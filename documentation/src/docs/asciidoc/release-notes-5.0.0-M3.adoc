@@ -1,0 +1,42 @@
+[[release-notes-5.0.0-m3]]
+=== 5.0.0-M3
+
+*Date of Release:* September 30, 2016
+
+*Scope:* Third milestone release of JUnit 5
+
+[[release-notes-5.0.0-m3-summary]]
+==== Summary of Changes
+
+The following is a list of global changes. For details regarding changes specific to the
+Platform, Jupiter, and Vintage, consult the dedicated subsections below. For a complete
+list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/6?closed=1+[5.0 M3] milestone page in the JUnit repository
+on GitHub.
+
+* ❓
+
+[[release-notes-5.0.0-m3-junit-platform]]
+===== JUnit Platform
+
+====== Bug Fixes
+
+* ❓
+
+====== Deprecations
+
+* ❓
+
+====== New Features
+
+* ❓
+
+[[release-notes-5.0.0-m3-junit-jupiter]]
+===== JUnit Jupiter
+
+* ❓
+
+[[release-notes-5.0.0-m3-junit-vintage]]
+===== JUnit Vintage
+
+* ❓
