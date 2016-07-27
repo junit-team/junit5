@@ -29,6 +29,8 @@ I hereby agree to the terms of the JUnit Contributor License Agreement.
 
 Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless) Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing license headers to source files. Formatter settings for Eclipse are available [in the repository](src/eclipse/junit-eclipse-formatter-settings.xml). For IntelliJ IDEA there's a [plugin](https://plugins.jetbrains.com/plugin/6546) you can use.
 
+Text in `*.adoc` and `*.md` files should be wrapped at 90 characters whenever technically possible.
+
 ### Javadoc
 
 - Javadoc comments should be wrapped after 80 characters whenever possible.
