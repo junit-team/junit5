@@ -65,8 +65,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		}
 		catch (Throwable throwable) {
 			rethrowIfBlacklisted(throwable);
-
-			// TODO [#336] Decide if exceptions thrown during preparation should result in the node being marked as "started".
+			// We call executionStarted first to comply with the contract of EngineExecutionListener
 			this.listener.executionStarted(testDescriptor);
 			this.listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
 			return;
