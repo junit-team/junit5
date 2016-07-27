@@ -44,7 +44,7 @@ public final class Assertions {
 		/* no-op */
 	}
 
-	// --- fail ----------------------------------------------------------
+	// --- fail ----------------------------------------------------------------
 
 	/**
 	 * <em>Fails</em> a test with the given failure {@code message}.
@@ -61,7 +61,7 @@ public final class Assertions {
 		fail(nullSafeGet(messageSupplier));
 	}
 
-	// --- assertTrue ----------------------------------------------------
+	// --- assertTrue ----------------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that the supplied {@code condition} is {@code true}.
@@ -111,7 +111,7 @@ public final class Assertions {
 		}
 	}
 
-	// --- assertFalse ---------------------------------------------------
+	// --- assertFalse ---------------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that the supplied {@code condition} is not {@code true}.
@@ -161,7 +161,7 @@ public final class Assertions {
 		}
 	}
 
-	// --- assertNull ----------------------------------------------------
+	// --- assertNull ----------------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that {@code actual} is {@code null}.
@@ -188,7 +188,7 @@ public final class Assertions {
 		}
 	}
 
-	// --- assertNotNull -------------------------------------------------
+	// --- assertNotNull -------------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that {@code actual} is not {@code null}.
@@ -215,7 +215,7 @@ public final class Assertions {
 		}
 	}
 
-	// --- assertEquals -------------------------------------------------
+	// --- assertEquals --------------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
@@ -491,7 +491,7 @@ public final class Assertions {
 		}
 	}
 
-	// --- assertArrayEquals -------------------------------------------------
+	// --- assertArrayEquals ---------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} boolean arrays are equal.
@@ -808,7 +808,7 @@ public final class Assertions {
 		assertArrayEquals(expected, actual, new ArrayDeque<>(), messageSupplier);
 	}
 
-	// --- assertNotEquals -------------------------------------------------
+	// --- assertNotEquals -----------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
@@ -844,7 +844,7 @@ public final class Assertions {
 		}
 	}
 
-	// --- assertSame ----------------------------------------------------
+	// --- assertSame ----------------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} refer to the same object.
@@ -871,7 +871,7 @@ public final class Assertions {
 		}
 	}
 
-	// --- assertNotSame -------------------------------------------------
+	// --- assertNotSame -------------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} do not refer to the same object.
@@ -898,7 +898,7 @@ public final class Assertions {
 		}
 	}
 
-	// --- assertAll -----------------------------------------------------
+	// --- assertAll -----------------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw an
@@ -951,7 +951,7 @@ public final class Assertions {
 		}
 	}
 
-	// --- assert exceptions ---------------------------------------------
+	// --- assert exceptions ---------------------------------------------------
 
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
@@ -996,7 +996,7 @@ public final class Assertions {
 			String.format("Expected %s to be thrown, but nothing was thrown.", expectedType.getName()));
 	}
 
-	// --- assertArrayEquals helpers -------------------------------------
+	// --- assertArrayEquals helpers -------------------------------------------
 
 	private static void assertArrayEquals(boolean[] expected, boolean[] actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
@@ -1278,7 +1278,7 @@ public final class Assertions {
 		return " at index " + indexesString;
 	}
 
-	// -------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	private static void failEqual(Object actual, String message) {
 		fail(buildPrefix(message) + "expected: not equal but was: <" + actual + ">");
