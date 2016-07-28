@@ -3109,7 +3109,7 @@ public class AssertionsTests {
 			changed.get().set(true);
 		});
 
-		assertFalse(changed.get().get(), "should have executed in a different same thread");
+		assertFalse(changed.get().get(), "should have executed in a different thread");
 	}
 
 	@Test

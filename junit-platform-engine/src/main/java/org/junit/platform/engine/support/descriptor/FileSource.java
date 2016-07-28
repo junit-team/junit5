@@ -48,10 +48,10 @@ public class FileSource implements FileSystemSource {
 
 	/**
 	 * Create a new {@code FileSource} using the supplied {@link File file} and
-	 * {@link FilePosition position}.
+	 * {@link FilePosition filePosition}.
 	 *
 	 * @param file the source file; must not be {@code null}
-	 * @param filePosition the source file; may be {@code null}
+	 * @param filePosition the position in the source file; may be {@code null}
 	 */
 	public FileSource(File file, FilePosition filePosition) {
 		Preconditions.notNull(file, "file must not be null");
