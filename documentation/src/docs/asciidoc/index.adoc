@@ -56,7 +56,11 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :junit5-maven-consumer:             {junit5-samples-repo}/tree/{release-branch}/junit5-maven-consumer[junit5-maven-consumer]
 :MockitoExtension:                  {junit5-samples-repo}/tree/{release-branch}/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
 
+:AssertJ:                           http://joel-costigliola.github.io/assertj/[AssertJ]
+:Hamcrest:                          http://hamcrest.org/JavaHamcrest/[Hamcrest]
 :SpringExtension:                   https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
+:Truth:                             http://google.github.io/truth/[Truth]
+
 
 include::overview.adoc[]
 
