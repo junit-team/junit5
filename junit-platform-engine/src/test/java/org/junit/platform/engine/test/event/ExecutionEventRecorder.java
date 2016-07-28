@@ -134,6 +134,10 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 		return containerEventsByType(FINISHED).count();
 	}
 
+	public List<ExecutionEvent> getSuccessfulTestFinishedEvents() {
+		return testFinishedEvents(Status.SUCCESSFUL).collect(toList());
+	}
+
 	public List<ExecutionEvent> getFailedTestFinishedEvents() {
 		return testFinishedEvents(Status.FAILED).collect(toList());
 	}

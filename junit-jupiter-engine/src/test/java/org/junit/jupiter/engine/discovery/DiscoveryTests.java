@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.engine;
+package org.junit.jupiter.engine.discovery;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -21,7 +21,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
@@ -36,7 +38,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	public void discoverTestClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(LocalTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
+		assertEquals(7, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -50,6 +52,22 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	public void discoverMethodByUniqueId() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
+		TestDescriptor engineDescriptor = discoverTests(request);
+		assertEquals(2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
+	public void discoverMethodByUniqueIdForOverloadedMethod() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test4()"))).build();
+		TestDescriptor engineDescriptor = discoverTests(request);
+		assertEquals(2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
+	public void discoverMethodByUniqueIdForOverloadedMethodVariantThatAcceptsArguments() {
+		LauncherDiscoveryRequest request = request().selectors(selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(
+			LocalTestCase.class, "test4(" + TestInfo.class.getName() + ")"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
@@ -70,7 +88,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 			selectClass(LocalTestCase.class)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(spec);
-		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
+		assertEquals(7, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	// -------------------------------------------------------------------
@@ -87,17 +105,22 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void test1() {
-
 		}
 
 		@Test
 		void test2() {
-
 		}
 
 		@Test
 		void test3() {
+		}
 
+		@Test
+		void test4() {
+		}
+
+		@Test
+		void test4(TestInfo testInfo) {
 		}
 
 		@CustomTestAnnotation
