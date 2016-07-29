@@ -35,7 +35,7 @@ class JUnitPlatformExtension {
 	/**
 	 * The directory for the XML test report files.
 	 *
-	 * <p>Defaults to {@code "build/test-results/junit-platform"}.
+	 * <p>Defaults to {@code file('build/test-results/junit-platform')}.
 	 */
 	File reportsDir
 
