@@ -1753,7 +1753,7 @@ final release.
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">junitPlatform {
     platformVersion 1.0
     logManager 'org.apache.logging.log4j.jul.LogManager'
-    reportsDir "build/test-results/junit-platform" // this is the default
+    reportsDir file('build/test-results/junit-platform') // this is the default
     // enableStandardTestTask true
     engines {
         include 'junit-jupiter'
@@ -3561,7 +3561,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-07-28 13:46:17 -04:00
+Last updated 2016-07-29 09:25:16 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
