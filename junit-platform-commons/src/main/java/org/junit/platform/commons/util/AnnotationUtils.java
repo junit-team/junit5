@@ -81,7 +81,7 @@ public final class AnnotationUtils {
 			return Optional.empty();
 		}
 
-		return findAnnotation(element.get(), annotationType, new HashSet<Annotation>());
+		return findAnnotation(element.get(), annotationType, new HashSet<>());
 	}
 
 	/**
