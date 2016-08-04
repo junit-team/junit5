@@ -555,10 +555,8 @@ public final class ReflectionUtils {
 		if (!lower.getName().equals(upper.getName())) {
 			return false;
 		}
-		if (!Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes())) {
-			return false;
-		}
-		return true;
+
+		return Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes());
 	}
 
 	private static <T extends AccessibleObject> T makeAccessible(T object) {
