@@ -11,6 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -46,7 +47,7 @@ import org.junit.platform.console.tasks.TempDirectory.Root;
  *
  * @since 1.0
  */
-class ReflectionUtilsTests {
+public class ReflectionUtilsTests {
 
 	@Test
 	void getDefaultClassLoader() {
@@ -269,14 +270,55 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void loadMethod() throws Exception {
+	void loadMethodWithInvalidFormatForFullyQualifiedMethodName() {
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod(null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod(""));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("   "));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("method"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("#nonexistentMethod"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("java.lang.String#"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("java.lang.String#chars("));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("java.lang.String#chars)"));
+	}
+
+	@Test
+	void loadMethod() {
 		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#publicMethod")).isPresent();
 		assertThat(ReflectionUtils.loadMethod(PrivateClass.class.getName() + "#privateMethod")).isPresent();
 		assertThat(ReflectionUtils.loadMethod("  " + PrivateClass.class.getName() + "#privateMethod  ")).isPresent();
 
-		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#nonExistingMethod")).isEmpty();
-		assertThat(ReflectionUtils.loadMethod("#nonExistingMethod")).isEmpty();
-		assertThat(ReflectionUtils.loadMethod("java.lang.String#")).isEmpty();
+		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#nonexistentMethod")).isEmpty();
+
+		// missing java.lang.String parameter type
+		assertThat(ReflectionUtils.loadMethod("java.lang.String#equalsIgnoreCase")).isEmpty();
+	}
+
+	@Test
+	void loadMethodWithArgumentList() {
+		assertAll(//
+			() -> assertFqmn(fqmn(PublicClass.class, "method", String.class, Integer.class)), //
+			() -> assertFqmn(fqmn(PublicClass.class, "method", String[].class, Integer[].class)), //
+			() -> assertFqmn(fqmn(PublicClass.class, "method", boolean.class, char.class)), //
+			() -> assertFqmn(fqmn(PublicClass.class, "method", char[].class, int[].class))//
+		);
+	}
+
+	@Test
+	void loadMethodFromSuperclassOrInterface() throws Exception {
+		assertAll(//
+			() -> assertFqmn(fqmn(ChildClass.class, "method1")), //
+			() -> assertFqmn(fqmn(ChildClass.class, "method2")), //
+			() -> assertFqmn(fqmn(ChildClass.class, "method3")), //
+			() -> assertFqmn(fqmn(ChildClass.class, "method4"))//
+		);
+	}
+
+	private static String fqmn(Class<?> clazz, String methodName, Class<?>... params) {
+		return String.format("%s#%s(%s)", clazz.getName(), methodName, StringUtils.nullSafeToString(params));
+	}
+
+	private static void assertFqmn(String fqmn) {
+		assertThat(ReflectionUtils.loadMethod(fqmn)).as(fqmn).isPresent();
 	}
 
 	@Test
@@ -636,6 +678,18 @@ class ReflectionUtilsTests {
 	public class PublicClass {
 
 		public void publicMethod() {
+		}
+
+		public void method(String str, Integer num) {
+		}
+
+		public void method(String[] strings, Integer[] nums) {
+		}
+
+		public void method(boolean b, char c) {
+		}
+
+		public void method(char[] characters, int[] nums) {
 		}
 	}
 

@@ -33,7 +33,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 
 /**
@@ -59,6 +62,11 @@ public final class ReflectionUtils {
 	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
 	}
+
+	// Pattern: [fully qualified class name]#[methodName]((comma-separated list of parameter type names))
+	private static final Pattern FULLY_QUALIFIED_METHOD_NAME_PATTERN = Pattern.compile("(.+)#([^()]+?)(\\((.*)\\))?");
+
+	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
 	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
 		ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass);
@@ -317,41 +325,66 @@ public final class ReflectionUtils {
 
 			return Optional.of(classLoader.loadClass(name));
 		}
-		catch (ClassNotFoundException ignore) {
+		catch (ClassNotFoundException ex) {
 			return Optional.empty();
 		}
 	}
 
 	/**
 	 * Load a method by its <em>fully qualified name</em>.
-	 * <p>The supported format is {@code [fully qualified class name]#[methodName]}.
-	 * For example, the fully qualified name for the {@code chars()} method in
-	 * {@code java.lang.String} is {@code java.lang.String#chars}.
+	 *
+	 * <p>The following formats are supported.
+	 *
+	 * <ul>
+	 * <li>{@code [fully qualified class name]#[methodName]}</li>
+	 * <li>{@code [fully qualified class name]#[methodName](parameter type list)}
+	 * <ul><li>The <em>parameter type list</em> is a comma-separated list of
+	 * fully qualified class names for the types of parameters accepted by
+	 * the method.</li></ul>
+	 * </li>
+	 * </ul>
+	 *
+	 * <h3>Examples</h3>
+	 *
+	 * <table border="1">
+	 * <tr><th>Method</th><th>Fully Qualified Method Name</th></tr>
+	 * <tr><td>{@link String#chars()}</td><td>{@code java.lang.String#chars}</td></tr>
+	 * <tr><td>{@link String#chars()}</td><td>{@code java.lang.String#chars()}</td></tr>
+	 * <tr><td>{@link String#equalsIgnoreCase(String)}</td><td>{@code java.lang.String#equalsIgnoreCase(java.lang.String)}</td></tr>
+	 * <tr><td>{@link String#substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
+	 * </table>
+	 *
 	 * @param fullyQualifiedMethodName the fully qualified name of the method to load;
 	 * never {@code null} or blank
-	 * @return Optional of Method
+	 * @return an {@code Optional} containing the method; never {@code null} but
+	 * potentially empty
 	 */
 	public static Optional<Method> loadMethod(String fullyQualifiedMethodName) {
 		Preconditions.notBlank(fullyQualifiedMethodName, "fully qualified method name must not be null or blank");
-		fullyQualifiedMethodName = fullyQualifiedMethodName.trim();
 
-		// TODO [#331] Support overloaded and inherited methods.
+		String fqmn = fullyQualifiedMethodName.trim();
+		Matcher matcher = FULLY_QUALIFIED_METHOD_NAME_PATTERN.matcher(fqmn);
 
-		int hashPosition = fullyQualifiedMethodName.lastIndexOf('#');
-		if (hashPosition >= 0 && hashPosition < fullyQualifiedMethodName.length()) {
-			String className = fullyQualifiedMethodName.substring(0, hashPosition);
-			String methodName = fullyQualifiedMethodName.substring(hashPosition + 1);
-			if (StringUtils.isNotBlank(className) && StringUtils.isNotBlank(methodName)) {
-				Optional<Class<?>> classOptional = loadClass(className);
-				if (classOptional.isPresent()) {
-					try {
-						return Optional.of(classOptional.get().getDeclaredMethod(methodName));
-					}
-					catch (NoSuchMethodException ignore) {
-					}
-				}
+		Preconditions.condition(matcher.matches(),
+			() -> String.format("Fully qualified method name [%s] does not match pattern [%s]", fqmn,
+				FULLY_QUALIFIED_METHOD_NAME_PATTERN));
+
+		String className = matcher.group(1);
+		String methodName = matcher.group(2);
+		// Note: group #3 includes the parameter types enclosed in parentheses;
+		// group #4 contains the actual parameter types.
+		String parameterTypeNames = matcher.group(4);
+
+		Optional<Class<?>> classOptional = loadClass(className);
+		if (classOptional.isPresent()) {
+			try {
+				return findMethod(classOptional.get(), methodName.trim(), parameterTypeNames);
+			}
+			catch (Exception ex) {
+				/* ignore */
 			}
 		}
+
 		return Optional.empty();
 	}
 
@@ -367,7 +400,7 @@ public final class ReflectionUtils {
 					try {
 						return makeAccessible(field).get(inner);
 					}
-					catch (SecurityException | IllegalArgumentException | IllegalAccessException ignore) {
+					catch (SecurityException | IllegalArgumentException | IllegalAccessException ex) {
 						return Optional.empty();
 					}
 				});
@@ -456,6 +489,27 @@ public final class ReflectionUtils {
 		catch (Throwable t) {
 			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
 		}
+	}
+
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
+		return findMethod(clazz, methodName, resolveParameterTypes(parameterTypeNames));
+	}
+
+	private static Class<?>[] resolveParameterTypes(String parameterTypeNames) {
+		if (StringUtils.isBlank(parameterTypeNames)) {
+			return EMPTY_CLASS_ARRAY;
+		}
+
+		// @formatter:off
+		return Arrays.stream(parameterTypeNames.split(","))
+				.map(ReflectionUtils::loadRequiredParameterType)
+				.toArray(Class[]::new);
+		// @formatter:on
+	}
+
+	private static Class<?> loadRequiredParameterType(String typeName) {
+		return ReflectionUtils.loadClass(typeName).orElseThrow(
+			() -> new JUnitException(String.format("Failed to load parameter type [%s]", typeName)));
 	}
 
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {

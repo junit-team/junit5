@@ -105,13 +105,26 @@ public final class DiscoverySelectors {
 	 * Create a {@code MethodSelector} for the supplied <em>fully qualified
 	 * method name</em>.
 	 *
-	 * <p>The supported format for a <em>fully qualified method name</em> is
-	 * {@code [fully qualified class name]#[methodName]}. For example, the
-	 * fully qualified name for the {@code chars()} method in
-	 * {@code java.lang.String} is {@code "java.lang.String#chars"}.
+	 * <p>The following formats are supported.
 	 *
-	 * <p><strong>WARNING</strong>: Overloaded methods and methods that accept
-	 * arguments are not currently supported.
+	 * <ul>
+	 * <li>{@code [fully qualified class name]#[methodName]}</li>
+	 * <li>{@code [fully qualified class name]#[methodName](parameter type list)}
+	 * <ul><li>The <em>parameter type list</em> is a comma-separated list of
+	 * fully qualified class names for the types of parameters accepted by
+	 * the method.</li></ul>
+	 * </li>
+	 * </ul>
+	 *
+	 * <h3>Examples</h3>
+	 *
+	 * <table border="1">
+	 * <tr><th>Method</th><th>Fully Qualified Method Name</th></tr>
+	 * <tr><td>{@link String#chars()}</td><td>{@code java.lang.String#chars}</td></tr>
+	 * <tr><td>{@link String#chars()}</td><td>{@code java.lang.String#chars()}</td></tr>
+	 * <tr><td>{@link String#equalsIgnoreCase(String)}</td><td>{@code java.lang.String#equalsIgnoreCase(java.lang.String)}</td></tr>
+	 * <tr><td>{@link String#substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
+	 * </table>
 	 *
 	 * @param name the fully qualified name of the method to select; never
 	 * {@code null} or blank
