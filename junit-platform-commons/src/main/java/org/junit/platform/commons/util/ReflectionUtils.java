@@ -16,6 +16,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.io.File;
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -62,21 +63,45 @@ public final class ReflectionUtils {
 	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
 		ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass);
 
+	private static final Map<String, Class<?>> primitiveNameToTypeMap;
+
 	private static final Map<Class<?>, Class<?>> primitiveToWrapperMap;
 
 	static {
-		Map<Class<?>, Class<?>> map = new HashMap<>(8);
+		Map<String, Class<?>> primitiveTypes = new HashMap<>(16);
 
-		map.put(boolean.class, Boolean.class);
-		map.put(byte.class, Byte.class);
-		map.put(char.class, Character.class);
-		map.put(short.class, Short.class);
-		map.put(int.class, Integer.class);
-		map.put(long.class, Long.class);
-		map.put(float.class, Float.class);
-		map.put(double.class, Double.class);
+		primitiveTypes.put(boolean.class.getName(), boolean.class);
+		primitiveTypes.put(byte.class.getName(), byte.class);
+		primitiveTypes.put(char.class.getName(), char.class);
+		primitiveTypes.put(short.class.getName(), short.class);
+		primitiveTypes.put(int.class.getName(), int.class);
+		primitiveTypes.put(long.class.getName(), long.class);
+		primitiveTypes.put(float.class.getName(), float.class);
+		primitiveTypes.put(double.class.getName(), double.class);
 
-		primitiveToWrapperMap = Collections.unmodifiableMap(map);
+		primitiveTypes.put(boolean[].class.getName(), boolean[].class);
+		primitiveTypes.put(byte[].class.getName(), byte[].class);
+		primitiveTypes.put(char[].class.getName(), char[].class);
+		primitiveTypes.put(short[].class.getName(), short[].class);
+		primitiveTypes.put(int[].class.getName(), int[].class);
+		primitiveTypes.put(long[].class.getName(), long[].class);
+		primitiveTypes.put(float[].class.getName(), float[].class);
+		primitiveTypes.put(double[].class.getName(), double[].class);
+
+		primitiveNameToTypeMap = Collections.unmodifiableMap(primitiveTypes);
+
+		Map<Class<?>, Class<?>> primitiveToWrapper = new HashMap<>(8);
+
+		primitiveToWrapper.put(boolean.class, Boolean.class);
+		primitiveToWrapper.put(byte.class, Byte.class);
+		primitiveToWrapper.put(char.class, Character.class);
+		primitiveToWrapper.put(short.class, Short.class);
+		primitiveToWrapper.put(int.class, Integer.class);
+		primitiveToWrapper.put(long.class, Long.class);
+		primitiveToWrapper.put(float.class, Float.class);
+		primitiveToWrapper.put(double.class, Double.class);
+
+		primitiveToWrapperMap = Collections.unmodifiableMap(primitiveToWrapper);
 	}
 
 	public static ClassLoader getDefaultClassLoader() {
@@ -277,11 +302,20 @@ public final class ReflectionUtils {
 	public static Optional<Class<?>> loadClass(String name, ClassLoader classLoader) {
 		Preconditions.notBlank(name, "class name must not be null or blank");
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
+		name = name.trim();
 
-		// TODO [#332] Support primitive types and arrays.
+		if (primitiveNameToTypeMap.containsKey(name)) {
+			return Optional.of(primitiveNameToTypeMap.get(name));
+		}
 
 		try {
-			return Optional.of(classLoader.loadClass(name.trim()));
+			// Object array such as: [Ljava.lang.String;
+			if (name.startsWith("[L") && name.endsWith(";")) {
+				Class<?> componentType = classLoader.loadClass(name.substring(2, name.length() - 1));
+				return Optional.of(Array.newInstance(componentType, 0).getClass());
+			}
+
+			return Optional.of(classLoader.loadClass(name));
 		}
 		catch (ClassNotFoundException ignore) {
 			return Optional.empty();

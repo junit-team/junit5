@@ -20,10 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -219,31 +216,49 @@ class ReflectionUtilsTests {
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass(null));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass(""));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass("   "));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass(null, null));
 
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.loadClass(InterfaceA.class.getName(), null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass(null, null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass(getClass().getName(), null));
 	}
 
 	@Test
 	void loadClassWhenClassNotFoundException() throws Exception {
-		ClassLoader classLoader = newThrowingClassLoaderMock();
-		assertThat(ReflectionUtils.loadClass(PublicClass.class.getName(), classLoader)).isEmpty();
+		assertThat(ReflectionUtils.loadClass("foo.bar.EnigmaClassThatDoesNotExist")).isEmpty();
 	}
 
 	@Test
 	void loadClass() throws Exception {
-		ClassLoader classLoader = newClassLoaderMock();
-		ReflectionUtils.loadClass(Integer.class.getName(), classLoader);
-		verify(classLoader).loadClass(Integer.class.getName());
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(Integer.class.getName());
+		assertThat(optional).isPresent();
+		assertThat(optional).contains(Integer.class);
 	}
 
 	@Test
 	void loadClassTrimsClassName() throws Exception {
-		String className = "  " + Integer.class.getName() + "    ";
-		ClassLoader classLoader = newClassLoaderMock();
-		ReflectionUtils.loadClass(className, classLoader);
-		verify(classLoader).loadClass(Integer.class.getName());
+		Optional<Class<?>> optional = ReflectionUtils.loadClass("  " + Integer.class.getName() + "\t");
+		assertThat(optional).isPresent();
+		assertThat(optional).contains(Integer.class);
+	}
+
+	@Test
+	void loadClassForPrimitive() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(int.class.getName());
+		assertThat(optional).isPresent();
+		assertThat(optional).contains(int.class);
+	}
+
+	@Test
+	void loadClassForPrimitiveArray() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(int[].class.getName());
+		assertThat(optional).isPresent();
+		assertThat(optional).contains(int[].class);
+	}
+
+	@Test
+	void loadClassForObjectArray() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(String[].class.getName());
+		assertThat(optional).isPresent();
+		assertThat(optional).contains(String[].class);
 	}
 
 	@Test
@@ -559,19 +574,6 @@ class ReflectionUtilsTests {
 		assertThat(methods.subList(3, 6)).containsOnly(MethodShadowingChild.class.getMethod("method4", boolean.class),
 			MethodShadowingChild.class.getMethod("method1", String.class),
 			MethodShadowingChild.class.getMethod("method5", Long.class));
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static ClassLoader newClassLoaderMock() throws Exception {
-		ClassLoader classLoader = mock(ClassLoader.class);
-		when(classLoader.loadClass(anyString())).thenReturn((Class) Integer.class);
-		return classLoader;
-	}
-
-	private static ClassLoader newThrowingClassLoaderMock() throws Exception {
-		ClassLoader classLoader = mock(ClassLoader.class);
-		when(classLoader.loadClass(anyString())).thenThrow(new ClassNotFoundException());
-		return classLoader;
 	}
 
 	private static void createDirectories(Path... paths) throws IOException {
