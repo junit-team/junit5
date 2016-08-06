@@ -21,7 +21,9 @@ class, test method, or custom _<<writing-tests-meta-annotations,composed annotat
 with `@ExtendWith(...)` and supplying class references for the extensions to register.
 
 For example, to register a custom `MockitoExtension` for a particular test method, you
-would annotate the test method as follows.
+would annotate the test method as follows. For special cases there is also the possiblilty
+to use <<extensions-registration-service-loader,service loader based>> extension
+registration.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -70,6 +72,21 @@ class MyTestsV2 {
 
 The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the
 `FooExtension` and `BarExtension`, in exactly that order.
+
+[[extensions-registration-service-loader]]
+==== Service Loader Extension Registration
+
+Besides to the default <<extensions-registration-declarative,extension registration>>
+behaviour using annotations as described before, there is a also an enhanced extension
+registration mechanism using the Java service loader facility.
+
+This feature is not enabled by default and must be activated setting the following system
+property:
+
+`-Djunit.extensions.auto-detect=true`
+
+When being enabled the extension registry will be initialized using the global extensions
+and then all extensions available thru the service loader will be added afterwards.
 
 [[extensions-registration-inheritance]]
 ==== Extension Inheritance

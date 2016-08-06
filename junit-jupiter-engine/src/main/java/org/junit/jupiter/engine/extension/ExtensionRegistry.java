@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -55,11 +56,17 @@ public class ExtensionRegistry {
 	 * Factory for creating and populating a new root registry with the default
 	 * extensions.
 	 *
+	 * @param autoDetect {@code true} to detect extensions also using
+	 * service loader, {@code false} otherwise
 	 * @return a new {@code ExtensionRegistry}
 	 */
-	public static ExtensionRegistry createRegistryWithDefaultExtensions() {
+	public static ExtensionRegistry createRegistryWithDefaultExtensions(boolean autoDetect) {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
 		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
+		if (autoDetect) {
+			ServiceLoader.load(Extension.class, ReflectionUtils.getDefaultClassLoader()).forEach(
+				extensionRegistry::registerDefaultExtension);
+		}
 		return extensionRegistry;
 	}
 

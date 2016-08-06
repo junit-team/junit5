@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -34,7 +35,26 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
  */
 public class ExtensionRegistryTests {
 
-	private final ExtensionRegistry registry = createRegistryWithDefaultExtensions();
+	private final ExtensionRegistry registry = createRegistryWithDefaultExtensions(false);
+
+	@Test
+	void newRegistryWithoutParentHasDefaultExtensionsUsingServiceLocator() {
+		ExtensionRegistry registry = createRegistryWithDefaultExtensions(true);
+		List<Extension> extensions = registry.getExtensions(Extension.class);
+
+		assertEquals(5, extensions.size());
+		assertExtensionRegistered(registry, DisabledCondition.class);
+		assertExtensionRegistered(registry, RepeatedTestExtension.class);
+		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
+		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
+		assertExtensionRegistered(registry, ServiceLoaderExtension.class);
+
+		assertEquals(2, countExtensions(registry, ParameterResolver.class));
+		assertEquals(1, countExtensions(registry, ContainerExecutionCondition.class));
+		assertEquals(1, countExtensions(registry, TestExecutionCondition.class));
+		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
+		assertEquals(1, countExtensions(registry, BeforeAllCallback.class));
+	}
 
 	@Test
 	void newRegistryWithoutParentHasDefaultExtensions() {

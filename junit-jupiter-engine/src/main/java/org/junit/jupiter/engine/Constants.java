@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine;
 
+import java.util.ServiceLoader;
+
 /**
  * Collection of constants related to the {@link JupiterTestEngine}.
  *
@@ -58,6 +60,14 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.extension.TestExecutionCondition
 	 */
 	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = "*";
+
+	/**
+	 * Property name used to enable test extensions to be loaded using the {@link ServiceLoader}  additional
+	 * to the global default ones within {@code ExtensionRegistry.createRegistryWithDefaultExtensions()}.
+	 *
+	 * The default behavior is not to load any extensions using the service loader.
+	 */
+	public static final String EXTENSIONS_AUTODETECT_PROPERTY_NAME = "junit.extensions.auto-detect";
 
 	private Constants() {
 		/* no-op */
