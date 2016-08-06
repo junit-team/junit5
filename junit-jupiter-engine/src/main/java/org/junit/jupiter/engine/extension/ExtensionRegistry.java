@@ -13,10 +13,10 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -43,8 +43,17 @@ public class ExtensionRegistry {
 
 	private static final Logger LOG = Logger.getLogger(ExtensionRegistry.class.getName());
 
-	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(
-		Arrays.asList(new DisabledCondition(), new TestInfoParameterResolver(), new TestReporterParameterResolver()));
+	private static final List<Extension> DEFAULT_EXTENSIONS;
+
+	static {
+		List<Extension> extensions = new ArrayList<>();
+		extensions.add(new DisabledCondition());
+		extensions.add(new TestInfoParameterResolver());
+		extensions.add(new TestReporterParameterResolver());
+
+		ServiceLoader.load(Extension.class, ReflectionUtils.getDefaultClassLoader()).forEach(extensions::add);
+		DEFAULT_EXTENSIONS = Collections.unmodifiableList(extensions);
+	}
 
 	/**
 	 * Factory for creating and populating a new root registry with the default
