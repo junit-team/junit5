@@ -3522,7 +3522,9 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>selectMethod(String)</code> method in <code>DiscoverySelectors</code> now supports selection of
+a <em>fully qualified method name</em> for a method that accepts parameters&#8201;&#8212;&#8201;for example:
+<code>"org.example.TestClass#testMethod(org.junit.jupiter.api.TestInfo)"</code>.</p>
 </li>
 </ul>
 </div>
@@ -3530,6 +3532,17 @@ on GitHub.</p>
 </div>
 <div class="sect4">
 <h5 id="release-notes-5.0.0-m3-junit-jupiter">JUnit Jupiter</h5>
+<div class="sect5">
+<h6 id="bug-fixes-4">Bug Fixes</h6>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>JupiterTestEngine</code> now supports selection of test methods via their unique ID for
+methods that accept parameters that represent arrays or primitive types.</p>
+</li>
+</ul>
+</div>
+</div>
 <div class="sect5">
 <h6 id="new-features-3">New Features</h6>
 <div class="ulist">
@@ -3561,7 +3574,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-07-29 09:25:16 -04:00
+Last updated 2016-08-07 13:56:58 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
