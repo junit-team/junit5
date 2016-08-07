@@ -508,7 +508,7 @@ public final class ReflectionUtils {
 	}
 
 	private static Class<?> loadRequiredParameterType(String typeName) {
-		return ReflectionUtils.loadClass(typeName).orElseThrow(
+		return loadClass(typeName).orElseThrow(
 			() -> new JUnitException(String.format("Failed to load parameter type [%s]", typeName)));
 	}
 
