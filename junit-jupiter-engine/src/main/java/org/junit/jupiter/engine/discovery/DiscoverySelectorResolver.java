@@ -22,7 +22,7 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.ClasspathSelector;
+import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -44,7 +44,7 @@ public class DiscoverySelectorResolver {
 	public void resolveSelectors(EngineDiscoveryRequest request, TestDescriptor engineDescriptor) {
 		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(engineDescriptor);
 
-		request.getSelectorsByType(ClasspathSelector.class).forEach(selector -> {
+		request.getSelectorsByType(ClasspathRootSelector.class).forEach(selector -> {
 			findAllClassesInClasspathRoot(selector.getClasspathRoot(), isScannableTestClass).forEach(
 				javaElementsResolver::resolveClass);
 		});

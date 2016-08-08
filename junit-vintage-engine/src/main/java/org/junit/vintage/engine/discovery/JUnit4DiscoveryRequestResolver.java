@@ -56,7 +56,7 @@ public class JUnit4DiscoveryRequestResolver {
 
 	private List<DiscoverySelectorResolver<?>> getAllDiscoverySelectorResolvers() {
 		return asList( //
-			new ClasspathSelectorResolver(), //
+			new ClasspathRootSelectorResolver(), //
 			new PackageNameSelectorResolver(), //
 			new ClassSelectorResolver(), //
 			new MethodSelectorResolver(), //

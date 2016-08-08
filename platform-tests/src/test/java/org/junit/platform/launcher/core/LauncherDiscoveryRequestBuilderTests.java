@@ -38,7 +38,7 @@ import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.ClasspathSelector;
+import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -151,7 +151,7 @@ public class LauncherDiscoveryRequestBuilderTests {
 					).build();
 			// @formatter:on
 
-			assertThat(discoveryRequest.getSelectorsByType(ClasspathSelector.class).size()).isEqualTo(0);
+			assertThat(discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).size()).isEqualTo(0);
 		}
 
 		@Test
@@ -165,8 +165,8 @@ public class LauncherDiscoveryRequestBuilderTests {
 						).build();
 				// @formatter:on
 
-				List<String> folders = discoveryRequest.getSelectorsByType(ClasspathSelector.class).stream().map(
-					ClasspathSelector::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
+				List<String> folders = discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).stream().map(
+					ClasspathRootSelector::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
 
 				assertThat(folders).contains(temporaryFolder.getAbsolutePath());
 			}

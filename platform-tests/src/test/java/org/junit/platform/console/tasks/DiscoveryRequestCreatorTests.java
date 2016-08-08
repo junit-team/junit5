@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.discovery.ClassFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.ClasspathSelector;
+import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.launcher.EngineFilter;
@@ -81,9 +81,9 @@ public class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
+		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
-		assertThat(classpathSelectors).extracting(ClasspathSelector::getClasspathRoot)
+		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
 			.hasAtLeastOneElementOfType(File.class)
 			.doesNotContainNull();
 		// @formatter:on
@@ -96,9 +96,9 @@ public class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
+		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
-		assertThat(classpathSelectors).extracting(ClasspathSelector::getClasspathRoot)
+		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
 			.containsExactly(new File("."), new File(".."));
 		// @formatter:on
 	}
@@ -110,9 +110,9 @@ public class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
+		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
-		assertThat(classpathSelectors).extracting(ClasspathSelector::getClasspathRoot)
+		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
 			.contains(new File("."), new File(".."));
 		// @formatter:on
 	}

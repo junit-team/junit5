@@ -18,7 +18,7 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
- * A {@link DiscoverySelector} that selects classpath <em>roots</em> so that
+ * A {@link DiscoverySelector} that selects a classpath <em>root</em> so that
  * {@link org.junit.platform.engine.TestEngine TestEngines} can search for class
  * files or resources within the physical classpath &mdash; for example, to
  * scan for test classes.
@@ -26,11 +26,11 @@ import org.junit.platform.engine.DiscoverySelector;
  * @since 1.0
  */
 @API(Experimental)
-public class ClasspathSelector implements DiscoverySelector {
+public class ClasspathRootSelector implements DiscoverySelector {
 
 	private final File classpathRoot;
 
-	ClasspathSelector(File classpathRoot) {
+	ClasspathRootSelector(File classpathRoot) {
 		this.classpathRoot = classpathRoot;
 	}
 

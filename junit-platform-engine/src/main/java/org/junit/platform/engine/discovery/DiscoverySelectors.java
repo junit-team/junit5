@@ -31,7 +31,7 @@ import org.junit.platform.engine.UniqueId;
  * {@link DiscoverySelector DiscoverySelectors}.
  *
  * @since 1.0
- * @see ClasspathSelector
+ * @see ClasspathRootSelector
  * @see ClassSelector
  * @see MethodSelector
  * @see PackageSelector
@@ -46,13 +46,13 @@ public final class DiscoverySelectors {
 	///CLOVER:ON
 
 	/**
-	 * Create a list of {@code ClasspathSelectors} for the supplied {@code directories}.
+	 * Create a list of {@code ClasspathRootSelectors} for the supplied {@code directories}.
 	 *
 	 * @param directories set of directories in the filesystem that represent classpath roots;
 	 * never {@code null}
 	 * @return a list of selectors for the supplied directories; directories which
 	 * do not physically exist in the filesystem will be filtered out
-	 * @see ClasspathSelector
+	 * @see ClasspathRootSelector
 	 */
 	public static List<DiscoverySelector> selectClasspathRoots(Set<File> directories) {
 		Preconditions.notNull(directories, "directories must not be null");
@@ -60,7 +60,7 @@ public final class DiscoverySelectors {
 		// @formatter:off
 		return directories.stream()
 				.filter(File::isDirectory)
-				.map(ClasspathSelector::new)
+				.map(ClasspathRootSelector::new)
 				.collect(toList());
 		// @formatter:on
 	}
