@@ -25,9 +25,9 @@ on GitHub.
 
 * ❓
 
-====== Deprecations
+====== Deprecations and Breaking Changes
 
-* ❓
+* `ClasspathSelector` has been renamed to `ClasspathRootSelector`.
 
 ====== New Features
 
