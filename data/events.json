@@ -126,5 +126,16 @@
     "speakers": [
       "nicolaiparlog"
     ]
+  },
+  {
+    "title": "JavaOne - JUnit5: Features, Architecture, and Extensibility [CON4015]",
+    "date": "2016-09-18",
+    "location": "San Francisco, CA",
+    "link": "https://oracle.rainfocus.com/scripts/catalog/oow16.jsp?event=javaone&search=junit5&search.event=javaone",
+    "speakers": [
+      "smoyer",
+      "nur1",
+      "sgs116"
+    ]
   }
 ]
