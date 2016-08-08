@@ -1504,13 +1504,13 @@ corresponding tests. Of course you&#8217;ll have to implement the abstract metho
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in <a href="#writing-tests-annotations">Annotations</a>
 is very similar to the <code>@Test</code> annotation in JUnit 4.
 Both describe methods that implement test cases.
-These test cases are static in the sense that they are fully specified at compile-time,
-and their behavior cannot be changed by anything happening at run-time.
+These test cases are static in the sense that they are fully specified at compile time,
+and their behavior cannot be changed by anything happening at runtime.
 <em>Assumptions provide a basic form of dynamic behavior but are intentionally rather limited in their expressiveness.</em></p>
 </div>
 <div class="paragraph">
 <p>In addition to these standard tests a completely new kind of test programming model has been introduced in JUnit Jupiter.
-This new kind of test is a <em>dynamic test</em> which is generated at run-time by a factory method
+This new kind of test is a <em>dynamic test</em> which is generated at runtime by a factory method
 that is annotated with <code>@TestFactory</code>.</p>
 </div>
 <div class="paragraph">
@@ -1562,7 +1562,7 @@ release.</p>
 </div>
 <div class="paragraph">
 <p>The first method returns an invalid return type. Since an invalid return type cannot be
-detected at compile-time, a <code>JUnitException</code> is thrown when it is detected at run-time.</p>
+detected at compile time, a <code>JUnitException</code> is thrown when it is detected at runtime.</p>
 </div>
 <div class="paragraph">
 <p>The next five methods are very simple examples that demonstrate the generation of a
