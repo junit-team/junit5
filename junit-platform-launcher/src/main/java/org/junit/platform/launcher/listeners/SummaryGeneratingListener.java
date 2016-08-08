@@ -12,13 +12,11 @@ package org.junit.platform.launcher.listeners;
 
 import static java.util.stream.Stream.concat;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
-import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
-import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
-import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
 
 import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -57,21 +55,33 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-		this.summary.testsFound.incrementAndGet();
+		if (testIdentifier.isContainer()) {
+			this.summary.containersFound.incrementAndGet();
+		}
+		if (testIdentifier.isTest()) {
+			this.summary.testsFound.incrementAndGet();
+		}
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		// @formatter:off
+		long skippedContainers = concat(Stream.of(testIdentifier), testPlan.getDescendants(testIdentifier).stream())
+				.filter(TestIdentifier::isContainer)
+				.count();
 		long skippedTests = concat(Stream.of(testIdentifier), testPlan.getDescendants(testIdentifier).stream())
 				.filter(TestIdentifier::isTest)
 				.count();
 		// @formatter:on
+		this.summary.containersSkipped.addAndGet(skippedContainers);
 		this.summary.testsSkipped.addAndGet(skippedTests);
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
+		if (testIdentifier.isContainer()) {
+			this.summary.containersStarted.incrementAndGet();
+		}
 		if (testIdentifier.isTest()) {
 			this.summary.testsStarted.incrementAndGet();
 		}
@@ -79,25 +89,44 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-		if (testExecutionResult.getStatus() == SUCCESSFUL) {
-			if (testIdentifier.isTest()) {
-				this.summary.testsSucceeded.incrementAndGet();
+
+		switch (testExecutionResult.getStatus()) {
+
+			case SUCCESSFUL: {
+				if (testIdentifier.isContainer()) {
+					this.summary.containersSucceeded.incrementAndGet();
+				}
+				if (testIdentifier.isTest()) {
+					this.summary.testsSucceeded.incrementAndGet();
+				}
+				break;
 			}
-		}
-		else if (testExecutionResult.getStatus() == ABORTED) {
-			if (testIdentifier.isTest()) {
-				this.summary.testsAborted.incrementAndGet();
+
+			case ABORTED: {
+				if (testIdentifier.isContainer()) {
+					this.summary.containersAborted.incrementAndGet();
+				}
+				if (testIdentifier.isTest()) {
+					this.summary.testsAborted.incrementAndGet();
+				}
+				break;
 			}
-		}
-		else if (testExecutionResult.getStatus() == FAILED) {
-			if (testIdentifier.isTest()) {
-				this.summary.testsFailed.incrementAndGet();
+
+			case FAILED: {
+				if (testIdentifier.isContainer()) {
+					this.summary.containersFailed.incrementAndGet();
+				}
+				if (testIdentifier.isTest()) {
+					this.summary.testsFailed.incrementAndGet();
+				}
+				testExecutionResult.getThrowable().ifPresent(
+					throwable -> this.summary.addFailure(testIdentifier, throwable));
+				break;
 			}
-			else if (testIdentifier.isContainer()) {
-				this.summary.containersFailed.incrementAndGet();
-			}
-			testExecutionResult.getThrowable().ifPresent(
-				throwable -> this.summary.addFailure(testIdentifier, throwable));
+
+			default:
+				throw new PreconditionViolationException(
+					"Unsupported execution status:" + testExecutionResult.getStatus());
 		}
 	}
 

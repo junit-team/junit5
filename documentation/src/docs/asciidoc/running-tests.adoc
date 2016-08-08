@@ -137,13 +137,18 @@ in output similar to the following:
 :junitPlatformTest
 
 Test run finished after 93 ms
-[         3 tests found      ]
-[         1 tests skipped    ]
-[         2 tests started    ]
-[         0 tests aborted    ]
-[         2 tests successful ]
-[         0 tests failed     ]
-[         0 containers failed]
+[         3 containers found      ]
+[         0 containers skipped    ]
+[         3 containers started    ]
+[         0 containers aborted    ]
+[         3 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         1 tests skipped         ]
+[         2 tests started         ]
+[         0 tests aborted         ]
+[         2 tests successful      ]
+[         0 tests failed          ]
 
 BUILD SUCCESSFUL
 ----
@@ -160,13 +165,18 @@ Test failures (1):
     => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
 Test run finished after 99 ms
-[         3 tests found      ]
-[         0 tests skipped    ]
-[         3 tests started    ]
-[         0 tests aborted    ]
-[         2 tests successful ]
-[         1 tests failed     ]
-[         0 containers failed]
+[         3 containers found      ]
+[         0 containers skipped    ]
+[         3 containers started    ]
+[         0 containers aborted    ]
+[         3 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         0 tests skipped         ]
+[         3 tests started         ]
+[         0 tests aborted         ]
+[         2 tests successful      ]
+[         1 tests failed          ]
 
 :junitPlatformTest FAILED
 
@@ -236,13 +246,18 @@ Engine finished: junit-jupiter
 Test execution finished.
 
 Test run finished after 29 ms
-[         2 tests found      ]
-[         1 tests started    ]
-[         1 tests skipped    ]
-[         0 tests aborted    ]
-[         1 tests successful ]
-[         0 tests failed     ]
-[         0 containers failed]
+[         2 containers found      ]
+[         0 containers skipped    ]
+[         2 containers started    ]
+[         0 containers aborted    ]
+[         2 containers successful ]
+[         0 containers failed     ]
+[         2 tests found           ]
+[         1 tests skipped         ]
+[         1 tests started         ]
+[         0 tests aborted         ]
+[         1 tests successful      ]
+[         0 tests failed          ]
 ----
 
 .Exit Code

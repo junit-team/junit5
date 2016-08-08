@@ -29,6 +29,8 @@ on GitHub.
 
 ====== New Features
 
+* The `TestExecutionSummary` used by the `ConsoleLauncher` and the JUnit Platform Gradle
+  plugin now includes statistics for all container events.
 * The `selectMethod(String)` method in `DiscoverySelectors` now supports selection of
   a _fully qualified method name_ for a method that accepts parameters -- for example:
   `"org.example.TestClass#testMethod(org.junit.jupiter.api.TestInfo)"`.

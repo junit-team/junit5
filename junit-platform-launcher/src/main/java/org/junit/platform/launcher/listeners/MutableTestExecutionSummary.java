@@ -30,13 +30,19 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	private static final String TAB = "  ";
 	private static final String DOUBLE_TAB = TAB + TAB;
 
+	final AtomicLong containersFound = new AtomicLong();
+	final AtomicLong containersStarted = new AtomicLong();
+	final AtomicLong containersSkipped = new AtomicLong();
+	final AtomicLong containersAborted = new AtomicLong();
+	final AtomicLong containersSucceeded = new AtomicLong();
+	final AtomicLong containersFailed = new AtomicLong();
+
 	final AtomicLong testsFound = new AtomicLong();
 	final AtomicLong testsStarted = new AtomicLong();
 	final AtomicLong testsSkipped = new AtomicLong();
 	final AtomicLong testsAborted = new AtomicLong();
 	final AtomicLong testsSucceeded = new AtomicLong();
 	final AtomicLong testsFailed = new AtomicLong();
-	final AtomicLong containersFailed = new AtomicLong();
 
 	private final TestPlan testPlan;
 	private final List<Failure> failures = new ArrayList<>();
@@ -45,12 +51,58 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	MutableTestExecutionSummary(TestPlan testPlan) {
 		this.testPlan = testPlan;
+		this.containersFound.set(testPlan.countTestIdentifiers(TestIdentifier::isContainer));
 		this.testsFound.set(testPlan.countTestIdentifiers(TestIdentifier::isTest));
 		this.timeStarted = System.currentTimeMillis();
 	}
 
 	void addFailure(TestIdentifier testIdentifier, Throwable throwable) {
 		this.failures.add(new Failure(testIdentifier, throwable));
+	}
+
+	@Override
+	public long getTimeStarted() {
+		return this.timeStarted;
+	}
+
+	@Override
+	public long getTimeFinished() {
+		return this.timeFinished;
+	}
+
+	@Override
+	public long getTotalFailureCount() {
+		return getTestsFailedCount() + getContainersFailedCount();
+	}
+
+	@Override
+	public long getContainersFoundCount() {
+		return this.containersFound.get();
+	}
+
+	@Override
+	public long getContainersStartedCount() {
+		return this.containersStarted.get();
+	}
+
+	@Override
+	public long getContainersSkippedCount() {
+		return this.containersSkipped.get();
+	}
+
+	@Override
+	public long getContainersAbortedCount() {
+		return this.containersAborted.get();
+	}
+
+	@Override
+	public long getContainersSucceededCount() {
+		return this.containersSucceeded.get();
+	}
+
+	@Override
+	public long getContainersFailedCount() {
+		return this.containersFailed.get();
 	}
 
 	@Override
@@ -84,45 +136,40 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	}
 
 	@Override
-	public long getContainersFailedCount() {
-		return this.containersFailed.get();
-	}
-
-	@Override
-	public long getTotalFailureCount() {
-		return getTestsFailedCount() + getContainersFailedCount();
-	}
-
-	@Override
-	public long getTimeStarted() {
-		return this.timeStarted;
-	}
-
-	@Override
-	public long getTimeFinished() {
-		return this.timeFinished;
-	}
-
-	@Override
 	public void printTo(PrintWriter writer) {
 		// @formatter:off
 		writer.println(String.format(
 			"%nTest run finished after %d ms%n"
-			+ "[%10d tests found      ]%n"
-			+ "[%10d tests skipped    ]%n"
-			+ "[%10d tests started    ]%n"
-			+ "[%10d tests aborted    ]%n"
-			+ "[%10d tests successful ]%n"
-			+ "[%10d tests failed     ]%n"
-			+ "[%10d containers failed]%n",
+
+			+ "[%10d containers found      ]%n"
+			+ "[%10d containers skipped    ]%n"
+			+ "[%10d containers started    ]%n"
+			+ "[%10d containers aborted    ]%n"
+			+ "[%10d containers successful ]%n"
+			+ "[%10d containers failed     ]%n"
+
+			+ "[%10d tests found           ]%n"
+			+ "[%10d tests skipped         ]%n"
+			+ "[%10d tests started         ]%n"
+			+ "[%10d tests aborted         ]%n"
+			+ "[%10d tests successful      ]%n"
+			+ "[%10d tests failed          ]%n",
+
 			(this.timeFinished - this.timeStarted),
+
+			this.containersFound.get(),
+			this.containersSkipped.get(),
+			this.containersStarted.get(),
+			this.containersAborted.get(),
+			this.containersSucceeded.get(),
+			this.containersFailed.get(),
+
 			this.testsFound.get(),
 			this.testsSkipped.get(),
 			this.testsStarted.get(),
 			this.testsAborted.get(),
 			this.testsSucceeded.get(),
-			this.testsFailed.get(),
-			this.containersFailed.get()
+			this.testsFailed.get()
 		));
 		// @formatter:on
 
