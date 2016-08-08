@@ -3,7 +3,8 @@
 
 *Date of Release:* September 30, 2016
 
-*Scope:* Third milestone release of JUnit 5
+*Scope:* Third milestone release of JUnit 5 with a focus on JUnit 4 interoperability,
+additional discovery selectors, and documentation.
 
 [[release-notes-5.0.0-m3-summary]]
 ==== Summary of Changes
@@ -15,6 +16,7 @@ link:{junit5-repo}+/milestone/6?closed=1+[5.0 M3] milestone page in the JUnit re
 on GitHub.
 
 * ❓
+
 
 [[release-notes-5.0.0-m3-junit-platform]]
 ===== JUnit Platform
@@ -32,8 +34,9 @@ on GitHub.
 * The `TestExecutionSummary` used by the `ConsoleLauncher` and the JUnit Platform Gradle
   plugin now includes statistics for all container events.
 * The `selectMethod(String)` method in `DiscoverySelectors` now supports selection of
-  a _fully qualified method name_ for a method that accepts parameters -- for example:
+  a _fully qualified method name_ for a method that accepts parameters -- for example,
   `"org.example.TestClass#testMethod(org.junit.jupiter.api.TestInfo)"`.
+
 
 [[release-notes-5.0.0-m3-junit-jupiter]]
 ===== JUnit Jupiter
@@ -41,7 +44,7 @@ on GitHub.
 ====== Bug Fixes
 
 * The `JupiterTestEngine` now supports selection of test methods via their unique ID for
-  methods that accept parameters that represent arrays or primitive types.
+  methods that accept arrays or primitive types as parameters.
 
 ====== New Features
 
@@ -53,4 +56,4 @@ on GitHub.
 [[release-notes-5.0.0-m3-junit-vintage]]
 ===== JUnit Vintage
 
-* ❓
+_No changes since 5.0.0-M2_
