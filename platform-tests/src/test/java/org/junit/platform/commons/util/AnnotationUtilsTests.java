@@ -548,7 +548,8 @@ class AnnotationUtilsTests {
 	static class SubMultiComposedExtensionClass extends MultiComposedExtensionClass {
 	}
 
-	@Extensions({ @ExtendWith("x"), @ExtendWith("y"), @ExtendWith("z") })
+	@ExtendWith("x")
+	@Extensions({ @ExtendWith("y"), @ExtendWith("z") })
 	@ExtendWithBar
 	static class ContainerPlusSubMultiComposedExtensionClass extends MultiComposedExtensionClass {
 	}

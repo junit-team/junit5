@@ -29,16 +29,26 @@ on GitHub.
 
 ====== New Features
 
-* ❓
+* The `TestExecutionSummary` used by the `ConsoleLauncher` and the JUnit Platform Gradle
+  plugin now includes statistics for all container events.
+* The `selectMethod(String)` method in `DiscoverySelectors` now supports selection of
+  a _fully qualified method name_ for a method that accepts parameters -- for example:
+  `"org.example.TestClass#testMethod(org.junit.jupiter.api.TestInfo)"`.
 
 [[release-notes-5.0.0-m3-junit-jupiter]]
 ===== JUnit Jupiter
+
+====== Bug Fixes
+
+* The `JupiterTestEngine` now supports selection of test methods via their unique ID for
+  methods that accept parameters that represent arrays or primitive types.
 
 ====== New Features
 
 * Support for lazy and preemptive _timeouts_ with lambda expressions in `Assertions`. See
   examples in <<writing-tests-assertions,`AssertionsDemo`>> and consult the
   `{Assertions}` Javadoc for further details.
+
 
 [[release-notes-5.0.0-m3-junit-vintage]]
 ===== JUnit Vintage

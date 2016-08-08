@@ -25,8 +25,10 @@ import org.junit.jupiter.api.Test;
 public class DiscoverySelectorsTests {
 
 	private static final Method fullyQualifiedMethod = fullyQualifiedMethod();
+	private static final Method fullyQualifiedMethodWithParameters = fullyQualifiedMethodWithParameters();
 
 	private static final String fullyQualifiedMethodName = fullyQualifiedMethodName();
+	private static final String fullyQualifiedMethodNameWithParameters = fullyQualifiedMethodNameWithParameters();
 
 	@Test
 	void selectPackageByName() {
@@ -47,6 +49,12 @@ public class DiscoverySelectorsTests {
 	}
 
 	@Test
+	void selectMethodByFullyQualifiedNameWithParameters() {
+		MethodSelector selector = selectMethod(fullyQualifiedMethodNameWithParameters);
+		assertEquals(fullyQualifiedMethodWithParameters, selector.getJavaMethod());
+	}
+
+	@Test
 	void selectMethodWithParametersByMethodReference() throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest", String.class);
 		MethodSelector selector = selectMethod(getClass(), method);
@@ -55,12 +63,26 @@ public class DiscoverySelectorsTests {
 	}
 
 	private static String fullyQualifiedMethodName() {
-		return DiscoverySelectorsTests.class.getName() + "#" + fullyQualifiedMethod().getName();
+		return String.format("%s#%s()", DiscoverySelectorsTests.class.getName(), fullyQualifiedMethod().getName());
+	}
+
+	private static String fullyQualifiedMethodNameWithParameters() {
+		return String.format("%s#%s(%s)", DiscoverySelectorsTests.class.getName(), fullyQualifiedMethod().getName(),
+			String.class.getName());
 	}
 
 	private static Method fullyQualifiedMethod() {
 		try {
 			return DiscoverySelectorsTests.class.getDeclaredMethod("myTest");
+		}
+		catch (Exception ex) {
+			throw new IllegalStateException(ex);
+		}
+	}
+
+	private static Method fullyQualifiedMethodWithParameters() {
+		try {
+			return DiscoverySelectorsTests.class.getDeclaredMethod("myTest", String.class);
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException(ex);

@@ -20,15 +20,12 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * Integration tests for support of overloaded test methods in conjunction with
@@ -36,7 +33,6 @@ import org.junit.runner.RunWith;
  *
  * @since 5.0
  */
-@RunWith(JUnitPlatform.class)
 public class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 
 	@Test
@@ -72,7 +68,6 @@ public class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 		assertTrue(first.isPresent());
 	}
 
-	@Disabled("Disabled until #331 is resolved")
 	@Test
 	void executeTestCaseWithOverloadedMethodsWithSingleMethodThatAcceptsArgumentsSelectedByFullyQualifedMethodName() {
 		String fqmn = TestCase.class.getName() + "#test(" + TestInfo.class.getName() + ")";

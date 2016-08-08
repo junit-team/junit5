@@ -312,12 +312,12 @@ The above tests are merely meant as examples and therefore not complete.
 The standard `@Test` annotation in JUnit Jupiter described in <<writing-tests-annotations>>
 is very similar to the `@Test` annotation in JUnit 4.
 Both describe methods that implement test cases.
-These test cases are static in the sense that they are fully specified at compile-time,
-and their behavior cannot be changed by anything happening at run-time.
+These test cases are static in the sense that they are fully specified at compile time,
+and their behavior cannot be changed by anything happening at runtime.
 _Assumptions provide a basic form of dynamic behavior but are intentionally rather limited in their expressiveness._
 
 In addition to these standard tests a completely new kind of test programming model has been introduced in JUnit Jupiter.
-This new kind of test is a _dynamic test_ which is generated at run-time by a factory method
+This new kind of test is a _dynamic test_ which is generated at runtime by a factory method
 that is annotated with `@TestFactory`.
 
 In contrast to `@Test` methods, a `@TestFactory` method is not itself a test case but rather a factory for test cases.
@@ -354,7 +354,7 @@ release.
 The following `DynamicTestsDemo` class demonstrates several examples of test factories and dynamic tests.
 
 The first method returns an invalid return type. Since an invalid return type cannot be
-detected at compile-time, a `JUnitException` is thrown when it is detected at run-time.
+detected at compile time, a `JUnitException` is thrown when it is detected at runtime.
 
 The next five methods are very simple examples that demonstrate the generation of a
 `Collection`, `Iterable`, `Iterator`, or `Stream` of `DynamicTest` instances.

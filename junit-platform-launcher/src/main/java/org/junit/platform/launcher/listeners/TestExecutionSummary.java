@@ -26,6 +26,58 @@ import org.junit.platform.commons.meta.API;
 public interface TestExecutionSummary {
 
 	/**
+	 * Get the timestamp (in milliseconds) when the test plan started.
+	 */
+	long getTimeStarted();
+
+	/**
+	 * Get the timestamp (in milliseconds) when the test plan finished.
+	 */
+	long getTimeFinished();
+
+	/**
+	 * Get the total number of {@linkplain #getContainersFailedCount failed
+	 * containers} and {@linkplain #getTestsFailedCount failed tests}.
+	 *
+	 * @see #getTestsFailedCount()
+	 * @see #getContainersFailedCount()
+	 */
+	long getTotalFailureCount();
+
+	/**
+	 * Get the number of containers found.
+	 */
+	long getContainersFoundCount();
+
+	/**
+	 * Get the number of containers started.
+	 */
+	long getContainersStartedCount();
+
+	/**
+	 * Get the number of containers skipped.
+	 */
+	long getContainersSkippedCount();
+
+	/**
+	 * Get the number of containers aborted.
+	 */
+	long getContainersAbortedCount();
+
+	/**
+	 * Get the number of containers that succeeded.
+	 */
+	long getContainersSucceededCount();
+
+	/**
+	 * Get the number of containers that failed.
+	 *
+	 * @see #getTestsFailedCount()
+	 * @see #getTotalFailureCount()
+	 */
+	long getContainersFailedCount();
+
+	/**
 	 * Get the number of tests found.
 	 */
 	long getTestsFoundCount();
@@ -57,33 +109,6 @@ public interface TestExecutionSummary {
 	 * @see #getTotalFailureCount()
 	 */
 	long getTestsFailedCount();
-
-	/**
-	 * Get the number of containers that failed.
-	 *
-	 * @see #getTestsFailedCount()
-	 * @see #getTotalFailureCount()
-	 */
-	long getContainersFailedCount();
-
-	/**
-	 * Get the total number of {@linkplain #getContainersFailedCount failed
-	 * containers} and {@linkplain #getTestsFailedCount failed tests}.
-	 *
-	 * @see #getTestsFailedCount()
-	 * @see #getContainersFailedCount()
-	 */
-	long getTotalFailureCount();
-
-	/**
-	 * Get the timestamp (in milliseconds) when the test plan started.
-	 */
-	long getTimeStarted();
-
-	/**
-	 * Get the timestamp (in milliseconds) when the test plan finished.
-	 */
-	long getTimeFinished();
 
 	/**
 	 * Print this summary to the supplied {@link PrintWriter}.

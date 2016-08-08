@@ -11,6 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,10 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +47,7 @@ import org.junit.platform.console.tasks.TempDirectory.Root;
  *
  * @since 1.0
  */
-class ReflectionUtilsTests {
+public class ReflectionUtilsTests {
 
 	@Test
 	void getDefaultClassLoader() {
@@ -219,31 +217,49 @@ class ReflectionUtilsTests {
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass(null));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass(""));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass("   "));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass(null, null));
 
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.loadClass(InterfaceA.class.getName(), null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass(null, null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadClass(getClass().getName(), null));
 	}
 
 	@Test
 	void loadClassWhenClassNotFoundException() throws Exception {
-		ClassLoader classLoader = newThrowingClassLoaderMock();
-		assertThat(ReflectionUtils.loadClass(PublicClass.class.getName(), classLoader)).isEmpty();
+		assertThat(ReflectionUtils.loadClass("foo.bar.EnigmaClassThatDoesNotExist")).isEmpty();
 	}
 
 	@Test
 	void loadClass() throws Exception {
-		ClassLoader classLoader = newClassLoaderMock();
-		ReflectionUtils.loadClass(Integer.class.getName(), classLoader);
-		verify(classLoader).loadClass(Integer.class.getName());
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(Integer.class.getName());
+		assertThat(optional).isPresent();
+		assertThat(optional).contains(Integer.class);
 	}
 
 	@Test
 	void loadClassTrimsClassName() throws Exception {
-		String className = "  " + Integer.class.getName() + "    ";
-		ClassLoader classLoader = newClassLoaderMock();
-		ReflectionUtils.loadClass(className, classLoader);
-		verify(classLoader).loadClass(Integer.class.getName());
+		Optional<Class<?>> optional = ReflectionUtils.loadClass("  " + Integer.class.getName() + "\t");
+		assertThat(optional).isPresent();
+		assertThat(optional).contains(Integer.class);
+	}
+
+	@Test
+	void loadClassForPrimitive() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(int.class.getName());
+		assertThat(optional).isPresent();
+		assertThat(optional).contains(int.class);
+	}
+
+	@Test
+	void loadClassForPrimitiveArray() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(int[].class.getName());
+		assertThat(optional).isPresent();
+		assertThat(optional).contains(int[].class);
+	}
+
+	@Test
+	void loadClassForObjectArray() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(String[].class.getName());
+		assertThat(optional).isPresent();
+		assertThat(optional).contains(String[].class);
 	}
 
 	@Test
@@ -254,14 +270,56 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void loadMethod() throws Exception {
+	void loadMethodWithInvalidFormatForFullyQualifiedMethodName() {
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod(null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod(""));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("   "));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("method"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("#nonexistentMethod"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("java.lang.String#"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("java.lang.String#chars("));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("java.lang.String#chars)"));
+	}
+
+	@Test
+	void loadMethod() {
 		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#publicMethod")).isPresent();
 		assertThat(ReflectionUtils.loadMethod(PrivateClass.class.getName() + "#privateMethod")).isPresent();
 		assertThat(ReflectionUtils.loadMethod("  " + PrivateClass.class.getName() + "#privateMethod  ")).isPresent();
 
-		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#nonExistingMethod")).isEmpty();
-		assertThat(ReflectionUtils.loadMethod("#nonExistingMethod")).isEmpty();
-		assertThat(ReflectionUtils.loadMethod("java.lang.String#")).isEmpty();
+		assertThat(ReflectionUtils.loadMethod("org.example.NonexistentClass#nonexistentMethod")).isEmpty();
+		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#nonexistentMethod")).isEmpty();
+
+		// missing java.lang.String parameter type
+		assertThat(ReflectionUtils.loadMethod("java.lang.String#equalsIgnoreCase")).isEmpty();
+	}
+
+	@Test
+	void loadMethodWithArgumentList() {
+		assertAll(//
+			() -> assertFqmn(fqmn(PublicClass.class, "method", String.class, Integer.class)), //
+			() -> assertFqmn(fqmn(PublicClass.class, "method", String[].class, Integer[].class)), //
+			() -> assertFqmn(fqmn(PublicClass.class, "method", boolean.class, char.class)), //
+			() -> assertFqmn(fqmn(PublicClass.class, "method", char[].class, int[].class))//
+		);
+	}
+
+	@Test
+	void loadMethodFromSuperclassOrInterface() throws Exception {
+		assertAll(//
+			() -> assertFqmn(fqmn(ChildClass.class, "method1")), //
+			() -> assertFqmn(fqmn(ChildClass.class, "method2")), //
+			() -> assertFqmn(fqmn(ChildClass.class, "method3")), //
+			() -> assertFqmn(fqmn(ChildClass.class, "method4"))//
+		);
+	}
+
+	private static String fqmn(Class<?> clazz, String methodName, Class<?>... params) {
+		return String.format("%s#%s(%s)", clazz.getName(), methodName, StringUtils.nullSafeToString(params));
+	}
+
+	private static void assertFqmn(String fqmn) {
+		assertThat(ReflectionUtils.loadMethod(fqmn)).as(fqmn).isPresent();
 	}
 
 	@Test
@@ -561,19 +619,6 @@ class ReflectionUtilsTests {
 			MethodShadowingChild.class.getMethod("method5", Long.class));
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static ClassLoader newClassLoaderMock() throws Exception {
-		ClassLoader classLoader = mock(ClassLoader.class);
-		when(classLoader.loadClass(anyString())).thenReturn((Class) Integer.class);
-		return classLoader;
-	}
-
-	private static ClassLoader newThrowingClassLoaderMock() throws Exception {
-		ClassLoader classLoader = mock(ClassLoader.class);
-		when(classLoader.loadClass(anyString())).thenThrow(new ClassNotFoundException());
-		return classLoader;
-	}
-
 	private static void createDirectories(Path... paths) throws IOException {
 		for (Path path : paths) {
 			Files.createDirectory(path);
@@ -634,6 +679,18 @@ class ReflectionUtilsTests {
 	public class PublicClass {
 
 		public void publicMethod() {
+		}
+
+		public void method(String str, Integer num) {
+		}
+
+		public void method(String[] strings, Integer[] nums) {
+		}
+
+		public void method(boolean b, char c) {
+		}
+
+		public void method(char[] characters, int[] nums) {
 		}
 	}
 

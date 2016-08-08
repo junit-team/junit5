@@ -128,12 +128,6 @@ class DiscoveryRequestCreator {
 	 * <li>method: fully qualified method name</li>
 	 * </ul>
 	 *
-	 * <p>The supported format for a <em>fully qualified method name</em> is
-	 * {@code [fully qualified class name]#[methodName]}. For example, the
-	 * fully qualified name for the {@code chars()} method in
-	 * {@code java.lang.String} is {@code java.lang.String#chars}. Names for
-	 * overloaded methods are not supported.
-	 *
 	 * @param name the name to select; never {@code null} or blank
 	 * @return an instance of {@link ClassSelector}, {@link MethodSelector}, or
 	 * {@link PackageSelector}
@@ -143,15 +137,25 @@ class DiscoveryRequestCreator {
 	private static DiscoverySelector selectName(String name) throws PreconditionViolationException {
 		Preconditions.notBlank(name, "name must not be null or blank");
 
-		Optional<Class<?>> classOptional = ReflectionUtils.loadClass(name);
-		if (classOptional.isPresent()) {
-			return selectClass(classOptional.get());
+		try {
+			Optional<Class<?>> classOptional = ReflectionUtils.loadClass(name);
+			if (classOptional.isPresent()) {
+				return selectClass(classOptional.get());
+			}
+		}
+		catch (Exception ex) {
+			// ignore
 		}
 
-		Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
-		if (methodOptional.isPresent()) {
-			Method method = methodOptional.get();
-			return selectMethod(method.getDeclaringClass(), method);
+		try {
+			Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
+			if (methodOptional.isPresent()) {
+				Method method = methodOptional.get();
+				return selectMethod(method.getDeclaringClass(), method);
+			}
+		}
+		catch (Exception ex) {
+			// ignore
 		}
 
 		if (ReflectionUtils.isPackage(name)) {

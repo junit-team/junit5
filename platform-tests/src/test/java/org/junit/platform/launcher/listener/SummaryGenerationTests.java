@@ -47,13 +47,20 @@ class SummaryGenerationTests {
 		String summaryString = summaryAsString();
 		assertAll("summary", //
 			() -> assertTrue(summaryString.contains("Test run finished after"), "test run"), //
+
+			() -> assertTrue(summaryString.contains("0 containers found"), "containers found"), //
+			() -> assertTrue(summaryString.contains("0 containers skipped"), "containers skipped"), //
+			() -> assertTrue(summaryString.contains("0 containers started"), "containers started"), //
+			() -> assertTrue(summaryString.contains("0 containers aborted"), "containers aborted"), //
+			() -> assertTrue(summaryString.contains("0 containers successful"), "containers successful"), //
+			() -> assertTrue(summaryString.contains("0 containers failed"), "containers failed"), //
+
 			() -> assertTrue(summaryString.contains("0 tests found"), "tests found"), //
 			() -> assertTrue(summaryString.contains("0 tests skipped"), "tests skipped"), //
 			() -> assertTrue(summaryString.contains("0 tests started"), "tests started"), //
 			() -> assertTrue(summaryString.contains("0 tests aborted"), "tests aborted"), //
 			() -> assertTrue(summaryString.contains("0 tests successful"), "tests successful"), //
-			() -> assertTrue(summaryString.contains("0 tests failed"), "tests failed"), //
-			() -> assertTrue(summaryString.contains("0 containers failed"), "containers failed") //
+			() -> assertTrue(summaryString.contains("0 tests failed"), "tests failed") //
 		);
 
 		assertEquals("", failuresAsString());
@@ -61,31 +68,63 @@ class SummaryGenerationTests {
 
 	@Test
 	void reportingCorrectCounts() throws Exception {
-		TestIdentifier successful = createTestIdentifier("1");
-		TestIdentifier failed = createTestIdentifier("2");
-		TestIdentifier aborted = createTestIdentifier("3");
-		TestIdentifier skipped = createTestIdentifier("4");
+		TestIdentifier successfulContainer = createContainerIdentifier("c1");
+		TestIdentifier failedContainer = createContainerIdentifier("c2");
+		TestIdentifier abortedContainer = createContainerIdentifier("c3");
+		TestIdentifier skippedContainer = createContainerIdentifier("c4");
+
+		TestIdentifier successfulTest = createTestIdentifier("t1");
+		TestIdentifier failedTest = createTestIdentifier("t2");
+		TestIdentifier abortedTest = createTestIdentifier("t3");
+		TestIdentifier skippedTest = createTestIdentifier("t4");
 
 		listener.testPlanExecutionStarted(testPlan);
-		listener.executionStarted(successful);
-		listener.executionFinished(successful, TestExecutionResult.successful());
-		listener.executionStarted(failed);
-		listener.executionFinished(failed, TestExecutionResult.failed(new RuntimeException("failed")));
-		listener.executionStarted(aborted);
-		listener.executionFinished(aborted, TestExecutionResult.aborted(new RuntimeException("aborted")));
-		listener.executionSkipped(skipped, "skipped");
+
+		listener.executionSkipped(skippedContainer, "skipped");
+		listener.executionSkipped(skippedTest, "skipped");
+
+		listener.executionStarted(successfulContainer);
+		listener.executionFinished(successfulContainer, TestExecutionResult.successful());
+
+		listener.executionStarted(successfulTest);
+		listener.executionFinished(successfulTest, TestExecutionResult.successful());
+
+		listener.executionStarted(failedContainer);
+		listener.executionFinished(failedContainer, TestExecutionResult.failed(new RuntimeException("failed")));
+
+		listener.executionStarted(failedTest);
+		listener.executionFinished(failedTest, TestExecutionResult.failed(new RuntimeException("failed")));
+
+		listener.executionStarted(abortedContainer);
+		listener.executionFinished(abortedContainer, TestExecutionResult.aborted(new RuntimeException("aborted")));
+
+		listener.executionStarted(abortedTest);
+		listener.executionFinished(abortedTest, TestExecutionResult.aborted(new RuntimeException("aborted")));
+
 		listener.testPlanExecutionFinished(testPlan);
 
 		String summaryString = summaryAsString();
-		assertAll("summary", //
-			() -> assertTrue(summaryString.contains("4 tests found"), "tests found"), //
-			() -> assertTrue(summaryString.contains("1 tests skipped"), "tests skipped"), //
-			() -> assertTrue(summaryString.contains("3 tests started"), "tests started"), //
-			() -> assertTrue(summaryString.contains("1 tests aborted"), "tests aborted"), //
-			() -> assertTrue(summaryString.contains("1 tests successful"), "tests successful"), //
-			() -> assertTrue(summaryString.contains("1 tests failed"), "tests failed"), //
-			() -> assertTrue(summaryString.contains("0 containers failed"), "containers failed") //
-		);
+		try {
+			assertAll("summary", //
+				() -> assertTrue(summaryString.contains("4 containers found"), "containers found"), //
+				() -> assertTrue(summaryString.contains("1 containers skipped"), "containers skipped"), //
+				() -> assertTrue(summaryString.contains("3 containers started"), "containers started"), //
+				() -> assertTrue(summaryString.contains("1 containers aborted"), "containers aborted"), //
+				() -> assertTrue(summaryString.contains("1 containers successful"), "containers successful"), //
+				() -> assertTrue(summaryString.contains("1 containers failed"), "containers failed"), //
+
+				() -> assertTrue(summaryString.contains("4 tests found"), "tests found"), //
+				() -> assertTrue(summaryString.contains("1 tests skipped"), "tests skipped"), //
+				() -> assertTrue(summaryString.contains("3 tests started"), "tests started"), //
+				() -> assertTrue(summaryString.contains("1 tests aborted"), "tests aborted"), //
+				() -> assertTrue(summaryString.contains("1 tests successful"), "tests successful"), //
+				() -> assertTrue(summaryString.contains("1 tests failed"), "tests failed") //
+			);
+		}
+		catch (AssertionError error) {
+			System.err.println(summaryString);
+			throw error;
+		}
 	}
 
 	@Test
@@ -123,7 +162,25 @@ class SummaryGenerationTests {
 
 	private TestIdentifier createTestIdentifier(String uniqueId) {
 		TestIdentifier identifier = TestIdentifier.from(
-			new TestDescriptorStub(UniqueId.root("root", uniqueId), "displayName"));
+			new TestDescriptorStub(UniqueId.root("test", uniqueId), uniqueId));
+		testPlan.add(identifier);
+		return identifier;
+	}
+
+	private TestIdentifier createContainerIdentifier(String uniqueId) {
+		TestIdentifier identifier = TestIdentifier.from(
+			new TestDescriptorStub(UniqueId.root("container", uniqueId), uniqueId) {
+
+				@Override
+				public boolean isContainer() {
+					return true;
+				}
+
+				@Override
+				public boolean isTest() {
+					return false;
+				}
+			});
 		testPlan.add(identifier);
 		return identifier;
 	}
