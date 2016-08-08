@@ -1839,13 +1839,18 @@ in output similar to the following:</p>
 <pre>:junitPlatformTest
 
 Test run finished after 93 ms
-[         3 tests found      ]
-[         1 tests skipped    ]
-[         2 tests started    ]
-[         0 tests aborted    ]
-[         2 tests successful ]
-[         0 tests failed     ]
-[         0 containers failed]
+[         3 containers found      ]
+[         0 containers skipped    ]
+[         3 containers started    ]
+[         0 containers aborted    ]
+[         3 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         1 tests skipped         ]
+[         2 tests started         ]
+[         0 tests aborted         ]
+[         2 tests successful      ]
+[         0 tests failed          ]
 
 BUILD SUCCESSFUL</pre>
 </div>
@@ -1863,13 +1868,18 @@ Test failures (1):
     => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
 Test run finished after 99 ms
-[         3 tests found      ]
-[         0 tests skipped    ]
-[         3 tests started    ]
-[         0 tests aborted    ]
-[         2 tests successful ]
-[         1 tests failed     ]
-[         0 containers failed]
+[         3 containers found      ]
+[         0 containers skipped    ]
+[         3 containers started    ]
+[         0 containers aborted    ]
+[         3 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         0 tests skipped         ]
+[         3 tests started         ]
+[         0 tests aborted         ]
+[         2 tests successful      ]
+[         1 tests failed          ]
 
 :junitPlatformTest FAILED
 
@@ -1963,13 +1973,18 @@ Engine finished: junit-jupiter
 Test execution finished.
 
 Test run finished after 29 ms
-[         2 tests found      ]
-[         1 tests started    ]
-[         1 tests skipped    ]
-[         0 tests aborted    ]
-[         1 tests successful ]
-[         0 tests failed     ]
-[         0 containers failed]</pre>
+[         2 containers found      ]
+[         0 containers skipped    ]
+[         2 containers started    ]
+[         0 containers aborted    ]
+[         2 containers successful ]
+[         0 containers failed     ]
+[         2 tests found           ]
+[         1 tests skipped         ]
+[         1 tests started         ]
+[         0 tests aborted         ]
+[         1 tests successful      ]
+[         0 tests failed          ]</pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -3521,6 +3536,10 @@ on GitHub.</p>
 <h6 id="new-features-2">New Features</h6>
 <div class="ulist">
 <ul>
+<li>
+<p>The <code>TestExecutionSummary</code> used by the <code>ConsoleLauncher</code> and the JUnit Platform Gradle
+plugin now includes statistics for all container events.</p>
+</li>
 <li>
 <p>The <code>selectMethod(String)</code> method in <code>DiscoverySelectors</code> now supports selection of
 a <em>fully qualified method name</em> for a method that accepts parameters&#8201;&#8212;&#8201;for example:
