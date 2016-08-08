@@ -241,13 +241,6 @@ public final class AnnotationUtils {
 			Class<A> annotationType, Class<? extends Annotation> containerType, boolean inherited, Set<A> found,
 			Set<Annotation> visited) {
 
-		// TODO [#335] Ensure that all locally declared annotations are favored over inherited
-		// annotations. "Locally declared" includes those that are meta-present on
-		// annotations which are directly present.
-		//
-		// The only way to ensure this is to add sufficient tests for all corner cases in
-		// AnnotationUtilsTests.
-
 		for (Annotation candidate : candidates) {
 			if (!isInJavaLangAnnotationPackage(candidate) && visited.add(candidate)) {
 				// Exact match?
