@@ -35,21 +35,30 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  * <h4>Example</h4>
  *
  * <pre style="code">
+ * import static org.junit.platform.engine.discovery.DiscoverySelectors.*;
+ * import static org.junit.platform.engine.discovery.ClassFilter.*;
+ * import static org.junit.platform.launcher.EngineFilter.*;
+ * import static org.junit.platform.launcher.TagFilter.*;
+ *
+ * // ...
+ *
  *   LauncherDiscoveryRequestBuilder.request()
  *     .selectors(
  *        selectPackage("org.example.user"),
  *        selectClass("org.example.payment.PaymentTests"),
  *        selectClass(ShippingTests.class),
- *        selectMethod("org.example.order.OrderTests", "test1"),
- *        selectMethod(OrderTests.class, "test2"),
+ *        selectMethod("org.example.order.OrderTests#test1"),
+ *        selectMethod("org.example.order.OrderTests#test2()"),
+ *        selectMethod("org.example.order.OrderTests#test3(java.lang.String)"),
+ *        selectMethod("org.example.order.OrderTests", "test4"),
+ *        selectMethod(OrderTests.class, "test5"),
  *        selectMethod(OrderTests.class, testMethod),
- *        selectClasspathRoots("/my/local/path1"),
- *        selectClasspathRoots("/my/local/path2"),
+ *        selectClasspathRoots(Collections.singleton(new File("/my/local/path1"))),
  *        selectUniqueId("unique-id-1"),
  *        selectUniqueId("unique-id-2")
  *     )
  *     .filters(
- *        includeEngines("junit-jupiter", "kotlin"),
+ *        includeEngines("junit-jupiter", "spek"),
  *        // excludeEngines("junit-vintage"),
  *        includeTags("fast"),
  *        // excludeTags("slow"),
@@ -100,7 +109,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	 *
 	 * @param selectors the {@code DiscoverySelectors} to add
 	 */
-	public LauncherDiscoveryRequestBuilder selectors(List<DiscoverySelector> selectors) {
+	public LauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
 		if (selectors != null) {
 			this.selectors.addAll(selectors);
 		}

@@ -45,11 +45,11 @@ import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
-import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -361,7 +361,7 @@ public class DiscoverySelectorResolverTests {
 		File classpath = new File(
 			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 
-		List<DiscoverySelector> selectors = selectClasspathRoots(singleton(classpath));
+		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(classpath));
 
 		resolver.resolveSelectors(request().selectors(selectors).build(), engineDescriptor);
 

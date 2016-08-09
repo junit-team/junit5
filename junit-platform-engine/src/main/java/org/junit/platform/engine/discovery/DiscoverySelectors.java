@@ -54,7 +54,7 @@ public final class DiscoverySelectors {
 	 * do not physically exist in the filesystem will be filtered out
 	 * @see ClasspathRootSelector
 	 */
-	public static List<DiscoverySelector> selectClasspathRoots(Set<File> directories) {
+	public static List<ClasspathRootSelector> selectClasspathRoots(Set<File> directories) {
 		Preconditions.notNull(directories, "directories must not be null");
 
 		// @formatter:off
@@ -95,7 +95,7 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	public static ClassSelector selectClass(String className) {
-		Preconditions.notBlank(className, "className must not be null or blank");
+		Preconditions.notBlank(className, "Class name must not be null or blank");
 
 		return selectClass(ReflectionUtils.loadClass(className).orElseThrow(
 			() -> new PreconditionViolationException("Could not load class with name: " + className)));
@@ -133,7 +133,7 @@ public final class DiscoverySelectors {
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(String name) throws PreconditionViolationException {
-		Preconditions.notBlank(name, "name must not be null or blank");
+		Preconditions.notBlank(name, "Method name must not be null or blank");
 
 		Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
 		Method method = methodOptional.orElseThrow(() -> new PreconditionViolationException(
