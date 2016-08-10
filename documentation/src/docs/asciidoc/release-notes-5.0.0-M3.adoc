@@ -31,6 +31,9 @@ on GitHub.
 
 ====== New Features
 
+* New `selectFile(*)` and `selectDirectory(*) methods in `DiscoverySelectors` for selecting
+  files and directories in the file system. A `TestEngine` can retrieve such values by
+  querying registered instances of `FileSelector` and `DirectorySelector`.
 * New `selectClasspathResource(String)` method in `DiscoverySelectors` for selecting
   _classpath resources_ such as XML or JSON files by name, where the name is a
   `/`-separated path name for the resource within the current classpath. A `TestEngine`

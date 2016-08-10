@@ -47,6 +47,78 @@ public final class DiscoverySelectors {
 	///CLOVER:ON
 
 	/**
+	 * Create a {@code FileSelector} for the supplied file path.
+	 *
+	 * <p>This method selects the file in its {@linkplain File#getCanonicalFile()
+	 * canonical} form.
+	 *
+	 * @param path the path to the file to select; never {@code null} or blank
+	 * @see FileSelector
+	 * @see #selectFile(File)
+	 * @see #selectDirectory(String)
+	 * @see #selectDirectory(File)
+	 */
+	public static FileSelector selectFile(String path) {
+		Preconditions.notBlank(path, "File path must not be null or blank");
+		return selectFile(new File(path));
+	}
+
+	/**
+	 * Create a {@code FileSelector} for the supplied {@linkplain File file}.
+	 *
+	 * <p>This method selects the file in its {@linkplain File#getCanonicalFile()
+	 * canonical} form.
+	 *
+	 * @param file the file to select; never {@code null}
+	 * @see FileSelector
+	 * @see #selectFile(String)
+	 * @see #selectDirectory(String)
+	 * @see #selectDirectory(File)
+	 */
+	public static FileSelector selectFile(File file) {
+		Preconditions.notNull(file, "File must not be null");
+		Preconditions.condition(file.isFile(),
+			() -> String.format("The supplied java.io.File [%s] must represent an existing file", file));
+		return new FileSelector(file);
+	}
+
+	/**
+	 * Create a {@code DirectorySelector} for the supplied directory path.
+	 *
+	 * <p>This method selects the directory in its {@linkplain File#getCanonicalFile()
+	 * canonical} form.
+	 *
+	 * @param path the path to the directory to select; never {@code null} or blank
+	 * @see DirectorySelector
+	 * @see #selectDirectory(File)
+	 * @see #selectFile(String)
+	 * @see #selectFile(File)
+	 */
+	public static DirectorySelector selectDirectory(String path) {
+		Preconditions.notBlank(path, "Directory path must not be null or blank");
+		return selectDirectory(new File(path));
+	}
+
+	/**
+	 * Create a {@code DirectorySelector} for the supplied {@linkplain File directory}.
+	 *
+	 * <p>This method selects the directory in its {@linkplain File#getCanonicalFile()
+	 * canonical} form.
+	 *
+	 * @param directory the directory to select; never {@code null}
+	 * @see DirectorySelector
+	 * @see #selectDirectory(String)
+	 * @see #selectFile(String)
+	 * @see #selectFile(File)
+	 */
+	public static DirectorySelector selectDirectory(File directory) {
+		Preconditions.notNull(directory, "Directory must not be null");
+		Preconditions.condition(directory.isDirectory(),
+			() -> String.format("The supplied java.io.File [%s] must represent an existing directory", directory));
+		return new DirectorySelector(directory);
+	}
+
+	/**
 	 * Create a list of {@code ClasspathRootSelectors} for the supplied {@code directories}.
 	 *
 	 * @param directories set of directories in the filesystem that represent classpath roots;

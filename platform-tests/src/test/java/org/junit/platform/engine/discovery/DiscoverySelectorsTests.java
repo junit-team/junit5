@@ -14,9 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirectory;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,54 @@ public class DiscoverySelectorsTests {
 
 	private static final String fullyQualifiedMethodName = fullyQualifiedMethodName();
 	private static final String fullyQualifiedMethodNameWithParameters = fullyQualifiedMethodNameWithParameters();
+
+	@Test
+	void selectFileByName() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectFile((String) null));
+		assertThrows(PreconditionViolationException.class, () -> selectFile("bogus/nonexistent.txt"));
+
+		File canonicalFile = new File("src/test/resources/do_not_delete_me.txt").getCanonicalFile();
+
+		FileSelector selector = selectFile("src/test/resources/do_not_delete_me.txt");
+		assertEquals(canonicalFile, selector.getFile());
+	}
+
+	@Test
+	void selectFileByFileReference() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectFile((File) null));
+		assertThrows(PreconditionViolationException.class, () -> selectFile(new File("bogus/nonexistent.txt")));
+
+		File currentDir = new File(".").getCanonicalFile();
+		File relativeDir = new File("..", currentDir.getName());
+		File file = new File(relativeDir, "src/test/resources/do_not_delete_me.txt");
+
+		FileSelector selector = selectFile(file);
+		assertEquals(file.getCanonicalFile(), selector.getFile());
+	}
+
+	@Test
+	void selectDirectoryByName() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectDirectory((String) null));
+		assertThrows(PreconditionViolationException.class, () -> selectDirectory("bogus/nonexistent"));
+
+		File canonicalDir = new File("src/test/resources").getCanonicalFile();
+
+		DirectorySelector selector = selectDirectory("src/test/resources");
+		assertEquals(canonicalDir, selector.getDirectory());
+	}
+
+	@Test
+	void selectDirectoryByFileReference() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectDirectory((File) null));
+		assertThrows(PreconditionViolationException.class, () -> selectDirectory(new File("bogus/nonexistent")));
+
+		File currentDir = new File(".").getCanonicalFile();
+		File relativeDir = new File("..", currentDir.getName());
+		File directory = new File(relativeDir, "src/test/resources");
+
+		DirectorySelector selector = selectDirectory(directory);
+		assertEquals(directory.getCanonicalFile(), selector.getDirectory());
+	}
 
 	@Test
 	void selectClasspathResources() {
