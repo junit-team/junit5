@@ -119,9 +119,7 @@ public final class DiscoverySelectors {
 	 */
 	public static ClassSelector selectClass(String className) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
-
-		return selectClass(ReflectionUtils.loadClass(className).orElseThrow(
-			() -> new PreconditionViolationException("Could not load class with name: " + className)));
+		return new ClassSelector(loadClass(className));
 	}
 
 	/**
