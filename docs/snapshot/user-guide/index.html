@@ -3538,13 +3538,24 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The <code>TestExecutionSummary</code> used by the <code>ConsoleLauncher</code> and the JUnit Platform Gradle
-plugin now includes statistics for all container events.</p>
+<p>New <code>selectFile(<strong>)</code> and <code>selectDirectory(</strong>) methods in `DiscoverySelectors</code> for selecting
+files and directories in the file system. A <code>TestEngine</code> can retrieve such values by
+querying registered instances of <code>FileSelector</code> and <code>DirectorySelector</code>.</p>
+</li>
+<li>
+<p>New <code>selectClasspathResource(String)</code> method in <code>DiscoverySelectors</code> for selecting
+<em>classpath resources</em> such as XML or JSON files by name, where the name is a
+<code>/</code>-separated path name for the resource within the current classpath. A <code>TestEngine</code>
+can retrieve such values by querying registered instances of <code>ClasspathResourceSelector</code>.</p>
 </li>
 <li>
 <p>The <code>selectMethod(String)</code> method in <code>DiscoverySelectors</code> now supports selection of
 a <em>fully qualified method name</em> for a method that accepts parameters&#8201;&#8212;&#8201;for example,
 <code>"org.example.TestClass#testMethod(org.junit.jupiter.api.TestInfo)"</code>.</p>
+</li>
+<li>
+<p>The <code>TestExecutionSummary</code> used by the <code>ConsoleLauncher</code> and the JUnit Platform Gradle
+plugin now includes statistics for all container events in addition to test events.</p>
 </li>
 </ul>
 </div>
@@ -3590,7 +3601,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-08-09 14:03:28 -04:00
+Last updated 2016-08-10 16:06:35 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
