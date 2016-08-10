@@ -24,6 +24,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * scan for test classes.
  *
  * @since 1.0
+ * @see ClasspathResourceSelector
  */
 @API(Experimental)
 public class ClasspathRootSelector implements DiscoverySelector {

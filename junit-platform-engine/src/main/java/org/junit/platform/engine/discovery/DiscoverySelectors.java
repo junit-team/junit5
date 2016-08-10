@@ -32,6 +32,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 1.0
  * @see ClasspathRootSelector
+ * @see ClasspathResourceSelector
  * @see ClassSelector
  * @see MethodSelector
  * @see PackageSelector
@@ -63,6 +64,28 @@ public final class DiscoverySelectors {
 				.map(ClasspathRootSelector::new)
 				.collect(toList());
 		// @formatter:on
+	}
+
+	/**
+	 * Create a {@code ClasspathResourceSelector} for the supplied classpath
+	 * resource name.
+	 *
+	 * <p>The name of a <em>classpath resource</em> must follow the semantics
+	 * for resource paths as defined in {@link ClassLoader#getResource(String)}.
+	 *
+	 * <p>If the supplied classpath resource name is prefixed with a slash
+	 * ({@code /}), the slash will be removed.
+	 *
+	 * @param classpathResourceName the name of the classpath resource; never
+	 * {@code null} or blank
+	 * @see ClasspathResourceSelector
+	 * @see ClassLoader#getResource(String)
+	 * @see ClassLoader#getResourceAsStream(String)
+	 * @see ClassLoader#getResources(String)
+	 */
+	public static ClasspathResourceSelector selectClasspathResource(String classpathResourceName) {
+		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
+		return new ClasspathResourceSelector(classpathResourceName);
 	}
 
 	/**

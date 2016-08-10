@@ -11,11 +11,16 @@
 package org.junit.platform.engine.discovery;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
  * Unit tests for {@link DiscoverySelectors}.
@@ -31,14 +36,30 @@ public class DiscoverySelectorsTests {
 	private static final String fullyQualifiedMethodNameWithParameters = fullyQualifiedMethodNameWithParameters();
 
 	@Test
+	void selectClasspathResources() {
+		assertThrows(PreconditionViolationException.class, () -> selectClasspathResource(null));
+		assertThrows(PreconditionViolationException.class, () -> selectClasspathResource(""));
+		assertThrows(PreconditionViolationException.class, () -> selectClasspathResource("    "));
+		assertThrows(PreconditionViolationException.class, () -> selectClasspathResource("\t"));
+
+		// with unnecessary "/" prefix
+		ClasspathResourceSelector selector = selectClasspathResource("/foo/bar/spec.xml");
+		assertEquals("foo/bar/spec.xml", selector.getClasspathResourceName());
+
+		// standard use case
+		selector = selectClasspathResource("A/B/C/spec.json");
+		assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
+	}
+
+	@Test
 	void selectPackageByName() {
-		PackageSelector selector = DiscoverySelectors.selectPackage(getClass().getPackage().getName());
+		PackageSelector selector = selectPackage(getClass().getPackage().getName());
 		assertEquals(getClass().getPackage().getName(), selector.getPackageName());
 	}
 
 	@Test
 	void selectClassByName() {
-		ClassSelector selector = DiscoverySelectors.selectClass(getClass().getName());
+		ClassSelector selector = selectClass(getClass().getName());
 		assertEquals(getClass(), selector.getJavaClass());
 	}
 
