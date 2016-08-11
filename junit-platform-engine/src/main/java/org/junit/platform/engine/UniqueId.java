@@ -12,6 +12,7 @@ package org.junit.platform.engine;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,12 +27,14 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * {@code UniqueId} encapsulates the creation, parsing, and display of unique IDs
  * for {@link TestDescriptor TestDescriptors}.
  *
- * <p>Instances of this class have value semantics and are immutable.</p>
+ * <p>Instances of this class have value semantics and are immutable.
  *
  * @since 1.0
  */
 @API(Experimental)
-public class UniqueId implements Cloneable {
+public class UniqueId implements Cloneable, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private static final String ENGINE_SEGMENT_TYPE = "engine";
 

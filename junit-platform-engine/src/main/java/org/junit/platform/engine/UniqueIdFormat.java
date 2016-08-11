@@ -13,6 +13,7 @@ package org.junit.platform.engine;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -23,12 +24,14 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.UniqueId.Segment;
 
 /**
- * Used to {@linkplain #parse parse} a {@link UniqueId} from a string representation
- * or to {@linkplain #format format} a {@link UniqueId} into a string representation.
+ * Used to {@link #parse} a {@link UniqueId} from a string representation
+ * or to {@link #format} a {@link UniqueId} into a string representation.
  *
  * @since 1.0
  */
-class UniqueIdFormat {
+class UniqueIdFormat implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private static final UniqueIdFormat defaultFormat = new UniqueIdFormat('[', ':', ']', '/');
 
