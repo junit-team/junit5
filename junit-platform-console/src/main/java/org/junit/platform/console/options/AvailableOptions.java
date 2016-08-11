@@ -23,20 +23,38 @@ class AvailableOptions {
 
 	private final OptionParser parser = new OptionParser();
 
+	// General Purpose
 	private final OptionSpec<Void> help;
 	private final OptionSpec<Void> disableAnsiColors;
-	private final OptionSpec<Void> runAllTests;
 	private final OptionSpec<Void> hideDetails;
+	private final OptionSpec<Void> runAllTests;
+	private final OptionSpec<String> additionalClasspathEntries;
+
+	// Reports
+	private final OptionSpec<String> xmlReportsDir;
+
+	// Selectors
+	private final OptionSpec<String> arguments;
+
+	// Filters
 	private final OptionSpec<String> includeClassNamePattern;
 	private final OptionSpec<String> includeTag;
 	private final OptionSpec<String> excludeTag;
 	private final OptionSpec<String> includeEngine;
 	private final OptionSpec<String> excludeEngine;
-	private final OptionSpec<String> additionalClasspathEntries;
-	private final OptionSpec<String> xmlReportsDir;
-	private final OptionSpec<String> arguments;
 
 	AvailableOptions() {
+
+		// --- General Purpose -------------------------------------------------
+
+		help = parser.acceptsAll(asList("h", "help"), //
+			"Display help information.");
+
+		disableAnsiColors = parser.acceptsAll(asList("C", "disable-ansi-colors"),
+			"Disable colored output (not supported by all terminals).");
+
+		hideDetails = parser.acceptsAll(asList("D", "hide-details"),
+			"Hide details while tests are being executed. Only show the summary and test failures.");
 
 		runAllTests = parser.acceptsAll(asList("a", "all"), //
 			"Run all tests");
@@ -44,6 +62,20 @@ class AvailableOptions {
 		additionalClasspathEntries = parser.acceptsAll(asList("p", "classpath"), //
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies.") //
 				.withRequiredArg();
+
+		// --- Reports ---------------------------------------------------------
+
+		xmlReportsDir = parser.acceptsAll(asList("r", "xml-reports-dir"), //
+			"Enable XML report output into a specified local directory (will be created if it does not exist).") //
+				.withRequiredArg();
+
+		// --- Selectors -------------------------------------------------------
+
+		arguments = parser.nonOptions("Test classes, methods, or packages to execute. If --all|-a has been provided, "
+				+ "arguments can list all classpath roots that should be considered for test scanning, "
+				+ "or none if the full classpath should be scanned.");
+
+		// --- Filters ---------------------------------------------------------
 
 		includeClassNamePattern = parser.acceptsAll(asList("n", "include-classname"),
 			"Provide a regular expression to include only classes whose fully qualified names match. " //
@@ -63,21 +95,6 @@ class AvailableOptions {
 		excludeEngine = parser.acceptsAll(asList("E", "exclude-engine"),
 			"Provide the ID of an engine to be excluded from the test run. This option can be repeated.") //
 				.withRequiredArg();
-
-		xmlReportsDir = parser.acceptsAll(asList("r", "xml-reports-dir"), //
-			"Enable XML report output into a specified local directory (will be created if it does not exist).") //
-				.withRequiredArg();
-
-		disableAnsiColors = parser.acceptsAll(asList("C", "disable-ansi-colors"),
-			"Disable colored output (not supported by all terminals).");
-		hideDetails = parser.acceptsAll(asList("D", "hide-details"),
-			"Hide details while tests are being executed. Only show the summary and test failures.");
-		help = parser.acceptsAll(asList("h", "help"), //
-			"Display help information.");
-
-		arguments = parser.nonOptions("Test classes, methods, or packages to execute. If --all|-a has been provided, "
-				+ "arguments can list all classpath roots that should be considered for test scanning, "
-				+ "or none if the full classpath should be scanned.");
 	}
 
 	OptionParser getParser() {
@@ -85,22 +102,28 @@ class AvailableOptions {
 	}
 
 	CommandLineOptions toCommandLineOptions(OptionSet detectedOptions) {
+
 		CommandLineOptions result = new CommandLineOptions();
 
+		// General Purpose
 		result.setDisplayHelp(detectedOptions.has(this.help));
 		result.setAnsiColorOutputDisabled(detectedOptions.has(this.disableAnsiColors));
-		result.setRunAllTests(detectedOptions.has(this.runAllTests));
 		result.setHideDetails(detectedOptions.has(this.hideDetails));
+		result.setRunAllTests(detectedOptions.has(this.runAllTests));
+		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
 
+		// Reports
+		result.setXmlReportsDir(detectedOptions.valueOf(this.xmlReportsDir));
+
+		// Selectors
+		result.setArguments(detectedOptions.valuesOf(this.arguments));
+
+		// Filters
 		result.setIncludeClassNamePattern(detectedOptions.valueOf(this.includeClassNamePattern));
 		result.setIncludedTags(detectedOptions.valuesOf(this.includeTag));
 		result.setExcludedTags(detectedOptions.valuesOf(this.excludeTag));
 		result.setIncludedEngines(detectedOptions.valuesOf(this.includeEngine));
 		result.setExcludedEngines(detectedOptions.valuesOf(this.excludeEngine));
-
-		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
-		result.setXmlReportsDir(detectedOptions.valueOf(this.xmlReportsDir));
-		result.setArguments(detectedOptions.valuesOf(this.arguments));
 
 		return result;
 	}
