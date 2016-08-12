@@ -15,7 +15,7 @@ list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/6?closed=1+[5.0 M3] milestone page in the JUnit repository
 on GitHub.
 
-* ❓
+* ❓❓❓
 
 
 [[release-notes-5.0.0-m3-junit-platform]]
@@ -23,7 +23,8 @@ on GitHub.
 
 ====== Bug Fixes
 
-* ❓
+* `ColoredPrintingTestListener`, which is used by the `ConsoleLauncher`, now outputs the
+  actual exception type and its stack trace when printing an exception message.
 
 ====== Deprecations and Breaking Changes
 
