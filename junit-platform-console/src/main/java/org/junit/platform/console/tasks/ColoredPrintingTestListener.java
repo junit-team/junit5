@@ -98,7 +98,7 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {
-		println(color, "%-10s   %s [%s]", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
+		println(color, "%-10s   %s (%s)", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
 	private void printlnException(Color color, Throwable throwable) {

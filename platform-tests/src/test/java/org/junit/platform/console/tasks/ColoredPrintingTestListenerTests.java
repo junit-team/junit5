@@ -42,7 +42,7 @@ public class ColoredPrintingTestListenerTests {
 		String output = stringWriter.toString();
 
 		// @formatter:off
-		String expected = "Skipped:     failingTest [[engine:demo-engine]]" + EOL
+		String expected = "Skipped:     failingTest ([engine:demo-engine])" + EOL
 				+ INDENTATION + "=> Reason: Test" + EOL
 				+ INDENTATION + "\tdisabled" + EOL;
 		// @formatter:on
@@ -61,7 +61,7 @@ public class ColoredPrintingTestListenerTests {
 
 		assertEquals(2, split.length);
 		assertAll("lines in the message",
-			() -> assertEquals("Reported:    failingTest [[engine:demo-engine]]", split[0]),
+			() -> assertEquals("Reported:    failingTest ([engine:demo-engine])", split[0]),
 			() -> assertTrue(split[1].startsWith(INDENTATION + "=> Reported values: ReportEntry [timestamp =")),
 			() -> assertTrue(split[1].endsWith(", foo = 'bar']")));
 	}
@@ -77,7 +77,7 @@ public class ColoredPrintingTestListenerTests {
 		String output = stringWriter.toString();
 
 		// @formatter:off
-		String expected = "Finished:    failingTest [[engine:demo-engine]]" + EOL
+		String expected = "Finished:    failingTest ([engine:demo-engine])" + EOL
 				+ INDENTATION + "=> Exception: Fail" + EOL
 				+ INDENTATION + "\texpected: <foo> but was: <bar>" + EOL;
 		// @formatter:on
