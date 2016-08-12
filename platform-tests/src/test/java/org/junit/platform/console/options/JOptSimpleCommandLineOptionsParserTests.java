@@ -160,18 +160,18 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseValidAdditionalClasspathEntries() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("."), parseArgLine("-p .").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList("."), parseArgLine("-cp .").getAdditionalClasspathEntries()),
 			() -> assertEquals(asList("."), parseArgLine("--classpath .").getAdditionalClasspathEntries()),
 			() -> assertEquals(asList("."), parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(".", "lib/some.jar"), parseArgLine("-p . -p lib/some.jar").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList("." + File.pathSeparator + "lib/some.jar"), parseArgLine("-p ." + File.pathSeparator + "lib/some.jar").getAdditionalClasspathEntries())
+			() -> assertEquals(asList(".", "lib/some.jar"), parseArgLine("-cp . -cp lib/some.jar").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList("." + File.pathSeparator + "lib/some.jar"), parseArgLine("-cp ." + File.pathSeparator + "lib/some.jar").getAdditionalClasspathEntries())
 		);
 		// @formatter:on
 	}
 
 	@Test
 	public void parseInvalidAdditionalClasspathEntries() {
-		assertOptionWithMissingRequiredArgumentThrowsException("-p", "--classpath");
+		assertOptionWithMissingRequiredArgumentThrowsException("-cp", "--classpath");
 	}
 
 	@Test

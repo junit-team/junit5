@@ -57,10 +57,11 @@ class AvailableOptions {
 			"Hide details while tests are being executed. Only show the summary and test failures.");
 
 		runAllTests = parser.acceptsAll(asList("a", "all"), //
-			"Run all tests");
+			"Run all tests.");
 
-		additionalClasspathEntries = parser.acceptsAll(asList("p", "classpath"), //
-			"Provide additional classpath entries -- for example, for adding engines and their dependencies.") //
+		additionalClasspathEntries = parser.acceptsAll(asList("cp", "classpath"), //
+			"Provide additional classpath entries -- for example, for adding engines and their dependencies. "
+					+ "This option can be repeated.") //
 				.withRequiredArg();
 
 		// --- Reports ---------------------------------------------------------
@@ -71,8 +72,8 @@ class AvailableOptions {
 
 		// --- Selectors -------------------------------------------------------
 
-		arguments = parser.nonOptions("Test classes, methods, or packages to execute. If --all|-a has been provided, "
-				+ "arguments can list all classpath roots that should be considered for test scanning, "
+		arguments = parser.nonOptions("Test classes, methods, or packages to execute. If --all|-a has been specified, "
+				+ "non-option arguments represent all classpath roots that should be considered for test scanning, "
 				+ "or none if the full classpath should be scanned.");
 
 		// --- Filters ---------------------------------------------------------
