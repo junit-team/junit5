@@ -158,20 +158,26 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidAdditionalClasspathEntries() {
+		File dir = new File(".");
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList(new File(".")), parseArgLine("-cp .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(new File(".")), parseArgLine("--classpath .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(new File(".")), parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(new File("."), new File("src/test/java")), parseArgLine("-cp . -cp src/test/java").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(new File("."), new File("src/test/java")), parseArgLine("-cp ." + File.pathSeparator + "src/test/java").getAdditionalClasspathEntries())
+			() -> assertEquals(asList(dir), parseArgLine("-cp .").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir), parseArgLine("--cp .").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir), parseArgLine("-classpath .").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir), parseArgLine("-classpath=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir), parseArgLine("--classpath .").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir), parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir), parseArgLine("--class-path .").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir), parseArgLine("--class-path=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir, new File("src/test/java")), parseArgLine("-cp . -cp src/test/java").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir, new File("src/test/java")), parseArgLine("-cp ." + File.pathSeparator + "src/test/java").getAdditionalClasspathEntries())
 		);
 		// @formatter:on
 	}
 
 	@Test
 	public void parseInvalidAdditionalClasspathEntries() {
-		assertOptionWithMissingRequiredArgumentThrowsException("-cp", "--classpath");
+		assertOptionWithMissingRequiredArgumentThrowsException("-cp", "--classpath", "--class-path");
 	}
 
 	@Test
@@ -236,13 +242,8 @@ class JOptSimpleCommandLineOptionsParserTests {
 		assertThat(exception.getCause()).hasMessage("Something went wrong");
 	}
 
-	private void assertOptionWithMissingRequiredArgumentThrowsException(String shortOption, String longOption) {
-		// @formatter:off
-		assertAll(
-			() -> assertThrows(OptionException.class, () -> parseArgLine(shortOption)),
-			() -> assertThrows(OptionException.class, () -> parseArgLine(longOption))
-		);
-		// @formatter:on
+	private void assertOptionWithMissingRequiredArgumentThrowsException(String... options) {
+		assertAll(stream(options).map(opt -> () -> assertThrows(OptionException.class, () -> parseArgLine(opt))));
 	}
 
 	private void assertParses(String name, Predicate<CommandLineOptions> property, String... argLines) {

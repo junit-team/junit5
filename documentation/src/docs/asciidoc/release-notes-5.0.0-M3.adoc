@@ -31,8 +31,8 @@ on GitHub.
 * `ClasspathSelector` has been renamed to `ClasspathRootSelector`.
 * The `-p` command-line option for configuring additional classpath entries for the
   `ConsoleLauncher` has been renamed to `-cp` in order to align with the option names for
-  the standard `java` executable. The existing `--classpath` command-line option remains
-  unchanged.
+  the standard `java` executable. In addition, a new `--class-path` alias has been
+  introduced, while the existing `--classpath` command-line option remains unchanged.
 
 ====== New Features
 

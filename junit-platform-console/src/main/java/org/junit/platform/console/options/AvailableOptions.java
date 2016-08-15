@@ -61,7 +61,7 @@ class AvailableOptions {
 		runAllTests = parser.acceptsAll(asList("a", "all"), //
 			"Run all tests.");
 
-		additionalClasspathEntries = parser.acceptsAll(asList("cp", "classpath"), //
+		additionalClasspathEntries = parser.acceptsAll(asList("cp", "classpath", "class-path"), //
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies. "
 					+ "This option can be repeated.") //
 				.withRequiredArg().ofType(File.class).withValuesSeparatedBy(File.pathSeparatorChar).describedAs(
