@@ -36,9 +36,11 @@ import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
 
 /**
- * {@code Assertions} is a collection of utility methods that support
- * asserting conditions in tests. A <em>failed</em> assertion will
- * always throw {@link AssertionFailedError} or a subclass thereof.
+ * {@code Assertions} is a collection of utility methods that support asserting
+ * conditions in tests.
+ *
+ * <p>Unless otherwise noted, a <em>failed</em> assertion will throw an
+ * {@link AssertionFailedError} or a subclass thereof.
  *
  * @since 5.0
  * @see AssertionFailedError
@@ -47,9 +49,11 @@ import org.opentest4j.MultipleFailuresError;
 @API(Maintained)
 public final class Assertions {
 
+	///CLOVER:OFF
 	private Assertions() {
 		/* no-op */
 	}
+	///CLOVER:ON
 
 	// --- fail ----------------------------------------------------------------
 
