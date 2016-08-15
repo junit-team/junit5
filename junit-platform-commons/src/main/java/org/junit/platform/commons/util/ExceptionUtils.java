@@ -59,7 +59,7 @@ public final class ExceptionUtils {
 	 */
 	public static RuntimeException throwAsUncheckedException(Throwable t) {
 		Preconditions.notNull(t, "Throwable must not be null");
-		ExceptionUtils.<RuntimeException> throwAs(t);
+		ExceptionUtils.throwAs(t);
 
 		// Appeasing the compiler: the following line will never be executed.
 		return null;
