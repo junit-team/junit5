@@ -33,7 +33,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
 import org.opentest4j.ValueWrapper;
@@ -2917,6 +2919,41 @@ public class AssertionsTests {
 	// --- assertAll -----------------------------------------------------
 
 	@Test
+	void assertAllWithNullInExecutableArray() {
+		try {
+			// @formatter:off
+			assertAll(
+				() -> {},
+				(Executable) null
+			);
+			// @formatter:on
+		}
+		catch (PreconditionViolationException ex) {
+			assertMessageEquals(ex, "executables must not be null");
+		}
+	}
+
+	@Test
+	void assertAllWithNullExecutableArray() {
+		try {
+			assertAll((Executable[]) null);
+		}
+		catch (PreconditionViolationException ex) {
+			assertMessageEquals(ex, "executables must not be null");
+		}
+	}
+
+	@Test
+	void assertAllWithNullExecutableStream() {
+		try {
+			assertAll((Stream<Executable>) null);
+		}
+		catch (PreconditionViolationException ex) {
+			assertMessageEquals(ex, "executables must not be null");
+		}
+	}
+
+	@Test
 	void assertAllWithExecutablesThatDoNotThrowExceptions() {
 		// @formatter:off
 		assertAll(
@@ -2928,12 +2965,33 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertAllWithExecutableThatThrowsAssertionError() {
-		MultipleFailuresError multipleFailuresError = expectThrows(MultipleFailuresError.class,
-			() -> assertAll(() -> assertFalse(true)));
+	void assertAllWithExecutablesThatThrowAssertionErrors() {
+		// @formatter:off
+		MultipleFailuresError multipleFailuresError = expectThrows(MultipleFailuresError.class, () ->
+			assertAll(
+				() -> assertFalse(true),
+				() -> assertFalse(true)
+			)
+		);
+		// @formatter:on
+
 		assertTrue(multipleFailuresError != null);
 		List<AssertionError> failures = multipleFailuresError.getFailures();
-		assertTrue(failures.size() == 1);
+		assertTrue(failures.size() == 2);
+		assertTrue(failures.get(0).getClass().equals(AssertionFailedError.class));
+	}
+
+	@Test
+	void assertAllWithStreamOfExecutablesThatThrowAssertionErrors() {
+		// @formatter:off
+		MultipleFailuresError multipleFailuresError = expectThrows(MultipleFailuresError.class, () ->
+			assertAll(Stream.of(() -> assertFalse(true), () -> assertFalse(true)))
+		);
+		// @formatter:on
+
+		assertTrue(multipleFailuresError != null);
+		List<AssertionError> failures = multipleFailuresError.getFailures();
+		assertTrue(failures.size() == 2);
 		assertTrue(failures.get(0).getClass().equals(AssertionFailedError.class));
 	}
 

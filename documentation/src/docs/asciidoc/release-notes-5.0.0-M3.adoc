@@ -63,6 +63,8 @@ on GitHub.
 * Support for lazy and preemptive _timeouts_ with lambda expressions in `Assertions`. See
   examples in <<writing-tests-assertions,`AssertionsDemo`>> and consult the
   `{Assertions}` Javadoc for further details.
+* New variants of `Assertions.assertAll()` that accept streams of executables (i.e.,
+  `Stream<Executable>`).
 
 
 [[release-notes-5.0.0-m3-junit-vintage]]
