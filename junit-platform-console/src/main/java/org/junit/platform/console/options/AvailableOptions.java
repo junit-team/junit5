@@ -64,7 +64,8 @@ class AvailableOptions {
 		additionalClasspathEntries = parser.acceptsAll(asList("cp", "classpath"), //
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies. "
 					+ "This option can be repeated.") //
-				.withRequiredArg().ofType(File.class).withValuesSeparatedBy(File.pathSeparatorChar);
+				.withRequiredArg().ofType(File.class).withValuesSeparatedBy(File.pathSeparatorChar).describedAs(
+					"path1" + File.pathSeparator + "path2" + File.pathSeparator + "...");
 
 		// --- Reports ---------------------------------------------------------
 
