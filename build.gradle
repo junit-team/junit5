@@ -499,13 +499,8 @@ configure(rootProject) {
 	prepareGhPages.dependsOn(createCurrentDocsFolder)
 
 	task wrapper(type: Wrapper) {
-		// To build against Gradle 3.0 nightly builds, obtain the latest
-		// distribution URL (http://gradle.org/gradle-nightly-build/)
-		// and then execute the following from the command line, using
-		// the latest distribution URL:
-		// gradlew wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.0-20160615000025+0000-bin.zip && gradlew -version && gradlew clean test
-
-		distributionUrl = 'https://services.gradle.org/distributions/gradle-2.14.1-bin.zip'
+		description = 'Generates gradlew and gradlew.bat scripts'
+		gradleVersion = '3.0'
 	}
 
 }
