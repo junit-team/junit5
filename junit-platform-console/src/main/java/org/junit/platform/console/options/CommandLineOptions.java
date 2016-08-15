@@ -41,7 +41,7 @@ public class CommandLineOptions {
 
 	private List<File> additionalClasspathEntries = emptyList();
 
-	private String xmlReportsDir;
+	private File xmlReportsDir;
 
 	private List<String> arguments = emptyList();
 
@@ -127,11 +127,11 @@ public class CommandLineOptions {
 		this.additionalClasspathEntries.removeIf(f -> !f.exists());
 	}
 
-	public Optional<String> getXmlReportsDir() {
+	public Optional<File> getXmlReportsDir() {
 		return Optional.ofNullable(this.xmlReportsDir);
 	}
 
-	public void setXmlReportsDir(String xmlReportsDir) {
+	public void setXmlReportsDir(File xmlReportsDir) {
 		this.xmlReportsDir = xmlReportsDir;
 	}
 

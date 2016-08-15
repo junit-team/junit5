@@ -340,7 +340,7 @@ class XmlReportsWritingListenerTests {
 		Files.write(reportsDir, singleton("content"));
 
 		StringWriter out = new StringWriter();
-		XmlReportsWritingListener listener = new XmlReportsWritingListener(reportsDir.toString(), new PrintWriter(out));
+		XmlReportsWritingListener listener = new XmlReportsWritingListener(reportsDir, new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(TestPlan.from(emptySet()));
 
@@ -356,8 +356,7 @@ class XmlReportsWritingListenerTests {
 		Files.createDirectories(xmlFile);
 
 		StringWriter out = new StringWriter();
-		XmlReportsWritingListener listener = new XmlReportsWritingListener(tempDirectory.toString(),
-			new PrintWriter(out));
+		XmlReportsWritingListener listener = new XmlReportsWritingListener(tempDirectory, new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(TestPlan.from(singleton(engineDescriptor)));
 		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
@@ -372,8 +371,7 @@ class XmlReportsWritingListenerTests {
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 
 		StringWriter out = new StringWriter();
-		XmlReportsWritingListener listener = new XmlReportsWritingListener(tempDirectory.toString(),
-			new PrintWriter(out));
+		XmlReportsWritingListener listener = new XmlReportsWritingListener(tempDirectory, new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(testPlan);
 		TestIdentifier testIdentifier = testPlan.getTestIdentifier("[child:test]");

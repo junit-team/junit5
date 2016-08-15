@@ -176,11 +176,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidXmlReportsDirs() {
+		File dir = new File("build/test-results");
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(Optional.of("build/test-results"), parseArgLine("-r build/test-results").getXmlReportsDir()),
-			() -> assertEquals(Optional.of("build/test-results"), parseArgLine("--xml-reports-dir build/test-results").getXmlReportsDir()),
-			() -> assertEquals(Optional.of("build/test-results"), parseArgLine("--xml-reports-dir=build/test-results").getXmlReportsDir())
+			() -> assertEquals(Optional.of(dir), parseArgLine("-r build/test-results").getXmlReportsDir()),
+			() -> assertEquals(Optional.of(dir), parseArgLine("--xml-reports-dir build/test-results").getXmlReportsDir()),
+			() -> assertEquals(Optional.of(dir), parseArgLine("--xml-reports-dir=build/test-results").getXmlReportsDir())
 		);
 		// @formatter:on
 	}

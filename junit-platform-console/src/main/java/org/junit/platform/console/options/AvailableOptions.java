@@ -33,7 +33,7 @@ class AvailableOptions {
 	private final OptionSpec<File> additionalClasspathEntries;
 
 	// Reports
-	private final OptionSpec<String> xmlReportsDir;
+	private final OptionSpec<File> xmlReportsDir;
 
 	// Selectors
 	private final OptionSpec<String> arguments;
@@ -70,7 +70,7 @@ class AvailableOptions {
 
 		xmlReportsDir = parser.acceptsAll(asList("r", "xml-reports-dir"), //
 			"Enable XML report output into a specified local directory (will be created if it does not exist).") //
-				.withRequiredArg();
+				.withRequiredArg().ofType(File.class);
 
 		// --- Selectors -------------------------------------------------------
 
