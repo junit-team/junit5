@@ -2023,34 +2023,37 @@ Test classes, methods, or packages to execute. If --all|-a has been specified, n
   arguments represent all classpath roots that should be considered for test scanning, or
   none if the full classpath should be scanned.
 
-Option                                       Description
-------                                       -----------
--h, --help                                   Display help information.
--C, --disable-ansi-colors                    Disable colored output (not supported by all
-                                               terminals).
--D, --hide-details                           Hide details while tests are being executed.
-                                               Only show the summary and test failures.
--a, --all                                    Run all tests.
---classpath, --cp <File: path1:path2:...>    Provide additional classpath entries -- for
-                                               example, for adding engines and their
-                                               dependencies. This option can be repeated.
--r, --xml-reports-dir <File>                 Enable XML report output into a specified
-                                               local directory (will be created if it
-                                               does not exist).
--n, --include-classname                      Provide a regular expression to include only
-                                               classes whose fully qualified names match.
-                                               By default any class name is accepted, and
-                                               thus all classes with tests are included.
--t, --include-tag                            Provide a tag to be included in the test
-                                               run. This option can be repeated.
--T, --exclude-tag                            Provide a tag to be excluded from the test
-                                               run. This option can be repeated.
--e, --include-engine                         Provide the ID of an engine to be included
-                                               in the test run. This option can be
-                                               repeated.
--E, --exclude-engine                         Provide the ID of an engine to be excluded
-                                               from the test run. This option can be
-                                               repeated.</pre>
+Option                                    Description
+------                                    -----------
+-h, --help                                Display help information.
+-C, --disable-ansi-colors                 Disable colored output (not supported by
+                                            all terminals).
+-D, --hide-details                        Hide details while tests are being
+                                            executed. Only show the summary and test
+                                            failures.
+-a, --all                                 Run all tests.
+--class-path, --classpath, --cp <File:    Provide additional classpath entries --
+  path1:path2:...>                          for example, for adding engines and
+                                            their dependencies. This option can be
+                                            repeated.
+-r, --xml-reports-dir <File>              Enable XML report output into a specified
+                                            local directory (will be created if it
+                                            does not exist).
+-n, --include-classname                   Provide a regular expression to include
+                                            only classes whose fully qualified names
+                                            match. By default any class name is
+                                            accepted, and thus all classes with
+                                            tests are included.
+-t, --include-tag                         Provide a tag to be included in the test
+                                            run. This option can be repeated.
+-T, --exclude-tag                         Provide a tag to be excluded from the test
+                                            run. This option can be repeated.
+-e, --include-engine                      Provide the ID of an engine to be included
+                                            in the test run. This option can be
+                                            repeated.
+-E, --exclude-engine                      Provide the ID of an engine to be excluded
+                                            from the test run. This option can be
+                                            repeated.</pre>
 </div>
 </div>
 </div>
@@ -3537,8 +3540,8 @@ actual exception type and its stack trace when printing an exception message.</p
 <li>
 <p>The <code>-p</code> command-line option for configuring additional classpath entries for the
 <code>ConsoleLauncher</code> has been renamed to <code>-cp</code> in order to align with the option names for
-the standard <code>java</code> executable. The existing <code>--classpath</code> command-line option remains
-unchanged.</p>
+the standard <code>java</code> executable. In addition, a new <code>--class-path</code> alias has been
+introduced, while the existing <code>--classpath</code> command-line option remains unchanged.</p>
 </li>
 </ul>
 </div>
@@ -3615,7 +3618,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-08-15 14:20:28 -04:00
+Last updated 2016-08-15 14:39:14 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
