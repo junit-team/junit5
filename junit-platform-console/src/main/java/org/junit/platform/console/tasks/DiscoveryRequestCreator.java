@@ -68,9 +68,7 @@ class DiscoveryRequestCreator {
 	private Set<File> determineClasspathRootDirectories(CommandLineOptions options) {
 		if (options.getArguments().isEmpty()) {
 			Set<File> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
-			if (!options.getAdditionalClasspathEntries().isEmpty()) {
-				rootDirs.addAll(new ClasspathEntriesParser().toDirectories(options.getAdditionalClasspathEntries()));
-			}
+			rootDirs.addAll(options.getAdditionalClasspathEntries());
 			return rootDirs;
 		}
 		return options.getArguments().stream().map(File::new).collect(toCollection(LinkedHashSet::new));

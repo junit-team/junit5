@@ -12,6 +12,7 @@ package org.junit.platform.console.tasks;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
@@ -66,14 +68,23 @@ public class ExecuteTestsTask implements ConsoleTask {
 	}
 
 	private Optional<ClassLoader> createCustomClassLoader() {
-		List<String> additionalClasspathEntries = options.getAdditionalClasspathEntries();
+		List<File> additionalClasspathEntries = options.getAdditionalClasspathEntries();
 		if (!additionalClasspathEntries.isEmpty()) {
-			URL[] urls = new ClasspathEntriesParser().toURLs(additionalClasspathEntries);
+			URL[] urls = additionalClasspathEntries.stream().map(this::toURL).toArray(URL[]::new);
 			ClassLoader parentClassLoader = ReflectionUtils.getDefaultClassLoader();
 			ClassLoader customClassLoader = URLClassLoader.newInstance(urls, parentClassLoader);
 			return Optional.of(customClassLoader);
 		}
 		return Optional.empty();
+	}
+
+	private URL toURL(File file) {
+		try {
+			return file.toURI().toURL();
+		}
+		catch (Exception ex) {
+			throw new JUnitException("Invalid classpath entry: " + file, ex);
+		}
 	}
 
 	private SummaryGeneratingListener registerListeners(PrintWriter out, Launcher launcher) {

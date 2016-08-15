@@ -12,6 +12,8 @@ package org.junit.platform.console.options;
 
 import static java.util.Arrays.asList;
 
+import java.io.File;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -28,7 +30,7 @@ class AvailableOptions {
 	private final OptionSpec<Void> disableAnsiColors;
 	private final OptionSpec<Void> hideDetails;
 	private final OptionSpec<Void> runAllTests;
-	private final OptionSpec<String> additionalClasspathEntries;
+	private final OptionSpec<File> additionalClasspathEntries;
 
 	// Reports
 	private final OptionSpec<String> xmlReportsDir;
@@ -62,7 +64,7 @@ class AvailableOptions {
 		additionalClasspathEntries = parser.acceptsAll(asList("cp", "classpath"), //
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies. "
 					+ "This option can be repeated.") //
-				.withRequiredArg();
+				.withRequiredArg().ofType(File.class).withValuesSeparatedBy(File.pathSeparatorChar);
 
 		// --- Reports ---------------------------------------------------------
 

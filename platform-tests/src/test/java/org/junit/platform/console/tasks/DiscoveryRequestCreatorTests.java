@@ -106,7 +106,7 @@ public class DiscoveryRequestCreatorTests {
 	@Test
 	public void convertsAllOptionWithAdditionalClasspathEntries() {
 		options.setRunAllTests(true);
-		options.setAdditionalClasspathEntries(asList(".", ".."));
+		options.setAdditionalClasspathEntries(asList(new File("."), new File("..")));
 
 		LauncherDiscoveryRequest request = convert();
 

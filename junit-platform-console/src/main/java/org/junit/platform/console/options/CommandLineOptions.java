@@ -13,6 +13,8 @@ package org.junit.platform.console.options;
 import static java.util.Collections.emptyList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +39,7 @@ public class CommandLineOptions {
 	private List<String> includedTags = emptyList();
 	private List<String> excludedTags = emptyList();
 
-	private List<String> additionalClasspathEntries = emptyList();
+	private List<File> additionalClasspathEntries = emptyList();
 
 	private String xmlReportsDir;
 
@@ -115,12 +117,14 @@ public class CommandLineOptions {
 		this.excludedTags = excludedTags;
 	}
 
-	public List<String> getAdditionalClasspathEntries() {
+	public List<File> getAdditionalClasspathEntries() {
 		return this.additionalClasspathEntries;
 	}
 
-	public void setAdditionalClasspathEntries(List<String> additionalClasspathEntries) {
-		this.additionalClasspathEntries = additionalClasspathEntries;
+	public void setAdditionalClasspathEntries(List<File> additionalClasspathEntries) {
+		// Create a modifiable copy
+		this.additionalClasspathEntries = new ArrayList<File>(additionalClasspathEntries);
+		this.additionalClasspathEntries.removeIf(f -> !f.exists());
 	}
 
 	public Optional<String> getXmlReportsDir() {

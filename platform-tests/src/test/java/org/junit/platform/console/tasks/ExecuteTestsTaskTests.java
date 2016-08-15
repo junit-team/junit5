@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.commons.util.ReflectionUtils.getDefaultClassLoader;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -152,7 +153,7 @@ public class ExecuteTestsTaskTests {
 		StringWriter stringWriter = new StringWriter();
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
-		options.setAdditionalClasspathEntries(singletonList("."));
+		options.setAdditionalClasspathEntries(singletonList(new File(".")));
 
 		ClassLoader oldClassLoader = getDefaultClassLoader();
 		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();

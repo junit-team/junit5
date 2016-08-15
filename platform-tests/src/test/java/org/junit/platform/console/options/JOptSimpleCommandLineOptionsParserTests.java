@@ -160,11 +160,11 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseValidAdditionalClasspathEntries() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("."), parseArgLine("-cp .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList("."), parseArgLine("--classpath .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList("."), parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(".", "lib/some.jar"), parseArgLine("-cp . -cp lib/some.jar").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList("." + File.pathSeparator + "lib/some.jar"), parseArgLine("-cp ." + File.pathSeparator + "lib/some.jar").getAdditionalClasspathEntries())
+			() -> assertEquals(asList(new File(".")), parseArgLine("-cp .").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(new File(".")), parseArgLine("--classpath .").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(new File(".")), parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(new File("."), new File("src/test/java")), parseArgLine("-cp . -cp src/test/java").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(new File("."), new File("src/test/java")), parseArgLine("-cp ." + File.pathSeparator + "src/test/java").getAdditionalClasspathEntries())
 		);
 		// @formatter:on
 	}
