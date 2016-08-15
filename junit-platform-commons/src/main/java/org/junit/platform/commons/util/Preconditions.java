@@ -81,7 +81,7 @@ public final class Preconditions {
 	 * @see #notNull(Object, Supplier)
 	 */
 	public static Object[] notNull(Object[] objects, String message) throws PreconditionViolationException {
-		notNull(objects, () -> "objects array must not be null");
+		notNull(objects, () -> StringUtils.isNotBlank(message) ? message : "Object array must not be null");
 		Arrays.stream(objects).forEach(object -> notNull(object, () -> message));
 
 		return objects;
