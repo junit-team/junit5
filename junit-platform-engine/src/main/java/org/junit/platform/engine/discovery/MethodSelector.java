@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.lang.reflect.Method;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -52,6 +53,16 @@ public class MethodSelector implements DiscoverySelector {
 	 */
 	public Method getJavaMethod() {
 		return this.method;
+	}
+
+	@Override
+	public String toString() {
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("javaClass", this.clazz.getName())
+				.append("javaMethod", this.method)
+				.toString();
+		// @formatter:on
 	}
 
 }

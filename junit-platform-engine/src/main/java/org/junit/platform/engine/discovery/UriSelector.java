@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.net.URI;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -41,6 +42,11 @@ public class UriSelector implements DiscoverySelector {
 	 */
 	public URI getUri() {
 		return this.uri;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("uri", this.uri).toString();
 	}
 
 }

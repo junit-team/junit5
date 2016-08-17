@@ -13,6 +13,7 @@ package org.junit.platform.engine.discovery;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -47,6 +48,11 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 */
 	public String getClasspathResourceName() {
 		return this.classpathResourceName;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("classpathResourceName", this.classpathResourceName).toString();
 	}
 
 }

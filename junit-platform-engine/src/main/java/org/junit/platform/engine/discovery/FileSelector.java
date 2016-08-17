@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -71,6 +72,11 @@ public class FileSelector implements DiscoverySelector {
 	 */
 	public String getRawPath() {
 		return this.path;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("path", this.path).toString();
 	}
 
 }

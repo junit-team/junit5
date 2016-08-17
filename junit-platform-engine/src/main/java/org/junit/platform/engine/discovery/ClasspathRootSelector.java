@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.io.File;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -40,6 +41,11 @@ public class ClasspathRootSelector implements DiscoverySelector {
 	 */
 	public File getClasspathRoot() {
 		return this.classpathRoot;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("classpathRoot", this.classpathRoot).toString();
 	}
 
 }
