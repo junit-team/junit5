@@ -36,6 +36,8 @@ on GitHub.
 
 ====== New Features
 
+* New `selectUri(*)` methods in `DiscoverySelectors` for selecting URIs. A `TestEngine`
+  can retrieve such values by querying registered instances of `UriSelector`.
 * New `selectFile(*)` and `selectDirectory(*) methods in `DiscoverySelectors` for selecting
   files and directories in the file system. A `TestEngine` can retrieve such values by
   querying registered instances of `FileSelector` and `DirectorySelector`.

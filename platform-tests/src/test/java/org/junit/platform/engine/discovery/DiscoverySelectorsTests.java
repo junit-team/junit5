@@ -18,9 +18,11 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirec
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
@@ -38,6 +40,29 @@ public class DiscoverySelectorsTests {
 
 	private static final String fullyQualifiedMethodName = fullyQualifiedMethodName();
 	private static final String fullyQualifiedMethodNameWithParameters = fullyQualifiedMethodNameWithParameters();
+
+	@Test
+	void selectUriByName() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectUri((String) null));
+		assertThrows(PreconditionViolationException.class, () -> selectUri("   "));
+		assertThrows(PreconditionViolationException.class, () -> selectUri("foo:"));
+
+		String uri = "http://junit.org";
+
+		UriSelector selector = selectUri(uri);
+		assertEquals(uri, selector.getUri().toString());
+	}
+
+	@Test
+	void selectUriByURI() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectUri((URI) null));
+		assertThrows(PreconditionViolationException.class, () -> selectUri("   "));
+
+		URI uri = new URI("http://junit.org");
+
+		UriSelector selector = selectUri(uri);
+		assertEquals(uri, selector.getUri());
+	}
 
 	@Test
 	void selectFileByName() throws Exception {

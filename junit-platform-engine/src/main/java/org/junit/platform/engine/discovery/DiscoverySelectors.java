@@ -16,6 +16,8 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -46,6 +48,43 @@ public final class DiscoverySelectors {
 		/* no-op */
 	}
 	///CLOVER:ON
+
+	/**
+	 * Create a {@code UriSelector} for the supplied URI.
+	 *
+	 * @param uri the URI to select; never {@code null} or blank
+	 * @see UriSelector
+	 * @see #selectUri(URI)
+	 * @see #selectFile(String)
+	 * @see #selectFile(File)
+	 * @see #selectDirectory(String)
+	 * @see #selectDirectory(File)
+	 */
+	public static UriSelector selectUri(String uri) {
+		Preconditions.notBlank(uri, "URI must not be null or blank");
+		try {
+			return new UriSelector(new URI(uri));
+		}
+		catch (URISyntaxException ex) {
+			throw new PreconditionViolationException("Failed to create a java.net.URI from: " + uri, ex);
+		}
+	}
+
+	/**
+	 * Create a {@code UriSelector} for the supplied {@link URI}.
+	 *
+	 * @param uri the URI to select; never {@code null}
+	 * @see UriSelector
+	 * @see #selectUri(String)
+	 * @see #selectFile(String)
+	 * @see #selectFile(File)
+	 * @see #selectDirectory(String)
+	 * @see #selectDirectory(File)
+	 */
+	public static UriSelector selectUri(URI uri) {
+		Preconditions.notNull(uri, "URI must not be null");
+		return new UriSelector(uri);
+	}
 
 	/**
 	 * Create a {@code FileSelector} for the supplied file path.
