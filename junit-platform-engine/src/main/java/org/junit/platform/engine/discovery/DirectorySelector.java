@@ -13,40 +13,64 @@ package org.junit.platform.engine.discovery;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
- * A {@link DiscoverySelector} that selects a {@linkplain File directory} so that
- * {@link org.junit.platform.engine.TestEngine TestEngines} can discover tests or
- * containers based on directories in the file system.
+ * A {@link DiscoverySelector} that selects a directory so that
+ * {@link org.junit.platform.engine.TestEngine TestEngines}
+ * can discover tests or containers based on directories in the
+ * file system.
  *
  * @since 1.0
  * @see FileSelector
+ * @see #getDirectory()
+ * @see #getPath()
+ * @see #getRawPath()
  */
 @API(Experimental)
 public class DirectorySelector implements DiscoverySelector {
 
-	private final File directory;
+	private final String path;
 
-	DirectorySelector(File directory) {
-		try {
-			this.directory = directory.getCanonicalFile();
-		}
-		catch (IOException ex) {
-			throw new PreconditionViolationException("Failed to retrieve canonical path for directory: " + directory,
-				ex);
-		}
+	DirectorySelector(String path) {
+		this.path = path;
 	}
 
 	/**
-	 * Get the selected {@linkplain File directory}.
+	 * Get the selected directory as a {@link java.io.File}.
+	 *
+	 * @see #getPath()
+	 * @see #getRawPath()
 	 */
 	public File getDirectory() {
-		return this.directory;
+		return new File(this.path);
+	}
+
+	/**
+	 * Get the selected directory as a {@link java.nio.file.Path} using the
+	 * {@linkplain FileSystems#getDefault default} {@link FileSystem}.
+	 *
+	 * @see #getFile()
+	 * @see #getRawPath()
+	 */
+	public Path getPath() {
+		return Paths.get(this.path);
+	}
+
+	/**
+	 * Get the selected directory as a <em>raw path</em>.
+	 *
+	 * @see #getDirectory()
+	 * @see #getPath()
+	 */
+	public String getRawPath() {
+		return this.path;
 	}
 
 }

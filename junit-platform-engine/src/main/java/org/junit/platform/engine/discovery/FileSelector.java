@@ -13,39 +13,64 @@ package org.junit.platform.engine.discovery;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
- * A {@link DiscoverySelector} that selects a {@linkplain File file} so that
- * {@link org.junit.platform.engine.TestEngine TestEngines} can discover tests
- * or containers based on files in the file system.
+ * A {@link DiscoverySelector} that selects a file so that
+ * {@link org.junit.platform.engine.TestEngine TestEngines}
+ * can discover tests or containers based on files in the
+ * file system.
  *
  * @since 1.0
  * @see DirectorySelector
+ * @see #getFile()
+ * @see #getPath()
+ * @see #getRawPath()
  */
 @API(Experimental)
 public class FileSelector implements DiscoverySelector {
 
-	private final File file;
+	private final String path;
 
-	FileSelector(File file) {
-		try {
-			this.file = file.getCanonicalFile();
-		}
-		catch (IOException ex) {
-			throw new PreconditionViolationException("Failed to retrieve canonical path for file: " + file, ex);
-		}
+	FileSelector(String path) {
+		this.path = path;
 	}
 
 	/**
-	 * Get the selected {@linkplain File file}.
+	 * Get the selected file as a {@link java.io.File}.
+	 *
+	 * @see #getPath()
+	 * @see #getRawPath()
 	 */
 	public File getFile() {
-		return this.file;
+		return new File(this.path);
+	}
+
+	/**
+	 * Get the selected file as a {@link java.nio.file.Path} using the
+	 * {@linkplain FileSystems#getDefault default} {@link FileSystem}.
+	 *
+	 * @see #getFile()
+	 * @see #getRawPath()
+	 */
+	public Path getPath() {
+		return Paths.get(this.path);
+	}
+
+	/**
+	 * Get the selected file as a <em>raw path</em>.
+	 *
+	 * @see #getFile()
+	 * @see #getPath()
+	 */
+	public String getRawPath() {
+		return this.path;
 	}
 
 }

@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +50,8 @@ public final class DiscoverySelectors {
 	/**
 	 * Create a {@code FileSelector} for the supplied file path.
 	 *
-	 * <p>This method selects the file in its {@linkplain File#getCanonicalFile()
-	 * canonical} form.
+	 * <p>This method selects the file using the supplied path <em>as is</em>,
+	 * without verifying if the file exists.
 	 *
 	 * @param path the path to the file to select; never {@code null} or blank
 	 * @see FileSelector
@@ -60,14 +61,15 @@ public final class DiscoverySelectors {
 	 */
 	public static FileSelector selectFile(String path) {
 		Preconditions.notBlank(path, "File path must not be null or blank");
-		return selectFile(new File(path));
+		return new FileSelector(path);
 	}
 
 	/**
 	 * Create a {@code FileSelector} for the supplied {@linkplain File file}.
 	 *
-	 * <p>This method selects the file in its {@linkplain File#getCanonicalFile()
-	 * canonical} form.
+	 * <p>This method selects the file in its {@linkplain File#getCanonicalPath()
+	 * canonical} form and throws a {@link PreconditionViolationException} if the
+	 * file does not exist.
 	 *
 	 * @param file the file to select; never {@code null}
 	 * @see FileSelector
@@ -79,14 +81,19 @@ public final class DiscoverySelectors {
 		Preconditions.notNull(file, "File must not be null");
 		Preconditions.condition(file.isFile(),
 			() -> String.format("The supplied java.io.File [%s] must represent an existing file", file));
-		return new FileSelector(file);
+		try {
+			return new FileSelector(file.getCanonicalPath());
+		}
+		catch (IOException ex) {
+			throw new PreconditionViolationException("Failed to retrieve canonical path for file: " + file, ex);
+		}
 	}
 
 	/**
 	 * Create a {@code DirectorySelector} for the supplied directory path.
 	 *
-	 * <p>This method selects the directory in its {@linkplain File#getCanonicalFile()
-	 * canonical} form.
+	 * <p>This method selects the directory using the supplied path <em>as is</em>,
+	 * without verifying if the directory exists.
 	 *
 	 * @param path the path to the directory to select; never {@code null} or blank
 	 * @see DirectorySelector
@@ -96,14 +103,15 @@ public final class DiscoverySelectors {
 	 */
 	public static DirectorySelector selectDirectory(String path) {
 		Preconditions.notBlank(path, "Directory path must not be null or blank");
-		return selectDirectory(new File(path));
+		return new DirectorySelector(path);
 	}
 
 	/**
 	 * Create a {@code DirectorySelector} for the supplied {@linkplain File directory}.
 	 *
-	 * <p>This method selects the directory in its {@linkplain File#getCanonicalFile()
-	 * canonical} form.
+	 * <p>This method selects the directory in its {@linkplain File#getCanonicalPath()
+	 * canonical} form and throws a {@link PreconditionViolationException} if the
+	 * directory does not exist.
 	 *
 	 * @param directory the directory to select; never {@code null}
 	 * @see DirectorySelector
@@ -115,7 +123,13 @@ public final class DiscoverySelectors {
 		Preconditions.notNull(directory, "Directory must not be null");
 		Preconditions.condition(directory.isDirectory(),
 			() -> String.format("The supplied java.io.File [%s] must represent an existing directory", directory));
-		return new DirectorySelector(directory);
+		try {
+			return new DirectorySelector(directory.getCanonicalPath());
+		}
+		catch (IOException ex) {
+			throw new PreconditionViolationException("Failed to retrieve canonical path for directory: " + directory,
+				ex);
+		}
 	}
 
 	/**

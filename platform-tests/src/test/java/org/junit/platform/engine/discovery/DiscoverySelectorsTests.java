@@ -21,6 +21,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
@@ -41,12 +42,14 @@ public class DiscoverySelectorsTests {
 	@Test
 	void selectFileByName() throws Exception {
 		assertThrows(PreconditionViolationException.class, () -> selectFile((String) null));
-		assertThrows(PreconditionViolationException.class, () -> selectFile("bogus/nonexistent.txt"));
+		assertThrows(PreconditionViolationException.class, () -> selectFile("   "));
 
-		File canonicalFile = new File("src/test/resources/do_not_delete_me.txt").getCanonicalFile();
+		String path = "src/test/resources/do_not_delete_me.txt";
 
-		FileSelector selector = selectFile("src/test/resources/do_not_delete_me.txt");
-		assertEquals(canonicalFile, selector.getFile());
+		FileSelector selector = selectFile(path);
+		assertEquals(path, selector.getRawPath());
+		assertEquals(new File(path), selector.getFile());
+		assertEquals(Paths.get(path), selector.getPath());
 	}
 
 	@Test
@@ -57,20 +60,25 @@ public class DiscoverySelectorsTests {
 		File currentDir = new File(".").getCanonicalFile();
 		File relativeDir = new File("..", currentDir.getName());
 		File file = new File(relativeDir, "src/test/resources/do_not_delete_me.txt");
+		String path = file.getCanonicalFile().getPath();
 
 		FileSelector selector = selectFile(file);
+		assertEquals(path, selector.getRawPath());
 		assertEquals(file.getCanonicalFile(), selector.getFile());
+		assertEquals(Paths.get(path), selector.getPath());
 	}
 
 	@Test
 	void selectDirectoryByName() throws Exception {
 		assertThrows(PreconditionViolationException.class, () -> selectDirectory((String) null));
-		assertThrows(PreconditionViolationException.class, () -> selectDirectory("bogus/nonexistent"));
+		assertThrows(PreconditionViolationException.class, () -> selectDirectory("   "));
 
-		File canonicalDir = new File("src/test/resources").getCanonicalFile();
+		String path = "src/test/resources";
 
-		DirectorySelector selector = selectDirectory("src/test/resources");
-		assertEquals(canonicalDir, selector.getDirectory());
+		DirectorySelector selector = selectDirectory(path);
+		assertEquals(path, selector.getRawPath());
+		assertEquals(new File(path), selector.getDirectory());
+		assertEquals(Paths.get(path), selector.getPath());
 	}
 
 	@Test
@@ -81,9 +89,12 @@ public class DiscoverySelectorsTests {
 		File currentDir = new File(".").getCanonicalFile();
 		File relativeDir = new File("..", currentDir.getName());
 		File directory = new File(relativeDir, "src/test/resources");
+		String path = directory.getCanonicalFile().getPath();
 
 		DirectorySelector selector = selectDirectory(directory);
+		assertEquals(path, selector.getRawPath());
 		assertEquals(directory.getCanonicalFile(), selector.getDirectory());
+		assertEquals(Paths.get(path), selector.getPath());
 	}
 
 	@Test
