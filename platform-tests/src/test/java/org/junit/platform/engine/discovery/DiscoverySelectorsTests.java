@@ -140,32 +140,32 @@ public class DiscoverySelectorsTests {
 
 	@Test
 	void selectPackageByName() {
-		PackageSelector selector = selectPackage(getClass().getPackage().getName());
+		JavaPackageSelector selector = selectPackage(getClass().getPackage().getName());
 		assertEquals(getClass().getPackage().getName(), selector.getPackageName());
 	}
 
 	@Test
 	void selectClassByName() {
-		ClassSelector selector = selectClass(getClass().getName());
+		JavaClassSelector selector = selectClass(getClass().getName());
 		assertEquals(getClass(), selector.getJavaClass());
 	}
 
 	@Test
 	void selectMethodByFullyQualifiedName() {
-		MethodSelector selector = selectMethod(fullyQualifiedMethodName);
+		JavaMethodSelector selector = selectMethod(fullyQualifiedMethodName);
 		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
 	}
 
 	@Test
 	void selectMethodByFullyQualifiedNameWithParameters() {
-		MethodSelector selector = selectMethod(fullyQualifiedMethodNameWithParameters);
+		JavaMethodSelector selector = selectMethod(fullyQualifiedMethodNameWithParameters);
 		assertEquals(fullyQualifiedMethodWithParameters, selector.getJavaMethod());
 	}
 
 	@Test
 	void selectMethodWithParametersByMethodReference() throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest", String.class);
-		MethodSelector selector = selectMethod(getClass(), method);
+		JavaMethodSelector selector = selectMethod(getClass(), method);
 		assertEquals(method, selector.getJavaMethod());
 		assertEquals(method, selector.getJavaMethod());
 	}

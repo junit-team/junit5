@@ -10,19 +10,19 @@
 
 package org.junit.vintage.engine.discovery;
 
-import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.JavaClassSelector;
 
 /**
  * @since 4.12
  */
-class ClassSelectorResolver extends DiscoverySelectorResolver<ClassSelector> {
+class ClassSelectorResolver extends DiscoverySelectorResolver<JavaClassSelector> {
 
 	ClassSelectorResolver() {
-		super(ClassSelector.class);
+		super(JavaClassSelector.class);
 	}
 
 	@Override
-	void resolve(ClassSelector selector, TestClassCollector collector) {
+	void resolve(JavaClassSelector selector, TestClassCollector collector) {
 		collector.addCompletely(selector.getJavaClass());
 	}
 

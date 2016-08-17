@@ -17,31 +17,32 @@ import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
- * A {@link DiscoverySelector} that selects a {@link Class} so that
+ * A {@link DiscoverySelector} that selects a Java package name so that
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
- * tests or containers based on Java classes.
+ * tests or containers based on packages.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.support.descriptor.JavaPackageSource
  */
 @API(Experimental)
-public class ClassSelector implements DiscoverySelector {
+public class JavaPackageSelector implements DiscoverySelector {
 
-	private final Class<?> javaClass;
+	private final String packageName;
 
-	ClassSelector(Class<?> javaClass) {
-		this.javaClass = javaClass;
+	JavaPackageSelector(String packageName) {
+		this.packageName = packageName;
 	}
 
 	/**
-	 * Get the selected Java {@link Class}.
+	 * Get the selected package name.
 	 */
-	public Class<?> getJavaClass() {
-		return this.javaClass;
+	public String getPackageName() {
+		return this.packageName;
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("javaClass", this.javaClass.getName()).toString();
+		return new ToStringBuilder(this).append("packageName", this.packageName).toString();
 	}
 
 }

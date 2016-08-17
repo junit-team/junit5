@@ -48,10 +48,10 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.JavaClassSelector;
+import org.junit.platform.engine.discovery.JavaMethodSelector;
+import org.junit.platform.engine.discovery.JavaPackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
@@ -64,7 +64,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void singleClassResolution() {
-		ClassSelector selector = selectClass(MyTestClass.class);
+		JavaClassSelector selector = selectClass(MyTestClass.class);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -93,8 +93,8 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void twoClassesResolution() {
-		ClassSelector selector1 = selectClass(MyTestClass.class);
-		ClassSelector selector2 = selectClass(YourTestClass.class);
+		JavaClassSelector selector1 = selectClass(MyTestClass.class);
+		JavaClassSelector selector2 = selectClass(YourTestClass.class);
 
 		resolver.resolveSelectors(request().selectors(selector1, selector2).build(), engineDescriptor);
 
@@ -111,7 +111,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void classResolutionOfStaticNestedClass() {
-		ClassSelector selector = selectClass(OtherTestClass.NestedTestClass.class);
+		JavaClassSelector selector = selectClass(OtherTestClass.NestedTestClass.class);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -125,7 +125,7 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void methodResolution() throws NoSuchMethodException {
 		Method test1 = MyTestClass.class.getDeclaredMethod("test1");
-		MethodSelector selector = selectMethod(test1.getDeclaringClass(), test1);
+		JavaMethodSelector selector = selectMethod(test1.getDeclaringClass(), test1);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -137,7 +137,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void methodResolutionFromInheritedMethod() throws NoSuchMethodException {
-		MethodSelector selector = selectMethod(HerTestClass.class, MyTestClass.class.getDeclaredMethod("test1"));
+		JavaMethodSelector selector = selectMethod(HerTestClass.class, MyTestClass.class.getDeclaredMethod("test1"));
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -150,7 +150,7 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void resolvingSelectorOfNonTestMethodResolvesNothing() throws NoSuchMethodException {
 		Method notATest = MyTestClass.class.getDeclaredMethod("notATest");
-		MethodSelector selector = selectMethod(notATest.getDeclaringClass(), notATest);
+		JavaMethodSelector selector = selectMethod(notATest.getDeclaringClass(), notATest);
 		EngineDiscoveryRequest request = request().selectors(selector).build();
 		resolver.resolveSelectors(request, engineDescriptor);
 		assertTrue(engineDescriptor.getAllDescendants().isEmpty());
@@ -342,7 +342,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void packageResolution() {
-		PackageSelector selector = selectPackage("org.junit.jupiter.engine.descriptor.subpackage");
+		JavaPackageSelector selector = selectPackage("org.junit.jupiter.engine.descriptor.subpackage");
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -380,7 +380,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void nestedTestResolutionFromBaseClass() {
-		ClassSelector selector = selectClass(TestCaseWithNesting.class);
+		JavaClassSelector selector = selectClass(TestCaseWithNesting.class);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -398,7 +398,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void nestedTestResolutionFromNestedTestClass() {
-		ClassSelector selector = selectClass(TestCaseWithNesting.NestedTestCase.class);
+		JavaClassSelector selector = selectClass(TestCaseWithNesting.NestedTestCase.class);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -432,7 +432,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void doubleNestedTestResolutionFromClass() {
-		ClassSelector selector = selectClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class);
+		JavaClassSelector selector = selectClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -448,7 +448,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void methodResolutionInDoubleNestedTestClass() throws NoSuchMethodException {
-		MethodSelector selector = selectMethod(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class,
+		JavaMethodSelector selector = selectMethod(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class,
 			TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class.getDeclaredMethod("testC"));
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);

@@ -23,10 +23,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.discovery.ClassFilter;
-import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.JavaClassSelector;
+import org.junit.platform.engine.discovery.JavaMethodSelector;
+import org.junit.platform.engine.discovery.JavaPackageSelector;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -45,7 +45,7 @@ public class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
+		List<JavaClassSelector> classSelectors = request.getSelectorsByType(JavaClassSelector.class);
 		assertThat(classSelectors).hasSize(1);
 		assertEquals(testClass, getOnlyElement(classSelectors).getJavaClass());
 	}
@@ -58,7 +58,7 @@ public class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
+		List<JavaMethodSelector> methodSelectors = request.getSelectorsByType(JavaMethodSelector.class);
 		assertThat(methodSelectors).hasSize(1);
 		assertEquals(testClass, getOnlyElement(methodSelectors).getJavaClass());
 		assertEquals(testMethod, getOnlyElement(methodSelectors).getJavaMethod());
@@ -71,8 +71,8 @@ public class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<PackageSelector> packageSelectors = request.getSelectorsByType(PackageSelector.class);
-		assertThat(packageSelectors).extracting(PackageSelector::getPackageName).containsExactly(packageName);
+		List<JavaPackageSelector> packageSelectors = request.getSelectorsByType(JavaPackageSelector.class);
+		assertThat(packageSelectors).extracting(JavaPackageSelector::getPackageName).containsExactly(packageName);
 	}
 
 	@Test

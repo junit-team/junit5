@@ -28,7 +28,7 @@ import org.junit.platform.commons.meta.API;
  * @since 1.0
  * @see JUnitPlatform
  * @see SelectPackages
- * @see org.junit.platform.engine.discovery.ClassSelector
+ * @see org.junit.platform.engine.discovery.JavaClassSelector
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

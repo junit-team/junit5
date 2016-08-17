@@ -24,14 +24,15 @@ import org.junit.platform.engine.DiscoverySelector;
  * tests or containers based on Java methods.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.support.descriptor.JavaMethodSource
  */
 @API(Experimental)
-public class MethodSelector implements DiscoverySelector {
+public class JavaMethodSelector implements DiscoverySelector {
 
 	private final Class<?> clazz;
 	private final Method method;
 
-	MethodSelector(Class<?> clazz, Method method) {
+	JavaMethodSelector(Class<?> clazz, Method method) {
 		this.clazz = clazz;
 		this.method = method;
 	}

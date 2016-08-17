@@ -37,10 +37,10 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.JavaClassSelector;
+import org.junit.platform.engine.discovery.JavaMethodSelector;
+import org.junit.platform.engine.discovery.JavaPackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.DiscoveryFilterStub;
@@ -66,8 +66,8 @@ public class LauncherDiscoveryRequestBuilderTests {
 					).build();
 			// @formatter:on
 
-			List<String> packageSelectors = discoveryRequest.getSelectorsByType(PackageSelector.class).stream().map(
-				PackageSelector::getPackageName).collect(toList());
+			List<String> packageSelectors = discoveryRequest.getSelectorsByType(JavaPackageSelector.class).stream().map(
+				JavaPackageSelector::getPackageName).collect(toList());
 			assertThat(packageSelectors).contains("org.junit.platform.engine");
 		}
 
@@ -82,8 +82,8 @@ public class LauncherDiscoveryRequestBuilderTests {
 				.build();
 			// @formatter:on
 
-			List<Class<?>> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream().map(
-				ClassSelector::getJavaClass).collect(toList());
+			List<Class<?>> classes = discoveryRequest.getSelectorsByType(JavaClassSelector.class).stream().map(
+				JavaClassSelector::getJavaClass).collect(toList());
 			assertThat(classes).contains(SampleTestClass.class, LauncherDiscoveryRequestBuilderTests.class);
 		}
 
@@ -95,10 +95,10 @@ public class LauncherDiscoveryRequestBuilderTests {
 					.build();
 			// @formatter:on
 
-			List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
+			List<JavaMethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(JavaMethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			MethodSelector methodSelector = methodSelectors.get(0);
+			JavaMethodSelector methodSelector = methodSelectors.get(0);
 			assertThat(methodSelector.getJavaClass()).isEqualTo(LauncherDiscoveryRequestBuilderTests.class);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(fullyQualifiedMethod());
 		}
@@ -114,10 +114,10 @@ public class LauncherDiscoveryRequestBuilderTests {
 					.build();
 			// @formatter:on
 
-			List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
+			List<JavaMethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(JavaMethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			MethodSelector methodSelector = methodSelectors.get(0);
+			JavaMethodSelector methodSelector = methodSelectors.get(0);
 			assertThat(methodSelector.getJavaClass()).isEqualTo(testClass);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(testMethod);
 		}
@@ -134,10 +134,10 @@ public class LauncherDiscoveryRequestBuilderTests {
 					).build();
 			// @formatter:on
 
-			List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
+			List<JavaMethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(JavaMethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			MethodSelector methodSelector = methodSelectors.get(0);
+			JavaMethodSelector methodSelector = methodSelectors.get(0);
 			assertThat(methodSelector.getJavaClass()).isEqualTo(testClass);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(testMethod);
 		}

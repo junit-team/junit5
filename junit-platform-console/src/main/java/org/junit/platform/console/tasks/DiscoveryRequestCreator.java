@@ -36,9 +36,9 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.JavaClassSelector;
+import org.junit.platform.engine.discovery.JavaMethodSelector;
+import org.junit.platform.engine.discovery.JavaPackageSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
@@ -127,8 +127,8 @@ class DiscoveryRequestCreator {
 	 * </ul>
 	 *
 	 * @param name the name to select; never {@code null} or blank
-	 * @return an instance of {@link ClassSelector}, {@link MethodSelector}, or
-	 * {@link PackageSelector}
+	 * @return an instance of {@link JavaClassSelector}, {@link JavaMethodSelector}, or
+	 * {@link JavaPackageSelector}
 	 * @throws PreconditionViolationException if the supplied name is {@code null},
 	 * blank, or does not specify a class, method, or package
 	 */

@@ -50,8 +50,8 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassFilter;
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.JavaClassSelector;
+import org.junit.platform.engine.discovery.JavaPackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
@@ -93,9 +93,9 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
+			List<JavaClassSelector> selectors = request.getSelectorsByType(JavaClassSelector.class);
 			assertThat(selectors).hasSize(1);
-			ClassSelector classSelector = getOnlyElement(selectors);
+			JavaClassSelector classSelector = getOnlyElement(selectors);
 			assertEquals(TestCase.class, classSelector.getJavaClass());
 		}
 
@@ -108,7 +108,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
+			List<JavaClassSelector> selectors = request.getSelectorsByType(JavaClassSelector.class);
 			assertThat(selectors).hasSize(2);
 			assertEquals(Short.class, selectors.get(0).getJavaClass());
 			assertEquals(Byte.class, selectors.get(1).getJavaClass());
@@ -123,7 +123,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<PackageSelector> selectors = request.getSelectorsByType(PackageSelector.class);
+			List<JavaPackageSelector> selectors = request.getSelectorsByType(JavaPackageSelector.class);
 			assertThat(selectors).hasSize(2);
 			assertEquals("foo", selectors.get(0).getPackageName());
 			assertEquals("bar", selectors.get(1).getPackageName());

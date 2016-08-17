@@ -24,6 +24,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * {@linkplain FilePosition position}.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.discovery.JavaClassSelector
  */
 @API(Experimental)
 public class JavaClassSource implements JavaSource {
