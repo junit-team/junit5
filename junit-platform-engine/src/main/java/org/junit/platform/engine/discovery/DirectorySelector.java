@@ -57,7 +57,7 @@ public class DirectorySelector implements DiscoverySelector {
 	 * Get the selected directory as a {@link java.nio.file.Path} using the
 	 * {@linkplain FileSystems#getDefault default} {@link FileSystem}.
 	 *
-	 * @see #getFile()
+	 * @see #getDirectory()
 	 * @see #getRawPath()
 	 */
 	public Path getPath() {
