@@ -131,7 +131,6 @@ class ClasspathScanner {
 		}
 
 		for (File file : files) {
-			System.err.println("file: " + file);
 			if (isClassFile(file)) {
 				processClassFileSafely(packageName, file, classFilter, classes);
 			}
