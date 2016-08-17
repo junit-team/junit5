@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,7 @@ import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -370,6 +372,8 @@ public class DiscoverySelectorResolverTests {
 			"Too few test descriptors in classpath");
 
 		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds().contains(uniqueIdForClass(ReflectionUtils.loadClass("DefaultPackageTestCase").get())),
+			"Failed to pick up DefaultPackageTestCase via classpath scanning");
 		assertTrue(uniqueIds.contains(uniqueIdForClass(Class1WithTestCases.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class1WithTestCases.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForClass(Class2WithTestCases.class)));

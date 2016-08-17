@@ -25,6 +25,9 @@ on GitHub.
 
 * `ColoredPrintingTestListener`, which is used by the `ConsoleLauncher`, now outputs the
   actual exception type and its stack trace when printing an exception message.
+* Test classes in the _default_ package are now picked up via classpath scanning when
+  scanning classpath roots -- for example, in conjunction with the JUnit Platform
+  Gradle plugin when no explicit packages have been selected.
 
 ====== Deprecations and Breaking Changes
 

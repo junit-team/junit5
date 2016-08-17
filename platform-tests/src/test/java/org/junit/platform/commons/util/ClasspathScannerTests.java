@@ -11,6 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -161,6 +162,23 @@ class ClasspathScannerTests {
 		File root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, thisClassOnly);
 		assertSame(ClasspathScannerTests.class, classes.get(0));
+	}
+
+	@Test
+	void findAllClassesInDefaultPackageInClasspathRoot() throws Exception {
+		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(),
+			this::inDefaultPackage);
+
+		assertEquals(1, classes.size(), "number of classes found in default package");
+		Class<?> testClass = classes.get(0);
+		assertTrue(inDefaultPackage(testClass));
+		assertEquals("DefaultPackageTestCase", testClass.getName());
+	}
+
+	private boolean inDefaultPackage(Class<?> clazz) {
+		// OpenJDK returns NULL for the default package.
+		Package pkg = clazz.getPackage();
+		return pkg == null || "".equals(clazz.getPackage().getName());
 	}
 
 	@Test

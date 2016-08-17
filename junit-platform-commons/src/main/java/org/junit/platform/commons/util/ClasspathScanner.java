@@ -131,6 +131,7 @@ class ClasspathScanner {
 		}
 
 		for (File file : files) {
+			System.err.println("file: " + file);
 			if (isClassFile(file)) {
 				processClassFileSafely(packageName, file, classFilter, classes);
 			}
@@ -158,9 +159,12 @@ class ClasspathScanner {
 	}
 
 	private Optional<Class<?>> loadClassFromFile(String packageName, File classFile) {
-		String className = packageName + '.'
-				+ classFile.getName().substring(0, classFile.getName().length() - CLASS_FILE_SUFFIX.length());
-		return this.loadClass.apply(className, getClassLoader());
+		String className = classFile.getName().substring(0, classFile.getName().length() - CLASS_FILE_SUFFIX.length());
+
+		// Handle default package appropriately.
+		String fqcn = StringUtils.isBlank(packageName) ? className : packageName + "." + className;
+
+		return this.loadClass.apply(fqcn, getClassLoader());
 	}
 
 	private void handleInternalError(File classFile, Optional<Class<?>> clazz, InternalError ex) {
