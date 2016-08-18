@@ -2666,8 +2666,8 @@ through to identify test classes and test methods in the past.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.launcher.Launcher;
@@ -2683,8 +2683,8 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;</code></
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
     .selectors(
-        selectPackage("com.example.mytests"),
-        selectClass(MyTestClass.class)
+        selectJavaPackage("com.example.mytests"),
+        selectJavaClass(MyTestClass.class)
     )
     .filters(includeClassNamePattern(".*Test"))
     .build();
@@ -2717,8 +2717,8 @@ be achieved through a <code><a href="../api/org/junit/platform/launcher/TestExec
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
     .selectors(
-        selectPackage("com.example.mytests"),
-        selectClass(MyTestClass.class)
+        selectJavaPackage("com.example.mytests"),
+        selectJavaClass(MyTestClass.class)
     )
     .filters(includeClassNamePattern(".*Test"))
     .build();
@@ -3540,16 +3540,23 @@ Gradle plugin when no explicit packages have been selected.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>ClasspathSelector</code> has been renamed to <code>ClasspathRootSelector</code>.</p>
+<p><code>ClasspathSelector</code> has been renamed to <code>ClasspathRootSelector</code> to avoid confusion with
+<code>ClasspathResourceSelector</code>.</p>
 </li>
 <li>
-<p><code>PackageSelector</code> has been renamed to <code>JavaPackageSelector</code> to align with <code>JavaPackageSource</code>.</p>
+<p><code>PackageSelector</code> and <code>DiscoverySelectors.selectPackage()</code> have been renamed to
+<code>JavaPackageSelector</code> and <code>DiscoverySelectors.selectJavaPackage()</code> to align with
+<code>JavaPackageSource</code>.</p>
 </li>
 <li>
-<p><code>ClassSelector</code> has been renamed to <code>JavaClassSelector</code> to align with <code>JavaClassSource</code>.</p>
+<p><code>ClassSelector</code> and <code>DiscoverySelectors.selectClass()</code> have been renamed to
+<code>JavaClassSelector</code> and <code>DiscoverySelectors.selectJavaClass()</code> to align with
+<code>JavaClassSource</code>.</p>
 </li>
 <li>
-<p><code>MethodSelector</code> has been renamed to <code>JavaMethodSelector</code> to align with <code>JavaMethodSource</code>.</p>
+<p><code>MethodSelector</code> and <code>DiscoverySelectors.selectMethod()</code> have been renamed to
+<code>JavaMethodSelector</code> and <code>DiscoverySelectors.selectJavaMethod()</code> to align with
+<code>JavaMethodSource</code>.</p>
 </li>
 <li>
 <p>The <code>-p</code> command-line option for configuring additional classpath entries for the
@@ -3636,7 +3643,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-08-17 15:05:56 -04:00
+Last updated 2016-08-18 14:26:15 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
