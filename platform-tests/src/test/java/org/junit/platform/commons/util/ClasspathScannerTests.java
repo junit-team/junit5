@@ -106,7 +106,7 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void findAllClassesInThisPackage() throws Exception {
+	void scanForClassesInPackage() throws Exception {
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.platform.commons", clazz -> true);
 		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
 		assertTrue(classes.contains(NestedClassToBeFound.class));
@@ -114,7 +114,16 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void findAllClassesInThisPackageWithFilter() throws Exception {
+	void scanForClassesInDefaultPackage() throws Exception {
+		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("", this::inDefaultPackage);
+
+		assertThat(classes.size()).as("number of classes found in default package").isGreaterThanOrEqualTo(1);
+		assertTrue(classes.stream().allMatch(clazz -> inDefaultPackage(clazz)));
+		assertTrue(classes.stream().anyMatch(clazz -> "DefaultPackageTestCase".equals(clazz.getName())));
+	}
+
+	@Test
+	void scanForClassesInPackageWithFilter() throws Exception {
 		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTests.class;
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.platform.commons", thisClassOnly);
 		assertSame(ClasspathScannerTests.class, classes.get(0));
@@ -124,6 +133,12 @@ class ClasspathScannerTests {
 	void scanForClassesInPackageForNullBasePackage() {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInPackage(null, clazz -> true));
+	}
+
+	@Test
+	void scanForClassesInPackageForWhitespaceBasePackage() {
+		assertThrows(PreconditionViolationException.class,
+			() -> classpathScanner.scanForClassesInPackage("    ", clazz -> true));
 	}
 
 	@Test
@@ -140,14 +155,21 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void isPackage() throws Exception {
+	void isPackage() {
+		assertTrue(classpathScanner.isPackage("")); // default package
 		assertTrue(classpathScanner.isPackage("org.junit.platform.commons"));
+
 		assertFalse(classpathScanner.isPackage("org.doesnotexist"));
 	}
 
 	@Test
 	void isPackageForNullPackageName() {
 		assertThrows(PreconditionViolationException.class, () -> classpathScanner.isPackage(null));
+	}
+
+	@Test
+	void isPackageForWhitespacePackageName() {
+		assertThrows(PreconditionViolationException.class, () -> classpathScanner.isPackage("    "));
 	}
 
 	@Test

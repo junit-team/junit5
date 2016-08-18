@@ -343,7 +343,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void packageResolution() {
+	public void packageResolutionUsingExplicitBasePackage() {
 		JavaPackageSelector selector = selectJavaPackage("org.junit.jupiter.engine.descriptor.subpackage");
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
@@ -359,6 +359,23 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
+	public void packageResolutionUsingDefaultPackage() {
+		resolver.resolveSelectors(request().selectors(selectJavaPackage("")).build(), engineDescriptor);
+
+		// 150 is completely arbitrary. The actual number is likely much higher.
+		assertThat(engineDescriptor.getAllDescendants().size()).isGreaterThan(150).as(
+			"Too few test descriptors in classpath");
+
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(ReflectionUtils.loadClass("DefaultPackageTestCase").get())),
+			"Failed to pick up DefaultPackageTestCase via classpath scanning");
+		assertTrue(uniqueIds.contains(uniqueIdForClass(Class1WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class1WithTestCases.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(Class2WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class2WithTestCases.class, "test2()")));
+	}
+
+	@Test
 	public void classpathResolution() {
 		File classpath = new File(
 			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().getPath());
@@ -367,7 +384,7 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().selectors(selectors).build(), engineDescriptor);
 
-		// 150 is completely arbitrary. At this very second in time, the number is actually 213.
+		// 150 is completely arbitrary. The actual number is likely much higher.
 		assertThat(engineDescriptor.getAllDescendants().size()).isGreaterThan(150).as(
 			"Too few test descriptors in classpath");
 

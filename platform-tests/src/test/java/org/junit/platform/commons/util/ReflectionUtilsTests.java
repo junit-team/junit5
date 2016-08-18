@@ -345,7 +345,6 @@ public class ReflectionUtilsTests {
 	@Test
 	void isPackage() {
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage(null));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage(""));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage("     "));
 
 		assertFalse(ReflectionUtils.isPackage("org.non.existing.package"));
@@ -353,6 +352,7 @@ public class ReflectionUtilsTests {
 		assertTrue(ReflectionUtils.isPackage("org.junit.platform.commons.util"));
 		assertTrue(ReflectionUtils.isPackage("org.junit.platform.commons"));
 		assertTrue(ReflectionUtils.isPackage("org.junit.platform"));
+		assertTrue(ReflectionUtils.isPackage("")); // default package
 	}
 
 	@Test

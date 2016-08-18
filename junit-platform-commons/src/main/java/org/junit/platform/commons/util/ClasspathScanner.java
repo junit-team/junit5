@@ -45,7 +45,7 @@ class ClasspathScanner {
 
 	private static final String CLASS_FILE_SUFFIX = ".class";
 
-	private static final String ROOT_PACKAGE_NAME = "";
+	private static final String DEFAULT_PACKAGE_NAME = "";
 
 	/** Malformed class name InternalError like reported in #401. */
 	private static final String MALFORMED_CLASS_NAME_ERROR_MESSAGE = "Malformed class name";
@@ -62,10 +62,11 @@ class ClasspathScanner {
 	}
 
 	boolean isPackage(String packageName) {
-		Preconditions.notBlank(packageName, "package name must not be null or blank");
+		assertPackageNameIsPlausible(packageName);
 
 		try {
-			return getClassLoader().getResources(packagePath(packageName)).hasMoreElements();
+			return packageName.length() == 0 // default package
+					|| getClassLoader().getResources(packagePath(packageName.trim())).hasMoreElements();
 		}
 		catch (Exception ex) {
 			return false;
@@ -73,7 +74,8 @@ class ClasspathScanner {
 	}
 
 	List<Class<?>> scanForClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter) {
-		Preconditions.notBlank(basePackageName, "basePackageName must not be null or blank");
+		assertPackageNameIsPlausible(basePackageName);
+		basePackageName = basePackageName.trim();
 
 		List<File> dirs = allSourceDirsForPackage(basePackageName);
 		return allClassesInSourceDirs(dirs, basePackageName, classFilter);
@@ -84,7 +86,7 @@ class ClasspathScanner {
 		Preconditions.condition(root.isDirectory(),
 			() -> "root must be an existing directory: " + root.getAbsolutePath());
 
-		return findClassesInSourceDirRecursively(ROOT_PACKAGE_NAME, root, classFilter);
+		return findClassesInSourceDirRecursively(DEFAULT_PACKAGE_NAME, root, classFilter);
 	}
 
 	private List<Class<?>> allClassesInSourceDirs(List<File> sourceDirs, String basePackageName,
@@ -212,6 +214,12 @@ class ClasspathScanner {
 
 	private ClassLoader getClassLoader() {
 		return this.classLoaderSupplier.get();
+	}
+
+	private static void assertPackageNameIsPlausible(String packageName) {
+		Preconditions.notNull(packageName, "package name must not be null");
+		Preconditions.condition(DEFAULT_PACKAGE_NAME.equals(packageName) || packageName.trim().length() != 0,
+			"package name must not contain only whitespace");
 	}
 
 	private static boolean isClassFile(File file) {

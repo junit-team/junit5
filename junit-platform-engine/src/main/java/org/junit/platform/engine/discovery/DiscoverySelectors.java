@@ -216,12 +216,17 @@ public final class DiscoverySelectors {
 	/**
 	 * Create a {@code PackageSelector} for the supplied package name.
 	 *
-	 * @param packageName the package name to select; never {@code null} or blank
+	 * <p>The default package is represented by an empty string ({@code ""}).
+	 *
+	 * @param packageName the package name to select; never {@code null} and
+	 * never containing whitespace only
 	 * @see JavaPackageSelector
 	 */
 	public static JavaPackageSelector selectJavaPackage(String packageName) {
-		Preconditions.notBlank(packageName, "Package name must not be null or blank");
-		return new JavaPackageSelector(packageName);
+		Preconditions.notNull(packageName, "Package name must not be null");
+		Preconditions.condition(packageName.equals("") || packageName.trim().length() != 0,
+			"Package name must not contain only whitespace");
+		return new JavaPackageSelector(packageName.trim());
 	}
 
 	/**
