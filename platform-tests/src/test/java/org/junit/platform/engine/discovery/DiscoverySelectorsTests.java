@@ -12,12 +12,12 @@ package org.junit.platform.engine.discovery;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirectory;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
 import java.io.File;
@@ -140,32 +140,32 @@ public class DiscoverySelectorsTests {
 
 	@Test
 	void selectPackageByName() {
-		JavaPackageSelector selector = selectPackage(getClass().getPackage().getName());
+		JavaPackageSelector selector = selectJavaPackage(getClass().getPackage().getName());
 		assertEquals(getClass().getPackage().getName(), selector.getPackageName());
 	}
 
 	@Test
 	void selectClassByName() {
-		JavaClassSelector selector = selectClass(getClass().getName());
+		JavaClassSelector selector = selectJavaClass(getClass().getName());
 		assertEquals(getClass(), selector.getJavaClass());
 	}
 
 	@Test
 	void selectMethodByFullyQualifiedName() {
-		JavaMethodSelector selector = selectMethod(fullyQualifiedMethodName);
+		JavaMethodSelector selector = selectJavaMethod(fullyQualifiedMethodName);
 		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
 	}
 
 	@Test
 	void selectMethodByFullyQualifiedNameWithParameters() {
-		JavaMethodSelector selector = selectMethod(fullyQualifiedMethodNameWithParameters);
+		JavaMethodSelector selector = selectJavaMethod(fullyQualifiedMethodNameWithParameters);
 		assertEquals(fullyQualifiedMethodWithParameters, selector.getJavaMethod());
 	}
 
 	@Test
 	void selectMethodWithParametersByMethodReference() throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest", String.class);
-		JavaMethodSelector selector = selectMethod(getClass(), method);
+		JavaMethodSelector selector = selectJavaMethod(getClass(), method);
 		assertEquals(method, selector.getJavaMethod());
 		assertEquals(method, selector.getJavaMethod());
 	}

@@ -11,8 +11,8 @@
 package org.junit.jupiter.engine.discovery;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -36,14 +36,14 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void discoverTestClass() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(LocalTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(LocalTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(7, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void doNotDiscoverAbstractTestClass() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(AbstractTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(AbstractTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(0, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
@@ -76,7 +76,8 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	public void discoverMethodByMethodReference() throws NoSuchMethodException {
 		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3", new Class[0]);
 
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, testMethod)).build();
+		LauncherDiscoveryRequest request = request().selectors(
+			selectJavaMethod(LocalTestCase.class, testMethod)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
@@ -85,7 +86,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	public void discoverCompositeSpec() {
 		LauncherDiscoveryRequest spec = request().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test2()")),
-			selectClass(LocalTestCase.class)).build();
+			selectJavaClass(LocalTestCase.class)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(7, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");

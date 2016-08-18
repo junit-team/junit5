@@ -219,7 +219,7 @@ public final class DiscoverySelectors {
 	 * @param packageName the package name to select; never {@code null} or blank
 	 * @see JavaPackageSelector
 	 */
-	public static JavaPackageSelector selectPackage(String packageName) {
+	public static JavaPackageSelector selectJavaPackage(String packageName) {
 		Preconditions.notBlank(packageName, "Package name must not be null or blank");
 		return new JavaPackageSelector(packageName);
 	}
@@ -230,7 +230,7 @@ public final class DiscoverySelectors {
 	 * @param clazz the class to select; never {@code null}
 	 * @see JavaClassSelector
 	 */
-	public static JavaClassSelector selectClass(Class<?> clazz) {
+	public static JavaClassSelector selectJavaClass(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		return new JavaClassSelector(clazz);
 	}
@@ -242,7 +242,7 @@ public final class DiscoverySelectors {
 	 * never {@code null} or blank
 	 * @see JavaClassSelector
 	 */
-	public static JavaClassSelector selectClass(String className) {
+	public static JavaClassSelector selectJavaClass(String className) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		return new JavaClassSelector(loadClass(className));
 	}
@@ -278,14 +278,14 @@ public final class DiscoverySelectors {
 	 * blank, or does not specify a unique method
 	 * @see JavaMethodSelector
 	 */
-	public static JavaMethodSelector selectMethod(String name) throws PreconditionViolationException {
+	public static JavaMethodSelector selectJavaMethod(String name) throws PreconditionViolationException {
 		Preconditions.notBlank(name, "Method name must not be null or blank");
 
 		Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
 		Method method = methodOptional.orElseThrow(() -> new PreconditionViolationException(
 			String.format("'%s' could not be resolved to a unique method", name)));
 
-		return selectMethod(method.getDeclaringClass(), method);
+		return selectJavaMethod(method.getDeclaringClass(), method);
 	}
 
 	/**
@@ -296,11 +296,11 @@ public final class DiscoverySelectors {
 	 * @param methodName the name of the method to select; never {@code null} or blank
 	 * @see JavaMethodSelector
 	 */
-	public static JavaMethodSelector selectMethod(String className, String methodName) {
+	public static JavaMethodSelector selectJavaMethod(String className, String methodName) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Class<?> clazz = loadClass(className);
-		return selectMethod(clazz, findMethod(clazz, methodName));
+		return selectJavaMethod(clazz, findMethod(clazz, methodName));
 	}
 
 	/**
@@ -311,10 +311,10 @@ public final class DiscoverySelectors {
 	 * @param methodName the name of the method to select; never {@code null} or blank
 	 * @see JavaMethodSelector
 	 */
-	public static JavaMethodSelector selectMethod(Class<?> clazz, String methodName) {
+	public static JavaMethodSelector selectJavaMethod(Class<?> clazz, String methodName) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		return selectMethod(clazz, findMethod(clazz, methodName));
+		return selectJavaMethod(clazz, findMethod(clazz, methodName));
 	}
 
 	/**
@@ -325,7 +325,7 @@ public final class DiscoverySelectors {
 	 * @param method the method to select; never {@code null}
 	 * @see JavaMethodSelector
 	 */
-	public static JavaMethodSelector selectMethod(Class<?> clazz, Method method) {
+	public static JavaMethodSelector selectJavaMethod(Class<?> clazz, Method method) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(method, "Method must not be null");
 		return new JavaMethodSelector(clazz, method);

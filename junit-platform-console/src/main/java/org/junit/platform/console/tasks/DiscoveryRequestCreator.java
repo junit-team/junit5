@@ -13,10 +13,10 @@ package org.junit.platform.console.tasks;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
@@ -138,7 +138,7 @@ class DiscoveryRequestCreator {
 		try {
 			Optional<Class<?>> classOptional = ReflectionUtils.loadClass(name);
 			if (classOptional.isPresent()) {
-				return selectClass(classOptional.get());
+				return selectJavaClass(classOptional.get());
 			}
 		}
 		catch (Exception ex) {
@@ -149,7 +149,7 @@ class DiscoveryRequestCreator {
 			Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
 			if (methodOptional.isPresent()) {
 				Method method = methodOptional.get();
-				return selectMethod(method.getDeclaringClass(), method);
+				return selectJavaMethod(method.getDeclaringClass(), method);
 			}
 		}
 		catch (Exception ex) {
@@ -157,7 +157,7 @@ class DiscoveryRequestCreator {
 		}
 
 		if (ReflectionUtils.isPackage(name)) {
-			return selectPackage(name);
+			return selectJavaPackage(name);
 		}
 
 		throw new PreconditionViolationException(

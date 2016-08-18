@@ -44,15 +44,15 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *
  *   LauncherDiscoveryRequestBuilder.request()
  *     .selectors(
- *        selectPackage("org.example.user"),
- *        selectClass("org.example.payment.PaymentTests"),
- *        selectClass(ShippingTests.class),
- *        selectMethod("org.example.order.OrderTests#test1"),
- *        selectMethod("org.example.order.OrderTests#test2()"),
- *        selectMethod("org.example.order.OrderTests#test3(java.lang.String)"),
- *        selectMethod("org.example.order.OrderTests", "test4"),
- *        selectMethod(OrderTests.class, "test5"),
- *        selectMethod(OrderTests.class, testMethod),
+ *        selectJavaPackage("org.example.user"),
+ *        selectJavaClass("org.example.payment.PaymentTests"),
+ *        selectJavaClass(ShippingTests.class),
+ *        selectJavaMethod("org.example.order.OrderTests#test1"),
+ *        selectJavaMethod("org.example.order.OrderTests#test2()"),
+ *        selectJavaMethod("org.example.order.OrderTests#test3(java.lang.String)"),
+ *        selectJavaMethod("org.example.order.OrderTests", "test4"),
+ *        selectJavaMethod(OrderTests.class, "test5"),
+ *        selectJavaMethod(OrderTests.class, testMethod),
  *        selectClasspathRoots(Collections.singleton(new File("/my/local/path1"))),
  *        selectUniqueId("unique-id-1"),
  *        selectUniqueId("unique-id-2")

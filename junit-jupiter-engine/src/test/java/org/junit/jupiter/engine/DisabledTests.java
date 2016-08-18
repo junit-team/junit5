@@ -12,7 +12,7 @@ package org.junit.jupiter.engine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.Disabled;
@@ -29,7 +29,8 @@ public class DisabledTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestClass() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestClassTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(
+			selectJavaClass(DisabledTestClassTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1, eventRecorder.getContainerSkippedCount(), "# container skipped");
@@ -38,7 +39,8 @@ public class DisabledTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestMethods() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestMethodsTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(
+			selectJavaClass(DisabledTestMethodsTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");

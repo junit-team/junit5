@@ -16,10 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.engine.FilterResult.excluded;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -62,7 +62,7 @@ public class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							selectPackage("org.junit.platform.engine")
+							selectJavaPackage("org.junit.platform.engine")
 					).build();
 			// @formatter:on
 
@@ -76,8 +76,8 @@ public class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							selectClass(LauncherDiscoveryRequestBuilderTests.class.getName()),
-							selectClass(SampleTestClass.class)
+							selectJavaClass(LauncherDiscoveryRequestBuilderTests.class.getName()),
+							selectJavaClass(SampleTestClass.class)
 					)
 				.build();
 			// @formatter:on
@@ -91,7 +91,7 @@ public class LauncherDiscoveryRequestBuilderTests {
 		public void methodsByFullyQualifiedNameAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
-					.selectors(selectMethod(fullyQualifiedMethodName()))
+					.selectors(selectJavaMethod(fullyQualifiedMethodName()))
 					.build();
 			// @formatter:on
 
@@ -110,7 +110,7 @@ public class LauncherDiscoveryRequestBuilderTests {
 
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
-					.selectors(selectMethod(SampleTestClass.class.getName(), "test"))
+					.selectors(selectJavaMethod(SampleTestClass.class.getName(), "test"))
 					.build();
 			// @formatter:on
 
@@ -130,7 +130,7 @@ public class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			DefaultDiscoveryRequest discoveryRequest = (DefaultDiscoveryRequest) request()
 					.selectors(
-							selectMethod(SampleTestClass.class, "test")
+							selectJavaMethod(SampleTestClass.class, "test")
 					).build();
 			// @formatter:on
 

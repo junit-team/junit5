@@ -13,7 +13,7 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterEach;
@@ -58,7 +58,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	@Test
 	public void executeSingleTest() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(LocalTestCase.class, "alwaysPasses")).build();
+			selectJavaMethod(LocalTestCase.class, "alwaysPasses")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -72,7 +72,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	@Test
 	public void executeTestDeclaredInSuperClass() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(LocalTestCase.class, "superclassTest")).build();
+			selectJavaMethod(LocalTestCase.class, "superclassTest")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -92,7 +92,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	@Test
 	public void executeTestWithExceptionThrownInAfterMethod() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(LocalTestCase.class, "throwExceptionInAfterMethod")).build();
+			selectJavaMethod(LocalTestCase.class, "throwExceptionInAfterMethod")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
