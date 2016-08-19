@@ -72,7 +72,7 @@ class AvailableOptions {
 
 		// --- Selectors -------------------------------------------------------
 
-		scanClasspath = parser.acceptsAll(asList("scan-class-path", "a", "all"), //
+		scanClasspath = parser.accepts("scan-class-path", //
 			"Scan entire classpath or explicit classpath roots.");
 
 		arguments = parser.nonOptions("If --scan-class-path has been specified, non-option arguments represent "

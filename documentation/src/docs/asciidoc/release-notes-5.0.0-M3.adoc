@@ -46,6 +46,8 @@ on GitHub.
   `ConsoleLauncher` has been renamed to `-cp` in order to align with the option names for
   the standard `java` executable. In addition, a new `--class-path` alias has been
   introduced, while the existing `--classpath` command-line option remains unchanged.
+* The `-a` and `--all` command-line options for the `ConsoleLauncher` have been renamed
+  to `--scan-class-path`.
 * The `--xml-reports-dir` command-line option for the `ConsoleLauncher` has been renamed
   to `--reports-dir`.
 * The `-C`, `-D`, and `-r` short command-line options for the `ConsoleLauncher` have been
