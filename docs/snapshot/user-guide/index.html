@@ -3598,7 +3598,9 @@ querying registered instances of <code>FileSelector</code> and <code>DirectorySe
 <p>New <code>selectClasspathResource(String)</code> method in <code>DiscoverySelectors</code> for selecting
 <em>classpath resources</em> such as XML or JSON files by name, where the name is a
 <code>/</code>-separated path name for the resource within the current classpath. A <code>TestEngine</code>
-can retrieve such values by querying registered instances of <code>ClasspathResourceSelector</code>.</p>
+can retrieve such values by querying registered instances of <code>ClasspathResourceSelector</code>.
+Furthermore, a classpath resource can be made available as the <code>TestSource</code> of a
+<code>TestIdentifier</code> via the new <code>ClasspathResourceSource</code>.</p>
 </li>
 <li>
 <p>The <code>selectMethod(String)</code> method in <code>DiscoverySelectors</code> now supports selection of
