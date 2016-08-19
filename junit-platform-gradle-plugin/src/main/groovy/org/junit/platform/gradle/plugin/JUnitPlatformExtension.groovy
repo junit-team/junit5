@@ -33,7 +33,7 @@ class JUnitPlatformExtension {
 	String logManager
 
 	/**
-	 * The directory for the XML test report files.
+	 * The directory for the test report files.
 	 *
 	 * <p>Defaults to {@code file('build/test-results/junit-platform')}.
 	 */

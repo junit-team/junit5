@@ -105,7 +105,7 @@ class JUnitPlatformPluginSpec extends Specification {
 			junitTask.args.containsAll('-T', 'slow')
 			junitTask.args.containsAll('-e', 'foo')
 			junitTask.args.containsAll('-E', 'bar')
-			junitTask.args.containsAll('--xml-reports-dir', new File('/any').getCanonicalFile().toString())
+			junitTask.args.containsAll('--reports-dir', new File('/any').getCanonicalFile().toString())
 			junitTask.args.contains(project.file('build/classes/main').absolutePath)
 			junitTask.args.contains(project.file('build/resources/main').absolutePath)
 			junitTask.args.contains(project.file('build/classes/test').absolutePath)

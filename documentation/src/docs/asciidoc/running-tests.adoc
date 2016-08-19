@@ -290,7 +290,7 @@ Option                                    Description
   path1:path2:...>                          for example, for adding engines and
                                             their dependencies. This option can be
                                             repeated.
---xml-reports-dir <File>                  Enable XML report output into a specified
+--reports-dir <File>                      Enable report output into a specified
                                             local directory (will be created if it
                                             does not exist).
 -n, --include-classname                   Provide a regular expression to include

@@ -51,7 +51,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertEquals(Optional.empty(), options.getIncludeClassNamePattern()),
 			() -> assertEquals(emptyList(), options.getIncludedTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
-			() -> assertEquals(Optional.empty(), options.getXmlReportsDir()),
+			() -> assertEquals(Optional.empty(), options.getReportsDir()),
 			() -> assertEquals(emptyList(), options.getArguments())
 		);
 		// @formatter:on
@@ -185,15 +185,15 @@ class JOptSimpleCommandLineOptionsParserTests {
 		File dir = new File("build/test-results");
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(Optional.of(dir), parseArgLine("--xml-reports-dir build/test-results").getXmlReportsDir()),
-			() -> assertEquals(Optional.of(dir), parseArgLine("--xml-reports-dir=build/test-results").getXmlReportsDir())
+			() -> assertEquals(Optional.of(dir), parseArgLine("--reports-dir build/test-results").getReportsDir()),
+			() -> assertEquals(Optional.of(dir), parseArgLine("--reports-dir=build/test-results").getReportsDir())
 		);
 		// @formatter:on
 	}
 
 	@Test
 	public void parseInvalidXmlReportsDirs() throws Exception {
-		assertOptionWithMissingRequiredArgumentThrowsException("--xml-reports-dir");
+		assertOptionWithMissingRequiredArgumentThrowsException("--reports-dir");
 	}
 
 	@Test

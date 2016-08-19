@@ -124,7 +124,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			args.add(engineId)
 		}
 
-		args.add('--xml-reports-dir')
+		args.add('--reports-dir')
 		args.add(reportsDir.getAbsolutePath())
 
 		def rootDirs = []

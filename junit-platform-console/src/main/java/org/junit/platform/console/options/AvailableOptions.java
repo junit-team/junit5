@@ -33,7 +33,7 @@ class AvailableOptions {
 	private final OptionSpec<File> additionalClasspathEntries;
 
 	// Reports
-	private final OptionSpec<File> xmlReportsDir;
+	private final OptionSpec<File> reportsDir;
 
 	// Selectors
 	private final OptionSpec<String> arguments;
@@ -69,8 +69,8 @@ class AvailableOptions {
 
 		// --- Reports ---------------------------------------------------------
 
-		xmlReportsDir = parser.accepts("xml-reports-dir", //
-			"Enable XML report output into a specified local directory (will be created if it does not exist).") //
+		reportsDir = parser.accepts("reports-dir", //
+			"Enable report output into a specified local directory (will be created if it does not exist).") //
 				.withRequiredArg().ofType(File.class);
 
 		// --- Selectors -------------------------------------------------------
@@ -117,7 +117,7 @@ class AvailableOptions {
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
 
 		// Reports
-		result.setXmlReportsDir(detectedOptions.valueOf(this.xmlReportsDir));
+		result.setReportsDir(detectedOptions.valueOf(this.reportsDir));
 
 		// Selectors
 		result.setArguments(detectedOptions.valuesOf(this.arguments));
