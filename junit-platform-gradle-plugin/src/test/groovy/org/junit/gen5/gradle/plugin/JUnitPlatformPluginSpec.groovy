@@ -99,7 +99,7 @@ class JUnitPlatformPluginSpec extends Specification {
 			junitTask.main == ConsoleLauncher.class.getName()
 
 			junitTask.args.contains('--hide-details')
-			junitTask.args.contains('--all')
+			junitTask.args.contains('--scan-class-path')
 			junitTask.args.containsAll('-n', '.*Tests?')
 			junitTask.args.containsAll('-t', 'fast')
 			junitTask.args.containsAll('-T', 'slow')
