@@ -52,10 +52,10 @@ class AvailableOptions {
 		help = parser.acceptsAll(asList("h", "help"), //
 			"Display help information.");
 
-		disableAnsiColors = parser.acceptsAll(asList("C", "disable-ansi-colors"),
-			"Disable colored output (not supported by all terminals).");
+		disableAnsiColors = parser.accepts("disable-ansi-colors",
+			"Disable ANSI colors in output (not supported by all terminals).");
 
-		hideDetails = parser.acceptsAll(asList("D", "hide-details"),
+		hideDetails = parser.accepts("hide-details",
 			"Hide details while tests are being executed. Only show the summary and test failures.");
 
 		runAllTests = parser.acceptsAll(asList("a", "all"), //
@@ -69,7 +69,7 @@ class AvailableOptions {
 
 		// --- Reports ---------------------------------------------------------
 
-		xmlReportsDir = parser.acceptsAll(asList("r", "xml-reports-dir"), //
+		xmlReportsDir = parser.accepts("xml-reports-dir", //
 			"Enable XML report output into a specified local directory (will be created if it does not exist).") //
 				.withRequiredArg().ofType(File.class);
 

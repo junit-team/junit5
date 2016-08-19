@@ -61,9 +61,9 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseSwitches() {
 		// @formatter:off
 		assertAll(
-			() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "-C", "--disable-ansi-colors"),
+			() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
 			() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
-			() -> assertParses("hide details", CommandLineOptions::isHideDetails, "-D", "--hide-details"),
+			() -> assertParses("hide details", CommandLineOptions::isHideDetails, "--hide-details"),
 			() -> assertParses("run all tests", CommandLineOptions::isRunAllTests, "-a", "--all")
 		);
 		// @formatter:on
@@ -185,7 +185,6 @@ class JOptSimpleCommandLineOptionsParserTests {
 		File dir = new File("build/test-results");
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(Optional.of(dir), parseArgLine("-r build/test-results").getXmlReportsDir()),
 			() -> assertEquals(Optional.of(dir), parseArgLine("--xml-reports-dir build/test-results").getXmlReportsDir()),
 			() -> assertEquals(Optional.of(dir), parseArgLine("--xml-reports-dir=build/test-results").getXmlReportsDir())
 		);
@@ -194,7 +193,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseInvalidXmlReportsDirs() throws Exception {
-		assertOptionWithMissingRequiredArgumentThrowsException("-r", "--xml-reports-dir");
+		assertOptionWithMissingRequiredArgumentThrowsException("--xml-reports-dir");
 	}
 
 	@Test
