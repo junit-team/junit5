@@ -28,6 +28,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * {@linkplain FilePosition position}.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.discovery.FileSelector
  */
 @API(Experimental)
 public class FileSource implements FileSystemSource {
@@ -112,7 +113,7 @@ public class FileSource implements FileSystemSource {
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("file", this.file.toString())
+				.append("file", this.file)
 				.append("filePosition", this.filePosition)
 				.toString();
 		// @formatter:on

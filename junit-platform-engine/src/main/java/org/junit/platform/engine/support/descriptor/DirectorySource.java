@@ -25,6 +25,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * Directory based {@link org.junit.platform.engine.TestSource}.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.discovery.DirectorySelector
  */
 @API(Experimental)
 public class DirectorySource implements FileSystemSource {
@@ -88,7 +89,7 @@ public class DirectorySource implements FileSystemSource {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("directory", this.directory.toString()).toString();
+		return new ToStringBuilder(this).append("directory", this.directory).toString();
 	}
 
 }
