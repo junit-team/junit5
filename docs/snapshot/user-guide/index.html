@@ -2019,9 +2019,9 @@ final release.
 <div class="listingblock">
 <div class="content">
 <pre>Non-option arguments:
-Test classes, methods, or packages to execute. If --all|-a has been specified, non-option
-  arguments represent all classpath roots that should be considered for test scanning, or
-  none if the full classpath should be scanned.
+If --scan-class-path has been specified, non-option arguments represent explicit
+  classpath roots that should be considered for scanning or none if the entire classpath
+  should be scanned.
 
 Option                                    Description
 ------                                    -----------
@@ -2031,7 +2031,6 @@ Option                                    Description
 --hide-details                            Hide details while tests are being
                                             executed. Only show the summary and test
                                             failures.
--a, --all                                 Run all tests.
 --class-path, --classpath, --cp <File:    Provide additional classpath entries --
   path1:path2:...>                          for example, for adding engines and
                                             their dependencies. This option can be
@@ -2039,6 +2038,8 @@ Option                                    Description
 --reports-dir <File>                      Enable report output into a specified
                                             local directory (will be created if it
                                             does not exist).
+--scan-class-path                         Scan entire classpath or explicit
+                                            classpath roots.
 -n, --include-classname                   Provide a regular expression to include
                                             only classes whose fully qualified names
                                             match. By default any class name is
@@ -3563,6 +3564,10 @@ Gradle plugin when no explicit packages have been selected.</p>
 <code>ConsoleLauncher</code> has been renamed to <code>-cp</code> in order to align with the option names for
 the standard <code>java</code> executable. In addition, a new <code>--class-path</code> alias has been
 introduced, while the existing <code>--classpath</code> command-line option remains unchanged.</p>
+</li>
+<li>
+<p>The <code>-a</code> and <code>--all</code> command-line options for the <code>ConsoleLauncher</code> have been renamed
+to <code>--scan-class-path</code>.</p>
 </li>
 <li>
 <p>The <code>--xml-reports-dir</code> command-line option for the <code>ConsoleLauncher</code> has been renamed
