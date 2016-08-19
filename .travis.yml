@@ -31,4 +31,4 @@ install: ./gradlew -version
 script:
   - java -version
   - ./gradlew -version
-  - ./gradlew clean check
+  - ./gradlew --refresh-dependencies clean check
