@@ -2026,9 +2026,9 @@ Test classes, methods, or packages to execute. If --all|-a has been specified, n
 Option                                    Description
 ------                                    -----------
 -h, --help                                Display help information.
--C, --disable-ansi-colors                 Disable colored output (not supported by
-                                            all terminals).
--D, --hide-details                        Hide details while tests are being
+--disable-ansi-colors                     Disable ANSI colors in output (not
+                                            supported by all terminals).
+--hide-details                            Hide details while tests are being
                                             executed. Only show the summary and test
                                             failures.
 -a, --all                                 Run all tests.
@@ -2036,7 +2036,7 @@ Option                                    Description
   path1:path2:...>                          for example, for adding engines and
                                             their dependencies. This option can be
                                             repeated.
--r, --xml-reports-dir <File>              Enable XML report output into a specified
+--reports-dir <File>                      Enable report output into a specified
                                             local directory (will be created if it
                                             does not exist).
 -n, --include-classname                   Provide a regular expression to include
@@ -3564,6 +3564,15 @@ Gradle plugin when no explicit packages have been selected.</p>
 the standard <code>java</code> executable. In addition, a new <code>--class-path</code> alias has been
 introduced, while the existing <code>--classpath</code> command-line option remains unchanged.</p>
 </li>
+<li>
+<p>The <code>--xml-reports-dir</code> command-line option for the <code>ConsoleLauncher</code> has been renamed
+to <code>--reports-dir</code>.</p>
+</li>
+<li>
+<p>The <code>-C</code>, <code>-D</code>, and <code>-r</code> short command-line options for the <code>ConsoleLauncher</code> have been
+removed in favor of using their <em>long</em> equivalents <code>--disable-ansi-colors</code>,
+<code>--hide-details</code>, and <code>--reports-dir</code> respectively.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -3643,7 +3652,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-08-18 15:30:45 -04:00
+Last updated 2016-08-19 11:58:28 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
