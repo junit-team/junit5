@@ -71,6 +71,10 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 		File file1 = new File("foo.txt");
 		File file2 = new File("bar.txt");
 		assertEqualsAndHashCode(new FileSource(file1), new FileSource(file1), new FileSource(file2));
+
+		FilePosition position = new FilePosition(42, 23);
+		assertEqualsAndHashCode(new FileSource(file1, position), new FileSource(file1, position),
+			new FileSource(file2, position));
 	}
 
 	@Test

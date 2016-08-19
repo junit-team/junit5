@@ -65,6 +65,8 @@ on GitHub.
   _classpath resources_ such as XML or JSON files by name, where the name is a
   `/`-separated path name for the resource within the current classpath. A `TestEngine`
   can retrieve such values by querying registered instances of `ClasspathResourceSelector`.
+  Furthermore, a classpath resource can be made available as the `TestSource` of a
+  `TestIdentifier` via the new `ClasspathResourceSource`.
 * The `selectMethod(String)` method in `DiscoverySelectors` now supports selection of
   a _fully qualified method name_ for a method that accepts parameters -- for example,
   `"org.example.TestClass#testMethod(org.junit.jupiter.api.TestInfo)"`.
