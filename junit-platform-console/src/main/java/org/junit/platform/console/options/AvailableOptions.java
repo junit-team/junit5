@@ -29,13 +29,13 @@ class AvailableOptions {
 	private final OptionSpec<Void> help;
 	private final OptionSpec<Void> disableAnsiColors;
 	private final OptionSpec<Void> hideDetails;
-	private final OptionSpec<Void> runAllTests;
 	private final OptionSpec<File> additionalClasspathEntries;
 
 	// Reports
 	private final OptionSpec<File> reportsDir;
 
 	// Selectors
+	private final OptionSpec<Void> scanClasspath;
 	private final OptionSpec<String> arguments;
 
 	// Filters
@@ -58,9 +58,6 @@ class AvailableOptions {
 		hideDetails = parser.accepts("hide-details",
 			"Hide details while tests are being executed. Only show the summary and test failures.");
 
-		runAllTests = parser.acceptsAll(asList("a", "all"), //
-			"Run all tests.");
-
 		additionalClasspathEntries = parser.acceptsAll(asList("cp", "classpath", "class-path"), //
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies. "
 					+ "This option can be repeated.") //
@@ -75,9 +72,12 @@ class AvailableOptions {
 
 		// --- Selectors -------------------------------------------------------
 
-		arguments = parser.nonOptions("Test classes, methods, or packages to execute. If --all|-a has been specified, "
-				+ "non-option arguments represent all classpath roots that should be considered for test scanning, "
-				+ "or none if the full classpath should be scanned.");
+		scanClasspath = parser.acceptsAll(asList("scan-class-path", "a", "all"), //
+			"Scan entire classpath or explicit classpath roots.");
+
+		arguments = parser.nonOptions("If --scan-class-path has been specified, non-option arguments represent "
+				+ "explicit classpath roots that should be considered for scanning "
+				+ "or none if the entire classpath should be scanned.");
 
 		// --- Filters ---------------------------------------------------------
 
@@ -113,13 +113,13 @@ class AvailableOptions {
 		result.setDisplayHelp(detectedOptions.has(this.help));
 		result.setAnsiColorOutputDisabled(detectedOptions.has(this.disableAnsiColors));
 		result.setHideDetails(detectedOptions.has(this.hideDetails));
-		result.setRunAllTests(detectedOptions.has(this.runAllTests));
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
 
 		// Reports
 		result.setReportsDir(detectedOptions.valueOf(this.reportsDir));
 
 		// Selectors
+		result.setScanClasspath(detectedOptions.has(this.scanClasspath));
 		result.setArguments(detectedOptions.valuesOf(this.arguments));
 
 		// Filters

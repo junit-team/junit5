@@ -28,22 +28,20 @@ public class CommandLineOptions {
 
 	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
-	private boolean runAllTests;
 	private boolean hideDetails;
 
-	private String includeClassNamePattern;
+	private boolean scanClasspath;
+	private List<String> arguments = emptyList();
 
+	private String includeClassNamePattern;
 	private List<String> includedEngines = emptyList();
 	private List<String> excludedEngines = emptyList();
-
 	private List<String> includedTags = emptyList();
 	private List<String> excludedTags = emptyList();
 
 	private List<File> additionalClasspathEntries = emptyList();
 
 	private File reportsDir;
-
-	private List<String> arguments = emptyList();
 
 	public boolean isDisplayHelp() {
 		return this.displayHelp;
@@ -61,12 +59,12 @@ public class CommandLineOptions {
 		this.ansiColorOutputDisabled = ansiColorOutputDisabled;
 	}
 
-	public boolean isRunAllTests() {
-		return this.runAllTests;
+	public boolean isScanClasspath() {
+		return this.scanClasspath;
 	}
 
-	public void setRunAllTests(boolean runAllTests) {
-		this.runAllTests = runAllTests;
+	public void setScanClasspath(boolean scanClasspath) {
+		this.scanClasspath = scanClasspath;
 	}
 
 	public boolean isHideDetails() {

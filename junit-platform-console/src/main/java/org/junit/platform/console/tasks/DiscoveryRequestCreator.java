@@ -54,13 +54,13 @@ class DiscoveryRequestCreator {
 	}
 
 	private LauncherDiscoveryRequestBuilder createRequestBuilder(CommandLineOptions options) {
-		if (options.isRunAllTests()) {
-			return createBuilderForAllTests(options);
+		if (options.isScanClasspath()) {
+			return createBuilderForClasspathScanning(options);
 		}
 		return createNameBasedBuilder(options);
 	}
 
-	private LauncherDiscoveryRequestBuilder createBuilderForAllTests(CommandLineOptions options) {
+	private LauncherDiscoveryRequestBuilder createBuilderForClasspathScanning(CommandLineOptions options) {
 		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
 		return request().selectors(selectClasspathRoots(rootDirectoriesToScan));
 	}

@@ -77,7 +77,7 @@ public class DiscoveryRequestCreatorTests {
 
 	@Test
 	public void convertsAllOptionWithoutExplicitRootDirectories() {
-		options.setRunAllTests(true);
+		options.setScanClasspath(true);
 
 		LauncherDiscoveryRequest request = convert();
 
@@ -91,7 +91,7 @@ public class DiscoveryRequestCreatorTests {
 
 	@Test
 	public void convertsAllOptionWithExplicitRootDirectories() {
-		options.setRunAllTests(true);
+		options.setScanClasspath(true);
 		options.setArguments(asList(".", ".."));
 
 		LauncherDiscoveryRequest request = convert();
@@ -105,7 +105,7 @@ public class DiscoveryRequestCreatorTests {
 
 	@Test
 	public void convertsAllOptionWithAdditionalClasspathEntries() {
-		options.setRunAllTests(true);
+		options.setScanClasspath(true);
 		options.setAdditionalClasspathEntries(asList(new File("."), new File("..")));
 
 		LauncherDiscoveryRequest request = convert();
@@ -119,7 +119,7 @@ public class DiscoveryRequestCreatorTests {
 
 	@Test
 	public void convertsIncludeClassNamePatternOption() {
-		options.setRunAllTests(true);
+		options.setScanClasspath(true);
 		options.setIncludeClassNamePattern(".*Test");
 
 		LauncherDiscoveryRequest request = convert();
@@ -131,7 +131,7 @@ public class DiscoveryRequestCreatorTests {
 
 	@Test
 	public void convertsTagOptions() {
-		options.setRunAllTests(true);
+		options.setScanClasspath(true);
 		options.setIncludedTags(asList("fast", "medium", "slow"));
 		options.setExcludedTags(asList("slow"));
 
@@ -145,7 +145,7 @@ public class DiscoveryRequestCreatorTests {
 
 	@Test
 	public void convertsEngineOptions() {
-		options.setRunAllTests(true);
+		options.setScanClasspath(true);
 		options.setIncludedEngines(asList("engine1", "engine2", "engine3"));
 		options.setExcludedEngines(asList("engine2"));
 

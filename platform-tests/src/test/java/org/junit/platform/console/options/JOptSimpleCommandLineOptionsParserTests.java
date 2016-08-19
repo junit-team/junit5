@@ -47,7 +47,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertFalse(options.isAnsiColorOutputDisabled()),
 			() -> assertFalse(options.isDisplayHelp()),
 			() -> assertFalse(options.isHideDetails()),
-			() -> assertFalse(options.isRunAllTests()),
+			() -> assertFalse(options.isScanClasspath()),
 			() -> assertEquals(Optional.empty(), options.getIncludeClassNamePattern()),
 			() -> assertEquals(emptyList(), options.getIncludedTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
@@ -64,7 +64,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
 			() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
 			() -> assertParses("hide details", CommandLineOptions::isHideDetails, "--hide-details"),
-			() -> assertParses("run all tests", CommandLineOptions::isRunAllTests, "-a", "--all")
+			() -> assertParses("scan class path", CommandLineOptions::isScanClasspath, "--scan-class-path", "-a", "--all")
 		);
 		// @formatter:on
 	}
