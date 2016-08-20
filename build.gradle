@@ -78,6 +78,51 @@ allprojects {
 		targetCompatibility = rootProject.targetCompatibility
 	}
 
+	// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
+	compileJava.options*.compilerArgs = [
+		'-Xlint:cast',
+		'-Xlint:classfile',
+		'-Xlint:deprecation',
+		'-Xlint:dep-ann',
+		'-Xlint:divzero',
+		'-Xlint:empty',
+		'-Xlint:fallthrough',
+		'-Xlint:finally',
+		'-Xlint:overrides',
+		'-Xlint:path',
+		'-Xlint:processing',
+		'-Xlint:rawtypes',
+		'-Xlint:serial',
+		'-Xlint:static',
+		'-Xlint:try',
+		'-Xlint:unchecked',
+		'-Xlint:varargs',
+		'-Xlint:-options',
+		'-Werror'
+	]
+
+	// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
+	compileTestJava.options*.compilerArgs = [
+		'-Xlint:cast',
+		'-Xlint:classfile',
+		'-Xlint:deprecation',
+		'-Xlint:dep-ann',
+		'-Xlint:divzero',
+		'-Xlint:empty',
+		'-Xlint:fallthrough',
+		'-Xlint:finally',
+		'-Xlint:path',
+		'-Xlint:processing',
+		'-Xlint:rawtypes',
+		'-Xlint:serial',
+		'-Xlint:static',
+		'-Xlint:try',
+		'-Xlint:unchecked',
+		'-Xlint:varargs',
+		'-Xlint:-options',
+		'-Xlint:-overrides'
+	]
+
 	compileTestJava {
 		options.compilerArgs += '-parameters'
 	}

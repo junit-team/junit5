@@ -74,7 +74,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void discoverMethodByMethodReference() throws NoSuchMethodException {
-		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3", new Class[0]);
+		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3", new Class<?>[0]);
 
 		LauncherDiscoveryRequest request = request().selectors(
 			selectJavaMethod(LocalTestCase.class, testMethod)).build();

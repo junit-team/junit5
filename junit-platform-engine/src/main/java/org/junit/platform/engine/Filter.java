@@ -49,6 +49,7 @@ public interface Filter<T> {
 	 * @see #composeFilters(Collection)
 	 */
 	@SafeVarargs
+	@SuppressWarnings("varargs")
 	static <T> Filter<T> composeFilters(Filter<T>... filters) {
 		Preconditions.notNull(filters, "Filters must not be null");
 
