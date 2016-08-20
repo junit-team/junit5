@@ -5,7 +5,9 @@
 **Project License:**  [Eclipse Public License v1.0](LICENSE.md)
 
 - You will only Submit Contributions where You have authored 100% of the content.
-- You will only Submit Contributions to which You have the necessary rights. This means that if You are employed You have received the necessary permissions from Your employer to make the Contributions.
+- You will only Submit Contributions to which You have the necessary rights. This means
+  that if You are employed You have received the necessary permissions from Your employer
+  to make the Contributions.
 - Whatever content You Contribute will be provided under the Project License(s).
 
 ## Commit Messages
@@ -27,9 +29,18 @@ I hereby agree to the terms of the JUnit Contributor License Agreement.
 
 ### Formatting
 
-Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless) Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing license headers to source files. Formatter settings for Eclipse are available [in the repository](src/eclipse/junit-eclipse-formatter-settings.xml). For IntelliJ IDEA there's a [plugin](https://plugins.jetbrains.com/plugin/6546) you can use.
+Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless)
+Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing
+license headers to source files. Formatter and import order settings for Eclipse are
+available in the repository under
+[src/eclipse/junit-eclipse-formatter-settings.xml](src/eclipse/junit-eclipse-formatter-settings.xml)
+and [src/eclipse/junit-eclipse.importorder](src/eclipse/junit-eclipse.importorder),
+respectively. For IntelliJ IDEA there's a
+[plugin](https://plugins.jetbrains.com/plugin/6546) you can use in conjunction with the
+Eclipse settings.
 
-Text in `*.adoc` and `*.md` files should be wrapped at 90 characters whenever technically possible.
+Text in `*.adoc` and `*.md` files should be wrapped at 90 characters whenever technically
+possible.
 
 ### Javadoc
 
