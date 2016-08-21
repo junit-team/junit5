@@ -11,12 +11,14 @@
 package org.junit.platform.commons.util;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -75,56 +77,46 @@ class ClasspathScanner {
 
 	List<Class<?>> scanForClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter) {
 		assertPackageNameIsPlausible(basePackageName);
+		Preconditions.notNull(classFilter, "classFilter must not be null");
 		basePackageName = basePackageName.trim();
 
-		List<File> dirs = allSourceDirsForPackage(basePackageName);
-		return allClassesInSourceDirs(dirs, basePackageName, classFilter);
+		return findClassesInSourceDirs(getSourceDirsForPackage(basePackageName), basePackageName, classFilter);
 	}
 
 	List<Class<?>> scanForClassesInClasspathRoot(File root, Predicate<Class<?>> classFilter) {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.condition(root.isDirectory(),
 			() -> "root must be an existing directory: " + root.getAbsolutePath());
-
-		return findClassesInSourceDirRecursively(DEFAULT_PACKAGE_NAME, root, classFilter);
-	}
-
-	private List<Class<?>> allClassesInSourceDirs(List<File> sourceDirs, String basePackageName,
-			Predicate<Class<?>> classFilter) {
-
-		List<Class<?>> classes = new ArrayList<>();
-		for (File sourceDir : sourceDirs) {
-			classes.addAll(findClassesInSourceDirRecursively(basePackageName, sourceDir, classFilter));
-		}
-		return classes;
-	}
-
-	private List<File> allSourceDirsForPackage(String basePackageName) {
-		try {
-			Enumeration<URL> resources = getClassLoader().getResources(packagePath(basePackageName));
-			List<File> dirs = new ArrayList<>();
-			while (resources.hasMoreElements()) {
-				URL resource = resources.nextElement();
-				dirs.add(new File(resource.getFile()));
-			}
-			return dirs;
-		}
-		catch (Exception ex) {
-			return Collections.emptyList();
-		}
-	}
-
-	private List<Class<?>> findClassesInSourceDirRecursively(String packageName, File sourceDir,
-			Predicate<Class<?>> classFilter) {
-
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 
+		return findClassesInSourceDir(DEFAULT_PACKAGE_NAME, root, classFilter);
+	}
+
+	/**
+	 * Recursively scan for classes in all of the supplied source directories.
+	 */
+	private List<Class<?>> findClassesInSourceDirs(List<File> sourceDirs, String basePackageName,
+			Predicate<Class<?>> classFilter) {
+
+		// @formatter:off
+		return sourceDirs.stream()
+				.map(dir -> findClassesInSourceDir(basePackageName, dir, classFilter))
+				.flatMap(Collection::stream)
+				.distinct()
+				.collect(toList());
+		// @formatter:on
+	}
+
+	/**
+	 * Recursively scan for classes in the supplied source directory.
+	 */
+	private List<Class<?>> findClassesInSourceDir(String packageName, File sourceDir, Predicate<Class<?>> classFilter) {
 		List<Class<?>> classes = new ArrayList<>();
-		collectClassesRecursively(packageName, sourceDir, classFilter, classes);
+		findClassesInSourceDir(packageName, sourceDir, classFilter, classes);
 		return classes;
 	}
 
-	private void collectClassesRecursively(String packageName, File sourceDir, Predicate<Class<?>> classFilter,
+	private void findClassesInSourceDir(String packageName, File sourceDir, Predicate<Class<?>> classFilter,
 			List<Class<?>> classes) {
 
 		File[] files = sourceDir.listFiles();
@@ -133,12 +125,11 @@ class ClasspathScanner {
 		}
 
 		for (File file : files) {
-			if (isClassFile(file)) {
+			if (isNotPackageInfo(file) && isClassFile(file)) {
 				processClassFileSafely(packageName, file, classFilter, classes);
 			}
 			else if (file.isDirectory()) {
-				collectClassesRecursively(appendSubpackageName(packageName, file.getName()), file, classFilter,
-					classes);
+				findClassesInSourceDir(appendSubpackageName(packageName, file.getName()), file, classFilter, classes);
 			}
 		}
 	}
@@ -222,12 +213,31 @@ class ClasspathScanner {
 			"package name must not contain only whitespace");
 	}
 
+	private static boolean isNotPackageInfo(File file) {
+		return !"package-info.class".equals(file.getName());
+	}
+
 	private static boolean isClassFile(File file) {
 		return file.isFile() && file.getName().endsWith(CLASS_FILE_SUFFIX);
 	}
 
 	private static String packagePath(String packageName) {
 		return packageName.replace('.', '/');
+	}
+
+	private List<File> getSourceDirsForPackage(String packageName) {
+		try {
+			Enumeration<URL> resources = getClassLoader().getResources(packagePath(packageName));
+			List<File> dirs = new ArrayList<>();
+			while (resources.hasMoreElements()) {
+				URL resource = resources.nextElement();
+				dirs.add(new File(resource.getFile()));
+			}
+			return dirs;
+		}
+		catch (Exception ex) {
+			return Collections.emptyList();
+		}
 	}
 
 	private static void logWarning(Throwable throwable, Supplier<String> msgSupplier) {
