@@ -157,19 +157,19 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 			(this.timeFinished - this.timeStarted),
 
-			this.containersFound.get(),
-			this.containersSkipped.get(),
-			this.containersStarted.get(),
-			this.containersAborted.get(),
-			this.containersSucceeded.get(),
-			this.containersFailed.get(),
+			getContainersFoundCount(),
+			getContainersSkippedCount(),
+			getContainersStartedCount(),
+			getContainersAbortedCount(),
+			getContainersSucceededCount(),
+			getContainersFailedCount(),
 
-			this.testsFound.get(),
-			this.testsSkipped.get(),
-			this.testsStarted.get(),
-			this.testsAborted.get(),
-			this.testsSucceeded.get(),
-			this.testsFailed.get()
+			getTestsFoundCount(),
+			getTestsSkippedCount(),
+			getTestsStartedCount(),
+			getTestsAbortedCount(),
+			getTestsSucceededCount(),
+			getTestsFailedCount()
 		));
 		// @formatter:on
 
