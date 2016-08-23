@@ -137,5 +137,14 @@
       "nur1",
       "sgs116"
     ]
+  },
+  {
+    "title": "Deep Dive into JUnit 5 - Devoxx Belgium 2016",
+    "date": "2016-11-09",
+    "location": "Antwerp, Belgium",
+    "link": "http://cfp.devoxx.be/2016/talk/OJP-6150/Deep_Dive_into_JUnit_5",
+    "speakers": [
+      "sbrannen"
+    ]
   }
 ]
