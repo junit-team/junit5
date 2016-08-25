@@ -3560,6 +3560,11 @@ Gradle plugin when no explicit packages have been selected.</p>
 <code>JavaMethodSource</code>.</p>
 </li>
 <li>
+<p>Generic name-based discovery selectors (i.e., <code>selectName()</code> and <code>selectNames()</code>) in
+<code>DiscoverySelectors</code> have been deprecated in favor of the dedicated
+<code>selectJavaPackage(String)</code>, <code>selectJavaClass(String)</code>, and <code>selectJavaMethod(String)</code> methods.</p>
+</li>
+<li>
 <p>The <code>-p</code> command-line option for configuring additional classpath entries for the
 <code>ConsoleLauncher</code> has been renamed to <code>-cp</code> in order to align with the option names for
 the standard <code>java</code> executable. In addition, a new <code>--class-path</code> alias has been
@@ -3625,6 +3630,9 @@ plugin now includes statistics for all container events in addition to test even
 <p>The <code>JupiterTestEngine</code> now supports selection of test methods via their unique ID for
 methods that accept arrays or primitive types as parameters.</p>
 </li>
+<li>
+<p><code>ExtensionContext.Store</code> is now thread-safe.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -3659,7 +3667,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-08-25 13:07:58 -04:00
+Last updated 2016-08-25 13:15:14 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
