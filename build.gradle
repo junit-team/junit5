@@ -16,6 +16,16 @@ buildscript {
 	}
 }
 
+plugins {
+	id 'com.gradle.build-scan' version '1.0'
+}
+
+buildScan {
+	licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+	licenseAgree = 'yes'
+}
+
+
 Date buildTimeAndDate = new Date()
 ext {
 	// Generate JAR manifest only if code was compiled or recompiled;
