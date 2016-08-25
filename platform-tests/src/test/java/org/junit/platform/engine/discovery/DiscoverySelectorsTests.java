@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Paths;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
@@ -153,6 +154,19 @@ public class DiscoverySelectorsTests {
 	@Test
 	void selectMethodByFullyQualifiedName() {
 		JavaMethodSelector selector = selectJavaMethod(fullyQualifiedMethodName);
+		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
+	}
+
+	@Disabled("Disabled until GitHub issue #477 is addressed.")
+	@Test
+	void selectMethodByFullyQualifiedNameForSpockSpec() {
+		String spockClassName = "org.example.CalculatorSpec";
+		String spockMethodName = "#a plus #b equals #c";
+		String spockFullyQualifiedMethodName = spockClassName + "#" + spockMethodName;
+		// NOTE: depending on the outcome of #477, the following should likely not throw an exception.
+		JavaMethodSelector selector = selectJavaMethod(spockFullyQualifiedMethodName);
+		// NOTE: depending on the outcome of #477, appropriate assertions should be added to replace
+		// the following.
 		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
 	}
 
