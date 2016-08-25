@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -448,7 +449,7 @@ public final class ReflectionUtils {
 		// @formatter:on
 	}
 
-	public static List<Class<?>> findAllClassesInClasspathRoot(File root, Predicate<Class<?>> classTester) {
+	public static List<Class<?>> findAllClassesInClasspathRoot(Path root, Predicate<Class<?>> classTester) {
 		return classpathScanner.scanForClassesInClasspathRoot(root, classTester);
 	}
 

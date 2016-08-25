@@ -15,8 +15,11 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 
-import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -83,10 +86,10 @@ class ClasspathScanner {
 		return findClassesInSourceDirs(getSourceDirsForPackage(basePackageName), basePackageName, classFilter);
 	}
 
-	List<Class<?>> scanForClassesInClasspathRoot(File root, Predicate<Class<?>> classFilter) {
+	List<Class<?>> scanForClassesInClasspathRoot(Path root, Predicate<Class<?>> classFilter) {
 		Preconditions.notNull(root, "root must not be null");
-		Preconditions.condition(root.isDirectory(),
-			() -> "root must be an existing directory: " + root.getAbsolutePath());
+		Preconditions.condition(Files.isDirectory(root),
+			() -> "root must be an existing directory: " + root.toAbsolutePath());
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 
 		return findClassesInSourceDir(DEFAULT_PACKAGE_NAME, root, classFilter);
@@ -95,7 +98,7 @@ class ClasspathScanner {
 	/**
 	 * Recursively scan for classes in all of the supplied source directories.
 	 */
-	private List<Class<?>> findClassesInSourceDirs(List<File> sourceDirs, String basePackageName,
+	private List<Class<?>> findClassesInSourceDirs(List<Path> sourceDirs, String basePackageName,
 			Predicate<Class<?>> classFilter) {
 
 		// @formatter:off
@@ -110,31 +113,31 @@ class ClasspathScanner {
 	/**
 	 * Recursively scan for classes in the supplied source directory.
 	 */
-	private List<Class<?>> findClassesInSourceDir(String packageName, File sourceDir, Predicate<Class<?>> classFilter) {
+	private List<Class<?>> findClassesInSourceDir(String packageName, Path sourceDir, Predicate<Class<?>> classFilter) {
 		List<Class<?>> classes = new ArrayList<>();
 		findClassesInSourceDir(packageName, sourceDir, classFilter, classes);
 		return classes;
 	}
 
-	private void findClassesInSourceDir(String packageName, File sourceDir, Predicate<Class<?>> classFilter,
+	private void findClassesInSourceDir(String packageName, Path sourceDir, Predicate<Class<?>> classFilter,
 			List<Class<?>> classes) {
-
-		File[] files = sourceDir.listFiles();
-		if (files == null) {
-			return;
+		try {
+			Files.list(sourceDir).forEach(path -> {
+				if (isNotPackageInfo(path) && isClassFile(path)) {
+					processClassFileSafely(packageName, path, classFilter, classes);
+				}
+				else if (Files.isDirectory(path)) {
+					findClassesInSourceDir(appendSubpackageName(packageName, path.getFileName().toString()), path,
+						classFilter, classes);
+				}
+			});
 		}
-
-		for (File file : files) {
-			if (isNotPackageInfo(file) && isClassFile(file)) {
-				processClassFileSafely(packageName, file, classFilter, classes);
-			}
-			else if (file.isDirectory()) {
-				findClassesInSourceDir(appendSubpackageName(packageName, file.getName()), file, classFilter, classes);
-			}
+		catch (IOException ex) {
+			logWarning(ex, () -> "I/O Error reading files in " + sourceDir);
 		}
 	}
 
-	private void processClassFileSafely(String packageName, File classFile, Predicate<Class<?>> classFilter,
+	private void processClassFileSafely(String packageName, Path classFile, Predicate<Class<?>> classFilter,
 			List<Class<?>> classes) {
 
 		Optional<Class<?>> clazz = Optional.empty();
@@ -150,8 +153,9 @@ class ClasspathScanner {
 		}
 	}
 
-	private Optional<Class<?>> loadClassFromFile(String packageName, File classFile) {
-		String className = classFile.getName().substring(0, classFile.getName().length() - CLASS_FILE_SUFFIX.length());
+	private Optional<Class<?>> loadClassFromFile(String packageName, Path classFile) {
+		String fileName = classFile.getFileName().toString();
+		String className = fileName.substring(0, fileName.length() - CLASS_FILE_SUFFIX.length());
 
 		// Handle default package appropriately.
 		String fqcn = StringUtils.isBlank(packageName) ? className : packageName + "." + className;
@@ -159,7 +163,7 @@ class ClasspathScanner {
 		return this.loadClass.apply(fqcn, getClassLoader());
 	}
 
-	private void handleInternalError(File classFile, Optional<Class<?>> clazz, InternalError ex) {
+	private void handleInternalError(Path classFile, Optional<Class<?>> clazz, InternalError ex) {
 		if (MALFORMED_CLASS_NAME_ERROR_MESSAGE.equals(ex.getMessage())) {
 			logMalformedClassName(classFile, clazz, ex);
 		}
@@ -168,24 +172,24 @@ class ClasspathScanner {
 		}
 	}
 
-	private void handleThrowable(File classFile, Throwable throwable) {
+	private void handleThrowable(Path classFile, Throwable throwable) {
 		rethrowIfBlacklisted(throwable);
 		logGenericFileProcessingException(classFile, throwable);
 	}
 
-	private void logMalformedClassName(File classFile, Optional<Class<?>> clazz, InternalError ex) {
+	private void logMalformedClassName(Path classFile, Optional<Class<?>> clazz, InternalError ex) {
 		try {
 
 			if (clazz.isPresent()) {
 				// Do not use getSimpleName() or getCanonicalName() here because they will likely
 				// throw another exception due to the underlying error.
 				logWarning(ex,
-					() -> format("The java.lang.Class loaded from file [%s] has a malformed class name [%s].",
-						classFile.getAbsolutePath(), clazz.get().getName()));
+					() -> format("The java.lang.Class loaded from path [%s] has a malformed class name [%s].",
+						classFile.toAbsolutePath(), clazz.get().getName()));
 			}
 			else {
-				logWarning(ex, () -> format("The java.lang.Class loaded from file [%s] has a malformed class name.",
-					classFile.getAbsolutePath()));
+				logWarning(ex, () -> format("The java.lang.Class loaded from path [%s] has a malformed class name.",
+					classFile.toAbsolutePath()));
 			}
 		}
 		catch (Throwable t) {
@@ -194,9 +198,9 @@ class ClasspathScanner {
 		}
 	}
 
-	private void logGenericFileProcessingException(File classFile, Throwable throwable) {
-		logWarning(throwable, () -> format("Failed to load java.lang.Class for file [%s] during classpath scanning.",
-			classFile.getAbsolutePath()));
+	private void logGenericFileProcessingException(Path classFile, Throwable throwable) {
+		logWarning(throwable, () -> format("Failed to load java.lang.Class for path [%s] during classpath scanning.",
+			classFile.toAbsolutePath()));
 	}
 
 	private String appendSubpackageName(String packageName, String subpackageName) {
@@ -213,29 +217,35 @@ class ClasspathScanner {
 			"package name must not contain only whitespace");
 	}
 
-	private static boolean isNotPackageInfo(File file) {
-		return !"package-info.class".equals(file.getName());
+	private static boolean isNotPackageInfo(Path path) {
+		return !path.endsWith("package-info.class");
 	}
 
-	private static boolean isClassFile(File file) {
-		return file.isFile() && file.getName().endsWith(CLASS_FILE_SUFFIX);
+	private static boolean isClassFile(Path path) {
+		return Files.isRegularFile(path) && path.getFileName().toString().endsWith(CLASS_FILE_SUFFIX);
 	}
 
 	private static String packagePath(String packageName) {
 		return packageName.replace('.', '/');
 	}
 
-	private List<File> getSourceDirsForPackage(String packageName) {
+	private List<Path> getSourceDirsForPackage(String packageName) {
 		try {
 			Enumeration<URL> resources = getClassLoader().getResources(packagePath(packageName));
-			List<File> dirs = new ArrayList<>();
+			List<Path> dirs = new ArrayList<>();
 			while (resources.hasMoreElements()) {
 				URL resource = resources.nextElement();
-				dirs.add(new File(resource.getFile()));
+				try {
+					dirs.add(Paths.get(resource.toURI()));
+				}
+				catch (Exception ex) {
+					logWarning(ex, () -> "Error converting directory to Path for " + resource);
+				}
 			}
 			return dirs;
 		}
 		catch (Exception ex) {
+			logWarning(ex, () -> "Error reading directories from class loader for package " + packageName);
 			return Collections.emptyList();
 		}
 	}

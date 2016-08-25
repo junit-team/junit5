@@ -17,9 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Predicate;
@@ -181,7 +182,7 @@ class ClasspathScannerTests {
 	@Test
 	void findAllClassesInClasspathRoot() throws Exception {
 		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTests.class;
-		File root = getTestClasspathRoot();
+		Path root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, thisClassOnly);
 		assertSame(ClasspathScannerTests.class, classes.get(0));
 	}
@@ -205,7 +206,7 @@ class ClasspathScannerTests {
 
 	@Test
 	void findAllClassesInClasspathRootWithFilter() throws Exception {
-		File root = getTestClasspathRoot();
+		Path root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, clazz -> true);
 
 		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
@@ -221,7 +222,7 @@ class ClasspathScannerTests {
 	@Test
 	void findAllClassesInClasspathRootForNonExistingRoot() throws Exception {
 		assertThrows(PreconditionViolationException.class,
-			() -> classpathScanner.scanForClassesInClasspathRoot(new File("does_not_exist"), clazz -> true));
+			() -> classpathScanner.scanForClassesInClasspathRoot(Paths.get("does_not_exist"), clazz -> true));
 	}
 
 	@Test
@@ -230,9 +231,9 @@ class ClasspathScannerTests {
 			() -> classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(), null));
 	}
 
-	private File getTestClasspathRoot() throws Exception {
+	private Path getTestClasspathRoot() throws Exception {
 		URL location = getClass().getProtectionDomain().getCodeSource().getLocation();
-		return new File(location.toURI());
+		return Paths.get(location.toURI());
 	}
 
 	class MemberClassToBeFound {

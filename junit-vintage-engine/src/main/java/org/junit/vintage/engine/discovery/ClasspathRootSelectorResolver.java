@@ -12,6 +12,8 @@ package org.junit.vintage.engine.discovery;
 
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 
+import java.nio.file.Paths;
+
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 
 /**
@@ -25,7 +27,8 @@ class ClasspathRootSelectorResolver extends DiscoverySelectorResolver<ClasspathR
 
 	@Override
 	void resolve(ClasspathRootSelector selector, TestClassCollector collector) {
-		findAllClassesInClasspathRoot(selector.getClasspathRoot(), classTester).forEach(collector::addCompletely);
+		findAllClassesInClasspathRoot(Paths.get(selector.getClasspathRoot()), classTester).forEach(
+			collector::addCompletely);
 	}
 
 }

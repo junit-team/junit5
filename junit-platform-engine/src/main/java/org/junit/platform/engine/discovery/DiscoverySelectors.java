@@ -188,6 +188,7 @@ public final class DiscoverySelectors {
 		// @formatter:off
 		return directories.stream()
 				.filter(File::isDirectory)
+				.map(File::toURI)
 				.map(ClasspathRootSelector::new)
 				.collect(toList());
 		// @formatter:on

@@ -166,7 +166,8 @@ public class LauncherDiscoveryRequestBuilderTests {
 				// @formatter:on
 
 				List<String> folders = discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).stream().map(
-					ClasspathRootSelector::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
+					ClasspathRootSelector::getClasspathRoot).map(File::new).map(File::getAbsolutePath).collect(
+						toList());
 
 				assertThat(folders).contains(temporaryFolder.getAbsolutePath());
 			}

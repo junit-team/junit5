@@ -14,6 +14,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,7 +46,7 @@ public class DiscoverySelectorResolver {
 		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(engineDescriptor);
 
 		request.getSelectorsByType(ClasspathRootSelector.class).forEach(selector -> {
-			findAllClassesInClasspathRoot(selector.getClasspathRoot(), isScannableTestClass).forEach(
+			findAllClassesInClasspathRoot(Paths.get(selector.getClasspathRoot()), isScannableTestClass).forEach(
 				javaElementsResolver::resolveClass);
 		});
 		request.getSelectorsByType(JavaPackageSelector.class).forEach(selector -> {

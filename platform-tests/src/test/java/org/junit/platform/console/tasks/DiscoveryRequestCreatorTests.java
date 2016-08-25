@@ -18,6 +18,7 @@ import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -84,7 +85,7 @@ public class DiscoveryRequestCreatorTests {
 		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
 		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
-			.hasAtLeastOneElementOfType(File.class)
+			.hasAtLeastOneElementOfType(URI.class)
 			.doesNotContainNull();
 		// @formatter:on
 	}
@@ -99,7 +100,7 @@ public class DiscoveryRequestCreatorTests {
 		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
 		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
-			.containsExactly(new File("."), new File(".."));
+			.containsExactly(new File(".").toURI(), new File("..").toURI());
 		// @formatter:on
 	}
 
@@ -113,7 +114,7 @@ public class DiscoveryRequestCreatorTests {
 		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
 		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
-			.contains(new File("."), new File(".."));
+			.contains(new File(".").toURI(), new File("..").toURI());
 		// @formatter:on
 	}
 
