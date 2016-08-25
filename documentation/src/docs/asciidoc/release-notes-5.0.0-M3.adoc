@@ -42,6 +42,9 @@ on GitHub.
 * `MethodSelector` and `DiscoverySelectors.selectMethod()` have been renamed to
   `JavaMethodSelector` and `DiscoverySelectors.selectJavaMethod()` to align with
   `JavaMethodSource`.
+* Generic name-based discovery selectors (i.e., `selectName()` and `selectNames()`) in
+  `DiscoverySelectors` have been deprecated in favor of the dedicated
+  `selectJavaPackage(String)`, `selectJavaClass(String)`, and `selectJavaMethod(String)` methods.
 * The `-p` command-line option for configuring additional classpath entries for the
   `ConsoleLauncher` has been renamed to `-cp` in order to align with the option names for
   the standard `java` executable. In addition, a new `--class-path` alias has been
@@ -81,6 +84,7 @@ on GitHub.
 
 * The `JupiterTestEngine` now supports selection of test methods via their unique ID for
   methods that accept arrays or primitive types as parameters.
+* `ExtensionContext.Store` is now thread-safe.
 
 ====== New Features
 
