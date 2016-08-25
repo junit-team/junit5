@@ -10,8 +10,10 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirectory;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
@@ -28,6 +30,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.engine.DiscoverySelector;
 
 /**
  * Unit tests for {@link DiscoverySelectors}.
@@ -182,6 +185,28 @@ public class DiscoverySelectorsTests {
 		JavaMethodSelector selector = selectJavaMethod(getClass(), method);
 		assertEquals(method, selector.getJavaMethod());
 		assertEquals(method, selector.getJavaMethod());
+	}
+
+	@Test
+	@SuppressWarnings("deprecation")
+	void selectNamesWithPackageName() {
+		DiscoverySelector selector = getOnlyElement(DiscoverySelectors.selectNames(singleton("org.junit.platform")));
+		assertEquals(JavaPackageSelector.class, selector.getClass());
+	}
+
+	@Test
+	@SuppressWarnings("deprecation")
+	void selectNameWithClassName() {
+		DiscoverySelector selector = getOnlyElement(DiscoverySelectors.selectNames(singleton(getClass().getName())));
+		assertEquals(JavaClassSelector.class, selector.getClass());
+	}
+
+	@Test
+	@SuppressWarnings("deprecation")
+	void selectNameWithMethodName() {
+		DiscoverySelector selector = getOnlyElement(
+			DiscoverySelectors.selectNames(singleton(fullyQualifiedMethodName)));
+		assertEquals(JavaMethodSelector.class, selector.getClass());
 	}
 
 	private static String fullyQualifiedMethodName() {
