@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2015-2016 the original author or authors.
  *
@@ -7,6 +8,7 @@
  *
  * http://www.eclipse.org/legal/epl-v10.html
  */
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test case that is used to verify proper support for classpath scanning
@@ -16,6 +18,7 @@
  */
 public class DefaultPackageTestCase {
 
+	@Test
 	void test() {
 		// do nothing
 	}

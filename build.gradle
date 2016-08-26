@@ -145,7 +145,7 @@ allprojects {
 
 	spotless {
 		java {
-			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java')
+			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), '(package|import) '
 			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
 			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 
