@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
@@ -26,6 +27,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.console.tasks.TempDirectory;
+import org.junit.platform.console.tasks.TempDirectory.Root;
 
 /**
  * Unit tests for {@link ClasspathScanner}.
@@ -196,6 +200,18 @@ class ClasspathScannerTests {
 		Class<?> testClass = classes.get(0);
 		assertTrue(inDefaultPackage(testClass));
 		assertEquals("DefaultPackageTestCase", testClass.getName());
+	}
+
+	@Test
+	@ExtendWith(TempDirectory.class)
+	void doesNotLoopInfinitelyWithCircularSymlinks(@Root Path tempDir) throws Exception {
+		Path directory = Files.createDirectory(tempDir.resolve("directory"));
+		Path symlink1 = Files.createSymbolicLink(tempDir.resolve("symlink1"), directory);
+		Files.createSymbolicLink(directory.resolve("symlink2"), symlink1);
+
+		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(symlink1, clazz -> true);
+
+		assertThat(classes).isEmpty();
 	}
 
 	private boolean inDefaultPackage(Class<?> clazz) {
