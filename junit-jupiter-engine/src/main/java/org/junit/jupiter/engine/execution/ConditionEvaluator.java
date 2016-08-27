@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.execution;
 
+import static java.lang.String.format;
 import static org.junit.jupiter.engine.Constants.DEACTIVATE_ALL_CONDITIONS_PATTERN;
 import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
@@ -116,8 +117,7 @@ public class ConditionEvaluator {
 			return result;
 		}
 		catch (Exception ex) {
-			throw new ConditionEvaluationException(
-				String.format("Failed to evaluate condition [%s]", condition.getClass().getName()), ex);
+			throw evaluationException(condition.getClass(), ex);
 		}
 	}
 
@@ -128,13 +128,18 @@ public class ConditionEvaluator {
 			return result;
 		}
 		catch (Exception ex) {
-			throw new ConditionEvaluationException(
-				String.format("Failed to evaluate condition [%s]", condition.getClass().getName()), ex);
+			throw evaluationException(condition.getClass(), ex);
 		}
 	}
 
 	private void logResult(Class<?> conditionType, ConditionEvaluationResult result) {
-		LOG.finer(() -> String.format("Evaluation of condition [%s] resulted in: %s", conditionType.getName(), result));
+		LOG.finer(() -> format("Evaluation of condition [%s] resulted in: %s", conditionType.getName(), result));
+	}
+
+	private ConditionEvaluationException evaluationException(Class<?> conditionType, Exception ex) {
+		String cause = StringUtils.isNotBlank(ex.getMessage()) ? ": " + ex.getMessage() : "";
+		return new ConditionEvaluationException(
+			format("Failed to evaluate condition [%s]%s", conditionType.getName(), cause), ex);
 	}
 
 	private Predicate<Object> conditionIsActivated(ConfigurationParameters configurationParameters) {

@@ -25,10 +25,6 @@ class ConditionEvaluationException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;
 
-	public ConditionEvaluationException(String message) {
-		super(message);
-	}
-
 	public ConditionEvaluationException(String message, Throwable cause) {
 		super(message, cause);
 	}
