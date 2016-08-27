@@ -11,13 +11,13 @@ buildscript {
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
 		classpath 'org.ajoberstar:gradle-git:1.5.1'
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
-		classpath 'net.nemerosa:versioning:2.4.0'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
 	}
 }
 
 plugins {
 	id 'com.gradle.build-scan' version '1.0'
+	id 'net.nemerosa.versioning' version '2.4.0'
 }
 
 buildScan {
@@ -36,6 +36,7 @@ ext {
 	generateManifest = false
 	buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
 	buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+	buildRevision = versioning.info.commit
 	builtByValue = project.hasProperty('builtBy') ? project.builtBy : project.defaultBuiltBy
 
 	platformProjects = [
@@ -74,7 +75,6 @@ allprojects {
 	apply plugin: 'idea'
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
-	apply plugin: 'net.nemerosa.versioning'
 	apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates
 
 	repositories {
@@ -369,7 +369,7 @@ subprojects { subproj ->
 				'Built-By': builtByValue,
 				'Build-Date': buildDate,
 				'Build-Time': buildTime,
-				'Build-Revision': versioning.info.commit,
+				'Build-Revision': buildRevision,
 				'Specification-Title': project.name,
 				'Specification-Version': normalizeVersion(project.version),
 				'Specification-Vendor': 'junit.org',
