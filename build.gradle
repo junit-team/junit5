@@ -418,6 +418,26 @@ configure(rootProject) {
 		logManager 'org.apache.logging.log4j.jul.LogManager'
 	}
 
+	task degraph() {
+		description = 'Runs DeGraph tests.'
+		// configured in afterEvaluate
+	}
+
+	afterEvaluate {
+		// The following is a hack which allows the custom `degraph`
+		// task to serve as an "alias" for the `junitPlatformTest` task.
+		// In addition, the following removes the dependency from the
+		// `test` task to the `junitPlatformTest` task (which is
+		// created by the JUnit Platform Gradle Plugin) and adds a
+		// dependency from `check` to `degraph`. Consequently,
+		// executing `gradle test` will not run the DeGraph tests, but
+		// `gradle degraph` or `gradle check` will.
+		def junitPlatformTestTask = tasks.getByName('junitPlatformTest')
+		degraph.dependsOn(junitPlatformTestTask)
+		test.dependsOn.remove(junitPlatformTestTask)
+		check.dependsOn(degraph)
+	}
+
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
 		description = "Generates aggregated Javadocs"
