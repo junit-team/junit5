@@ -130,7 +130,7 @@ class ClasspathScannerTests {
 
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.platform.jartest.included",
 			clazz -> true);
-		assertThat(classes.size()).isEqualTo(2);
+		assertThat(classes).hasSize(2);
 		List<String> classNames = classes.stream().map(Class::getSimpleName).collect(Collectors.toList());
 		assertTrue(classNames.contains("Included"));
 		assertTrue(classNames.contains("RecursivelyIncluded"));
