@@ -13,9 +13,11 @@ package org.junit.platform.commons.util;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
+import static org.junit.platform.commons.util.ClassFileVisitor.CLASS_FILE_SUFFIX;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -23,12 +25,9 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -39,6 +38,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
 
@@ -56,11 +56,10 @@ class ClasspathScanner {
 
 	private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
 
-	private static final String CLASS_FILE_SUFFIX = ".class";
-	private static final char PACKAGE_SEPARATOR_CHAR = '.';
-	private static final String PACKAGE_SEPARATOR_STRING = String.valueOf(PACKAGE_SEPARATOR_CHAR);
 	private static final String DEFAULT_PACKAGE_NAME = "";
 	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
+	private static final char PACKAGE_SEPARATOR_CHAR = '.';
+	private static final String PACKAGE_SEPARATOR_STRING = String.valueOf(PACKAGE_SEPARATOR_CHAR);
 
 	/** Malformed class name InternalError like reported in #401. */
 	private static final String MALFORMED_CLASS_NAME_ERROR_MESSAGE = "Malformed class name";
@@ -185,72 +184,25 @@ class ClasspathScanner {
 		return new RegularPathProvider();
 	}
 
-	private List<Class<?>> findClassesInSourcePath(String packageName, Path sourcePath,
+	private List<Class<?>> findClassesInSourcePath(String rootPackageName, Path rootDir,
 			Predicate<Class<?>> classFilter) {
 		List<Class<?>> classes = new ArrayList<>();
 		try {
-			Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
-				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-					if (isNotPackageInfo(file) && isClassFile(file)) {
-						String subpackageName = buildPackageName(packageName, sourcePath, file);
-						processClassFileSafely(subpackageName, file, classFilter, classes);
-					}
-					return FileVisitResult.CONTINUE;
-				}
-
-				@Override
-				public FileVisitResult visitFileFailed(Path file, IOException exc) {
-					logWarning(exc, () -> "I/O error visiting file: " + file);
-					return FileVisitResult.CONTINUE;
-				}
-
-				@Override
-				public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
-					if (exc != null) {
-						logWarning(exc, () -> "I/O error visiting directory: " + dir);
-					}
-					return FileVisitResult.CONTINUE;
-				}
-
-				private String buildPackageName(String rootPackageName, Path rootPath, Path file) {
-					Path relativePath = rootPath.relativize(file.getParent());
-					String pathSeparator = rootPath.getFileSystem().getSeparator();
-					String subpackageName = relativePath.toString().replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
-					if (subpackageName.endsWith(pathSeparator)) {
-						// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
-						subpackageName = subpackageName.substring(0, subpackageName.length() - pathSeparator.length());
-					}
-					if (subpackageName.isEmpty()) {
-						return rootPackageName;
-					}
-					if (rootPackageName.isEmpty()) {
-						return subpackageName;
-					}
-					return rootPackageName + PACKAGE_SEPARATOR_STRING + subpackageName;
-				}
-
-				private boolean isNotPackageInfo(Path path) {
-					return !path.endsWith("package-info.class");
-				}
-
-				private boolean isClassFile(Path path) {
-					return Files.isRegularFile(path) && path.getFileName().toString().endsWith(CLASS_FILE_SUFFIX);
-				}
-			});
+			Files.walkFileTree(rootDir, new ClassFileVisitor(
+				classFile -> processClassFileSafely(rootPackageName, rootDir, classFilter, classes, classFile)));
 		}
 		catch (IOException ex) {
-			logWarning(ex, () -> "I/O error scanning files in " + sourcePath);
+			logWarning(ex, () -> "I/O error scanning files in " + rootDir);
 		}
 		return classes;
 	}
 
-	private void processClassFileSafely(String packageName, Path classFile, Predicate<Class<?>> classFilter,
-			List<Class<?>> classes) {
-
+	private void processClassFileSafely(String rootPackageName, Path rootDir, Predicate<Class<?>> classFilter,
+			List<Class<?>> classes, Path classFile) {
 		Optional<Class<?>> clazz = Optional.empty();
 		try {
-			clazz = loadClassFromFile(packageName, classFile);
+			String fullyQualifiedClassName = determineFullyQualifiedClassName(rootPackageName, rootDir, classFile);
+			clazz = this.loadClass.apply(fullyQualifiedClassName, getClassLoader());
 			clazz.filter(classFilter).ifPresent(classes::add);
 		}
 		catch (InternalError internalError) {
@@ -261,14 +213,32 @@ class ClasspathScanner {
 		}
 	}
 
-	private Optional<Class<?>> loadClassFromFile(String packageName, Path classFile) {
+	private String determineFullyQualifiedClassName(String rootPackageName, Path rootDir, Path classFile) {
+		// @formatter:off
+		return Stream.of(
+					rootPackageName,
+					determineSubpackageName(rootDir, classFile),
+					determineSimpleClassName(classFile)
+				)
+				.filter(value -> !value.isEmpty()) // Handle default package appropriately.
+				.collect(joining(PACKAGE_SEPARATOR_STRING));
+		// @formatter:on
+	}
+
+	private String determineSimpleClassName(Path classFile) {
 		String fileName = classFile.getFileName().toString();
-		String className = fileName.substring(0, fileName.length() - CLASS_FILE_SUFFIX.length());
+		return fileName.substring(0, fileName.length() - CLASS_FILE_SUFFIX.length());
+	}
 
-		// Handle default package appropriately.
-		String fqcn = StringUtils.isBlank(packageName) ? className : packageName + PACKAGE_SEPARATOR_STRING + className;
-
-		return this.loadClass.apply(fqcn, getClassLoader());
+	private String determineSubpackageName(Path rootDir, Path classFile) {
+		Path relativePath = rootDir.relativize(classFile.getParent());
+		String pathSeparator = rootDir.getFileSystem().getSeparator();
+		String subpackageName = relativePath.toString().replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
+		if (subpackageName.endsWith(pathSeparator)) {
+			// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
+			subpackageName = subpackageName.substring(0, subpackageName.length() - pathSeparator.length());
+		}
+		return subpackageName;
 	}
 
 	private void handleInternalError(Path classFile, Optional<Class<?>> clazz, InternalError ex) {
