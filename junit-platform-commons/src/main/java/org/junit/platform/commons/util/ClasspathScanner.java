@@ -57,8 +57,10 @@ class ClasspathScanner {
 	private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
 
 	private static final String CLASS_FILE_SUFFIX = ".class";
-	private static final String PACKAGE_SEPARATOR = ".";
+	private static final char PACKAGE_SEPARATOR_CHAR = '.';
+	private static final String PACKAGE_SEPARATOR_STRING = String.valueOf(PACKAGE_SEPARATOR_CHAR);
 	private static final String DEFAULT_PACKAGE_NAME = "";
+	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
 
 	/** Malformed class name InternalError like reported in #401. */
 	private static final String MALFORMED_CLASS_NAME_ERROR_MESSAGE = "Malformed class name";
@@ -239,7 +241,7 @@ class ClasspathScanner {
 		String className = fileName.substring(0, fileName.length() - CLASS_FILE_SUFFIX.length());
 
 		// Handle default package appropriately.
-		String fqcn = StringUtils.isBlank(packageName) ? className : packageName + PACKAGE_SEPARATOR + className;
+		String fqcn = StringUtils.isBlank(packageName) ? className : packageName + PACKAGE_SEPARATOR_STRING + className;
 
 		return this.loadClass.apply(fqcn, getClassLoader());
 	}
@@ -286,11 +288,11 @@ class ClasspathScanner {
 
 	private String buildPackageName(String rootPackageName, Path rootPath, Path file) {
 		Path relativePath = rootPath.relativize(file.getParent());
-		String separator = rootPath.getFileSystem().getSeparator();
-		String subpackageName = relativePath.toString().replace(separator, PACKAGE_SEPARATOR);
-		if (subpackageName.endsWith(separator)) {
+		String pathSeparator = rootPath.getFileSystem().getSeparator();
+		String subpackageName = relativePath.toString().replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
+		if (subpackageName.endsWith(pathSeparator)) {
 			// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
-			subpackageName = subpackageName.substring(0, subpackageName.length() - separator.length());
+			subpackageName = subpackageName.substring(0, subpackageName.length() - pathSeparator.length());
 		}
 		if (subpackageName.isEmpty()) {
 			return rootPackageName;
@@ -298,7 +300,7 @@ class ClasspathScanner {
 		if (rootPackageName.isEmpty()) {
 			return subpackageName;
 		}
-		return rootPackageName + PACKAGE_SEPARATOR + subpackageName;
+		return rootPackageName + PACKAGE_SEPARATOR_STRING + subpackageName;
 	}
 
 	private ClassLoader getClassLoader() {
@@ -320,7 +322,7 @@ class ClasspathScanner {
 	}
 
 	private static String packagePath(String packageName) {
-		return packageName.replace('.', '/');
+		return packageName.replace(PACKAGE_SEPARATOR_CHAR, CLASSPATH_RESOURCE_PATH_SEPARATOR);
 	}
 
 	private List<URI> getRootUrisForPackage(String packageName) {
