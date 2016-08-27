@@ -212,6 +212,31 @@ class ClasspathScanner {
 					}
 					return FileVisitResult.CONTINUE;
 				}
+
+				private String buildPackageName(String rootPackageName, Path rootPath, Path file) {
+					Path relativePath = rootPath.relativize(file.getParent());
+					String pathSeparator = rootPath.getFileSystem().getSeparator();
+					String subpackageName = relativePath.toString().replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
+					if (subpackageName.endsWith(pathSeparator)) {
+						// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
+						subpackageName = subpackageName.substring(0, subpackageName.length() - pathSeparator.length());
+					}
+					if (subpackageName.isEmpty()) {
+						return rootPackageName;
+					}
+					if (rootPackageName.isEmpty()) {
+						return subpackageName;
+					}
+					return rootPackageName + PACKAGE_SEPARATOR_STRING + subpackageName;
+				}
+
+				private boolean isNotPackageInfo(Path path) {
+					return !path.endsWith("package-info.class");
+				}
+
+				private boolean isClassFile(Path path) {
+					return Files.isRegularFile(path) && path.getFileName().toString().endsWith(CLASS_FILE_SUFFIX);
+				}
 			});
 		}
 		catch (IOException ex) {
@@ -286,23 +311,6 @@ class ClasspathScanner {
 			classFile.toAbsolutePath()));
 	}
 
-	private String buildPackageName(String rootPackageName, Path rootPath, Path file) {
-		Path relativePath = rootPath.relativize(file.getParent());
-		String pathSeparator = rootPath.getFileSystem().getSeparator();
-		String subpackageName = relativePath.toString().replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
-		if (subpackageName.endsWith(pathSeparator)) {
-			// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
-			subpackageName = subpackageName.substring(0, subpackageName.length() - pathSeparator.length());
-		}
-		if (subpackageName.isEmpty()) {
-			return rootPackageName;
-		}
-		if (rootPackageName.isEmpty()) {
-			return subpackageName;
-		}
-		return rootPackageName + PACKAGE_SEPARATOR_STRING + subpackageName;
-	}
-
 	private ClassLoader getClassLoader() {
 		return this.classLoaderSupplier.get();
 	}
@@ -311,14 +319,6 @@ class ClasspathScanner {
 		Preconditions.notNull(packageName, "package name must not be null");
 		Preconditions.condition(DEFAULT_PACKAGE_NAME.equals(packageName) || packageName.trim().length() != 0,
 			"package name must not contain only whitespace");
-	}
-
-	private static boolean isNotPackageInfo(Path path) {
-		return !path.endsWith("package-info.class");
-	}
-
-	private static boolean isClassFile(Path path) {
-		return Files.isRegularFile(path) && path.getFileName().toString().endsWith(CLASS_FILE_SUFFIX);
 	}
 
 	private static String packagePath(String packageName) {
