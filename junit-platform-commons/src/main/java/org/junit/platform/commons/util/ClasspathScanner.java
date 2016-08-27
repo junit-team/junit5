@@ -101,8 +101,7 @@ class ClasspathScanner {
 			() -> "root must be an existing directory: " + root.toAbsolutePath());
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 
-		// TODO Don't convert to URI here
-		return findClassesForUri(DEFAULT_PACKAGE_NAME, root.toUri(), classFilter);
+		return findClassesInSourcePath(DEFAULT_PACKAGE_NAME, root, classFilter);
 	}
 
 	/**
@@ -132,37 +131,36 @@ class ClasspathScanner {
 		public CloseablePath toPath(URI uri) throws IOException {
 			String[] parts = uri.toString().split("!");
 			FileSystem fileSystem = FileSystems.newFileSystem(URI.create(parts[0]), emptyMap());
-			return new CloseablePath(fileSystem.getPath(parts[1])) {
-				@Override
-				public void close() throws IOException {
-					fileSystem.close();
-				}
-			};
+			return new CloseablePath(fileSystem.getPath(parts[1]), fileSystem);
 		}
 	}
 
 	class RegularPathProvider implements PathProvider {
 		@Override
 		public CloseablePath toPath(URI uri) throws IOException {
-			return new CloseablePath(Paths.get(uri)) {
-				@Override
-				public void close() throws IOException {
-					// nothing to do here
-				}
-			};
+			Path path = Paths.get(uri);
+			return new CloseablePath(path, () -> {
+			});
 		}
 	}
 
-	abstract class CloseablePath implements Closeable {
+	final static class CloseablePath implements Closeable {
 
 		private final Path path;
+		private final Closeable delegate;
 
-		public CloseablePath(Path path) {
+		public CloseablePath(Path path, Closeable delegate) {
 			this.path = path;
+			this.delegate = delegate;
 		}
 
 		public Path getPath() {
 			return path;
+		}
+
+		@Override
+		public void close() throws IOException {
+			delegate.close();
 		}
 	}
 
