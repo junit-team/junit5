@@ -11,6 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
@@ -22,12 +23,14 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +57,7 @@ class ClasspathScanner {
 	private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
 
 	private static final String CLASS_FILE_SUFFIX = ".class";
-
+	private static final String PACKAGE_SEPARATOR = ".";
 	private static final String DEFAULT_PACKAGE_NAME = "";
 
 	/** Malformed class name InternalError like reported in #401. */
@@ -116,15 +119,6 @@ class ClasspathScanner {
 		// @formatter:on
 	}
 
-	/**
-	 * Recursively scan for classes in the supplied source directory.
-	 */
-	private List<Class<?>> findClassesForUri(String packageName, URI sourceUri, Predicate<Class<?>> classFilter) {
-		List<Class<?>> classes = new ArrayList<>();
-		findClassesForUri(packageName, sourceUri, classFilter, classes);
-		return classes;
-	}
-
 	interface PathProvider {
 
 		CloseablePath toPath(URI uri) throws IOException;
@@ -171,14 +165,14 @@ class ClasspathScanner {
 		}
 	}
 
-	private void findClassesForUri(String packageName, URI sourceUri, Predicate<Class<?>> classFilter,
-			List<Class<?>> classes) {
+	private List<Class<?>> findClassesForUri(String packageName, URI sourceUri, Predicate<Class<?>> classFilter) {
 		PathProvider provider = determineProvider(sourceUri);
 		try (CloseablePath closeablePath = provider.toPath(sourceUri)) {
-			findClassesInSourcePath(packageName, closeablePath.getPath(), classFilter, classes);
+			return findClassesInSourcePath(packageName, closeablePath.getPath(), classFilter);
 		}
 		catch (Exception ex) {
 			logWarning(ex, () -> "Error reading Path from URI " + sourceUri);
+			return emptyList();
 		}
 	}
 
@@ -189,21 +183,39 @@ class ClasspathScanner {
 		return new RegularPathProvider();
 	}
 
-	private void findClassesInSourcePath(String packageName, Path sourcePath, Predicate<Class<?>> classFilter,
-			List<Class<?>> classes) {
+	private List<Class<?>> findClassesInSourcePath(String packageName, Path sourcePath,
+			Predicate<Class<?>> classFilter) {
+		List<Class<?>> classes = new ArrayList<>();
 		try {
-			Files.list(sourcePath).forEach(path -> {
-				if (isNotPackageInfo(path) && isClassFile(path)) {
-					processClassFileSafely(packageName, path, classFilter, classes);
+			Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+				@Override
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+					if (isNotPackageInfo(file) && isClassFile(file)) {
+						String subpackageName = buildPackageName(packageName, sourcePath, file);
+						processClassFileSafely(subpackageName, file, classFilter, classes);
+					}
+					return FileVisitResult.CONTINUE;
 				}
-				else if (Files.isDirectory(path)) {
-					findClassesInSourcePath(appendSubpackageName(packageName, path), path, classFilter, classes);
+
+				@Override
+				public FileVisitResult visitFileFailed(Path file, IOException exc) {
+					logWarning(exc, () -> "I/O error visiting file: " + file);
+					return FileVisitResult.CONTINUE;
+				}
+
+				@Override
+				public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+					if (exc != null) {
+						logWarning(exc, () -> "I/O error visiting directory: " + dir);
+					}
+					return FileVisitResult.CONTINUE;
 				}
 			});
 		}
 		catch (IOException ex) {
-			logWarning(ex, () -> "I/O error reading files in " + sourcePath);
+			logWarning(ex, () -> "I/O error scanning files in " + sourcePath);
 		}
+		return classes;
 	}
 
 	private void processClassFileSafely(String packageName, Path classFile, Predicate<Class<?>> classFilter,
@@ -227,7 +239,7 @@ class ClasspathScanner {
 		String className = fileName.substring(0, fileName.length() - CLASS_FILE_SUFFIX.length());
 
 		// Handle default package appropriately.
-		String fqcn = StringUtils.isBlank(packageName) ? className : packageName + "." + className;
+		String fqcn = StringUtils.isBlank(packageName) ? className : packageName + PACKAGE_SEPARATOR + className;
 
 		return this.loadClass.apply(fqcn, getClassLoader());
 	}
@@ -272,13 +284,21 @@ class ClasspathScanner {
 			classFile.toAbsolutePath()));
 	}
 
-	private String appendSubpackageName(String packageName, Path subpackage) {
-		// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
-		String subpackageName = subpackage.getFileName().toString();
-		if (subpackageName.endsWith("/")) {
-			subpackageName = subpackageName.substring(0, subpackageName.length() - 1);
+	private String buildPackageName(String rootPackageName, Path rootPath, Path file) {
+		Path relativePath = rootPath.relativize(file.getParent());
+		String separator = rootPath.getFileSystem().getSeparator();
+		String subpackageName = relativePath.toString().replace(separator, PACKAGE_SEPARATOR);
+		if (subpackageName.endsWith(separator)) {
+			// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
+			subpackageName = subpackageName.substring(0, subpackageName.length() - separator.length());
 		}
-		return (!packageName.isEmpty() ? packageName + "." + subpackageName : subpackageName);
+		if (subpackageName.isEmpty()) {
+			return rootPackageName;
+		}
+		if (rootPackageName.isEmpty()) {
+			return subpackageName;
+		}
+		return rootPackageName + PACKAGE_SEPARATOR + subpackageName;
 	}
 
 	private ClassLoader getClassLoader() {
@@ -315,7 +335,7 @@ class ClasspathScanner {
 		}
 		catch (Exception ex) {
 			logWarning(ex, () -> "Error reading directories from class loader for package " + packageName);
-			return Collections.emptyList();
+			return emptyList();
 		}
 	}
 
