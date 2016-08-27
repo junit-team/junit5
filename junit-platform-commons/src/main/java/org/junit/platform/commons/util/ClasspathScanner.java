@@ -116,8 +116,7 @@ class ClasspathScanner {
 	}
 
 	private List<Class<?>> findClassesForUri(String basePackageName, URI baseUri, Predicate<Class<?>> classFilter) {
-		CloseablePathProvider provider = CloseablePathProvider.create(baseUri.getScheme());
-		try (CloseablePath closeablePath = provider.toCloseablePath(baseUri)) {
+		try (CloseablePath closeablePath = CloseablePath.create(baseUri)) {
 			Path baseDir = closeablePath.getPath();
 			return findClassesForPath(basePackageName, baseDir, classFilter);
 		}
