@@ -36,7 +36,7 @@ class ClassFileVisitor extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
-		if (isNotPackageInfo(file) && isClassFile(file, attributes)) {
+		if (isNotPackageInfo(file) && isClassFile(file)) {
 			classFileConsumer.accept(file);
 		}
 		return CONTINUE;
@@ -60,8 +60,8 @@ class ClassFileVisitor extends SimpleFileVisitor<Path> {
 		return !path.endsWith(PACKAGE_INFO_FILE_NAME);
 	}
 
-	private static boolean isClassFile(Path path, BasicFileAttributes attributes) {
-		return attributes.isRegularFile() && path.getFileName().toString().endsWith(CLASS_FILE_SUFFIX);
+	private static boolean isClassFile(Path file) {
+		return file.getFileName().toString().endsWith(CLASS_FILE_SUFFIX);
 	}
 
 }
