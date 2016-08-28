@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.console.tasks.TempDirectory;
-import org.junit.platform.console.tasks.TempDirectory.Root;
+import org.junit.jupiter.extensions.TempDirectory;
+import org.junit.jupiter.extensions.TempDirectory.Root;
 
 /**
  * Unit tests for {@link ClasspathScanner}.

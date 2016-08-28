@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.jupiter.extensions;
 
 import java.io.IOException;
 import java.lang.annotation.Documented;

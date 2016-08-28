@@ -36,11 +36,11 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.extensions.TempDirectory;
+import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
-import org.junit.platform.console.tasks.TempDirectory;
-import org.junit.platform.console.tasks.TempDirectory.Root;
 
 /**
  * Unit tests for {@link ReflectionUtils}.
