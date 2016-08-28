@@ -366,7 +366,7 @@ public class ReflectionUtilsTests {
 		try {
 			createDirectories(root1, root2);
 
-			assertThat(ReflectionUtils.getAllClasspathRootDirectories()).containsOnly(root1.toFile(), root2.toFile());
+			assertThat(ReflectionUtils.getAllClasspathRootDirectories()).containsOnly(root1, root2);
 		}
 		finally {
 			System.setProperty("java.class.path", originalClassPath);

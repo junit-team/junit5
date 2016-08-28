@@ -10,7 +10,6 @@
 
 package org.junit.platform.console.tasks;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -39,11 +38,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	private XmlReportData reportData;
 
-	public XmlReportsWritingListener(File reportsDir, PrintWriter out) {
-		this(reportsDir.toPath(), out);
-	}
-
-	public XmlReportsWritingListener(Path reportsDir, PrintWriter out) {
+	XmlReportsWritingListener(Path reportsDir, PrintWriter out) {
 		this(reportsDir, out, Clock.systemDefaultZone());
 	}
 

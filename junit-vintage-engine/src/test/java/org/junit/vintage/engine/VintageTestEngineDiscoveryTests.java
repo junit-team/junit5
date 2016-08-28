@@ -28,10 +28,11 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaP
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -210,7 +211,7 @@ class VintageTestEngineDiscoveryTests {
 
 	@Test
 	void resolvesClasspathSelector() throws Exception {
-		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
+		Path root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClasspathRoots(singleton(root))).build();
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -225,7 +226,7 @@ class VintageTestEngineDiscoveryTests {
 
 	@Test
 	void resolvesApplyingClassFilters() throws Exception {
-		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
+		Path root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClasspathRoots(singleton(root))).filters(
 			includeClassNamePattern(".*JUnit4.*"), includeClassNamePattern(".*Plain.*")).build();
@@ -609,9 +610,9 @@ class VintageTestEngineDiscoveryTests {
 		return engine.discover(discoveryRequest, UniqueId.forEngine(engine.getId()));
 	}
 
-	private File getClasspathRoot(Class<?> testClass) throws Exception {
+	private Path getClasspathRoot(Class<?> testClass) throws Exception {
 		URL location = testClass.getProtectionDomain().getCodeSource().getLocation();
-		return new File(location.toURI());
+		return Paths.get(location.toURI());
 	}
 
 	private void assertYieldsNoDescriptors(Class<?> testClass) {

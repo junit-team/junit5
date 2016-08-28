@@ -13,10 +13,12 @@ package org.junit.platform.console.options;
 import static java.util.Arrays.asList;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import joptsimple.util.PathConverter;
 
 /**
  * @since 1.0
@@ -29,10 +31,10 @@ class AvailableOptions {
 	private final OptionSpec<Void> help;
 	private final OptionSpec<Void> disableAnsiColors;
 	private final OptionSpec<Void> hideDetails;
-	private final OptionSpec<File> additionalClasspathEntries;
+	private final OptionSpec<Path> additionalClasspathEntries;
 
 	// Reports
-	private final OptionSpec<File> reportsDir;
+	private final OptionSpec<Path> reportsDir;
 
 	// Selectors
 	private final OptionSpec<Void> scanClasspath;
@@ -61,14 +63,17 @@ class AvailableOptions {
 		additionalClasspathEntries = parser.acceptsAll(asList("cp", "classpath", "class-path"), //
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies. "
 					+ "This option can be repeated.") //
-				.withRequiredArg().ofType(File.class).withValuesSeparatedBy(File.pathSeparatorChar).describedAs(
-					"path1" + File.pathSeparator + "path2" + File.pathSeparator + "...");
+				.withRequiredArg() //
+				.withValuesConvertedBy(new PathConverter()) //
+				.withValuesSeparatedBy(File.pathSeparatorChar) //
+				.describedAs("path1" + File.pathSeparator + "path2" + File.pathSeparator + "...");
 
 		// --- Reports ---------------------------------------------------------
 
 		reportsDir = parser.accepts("reports-dir", //
 			"Enable report output into a specified local directory (will be created if it does not exist).") //
-				.withRequiredArg().ofType(File.class);
+				.withRequiredArg() //
+				.withValuesConvertedBy(new PathConverter());
 
 		// --- Selectors -------------------------------------------------------
 

@@ -19,6 +19,7 @@ import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -85,8 +86,8 @@ public class DiscoveryRequestCreatorTests {
 		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
 		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
-			.hasAtLeastOneElementOfType(URI.class)
-			.doesNotContainNull();
+				.hasAtLeastOneElementOfType(URI.class)
+				.doesNotContainNull();
 		// @formatter:on
 	}
 
@@ -100,14 +101,14 @@ public class DiscoveryRequestCreatorTests {
 		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
 		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
-			.containsExactly(new File(".").toURI(), new File("..").toURI());
+				.containsExactly(new File(".").toURI(), new File("..").toURI());
 		// @formatter:on
 	}
 
 	@Test
 	public void convertsAllOptionWithAdditionalClasspathEntries() {
 		options.setScanClasspath(true);
-		options.setAdditionalClasspathEntries(asList(new File("."), new File("..")));
+		options.setAdditionalClasspathEntries(asList(Paths.get("."), Paths.get("..")));
 
 		LauncherDiscoveryRequest request = convert();
 
@@ -148,7 +149,7 @@ public class DiscoveryRequestCreatorTests {
 	public void convertsEngineOptions() {
 		options.setScanClasspath(true);
 		options.setIncludedEngines(asList("engine1", "engine2", "engine3"));
-		options.setExcludedEngines(asList("engine2"));
+		options.setExcludedEngines(singletonList("engine2"));
 
 		LauncherDiscoveryRequest request = convert();
 		List<EngineFilter> engineFilters = request.getEngineFilters();

@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -182,13 +184,13 @@ public final class DiscoverySelectors {
 	 * do not physically exist in the filesystem will be filtered out
 	 * @see ClasspathRootSelector
 	 */
-	public static List<ClasspathRootSelector> selectClasspathRoots(Set<File> directories) {
+	public static List<ClasspathRootSelector> selectClasspathRoots(Set<Path> directories) {
 		Preconditions.notNull(directories, "directories must not be null");
 
 		// @formatter:off
 		return directories.stream()
-				.filter(File::isDirectory)
-				.map(File::toURI)
+				.filter(Files::isDirectory)
+				.map(Path::toUri)
 				.map(ClasspathRootSelector::new)
 				.collect(toList());
 		// @formatter:on

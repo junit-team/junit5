@@ -23,7 +23,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -437,14 +439,13 @@ public final class ReflectionUtils {
 		return classpathScanner.isPackage(packageName);
 	}
 
-	public static Set<File> getAllClasspathRootDirectories() {
+	public static Set<Path> getAllClasspathRootDirectories() {
 		// This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
 		// @formatter:off
 		return Arrays.stream(fullClassPath.split(File.pathSeparator))
-				.filter(part -> !part.endsWith(".jar"))
-				.map(File::new)
-				.filter(File::isDirectory)
+				.map(Paths::get)
+				.filter(Files::isDirectory)
 				.collect(toSet());
 		// @formatter:on
 	}

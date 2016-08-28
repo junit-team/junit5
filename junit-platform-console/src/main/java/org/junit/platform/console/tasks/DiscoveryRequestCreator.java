@@ -23,8 +23,9 @@ import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.io.File;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -61,17 +62,17 @@ class DiscoveryRequestCreator {
 	}
 
 	private LauncherDiscoveryRequestBuilder createBuilderForClasspathScanning(CommandLineOptions options) {
-		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
+		Set<Path> rootDirectoriesToScan = determineClasspathRootDirectories(options);
 		return request().selectors(selectClasspathRoots(rootDirectoriesToScan));
 	}
 
-	private Set<File> determineClasspathRootDirectories(CommandLineOptions options) {
+	private Set<Path> determineClasspathRootDirectories(CommandLineOptions options) {
 		if (options.getArguments().isEmpty()) {
-			Set<File> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
+			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
 			rootDirs.addAll(options.getAdditionalClasspathEntries());
 			return rootDirs;
 		}
-		return options.getArguments().stream().map(File::new).collect(toCollection(LinkedHashSet::new));
+		return options.getArguments().stream().map(Paths::get).collect(toCollection(LinkedHashSet::new));
 	}
 
 	private LauncherDiscoveryRequestBuilder createNameBasedBuilder(CommandLineOptions options) {

@@ -13,6 +13,7 @@ package org.junit.platform.console.options;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -61,8 +64,8 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseSwitches() {
 		// @formatter:off
 		assertAll(
-			() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
-			() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
+				() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
+				() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
 			() -> assertParses("hide details", CommandLineOptions::isHideDetails, "--hide-details"),
 			() -> assertParses("scan class path", CommandLineOptions::isScanClasspath, "--scan-class-path")
 		);
@@ -158,19 +161,19 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidAdditionalClasspathEntries() {
-		File dir = new File(".");
+		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList(dir), parseArgLine("-cp .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir), parseArgLine("--cp .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir), parseArgLine("-classpath .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir), parseArgLine("-classpath=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir), parseArgLine("--classpath .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir), parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir), parseArgLine("--class-path .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir), parseArgLine("--class-path=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir, new File("src/test/java")), parseArgLine("-cp . -cp src/test/java").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir, new File("src/test/java")), parseArgLine("-cp ." + File.pathSeparator + "src/test/java").getAdditionalClasspathEntries())
+			() -> assertEquals(singletonList(dir), parseArgLine("-cp .").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--cp .").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("-classpath .").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("-classpath=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--classpath .").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--class-path .").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--class-path=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir, Paths.get("src", "test", "java")), parseArgLine("-cp . -cp src/test/java").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir, Paths.get("src", "test", "java")), parseArgLine("-cp ." + File.pathSeparator + "src/test/java").getAdditionalClasspathEntries())
 		);
 		// @formatter:on
 	}
@@ -182,7 +185,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidXmlReportsDirs() {
-		File dir = new File("build/test-results");
+		Path dir = Paths.get("build", "test-results");
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(Optional.of(dir), parseArgLine("--reports-dir build/test-results").getReportsDir()),

@@ -22,28 +22,28 @@ import java.nio.file.Paths;
 
 final class CloseablePath implements Closeable {
 
-    private static final String JAR_URI_SCHEME = "jar";
-    private static final String JAR_URI_SEPARATOR = "!";
+	private static final String JAR_URI_SCHEME = "jar";
+	private static final String JAR_URI_SEPARATOR = "!";
 
-    private static final Closeable NULL_CLOSEABLE = () -> {
-    };
+	private static final Closeable NULL_CLOSEABLE = () -> {
+	};
 
 	private final Path path;
 	private final Closeable delegate;
 
-    static CloseablePath create(URI uri) throws IOException {
-        if (JAR_URI_SCHEME.equals(uri.getScheme())) {
-            String[] parts = uri.toString().split(JAR_URI_SEPARATOR);
-            FileSystem fileSystem = FileSystems.newFileSystem(URI.create(parts[0]), emptyMap());
-            return new CloseablePath(fileSystem.getPath(parts[1]), fileSystem);
-        }
-        return new CloseablePath(Paths.get(uri), NULL_CLOSEABLE);
-    }
+	static CloseablePath create(URI uri) throws IOException {
+		if (JAR_URI_SCHEME.equals(uri.getScheme())) {
+			String[] parts = uri.toString().split(JAR_URI_SEPARATOR);
+			FileSystem fileSystem = FileSystems.newFileSystem(URI.create(parts[0]), emptyMap());
+			return new CloseablePath(fileSystem.getPath(parts[1]), fileSystem);
+		}
+		return new CloseablePath(Paths.get(uri), NULL_CLOSEABLE);
+	}
 
-    private CloseablePath(Path path, Closeable delegate) {
-        this.path = path;
-        this.delegate = delegate;
-    }
+	private CloseablePath(Path path, Closeable delegate) {
+		this.path = path;
+		this.delegate = delegate;
+	}
 
 	public Path getPath() {
 		return path;

@@ -24,15 +24,18 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqu
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.io.File;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
-import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.console.tasks.TempDirectory;
+import org.junit.platform.console.tasks.TempDirectory.Root;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.TestEngine;
@@ -52,7 +55,7 @@ import org.junit.platform.launcher.PostDiscoveryFilterStub;
 /**
  * @since 1.0
  */
-public class LauncherDiscoveryRequestBuilderTests {
+class LauncherDiscoveryRequestBuilderTests {
 
 	@Nested
 	class DiscoverySelectionTests {
@@ -147,7 +150,7 @@ public class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							selectClasspathRoots(singleton(new File("/some/local/path")))
+							selectClasspathRoots(singleton(Paths.get("some", "local", "path")))
 					).build();
 			// @formatter:on
 
@@ -155,25 +158,19 @@ public class LauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		public void availableFoldersAreStoredInDiscoveryRequest() throws Exception {
-			File temporaryFolder = Files.newTemporaryFolder();
-			try {
-				// @formatter:off
-				LauncherDiscoveryRequest discoveryRequest = request()
-						.selectors(
-								selectClasspathRoots(singleton(temporaryFolder))
-						).build();
-				// @formatter:on
+		@ExtendWith(TempDirectory.class)
+		public void availableFoldersAreStoredInDiscoveryRequest(@Root Path tempDir) throws Exception {
+			// @formatter:off
+			LauncherDiscoveryRequest discoveryRequest = request()
+					.selectors(
+							selectClasspathRoots(singleton(tempDir))
+					).build();
+			// @formatter:on
 
-				List<String> folders = discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).stream().map(
-					ClasspathRootSelector::getClasspathRoot).map(File::new).map(File::getAbsolutePath).collect(
-						toList());
+			List<Path> folders = discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).stream().map(
+				ClasspathRootSelector::getClasspathRoot).map(Paths::get).collect(toList());
 
-				assertThat(folders).contains(temporaryFolder.getAbsolutePath());
-			}
-			finally {
-				temporaryFolder.delete();
-			}
+			assertThat(folders).contains(tempDir);
 		}
 
 		@Test

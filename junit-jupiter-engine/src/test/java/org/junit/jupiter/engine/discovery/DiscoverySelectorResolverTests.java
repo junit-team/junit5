@@ -27,8 +27,9 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaP
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.io.File;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -376,9 +377,9 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void classpathResolution() {
-		File classpath = new File(
-			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+	public void classpathResolution() throws Exception {
+		Path classpath = Paths.get(
+			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
 		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(classpath));
 

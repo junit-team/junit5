@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.commons.util.ReflectionUtils.getDefaultClassLoader;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.CommandLineOptions;
@@ -125,7 +125,7 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void usesCustomClassLoaderIfAdditionalClassPathEntriesArePresent() throws Exception {
-		options.setAdditionalClasspathEntries(singletonList(new File(".")));
+		options.setAdditionalClasspathEntries(singletonList(Paths.get(".")));
 
 		ClassLoader oldClassLoader = getDefaultClassLoader();
 		dummyTestEngine.addTest("failingTest",

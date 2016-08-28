@@ -13,7 +13,8 @@ package org.junit.platform.console.options;
 import static java.util.Collections.emptyList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,9 +40,9 @@ public class CommandLineOptions {
 	private List<String> includedTags = emptyList();
 	private List<String> excludedTags = emptyList();
 
-	private List<File> additionalClasspathEntries = emptyList();
+	private List<Path> additionalClasspathEntries = emptyList();
 
-	private File reportsDir;
+	private Path reportsDir;
 
 	public boolean isDisplayHelp() {
 		return this.displayHelp;
@@ -115,21 +116,21 @@ public class CommandLineOptions {
 		this.excludedTags = excludedTags;
 	}
 
-	public List<File> getAdditionalClasspathEntries() {
+	public List<Path> getAdditionalClasspathEntries() {
 		return this.additionalClasspathEntries;
 	}
 
-	public void setAdditionalClasspathEntries(List<File> additionalClasspathEntries) {
+	public void setAdditionalClasspathEntries(List<Path> additionalClasspathEntries) {
 		// Create a modifiable copy
-		this.additionalClasspathEntries = new ArrayList<File>(additionalClasspathEntries);
-		this.additionalClasspathEntries.removeIf(f -> !f.exists());
+		this.additionalClasspathEntries = new ArrayList<>(additionalClasspathEntries);
+		this.additionalClasspathEntries.removeIf(path -> !Files.exists(path));
 	}
 
-	public Optional<File> getReportsDir() {
+	public Optional<Path> getReportsDir() {
 		return Optional.ofNullable(this.reportsDir);
 	}
 
-	public void setReportsDir(File reportsDir) {
+	public void setReportsDir(Path reportsDir) {
 		this.reportsDir = reportsDir;
 	}
 

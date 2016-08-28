@@ -12,10 +12,10 @@ package org.junit.platform.console.tasks;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -68,7 +68,7 @@ public class ExecuteTestsTask implements ConsoleTask {
 	}
 
 	private Optional<ClassLoader> createCustomClassLoader() {
-		List<File> additionalClasspathEntries = options.getAdditionalClasspathEntries();
+		List<Path> additionalClasspathEntries = options.getAdditionalClasspathEntries();
 		if (!additionalClasspathEntries.isEmpty()) {
 			URL[] urls = additionalClasspathEntries.stream().map(this::toURL).toArray(URL[]::new);
 			ClassLoader parentClassLoader = ReflectionUtils.getDefaultClassLoader();
@@ -78,12 +78,12 @@ public class ExecuteTestsTask implements ConsoleTask {
 		return Optional.empty();
 	}
 
-	private URL toURL(File file) {
+	private URL toURL(Path path) {
 		try {
-			return file.toURI().toURL();
+			return path.toUri().toURL();
 		}
 		catch (Exception ex) {
-			throw new JUnitException("Invalid classpath entry: " + file, ex);
+			throw new JUnitException("Invalid classpath entry: " + path, ex);
 		}
 	}
 
