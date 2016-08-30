@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.api;
+package org.junit.jupiter.api.function;
 
 import static org.junit.platform.commons.meta.API.Usage.Stable;
 
@@ -32,10 +32,11 @@ import org.junit.platform.commons.meta.API;
  * use cases, {@link #execute()} is declared to throw {@code Throwable}.
  *
  * @since 5.0
- * @see Assertions#assertAll(Executable...)
- * @see Assertions#assertAll(String, Executable...)
- * @see Assertions#assertThrows(Class, Executable)
- * @see Assumptions#assumingThat(java.util.function.BooleanSupplier, Executable)
+ * @see org.junit.jupiter.api.Assertions#assertAll(Executable...)
+ * @see org.junit.jupiter.api.Assertions#assertAll(String, Executable...)
+ * @see org.junit.jupiter.api.Assertions#assertThrows(Class, Executable)
+ * @see org.junit.jupiter.api.Assumptions#assumingThat(java.util.function.BooleanSupplier, Executable)
+ * @see org.junit.jupiter.api.DynamicTest#dynamicTest(String, Executable)
  */
 @FunctionalInterface
 @API(Stable)

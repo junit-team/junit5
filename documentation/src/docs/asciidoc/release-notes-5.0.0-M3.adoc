@@ -86,6 +86,11 @@ on GitHub.
   methods that accept arrays or primitive types as parameters.
 * `ExtensionContext.Store` is now thread-safe.
 
+====== Deprecations and Breaking Changes
+
+* The `Executable` functional interface has been relocated to a new dedicated
+  `org.junit.jupiter.api.function` package.
+
 ====== New Features
 
 * Support for lazy and preemptive _timeouts_ with lambda expressions in `Assertions`. See

@@ -16,6 +16,7 @@ import static org.junit.platform.commons.meta.API.Usage.Maintained;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.StringUtils;
