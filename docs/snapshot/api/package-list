@@ -1,5 +1,6 @@
 org.junit.jupiter.api
 org.junit.jupiter.api.extension
+org.junit.jupiter.api.function
 org.junit.jupiter.engine
 org.junit.jupiter.engine.descriptor
 org.junit.jupiter.engine.discovery
