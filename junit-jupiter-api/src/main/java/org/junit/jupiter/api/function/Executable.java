@@ -37,6 +37,7 @@ import org.junit.platform.commons.meta.API;
  * @see org.junit.jupiter.api.Assertions#assertThrows(Class, Executable)
  * @see org.junit.jupiter.api.Assumptions#assumingThat(java.util.function.BooleanSupplier, Executable)
  * @see org.junit.jupiter.api.DynamicTest#dynamicTest(String, Executable)
+ * @see ThrowingConsumer
  */
 @FunctionalInterface
 @API(Stable)

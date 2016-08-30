@@ -15,12 +15,12 @@ import static java.util.Spliterators.spliteratorUnknownSize;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.Iterator;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -40,7 +40,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 5.0
  * @see #dynamicTest(String, Executable)
- * @see #stream(Iterator, Function, Consumer)
+ * @see #stream(Iterator, Function, ThrowingConsumer)
  * @see Test
  * @see TestFactory
  * @see Executable
@@ -56,7 +56,7 @@ public class DynamicTest {
 	 * {@code null} or blank
 	 * @param executable the executable code block for the dynamic test;
 	 * never {@code null}
-	 * @see #stream(Iterator, Function, Consumer)
+	 * @see #stream(Iterator, Function, ThrowingConsumer)
 	 */
 	public static DynamicTest dynamicTest(String displayName, Executable executable) {
 		return new DynamicTest(displayName, executable);
@@ -87,7 +87,7 @@ public class DynamicTest {
 	 * @see #dynamicTest(String, Executable)
 	 */
 	public static <T> Stream<DynamicTest> stream(Iterator<T> inputGenerator,
-			Function<? super T, String> displayNameGenerator, Consumer<? super T> testExecutor) {
+			Function<? super T, String> displayNameGenerator, ThrowingConsumer<? super T> testExecutor) {
 
 		Preconditions.notNull(inputGenerator, "inputGenerator must not be null");
 		Preconditions.notNull(displayNameGenerator, "displayNameGenerator must not be null");
