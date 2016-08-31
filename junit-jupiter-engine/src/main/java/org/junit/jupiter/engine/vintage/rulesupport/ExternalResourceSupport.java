@@ -10,70 +10,60 @@
 
 package org.junit.jupiter.engine.vintage.rulesupport;
 
-import static java.util.stream.Collectors.*;
-
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.TestExtensionContext;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.rules.ExternalResource;
 
 public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCallback {
 
-	final Class<Rule> annotationType = Rule.class;
-	final Class<ExternalResource> ruleType = ExternalResource.class;
+	private final Class<Rule> annotationType = Rule.class;
+	private final Class<ExternalResource> ruleType = ExternalResource.class;
 
 	@Override
 	public void beforeEach(TestExtensionContext context) throws Exception {
 		// TODO: generalize to methods returning rule instances!
-		this.invokeNamedMethodOnRuleAnnotatedFields(context, "before");
+		this.invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::before);
 	}
 
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {
 		// TODO: generalize to methods returning rule instances!
-		this.invokeNamedMethodOnRuleAnnotatedFields(context, "after");
+		this.invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::after);
 	}
 
-	private void invokeNamedMethodOnRuleAnnotatedFields(TestExtensionContext context, String name) {
+	private void invokeAppropriateMethodOnRuleAnnotatedMembers(TestExtensionContext context,
+			Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
+		// @formatter:off
+        Stream<AbstractTestRuleAdapter> ruleAdapters = this.findRuleAnnotatedFields(context)
+                .map(field -> new RuleAnnotatedField(context, field))
+                .map(annotatedField -> new ExternalResourceAdapter(annotatedField.getTestRuleInstance()));
+		// @formatter:on
+
+		ruleAdapters.forEach(methodCaller::accept);
+	}
+
+	private Stream<Field> findRuleAnnotatedFields(TestExtensionContext context) {
 		Object testInstance = context.getTestInstance();
-		List<Field> externalResourceFields = this.findRuleAnnotatedFieldsOfTargetType(testInstance);
-
-		externalResourceFields.forEach(field -> this.invokeNamedMethodSafely(name, testInstance, field));
+		return findAnnotatedFields(testInstance, this.ruleType, this.annotationType);
 	}
 
-	private void invokeNamedMethodSafely(String name, Object testInstance, Field field) {
-		try {
-			invokeNamedMethod(testInstance, name, field);
-		}
-		catch (IllegalAccessException | NoSuchMethodException e) {
-			//TODO: decide whether this should be logged
-			e.printStackTrace();
-		}
-	}
-
-	private void invokeNamedMethod(Object testInstance, String name, Field field)
-			throws IllegalAccessException, NoSuchMethodException {
-		ExternalResource externalResource = (ExternalResource) field.get(testInstance);
-
-		Method method = externalResource.getClass().getDeclaredMethod(name);
-		method.setAccessible(true);
-		ReflectionUtils.invokeMethod(method, externalResource);
-	}
-
-	//TODO: decide whether this should be promoted to ReflectionUtils
-	private List<Field> findRuleAnnotatedFieldsOfTargetType(Object testInstance) {
-		Field[] declaredFields = testInstance.getClass().getDeclaredFields();
+	// TODO: decide whether this should be promoted to AnnotationUtils
+	private static Stream<Field> findAnnotatedFields(Object instance, Class<?> fieldType,
+			Class<? extends Annotation> annotationType) {
+		Field[] declaredFields = instance.getClass().getDeclaredFields();
 
 		// @formatter:off
-        return Arrays.asList(declaredFields).stream()
-                .filter(field -> this.ruleType.isAssignableFrom(field.getType()))
-                .filter(field -> field.isAnnotationPresent(this.annotationType))
-                .collect(toList());
+        return Arrays.stream(declaredFields)
+                .filter(field -> fieldType.isAssignableFrom(field.getType()))
+                .filter(field -> field.isAnnotationPresent(annotationType));
 		// @formatter:on
 	}
 
