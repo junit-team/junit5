@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.ExternalResource;
 
-@ExtendWith(ExternalResourceLegacySupport.class)
-public class MultipleExternalResourceLegacySupportTests {
+@ExtendWith(ExternalResourceSupport.class)
+public class ExternalResourceSupportForMultipleFieldRulesTests {
 
 	private static boolean beforeOfRule1WasExecuted = false;
 	private static boolean beforeOfRule2WasExecuted = false;
@@ -52,15 +52,15 @@ public class MultipleExternalResourceLegacySupportTests {
 	};
 
 	@Test
-	void beforeMethodsOfbothRulesWereExecuted() {
+	void beforeMethodsOfBothRulesWereExecuted() {
 		assert beforeOfRule1WasExecuted;
-		//		assert beforeOfRule2WasExecuted;
+		assert beforeOfRule2WasExecuted;
 	}
 
 	@AfterAll
 	static void afterMethodsOfBothRulesWereExecuted() {
 		assert afterOfRule1WasExecuted;
-		//        assert afterOfRule2WasExecuted;
+		assert afterOfRule2WasExecuted;
 	}
 
 }
