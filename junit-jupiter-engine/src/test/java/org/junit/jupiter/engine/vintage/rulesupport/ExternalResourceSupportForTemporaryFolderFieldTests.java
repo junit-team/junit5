@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.TemporaryFolder;
 
-@ExtendWith(ExternalResourceLegacySupport.class)
-public class ExternalResourceLegacySupportTests {
+@ExtendWith(ExternalResourceSupport.class)
+public class ExternalResourceSupportForTemporaryFolderFieldTests {
 
 	private File file;
 

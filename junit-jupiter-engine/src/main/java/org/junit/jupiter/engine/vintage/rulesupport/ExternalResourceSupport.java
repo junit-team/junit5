@@ -22,30 +22,38 @@ import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.rules.ExternalResource;
 
-public class ExternalResourceLegacySupport implements BeforeEachCallback, AfterEachCallback {
+public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCallback {
 
 	final Class<Rule> annotationType = Rule.class;
 	final Class<ExternalResource> ruleType = ExternalResource.class;
 
 	@Override
 	public void beforeEach(TestExtensionContext context) throws Exception {
-		this.invokeNamedMethodOnRuleAnnotatedField(context, "before");
+		// TODO: generalize to methods returning rule instances!
+		this.invokeNamedMethodOnRuleAnnotatedFields(context, "before");
 	}
 
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {
-		this.invokeNamedMethodOnRuleAnnotatedField(context, "after");
+		// TODO: generalize to methods returning rule instances!
+		this.invokeNamedMethodOnRuleAnnotatedFields(context, "after");
 	}
 
-	public void invokeNamedMethodOnRuleAnnotatedField(TestExtensionContext context, String name)
-			throws IllegalAccessException, NoSuchMethodException {
+	private void invokeNamedMethodOnRuleAnnotatedFields(TestExtensionContext context, String name) {
 		Object testInstance = context.getTestInstance();
-
 		List<Field> externalResourceFields = this.findRuleAnnotatedFieldsOfTargetType(testInstance);
 
-		// TODO: generalize to several fields (and methods!)
-		Field field = externalResourceFields.get(0);
-		this.invokeNamedMethod(testInstance, name, field);
+		externalResourceFields.forEach(field -> this.invokeNamedMethodSafely(name, testInstance, field));
+	}
+
+	private void invokeNamedMethodSafely(String name, Object testInstance, Field field) {
+		try {
+			invokeNamedMethod(testInstance, name, field);
+		}
+		catch (IllegalAccessException | NoSuchMethodException e) {
+			//TODO: decide whether this should be logged
+			e.printStackTrace();
+		}
 	}
 
 	private void invokeNamedMethod(Object testInstance, String name, Field field)
@@ -57,6 +65,7 @@ public class ExternalResourceLegacySupport implements BeforeEachCallback, AfterE
 		ReflectionUtils.invokeMethod(method, externalResource);
 	}
 
+	//TODO: decide whether this should be promoted to ReflectionUtils
 	private List<Field> findRuleAnnotatedFieldsOfTargetType(Object testInstance) {
 		Field[] declaredFields = testInstance.getClass().getDeclaredFields();
 
