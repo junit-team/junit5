@@ -10,14 +10,12 @@
 
 package org.junit.jupiter.engine.vintage.rulesupport;
 
-import org.junit.rules.ExternalResource;
+import org.junit.rules.TestRule;
 
 public class ExternalResourceAdapter extends AbstractTestRuleAdapter {
 
-	private final ExternalResource target;
-
-	public ExternalResourceAdapter(ExternalResource target) {
-		this.target = target;
+	public ExternalResourceAdapter(TestRule target) {
+		super(target);
 	}
 
 	@Override

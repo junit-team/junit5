@@ -10,14 +10,21 @@
 
 package org.junit.jupiter.engine.vintage.rulesupport;
 
+import java.util.function.Function;
+
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.rules.TestRule;
 
 public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCallback {
 
-	private AbstractExternalResourceSupport fieldSupport = new ExternalResourceFieldSupport();
-	private AbstractExternalResourceSupport methodSupport = new ExternalResourceMethodSupport();
+	private final Class<? extends TestRule> ruleType = TestRule.class;
+	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = annotatedMember -> new ExternalResourceAdapter(
+		annotatedMember.getTestRuleInstance());
+
+	private AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(ruleType, adapterGenerator);
+	private AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(ruleType, adapterGenerator);
 
 	@Override
 	public void beforeEach(TestExtensionContext context) throws Exception {

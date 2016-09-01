@@ -15,12 +15,19 @@ import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.Hi
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.rules.TestRule;
 
-class ExternalResourceMethodSupport extends AbstractExternalResourceSupport {
+class TestRuleMethodSupport extends AbstractTestRuleSupport {
+
+	TestRuleMethodSupport(Class<? extends TestRule> ruleType,
+			Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {
+		super(ruleType, adapterGenerator);
+	}
 
 	@Override
 	protected RuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member) {
