@@ -10,9 +10,13 @@
 
 package org.junit.jupiter.engine.vintage.rulesupport;
 
+import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -20,6 +24,7 @@ import org.junit.Rule;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.rules.ExternalResource;
 
 public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCallback {
@@ -29,17 +34,17 @@ public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCal
 
 	@Override
 	public void beforeEach(TestExtensionContext context) throws Exception {
-		// TODO: generalize to methods returning rule instances!
-		this.invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::before);
+		this.invokeAppropriateMethodOnRuleAnnotatedFields(context, GenericBeforeAndAfterAdvice::before);
+		this.invokeAppropriateMethodOnRuleAnnotatedMethods(context, GenericBeforeAndAfterAdvice::before);
 	}
 
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {
-		// TODO: generalize to methods returning rule instances!
-		this.invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::after);
+		this.invokeAppropriateMethodOnRuleAnnotatedFields(context, GenericBeforeAndAfterAdvice::after);
+		this.invokeAppropriateMethodOnRuleAnnotatedMethods(context, GenericBeforeAndAfterAdvice::after);
 	}
 
-	private void invokeAppropriateMethodOnRuleAnnotatedMembers(TestExtensionContext context,
+	private void invokeAppropriateMethodOnRuleAnnotatedFields(TestExtensionContext context,
 			Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
 		// @formatter:off
         Stream<AbstractTestRuleAdapter> ruleAdapters = this.findRuleAnnotatedFields(context)
@@ -50,9 +55,28 @@ public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCal
 		ruleAdapters.forEach(methodCaller::accept);
 	}
 
+	private void invokeAppropriateMethodOnRuleAnnotatedMethods(TestExtensionContext context,
+			Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
+		// @formatter:off
+        Stream<AbstractTestRuleAdapter> ruleAdapters = this.findRuleAnnotatedMethods(context)
+                .map(method -> new RuleAnnotatedMethod(context, method))
+                .map(annotatedMethod -> new ExternalResourceAdapter(annotatedMethod.getTestRuleInstance()));
+		// @formatter:on
+
+		ruleAdapters.forEach(methodCaller::accept);
+	}
+
 	private Stream<Field> findRuleAnnotatedFields(TestExtensionContext context) {
 		Object testInstance = context.getTestInstance();
 		return findAnnotatedFields(testInstance, this.ruleType, this.annotationType);
+	}
+
+	private Stream<Method> findRuleAnnotatedMethods(TestExtensionContext context) {
+		Object testInstance = context.getTestInstance();
+		List<Method> annotatedMethods = AnnotationUtils.findAnnotatedMethods(testInstance.getClass(),
+			this.annotationType, HierarchyDown);
+
+		return annotatedMethods.stream();
 	}
 
 	// TODO: decide whether this should be promoted to AnnotationUtils

@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.engine.vintage.rulesupport;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.Rule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.ExternalResource;
 
 @ExtendWith(ExternalResourceSupport.class)
-public class ExternalResourceSupportForMultipleFieldRulesTests {
+public class ExternalResourceSupportForMultipleMethodRulesTests {
 
 	private static boolean beforeOfRule1WasExecuted = false;
 	private static boolean beforeOfRule2WasExecuted = false;
@@ -27,8 +25,7 @@ public class ExternalResourceSupportForMultipleFieldRulesTests {
 	private static boolean afterOfRule1WasExecuted = false;
 	private static boolean afterOfRule2WasExecuted = false;
 
-	@Rule
-	public ExternalResource resource1 = new ExternalResource() {
+	private ExternalResource resource1 = new ExternalResource() {
 		@Override
 		protected void before() throws Throwable {
 			beforeOfRule1WasExecuted = true;
@@ -40,8 +37,7 @@ public class ExternalResourceSupportForMultipleFieldRulesTests {
 		}
 	};
 
-	@Rule
-	public ExternalResource resource2 = new ExternalResource() {
+	private ExternalResource resource2 = new ExternalResource() {
 		@Override
 		protected void before() throws Throwable {
 			beforeOfRule2WasExecuted = true;
@@ -53,10 +49,20 @@ public class ExternalResourceSupportForMultipleFieldRulesTests {
 		}
 	};
 
+	@Rule
+	public ExternalResource getResource1() {
+		return resource1;
+	}
+
+	@Rule
+	public ExternalResource getResource2() {
+		return resource2;
+	}
+
 	@Test
 	void beforeMethodsOfBothRulesWereExecuted() {
-		assertTrue(beforeOfRule1WasExecuted);
-		assertTrue(beforeOfRule2WasExecuted);
+		assert beforeOfRule1WasExecuted;
+		assert beforeOfRule2WasExecuted;
 	}
 
 	@AfterAll
