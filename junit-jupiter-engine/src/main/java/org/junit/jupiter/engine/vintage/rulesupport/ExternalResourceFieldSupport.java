@@ -36,10 +36,10 @@ class ExternalResourceFieldSupport extends AbstractExternalResourceSupport {
 	// TODO: decide whether this should be promoted to AnnotationUtils
 	private static Stream<Field> findAnnotatedFields(Object instance, Class<?> fieldType,
 			Class<? extends Annotation> annotationType) {
-		Field[] declaredFields = instance.getClass().getDeclaredFields();
+		Field[] fields = instance.getClass().getFields();
 
 		// @formatter:off
-        return Arrays.stream(declaredFields)
+        return Arrays.stream(fields)
                 .filter(field -> fieldType.isAssignableFrom(field.getType()))
                 .filter(field -> field.isAnnotationPresent(annotationType));
 		// @formatter:on
