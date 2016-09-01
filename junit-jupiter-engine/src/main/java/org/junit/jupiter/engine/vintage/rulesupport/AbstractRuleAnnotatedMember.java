@@ -12,6 +12,13 @@ package org.junit.jupiter.engine.vintage.rulesupport;
 
 import org.junit.rules.TestRule;
 
-interface RuleAnnotatedMember {
-	TestRule getTestRuleInstance();
+public abstract class AbstractRuleAnnotatedMember implements RuleAnnotatedMember {
+
+	protected TestRule testRuleInstance;
+
+	@Override
+	public TestRule getTestRuleInstance() {
+		return this.testRuleInstance;
+	}
+
 }

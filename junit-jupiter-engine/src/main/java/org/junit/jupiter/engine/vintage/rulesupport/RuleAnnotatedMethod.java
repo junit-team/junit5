@@ -14,22 +14,15 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.rules.ExternalResource;
+import org.junit.rules.TestRule;
 
-class RuleAnnotatedMethod implements RuleAnnotatedMember {
-
-	private ExternalResource testRuleInstance;
+class RuleAnnotatedMethod extends AbstractRuleAnnotatedMember {
 
 	RuleAnnotatedMethod(TestExtensionContext context, Method member) {
 		Object testInstance = context.getTestInstance();
 
 		//no args
-		this.testRuleInstance = (ExternalResource) ReflectionUtils.invokeMethod(member, testInstance);
-	}
-
-	@Override
-	public ExternalResource getTestRuleInstance() {
-		return this.testRuleInstance;
+		this.testRuleInstance = (TestRule) ReflectionUtils.invokeMethod(member, testInstance);
 	}
 
 }

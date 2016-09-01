@@ -17,6 +17,12 @@ import org.junit.rules.TestRule;
 
 public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAdvice {
 
+	protected final TestRule target;
+
+	public AbstractTestRuleAdapter(TestRule target) {
+		this.target = target;
+	}
+
 	protected void executeMethod(String name, TestRule externalResource) {
 		try {
 			Method method = externalResource.getClass().getDeclaredMethod(name);

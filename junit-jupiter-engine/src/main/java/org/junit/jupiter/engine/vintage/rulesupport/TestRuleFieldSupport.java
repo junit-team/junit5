@@ -15,12 +15,19 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.rules.TestRule;
 
-class ExternalResourceFieldSupport extends AbstractExternalResourceSupport {
+class TestRuleFieldSupport extends AbstractTestRuleSupport {
+
+	TestRuleFieldSupport(Class<? extends TestRule> ruleType,
+			Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {
+		super(ruleType, adapterGenerator);
+	}
 
 	@Override
 	protected RuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member) {

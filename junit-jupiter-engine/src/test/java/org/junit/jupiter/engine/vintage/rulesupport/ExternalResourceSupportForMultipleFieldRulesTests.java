@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.ExternalResource;
 
-@ExtendWith(ExternalResourceFieldSupport.class)
+@ExtendWith(ExternalResourceSupport.class)
 public class ExternalResourceSupportForMultipleFieldRulesTests {
 
 	private static boolean beforeOfRule1WasExecuted = false;

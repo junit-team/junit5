@@ -13,17 +13,26 @@ package org.junit.jupiter.engine.vintage.rulesupport;
 import java.lang.reflect.Member;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.TestExtensionContext;
-import org.junit.rules.ExternalResource;
+import org.junit.rules.TestRule;
 
-public abstract class AbstractExternalResourceSupport implements BeforeEachCallback, AfterEachCallback {
+abstract class AbstractTestRuleSupport implements BeforeEachCallback, AfterEachCallback {
 
 	private final Class<Rule> annotationType = Rule.class;
-	private final Class<ExternalResource> ruleType = ExternalResource.class;
+
+	private final Class<? extends TestRule> ruleType;
+	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator;
+
+	protected AbstractTestRuleSupport(Class<? extends TestRule> ruleType,
+			Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {
+		this.ruleType = ruleType;
+		this.adapterGenerator = adapterGenerator;
+	}
 
 	protected abstract RuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member);
 
@@ -33,7 +42,7 @@ public abstract class AbstractExternalResourceSupport implements BeforeEachCallb
 		return this.annotationType;
 	}
 
-	protected Class<ExternalResource> getRuleType() {
+	protected Class<? extends TestRule> getRuleType() {
 		return this.ruleType;
 	}
 
@@ -54,7 +63,7 @@ public abstract class AbstractExternalResourceSupport implements BeforeEachCallb
 		// @formatter:off
         members.stream()
                 .map(member -> this.createRuleAnnotatedMember(context, member))
-                .map(annotatedMember -> new ExternalResourceAdapter(annotatedMember.getTestRuleInstance()))
+                .map(this.adapterGenerator)
 		        .forEach(methodCaller::accept);
         // @formatter:on
 	}

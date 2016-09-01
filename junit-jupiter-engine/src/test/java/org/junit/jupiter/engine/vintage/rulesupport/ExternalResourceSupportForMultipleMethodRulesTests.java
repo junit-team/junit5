@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.ExternalResource;
 
-@ExtendWith(ExternalResourceMethodSupport.class)
+@ExtendWith(ExternalResourceSupport.class)
 public class ExternalResourceSupportForMultipleMethodRulesTests {
 
 	private static boolean beforeOfRule1WasExecuted = false;

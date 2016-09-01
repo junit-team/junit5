@@ -15,9 +15,7 @@ import java.lang.reflect.Field;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.rules.ExternalResource;
 
-class RuleAnnotatedField implements RuleAnnotatedMember {
-
-	private ExternalResource testRuleInstance;
+class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
 
 	RuleAnnotatedField(TestExtensionContext context, Field testRuleField) {
 		Object testInstance = context.getTestInstance();
@@ -29,11 +27,6 @@ class RuleAnnotatedField implements RuleAnnotatedMember {
 			// TODO: decide whether this should be logged
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public ExternalResource getTestRuleInstance() {
-		return this.testRuleInstance;
 	}
 
 }
