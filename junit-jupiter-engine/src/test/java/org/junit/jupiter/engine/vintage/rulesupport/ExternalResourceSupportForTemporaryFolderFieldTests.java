@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.TemporaryFolder;
 
-@ExtendWith(ExternalResourceSupport.class)
+@ExtendWith(ExternalResourceFieldSupport.class)
 public class ExternalResourceSupportForTemporaryFolderFieldTests {
 
 	private File file;
