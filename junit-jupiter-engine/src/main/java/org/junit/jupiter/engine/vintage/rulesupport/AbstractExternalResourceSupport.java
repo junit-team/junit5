@@ -53,9 +53,9 @@ public abstract class AbstractExternalResourceSupport implements BeforeEachCallb
 
 		// @formatter:off
         members.stream()
-            .map(member -> this.createRuleAnnotatedMember(context, member))
-            .map(annotatedMember -> new ExternalResourceAdapter(annotatedMember.getTestRuleInstance()))
-		    .forEach(methodCaller::accept);
+                .map(member -> this.createRuleAnnotatedMember(context, member))
+                .map(annotatedMember -> new ExternalResourceAdapter(annotatedMember.getTestRuleInstance()))
+		        .forEach(methodCaller::accept);
         // @formatter:on
 	}
 
