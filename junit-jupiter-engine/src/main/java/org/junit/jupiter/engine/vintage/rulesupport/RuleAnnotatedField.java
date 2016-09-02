@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.vintage.rulesupport;
 import java.lang.reflect.Field;
 
 import org.junit.jupiter.api.extension.TestExtensionContext;
-import org.junit.rules.ExternalResource;
+import org.junit.rules.TestRule;
 
 class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
 
@@ -21,7 +21,7 @@ class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
 		Object testInstance = context.getTestInstance();
 
 		try {
-			this.testRuleInstance = (ExternalResource) testRuleField.get(testInstance);
+			this.testRuleInstance = (TestRule) testRuleField.get(testInstance);
 		}
 		catch (IllegalAccessException e) {
 			// TODO: decide whether this should be logged
