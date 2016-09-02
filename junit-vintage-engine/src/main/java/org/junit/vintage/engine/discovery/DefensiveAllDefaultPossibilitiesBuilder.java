@@ -10,8 +10,11 @@
 
 package org.junit.vintage.engine.discovery;
 
+import static java.util.logging.Level.WARNING;
+
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 
 import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.internal.builders.AnnotatedBuilder;
@@ -30,6 +33,8 @@ import org.junit.runners.model.RunnerBuilder;
  * @see DefensiveJUnit4Builder
  */
 class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBuilder {
+
+	private static final Logger LOG = Logger.getLogger(DefensiveAllDefaultPossibilitiesBuilder.class.getName());
 
 	private final AnnotatedBuilder annotatedBuilder;
 	private final DefensiveJUnit4Builder defensiveJUnit4Builder;
@@ -56,7 +61,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 	 */
 	private static class DefensiveAnnotatedBuilder extends AnnotatedBuilder {
 
-		public DefensiveAnnotatedBuilder(RunnerBuilder suiteBuilder) {
+		DefensiveAnnotatedBuilder(RunnerBuilder suiteBuilder) {
 			super(suiteBuilder);
 		}
 
@@ -64,6 +69,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		public Runner buildRunner(Class<? extends Runner> runnerClass, Class<?> testClass) throws Exception {
 			// Referenced by name because it might not be available at runtime.
 			if ("org.junit.platform.runner.JUnitPlatform".equals(runnerClass.getName())) {
+				LOG.log(WARNING, "Ignoring test class using JUnitPlatform runner: " + testClass);
 				return null;
 			}
 			return super.buildRunner(runnerClass, testClass);
