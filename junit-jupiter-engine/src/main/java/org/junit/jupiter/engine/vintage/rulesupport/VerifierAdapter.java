@@ -10,12 +10,10 @@
 
 package org.junit.jupiter.engine.vintage.rulesupport;
 
-import org.junit.rules.TestRule;
-
 public class VerifierAdapter extends AbstractTestRuleAdapter {
 
-	public VerifierAdapter(TestRule target) {
-		super(target);
+	public VerifierAdapter(RuleAnnotatedMember annotatedMember) {
+		super(annotatedMember);
 	}
 
 	@Override

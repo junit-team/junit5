@@ -19,8 +19,8 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 
 	protected final TestRule target;
 
-	public AbstractTestRuleAdapter(TestRule target) {
-		this.target = target;
+	public AbstractTestRuleAdapter(RuleAnnotatedMember annotatedMember) {
+		this.target = annotatedMember.getTestRuleInstance();
 	}
 
 	protected void executeMethod(String name, TestRule externalResource) {

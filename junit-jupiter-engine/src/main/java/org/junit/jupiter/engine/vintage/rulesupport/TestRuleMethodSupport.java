@@ -20,18 +20,16 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.platform.commons.util.AnnotationUtils;
-import org.junit.rules.TestRule;
 
 class TestRuleMethodSupport extends AbstractTestRuleSupport {
 
-	TestRuleMethodSupport(Class<? extends TestRule> ruleType,
-			Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {
-		super(ruleType, adapterGenerator);
+	TestRuleMethodSupport(Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {
+		super(adapterGenerator);
 	}
 
 	@Override
 	protected RuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member) {
-		return new RuleAnnotatedMethod(context, (Method) member);
+		return new RuleAnnotatedMethod(context.getTestInstance(), (Method) member);
 	}
 
 	@Override
