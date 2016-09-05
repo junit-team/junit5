@@ -24,13 +24,10 @@ import org.junit.rules.TestRule;
 abstract class AbstractTestRuleSupport implements BeforeEachCallback, AfterEachCallback {
 
 	private final Class<Rule> annotationType = Rule.class;
-
-	private final Class<? extends TestRule> ruleType;
+	private final Class<? extends TestRule> ruleType = TestRule.class;
 	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator;
 
-	protected AbstractTestRuleSupport(Class<? extends TestRule> ruleType,
-			Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {
-		this.ruleType = ruleType;
+	protected AbstractTestRuleSupport(Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {
 		this.adapterGenerator = adapterGenerator;
 	}
 

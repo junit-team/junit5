@@ -14,16 +14,13 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.TestExtensionContext;
-import org.junit.rules.TestRule;
 
 public class VerifierSupport implements AfterEachCallback {
 
-	private final Class<? extends TestRule> ruleType = TestRule.class;
-	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = annotatedMember -> new VerifierAdapter(
-		annotatedMember.getTestRuleInstance());
+	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = VerifierAdapter::new;
 
-	private AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(ruleType, adapterGenerator);
-	private AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(ruleType, adapterGenerator);
+	private AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator);
+	private AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator);
 
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {

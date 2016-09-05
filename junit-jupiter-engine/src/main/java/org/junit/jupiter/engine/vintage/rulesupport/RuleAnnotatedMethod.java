@@ -12,15 +12,12 @@ package org.junit.jupiter.engine.vintage.rulesupport;
 
 import java.lang.reflect.Method;
 
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.rules.TestRule;
 
 class RuleAnnotatedMethod extends AbstractRuleAnnotatedMember {
 
-	RuleAnnotatedMethod(TestExtensionContext context, Method member) {
-		Object testInstance = context.getTestInstance();
-
+	RuleAnnotatedMethod(Object testInstance, Method member) {
 		//no args
 		this.testRuleInstance = (TestRule) ReflectionUtils.invokeMethod(member, testInstance);
 	}

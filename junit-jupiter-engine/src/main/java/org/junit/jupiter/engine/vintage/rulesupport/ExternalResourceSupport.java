@@ -15,16 +15,13 @@ import java.util.function.Function;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.TestExtensionContext;
-import org.junit.rules.TestRule;
 
 public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCallback {
 
-	private final Class<? extends TestRule> ruleType = TestRule.class;
-	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = annotatedMember -> new ExternalResourceAdapter(
-		annotatedMember.getTestRuleInstance());
+	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = ExternalResourceAdapter::new;
 
-	private AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(ruleType, adapterGenerator);
-	private AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(ruleType, adapterGenerator);
+	private final AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator);
+	private final AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator);
 
 	@Override
 	public void beforeEach(TestExtensionContext context) throws Exception {

@@ -12,14 +12,11 @@ package org.junit.jupiter.engine.vintage.rulesupport;
 
 import java.lang.reflect.Field;
 
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.rules.TestRule;
 
 class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
 
-	RuleAnnotatedField(TestExtensionContext context, Field testRuleField) {
-		Object testInstance = context.getTestInstance();
-
+	RuleAnnotatedField(Object testInstance, Field testRuleField) {
 		try {
 			this.testRuleInstance = (TestRule) testRuleField.get(testInstance);
 		}
