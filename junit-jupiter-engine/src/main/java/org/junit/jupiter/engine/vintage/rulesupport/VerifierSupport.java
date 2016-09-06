@@ -14,6 +14,9 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.engine.vintage.rulesupport.adapter.AbstractTestRuleAdapter;
+import org.junit.jupiter.engine.vintage.rulesupport.adapter.VerifierAdapter;
+import org.junit.jupiter.engine.vintage.rulesupport.member.RuleAnnotatedMember;
 
 public class VerifierSupport implements AfterEachCallback {
 

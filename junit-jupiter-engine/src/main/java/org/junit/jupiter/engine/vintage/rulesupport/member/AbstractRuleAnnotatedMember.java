@@ -8,14 +8,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.engine.vintage.rulesupport;
+package org.junit.jupiter.engine.vintage.rulesupport.member;
 
-public interface GenericBeforeAndAfterAdvice {
+import org.junit.rules.TestRule;
 
-	default void before() {
-	}
+public abstract class AbstractRuleAnnotatedMember implements RuleAnnotatedMember {
 
-	default void after() {
+	protected TestRule testRuleInstance;
+
+	@Override
+	public TestRule getTestRuleInstance() {
+		return this.testRuleInstance;
 	}
 
 }

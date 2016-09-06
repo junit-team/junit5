@@ -8,15 +8,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.engine.vintage.rulesupport;
+package org.junit.jupiter.engine.vintage.rulesupport.member;
 
 import java.lang.reflect.Field;
 
+import org.junit.jupiter.engine.vintage.rulesupport.member.AbstractRuleAnnotatedMember;
 import org.junit.rules.TestRule;
 
-class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
+public class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
 
-	RuleAnnotatedField(Object testInstance, Field testRuleField) {
+	public RuleAnnotatedField(Object testInstance, Field testRuleField) {
 		try {
 			this.testRuleInstance = (TestRule) testRuleField.get(testInstance);
 		}
