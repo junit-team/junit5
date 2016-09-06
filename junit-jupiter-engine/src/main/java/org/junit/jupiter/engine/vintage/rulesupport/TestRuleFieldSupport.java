@@ -20,6 +20,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.engine.vintage.rulesupport.adapter.AbstractTestRuleAdapter;
+import org.junit.jupiter.engine.vintage.rulesupport.member.RuleAnnotatedField;
+import org.junit.jupiter.engine.vintage.rulesupport.member.RuleAnnotatedMember;
 
 class TestRuleFieldSupport extends AbstractTestRuleSupport {
 

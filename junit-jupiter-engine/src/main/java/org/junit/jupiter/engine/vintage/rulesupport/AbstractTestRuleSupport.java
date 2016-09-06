@@ -19,9 +19,12 @@ import org.junit.Rule;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.engine.vintage.rulesupport.adapter.AbstractTestRuleAdapter;
+import org.junit.jupiter.engine.vintage.rulesupport.adapter.GenericBeforeAndAfterAdvice;
+import org.junit.jupiter.engine.vintage.rulesupport.member.RuleAnnotatedMember;
 import org.junit.rules.TestRule;
 
-abstract class AbstractTestRuleSupport implements BeforeEachCallback, AfterEachCallback {
+public abstract class AbstractTestRuleSupport implements BeforeEachCallback, AfterEachCallback {
 
 	private final Class<Rule> annotationType = Rule.class;
 	private final Class<? extends TestRule> ruleType = TestRule.class;

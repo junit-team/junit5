@@ -15,6 +15,9 @@ import java.util.function.Function;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.engine.vintage.rulesupport.adapter.AbstractTestRuleAdapter;
+import org.junit.jupiter.engine.vintage.rulesupport.adapter.ExternalResourceAdapter;
+import org.junit.jupiter.engine.vintage.rulesupport.member.RuleAnnotatedMember;
 
 public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCallback {
 

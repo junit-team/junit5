@@ -8,10 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.engine.vintage.rulesupport;
+package org.junit.jupiter.engine.vintage.rulesupport.adapter;
 
 import java.lang.reflect.Method;
 
+import org.junit.jupiter.engine.vintage.rulesupport.member.RuleAnnotatedMember;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.rules.TestRule;
 

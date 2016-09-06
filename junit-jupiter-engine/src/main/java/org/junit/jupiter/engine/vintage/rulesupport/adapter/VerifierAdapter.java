@@ -8,22 +8,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.engine.vintage.rulesupport;
+package org.junit.jupiter.engine.vintage.rulesupport.adapter;
 
-public class ExternalResourceAdapter extends AbstractTestRuleAdapter {
+import org.junit.jupiter.engine.vintage.rulesupport.member.RuleAnnotatedMember;
 
-	public ExternalResourceAdapter(RuleAnnotatedMember annotatedMember) {
+public class VerifierAdapter extends AbstractTestRuleAdapter {
+
+	public VerifierAdapter(RuleAnnotatedMember annotatedMember) {
 		super(annotatedMember);
 	}
 
 	@Override
-	public void before() {
-		super.executeMethod("before", this.target);
-	}
-
-	@Override
 	public void after() {
-		super.executeMethod("after", this.target);
+		super.executeMethod("verify", this.target);
 	}
 
 }

@@ -8,17 +8,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.engine.vintage.rulesupport;
+package org.junit.jupiter.engine.vintage.rulesupport.member;
 
 import org.junit.rules.TestRule;
 
-public abstract class AbstractRuleAnnotatedMember implements RuleAnnotatedMember {
-
-	protected TestRule testRuleInstance;
-
-	@Override
-	public TestRule getTestRuleInstance() {
-		return this.testRuleInstance;
-	}
-
+public interface RuleAnnotatedMember {
+	TestRule getTestRuleInstance();
 }

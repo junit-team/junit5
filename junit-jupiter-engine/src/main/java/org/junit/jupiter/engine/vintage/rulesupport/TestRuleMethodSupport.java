@@ -19,6 +19,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.engine.vintage.rulesupport.adapter.AbstractTestRuleAdapter;
+import org.junit.jupiter.engine.vintage.rulesupport.member.RuleAnnotatedMember;
+import org.junit.jupiter.engine.vintage.rulesupport.member.RuleAnnotatedMethod;
 import org.junit.platform.commons.util.AnnotationUtils;
 
 class TestRuleMethodSupport extends AbstractTestRuleSupport {

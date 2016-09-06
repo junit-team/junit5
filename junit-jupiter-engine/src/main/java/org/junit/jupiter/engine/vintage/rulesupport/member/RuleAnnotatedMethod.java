@@ -8,16 +8,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.engine.vintage.rulesupport;
+package org.junit.jupiter.engine.vintage.rulesupport.member;
 
 import java.lang.reflect.Method;
 
+import org.junit.jupiter.engine.vintage.rulesupport.member.AbstractRuleAnnotatedMember;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.rules.TestRule;
 
-class RuleAnnotatedMethod extends AbstractRuleAnnotatedMember {
+public class RuleAnnotatedMethod extends AbstractRuleAnnotatedMember {
 
-	RuleAnnotatedMethod(Object testInstance, Method member) {
+	public RuleAnnotatedMethod(Object testInstance, Method member) {
 		//no args
 		this.testRuleInstance = (TestRule) ReflectionUtils.invokeMethod(member, testInstance);
 	}
