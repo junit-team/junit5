@@ -3627,6 +3627,10 @@ plugin now includes statistics for all container events in addition to test even
 <div class="ulist">
 <ul>
 <li>
+<p><code>@AfterEach</code> methods are now executed with <em>bottom-up</em> semantics within a test
+class hierarchy.</p>
+</li>
+<li>
 <p><code>DynamicTest.stream()</code> now accepts a <code>ThrowingConsumer</code> instead of a conventional
 <code>Consumer</code> for its <em>test executor</em>, thereby allowing for custom streams of
 dynamic tests that may potentially throw checked exceptions.</p>
@@ -3683,7 +3687,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-09-07 07:54:45 -04:00
+Last updated 2016-09-07 08:09:48 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
