@@ -82,6 +82,8 @@ on GitHub.
 
 ====== Bug Fixes
 
+* `@AfterEach` methods are now executed with _bottom-up_ semantics within a test
+  class hierarchy.
 * `DynamicTest.stream()` now accepts a `ThrowingConsumer` instead of a conventional
   `Consumer` for its _test executor_, thereby allowing for custom streams of
   dynamic tests that may potentially throw checked exceptions.
