@@ -18,6 +18,8 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -244,7 +246,15 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void registerAfterEachMethodAdapters(ExtensionRegistry registry) {
-		registerMethodsAsExtensions(this.afterEachMethods, registry, this::synthesizeAfterEachMethodAdapter);
+
+		// Since the bottom-up ordering of afterEachMethods will later be reversed when the
+		// synthesized AfterEachMethodAdapters are executed within MethodTestDescriptor, we
+		// have to reverse the afterEachMethods list to put them in top-down order before we
+		// register them as synthesized extensions.
+		List<Method> reversed = new ArrayList<>(this.afterEachMethods);
+		Collections.reverse(reversed);
+
+		registerMethodsAsExtensions(reversed, registry, this::synthesizeAfterEachMethodAdapter);
 	}
 
 	private void registerMethodsAsExtensions(List<Method> methods, ExtensionRegistry registry,
