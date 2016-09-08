@@ -15,6 +15,7 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.platform.console.ConsoleLauncher
+import spock.lang.Requires
 import spock.lang.Specification
 
 /**
@@ -131,4 +132,103 @@ class JUnitPlatformPluginSpec extends Specification {
 		testTask.enabled == true
 	}
 
+	@Requires({ System.getenv("ANDROID_HOME") })
+	def "setting junitPlatform properties (android)"() {
+
+		Project androidProject = ProjectBuilder.builder().withParent(project).build()
+		androidProject.file(".").mkdir();
+		androidProject.apply plugin: 'com.android.application'
+		androidProject.apply plugin: 'org.junit.platform.gradle.plugin'
+		androidProject.repositories {
+			jcenter()
+		}
+
+		when:
+		androidProject.android {
+			compileSdkVersion 24
+			buildToolsVersion "24.0.2"
+
+			defaultConfig {
+				applicationId "org.junit.android.sample"
+				minSdkVersion 24
+				targetSdkVersion 24
+				versionCode 1
+				versionName "1.0"
+			}
+		}
+		androidProject.junitPlatform {
+			platformVersion '5.0.0-M2'
+			includeClassNamePattern '.*Tests?'
+			logManager 'org.apache.logging.log4j.jul.LogManager'
+			tags {
+				include 'fast'
+				exclude 'slow'
+			}
+			reportsDir new File("any")
+		}
+		androidProject.evaluate()
+
+		then:
+		true == true
+	}
+
+    @Requires({ System.getenv("ANDROID_HOME") })
+    def "creating junitPlatformTest tasks (android)"() {
+
+        Project androidProject = ProjectBuilder.builder().withParent(project).build()
+        androidProject.file(".").mkdir();
+        androidProject.apply plugin: 'com.android.application'
+        androidProject.apply plugin: 'org.junit.platform.gradle.plugin'
+        androidProject.repositories {
+            jcenter()
+        }
+
+        when:
+        androidProject.android {
+            compileSdkVersion 24
+            buildToolsVersion "24.0.2"
+
+            defaultConfig {
+                applicationId "org.junit.android.sample"
+                minSdkVersion 24
+                targetSdkVersion 24
+                versionCode 1
+                versionName "1.0"
+            }
+        }
+        androidProject.junitPlatform {
+            platformVersion '5.0.0-M2'
+            includeClassNamePattern '.*Tests?'
+            logManager 'org.apache.logging.log4j.jul.LogManager'
+            tags {
+                include 'fast'
+                exclude 'slow'
+            }
+            reportsDir new File("any")
+        }
+        androidProject.evaluate()
+
+        then:
+        Task junitDebugTask = androidProject.tasks.findByName('junitPlatformTestDebug')
+        junitDebugTask instanceof JavaExec
+        junitDebugTask.main == ConsoleLauncher.class.getName()
+
+        junitDebugTask.args.contains('--hide-details')
+        junitDebugTask.args.contains('--scan-class-path')
+        junitDebugTask.args.containsAll('-n', '.*Tests?')
+        junitDebugTask.args.containsAll('-t', 'fast')
+        junitDebugTask.args.containsAll('-T', 'slow')
+        junitDebugTask.args.containsAll('--reports-dir', new File('any').getCanonicalFile().toString())
+
+        Task junitReleaseTask = androidProject.tasks.findByName('junitPlatformTestRelease')
+        junitReleaseTask instanceof JavaExec
+        junitReleaseTask.main == ConsoleLauncher.class.getName()
+
+        junitReleaseTask.args.contains('--hide-details')
+        junitReleaseTask.args.contains('--scan-class-path')
+        junitReleaseTask.args.containsAll('-n', '.*Tests?')
+        junitReleaseTask.args.containsAll('-t', 'fast')
+        junitReleaseTask.args.containsAll('-T', 'slow')
+        junitReleaseTask.args.containsAll('--reports-dir', new File('any').getCanonicalFile().toString())
+    }
 }

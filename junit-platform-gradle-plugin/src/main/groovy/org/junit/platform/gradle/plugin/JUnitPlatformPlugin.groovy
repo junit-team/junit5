@@ -45,13 +45,87 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		}
 
 		project.afterEvaluate {
-			configure(project, junitExtension)
+			if (isAndroidProject(project)) {
+				configureAndroid(project, junitExtension)
+			} else {
+				configureJava(project, junitExtension)
+			}
 		}
 	}
 
-	private void configure(Project project, junitExtension) {
+	private void configureAndroid(Project project, junitExtension) {
+		// Add the test task to each of the project's unit test variants
+		def allVariants = isAndroidLibrary(project) ? "libraryVariants" : "applicationVariants"
+		def testVariants = project.android[allVariants].findAll { it.hasProperty("unitTestVariant") }
+
+		testVariants.collect { it.unitTestVariant }.each { variant ->
+			def buildType = variant.buildType.name
+			def nameSuffix = "${variant.flavorName.capitalize()}${buildType.capitalize()}"
+
+			// Obtain variant properties
+			def variantData = variant.variantData
+			def variantScope = variantData.scope
+			def scopeJavaOutputs = variantScope.hasProperty("javaOutputs") ? variantScope.javaOutputs : variantScope.javaOuptuts
+
+			// Obtain tested variant properties
+			def testedVariantData = variant.testedVariant.variantData
+			def testedVariantScope = testedVariantData.scope
+			def testedScopeJavaOutputs = testedVariantScope.hasProperty("javaOutputs") ? testedVariantScope.javaOutputs : testedVariantScope.javaOuptuts
+
+			// Setup classpath for this variant's tests and add the test task
+			// (refer to com.android.build.gradle.tasks.factory.UnitTestConfigAction)
+			// 1) Add the compiler's classpath
+			def classpaths = new ArrayList<>()
+			if (variantData.javacTask) {
+				def javaCompiler = variant.javaCompiler
+				classpaths.add(javaCompiler.classpath)
+				classpaths.add(javaCompiler.outputs.files)
+			} else {
+				classpaths.add(testedScopeJavaOutputs)
+				classpaths.add(scopeJavaOutputs)
+			}
+
+			// 2) Add the testApk configuration
+			classpaths.add(project.configurations.getByName("testApk"))
+
+			// 3) Add test resources
+			classpaths.add(variantData.javaResourcesForUnitTesting)
+			classpaths.add(testedVariantData.javaResourcesForUnitTesting)
+
+			// 4) Add filtered boot classpath
+			def globalScope = variantScope.globalScope
+			classpaths.add(globalScope.androidBuilder.getBootClasspath(false).findAll {
+				!it.name.equals("android.jar")
+			})
+
+			// 5) Add mocked version of android.jar
+			classpaths.add(globalScope.mockableAndroidJarFile)
+
+			addJunitPlattformTask(
+					project: project,
+					junitExtension: junitExtension,
+					nameSuffix: nameSuffix,
+					classpath: project.files(classpaths),
+					dependentTasks: Collections.singletonList("assemble${nameSuffix}UnitTest"))
+		}
+	}
+
+	private void configureJava(Project project, junitExtension) {
+		addJunitPlattformTask(
+				project: project,
+				junitExtension: junitExtension,
+				classpath: project.sourceSets.test.runtimeClasspath,
+				dependentTasks: Collections.singletonList("testClasses"))
+	}
+
+	private void addJunitPlattformTask(Map map) {
+		Project project = map.project
+		def junitExtension = map.junitExtension
+		def classpath = map.classpath
+		String nameSuffix = map.getOrDefault("nameSuffix", "")
+		def dependentTasks = map.dependentTasks
 		project.task(
-				TASK_NAME,
+				TASK_NAME + nameSuffix,
 				type: JavaExec,
 				group: 'verification',
 				description: 'Runs tests on the JUnit Platform.') { junitTask ->
@@ -70,7 +144,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 				systemProperty 'java.util.logging.manager', junitExtension.logManager
 			}
 
-			configureTaskDependencies(project, junitTask, junitExtension)
+			configureTaskDependencies(project, junitTask, junitExtension, dependentTasks)
 
 			// Build the classpath from the user's test runtime classpath and the JUnit
 			// Platform modules.
@@ -79,16 +153,24 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			// instrumented by Clover in JUnit's build will be shadowed by JARs pulled in
 			// via the junitPlatform configuration... leading to zero code coverage for
 			// the respective modules.
-			junitTask.classpath = project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform
+			junitTask.classpath = classpath + project.configurations.junitPlatform
 
 			junitTask.main = ConsoleLauncher.class.getName()
 			junitTask.args buildArgs(project, junitExtension, reportsDir)
 		}
 	}
 
-	private void configureTaskDependencies(project, junitTask, junitExtension) {
-		def testClassesTask = project.tasks.getByName('testClasses')
-		junitTask.dependsOn testClassesTask
+	private void configureTaskDependencies(project, junitTask, junitExtension, dependentTasks) {
+		if (!dependentTasks) {
+			dependentTasks = Collections.emptyList()
+		}
+
+		dependentTasks.each {
+			def task = project.tasks.findByName(it)
+			if (task) {
+				junitTask.dependsOn task
+			}
+		}
 
 		def testTask = project.tasks.getByName('test')
 		testTask.dependsOn junitTask
@@ -141,4 +223,15 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		return args
 	}
 
+	private static boolean isAndroidProject(Project project) {
+		return project.plugins.findPlugin("com.android.application") ||
+				project.plugins.findPlugin("android") ||
+				project.plugins.findPlugin("com.android.test") ||
+				isAndroidLibrary(project)
+	}
+
+	private static boolean isAndroidLibrary(Project project) {
+		return project.plugins.findPlugin("com.android.library") ||
+				project.plugins.findPlugin("android-library")
+	}
 }
