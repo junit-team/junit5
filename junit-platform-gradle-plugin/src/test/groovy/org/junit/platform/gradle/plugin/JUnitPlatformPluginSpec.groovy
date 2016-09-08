@@ -195,6 +195,17 @@ class JUnitPlatformPluginSpec extends Specification {
                 versionCode 1
                 versionName "1.0"
             }
+
+            flavorDimensions "version"
+
+            productFlavors {
+                free {
+                    dimension "version"
+                }
+                paid {
+                    dimension "version"
+                }
+            }
         }
         androidProject.junitPlatform {
             platformVersion '5.0.0-M2'
@@ -209,26 +220,25 @@ class JUnitPlatformPluginSpec extends Specification {
         androidProject.evaluate()
 
         then:
-        Task junitDebugTask = androidProject.tasks.findByName('junitPlatformTestDebug')
-        junitDebugTask instanceof JavaExec
-        junitDebugTask.main == ConsoleLauncher.class.getName()
+        // Assert that each variant is being assigned a task:
+        // With 2 build types ("debug", "release") and 1 flavor dimension ("version"),
+        // expect 4 tasks to be created in total
+        // * junitPlatformTestFreeDebug
+        // * junitPlatformTestFreeRelease
+        // * junitPlatformTestPaidDebug
+        // * junitPlatformTestPaidRelease
+        def junitTasks = androidProject.tasks.findAll { it.name.contains("junitPlatformTest") }
+        junitTasks.size() == 4
+        junitTasks.each { task ->
+            task instanceof JavaExec
+            task.main == ConsoleLauncher.class.getName()
 
-        junitDebugTask.args.contains('--hide-details')
-        junitDebugTask.args.contains('--scan-class-path')
-        junitDebugTask.args.containsAll('-n', '.*Tests?')
-        junitDebugTask.args.containsAll('-t', 'fast')
-        junitDebugTask.args.containsAll('-T', 'slow')
-        junitDebugTask.args.containsAll('--reports-dir', new File('any').getCanonicalFile().toString())
-
-        Task junitReleaseTask = androidProject.tasks.findByName('junitPlatformTestRelease')
-        junitReleaseTask instanceof JavaExec
-        junitReleaseTask.main == ConsoleLauncher.class.getName()
-
-        junitReleaseTask.args.contains('--hide-details')
-        junitReleaseTask.args.contains('--scan-class-path')
-        junitReleaseTask.args.containsAll('-n', '.*Tests?')
-        junitReleaseTask.args.containsAll('-t', 'fast')
-        junitReleaseTask.args.containsAll('-T', 'slow')
-        junitReleaseTask.args.containsAll('--reports-dir', new File('any').getCanonicalFile().toString())
+            task.args.contains('--hide-details')
+            task.args.contains('--scan-class-path')
+            task.args.containsAll('-n', '.*Tests?')
+            task.args.containsAll('-t', 'fast')
+            task.args.containsAll('-T', 'slow')
+            task.args.containsAll('--reports-dir', new File('any').getCanonicalFile().toString())
+        }
     }
 }
