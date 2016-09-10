@@ -14,9 +14,11 @@ import static java.util.Arrays.asList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.engine.Filter.adaptFilter;
 import static org.junit.platform.engine.Filter.composeFilters;
+import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.meta.API;
@@ -49,16 +51,17 @@ public class JUnit4DiscoveryRequestResolver {
 
 	private TestClassCollector collectTestClasses(EngineDiscoveryRequest discoveryRequest) {
 		TestClassCollector collector = new TestClassCollector();
-		for (DiscoverySelectorResolver<?> selectorResolver : getAllDiscoverySelectorResolvers()) {
+		for (DiscoverySelectorResolver<?> selectorResolver : getAllDiscoverySelectorResolvers(discoveryRequest)) {
 			resolveSelectorsOfSingleType(discoveryRequest, selectorResolver, collector);
 		}
 		return collector;
 	}
 
-	private List<DiscoverySelectorResolver<?>> getAllDiscoverySelectorResolvers() {
+	private List<DiscoverySelectorResolver<?>> getAllDiscoverySelectorResolvers(EngineDiscoveryRequest request) {
+		Predicate<String> classNamePredicate = buildClassNamePredicate(request);
 		return asList( //
-			new ClasspathRootSelectorResolver(), //
-			new PackageNameSelectorResolver(), //
+			new ClasspathRootSelectorResolver(classNamePredicate), //
+			new PackageNameSelectorResolver(classNamePredicate), //
 			new ClassSelectorResolver(), //
 			new MethodSelectorResolver(), //
 			new UniqueIdSelectorResolver(logger)//

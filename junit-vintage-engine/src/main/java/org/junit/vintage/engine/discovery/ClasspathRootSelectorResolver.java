@@ -13,6 +13,7 @@ package org.junit.vintage.engine.discovery;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 
 import java.nio.file.Paths;
+import java.util.function.Predicate;
 
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 
@@ -21,13 +22,16 @@ import org.junit.platform.engine.discovery.ClasspathRootSelector;
  */
 class ClasspathRootSelectorResolver extends DiscoverySelectorResolver<ClasspathRootSelector> {
 
-	ClasspathRootSelectorResolver() {
+	private final Predicate<String> classNamePredicate;
+
+	ClasspathRootSelectorResolver(Predicate<String> classNamePredicate) {
 		super(ClasspathRootSelector.class);
+		this.classNamePredicate = classNamePredicate;
 	}
 
 	@Override
 	void resolve(ClasspathRootSelector selector, TestClassCollector collector) {
-		findAllClassesInClasspathRoot(Paths.get(selector.getClasspathRoot()), classTester).forEach(
+		findAllClassesInClasspathRoot(Paths.get(selector.getClasspathRoot()), classTester, classNamePredicate).forEach(
 			collector::addCompletely);
 	}
 

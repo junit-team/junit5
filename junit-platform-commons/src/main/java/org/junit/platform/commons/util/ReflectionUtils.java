@@ -450,12 +450,14 @@ public final class ReflectionUtils {
 		// @formatter:on
 	}
 
-	public static List<Class<?>> findAllClassesInClasspathRoot(Path root, Predicate<Class<?>> classTester) {
-		return classpathScanner.scanForClassesInClasspathRoot(root, classTester, className -> true);
+	public static List<Class<?>> findAllClassesInClasspathRoot(Path root, Predicate<Class<?>> classTester,
+			Predicate<String> classNameFilter) {
+		return classpathScanner.scanForClassesInClasspathRoot(root, classTester, classNameFilter);
 	}
 
-	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester) {
-		return classpathScanner.scanForClassesInPackage(basePackageName, classTester, className -> true);
+	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester,
+			Predicate<String> classNameFilter) {
+		return classpathScanner.scanForClassesInPackage(basePackageName, classTester, classNameFilter);
 	}
 
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
