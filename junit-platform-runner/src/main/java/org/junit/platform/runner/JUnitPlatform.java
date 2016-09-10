@@ -13,7 +13,7 @@ package org.junit.platform.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
-import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;

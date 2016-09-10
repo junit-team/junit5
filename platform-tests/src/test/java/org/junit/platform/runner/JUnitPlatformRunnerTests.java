@@ -49,7 +49,7 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClassFilter;
+import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.JavaClassSelector;
 import org.junit.platform.engine.discovery.JavaPackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -197,7 +197,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsClassFilterToRequestWhenFilterClassNameAnnotationIsPresent() throws Exception {
+		void addsClassNameFilterToRequestWhenFilterClassNameAnnotationIsPresent() throws Exception {
 
 			@IncludeClassNamePattern(".*Foo")
 			class TestCase {
@@ -209,12 +209,12 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassFilter> filters = request.getDiscoveryFiltersByType(ClassFilter.class);
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
 			assertThat(filters).hasSize(1);
 
-			ClassFilter filter = filters.get(0);
-			assertTrue(filter.apply(Foo.class).included());
-			assertTrue(filter.apply(Bar.class).excluded());
+			ClassNameFilter filter = filters.get(0);
+			assertTrue(filter.apply(Foo.class.getName()).included());
+			assertTrue(filter.apply(Bar.class.getName()).excluded());
 		}
 
 		@Test

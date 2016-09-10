@@ -36,7 +36,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *
  * <pre style="code">
  * import static org.junit.platform.engine.discovery.DiscoverySelectors.*;
- * import static org.junit.platform.engine.discovery.ClassFilter.*;
+ * import static org.junit.platform.engine.discovery.ClassNameFilter.*;
  * import static org.junit.platform.launcher.EngineFilter.*;
  * import static org.junit.platform.launcher.TagFilter.*;
  *
@@ -72,7 +72,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *
  * @since 1.0
  * @see org.junit.platform.engine.discovery.DiscoverySelectors
- * @see org.junit.platform.engine.discovery.ClassFilter
+ * @see org.junit.platform.engine.discovery.ClassNameFilter
  * @see org.junit.platform.launcher.EngineFilter
  * @see org.junit.platform.launcher.TagFilter
  */

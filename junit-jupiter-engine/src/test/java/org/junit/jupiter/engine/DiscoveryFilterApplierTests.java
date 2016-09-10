@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClassFilter;
+import org.junit.platform.engine.discovery.ClassNameFilter;
 
 /**
  * Microtests for {@link DiscoveryFilterApplier}.
@@ -39,7 +39,7 @@ class DiscoveryFilterApplierTests {
 	void nonMatchingClassesAreExcluded() {
 
 		EngineDiscoveryRequest request = request().filters(
-			ClassFilter.includeClassNamePattern(".*\\$MatchingClass")).build();
+			ClassNameFilter.includeClassNamePattern(".*\\$MatchingClass")).build();
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
@@ -61,7 +61,7 @@ class DiscoveryFilterApplierTests {
 	@Test
 	void nestedTestClassesAreAlwaysIncludedWhenTheirParentIs() {
 		EngineDiscoveryRequest request = request().filters(
-			ClassFilter.includeClassNamePattern(".*\\$MatchingClass")).build();
+			ClassNameFilter.includeClassNamePattern(".*\\$MatchingClass")).build();
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()

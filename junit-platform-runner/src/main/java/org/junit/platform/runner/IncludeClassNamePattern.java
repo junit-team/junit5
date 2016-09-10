@@ -31,7 +31,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  * @see JUnitPlatform
- * @see org.junit.platform.engine.discovery.ClassFilter#includeClassNamePattern
+ * @see org.junit.platform.engine.discovery.ClassNameFilter#includeClassNamePattern
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

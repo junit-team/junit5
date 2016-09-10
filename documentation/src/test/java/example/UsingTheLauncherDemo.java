@@ -11,7 +11,7 @@
 package example;
 
 // tag::imports[]
-import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 

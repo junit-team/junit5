@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.FunctionUtils.where;
-import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
@@ -225,7 +225,7 @@ class VintageTestEngineDiscoveryTests {
 	}
 
 	@Test
-	void resolvesApplyingClassFilters() throws Exception {
+	void resolvesApplyingClassNameFilters() throws Exception {
 		Path root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClasspathRoots(singleton(root))).filters(
@@ -523,7 +523,7 @@ class VintageTestEngineDiscoveryTests {
 	}
 
 	@Test
-	void doesNotResolveMethodOfClassNotAcceptedByClassFilter() throws Exception {
+	void doesNotResolveMethodOfClassNotAcceptedByClassNameFilter() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		// @formatter:off
 		LauncherDiscoveryRequest request = request()

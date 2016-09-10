@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.CommandLineOptions;
-import org.junit.platform.engine.discovery.ClassFilter;
+import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.JavaClassSelector;
 import org.junit.platform.engine.discovery.JavaMethodSelector;
@@ -126,7 +126,7 @@ public class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClassFilter> filter = request.getDiscoveryFiltersByType(ClassFilter.class);
+		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
 		assertThat(filter).hasSize(1);
 		assertThat(filter.get(0).toString()).contains(".*Test");
 	}

@@ -23,7 +23,7 @@ import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineDiscoveryRequest;
-import org.junit.platform.engine.discovery.ClassFilter;
+import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.vintage.engine.RecordCollectingLogger;
 
@@ -37,7 +37,8 @@ class VintageDiscoveryRequestResolverTests {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(engineId(), "JUnit Vintage");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 
-		ClassFilter filter = testClass -> includedIf(Foo.class.equals(testClass), () -> "match", () -> "no match");
+		ClassNameFilter filter = className -> includedIf(Foo.class.getName().equals(className), () -> "match",
+			() -> "no match");
 		// @formatter:off
 		EngineDiscoveryRequest request = request()
 				.selectors(selectJavaClass(Foo.class), selectJavaClass(Bar.class))
