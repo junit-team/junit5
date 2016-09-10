@@ -4,8 +4,16 @@
 [[running-tests-ide]]
 === IDE Support
 
-At the time of this writing there is no direct support for running tests on the JUnit
-Platform within IDEs. However, the JUnit team provides two intermediate solutions so that
+==== IntelliJ IDEA
+
+IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2.
+For details please see the https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/[post on the IntelliJ IDEA blog].
+
+==== Other IDEs
+
+At the time of this writing, there is no direct support for running tests on the JUnit
+Platform within IDEs other than IntelliJ IDEA.
+However, the JUnit team provides two intermediate solutions so that
 you can go ahead and try out JUnit 5 within your IDE today. You can use the
 <<running-tests-console-launcher>> manually or execute tests with a
 <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
