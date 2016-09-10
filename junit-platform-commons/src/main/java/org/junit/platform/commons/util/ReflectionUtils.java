@@ -451,11 +451,11 @@ public final class ReflectionUtils {
 	}
 
 	public static List<Class<?>> findAllClassesInClasspathRoot(Path root, Predicate<Class<?>> classTester) {
-		return classpathScanner.scanForClassesInClasspathRoot(root, classTester);
+		return classpathScanner.scanForClassesInClasspathRoot(root, classTester, className -> true);
 	}
 
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester) {
-		return classpathScanner.scanForClassesInPackage(basePackageName, classTester);
+		return classpathScanner.scanForClassesInPackage(basePackageName, classTester, className -> true);
 	}
 
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {

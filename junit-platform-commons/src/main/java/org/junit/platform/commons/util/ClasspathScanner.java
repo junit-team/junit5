@@ -83,42 +83,48 @@ class ClasspathScanner {
 		}
 	}
 
-	List<Class<?>> scanForClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter) {
+	List<Class<?>> scanForClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
 		assertPackageNameIsPlausible(basePackageName);
 		Preconditions.notNull(classFilter, "classFilter must not be null");
+		Preconditions.notNull(classNameFilter, "classNameFilter must not be null");
 		basePackageName = basePackageName.trim();
 
-		return findClassesForUris(getRootUrisForPackage(basePackageName), basePackageName, classFilter);
+		return findClassesForUris(getRootUrisForPackage(basePackageName), basePackageName, classFilter,
+			classNameFilter);
 	}
 
-	List<Class<?>> scanForClassesInClasspathRoot(Path root, Predicate<Class<?>> classFilter) {
+	List<Class<?>> scanForClassesInClasspathRoot(Path root, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.condition(Files.isDirectory(root),
 			() -> "root must be an existing directory: " + root.toAbsolutePath());
 		Preconditions.notNull(classFilter, "classFilter must not be null");
+		Preconditions.notNull(classNameFilter, "classNameFilter must not be null");
 
-		return findClassesForPath(root, DEFAULT_PACKAGE_NAME, classFilter);
+		return findClassesForPath(root, DEFAULT_PACKAGE_NAME, classFilter, classNameFilter);
 	}
 
 	/**
 	 * Recursively scan for classes in all of the supplied source directories.
 	 */
 	private List<Class<?>> findClassesForUris(List<URI> baseUris, String basePackageName,
-			Predicate<Class<?>> classFilter) {
+			Predicate<Class<?>> classFilter, Predicate<String> classNameFilter) {
 
 		// @formatter:off
 		return baseUris.stream()
-				.map(baseUri -> findClassesForUri(baseUri, basePackageName, classFilter))
+				.map(baseUri -> findClassesForUri(baseUri, basePackageName, classFilter, classNameFilter))
 				.flatMap(Collection::stream)
 				.distinct()
 				.collect(toList());
 		// @formatter:on
 	}
 
-	private List<Class<?>> findClassesForUri(URI baseUri, String basePackageName, Predicate<Class<?>> classFilter) {
+	private List<Class<?>> findClassesForUri(URI baseUri, String basePackageName, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
 		try (CloseablePath closeablePath = CloseablePath.create(baseUri)) {
 			Path baseDir = closeablePath.getPath();
-			return findClassesForPath(baseDir, basePackageName, classFilter);
+			return findClassesForPath(baseDir, basePackageName, classFilter, classNameFilter);
 		}
 		catch (Exception ex) {
 			logWarning(ex, () -> "Error scanning files for URI " + baseUri);
@@ -126,11 +132,12 @@ class ClasspathScanner {
 		}
 	}
 
-	private List<Class<?>> findClassesForPath(Path baseDir, String basePackageName, Predicate<Class<?>> classFilter) {
+	private List<Class<?>> findClassesForPath(Path baseDir, String basePackageName, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
 		List<Class<?>> classes = new ArrayList<>();
 		try {
-			Files.walkFileTree(baseDir, new ClassFileVisitor(
-				classFile -> processClassFileSafely(baseDir, basePackageName, classFilter, classFile, classes::add)));
+			Files.walkFileTree(baseDir, new ClassFileVisitor(classFile -> processClassFileSafely(baseDir,
+				basePackageName, classFilter, classNameFilter, classFile, classes::add)));
 		}
 		catch (IOException ex) {
 			logWarning(ex, () -> "I/O error scanning files in " + baseDir);
@@ -139,12 +146,14 @@ class ClasspathScanner {
 	}
 
 	private void processClassFileSafely(Path baseDir, String basePackageName, Predicate<Class<?>> classFilter,
-			Path classFile, Consumer<Class<?>> classConsumer) {
+			Predicate<String> classNameFilter, Path classFile, Consumer<Class<?>> classConsumer) {
 		Optional<Class<?>> clazz = Optional.empty();
 		try {
 			String fullyQualifiedClassName = determineFullyQualifiedClassName(baseDir, basePackageName, classFile);
-			clazz = this.loadClass.apply(fullyQualifiedClassName, getClassLoader());
-			clazz.filter(classFilter).ifPresent(classConsumer);
+			if (classNameFilter.test(fullyQualifiedClassName)) {
+				clazz = this.loadClass.apply(fullyQualifiedClassName, getClassLoader());
+				clazz.filter(classFilter).ifPresent(classConsumer);
+			}
 		}
 		catch (InternalError internalError) {
 			handleInternalError(classFile, clazz, internalError);
