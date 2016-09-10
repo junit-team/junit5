@@ -99,6 +99,7 @@ public final class Preconditions {
 	public static <T extends Collection<?>> T notEmpty(T collection, String message)
 			throws PreconditionViolationException {
 		condition(collection != null && !collection.isEmpty(), () -> message);
+		collection.forEach(object -> notNull(object, () -> message));
 		return collection;
 	}
 
