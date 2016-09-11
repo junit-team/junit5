@@ -35,7 +35,9 @@ class FilterCompositionTests {
 		Filter<Object> composedFilter = Filter.composeFilters();
 
 		assertTrue(composedFilter.apply(String.class).included());
+		assertTrue(composedFilter.toPredicate().test(String.class));
 		assertTrue(composedFilter.apply(Object.class).included());
+		assertTrue(composedFilter.toPredicate().test(Object.class));
 	}
 
 	@Test
@@ -53,7 +55,9 @@ class FilterCompositionTests {
 		Filter<String> composed = Filter.composeFilters(firstFilter, secondFilter);
 
 		assertFalse(composed.apply("java.lang.String").included());
+		assertFalse(composed.toPredicate().test("java.lang.String"));
 		assertTrue(composed.apply("java.util.StringJoiner").included());
+		assertTrue(composed.toPredicate().test("java.util.StringJoiner"));
 	}
 
 	@Test

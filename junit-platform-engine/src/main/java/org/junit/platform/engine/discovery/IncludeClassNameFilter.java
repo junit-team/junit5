@@ -12,6 +12,7 @@ package org.junit.platform.engine.discovery;
 
 import static org.junit.platform.engine.FilterResult.includedIf;
 
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.junit.platform.commons.util.Preconditions;
@@ -37,9 +38,18 @@ class IncludeClassNameFilter implements ClassNameFilter {
 
 	@Override
 	public FilterResult apply(String className) {
-		return includedIf(this.pattern.matcher(className).matches(), //
+		return includedIf(matchesPattern(className), //
 			() -> String.format("Class name [%s] matches pattern: %s", className, this.pattern), //
 			() -> String.format("Class name [%s] does not match pattern: %s", className, this.pattern));
+	}
+
+	@Override
+	public Predicate<String> toPredicate() {
+		return this::matchesPattern;
+	}
+
+	private boolean matchesPattern(String className) {
+		return this.pattern.matcher(className).matches();
 	}
 
 	@Override

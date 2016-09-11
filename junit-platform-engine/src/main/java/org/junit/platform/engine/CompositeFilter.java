@@ -14,7 +14,11 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static org.junit.platform.engine.FilterResult.included;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
+
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Combines a collection of {@link Filter Filters} into a new filter that will
@@ -26,8 +30,19 @@ import java.util.Collection;
 class CompositeFilter<T> implements Filter<T> {
 
 	@SuppressWarnings("rawtypes")
-	private static final Filter ALWAYS_INCLUDED_FILTER = obj -> included("Always included");
+	private static final Filter ALWAYS_INCLUDED_FILTER = new Filter() {
+		@Override
+		public FilterResult apply(Object obj) {
+			return ALWAYS_INCLUDED_RESULT;
+		}
 
+		@Override
+		public Predicate toPredicate() {
+			return obj -> true;
+		}
+	};
+
+	private static final FilterResult ALWAYS_INCLUDED_RESULT = included("Always included");
 	private static final FilterResult INCLUDED_BY_ALL_FILTERS = included("Element was included by all filters.");
 
 	@SuppressWarnings("unchecked")
@@ -35,10 +50,10 @@ class CompositeFilter<T> implements Filter<T> {
 		return ALWAYS_INCLUDED_FILTER;
 	}
 
-	private final Collection<? extends Filter<T>> filters;
+	private final Collection<Filter<T>> filters;
 
 	CompositeFilter(Collection<? extends Filter<T>> filters) {
-		this.filters = filters;
+		this.filters = new ArrayList<>(Preconditions.notEmpty(filters, "filters must not be empty"));
 	}
 
 	@Override
@@ -53,8 +68,23 @@ class CompositeFilter<T> implements Filter<T> {
 	}
 
 	@Override
+	public Predicate<T> toPredicate() {
+		// @formatter:off
+		return filters.stream()
+				.map(Filter::toPredicate)
+				.reduce(Predicate::and)
+				.get(); // it's safe to call get() here because the constructor ensures filters is not empty
+		// @formatter:on
+	}
+
+	@Override
 	public String toString() {
-		return filters.stream().map(Object::toString).map(value -> format("(%s)", value)).collect(joining(" and "));
+		// @formatter:off
+		return filters.stream()
+				.map(Object::toString)
+				.map(value -> format("(%s)", value))
+				.collect(joining(" and "));
+		// @formatter:on
 	}
 
 }

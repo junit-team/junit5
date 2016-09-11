@@ -29,7 +29,9 @@ class ClassNameFilterTests {
 
 		assertEquals("Includes class names with regular expression: " + regex, filter.toString());
 		assertTrue(filter.apply("java.lang.String").included());
+		assertTrue(filter.toPredicate().test("java.lang.String"));
 		assertFalse(filter.apply("java.util.Collection").included());
+		assertFalse(filter.toPredicate().test("java.util.Collection"));
 	}
 
 }
