@@ -28,6 +28,7 @@ on GitHub.
 * Test classes in the _default_ package are now picked up via classpath scanning when
   scanning classpath roots -- for example, in conjunction with the JUnit Platform
   Gradle plugin when no explicit packages have been selected.
+* Classpath scanning no longer loads classes that are excluded by a class name filter.
 
 ====== Deprecations and Breaking Changes
 
@@ -45,6 +46,9 @@ on GitHub.
 * Generic name-based discovery selectors (i.e., `selectName()` and `selectNames()`) in
   `DiscoverySelectors` have been deprecated in favor of the dedicated
   `selectJavaPackage(String)`, `selectJavaClass(String)`, and `selectJavaMethod(String)` methods.
+* `ClassFilter` has been renamed to `ClassNameFilter` and now implements `DiscoveryFilter<String>`
+  instead of `DiscoveryFilter<Class<?>>` so it can be applied before loading classes during
+  classpath scanning.
 * The `-p` command-line option for configuring additional classpath entries for the
   `ConsoleLauncher` has been renamed to `-cp` in order to align with the option names for
   the standard `java` executable. In addition, a new `--class-path` alias has been
