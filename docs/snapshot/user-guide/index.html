@@ -3544,6 +3544,9 @@ actual exception type and its stack trace when printing an exception message.</p
 scanning classpath roots&#8201;&#8212;&#8201;for example, in conjunction with the JUnit Platform
 Gradle plugin when no explicit packages have been selected.</p>
 </li>
+<li>
+<p>Classpath scanning no longer loads classes that are excluded by a class name filter.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -3574,6 +3577,11 @@ Gradle plugin when no explicit packages have been selected.</p>
 <p>Generic name-based discovery selectors (i.e., <code>selectName()</code> and <code>selectNames()</code>) in
 <code>DiscoverySelectors</code> have been deprecated in favor of the dedicated
 <code>selectJavaPackage(String)</code>, <code>selectJavaClass(String)</code>, and <code>selectJavaMethod(String)</code> methods.</p>
+</li>
+<li>
+<p><code>ClassFilter</code> has been renamed to <code>ClassNameFilter</code> and now implements <code>DiscoveryFilter&lt;String&gt;</code>
+instead of <code>DiscoveryFilter&lt;Class&lt;?&gt;&gt;</code> so it can be applied before loading classes during
+classpath scanning.</p>
 </li>
 <li>
 <p>The <code>-p</code> command-line option for configuring additional classpath entries for the
