@@ -1818,8 +1818,8 @@ similar to the following.</p>
 </div>
 <div class="paragraph">
 <p>The JUnit Gradle plugin can run JUnit 4 based tests as long as you configure a
-<code>testCompile</code> dependency on JUnit 4 and a <code>testRuntime</code> dependency on the JUnit 4
-TestEngine implementation similar to the following.</p>
+<code>testCompile</code> dependency on JUnit 4 and a <code>testRuntime</code> dependency on the JUnit Vintage
+<code>TestEngine</code> implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1958,6 +1958,98 @@ point.</p>
     &lt;/plugins&gt;
 &lt;/build&gt;
 ...</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="running-tests-build-maven-engines-configure">Configuring Test Engines</h5>
+<div class="paragraph">
+<p>In order to have Maven Surefire run any tests at all, a <code>TestEngine</code> implementation must be added
+to the runtime classpath.</p>
+</div>
+<div class="paragraph">
+<p>To configure support for JUnit Jupiter based tests, configure a <code>test</code> dependency on the JUnit
+Jupiter API and add the JUnit Jupiter <code>TestEngine</code> implementation to the dependencies of the
+<code>maven-surefire-plugin</code> similar to the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml" data-lang="xml">...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.19&lt;/version&gt;
+            &lt;dependencies&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.junit.platform&lt;/groupId&gt;
+                    &lt;artifactId&gt;junit-platform-surefire-provider&lt;/artifactId&gt;
+                    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+                &lt;/dependency&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
+                    &lt;artifactId&gt;junit-jupiter-engine&lt;/artifactId&gt;
+                    &lt;version&gt;5.0.0-SNAPSHOT&lt;/version&gt;
+                &lt;/dependency&gt;
+            &lt;/dependencies&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;dependencies&gt;
+    ...
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
+        &lt;artifactId&gt;junit-jupiter-api&lt;/artifactId&gt;
+        &lt;version&gt;5.0.0-SNAPSHOT&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The JUnit Platform Surefire Provider can run JUnit 4 based tests as long as you configure a
+<code>test</code> dependency on JUnit 4 and add the JUnit Vintage <code>TestEngine</code> implementation to the
+dependencies of the <code>maven-surefire-plugin</code> similar to the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml" data-lang="xml">...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.19&lt;/version&gt;
+            &lt;dependencies&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.junit.platform&lt;/groupId&gt;
+                    &lt;artifactId&gt;junit-platform-surefire-provider&lt;/artifactId&gt;
+                    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+                &lt;/dependency&gt;
+                ...
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.junit.vintage&lt;/groupId&gt;
+                    &lt;artifactId&gt;junit-vintage-engine&lt;/artifactId&gt;
+                    &lt;version&gt;4.12.0-SNAPSHOT&lt;/version&gt;
+                &lt;/dependency&gt;
+            &lt;/dependencies&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;dependencies&gt;
+    ...
+    &lt;dependency&gt;
+        &lt;groupId&gt;junit&lt;/groupId&gt;
+        &lt;artifactId&gt;junit&lt;/artifactId&gt;
+        &lt;version&gt;4.12&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+...</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -3706,7 +3798,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-09-11 08:31:18 -04:00
+Last updated 2016-09-11 14:43:08 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
