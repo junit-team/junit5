@@ -124,6 +124,16 @@ class PreconditionsTests {
 	}
 
 	@Test
+	void notEmptyThrowsForCollectionWithNullElements() {
+		String message = "collection contains null elements";
+
+		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+			() -> Preconditions.notEmpty(Collections.singletonList(null), message));
+
+		assertEquals(message, exception.getMessage());
+	}
+
+	@Test
 	void notBlankPassesForNonBlankString() {
 		String string = "abc";
 		String nonBlankString = Preconditions.notBlank(string, "");
