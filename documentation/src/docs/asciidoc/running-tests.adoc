@@ -477,7 +477,8 @@ include::{testDir}/example/JUnit4SuiteDemo.java[tags=user_guide]
 ----
 
 The `JUnit4SuiteDemo` will discover and run all tests in the `example` package
-and its subpackages.
+and its subpackages. By default, it will only include test classes whose names match the
+pattern `{standard-include-class-name-pattern}`.
 
 .Additional Configuration Options
 NOTE: There are more configuration options for discovering and filtering tests than just

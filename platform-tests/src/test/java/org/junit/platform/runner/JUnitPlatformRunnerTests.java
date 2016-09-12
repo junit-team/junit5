@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.successful;
+import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
@@ -197,24 +198,43 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsClassNameFilterToRequestWhenFilterClassNameAnnotationIsPresent() throws Exception {
+		void addsDefaultClassNameFilterToRequestWhenFilterClassNameAnnotationIsNotPresentOnTestSuite()
+				throws Exception {
 
-			@IncludeClassNamePattern(".*Foo")
+			@SelectPackages("foo")
 			class TestCase {
-			}
-			class Foo {
-			}
-			class Bar {
 			}
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
 			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
-			assertThat(filters).hasSize(1);
+			assertThat(getOnlyElement(filters).toString()).contains(STANDARD_INCLUDE_PATTERN);
+		}
 
-			ClassNameFilter filter = filters.get(0);
-			assertTrue(filter.apply(Foo.class.getName()).included());
-			assertTrue(filter.apply(Bar.class.getName()).excluded());
+		@Test
+		void addsDefaultClassNameFilterToRequestWhenFilterClassNameAnnotationIsNotPresentOnTestClass()
+				throws Exception {
+
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(filters).isEmpty();
+		}
+
+		@Test
+		void addsExplicitClassNameFilterToRequestWhenFilterClassNameAnnotationIsPresent() throws Exception {
+
+			@IncludeClassNamePattern(".*Foo")
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains(".*Foo");
 		}
 
 		@Test

@@ -20,6 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.discovery.ClassNameFilter;
 
 /**
  * {@code @IncludeClassNamePattern} specifies a regular expression that is used
@@ -43,6 +44,6 @@ public @interface IncludeClassNamePattern {
 	/**
 	 * Regular expression used to match against fully qualified class names.
 	 */
-	String value();
+	String value() default ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 }
