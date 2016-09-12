@@ -30,6 +30,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * {@link Method} does not implement {@link java.io.Serializable}.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.discovery.JavaMethodSelector
  */
 @API(Experimental)
 public class JavaMethodSource implements JavaSource {

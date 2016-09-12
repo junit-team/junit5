@@ -23,11 +23,7 @@ import org.junit.platform.commons.JUnitException;
  */
 class ConditionEvaluationException extends JUnitException {
 
-	private static final long serialVersionUID = 7541146267089707036L;
-
-	public ConditionEvaluationException(String message) {
-		super(message);
-	}
+	private static final long serialVersionUID = 1L;
 
 	public ConditionEvaluationException(String message, Throwable cause) {
 		super(message, cause);

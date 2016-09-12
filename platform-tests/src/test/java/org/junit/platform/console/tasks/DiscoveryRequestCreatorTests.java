@@ -15,18 +15,21 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.CommandLineOptions;
-import org.junit.platform.engine.discovery.ClassFilter;
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.ClasspathSelector;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.ClassNameFilter;
+import org.junit.platform.engine.discovery.ClasspathRootSelector;
+import org.junit.platform.engine.discovery.JavaClassSelector;
+import org.junit.platform.engine.discovery.JavaMethodSelector;
+import org.junit.platform.engine.discovery.JavaPackageSelector;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -45,7 +48,7 @@ public class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
+		List<JavaClassSelector> classSelectors = request.getSelectorsByType(JavaClassSelector.class);
 		assertThat(classSelectors).hasSize(1);
 		assertEquals(testClass, getOnlyElement(classSelectors).getJavaClass());
 	}
@@ -58,7 +61,7 @@ public class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
+		List<JavaMethodSelector> methodSelectors = request.getSelectorsByType(JavaMethodSelector.class);
 		assertThat(methodSelectors).hasSize(1);
 		assertEquals(testClass, getOnlyElement(methodSelectors).getJavaClass());
 		assertEquals(testMethod, getOnlyElement(methodSelectors).getJavaMethod());
@@ -71,67 +74,78 @@ public class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<PackageSelector> packageSelectors = request.getSelectorsByType(PackageSelector.class);
-		assertThat(packageSelectors).extracting(PackageSelector::getPackageName).containsExactly(packageName);
+		List<JavaPackageSelector> packageSelectors = request.getSelectorsByType(JavaPackageSelector.class);
+		assertThat(packageSelectors).extracting(JavaPackageSelector::getPackageName).containsExactly(packageName);
 	}
 
 	@Test
 	public void convertsAllOptionWithoutExplicitRootDirectories() {
-		options.setRunAllTests(true);
+		options.setScanClasspath(true);
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
+		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
-		assertThat(classpathSelectors).extracting(ClasspathSelector::getClasspathRoot)
-			.hasAtLeastOneElementOfType(File.class)
-			.doesNotContainNull();
+		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
+				.hasAtLeastOneElementOfType(URI.class)
+				.doesNotContainNull();
 		// @formatter:on
 	}
 
 	@Test
 	public void convertsAllOptionWithExplicitRootDirectories() {
-		options.setRunAllTests(true);
+		options.setScanClasspath(true);
 		options.setArguments(asList(".", ".."));
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
+		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
-		assertThat(classpathSelectors).extracting(ClasspathSelector::getClasspathRoot)
-			.containsExactly(new File("."), new File(".."));
+		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
+				.containsExactly(new File(".").toURI(), new File("..").toURI());
 		// @formatter:on
 	}
 
 	@Test
 	public void convertsAllOptionWithAdditionalClasspathEntries() {
-		options.setRunAllTests(true);
-		options.setAdditionalClasspathEntries(asList(".", ".."));
+		options.setScanClasspath(true);
+		options.setAdditionalClasspathEntries(asList(Paths.get("."), Paths.get("..")));
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
+		List<ClasspathRootSelector> classpathRootSelectors = request.getSelectorsByType(ClasspathRootSelector.class);
 		// @formatter:off
-		assertThat(classpathSelectors).extracting(ClasspathSelector::getClasspathRoot)
-			.contains(new File("."), new File(".."));
+		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
+			.contains(new File(".").toURI(), new File("..").toURI());
 		// @formatter:on
 	}
 
 	@Test
-	public void convertsIncludeClassNamePatternOption() {
-		options.setRunAllTests(true);
-		options.setIncludeClassNamePattern(".*Test");
+	public void convertsDefaultIncludeClassNamePatternOption() {
+		options.setScanClasspath(true);
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClassFilter> filter = request.getDiscoveryFiltersByType(ClassFilter.class);
+		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
 		assertThat(filter).hasSize(1);
-		assertThat(filter.get(0).toString()).contains(".*Test");
+		assertThat(filter.get(0).toString()).contains(STANDARD_INCLUDE_PATTERN);
+	}
+
+	@Test
+	public void convertsExplicitIncludeClassNamePatternOption() {
+		options.setScanClasspath(true);
+		options.setIncludeClassNamePattern("Foo.*Bar");
+
+		LauncherDiscoveryRequest request = convert();
+
+		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+		assertThat(filter).hasSize(1);
+		assertThat(filter.get(0).toString()).contains("Foo.*Bar");
 	}
 
 	@Test
 	public void convertsTagOptions() {
-		options.setRunAllTests(true);
+		options.setScanClasspath(true);
 		options.setIncludedTags(asList("fast", "medium", "slow"));
 		options.setExcludedTags(asList("slow"));
 
@@ -145,9 +159,9 @@ public class DiscoveryRequestCreatorTests {
 
 	@Test
 	public void convertsEngineOptions() {
-		options.setRunAllTests(true);
+		options.setScanClasspath(true);
 		options.setIncludedEngines(asList("engine1", "engine2", "engine3"));
-		options.setExcludedEngines(asList("engine2"));
+		options.setExcludedEngines(singletonList("engine2"));
 
 		LauncherDiscoveryRequest request = convert();
 		List<EngineFilter> engineFilters = request.getEngineFilters();

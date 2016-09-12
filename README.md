@@ -49,6 +49,13 @@ A code coverage report can also be generated locally by executing
 on your computer. The results will be available in
 `junit-tests/build/reports/clover/html/index.html`.
 
+## Gradle Build Scans
+
+JUnit 5 utilizes [Gradle's](https://gradle.com/) support for _Build Scans_. An example
+build scan for JUnit 5 can be viewed [here](https://scans.gradle.com/s/pgjgssca2kkli).
+Note, however, that the number of listed tests only reflects the Spock tests within the
+JUnit 5 test suite. To see a full representation of the number of tests executed per
+project, click on "See console output" on the build scan page.
 
 ## Building from Source
 

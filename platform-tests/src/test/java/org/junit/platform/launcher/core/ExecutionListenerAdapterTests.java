@@ -52,7 +52,7 @@ class ExecutionListenerAdapterTests {
 	}
 
 	private TestDescriptor getSampleMethodTestDescriptor() {
-		Method localMethodNamedNothing = ReflectionUtils.findMethod(this.getClass(), "nothing", new Class[] {}).get();
+		Method localMethodNamedNothing = ReflectionUtils.findMethod(this.getClass(), "nothing", new Class<?>[0]).get();
 		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(),
 			localMethodNamedNothing);
 	}

@@ -57,6 +57,7 @@ public class ExecutionEventConditions {
 	}
 
 	@SafeVarargs
+	@SuppressWarnings("varargs")
 	public static Condition<ExecutionEvent> event(Condition<? super ExecutionEvent>... conditions) {
 		return Assertions.<ExecutionEvent> allOf(conditions);
 	}

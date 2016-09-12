@@ -13,6 +13,7 @@ package org.junit.platform.console.options;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,11 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -47,11 +51,11 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertFalse(options.isAnsiColorOutputDisabled()),
 			() -> assertFalse(options.isDisplayHelp()),
 			() -> assertFalse(options.isHideDetails()),
-			() -> assertFalse(options.isRunAllTests()),
-			() -> assertEquals(Optional.empty(), options.getIncludeClassNamePattern()),
+			() -> assertFalse(options.isScanClasspath()),
+			() -> assertEquals(STANDARD_INCLUDE_PATTERN, options.getIncludeClassNamePattern()),
 			() -> assertEquals(emptyList(), options.getIncludedTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
-			() -> assertEquals(Optional.empty(), options.getXmlReportsDir()),
+			() -> assertEquals(Optional.empty(), options.getReportsDir()),
 			() -> assertEquals(emptyList(), options.getArguments())
 		);
 		// @formatter:on
@@ -61,10 +65,10 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseSwitches() {
 		// @formatter:off
 		assertAll(
-			() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "-C", "--disable-ansi-colors"),
-			() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
-			() -> assertParses("hide details", CommandLineOptions::isHideDetails, "-D", "--hide-details"),
-			() -> assertParses("run all tests", CommandLineOptions::isRunAllTests, "-a", "--all")
+				() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
+				() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
+			() -> assertParses("hide details", CommandLineOptions::isHideDetails, "--hide-details"),
+			() -> assertParses("scan class path", CommandLineOptions::isScanClasspath, "--scan-class-path")
 		);
 		// @formatter:on
 	}
@@ -73,16 +77,16 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseValidIncludeClassNamePatterns() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(Optional.of(".*Test"), parseArgLine("-n .*Test").getIncludeClassNamePattern()),
-			() -> assertEquals(Optional.of(".*Test"), parseArgLine("--include-classname .*Test").getIncludeClassNamePattern()),
-			() -> assertEquals(Optional.of(".*Test"), parseArgLine("--include-classname=.*Test").getIncludeClassNamePattern())
+			() -> assertEquals(".*Test", parseArgLine("-n .*Test").getIncludeClassNamePattern()),
+			() -> assertEquals(".*Test", parseArgLine("--include-classname .*Test").getIncludeClassNamePattern()),
+			() -> assertEquals(".*Test", parseArgLine("--include-classname=.*Test").getIncludeClassNamePattern())
 		);
 		// @formatter:on
 	}
 
 	@Test
-	public void defaultIsNoIncludeClassNamePattern() {
-		assertEquals(Optional.empty(), parseArgLine("").getIncludeClassNamePattern());
+	public void usesDefaultClassNamePatternWithoutExplicitArgument() {
+		assertEquals(STANDARD_INCLUDE_PATTERN, parseArgLine("").getIncludeClassNamePattern());
 	}
 
 	@Test
@@ -158,36 +162,42 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidAdditionalClasspathEntries() {
+		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("."), parseArgLine("-p .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList("."), parseArgLine("--classpath .").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList("."), parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(".", "lib/some.jar"), parseArgLine("-p . -p lib/some.jar").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList("." + File.pathSeparator + "lib/some.jar"), parseArgLine("-p ." + File.pathSeparator + "lib/some.jar").getAdditionalClasspathEntries())
+			() -> assertEquals(singletonList(dir), parseArgLine("-cp .").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--cp .").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("-classpath .").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("-classpath=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--classpath .").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--class-path .").getAdditionalClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--class-path=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir, Paths.get("src", "test", "java")), parseArgLine("-cp . -cp src/test/java").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(dir, Paths.get("src", "test", "java")), parseArgLine("-cp ." + File.pathSeparator + "src/test/java").getAdditionalClasspathEntries())
 		);
 		// @formatter:on
 	}
 
 	@Test
 	public void parseInvalidAdditionalClasspathEntries() {
-		assertOptionWithMissingRequiredArgumentThrowsException("-p", "--classpath");
+		assertOptionWithMissingRequiredArgumentThrowsException("-cp", "--classpath", "--class-path");
 	}
 
 	@Test
 	public void parseValidXmlReportsDirs() {
+		Path dir = Paths.get("build", "test-results");
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(Optional.of("build/test-results"), parseArgLine("-r build/test-results").getXmlReportsDir()),
-			() -> assertEquals(Optional.of("build/test-results"), parseArgLine("--xml-reports-dir build/test-results").getXmlReportsDir()),
-			() -> assertEquals(Optional.of("build/test-results"), parseArgLine("--xml-reports-dir=build/test-results").getXmlReportsDir())
+			() -> assertEquals(Optional.of(dir), parseArgLine("--reports-dir build/test-results").getReportsDir()),
+			() -> assertEquals(Optional.of(dir), parseArgLine("--reports-dir=build/test-results").getReportsDir())
 		);
 		// @formatter:on
 	}
 
 	@Test
 	public void parseInvalidXmlReportsDirs() throws Exception {
-		assertOptionWithMissingRequiredArgumentThrowsException("-r", "--xml-reports-dir");
+		assertOptionWithMissingRequiredArgumentThrowsException("--reports-dir");
 	}
 
 	@Test
@@ -235,13 +245,8 @@ class JOptSimpleCommandLineOptionsParserTests {
 		assertThat(exception.getCause()).hasMessage("Something went wrong");
 	}
 
-	private void assertOptionWithMissingRequiredArgumentThrowsException(String shortOption, String longOption) {
-		// @formatter:off
-		assertAll(
-			() -> assertThrows(OptionException.class, () -> parseArgLine(shortOption)),
-			() -> assertThrows(OptionException.class, () -> parseArgLine(longOption))
-		);
-		// @formatter:on
+	private void assertOptionWithMissingRequiredArgumentThrowsException(String... options) {
+		assertAll(stream(options).map(opt -> () -> assertThrows(OptionException.class, () -> parseArgLine(opt))));
 	}
 
 	private void assertParses(String name, Predicate<CommandLineOptions> property, String... argLines) {

@@ -16,31 +16,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.engine.FilterResult.excluded;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.io.File;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
-import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.extensions.TempDirectory;
+import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.ClasspathSelector;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.ClasspathRootSelector;
+import org.junit.platform.engine.discovery.JavaClassSelector;
+import org.junit.platform.engine.discovery.JavaMethodSelector;
+import org.junit.platform.engine.discovery.JavaPackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.DiscoveryFilterStub;
@@ -52,7 +55,7 @@ import org.junit.platform.launcher.PostDiscoveryFilterStub;
 /**
  * @since 1.0
  */
-public class LauncherDiscoveryRequestBuilderTests {
+class LauncherDiscoveryRequestBuilderTests {
 
 	@Nested
 	class DiscoverySelectionTests {
@@ -62,12 +65,12 @@ public class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							selectPackage("org.junit.platform.engine")
+							selectJavaPackage("org.junit.platform.engine")
 					).build();
 			// @formatter:on
 
-			List<String> packageSelectors = discoveryRequest.getSelectorsByType(PackageSelector.class).stream().map(
-				PackageSelector::getPackageName).collect(toList());
+			List<String> packageSelectors = discoveryRequest.getSelectorsByType(JavaPackageSelector.class).stream().map(
+				JavaPackageSelector::getPackageName).collect(toList());
 			assertThat(packageSelectors).contains("org.junit.platform.engine");
 		}
 
@@ -76,14 +79,14 @@ public class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							selectClass(LauncherDiscoveryRequestBuilderTests.class.getName()),
-							selectClass(SampleTestClass.class)
+							selectJavaClass(LauncherDiscoveryRequestBuilderTests.class.getName()),
+							selectJavaClass(SampleTestClass.class)
 					)
 				.build();
 			// @formatter:on
 
-			List<Class<?>> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream().map(
-				ClassSelector::getJavaClass).collect(toList());
+			List<Class<?>> classes = discoveryRequest.getSelectorsByType(JavaClassSelector.class).stream().map(
+				JavaClassSelector::getJavaClass).collect(toList());
 			assertThat(classes).contains(SampleTestClass.class, LauncherDiscoveryRequestBuilderTests.class);
 		}
 
@@ -91,14 +94,14 @@ public class LauncherDiscoveryRequestBuilderTests {
 		public void methodsByFullyQualifiedNameAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
-					.selectors(selectMethod(fullyQualifiedMethodName()))
+					.selectors(selectJavaMethod(fullyQualifiedMethodName()))
 					.build();
 			// @formatter:on
 
-			List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
+			List<JavaMethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(JavaMethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			MethodSelector methodSelector = methodSelectors.get(0);
+			JavaMethodSelector methodSelector = methodSelectors.get(0);
 			assertThat(methodSelector.getJavaClass()).isEqualTo(LauncherDiscoveryRequestBuilderTests.class);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(fullyQualifiedMethod());
 		}
@@ -110,14 +113,14 @@ public class LauncherDiscoveryRequestBuilderTests {
 
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
-					.selectors(selectMethod(SampleTestClass.class.getName(), "test"))
+					.selectors(selectJavaMethod(SampleTestClass.class.getName(), "test"))
 					.build();
 			// @formatter:on
 
-			List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
+			List<JavaMethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(JavaMethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			MethodSelector methodSelector = methodSelectors.get(0);
+			JavaMethodSelector methodSelector = methodSelectors.get(0);
 			assertThat(methodSelector.getJavaClass()).isEqualTo(testClass);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(testMethod);
 		}
@@ -130,14 +133,14 @@ public class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			DefaultDiscoveryRequest discoveryRequest = (DefaultDiscoveryRequest) request()
 					.selectors(
-							selectMethod(SampleTestClass.class, "test")
+							selectJavaMethod(SampleTestClass.class, "test")
 					).build();
 			// @formatter:on
 
-			List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
+			List<JavaMethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(JavaMethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			MethodSelector methodSelector = methodSelectors.get(0);
+			JavaMethodSelector methodSelector = methodSelectors.get(0);
 			assertThat(methodSelector.getJavaClass()).isEqualTo(testClass);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(testMethod);
 		}
@@ -147,32 +150,27 @@ public class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							selectClasspathRoots(singleton(new File("/some/local/path")))
+							selectClasspathRoots(singleton(Paths.get("some", "local", "path")))
 					).build();
 			// @formatter:on
 
-			assertThat(discoveryRequest.getSelectorsByType(ClasspathSelector.class).size()).isEqualTo(0);
+			assertThat(discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).size()).isEqualTo(0);
 		}
 
 		@Test
-		public void availableFoldersAreStoredInDiscoveryRequest() throws Exception {
-			File temporaryFolder = Files.newTemporaryFolder();
-			try {
-				// @formatter:off
-				LauncherDiscoveryRequest discoveryRequest = request()
-						.selectors(
-								selectClasspathRoots(singleton(temporaryFolder))
-						).build();
-				// @formatter:on
+		@ExtendWith(TempDirectory.class)
+		public void availableFoldersAreStoredInDiscoveryRequest(@Root Path tempDir) throws Exception {
+			// @formatter:off
+			LauncherDiscoveryRequest discoveryRequest = request()
+					.selectors(
+							selectClasspathRoots(singleton(tempDir))
+					).build();
+			// @formatter:on
 
-				List<String> folders = discoveryRequest.getSelectorsByType(ClasspathSelector.class).stream().map(
-					ClasspathSelector::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
+			List<Path> folders = discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).stream().map(
+				ClasspathRootSelector::getClasspathRoot).map(Paths::get).collect(toList());
 
-				assertThat(folders).contains(temporaryFolder.getAbsolutePath());
-			}
-			finally {
-				temporaryFolder.delete();
-			}
+			assertThat(folders).contains(tempDir);
 		}
 
 		@Test

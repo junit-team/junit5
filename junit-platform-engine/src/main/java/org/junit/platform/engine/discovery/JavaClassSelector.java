@@ -13,6 +13,7 @@ package org.junit.platform.engine.discovery;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -21,13 +22,14 @@ import org.junit.platform.engine.DiscoverySelector;
  * tests or containers based on Java classes.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.support.descriptor.JavaClassSource
  */
 @API(Experimental)
-public class ClassSelector implements DiscoverySelector {
+public class JavaClassSelector implements DiscoverySelector {
 
 	private final Class<?> javaClass;
 
-	ClassSelector(Class<?> javaClass) {
+	JavaClassSelector(Class<?> javaClass) {
 		this.javaClass = javaClass;
 	}
 
@@ -36,6 +38,11 @@ public class ClassSelector implements DiscoverySelector {
 	 */
 	public Class<?> getJavaClass() {
 		return this.javaClass;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("javaClass", this.javaClass.getName()).toString();
 	}
 
 }

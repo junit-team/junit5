@@ -12,17 +12,20 @@ package org.junit.vintage.engine.discovery;
 
 import static java.util.Arrays.asList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.engine.Filter.adaptFilter;
 import static org.junit.platform.engine.Filter.composeFilters;
+import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.Filter;
-import org.junit.platform.engine.discovery.ClassFilter;
+import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 
@@ -48,16 +51,17 @@ public class JUnit4DiscoveryRequestResolver {
 
 	private TestClassCollector collectTestClasses(EngineDiscoveryRequest discoveryRequest) {
 		TestClassCollector collector = new TestClassCollector();
-		for (DiscoverySelectorResolver<?> selectorResolver : getAllDiscoverySelectorResolvers()) {
+		for (DiscoverySelectorResolver<?> selectorResolver : getAllDiscoverySelectorResolvers(discoveryRequest)) {
 			resolveSelectorsOfSingleType(discoveryRequest, selectorResolver, collector);
 		}
 		return collector;
 	}
 
-	private List<DiscoverySelectorResolver<?>> getAllDiscoverySelectorResolvers() {
+	private List<DiscoverySelectorResolver<?>> getAllDiscoverySelectorResolvers(EngineDiscoveryRequest request) {
+		Predicate<String> classNamePredicate = buildClassNamePredicate(request);
 		return asList( //
-			new ClasspathSelectorResolver(), //
-			new PackageNameSelectorResolver(), //
+			new ClasspathRootSelectorResolver(classNamePredicate), //
+			new PackageNameSelectorResolver(classNamePredicate), //
 			new ClassSelectorResolver(), //
 			new MethodSelectorResolver(), //
 			new UniqueIdSelectorResolver(logger)//
@@ -72,8 +76,9 @@ public class JUnit4DiscoveryRequestResolver {
 
 	private Set<TestClassRequest> filterAndConvertToTestClassRequests(EngineDiscoveryRequest discoveryRequest,
 			TestClassCollector collector) {
-		List<ClassFilter> allClassFilters = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
-		Filter<Class<?>> classFilter = new ExclusionReasonConsumingFilter<>(composeFilters(allClassFilters),
+		List<ClassNameFilter> allClassNameFilters = discoveryRequest.getDiscoveryFiltersByType(ClassNameFilter.class);
+		Filter<Class<?>> adaptedFilter = adaptFilter(composeFilters(allClassNameFilters), Class::getName);
+		Filter<Class<?>> classFilter = new ExclusionReasonConsumingFilter<>(adaptedFilter,
 			(testClass, reason) -> logger.fine(() -> String.format("Class %s was excluded by a class filter: %s",
 				testClass.getName(), reason.orElse("<unknown reason>"))));
 		return collector.toRequests(classFilter.toPredicate());

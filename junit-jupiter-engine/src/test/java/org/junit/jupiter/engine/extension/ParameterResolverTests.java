@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.allOf;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -22,7 +23,6 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 
-import java.util.Arrays;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.AfterAll;
@@ -270,7 +270,6 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		void injectPrimitive(int number) {
 			// should never be invoked since an int cannot be null
 		}
-
 	}
 
 	@ExtendWith(PrimitiveIntegerParameterResolver.class)
@@ -280,7 +279,6 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		void intPrimitive(int i) {
 			assertEquals(42, i);
 		}
-
 	}
 
 	@ExtendWith(PrimitiveArrayParameterResolver.class)
@@ -288,9 +286,8 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void primitiveArray(int... ints) {
-			assertEquals(Arrays.toString(new int[] { 1, 2, 3 }), Arrays.toString(ints));
+			assertArrayEquals(new int[] { 1, 2, 3 }, ints);
 		}
-
 	}
 
 	@ExtendWith(NumberParameterResolver.class)
@@ -314,7 +311,6 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		void doubleParameterInjection(Double number) {
 			/* no-op */
 		}
-
 	}
 
 	private static class BeforeAndAfterMethodInjectionTestCase {

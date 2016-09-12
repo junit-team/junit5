@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -28,6 +27,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.function.ThrowingConsumer;
 
 class DynamicTestsDemo {
 
@@ -139,7 +139,7 @@ class DynamicTestsDemo {
 		Function<Integer, String> displayNameGenerator = (input) -> "input:" + input;
 
 		// Executes tests based on the current input value.
-		Consumer<Integer> testExecutor = (input) -> assertTrue(input % 7 != 0);
+		ThrowingConsumer<Integer> testExecutor = (input) -> assertTrue(input % 7 != 0);
 
 		// Returns a stream of dynamic tests.
 		return DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);

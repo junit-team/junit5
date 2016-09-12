@@ -31,9 +31,11 @@ import org.junit.platform.engine.TestTag;
 @API(Experimental)
 public final class TagFilter {
 
+	///CLOVER:OFF
 	private TagFilter() {
 		/* no-op */
 	}
+	///CLOVER:ON
 
 	/**
 	 * Create an <em>include</em> filter based on the supplied {@code tags}.

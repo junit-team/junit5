@@ -25,6 +25,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * implement {@link java.io.Serializable}.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.discovery.JavaPackageSelector
  */
 @API(Experimental)
 public class JavaPackageSource implements JavaSource {

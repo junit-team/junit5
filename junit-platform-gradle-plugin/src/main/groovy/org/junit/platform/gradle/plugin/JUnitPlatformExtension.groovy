@@ -9,6 +9,8 @@
  */
 package org.junit.platform.gradle.plugin
 
+import org.junit.platform.engine.discovery.ClassNameFilter
+
 /**
  * Core configuration options for the JUnit Platform Gradle plugin.
  *
@@ -33,7 +35,7 @@ class JUnitPlatformExtension {
 	String logManager
 
 	/**
-	 * The directory for the XML test report files.
+	 * The directory for the test report files.
 	 *
 	 * <p>Defaults to {@code file('build/test-results/junit-platform')}.
 	 */
@@ -56,7 +58,9 @@ class JUnitPlatformExtension {
 	 * <p>If the fully qualified name of a class matches against the pattern, the
 	 * class will be included in the test plan; otherwise, the class will be
 	 * excluded.
+	 *
+	 * <p>Defaults to {@value ClassNameFilter#STANDARD_INCLUDE_PATTERN}.
 	 */
-	String includeClassNamePattern
+	String includeClassNamePattern = ClassNameFilter.STANDARD_INCLUDE_PATTERN
 
 }

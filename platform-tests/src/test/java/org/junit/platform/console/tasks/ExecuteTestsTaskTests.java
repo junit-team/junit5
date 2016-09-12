@@ -21,6 +21,7 @@ import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposes
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.CommandLineOptions;
@@ -35,14 +36,16 @@ public class ExecuteTestsTaskTests {
 	private static final Runnable SUCCEEDING_TEST = () -> {
 	};
 
+	private final StringWriter stringWriter = new StringWriter();
+	private final CommandLineOptions options = new CommandLineOptions();
+	private DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
+
+	{
+		options.setScanClasspath(true);
+	}
+
 	@Test
 	public void printsSummary() throws Exception {
-		StringWriter stringWriter = new StringWriter();
-
-		CommandLineOptions options = new CommandLineOptions();
-		options.setRunAllTests(true);
-
-		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
@@ -55,13 +58,8 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void printsDetailsIfTheyAreNotHidden() throws Exception {
-		StringWriter stringWriter = new StringWriter();
-
-		CommandLineOptions options = new CommandLineOptions();
 		options.setHideDetails(false);
-		options.setRunAllTests(true);
 
-		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
@@ -72,13 +70,8 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void printsNoDetailsIfTheyAreHidden() throws Exception {
-		StringWriter stringWriter = new StringWriter();
-
-		CommandLineOptions options = new CommandLineOptions();
 		options.setHideDetails(true);
-		options.setRunAllTests(true);
 
-		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
@@ -89,13 +82,8 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void printsFailuresEvenIfDetailsAreHidden() throws Exception {
-		StringWriter stringWriter = new StringWriter();
-
-		CommandLineOptions options = new CommandLineOptions();
 		options.setHideDetails(true);
-		options.setRunAllTests(true);
 
-		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
@@ -107,10 +95,6 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void hasStatusCode0ForSucceedingTest() throws Exception {
-		CommandLineOptions options = new CommandLineOptions();
-		options.setRunAllTests(true);
-
-		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
@@ -121,10 +105,6 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void hasStatusCode1ForFailingTest() throws Exception {
-		CommandLineOptions options = new CommandLineOptions();
-		options.setRunAllTests(true);
-
-		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
@@ -135,10 +115,6 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void hasStatusCode1ForFailingContainer() throws Exception {
-		CommandLineOptions options = new CommandLineOptions();
-		options.setRunAllTests(true);
-
-		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
@@ -149,13 +125,9 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void usesCustomClassLoaderIfAdditionalClassPathEntriesArePresent() throws Exception {
-		StringWriter stringWriter = new StringWriter();
-		CommandLineOptions options = new CommandLineOptions();
-		options.setRunAllTests(true);
-		options.setAdditionalClasspathEntries(singletonList("."));
+		options.setAdditionalClasspathEntries(singletonList(Paths.get(".")));
 
 		ClassLoader oldClassLoader = getDefaultClassLoader();
-		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest",
 			() -> assertSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
@@ -167,13 +139,9 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void usesSameClassLoaderIfNoAdditionalClassPathEntriesArePresent() throws Exception {
-		StringWriter stringWriter = new StringWriter();
-		CommandLineOptions options = new CommandLineOptions();
-		options.setRunAllTests(true);
 		options.setAdditionalClasspathEntries(emptyList());
 
 		ClassLoader oldClassLoader = getDefaultClassLoader();
-		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest",
 			() -> assertNotSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
@@ -186,4 +154,5 @@ public class ExecuteTestsTaskTests {
 	private PrintWriter dummyWriter() {
 		return new PrintWriter(new StringWriter());
 	}
+
 }

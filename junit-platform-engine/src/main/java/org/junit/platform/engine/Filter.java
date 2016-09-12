@@ -16,6 +16,7 @@ import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.CompositeFilter.alwaysIncluded;
 
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.meta.API;
@@ -49,6 +50,7 @@ public interface Filter<T> {
 	 * @see #composeFilters(Collection)
 	 */
 	@SafeVarargs
+	@SuppressWarnings("varargs")
 	static <T> Filter<T> composeFilters(Filter<T>... filters) {
 		Preconditions.notNull(filters, "Filters must not be null");
 
@@ -81,6 +83,18 @@ public interface Filter<T> {
 			return getOnlyElement(filters);
 		}
 		return new CompositeFilter<>(filters);
+	}
+
+	/**
+	 * Return a filter that will include elements if and only if the adapted
+	 * {@code Filter} includes the value converted using the supplied
+	 * {@link Function}.
+	 *
+	 * @param adaptee the filter to be adapted
+	 * @param converter the converter function to apply
+	 */
+	static <T, V> Filter<T> adaptFilter(Filter<V> adaptee, Function<T, V> converter) {
+		return input -> adaptee.apply(converter.apply(input));
 	}
 
 	/**

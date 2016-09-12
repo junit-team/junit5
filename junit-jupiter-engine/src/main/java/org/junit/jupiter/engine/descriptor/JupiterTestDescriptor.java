@@ -24,10 +24,10 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Executable;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;

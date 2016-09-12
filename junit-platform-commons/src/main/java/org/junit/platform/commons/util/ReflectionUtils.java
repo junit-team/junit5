@@ -23,6 +23,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -423,28 +426,38 @@ public final class ReflectionUtils {
 		return Optional.empty();
 	}
 
+	/**
+	 * Determine if the supplied package name refers to a package that is present
+	 * in the classpath.
+	 *
+	 * <p>The default package is represented by an empty string ({@code ""}).
+	 *
+	 * @param packageName the package name to check; never {@code null} and never
+	 * containing whitespace only
+	 */
 	public static boolean isPackage(String packageName) {
 		return classpathScanner.isPackage(packageName);
 	}
 
-	public static Set<File> getAllClasspathRootDirectories() {
+	public static Set<Path> getAllClasspathRootDirectories() {
 		// This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
 		// @formatter:off
 		return Arrays.stream(fullClassPath.split(File.pathSeparator))
-				.filter(part -> !part.endsWith(".jar"))
-				.map(File::new)
-				.filter(File::isDirectory)
+				.map(Paths::get)
+				.filter(Files::isDirectory)
 				.collect(toSet());
 		// @formatter:on
 	}
 
-	public static List<Class<?>> findAllClassesInClasspathRoot(File root, Predicate<Class<?>> classTester) {
-		return classpathScanner.scanForClassesInClasspathRoot(root, classTester);
+	public static List<Class<?>> findAllClassesInClasspathRoot(Path root, Predicate<Class<?>> classTester,
+			Predicate<String> classNameFilter) {
+		return classpathScanner.scanForClassesInClasspathRoot(root, classTester, classNameFilter);
 	}
 
-	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester) {
-		return classpathScanner.scanForClassesInPackage(basePackageName, classTester);
+	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester,
+			Predicate<String> classNameFilter) {
+		return classpathScanner.scanForClassesInPackage(basePackageName, classTester, classNameFilter);
 	}
 
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
@@ -643,10 +656,8 @@ public final class ReflectionUtils {
 		if (!lower.getName().equals(upper.getName())) {
 			return false;
 		}
-		if (!Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes())) {
-			return false;
-		}
-		return true;
+
+		return Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes());
 	}
 
 	private static <T extends AccessibleObject> T makeAccessible(T object) {

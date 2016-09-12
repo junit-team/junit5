@@ -199,7 +199,7 @@ public class ExtensionValuesStoreTests {
 		@Test
 		void getOrComputeIfAbsentWithTypeSafetyAndInvalidRequiredTypeThrowsException() {
 			String key = "pi";
-			Float value = new Float(3.14);
+			Float value = Float.valueOf(3.14f);
 
 			// Store a Float...
 			store.put(namespace, key, value);

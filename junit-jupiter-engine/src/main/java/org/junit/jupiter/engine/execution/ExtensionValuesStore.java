@@ -35,7 +35,8 @@ import org.junit.platform.commons.util.Preconditions;
 public class ExtensionValuesStore {
 
 	private final ExtensionValuesStore parentStore;
-	private final Map<Object, StoredValue> storedValues = new HashMap<>();
+	private final Map<Object, StoredValue> storedValues = new HashMap<>(4);
+	private final Object monitor = new Object();
 
 	ExtensionValuesStore() {
 		this(null);
@@ -46,15 +47,17 @@ public class ExtensionValuesStore {
 	}
 
 	Object get(Namespace namespace, Object key) {
-		StoredValue storedValue = getStoredValue(namespace, key);
-		if (storedValue != null) {
-			return storedValue.value;
-		}
-		else if (parentStore != null) {
-			return parentStore.get(namespace, key);
-		}
-		else {
-			return null;
+		synchronized (this.monitor) {
+			StoredValue storedValue = getStoredValue(namespace, key);
+			if (storedValue != null) {
+				return storedValue.value;
+			}
+			else if (this.parentStore != null) {
+				return this.parentStore.get(namespace, key);
+			}
+			else {
+				return null;
+			}
 		}
 	}
 
@@ -64,17 +67,19 @@ public class ExtensionValuesStore {
 	}
 
 	<K, V> Object getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator) {
-		StoredValue storedValue = getStoredValue(namespace, key);
-		if (storedValue == null) {
-			if (parentStore != null) {
-				storedValue = parentStore.getStoredValue(namespace, key);
-			}
+		synchronized (this.monitor) {
+			StoredValue storedValue = getStoredValue(namespace, key);
 			if (storedValue == null) {
-				storedValue = new StoredValue(defaultCreator.apply(key));
-				putStoredValue(namespace, key, storedValue);
+				if (this.parentStore != null) {
+					storedValue = this.parentStore.getStoredValue(namespace, key);
+				}
+				if (storedValue == null) {
+					storedValue = new StoredValue(defaultCreator.apply(key));
+					putStoredValue(namespace, key, storedValue);
+				}
 			}
+			return storedValue.value;
 		}
-		return storedValue.value;
 	}
 
 	<K, V> V getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
@@ -86,13 +91,16 @@ public class ExtensionValuesStore {
 		Preconditions.notNull(namespace, "Namespace must not be null");
 		Preconditions.notNull(key, "key must not be null");
 
-		putStoredValue(namespace, key, new StoredValue(value));
+		synchronized (this.monitor) {
+			putStoredValue(namespace, key, new StoredValue(value));
+		}
 	}
 
 	Object remove(Namespace namespace, Object key) {
-		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		StoredValue previous = storedValues.remove(compositeKey);
-		return (previous != null ? previous.value : null);
+		synchronized (this.monitor) {
+			StoredValue previous = this.storedValues.remove(new CompositeKey(namespace, key));
+			return (previous != null ? previous.value : null);
+		}
 	}
 
 	<T> T remove(Namespace namespace, Object key, Class<T> requiredType) {
@@ -102,12 +110,12 @@ public class ExtensionValuesStore {
 
 	private StoredValue getStoredValue(Namespace namespace, Object key) {
 		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		return storedValues.get(compositeKey);
+		return this.storedValues.get(compositeKey);
 	}
 
 	private void putStoredValue(Namespace namespace, Object key, StoredValue storedValue) {
 		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		storedValues.put(compositeKey, storedValue);
+		this.storedValues.put(compositeKey, storedValue);
 	}
 
 	@SuppressWarnings("unchecked")

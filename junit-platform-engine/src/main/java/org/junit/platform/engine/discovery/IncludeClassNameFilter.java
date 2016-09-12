@@ -12,13 +12,14 @@ package org.junit.platform.engine.discovery;
 
 import static org.junit.platform.engine.FilterResult.includedIf;
 
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.FilterResult;
 
 /**
- * {@link ClassFilter} that matches fully qualified class names against a
+ * {@link ClassNameFilter} that matches fully qualified class names against a
  * pattern in the form of a regular expression.
  *
  * <p>If the fully qualified name of a class matches against the pattern, the
@@ -26,7 +27,7 @@ import org.junit.platform.engine.FilterResult;
  *
  * @since 1.0
  */
-class IncludeClassNameFilter implements ClassFilter {
+class IncludeClassNameFilter implements ClassNameFilter {
 
 	private final Pattern pattern;
 
@@ -36,11 +37,19 @@ class IncludeClassNameFilter implements ClassFilter {
 	}
 
 	@Override
-	public FilterResult apply(Class<?> clazz) {
-		String name = clazz.getName();
-		return includedIf(this.pattern.matcher(name).matches(), //
-			() -> String.format("Class name [%s] matches pattern: %s", name, this.pattern), //
-			() -> String.format("Class name [%s] does not match pattern: %s", name, this.pattern));
+	public FilterResult apply(String className) {
+		return includedIf(matchesPattern(className), //
+			() -> String.format("Class name [%s] matches pattern: %s", className, this.pattern), //
+			() -> String.format("Class name [%s] does not match pattern: %s", className, this.pattern));
+	}
+
+	@Override
+	public Predicate<String> toPredicate() {
+		return this::matchesPattern;
+	}
+
+	private boolean matchesPattern(String className) {
+		return this.pattern.matcher(className).matches();
 	}
 
 	@Override

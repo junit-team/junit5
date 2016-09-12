@@ -13,6 +13,7 @@ package org.junit.platform.engine.discovery;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -21,13 +22,14 @@ import org.junit.platform.engine.DiscoverySelector;
  * tests or containers based on packages.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.support.descriptor.JavaPackageSource
  */
 @API(Experimental)
-public class PackageSelector implements DiscoverySelector {
+public class JavaPackageSelector implements DiscoverySelector {
 
 	private final String packageName;
 
-	PackageSelector(String packageName) {
+	JavaPackageSelector(String packageName) {
 		this.packageName = packageName;
 	}
 
@@ -36,6 +38,11 @@ public class PackageSelector implements DiscoverySelector {
 	 */
 	public String getPackageName() {
 		return this.packageName;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("packageName", this.packageName).toString();
 	}
 
 }

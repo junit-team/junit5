@@ -57,12 +57,18 @@ class PreconditionsTests {
 
 	@Test
 	void notNullForNullObjectArray() {
-		Object[] objects = null;
-
 		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
-			() -> Preconditions.notNull(objects, ""));
+			() -> Preconditions.notNull((Object[]) null, ""));
 
-		assertEquals("objects array must not be null", exception.getMessage());
+		assertEquals("Object array must not be null", exception.getMessage());
+	}
+
+	@Test
+	void notNullForNullObjectArrayWithCustomMessage() {
+		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+			() -> Preconditions.notNull((Object[]) null, "custom message"));
+
+		assertEquals("custom message", exception.getMessage());
 	}
 
 	@Test
@@ -113,6 +119,16 @@ class PreconditionsTests {
 
 		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
 			() -> Preconditions.notEmpty(Collections.emptyList(), message));
+
+		assertEquals(message, exception.getMessage());
+	}
+
+	@Test
+	void notEmptyThrowsForCollectionWithNullElements() {
+		String message = "collection contains null elements";
+
+		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+			() -> Preconditions.notEmpty(Collections.singletonList(null), message));
 
 		assertEquals(message, exception.getMessage());
 	}

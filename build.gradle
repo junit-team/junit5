@@ -7,14 +7,24 @@ buildscript {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
-		classpath 'com.diffplug.gradle.spotless:spotless:1.3.3'
+		classpath 'com.diffplug.gradle.spotless:spotless:2.0.0'
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
 		classpath 'org.ajoberstar:gradle-git:1.5.1'
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
-		classpath 'net.nemerosa:versioning:2.4.0'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
 	}
 }
+
+plugins {
+	id 'com.gradle.build-scan' version '1.0'
+	id 'net.nemerosa.versioning' version '2.4.0'
+}
+
+buildScan {
+	licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+	licenseAgree = 'yes'
+}
+
 
 Date buildTimeAndDate = new Date()
 ext {
@@ -26,6 +36,7 @@ ext {
 	generateManifest = false
 	buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
 	buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+	buildRevision = versioning.info.commit
 	builtByValue = project.hasProperty('builtBy') ? project.builtBy : project.defaultBuiltBy
 
 	platformProjects = [
@@ -64,7 +75,6 @@ allprojects {
 	apply plugin: 'idea'
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
-	apply plugin: 'net.nemerosa.versioning'
 	apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates
 
 	repositories {
@@ -78,6 +88,51 @@ allprojects {
 		targetCompatibility = rootProject.targetCompatibility
 	}
 
+	// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
+	compileJava.options*.compilerArgs = [
+		'-Xlint:cast',
+		'-Xlint:classfile',
+		'-Xlint:deprecation',
+		'-Xlint:dep-ann',
+		'-Xlint:divzero',
+		'-Xlint:empty',
+		'-Xlint:fallthrough',
+		'-Xlint:finally',
+		'-Xlint:overrides',
+		'-Xlint:path',
+		'-Xlint:processing',
+		'-Xlint:rawtypes',
+		'-Xlint:serial',
+		'-Xlint:static',
+		'-Xlint:try',
+		'-Xlint:unchecked',
+		'-Xlint:varargs',
+		'-Xlint:-options',
+		'-Werror'
+	]
+
+	// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
+	compileTestJava.options*.compilerArgs = [
+		'-Xlint:cast',
+		'-Xlint:classfile',
+		'-Xlint:deprecation',
+		'-Xlint:dep-ann',
+		'-Xlint:divzero',
+		'-Xlint:empty',
+		'-Xlint:fallthrough',
+		'-Xlint:finally',
+		'-Xlint:path',
+		'-Xlint:processing',
+		'-Xlint:rawtypes',
+		'-Xlint:serial',
+		'-Xlint:static',
+		'-Xlint:try',
+		'-Xlint:unchecked',
+		'-Xlint:varargs',
+		'-Xlint:-options',
+		'-Xlint:-overrides'
+	]
+
 	compileTestJava {
 		options.compilerArgs += '-parameters'
 	}
@@ -90,13 +145,11 @@ allprojects {
 
 	spotless {
 		java {
-			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java')
-			importOrder(['java', 'javax', 'com', 'org'])
-
+			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), '(package|import) '
+			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
 			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 
 			trimTrailingWhitespace()
-			lineEndings 'UNIX'
 			endWithNewline()
 
 			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
@@ -149,6 +202,10 @@ allprojects {
 				}
 			}
 		}
+
+		// Disable javac warnings when executing Clover
+		compileJava.options*.compilerArgs = ['-Xlint:none']
+		compileTestJava.options*.compilerArgs = ['-Xlint:none']
 
 		compileJava.source = instrumentedJavaSourcesDir
 		sourceSets.main.compileClasspath += configurations.clover
@@ -312,7 +369,7 @@ subprojects { subproj ->
 				'Built-By': builtByValue,
 				'Build-Date': buildDate,
 				'Build-Time': buildTime,
-				'Build-Revision': versioning.info.commit,
+				'Build-Revision': buildRevision,
 				'Specification-Title': project.name,
 				'Specification-Version': normalizeVersion(project.version),
 				'Specification-Vendor': 'junit.org',
@@ -361,6 +418,26 @@ configure(rootProject) {
 		logManager 'org.apache.logging.log4j.jul.LogManager'
 	}
 
+	task degraph() {
+		description = 'Runs DeGraph tests.'
+		// configured in afterEvaluate
+	}
+
+	afterEvaluate {
+		// The following is a hack which allows the custom `degraph`
+		// task to serve as an "alias" for the `junitPlatformTest` task.
+		// In addition, the following removes the dependency from the
+		// `test` task to the `junitPlatformTest` task (which is
+		// created by the JUnit Platform Gradle Plugin) and adds a
+		// dependency from `check` to `degraph`. Consequently,
+		// executing `gradle test` will not run the DeGraph tests, but
+		// `gradle degraph` or `gradle check` will.
+		def junitPlatformTestTask = tasks.getByName('junitPlatformTest')
+		degraph.dependsOn(junitPlatformTestTask)
+		test.dependsOn.remove(junitPlatformTestTask)
+		check.dependsOn(degraph)
+	}
+
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
 		description = "Generates aggregated Javadocs"
@@ -396,13 +473,11 @@ configure(rootProject) {
 			target '**/*.gradle', '**/*.gitignore'
 			indentWithTabs()
 			trimTrailingWhitespace()
-			lineEndings 'UNIX'
 			endWithNewline()
 		}
 		format 'documentation', {
 			target '**/*.adoc', '**/*.md'
 			trimTrailingWhitespace()
-			lineEndings 'UNIX'
 			endWithNewline()
 		}
 	}
@@ -499,13 +574,8 @@ configure(rootProject) {
 	prepareGhPages.dependsOn(createCurrentDocsFolder)
 
 	task wrapper(type: Wrapper) {
-		// To build against Gradle 3.0 nightly builds, obtain the latest
-		// distribution URL (http://gradle.org/gradle-nightly-build/)
-		// and then execute the following from the command line, using
-		// the latest distribution URL:
-		// gradlew wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.0-20160615000025+0000-bin.zip && gradlew -version && gradlew clean test
-
-		distributionUrl = 'https://services.gradle.org/distributions/gradle-2.14.1-bin.zip'
+		description = 'Generates gradlew and gradlew.bat scripts'
+		gradleVersion = '3.0'
 	}
 
 }

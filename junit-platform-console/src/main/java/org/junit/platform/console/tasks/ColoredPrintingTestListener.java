@@ -20,6 +20,7 @@ import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -98,11 +99,11 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {
-		println(color, "%-10s   %s [%s]", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
+		println(color, "%-10s   %s (%s)", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
 	private void printlnException(Color color, Throwable throwable) {
-		printlnMessage(color, "Exception", throwable.getLocalizedMessage());
+		printlnMessage(color, "Exception", ExceptionUtils.readStackTrace(throwable));
 	}
 
 	private void printlnMessage(Color color, String message, String detail) {
@@ -124,11 +125,13 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	/**
-	 * Indents the given message if it is a multi-line string. {@link #INDENTATION} is used to prefix the start of each
-	 * new line except the first one.
+	 * Indent the given message if it is a multi-line string.
 	 *
-	 * @param message the message to indent.
-	 * @return indented message.
+	 * <p>{@link #INDENTATION} is used to prefix the start of each new line
+	 * except the first one.
+	 *
+	 * @param message the message to indent
+	 * @return indented message
 	 */
 	private static String indented(String message) {
 		return LINE_START_PATTERN.matcher(message).replaceAll(INDENTATION).trim();

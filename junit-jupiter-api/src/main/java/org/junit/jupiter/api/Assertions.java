@@ -28,17 +28,22 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
 
 /**
- * {@code Assertions} is a collection of utility methods that support
- * asserting conditions in tests. A <em>failed</em> assertion will
- * always throw {@link AssertionFailedError} or a subclass thereof.
+ * {@code Assertions} is a collection of utility methods that support asserting
+ * conditions in tests.
+ *
+ * <p>Unless otherwise noted, a <em>failed</em> assertion will throw an
+ * {@link AssertionFailedError} or a subclass thereof.
  *
  * @since 5.0
  * @see AssertionFailedError
@@ -47,9 +52,11 @@ import org.opentest4j.MultipleFailuresError;
 @API(Maintained)
 public final class Assertions {
 
+	///CLOVER:OFF
 	private Assertions() {
 		/* no-op */
 	}
+	///CLOVER:ON
 
 	// --- fail ----------------------------------------------------------------
 
@@ -911,18 +918,49 @@ public final class Assertions {
 	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw an
 	 * {@link AssertionError}.
 	 *
-	 * <p>If any supplied {@link Executable} throws an {@code AssertionError}, all remaining
-	 * {@code executables} will still be executed, and all failures will be aggregated
-	 * and reported in a {@link MultipleFailuresError}. However, if an {@code executable}
-	 * throws an exception that is not an {@code AssertionError}, execution will halt
-	 * immediately, and the exception will be rethrown <em>as is</em> but
-	 * {@link ExceptionUtils#throwAsUncheckedException masked} as an unchecked exception.
+	 * <p>See Javadoc for {@link #assertAll(String, Stream)} for an explanation of this
+	 * method's exception handling semantics.
 	 *
 	 * @see #assertAll(String, Executable...)
+	 * @see #assertAll(Stream)
+	 * @see #assertAll(String, Stream)
 	 */
 	@API(Experimental)
 	public static void assertAll(Executable... executables) throws MultipleFailuresError {
 		assertAll(null, executables);
+	}
+
+	/**
+	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw an
+	 * {@link AssertionError}.
+	 *
+	 * <p>See Javadoc for {@link #assertAll(String, Stream)} for an explanation of this
+	 * method's exception handling semantics.
+	 *
+	 * @see #assertAll(Executable...)
+	 * @see #assertAll(String, Executable...)
+	 * @see #assertAll(String, Stream)
+	 */
+	@API(Experimental)
+	public static void assertAll(Stream<Executable> executables) throws MultipleFailuresError {
+		assertAll(null, executables);
+	}
+
+	/**
+	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw an
+	 * {@link AssertionError}.
+	 *
+	 * <p>See Javadoc for {@link #assertAll(String, Stream)} for an explanation of this
+	 * method's exception handling semantics.
+	 *
+	 * @see #assertAll(Executable...)
+	 * @see #assertAll(Stream)
+	 * @see #assertAll(String, Stream)
+	 */
+	@API(Experimental)
+	public static void assertAll(String heading, Executable... executables) throws MultipleFailuresError {
+		Preconditions.notNull(executables, "executables must not be null");
+		assertAll(heading, Arrays.stream(executables));
 	}
 
 	/**
@@ -938,11 +976,17 @@ public final class Assertions {
 	 *
 	 * <p>The supplied {@code heading} will be included in the message string for the
 	 * {@link MultipleFailuresError}.
+	 *
+	 * @see #assertAll(Executable...)
+	 * @see #assertAll(String, Executable...)
+	 * @see #assertAll(Stream)
 	 */
 	@API(Experimental)
-	public static void assertAll(String heading, Executable... executables) throws MultipleFailuresError {
+	public static void assertAll(String heading, Stream<Executable> executables) throws MultipleFailuresError {
+		Preconditions.notNull(executables, "executables must not be null");
 		MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading);
-		for (Executable executable : executables) {
+
+		executables.forEach(executable -> {
 			try {
 				executable.execute();
 			}
@@ -952,7 +996,8 @@ public final class Assertions {
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
 			}
-		}
+		});
+
 		if (multipleFailuresError.hasFailures()) {
 			throw multipleFailuresError;
 		}

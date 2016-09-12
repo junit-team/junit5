@@ -25,7 +25,7 @@ import org.junit.platform.commons.meta.API;
 @API(Experimental)
 public class ExtensionContextException extends JUnitException {
 
-	private static final long serialVersionUID = -2902318452924798975L;
+	private static final long serialVersionUID = 1L;
 
 	public ExtensionContextException(String message) {
 		super(message);

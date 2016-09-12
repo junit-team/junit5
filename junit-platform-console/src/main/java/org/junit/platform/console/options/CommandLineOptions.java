@@ -13,6 +13,9 @@ package org.junit.platform.console.options;
 import static java.util.Collections.emptyList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,22 +29,20 @@ public class CommandLineOptions {
 
 	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
-	private boolean runAllTests;
 	private boolean hideDetails;
 
-	private String includeClassNamePattern;
+	private boolean scanClasspath;
+	private List<String> arguments = emptyList();
 
+	private String includeClassNamePattern = "^.*Tests?$";
 	private List<String> includedEngines = emptyList();
 	private List<String> excludedEngines = emptyList();
-
 	private List<String> includedTags = emptyList();
 	private List<String> excludedTags = emptyList();
 
-	private List<String> additionalClasspathEntries = emptyList();
+	private List<Path> additionalClasspathEntries = emptyList();
 
-	private String xmlReportsDir;
-
-	private List<String> arguments = emptyList();
+	private Path reportsDir;
 
 	public boolean isDisplayHelp() {
 		return this.displayHelp;
@@ -59,12 +60,12 @@ public class CommandLineOptions {
 		this.ansiColorOutputDisabled = ansiColorOutputDisabled;
 	}
 
-	public boolean isRunAllTests() {
-		return this.runAllTests;
+	public boolean isScanClasspath() {
+		return this.scanClasspath;
 	}
 
-	public void setRunAllTests(boolean runAllTests) {
-		this.runAllTests = runAllTests;
+	public void setScanClasspath(boolean scanClasspath) {
+		this.scanClasspath = scanClasspath;
 	}
 
 	public boolean isHideDetails() {
@@ -75,8 +76,8 @@ public class CommandLineOptions {
 		this.hideDetails = hideDetails;
 	}
 
-	public Optional<String> getIncludeClassNamePattern() {
-		return Optional.ofNullable(this.includeClassNamePattern);
+	public String getIncludeClassNamePattern() {
+		return this.includeClassNamePattern;
 	}
 
 	public void setIncludeClassNamePattern(String includeClassNamePattern) {
@@ -115,20 +116,22 @@ public class CommandLineOptions {
 		this.excludedTags = excludedTags;
 	}
 
-	public List<String> getAdditionalClasspathEntries() {
+	public List<Path> getAdditionalClasspathEntries() {
 		return this.additionalClasspathEntries;
 	}
 
-	public void setAdditionalClasspathEntries(List<String> additionalClasspathEntries) {
-		this.additionalClasspathEntries = additionalClasspathEntries;
+	public void setAdditionalClasspathEntries(List<Path> additionalClasspathEntries) {
+		// Create a modifiable copy
+		this.additionalClasspathEntries = new ArrayList<>(additionalClasspathEntries);
+		this.additionalClasspathEntries.removeIf(path -> !Files.exists(path));
 	}
 
-	public Optional<String> getXmlReportsDir() {
-		return Optional.ofNullable(this.xmlReportsDir);
+	public Optional<Path> getReportsDir() {
+		return Optional.ofNullable(this.reportsDir);
 	}
 
-	public void setXmlReportsDir(String xmlReportsDir) {
-		this.xmlReportsDir = xmlReportsDir;
+	public void setReportsDir(Path reportsDir) {
+		this.reportsDir = reportsDir;
 	}
 
 	public List<String> getArguments() {

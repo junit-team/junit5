@@ -97,7 +97,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 	private ArrayList<String> buildArgs(project, junitExtension, reportsDir) {
 
-		def args = ['--hide-details', '--all']
+		def args = ['--hide-details', '--scan-class-path']
 
 		if (junitExtension.includeClassNamePattern) {
 			args.add('-n')
@@ -124,7 +124,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			args.add(engineId)
 		}
 
-		args.add('-r')
+		args.add('--reports-dir')
 		args.add(reportsDir.getAbsolutePath())
 
 		def rootDirs = []

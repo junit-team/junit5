@@ -13,6 +13,7 @@ package org.junit.platform.engine.discovery;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.UniqueId;
 
@@ -37,6 +38,11 @@ public class UniqueIdSelector implements DiscoverySelector {
 	 */
 	public UniqueId getUniqueId() {
 		return this.uniqueId;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("uniqueId", this.uniqueId).toString();
 	}
 
 }

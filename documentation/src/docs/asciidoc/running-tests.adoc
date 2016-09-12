@@ -4,8 +4,16 @@
 [[running-tests-ide]]
 === IDE Support
 
-At the time of this writing there is no direct support for running tests on the JUnit
-Platform within IDEs. However, the JUnit team provides two intermediate solutions so that
+==== IntelliJ IDEA
+
+IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2.
+For details please see the https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/[post on the IntelliJ IDEA blog].
+
+==== Other IDEs
+
+At the time of this writing, there is no direct support for running tests on the JUnit
+Platform within IDEs other than IntelliJ IDEA.
+However, the JUnit team provides two intermediate solutions so that
 you can go ahead and try out JUnit 5 within your IDE today. You can use the
 <<running-tests-console-launcher>> manually or execute tests with a
 <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
@@ -107,14 +115,14 @@ dependencies {
 ----
 
 The JUnit Gradle plugin can run JUnit 4 based tests as long as you configure a
-`testCompile` dependency on JUnit 4 and a `testRuntime` dependency on the JUnit 4
-TestEngine implementation similar to the following.
+`testCompile` dependency on JUnit 4 and a `testRuntime` dependency on the JUnit Vintage
+`TestEngine` implementation similar to the following.
 
 [source,java,indent=0]
 [subs="verbatim,attributes"]
 ----
 dependencies {
-	testCompile("junit:junit:4.12")
+	testCompile("junit:junit:{junit4-version}")
 	testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
 }
 ----
@@ -127,7 +135,7 @@ Once the JUnit Gradle plugin has been applied and configured, you have a new
 
 Invoking `gradlew clean junitPlatformTest` (or `gradlew clean test`) from the command
 line will execute all tests within the project whose class names match the regular
-expression supplied via `includeClassNamePattern`.
+expression supplied via `includeClassNamePattern` (defaults to `{standard-include-class-name-pattern}`).
 
 Executing the `junitPlatformTest` task in the `{junit5-gradle-consumer}` project results
 in output similar to the following:
@@ -225,6 +233,97 @@ point.
 	...
 ----
 
+[[running-tests-build-maven-engines-configure]]
+===== Configuring Test Engines
+
+In order to have Maven Surefire run any tests at all, a `TestEngine` implementation must be added
+to the runtime classpath.
+
+To configure support for JUnit Jupiter based tests, configure a `test` dependency on the JUnit
+Jupiter API and add the JUnit Jupiter `TestEngine` implementation to the dependencies of the
+`maven-surefire-plugin` similar to the following.
+
+[source,xml,indent=0]
+[subs="verbatim,attributes"]
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>{platform-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.junit.jupiter</groupId>
+						<artifactId>junit-jupiter-engine</artifactId>
+						<version>{jupiter-version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+	<dependencies>
+		...
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>{jupiter-version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	...
+----
+
+The JUnit Platform Surefire Provider can run JUnit 4 based tests as long as you configure a
+`test` dependency on JUnit 4 and add the JUnit Vintage `TestEngine` implementation to the
+dependencies of the `maven-surefire-plugin` similar to the following.
+
+[source,xml,indent=0]
+[subs="verbatim,attributes"]
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>{platform-version}</version>
+					</dependency>
+					...
+					<dependency>
+						<groupId>org.junit.vintage</groupId>
+						<artifactId>junit-vintage-engine</artifactId>
+						<version>{vintage-version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+	<dependencies>
+		...
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>{junit4-version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	...
+----
+
 [[running-tests-console-launcher]]
 === Console Launcher
 
@@ -273,35 +372,43 @@ final release.
 [subs="none"]
 ----
 Non-option arguments:
-Test classes, methods, or packages to execute. If --all|-a has been provided,
-  arguments can list all classpath roots that should be considered for test
-  scanning, or none if the full classpath should be scanned.
+If --scan-class-path has been specified, non-option arguments represent explicit
+  classpath roots that should be considered for scanning or none if the entire classpath
+  should be scanned.
 
-Option                       Description
-------                       -----------
--a, --all                    Run all tests
--p, --classpath              Provide additional classpath entries -- for example,
-                               for adding engines and their dependencies.
--n, --include-classname      Provide a regular expression to include only
-                               classes whose fully qualified names match.
-                               By default any class name is accepted, and
-                               thus all classes with tests are included.
--t, --include-tag            Provide a tag to be included in the test run. This
-                               option can be repeated.
--T, --exclude-tag            Provide a tag to be excluded from the test run. This
-                               option can be repeated.
--e, --include-engine         Provide the ID of an engine to be included in the test
-                               run. This option can be repeated.
--E, --exclude-engine         Provide the ID of an engine to be excluded from the
-                               test run. This option can be repeated.
--r, --xml-reports-dir        Enable XML report output into a specified local
-                               directory (will be created if it does not
-                               exist).
--C, --disable-ansi-colors    Disable colored output (not supported by all
-                               terminals).
--D, --hide-details           Hide details while tests are being executed.
-                               Only show the summary and test failures.
--h, --help                   Display help information.
+Option                                    Description
+------                                    -----------
+-h, --help                                Display help information.
+--disable-ansi-colors                     Disable ANSI colors in output (not
+                                            supported by all terminals).
+--hide-details                            Hide details while tests are being
+                                            executed. Only show the summary and test
+                                            failures.
+--class-path, --classpath, --cp <File:    Provide additional classpath entries --
+  path1:path2:...>                          for example, for adding engines and
+                                            their dependencies. This option can be
+                                            repeated.
+--reports-dir <File>                      Enable report output into a specified
+                                            local directory (will be created if it
+                                            does not exist).
+--scan-class-path                         Scan entire classpath or explicit
+                                            classpath roots.
+-n, --include-classname                   Provide a regular expression to include
+                                            only classes whose fully qualified names
+                                            match. To avoid loading classes
+                                            unnecessarily, the default pattern only
+                                            includes class names that end with
+                                            "Test" or "Tests". (default: ^.*Tests?$)
+-t, --include-tag                         Provide a tag to be included in the test
+                                            run. This option can be repeated.
+-T, --exclude-tag                         Provide a tag to be excluded from the test
+                                            run. This option can be repeated.
+-e, --include-engine                      Provide the ID of an engine to be included
+                                            in the test run. This option can be
+                                            repeated.
+-E, --exclude-engine                      Provide the ID of an engine to be excluded
+                                            from the test run. This option can be
+                                            repeated.
 ----
 
 
@@ -370,7 +477,8 @@ include::{testDir}/example/JUnit4SuiteDemo.java[tags=user_guide]
 ----
 
 The `JUnit4SuiteDemo` will discover and run all tests in the `example` package
-and its subpackages.
+and its subpackages. By default, it will only include test classes whose names match the
+pattern `{standard-include-class-name-pattern}`.
 
 .Additional Configuration Options
 NOTE: There are more configuration options for discovering and filtering tests than just

@@ -20,18 +20,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.FunctionUtils.where;
-import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -210,7 +211,7 @@ class VintageTestEngineDiscoveryTests {
 
 	@Test
 	void resolvesClasspathSelector() throws Exception {
-		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
+		Path root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClasspathRoots(singleton(root))).build();
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -224,8 +225,8 @@ class VintageTestEngineDiscoveryTests {
 	}
 
 	@Test
-	void resolvesApplyingClassFilters() throws Exception {
-		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
+	void resolvesApplyingClassNameFilters() throws Exception {
+		Path root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClasspathRoots(singleton(root))).filters(
 			includeClassNamePattern(".*JUnit4.*"), includeClassNamePattern(".*Plain.*")).build();
@@ -246,7 +247,7 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(
-			selectPackage(testClass.getPackage().getName())).build();
+			selectJavaPackage(testClass.getPackage().getName())).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -263,7 +264,7 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
 
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(
-			selectPackage(testClass.getPackage().getName())).build();
+			selectJavaPackage(testClass.getPackage().getName())).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -323,7 +324,7 @@ class VintageTestEngineDiscoveryTests {
 	void resolvesMethodSelectorForSingleMethod() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(
-			selectMethod(testClass, testClass.getMethod("failingTest"))).build();
+			selectJavaMethod(testClass, testClass.getMethod("failingTest"))).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -339,8 +340,8 @@ class VintageTestEngineDiscoveryTests {
 	void resolvesMethodSelectorForTwoMethodsOfSameClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(
-			selectMethod(testClass, testClass.getMethod("failingTest")),
-			selectMethod(testClass, testClass.getMethod("successfulTest"))).build();
+			selectJavaMethod(testClass, testClass.getMethod("failingTest")),
+			selectJavaMethod(testClass, testClass.getMethod("successfulTest"))).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -469,8 +470,9 @@ class VintageTestEngineDiscoveryTests {
 	void ignoresMoreFineGrainedSelectorsWhenClassIsSelectedAsWell() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		LauncherDiscoveryRequest discoveryRequest = request().selectors( //
-			selectMethod(testClass, testClass.getMethod("failingTest")), //
-			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "abortedTest")), selectClass(testClass) //
+			selectJavaMethod(testClass, testClass.getMethod("failingTest")), //
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "abortedTest")),
+			selectJavaClass(testClass) //
 		).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
@@ -485,7 +487,7 @@ class VintageTestEngineDiscoveryTests {
 	void resolvesCombinationOfMethodAndUniqueIdSelector() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		LauncherDiscoveryRequest discoveryRequest = request().selectors( //
-			selectMethod(testClass, testClass.getMethod("failingTest")), //
+			selectJavaMethod(testClass, testClass.getMethod("failingTest")), //
 			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "abortedTest") //
 			)).build();
 
@@ -506,7 +508,7 @@ class VintageTestEngineDiscoveryTests {
 	void ignoresRedundantSelector() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		LauncherDiscoveryRequest discoveryRequest = request().selectors( //
-			selectMethod(testClass, testClass.getMethod("failingTest")), //
+			selectJavaMethod(testClass, testClass.getMethod("failingTest")), //
 			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "failingTest") //
 			)).build();
 
@@ -521,11 +523,11 @@ class VintageTestEngineDiscoveryTests {
 	}
 
 	@Test
-	void doesNotResolveMethodOfClassNotAcceptedByClassFilter() throws Exception {
+	void doesNotResolveMethodOfClassNotAcceptedByClassNameFilter() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		// @formatter:off
 		LauncherDiscoveryRequest request = request()
-				.selectors(selectMethod(testClass, testClass.getMethod("failingTest")))
+				.selectors(selectJavaMethod(testClass, testClass.getMethod("failingTest")))
 				.filters(includeClassNamePattern("Foo"))
 				.build();
 		// @formatter:on
@@ -538,7 +540,7 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> testClass = IgnoredJUnit4TestCase.class;
 		// @formatter:off
 		LauncherDiscoveryRequest request = request()
-				.selectors(selectMethod(testClass, testClass.getMethod("test")))
+				.selectors(selectJavaMethod(testClass, testClass.getMethod("test")))
 				.build();
 		// @formatter:on
 
@@ -553,7 +555,7 @@ class VintageTestEngineDiscoveryTests {
 	@Test
 	void usesCustomUniqueIdsWhenPresent() throws Exception {
 		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIds.class;
-		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(testClass)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(request);
 
@@ -573,7 +575,7 @@ class VintageTestEngineDiscoveryTests {
 	@Test
 	void resolvesTestSourceForParameterizedTests() throws Exception {
 		Class<?> testClass = ParameterizedTestCase.class;
-		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(testClass)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(request);
 
@@ -608,9 +610,9 @@ class VintageTestEngineDiscoveryTests {
 		return engine.discover(discoveryRequest, UniqueId.forEngine(engine.getId()));
 	}
 
-	private File getClasspathRoot(Class<?> testClass) throws Exception {
+	private Path getClasspathRoot(Class<?> testClass) throws Exception {
 		URL location = testClass.getProtectionDomain().getCodeSource().getLocation();
-		return new File(location.toURI());
+		return Paths.get(location.toURI());
 	}
 
 	private void assertYieldsNoDescriptors(Class<?> testClass) {
@@ -680,6 +682,6 @@ class VintageTestEngineDiscoveryTests {
 	}
 
 	private static LauncherDiscoveryRequest discoveryRequestForClass(Class<?> testClass) {
-		return request().selectors(selectClass(testClass)).build();
+		return request().selectors(selectJavaClass(testClass)).build();
 	}
 }

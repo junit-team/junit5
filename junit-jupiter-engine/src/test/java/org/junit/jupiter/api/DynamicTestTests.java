@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -20,21 +21,35 @@ import java.util.stream.Stream;
 
 class DynamicTestTests {
 
+	private final List<String> assertedValues = new LinkedList<>();
+
 	@Test
 	void streamFromIterator() throws Throwable {
-		List<String> assertedValues = new LinkedList<>();
-
-		Stream<DynamicTest> stream = DynamicTest.stream(Arrays.asList("foo", "bar").iterator(), String::toUpperCase,
-			assertedValues::add);
+		Stream<DynamicTest> stream = DynamicTest.stream(Arrays.asList("foo", "bar", "baz").iterator(),
+			String::toUpperCase, this::throwingConsumer);
 		List<DynamicTest> dynamicTests = stream.collect(Collectors.toList());
 
-		assertThat(dynamicTests).hasSize(2).extracting(DynamicTest::getDisplayName).containsExactly("FOO", "BAR");
+		assertThat(dynamicTests).hasSize(3).extracting(DynamicTest::getDisplayName).containsExactly("FOO", "BAR",
+			"BAZ");
 
 		assertThat(assertedValues).isEmpty();
+
 		dynamicTests.get(0).getExecutable().execute();
 		assertThat(assertedValues).containsExactly("foo");
+
 		dynamicTests.get(1).getExecutable().execute();
 		assertThat(assertedValues).containsExactly("foo", "bar");
+
+		Throwable t = expectThrows(Throwable.class, () -> dynamicTests.get(2).getExecutable().execute());
+		assertThat(t).hasMessage("Baz!");
+		assertThat(assertedValues).containsExactly("foo", "bar");
+	}
+
+	private void throwingConsumer(String str) throws Throwable {
+		if ("baz".equals(str)) {
+			throw new Throwable("Baz!");
+		}
+		this.assertedValues.add(str);
 	}
 
 }

@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.lang.reflect.Method;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -23,14 +24,15 @@ import org.junit.platform.engine.DiscoverySelector;
  * tests or containers based on Java methods.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.support.descriptor.JavaMethodSource
  */
 @API(Experimental)
-public class MethodSelector implements DiscoverySelector {
+public class JavaMethodSelector implements DiscoverySelector {
 
 	private final Class<?> clazz;
 	private final Method method;
 
-	MethodSelector(Class<?> clazz, Method method) {
+	JavaMethodSelector(Class<?> clazz, Method method) {
 		this.clazz = clazz;
 		this.method = method;
 	}
@@ -52,6 +54,16 @@ public class MethodSelector implements DiscoverySelector {
 	 */
 	public Method getJavaMethod() {
 		return this.method;
+	}
+
+	@Override
+	public String toString() {
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("javaClass", this.clazz.getName())
+				.append("javaMethod", this.method)
+				.toString();
+		// @formatter:on
 	}
 
 }

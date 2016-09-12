@@ -58,7 +58,7 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 	private static final class OrderPreservingHelpFormatter extends BuiltinHelpFormatter {
 
 		private OrderPreservingHelpFormatter() {
-			super(100, 4);
+			super(90, 4);
 		}
 
 		@Override

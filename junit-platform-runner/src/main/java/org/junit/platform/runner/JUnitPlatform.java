@@ -13,8 +13,9 @@ package org.junit.platform.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
-import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
@@ -60,6 +61,11 @@ import org.junit.runners.model.InitializationError;
  * supported on the JUnit Platform &mdash; for example, a JUnit Jupiter test class.
  * Note, however, that any test class run with this runner must be {@code public}
  * in order to be picked up by IDEs and build tools.
+ *
+ * <p>When used on a class that serves as a test suite and the
+ * {@link IncludeClassNamePattern} annotation is not present, the default
+ * include pattern {@value org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN}
+ * is used to avoid loading classes unnecessarily.
  *
  * @since 1.0
  * @see SelectPackages
@@ -118,17 +124,18 @@ public class JUnitPlatform extends Runner implements Filterable {
 		List<DiscoverySelector> selectors = getSelectorsFromAnnotations();
 
 		// Allows to simply add @RunWith(JUnitPlatform.class) to any test case
-		if (selectors.isEmpty()) {
-			selectors.add(selectClass(this.testClass));
+		boolean isSuite = !selectors.isEmpty();
+		if (!isSuite) {
+			selectors.add(selectJavaClass(this.testClass));
 		}
 
 		LauncherDiscoveryRequestBuilder requestBuilder = request().selectors(selectors);
-		addFiltersFromAnnotations(requestBuilder);
+		addFiltersFromAnnotations(requestBuilder, isSuite);
 		return requestBuilder.build();
 	}
 
-	private void addFiltersFromAnnotations(LauncherDiscoveryRequestBuilder requestBuilder) {
-		addIncludeClassNamePatternFilter(requestBuilder);
+	private void addFiltersFromAnnotations(LauncherDiscoveryRequestBuilder requestBuilder, boolean isSuite) {
+		addIncludeClassNamePatternFilter(requestBuilder, isSuite);
 
 		addIncludedTagsFilter(requestBuilder);
 		addExcludedTagsFilter(requestBuilder);
@@ -140,8 +147,8 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private List<DiscoverySelector> getSelectorsFromAnnotations() {
 		List<DiscoverySelector> selectors = new ArrayList<>();
 
-		selectors.addAll(transform(getSelectedClasses(), DiscoverySelectors::selectClass));
-		selectors.addAll(transform(getSelectedPackageNames(), DiscoverySelectors::selectPackage));
+		selectors.addAll(transform(getSelectedClasses(), DiscoverySelectors::selectJavaClass));
+		selectors.addAll(transform(getSelectedPackageNames(), DiscoverySelectors::selectJavaPackage));
 
 		return selectors;
 	}
@@ -150,8 +157,8 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return stream(sourceElements).map(transformer).collect(toList());
 	}
 
-	private void addIncludeClassNamePatternFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
-		String pattern = getIncludeClassNamePattern();
+	private void addIncludeClassNamePatternFilter(LauncherDiscoveryRequestBuilder requestBuilder, boolean isSuite) {
+		String pattern = getIncludeClassNamePattern(isSuite);
 		if (!pattern.isEmpty()) {
 			requestBuilder.filters(includeClassNamePattern(pattern));
 		}
@@ -209,9 +216,9 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return getValueFromAnnotation(ExcludeEngines.class, ExcludeEngines::value, EMPTY_STRING_ARRAY);
 	}
 
-	private String getIncludeClassNamePattern() {
+	private String getIncludeClassNamePattern(boolean isSuite) {
 		return getValueFromAnnotation(IncludeClassNamePattern.class, IncludeClassNamePattern::value,
-			EMPTY_STRING).trim();
+			isSuite ? STANDARD_INCLUDE_PATTERN : EMPTY_STRING).trim();
 	}
 
 	private <A extends Annotation, V> V getValueFromAnnotation(Class<A> annotationClass, Function<A, V> extractor,

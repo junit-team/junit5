@@ -35,21 +35,30 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  * <h4>Example</h4>
  *
  * <pre style="code">
+ * import static org.junit.platform.engine.discovery.DiscoverySelectors.*;
+ * import static org.junit.platform.engine.discovery.ClassNameFilter.*;
+ * import static org.junit.platform.launcher.EngineFilter.*;
+ * import static org.junit.platform.launcher.TagFilter.*;
+ *
+ * // ...
+ *
  *   LauncherDiscoveryRequestBuilder.request()
  *     .selectors(
- *        selectPackage("org.example.user"),
- *        selectClass("org.example.payment.PaymentTests"),
- *        selectClass(ShippingTests.class),
- *        selectMethod("org.example.order.OrderTests", "test1"),
- *        selectMethod(OrderTests.class, "test2"),
- *        selectMethod(OrderTests.class, testMethod),
- *        selectClasspathRoots("/my/local/path1"),
- *        selectClasspathRoots("/my/local/path2"),
+ *        selectJavaPackage("org.example.user"),
+ *        selectJavaClass("org.example.payment.PaymentTests"),
+ *        selectJavaClass(ShippingTests.class),
+ *        selectJavaMethod("org.example.order.OrderTests#test1"),
+ *        selectJavaMethod("org.example.order.OrderTests#test2()"),
+ *        selectJavaMethod("org.example.order.OrderTests#test3(java.lang.String)"),
+ *        selectJavaMethod("org.example.order.OrderTests", "test4"),
+ *        selectJavaMethod(OrderTests.class, "test5"),
+ *        selectJavaMethod(OrderTests.class, testMethod),
+ *        selectClasspathRoots(Collections.singleton(new File("/my/local/path1"))),
  *        selectUniqueId("unique-id-1"),
  *        selectUniqueId("unique-id-2")
  *     )
  *     .filters(
- *        includeEngines("junit-jupiter", "kotlin"),
+ *        includeEngines("junit-jupiter", "spek"),
  *        // excludeEngines("junit-vintage"),
  *        includeTags("fast"),
  *        // excludeTags("slow"),
@@ -63,7 +72,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *
  * @since 1.0
  * @see org.junit.platform.engine.discovery.DiscoverySelectors
- * @see org.junit.platform.engine.discovery.ClassFilter
+ * @see org.junit.platform.engine.discovery.ClassNameFilter
  * @see org.junit.platform.launcher.EngineFilter
  * @see org.junit.platform.launcher.TagFilter
  */
@@ -100,7 +109,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	 *
 	 * @param selectors the {@code DiscoverySelectors} to add
 	 */
-	public LauncherDiscoveryRequestBuilder selectors(List<DiscoverySelector> selectors) {
+	public LauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
 		if (selectors != null) {
 			this.selectors.addAll(selectors);
 		}

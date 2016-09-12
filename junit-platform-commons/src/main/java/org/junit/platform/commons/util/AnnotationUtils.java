@@ -81,7 +81,7 @@ public final class AnnotationUtils {
 			return Optional.empty();
 		}
 
-		return findAnnotation(element.get(), annotationType, new HashSet<Annotation>());
+		return findAnnotation(element.get(), annotationType, new HashSet<>());
 	}
 
 	/**
@@ -280,7 +280,7 @@ public final class AnnotationUtils {
 
 	private static class AnnotationCacheKey implements Serializable {
 
-		private static final long serialVersionUID = 4611807332019442648L;
+		private static final long serialVersionUID = 1L;
 
 		private final AnnotatedElement element;
 		private final Class<? extends Annotation> annotationType;

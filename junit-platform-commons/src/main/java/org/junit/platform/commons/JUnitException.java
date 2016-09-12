@@ -23,7 +23,7 @@ import org.junit.platform.commons.meta.API;
 @API(Internal)
 public class JUnitException extends RuntimeException {
 
-	private static final long serialVersionUID = -1751494513161886551L;
+	private static final long serialVersionUID = 1L;
 
 	public JUnitException(String message) {
 		super(message);

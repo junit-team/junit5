@@ -10,13 +10,20 @@
 
 package org.junit.jupiter.engine;
 
+import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -29,8 +36,11 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  */
 public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 
+	private static final List<String> callSequence = new ArrayList<>();
+
 	@BeforeEach
 	void initStatics() {
+		callSequence.clear();
 		LocalTestCase.countBeforeInvoked = 0;
 		LocalTestCase.countAfterInvoked = 0;
 		AbstractTestCase.countSuperBeforeInvoked = 0;
@@ -39,8 +49,6 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 
 	@Test
 	public void executeAllTestsInClass() {
-		LocalTestCase.countAfterInvoked = 0;
-
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(LocalTestCase.class);
 
 		assertEquals(6, eventRecorder.getTestStartedCount(), "# tests started");
@@ -58,7 +66,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	@Test
 	public void executeSingleTest() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(LocalTestCase.class, "alwaysPasses")).build();
+			selectJavaMethod(LocalTestCase.class, "alwaysPasses")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -72,7 +80,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	@Test
 	public void executeTestDeclaredInSuperClass() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(LocalTestCase.class, "superclassTest")).build();
+			selectJavaMethod(LocalTestCase.class, "superTest")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -92,7 +100,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	@Test
 	public void executeTestWithExceptionThrownInAfterMethod() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(LocalTestCase.class, "throwExceptionInAfterMethod")).build();
+			selectJavaMethod(LocalTestCase.class, "throwExceptionInAfterMethod")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -101,6 +109,39 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
 		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
 		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+	}
+
+	@Test
+	public void beforeAndAfterMethodsInTestClassHierarchy() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCase3.class);
+
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped"),
+			() -> assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted"),
+			() -> assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed")
+		);
+		// @formatter:on
+
+		// @formatter:off
+		assertEquals(asList(
+			"beforeAll1",
+				"beforeAll2",
+					"beforeAll3",
+						"beforeEach1",
+							"beforeEach2",
+								"beforeEach3",
+									"test3",
+								"afterEach3",
+							"afterEach2",
+						"afterEach1",
+					"afterAll3",
+				"afterAll2",
+			"afterAll1"
+		), callSequence, "wrong call sequence");
+		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------
@@ -121,7 +162,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 		}
 
 		@Test
-		void superclassTest() {
+		void superTest() {
 			/* no-op */
 		}
 	}
@@ -172,6 +213,80 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 		@Test
 		void alwaysFails() {
 			fail("#fail");
+		}
+	}
+
+	private static class TestCase1 {
+
+		@BeforeAll
+		static void beforeAll1() {
+			callSequence.add("beforeAll1");
+		}
+
+		@BeforeEach
+		void beforeEach1() {
+			callSequence.add("beforeEach1");
+		}
+
+		@AfterEach
+		void afterEach1() {
+			callSequence.add("afterEach1");
+		}
+
+		@AfterAll
+		static void afterAll1() {
+			callSequence.add("afterAll1");
+		}
+	}
+
+	private static class TestCase2 extends TestCase1 {
+
+		@BeforeAll
+		static void beforeAll2() {
+			callSequence.add("beforeAll2");
+		}
+
+		@BeforeEach
+		void beforeEach2() {
+			callSequence.add("beforeEach2");
+		}
+
+		@AfterEach
+		void afterEach2() {
+			callSequence.add("afterEach2");
+		}
+
+		@AfterAll
+		static void afterAll2() {
+			callSequence.add("afterAll2");
+		}
+	}
+
+	private static class TestCase3 extends TestCase2 {
+
+		@BeforeAll
+		static void beforeAll3() {
+			callSequence.add("beforeAll3");
+		}
+
+		@BeforeEach
+		void beforeEach3() {
+			callSequence.add("beforeEach3");
+		}
+
+		@Test
+		void test3() {
+			callSequence.add("test3");
+		}
+
+		@AfterEach
+		void afterEach3() {
+			callSequence.add("afterEach3");
+		}
+
+		@AfterAll
+		static void afterAll3() {
+			callSequence.add("afterAll3");
 		}
 	}
 

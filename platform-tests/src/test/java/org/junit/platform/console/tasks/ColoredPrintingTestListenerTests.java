@@ -33,61 +33,53 @@ public class ColoredPrintingTestListenerTests {
 	private static final String EOL = System.lineSeparator();
 
 	@Test
-	public void executionSkippedMessageIndented() {
+	public void executionSkipped() {
 		StringWriter stringWriter = new StringWriter();
-		PrintWriter out = new PrintWriter(stringWriter);
-		ColoredPrintingTestListener listener = new ColoredPrintingTestListener(out, true);
+		listener(stringWriter).executionSkipped(newTestIdentifier(), "Test" + EOL + "disabled");
+		String[] lines = lines(stringWriter);
 
-		listener.executionSkipped(newTestIdentifier(), "Test" + EOL + "\tdisabled");
-		String output = stringWriter.toString();
-
-		// @formatter:off
-		String expected = "Skipped:     failingTest [[engine:demo-engine]]" + EOL
-				+ INDENTATION + "=> Reason: Test" + EOL
-				+ INDENTATION + "\tdisabled" + EOL;
-		// @formatter:on
-
-		assertEquals(expected, output);
+		assertEquals(3, lines.length);
+		assertAll("lines in the output", //
+			() -> assertEquals("Skipped:     demo-test ([engine:demo-engine])", lines[0]), //
+			() -> assertEquals(INDENTATION + "=> Reason: Test", lines[1]), //
+			() -> assertEquals(INDENTATION + "disabled", lines[2]));
 	}
 
 	@Test
-	public void reportingEntryPublishedMessageIndented() {
+	public void reportingEntryPublished() {
 		StringWriter stringWriter = new StringWriter();
-		PrintWriter out = new PrintWriter(stringWriter);
-		ColoredPrintingTestListener listener = new ColoredPrintingTestListener(out, true);
+		listener(stringWriter).reportingEntryPublished(newTestIdentifier(), ReportEntry.from("foo", "bar"));
+		String[] lines = lines(stringWriter);
 
-		listener.reportingEntryPublished(newTestIdentifier(), ReportEntry.from("foo", "bar"));
-		String[] split = stringWriter.toString().split(System.lineSeparator());
-
-		assertEquals(2, split.length);
-		assertAll("lines in the message",
-			() -> assertEquals("Reported:    failingTest [[engine:demo-engine]]", split[0]),
-			() -> assertTrue(split[1].startsWith(INDENTATION + "=> Reported values: ReportEntry [timestamp =")),
-			() -> assertTrue(split[1].endsWith(", foo = 'bar']")));
+		assertEquals(2, lines.length);
+		assertAll("lines in the output", //
+			() -> assertEquals("Reported:    demo-test ([engine:demo-engine])", lines[0]), //
+			() -> assertTrue(lines[1].startsWith(INDENTATION + "=> Reported values: ReportEntry [timestamp =")), //
+			() -> assertTrue(lines[1].endsWith(", foo = 'bar']")));
 	}
 
 	@Test
-	public void exceptionMessageIndented() {
+	public void executionFinishedWithFailure() {
 		StringWriter stringWriter = new StringWriter();
-		PrintWriter out = new PrintWriter(stringWriter);
-		ColoredPrintingTestListener listener = new ColoredPrintingTestListener(out, true);
+		listener(stringWriter).executionFinished(newTestIdentifier(), failed(new AssertionError("Boom!")));
+		String[] lines = lines(stringWriter);
 
-		listener.executionFinished(newTestIdentifier(),
-			failed(new Throwable("Fail" + EOL + "\texpected: <foo> but was: <bar>")));
-		String output = stringWriter.toString();
+		assertAll("lines in the output", //
+			() -> assertEquals("Finished:    demo-test ([engine:demo-engine])", lines[0]), //
+			() -> assertEquals(INDENTATION + "=> Exception: java.lang.AssertionError: Boom!", lines[1]));
+	}
 
-		// @formatter:off
-		String expected = "Finished:    failingTest [[engine:demo-engine]]" + EOL
-				+ INDENTATION + "=> Exception: Fail" + EOL
-				+ INDENTATION + "\texpected: <foo> but was: <bar>" + EOL;
-		// @formatter:on
-
-		assertEquals(expected, output);
+	private ColoredPrintingTestListener listener(StringWriter stringWriter) {
+		return new ColoredPrintingTestListener(new PrintWriter(stringWriter), true);
 	}
 
 	private static TestIdentifier newTestIdentifier() {
-		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.forEngine("demo-engine"), "failingTest");
+		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.forEngine("demo-engine"), "demo-test");
 		return TestIdentifier.from(testDescriptor);
+	}
+
+	private String[] lines(StringWriter stringWriter) {
+		return stringWriter.toString().split(EOL);
 	}
 
 }

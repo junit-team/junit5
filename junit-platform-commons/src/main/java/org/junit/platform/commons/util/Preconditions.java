@@ -81,7 +81,7 @@ public final class Preconditions {
 	 * @see #notNull(Object, Supplier)
 	 */
 	public static Object[] notNull(Object[] objects, String message) throws PreconditionViolationException {
-		notNull(objects, () -> "objects array must not be null");
+		notNull(objects, () -> StringUtils.isNotBlank(message) ? message : "Object array must not be null");
 		Arrays.stream(objects).forEach(object -> notNull(object, () -> message));
 
 		return objects;
@@ -99,6 +99,7 @@ public final class Preconditions {
 	public static <T extends Collection<?>> T notEmpty(T collection, String message)
 			throws PreconditionViolationException {
 		condition(collection != null && !collection.isEmpty(), () -> message);
+		collection.forEach(object -> notNull(object, () -> message));
 		return collection;
 	}
 

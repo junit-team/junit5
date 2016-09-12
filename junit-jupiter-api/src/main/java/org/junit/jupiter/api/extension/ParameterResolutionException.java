@@ -25,7 +25,7 @@ import org.junit.platform.commons.meta.API;
 @API(Experimental)
 public class ParameterResolutionException extends JUnitException {
 
-	private static final long serialVersionUID = 5137237798019406636L;
+	private static final long serialVersionUID = 1L;
 
 	public ParameterResolutionException(String message) {
 		super(message);

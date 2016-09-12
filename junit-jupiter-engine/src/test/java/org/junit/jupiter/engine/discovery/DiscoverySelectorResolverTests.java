@@ -20,15 +20,16 @@ import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.engineId
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestFactoryMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.io.File;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,13 +46,14 @@ import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
-import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.ClasspathRootSelector;
+import org.junit.platform.engine.discovery.JavaClassSelector;
+import org.junit.platform.engine.discovery.JavaMethodSelector;
+import org.junit.platform.engine.discovery.JavaPackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
@@ -64,7 +66,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void singleClassResolution() {
-		ClassSelector selector = selectClass(MyTestClass.class);
+		JavaClassSelector selector = selectJavaClass(MyTestClass.class);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -79,8 +81,8 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void duplicateClassSelectorOnlyResolvesOnce() {
 		resolver.resolveSelectors(request().selectors( //
-			selectClass(MyTestClass.class), //
-			selectClass(MyTestClass.class) //
+			selectJavaClass(MyTestClass.class), //
+			selectJavaClass(MyTestClass.class) //
 		).build(), engineDescriptor);
 
 		assertEquals(4, engineDescriptor.getAllDescendants().size());
@@ -93,8 +95,8 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void twoClassesResolution() {
-		ClassSelector selector1 = selectClass(MyTestClass.class);
-		ClassSelector selector2 = selectClass(YourTestClass.class);
+		JavaClassSelector selector1 = selectJavaClass(MyTestClass.class);
+		JavaClassSelector selector2 = selectJavaClass(YourTestClass.class);
 
 		resolver.resolveSelectors(request().selectors(selector1, selector2).build(), engineDescriptor);
 
@@ -111,7 +113,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void classResolutionOfStaticNestedClass() {
-		ClassSelector selector = selectClass(OtherTestClass.NestedTestClass.class);
+		JavaClassSelector selector = selectJavaClass(OtherTestClass.NestedTestClass.class);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -125,7 +127,7 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void methodResolution() throws NoSuchMethodException {
 		Method test1 = MyTestClass.class.getDeclaredMethod("test1");
-		MethodSelector selector = selectMethod(test1.getDeclaringClass(), test1);
+		JavaMethodSelector selector = selectJavaMethod(test1.getDeclaringClass(), test1);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -137,7 +139,8 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void methodResolutionFromInheritedMethod() throws NoSuchMethodException {
-		MethodSelector selector = selectMethod(HerTestClass.class, MyTestClass.class.getDeclaredMethod("test1"));
+		JavaMethodSelector selector = selectJavaMethod(HerTestClass.class,
+			MyTestClass.class.getDeclaredMethod("test1"));
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -150,7 +153,7 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void resolvingSelectorOfNonTestMethodResolvesNothing() throws NoSuchMethodException {
 		Method notATest = MyTestClass.class.getDeclaredMethod("notATest");
-		MethodSelector selector = selectMethod(notATest.getDeclaringClass(), notATest);
+		JavaMethodSelector selector = selectJavaMethod(notATest.getDeclaringClass(), notATest);
 		EngineDiscoveryRequest request = request().selectors(selector).build();
 		resolver.resolveSelectors(request, engineDescriptor);
 		assertTrue(engineDescriptor.getAllDescendants().isEmpty());
@@ -341,8 +344,8 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void packageResolution() {
-		PackageSelector selector = selectPackage("org.junit.jupiter.engine.descriptor.subpackage");
+	public void packageResolutionUsingExplicitBasePackage() {
+		JavaPackageSelector selector = selectJavaPackage("org.junit.jupiter.engine.descriptor.subpackage");
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -357,19 +360,38 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void classpathResolution() {
-		File classpath = new File(
-			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+	public void packageResolutionUsingDefaultPackage() {
+		resolver.resolveSelectors(request().selectors(selectJavaPackage("")).build(), engineDescriptor);
 
-		List<DiscoverySelector> selectors = selectClasspathRoots(singleton(classpath));
-
-		resolver.resolveSelectors(request().selectors(selectors).build(), engineDescriptor);
-
-		// 150 is completely arbitrary. At this very second in time, the number is actually 213.
+		// 150 is completely arbitrary. The actual number is likely much higher.
 		assertThat(engineDescriptor.getAllDescendants().size()).isGreaterThan(150).as(
 			"Too few test descriptors in classpath");
 
 		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(ReflectionUtils.loadClass("DefaultPackageTestCase").get())),
+			"Failed to pick up DefaultPackageTestCase via classpath scanning");
+		assertTrue(uniqueIds.contains(uniqueIdForClass(Class1WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class1WithTestCases.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(Class2WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class2WithTestCases.class, "test2()")));
+	}
+
+	@Test
+	public void classpathResolution() throws Exception {
+		Path classpath = Paths.get(
+			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(classpath));
+
+		resolver.resolveSelectors(request().selectors(selectors).build(), engineDescriptor);
+
+		// 150 is completely arbitrary. The actual number is likely much higher.
+		assertThat(engineDescriptor.getAllDescendants().size()).isGreaterThan(150).as(
+			"Too few test descriptors in classpath");
+
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds().contains(uniqueIdForClass(ReflectionUtils.loadClass("DefaultPackageTestCase").get())),
+			"Failed to pick up DefaultPackageTestCase via classpath scanning");
 		assertTrue(uniqueIds.contains(uniqueIdForClass(Class1WithTestCases.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class1WithTestCases.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForClass(Class2WithTestCases.class)));
@@ -380,7 +402,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void nestedTestResolutionFromBaseClass() {
-		ClassSelector selector = selectClass(TestCaseWithNesting.class);
+		JavaClassSelector selector = selectJavaClass(TestCaseWithNesting.class);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -398,7 +420,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void nestedTestResolutionFromNestedTestClass() {
-		ClassSelector selector = selectClass(TestCaseWithNesting.NestedTestCase.class);
+		JavaClassSelector selector = selectJavaClass(TestCaseWithNesting.NestedTestCase.class);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -432,7 +454,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void doubleNestedTestResolutionFromClass() {
-		ClassSelector selector = selectClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class);
+		JavaClassSelector selector = selectJavaClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class);
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -448,7 +470,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void methodResolutionInDoubleNestedTestClass() throws NoSuchMethodException {
-		MethodSelector selector = selectMethod(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class,
+		JavaMethodSelector selector = selectJavaMethod(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class,
 			TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class.getDeclaredMethod("testC"));
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);

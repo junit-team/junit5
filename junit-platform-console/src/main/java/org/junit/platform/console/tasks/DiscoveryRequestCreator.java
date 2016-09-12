@@ -12,19 +12,20 @@ package org.junit.platform.console.tasks;
 
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.io.File;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -36,9 +37,9 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.JavaClassSelector;
+import org.junit.platform.engine.discovery.JavaMethodSelector;
+import org.junit.platform.engine.discovery.JavaPackageSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
@@ -54,26 +55,24 @@ class DiscoveryRequestCreator {
 	}
 
 	private LauncherDiscoveryRequestBuilder createRequestBuilder(CommandLineOptions options) {
-		if (options.isRunAllTests()) {
-			return createBuilderForAllTests(options);
+		if (options.isScanClasspath()) {
+			return createBuilderForClasspathScanning(options);
 		}
 		return createNameBasedBuilder(options);
 	}
 
-	private LauncherDiscoveryRequestBuilder createBuilderForAllTests(CommandLineOptions options) {
-		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
+	private LauncherDiscoveryRequestBuilder createBuilderForClasspathScanning(CommandLineOptions options) {
+		Set<Path> rootDirectoriesToScan = determineClasspathRootDirectories(options);
 		return request().selectors(selectClasspathRoots(rootDirectoriesToScan));
 	}
 
-	private Set<File> determineClasspathRootDirectories(CommandLineOptions options) {
+	private Set<Path> determineClasspathRootDirectories(CommandLineOptions options) {
 		if (options.getArguments().isEmpty()) {
-			Set<File> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
-			if (!options.getAdditionalClasspathEntries().isEmpty()) {
-				rootDirs.addAll(new ClasspathEntriesParser().toDirectories(options.getAdditionalClasspathEntries()));
-			}
+			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
+			rootDirs.addAll(options.getAdditionalClasspathEntries());
 			return rootDirs;
 		}
-		return options.getArguments().stream().map(File::new).collect(toCollection(LinkedHashSet::new));
+		return options.getArguments().stream().map(Paths::get).collect(toCollection(LinkedHashSet::new));
 	}
 
 	private LauncherDiscoveryRequestBuilder createNameBasedBuilder(CommandLineOptions options) {
@@ -82,8 +81,7 @@ class DiscoveryRequestCreator {
 	}
 
 	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
-		options.getIncludeClassNamePattern().ifPresent(
-			pattern -> requestBuilder.filters(includeClassNamePattern(pattern)));
+		requestBuilder.filters(includeClassNamePattern(options.getIncludeClassNamePattern()));
 
 		if (!options.getIncludedTags().isEmpty()) {
 			requestBuilder.filters(includeTags(options.getIncludedTags()));
@@ -129,8 +127,8 @@ class DiscoveryRequestCreator {
 	 * </ul>
 	 *
 	 * @param name the name to select; never {@code null} or blank
-	 * @return an instance of {@link ClassSelector}, {@link MethodSelector}, or
-	 * {@link PackageSelector}
+	 * @return an instance of {@link JavaClassSelector}, {@link JavaMethodSelector}, or
+	 * {@link JavaPackageSelector}
 	 * @throws PreconditionViolationException if the supplied name is {@code null},
 	 * blank, or does not specify a class, method, or package
 	 */
@@ -140,7 +138,7 @@ class DiscoveryRequestCreator {
 		try {
 			Optional<Class<?>> classOptional = ReflectionUtils.loadClass(name);
 			if (classOptional.isPresent()) {
-				return selectClass(classOptional.get());
+				return selectJavaClass(classOptional.get());
 			}
 		}
 		catch (Exception ex) {
@@ -151,7 +149,7 @@ class DiscoveryRequestCreator {
 			Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
 			if (methodOptional.isPresent()) {
 				Method method = methodOptional.get();
-				return selectMethod(method.getDeclaringClass(), method);
+				return selectJavaMethod(method.getDeclaringClass(), method);
 			}
 		}
 		catch (Exception ex) {
@@ -159,7 +157,7 @@ class DiscoveryRequestCreator {
 		}
 
 		if (ReflectionUtils.isPackage(name)) {
-			return selectPackage(name);
+			return selectJavaPackage(name);
 		}
 
 		throw new PreconditionViolationException(

@@ -38,13 +38,17 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	private XmlReportData reportData;
 
-	public XmlReportsWritingListener(String reportsDir, PrintWriter out) {
+	XmlReportsWritingListener(Path reportsDir, PrintWriter out) {
 		this(reportsDir, out, Clock.systemDefaultZone());
 	}
 
 	// For tests only
 	XmlReportsWritingListener(String reportsDir, PrintWriter out, Clock clock) {
-		this.reportsDir = Paths.get(reportsDir);
+		this(Paths.get(reportsDir), out, clock);
+	}
+
+	private XmlReportsWritingListener(Path reportsDir, PrintWriter out, Clock clock) {
+		this.reportsDir = reportsDir;
 		this.out = out;
 		this.clock = clock;
 	}

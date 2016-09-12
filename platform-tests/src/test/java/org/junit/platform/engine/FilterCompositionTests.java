@@ -17,10 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.FilterResult.excluded;
 import static org.junit.platform.engine.FilterResult.included;
 
-import java.util.StringJoiner;
-
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.discovery.ClassFilter;
+import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.launcher.FilterStub;
 
 /**
@@ -37,25 +35,29 @@ class FilterCompositionTests {
 		Filter<Object> composedFilter = Filter.composeFilters();
 
 		assertTrue(composedFilter.apply(String.class).included());
+		assertTrue(composedFilter.toPredicate().test(String.class));
 		assertTrue(composedFilter.apply(Object.class).included());
+		assertTrue(composedFilter.toPredicate().test(Object.class));
 	}
 
 	@Test
 	void composingSingleFilterWillReturnTheOriginalOne() {
-		Filter<Class<?>> singleFilter = ClassFilter.includeClassNamePattern(".*ring.*");
-		Filter<Class<?>> composed = Filter.composeFilters(singleFilter);
+		Filter<?> singleFilter = ClassNameFilter.includeClassNamePattern(".*ring.*");
+		Filter<?> composed = Filter.composeFilters(singleFilter);
 		assertSame(singleFilter, composed);
 	}
 
 	@Test
 	void composingMultipleFiltersIsAConjunctionOfFilters() {
-		Filter<Class<?>> firstFilter = ClassFilter.includeClassNamePattern(".*ring.*");
-		Filter<Class<?>> secondFilter = ClassFilter.includeClassNamePattern(".*Join.*");
+		Filter<String> firstFilter = ClassNameFilter.includeClassNamePattern(".*ring.*");
+		Filter<String> secondFilter = ClassNameFilter.includeClassNamePattern(".*Join.*");
 
-		Filter<Class<?>> composed = Filter.composeFilters(firstFilter, secondFilter);
+		Filter<String> composed = Filter.composeFilters(firstFilter, secondFilter);
 
-		assertFalse(composed.apply(String.class).included());
-		assertTrue(composed.apply(StringJoiner.class).included());
+		assertFalse(composed.apply("java.lang.String").included());
+		assertFalse(composed.toPredicate().test("java.lang.String"));
+		assertTrue(composed.apply("java.util.StringJoiner").included());
+		assertTrue(composed.toPredicate().test("java.util.StringJoiner"));
 	}
 
 	@Test

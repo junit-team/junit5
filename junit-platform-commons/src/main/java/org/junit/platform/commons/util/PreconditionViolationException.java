@@ -24,10 +24,14 @@ import org.junit.platform.commons.meta.API;
 @API(Internal)
 public class PreconditionViolationException extends JUnitException {
 
-	private static final long serialVersionUID = 5652830566059484475L;
+	private static final long serialVersionUID = 1L;
 
 	public PreconditionViolationException(String message) {
 		super(message);
+	}
+
+	public PreconditionViolationException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }

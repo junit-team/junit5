@@ -21,6 +21,7 @@ import org.junit.platform.engine.TestSource;
  * A {@link TestSource} that can be represented as a {@link URI}.
  *
  * @since 1.0
+ * @see org.junit.platform.engine.discovery.UriSelector
  */
 @API(Experimental)
 public interface UriSource extends TestSource {

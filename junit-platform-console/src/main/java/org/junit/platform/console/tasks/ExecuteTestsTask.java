@@ -15,10 +15,12 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
@@ -66,14 +68,23 @@ public class ExecuteTestsTask implements ConsoleTask {
 	}
 
 	private Optional<ClassLoader> createCustomClassLoader() {
-		List<String> additionalClasspathEntries = options.getAdditionalClasspathEntries();
+		List<Path> additionalClasspathEntries = options.getAdditionalClasspathEntries();
 		if (!additionalClasspathEntries.isEmpty()) {
-			URL[] urls = new ClasspathEntriesParser().toURLs(additionalClasspathEntries);
+			URL[] urls = additionalClasspathEntries.stream().map(this::toURL).toArray(URL[]::new);
 			ClassLoader parentClassLoader = ReflectionUtils.getDefaultClassLoader();
 			ClassLoader customClassLoader = URLClassLoader.newInstance(urls, parentClassLoader);
 			return Optional.of(customClassLoader);
 		}
 		return Optional.empty();
+	}
+
+	private URL toURL(Path path) {
+		try {
+			return path.toUri().toURL();
+		}
+		catch (Exception ex) {
+			throw new JUnitException("Invalid classpath entry: " + path, ex);
+		}
 	}
 
 	private SummaryGeneratingListener registerListeners(PrintWriter out, Launcher launcher) {
@@ -83,9 +94,8 @@ public class ExecuteTestsTask implements ConsoleTask {
 			launcher.registerTestExecutionListeners(
 				new ColoredPrintingTestListener(out, options.isAnsiColorOutputDisabled()));
 		}
-		if (options.getXmlReportsDir().isPresent()) {
-			launcher.registerTestExecutionListeners(
-				new XmlReportsWritingListener(options.getXmlReportsDir().get(), out));
+		if (options.getReportsDir().isPresent()) {
+			launcher.registerTestExecutionListeners(new XmlReportsWritingListener(options.getReportsDir().get(), out));
 		}
 		return summaryListener;
 	}
