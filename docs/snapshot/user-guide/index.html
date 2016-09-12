@@ -1839,7 +1839,7 @@ similar to the following.</p>
 <div class="paragraph">
 <p>Invoking <code>gradlew clean junitPlatformTest</code> (or <code>gradlew clean test</code>) from the command
 line will execute all tests within the project whose class names match the regular
-expression supplied via <code>includeClassNamePattern</code>.</p>
+expression supplied via <code>includeClassNamePattern</code> (defaults to <code>^.*Tests?$</code>).</p>
 </div>
 <div class="paragraph">
 <p>Executing the <code>junitPlatformTest</code> task in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project results
@@ -2145,9 +2145,10 @@ Option                                    Description
                                             classpath roots.
 -n, --include-classname                   Provide a regular expression to include
                                             only classes whose fully qualified names
-                                            match. By default any class name is
-                                            accepted, and thus all classes with
-                                            tests are included.
+                                            match. To avoid loading classes
+                                            unnecessarily, the default pattern only
+                                            includes class names that end with
+                                            "Test" or "Tests". (default: ^.*Tests?$)
 -t, --include-tag                         Provide a tag to be included in the test
                                             run. This option can be repeated.
 -T, --exclude-tag                         Provide a tag to be excluded from the test
@@ -2274,7 +2275,8 @@ public class JUnit4SuiteDemo {
 </div>
 <div class="paragraph">
 <p>The <code>JUnit4SuiteDemo</code> will discover and run all tests in the <code>example</code> package
-and its subpackages.</p>
+and its subpackages. By default, it will only include test classes whose names match the
+pattern <code>^.*Tests?$</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3727,6 +3729,11 @@ a <em>fully qualified method name</em> for a method that accepts parameters&#820
 <p>The <code>TestExecutionSummary</code> used by the <code>ConsoleLauncher</code> and the JUnit Platform Gradle
 plugin now includes statistics for all container events in addition to test events.</p>
 </li>
+<li>
+<p>The <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code>, the Gradle plugin, and the <code><a href="../api/org/junit/platform/runner/JUnitPlatform.html">JUnitPlatform</a></code> runner now use
+<code>^.*Tests?$</code> as the default pattern for class names to be included
+in the test run.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -3798,7 +3805,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-09-10 10:39:58 -04:00
+Last updated 2016-09-12 16:01:19 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
