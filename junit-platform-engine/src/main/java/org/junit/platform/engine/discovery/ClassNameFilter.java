@@ -24,6 +24,8 @@ import org.junit.platform.engine.DiscoveryFilter;
 @API(Experimental)
 public interface ClassNameFilter extends DiscoveryFilter<String> {
 
+	String STANDARD_INCLUDE_PATTERN = "^.*Tests?$";
+
 	/**
 	 * Create a new <em>include</em> {@link ClassNameFilter} based on the supplied
 	 * pattern.

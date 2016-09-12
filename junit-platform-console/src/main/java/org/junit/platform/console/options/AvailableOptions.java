@@ -20,6 +20,8 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import joptsimple.util.PathConverter;
 
+import org.junit.platform.engine.discovery.ClassNameFilter;
+
 /**
  * @since 1.0
  */
@@ -88,8 +90,10 @@ class AvailableOptions {
 
 		includeClassNamePattern = parser.acceptsAll(asList("n", "include-classname"),
 			"Provide a regular expression to include only classes whose fully qualified names match. " //
-					+ "By default any class name is accepted, and thus all classes with tests are included.") //
-				.withRequiredArg();
+					+ "To avoid loading classes unnecessarily, the default pattern only includes class " //
+					+ "names that end with \"Test\" or \"Tests\".") //
+				.withRequiredArg() //
+				.defaultsTo(ClassNameFilter.STANDARD_INCLUDE_PATTERN);
 
 		includeTag = parser.acceptsAll(asList("t", "include-tag"),
 			"Provide a tag to be included in the test run. This option can be repeated.") //

@@ -81,8 +81,7 @@ class DiscoveryRequestCreator {
 	}
 
 	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
-		options.getIncludeClassNamePattern().ifPresent(
-			pattern -> requestBuilder.filters(includeClassNamePattern(pattern)));
+		requestBuilder.filters(includeClassNamePattern(options.getIncludeClassNamePattern()));
 
 		if (!options.getIncludedTags().isEmpty()) {
 			requestBuilder.filters(includeTags(options.getIncludedTags()));

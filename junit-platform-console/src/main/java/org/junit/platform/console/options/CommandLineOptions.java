@@ -34,7 +34,7 @@ public class CommandLineOptions {
 	private boolean scanClasspath;
 	private List<String> arguments = emptyList();
 
-	private String includeClassNamePattern;
+	private String includeClassNamePattern = "^.*Tests?$";
 	private List<String> includedEngines = emptyList();
 	private List<String> excludedEngines = emptyList();
 	private List<String> includedTags = emptyList();
@@ -76,8 +76,8 @@ public class CommandLineOptions {
 		this.hideDetails = hideDetails;
 	}
 
-	public Optional<String> getIncludeClassNamePattern() {
-		return Optional.ofNullable(this.includeClassNamePattern);
+	public String getIncludeClassNamePattern() {
+		return this.includeClassNamePattern;
 	}
 
 	public void setIncludeClassNamePattern(String includeClassNamePattern) {

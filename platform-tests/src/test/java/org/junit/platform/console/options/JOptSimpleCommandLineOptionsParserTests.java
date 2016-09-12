@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +52,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertFalse(options.isDisplayHelp()),
 			() -> assertFalse(options.isHideDetails()),
 			() -> assertFalse(options.isScanClasspath()),
-			() -> assertEquals(Optional.empty(), options.getIncludeClassNamePattern()),
+			() -> assertEquals(STANDARD_INCLUDE_PATTERN, options.getIncludeClassNamePattern()),
 			() -> assertEquals(emptyList(), options.getIncludedTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getReportsDir()),
@@ -76,16 +77,16 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseValidIncludeClassNamePatterns() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(Optional.of(".*Test"), parseArgLine("-n .*Test").getIncludeClassNamePattern()),
-			() -> assertEquals(Optional.of(".*Test"), parseArgLine("--include-classname .*Test").getIncludeClassNamePattern()),
-			() -> assertEquals(Optional.of(".*Test"), parseArgLine("--include-classname=.*Test").getIncludeClassNamePattern())
+			() -> assertEquals(".*Test", parseArgLine("-n .*Test").getIncludeClassNamePattern()),
+			() -> assertEquals(".*Test", parseArgLine("--include-classname .*Test").getIncludeClassNamePattern()),
+			() -> assertEquals(".*Test", parseArgLine("--include-classname=.*Test").getIncludeClassNamePattern())
 		);
 		// @formatter:on
 	}
 
 	@Test
-	public void defaultIsNoIncludeClassNamePattern() {
-		assertEquals(Optional.empty(), parseArgLine("").getIncludeClassNamePattern());
+	public void usesDefaultClassNamePatternWithoutExplicitArgument() {
+		assertEquals(STANDARD_INCLUDE_PATTERN, parseArgLine("").getIncludeClassNamePattern());
 	}
 
 	@Test

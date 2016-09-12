@@ -15,6 +15,7 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -120,15 +121,26 @@ public class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsIncludeClassNamePatternOption() {
+	public void convertsDefaultIncludeClassNamePatternOption() {
 		options.setScanClasspath(true);
-		options.setIncludeClassNamePattern(".*Test");
 
 		LauncherDiscoveryRequest request = convert();
 
 		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
 		assertThat(filter).hasSize(1);
-		assertThat(filter.get(0).toString()).contains(".*Test");
+		assertThat(filter.get(0).toString()).contains(STANDARD_INCLUDE_PATTERN);
+	}
+
+	@Test
+	public void convertsExplicitIncludeClassNamePatternOption() {
+		options.setScanClasspath(true);
+		options.setIncludeClassNamePattern("Foo.*Bar");
+
+		LauncherDiscoveryRequest request = convert();
+
+		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+		assertThat(filter).hasSize(1);
+		assertThat(filter.get(0).toString()).contains("Foo.*Bar");
 	}
 
 	@Test

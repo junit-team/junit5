@@ -395,9 +395,10 @@ Option                                    Description
                                             classpath roots.
 -n, --include-classname                   Provide a regular expression to include
                                             only classes whose fully qualified names
-                                            match. By default any class name is
-                                            accepted, and thus all classes with
-                                            tests are included.
+                                            match. To avoid loading classes
+                                            unnecessarily, the default pattern only
+                                            includes class names that end with
+                                            "Test" or "Tests". (default: ^.*Tests?$)
 -t, --include-tag                         Provide a tag to be included in the test
                                             run. This option can be repeated.
 -T, --exclude-tag                         Provide a tag to be excluded from the test
