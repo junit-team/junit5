@@ -21,6 +21,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :SummaryGeneratingListener:         {javadoc-root}/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html[SummaryGeneratingListener]
 :TestEngine:                        {javadoc-root}/org/junit/platform/engine/TestEngine.html[TestEngine]
 :TestExecutionListener:             {javadoc-root}/org/junit/platform/launcher/TestExecutionListener.html[TestExecutionListener]
+:standard-include-class-name-pattern: ^.*Tests?$
 
 :api-package:                       {javadoc-root}/org/junit/jupiter/api/package-summary.html[org.junit.jupiter.api]
 :extension-api-package:             {javadoc-root}/org/junit/jupiter/api/extension/package-summary.html[org.junit.jupiter.api.extension]

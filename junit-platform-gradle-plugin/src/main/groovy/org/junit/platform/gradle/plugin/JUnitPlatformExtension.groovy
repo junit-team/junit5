@@ -9,6 +9,8 @@
  */
 package org.junit.platform.gradle.plugin
 
+import org.junit.platform.engine.discovery.ClassNameFilter
+
 /**
  * Core configuration options for the JUnit Platform Gradle plugin.
  *
@@ -56,7 +58,9 @@ class JUnitPlatformExtension {
 	 * <p>If the fully qualified name of a class matches against the pattern, the
 	 * class will be included in the test plan; otherwise, the class will be
 	 * excluded.
+	 *
+	 * <p>Defaults to {@value ClassNameFilter#STANDARD_INCLUDE_PATTERN}.
 	 */
-	String includeClassNamePattern
+	String includeClassNamePattern = ClassNameFilter.STANDARD_INCLUDE_PATTERN
 
 }

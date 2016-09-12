@@ -135,7 +135,7 @@ Once the JUnit Gradle plugin has been applied and configured, you have a new
 
 Invoking `gradlew clean junitPlatformTest` (or `gradlew clean test`) from the command
 line will execute all tests within the project whose class names match the regular
-expression supplied via `includeClassNamePattern`.
+expression supplied via `includeClassNamePattern` (defaults to `{standard-include-class-name-pattern}`).
 
 Executing the `junitPlatformTest` task in the `{junit5-gradle-consumer}` project results
 in output similar to the following:

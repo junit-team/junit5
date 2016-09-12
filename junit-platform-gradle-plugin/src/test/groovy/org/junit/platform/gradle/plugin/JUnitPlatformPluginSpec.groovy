@@ -15,6 +15,7 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.platform.console.ConsoleLauncher
+import org.junit.platform.engine.discovery.ClassNameFilter
 import spock.lang.Specification
 
 /**
@@ -114,6 +115,19 @@ class JUnitPlatformPluginSpec extends Specification {
 		Task testTask = project.tasks.findByName('test')
 		testTask instanceof Test
 		testTask.enabled == false
+	}
+
+	def "uses standard class name pattern"() {
+
+		project.apply plugin: 'java'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		project.evaluate()
+
+		then:
+		Task junitTask = project.tasks.findByName('junitPlatformTest')
+		junitTask.args.containsAll('-n', ClassNameFilter.STANDARD_INCLUDE_PATTERN)
 	}
 
 	def "enableStandardTestTask set to true"() {
