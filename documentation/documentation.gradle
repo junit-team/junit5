@@ -1,5 +1,15 @@
+plugins {
+	id 'org.asciidoctor.convert' version '1.5.3'
+	// for asciidoctor-diagram support
+	id 'com.github.jruby-gradle.base' version '1.2.1'
+}
+
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'org.junit.platform.gradle.plugin'
+
+dependencies {
+	gems 'rubygems:asciidoctor-diagram:1.4.0'
+}
 
 junitPlatform {
 	includeClassNamePattern '.+(Tests|Demo)$'
@@ -31,9 +41,20 @@ dependencies {
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }
 
+asciidoctorj {
+    version = '1.5.4'
+}
+
 asciidoctor {
+
+	// for asciidoctor-diagram support
+	dependsOn jrubyPrepare
+    requires = ['asciidoctor-diagram']
+    gemPath = jrubyPrepare.outputDir
+
 	separateOutputDirs = false
 	sources { include 'index.adoc' }
+
 	attributes	'jupiter-version': project.property('version'),
 				'platform-version': project.property('platformVersion'),
 				'vintage-version': project.property('vintageVersion'),
