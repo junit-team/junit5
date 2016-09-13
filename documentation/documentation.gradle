@@ -42,15 +42,15 @@ dependencies {
 }
 
 asciidoctorj {
-    version = '1.5.4'
+	version = '1.5.4.1'
 }
 
 asciidoctor {
 
 	// for asciidoctor-diagram support
 	dependsOn jrubyPrepare
-    requires = ['asciidoctor-diagram']
-    gemPath = jrubyPrepare.outputDir
+	requires = ['asciidoctor-diagram']
+	gemPath = jrubyPrepare.outputDir
 
 	separateOutputDirs = false
 	sources { include 'index.adoc' }

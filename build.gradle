@@ -67,7 +67,7 @@ ext {
 	]
 }
 
-allprojects {
+allprojects { subproj ->
 
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
@@ -166,7 +166,7 @@ allprojects {
 		}
 	}
 
-	if (project.hasProperty('enableClover')) {
+	if (project.hasProperty('enableClover') && subproj.name != "documentation") {
 
 		configurations {
 			clover
