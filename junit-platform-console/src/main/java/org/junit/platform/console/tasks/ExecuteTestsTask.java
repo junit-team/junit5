@@ -24,6 +24,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
+import org.junit.platform.console.options.Details;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherFactory;
@@ -90,18 +91,26 @@ public class ExecuteTestsTask implements ConsoleTask {
 	private SummaryGeneratingListener registerListeners(PrintWriter out, Launcher launcher) {
 		SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
 		launcher.registerTestExecutionListeners(summaryListener);
-		if (!options.isHideDetails()) {
-			launcher.registerTestExecutionListeners(
-				new ColoredPrintingTestListener(out, options.isAnsiColorOutputDisabled()));
+		switch (options.getDetails()) {
+			case FLAT:
+				launcher.registerTestExecutionListeners(
+					new ColoredPrintingTestListener(out, options.isAnsiColorOutputDisabled()));
+				break;
+			case TREE:
+				launcher.registerTestExecutionListeners(new TreePrinter(out, options.isAnsiColorOutputDisabled()));
+				break;
+			case VERBOSE:
+				launcher.registerTestExecutionListeners(
+					new VerboseTreePrinter(out, options.isAnsiColorOutputDisabled()));
+				break;
 		}
-		if (options.getReportsDir().isPresent()) {
-			launcher.registerTestExecutionListeners(new XmlReportsWritingListener(options.getReportsDir().get(), out));
-		}
+		options.getReportsDir().ifPresent(
+			dir -> launcher.registerTestExecutionListeners(new XmlReportsWritingListener(dir, out)));
 		return summaryListener;
 	}
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
-		if (options.isHideDetails()) { // Otherwise the failures have already been printed
+		if (options.getDetails() == Details.HIDDEN) { // Otherwise the failures have already been printed
 			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);

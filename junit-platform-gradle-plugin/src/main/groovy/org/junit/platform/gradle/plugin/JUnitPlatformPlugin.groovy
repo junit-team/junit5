@@ -97,7 +97,12 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 	private ArrayList<String> buildArgs(project, junitExtension, reportsDir) {
 
-		def args = ['--hide-details', '--scan-class-path']
+		def args = ['--scan-class-path']
+
+		if (junitExtension.details) {
+			args.add('--details')
+			args.add(junitExtension.details.name())
+		}
 
 		if (junitExtension.includeClassNamePattern) {
 			args.add('-n')

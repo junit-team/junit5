@@ -9,6 +9,7 @@
  */
 package org.junit.platform.gradle.plugin
 
+import org.junit.platform.console.options.Details
 import org.junit.platform.engine.discovery.ClassNameFilter
 
 /**
@@ -63,4 +64,10 @@ class JUnitPlatformExtension {
 	 */
 	String includeClassNamePattern = ClassNameFilter.STANDARD_INCLUDE_PATTERN
 
+	/**
+	 * Select test execution plan detail mode.
+	 *
+	 * <p>Defaults to {@link Details#HIDDEN}.
+	 */
+	Details details = Details.HIDDEN
 }
