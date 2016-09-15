@@ -57,7 +57,7 @@ class DisabledCondition implements ContainerExecutionCondition, TestExecutionCon
 		Optional<Disabled> disabled = findAnnotation(element, Disabled.class);
 		if (disabled.isPresent()) {
 			String reason = disabled.map(Disabled::value).filter(StringUtils::isNotBlank).orElseGet(
-				() -> element + " is @Disabled");
+				() -> element.get() + " is @Disabled");
 			return ConditionEvaluationResult.disabled(reason);
 		}
 
