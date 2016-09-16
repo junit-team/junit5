@@ -90,7 +90,7 @@ public class ExecuteTestsTask implements ConsoleTask {
 	private SummaryGeneratingListener registerListeners(PrintWriter out, Launcher launcher) {
 		SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
 		launcher.registerTestExecutionListeners(summaryListener);
-		if (!options.isHideDetails()) {
+		if (true || !options.isHideDetails()) {
 			launcher.registerTestExecutionListeners(
 				new ColoredPrintingTestListener(out, options.isAnsiColorOutputDisabled()));
 		}
