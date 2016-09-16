@@ -41,9 +41,11 @@ public class DiscoverySelectorsTests {
 
 	private static final Method fullyQualifiedMethod = fullyQualifiedMethod();
 	private static final Method fullyQualifiedMethodWithParameters = fullyQualifiedMethodWithParameters();
+	private static final Method fullyQualifiedDefaultMethod = fullyQualifiedDefaultMethod();
 
 	private static final String fullyQualifiedMethodName = fullyQualifiedMethodName();
 	private static final String fullyQualifiedMethodNameWithParameters = fullyQualifiedMethodNameWithParameters();
+	private static final String fullyQualifiedDefaultMethodName = fullyQualifiedDefaultMethodName();
 
 	@Test
 	void selectUriByName() throws Exception {
@@ -180,6 +182,16 @@ public class DiscoverySelectorsTests {
 	}
 
 	@Test
+	void selectMethodByFullyQualifiedNameForDefaultMethodInInterface() {
+
+		// NOTE: although this test currently passes, it may need to be
+		// revised once GitHub issue #516 is addressed.
+
+		JavaMethodSelector selector = selectJavaMethod(fullyQualifiedDefaultMethodName);
+		assertEquals(fullyQualifiedDefaultMethod, selector.getJavaMethod());
+	}
+
+	@Test
 	void selectMethodWithParametersByMethodReference() throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest", String.class);
 		JavaMethodSelector selector = selectJavaMethod(getClass(), method);
@@ -218,6 +230,10 @@ public class DiscoverySelectorsTests {
 			String.class.getName());
 	}
 
+	private static String fullyQualifiedDefaultMethodName() {
+		return String.format("%s#%s()", TestCaseWithDefaultMethod.class.getName(), fullyQualifiedMethod().getName());
+	}
+
 	private static Method fullyQualifiedMethod() {
 		try {
 			return DiscoverySelectorsTests.class.getDeclaredMethod("myTest");
@@ -234,6 +250,25 @@ public class DiscoverySelectorsTests {
 		catch (Exception ex) {
 			throw new IllegalStateException(ex);
 		}
+	}
+
+	private static Method fullyQualifiedDefaultMethod() {
+		try {
+			return TestInterface.class.getDeclaredMethod("myTest");
+		}
+		catch (Exception ex) {
+			throw new IllegalStateException(ex);
+		}
+	}
+
+	interface TestInterface {
+
+		@Test
+		default void myTest() {
+		}
+	}
+
+	static class TestCaseWithDefaultMethod implements TestInterface {
 	}
 
 	void myTest() {
