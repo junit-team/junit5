@@ -441,8 +441,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#installation">2. Installation</a>
 <ul class="sectlevel2">
-<li><a href="#dependency-metadata">2.1. Dependency Metadata</a></li>
-<li><a href="#dependency-metadata-junit-jupiter-samples">2.2. JUnit Jupiter Sample Projects</a></li>
+<li><a href="#overview-artifacts">2.1. Artifacts</a></li>
+<li><a href="#dependency-metadata">2.2. Dependency Metadata</a></li>
+<li><a href="#dependency-metadata-junit-jupiter-samples">2.3. JUnit Jupiter Sample Projects</a></li>
+<li><a href="#dependency-diagram">2.4. Dependency Diagram</a></li>
 </ul>
 </li>
 <li><a href="#writing-tests">3. Writing Tests</a>
@@ -567,14 +569,81 @@ compiled with previous versions of the JDK.</p>
 <a href="https://oss.sonatype.org/content/repositories/snapshots/org/junit/">/org/junit</a>.</p>
 </div>
 <div class="sect2">
-<h3 id="dependency-metadata">2.1. Dependency Metadata</h3>
-<div class="imageblock">
-<div class="content">
-<img src="images/component-diagram.svg" alt="component diagram" width="1030" height="503">
+<h3 id="overview-artifacts">2.1. Artifacts</h3>
+<div class="sect3">
+<h4 id="overview-artifacts-junit-platform">2.1.1. JUnit Platform</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>junit-platform-commons</code></dt>
+<dd>
+<p>Internal common library/utilities of JUnit. These utilities are intended solely for usage within
+the JUnit framework itself. <em>Any usage by external parties is not supported.</em> Use at your own
+risk!</p>
+</dd>
+<dt class="hdlist1"><code>junit-platform-console</code></dt>
+<dd>
+<p>Support for discovering and executing tests on the JUnit Platform from the console. See
+<a href="#running-tests-console-launcher">Console Launcher</a> for details.</p>
+</dd>
+<dt class="hdlist1"><code>junit-platform-engine</code></dt>
+<dd>
+<p>Public API for test engines. See <a href="#launcher-api-engines-custom">Plugging in Your Own Test Engine</a> for details.</p>
+</dd>
+<dt class="hdlist1"><code>junit-platform-gradle-plugin</code></dt>
+<dd>
+<p>Support for discovering and executing tests on the JUnit Platform using
+<a href="#running-tests-build-gradle">Gradle</a>.</p>
+</dd>
+<dt class="hdlist1"><code>junit-platform-launcher</code></dt>
+<dd>
+<p>Public API for configuring and launching test plans&#8201;&#8212;&#8201;typically used by IDEs and build tools.
+See <a href="#launcher-api">JUnit Platform Launcher API</a> for details.</p>
+</dd>
+<dt class="hdlist1"><code>junit-platform-runner</code></dt>
+<dd>
+<p>Runner and annotations for configuring and executing tests on the JUnit Platform in a JUnit 4
+environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to Run the JUnit Platform</a> for details.</p>
+</dd>
+<dt class="hdlist1"><code>junit-platform-surefire-provider</code></dt>
+<dd>
+<p>Support for discovering and executing tests on the JUnit Platform using
+<a href="#running-tests-build-maven">Maven Surefire</a>.</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect3">
-<h4 id="dependency-metadata-junit-platform">2.1.1. JUnit Platform</h4>
+<h4 id="overview-artifacts-junit-jupiter">2.1.2. JUnit Jupiter</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>junit-jupiter-api</code></dt>
+<dd>
+<p>JUnit Jupiter API for <a href="#writing-tests">writing tests</a> and <a href="#extensions">extensions</a>.</p>
+</dd>
+<dt class="hdlist1"><code>junit-jupiter-engine</code></dt>
+<dd>
+<p>JUnit Jupiter test engine implementation, only required at runtime.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="overview-artifacts-junit-vintage">2.1.3. JUnit Vintage</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>junit-vintage-engine</code></dt>
+<dd>
+<p>JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e. tests
+written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="dependency-metadata">2.2. Dependency Metadata</h3>
+<div class="sect3">
+<h4 id="dependency-metadata-junit-platform">2.2.1. JUnit Platform</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -615,7 +684,7 @@ compiled with previous versions of the JDK.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="dependency-metadata-junit-jupiter">2.1.2. JUnit Jupiter</h4>
+<h4 id="dependency-metadata-junit-jupiter">2.2.2. JUnit Jupiter</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -641,7 +710,7 @@ compiled with previous versions of the JDK.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="dependency-metadata-junit-vintage">2.1.3. JUnit Vintage</h4>
+<h4 id="dependency-metadata-junit-vintage">2.2.3. JUnit Vintage</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -658,7 +727,7 @@ compiled with previous versions of the JDK.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="dependency-metadata-junit-jupiter-samples">2.2. JUnit Jupiter Sample Projects</h3>
+<h3 id="dependency-metadata-junit-jupiter-samples">2.3. JUnit Jupiter Sample Projects</h3>
 <div class="paragraph">
 <p>The <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository hosts a collection of sample
 projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respective
@@ -673,6 +742,14 @@ projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respect
 <p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project.</p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="dependency-diagram">2.4. Dependency Diagram</h3>
+<div class="imageblock">
+<div class="content">
+<img src="images/component-diagram.svg" alt="component diagram" width="1030" height="503">
+</div>
 </div>
 </div>
 </div>
@@ -3810,7 +3887,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-09-16 06:32:35 EDT
+Last updated 2016-09-18 11:46:17 EDT
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
