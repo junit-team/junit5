@@ -43,8 +43,94 @@ Artifacts for final releases and milestones are deployed to Maven Central.
 Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
 {snapshot-repo}/org/junit/[/org/junit].
 
+[[overview-artifacts]]
+=== Artifacts
+
+[[overview-artifacts-junit-platform]]
+==== JUnit Platform
+
+`junit-platform-commons`::
+  Internal common library/utilities of JUnit. These utilities are intended solely for usage within
+  the JUnit framework itself. _Any usage by external parties is not supported._ Use at your own
+  risk!
+`junit-platform-console`::
+  Support for discovering and executing tests on the JUnit Platform from the console. See
+  <<running-tests-console-launcher>> for details.
+`junit-platform-engine`::
+  Public API for test engines. See <<launcher-api-engines-custom>> for details.
+`junit-platform-gradle-plugin`::
+  Support for discovering and executing tests on the JUnit Platform using
+  <<running-tests-build-gradle,Gradle>>.
+`junit-platform-launcher`::
+  Public API for configuring and launching test plans -- typically used by IDEs and build tools.
+  See <<launcher-api>> for details.
+`junit-platform-runner`::
+  Runner and annotations for configuring and executing tests on the JUnit Platform in a JUnit 4
+  environment. See <<running-tests-junit-platform-runner>> for details.
+`junit-platform-surefire-provider`::
+  Support for discovering and executing tests on the JUnit Platform using
+  <<running-tests-build-maven,Maven Surefire>>.
+
+[[overview-artifacts-junit-jupiter]]
+==== JUnit Jupiter
+
+`junit-jupiter-api`::
+  JUnit Jupiter API for <<writing-tests,writing tests>> and <<extensions,extensions>>.
+`junit-jupiter-engine`::
+  JUnit Jupiter test engine implementation, only required at runtime.
+
+[[overview-artifacts-junit-vintage]]
+==== JUnit Vintage
+
+`junit-vintage-engine`::
+  JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e. tests
+  written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.
+
 [[dependency-metadata]]
 === Dependency Metadata
+
+[[dependency-metadata-junit-platform]]
+==== JUnit Platform
+
+* *Group ID*: `org.junit.platform`
+* *Version*: `{platform-version}`
+* *Artifact IDs*:
+** `junit-platform-commons`
+** `junit-platform-console`
+** `junit-platform-engine`
+** `junit-platform-gradle-plugin`
+** `junit-platform-launcher`
+** `junit-platform-runner`
+** `junit-platform-surefire-provider`
+
+[[dependency-metadata-junit-jupiter]]
+==== JUnit Jupiter
+
+* *Group ID*: `org.junit.jupiter`
+* *Version*: `{jupiter-version}`
+* *Artifact IDs*:
+** `junit-jupiter-api`
+** `junit-jupiter-engine`
+
+[[dependency-metadata-junit-vintage]]
+==== JUnit Vintage
+
+* *Group ID*: `org.junit.vintage`
+* *Version*: `{vintage-version}`
+* *Artifact ID*: `junit-vintage-engine`
+
+[[dependency-metadata-junit-jupiter-samples]]
+=== JUnit Jupiter Sample Projects
+
+The {junit5-samples-repo}[`junit5-samples`] repository hosts a collection of sample
+projects based on JUnit Jupiter and JUnit Vintage. You'll find the respective
+`build.gradle` and `pom.xml` in the projects below.
+
+* For Gradle, check out the `{junit5-gradle-consumer}` project.
+* For Maven, check out the `{junit5-maven-consumer}` project.
+
+[[dependency-diagram]]
+=== Dependency Diagram
 
 [plantuml, component-diagram, svg]
 ----
@@ -99,43 +185,3 @@ surefire ..> launcher
 vintage ..> engine
 vintage ..> junit4
 ----
-
-[[dependency-metadata-junit-platform]]
-==== JUnit Platform
-
-* *Group ID*: `org.junit.platform`
-* *Version*: `{platform-version}`
-* *Artifact IDs*:
-** `junit-platform-commons`
-** `junit-platform-console`
-** `junit-platform-engine`
-** `junit-platform-gradle-plugin`
-** `junit-platform-launcher`
-** `junit-platform-runner`
-** `junit-platform-surefire-provider`
-
-[[dependency-metadata-junit-jupiter]]
-==== JUnit Jupiter
-
-* *Group ID*: `org.junit.jupiter`
-* *Version*: `{jupiter-version}`
-* *Artifact IDs*:
-** `junit-jupiter-api`
-** `junit-jupiter-engine`
-
-[[dependency-metadata-junit-vintage]]
-==== JUnit Vintage
-
-* *Group ID*: `org.junit.vintage`
-* *Version*: `{vintage-version}`
-* *Artifact ID*: `junit-vintage-engine`
-
-[[dependency-metadata-junit-jupiter-samples]]
-=== JUnit Jupiter Sample Projects
-
-The {junit5-samples-repo}[`junit5-samples`] repository hosts a collection of sample
-projects based on JUnit Jupiter and JUnit Vintage. You'll find the respective
-`build.gradle` and `pom.xml` in the projects below.
-
-* For Gradle, check out the `{junit5-gradle-consumer}` project.
-* For Maven, check out the `{junit5-maven-consumer}` project.
