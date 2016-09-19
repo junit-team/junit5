@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
@@ -88,6 +90,37 @@ public class ExtensionRegistry {
 	}
 
 	/**
+	 * Stream all {@code Extensions} in this registry or one of its ancestors of
+	 * the specified type.
+	 *
+	 * @param extensionType the type of {@link Extension} to get
+	 * @see #getReversedExtensions(Class)
+	 * @see #getExtensions(Class)
+	 */
+	public <E extends Extension> Stream<E> stream(Class<E> extensionType) {
+		if (this.parent == null) {
+			return streamLocal(extensionType);
+		}
+		else {
+			return concat(this.parent.stream(extensionType), streamLocal(extensionType));
+		}
+	}
+
+	/**
+	 * Stream all {@code Extensions} in this registry (ancestor are ignored!).
+	 *
+	 * @param extensionType the type of {@link Extension} to get
+	 * @see #getReversedExtensions(Class)
+	 */
+	private <E extends Extension> Stream<E> streamLocal(Class<E> extensionType) {
+		// @formatter:off
+		return registeredExtensions.stream()
+				.filter(extensionType::isInstance)
+				.map(extensionType::cast);
+		// @formatter:on
+	}
+
+	/**
 	 * Get all {@code Extensions} in this registry or one of its ancestors of
 	 * the specified type.
 	 *
@@ -96,20 +129,7 @@ public class ExtensionRegistry {
 	 * @see #stream(Class)
 	 */
 	public <E extends Extension> List<E> getExtensions(Class<E> extensionType) {
-		List<E> extensions = new ArrayList<>();
-
-		if (this.parent != null) {
-			extensions.addAll(this.parent.getExtensions(extensionType));
-		}
-
-		// @formatter:off
-		this.registeredExtensions.stream()
-				.filter(extension -> extensionType.isAssignableFrom(extension.getClass()))
-				.map(extensionType::cast)
-				.forEach(extensions::add);
-		// @formatter:on
-
-		return extensions;
+		return stream(extensionType).collect(toList());
 	}
 
 	/**
@@ -124,18 +144,6 @@ public class ExtensionRegistry {
 		List<E> extensions = getExtensions(extensionType);
 		Collections.reverse(extensions);
 		return extensions;
-	}
-
-	/**
-	 * Generate a stream for iterating over all registered extensions of the
-	 * specified type.
-	 *
-	 * @param extensionType the type of {@link Extension} to stream
-	 * @see #getExtensions(Class)
-	 * @see #getReversedExtensions(Class)
-	 */
-	public <E extends Extension> Stream<E> stream(Class<E> extensionType) {
-		return getExtensions(extensionType).stream();
 	}
 
 	/**
