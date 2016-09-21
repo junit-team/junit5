@@ -574,7 +574,7 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = 'Generates gradlew and gradlew.bat scripts'
-		gradleVersion = '3.0'
+		gradleVersion = '3.1'
 	}
 
 }
