@@ -75,7 +75,7 @@ class TestingAStackDemo {
 
 			@Test
 			@DisplayName("it is no longer empty")
-			void isEmpty() {
+			void isNotEmpty() {
 				assertFalse(stack.isEmpty());
 			}
 
