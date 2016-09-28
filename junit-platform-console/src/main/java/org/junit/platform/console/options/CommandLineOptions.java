@@ -31,9 +31,11 @@ import org.junit.platform.commons.meta.API;
 @API(Internal)
 public class CommandLineOptions {
 
+	static final Details DEFAULT_DETAILS = Details.TREE;
+
 	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
-	private boolean hideDetails;
+	private Details details = DEFAULT_DETAILS;
 
 	private boolean scanClasspath;
 	private List<Path> selectedClasspathEntries = emptyList();
@@ -82,12 +84,12 @@ public class CommandLineOptions {
 		this.scanClasspath = scanClasspath;
 	}
 
-	public boolean isHideDetails() {
-		return this.hideDetails;
+	public Details getDetails() {
+		return details;
 	}
 
-	public void setHideDetails(boolean hideDetails) {
-		this.hideDetails = hideDetails;
+	public void setDetails(Details details) {
+		this.details = details;
 	}
 
 	public List<URI> getSelectedUris() {

@@ -35,7 +35,7 @@ class AvailableOptions {
 	// General Purpose
 	private final OptionSpec<Void> help;
 	private final OptionSpec<Void> disableAnsiColors;
-	private final OptionSpec<Void> hideDetails;
+	private final OptionSpec<Details> details;
 	private final OptionSpec<Path> additionalClasspathEntries;
 
 	// Reports
@@ -70,8 +70,17 @@ class AvailableOptions {
 		disableAnsiColors = parser.accepts("disable-ansi-colors",
 			"Disable ANSI colors in output (not supported by all terminals).");
 
-		hideDetails = parser.accepts("hide-details",
-			"Hide details while tests are being executed. Only show the summary and test failures.");
+		// TODO Remove "hide-details" before final release. Only here to make "legacy" Gradle plugin happy.
+		// If removed, an old Gradle:junitPlatformTest will report:
+		//   Exception in thread "main" joptsimple.UnrecognizedOptionException: hide-details is not a recognized option
+		parser.accepts("hide-details", "@Deprecated. Use '--details hidden' instead.");
+
+		details = parser.accepts("details",
+			"Select output details mode while tests are executed. Use one of: " + asList(Details.values())
+					+ ". If hidden, only the summary and test failures are shown.") //
+				.withRequiredArg() //
+				.ofType(Details.class) //
+				.defaultsTo(CommandLineOptions.DEFAULT_DETAILS);
 
 		additionalClasspathEntries = parser.acceptsAll(asList(CP_OPTION, "classpath", "class-path"), //
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies. "
@@ -173,7 +182,7 @@ class AvailableOptions {
 		// General Purpose
 		result.setDisplayHelp(detectedOptions.has(this.help));
 		result.setAnsiColorOutputDisabled(detectedOptions.has(this.disableAnsiColors));
-		result.setHideDetails(detectedOptions.has(this.hideDetails));
+		result.setDetails(detectedOptions.valueOf(this.details));
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
 
 		// Reports

@@ -15,6 +15,7 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.platform.console.ConsoleLauncher
+import org.junit.platform.console.options.Details
 import org.junit.platform.engine.discovery.ClassNameFilter
 import spock.lang.Specification
 
@@ -63,6 +64,8 @@ class JUnitPlatformPluginSpec extends Specification {
 			}
 
 			reportsDir new File("any")
+
+			details Details.HIDDEN
 		}
 		then:
 		true == true
@@ -96,6 +99,8 @@ class JUnitPlatformPluginSpec extends Specification {
 			}
 
 			reportsDir new File("/any")
+
+			details Details.FLAT
 		}
 		project.evaluate()
 
@@ -104,7 +109,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask instanceof JavaExec
 		junitTask.main == ConsoleLauncher.class.getName()
 
-		junitTask.args.contains('--hide-details')
+		junitTask.args.containsAll('--details', 'FLAT')
 		junitTask.args.containsAll('-n', '.*Tests?', '-n', 'Foo', '-n', 'Bar')
 		junitTask.args.containsAll('--include-package', 'testpackage.included.p1', '--include-package', 'testpackage.included.p2')
 		junitTask.args.containsAll('--exclude-package', 'testpackage.excluded.p1', '--exclude-package', 'testpackage.excluded.p2')
