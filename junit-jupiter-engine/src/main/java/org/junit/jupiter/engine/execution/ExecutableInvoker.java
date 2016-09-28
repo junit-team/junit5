@@ -185,7 +185,7 @@ public class ExecutableInvoker {
 					.collect(toList());
 			// @formatter:on
 
-			if (matchingResolvers.size() == 0) {
+			if (matchingResolvers.isEmpty()) {
 				throw new ParameterResolutionException(
 					String.format("No ParameterResolver registered for parameter [%s] in executable [%s].",
 						parameterContext.getParameter(), executable.toGenericString()));
