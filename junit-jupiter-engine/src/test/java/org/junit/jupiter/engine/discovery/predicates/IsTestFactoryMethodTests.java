@@ -10,40 +10,62 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.function.Predicate;
-
-import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
+
+import java.lang.reflect.Method;
+import java.util.function.Predicate;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IsTestFactoryMethodTests {
 
 	private final Predicate<Method> isTestMethod = new IsTestFactoryMethod();
 
-	@Test
-	void publicTestMethodsEvaluatesToTrue() throws NoSuchMethodException {
-		Method publicTestMethod = this.findMethod("factory");
-		assertTrue(isTestMethod.test(publicTestMethod));
+	@Nested
+	class IdentifiesPotentialTestMethods extends IsPotentialTestMethodTestSkeleton {
+
+		IdentifiesPotentialTestMethods() {
+			super(isTestMethod);
+		}
+
 	}
 
-	private Method findMethod(String name) {
-		return ReflectionUtils.findMethod(AnotherClassWithTestFactory.class, name).get();
+	@Nested
+	class IdentifiesAnnotatedMethods {
+
+		@Test
+		void testFactoryMethodEvaluatesToTrue() throws NoSuchMethodException {
+			Method testMethod = IsTestFactoryMethodTests.this.findMethod("testFactoryMethod");
+			assertTrue(isTestMethod.test(testMethod));
+		}
+
+		@Test
+		void nonTestFactoryMethodEvaluatesToFalse() throws NoSuchMethodException {
+			Method nonTestMethod = IsTestFactoryMethodTests.this.findMethod("nonTestFactoryMethod");
+			assertFalse(isTestMethod.test(nonTestMethod));
+		}
+
+	}
+
+	private Method findMethod(String name, Class<?>... aClass) {
+		return ReflectionUtils.findMethod(ClassWithTestFactoryAndNonTestFactoryMethod.class, name, aClass).get();
 	}
 
 }
 
 //class name must not end with 'Tests', otherwise it would be picked up by the suite
-class AnotherClassWithTestFactory {
+class ClassWithTestFactoryAndNonTestFactoryMethod {
 
 	@TestFactory
-	Collection<DynamicTest> factory() {
-		return new ArrayList<>();
+	void testFactoryMethod() {
+	}
+
+	void nonTestFactoryMethod() {
 	}
 
 }
+

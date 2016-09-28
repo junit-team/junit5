@@ -30,16 +30,11 @@ import org.junit.platform.commons.meta.API;
 @API(Internal)
 public class IsTestMethod implements Predicate<Method> {
 
+	private static final IsPotentialTestMethod isPotentialTestMethod = new IsPotentialTestMethod();
+
 	@Override
 	public boolean test(Method candidate) {
-		//please do not collapse into single return
-		if (isStatic(candidate))
-			return false;
-		if (isPrivate(candidate))
-			return false;
-		if (isAbstract(candidate))
-			return false;
-		return isAnnotated(candidate, Test.class);
+		return isPotentialTestMethod.test(candidate) && isAnnotated(candidate, Test.class);
 	}
 
 }

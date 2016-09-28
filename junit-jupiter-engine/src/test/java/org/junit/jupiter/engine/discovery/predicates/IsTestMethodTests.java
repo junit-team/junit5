@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -27,90 +27,47 @@ public class IsTestMethodTests {
 
 	private final Predicate<Method> isTestMethod = new IsTestMethod();
 
-	@Test
-	void publicTestMethodsEvaluatesToTrue() throws NoSuchMethodException {
-		Method publicTestMethod = this.findMethod("publicTestMethod");
-		assertTrue(isTestMethod.test(publicTestMethod));
+	@Nested
+	class IdentifiesPotentialTestMethods extends IsPotentialTestMethodTestSkeleton {
+
+		IdentifiesPotentialTestMethods() {
+			super(isTestMethod);
+		}
+
 	}
 
-	@Test
-	void publicTestMethodsWithArgumentEvaluatesToTrue() throws NoSuchMethodException {
-		Method publicTestMethodWithArgument = findMethod("publicTestMethodWithArgument", TestInfo.class);
-		assertTrue(isTestMethod.test(publicTestMethodWithArgument));
-	}
+	@Nested
+	class IdentifiesAnnotatedMethods {
 
-	@Test
-	void protectedTestMethodsEvaluatesToTrue() throws NoSuchMethodException {
-		Method protectedTestMethod = this.findMethod("protectedTestMethod");
-		assertTrue(isTestMethod.test(protectedTestMethod));
-	}
+		@Test
+		void testMethodEvaluatesToTrue() throws NoSuchMethodException {
+			Method testMethod = IsTestMethodTests.this.findMethod("testMethod");
+			assertTrue(isTestMethod.test(testMethod));
+		}
 
-	@Test
-	void packageVisibleTestMethodTestMethodsEvaluatesToTrue() throws NoSuchMethodException {
-		Method packageVisibleTestMethod = this.findMethod("packageVisibleTestMethod");
-		assertTrue(isTestMethod.test(packageVisibleTestMethod));
-	}
+		@Test
+		void nonTestMethodEvaluatesToFalse() throws NoSuchMethodException {
+			Method nonTestMethod = IsTestMethodTests.this.findMethod("nonTestMethod");
+			assertFalse(isTestMethod.test(nonTestMethod));
+		}
 
-	@Test
-	void privateTestMethodEvaluatesToFalse() throws NoSuchMethodException {
-		Method privateTestMethod = this.findMethod("privateTestMethod");
-		assertFalse(isTestMethod.test(privateTestMethod));
-	}
-
-	@Test
-	void staticTestMethodEvaluatesToFalse() throws NoSuchMethodException {
-		Method staticTestMethod = this.findMethod("staticTestMethod");
-		assertFalse(isTestMethod.test(staticTestMethod));
-	}
-
-	@Test
-	void abstractTestMethodEvaluatesToFalse() throws NoSuchMethodException {
-		Method abstractTestMethod = this.findMethodOfAbstractClass("abstractTestMethod");
-		assertFalse(isTestMethod.test(abstractTestMethod));
 	}
 
 	private Method findMethod(String name, Class<?>... aClass) {
-		return ReflectionUtils.findMethod(ClassWithTestMethods.class, name, aClass).get();
-	}
-
-	private Method findMethodOfAbstractClass(String name) {
-		return ReflectionUtils.findMethod(AbstractClassWithTestMethod.class, name).get();
+		return ReflectionUtils.findMethod(ClassWithTestAndNonTestMethod.class, name, aClass).get();
 	}
 
 }
 
 //class name must not end with 'Tests', otherwise it would be picked up by the suite
-class ClassWithTestMethods {
+class ClassWithTestAndNonTestMethod {
 
 	@Test
-	public void publicTestMethod() {
+	void testMethod() {
 	}
 
-	@Test
-	public void publicTestMethodWithArgument(TestInfo info) {
-	}
-
-	@Test
-	protected void protectedTestMethod() {
-	}
-
-	@Test
-	void packageVisibleTestMethod() {
-	}
-
-	@Test
-	private void privateTestMethod() {
-	}
-
-	@Test
-	static void staticTestMethod() {
+	void nonTestMethod() {
 	}
 
 }
 
-abstract class AbstractClassWithTestMethod {
-
-	@Test
-	abstract void abstractTestMethod();
-
-}

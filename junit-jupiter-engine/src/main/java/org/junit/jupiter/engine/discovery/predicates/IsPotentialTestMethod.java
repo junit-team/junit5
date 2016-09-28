@@ -10,28 +10,35 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.commons.meta.API;
 
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
+import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 /**
- * Test if a method is a JUnit Jupiter test factory method.
+ * Test if a method is a potential JUnit Jupiter test method
+ * even if it does not have a {@code @Test} annotation.
  *
  * @since 5.0
  */
 @API(Internal)
-public class IsTestFactoryMethod implements Predicate<Method> {
-
-	private static final IsPotentialTestMethod isPotentialTestMethod = new IsPotentialTestMethod();
+class IsPotentialTestMethod implements Predicate<Method> {
 
 	@Override
 	public boolean test(Method candidate) {
-		return isPotentialTestMethod.test(candidate) && isAnnotated(candidate, TestFactory.class);
+		//please do not collapse into single return
+		if (isStatic(candidate))
+			return false;
+		if (isPrivate(candidate))
+			return false;
+		if (isAbstract(candidate))
+			return false;
+		return true;
 	}
 
 }
