@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
@@ -125,6 +126,17 @@ public interface ExtensionContext {
 	 * {@code null} or blank
 	 */
 	void publishReportEntry(Map<String, String> map);
+
+	/**
+	 * Publish the specified key-value pair to be consumed by an
+	 * {@code org.junit.platform.engine.EngineExecutionListener}.
+	 *
+	 * @param key the key of the published pair; never {@code null} or blank
+	 * @param value the value of the published pair; never {@code null} or blank
+	 */
+	default void publishReportEntry(String key, String value) {
+		this.publishReportEntry(Collections.singletonMap(key, value));
+	}
 
 	/**
 	 * Get the {@link Store} for the default, global {@link Namespace}.
