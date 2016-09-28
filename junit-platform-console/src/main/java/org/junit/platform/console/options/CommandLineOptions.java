@@ -29,7 +29,7 @@ public class CommandLineOptions {
 
 	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
-	private boolean hideDetails;
+	private Details details = Details.VERBOSE;
 
 	private boolean scanClasspath;
 	private List<String> arguments = emptyList();
@@ -68,12 +68,12 @@ public class CommandLineOptions {
 		this.scanClasspath = scanClasspath;
 	}
 
-	public boolean isHideDetails() {
-		return this.hideDetails;
+	public Details getDetails() {
+		return details;
 	}
 
-	public void setHideDetails(boolean hideDetails) {
-		this.hideDetails = hideDetails;
+	public void setDetails(Details details) {
+		this.details = details;
 	}
 
 	public String getIncludeClassNamePattern() {

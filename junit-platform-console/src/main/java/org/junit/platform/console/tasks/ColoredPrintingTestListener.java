@@ -10,19 +10,16 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.BLUE;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.GREEN;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.NONE;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.PURPLE;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.RED;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.YELLOW;
+import static org.junit.platform.console.tasks.Color.BLUE;
+import static org.junit.platform.console.tasks.Color.NONE;
+import static org.junit.platform.console.tasks.Color.PURPLE;
+import static org.junit.platform.console.tasks.Color.YELLOW;
 
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -74,7 +71,7 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-		Color color = determineColor(testExecutionResult.getStatus());
+		Color color = Color.valueOf(testExecutionResult);
 		printlnTestDescriptor(color, "Finished:", testIdentifier);
 		testExecutionResult.getThrowable().ifPresent(t -> printlnException(color, t));
 	}
@@ -83,19 +80,6 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 		printlnTestDescriptor(PURPLE, "Reported:", testIdentifier);
 		printlnMessage(PURPLE, "Reported values", entry.toString());
-	}
-
-	private Color determineColor(Status status) {
-		switch (status) {
-			case SUCCESSFUL:
-				return GREEN;
-			case ABORTED:
-				return YELLOW;
-			case FAILED:
-				return RED;
-			default:
-				return NONE;
-		}
 	}
 
 	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {
@@ -136,37 +120,4 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	private static String indented(String message) {
 		return LINE_START_PATTERN.matcher(message).replaceAll(INDENTATION).trim();
 	}
-
-	enum Color {
-
-		NONE(0),
-
-		BLACK(30),
-
-		RED(31),
-
-		GREEN(32),
-
-		YELLOW(33),
-
-		BLUE(34),
-
-		PURPLE(35),
-
-		CYAN(36),
-
-		WHITE(37);
-
-		private final int ansiCode;
-
-		Color(int ansiCode) {
-			this.ansiCode = ansiCode;
-		}
-
-		@Override
-		public String toString() {
-			return "\u001B[" + this.ansiCode + "m";
-		}
-	}
-
 }

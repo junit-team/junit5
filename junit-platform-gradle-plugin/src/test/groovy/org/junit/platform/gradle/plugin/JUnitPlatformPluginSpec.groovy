@@ -15,6 +15,7 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.platform.console.ConsoleLauncher
+import org.junit.platform.console.options.Details
 import org.junit.platform.engine.discovery.ClassNameFilter
 import spock.lang.Specification
 
@@ -63,9 +64,11 @@ class JUnitPlatformPluginSpec extends Specification {
 			}
 
 			reportsDir new File("any")
+
+			details Details.HIDDEN
 		}
 		then:
-		true == true
+		true
 	}
 
 	def "creating junitPlatformTest task"() {
@@ -91,6 +94,8 @@ class JUnitPlatformPluginSpec extends Specification {
 			}
 
 			reportsDir new File("/any")
+
+			details Details.FLAT
 		}
 		project.evaluate()
 
@@ -99,7 +104,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask instanceof JavaExec
 		junitTask.main == ConsoleLauncher.class.getName()
 
-		junitTask.args.contains('--hide-details')
+		junitTask.args.containsAll('--details', 'FLAT')
 		junitTask.args.contains('--scan-class-path')
 		junitTask.args.containsAll('-n', '.*Tests?')
 		junitTask.args.containsAll('-t', 'fast')
