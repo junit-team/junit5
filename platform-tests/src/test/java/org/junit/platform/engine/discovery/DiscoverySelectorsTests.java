@@ -162,19 +162,6 @@ public class DiscoverySelectorsTests {
 		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
 	}
 
-	@Disabled("Disabled until GitHub issue #477 is addressed.")
-	@Test
-	void selectMethodByFullyQualifiedNameForSpockSpec() {
-		String spockClassName = "org.example.CalculatorSpec";
-		String spockMethodName = "#a plus #b equals #c";
-		String spockFullyQualifiedMethodName = spockClassName + "#" + spockMethodName;
-		// NOTE: depending on the outcome of #477, the following should likely not throw an exception.
-		JavaMethodSelector selector = selectJavaMethod(spockFullyQualifiedMethodName);
-		// NOTE: depending on the outcome of #477, appropriate assertions should be added to replace
-		// the following.
-		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
-	}
-
 	@Test
 	void selectMethodByFullyQualifiedNameWithParameters() {
 		JavaMethodSelector selector = selectJavaMethod(fullyQualifiedMethodNameWithParameters);
@@ -197,6 +184,33 @@ public class DiscoverySelectorsTests {
 		JavaMethodSelector selector = selectJavaMethod(getClass(), method);
 		assertEquals(method, selector.getJavaMethod());
 		assertEquals(method, selector.getJavaMethod());
+	}
+
+	@Test
+	void selectClassByNameForSpockSpec() {
+		String spockClassName = "org.example.CalculatorSpec";
+		JavaClassSelector selector = selectJavaClass(spockClassName);
+		assertEquals(spockClassName, selector.getClassName());
+	}
+
+	@Test
+	void selectMethodByClassAndNameForSpockSpec() {
+		String spockClassName = "org.example.CalculatorSpec";
+		String spockMethodName = "#a plus #b equals #c";
+
+		JavaMethodSelector selector = selectJavaMethod(spockClassName, spockMethodName);
+		assertEquals(spockClassName, selector.getClassName());
+		assertEquals(spockMethodName, selector.getMethodName());
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameForSpockSpec() {
+		String spockClassName = "org.example.CalculatorSpec";
+		String spockMethodName = "#a plus #b equals #c";
+		String spockFullyQualifiedMethodName = spockClassName + "#" + spockMethodName;
+
+		JavaMethodSelector selector = selectJavaMethod(spockFullyQualifiedMethodName);
+		assertEquals(spockFullyQualifiedMethodName, selector.getMethodName());
 	}
 
 	@Test
