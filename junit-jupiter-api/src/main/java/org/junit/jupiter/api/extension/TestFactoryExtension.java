@@ -10,12 +10,14 @@
 
 package org.junit.jupiter.api.extension;
 
-import org.junit.jupiter.api.DynamicTest;
 import org.junit.platform.commons.meta.API;
 
+import java.lang.reflect.AnnotatedElement;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
 /**
  * TODO
@@ -24,6 +26,19 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
  */
 @API(Experimental)
 public interface TestFactoryExtension extends Extension {
+
+	@SuppressWarnings("unchecked")
+	static Stream<Class<TestFactoryExtension>> streamTestFactoryExtensions(AnnotatedElement candidate) {
+		// @formatter:off
+		Stream<? extends Class<? extends Extension>> classStream =
+				findRepeatableAnnotations(candidate, ExtendWith.class).stream()
+						.map(ExtendWith::value)
+						.flatMap(Arrays::stream)
+						.filter(TestFactoryExtension.class::isAssignableFrom);
+		// @formatter:on
+		// this cast is save because both stream and class are covariant
+		return (Stream<Class<TestFactoryExtension>>) classStream;
+	}
 
 	// TODO
 
