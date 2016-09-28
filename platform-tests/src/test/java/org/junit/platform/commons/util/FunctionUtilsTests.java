@@ -10,15 +10,18 @@
 
 package org.junit.platform.commons.util;
 
+import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
 import static java.util.function.Predicate.isEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
-
-import java.util.function.Predicate;
-
-import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link FunctionUtils}.
@@ -26,6 +29,8 @@ import org.junit.jupiter.api.Test;
  * @since 1.0
  */
 class FunctionUtilsTests {
+
+	// whereWith
 
 	@Test
 	void whereWithNullFunction() {
@@ -49,6 +54,71 @@ class FunctionUtilsTests {
 		assertFalse(combinedPredicate.test("fo"));
 		assertTrue(combinedPredicate.test("foo"));
 		assertFalse(combinedPredicate.test("fooo"));
+	}
+
+	// firstPresent
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void firstPresentWithNullSupplierArray() {
+		PreconditionViolationException exception = expectThrows(
+				PreconditionViolationException.class,
+				() -> FunctionUtils.firstPresent((Supplier[]) null));
+		assertEquals("suppliers must not be null", exception.getMessage());
+	}
+
+	@Test
+	void firstPresentWithNullSupplier() {
+		PreconditionViolationException exception = expectThrows(
+				PreconditionViolationException.class,
+				() -> FunctionUtils.firstPresent(Optional::empty, null));
+		assertEquals("suppliers must not be null", exception.getMessage());
+	}
+
+	@Test
+	void firstPresentWithNullProducingSupplier() {
+		PreconditionViolationException exception = expectThrows(
+				PreconditionViolationException.class,
+				() -> FunctionUtils.firstPresent(() -> null));
+		assertEquals("supplied optional must not be null", exception.getMessage());
+	}
+
+	@Test
+	void firstPresentWithEmptyOptional() {
+		Optional<String> firstPresent = FunctionUtils.firstPresent(Optional::empty);
+		assertFalse(firstPresent.isPresent());
+	}
+
+	@Test
+	void firstPresentWithEmptyOptionals() {
+		Optional<String> firstPresent = FunctionUtils.firstPresent(Optional::empty, Optional::empty, Optional::empty);
+		assertFalse(firstPresent.isPresent());
+	}
+
+	@Test
+	void firstPresentWithPresentOptional() {
+		Optional<String> only = Optional.of("ONLY");
+		Optional<String> firstPresent = FunctionUtils.firstPresent(() -> only);
+
+		assertSame(only, firstPresent);
+	}
+
+	@Test
+	void firstPresentWithPresentOptionals() {
+		Optional<String> first = Optional.of("FIRST");
+		Optional<String> firstPresent = FunctionUtils.firstPresent(
+				() -> first, () -> Optional.of("SECOND"), () -> Optional.of("THIRD"));
+
+		assertSame(first, firstPresent);
+	}
+
+	@Test
+	void firstPresentWithDifferentOptionals() {
+		Optional<String> first = Optional.of("FIRST");
+		Optional<String> firstPresent = FunctionUtils.firstPresent(
+				Optional::empty, () -> first, () -> Optional.of("SECOND"), Optional::empty, () -> Optional.of("THIRD"));
+
+		assertSame(first, firstPresent);
 	}
 
 }
