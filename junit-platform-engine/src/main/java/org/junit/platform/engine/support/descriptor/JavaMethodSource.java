@@ -37,8 +37,8 @@ public class JavaMethodSource implements JavaSource {
 
 	private static final long serialVersionUID = 1L;
 
-	private final Class<?> javaClass;
-	private final String javaMethodName;
+	private final String className;
+	private final String methodName;
 	private final Class<?>[] javaMethodParameterTypes;
 
 	/**
@@ -49,18 +49,16 @@ public class JavaMethodSource implements JavaSource {
 	 */
 	public JavaMethodSource(Method method) {
 		Preconditions.notNull(method, "method must not be null");
-		this.javaClass = method.getDeclaringClass();
-		this.javaMethodName = method.getName();
+		this.className = method.getDeclaringClass().getName();
+		this.methodName = method.getName();
 		this.javaMethodParameterTypes = method.getParameterTypes();
 	}
 
 	/**
-	 * Get the declaring {@linkplain Class class} of this source.
-	 *
-	 * @see Method#getDeclaringClass()
+	 * Get the declaring {@link Class} name of this source.
 	 */
-	public final Class<?> getJavaClass() {
-		return this.javaClass;
+	public String getClassName() {
+		return this.className;
 	}
 
 	/**
@@ -68,8 +66,8 @@ public class JavaMethodSource implements JavaSource {
 	 *
 	 * @see Method#getName()
 	 */
-	public final String getJavaMethodName() {
-		return this.javaMethodName;
+	public final String getMethodName() {
+		return this.methodName;
 	}
 
 	/**
@@ -77,7 +75,7 @@ public class JavaMethodSource implements JavaSource {
 	 *
 	 * @see Method#getParameterTypes()
 	 */
-	public final List<Class<?>> getJavaMethodParameterTypes() {
+	public final List<Class<?>> getMethodParameterTypes() {
 		return unmodifiableList(Arrays.asList(this.javaMethodParameterTypes));
 	}
 
@@ -90,22 +88,21 @@ public class JavaMethodSource implements JavaSource {
 			return false;
 		}
 		JavaMethodSource that = (JavaMethodSource) o;
-		return Objects.equals(this.javaClass, that.javaClass)
-				&& Objects.equals(this.javaMethodName, that.javaMethodName)
+		return Objects.equals(this.className, that.className) && Objects.equals(this.methodName, that.methodName)
 				&& Arrays.equals(this.javaMethodParameterTypes, that.javaMethodParameterTypes);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.javaClass, this.javaMethodName) + Arrays.hashCode(this.javaMethodParameterTypes);
+		return Objects.hash(this.className, this.methodName) + Arrays.hashCode(this.javaMethodParameterTypes);
 	}
 
 	@Override
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("javaClass", this.javaClass.getName())
-				.append("javaMethodName", this.javaMethodName)
+				.append("className", this.className)
+				.append("methodName", this.methodName)
 				.append("javaMethodParameterTypes", nullSafeToString(this.javaMethodParameterTypes))
 				.toString();
 		// @formatter:on

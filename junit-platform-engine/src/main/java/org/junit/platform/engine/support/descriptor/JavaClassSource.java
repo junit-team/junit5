@@ -16,7 +16,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
@@ -31,9 +33,33 @@ public class JavaClassSource implements JavaSource {
 
 	private static final long serialVersionUID = 1L;
 
-	private final Class<?> javaClass;
+	private final String className;
+
+	private Class<?> javaClass;
 
 	private final FilePosition filePosition;
+
+	/**
+	 * Create a new {@code JavaClassSource} using the supplied
+	 * className.
+	 *
+	 * @param className the Java class name; must not be {@code null}
+	 */
+	public JavaClassSource(String className) {
+		this(className, null);
+	}
+
+	/**
+	 * Create a new {@code JavaClassSource} using the supplied
+	 * className and {@link FilePosition filePosition}.
+	 *
+	 * @param className the Java class name; must not be {@code null}
+	 * @param filePosition the position in the Java source file; may be {@code null}
+	 */
+	public JavaClassSource(String className, FilePosition filePosition) {
+		this.className = className;
+		this.filePosition = filePosition;
+	}
 
 	/**
 	 * Create a new {@code JavaClassSource} using the supplied
@@ -54,7 +80,17 @@ public class JavaClassSource implements JavaSource {
 	 */
 	public JavaClassSource(Class<?> javaClass, FilePosition filePosition) {
 		this.javaClass = Preconditions.notNull(javaClass, "class must not be null");
+		this.className = this.javaClass.getName();
 		this.filePosition = filePosition;
+	}
+
+	/**
+	 * Get the class name of this source.
+	 *
+	 * @see #getPosition()
+	 */
+	public final String getClassName() {
+		return this.className;
 	}
 
 	/**
@@ -63,6 +99,10 @@ public class JavaClassSource implements JavaSource {
 	 * @see #getPosition()
 	 */
 	public final Class<?> getJavaClass() {
+		if (this.javaClass == null) {
+			this.javaClass = ReflectionUtils.loadClass(this.className).orElseThrow(
+				() -> new PreconditionViolationException("Could not load class with name: " + this.className));
+		}
 		return this.javaClass;
 	}
 
@@ -97,10 +137,9 @@ public class JavaClassSource implements JavaSource {
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("javaClass", this.javaClass.getName())
+				.append("className", this.className)
 				.append("filePosition", this.filePosition)
 				.toString();
 		// @formatter:on
 	}
-
 }

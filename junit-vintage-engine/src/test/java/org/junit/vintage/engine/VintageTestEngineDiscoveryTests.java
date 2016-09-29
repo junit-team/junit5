@@ -676,9 +676,9 @@ class VintageTestEngineDiscoveryTests {
 	private static void assertMethodSource(Method expectedMethod, TestDescriptor testDescriptor) {
 		assertThat(testDescriptor.getSource()).containsInstanceOf(JavaMethodSource.class);
 		JavaMethodSource methodSource = (JavaMethodSource) testDescriptor.getSource().get();
-		assertThat(methodSource.getJavaClass()).isEqualTo(expectedMethod.getDeclaringClass());
-		assertThat(methodSource.getJavaMethodName()).isEqualTo(expectedMethod.getName());
-		assertThat(methodSource.getJavaMethodParameterTypes()).containsExactly(expectedMethod.getParameterTypes());
+		assertThat(methodSource.getClassName()).isEqualTo(expectedMethod.getDeclaringClass().getName());
+		assertThat(methodSource.getMethodName()).isEqualTo(expectedMethod.getName());
+		assertThat(methodSource.getMethodParameterTypes()).containsExactly(expectedMethod.getParameterTypes());
 	}
 
 	private static LauncherDiscoveryRequest discoveryRequestForClass(Class<?> testClass) {

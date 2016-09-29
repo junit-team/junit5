@@ -59,6 +59,26 @@ class JavaSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
+	void classNameSource() {
+		String testClassName = "com.unknown.mypackage.ClassByName";
+		JavaClassSource source = new JavaClassSource(testClassName);
+
+		assertThat(source.getClassName()).isEqualTo(testClassName);
+		assertThat(source.getPosition()).isEmpty();
+	}
+
+	@Test
+	void classNameSourceWithFilePosition() {
+		String testClassName = "com.unknown.mypackage.ClassByName";
+		FilePosition position = new FilePosition(42, 23);
+		JavaClassSource source = new JavaClassSource(testClassName, position);
+
+		assertThat(source.getClassName()).isEqualTo(testClassName);
+		assertThat(source.getPosition()).isNotEmpty();
+		assertThat(source.getPosition()).hasValue(position);
+	}
+
+	@Test
 	void classSource() {
 		Class<?> testClass = getClass();
 		JavaClassSource source = new JavaClassSource(testClass);
@@ -83,9 +103,9 @@ class JavaSourceTests extends AbstractTestSourceTests {
 		Method testMethod = getMethod("method1");
 		JavaMethodSource source = new JavaMethodSource(testMethod);
 
-		assertThat(source.getJavaClass()).isEqualTo(getClass());
-		assertThat(source.getJavaMethodName()).isEqualTo(testMethod.getName());
-		assertThat(source.getJavaMethodParameterTypes()).containsExactly(String.class);
+		assertThat(source.getClassName()).isEqualTo(getClass().getName());
+		assertThat(source.getMethodName()).isEqualTo(testMethod.getName());
+		assertThat(source.getMethodParameterTypes()).containsExactly(String.class);
 	}
 
 	@Test
