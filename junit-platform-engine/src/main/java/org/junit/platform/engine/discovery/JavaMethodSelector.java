@@ -40,14 +40,12 @@ import org.junit.platform.engine.DiscoverySelector;
 @API(Experimental)
 public class JavaMethodSelector implements DiscoverySelector {
 
+	private static Pattern methodNameWithParametersPattern = Pattern.compile("([^(]+)\\(([^)]*)\\)");
+
 	private Class<?> javaClass;
-	private String className;
+	private final String className;
 	private Method javaMethod;
 	private final String methodName;
-
-	JavaMethodSelector(String methodName) {
-		this.methodName = methodName;
-	}
 
 	JavaMethodSelector(String className, String methodName) {
 		this.className = className;
@@ -114,22 +112,27 @@ public class JavaMethodSelector implements DiscoverySelector {
 
 	private void lazyLoadJavaClassAndMethod() {
 		if (this.javaClass == null) {
-			if (isBlank(this.className)) {
-				this.javaMethod = ReflectionUtils.loadMethod(this.methodName).orElseThrow(
-					() -> new PreconditionViolationException(
-						"Could not load class for method name: " + this.methodName));
-				this.javaClass = this.javaMethod.getDeclaringClass();
-			}
-			else {
-				this.javaClass = ReflectionUtils.loadClass(this.className).orElseThrow(
-					() -> new PreconditionViolationException("Could not load class with name: " + this.className));
-			}
+			this.javaClass = ReflectionUtils.loadClass(this.className).orElseThrow(
+				() -> new PreconditionViolationException("Could not load class with name: " + this.className));
 		}
 
 		if (this.javaMethod == null) {
-			this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName).orElseThrow(
-				() -> new PreconditionViolationException(String.format(
-					"Could not find method with name [%s] in class [%s].", this.methodName, this.javaClass.getName())));
+			Matcher matcher = methodNameWithParametersPattern.matcher(this.methodName);
+			if (matcher.matches()) {
+				String methodNameOnly = matcher.group(1);
+				String parameterTypes = matcher.group(2);
+				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, methodNameOnly,
+					parameterTypes).orElseThrow(
+						() -> new PreconditionViolationException(
+							String.format("Could not find method with name [%s] in class [%s].", this.methodName,
+								this.javaClass.getName())));
+			}
+			else {
+				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName).orElseThrow(
+					() -> new PreconditionViolationException(
+						String.format("Could not find method with name [%s] in class [%s].", this.methodName,
+							this.javaClass.getName())));
+			}
 		}
 	}
 

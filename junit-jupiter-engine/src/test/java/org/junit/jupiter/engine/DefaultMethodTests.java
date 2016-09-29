@@ -28,17 +28,11 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  */
 public class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 
-	@Disabled("Disabled until GitHub issue #516 is addressed.")
 	@Test
 	void executeTestCaseWithDefaultMethodFromInterfaceSelectedByFullyQualifedMethodName() {
 		String fqmn = TestCaseWithDefaultMethod.class.getName() + "#test";
 		LauncherDiscoveryRequest request = request().selectors(selectJavaMethod(fqmn)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
-
-		// NOTE: the warning in the log output:
-		//
-		// org.junit.jupiter.engine.discovery.JavaElementsResolver resolveMethod
-		// WARNING: Method 'public default void org.junit.jupiter.engine.DefaultMethodTests$TestInterface.test()' could not be resolved
 
 		// @formatter:off
 		assertAll(
