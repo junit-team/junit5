@@ -210,7 +210,8 @@ public class DiscoverySelectorsTests {
 		String spockFullyQualifiedMethodName = spockClassName + "#" + spockMethodName;
 
 		JavaMethodSelector selector = selectJavaMethod(spockFullyQualifiedMethodName);
-		assertEquals(spockFullyQualifiedMethodName, selector.getMethodName());
+		assertEquals(spockClassName, selector.getClassName());
+		assertEquals(spockMethodName, selector.getMethodName());
 	}
 
 	@Test

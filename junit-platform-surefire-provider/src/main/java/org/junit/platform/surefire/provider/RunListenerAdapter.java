@@ -74,8 +74,8 @@ final class RunListenerAdapter implements TestExecutionListener {
 		}
 		else if (testSource instanceof JavaMethodSource) {
 			JavaMethodSource javaMethodSource = (JavaMethodSource) testSource;
-			String className = javaMethodSource.getJavaClass().getName();
-			String methodName = javaMethodSource.getJavaMethodName();
+			String className = javaMethodSource.getClassName();
+			String methodName = javaMethodSource.getMethodName();
 			StackTraceWriter stackTraceWriter = new PojoStackTraceWriter(className, methodName, throwable.orElse(null));
 			return new SimpleReportEntry(className, testIdentifier.getDisplayName(), stackTraceWriter, null);
 		}
@@ -93,7 +93,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 		}
 		else if (testSource instanceof JavaMethodSource) {
 			JavaMethodSource javaMethodSource = (JavaMethodSource) testSource;
-			return javaMethodSource.getJavaClass().getName();
+			return javaMethodSource.getClassName();
 		}
 		else {
 			return testIdentifier.getUniqueId();

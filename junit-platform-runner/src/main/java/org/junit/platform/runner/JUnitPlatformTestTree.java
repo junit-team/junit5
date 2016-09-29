@@ -102,12 +102,12 @@ class JUnitPlatformTestTree {
 			}
 			else if (source instanceof JavaMethodSource) {
 				JavaMethodSource javaMethodSource = (JavaMethodSource) source;
-				List<Class<?>> parameterTypes = javaMethodSource.getJavaMethodParameterTypes();
+				List<Class<?>> parameterTypes = javaMethodSource.getMethodParameterTypes();
 				if (parameterTypes.size() == 0) {
-					return javaMethodSource.getJavaMethodName();
+					return javaMethodSource.getMethodName();
 				}
 				else {
-					return String.format("%s(%s)", javaMethodSource.getJavaMethodName(), StringUtils.nullSafeToString(
+					return String.format("%s(%s)", javaMethodSource.getMethodName(), StringUtils.nullSafeToString(
 						Class::getName, parameterTypes.toArray(new Class<?>[parameterTypes.size()])));
 				}
 			}

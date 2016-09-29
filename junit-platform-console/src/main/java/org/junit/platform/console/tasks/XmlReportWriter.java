@@ -156,8 +156,8 @@ class XmlReportWriter {
 			}
 			else if (source instanceof JavaMethodSource) {
 				JavaMethodSource javaMethodSource = (JavaMethodSource) source;
-				List<Class<?>> parameterTypes = javaMethodSource.getJavaMethodParameterTypes();
-				return String.format("%s(%s)", javaMethodSource.getJavaMethodName(), StringUtils.nullSafeToString(
+				List<Class<?>> parameterTypes = javaMethodSource.getMethodParameterTypes();
+				return String.format("%s(%s)", javaMethodSource.getMethodName(), StringUtils.nullSafeToString(
 					Class::getName, parameterTypes.toArray(new Class<?>[parameterTypes.size()])));
 			}
 		}
@@ -171,10 +171,10 @@ class XmlReportWriter {
 		if (optionalSource.isPresent()) {
 			TestSource source = optionalSource.get();
 			if (source instanceof JavaClassSource) {
-				return ((JavaClassSource) source).getJavaClass().getName();
+				return ((JavaClassSource) source).getClassName();
 			}
 			else if (source instanceof JavaMethodSource) {
-				return ((JavaMethodSource) source).getJavaClass().getName();
+				return ((JavaMethodSource) source).getClassName();
 			}
 		}
 
