@@ -104,13 +104,13 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		if (getUniqueId().equals(uniqueId)) {
 			return Optional.of(this);
 		}
-		for (TestDescriptor child : this.children) {
-			Optional<? extends TestDescriptor> result = child.findByUniqueId(uniqueId);
-			if (result.isPresent()) {
-				return result;
-			}
-		}
-		return Optional.empty();
+		// @formatter:off
+		return this.children.stream()
+				.map(child -> child.findByUniqueId(uniqueId))
+				.filter(Optional::isPresent)
+				.findAny()
+				.orElse(Optional.empty());
+		// @formatter:on
 	}
 
 	@Override

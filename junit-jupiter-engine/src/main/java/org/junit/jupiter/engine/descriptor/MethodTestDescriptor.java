@@ -265,7 +265,6 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 			Executable executable = generator.apply(testExtensionContext, callback);
 			throwableCollector.execute(executable);
 		});
-
 	}
 
 }

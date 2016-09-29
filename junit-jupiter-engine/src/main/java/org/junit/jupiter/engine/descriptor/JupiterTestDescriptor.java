@@ -51,7 +51,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	// --- TestDescriptor ------------------------------------------------------
 
-	protected Set<TestTag> getTags(AnnotatedElement element) {
+	protected static Set<TestTag> getTags(AnnotatedElement element) {
 		// @formatter:off
 		return findRepeatableAnnotations(element, Tag.class).stream()
 				.map(Tag::value)
