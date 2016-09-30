@@ -31,9 +31,8 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
-import org.junit.platform.engine.support.descriptor.JavaSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.runner.Description;
 
 /**
@@ -51,7 +50,7 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 	public VintageTestDescriptor(TestDescriptor parent, String segmentType, String segmentValue,
 			Description description) {
 
-		this(parent, segmentType, segmentValue, description, toJavaSource(description));
+		this(parent, segmentType, segmentValue, description, toTestSource(description));
 	}
 
 	VintageTestDescriptor(TestDescriptor parent, String segmentType, String segmentValue, Description description,
@@ -110,29 +109,29 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 		return Optional.ofNullable(annotation).map(Category::value);
 	}
 
-	private static Optional<JavaSource> toJavaSource(Description description) {
+	private static Optional<TestSource> toTestSource(Description description) {
 		Class<?> testClass = description.getTestClass();
 		if (testClass != null) {
 			String methodName = description.getMethodName();
 			if (methodName != null) {
-				JavaMethodSource javaMethodSource = toJavaMethodSource(testClass, methodName);
-				if (javaMethodSource != null) {
-					return Optional.of(javaMethodSource);
+				MethodSource methodSource = toMethodSource(testClass, methodName);
+				if (methodSource != null) {
+					return Optional.of(methodSource);
 				}
 			}
-			return Optional.of(new JavaClassSource(testClass));
+			return Optional.of(new ClassSource(testClass));
 		}
 		return Optional.empty();
 	}
 
-	private static JavaMethodSource toJavaMethodSource(Class<?> testClass, String methodName) {
+	private static MethodSource toMethodSource(Class<?> testClass, String methodName) {
 		if (methodName.contains("[") && methodName.endsWith("]")) {
 			// special case for parameterized tests
-			return toJavaMethodSource(testClass, methodName.substring(0, methodName.indexOf("[")));
+			return toMethodSource(testClass, methodName.substring(0, methodName.indexOf("[")));
 		}
 		else {
 			List<Method> methods = findMethods(testClass, where(Method::getName, isEqual(methodName)));
-			return (methods.size() == 1) ? new JavaMethodSource(getOnlyElement(methods)) : null;
+			return (methods.size() == 1) ? new MethodSource(getOnlyElement(methods)) : null;
 		}
 	}
 

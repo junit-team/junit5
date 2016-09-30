@@ -40,7 +40,7 @@ import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.
@@ -76,7 +76,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = testMethod;
 
-		setSource(new JavaMethodSource(testMethod));
+		setSource(new MethodSource(testMethod));
 	}
 
 	// --- TestDescriptor ------------------------------------------------------

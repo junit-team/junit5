@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
@@ -134,7 +134,7 @@ class DefaultLauncherTests {
 
 		DefaultLauncher launcher = createLauncher(engine);
 
-		TestPlan testPlan = launcher.discover(request().selectors(selectJavaPackage("any")).build());
+		TestPlan testPlan = launcher.discover(request().selectors(selectPackage("any")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -286,7 +286,7 @@ class DefaultLauncherTests {
 
 		TestPlan testPlan = launcher.discover( //
 			request() //
-					.selectors(selectJavaPackage("any")) //
+					.selectors(selectPackage("any")) //
 					.filters(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
 					.build());
 

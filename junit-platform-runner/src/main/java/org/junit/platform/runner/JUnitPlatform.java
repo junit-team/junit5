@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
@@ -126,7 +126,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 		// Allows to simply add @RunWith(JUnitPlatform.class) to any test case
 		boolean isSuite = !selectors.isEmpty();
 		if (!isSuite) {
-			selectors.add(selectJavaClass(this.testClass));
+			selectors.add(selectClass(this.testClass));
 		}
 
 		LauncherDiscoveryRequestBuilder requestBuilder = request().selectors(selectors);
@@ -147,8 +147,8 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private List<DiscoverySelector> getSelectorsFromAnnotations() {
 		List<DiscoverySelector> selectors = new ArrayList<>();
 
-		selectors.addAll(transform(getSelectedClasses(), DiscoverySelectors::selectJavaClass));
-		selectors.addAll(transform(getSelectedPackageNames(), DiscoverySelectors::selectJavaPackage));
+		selectors.addAll(transform(getSelectedClasses(), DiscoverySelectors::selectClass));
+		selectors.addAll(transform(getSelectedPackageNames(), DiscoverySelectors::selectPackage));
 
 		return selectors;
 	}

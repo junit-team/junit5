@@ -14,22 +14,22 @@ import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPa
 
 import java.util.function.Predicate;
 
-import org.junit.platform.engine.discovery.JavaPackageSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
 
 /**
  * @since 4.12
  */
-class PackageNameSelectorResolver extends DiscoverySelectorResolver<JavaPackageSelector> {
+class PackageNameSelectorResolver extends DiscoverySelectorResolver<PackageSelector> {
 
 	private final Predicate<String> classNamePredicate;
 
 	PackageNameSelectorResolver(Predicate<String> classNamePredicate) {
-		super(JavaPackageSelector.class);
+		super(PackageSelector.class);
 		this.classNamePredicate = classNamePredicate;
 	}
 
 	@Override
-	void resolve(JavaPackageSelector selector, TestClassCollector collector) {
+	void resolve(PackageSelector selector, TestClassCollector collector) {
 		findAllClassesInPackage(selector.getPackageName(), classTester, classNamePredicate).forEach(
 			collector::addCompletely);
 	}

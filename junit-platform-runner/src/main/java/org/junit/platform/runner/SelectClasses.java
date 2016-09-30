@@ -20,6 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.discovery.ClassSelector;
 
 /**
  * {@code @SelectClasses} specifies the classes to <em>select</em> when running
@@ -28,7 +29,7 @@ import org.junit.platform.commons.meta.API;
  * @since 1.0
  * @see JUnitPlatform
  * @see SelectPackages
- * @see org.junit.platform.engine.discovery.JavaClassSelector
+ * @see ClassSelector
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

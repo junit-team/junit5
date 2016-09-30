@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
@@ -132,7 +132,7 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 			String... expectedCalls) {
 
 		callSequence.clear();
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(testClass)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(testsStarted, eventRecorder.getTestStartedCount(), "# tests started");

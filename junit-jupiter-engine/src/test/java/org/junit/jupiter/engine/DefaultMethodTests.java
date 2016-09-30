@@ -12,10 +12,9 @@ package org.junit.jupiter.engine;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -31,7 +30,7 @@ public class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeTestCaseWithDefaultMethodFromInterfaceSelectedByFullyQualifedMethodName() {
 		String fqmn = TestCaseWithDefaultMethod.class.getName() + "#test";
-		LauncherDiscoveryRequest request = request().selectors(selectJavaMethod(fqmn)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		// @formatter:off

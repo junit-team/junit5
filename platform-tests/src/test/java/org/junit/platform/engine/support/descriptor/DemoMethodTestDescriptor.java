@@ -38,7 +38,7 @@ public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = testMethod;
 
-		setSource(new JavaMethodSource(testMethod));
+		setSource(new MethodSource(testMethod));
 	}
 
 	@Override

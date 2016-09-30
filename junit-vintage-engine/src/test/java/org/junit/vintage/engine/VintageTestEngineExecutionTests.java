@@ -11,7 +11,7 @@
 package org.junit.vintage.engine;
 
 import static org.assertj.core.api.Assertions.allOf;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
@@ -456,7 +456,7 @@ class VintageTestEngineExecutionTests {
 
 	private static List<ExecutionEvent> execute(Class<?> testClass) {
 		VintageTestEngine engine = new VintageTestEngine();
-		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectJavaClass(testClass)).build();
+		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		return ExecutionEventRecorder.execute(engine, discoveryRequest);
 	}
 }

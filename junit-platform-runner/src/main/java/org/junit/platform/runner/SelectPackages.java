@@ -20,6 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.discovery.PackageSelector;
 
 /**
  * {@code @SelectPackages} specifies the names of packages to <em>select</em>
@@ -28,7 +29,7 @@ import org.junit.platform.commons.meta.API;
  * @since 1.0
  * @see JUnitPlatform
  * @see SelectClasses
- * @see org.junit.platform.engine.discovery.JavaPackageSelector
+ * @see PackageSelector
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

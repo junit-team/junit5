@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.FilterResult.includedIf;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.vintage.engine.VintageUniqueIdBuilder.engineId;
 
@@ -41,7 +41,7 @@ class VintageDiscoveryRequestResolverTests {
 			() -> "no match");
 		// @formatter:off
 		EngineDiscoveryRequest request = request()
-				.selectors(selectJavaClass(Foo.class), selectJavaClass(Bar.class))
+				.selectors(selectClass(Foo.class), selectClass(Bar.class))
 				.filters(filter)
 				.build();
 		// @formatter:on

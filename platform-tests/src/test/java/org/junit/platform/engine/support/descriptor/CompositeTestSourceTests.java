@@ -43,7 +43,7 @@ class CompositeTestSourceTests extends AbstractTestSourceTests {
 	@Test
 	void createCompositeTestSourceFromClassAndFileSources() {
 		FileSource fileSource = new FileSource(new File("example.test"));
-		JavaClassSource classSource = new JavaClassSource(getClass());
+		ClassSource classSource = new ClassSource(getClass());
 		List<TestSource> sources = new ArrayList<>(Arrays.asList(fileSource, classSource));
 		CompositeTestSource compositeTestSource = new CompositeTestSource(sources);
 
@@ -60,8 +60,8 @@ class CompositeTestSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void equalsAndHashCode() {
-		List<TestSource> sources1 = Arrays.asList(new JavaClassSource(Number.class));
-		List<TestSource> sources2 = Arrays.asList(new JavaClassSource(String.class));
+		List<TestSource> sources1 = Arrays.asList(new ClassSource(Number.class));
+		List<TestSource> sources2 = Arrays.asList(new ClassSource(String.class));
 		assertEqualsAndHashCode(new CompositeTestSource(sources1), new CompositeTestSource(sources1),
 			new CompositeTestSource(sources2));
 	}

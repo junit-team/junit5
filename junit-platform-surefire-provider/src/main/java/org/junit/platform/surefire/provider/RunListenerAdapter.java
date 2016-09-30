@@ -22,8 +22,8 @@ import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.report.StackTraceWriter;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 
@@ -66,16 +66,16 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier, Optional<Throwable> throwable) {
 		TestSource testSource = testIdentifier.getSource().orElse(null);
-		if (testSource instanceof JavaClassSource) {
-			JavaClassSource javaClassSource = (JavaClassSource) testSource;
-			String className = javaClassSource.getJavaClass().getName();
+		if (testSource instanceof ClassSource) {
+			ClassSource classSource = (ClassSource) testSource;
+			String className = classSource.getJavaClass().getName();
 			StackTraceWriter stackTraceWriter = new PojoStackTraceWriter(className, "", throwable.orElse(null));
 			return new SimpleReportEntry(className, testIdentifier.getDisplayName(), stackTraceWriter, null);
 		}
-		else if (testSource instanceof JavaMethodSource) {
-			JavaMethodSource javaMethodSource = (JavaMethodSource) testSource;
-			String className = javaMethodSource.getClassName();
-			String methodName = javaMethodSource.getMethodName();
+		else if (testSource instanceof MethodSource) {
+			MethodSource methodSource = (MethodSource) testSource;
+			String className = methodSource.getClassName();
+			String methodName = methodSource.getMethodName();
 			StackTraceWriter stackTraceWriter = new PojoStackTraceWriter(className, methodName, throwable.orElse(null));
 			return new SimpleReportEntry(className, testIdentifier.getDisplayName(), stackTraceWriter, null);
 		}
@@ -87,13 +87,13 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	private String getClassNameOrUniqueId(TestIdentifier testIdentifier) {
 		TestSource testSource = testIdentifier.getSource().orElse(null);
-		if (testSource instanceof JavaClassSource) {
-			JavaClassSource javaClassSource = (JavaClassSource) testSource;
-			return javaClassSource.getJavaClass().getName();
+		if (testSource instanceof ClassSource) {
+			ClassSource classSource = (ClassSource) testSource;
+			return classSource.getJavaClass().getName();
 		}
-		else if (testSource instanceof JavaMethodSource) {
-			JavaMethodSource javaMethodSource = (JavaMethodSource) testSource;
-			return javaMethodSource.getClassName();
+		else if (testSource instanceof MethodSource) {
+			MethodSource methodSource = (MethodSource) testSource;
+			return methodSource.getClassName();
 		}
 		else {
 			return testIdentifier.getUniqueId();

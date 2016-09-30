@@ -17,6 +17,8 @@ import java.util.Objects;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.discovery.PackageSelector;
 
 /**
  * Java package based {@link org.junit.platform.engine.TestSource}.
@@ -25,32 +27,32 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * implement {@link java.io.Serializable}.
  *
  * @since 1.0
- * @see org.junit.platform.engine.discovery.JavaPackageSelector
+ * @see PackageSelector
  */
 @API(Experimental)
-public class JavaPackageSource implements JavaSource {
+public class PackageSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
 
 	private final String packageName;
 
 	/**
-	 * Create a new {@code JavaPackageSource} using the supplied
+	 * Create a new {@code PackageSource} using the supplied
 	 * {@link Package javaPackage}.
 	 *
 	 * @param javaPackage the Java package; must not be {@code null}
 	 */
-	public JavaPackageSource(Package javaPackage) {
+	public PackageSource(Package javaPackage) {
 		this(Preconditions.notNull(javaPackage, "package must not be null").getName());
 	}
 
 	/**
-	 * Create a new {@code JavaPackageSource} using the supplied
+	 * Create a new {@code PackageSource} using the supplied
 	 * {@code packageName}.
 	 *
 	 * @param packageName the Java package name; must not be {@code null} or blank
 	 */
-	public JavaPackageSource(String packageName) {
+	public PackageSource(String packageName) {
 		this.packageName = Preconditions.notBlank(packageName, "package name must not be null or blank");
 	}
 
@@ -69,7 +71,7 @@ public class JavaPackageSource implements JavaSource {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		JavaPackageSource that = (JavaPackageSource) o;
+		PackageSource that = (PackageSource) o;
 		return Objects.equals(this.packageName, that.packageName);
 	}
 

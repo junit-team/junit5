@@ -13,8 +13,8 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -37,7 +37,7 @@ public class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestCaseWithOverloadedMethodsAndThenRerunOnlyOneOfTheMethodsSelectedByUniqueId() {
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(TestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCase.class)).build();
 		ExecutionEventRecorder eventRecorder1 = executeTests(request);
 
 		// @formatter:off
@@ -71,7 +71,7 @@ public class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeTestCaseWithOverloadedMethodsWithSingleMethodThatAcceptsArgumentsSelectedByFullyQualifedMethodName() {
 		String fqmn = TestCase.class.getName() + "#test(" + TestInfo.class.getName() + ")";
-		LauncherDiscoveryRequest request = request().selectors(selectJavaMethod(fqmn)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		// @formatter:off

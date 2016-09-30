@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.dynamicTestRegistered;
@@ -39,6 +39,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
@@ -51,7 +52,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(MyDynamicTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
@@ -59,7 +60,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void testFactoryMethodIsCorrectlyDiscoveredForMethodSelector() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaMethod(MyDynamicTestCase.class, "dynamicStream")).build();
+			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
@@ -67,7 +68,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void dynamicTestsAreExecutedFromStream() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaMethod(MyDynamicTestCase.class, "dynamicStream")).build();
+			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -89,7 +90,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void dynamicTestsAreExecutedFromCollection() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaMethod(MyDynamicTestCase.class, "dynamicCollection")).build();
+			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicCollection")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -105,7 +106,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void dynamicTestsAreExecutedFromIterator() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaMethod(MyDynamicTestCase.class, "dynamicIterator")).build();
+			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicIterator")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -121,7 +122,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void dynamicTestsAreExecutedFromIterable() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaMethod(MyDynamicTestCase.class, "dynamicIterable")).build();
+			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicIterable")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

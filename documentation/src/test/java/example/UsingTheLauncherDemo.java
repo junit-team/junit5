@@ -12,8 +12,8 @@ package example;
 
 // tag::imports[]
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.launcher.Launcher;
@@ -37,8 +37,8 @@ class UsingTheLauncherDemo {
 		// tag::discovery[]
 		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
 			.selectors(
-				selectJavaPackage("com.example.mytests"),
-				selectJavaClass(MyTestClass.class)
+				selectPackage("com.example.mytests"),
+				selectClass(MyTestClass.class)
 			)
 			.filters(includeClassNamePatterns(".*Test"))
 			.build();
@@ -54,8 +54,8 @@ class UsingTheLauncherDemo {
 		// tag::execution[]
 		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
 			.selectors(
-				selectJavaPackage("com.example.mytests"),
-				selectJavaClass(MyTestClass.class)
+				selectPackage("com.example.mytests"),
+				selectClass(MyTestClass.class)
 			)
 			.filters(includeClassNamePatterns(".*Test"))
 			.build();

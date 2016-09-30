@@ -10,7 +10,7 @@
 
 package org.junit.platform.surefire.provider;
 
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.InvocationTargetException;
@@ -97,7 +97,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		SimpleReportEntry classEntry = new SimpleReportEntry(getClass().getName(), testClass.getName());
 		runListener.testSetStarting(classEntry);
 
-		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectJavaClass(testClass)).build();
+		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		launcher.execute(discoveryRequest);
 
 		runListener.testSetCompleted(classEntry);
