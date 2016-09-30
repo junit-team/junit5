@@ -105,7 +105,7 @@ class JavaSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source.getClassName()).isEqualTo(getClass().getName());
 		assertThat(source.getMethodName()).isEqualTo(testMethod.getName());
-		assertThat(source.getMethodParameterTypes()).containsExactly(String.class);
+		assertThat(source.getMethodParameterTypes()).isEqualTo(String.class.getName());
 	}
 
 	@Test

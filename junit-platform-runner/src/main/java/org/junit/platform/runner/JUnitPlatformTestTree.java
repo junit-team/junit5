@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.toSet;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -102,13 +101,12 @@ class JUnitPlatformTestTree {
 			}
 			else if (source instanceof JavaMethodSource) {
 				JavaMethodSource javaMethodSource = (JavaMethodSource) source;
-				List<Class<?>> parameterTypes = javaMethodSource.getMethodParameterTypes();
-				if (parameterTypes.size() == 0) {
+				String methodParameterTypes = javaMethodSource.getMethodParameterTypes();
+				if (StringUtils.isBlank(methodParameterTypes)) {
 					return javaMethodSource.getMethodName();
 				}
 				else {
-					return String.format("%s(%s)", javaMethodSource.getMethodName(), StringUtils.nullSafeToString(
-						Class::getName, parameterTypes.toArray(new Class<?>[parameterTypes.size()])));
+					return String.format("%s(%s)", javaMethodSource.getMethodName(), methodParameterTypes);
 				}
 			}
 		}

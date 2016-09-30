@@ -13,12 +13,11 @@ package org.junit.platform.engine.discovery;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.Method;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
@@ -40,22 +39,31 @@ import org.junit.platform.engine.DiscoverySelector;
 @API(Experimental)
 public class JavaMethodSelector implements DiscoverySelector {
 
-	private static Pattern methodNameWithParametersPattern = Pattern.compile("([^(]+)\\(([^)]*)\\)");
-
 	private Class<?> javaClass;
 	private final String className;
 	private Method javaMethod;
 	private final String methodName;
+	private final String methodParameterTypes;
 
 	JavaMethodSelector(String className, String methodName) {
+		this(className, methodName, null);
+	}
+
+	JavaMethodSelector(String className, String methodName, String methodParameterTypes) {
 		this.className = className;
 		this.methodName = methodName;
+		this.methodParameterTypes = methodParameterTypes;
 	}
 
 	JavaMethodSelector(Class<?> javaClass, String methodName) {
+		this(javaClass, methodName, null);
+	}
+
+	public JavaMethodSelector(Class<?> javaClass, String methodName, String methodParameterTypes) {
 		this.javaClass = javaClass;
 		this.className = javaClass.getName();
 		this.methodName = methodName;
+		this.methodParameterTypes = methodParameterTypes;
 	}
 
 	JavaMethodSelector(Class<?> javaClass, Method method) {
@@ -63,6 +71,7 @@ public class JavaMethodSelector implements DiscoverySelector {
 		this.className = javaClass.getName();
 		this.javaMethod = method;
 		this.methodName = method.getName();
+		this.methodParameterTypes = null;
 	}
 
 	/**
@@ -91,6 +100,16 @@ public class JavaMethodSelector implements DiscoverySelector {
 	}
 
 	/**
+	 * Get the parameters types for the selected {@link Method} as a
+	 * {@link String}. Note: The parameters are not provided as a list. This
+	 * is by design to allow this generic class to be used by other JVM
+	 * related languages.
+	 */
+	public String getMethodParameterTypes() {
+		return this.methodParameterTypes;
+	}
+
+	/**
 	 * Get the selected Java {@link Method}.
 	 *
 	 * @see #getJavaClass()
@@ -106,6 +125,7 @@ public class JavaMethodSelector implements DiscoverySelector {
 		return new ToStringBuilder(this)
 				.append("className", this.className)
 				.append("methodName", this.methodName)
+				.append("methodParameterTypes", this.methodParameterTypes)
 				.toString();
 		// @formatter:on
 	}
@@ -117,15 +137,11 @@ public class JavaMethodSelector implements DiscoverySelector {
 		}
 
 		if (this.javaMethod == null) {
-			Matcher matcher = methodNameWithParametersPattern.matcher(this.methodName);
-			if (matcher.matches()) {
-				String methodNameOnly = matcher.group(1);
-				String parameterTypes = matcher.group(2);
-				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, methodNameOnly,
-					parameterTypes).orElseThrow(
-						() -> new PreconditionViolationException(
-							String.format("Could not find method with name [%s] in class [%s].", this.methodName,
-								this.javaClass.getName())));
+			if (StringUtils.isNotBlank(this.methodParameterTypes)) {
+				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName,
+					this.methodParameterTypes).orElseThrow(() -> new PreconditionViolationException(
+						String.format("Could not find method with name [%s] and parameter types [%s] in class [%s].",
+							this.methodName, this.methodParameterTypes, this.javaClass.getName())));
 			}
 			else {
 				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName).orElseThrow(
@@ -135,5 +151,4 @@ public class JavaMethodSelector implements DiscoverySelector {
 			}
 		}
 	}
-
 }
