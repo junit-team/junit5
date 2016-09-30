@@ -19,6 +19,8 @@ import java.util.Objects;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.discovery.MethodSelector;
 
 /**
  * Java method based {@link org.junit.platform.engine.TestSource}.
@@ -27,10 +29,10 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * {@link Method} does not implement {@link java.io.Serializable}.
  *
  * @since 1.0
- * @see org.junit.platform.engine.discovery.JavaMethodSelector
+ * @see MethodSelector
  */
 @API(Experimental)
-public class JavaMethodSource implements JavaSource {
+public class MethodSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,25 +41,25 @@ public class JavaMethodSource implements JavaSource {
 	private final String methodParameterTypes;
 
 	/**
-	 * Create a new {@code JavaMethodSource} using the supplied
+	 * Create a new {@code MethodSource} using the supplied
 	 * class and method name.
 	 *
 	 * @param className the {@link Class} name; must not be {@code null} or blank
 	 * @param methodName the {@link Method} name; must not be {@code null} or blank
 	 */
-	public JavaMethodSource(String className, String methodName) {
+	public MethodSource(String className, String methodName) {
 		this(className, methodName, null);
 	}
 
 	/**
-	 * Create a new {@code JavaMethodSource} using the supplied
+	 * Create a new {@code MethodSource} using the supplied
 	 * class and method name.
 	 *
 	 * @param className the {@link Class} name; must not be {@code null} or blank
 	 * @param methodName the {@link Method} name; must not be {@code null} or blank
 	 * @param methodParameterTypes the {@link Method} parameter types as string
 	 */
-	public JavaMethodSource(String className, String methodName, String methodParameterTypes) {
+	public MethodSource(String className, String methodName, String methodParameterTypes) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		this.className = className;
@@ -66,12 +68,12 @@ public class JavaMethodSource implements JavaSource {
 	}
 
 	/**
-	 * Create a new {@code JavaMethodSource} using the supplied
+	 * Create a new {@code MethodSource} using the supplied
 	 * {@link Method method}.
 	 *
 	 * @param method the Java method; must not be {@code null}
 	 */
-	public JavaMethodSource(Method method) {
+	public MethodSource(Method method) {
 		Preconditions.notNull(method, "method must not be null");
 		this.className = method.getDeclaringClass().getName();
 		this.methodName = method.getName();
@@ -107,7 +109,7 @@ public class JavaMethodSource implements JavaSource {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		JavaMethodSource that = (JavaMethodSource) o;
+		MethodSource that = (MethodSource) o;
 		return Objects.equals(this.className, that.className) && Objects.equals(this.methodName, that.methodName)
 				&& Objects.equals(this.methodParameterTypes, that.methodParameterTypes);
 	}

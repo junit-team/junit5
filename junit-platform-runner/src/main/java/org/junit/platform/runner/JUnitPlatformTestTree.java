@@ -24,8 +24,8 @@ import java.util.function.Predicate;
 
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.runner.Description;
@@ -96,17 +96,17 @@ class JUnitPlatformTestTree {
 		Optional<TestSource> optionalSource = testIdentifier.getSource();
 		if (optionalSource.isPresent()) {
 			TestSource source = optionalSource.get();
-			if (source instanceof JavaClassSource) {
-				return ((JavaClassSource) source).getJavaClass().getName();
+			if (source instanceof ClassSource) {
+				return ((ClassSource) source).getJavaClass().getName();
 			}
-			else if (source instanceof JavaMethodSource) {
-				JavaMethodSource javaMethodSource = (JavaMethodSource) source;
-				String methodParameterTypes = javaMethodSource.getMethodParameterTypes();
+			else if (source instanceof MethodSource) {
+				MethodSource methodSource = (MethodSource) source;
+				String methodParameterTypes = methodSource.getMethodParameterTypes();
 				if (StringUtils.isBlank(methodParameterTypes)) {
-					return javaMethodSource.getMethodName();
+					return methodSource.getMethodName();
 				}
 				else {
-					return String.format("%s(%s)", javaMethodSource.getMethodName(), methodParameterTypes);
+					return String.format("%s(%s)", methodSource.getMethodName(), methodParameterTypes);
 				}
 			}
 		}

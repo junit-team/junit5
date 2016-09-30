@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.test.TestDescriptorStub;
 
 /**
@@ -43,12 +43,12 @@ class TestIdentifierTests {
 	@Test
 	void serialization() throws Exception {
 		TestIdentifier identifier = serializeAndDeserialize(//
-			new TestIdentifier("uniqueId", "displayName", Optional.of(new JavaClassSource(TestIdentifierTests.class)),
+			new TestIdentifier("uniqueId", "displayName", Optional.of(new ClassSource(TestIdentifierTests.class)),
 				singleton(TestTag.create("aTag")), true, false, Optional.of("parentId")));
 
 		assertEquals("uniqueId", identifier.getUniqueId());
 		assertEquals("displayName", identifier.getDisplayName());
-		assertThat(identifier.getSource()).contains(new JavaClassSource(TestIdentifierTests.class));
+		assertThat(identifier.getSource()).contains(new ClassSource(TestIdentifierTests.class));
 		assertEquals(singleton(TestTag.create("aTag")), identifier.getTags());
 		assertTrue(identifier.isTest());
 		assertFalse(identifier.isContainer());

@@ -17,31 +17,36 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 
 /**
  * A {@link DiscoverySelector} that selects a {@link Class} so that
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * tests or containers based on classes.
  *
- * If a java {@link Class} is provided, the selector will return this
+ * If a Java {@link Class} is provided, the selector will return this
  * {@link Class} and its class name accordingly. If the selector was
  * created with a {@link Class} name, it will tries to lazy load the
- * {@link Class} only on request.
+ * Java {@link Class} only on request.
+ *
+ * Note: Java {@link Class} here means, anything that can be referenced
+ * by a {@link Class} on the JVM, e.g. also classes from other languages
+ * like Groovy, Scala, etc.
  *
  * @since 1.0
- * @see org.junit.platform.engine.support.descriptor.JavaClassSource
+ * @see ClassSource
  */
 @API(Experimental)
-public class JavaClassSelector implements DiscoverySelector {
+public class ClassSelector implements DiscoverySelector {
 
 	private final String className;
 	private Class<?> javaClass;
 
-	JavaClassSelector(String className) {
+	ClassSelector(String className) {
 		this.className = className;
 	}
 
-	JavaClassSelector(Class<?> javaClass) {
+	ClassSelector(Class<?> javaClass) {
 		this.className = javaClass.getName();
 		this.javaClass = javaClass;
 	}
@@ -54,7 +59,11 @@ public class JavaClassSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the selected Java {@link Class}.
+	 * Get the selected {@link Class}.
+	 *
+	 * Note: If the {@link Class} was not provided, but only the name,
+	 * this method tries to lazy load the {@link Class} and throws an
+	 * {@link PreconditionViolationException} if it fails.
 	 */
 	public Class<?> getJavaClass() {
 		if (this.javaClass == null) {

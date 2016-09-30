@@ -12,7 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.List;
@@ -56,8 +56,8 @@ class LauncherFactoryTests {
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
 		// @formatter:off
 		return request()
-				.selectors(selectJavaClass(JUnit4Example.class))
-				.selectors(selectJavaClass(JUnit5Example.class))
+				.selectors(selectClass(JUnit4Example.class))
+				.selectors(selectClass(JUnit5Example.class))
 				.build();
 		// @formatter:on
 	}

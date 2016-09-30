@@ -51,13 +51,13 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
-import org.junit.platform.engine.discovery.JavaClassSelector;
-import org.junit.platform.engine.discovery.JavaPackageSelector;
+import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalContainerDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
@@ -94,9 +94,9 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<JavaClassSelector> selectors = request.getSelectorsByType(JavaClassSelector.class);
+			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
 			assertThat(selectors).hasSize(1);
-			JavaClassSelector classSelector = getOnlyElement(selectors);
+			ClassSelector classSelector = getOnlyElement(selectors);
 			assertEquals(TestCase.class, classSelector.getJavaClass());
 		}
 
@@ -109,7 +109,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<JavaClassSelector> selectors = request.getSelectorsByType(JavaClassSelector.class);
+			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
 			assertThat(selectors).hasSize(2);
 			assertEquals(Short.class, selectors.get(0).getJavaClass());
 			assertEquals(Byte.class, selectors.get(1).getJavaClass());
@@ -124,7 +124,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<JavaPackageSelector> selectors = request.getSelectorsByType(JavaPackageSelector.class);
+			List<PackageSelector> selectors = request.getSelectorsByType(PackageSelector.class);
 			assertThat(selectors).hasSize(2);
 			assertEquals("foo", selectors.get(0).getPackageName());
 			assertEquals("bar", selectors.get(1).getPackageName());
@@ -416,10 +416,10 @@ class JUnitPlatformRunnerTests {
 			DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
 			DemoHierarchicalContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
-				"containerDisplayName", new JavaClassSource(getClass()));
+				"containerDisplayName", new ClassSource(getClass()));
 			containerDescriptor.addChild(
 				new DemoHierarchicalTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
-					"testDisplayName", new JavaMethodSource(failingTest), () -> {
+					"testDisplayName", new MethodSource(failingTest), () -> {
 					}));
 
 			JUnitPlatform platformRunner = new JUnitPlatform(TestClass.class, createLauncher(engine));
@@ -452,10 +452,10 @@ class JUnitPlatformRunnerTests {
 			DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
 			DemoHierarchicalContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
-				"containerDisplayName", new JavaClassSource(getClass()));
+				"containerDisplayName", new ClassSource(getClass()));
 			containerDescriptor.addChild(
 				new DemoHierarchicalTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
-					"testDisplayName", new JavaMethodSource(failingTest), () -> {
+					"testDisplayName", new MethodSource(failingTest), () -> {
 					}));
 
 			JUnitPlatform platformRunner = new JUnitPlatform(TestClassWithTechnicalNames.class, createLauncher(engine));

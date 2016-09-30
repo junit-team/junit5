@@ -12,7 +12,7 @@ package org.junit.jupiter.engine;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +34,7 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void nestedTestsAreCorrectlyDiscovered() {
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(TestCaseWithNesting.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
@@ -53,8 +53,7 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void doublyNestedTestsAreCorrectlyDiscovered() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaClass(TestCaseWithDoubleNesting.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithDoubleNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(8, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}

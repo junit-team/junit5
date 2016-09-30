@@ -20,24 +20,29 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * A {@link DiscoverySelector} that selects a {@link Method} so that
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * tests or containers based on Java methods.
  *
- *  If a java {@link Method} is provided, the selector will return this
+ *  If a Java {@link Method} is provided, the selector will return this
  * {@link Method} and its method name accordingly. If the selector was
  * created with a {@link Class} and {@link Method} name, a {@link Class}
  * name and {@link Method} name, or only a full qualified {@link Method}
  * name, it will tries to lazy load the {@link Class} and {@link Method}
  * only on request.
  *
+ * Note: Java {@link Method} here means, anything that can be referenced
+ * by a {@link Method} on the JVM, e.g. also methods from other languages
+ * like Groovy, Scala, etc.
+ *
  * @since 1.0
- * @see org.junit.platform.engine.support.descriptor.JavaMethodSource
+ * @see MethodSource
  */
 @API(Experimental)
-public class JavaMethodSelector implements DiscoverySelector {
+public class MethodSelector implements DiscoverySelector {
 
 	private Class<?> javaClass;
 	private final String className;
@@ -45,28 +50,28 @@ public class JavaMethodSelector implements DiscoverySelector {
 	private final String methodName;
 	private final String methodParameterTypes;
 
-	JavaMethodSelector(String className, String methodName) {
+	MethodSelector(String className, String methodName) {
 		this(className, methodName, null);
 	}
 
-	JavaMethodSelector(String className, String methodName, String methodParameterTypes) {
+	MethodSelector(String className, String methodName, String methodParameterTypes) {
 		this.className = className;
 		this.methodName = methodName;
 		this.methodParameterTypes = methodParameterTypes;
 	}
 
-	JavaMethodSelector(Class<?> javaClass, String methodName) {
+	MethodSelector(Class<?> javaClass, String methodName) {
 		this(javaClass, methodName, null);
 	}
 
-	public JavaMethodSelector(Class<?> javaClass, String methodName, String methodParameterTypes) {
+	public MethodSelector(Class<?> javaClass, String methodName, String methodParameterTypes) {
 		this.javaClass = javaClass;
 		this.className = javaClass.getName();
 		this.methodName = methodName;
 		this.methodParameterTypes = methodParameterTypes;
 	}
 
-	JavaMethodSelector(Class<?> javaClass, Method method) {
+	MethodSelector(Class<?> javaClass, Method method) {
 		this.javaClass = javaClass;
 		this.className = javaClass.getName();
 		this.javaMethod = method;
@@ -82,8 +87,12 @@ public class JavaMethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the Java {@link Class} in which the selected {@linkplain #getJavaMethod
+	 * Get the {@link Class} in which the selected {@linkplain #getJavaMethod
 	 * javaMethod} is declared, or a subclass thereof.
+	 *
+	 * Note: If the {@link Class} was not provided, but only the name,
+	 * this method tries to lazy load the {@link Class} and throws an
+	 * {@link PreconditionViolationException} if it fails.
 	 *
 	 * @see #getJavaMethod()
 	 */
@@ -110,7 +119,11 @@ public class JavaMethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the selected Java {@link Method}.
+	 * Get the selected {@link Method}.
+	 *
+	 * Note: If the {@link Method} was not provided, but only the name,
+	 * this method tries to lazy load the {@link Method} and throws an
+	 * {@link PreconditionViolationException} if it fails.
 	 *
 	 * @see #getJavaClass()
 	 */

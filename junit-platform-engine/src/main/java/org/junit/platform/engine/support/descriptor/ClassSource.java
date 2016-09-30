@@ -20,16 +20,18 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.discovery.ClassSelector;
 
 /**
  * Java class based {@link org.junit.platform.engine.TestSource} with an optional
  * {@linkplain FilePosition position}.
  *
  * @since 1.0
- * @see org.junit.platform.engine.discovery.JavaClassSelector
+ * @see ClassSelector
  */
 @API(Experimental)
-public class JavaClassSource implements JavaSource {
+public class ClassSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,45 +42,45 @@ public class JavaClassSource implements JavaSource {
 	private final FilePosition filePosition;
 
 	/**
-	 * Create a new {@code JavaClassSource} using the supplied
+	 * Create a new {@code ClassSource} using the supplied
 	 * className.
 	 *
 	 * @param className the Java class name; must not be {@code null}
 	 */
-	public JavaClassSource(String className) {
+	public ClassSource(String className) {
 		this(className, null);
 	}
 
 	/**
-	 * Create a new {@code JavaClassSource} using the supplied
+	 * Create a new {@code ClassSource} using the supplied
 	 * className and {@link FilePosition filePosition}.
 	 *
 	 * @param className the Java class name; must not be {@code null}
 	 * @param filePosition the position in the Java source file; may be {@code null}
 	 */
-	public JavaClassSource(String className, FilePosition filePosition) {
+	public ClassSource(String className, FilePosition filePosition) {
 		this.className = className;
 		this.filePosition = filePosition;
 	}
 
 	/**
-	 * Create a new {@code JavaClassSource} using the supplied
+	 * Create a new {@code ClassSource} using the supplied
 	 * {@link Class javaClass}.
 	 *
 	 * @param javaClass the Java class; must not be {@code null}
 	 */
-	public JavaClassSource(Class<?> javaClass) {
+	public ClassSource(Class<?> javaClass) {
 		this(javaClass, null);
 	}
 
 	/**
-	 * Create a new {@code JavaClassSource} using the supplied
+	 * Create a new {@code ClassSource} using the supplied
 	 * {@link Class javaClass} and {@link FilePosition filePosition}.
 	 *
 	 * @param javaClass the Java class; must not be {@code null}
 	 * @param filePosition the position in the Java source file; may be {@code null}
 	 */
-	public JavaClassSource(Class<?> javaClass, FilePosition filePosition) {
+	public ClassSource(Class<?> javaClass, FilePosition filePosition) {
 		this.javaClass = Preconditions.notNull(javaClass, "class must not be null");
 		this.className = this.javaClass.getName();
 		this.filePosition = filePosition;
@@ -124,7 +126,7 @@ public class JavaClassSource implements JavaSource {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		JavaClassSource that = (JavaClassSource) o;
+		ClassSource that = (ClassSource) o;
 		return Objects.equals(this.javaClass, that.javaClass) && Objects.equals(this.filePosition, that.filePosition);
 	}
 

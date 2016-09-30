@@ -31,7 +31,7 @@ public class DemoClassTestDescriptor extends AbstractTestDescriptor {
 
 	public DemoClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
 		super(uniqueId, Preconditions.notNull(testClass, "Class must not be null").getSimpleName());
-		setSource(new JavaClassSource(testClass));
+		setSource(new ClassSource(testClass));
 		this.testClass = testClass;
 	}
 

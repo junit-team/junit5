@@ -12,7 +12,7 @@ package org.junit.jupiter.engine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class ReportingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void threeReportEntriesArePublished() {
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(MyReportingTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(MyReportingTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

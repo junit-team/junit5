@@ -47,7 +47,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -90,7 +90,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		this.beforeEachMethods = findBeforeEachMethods(testClass);
 		this.afterEachMethods = findAfterEachMethods(testClass);
 
-		setSource(new JavaClassSource(testClass));
+		setSource(new ClassSource(testClass));
 	}
 
 	// --- TestDescriptor ------------------------------------------------------

@@ -36,8 +36,8 @@ import javax.xml.stream.XMLStreamWriter;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 
 /**
@@ -150,13 +150,12 @@ class XmlReportWriter {
 		Optional<TestSource> optionalSource = testIdentifier.getSource();
 		if (optionalSource.isPresent()) {
 			TestSource source = optionalSource.get();
-			if (source instanceof JavaClassSource) {
-				return ((JavaClassSource) source).getJavaClass().getName();
+			if (source instanceof ClassSource) {
+				return ((ClassSource) source).getJavaClass().getName();
 			}
-			else if (source instanceof JavaMethodSource) {
-				JavaMethodSource javaMethodSource = (JavaMethodSource) source;
-				return String.format("%s(%s)", javaMethodSource.getMethodName(),
-					javaMethodSource.getMethodParameterTypes());
+			else if (source instanceof MethodSource) {
+				MethodSource methodSource = (MethodSource) source;
+				return String.format("%s(%s)", methodSource.getMethodName(), methodSource.getMethodParameterTypes());
 			}
 		}
 
@@ -168,11 +167,11 @@ class XmlReportWriter {
 		Optional<TestSource> optionalSource = testIdentifier.getSource();
 		if (optionalSource.isPresent()) {
 			TestSource source = optionalSource.get();
-			if (source instanceof JavaClassSource) {
-				return ((JavaClassSource) source).getClassName();
+			if (source instanceof ClassSource) {
+				return ((ClassSource) source).getClassName();
 			}
-			else if (source instanceof JavaMethodSource) {
-				return ((JavaMethodSource) source).getClassName();
+			else if (source instanceof MethodSource) {
+				return ((MethodSource) source).getClassName();
 			}
 		}
 

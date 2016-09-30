@@ -17,7 +17,7 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * @since 1.0
@@ -51,7 +51,7 @@ public final class DemoHierarchicalTestEngine extends HierarchicalTestEngine<Dem
 
 	public DemoHierarchicalTestDescriptor addTest(Method testMethod, Runnable executeBlock) {
 		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", testMethod.getName());
-		JavaMethodSource source = new JavaMethodSource(testMethod);
+		MethodSource source = new MethodSource(testMethod);
 		DemoHierarchicalTestDescriptor child = new DemoHierarchicalTestDescriptor(uniqueId, testMethod.getName(),
 			source, executeBlock);
 		engineDescriptor.addChild(child);
