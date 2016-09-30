@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.platform.commons.meta.API;
 
 import java.lang.reflect.AnnotatedElement;
@@ -40,6 +41,22 @@ public interface TestFactoryExtension extends Extension {
 		return (Stream<Class<TestFactoryExtension>>) classStream;
 	}
 
-	// TODO
+	/**
+	 * Creates dynamic tests for the container represented by the specified
+	 * {@link ContainerExtensionContext}.
+	 *
+	 * @param context the current extension context; never {@code null}
+	 * @return the generated tests; never {@code null}
+	 */
+	Stream<DynamicTest> createForContainer(ContainerExtensionContext context);
+
+	/**
+	 * Creates dynamic tests for the method represented by the specified
+	 * {@link TestExtensionContext}.
+	 *
+	 * @param context the current extension context; never {@code null}
+	 * @return the generated tests; never {@code null}
+	 */
+	Stream<DynamicTest> createForMethod(TestExtensionContext context);
 
 }

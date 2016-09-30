@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.engineId;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestFactoryExtensionMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestFactoryMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
@@ -39,7 +40,10 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.TwoTestFactoryExtension;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
+import org.junit.jupiter.engine.descriptor.TestFactoryExtensionMethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
@@ -70,12 +74,13 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
-		assertEquals(4, engineDescriptor.getAllDescendants().size());
+		assertEquals(5, engineDescriptor.getAllDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()")));
 	}
 
 	@Test
@@ -85,12 +90,13 @@ public class DiscoverySelectorResolverTests {
 			selectJavaClass(MyTestClass.class) //
 		).build(), engineDescriptor);
 
-		assertEquals(4, engineDescriptor.getAllDescendants().size());
+		assertEquals(5, engineDescriptor.getAllDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()")));
 	}
 
 	@Test
@@ -100,12 +106,13 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().selectors(selector1, selector2).build(), engineDescriptor);
 
-		assertEquals(7, engineDescriptor.getAllDescendants().size());
+		assertEquals(8, engineDescriptor.getAllDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()")));
 		assertTrue(uniqueIds.contains(uniqueIdForClass(YourTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test3()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test4()")));
@@ -165,12 +172,13 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
-		assertEquals(4, engineDescriptor.getAllDescendants().size());
+		assertEquals(5, engineDescriptor.getAllDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()")));
 	}
 
 	@Test
@@ -341,6 +349,33 @@ public class DiscoverySelectorResolverTests {
 
 		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(MyTestClass.class),
 			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
+	}
+
+	@Test
+	public void resolvingTestFactoryExtensionByUniqueIdResolvesOnlyUpToParentTestFactory() {
+		UniqueIdSelector selector = selectUniqueId(
+				uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()")
+						.append(TestFactoryExtensionMethodTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "%1"));
+
+		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
+
+		assertThat(engineDescriptor.getAllDescendants()).hasSize(2);
+
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(MyTestClass.class),
+				uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()"));
+	}
+
+	@Test
+	public void resolvingTestFactoryExtensionMethodByUniqueId() {
+		UniqueIdSelector selector = selectUniqueId(
+				uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()"));
+
+		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
+
+		assertThat(engineDescriptor.getAllDescendants()).hasSize(2);
+
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(MyTestClass.class),
+				uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()"));
 	}
 
 	@Test
@@ -527,6 +562,11 @@ class MyTestClass {
 	Stream<DynamicTest> dynamicTest() {
 		return new ArrayList<DynamicTest>().stream();
 	}
+
+	@ExtendWith(TwoTestFactoryExtension.class)
+	void twoTests() {
+	}
+
 }
 
 class YourTestClass {

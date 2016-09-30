@@ -10,9 +10,14 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.TestFactoryExtension;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.lang.annotation.ElementType;
@@ -21,6 +26,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -138,6 +144,22 @@ abstract class AbstractClassWithMethod {
 @Retention(RetentionPolicy.RUNTIME)
 @Test
 @TestFactory
+@ExtendWith(TestFactoryExtension.class)
 @interface Testlike {
+
+	class MockTestFactoryExtension implements TestFactoryExtension {
+
+		@Override
+		public Stream<DynamicTest> createForContainer(
+				ContainerExtensionContext context) {
+			return Stream.empty();
+		}
+
+		@Override
+		public Stream<DynamicTest> createForMethod(TestExtensionContext context) {
+			return Stream.empty();
+		}
+	}
+
 }
 
