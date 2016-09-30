@@ -10,10 +10,17 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+
+import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.extension.TestFactoryExtension;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.extension.TestFactoryExtensionScanner;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -21,12 +28,6 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.SingleTestExecutor;
-
-import java.lang.reflect.Method;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
-
-import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 /**
  * {@link TestDescriptor} for {@link TestFactoryExtension} methods.
@@ -76,7 +77,8 @@ public class TestFactoryExtensionMethodTestDescriptor extends MethodTestDescript
 		context.getThrowableCollector().execute(() -> {
 			AtomicInteger index = new AtomicInteger();
 			Method extendedMethod = testExtensionContext.getTestMethod().get();
-			TestFactoryExtension.streamTestFactoryExtensions(extendedMethod)
+			// @formatter:off
+			TestFactoryExtensionScanner.streamTestFactoryExtensions(extendedMethod)
 					.flatMap(extension -> createDynamicTestsForExtension(extension, testExtensionContext))
 					.forEach(dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), listener));
 		});

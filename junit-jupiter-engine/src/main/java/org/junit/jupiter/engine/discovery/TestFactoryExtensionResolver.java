@@ -10,8 +10,15 @@
 
 package org.junit.jupiter.engine.discovery;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
-import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryExtensionMethodTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryExtensionContainer;
 import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryExtensionMethod;
@@ -23,19 +30,11 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.UniqueId.Segment;
 
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
-
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
-
 /**
  * @since 5.0
  */
 @API(Experimental)
-class TestFactoryExtensionResolver implements ElementResolver {
+public class TestFactoryExtensionResolver implements ElementResolver {
 
 	static final String CONTAINER_SEGMENT_TYPE = "test-factory-container";
 	static final String METHOD_SEGMENT_TYPE = "test-factory-method";
@@ -91,7 +90,7 @@ class TestFactoryExtensionResolver implements ElementResolver {
 
 	protected UniqueId createUniqueMethodId(Method testFactoryMethod, TestDescriptor parent) {
 		String methodId = String.format("%s(%s)", testFactoryMethod.getName(),
-				StringUtils.nullSafeToString(testFactoryMethod.getParameterTypes()));
+			StringUtils.nullSafeToString(testFactoryMethod.getParameterTypes()));
 		return parent.getUniqueId().append(METHOD_SEGMENT_TYPE, methodId);
 	}
 
@@ -102,10 +101,8 @@ class TestFactoryExtensionResolver implements ElementResolver {
 
 	@Override
 	public Optional<TestDescriptor> resolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
-		return FunctionUtils.firstPresent(
-				() -> resolveUniqueContainerId(segment, parent),
-				() -> resolveUniqueMethodId(segment, parent)
-		);
+		return FunctionUtils.firstPresent(() -> resolveUniqueContainerId(segment, parent),
+			() -> resolveUniqueMethodId(segment, parent));
 	}
 
 	private Optional<TestDescriptor> resolveUniqueContainerId(Segment segment, TestDescriptor parent) {

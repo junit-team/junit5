@@ -44,7 +44,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.TwoTestFactoryExtension;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryExtensionMethodTestDescriptor;
-import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases;
@@ -328,8 +327,8 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void resolvingDynamicTestByUniqueIdResolvesOnlyUpToParentTestFactory() {
 		UniqueIdSelector selector = selectUniqueId(
-			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()").append(
-				TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "%1"));
+			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")
+					.append(TestFactoryExtensionMethodTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "%1"));
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 

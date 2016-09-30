@@ -23,8 +23,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions
-		.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.dynamicTestRegistered;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;

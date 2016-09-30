@@ -10,16 +10,14 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.TestFactoryExtension;
-import org.junit.platform.commons.meta.API;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Arrays;
 import java.util.function.Predicate;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
+import org.junit.jupiter.api.extension.TestFactoryExtension;
+import org.junit.jupiter.engine.extension.TestFactoryExtensionScanner;
+import org.junit.platform.commons.meta.API;
 
 /**
  * Test whether an element is extended with {@link TestFactoryExtension}.
@@ -32,7 +30,7 @@ class IsTestFactoryExtensionElement implements Predicate<AnnotatedElement> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean test(AnnotatedElement candidate) {
-		return TestFactoryExtension.streamTestFactoryExtensions(candidate).anyMatch(ignored -> true);
+		return TestFactoryExtensionScanner.streamTestFactoryExtensions(candidate).anyMatch(ignored -> true);
 	}
 
 }
