@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.util.Optional;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * A <em>node</em> within the execution hierarchy.
@@ -113,7 +114,7 @@ public interface Node<C extends EngineExecutionContext> {
 		private static final SkipResult alwaysExecuteSkipResult = new SkipResult(false, null);
 
 		private final boolean skipped;
-		private final String reason;
+		private final Optional<String> reason;
 
 		/**
 		 * Factory for creating <em>skipped</em> results.
@@ -140,7 +141,7 @@ public interface Node<C extends EngineExecutionContext> {
 
 		private SkipResult(boolean skipped, String reason) {
 			this.skipped = skipped;
-			this.reason = reason;
+			this.reason = Optional.ofNullable(reason);
 		}
 
 		/**
@@ -157,7 +158,17 @@ public interface Node<C extends EngineExecutionContext> {
 		 * if available.
 		 */
 		public Optional<String> getReason() {
-			return Optional.ofNullable(this.reason);
+			return this.reason;
+		}
+
+		@Override
+		public String toString() {
+			// @formatter:off
+			return new ToStringBuilder(this)
+					.append("skipped", this.skipped)
+					.append("reason", this.reason.orElse("<unknown>"))
+					.toString();
+			// @formatter:on
 		}
 	}
 
