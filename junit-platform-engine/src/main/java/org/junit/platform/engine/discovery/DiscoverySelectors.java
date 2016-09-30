@@ -32,6 +32,7 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.UniqueId;
 
@@ -49,7 +50,7 @@ import org.junit.platform.engine.UniqueId;
 @API(Experimental)
 public final class DiscoverySelectors {
 
-	private static Pattern fullyQualifiedMethodNamePattern = Pattern.compile("([^#]+)#(.+)");
+	private static Pattern fullyQualifiedMethodNamePattern = Pattern.compile("([^#]+)#([^(]+)(?:\\((.*)\\))?");
 
 	///CLOVER:OFF
 	private DiscoverySelectors() {
@@ -300,7 +301,12 @@ public final class DiscoverySelectors {
 		Preconditions.condition(matcher.matches(),
 			"FullyQualifiedMethodName is not a valid fully qualified method name");
 
-		return selectJavaMethod(matcher.group(1), matcher.group(2));
+		if (StringUtils.isNotBlank(matcher.group(3))) {
+			return selectJavaMethod(matcher.group(1), matcher.group(2), matcher.group(3));
+		}
+		else {
+			return selectJavaMethod(matcher.group(1), matcher.group(2));
+		}
 	}
 
 	/**
@@ -318,6 +324,25 @@ public final class DiscoverySelectors {
 	}
 
 	/**
+	 * Create a {@code JavaMethodSelector} for the supplied class name and method name
+	 * with respect to the given method parameter types.
+	 *
+	 * @param className the fully qualified name of the class in which the method
+	 * is declared, or a subclass thereof; never {@code null} or blank
+	 * @param methodName the name of the method to select; never {@code null} or blank
+	 * @param methodParameterTypes the method parameter types as string; never
+	 * {@code null} or blank
+	 * @see JavaMethodSelector
+	 */
+	public static JavaMethodSelector selectJavaMethod(String className, String methodName,
+			String methodParameterTypes) {
+		Preconditions.notBlank(className, "Class name must not be null or blank");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		Preconditions.notBlank(methodParameterTypes, "Parameter types must not be null or blank");
+		return new JavaMethodSelector(className, methodName, methodParameterTypes);
+	}
+
+	/**
 	 * Create a {@code JavaMethodSelector} for the supplied {@link Class} and method name.
 	 *
 	 * @param javaClass the class in which the method is declared, or a subclass thereof;
@@ -329,6 +354,24 @@ public final class DiscoverySelectors {
 		Preconditions.notNull(javaClass, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		return new JavaMethodSelector(javaClass, methodName);
+	}
+
+	/**
+	 * Create a {@code JavaMethodSelector} for the supplied {@link Class} and method name.
+	 *
+	 * @param javaClass the class in which the method is declared, or a subclass thereof;
+	 * never {@code null}
+	 * @param methodName the name of the method to select; never {@code null} or blank
+	 * @param methodParameterTypes the method parameter types as string; never
+	 * {@code null} or blank
+	 * @see JavaMethodSelector
+	 */
+	public static JavaMethodSelector selectJavaMethod(Class<?> javaClass, String methodName,
+			String methodParameterTypes) {
+		Preconditions.notNull(javaClass, "Class must not be null");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		Preconditions.notBlank(methodParameterTypes, "Parameter types name must not be null or blank");
+		return new JavaMethodSelector(javaClass, methodName, methodParameterTypes);
 	}
 
 	/**
