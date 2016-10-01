@@ -10,16 +10,16 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
-import org.junit.platform.commons.util.ReflectionUtils;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 public class IsTestFactoryMethodTests {
 
@@ -68,4 +68,3 @@ class ClassWithTestFactoryAndNonTestFactoryMethod {
 	}
 
 }
-

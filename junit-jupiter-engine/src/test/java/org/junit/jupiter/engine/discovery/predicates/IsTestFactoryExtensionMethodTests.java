@@ -10,17 +10,17 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.lang.reflect.Method;
+import java.util.function.Predicate;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.TestFactoryExtension;
 import org.junit.platform.commons.util.ReflectionUtils;
-
-import java.lang.reflect.Method;
-import java.util.function.Predicate;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @since 5.0
@@ -56,8 +56,8 @@ public class IsTestFactoryExtensionMethodTests {
 	}
 
 	private static Method findMethod(String name, Class<?>... aClass) {
-		return ReflectionUtils.findMethod(ClassWithTestFactoryAndNonTestFactoryExtensionMethod.class, name, aClass)
-				.get();
+		return ReflectionUtils.findMethod(ClassWithTestFactoryAndNonTestFactoryExtensionMethod.class, name,
+			aClass).get();
 	}
 
 }

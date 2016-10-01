@@ -10,15 +10,15 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import org.junit.platform.commons.meta.API;
-
-import java.lang.reflect.Method;
-import java.util.function.Predicate;
-
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
+
+import java.lang.reflect.Method;
+import java.util.function.Predicate;
+
+import org.junit.platform.commons.meta.API;
 
 /**
  * Test if a method is a potential JUnit Jupiter test method

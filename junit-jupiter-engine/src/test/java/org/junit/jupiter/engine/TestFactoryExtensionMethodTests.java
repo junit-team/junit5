@@ -10,16 +10,6 @@
 
 package org.junit.jupiter.engine;
 
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.TestFactoryExtension;
-import org.junit.jupiter.api.extension.TwoTestFactoryExtension;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
@@ -35,6 +25,14 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.TestFactoryExtension;
+import org.junit.jupiter.api.extension.TwoTestFactoryExtension;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+
 /**
  * Integration tests for {@link TestFactoryExtension TestFactoryExtension}s.
  *
@@ -44,7 +42,8 @@ class TestFactoryExtensionMethodTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testFactoryExtensionMethodsAreCorrectlyDiscoveredForClassSelector() {
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(MyTestFactoryExtensionTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(
+			selectJavaClass(MyTestFactoryExtensionTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(3, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}

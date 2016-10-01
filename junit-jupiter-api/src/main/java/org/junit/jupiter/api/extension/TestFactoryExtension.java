@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.api.extension;
 
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.platform.commons.meta.API;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.stream.Stream;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.platform.commons.meta.API;
 
 /**
  * TODO

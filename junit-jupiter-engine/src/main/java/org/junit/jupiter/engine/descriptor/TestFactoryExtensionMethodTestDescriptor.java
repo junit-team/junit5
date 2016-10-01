@@ -81,11 +81,12 @@ public class TestFactoryExtensionMethodTestDescriptor extends MethodTestDescript
 			TestFactoryExtensionScanner.streamTestFactoryExtensions(extendedMethod)
 					.flatMap(extension -> createDynamicTestsForExtension(extension, testExtensionContext))
 					.forEach(dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), listener));
+			// @formatter:on
 		});
 	}
 
-	private Stream<DynamicTest> createDynamicTestsForExtension(
-			Class<TestFactoryExtension> extensionClass, TestExtensionContext testExtensionContext) {
+	private Stream<DynamicTest> createDynamicTestsForExtension(Class<TestFactoryExtension> extensionClass,
+			TestExtensionContext testExtensionContext) {
 		TestFactoryExtension extension = ReflectionUtils.newInstance(extensionClass);
 		return extension.createForMethod(testExtensionContext);
 	}

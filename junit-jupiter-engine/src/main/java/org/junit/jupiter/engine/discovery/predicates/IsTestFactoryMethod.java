@@ -10,14 +10,14 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import org.junit.jupiter.api.TestFactory;
-import org.junit.platform.commons.meta.API;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.platform.commons.meta.API;
 
 /**
  * Test if a method is a JUnit Jupiter test factory method.

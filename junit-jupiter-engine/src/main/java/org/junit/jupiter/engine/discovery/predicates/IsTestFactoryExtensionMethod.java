@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import org.junit.platform.commons.meta.API;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import org.junit.platform.commons.meta.API;
 
 /**
  * Test whether a method is a JUnit Jupiter test factory method.

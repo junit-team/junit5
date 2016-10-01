@@ -10,15 +10,8 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.TestExtensionContext;
-import org.junit.jupiter.api.extension.TestFactoryExtension;
-import org.junit.platform.commons.util.ReflectionUtils;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,8 +21,15 @@ import java.lang.reflect.Method;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.TestFactoryExtension;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Abstract superclass to tests that verify that test methods are correctly identified
@@ -150,8 +150,7 @@ abstract class AbstractClassWithMethod {
 	class MockTestFactoryExtension implements TestFactoryExtension {
 
 		@Override
-		public Stream<DynamicTest> createForContainer(
-				ContainerExtensionContext context) {
+		public Stream<DynamicTest> createForContainer(ContainerExtensionContext context) {
 			return Stream.empty();
 		}
 
@@ -162,4 +161,3 @@ abstract class AbstractClassWithMethod {
 	}
 
 }
-

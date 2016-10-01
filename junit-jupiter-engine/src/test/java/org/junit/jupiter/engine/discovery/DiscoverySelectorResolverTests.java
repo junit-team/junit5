@@ -327,8 +327,8 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void resolvingDynamicTestByUniqueIdResolvesOnlyUpToParentTestFactory() {
 		UniqueIdSelector selector = selectUniqueId(
-			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")
-					.append(TestFactoryExtensionMethodTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "%1"));
+			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()").append(
+				TestFactoryExtensionMethodTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "%1"));
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
@@ -353,28 +353,28 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void resolvingTestFactoryExtensionByUniqueIdResolvesOnlyUpToParentTestFactory() {
 		UniqueIdSelector selector = selectUniqueId(
-				uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()")
-						.append(TestFactoryExtensionMethodTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "%1"));
+			uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()").append(
+				TestFactoryExtensionMethodTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "%1"));
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
 		assertThat(engineDescriptor.getAllDescendants()).hasSize(2);
 
 		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(MyTestClass.class),
-				uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()"));
+			uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()"));
 	}
 
 	@Test
 	public void resolvingTestFactoryExtensionMethodByUniqueId() {
 		UniqueIdSelector selector = selectUniqueId(
-				uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()"));
+			uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()"));
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
 		assertThat(engineDescriptor.getAllDescendants()).hasSize(2);
 
 		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(MyTestClass.class),
-				uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()"));
+			uniqueIdForTestFactoryExtensionMethod(MyTestClass.class, "twoTests()"));
 	}
 
 	@Test

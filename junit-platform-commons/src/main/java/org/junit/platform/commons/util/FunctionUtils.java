@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.util;
 
-import org.junit.platform.commons.meta.API;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -18,7 +18,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import org.junit.platform.commons.meta.API;
 
 /**
  * Collection of utilities for working with {@link Function Functions},
@@ -63,16 +63,18 @@ public final class FunctionUtils {
 	 * @param suppliers the suppliers producing Optional instances
 	 * @throws PreconditionViolationException if the
 	 */
-	@SuppressWarnings({"varargs", "unchecked"})
+	@SuppressWarnings({ "varargs", "unchecked" })
 	@SafeVarargs
 	public static <T> Optional<T> firstPresent(Supplier<Optional<? extends T>>... suppliers) {
 		Preconditions.notNull(suppliers, "suppliers must not be null");
+		// @formatter:off
 		Optional<? extends T> firstPresent = Arrays.stream(suppliers)
 				.map(Supplier::get)
 				.peek(optional -> Preconditions.notNull(optional, "supplied optional must not be null"))
 				.filter(Optional::isPresent)
 				.findFirst()
 				.orElse(Optional.empty());
+		// @formatter:on
 		// this cast is safe because Optional is covariant,
 		return (Optional<T>) firstPresent;
 	}
