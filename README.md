@@ -45,7 +45,7 @@ Code coverage using [Clover] for the latest build is available on the [Jenkins C
 We are thankful to [Atlassian] for providing the Clover license free of charge.
 
 A code coverage report can also be generated locally by executing
-`gradlew -PenableClover clean cloverHtmlReport` if you have a local Clover license file
+`gradlew -PenableClover cloverHtmlReport` if you have a local Clover license file
 on your computer. The results will be available in
 `junit-tests/build/reports/clover/html/index.html`.
 
@@ -62,13 +62,13 @@ project, click on "See console output" on the build scan page.
 All modules can be built with Gradle using the following command.
 
 ```
-gradlew clean assemble
+gradlew assemble
 ```
 
 All modules can be tested with Gradle using the following command.
 
 ```
-gradlew clean test
+gradlew test
 ```
 
 ## Installing in Local Maven Repository
@@ -76,7 +76,7 @@ gradlew clean test
 All modules can be installed in a local Maven repository for consumption in other projects via the following command.
 
 ```
-gradlew clean install
+gradlew install
 ```
 
 ## Dependency Metadata
