@@ -37,7 +37,11 @@ public class JupiterUniqueIdBuilder {
 	}
 
 	public static UniqueId uniqueIdForTestFactoryMethod(Class<?> clazz, String methodPart) {
-		return uniqueIdForClass(clazz).append(TestFactoryMethodResolver.SEGMENT_TYPE, methodPart);
+		return uniqueIdForTestFactoryExtensionMethod(clazz, methodPart);
+	}
+
+	public static UniqueId uniqueIdForTestFactoryExtensionMethod(Class<?> clazz, String methodPart) {
+		return uniqueIdForClass(clazz).append(TestFactoryExtensionResolver.METHOD_SEGMENT_TYPE, methodPart);
 	}
 
 	public static UniqueId engineId() {

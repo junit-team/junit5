@@ -21,7 +21,7 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
  *
  * @since 5.0
  */
-class DynamicTestTestDescriptor extends AbstractTestDescriptor {
+public class DynamicTestTestDescriptor extends AbstractTestDescriptor {
 
 	public DynamicTestTestDescriptor(UniqueId uniqueId, DynamicTest dynamicTest, TestSource source) {
 		super(uniqueId, dynamicTest.getDisplayName());

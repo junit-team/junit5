@@ -18,14 +18,16 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.TestFactoryExtension;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
  */
-public class IsTestMethodTests {
+public class IsTestFactoryExtensionMethodTests {
 
-	private final Predicate<Method> isTestMethod = new IsTestMethod();
+	private final Predicate<Method> isTestMethod = new IsTestFactoryExtensionMethod();
 
 	@Nested
 	class IdentifiesPotentialTestMethods extends IsPotentialTestMethodTestSkeleton {
@@ -40,33 +42,34 @@ public class IsTestMethodTests {
 	class IdentifiesAnnotatedMethods {
 
 		@Test
-		void testMethodEvaluatesToTrue() throws NoSuchMethodException {
-			Method testMethod = IsTestMethodTests.this.findMethod("testMethod");
+		void testFactoryMethodEvaluatesToTrue() throws NoSuchMethodException {
+			Method testMethod = findMethod("testFactoryExtensionMethod");
 			assertTrue(isTestMethod.test(testMethod));
 		}
 
 		@Test
-		void nonTestMethodEvaluatesToFalse() throws NoSuchMethodException {
-			Method nonTestMethod = IsTestMethodTests.this.findMethod("nonTestMethod");
+		void nonTestFactoryMethodEvaluatesToFalse() throws NoSuchMethodException {
+			Method nonTestMethod = findMethod("nonTestFactoryExtensionMethod");
 			assertFalse(isTestMethod.test(nonTestMethod));
 		}
 
 	}
 
-	private Method findMethod(String name, Class<?>... aClass) {
-		return ReflectionUtils.findMethod(ClassWithTestAndNonTestMethod.class, name, aClass).get();
+	private static Method findMethod(String name, Class<?>... aClass) {
+		return ReflectionUtils.findMethod(ClassWithTestFactoryAndNonTestFactoryExtensionMethod.class, name,
+			aClass).get();
 	}
 
 }
 
 //class name must not end with 'Tests', otherwise it would be picked up by the suite
-class ClassWithTestAndNonTestMethod {
+class ClassWithTestFactoryAndNonTestFactoryExtensionMethod {
 
-	@Test
-	void testMethod() {
+	@ExtendWith(TestFactoryExtension.class)
+	void testFactoryExtensionMethod() {
 	}
 
-	void nonTestMethod() {
+	void nonTestFactoryExtensionMethod() {
 	}
 
 }

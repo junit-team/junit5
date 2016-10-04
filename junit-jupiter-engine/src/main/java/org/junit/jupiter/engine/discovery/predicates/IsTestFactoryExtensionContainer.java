@@ -11,27 +11,26 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a method is a JUnit Jupiter test factory method.
+ * Test whether a method is a JUnit Jupiter test factory container.
  *
  * @since 5.0
  */
 @API(Internal)
-public class IsTestFactoryMethod implements Predicate<Method> {
+public class IsTestFactoryExtensionContainer implements Predicate<Class<?>> {
 
-	private static final IsPotentialTestMethod isPotentialTestMethod = new IsPotentialTestMethod();
+	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
+	private static final IsTestFactoryExtensionElement isTestFactoryExtensionElement = new IsTestFactoryExtensionElement();
 
 	@Override
-	public boolean test(Method candidate) {
-		return isPotentialTestMethod.test(candidate) && isAnnotated(candidate, TestFactory.class);
+	public boolean test(Class<?> candidate) {
+		return isPotentialTestContainer.and(isTestFactoryExtensionElement).test(candidate);
 	}
 
 }

@@ -11,27 +11,26 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.AnnotatedElement;
 import java.util.function.Predicate;
 
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.TestFactoryExtension;
+import org.junit.jupiter.engine.extension.TestFactoryExtensionScanner;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a method is a JUnit Jupiter test factory method.
+ * Test whether an element is extended with {@link TestFactoryExtension}.
  *
  * @since 5.0
  */
 @API(Internal)
-public class IsTestFactoryMethod implements Predicate<Method> {
-
-	private static final IsPotentialTestMethod isPotentialTestMethod = new IsPotentialTestMethod();
+class IsTestFactoryExtensionElement implements Predicate<AnnotatedElement> {
 
 	@Override
-	public boolean test(Method candidate) {
-		return isPotentialTestMethod.test(candidate) && isAnnotated(candidate, TestFactory.class);
+	@SuppressWarnings("unchecked")
+	public boolean test(AnnotatedElement candidate) {
+		return TestFactoryExtensionScanner.streamTestFactoryExtensions(candidate).anyMatch(ignored -> true);
 	}
 
 }
