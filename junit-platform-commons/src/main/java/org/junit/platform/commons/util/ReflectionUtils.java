@@ -230,7 +230,8 @@ public final class ReflectionUtils {
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
 		Preconditions.notNull(clazz, "class must not be null");
-		Preconditions.notNull(args, "none of the arguments may be null");
+		Preconditions.notNull(args, "argument array must not be null");
+		Preconditions.containsNoNullElements(args, "individual arguments must not be null");
 
 		try {
 			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);

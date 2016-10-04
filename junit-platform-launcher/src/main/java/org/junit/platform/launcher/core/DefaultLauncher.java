@@ -68,7 +68,8 @@ class DefaultLauncher implements Launcher {
 
 	@Override
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		Preconditions.notNull(listeners, "listeners must not be null");
+		Preconditions.notNull(listeners, "listeners array must not be null");
+		Preconditions.containsNoNullElements(listeners, "individual listeners must not be null");
 		this.listenerRegistry.registerListeners(listeners);
 	}
 

@@ -52,7 +52,8 @@ public interface Filter<T> {
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	static <T> Filter<T> composeFilters(Filter<T>... filters) {
-		Preconditions.notNull(filters, "Filters must not be null");
+		Preconditions.notNull(filters, "filters array must not be null");
+		Preconditions.containsNoNullElements(filters, "individual filters must not be null");
 
 		if (filters.length == 0) {
 			return alwaysIncluded();

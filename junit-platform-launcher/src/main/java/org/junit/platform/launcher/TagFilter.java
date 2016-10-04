@@ -46,7 +46,7 @@ public final class TagFilter {
 	 * @param tags the included tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter includeTags(String... tags) {
-		Preconditions.notNull(tags, "tags must not be null");
+		Preconditions.notNull(tags, "tags array must not be null");
 		return includeTags(asList(tags));
 	}
 
@@ -59,7 +59,8 @@ public final class TagFilter {
 	 * @param tags the included tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter includeTags(List<String> tags) {
-		Preconditions.notEmpty(tags, "tags must not be null or empty");
+		Preconditions.notEmpty(tags, "tags list must not be null or empty");
+		Preconditions.containsNoNullElements(tags, "individual tags must not be null");
 		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).anyMatch(tags::contains));
 	}
 
@@ -72,7 +73,7 @@ public final class TagFilter {
 	 * @param tags the excluded tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter excludeTags(String... tags) {
-		Preconditions.notNull(tags, "tags must not be null");
+		Preconditions.notNull(tags, "tags array must not be null");
 		return excludeTags(asList(tags));
 	}
 
@@ -85,7 +86,8 @@ public final class TagFilter {
 	 * @param tags the excluded tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter excludeTags(List<String> tags) {
-		Preconditions.notEmpty(tags, "tags must not be null or empty");
+		Preconditions.notEmpty(tags, "tags list must not be null or empty");
+		Preconditions.containsNoNullElements(tags, "individual tags must not be null");
 		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).noneMatch(tags::contains));
 	}
 

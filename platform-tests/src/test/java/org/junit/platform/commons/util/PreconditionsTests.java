@@ -22,6 +22,7 @@ import static org.junit.platform.commons.util.Preconditions.notNull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -134,6 +135,53 @@ class PreconditionsTests {
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> notEmpty(Collections.singletonList(null), message));
+
+		assertEquals(message, exception.getMessage());
+	}
+
+	@Test
+	void containsNoNullElementsPassesForArrayThatIsNullOrEmpty() {
+		containsNoNullElements((Object[]) null, "array is null");
+		containsNoNullElements(new Object[0], "array is empty");
+	}
+
+	@Test
+	void containsNoNullElementsPassesForCollectionThatIsNullOrEmpty() {
+		containsNoNullElements((List<?>) null, "collection is null");
+		containsNoNullElements(Collections.emptyList(), "collection is empty");
+	}
+
+	@Test
+	void containsNoNullElementsPassesForArrayContainingNonNullElements() {
+		String[] input = new String[] { "a", "b", "c" };
+		String[] output = containsNoNullElements(input, "message");
+		assertSame(input, output);
+	}
+
+	@Test
+	void containsNoNullElementsPassesForCollectionContainingNonNullElements() {
+		Collection<String> input = Arrays.asList("a", "b", "c");
+		Collection<String> output = containsNoNullElements(input, "message");
+		assertSame(input, output);
+	}
+
+	@Test
+	void containsNoNullElementsThrowsForArrayContainingNullElements() {
+		String message = "array contains null elements";
+		Object[] array = { new Object(), null, new Object() };
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> containsNoNullElements(array, message));
+
+		assertEquals(message, exception.getMessage());
+	}
+
+	@Test
+	void containsNoNullElementsThrowsForCollectionContainingNullElements() {
+		String message = "collection contains null elements";
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> containsNoNullElements(Collections.singletonList(null), message));
 
 		assertEquals(message, exception.getMessage());
 	}

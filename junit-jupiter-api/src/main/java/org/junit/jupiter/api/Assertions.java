@@ -1034,7 +1034,8 @@ public final class Assertions {
 	 */
 	@API(Experimental)
 	public static void assertAll(String heading, Executable... executables) throws MultipleFailuresError {
-		Preconditions.notNull(executables, "executables must not be null");
+		Preconditions.notNull(executables, "executables array must not be null");
+		Preconditions.containsNoNullElements(executables, "individual executables must not be null");
 		assertAll(heading, Arrays.stream(executables));
 	}
 

@@ -83,7 +83,6 @@ public final class Preconditions {
 	public static Object[] notNull(Object[] objects, String message) throws PreconditionViolationException {
 		notNull(objects, () -> StringUtils.isNotBlank(message) ? message : "Object array must not be null");
 		Arrays.stream(objects).forEach(object -> notNull(object, () -> message));
-
 		return objects;
 	}
 
@@ -100,6 +99,47 @@ public final class Preconditions {
 			throws PreconditionViolationException {
 		condition(collection != null && !collection.isEmpty(), () -> message);
 		collection.forEach(object -> notNull(object, () -> message));
+		return collection;
+	}
+
+	/**
+	 * Assert that the supplied array contains no {@code null} elements.
+	 *
+	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
+	 * array is {@code null} or <em>empty</em>.
+	 *
+	 * @param array the array to check
+	 * @param message precondition violation message
+	 * @return the supplied array as a convenience
+	 * @throws PreconditionViolationException if the supplied array contains
+	 * any {@code null} elements
+	 * @see #notNull(Object, Supplier)
+	 */
+	public static <T> T[] containsNoNullElements(T[] array, String message) throws PreconditionViolationException {
+		if (array != null) {
+			Arrays.stream(array).forEach(object -> notNull(object, () -> message));
+		}
+		return array;
+	}
+
+	/**
+	 * Assert that the supplied collection contains no {@code null} elements.
+	 *
+	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
+	 * collection is {@code null} or <em>empty</em>.
+	 *
+	 * @param collection the collection to check
+	 * @param message precondition violation message
+	 * @return the supplied collection as a convenience
+	 * @throws PreconditionViolationException if the supplied collection contains
+	 * any {@code null} elements
+	 * @see #notNull(Object, Supplier)
+	 */
+	public static <T extends Collection<?>> T containsNoNullElements(T collection, String message)
+			throws PreconditionViolationException {
+		if (collection != null) {
+			collection.forEach(object -> notNull(object, () -> message));
+		}
 		return collection;
 	}
 

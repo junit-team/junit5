@@ -311,10 +311,11 @@ public interface ExtensionContext {
 		 *
 		 * <p>The order of the {@code parts} is not significant.
 		 *
-		 * <p>Internally the {@code parts} are compared using {@code Object.equals(Object)}.
+		 * <p>Internally the {@code parts} are compared using {@link Object#equals(Object)}.
 		 */
 		public static Namespace create(Object... parts) {
-			Preconditions.notNull(parts, "There must be at least one reference object to create a namespace");
+			Preconditions.notNull(parts, "parts array must not be null");
+			Preconditions.containsNoNullElements(parts, "individual parts must not be null");
 			return new Namespace(parts);
 		}
 
