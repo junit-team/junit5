@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
 import static org.mockito.Mockito.mock;
@@ -116,7 +115,7 @@ public class ReflectionUtilsTests {
 			ReflectionUtils.newInstance(C.class, ((Object[]) null));
 		});
 
-		RuntimeException exception = expectThrows(RuntimeException.class,
+		RuntimeException exception = assertThrows(RuntimeException.class,
 			() -> ReflectionUtils.newInstance(Exploder.class));
 		assertThat(exception).hasMessage("boom");
 	}
@@ -454,11 +453,11 @@ public class ReflectionUtilsTests {
 		assertThat(ReflectionUtils.findMethod(Files.class, "copy", Path.class, OutputStream.class)).contains(
 			Files.class.getMethod("copy", Path.class, OutputStream.class));
 
-		RuntimeException exception = expectThrows(PreconditionViolationException.class,
+		RuntimeException exception = assertThrows(PreconditionViolationException.class,
 			() -> ReflectionUtils.findMethod(String.class, null));
 		assertThat(exception).hasMessage("method name must not be null or empty");
 
-		exception = expectThrows(PreconditionViolationException.class,
+		exception = assertThrows(PreconditionViolationException.class,
 			() -> ReflectionUtils.findMethod(String.class, "   "));
 		assertThat(exception).hasMessage("method name must not be null or empty");
 	}

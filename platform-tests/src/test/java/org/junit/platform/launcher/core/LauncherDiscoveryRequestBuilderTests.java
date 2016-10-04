@@ -13,8 +13,8 @@ package org.junit.platform.launcher.core;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.engine.FilterResult.excluded;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
@@ -254,7 +254,7 @@ class LauncherDiscoveryRequestBuilderTests {
 
 		@Test
 		public void exceptionForIllegalFilterClass() throws Exception {
-			Exception exception = expectThrows(PreconditionViolationException.class,
+			Exception exception = assertThrows(PreconditionViolationException.class,
 				() -> request().filters(o -> excluded("reason")));
 
 			assertThat(exception).hasMessageStartingWith("Filter");

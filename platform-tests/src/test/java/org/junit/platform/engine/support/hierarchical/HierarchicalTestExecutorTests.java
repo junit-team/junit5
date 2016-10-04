@@ -11,8 +11,8 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -335,7 +335,7 @@ public class HierarchicalTestExecutorTests {
 		stub(child.shouldBeSkipped(rootContext)).toThrow(outOfMemoryError);
 		root.addChild(child);
 
-		Throwable actualException = expectThrows(OutOfMemoryError.class, () -> executor.execute());
+		Throwable actualException = assertThrows(OutOfMemoryError.class, () -> executor.execute());
 		assertSame(outOfMemoryError, actualException);
 	}
 
@@ -349,7 +349,7 @@ public class HierarchicalTestExecutorTests {
 		stub(child.execute(rootContext)).toThrow(outOfMemoryError);
 		root.addChild(child);
 
-		Throwable actualException = expectThrows(OutOfMemoryError.class, () -> executor.execute());
+		Throwable actualException = assertThrows(OutOfMemoryError.class, () -> executor.execute());
 		assertSame(outOfMemoryError, actualException);
 	}
 

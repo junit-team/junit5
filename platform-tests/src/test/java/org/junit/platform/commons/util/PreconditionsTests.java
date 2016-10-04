@@ -12,7 +12,7 @@ package org.junit.platform.commons.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,7 +31,7 @@ class PreconditionsTests {
 	void notNullThrowsForNullObject() {
 		String message = "argument is null";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notNull((Object) null, message));
 
 		assertEquals(message, exception.getMessage());
@@ -49,7 +49,7 @@ class PreconditionsTests {
 		String message = "argument is null";
 		Object object = null;
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notNull(object, () -> message));
 
 		assertEquals(message, exception.getMessage());
@@ -57,7 +57,7 @@ class PreconditionsTests {
 
 	@Test
 	void notNullForNullObjectArray() {
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notNull((Object[]) null, ""));
 
 		assertEquals("Object array must not be null", exception.getMessage());
@@ -65,7 +65,7 @@ class PreconditionsTests {
 
 	@Test
 	void notNullForNullObjectArrayWithCustomMessage() {
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notNull((Object[]) null, "custom message"));
 
 		assertEquals("custom message", exception.getMessage());
@@ -90,7 +90,7 @@ class PreconditionsTests {
 		String message = "there is null in the array";
 		Object[] objects = { new Object(), null, new Object() };
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notNull(objects, message));
 
 		assertEquals(message, exception.getMessage());
@@ -107,7 +107,7 @@ class PreconditionsTests {
 	void notEmptyThrowsForNullCollection() {
 		String message = "collection is empty";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notEmpty(null, message));
 
 		assertEquals(message, exception.getMessage());
@@ -117,7 +117,7 @@ class PreconditionsTests {
 	void notEmptyThrowsForEmptyCollection() {
 		String message = "collection is empty";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notEmpty(Collections.emptyList(), message));
 
 		assertEquals(message, exception.getMessage());
@@ -127,7 +127,7 @@ class PreconditionsTests {
 	void notEmptyThrowsForCollectionWithNullElements() {
 		String message = "collection contains null elements";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notEmpty(Collections.singletonList(null), message));
 
 		assertEquals(message, exception.getMessage());
@@ -144,7 +144,7 @@ class PreconditionsTests {
 	void notBlankThrowsForNullString() {
 		String message = "string shouldn't be blank";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notBlank(null, message));
 
 		assertEquals(message, exception.getMessage());
@@ -154,7 +154,7 @@ class PreconditionsTests {
 	void notBlankThrowsForNullStringWithMessageSupplier() {
 		String message = "string shouldn't be blank";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notBlank(null, () -> message));
 
 		assertEquals(message, exception.getMessage());
@@ -164,7 +164,7 @@ class PreconditionsTests {
 	void notBlankThrowsForEmptyString() {
 		String message = "string shouldn't be blank";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notBlank("", message));
 
 		assertEquals(message, exception.getMessage());
@@ -174,7 +174,7 @@ class PreconditionsTests {
 	void notBlankThrowsForEmptyStringWithMessageSupplier() {
 		String message = "string shouldn't be blank";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notBlank("", () -> message));
 
 		assertEquals(message, exception.getMessage());
@@ -184,7 +184,7 @@ class PreconditionsTests {
 	void notBlankThrowsForBlankString() {
 		String message = "string shouldn't be blank";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notBlank("          ", message));
 
 		assertEquals(message, exception.getMessage());
@@ -194,7 +194,7 @@ class PreconditionsTests {
 	void notBlankThrowsForBlankStringWithMessageSupplier() {
 		String message = "string shouldn't be blank";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.notBlank("          ", () -> message));
 
 		assertEquals(message, exception.getMessage());
@@ -214,7 +214,7 @@ class PreconditionsTests {
 	void conditionThrowsForFalsePredicate() {
 		String message = "condition does not hold";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.condition(false, message));
 
 		assertEquals(message, exception.getMessage());
@@ -224,7 +224,7 @@ class PreconditionsTests {
 	void conditionThrowsForFalsePredicateWithMessageSupplier() {
 		String message = "condition does not hold";
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> Preconditions.condition(false, () -> message));
 
 		assertEquals(message, exception.getMessage());

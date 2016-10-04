@@ -12,8 +12,8 @@ package org.junit.platform.launcher.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
@@ -53,14 +53,14 @@ class DefaultLauncherTests {
 
 	@Test
 	void constructLauncherWithoutAnyEngines() {
-		Throwable exception = expectThrows(PreconditionViolationException.class, () -> createLauncher());
+		Throwable exception = assertThrows(PreconditionViolationException.class, () -> createLauncher());
 
 		assertThat(exception).hasMessageContaining("Cannot create Launcher without at least one TestEngine");
 	}
 
 	@Test
 	void constructLauncherWithMultipleTestEnginesWithDuplicateIds() {
-		JUnitException exception = expectThrows(JUnitException.class,
+		JUnitException exception = assertThrows(JUnitException.class,
 			() -> createLauncher(new DemoHierarchicalTestEngine("dummy id"),
 				new DemoHierarchicalTestEngine("dummy id")));
 
@@ -87,7 +87,7 @@ class DefaultLauncherTests {
 			}
 		};
 
-		Throwable exception = expectThrows(PreconditionViolationException.class,
+		Throwable exception = assertThrows(PreconditionViolationException.class,
 			() -> createLauncher(engine).discover(request().build()));
 
 		assertThat(exception).hasMessage(

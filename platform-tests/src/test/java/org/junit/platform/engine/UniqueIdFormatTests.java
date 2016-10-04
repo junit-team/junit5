@@ -11,8 +11,8 @@
 package org.junit.platform.engine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -114,7 +114,7 @@ class UniqueIdFormatTests {
 
 		@Test
 		default void parseMalformedUid() {
-			Throwable throwable = expectThrows(JUnitException.class, () -> getFormat().parse("malformed UID"));
+			Throwable throwable = assertThrows(JUnitException.class, () -> getFormat().parse("malformed UID"));
 			assertTrue(throwable.getMessage().contains("malformed UID"));
 		}
 

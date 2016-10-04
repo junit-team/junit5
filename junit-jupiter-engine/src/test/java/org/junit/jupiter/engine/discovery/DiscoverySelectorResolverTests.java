@@ -14,8 +14,8 @@ import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.engineId;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
@@ -233,14 +233,14 @@ public class DiscoverySelectorResolverTests {
 	public void methodResolutionByUniqueIdWithBogusParameters() {
 		UniqueIdSelector selector = selectUniqueId(
 			uniqueIdForMethod(getClass(), "methodName(java.lang.String, junit.foo.Enigma)"));
-		Exception exception = expectThrows(JUnitException.class,
+		Exception exception = assertThrows(JUnitException.class,
 			() -> resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor));
 		assertThat(exception).hasMessageStartingWith("Failed to load parameter type");
 		assertThat(exception).hasMessageContaining("junit.foo.Enigma");
 	}
 
 	private void assertMethodDoesNotMatchPattern(UniqueIdSelector selector) {
-		Exception exception = expectThrows(PreconditionViolationException.class,
+		Exception exception = assertThrows(PreconditionViolationException.class,
 			() -> resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor));
 		assertThat(exception).hasMessageStartingWith("Method");
 		assertThat(exception).hasMessageContaining("does not match pattern");

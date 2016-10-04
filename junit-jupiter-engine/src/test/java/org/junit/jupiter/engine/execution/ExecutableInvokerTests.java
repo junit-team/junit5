@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -160,7 +160,7 @@ class ExecutableInvokerTests {
 		testMethodWithASinglePrimitiveIntParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo(null);
 
-		ParameterResolutionException caught = expectThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
 		// @formatter:off
 		assertThat(caught.getMessage())
@@ -173,7 +173,7 @@ class ExecutableInvokerTests {
 	void reportIfThereIsNoParameterResolverThatSupportsTheParameter() {
 		testMethodWithASingleStringParameter();
 
-		ParameterResolutionException caught = expectThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
 		assertThat(caught.getMessage()).contains("parameter [java.lang.String arg0]");
 	}
@@ -184,7 +184,7 @@ class ExecutableInvokerTests {
 		thereIsAParameterResolverThatResolvesTheParameterTo("one");
 		thereIsAParameterResolverThatResolvesTheParameterTo("two");
 
-		ParameterResolutionException caught = expectThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
 		// @formatter:off
 		assertThat(caught.getMessage())
@@ -198,7 +198,7 @@ class ExecutableInvokerTests {
 		testMethodWithASingleStringParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo(BigDecimal.ONE);
 
-		ParameterResolutionException caught = expectThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
 		// @formatter:off
 		assertThat(caught.getMessage())
@@ -213,7 +213,7 @@ class ExecutableInvokerTests {
 		IllegalArgumentException cause = anyExceptionButParameterResolutionException();
 		throwDuringParameterResolution(cause);
 
-		ParameterResolutionException caught = expectThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
 		assertSame(cause, caught.getCause(), () -> "cause should be present");
 		assertThat(caught.getMessage()).startsWith("Failed to resolve parameter [java.lang.String arg0]");
@@ -225,7 +225,7 @@ class ExecutableInvokerTests {
 		ParameterResolutionException cause = new ParameterResolutionException("custom message");
 		throwDuringParameterResolution(cause);
 
-		ParameterResolutionException caught = expectThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
 		assertSame(cause, caught);
 	}

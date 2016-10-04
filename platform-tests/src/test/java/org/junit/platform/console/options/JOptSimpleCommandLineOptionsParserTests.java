@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.io.File;
@@ -239,7 +238,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 		};
 
 		CommandLineOptionsParser parser = createParser();
-		RuntimeException exception = expectThrows(RuntimeException.class, () -> parser.printHelp(writer));
+		RuntimeException exception = assertThrows(RuntimeException.class, () -> parser.printHelp(writer));
 
 		assertThat(exception).hasCauseInstanceOf(IOException.class);
 		assertThat(exception.getCause()).hasMessage("Something went wrong");

@@ -16,10 +16,10 @@ import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +49,7 @@ class AssertionsDemo {
 
 	@Test
 	void exceptionTesting() {
-		Throwable exception = expectThrows(IllegalArgumentException.class, () -> {
+		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
 			throw new IllegalArgumentException("a message");
 		});
 		assertEquals("a message", exception.getMessage());

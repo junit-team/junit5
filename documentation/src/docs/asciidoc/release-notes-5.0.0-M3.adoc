@@ -102,14 +102,16 @@ on GitHub.
 
 * The `Executable` functional interface has been relocated to a new dedicated
   `org.junit.jupiter.api.function` package.
+* `Assertions.expectThrows()` has been deprecated in favor of `Assertions.assertThrows()`.
 
-====== New Features
+====== New Features and Improvements
 
 * Support for lazy and preemptive _timeouts_ with lambda expressions in `Assertions`. See
   examples in <<writing-tests-assertions,`AssertionsDemo`>> and consult the
   `{Assertions}` Javadoc for further details.
 * New variants of `Assertions.assertAll()` that accept streams of executables (i.e.,
   `Stream<Executable>`).
+* `Assertions.assertThrows()` now returns the thrown exception.
 
 
 [[release-notes-5.0.0-m3-junit-vintage]]

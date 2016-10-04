@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.execution;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.function.Function;
 
@@ -157,7 +157,7 @@ public class ExtensionValuesStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = expectThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(ExtensionContextException.class,
 				() -> store.get(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());
@@ -207,7 +207,7 @@ public class ExtensionValuesStoreTests {
 			// But declare that our function creates a String...
 			Function<String, String> defaultCreator = k -> "enigma";
 
-			Exception exception = expectThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(ExtensionContextException.class,
 				() -> store.getOrComputeIfAbsent(namespace, key, defaultCreator, String.class));
 			assertEquals("Object stored under key [pi] is not of required type [java.lang.String]",
 				exception.getMessage());
@@ -241,7 +241,7 @@ public class ExtensionValuesStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = expectThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(ExtensionContextException.class,
 				() -> store.remove(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());

@@ -1007,30 +1007,16 @@ public final class Assertions {
 
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
-	 * an exception of the {@code expectedType}.
+	 * an exception of the {@code expectedType} and returns the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is thrown,
 	 * this method will fail.
 	 *
-	 * <p>Use {@link #assertThrows} if you do not want to perform additional checks on
-	 * the exception instance. Otherwise use {@link #expectThrows}.
-	 */
-	public static void assertThrows(Class<? extends Throwable> expectedType, Executable executable) {
-		expectThrows(expectedType, executable);
-	}
-
-	/**
-	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
-	 * an exception of the {@code expectedType}, and returns the exception.
-	 *
-	 * <p>If no exception is thrown or if an exception of a different type is thrown,
-	 * this method will fail.
-	 *
-	 * <p>Use {@link #expectThrows} if you want to perform additional checks on the exception instance.
-	 * Otherwise use {@link #assertThrows}.</p>
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * simply ignore the return value.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Throwable> T expectThrows(Class<T> expectedType, Executable executable) {
+	public static <T extends Throwable> T assertThrows(Class<? extends Throwable> expectedType, Executable executable) {
 		try {
 			executable.execute();
 		}
@@ -1046,6 +1032,14 @@ public final class Assertions {
 		}
 		throw new AssertionFailedError(
 			String.format("Expected %s to be thrown, but nothing was thrown.", expectedType.getName()));
+	}
+
+	/**
+	 * @deprecated Use {@link #assertThrows(Class, Executable)} instead.
+	 */
+	@Deprecated
+	public static <T extends Throwable> T expectThrows(Class<T> expectedType, Executable executable) {
+		return assertThrows(expectedType, executable);
 	}
 
 	// --- assertTimeout -------------------------------------------------------
