@@ -932,10 +932,10 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -961,7 +961,7 @@ class AssertionsDemo {
 
     @Test
     void exceptionTesting() {
-        Throwable exception = expectThrows(IllegalArgumentException.class, () -&gt; {
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -&gt; {
             throw new IllegalArgumentException("a message");
         });
         assertEquals("a message", exception.getMessage());
@@ -3805,11 +3805,14 @@ methods that accept arrays or primitive types as parameters.</p>
 <p>The <code>Executable</code> functional interface has been relocated to a new dedicated
 <code>org.junit.jupiter.api.function</code> package.</p>
 </li>
+<li>
+<p><code>Assertions.expectThrows()</code> has been deprecated in favor of <code>Assertions.assertThrows()</code>.</p>
+</li>
 </ul>
 </div>
 </div>
 <div class="sect5">
-<h6 id="new-features-3">New Features</h6>
+<h6 id="new-features-and-improvements">New Features and Improvements</h6>
 <div class="ulist">
 <ul>
 <li>
@@ -3820,6 +3823,9 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <li>
 <p>New variants of <code>Assertions.assertAll()</code> that accept streams of executables (i.e.,
 <code>Stream&lt;Executable&gt;</code>).</p>
+</li>
+<li>
+<p><code>Assertions.assertThrows()</code> now returns the thrown exception.</p>
 </li>
 </ul>
 </div>
@@ -3839,7 +3845,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-10-03 10:49:53 EDT
+Last updated 2016-10-04 08:24:10 EDT
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
