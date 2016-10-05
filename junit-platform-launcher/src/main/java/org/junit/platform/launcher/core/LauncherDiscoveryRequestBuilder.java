@@ -87,6 +87,8 @@ public final class LauncherDiscoveryRequestBuilder {
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
+	 *
+	 * @return a new builder
 	 */
 	public static LauncherDiscoveryRequestBuilder request() {
 		return new LauncherDiscoveryRequestBuilder();
@@ -95,24 +97,25 @@ public final class LauncherDiscoveryRequestBuilder {
 	/**
 	 * Add all of the supplied {@code selectors} to the request.
 	 *
-	 * @param selectors the {@code DiscoverySelectors} to add
+	 * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
+	 * @return this builder for method chaining
 	 */
 	public LauncherDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
-		if (selectors != null) {
-			selectors(Arrays.asList(selectors));
-		}
+		Preconditions.notNull(selectors, "selectors array must not be null");
+		selectors(Arrays.asList(selectors));
 		return this;
 	}
 
 	/**
 	 * Add all of the supplied {@code selectors} to the request.
 	 *
-	 * @param selectors the {@code DiscoverySelectors} to add
+	 * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
+	 * @return this builder for method chaining
 	 */
 	public LauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
-		if (selectors != null) {
-			this.selectors.addAll(selectors);
-		}
+		Preconditions.notNull(selectors, "selectors list must not be null");
+		Preconditions.containsNoNullElements(selectors, "individual selectors must not be null");
+		this.selectors.addAll(selectors);
 		return this;
 	}
 
@@ -125,17 +128,23 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * for the same discovery request since doing so will likely lead to
 	 * undesirable results (i.e., zero engines being active).
 	 *
-	 * @param filters the {@code Filter}s to add
+	 * @param filters the {@code Filter}s to add; never {@code null}
+	 * @return this builder for method chaining
 	 */
 	public LauncherDiscoveryRequestBuilder filters(Filter<?>... filters) {
-		if (filters != null) {
-			Arrays.stream(filters).forEach(this::storeFilter);
-		}
+		Preconditions.notNull(filters, "filters array must not be null");
+		Preconditions.containsNoNullElements(filters, "individual filters must not be null");
+		Arrays.stream(filters).forEach(this::storeFilter);
 		return this;
 	}
 
 	/**
 	 * Add the supplied <em>configuration parameter</em> to the request.
+	 *
+	 * @param key the configuration parameter key under which to store the
+	 * value; never {@code null} or blank
+	 * @param value the value to store
+	 * @return this builder for method chaining
 	 */
 	public LauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
 		Preconditions.notBlank(key, "configuration parameter key must not be null or blank");
@@ -144,14 +153,16 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Add all of the supplied {@code configurationParameters} to the request.
+	 * Add all of the supplied configuration parameters to the request.
 	 *
-	 * @param configurationParameters the map of configuration parameters to add
+	 * @param configurationParameters the map of configuration parameters to add;
+	 * never {@code null}
+	 * @return this builder for method chaining
+	 * @see #configurationParameter(String, String)
 	 */
 	public LauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
-		if (configurationParameters != null) {
-			configurationParameters.forEach(this::configurationParameter);
-		}
+		Preconditions.notNull(configurationParameters, "configuration parameters map must not be null");
+		configurationParameters.forEach(this::configurationParameter);
 		return this;
 	}
 
