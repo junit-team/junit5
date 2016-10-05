@@ -90,10 +90,10 @@ public class ExtensionRegistry {
 	}
 
 	/**
-	 * Stream all {@code Extensions} in this registry or one of its ancestors of
-	 * the specified type.
+	 * Stream all {@code Extensions} of the specified type that are present
+	 * in this registry or one of its ancestors.
 	 *
-	 * @param extensionType the type of {@link Extension} to get
+	 * @param extensionType the type of {@link Extension} to stream
 	 * @see #getReversedExtensions(Class)
 	 * @see #getExtensions(Class)
 	 */
@@ -107,22 +107,25 @@ public class ExtensionRegistry {
 	}
 
 	/**
-	 * Stream all {@code Extensions} in this registry (ancestor are ignored!).
+	 * Stream all {@code Extensions} of the specified type that are present
+	 * in this registry.
 	 *
-	 * @param extensionType the type of {@link Extension} to get
+	 * <p>Extensions in ancestors are ignored.
+	 *
+	 * @param extensionType the type of {@link Extension} to stream
 	 * @see #getReversedExtensions(Class)
 	 */
 	private <E extends Extension> Stream<E> streamLocal(Class<E> extensionType) {
 		// @formatter:off
-		return registeredExtensions.stream()
+		return this.registeredExtensions.stream()
 				.filter(extensionType::isInstance)
 				.map(extensionType::cast);
 		// @formatter:on
 	}
 
 	/**
-	 * Get all {@code Extensions} in this registry or one of its ancestors of
-	 * the specified type.
+	 * Get all {@code Extensions} of the specified type that are present
+	 * in this registry or one of its ancestors.
 	 *
 	 * @param extensionType the type of {@link Extension} to get
 	 * @see #getReversedExtensions(Class)
@@ -133,8 +136,8 @@ public class ExtensionRegistry {
 	}
 
 	/**
-	 * Get all {@code Extensions} in this registry or one of its ancestors of
-	 * the specified type, in reverse order.
+	 * Get all {@code Extensions} of the specified type that are present
+	 * in this registry or one of its ancestors, in reverse order.
 	 *
 	 * @param extensionType the type of {@link Extension} to get
 	 * @see #getExtensions(Class)
