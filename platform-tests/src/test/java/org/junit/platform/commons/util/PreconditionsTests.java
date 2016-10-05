@@ -35,20 +35,20 @@ import org.junit.jupiter.api.Test;
 class PreconditionsTests {
 
 	@Test
-	void notNullThrowsForNullObject() {
-		String message = "argument is null";
-
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> notNull((Object) null, message));
-
-		assertEquals(message, exception.getMessage());
-	}
-
-	@Test
 	void notNullPassesForNonNullObject() {
 		Object object = new Object();
 		Object nonNullObject = notNull(object, "message");
 		assertSame(object, nonNullObject);
+	}
+
+	@Test
+	void notNullThrowsForNullObject() {
+		String message = "argument is null";
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> notNull(null, message));
+
+		assertEquals(message, exception.getMessage());
 	}
 
 	@Test
@@ -58,47 +58,6 @@ class PreconditionsTests {
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> notNull(object, () -> message));
-
-		assertEquals(message, exception.getMessage());
-	}
-
-	@Test
-	void notNullForNullObjectArray() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> notNull((Object[]) null, ""));
-
-		assertEquals("Object array must not be null", exception.getMessage());
-	}
-
-	@Test
-	void notNullForNullObjectArrayWithCustomMessage() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> notNull((Object[]) null, "custom message"));
-
-		assertEquals("custom message", exception.getMessage());
-	}
-
-	@Test
-	void notNullPassesForEmptyObjectArray() {
-		Object[] objects = new Object[0];
-		Object nonNullObjects = notNull(objects, "message");
-		assertSame(objects, nonNullObjects);
-	}
-
-	@Test
-	void notNullPassesForObjectArrayContainingObjects() {
-		Object[] objects = { new Object(), new Object(), new Object() };
-		Object nonNullObjects = notNull(objects, "message");
-		assertSame(objects, nonNullObjects);
-	}
-
-	@Test
-	void notNullThrowsForObjectArrayContainingNulls() {
-		String message = "there is null in the array";
-		Object[] objects = { new Object(), null, new Object() };
-
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> notNull(objects, message));
 
 		assertEquals(message, exception.getMessage());
 	}

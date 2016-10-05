@@ -70,23 +70,6 @@ public final class Preconditions {
 	}
 
 	/**
-	 * Assert that the supplied array and none of the objects it contains are
-	 * {@code null}.
-	 *
-	 * @param objects the array to check
-	 * @param message precondition violation message
-	 * @return the supplied array as a convenience
-	 * @throws PreconditionViolationException if the supplied array or any of
-	 * the objects its contains is {@code null}
-	 * @see #notNull(Object, Supplier)
-	 */
-	public static Object[] notNull(Object[] objects, String message) throws PreconditionViolationException {
-		notNull(objects, () -> StringUtils.isNotBlank(message) ? message : "Object array must not be null");
-		Arrays.stream(objects).forEach(object -> notNull(object, () -> message));
-		return objects;
-	}
-
-	/**
 	 * Assert that the supplied array is neither {@code null} nor <em>empty</em>.
 	 *
 	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
