@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -822,6 +824,79 @@ public final class Assertions {
 		assertArrayEquals(expected, actual, new ArrayDeque<>(), messageSupplier);
 	}
 
+	// --- assertIterableEquals --------------------------------------------
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} iterables are deeply equal.
+	 * <p>Similarly to the check for deep equality in {@link #assertArrayEquals(Object[], Object[])},
+	 * if two iterables are encountered (including {@code expected} and {@code actual}) then their
+	 * iterators must return equal elements in the same order as each other. <strong>Note:</strong>
+	 * this means that the iterables <em>do not</em> need to be of the same type. Example: <pre>{@code
+	 * import static java.util.Arrays.asList;
+	 *  . . .
+	 * Iterable<Integer> i0 = new ArrayList<>(asList(1, 2, 3));
+	 * Iterable<Integer> i1 = new LinkedList<>(asList(1, 2, 3));
+	 * assertIterableEquals(i0, i1); // Passes
+	 * }</pre>
+	 * <p>If both {@code expected} and {@code actual} are {@code null}, they are considered equal.
+	 *
+	 * @see Objects#equals(Object, Object)
+	 * @see Arrays#deepEquals(Object[], Object[])
+	 * @see #assertArrayEquals(Object[], Object[])
+	 */
+	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual) {
+		assertIterableEquals(expected, actual, () -> null);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} iterables are deeply equal.
+	 * <p>Similarly to the check for deep equality in
+	 * {@link #assertArrayEquals(Object[], Object[], String)}, if two iterables are encountered
+	 * (including {@code expected} and {@code actual}) then their iterators must return equal
+	 * elements in the same order as each other. <strong>Note:</strong> this means that the iterables
+	 * <em>do not</em> need to be of the same type. Example: <pre>{@code
+	 * import static java.util.Arrays.asList;
+	 *  . . .
+	 * Iterable<Integer> i0 = new ArrayList<>(asList(1, 2, 3));
+	 * Iterable<Integer> i1 = new LinkedList<>(asList(1, 2, 3));
+	 * assertIterableEquals(i0, i1); // Passes
+	 * }</pre>
+	 * <p>If both {@code expected} and {@code actual} are {@code null}, they are considered equal.
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @see Objects#equals(Object, Object)
+	 * @see Arrays#deepEquals(Object[], Object[])
+	 * @see #assertArrayEquals(Object[], Object[], String)
+	 */
+	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, String message) {
+		assertIterableEquals(expected, actual, () -> message);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} iterables are deeply equal.
+	 * <p>Similarly to the check for deep equality in
+	 * {@link #assertArrayEquals(Object[], Object[], Supplier)}, if two iterables are encountered
+	 * (including {@code expected} and {@code actual}) then their iterators must return equal
+	 * elements in the same order as each other. <strong>Note:</strong> this means that the iterables
+	 * <em>do not</em> need to be of the same type. Example: <pre>{@code
+	 * import static java.util.Arrays.asList;
+	 *  . . .
+	 * Iterable<Integer> i0 = new ArrayList<>(asList(1, 2, 3));
+	 * Iterable<Integer> i1 = new LinkedList<>(asList(1, 2, 3));
+	 * assertIterableEquals(i0, i1); // Passes
+	 * }</pre>
+	 * <p>If both {@code expected} and {@code actual} are {@code null}, they are considered equal.
+	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 *
+	 * @see Objects#equals(Object, Object)
+	 * @see Arrays#deepEquals(Object[], Object[])
+	 * @see #assertArrayEquals(Object[], Object[], Supplier)
+	 */
+	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual,
+			Supplier<String> messageSupplier) {
+		assertIterableEquals(expected, actual, new ArrayDeque<>(), messageSupplier);
+	}
+
 	// --- assertNotEquals -----------------------------------------------------
 
 	/**
@@ -1474,12 +1549,90 @@ public final class Assertions {
 		return result;
 	}
 
-	private static String formatIndexes(Deque<Integer> indexes) {
-		if (indexes == null || indexes.isEmpty()) {
-			return "";
+	// --- assertIterableEquals helpers ----------------------------------
+
+	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
+			Supplier<String> messageSupplier) {
+
+		if (expected == actual) {
+			return;
 		}
-		String indexesString = indexes.stream().map(Object::toString).collect(joining("][", "[", "]"));
-		return " at index " + indexesString;
+		assertIterablesNotNull(expected, actual, indexes, messageSupplier);
+
+		Iterator<?> expectedIterator = expected.iterator();
+		Iterator<?> actualIterator = actual.iterator();
+
+		int processed = 0;
+		while (expectedIterator.hasNext() && actualIterator.hasNext()) {
+			processed++;
+			Object expectedElement = expectedIterator.next();
+			Object actualElement = actualIterator.next();
+
+			if (expectedElement == actualElement) {
+				continue;
+			}
+
+			indexes.addLast(processed - 1);
+			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageSupplier);
+			indexes.removeLast();
+		}
+
+		assertIteratorsAreEmpty(expectedIterator, actualIterator, processed, indexes, messageSupplier);
+	}
+
+	private static void assertIterableElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
+			Supplier<String> messageSupplier) {
+		if (expected instanceof Iterable && actual instanceof Iterable) {
+			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageSupplier);
+		}
+		else if (!Objects.equals(expected, actual)) {
+			assertIterablesNotNull(expected, actual, indexes, messageSupplier);
+			failIterablesNotEqual(expected, actual, indexes, messageSupplier);
+		}
+	}
+
+	private static void assertIterablesNotNull(Object expected, Object actual, Deque<Integer> indexes,
+			Supplier<String> messageSupplier) {
+
+		if (expected == null) {
+			failExpectedIterableIsNull(indexes, messageSupplier);
+		}
+		if (actual == null) {
+			failActualIterableIsNull(indexes, messageSupplier);
+		}
+	}
+
+	private static void failExpectedIterableIsNull(Deque<Integer> indexes, Supplier<String> messageSupplier) {
+		fail(buildPrefix(nullSafeGet(messageSupplier)) + "expected iterable was <null>" + formatIndexes(indexes));
+	}
+
+	private static void failActualIterableIsNull(Deque<Integer> indexes, Supplier<String> messageSupplier) {
+		fail(buildPrefix(nullSafeGet(messageSupplier)) + "actual iterable was <null>" + formatIndexes(indexes));
+	}
+
+	private static void assertIteratorsAreEmpty(Iterator<?> expected, Iterator<?> actual, int processed,
+			Deque<Integer> indexes, Supplier<String> messageSupplier) {
+
+		if (expected.hasNext() || actual.hasNext()) {
+			AtomicInteger expectedCount = new AtomicInteger(processed);
+			expected.forEachRemaining(e -> expectedCount.incrementAndGet());
+
+			AtomicInteger actualCount = new AtomicInteger(processed);
+			actual.forEachRemaining(e -> actualCount.incrementAndGet());
+
+			String prefix = buildPrefix(nullSafeGet(messageSupplier));
+			String message = "iterable lengths differ" + formatIndexes(indexes) + ", expected: <" + expectedCount.get()
+					+ "> but was: <" + actualCount.get() + ">";
+			fail(prefix + message);
+		}
+	}
+
+	private static void failIterablesNotEqual(Object expected, Object actual, Deque<Integer> indexes,
+			Supplier<String> messageSupplier) {
+
+		String prefix = buildPrefix(nullSafeGet(messageSupplier));
+		String message = "iterable contents differ" + formatIndexes(indexes) + ", " + formatValues(expected, actual);
+		fail(prefix + message);
 	}
 
 	// -------------------------------------------------------------------------
@@ -1583,6 +1736,14 @@ public final class Assertions {
 
 	private static void failIllegalDelta(String delta) {
 		fail("positive delta expected but was: <" + delta + ">");
+	}
+
+	private static String formatIndexes(Deque<Integer> indexes) {
+		if (indexes == null || indexes.isEmpty()) {
+			return "";
+		}
+		String indexesString = indexes.stream().map(Object::toString).collect(joining("][", "[", "]"));
+		return " at index " + indexesString;
 	}
 
 }
