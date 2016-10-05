@@ -10,6 +10,8 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,7 +23,6 @@ import static org.junit.platform.commons.util.Preconditions.notNull;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ class PreconditionsTests {
 	@Test
 	void notNullPassesForNonNullObject() {
 		Object object = new Object();
-		Object nonNullObject = notNull(object, "");
+		Object nonNullObject = notNull(object, "message");
 		assertSame(object, nonNullObject);
 	}
 
@@ -80,14 +81,14 @@ class PreconditionsTests {
 	@Test
 	void notNullPassesForEmptyObjectArray() {
 		Object[] objects = new Object[0];
-		Object nonNullObjects = notNull(objects, "");
+		Object nonNullObjects = notNull(objects, "message");
 		assertSame(objects, nonNullObjects);
 	}
 
 	@Test
 	void notNullPassesForObjectArrayContainingObjects() {
 		Object[] objects = { new Object(), new Object(), new Object() };
-		Object nonNullObjects = notNull(objects, "");
+		Object nonNullObjects = notNull(objects, "message");
 		assertSame(objects, nonNullObjects);
 	}
 
@@ -103,10 +104,37 @@ class PreconditionsTests {
 	}
 
 	@Test
+	void notEmptyPassesForNonEmptyArray() {
+		String[] array = new String[] { "a", "b", "c" };
+		String[] nonEmptyArray = notEmpty(array, "message");
+		assertSame(array, nonEmptyArray);
+	}
+
+	@Test
 	void notEmptyPassesForNonEmptyCollection() {
 		Collection<String> collection = Arrays.asList("a", "b", "c");
-		Collection<String> nonEmptyCollection = notEmpty(collection, "");
+		Collection<String> nonEmptyCollection = notEmpty(collection, "message");
 		assertSame(collection, nonEmptyCollection);
+	}
+
+	@Test
+	void notEmptyPassesForArrayWithNullElements() {
+		notEmpty(new String[] { null }, "message");
+	}
+
+	@Test
+	void notEmptyPassesForCollectionWithNullElements() {
+		notEmpty(singletonList(null), "message");
+	}
+
+	@Test
+	void notEmptyThrowsForNullArray() {
+		String message = "array is empty";
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> notEmpty((Object[]) null, message));
+
+		assertEquals(message, exception.getMessage());
 	}
 
 	@Test
@@ -114,7 +142,17 @@ class PreconditionsTests {
 		String message = "collection is empty";
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> notEmpty(null, message));
+			() -> notEmpty((Collection<?>) null, message));
+
+		assertEquals(message, exception.getMessage());
+	}
+
+	@Test
+	void notEmptyThrowsForEmptyArray() {
+		String message = "array is empty";
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> notEmpty(new Object[0], message));
 
 		assertEquals(message, exception.getMessage());
 	}
@@ -124,17 +162,7 @@ class PreconditionsTests {
 		String message = "collection is empty";
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> notEmpty(Collections.emptyList(), message));
-
-		assertEquals(message, exception.getMessage());
-	}
-
-	@Test
-	void notEmptyThrowsForCollectionWithNullElements() {
-		String message = "collection contains null elements";
-
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> notEmpty(Collections.singletonList(null), message));
+			() -> notEmpty(emptyList(), message));
 
 		assertEquals(message, exception.getMessage());
 	}
@@ -148,7 +176,7 @@ class PreconditionsTests {
 	@Test
 	void containsNoNullElementsPassesForCollectionThatIsNullOrEmpty() {
 		containsNoNullElements((List<?>) null, "collection is null");
-		containsNoNullElements(Collections.emptyList(), "collection is empty");
+		containsNoNullElements(emptyList(), "collection is empty");
 	}
 
 	@Test
@@ -181,7 +209,7 @@ class PreconditionsTests {
 		String message = "collection contains null elements";
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> containsNoNullElements(Collections.singletonList(null), message));
+			() -> containsNoNullElements(singletonList(null), message));
 
 		assertEquals(message, exception.getMessage());
 	}
@@ -189,7 +217,7 @@ class PreconditionsTests {
 	@Test
 	void notBlankPassesForNonBlankString() {
 		String string = "abc";
-		String nonBlankString = notBlank(string, "");
+		String nonBlankString = notBlank(string, "message");
 		assertSame(string, nonBlankString);
 	}
 

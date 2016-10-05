@@ -37,6 +37,7 @@ import org.junit.platform.engine.test.TestEngineSpy;
 import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -65,6 +66,36 @@ class DefaultLauncherTests {
 				new DemoHierarchicalTestEngine("dummy id")));
 
 		assertThat(exception).hasMessageContaining("multiple engines with the same ID");
+	}
+
+	@Test
+	void registerTestExecutionListenersWithNullArray() {
+		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> launcher.registerTestExecutionListeners((TestExecutionListener[]) null));
+
+		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
+	}
+
+	@Test
+	void registerTestExecutionListenersWithEmptyArray() {
+		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[0]));
+
+		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
+	}
+
+	@Test
+	void registerTestExecutionListenersWithArrayContainingNullElements() {
+		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[] { null }));
+
+		assertThat(exception).hasMessageContaining("individual listeners must not be null");
 	}
 
 	@Test

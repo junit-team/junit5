@@ -49,6 +49,7 @@ public class CompositeTestSource implements TestSource {
 	 */
 	public CompositeTestSource(Collection<? extends TestSource> sources) {
 		Preconditions.notEmpty(sources, "TestSource collection must not be null or empty");
+		Preconditions.containsNoNullElements(sources, "individual TestSources must not be null");
 		this.sources = Collections.unmodifiableList(new ArrayList<>(sources));
 	}
 

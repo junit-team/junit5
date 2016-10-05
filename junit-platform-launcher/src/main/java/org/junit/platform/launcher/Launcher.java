@@ -56,7 +56,7 @@ public interface Launcher {
 	 * Register one or more listeners for test execution.
 	 *
 	 * @param listeners the listeners to be notified of test execution events;
-	 * never {@code null}
+	 * never {@code null} or empty
 	 */
 	void registerTestExecutionListeners(TestExecutionListener... listeners);
 

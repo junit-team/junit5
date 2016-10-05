@@ -3342,7 +3342,7 @@ public class AssertionsTests {
 			// @formatter:on
 		}
 		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "executables array must not be null");
+			assertMessageEquals(ex, "individual executables must not be null");
 		}
 	}
 
@@ -3352,7 +3352,7 @@ public class AssertionsTests {
 			assertAll((Executable[]) null);
 		}
 		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "executables array must not be null");
+			assertMessageEquals(ex, "executables array must not be null or empty");
 		}
 	}
 
