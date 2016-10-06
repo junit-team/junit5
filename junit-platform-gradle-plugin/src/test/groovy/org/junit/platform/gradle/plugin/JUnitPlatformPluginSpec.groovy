@@ -145,4 +145,32 @@ class JUnitPlatformPluginSpec extends Specification {
 		testTask.enabled == true
 	}
 
+	def "when buildDir is set to non-standard location, it will be honored"() {
+		project.apply plugin: 'java'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		project.buildDir = new File('/foo/bar/build')
+		project.evaluate()
+
+		then:
+		Task junitTask = project.tasks.findByName('junitPlatformTest')
+		junitTask.args.containsAll('--reports-dir', new File(project.buildDir, 'test-results/junit-platform').getCanonicalFile().toString())
+	}
+
+	def "users can set buildDir to be a GString, and it will be converted to file"() {
+		project.apply plugin: 'java'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		project.junitPlatform {
+			reportsDir = "$project.buildDir/foo/bar/baz"
+		}
+		project.evaluate()
+
+		then:
+		Task junitTask = project.tasks.findByName('junitPlatformTest')
+		junitTask.args.containsAll('--reports-dir', new File(project.buildDir, 'foo/bar/baz').getCanonicalFile().toString())
+	}
+
 }

@@ -25,7 +25,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	private static final String TASK_NAME      = 'junitPlatformTest';
 
 	void apply(Project project) {
-		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitPlatformExtension)
+		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitPlatformExtension, project)
 		junitExtension.extensions.create('tags', TagsExtension)
 		junitExtension.extensions.create('engines', EnginesExtension)
 
@@ -49,7 +49,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		}
 	}
 
-	private void configure(Project project, junitExtension) {
+	private void configure(Project project, JUnitPlatformExtension junitExtension) {
 		project.task(
 				TASK_NAME,
 				type: JavaExec,
@@ -63,7 +63,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			junitTask.inputs.property('excludedTags', junitExtension.tags.exclude)
 			junitTask.inputs.property('includeClassNamePattern', junitExtension.includeClassNamePattern)
 
-			def reportsDir = junitExtension.reportsDir ?: project.file("build/test-results/junit-platform")
+			def reportsDir = junitExtension.reportsDir ?: project.file("$project.buildDir/test-results/junit-platform")
 			junitTask.outputs.dir reportsDir
 
 			if (junitExtension.logManager) {
