@@ -287,9 +287,9 @@ public final class DiscoverySelectors {
 	 * <tr><td>{@link String#substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
 	 * </table>
 	 *
-	 * @param methodName the fully qualified methodName of the method to select; never
+	 * @param fullyQualifiedMethodName the fully qualified name of the method to select; never
 	 * {@code null} or blank
-	 * @throws PreconditionViolationException if the supplied methodName is {@code null},
+	 * @throws PreconditionViolationException if the supplied method name is {@code null},
 	 * blank, or does not specify a unique method
 	 * @see JavaMethodSelector
 	 */
@@ -301,11 +301,14 @@ public final class DiscoverySelectors {
 		Preconditions.condition(matcher.matches(),
 			"FullyQualifiedMethodName is not a valid fully qualified method name");
 
-		if (StringUtils.isNotBlank(matcher.group(3))) {
-			return selectJavaMethod(matcher.group(1), matcher.group(2), matcher.group(3));
+		String className = matcher.group(1);
+		String methodName = matcher.group(2);
+		String methodParameters = matcher.group(3);
+		if (StringUtils.isNotBlank(methodParameters)) {
+			return selectJavaMethod(className, methodName, methodParameters);
 		}
 		else {
-			return selectJavaMethod(matcher.group(1), matcher.group(2));
+			return selectJavaMethod(className, methodName);
 		}
 	}
 
