@@ -8,6 +8,7 @@ org.junit.jupiter.engine.discovery.predicates
 org.junit.jupiter.engine.execution
 org.junit.jupiter.engine.extension
 org.junit.platform.commons
+org.junit.platform.commons.annotation
 org.junit.platform.commons.meta
 org.junit.platform.commons.util
 org.junit.platform.console
