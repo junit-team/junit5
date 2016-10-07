@@ -83,6 +83,10 @@ allprojects { subproj ->
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 
+	tasks.withType(Test) { task ->
+		task.testLogging.exceptionFormat = 'full'
+	}
+
 	tasks.withType(JavaCompile) {
 		sourceCompatibility = rootProject.sourceCompatibility
 		targetCompatibility = rootProject.targetCompatibility
