@@ -85,6 +85,9 @@ on GitHub.
 * The `{ConsoleLauncher}`, the Gradle plugin, and the `{JUnitPlatform-Runner}` runner now use
   `{standard-include-class-name-pattern}` as the default pattern for class names to be included
   in the test run.
+* New `@Testable` annotation that `TestEngine` implementations can use to signal to IDEs
+  and tooling vendors that the annotated or meta-annotated element is _testable_ (i.e.
+  that it can be executed as a test on the JUnit Platform).
 
 
 [[release-notes-5.0.0-m3-junit-jupiter]]

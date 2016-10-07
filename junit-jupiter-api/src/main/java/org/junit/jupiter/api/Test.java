@@ -18,6 +18,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.junit.platform.commons.annotation.Testable;
 import org.junit.platform.commons.meta.API;
 
 /**
@@ -46,5 +47,6 @@ import org.junit.platform.commons.meta.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(Stable)
+@Testable
 public @interface Test {
 }
