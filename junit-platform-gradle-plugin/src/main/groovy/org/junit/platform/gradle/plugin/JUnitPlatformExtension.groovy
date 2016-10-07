@@ -9,6 +9,7 @@
  */
 package org.junit.platform.gradle.plugin
 
+import org.gradle.api.Project
 import org.junit.platform.engine.discovery.ClassNameFilter
 
 /**
@@ -17,6 +18,12 @@ import org.junit.platform.engine.discovery.ClassNameFilter
  * @since 1.0
  */
 class JUnitPlatformExtension {
+
+	private Project project
+
+	JUnitPlatformExtension(Project project) {
+		this.project = project
+	}
 
 	/**
 	 * The version of the JUnit Platform to use.
@@ -37,9 +44,23 @@ class JUnitPlatformExtension {
 	/**
 	 * The directory for the test report files.
 	 *
-	 * <p>Defaults to {@code file('build/test-results/junit-platform')}.
+	 * <p>Defaults to {@code file("$buildDir/test-results/junit-platform")}.
 	 */
 	File reportsDir
+
+	/**
+	 * Accepts a path to the reportsDir. If the object is a {@link java.io.File) it
+	 * will be used as is. If the object is anything else, it will convert to File
+	 * automatically using {@link org.gradle.api.Project#file(Object)}
+	 */
+	void setReportsDir(Object reportsDir) {
+		// Work around for https://discuss.gradle.org/t/bug-in-project-file-on-windows/19917
+		if (reportsDir instanceof File) {
+			this.reportsDir = reportsDir
+		} else {
+			this.reportsDir = project.file(reportsDir)
+		}
+	}
 
 	/**
 	 * Whether or not the standard Gradle {@code test} task should be enabled.
