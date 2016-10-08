@@ -352,11 +352,12 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	private static class ExtendWithOnMethodTestCase {
 
 		/**
-		 * This set-up / tear-down method is intentionally NOT annotated with
-		 * {@code @ExtendWith} in order to verify that {@code @BeforeEach} and
-		 * {@code @AfterEach} methods are properly invoked using the same
+		 * This set-up / tear-down method is here to verify that {@code @BeforeEach}
+		 * and {@code @AfterEach} methods are properly invoked using the same
 		 * {@code ExtensionRegistry} as the one used for the corresponding
 		 * {@code @Test} method.
+		 *
+		 * @see <a href="https://github.com/junit-team/junit5/issues/523">#523</a>
 		 */
 		@BeforeEach
 		@AfterEach
