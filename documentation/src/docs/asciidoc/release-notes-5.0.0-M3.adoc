@@ -100,6 +100,8 @@ on GitHub.
 * `DynamicTest.stream()` now accepts a `ThrowingConsumer` instead of a conventional
   `Consumer` for its _test executor_, thereby allowing for custom streams of
   dynamic tests that may potentially throw checked exceptions.
+* Extensions registered at the test method level are now used when invoking
+  `@BeforeEach` and `@AfterEach` methods for the corresponding test method.
 * The `JupiterTestEngine` now supports selection of test methods via their unique ID for
   methods that accept arrays or primitive types as parameters.
 * `ExtensionContext.Store` is now thread-safe.

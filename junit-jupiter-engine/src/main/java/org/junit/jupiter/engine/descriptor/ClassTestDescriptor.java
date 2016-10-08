@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -258,17 +257,17 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void registerMethodsAsExtensions(List<Method> methods, ExtensionRegistry registry,
-			BiFunction<ExtensionRegistry, Method, Extension> extensionSynthesizer) {
+			Function<Method, Extension> extensionSynthesizer) {
 
-		methods.forEach(method -> registry.registerExtension(extensionSynthesizer.apply(registry, method), method));
+		methods.forEach(method -> registry.registerExtension(extensionSynthesizer.apply(method), method));
 	}
 
-	private BeforeEachMethodAdapter synthesizeBeforeEachMethodAdapter(ExtensionRegistry registry, Method method) {
-		return extensionContext -> invokeMethodInTestExtensionContext(method, extensionContext, registry);
+	private BeforeEachMethodAdapter synthesizeBeforeEachMethodAdapter(Method method) {
+		return (extensionContext, registry) -> invokeMethodInTestExtensionContext(method, extensionContext, registry);
 	}
 
-	private AfterEachMethodAdapter synthesizeAfterEachMethodAdapter(ExtensionRegistry registry, Method method) {
-		return extensionContext -> invokeMethodInTestExtensionContext(method, extensionContext, registry);
+	private AfterEachMethodAdapter synthesizeAfterEachMethodAdapter(Method method) {
+		return (extensionContext, registry) -> invokeMethodInTestExtensionContext(method, extensionContext, registry);
 	}
 
 	private void invokeMethodInTestExtensionContext(Method method, TestExtensionContext context,

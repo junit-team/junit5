@@ -351,6 +351,20 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	private static class ExtendWithOnMethodTestCase {
 
+		/**
+		 * This set-up / tear-down method is intentionally NOT annotated with
+		 * {@code @ExtendWith} in order to verify that {@code @BeforeEach} and
+		 * {@code @AfterEach} methods are properly invoked using the same
+		 * {@code ExtensionRegistry} as the one used for the corresponding
+		 * {@code @Test} method.
+		 */
+		@BeforeEach
+		@AfterEach
+		void setUpAndTearDown(CustomType customType, @CustomAnnotation String value) {
+			assertNotNull(customType);
+			assertNotNull(value);
+		}
+
 		@Test
 		@ExtendWith(CustomTypeParameterResolver.class)
 		@ExtendWith(CustomAnnotationParameterResolver.class)
