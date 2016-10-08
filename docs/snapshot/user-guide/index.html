@@ -3798,6 +3798,10 @@ class hierarchy.</p>
 dynamic tests that may potentially throw checked exceptions.</p>
 </li>
 <li>
+<p>Extensions registered at the test method level are now used when invoking
+<code>@BeforeEach</code> and <code>@AfterEach</code> methods for the corresponding test method.</p>
+</li>
+<li>
 <p>The <code>JupiterTestEngine</code> now supports selection of test methods via their unique ID for
 methods that accept arrays or primitive types as parameters.</p>
 </li>
@@ -3855,7 +3859,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-10-07 15:20:18 EDT
+Last updated 2016-10-07 13:58:46 EDT
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
