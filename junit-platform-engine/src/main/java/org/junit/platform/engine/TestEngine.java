@@ -21,14 +21,23 @@ import org.junit.platform.commons.meta.API;
  * <p>For example, JUnit provides a {@code TestEngine} that discovers and
  * executes tests written using the JUnit Jupiter programming model.
  *
- * <p>Every {@code TestEngine} must {@linkplain #getId provide an ID},
+ * <p>Every {@code TestEngine} must {@linkplain #getId provide its own unique ID},
  * {@linkplain #discover discover tests} from
  * {@link EngineDiscoveryRequest EngineDiscoveryRequests},
- * and {@linkplain #execute execute them} according to
+ * and {@linkplain #execute execute those tests} according to
  * {@link ExecutionRequest ExecutionRequests}.
  *
- * @see EngineDiscoveryRequest
- * @see ExecutionRequest
+ * <p>In order to facilitate test discovery within IDEs and tools prior
+ * to launching the JUnit Platform, {@code TestEngine} implementations are
+ * encouraged to make use of the
+ * {@link org.junit.platform.commons.annotation.Testable @Testable} annotation.
+ * For example, the {@code @Test} and {@code @TestFactory} annotations in JUnit
+ * Jupiter are meta-annotated with {@code @Testable}. Consult the Javadoc for
+ * {@code @Testable} for further details.
+ *
+ * @see org.junit.platform.engine.EngineDiscoveryRequest
+ * @see org.junit.platform.engine.ExecutionRequest
+ * @see org.junit.platform.commons.annotation.Testable
  * @since 1.0
  */
 @API(Experimental)

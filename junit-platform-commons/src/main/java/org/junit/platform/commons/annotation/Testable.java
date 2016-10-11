@@ -40,7 +40,7 @@ import org.junit.platform.commons.meta.API;
  * <p>{@code @Testable} will typically be used as a meta-annotation in order to
  * create a custom <em>composed annotation</em> that inherits the semantics
  * of {@code @Testable}. For example, the {@code @Test} and {@code @TestFactory}
- * annotations in JUnit Jupiter are meta-annotated with {@code Testable}.
+ * annotations in JUnit Jupiter are meta-annotated with {@code @Testable}.
  * <p>For test programming models that do not rely on annotations, test classes
  * or test methods may be directly annotated with {@code @Testable}. Alternatively,
  * if concrete test classes extend from a base class, the base class can be
