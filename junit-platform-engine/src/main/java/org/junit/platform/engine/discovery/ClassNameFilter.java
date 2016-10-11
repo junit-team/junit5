@@ -19,7 +19,7 @@ import org.junit.platform.engine.DiscoveryFilter;
  * {@link DiscoveryFilter} that is applied to the name of a {@link Class}.
  *
  * @since 1.0
- * @see #includeClassNamePattern(String)
+ * @see #includeClassNamePatterns
  */
 @API(Experimental)
 public interface ClassNameFilter extends DiscoveryFilter<String> {
@@ -36,9 +36,27 @@ public interface ClassNameFilter extends DiscoveryFilter<String> {
 	 * @param pattern a regular expression to match against fully qualified
 	 * class names; never {@code null} or blank
 	 * @see Class#getName()
+	 * @deprecated Please use {@link #includeClassNamePatterns}
 	 */
+	@Deprecated
 	static ClassNameFilter includeClassNamePattern(String pattern) {
 		return new IncludeClassNameFilter(pattern);
+	}
+
+	/**
+	 * Create a new <em>include</em> {@link ClassNameFilter} based on the
+	 * supplied patterns.
+	 *
+	 * <p>The patterns are combined using OR semantics, i.e. if the fully
+	 * qualified name of a class matches against at least one of the patterns,
+	 * the class will be included in the result set.
+	 *
+	 * @param patterns regular expressions to match against fully qualified
+	 * class names; never {@code null}, empty, or containing {@code null}
+	 * @see Class#getName()
+	 */
+	static ClassNameFilter includeClassNamePatterns(String... patterns) {
+		return new IncludeClassNameFilter(patterns);
 	}
 
 }

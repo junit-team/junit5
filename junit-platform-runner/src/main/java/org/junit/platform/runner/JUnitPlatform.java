@@ -14,7 +14,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
-import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
@@ -160,7 +160,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private void addIncludeClassNamePatternFilter(LauncherDiscoveryRequestBuilder requestBuilder, boolean isSuite) {
 		String pattern = getIncludeClassNamePattern(isSuite);
 		if (!pattern.isEmpty()) {
-			requestBuilder.filters(includeClassNamePattern(pattern));
+			requestBuilder.filters(includeClassNamePatterns(pattern));
 		}
 	}
 

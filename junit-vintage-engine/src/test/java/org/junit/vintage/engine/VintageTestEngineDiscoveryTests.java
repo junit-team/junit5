@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.FunctionUtils.where;
-import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
@@ -229,7 +229,7 @@ class VintageTestEngineDiscoveryTests {
 		Path root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClasspathRoots(singleton(root))).filters(
-			includeClassNamePattern(".*JUnit4.*"), includeClassNamePattern(".*Plain.*")).build();
+			includeClassNamePatterns(".*JUnit4.*"), includeClassNamePatterns(".*Plain.*")).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -528,7 +528,7 @@ class VintageTestEngineDiscoveryTests {
 		// @formatter:off
 		LauncherDiscoveryRequest request = request()
 				.selectors(selectJavaMethod(testClass, testClass.getMethod("failingTest")))
-				.filters(includeClassNamePattern("Foo"))
+				.filters(includeClassNamePatterns("Foo"))
 				.build();
 		// @formatter:on
 

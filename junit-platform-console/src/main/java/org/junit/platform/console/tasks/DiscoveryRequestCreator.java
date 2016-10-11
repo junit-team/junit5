@@ -12,7 +12,7 @@ package org.junit.platform.console.tasks;
 
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
@@ -81,7 +81,7 @@ class DiscoveryRequestCreator {
 	}
 
 	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
-		requestBuilder.filters(includeClassNamePattern(options.getIncludeClassNamePattern()));
+		requestBuilder.filters(includeClassNamePatterns(options.getIncludeClassNamePattern()));
 
 		if (!options.getIncludedTags().isEmpty()) {
 			requestBuilder.filters(includeTags(options.getIncludedTags()));

@@ -62,8 +62,8 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *        // excludeEngines("junit-vintage"),
  *        includeTags("fast"),
  *        // excludeTags("slow"),
- *        includeClassNamePattern(".*Test[s]?")
- *        // includeClassNamePattern("org\.example\.tests.*")
+ *        includeClassNamePatterns(".*Test[s]?")
+ *        // includeClassNamePatterns("org\.example\.tests.*")
  *     )
  *     .configurationParameter("key1", "value1")
  *     .configurationParameters(configParameterMap)

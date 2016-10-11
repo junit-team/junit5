@@ -62,6 +62,8 @@ on GitHub.
   `--hide-details`, and `--reports-dir` respectively.
 * `LauncherDiscoveryRequestBuilder` no longer accepts `null` values for `selectors`, `filters`,
   or maps of configuration parameters.
+* `ClassNameFilter.includeClassNamePattern` is now deprecated in favor of
+  `ClassNameFilter.includeClassNamePatterns`.
 
 
 ====== New Features
@@ -88,6 +90,8 @@ on GitHub.
 * New `@Testable` annotation that `TestEngine` implementations can use to signal to IDEs
   and tooling vendors that the annotated or meta-annotated element is _testable_ (i.e.
   that it can be executed as a test on the JUnit Platform).
+* Multiple regular expressions that are combined using OR semantics can now be passed to
+  `ClassNameFilter.includeClassNamePatterns`.
 
 
 [[release-notes-5.0.0-m3-junit-jupiter]]

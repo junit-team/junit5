@@ -32,7 +32,7 @@ import org.junit.platform.engine.discovery.ClassNameFilter;
  *
  * @since 1.0
  * @see JUnitPlatform
- * @see org.junit.platform.engine.discovery.ClassNameFilter#includeClassNamePattern
+ * @see org.junit.platform.engine.discovery.ClassNameFilter#includeClassNamePatterns
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

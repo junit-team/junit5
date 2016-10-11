@@ -42,15 +42,15 @@ class FilterCompositionTests {
 
 	@Test
 	void composingSingleFilterWillReturnTheOriginalOne() {
-		Filter<?> singleFilter = ClassNameFilter.includeClassNamePattern(".*ring.*");
+		Filter<?> singleFilter = ClassNameFilter.includeClassNamePatterns(".*ring.*");
 		Filter<?> composed = Filter.composeFilters(singleFilter);
 		assertSame(singleFilter, composed);
 	}
 
 	@Test
 	void composingMultipleFiltersIsAConjunctionOfFilters() {
-		Filter<String> firstFilter = ClassNameFilter.includeClassNamePattern(".*ring.*");
-		Filter<String> secondFilter = ClassNameFilter.includeClassNamePattern(".*Join.*");
+		Filter<String> firstFilter = ClassNameFilter.includeClassNamePatterns(".*ring.*");
+		Filter<String> secondFilter = ClassNameFilter.includeClassNamePatterns(".*Join.*");
 
 		Filter<String> composed = Filter.composeFilters(firstFilter, secondFilter);
 

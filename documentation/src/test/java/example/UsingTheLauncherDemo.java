@@ -11,7 +11,7 @@
 package example;
 
 // tag::imports[]
-import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 
@@ -40,7 +40,7 @@ class UsingTheLauncherDemo {
 				selectJavaPackage("com.example.mytests"),
 				selectJavaClass(MyTestClass.class)
 			)
-			.filters(includeClassNamePattern(".*Test"))
+			.filters(includeClassNamePatterns(".*Test"))
 			.build();
 
 		TestPlan plan = LauncherFactory.create().discover(request);
@@ -57,7 +57,7 @@ class UsingTheLauncherDemo {
 				selectJavaPackage("com.example.mytests"),
 				selectJavaClass(MyTestClass.class)
 			)
-			.filters(includeClassNamePattern(".*Test"))
+			.filters(includeClassNamePatterns(".*Test"))
 			.build();
 
 		Launcher launcher = LauncherFactory.create();
