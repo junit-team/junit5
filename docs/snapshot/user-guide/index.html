@@ -2806,7 +2806,7 @@ through to identify test classes and test methods in the past.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
 
@@ -2827,7 +2827,7 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;</code></
         selectJavaPackage("com.example.mytests"),
         selectJavaClass(MyTestClass.class)
     )
-    .filters(includeClassNamePattern(".*Test"))
+    .filters(includeClassNamePatterns(".*Test"))
     .build();
 
 TestPlan plan = LauncherFactory.create().discover(request);</code></pre>
@@ -2861,7 +2861,7 @@ be achieved through a <code><a href="../api/org/junit/platform/launcher/TestExec
         selectJavaPackage("com.example.mytests"),
         selectJavaClass(MyTestClass.class)
     )
-    .filters(includeClassNamePattern(".*Test"))
+    .filters(includeClassNamePatterns(".*Test"))
     .build();
 
 Launcher launcher = LauncherFactory.create();
@@ -3735,6 +3735,10 @@ removed in favor of using their <em>long</em> equivalents <code>--disable-ansi-c
 <p><code>LauncherDiscoveryRequestBuilder</code> no longer accepts <code>null</code> values for <code>selectors</code>, <code>filters</code>,
 or maps of configuration parameters.</p>
 </li>
+<li>
+<p><code>ClassNameFilter.includeClassNamePattern</code> is now deprecated in favor of
+<code>ClassNameFilter.includeClassNamePatterns</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -3777,6 +3781,10 @@ in the test run.</p>
 <p>New <code>@Testable</code> annotation that <code>TestEngine</code> implementations can use to signal to IDEs
 and tooling vendors that the annotated or meta-annotated element is <em>testable</em> (i.e.
 that it can be executed as a test on the JUnit Platform).</p>
+</li>
+<li>
+<p>Multiple regular expressions that are combined using OR semantics can now be passed to
+<code>ClassNameFilter.includeClassNamePatterns</code>.</p>
 </li>
 </ul>
 </div>
@@ -3859,7 +3867,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-10-11 15:02:31 EDT
+Last updated 2016-10-11 16:47:20 EDT
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
