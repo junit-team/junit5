@@ -34,18 +34,14 @@ on GitHub.
 
 * `ClasspathSelector` has been renamed to `ClasspathRootSelector` to avoid confusion with
   `ClasspathResourceSelector`.
-* `PackageSelector` and `DiscoverySelectors.selectPackage()` have been renamed to
-  `JavaPackageSelector` and `DiscoverySelectors.selectJavaPackage()` to align with
-  `JavaPackageSource`.
-* `ClassSelector` and `DiscoverySelectors.selectClass()` have been renamed to
-  `JavaClassSelector` and `DiscoverySelectors.selectJavaClass()` to align with
-  `JavaClassSource`.
-* `MethodSelector` and `DiscoverySelectors.selectMethod()` have been renamed to
-  `JavaMethodSelector` and `DiscoverySelectors.selectJavaMethod()` to align with
-  `JavaMethodSource`.
+* `JavaPackageSource` has been renamed to `PackageSource` to align with `PackageSelector`.
+* `JavaClassSource` has been renamed to `ClassSource` to align with `ClassSelector`.
+* `JavaMethodSource` has been renamed to `MethodSource` to align with `MethodSelector`.
+* `PackageSource`, `ClassSource`, and `MethodSource` do no longer implement the `JavaSource`
+   interface, which has been removed, but implement the `TestSource` interface directly.
 * Generic name-based discovery selectors (i.e., `selectName()` and `selectNames()`) in
   `DiscoverySelectors` have been deprecated in favor of the dedicated
-  `selectJavaPackage(String)`, `selectJavaClass(String)`, and `selectJavaMethod(String)` methods.
+  `selectPackage(String)`, `selectClass(String)`, and `selectMethod(String)` methods.
 * `ClassFilter` has been renamed to `ClassNameFilter` and now implements `DiscoveryFilter<String>`
   instead of `DiscoveryFilter<Class<?>>` so it can be applied before loading classes during
   classpath scanning.
