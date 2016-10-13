@@ -15,15 +15,14 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.support.descriptor.PackageSource;
 
 /**
- * A {@link DiscoverySelector} that selects a Java package name so that
+ * A {@link DiscoverySelector} that selects a package name so that
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * tests or containers based on packages.
  *
  * @since 1.0
- * @see PackageSource
+ * @see org.junit.platform.engine.support.descriptor.PackageSource
  */
 @API(Experimental)
 public class PackageSelector implements DiscoverySelector {

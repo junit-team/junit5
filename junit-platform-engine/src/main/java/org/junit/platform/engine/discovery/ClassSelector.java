@@ -17,29 +17,29 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.support.descriptor.ClassSource;
 
 /**
- * A {@link DiscoverySelector} that selects a {@link Class} so that
- * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
+ * A {@link DiscoverySelector} that selects a {@link Class} or class name so
+ * that {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * tests or containers based on classes.
  *
- * If a Java {@link Class} is provided, the selector will return this
- * {@link Class} and its class name accordingly. If the selector was
- * created with a {@link Class} name, it will tries to lazy load the
- * Java {@link Class} only on request.
+ * <p>If a Java {@link Class} reference is provided, the selector will return
+ * that {@code Class} and its class name accordingly. If a class name is
+ * provided, the selector will only attempt to lazily load the {@link Class}
+ * if {@link #getJavaClass()} is invoked.
  *
- * Note: Java {@link Class} here means, anything that can be referenced
- * by a {@link Class} on the JVM, e.g. also classes from other languages
- * like Groovy, Scala, etc.
+ * <p>In this context, Java {@link Class} means anything that can be referenced
+ * as a {@link Class} on the JVM &mdash; for example, classes from other JVM
+ * languages such Groovy, Scala, etc.
  *
  * @since 1.0
- * @see ClassSource
+ * @see org.junit.platform.engine.support.descriptor.ClassSource
  */
 @API(Experimental)
 public class ClassSelector implements DiscoverySelector {
 
 	private final String className;
+
 	private Class<?> javaClass;
 
 	ClassSelector(String className) {
@@ -52,7 +52,7 @@ public class ClassSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the selected {@link Class} name.
+	 * Get the selected class name.
 	 */
 	public String getClassName() {
 		return this.className;
@@ -61,9 +61,9 @@ public class ClassSelector implements DiscoverySelector {
 	/**
 	 * Get the selected {@link Class}.
 	 *
-	 * Note: If the {@link Class} was not provided, but only the name,
-	 * this method tries to lazy load the {@link Class} and throws an
-	 * {@link PreconditionViolationException} if it fails.
+	 * <p>If the {@link Class} was not provided, but only the name, this method
+	 * attempts to lazily load the {@link Class} based on its name and throws a
+	 * {@link PreconditionViolationException} if the class cannot be loaded.
 	 */
 	public Class<?> getJavaClass() {
 		if (this.javaClass == null) {

@@ -289,16 +289,14 @@ public final class DiscoverySelectors {
 	 *
 	 * @param fullyQualifiedMethodName the fully qualified name of the method to select; never
 	 * {@code null} or blank
-	 * @throws PreconditionViolationException if the supplied method name is {@code null},
-	 * blank, or does not specify a unique method
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(String fullyQualifiedMethodName) throws PreconditionViolationException {
-		Preconditions.notBlank(fullyQualifiedMethodName, "FullyQualifiedMethodName must not be null or blank");
+		Preconditions.notBlank(fullyQualifiedMethodName, "fullyQualifiedMethodName must not be null or blank");
 
 		Matcher matcher = fullyQualifiedMethodNamePattern.matcher(fullyQualifiedMethodName);
 		Preconditions.condition(matcher.matches(),
-			"FullyQualifiedMethodName is not a valid fully qualified method name");
+			"fullyQualifiedMethodName is not a valid fully qualified method name");
 
 		String className = matcher.group(1);
 		String methodName = matcher.group(2);
@@ -326,13 +324,17 @@ public final class DiscoverySelectors {
 	}
 
 	/**
-	 * Create a {@code MethodSelector} for the supplied class name and method name
-	 * with respect to the given method parameter types.
+	 * Create a {@code MethodSelector} for the supplied class name, method name,
+	 * and method parameter types.
+	 *
+	 * <p>The parameter types {@code String} is typically a comma-separated list
+	 * of atomic types, fully qualified class names, or array types; however,
+	 * the exact syntax depends on the underlying test engine.
 	 *
 	 * @param className the fully qualified name of the class in which the method
 	 * is declared, or a subclass thereof; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param methodParameterTypes the method parameter types as string; never
+	 * @param methodParameterTypes the method parameter types as a single string; never
 	 * {@code null} or blank
 	 * @see MethodSelector
 	 */
@@ -358,12 +360,17 @@ public final class DiscoverySelectors {
 	}
 
 	/**
-	 * Create a {@code MethodSelector} for the supplied {@link Class} and method name.
+	 * Create a {@code MethodSelector} for the supplied {@link Class}, method name,
+	 * and method parameter types.
+	 *
+	 * <p>The parameter types {@code String} is typically a comma-separated list
+	 * of atomic types, fully qualified class names, or array types; however,
+	 * the exact syntax depends on the underlying test engine.
 	 *
 	 * @param javaClass the class in which the method is declared, or a subclass thereof;
 	 * never {@code null}
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param methodParameterTypes the method parameter types as string; never
+	 * @param methodParameterTypes the method parameter types as a single string; never
 	 * {@code null} or blank
 	 * @see MethodSelector
 	 */

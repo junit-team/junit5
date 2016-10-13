@@ -25,11 +25,11 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.FilterResult;
 
 /**
- * {@link ClassNameFilter} that matches fully qualified class names against a
- * pattern in the form of a regular expression.
+ * {@link ClassNameFilter} that matches fully qualified class names against
+ * patterns in the form of regular expressions.
  *
- * <p>If the fully qualified name of a class matches against the pattern, the
- * class will be included.
+ * <p>If the fully qualified name of a class matches against at least one
+ * pattern, the class will be included.
  *
  * @since 1.0
  */

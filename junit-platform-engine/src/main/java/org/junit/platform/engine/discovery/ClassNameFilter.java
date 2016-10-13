@@ -36,7 +36,8 @@ public interface ClassNameFilter extends DiscoveryFilter<String> {
 	 * @param pattern a regular expression to match against fully qualified
 	 * class names; never {@code null} or blank
 	 * @see Class#getName()
-	 * @deprecated Please use {@link #includeClassNamePatterns}
+	 * @deprecated This method will be removed in 5.0 M4; use
+	 * {@link #includeClassNamePatterns} instead.
 	 */
 	@Deprecated
 	static ClassNameFilter includeClassNamePattern(String pattern) {

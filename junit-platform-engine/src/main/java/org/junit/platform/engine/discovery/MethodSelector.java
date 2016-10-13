@@ -20,35 +20,36 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
- * A {@link DiscoverySelector} that selects a {@link Method} so that
- * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
- * tests or containers based on Java methods.
+ * A {@link DiscoverySelector} that selects a {@link Method} or a combination of
+ * class name, method name, and parameter types so that
+ * {@link org.junit.platform.engine.TestEngine TestEngines} can discover tests
+ * or containers based on methods.
  *
- *  If a Java {@link Method} is provided, the selector will return this
- * {@link Method} and its method name accordingly. If the selector was
- * created with a {@link Class} and {@link Method} name, a {@link Class}
- * name and {@link Method} name, or only a full qualified {@link Method}
- * name, it will tries to lazy load the {@link Class} and {@link Method}
- * only on request.
+ * <p>If a Java {@link Method} is provided, the selector will return that
+ * {@code Method} and its method and class names accordingly. If a {@link Class}
+ * and method name, a class name and method name, or simply a fully qualified
+ * method name is provided, the selector will only attempt to lazily load the
+ * {@link Class} and {@link Method} if {@link #getJavaClass()} or
+ * {@link #getJavaMethod()} is invoked.
  *
- * Note: Java {@link Method} here means, anything that can be referenced
- * by a {@link Method} on the JVM, e.g. also methods from other languages
- * like Groovy, Scala, etc.
+ * <p>In this context, Java {@link Method} means anything that can be referenced
+ * as a {@link Method} on the JVM &mdash; for example, methods from other JVM
+ * languages such Groovy, Scala, etc.
  *
  * @since 1.0
- * @see MethodSource
+ * @see org.junit.platform.engine.support.descriptor.MethodSource
  */
 @API(Experimental)
 public class MethodSelector implements DiscoverySelector {
 
-	private Class<?> javaClass;
 	private final String className;
-	private Method javaMethod;
 	private final String methodName;
 	private final String methodParameterTypes;
+
+	private Class<?> javaClass;
+	private Method javaMethod;
 
 	MethodSelector(String className, String methodName) {
 		this(className, methodName, null);
@@ -80,55 +81,59 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the selected {@link Class} name.
+	 * Get the selected class name.
 	 */
 	public String getClassName() {
 		return this.className;
 	}
 
 	/**
-	 * Get the {@link Class} in which the selected {@linkplain #getJavaMethod
-	 * javaMethod} is declared, or a subclass thereof.
-	 *
-	 * Note: If the {@link Class} was not provided, but only the name,
-	 * this method tries to lazy load the {@link Class} and throws an
-	 * {@link PreconditionViolationException} if it fails.
-	 *
-	 * @see #getJavaMethod()
-	 */
-	public Class<?> getJavaClass() {
-		lazyLoadJavaClassAndMethod();
-		return this.javaClass;
-	}
-
-	/**
-	 * Get the selected {@link Method} name.
+	 * Get the selected method name.
 	 */
 	public String getMethodName() {
 		return this.methodName;
 	}
 
 	/**
-	 * Get the parameters types for the selected {@link Method} as a
-	 * {@link String}. Note: The parameters are not provided as a list. This
-	 * is by design to allow this generic class to be used by other JVM
-	 * related languages.
+	 * Get the parameter types for the selected method as a {@link String},
+	 * typically a comma-separated list of atomic types, fully qualified class
+	 * names, or array types.
+	 *
+	 * <p>Note: the parameter types are provided as a single string instead of
+	 * a collection in order to allow this selector to be used in a generic
+	 * fashion by various test engines. It is therefore the responsibility of
+	 * the caller of this method to determine how to parse the returned string.
 	 */
 	public String getMethodParameterTypes() {
 		return this.methodParameterTypes;
 	}
 
 	/**
+	 * Get the {@link Class} in which the selected {@linkplain #getJavaMethod
+	 * method} is declared, or a subclass thereof.
+	 *
+	 * <p>If the {@link Class} was not provided, but only the name, this method
+	 * attempts to lazily load the {@code Class} based on its name and throws a
+	 * {@link PreconditionViolationException} if the class cannot be loaded.
+	 *
+	 * @see #getJavaMethod()
+	 */
+	public Class<?> getJavaClass() {
+		lazyLoadJavaClass();
+		return this.javaClass;
+	}
+
+	/**
 	 * Get the selected {@link Method}.
 	 *
-	 * Note: If the {@link Method} was not provided, but only the name,
-	 * this method tries to lazy load the {@link Method} and throws an
-	 * {@link PreconditionViolationException} if it fails.
+	 * <p>If the {@link Method} was not provided, but only the name, this method
+	 * attempts to lazily load the {@code Method} based on its name and throws a
+	 * {@link PreconditionViolationException} if the method cannot be loaded.
 	 *
 	 * @see #getJavaClass()
 	 */
 	public Method getJavaMethod() {
-		lazyLoadJavaClassAndMethod();
+		lazyLoadJavaMethod();
 		return this.javaMethod;
 	}
 
@@ -143,11 +148,15 @@ public class MethodSelector implements DiscoverySelector {
 		// @formatter:on
 	}
 
-	private void lazyLoadJavaClassAndMethod() {
+	private void lazyLoadJavaClass() {
 		if (this.javaClass == null) {
 			this.javaClass = ReflectionUtils.loadClass(this.className).orElseThrow(
 				() -> new PreconditionViolationException("Could not load class with name: " + this.className));
 		}
+	}
+
+	private void lazyLoadJavaMethod() {
+		lazyLoadJavaClass();
 
 		if (this.javaMethod == null) {
 			if (StringUtils.isNotBlank(this.methodParameterTypes)) {
@@ -164,4 +173,5 @@ public class MethodSelector implements DiscoverySelector {
 			}
 		}
 	}
+
 }

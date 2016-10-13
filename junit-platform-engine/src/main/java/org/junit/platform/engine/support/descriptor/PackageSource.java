@@ -21,7 +21,7 @@ import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.discovery.PackageSelector;
 
 /**
- * Java package based {@link org.junit.platform.engine.TestSource}.
+ * Package based {@link org.junit.platform.engine.TestSource}.
  *
  * <p>This class stores the package name because {@link Package} does not
  * implement {@link java.io.Serializable}.
@@ -37,8 +37,7 @@ public class PackageSource implements TestSource {
 	private final String packageName;
 
 	/**
-	 * Create a new {@code PackageSource} using the supplied
-	 * {@link Package javaPackage}.
+	 * Create a new {@code PackageSource} using the supplied Java {@link Package}.
 	 *
 	 * @param javaPackage the Java package; must not be {@code null}
 	 */
@@ -47,10 +46,9 @@ public class PackageSource implements TestSource {
 	}
 
 	/**
-	 * Create a new {@code PackageSource} using the supplied
-	 * {@code packageName}.
+	 * Create a new {@code PackageSource} using the supplied {@code packageName}.
 	 *
-	 * @param packageName the Java package name; must not be {@code null} or blank
+	 * @param packageName the package name; must not be {@code null} or blank
 	 */
 	public PackageSource(String packageName) {
 		this.packageName = Preconditions.notBlank(packageName, "package name must not be null or blank");
