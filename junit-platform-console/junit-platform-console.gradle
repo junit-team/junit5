@@ -2,7 +2,7 @@ apply plugin: 'application'
 
 dependencies {
 	compile(project(':junit-platform-launcher'))
-	compile('net.sf.jopt-simple:jopt-simple:5.0.2')
+	compile('net.sf.jopt-simple:jopt-simple:5.0.3')
 }
 
 mainClassName = "org.junit.platform.console.ConsoleLauncher"
