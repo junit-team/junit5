@@ -169,7 +169,7 @@ If a test fails, the build will fail with output similar to the following:
 
 Test failures (1):
   JUnit Jupiter:SecondTest:mySecondTest()
-    JavaMethodSource [javaClass = 'com.example.project.SecondTest', javaMethodName = 'mySecondTest', javaMethodParameterTypes = '']
+    MethodSource [className = 'com.example.project.SecondTest', methodName = 'mySecondTest', methodParameterTypes = '']
     => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
 Test run finished after 99 ms
