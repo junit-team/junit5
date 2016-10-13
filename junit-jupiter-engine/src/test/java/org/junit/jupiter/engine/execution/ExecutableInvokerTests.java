@@ -164,7 +164,7 @@ class ExecutableInvokerTests {
 
 		// @formatter:off
 		assertThat(caught.getMessage())
-				.contains("resolved a null value for parameter [int arg0]")
+				.contains("resolved a null value for parameter [int")
 				.contains("but a primitive of type [int] is required.");
 		// @formatter:on
 	}
@@ -175,7 +175,7 @@ class ExecutableInvokerTests {
 
 		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
-		assertThat(caught.getMessage()).contains("parameter [java.lang.String arg0]");
+		assertThat(caught.getMessage()).contains("parameter [java.lang.String");
 	}
 
 	@Test
@@ -188,7 +188,7 @@ class ExecutableInvokerTests {
 
 		// @formatter:off
 		assertThat(caught.getMessage())
-				.contains("parameter [java.lang.String arg0]")
+				.contains("parameter [java.lang.String")
 				.contains(ConfigurableParameterResolver.class.getName() + ", " + ConfigurableParameterResolver.class.getName());
 		// @formatter:on
 	}
@@ -202,7 +202,7 @@ class ExecutableInvokerTests {
 
 		// @formatter:off
 		assertThat(caught.getMessage())
-				.contains("resolved a value of type [java.math.BigDecimal] for parameter [java.lang.String arg0]")
+				.contains("resolved a value of type [java.math.BigDecimal] for parameter [java.lang.String")
 				.contains("but a value assignment compatible with [java.lang.String] is required.");
 		// @formatter:on
 	}
@@ -216,7 +216,7 @@ class ExecutableInvokerTests {
 		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
 		assertSame(cause, caught.getCause(), () -> "cause should be present");
-		assertThat(caught.getMessage()).startsWith("Failed to resolve parameter [java.lang.String arg0]");
+		assertThat(caught.getMessage()).startsWith("Failed to resolve parameter [java.lang.String");
 	}
 
 	@Test
