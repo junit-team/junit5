@@ -37,14 +37,16 @@ on GitHub.
 * `JavaPackageSource` has been renamed to `PackageSource` to align with `PackageSelector`.
 * `JavaClassSource` has been renamed to `ClassSource` to align with `ClassSelector`.
 * `JavaMethodSource` has been renamed to `MethodSource` to align with `MethodSelector`.
-* `PackageSource`, `ClassSource`, and `MethodSource` do no longer implement the `JavaSource`
-   interface, which has been removed, but implement the `TestSource` interface directly.
+* `PackageSource`, `ClassSource`, and `MethodSource` now directly implement the `TestSource`
+  interface instead of the `JavaSource` interface which has been removed.
 * Generic name-based discovery selectors (i.e., `selectName()` and `selectNames()`) in
   `DiscoverySelectors` have been deprecated in favor of the dedicated
   `selectPackage(String)`, `selectClass(String)`, and `selectMethod(String)` methods.
 * `ClassFilter` has been renamed to `ClassNameFilter` and now implements `DiscoveryFilter<String>`
   instead of `DiscoveryFilter<Class<?>>` so it can be applied before loading classes during
   classpath scanning.
+* `ClassNameFilter.includeClassNamePattern` is now deprecated in favor of
+  `ClassNameFilter.includeClassNamePatterns`.
 * The `-p` command-line option for configuring additional classpath entries for the
   `ConsoleLauncher` has been renamed to `-cp` in order to align with the option names for
   the standard `java` executable. In addition, a new `--class-path` alias has been
@@ -58,15 +60,13 @@ on GitHub.
   `--hide-details`, and `--reports-dir` respectively.
 * `LauncherDiscoveryRequestBuilder` no longer accepts `null` values for `selectors`, `filters`,
   or maps of configuration parameters.
-* `ClassNameFilter.includeClassNamePattern` is now deprecated in favor of
-  `ClassNameFilter.includeClassNamePatterns`.
 
 
 ====== New Features
 
 * New `selectUri(*)` methods in `DiscoverySelectors` for selecting URIs. A `TestEngine`
   can retrieve such values by querying registered instances of `UriSelector`.
-* New `selectFile(*)` and `selectDirectory(*) methods in `DiscoverySelectors` for selecting
+* New `selectFile(*)` and `selectDirectory(*)` methods in `DiscoverySelectors` for selecting
   files and directories in the file system. A `TestEngine` can retrieve such values by
   querying registered instances of `FileSelector` and `DirectorySelector`.
 * New `selectClasspathResource(String)` method in `DiscoverySelectors` for selecting
