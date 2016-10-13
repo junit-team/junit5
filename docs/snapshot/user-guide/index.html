@@ -1910,7 +1910,7 @@ BUILD SUCCESSFUL</pre>
 
 Test failures (1):
   JUnit Jupiter:SecondTest:mySecondTest()
-    JavaMethodSource [javaClass = 'com.example.project.SecondTest', javaMethodName = 'mySecondTest', javaMethodParameterTypes = '']
+    MethodSource [className = 'com.example.project.SecondTest', methodName = 'mySecondTest', methodParameterTypes = '']
     => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
 Test run finished after 99 ms
@@ -2807,8 +2807,8 @@ through to identify test classes and test methods in the past.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.launcher.Launcher;
@@ -2824,8 +2824,8 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;</code></
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
     .selectors(
-        selectJavaPackage("com.example.mytests"),
-        selectJavaClass(MyTestClass.class)
+        selectPackage("com.example.mytests"),
+        selectClass(MyTestClass.class)
     )
     .filters(includeClassNamePatterns(".*Test"))
     .build();
@@ -2858,8 +2858,8 @@ be achieved through a <code><a href="../api/org/junit/platform/launcher/TestExec
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
     .selectors(
-        selectJavaPackage("com.example.mytests"),
-        selectJavaClass(MyTestClass.class)
+        selectPackage("com.example.mytests"),
+        selectClass(MyTestClass.class)
     )
     .filters(includeClassNamePatterns(".*Test"))
     .build();
@@ -3688,24 +3688,22 @@ Gradle plugin when no explicit packages have been selected.</p>
 <code>ClasspathResourceSelector</code>.</p>
 </li>
 <li>
-<p><code>PackageSelector</code> and <code>DiscoverySelectors.selectPackage()</code> have been renamed to
-<code>JavaPackageSelector</code> and <code>DiscoverySelectors.selectJavaPackage()</code> to align with
-<code>JavaPackageSource</code>.</p>
+<p><code>JavaPackageSource</code> has been renamed to <code>PackageSource</code> to align with <code>PackageSelector</code>.</p>
 </li>
 <li>
-<p><code>ClassSelector</code> and <code>DiscoverySelectors.selectClass()</code> have been renamed to
-<code>JavaClassSelector</code> and <code>DiscoverySelectors.selectJavaClass()</code> to align with
-<code>JavaClassSource</code>.</p>
+<p><code>JavaClassSource</code> has been renamed to <code>ClassSource</code> to align with <code>ClassSelector</code>.</p>
 </li>
 <li>
-<p><code>MethodSelector</code> and <code>DiscoverySelectors.selectMethod()</code> have been renamed to
-<code>JavaMethodSelector</code> and <code>DiscoverySelectors.selectJavaMethod()</code> to align with
-<code>JavaMethodSource</code>.</p>
+<p><code>JavaMethodSource</code> has been renamed to <code>MethodSource</code> to align with <code>MethodSelector</code>.</p>
+</li>
+<li>
+<p><code>PackageSource</code>, <code>ClassSource</code>, and <code>MethodSource</code> do no longer implement the <code>JavaSource</code>
+interface, which has been removed, but implement the <code>TestSource</code> interface directly.</p>
 </li>
 <li>
 <p>Generic name-based discovery selectors (i.e., <code>selectName()</code> and <code>selectNames()</code>) in
 <code>DiscoverySelectors</code> have been deprecated in favor of the dedicated
-<code>selectJavaPackage(String)</code>, <code>selectJavaClass(String)</code>, and <code>selectJavaMethod(String)</code> methods.</p>
+<code>selectPackage(String)</code>, <code>selectClass(String)</code>, and <code>selectMethod(String)</code> methods.</p>
 </li>
 <li>
 <p><code>ClassFilter</code> has been renamed to <code>ClassNameFilter</code> and now implements <code>DiscoveryFilter&lt;String&gt;</code>
@@ -3867,7 +3865,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-10-12 01:29:54 EDT
+Last updated 2016-10-13 07:11:50 EDT
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
