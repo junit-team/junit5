@@ -13,16 +13,16 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -126,7 +126,7 @@ public class HierarchicalTestExecutorTests {
 	public void skippingAContainer() throws Exception {
 
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
-		stub(child.shouldBeSkipped(rootContext)).toReturn(Node.SkipResult.skip("in test"));
+		when(child.shouldBeSkipped(rootContext)).thenReturn(Node.SkipResult.skip("in test"));
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -147,7 +147,7 @@ public class HierarchicalTestExecutorTests {
 	public void skippingALeaf() throws Exception {
 
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "child leaf")));
-		stub(child.shouldBeSkipped(rootContext)).toReturn(Node.SkipResult.skip("in test"));
+		when(child.shouldBeSkipped(rootContext)).thenReturn(Node.SkipResult.skip("in test"));
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -169,7 +169,7 @@ public class HierarchicalTestExecutorTests {
 
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		RuntimeException anException = new RuntimeException("in skip");
-		stub(child.shouldBeSkipped(rootContext)).toThrow(anException);
+		when(child.shouldBeSkipped(rootContext)).thenThrow(anException);
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, child);
@@ -197,7 +197,7 @@ public class HierarchicalTestExecutorTests {
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		root.addChild(child);
 		RuntimeException anException = new RuntimeException("in test");
-		stub(root.before(rootContext)).toThrow(anException);
+		when(root.before(rootContext)).thenThrow(anException);
 
 		InOrder inOrder = inOrder(listener, root, child);
 
@@ -251,7 +251,7 @@ public class HierarchicalTestExecutorTests {
 
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
 		RuntimeException anException = new RuntimeException("in test");
-		stub(child.execute(rootContext)).toThrow(anException);
+		when(child.execute(rootContext)).thenThrow(anException);
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -278,7 +278,7 @@ public class HierarchicalTestExecutorTests {
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		root.addChild(child);
 		TestAbortedException anAbortedException = new TestAbortedException("in BeforeAll");
-		stub(root.before(rootContext)).toThrow(anAbortedException);
+		when(root.before(rootContext)).thenThrow(anAbortedException);
 
 		InOrder inOrder = inOrder(listener, root, child);
 
@@ -304,7 +304,7 @@ public class HierarchicalTestExecutorTests {
 
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
 		TestAbortedException anAbortedException = new TestAbortedException("in test");
-		stub(child.execute(rootContext)).toThrow(anAbortedException);
+		when(child.execute(rootContext)).thenThrow(anAbortedException);
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -332,7 +332,7 @@ public class HierarchicalTestExecutorTests {
 	public void outOfMemoryErrorInShouldBeSkipped() throws Exception {
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		OutOfMemoryError outOfMemoryError = new OutOfMemoryError("in skip");
-		stub(child.shouldBeSkipped(rootContext)).toThrow(outOfMemoryError);
+		when(child.shouldBeSkipped(rootContext)).thenThrow(outOfMemoryError);
 		root.addChild(child);
 
 		Throwable actualException = assertThrows(OutOfMemoryError.class, () -> executor.execute());
@@ -346,7 +346,7 @@ public class HierarchicalTestExecutorTests {
 	public void outOfMemoryErrorInLeafExecution() throws Exception {
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
 		OutOfMemoryError outOfMemoryError = new OutOfMemoryError("in test");
-		stub(child.execute(rootContext)).toThrow(outOfMemoryError);
+		when(child.execute(rootContext)).thenThrow(outOfMemoryError);
 		root.addChild(child);
 
 		Throwable actualException = assertThrows(OutOfMemoryError.class, () -> executor.execute());

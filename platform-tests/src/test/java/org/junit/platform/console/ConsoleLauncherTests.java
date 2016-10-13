@@ -12,8 +12,8 @@ package org.junit.platform.console;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -73,7 +73,7 @@ public class ConsoleLauncherTests {
 	public void displayHelpCallsParser() {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
 		doAnswer(invocation -> {
-			PrintWriter out = invocation.getArgumentAt(0, PrintWriter.class);
+			PrintWriter out = invocation.getArgument(0);
 			out.print("Keep Calm and Carry On");
 			return null;
 		}).when(commandLineOptionsParser).printHelp(any());
@@ -86,4 +86,5 @@ public class ConsoleLauncherTests {
 
 		assertThat(stringWriter.toString()).contains("Keep Calm and Carry On");
 	}
+
 }

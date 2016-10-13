@@ -28,8 +28,8 @@ import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposes
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
 import static org.junit.runner.manipulation.Filter.matchMethodDescription;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -388,7 +388,7 @@ class JUnitPlatformRunnerTests {
 			when(engine.getId()).thenReturn("engine");
 			when(engine.discover(any(), eq(uniqueEngineId))).thenReturn(engineDescriptor);
 			doAnswer(invocation -> {
-				ExecutionRequest request = invocation.getArgumentAt(0, ExecutionRequest.class);
+				ExecutionRequest request = invocation.getArgument(0);
 				EngineExecutionListener listener = request.getEngineExecutionListener();
 				listener.executionStarted(engineDescriptor);
 				listener.executionSkipped(container, "deliberately skipped container");
