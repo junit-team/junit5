@@ -16,6 +16,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.util.function.Predicate;
 
 import org.apache.maven.surefire.util.ScannerFilter;
+import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
@@ -30,15 +31,18 @@ final class TestPlanScannerFilter implements ScannerFilter {
 			|| testIdentifier.isContainer();
 
 	private final Launcher launcher;
+	private final Filter<?>[] includeAndExcludeFilters;
 
-	public TestPlanScannerFilter(Launcher launcher) {
+	public TestPlanScannerFilter(Launcher launcher, Filter<?>[] includeAndExcludeFilters) {
 		this.launcher = launcher;
+		this.includeAndExcludeFilters = includeAndExcludeFilters;
 	}
 
 	@Override
 	@SuppressWarnings("rawtypes")
 	public boolean accept(Class testClass) {
-		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
+		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).filters(
+			includeAndExcludeFilters).build();
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 		return testPlan.countTestIdentifiers(hasTests) > 0;
 	}
