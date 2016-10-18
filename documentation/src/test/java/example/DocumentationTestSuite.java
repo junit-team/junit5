@@ -11,7 +11,7 @@
 package example;
 
 import org.junit.platform.runner.ExcludeTags;
-import org.junit.platform.runner.IncludeClassNamePattern;
+import org.junit.platform.runner.IncludeClassNamePatterns;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.runner.SelectPackages;
 import org.junit.runner.RunWith;
@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)
 @SelectPackages("example")
-@IncludeClassNamePattern(".+(Tests|Demo)$")
+@IncludeClassNamePatterns(".+(Tests|Demo)$")
 @ExcludeTags("exclude")
 public class DocumentationTestSuite {
 }

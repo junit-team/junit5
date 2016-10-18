@@ -63,14 +63,14 @@ import org.junit.runners.model.InitializationError;
  * in order to be picked up by IDEs and build tools.
  *
  * <p>When used on a class that serves as a test suite and the
- * {@link IncludeClassNamePattern} annotation is not present, the default
+ * {@link IncludeClassNamePatterns} annotation is not present, the default
  * include pattern {@value org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN}
  * is used to avoid loading classes unnecessarily.
  *
  * @since 1.0
  * @see SelectPackages
  * @see SelectClasses
- * @see IncludeClassNamePattern
+ * @see IncludeClassNamePatterns
  * @see IncludeTags
  * @see ExcludeTags
  * @see IncludeEngines
@@ -158,9 +158,9 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	private void addIncludeClassNamePatternFilter(LauncherDiscoveryRequestBuilder requestBuilder, boolean isSuite) {
-		String pattern = getIncludeClassNamePattern(isSuite);
-		if (!pattern.isEmpty()) {
-			requestBuilder.filters(includeClassNamePatterns(pattern));
+		String[] patterns = getIncludeClassNamePatterns(isSuite);
+		if (patterns.length > 0) {
+			requestBuilder.filters(includeClassNamePatterns(patterns));
 		}
 	}
 
@@ -216,9 +216,35 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return getValueFromAnnotation(ExcludeEngines.class, ExcludeEngines::value, EMPTY_STRING_ARRAY);
 	}
 
-	private String getIncludeClassNamePattern(boolean isSuite) {
-		return getValueFromAnnotation(IncludeClassNamePattern.class, IncludeClassNamePattern::value,
-			isSuite ? STANDARD_INCLUDE_PATTERN : EMPTY_STRING).trim();
+	@SuppressWarnings("deprecation")
+	private String[] getIncludeClassNamePatterns(boolean isSuite) {
+		String[] patterns = getIncludeClassNamePatterns();
+		if (patterns.length == 0 && isSuite) {
+			return new String[] { STANDARD_INCLUDE_PATTERN };
+		}
+		Preconditions.containsNoNullElements(patterns, "IncludeClassNamePatterns must not contain null elements");
+		trim(patterns);
+		return patterns;
+	}
+
+	private void trim(String[] patterns) {
+		for (int i = 0; i < patterns.length; i++) {
+			patterns[i] = patterns[i].trim();
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private String[] getIncludeClassNamePatterns() {
+		String[] patterns = getValueFromAnnotation(IncludeClassNamePatterns.class, IncludeClassNamePatterns::value,
+			new String[0]);
+		String patternFromDeprecatedAnnotation = getValueFromAnnotation(IncludeClassNamePattern.class,
+			IncludeClassNamePattern::value, EMPTY_STRING);
+		Preconditions.condition(patterns.length == 0 || patternFromDeprecatedAnnotation.isEmpty(),
+			"You must not specify both @IncludeClassNamePattern and @IncludeClassNamePatterns");
+		if (patterns.length == 0 && !patternFromDeprecatedAnnotation.isEmpty()) {
+			patterns = new String[] { patternFromDeprecatedAnnotation };
+		}
+		return patterns;
 	}
 
 	private <A extends Annotation, V> V getValueFromAnnotation(Class<A> annotationClass, Function<A, V> extractor,

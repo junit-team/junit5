@@ -42,6 +42,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -225,8 +226,10 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsExplicitClassNameFilterToRequestWhenFilterClassNameAnnotationIsPresent() throws Exception {
+		void addsExplicitClassNameFilterToRequestWhenDeprecatedIncludeClassNamePatternAnnotationIsPresent()
+				throws Exception {
 
+			@SuppressWarnings("deprecation")
 			@IncludeClassNamePattern(".*Foo")
 			class TestCase {
 			}
@@ -235,6 +238,76 @@ class JUnitPlatformRunnerTests {
 
 			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
 			assertThat(getOnlyElement(filters).toString()).contains(".*Foo");
+		}
+
+		@Test
+		void addsExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent() throws Exception {
+
+			@IncludeClassNamePatterns({ ".*Foo", "Bar.*" })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains(".*Foo", "Bar.*");
+		}
+
+		@Test
+		void usesStandardIncludePatternWhenIncludeClassNamePatternsAnnotationIsPresentWithoutArguments()
+				throws Exception {
+
+			@IncludeClassNamePatterns
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains(STANDARD_INCLUDE_PATTERN);
+		}
+
+		@Test
+		void addsExplicitClassNameFilterWhenIncludeClassNamePatternsAnnotationIsPresentWithEmptyArguments()
+				throws Exception {
+
+			@IncludeClassNamePatterns({})
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(filters).isEmpty();
+		}
+
+		@Test
+		void throwsExceptionWhenBothIncludeClassNamePatternsAnnotationsArePresent() throws Exception {
+
+			@SuppressWarnings("deprecation")
+			@IncludeClassNamePattern("foo")
+			@IncludeClassNamePatterns("foo")
+			class TestCase {
+			}
+
+			PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+				() -> instantiateRunnerAndCaptureGeneratedRequest(TestCase.class));
+
+			assertThat(exception).hasMessage(
+				"You must not specify both @IncludeClassNamePattern and @IncludeClassNamePatterns");
+		}
+
+		@Test
+		void trimsArgumentsOfIncludeClassNamePatternsAnnotation() throws Exception {
+
+			@IncludeClassNamePatterns({ " foo", "bar " })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains("'foo'", "'bar'");
 		}
 
 		@Test
