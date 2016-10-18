@@ -3715,6 +3715,9 @@ classpath scanning.</p>
 <code>ClassNameFilter.includeClassNamePatterns</code>.</p>
 </li>
 <li>
+<p><code>@IncludeClassNamePattern</code> is now deprecated in favor of <code>@IncludeClassNamePatterns</code>.</p>
+</li>
+<li>
 <p>The <code>-p</code> command-line option for configuring additional classpath entries for the
 <code>ConsoleLauncher</code> has been renamed to <code>-cp</code> in order to align with the option names for
 the standard <code>java</code> executable. In addition, a new <code>--class-path</code> alias has been
@@ -3783,6 +3786,10 @@ that it can be executed as a test on the JUnit Platform).</p>
 <li>
 <p>Multiple regular expressions that are combined using OR semantics can now be passed to
 <code>ClassNameFilter.includeClassNamePatterns</code>.</p>
+</li>
+<li>
+<p>Multiple regular expressions that are combined using OR semantics can now be passed via
+<code>@IncludeClassNamePatterns</code> to the <code>JUnitPlatform</code> runner.</p>
 </li>
 </ul>
 </div>
@@ -3865,7 +3872,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-10-18 06:09:02 EDT
+Last updated 2016-10-18 13:51:20 EDT
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
