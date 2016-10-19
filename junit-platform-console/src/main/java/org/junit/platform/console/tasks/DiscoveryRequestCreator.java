@@ -12,6 +12,8 @@ package org.junit.platform.console.tasks;
 
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
+import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
+import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
@@ -84,6 +86,14 @@ class DiscoveryRequestCreator {
 
 	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
 		requestBuilder.filters(includeClassNamePatterns(options.getIncludedClassNamePatterns().toArray(new String[0])));
+
+		if (!options.getIncludedPackages().isEmpty()) {
+			requestBuilder.filters(includePackageNames(options.getIncludedPackages()));
+		}
+
+		if (!options.getExcludedPackages().isEmpty()) {
+			requestBuilder.filters(excludePackageNames(options.getExcludedPackages()));
+		}
 
 		if (!options.getIncludedTags().isEmpty()) {
 			requestBuilder.filters(includeTags(options.getIncludedTags()));

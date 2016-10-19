@@ -47,6 +47,8 @@ public class CommandLineOptions {
 	private List<String> selectedClasspathResources = emptyList();
 
 	private List<String> includedClassNamePatterns = singletonList(STANDARD_INCLUDE_PATTERN);
+	private List<String> includedPackages = emptyList();
+	private List<String> excludedPackages = emptyList();
 	private List<String> includedEngines = emptyList();
 	private List<String> excludedEngines = emptyList();
 	private List<String> includedTags = emptyList();
@@ -155,6 +157,22 @@ public class CommandLineOptions {
 
 	public void setIncludedClassNamePatterns(List<String> includedClassNamePatterns) {
 		this.includedClassNamePatterns = includedClassNamePatterns;
+	}
+
+	public List<String> getIncludedPackages() {
+		return this.includedPackages;
+	}
+
+	public void setIncludedPackages(List<String> includedPackages) {
+		this.includedPackages = includedPackages;
+	}
+
+	public List<String> getExcludedPackages() {
+		return this.excludedPackages;
+	}
+
+	public void setExcludedPackages(List<String> excludedPackages) {
+		this.excludedPackages = excludedPackages;
 	}
 
 	public List<String> getIncludedEngines() {

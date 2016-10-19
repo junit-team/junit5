@@ -52,7 +52,10 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertFalse(options.isHideDetails()),
 			() -> assertFalse(options.isScanClasspath()),
 			() -> assertEquals(singletonList(STANDARD_INCLUDE_PATTERN), options.getIncludedClassNamePatterns()),
+			() -> assertEquals(emptyList(), options.getIncludedPackages()),
+			() -> assertEquals(emptyList(), options.getExcludedPackages()),
 			() -> assertEquals(emptyList(), options.getIncludedTags()),
+			() -> assertEquals(emptyList(), options.getExcludedTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getReportsDir()),
 			() -> assertEquals(emptyList(), options.getSelectedUris()),
@@ -94,6 +97,34 @@ class JOptSimpleCommandLineOptionsParserTests {
 	@Test
 	public void parseInvalidIncludeClassNamePatterns() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("-n", "--include-classname");
+	}
+
+	@Test
+	public void parseValidIncludedPackages() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(asList("org.junit.included"),
+						parseArgLine("--include-package org.junit.included").getIncludedPackages()),
+				() -> assertEquals(asList("org.junit.included"),
+						parseArgLine("--include-package=org.junit.included").getIncludedPackages()),
+				() -> assertEquals(asList("org.junit.included1", "org.junit.included2"),
+						parseArgLine("--include-package org.junit.included1 --include-package org.junit.included2").getIncludedPackages())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseValidExcludedPackages() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(asList("org.junit.excluded"),
+						parseArgLine("--exclude-package org.junit.excluded").getExcludedPackages()),
+				() -> assertEquals(asList("org.junit.excluded"),
+						parseArgLine("--exclude-package=org.junit.excluded").getExcludedPackages()),
+				() -> assertEquals(asList("org.junit.excluded1", "org.junit.excluded2"),
+						parseArgLine("--exclude-package org.junit.excluded1 --exclude-package org.junit.excluded2").getExcludedPackages())
+		);
+		// @formatter:on
 	}
 
 	@Test

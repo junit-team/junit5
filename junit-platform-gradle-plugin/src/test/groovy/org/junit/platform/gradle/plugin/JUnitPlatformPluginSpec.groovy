@@ -81,6 +81,10 @@ class JUnitPlatformPluginSpec extends Specification {
 			filters {
 				includeClassNamePattern '.*Tests?'
 				includeClassNamePatterns 'Foo', 'Bar'
+				packages {
+					include 'testpackage.included.p1', 'testpackage.included.p2'
+					exclude 'testpackage.excluded.p1', 'testpackage.excluded.p2'
+				}
 				engines {
 					include 'foo'
 					exclude 'bar'
@@ -102,6 +106,8 @@ class JUnitPlatformPluginSpec extends Specification {
 
 		junitTask.args.contains('--hide-details')
 		junitTask.args.containsAll('-n', '.*Tests?', '-n', 'Foo', '-n', 'Bar')
+		junitTask.args.containsAll('--include-package', 'testpackage.included.p1', '--include-package', 'testpackage.included.p2')
+		junitTask.args.containsAll('--exclude-package', 'testpackage.excluded.p1', '--exclude-package', 'testpackage.excluded.p2')
 		junitTask.args.containsAll('-t', 'fast')
 		junitTask.args.containsAll('-T', 'slow')
 		junitTask.args.containsAll('-e', 'foo')

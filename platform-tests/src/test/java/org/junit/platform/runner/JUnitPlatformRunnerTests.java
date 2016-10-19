@@ -53,6 +53,7 @@ import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
@@ -129,6 +130,42 @@ class JUnitPlatformRunnerTests {
 			assertThat(selectors).hasSize(2);
 			assertEquals("foo", selectors.get(0).getPackageName());
 			assertEquals("bar", selectors.get(1).getPackageName());
+		}
+
+		@Test
+		void addsPackageFiltersToRequestWhenIncludePackageAnnotationIsPresent() throws Exception {
+
+			@IncludePackages({ "includedpackage1", "includedpackage2" })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<PackageNameFilter> filters = request.getDiscoveryFiltersByType(PackageNameFilter.class);
+			assertThat(filters).hasSize(1);
+
+			PackageNameFilter filter = filters.get(0);
+			assertTrue(filter.apply("includedpackage1.TestClass").included());
+			assertTrue(filter.apply("includedpackage2.TestClass").included());
+			assertTrue(filter.apply("excludedpackage1.TestClass").excluded());
+		}
+
+		@Test
+		void addsPackageFiltersToRequestWhenExcludePackageAnnotationIsPresent() throws Exception {
+
+			@ExcludePackages({ "excludedpackage1", "excludedpackage2" })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<PackageNameFilter> filters = request.getDiscoveryFiltersByType(PackageNameFilter.class);
+			assertThat(filters).hasSize(1);
+
+			PackageNameFilter filter = filters.get(0);
+			assertTrue(filter.apply("includedpackage1.TestClass").included());
+			assertTrue(filter.apply("excludedpackage1.TestClass").excluded());
+			assertTrue(filter.apply("excludedpackage2.TestClass").excluded());
 		}
 
 		@Test

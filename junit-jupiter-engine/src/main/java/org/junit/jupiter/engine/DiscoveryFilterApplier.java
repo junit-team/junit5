@@ -18,6 +18,7 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassNameFilter;
+import org.junit.platform.engine.discovery.PackageNameFilter;
 
 /**
  * Class for applying all {@link org.junit.platform.engine.DiscoveryFilter}s to all
@@ -32,6 +33,36 @@ class DiscoveryFilterApplier {
 	 */
 	void applyAllFilters(EngineDiscoveryRequest discoveryRequest, TestDescriptor engineDescriptor) {
 		applyClassNameFilters(discoveryRequest.getDiscoveryFiltersByType(ClassNameFilter.class), engineDescriptor);
+		applyPackageNameFilters(discoveryRequest.getDiscoveryFiltersByType(PackageNameFilter.class), engineDescriptor);
+	}
+
+	private void applyPackageNameFilters(List<PackageNameFilter> packageNameFilters, TestDescriptor engineDescriptor) {
+		if (packageNameFilters.isEmpty()) {
+			return;
+		}
+		TestDescriptor.Visitor filteringVisitor = descriptor -> {
+			if (descriptor instanceof ClassTestDescriptor) {
+				if (!includePackage((ClassTestDescriptor) descriptor, packageNameFilters))
+					descriptor.removeFromHierarchy();
+			}
+		};
+		engineDescriptor.accept(filteringVisitor);
+	}
+
+	private boolean includePackage(ClassTestDescriptor classTestDescriptor,
+			List<PackageNameFilter> packageNameFilters) {
+
+		// Nested Tests are never filtered out
+		if (classTestDescriptor instanceof NestedClassTestDescriptor)
+			return true;
+
+		Class<?> testClass = classTestDescriptor.getTestClass();
+
+		// @formatter:off
+		return (packageNameFilters.stream()
+				.map(filter -> filter.apply(testClass.getPackage().getName()))
+				.noneMatch(FilterResult::excluded));
+		// @formatter:on
 	}
 
 	private void applyClassNameFilters(List<ClassNameFilter> classNameFilters, TestDescriptor engineDescriptor) {
