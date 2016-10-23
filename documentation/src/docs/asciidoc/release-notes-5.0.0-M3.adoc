@@ -91,6 +91,9 @@ on GitHub.
   `ClassNameFilter.includeClassNamePatterns`.
 * Multiple regular expressions that are combined using OR semantics can now be passed via
   `@IncludeClassNamePatterns` to the `JUnitPlatform` runner.
+* The `junit-platform-console` no longer has a mandatory dependency on
+  https://pholser.github.io/jopt-simple/[JOpt Simple]. Thus, it's now possible to test custom
+  code that uses a different version of that library.
 
 
 [[release-notes-5.0.0-m3-junit-jupiter]]
