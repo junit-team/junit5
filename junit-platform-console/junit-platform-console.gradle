@@ -1,8 +1,52 @@
 apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+	}
+}
+
+configurations {
+	shadowed
+}
 
 dependencies {
 	compile(project(':junit-platform-launcher'))
-	compile('net.sf.jopt-simple:jopt-simple:5.0.3')
+	shadowed('net.sf.jopt-simple:jopt-simple:5.0.3')
 }
 
+sourceSets.main.compileClasspath += configurations.shadowed
+
 mainClassName = "org.junit.platform.console.ConsoleLauncher"
+
+javadoc {
+	classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
+}
+
+shadowJar {
+	classifier = null
+	configurations = [project.configurations.shadowed]
+	exclude 'META-INF/**'
+	relocate 'joptsimple', 'org.junit.platform.joptsimple'
+	transform(org.junit.platform.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
+		paths = [
+			'joptsimple/ExceptionMessages.properties',
+			'joptsimple/HelpFormatterMessages.properties'
+		]
+		keyTransformer = { key ->
+			key.replaceAll('^(joptsimple\\..*)$', 'org.junit.platform.$1')
+		}
+	}
+}
+
+artifacts {
+	archives shadowJar
+}
+
+distZip.dependsOn(shadowJar)
+distTar.dependsOn(shadowJar)
+installDist.dependsOn(shadowJar)
