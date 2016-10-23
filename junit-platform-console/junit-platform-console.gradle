@@ -27,6 +27,8 @@ javadoc {
 	classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
 }
 
+jar.enabled = false
+
 shadowJar {
 	classifier = null
 	configurations = [project.configurations.shadowed]
