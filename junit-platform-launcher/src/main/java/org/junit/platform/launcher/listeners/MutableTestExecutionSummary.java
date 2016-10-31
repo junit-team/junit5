@@ -10,15 +10,16 @@
 
 package org.junit.platform.launcher.listeners;
 
+import org.junit.platform.launcher.Failure;
+import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-
-import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.launcher.TestPlan;
 
 /**
  * Mutable, internal implementation of the {@link TestExecutionSummary} API.
@@ -190,6 +191,11 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		}
 	}
 
+	@Override
+	public List<Failure> getFailures() {
+		return failures.stream().collect(Collectors.toList());
+	}
+
 	private String describeTest(TestIdentifier testIdentifier) {
 		List<String> descriptionParts = new ArrayList<>();
 		collectTestDescription(Optional.of(testIdentifier), descriptionParts);
@@ -201,25 +207,6 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 			descriptionParts.add(0, testIdentifier.getDisplayName());
 			collectTestDescription(this.testPlan.getParent(testIdentifier), descriptionParts);
 		});
-	}
-
-	private static class Failure {
-
-		private final TestIdentifier testIdentifier;
-		private final Throwable exception;
-
-		Failure(TestIdentifier testIdentifier, Throwable exception) {
-			this.testIdentifier = testIdentifier;
-			this.exception = exception;
-		}
-
-		TestIdentifier getTestIdentifier() {
-			return testIdentifier;
-		}
-
-		Throwable getException() {
-			return exception;
-		}
 	}
 
 }

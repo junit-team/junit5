@@ -10,11 +10,13 @@
 
 package org.junit.platform.launcher.listeners;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.launcher.Failure;
 
 import java.io.PrintWriter;
+import java.util.List;
 
-import org.junit.platform.commons.meta.API;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 /**
  * Summary of test plan execution.
@@ -126,5 +128,10 @@ public interface TestExecutionSummary {
 	 * @see #printTo(PrintWriter)
 	 */
 	void printFailuresTo(PrintWriter writer);
+
+	/**
+	 * Get a list of the failures of this test execution.
+	 */
+	List<Failure> getFailures();
 
 }
