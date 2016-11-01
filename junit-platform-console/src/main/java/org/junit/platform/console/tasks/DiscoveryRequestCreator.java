@@ -11,7 +11,6 @@
 package org.junit.platform.console.tasks;
 
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
@@ -26,8 +25,8 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -38,6 +37,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -76,8 +76,12 @@ class DiscoveryRequestCreator {
 	}
 
 	private LauncherDiscoveryRequestBuilder createNameBasedBuilder(CommandLineOptions options) {
-		Preconditions.notEmpty(options.getArguments(), "No arguments were supplied to the ConsoleLauncher");
-		return request().selectors(selectNames(options.getArguments()));
+		List<DiscoverySelector> selectors = new LinkedList<>();
+		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
+		Preconditions.condition(!selectors.isEmpty() || !options.getArguments().isEmpty(),
+			"No arguments were supplied to the ConsoleLauncher");
+		options.getArguments().stream().map(DiscoveryRequestCreator::selectName).forEach(selectors::add);
+		return request().selectors(selectors);
 	}
 
 	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
@@ -98,22 +102,6 @@ class DiscoveryRequestCreator {
 		if (!options.getExcludedEngines().isEmpty()) {
 			requestBuilder.filters(excludeEngines(options.getExcludedEngines()));
 		}
-	}
-
-	/**
-	 * Create a list of {@link DiscoverySelector DiscoverySelectors} for the
-	 * supplied names.
-	 * <p>
-	 * <p>Consult the documentation for {@link #selectName(String)} for details
-	 * on what types of names are supported.
-	 *
-	 * @param names the names to select; never {@code null}
-	 * @return a list of {@code DiscoverySelectors} for the supplied names;
-	 * potentially empty
-	 */
-	private static List<DiscoverySelector> selectNames(Collection<String> names) {
-		Preconditions.notNull(names, "names collection must not be null");
-		return names.stream().map(DiscoveryRequestCreator::selectName).collect(toList());
 	}
 
 	/**

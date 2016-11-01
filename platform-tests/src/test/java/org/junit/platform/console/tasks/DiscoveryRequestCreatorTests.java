@@ -30,6 +30,7 @@ import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.UriSelector;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -169,6 +170,16 @@ public class DiscoveryRequestCreatorTests {
 		assertThat(engineFilters).hasSize(2);
 		assertThat(engineFilters.get(0).toString()).contains("includes", "[engine1, engine2, engine3]");
 		assertThat(engineFilters.get(1).toString()).contains("excludes", "[engine2]");
+	}
+
+	@Test
+	public void convertsUriSelectors() {
+		options.setSelectedUris(asList(URI.create("a"), URI.create("b")));
+
+		LauncherDiscoveryRequest request = convert();
+		List<UriSelector> uriSelectors = request.getSelectorsByType(UriSelector.class);
+
+		assertThat(uriSelectors).extracting(UriSelector::getUri).containsExactly(URI.create("a"), URI.create("b"));
 	}
 
 	private LauncherDiscoveryRequest convert() {
