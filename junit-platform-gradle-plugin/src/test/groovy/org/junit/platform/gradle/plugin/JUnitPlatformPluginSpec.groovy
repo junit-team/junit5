@@ -173,4 +173,29 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask.args.containsAll('--reports-dir', new File(project.buildDir, 'foo/bar/baz').getCanonicalFile().toString())
 	}
 
+	def "selectors can be specified"() {
+
+		project.apply plugin: 'java'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		project.junitPlatform {
+			selectors {
+				uris 'u:foo', 'u:bar'
+				uri 'u:qux'
+			}
+		}
+		project.evaluate()
+
+		then:
+		Task junitTask = project.tasks.findByName('junitPlatformTest')
+
+		!junitTask.args.contains('--scan-class-path')
+		!junitTask.args.contains(project.file('build/classes/main').absolutePath)
+
+		junitTask.args.containsAll('-u', 'u:foo')
+		junitTask.args.containsAll('-u', 'u:bar')
+		junitTask.args.containsAll('-u', 'u:qux')
+	}
+
 }

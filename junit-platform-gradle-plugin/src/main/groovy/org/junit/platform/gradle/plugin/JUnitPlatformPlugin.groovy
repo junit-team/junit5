@@ -26,6 +26,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 	void apply(Project project) {
 		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitPlatformExtension, project)
+		junitExtension.extensions.create('selectors', SelectorsExtension)
 		junitExtension.extensions.create('tags', TagsExtension)
 		junitExtension.extensions.create('engines', EnginesExtension)
 
@@ -97,7 +98,11 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 	private ArrayList<String> buildArgs(project, junitExtension, reportsDir) {
 
-		def args = ['--hide-details', '--scan-class-path']
+		def args = ['--hide-details']
+
+		junitExtension.selectors.uris.each { uri ->
+			args.addAll(['-u', uri])
+		}
 
 		if (junitExtension.includeClassNamePattern) {
 			args.add('-n')
@@ -127,15 +132,20 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		args.add('--reports-dir')
 		args.add(reportsDir.getAbsolutePath())
 
-		def rootDirs = []
-		project.sourceSets.each { sourceSet ->
-			rootDirs.add(sourceSet.output.classesDir)
-			rootDirs.add(sourceSet.output.resourcesDir)
-			rootDirs.addAll(sourceSet.output.dirs.files)
-		}
+		if (junitExtension.selectors.empty) {
+			args.add('--scan-class-path')
 
-		rootDirs.each { File root ->
-			args.add(root.getAbsolutePath())
+			def rootDirs = []
+			project.sourceSets.each { sourceSet ->
+				rootDirs.add(sourceSet.output.classesDir)
+				rootDirs.add(sourceSet.output.resourcesDir)
+				rootDirs.addAll(sourceSet.output.dirs.files)
+			}
+
+			rootDirs.each { File root ->
+				args.add(root.getAbsolutePath())
+			}
+
 		}
 
 		return args
