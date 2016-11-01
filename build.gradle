@@ -59,6 +59,12 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
+	licenseHeaderFileProvider = { project ->
+		project.name == 'junit-platform-surefire-provider'
+			? 'apache-license-2.0.java'
+			: 'eclipse-public-license-1.0.java'
+	}
+
 	cloverTestProjects = [
 		'junit-jupiter-engine',
 		'junit-vintage-engine',
@@ -361,8 +367,10 @@ subprojects { subproj ->
 	}
 
 	spotless {
+		def headerFile = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
+
 		java {
-			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), '(package|import) '
+			licenseHeaderFile headerFile, '(package|import) '
 			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
 			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 
@@ -377,7 +385,7 @@ subprojects { subproj ->
 			indentWithTabs()
 			trimTrailingWhitespace()
 			endWithNewline()
-			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), "package "
+			licenseHeaderFile headerFile, "package "
 
 			customReplaceRegex 'class-level Javadoc indentation fix', /^\*/, ' *'
 			customReplaceRegex 'nested Javadoc indentation fix', /\t\*/, '\t *'
