@@ -11,7 +11,7 @@ junitPlatform {
 dependencies {
 	// --- Things we are testing --------------------------------------------------
 	testCompile(project(':junit-platform-commons'))
-	testCompile(project(':junit-platform-console'))
+	testCompile(project(path: ':junit-platform-console', configuration: 'shadow'))
 	testCompile(project(':junit-platform-engine'))
 	testCompile(project(':junit-platform-launcher'))
 

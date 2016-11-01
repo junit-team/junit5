@@ -10,7 +10,7 @@
 
 package org.junit.platform;
 
-import org.junit.platform.runner.IncludeClassNamePattern;
+import org.junit.platform.runner.IncludeClassNamePatterns;
 import org.junit.platform.runner.IncludeEngines;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.runner.SelectPackages;
@@ -33,7 +33,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)
 @SelectPackages("org.junit.platform")
-@IncludeClassNamePattern(".*Tests?")
+@IncludeClassNamePatterns(".*Tests?")
 @IncludeEngines("junit-jupiter")
 public class JUnitPlatformTestSuite {
 }

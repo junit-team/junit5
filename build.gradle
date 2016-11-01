@@ -59,6 +59,12 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
+	licenseHeaderFileProvider = { project ->
+		project.name == 'junit-platform-surefire-provider'
+			? 'apache-license-2.0.java'
+			: 'eclipse-public-license-1.0.java'
+	}
+
 	cloverTestProjects = [
 		'junit-jupiter-engine',
 		'junit-vintage-engine',
@@ -147,30 +153,6 @@ allprojects { subproj ->
 		sourceSets = [ sourceSets.main ]
 	}
 
-	spotless {
-		java {
-			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), '(package|import) '
-			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
-			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
-
-			trimTrailingWhitespace()
-			endWithNewline()
-
-			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
-		}
-
-		format 'groovy', {
-			target '**/*.groovy'
-			indentWithTabs()
-			trimTrailingWhitespace()
-			endWithNewline()
-			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), "package "
-
-			customReplaceRegex 'class-level Javadoc indentation fix', /^\*/, ' *'
-			customReplaceRegex 'nested Javadoc indentation fix', /\t\*/, '\t *'
-		}
-	}
-
 	if (project.hasProperty('enableClover') && subproj.name != "documentation") {
 
 		configurations {
@@ -256,7 +238,7 @@ subprojects { subproj ->
 		}
 
 		tasks.withType(Jar) {
-			from(rootProject.projectDir) {
+			from(project.projectDir) {
 				include 'LICENSE.md'
 				into 'META-INF'
 			}
@@ -381,6 +363,32 @@ subprojects { subproj ->
 				'Implementation-Version': project.version,
 				'Implementation-Vendor': 'junit.org'
 			)
+		}
+	}
+
+	spotless {
+		def headerFile = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
+
+		java {
+			licenseHeaderFile headerFile, '(package|import) '
+			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
+			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+
+			trimTrailingWhitespace()
+			endWithNewline()
+
+			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+		}
+
+		format 'groovy', {
+			target '**/*.groovy'
+			indentWithTabs()
+			trimTrailingWhitespace()
+			endWithNewline()
+			licenseHeaderFile headerFile, "package "
+
+			customReplaceRegex 'class-level Javadoc indentation fix', /^\*/, ' *'
+			customReplaceRegex 'nested Javadoc indentation fix', /\t\*/, '\t *'
 		}
 	}
 

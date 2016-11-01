@@ -10,7 +10,7 @@
 
 package org.junit.platform.runner;
 
-import static org.junit.platform.commons.meta.API.Usage.Deprecated;
+import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -23,25 +23,24 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 
 /**
- * {@code @IncludeClassNamePattern} specifies a regular expression that is used
+ * {@code @IncludeClassNamePatterns} specifies regular expressions that are used
  * to match against fully qualified class names when running a test suite via
  * {@code @RunWith(JUnitPlatform.class)}.
  *
- * <p>If the fully qualified name of a class matches against the pattern, the
- * class will be included in the test plan.
+ * <p>The patterns are combined using OR semantics, i.e. if the fully
+ * qualified name of a class matches against at least one of the patterns,
+ * the class will be included in the test plan.
  *
  * @since 1.0
  * @see JUnitPlatform
- * @see org.junit.platform.engine.discovery.ClassNameFilter#includeClassNamePatterns
- * @deprecated Please use {@link IncludeClassNamePatterns}.
+ * @see ClassNameFilter#includeClassNamePatterns
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-@API(Deprecated)
-@Deprecated
-public @interface IncludeClassNamePattern {
+@API(Maintained)
+public @interface IncludeClassNamePatterns {
 
 	/**
 	 * Regular expression used to match against fully qualified class names.
@@ -49,6 +48,6 @@ public @interface IncludeClassNamePattern {
 	 * <p>Defaults to {@code "^.*Tests?$"} which matches against class names
 	 * ending in {@code Test} or {@code Tests} (in any package).
 	 */
-	String value() default ClassNameFilter.STANDARD_INCLUDE_PATTERN;
+	String[] value() default { ClassNameFilter.STANDARD_INCLUDE_PATTERN };
 
 }

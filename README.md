@@ -71,6 +71,8 @@ All modules can be tested with Gradle using the following command.
 gradlew clean test
 ```
 
+Since Gradle has excellent incremental build support, you can usually omit executing the `clean` task.
+
 ## Installing in Local Maven Repository
 
 All modules can be installed in a local Maven repository for consumption in other projects via the following command.

@@ -31,9 +31,8 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import joptsimple.OptionException;
-
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * @since 1.0
@@ -245,7 +244,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	private void assertOptionWithMissingRequiredArgumentThrowsException(String... options) {
-		assertAll(stream(options).map(opt -> () -> assertThrows(OptionException.class, () -> parseArgLine(opt))));
+		assertAll(stream(options).map(opt -> () -> assertThrows(JUnitException.class, () -> parseArgLine(opt))));
 	}
 
 	private void assertParses(String name, Predicate<CommandLineOptions> property, String... argLines) {

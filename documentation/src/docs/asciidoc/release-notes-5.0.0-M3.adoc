@@ -47,6 +47,7 @@ on GitHub.
   classpath scanning.
 * `ClassNameFilter.includeClassNamePattern` is now deprecated in favor of
   `ClassNameFilter.includeClassNamePatterns`.
+* `@IncludeClassNamePattern` is now deprecated in favor of `@IncludeClassNamePatterns`.
 * The `-p` command-line option for configuring additional classpath entries for the
   `ConsoleLauncher` has been renamed to `-cp` in order to align with the option names for
   the standard `java` executable. In addition, a new `--class-path` alias has been
@@ -88,6 +89,11 @@ on GitHub.
   that it can be executed as a test on the JUnit Platform).
 * Multiple regular expressions that are combined using OR semantics can now be passed to
   `ClassNameFilter.includeClassNamePatterns`.
+* Multiple regular expressions that are combined using OR semantics can now be passed via
+  `@IncludeClassNamePatterns` to the `JUnitPlatform` runner.
+* The `junit-platform-console` no longer has a mandatory dependency on
+  https://pholser.github.io/jopt-simple/[JOpt Simple]. Thus, it's now possible to test custom
+  code that uses a different version of that library.
 
 
 [[release-notes-5.0.0-m3-junit-jupiter]]
