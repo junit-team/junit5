@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -196,6 +197,27 @@ class JOptSimpleCommandLineOptionsParserTests {
 	@Test
 	public void parseInvalidXmlReportsDirs() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("--reports-dir");
+	}
+
+	@Test
+	public void parseValidUriSelectors() {
+		Path dir = Paths.get(".");
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("-u file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("--u file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("-select-uri file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("-select-uri=file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("--select-uri file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("--select-uri=file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(asList(new URI("file:///foo.txt"), new URI("http://localhost")), parseArgLine("-u file:///foo.txt -u http://localhost").getSelectedUris())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidUriSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-u", "--select-uri", "-u unknown-scheme:");
 	}
 
 	@Test

@@ -13,6 +13,7 @@ package org.junit.platform.console.options;
 import static java.util.Collections.emptyList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class CommandLineOptions {
 
 	private boolean scanClasspath;
 	private List<String> arguments = emptyList();
+	private List<URI> selectedUris = emptyList();
 
 	private String includeClassNamePattern = "^.*Tests?$";
 	private List<String> includedEngines = emptyList();
@@ -74,6 +76,14 @@ public class CommandLineOptions {
 
 	public void setHideDetails(boolean hideDetails) {
 		this.hideDetails = hideDetails;
+	}
+
+	public List<URI> getSelectedUris() {
+		return selectedUris;
+	}
+
+	public void setSelectedUris(List<URI> selectedUris) {
+		this.selectedUris = selectedUris;
 	}
 
 	public String getIncludeClassNamePattern() {

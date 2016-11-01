@@ -13,6 +13,7 @@ package org.junit.platform.console.options;
 import static java.util.Arrays.asList;
 
 import java.io.File;
+import java.net.URI;
 import java.nio.file.Path;
 
 import joptsimple.OptionParser;
@@ -41,6 +42,7 @@ class AvailableOptions {
 	// Selectors
 	private final OptionSpec<Void> scanClasspath;
 	private final OptionSpec<String> arguments;
+	private final OptionSpec<URI> selectedUris;
 
 	// Filters
 	private final OptionSpec<String> includeClassNamePattern;
@@ -86,6 +88,11 @@ class AvailableOptions {
 				+ "explicit classpath roots that should be considered for scanning "
 				+ "or none if the entire classpath should be scanned.");
 
+		selectedUris = parser.acceptsAll(asList("u", "select-uri"), //
+			"Select a URI for test discovery. This option can be repeated.") //
+				.withRequiredArg() //
+				.withValuesConvertedBy(new URIConverter());
+
 		// --- Filters ---------------------------------------------------------
 
 		includeClassNamePattern = parser.acceptsAll(asList("n", "include-classname"),
@@ -130,6 +137,7 @@ class AvailableOptions {
 		// Selectors
 		result.setScanClasspath(detectedOptions.has(this.scanClasspath));
 		result.setArguments(detectedOptions.valuesOf(this.arguments));
+		result.setSelectedUris(detectedOptions.valuesOf(this.selectedUris));
 
 		// Filters
 		result.setIncludeClassNamePattern(detectedOptions.valueOf(this.includeClassNamePattern));

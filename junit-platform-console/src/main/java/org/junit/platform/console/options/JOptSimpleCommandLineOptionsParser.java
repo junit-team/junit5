@@ -36,14 +36,13 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 	public CommandLineOptions parse(String... arguments) {
 		AvailableOptions availableOptions = getAvailableOptions();
 		OptionParser parser = availableOptions.getParser();
-		OptionSet detectedOptions;
 		try {
-			detectedOptions = parser.parse(arguments);
+			OptionSet detectedOptions = parser.parse(arguments);
+			return availableOptions.toCommandLineOptions(detectedOptions);
 		}
 		catch (OptionException e) {
 			throw new JUnitException("Error parsing command-line arguments", e);
 		}
-		return availableOptions.toCommandLineOptions(detectedOptions);
 	}
 
 	@Override
