@@ -36,7 +36,7 @@ import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -58,7 +58,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 			+ " parameters (or the " + EXCLUDE_GROUPS + " and " + EXCLUDE_TAGS + " pararameters) are synonyms - "
 			+ "only one of each is allowed (though neither is required).";
 
-	static final String EXCEPTION_MESSAGE_NO_ENGINE = "JUnit 5 Precondition Violation - No engines were specified.";
+	static final String EXCEPTION_MESSAGE_NO_ENGINE = "JUnit Platform Precondition Violation - No engines were specified.";
 
 	private final ProviderParameters parameters;
 	private final Launcher launcher;
@@ -134,19 +134,19 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	private Filter<?>[] getIncludeAndExcludeFilters() {
 		List<Filter<?>> filters = new ArrayList<>();
 
-		Optional<List<String>> includes = getGroupOrTags(getPropertiesList(INCLUDE_GROUPS),
+		Optional<List<String>> includes = getGroupsOrTags(getPropertiesList(INCLUDE_GROUPS),
 			getPropertiesList(INCLUDE_TAGS));
 		if (includes.isPresent()) {
 			filters.add(TagFilter.includeTags(includes.get()));
 		}
 
-		Optional<List<String>> excludes = getGroupOrTags(getPropertiesList(EXCLUDE_GROUPS),
+		Optional<List<String>> excludes = getGroupsOrTags(getPropertiesList(EXCLUDE_GROUPS),
 			getPropertiesList(EXCLUDE_TAGS));
 		if (excludes.isPresent()) {
 			filters.add(TagFilter.excludeTags(excludes.get()));
 		}
 
-		return filters.toArray(new Filter<?>[0]);
+		return filters.toArray(new Filter<?>[filters.size()]);
 	}
 
 	private Optional<List<String>> getPropertiesList(String key) {
@@ -158,12 +158,10 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		return Optional.ofNullable(compoundProperties);
 	}
 
-	private Optional<List<String>> getGroupOrTags(Optional<List<String>> groups, Optional<List<String>> tags) {
+	private Optional<List<String>> getGroupsOrTags(Optional<List<String>> groups, Optional<List<String>> tags) {
 		Optional<List<String>> elements = Optional.empty();
 
-		if (groups.isPresent() && tags.isPresent()) {
-			throw new PreconditionViolationException(EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED);
-		}
+		Preconditions.condition(!groups.isPresent() || !tags.isPresent(), EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED);
 
 		if (groups.isPresent()) {
 			elements = groups;
