@@ -12,19 +12,19 @@ package org.junit.platform.launcher;
 
 public class Failure {
 
-    private final TestIdentifier testIdentifier;
-    private final Throwable exception;
+	private final TestIdentifier testIdentifier;
+	private final Throwable exception;
 
-    public Failure(TestIdentifier testIdentifier, Throwable exception) {
-        this.testIdentifier = testIdentifier;
-        this.exception = exception;
-    }
+	public Failure(TestIdentifier testIdentifier, Throwable exception) {
+		this.testIdentifier = testIdentifier;
+		this.exception = exception;
+	}
 
-    public TestIdentifier getTestIdentifier() {
-        return testIdentifier;
-    }
+	public TestIdentifier getTestIdentifier() {
+		return testIdentifier;
+	}
 
-    public Throwable getException() {
-        return exception;
-    }
+	public Throwable getException() {
+		return exception;
+	}
 }

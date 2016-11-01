@@ -10,13 +10,13 @@
 
 package org.junit.platform.launcher.listeners;
 
-import org.junit.platform.commons.meta.API;
-import org.junit.platform.launcher.Failure;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.io.PrintWriter;
 import java.util.List;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.launcher.Failure;
 
 /**
  * Summary of test plan execution.

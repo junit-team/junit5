@@ -10,16 +10,16 @@
 
 package org.junit.platform.launcher.listeners;
 
-import org.junit.platform.launcher.Failure;
-import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.launcher.TestPlan;
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
+
+import org.junit.platform.launcher.Failure;
+import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
 
 /**
  * Mutable, internal implementation of the {@link TestExecutionSummary} API.
