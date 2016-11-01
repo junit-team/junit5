@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import org.junit.platform.launcher.Failure;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -46,7 +45,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	final AtomicLong testsFailed = new AtomicLong();
 
 	private final TestPlan testPlan;
-	private final List<Failure> failures = new ArrayList<>();
+	private final List<DefaultFailure> failures = new ArrayList<>();
 	private final long timeStarted;
 	long timeFinished;
 
@@ -58,7 +57,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	}
 
 	void addFailure(TestIdentifier testIdentifier, Throwable throwable) {
-		this.failures.add(new Failure(testIdentifier, throwable));
+		this.failures.add(new DefaultFailure(testIdentifier, throwable));
 	}
 
 	@Override
@@ -192,8 +191,8 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	}
 
 	@Override
-	public List<Failure> getFailures() {
-		return failures.stream().collect(Collectors.toList());
+	public List<TestExecutionSummary.Failure> getFailures() {
+		return new ArrayList<>(failures);
 	}
 
 	private String describeTest(TestIdentifier testIdentifier) {
@@ -209,4 +208,22 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		});
 	}
 
+	private static class DefaultFailure implements TestExecutionSummary.Failure {
+
+		private final TestIdentifier testIdentifier;
+		private final Throwable exception;
+
+		DefaultFailure(TestIdentifier testIdentifier, Throwable exception) {
+			this.testIdentifier = testIdentifier;
+			this.exception = exception;
+		}
+
+		public TestIdentifier getTestIdentifier() {
+			return testIdentifier;
+		}
+
+		public Throwable getException() {
+			return exception;
+		}
+	}
 }

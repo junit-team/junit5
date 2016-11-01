@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.launcher.Failure;
+import org.junit.platform.launcher.TestIdentifier;
 
 /**
  * Summary of test plan execution.
@@ -133,5 +133,12 @@ public interface TestExecutionSummary {
 	 * Get a list of the failures of this test execution.
 	 */
 	List<Failure> getFailures();
+
+	interface Failure {
+
+		TestIdentifier getTestIdentifier();
+
+		Throwable getException();
+	}
 
 }
