@@ -232,7 +232,7 @@ subprojects { subproj ->
 		}
 
 		tasks.withType(Jar) {
-			from(rootProject.projectDir) {
+			from(project.projectDir) {
 				include 'LICENSE.md'
 				into 'META-INF'
 			}
