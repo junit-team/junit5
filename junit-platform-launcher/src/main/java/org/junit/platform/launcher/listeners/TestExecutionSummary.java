@@ -130,14 +130,23 @@ public interface TestExecutionSummary {
 	void printFailuresTo(PrintWriter writer);
 
 	/**
-	 * Get a list of the failures of this test execution.
+	 * Get a list of the failures of the test plan execution.
 	 */
 	List<Failure> getFailures();
 
+	/**
+	 * Failure of a test or container.
+	 */
 	interface Failure {
 
+		/**
+		 * Get the identifier of the failed test or container.
+		 */
 		TestIdentifier getTestIdentifier();
 
+		/**
+		 * Get the {@link Throwable} causing the failure.
+		 */
 		Throwable getException();
 	}
 
