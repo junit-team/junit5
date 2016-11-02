@@ -47,6 +47,11 @@ class SelectorsExtension {
 	List<String> methods = []
 
 	/**
+	 * A list of <em>classpath resources</em> that are to be used for test discovery.
+	 */
+	List<String> resources = []
+
+	/**
 	 * Add a <em>URI</em> to be used for test discovery.
 	 */
 	void uri(String uri) {
@@ -130,7 +135,21 @@ class SelectorsExtension {
 		this.methods.addAll methods
 	}
 
+	/**
+	 * Add a <em>resource</em> to be used for test discovery.
+	 */
+	void resource(String resource) {
+		resources(resource)
+	}
+
+	/**
+	 * Add one or more <em>resources</em> to be used for test discovery.
+	 */
+	void resources(String... resources) {
+		this.resources.addAll resources
+	}
+
 	protected boolean isEmpty() {
-		return uris.empty && files.empty && directories.empty && packages.empty && classes.empty && methods.empty
+		return uris.empty && files.empty && directories.empty && packages.empty && classes.empty && methods.empty && resources.empty
 	}
 }

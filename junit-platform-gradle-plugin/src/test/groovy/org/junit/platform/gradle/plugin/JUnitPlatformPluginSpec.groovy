@@ -193,6 +193,8 @@ class JUnitPlatformPluginSpec extends Specification {
 				aClass 'com.example.app.Application'
 				methods 'com.acme.Foo#a', 'com.acme.Foo#b'
 				method 'com.example.app.Application#run(java.lang.String[])'
+				resources '/bar.csv', '/foo/input.json'
+				resource '/com/acme/my.properties'
 			}
 		}
 		project.evaluate()
@@ -209,6 +211,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask.args.containsAll('-p', 'com.acme.foo', '-p', 'com.acme.bar', '-p', 'com.example.app')
 		junitTask.args.containsAll('-c', 'com.acme.Foo', '-c', 'com.acme.Bar', '-c', 'com.example.app.Application')
 		junitTask.args.containsAll('-m', 'com.acme.Foo#a', '-m', 'com.acme.Foo#b', '-m', 'com.example.app.Application#run(java.lang.String[])')
+		junitTask.args.containsAll('-r', '/bar.csv', '-r', '/foo/input.json', '-r', '/com/acme/my.properties')
 	}
 
 }

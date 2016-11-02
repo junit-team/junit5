@@ -124,6 +124,10 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			args.addAll(['-m', method])
 		}
 
+		junitExtension.selectors.resources.each { resource ->
+			args.addAll(['-r', resource])
+		}
+
 		if (junitExtension.includeClassNamePattern) {
 			args.add('-n')
 			args.add(junitExtension.includeClassNamePattern)
