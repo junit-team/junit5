@@ -204,7 +204,6 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidUriSelectors() {
-		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("-u file:///foo.txt").getSelectedUris()),
@@ -225,7 +224,6 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidFileSelectors() {
-		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("foo.txt"), parseArgLine("-f foo.txt").getSelectedFiles()),
@@ -246,7 +244,6 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidDirectorySelectors() {
-		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("foo/bar"), parseArgLine("-d foo/bar").getSelectedDirectories()),
@@ -267,7 +264,6 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidPackageSelectors() {
-		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-p com.acme.foo").getSelectedPackages()),
@@ -288,7 +284,6 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidClassSelectors() {
-		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("-c com.acme.Foo").getSelectedClasses()),
@@ -309,7 +304,6 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidMethodSelectors() {
-		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("-m com.acme.Foo#m()").getSelectedMethods()),
@@ -331,7 +325,6 @@ class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseValidClasspathResourceSelectors() {
-		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("/foo.csv"), parseArgLine("-r /foo.csv").getSelectedClasspathResources()),

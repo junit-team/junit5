@@ -218,12 +218,15 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 			this.exception = exception;
 		}
 
+		@Override
 		public TestIdentifier getTestIdentifier() {
 			return testIdentifier;
 		}
 
+		@Override
 		public Throwable getException() {
 			return exception;
 		}
 	}
+
 }

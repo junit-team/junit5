@@ -216,7 +216,6 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return getValueFromAnnotation(ExcludeEngines.class, ExcludeEngines::value, EMPTY_STRING_ARRAY);
 	}
 
-	@SuppressWarnings("deprecation")
 	private String[] getIncludeClassNamePatterns(boolean isSuite) {
 		String[] patterns = getIncludeClassNamePatterns();
 		if (patterns.length == 0 && isSuite) {
