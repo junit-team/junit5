@@ -28,6 +28,8 @@ import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
+import org.junit.platform.engine.discovery.DirectorySelector;
+import org.junit.platform.engine.discovery.FileSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UriSelector;
@@ -180,6 +182,26 @@ public class DiscoveryRequestCreatorTests {
 		List<UriSelector> uriSelectors = request.getSelectorsByType(UriSelector.class);
 
 		assertThat(uriSelectors).extracting(UriSelector::getUri).containsExactly(URI.create("a"), URI.create("b"));
+	}
+
+	@Test
+	public void convertsFileSelectors() {
+		options.setSelectedFiles(asList("foo.txt", "bar.csv"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<FileSelector> fileSelectors = request.getSelectorsByType(FileSelector.class);
+
+		assertThat(fileSelectors).extracting(FileSelector::getRawPath).containsExactly("foo.txt", "bar.csv");
+	}
+
+	@Test
+	public void convertsDirectorySelectors() {
+		options.setSelectedDirectories(asList("foo/bar", "bar/qux"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<DirectorySelector> directorySelectors = request.getSelectorsByType(DirectorySelector.class);
+
+		assertThat(directorySelectors).extracting(DirectorySelector::getRawPath).containsExactly("foo/bar", "bar/qux");
 	}
 
 	private LauncherDiscoveryRequest convert() {

@@ -35,6 +35,8 @@ public class CommandLineOptions {
 	private boolean scanClasspath;
 	private List<String> arguments = emptyList();
 	private List<URI> selectedUris = emptyList();
+	private List<String> selectedFiles = emptyList();
+	private List<String> selectedDirectories = emptyList();
 
 	private String includeClassNamePattern = "^.*Tests?$";
 	private List<String> includedEngines = emptyList();
@@ -84,6 +86,22 @@ public class CommandLineOptions {
 
 	public void setSelectedUris(List<URI> selectedUris) {
 		this.selectedUris = selectedUris;
+	}
+
+	public List<String> getSelectedFiles() {
+		return selectedFiles;
+	}
+
+	public void setSelectedFiles(List<String> selectedFiles) {
+		this.selectedFiles = selectedFiles;
+	}
+
+	public List<String> getSelectedDirectories() {
+		return selectedDirectories;
+	}
+
+	public void setSelectedDirectories(List<String> selectedDirectories) {
+		this.selectedDirectories = selectedDirectories;
 	}
 
 	public String getIncludeClassNamePattern() {

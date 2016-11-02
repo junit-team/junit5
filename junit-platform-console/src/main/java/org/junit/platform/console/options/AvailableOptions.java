@@ -43,6 +43,8 @@ class AvailableOptions {
 	private final OptionSpec<Void> scanClasspath;
 	private final OptionSpec<String> arguments;
 	private final OptionSpec<URI> selectedUris;
+	private final OptionSpec<String> selectedFiles;
+	private final OptionSpec<String> selectedDirectories;
 
 	// Filters
 	private final OptionSpec<String> includeClassNamePattern;
@@ -93,6 +95,14 @@ class AvailableOptions {
 				.withRequiredArg() //
 				.withValuesConvertedBy(new URIConverter());
 
+		selectedFiles = parser.acceptsAll(asList("f", "select-file"), //
+			"Select a file for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
+		selectedDirectories = parser.acceptsAll(asList("d", "select-directory"), //
+			"Select a directory for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
 		// --- Filters ---------------------------------------------------------
 
 		includeClassNamePattern = parser.acceptsAll(asList("n", "include-classname"),
@@ -138,6 +148,8 @@ class AvailableOptions {
 		result.setScanClasspath(detectedOptions.has(this.scanClasspath));
 		result.setArguments(detectedOptions.valuesOf(this.arguments));
 		result.setSelectedUris(detectedOptions.valuesOf(this.selectedUris));
+		result.setSelectedFiles(detectedOptions.valuesOf(this.selectedFiles));
+		result.setSelectedDirectories(detectedOptions.valuesOf(this.selectedDirectories));
 
 		// Filters
 		result.setIncludeClassNamePattern(detectedOptions.valueOf(this.includeClassNamePattern));

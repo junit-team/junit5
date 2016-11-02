@@ -78,6 +78,8 @@ class DiscoveryRequestCreator {
 	private LauncherDiscoveryRequestBuilder createNameBasedBuilder(CommandLineOptions options) {
 		List<DiscoverySelector> selectors = new LinkedList<>();
 		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
+		options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
+		options.getSelectedDirectories().stream().map(DiscoverySelectors::selectDirectory).forEach(selectors::add);
 		Preconditions.condition(!selectors.isEmpty() || !options.getArguments().isEmpty(),
 			"No arguments were supplied to the ConsoleLauncher");
 		options.getArguments().stream().map(DiscoveryRequestCreator::selectName).forEach(selectors::add);

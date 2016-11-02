@@ -55,6 +55,9 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertEquals(emptyList(), options.getIncludedTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getReportsDir()),
+			() -> assertEquals(emptyList(), options.getSelectedUris()),
+			() -> assertEquals(emptyList(), options.getSelectedFiles()),
+			() -> assertEquals(emptyList(), options.getSelectedDirectories()),
 			() -> assertEquals(emptyList(), options.getArguments())
 		);
 		// @formatter:on
@@ -218,6 +221,48 @@ class JOptSimpleCommandLineOptionsParserTests {
 	@Test
 	public void parseInvalidUriSelectors() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-u", "--select-uri", "-u unknown-scheme:");
+	}
+
+	@Test
+	public void parseValidFileSelectors() {
+		Path dir = Paths.get(".");
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("-f foo.txt").getSelectedFiles()),
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("--f foo.txt").getSelectedFiles()),
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("-select-file foo.txt").getSelectedFiles()),
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("-select-file=foo.txt").getSelectedFiles()),
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("--select-file foo.txt").getSelectedFiles()),
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("--select-file=foo.txt").getSelectedFiles()),
+				() -> assertEquals(asList("foo.txt", "bar.csv"), parseArgLine("-f foo.txt -f bar.csv").getSelectedFiles())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidFileSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-f", "--select-file");
+	}
+
+	@Test
+	public void parseValidDirectorySelectors() {
+		Path dir = Paths.get(".");
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("-d foo/bar").getSelectedDirectories()),
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("--d foo/bar").getSelectedDirectories()),
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("-select-directory foo/bar").getSelectedDirectories()),
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("-select-directory=foo/bar").getSelectedDirectories()),
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("--select-directory foo/bar").getSelectedDirectories()),
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("--select-directory=foo/bar").getSelectedDirectories()),
+				() -> assertEquals(asList("foo/bar", "bar/qux"), parseArgLine("-d foo/bar -d bar/qux").getSelectedDirectories())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidDirectorySelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-d", "--select-directory");
 	}
 
 	@Test
