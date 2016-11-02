@@ -63,11 +63,10 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 				description: 'Runs tests on the JUnit Platform.') { junitTask ->
 
 			junitTask.inputs.property('enableStandardTestTask', junitExtension.enableStandardTestTask)
-			junitTask.inputs.property('includedEngines', junitExtension.engines.include)
-			junitTask.inputs.property('excludedEngines', junitExtension.engines.exclude)
-			junitTask.inputs.property('includedTags', junitExtension.tags.include)
-			junitTask.inputs.property('excludedTags', junitExtension.tags.exclude)
-			junitTask.inputs.property('includeClassNamePattern', junitExtension.includeClassNamePattern)
+			junitTask.inputs.property('selectors', junitExtension.selectors)
+			junitTask.inputs.property('filters', junitExtension.filters)
+			junitTask.inputs.property('filters.engines', junitExtension.filters.engines)
+			junitTask.inputs.property('filters.tags', junitExtension.filters.tags)
 
 			def reportsDir = junitExtension.reportsDir ?: project.file("$project.buildDir/test-results/junit-platform")
 			junitTask.outputs.dir reportsDir

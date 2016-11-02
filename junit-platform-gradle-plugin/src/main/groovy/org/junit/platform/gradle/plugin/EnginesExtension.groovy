@@ -9,12 +9,15 @@
  */
 package org.junit.platform.gradle.plugin
 
+import groovy.transform.EqualsAndHashCode
+
 /**
  * TestEngine configuration options for the JUnit Platform Gradle plugin.
  *
  * @since 1.0
  */
-class EnginesExtension {
+@EqualsAndHashCode
+class EnginesExtension implements Serializable {
 
 	/**
 	 * A list of <em>engine IDs</em> to be included when building the test plan.

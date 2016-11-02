@@ -9,6 +9,7 @@
  */
 package org.junit.platform.gradle.plugin
 
+import groovy.transform.EqualsAndHashCode
 import org.junit.platform.engine.discovery.ClassNameFilter
 
 /**
@@ -16,7 +17,8 @@ import org.junit.platform.engine.discovery.ClassNameFilter
  *
  * @since 1.0
  */
-class FiltersExtension {
+@EqualsAndHashCode
+class FiltersExtension implements Serializable {
 
 	/**
 	 * A pattern in the form of a regular expression that is used to match against
