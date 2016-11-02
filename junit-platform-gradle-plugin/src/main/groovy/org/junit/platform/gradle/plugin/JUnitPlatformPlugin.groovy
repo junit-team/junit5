@@ -58,10 +58,18 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 				description: 'Runs tests on the JUnit Platform.') { junitTask ->
 
 			junitTask.inputs.property('enableStandardTestTask', junitExtension.enableStandardTestTask)
-			junitTask.inputs.property('selectors', junitExtension.selectors)
-			junitTask.inputs.property('filters', junitExtension.filters)
-			junitTask.inputs.property('filters.engines', junitExtension.filters.engines)
-			junitTask.inputs.property('filters.tags', junitExtension.filters.tags)
+			junitTask.inputs.property('selectors.uris', junitExtension.selectors.uris)
+			junitTask.inputs.property('selectors.files', junitExtension.selectors.files)
+			junitTask.inputs.property('selectors.directories', junitExtension.selectors.directories)
+			junitTask.inputs.property('selectors.packages', junitExtension.selectors.packages)
+			junitTask.inputs.property('selectors.classes', junitExtension.selectors.classes)
+			junitTask.inputs.property('selectors.methods', junitExtension.selectors.methods)
+			junitTask.inputs.property('selectors.resources', junitExtension.selectors.resources)
+			junitTask.inputs.property('filters.engines.include', junitExtension.filters.engines.include)
+			junitTask.inputs.property('filters.engines.exclude', junitExtension.filters.engines.exclude)
+			junitTask.inputs.property('filters.tags.include', junitExtension.filters.tags.include)
+			junitTask.inputs.property('filters.tags.exclude', junitExtension.filters.tags.exclude)
+			junitTask.inputs.property('filters.includeClassNamePattern', junitExtension.filters.includeClassNamePattern)
 
 			def reportsDir = junitExtension.reportsDir ?: project.file("$project.buildDir/test-results/junit-platform")
 			junitTask.outputs.dir reportsDir

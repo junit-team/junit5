@@ -9,15 +9,12 @@
  */
 package org.junit.platform.gradle.plugin
 
-import groovy.transform.EqualsAndHashCode
-
 /**
  * Discovery selector configuration options for the JUnit Platform Gradle plugin.
  *
  * @since 1.0
  */
-@EqualsAndHashCode
-class SelectorsExtension implements Serializable {
+class SelectorsExtension {
 
 	/**
 	 * A list of <em>URIs</em> that are to be used for test discovery.

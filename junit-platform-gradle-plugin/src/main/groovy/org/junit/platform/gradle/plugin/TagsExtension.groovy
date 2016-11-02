@@ -9,15 +9,12 @@
  */
 package org.junit.platform.gradle.plugin
 
-import groovy.transform.EqualsAndHashCode
-
 /**
  * Tag configuration options for the JUnit Platform Gradle plugin.
  *
  * @since 1.0
  */
-@EqualsAndHashCode
-class TagsExtension implements Serializable {
+class TagsExtension {
 
 	/**
 	 * A list of <em>tags</em> to be included when building the test plan.
