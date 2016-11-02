@@ -183,6 +183,10 @@ class JUnitPlatformPluginSpec extends Specification {
 			selectors {
 				uris 'u:foo', 'u:bar'
 				uri 'u:qux'
+				files 'foo.txt', 'bar.csv'
+				file 'qux.json'
+				directories 'foo/bar', 'bar/qux'
+				directory 'qux/bar'
 			}
 		}
 		project.evaluate()
@@ -193,9 +197,9 @@ class JUnitPlatformPluginSpec extends Specification {
 		!junitTask.args.contains('--scan-class-path')
 		!junitTask.args.contains(project.file('build/classes/main').absolutePath)
 
-		junitTask.args.containsAll('-u', 'u:foo')
-		junitTask.args.containsAll('-u', 'u:bar')
-		junitTask.args.containsAll('-u', 'u:qux')
+		junitTask.args.containsAll('-u', 'u:foo', '-u', 'u:bar', '-u', 'u:qux')
+		junitTask.args.containsAll('-f', 'foo.txt', '-f', 'bar.csv', '-f', 'qux.json')
+		junitTask.args.containsAll('-d', 'foo/bar', '-d', 'bar/qux', '-d', 'qux/bar')
 	}
 
 }

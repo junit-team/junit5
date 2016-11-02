@@ -104,6 +104,14 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			args.addAll(['-u', uri])
 		}
 
+		junitExtension.selectors.files.each { file ->
+			args.addAll(['-f', file])
+		}
+
+		junitExtension.selectors.directories.each { directory ->
+			args.addAll(['-d', directory])
+		}
+
 		if (junitExtension.includeClassNamePattern) {
 			args.add('-n')
 			args.add(junitExtension.includeClassNamePattern)

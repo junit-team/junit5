@@ -22,7 +22,17 @@ class SelectorsExtension {
 	List<String> uris = []
 
 	/**
-	 * Add a <em>URIs</em> to be used for test discovery.
+	 * A list of <em>files</em> that are to be used for test discovery.
+	 */
+	List<String> files = []
+
+	/**
+	 * A list of <em>directories</em> that are to be used for test discovery.
+	 */
+	List<String> directories = []
+
+	/**
+	 * Add a <em>URI</em> to be used for test discovery.
 	 */
 	void uri(String uri) {
 		uris(uri)
@@ -35,7 +45,35 @@ class SelectorsExtension {
 		this.uris.addAll uris
 	}
 
+	/**
+	 * Add a <em>file</em> to be used for test discovery.
+	 */
+	void file(String file) {
+		files(file)
+	}
+
+	/**
+	 * Add one or more <em>files</em> to be used for test discovery.
+	 */
+	void files(String... files) {
+		this.files.addAll files
+	}
+
+	/**
+	 * Add a <em>directory</em> to be used for test discovery.
+	 */
+	void directory(String directory) {
+		directories(directory)
+	}
+
+	/**
+	 * Add one or more <em>directories</em> to be used for test discovery.
+	 */
+	void directories(String... directories) {
+		this.directories.addAll directories
+	}
+
 	protected boolean isEmpty() {
-		return uris.empty
+		return uris.empty && files.empty && directories.empty
 	}
 }
