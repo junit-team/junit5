@@ -266,6 +266,70 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
+	public void parseValidPackageSelectors() {
+		Path dir = Paths.get(".");
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-p com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("--p com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-select-package com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-select-package=com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("--select-package com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("--select-package=com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(asList("com.acme.foo", "com.example.bar"), parseArgLine("-p com.acme.foo -p com.example.bar").getSelectedPackages())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidPackageSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-p", "--select-package");
+	}
+
+	@Test
+	public void parseValidClassSelectors() {
+		Path dir = Paths.get(".");
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("-c com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("--c com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("-select-class com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("-select-class=com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("--select-class com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("--select-class=com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(asList("com.acme.Foo", "com.example.Bar"), parseArgLine("-c com.acme.Foo -c com.example.Bar").getSelectedClasses())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidClassSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-c", "--select-class");
+	}
+
+	@Test
+	public void parseValidMethodSelectors() {
+		Path dir = Paths.get(".");
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("-m com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("--m com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("-select-method com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("-select-method=com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("--select-method com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("--select-method=com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(asList("com.acme.Foo#m()", "com.example.Bar#method(java.lang.Object)"),
+						parseArgLine("-m com.acme.Foo#m() -m com.example.Bar#method(java.lang.Object)").getSelectedMethods())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidMethodSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-m", "--select-method");
+	}
+
+	@Test
 	public void parseExtraArguments() {
 		// @formatter:off
 		assertAll(

@@ -204,6 +204,44 @@ public class DiscoveryRequestCreatorTests {
 		assertThat(directorySelectors).extracting(DirectorySelector::getRawPath).containsExactly("foo/bar", "bar/qux");
 	}
 
+	@Test
+	public void convertsPackageSelectors() {
+		options.setSelectedPackages(asList("com.acme.foo", "com.example.bar"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<PackageSelector> packageSelectors = request.getSelectorsByType(PackageSelector.class);
+
+		assertThat(packageSelectors).extracting(PackageSelector::getPackageName).containsExactly("com.acme.foo",
+			"com.example.bar");
+	}
+
+	@Test
+	public void convertsClassSelectors() {
+		options.setSelectedClasses(asList("com.acme.Foo", "com.example.Bar"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
+
+		assertThat(classSelectors).extracting(ClassSelector::getClassName).containsExactly("com.acme.Foo",
+			"com.example.Bar");
+	}
+
+	@Test
+	public void convertsMethodSelectors() {
+		options.setSelectedMethods(asList("com.acme.Foo#m()", "com.example.Bar#method(java.lang.Object)"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
+
+		assertThat(methodSelectors).hasSize(2);
+		assertThat(methodSelectors.get(0).getClassName()).isEqualTo("com.acme.Foo");
+		assertThat(methodSelectors.get(0).getMethodName()).isEqualTo("m");
+		assertThat(methodSelectors.get(0).getMethodParameterTypes()).isNull();
+		assertThat(methodSelectors.get(1).getClassName()).isEqualTo("com.example.Bar");
+		assertThat(methodSelectors.get(1).getMethodName()).isEqualTo("method");
+		assertThat(methodSelectors.get(1).getMethodParameterTypes()).isEqualTo("java.lang.Object");
+	}
+
 	private LauncherDiscoveryRequest convert() {
 		DiscoveryRequestCreator creator = new DiscoveryRequestCreator();
 		return creator.toDiscoveryRequest(options);

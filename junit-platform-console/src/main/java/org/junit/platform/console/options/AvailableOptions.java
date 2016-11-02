@@ -45,6 +45,9 @@ class AvailableOptions {
 	private final OptionSpec<URI> selectedUris;
 	private final OptionSpec<String> selectedFiles;
 	private final OptionSpec<String> selectedDirectories;
+	private final OptionSpec<String> selectedPackages;
+	private final OptionSpec<String> selectedClasses;
+	private final OptionSpec<String> selectedMethods;
 
 	// Filters
 	private final OptionSpec<String> includeClassNamePattern;
@@ -103,6 +106,18 @@ class AvailableOptions {
 			"Select a directory for test discovery. This option can be repeated.") //
 				.withRequiredArg();
 
+		selectedPackages = parser.acceptsAll(asList("p", "select-package"), //
+			"Select a package for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
+		selectedClasses = parser.acceptsAll(asList("c", "select-class"), //
+			"Select a class for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
+		selectedMethods = parser.acceptsAll(asList("m", "select-method"), //
+			"Select a method for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
 		// --- Filters ---------------------------------------------------------
 
 		includeClassNamePattern = parser.acceptsAll(asList("n", "include-classname"),
@@ -150,6 +165,9 @@ class AvailableOptions {
 		result.setSelectedUris(detectedOptions.valuesOf(this.selectedUris));
 		result.setSelectedFiles(detectedOptions.valuesOf(this.selectedFiles));
 		result.setSelectedDirectories(detectedOptions.valuesOf(this.selectedDirectories));
+		result.setSelectedPackages(detectedOptions.valuesOf(this.selectedPackages));
+		result.setSelectedClasses(detectedOptions.valuesOf(this.selectedClasses));
+		result.setSelectedMethods(detectedOptions.valuesOf(this.selectedMethods));
 
 		// Filters
 		result.setIncludeClassNamePattern(detectedOptions.valueOf(this.includeClassNamePattern));
