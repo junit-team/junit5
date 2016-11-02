@@ -50,16 +50,16 @@ class JUnitPlatformPluginSpec extends Specification {
 			enableStandardTestTask true
 			logManager 'org.apache.logging.log4j.jul.LogManager'
 
-			includeClassNamePattern '.*Tests?'
-
-			engines {
-				include 'foo'
-				exclude 'bar'
-			}
-
-			tags {
-				include 'fast'
-				exclude 'slow'
+			filters {
+				includeClassNamePattern '.*Tests?'
+				engines {
+					include 'foo'
+					exclude 'bar'
+				}
+				tags {
+					include 'fast'
+					exclude 'slow'
+				}
 			}
 
 			reportsDir new File("any")
@@ -78,16 +78,16 @@ class JUnitPlatformPluginSpec extends Specification {
 			// enableStandardTestTask // defaults to false
 			logManager 'org.apache.logging.log4j.jul.LogManager'
 
-			includeClassNamePattern '.*Tests?'
-
-			engines {
-				include 'foo'
-				exclude 'bar'
-			}
-
-			tags {
-				include 'fast'
-				exclude 'slow'
+			filters {
+				includeClassNamePattern '.*Tests?'
+				engines {
+					include 'foo'
+					exclude 'bar'
+				}
+				tags {
+					include 'fast'
+					exclude 'slow'
+				}
 			}
 
 			reportsDir new File("/any")

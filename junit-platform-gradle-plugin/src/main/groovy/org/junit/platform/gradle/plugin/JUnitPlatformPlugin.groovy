@@ -15,6 +15,7 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.JavaExec
 import org.gradle.util.GradleVersion
 import org.junit.platform.console.ConsoleLauncher
+import org.junit.platform.engine.discovery.ClassNameFilter
 
 /**
  * @since 1.0
@@ -27,6 +28,10 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	void apply(Project project) {
 		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitPlatformExtension, project)
 		junitExtension.extensions.create('selectors', SelectorsExtension)
+		def filters = junitExtension.extensions.create('filters', FiltersExtension)
+		filters.extensions.create('tags', TagsExtension)
+		filters.extensions.create('engines', EnginesExtension)
+		// TODO #554 Remove these
 		junitExtension.extensions.create('tags', TagsExtension)
 		junitExtension.extensions.create('engines', EnginesExtension)
 
@@ -96,12 +101,20 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		testTask.enabled = junitExtension.enableStandardTestTask
 	}
 
-	private ArrayList<String> buildArgs(project, junitExtension, reportsDir) {
+	private List<String> buildArgs(project, junitExtension, reportsDir) {
 
 		def args = ['--hide-details']
 
 		addSelectors(project, junitExtension.selectors, args)
-		addFilters(junitExtension.includeClassNamePattern, junitExtension.tags, junitExtension.engines, args)
+		// TODO #554 Remove this if
+		if (junitExtension.includeClassNamePattern != ClassNameFilter.STANDARD_INCLUDE_PATTERN
+				|| !junitExtension.tags.include.empty  || !junitExtension.tags.exclude.empty
+				|| !junitExtension.engines.include.empty  || !junitExtension.engines.exclude.empty) {
+			addFilters(junitExtension.includeClassNamePattern, junitExtension.tags, junitExtension.engines, args)
+		} else {
+			def filters = junitExtension.extensions.filters
+			addFilters(filters.includeClassNamePattern, filters.tags, filters.engines, args)
+		}
 
 		args.add('--reports-dir')
 		args.add(reportsDir.getAbsolutePath())
