@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
+import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -22,7 +24,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-public class AssertionsAssertThrowsTests implements AssertionsHelper {
+public class AssertionsAssertThrowsTests {
 
 	@Test
 	void assertThrowsThrowable() {
@@ -50,7 +52,8 @@ public class AssertionsAssertThrowsTests implements AssertionsHelper {
 
 	@Test
 	void assertThrowsError() {
-		StackOverflowError stackOverflowError = assertThrows(StackOverflowError.class, this::recurseIndefinitely);
+		StackOverflowError stackOverflowError = assertThrows(StackOverflowError.class,
+			AssertionTestUtils::recurseIndefinitely);
 		assertNotNull(stackOverflowError);
 	}
 

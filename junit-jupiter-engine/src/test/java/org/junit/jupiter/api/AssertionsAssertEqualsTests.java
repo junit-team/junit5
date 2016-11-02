@@ -10,6 +10,11 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionTestUtils.assertExpectedAndActualValues;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEndsWith;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
+import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -21,7 +26,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-public class AssertionsAssertEqualsTests implements AssertionsHelper {
+public class AssertionsAssertEqualsTests {
 
 	@Test
 	void assertEqualsByte() {

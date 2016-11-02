@@ -16,39 +16,46 @@ import java.util.Objects;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.ValueWrapper;
 
-interface AssertionsHelper {
-	default void expectAssertionFailedError() {
+class AssertionTestUtils {
+
+	///CLOVER:OFF
+	private AssertionTestUtils() {
+		/* no-op */
+	}
+	///CLOVER:ON
+
+	static void expectAssertionFailedError() {
 		throw new AssertionError("Should have thrown an " + AssertionFailedError.class.getName());
 	}
 
-	default void assertMessageEquals(Throwable ex, String msg) throws AssertionError {
+	static void assertMessageEquals(Throwable ex, String msg) throws AssertionError {
 		if (!msg.equals(ex.getMessage())) {
 			throw new AssertionError("Exception message should be [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
-	default void assertMessageStartsWith(Throwable ex, String msg) throws AssertionError {
+	static void assertMessageStartsWith(Throwable ex, String msg) throws AssertionError {
 		if (!ex.getMessage().startsWith(msg)) {
 			throw new AssertionError(
 				"Exception message should start with [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
-	default void assertMessageEndsWith(Throwable ex, String msg) throws AssertionError {
+	static void assertMessageEndsWith(Throwable ex, String msg) throws AssertionError {
 		if (!ex.getMessage().endsWith(msg)) {
 			throw new AssertionError(
 				"Exception message should end with [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
-	default void assertMessageContains(Throwable ex, String msg) throws AssertionError {
+	static void assertMessageContains(Throwable ex, String msg) throws AssertionError {
 		if (!ex.getMessage().contains(msg)) {
 			throw new AssertionError(
 				"Exception message should contain [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
-	default void assertExpectedAndActualValues(AssertionFailedError ex, Object expected, Object actual)
+	static void assertExpectedAndActualValues(AssertionFailedError ex, Object expected, Object actual)
 			throws AssertionError {
 		if (!wrapsEqualValue(ex.getExpected(), expected)) {
 			throw new AssertionError("Expected value in AssertionFailedError should equal ["
@@ -60,7 +67,7 @@ interface AssertionsHelper {
 		}
 	}
 
-	default boolean wrapsEqualValue(ValueWrapper wrapper, Object value) {
+	static boolean wrapsEqualValue(ValueWrapper wrapper, Object value) {
 		if (value == null || value instanceof Serializable) {
 			return Objects.equals(value, wrapper.getValue());
 		}
@@ -69,7 +76,7 @@ interface AssertionsHelper {
 				&& Objects.equals(wrapper.getType(), value.getClass());
 	}
 
-	default void recurseIndefinitely() {
+	static void recurseIndefinitely() {
 		// simulate infinite recursion
 		throw new StackOverflowError();
 	}

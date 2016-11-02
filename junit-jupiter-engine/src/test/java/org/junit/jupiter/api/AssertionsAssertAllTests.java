@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,7 +30,7 @@ import org.opentest4j.MultipleFailuresError;
  *
  * @since 5.0
  */
-public class AssertionsAssertAllTests implements AssertionsHelper {
+public class AssertionsAssertAllTests {
 
 	@Test
 	void assertAllWithNullInExecutableArray() {
@@ -131,7 +132,7 @@ public class AssertionsAssertAllTests implements AssertionsHelper {
 
 	@Test
 	void assertAllWithExecutableThatThrowsError() {
-		assertThrows(StackOverflowError.class, () -> assertAll(this::recurseIndefinitely));
+		assertThrows(StackOverflowError.class, () -> assertAll(AssertionTestUtils::recurseIndefinitely));
 	}
 
 	@SuppressWarnings("serial")

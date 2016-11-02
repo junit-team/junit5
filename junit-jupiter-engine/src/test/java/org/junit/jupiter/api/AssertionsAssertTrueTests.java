@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
+import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.opentest4j.AssertionFailedError;
@@ -19,7 +21,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-public class AssertionsAssertTrueTests implements AssertionsHelper {
+public class AssertionsAssertTrueTests {
 
 	@Test
 	void assertTrueWithBooleanTrue() {

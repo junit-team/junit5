@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEndsWith;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
+import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -20,7 +23,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-public class AssertionsAssertNotEqualsTests implements AssertionsHelper {
+public class AssertionsAssertNotEqualsTests {
 
 	@Test
 	void assertNotEqualsWithNullVsObject() {
