@@ -100,63 +100,35 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 		def args = ['--hide-details']
 
-		junitExtension.selectors.uris.each { uri ->
-			args.addAll(['-u', uri])
-		}
-
-		junitExtension.selectors.files.each { file ->
-			args.addAll(['-f', file])
-		}
-
-		junitExtension.selectors.directories.each { directory ->
-			args.addAll(['-d', directory])
-		}
-
-		junitExtension.selectors.packages.each { aPackage ->
-			args.addAll(['-p', aPackage])
-		}
-
-		junitExtension.selectors.classes.each { aClass ->
-			args.addAll(['-c', aClass])
-		}
-
-		junitExtension.selectors.methods.each { method ->
-			args.addAll(['-m', method])
-		}
-
-		junitExtension.selectors.resources.each { resource ->
-			args.addAll(['-r', resource])
-		}
-
-		if (junitExtension.includeClassNamePattern) {
-			args.add('-n')
-			args.add(junitExtension.includeClassNamePattern)
-		}
-
-		junitExtension.tags.include.each { tag ->
-			args.add('-t')
-			args.add(tag)
-		}
-
-		junitExtension.tags.exclude.each { tag ->
-			args.add('-T')
-			args.add(tag)
-		}
-
-		junitExtension.engines.include.each { engineId ->
-			args.add('-e')
-			args.add(engineId)
-		}
-
-		junitExtension.engines.exclude.each { engineId ->
-			args.add('-E')
-			args.add(engineId)
-		}
+		addSelectors(project, junitExtension.selectors, args)
+		addFilters(junitExtension.includeClassNamePattern, junitExtension.tags, junitExtension.engines, args)
 
 		args.add('--reports-dir')
 		args.add(reportsDir.getAbsolutePath())
 
-		if (junitExtension.selectors.empty) {
+		return args
+	}
+
+	private void addFilters(includeClassNamePattern, tags, engines, args) {
+		if (includeClassNamePattern) {
+			args.addAll(['-n', includeClassNamePattern])
+		}
+		tags.include.each { tag ->
+			args.addAll(['-t', tag])
+		}
+		tags.exclude.each { tag ->
+			args.addAll(['-T', tag])
+		}
+		engines.include.each { engineId ->
+			args.addAll(['-e', engineId])
+		}
+		engines.exclude.each { engineId ->
+			args.addAll(['-E', engineId])
+		}
+	}
+
+	private void addSelectors(project, selectors, args) {
+		if (selectors.empty) {
 			args.add('--scan-class-path')
 
 			def rootDirs = []
@@ -169,10 +141,29 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			rootDirs.each { File root ->
 				args.add(root.getAbsolutePath())
 			}
-
+		} else {
+			selectors.uris.each { uri ->
+				args.addAll(['-u', uri])
+			}
+			selectors.files.each { file ->
+				args.addAll(['-f', file])
+			}
+			selectors.directories.each { directory ->
+				args.addAll(['-d', directory])
+			}
+			selectors.packages.each { aPackage ->
+				args.addAll(['-p', aPackage])
+			}
+			selectors.classes.each { aClass ->
+				args.addAll(['-c', aClass])
+			}
+			selectors.methods.each { method ->
+				args.addAll(['-m', method])
+			}
+			selectors.resources.each { resource ->
+				args.addAll(['-r', resource])
+			}
 		}
-
-		return args
 	}
 
 }
