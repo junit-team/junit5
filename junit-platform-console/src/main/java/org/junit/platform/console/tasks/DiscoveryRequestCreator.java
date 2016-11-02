@@ -83,6 +83,8 @@ class DiscoveryRequestCreator {
 		options.getSelectedPackages().stream().map(DiscoverySelectors::selectPackage).forEach(selectors::add);
 		options.getSelectedClasses().stream().map(DiscoverySelectors::selectClass).forEach(selectors::add);
 		options.getSelectedMethods().stream().map(DiscoverySelectors::selectMethod).forEach(selectors::add);
+		options.getSelectedClasspathResources().stream().map(DiscoverySelectors::selectClasspathResource).forEach(
+			selectors::add);
 		Preconditions.condition(!selectors.isEmpty() || !options.getArguments().isEmpty(),
 			"No arguments were supplied to the ConsoleLauncher");
 		options.getArguments().stream().map(DiscoveryRequestCreator::selectName).forEach(selectors::add);

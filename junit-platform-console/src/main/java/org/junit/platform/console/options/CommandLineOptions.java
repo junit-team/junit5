@@ -40,6 +40,7 @@ public class CommandLineOptions {
 	private List<String> selectedPackages = emptyList();
 	private List<String> selectedClasses = emptyList();
 	private List<String> selectedMethods = emptyList();
+	private List<String> selectedClasspathResources = emptyList();
 
 	private String includeClassNamePattern = "^.*Tests?$";
 	private List<String> includedEngines = emptyList();
@@ -129,6 +130,14 @@ public class CommandLineOptions {
 
 	public void setSelectedMethods(List<String> selectedMethods) {
 		this.selectedMethods = selectedMethods;
+	}
+
+	public List<String> getSelectedClasspathResources() {
+		return selectedClasspathResources;
+	}
+
+	public void setSelectedClasspathResources(List<String> selectedClasspathResources) {
+		this.selectedClasspathResources = selectedClasspathResources;
 	}
 
 	public String getIncludeClassNamePattern() {

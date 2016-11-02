@@ -48,6 +48,7 @@ class AvailableOptions {
 	private final OptionSpec<String> selectedPackages;
 	private final OptionSpec<String> selectedClasses;
 	private final OptionSpec<String> selectedMethods;
+	private final OptionSpec<String> selectedClasspathResources;
 
 	// Filters
 	private final OptionSpec<String> includeClassNamePattern;
@@ -118,6 +119,10 @@ class AvailableOptions {
 			"Select a method for test discovery. This option can be repeated.") //
 				.withRequiredArg();
 
+		selectedClasspathResources = parser.acceptsAll(asList("r", "select-resource"), //
+			"Select a classpath resource for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
 		// --- Filters ---------------------------------------------------------
 
 		includeClassNamePattern = parser.acceptsAll(asList("n", "include-classname"),
@@ -168,6 +173,7 @@ class AvailableOptions {
 		result.setSelectedPackages(detectedOptions.valuesOf(this.selectedPackages));
 		result.setSelectedClasses(detectedOptions.valuesOf(this.selectedClasses));
 		result.setSelectedMethods(detectedOptions.valuesOf(this.selectedMethods));
+		result.setSelectedClasspathResources(detectedOptions.valuesOf(this.selectedClasspathResources));
 
 		// Filters
 		result.setIncludeClassNamePattern(detectedOptions.valueOf(this.includeClassNamePattern));

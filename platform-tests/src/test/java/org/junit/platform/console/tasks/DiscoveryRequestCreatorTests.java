@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.FileSelector;
@@ -240,6 +241,18 @@ public class DiscoveryRequestCreatorTests {
 		assertThat(methodSelectors.get(1).getClassName()).isEqualTo("com.example.Bar");
 		assertThat(methodSelectors.get(1).getMethodName()).isEqualTo("method");
 		assertThat(methodSelectors.get(1).getMethodParameterTypes()).isEqualTo("java.lang.Object");
+	}
+
+	@Test
+	public void convertsClasspathResourceSelectors() {
+		options.setSelectedClasspathResources(asList("foo.csv", "com/example/bar.json"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<ClasspathResourceSelector> classpathResourceSelectors = request.getSelectorsByType(
+			ClasspathResourceSelector.class);
+
+		assertThat(classpathResourceSelectors).extracting(
+			ClasspathResourceSelector::getClasspathResourceName).containsExactly("foo.csv", "com/example/bar.json");
 	}
 
 	private LauncherDiscoveryRequest convert() {
