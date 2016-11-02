@@ -112,6 +112,18 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			args.addAll(['-d', directory])
 		}
 
+		junitExtension.selectors.packages.each { aPackage ->
+			args.addAll(['-p', aPackage])
+		}
+
+		junitExtension.selectors.classes.each { aClass ->
+			args.addAll(['-c', aClass])
+		}
+
+		junitExtension.selectors.methods.each { method ->
+			args.addAll(['-m', method])
+		}
+
 		if (junitExtension.includeClassNamePattern) {
 			args.add('-n')
 			args.add(junitExtension.includeClassNamePattern)

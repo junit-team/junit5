@@ -187,6 +187,12 @@ class JUnitPlatformPluginSpec extends Specification {
 				file 'qux.json'
 				directories 'foo/bar', 'bar/qux'
 				directory 'qux/bar'
+				packages 'com.acme.foo', 'com.acme.bar'
+				aPackage 'com.example.app'
+				classes 'com.acme.Foo', 'com.acme.Bar'
+				aClass 'com.example.app.Application'
+				methods 'com.acme.Foo#a', 'com.acme.Foo#b'
+				method 'com.example.app.Application#run(java.lang.String[])'
 			}
 		}
 		project.evaluate()
@@ -200,6 +206,9 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask.args.containsAll('-u', 'u:foo', '-u', 'u:bar', '-u', 'u:qux')
 		junitTask.args.containsAll('-f', 'foo.txt', '-f', 'bar.csv', '-f', 'qux.json')
 		junitTask.args.containsAll('-d', 'foo/bar', '-d', 'bar/qux', '-d', 'qux/bar')
+		junitTask.args.containsAll('-p', 'com.acme.foo', '-p', 'com.acme.bar', '-p', 'com.example.app')
+		junitTask.args.containsAll('-c', 'com.acme.Foo', '-c', 'com.acme.Bar', '-c', 'com.example.app.Application')
+		junitTask.args.containsAll('-m', 'com.acme.Foo#a', '-m', 'com.acme.Foo#b', '-m', 'com.example.app.Application#run(java.lang.String[])')
 	}
 
 }

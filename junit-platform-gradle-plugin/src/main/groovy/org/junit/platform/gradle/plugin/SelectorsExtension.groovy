@@ -32,6 +32,21 @@ class SelectorsExtension {
 	List<String> directories = []
 
 	/**
+	 * A list of <em>packages</em> that are to be used for test discovery.
+	 */
+	List<String> packages = []
+
+	/**
+	 * A list of <em>classes</em> that are to be used for test discovery.
+	 */
+	List<String> classes = []
+
+	/**
+	 * A list of <em>methods</em> that are to be used for test discovery.
+	 */
+	List<String> methods = []
+
+	/**
 	 * Add a <em>URI</em> to be used for test discovery.
 	 */
 	void uri(String uri) {
@@ -73,7 +88,49 @@ class SelectorsExtension {
 		this.directories.addAll directories
 	}
 
+	/**
+	 * Add a <em>package</em> to be used for test discovery.
+	 */
+	void aPackage(String aPackage) {
+		packages(aPackage)
+	}
+
+	/**
+	 * Add one or more <em>packages</em> to be used for test discovery.
+	 */
+	void packages(String... packages) {
+		this.packages.addAll packages
+	}
+
+	/**
+	 * Add a <em>class</em> to be used for test discovery.
+	 */
+	void aClass(String aClass) {
+		classes(aClass)
+	}
+
+	/**
+	 * Add one or more <em>classes</em> to be used for test discovery.
+	 */
+	void classes(String... classes) {
+		this.classes.addAll classes
+	}
+
+	/**
+	 * Add a <em>method</em> to be used for test discovery.
+	 */
+	void method(String method) {
+		methods(method)
+	}
+
+	/**
+	 * Add one or more <em>methods</em> to be used for test discovery.
+	 */
+	void methods(String... methods) {
+		this.methods.addAll methods
+	}
+
 	protected boolean isEmpty() {
-		return uris.empty && files.empty && directories.empty
+		return uris.empty && files.empty && directories.empty && packages.empty && classes.empty && methods.empty
 	}
 }
