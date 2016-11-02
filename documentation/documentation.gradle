@@ -12,9 +12,11 @@ dependencies {
 }
 
 junitPlatform {
-	includeClassNamePattern '.+(Tests|Demo)$'
-	tags {
-		exclude 'exclude'
+	filters {
+		includeClassNamePattern '.+(Tests|Demo)$'
+		tags {
+			exclude 'exclude'
+		}
 	}
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
