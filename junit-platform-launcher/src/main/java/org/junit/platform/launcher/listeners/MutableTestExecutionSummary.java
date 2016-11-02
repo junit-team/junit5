@@ -57,7 +57,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	}
 
 	void addFailure(TestIdentifier testIdentifier, Throwable throwable) {
-		this.failures.add(new Failure(testIdentifier, throwable));
+		this.failures.add(new DefaultFailure(testIdentifier, throwable));
 	}
 
 	@Override
@@ -190,6 +190,11 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		}
 	}
 
+	@Override
+	public List<TestExecutionSummary.Failure> getFailures() {
+		return new ArrayList<>(failures);
+	}
+
 	private String describeTest(TestIdentifier testIdentifier) {
 		List<String> descriptionParts = new ArrayList<>();
 		collectTestDescription(Optional.of(testIdentifier), descriptionParts);
@@ -203,23 +208,22 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		});
 	}
 
-	private static class Failure {
+	private static class DefaultFailure implements TestExecutionSummary.Failure {
 
 		private final TestIdentifier testIdentifier;
 		private final Throwable exception;
 
-		Failure(TestIdentifier testIdentifier, Throwable exception) {
+		DefaultFailure(TestIdentifier testIdentifier, Throwable exception) {
 			this.testIdentifier = testIdentifier;
 			this.exception = exception;
 		}
 
-		TestIdentifier getTestIdentifier() {
+		public TestIdentifier getTestIdentifier() {
 			return testIdentifier;
 		}
 
-		Throwable getException() {
+		public Throwable getException() {
 			return exception;
 		}
 	}
-
 }

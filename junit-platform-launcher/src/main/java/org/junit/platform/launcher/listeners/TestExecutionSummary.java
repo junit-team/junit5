@@ -13,8 +13,10 @@ package org.junit.platform.launcher.listeners;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.launcher.TestIdentifier;
 
 /**
  * Summary of test plan execution.
@@ -126,5 +128,26 @@ public interface TestExecutionSummary {
 	 * @see #printTo(PrintWriter)
 	 */
 	void printFailuresTo(PrintWriter writer);
+
+	/**
+	 * Get a list of the failures of the test plan execution.
+	 */
+	List<Failure> getFailures();
+
+	/**
+	 * Failure of a test or container.
+	 */
+	interface Failure {
+
+		/**
+		 * Get the identifier of the failed test or container.
+		 */
+		TestIdentifier getTestIdentifier();
+
+		/**
+		 * Get the {@link Throwable} causing the failure.
+		 */
+		Throwable getException();
+	}
 
 }
