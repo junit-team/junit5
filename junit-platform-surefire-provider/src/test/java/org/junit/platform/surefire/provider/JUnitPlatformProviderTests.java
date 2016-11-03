@@ -26,8 +26,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.surefire.providerapi.ProviderParameters;
 import org.apache.maven.surefire.report.ReporterFactory;
@@ -37,6 +39,7 @@ import org.apache.maven.surefire.util.ScanResult;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
@@ -110,6 +113,82 @@ class JUnitPlatformProviderTests {
 		assertThat(executionListener.summaries).hasSize(2);
 		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
 		TestClass2.verifyExecutionSummary(executionListener.summaries.get(1));
+	}
+
+	@Test
+	void bothGroupsAndIncludeTagsThrowsException() {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.INCLUDE_GROUPS, "groupOne, groupTwo");
+		properties.put(JUnitPlatformProvider.INCLUDE_TAGS, "tagOne, tagTwo");
+		verifyPreconditionViolationException(properties);
+	}
+
+	@Test
+	void bothExcludedGroupsAndExcludeTagsThrowsException() {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.EXCLUDE_GROUPS, "groupOne, groupTwo");
+		properties.put(JUnitPlatformProvider.EXCLUDE_TAGS, "tagOne, tagTwo");
+		verifyPreconditionViolationException(properties);
+	}
+
+	@Test
+	void onlyGroupsIsDeclared() throws Exception {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.INCLUDE_GROUPS, "groupOne, groupTwo");
+
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+
+		assertEquals(1, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
+	void onlyExcludeTagsIsDeclared() throws Exception {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.EXCLUDE_TAGS, "tagOne, tagTwo");
+
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+
+		assertEquals(1, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
+	void bothIncludeAndExcludeAreAllowed() throws Exception {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.INCLUDE_TAGS, "tagOne, tagTwo");
+		properties.put(JUnitPlatformProvider.EXCLUDE_TAGS, "tagThree, tagFour");
+
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+
+		assertEquals(2, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
+	void noFiltersAreCreatedIfNoPropertiesAreDeclared() throws Exception {
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+
+		assertEquals(0, provider.includeAndExcludeFilters.length);
+	}
+
+	private void verifyPreconditionViolationException(Map<String, String> properties) {
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		Throwable throwable = assertThrows(PreconditionViolationException.class, () -> {
+			new JUnitPlatformProvider(providerParameters);
+		});
+
+		assertEquals(JUnitPlatformProvider.EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED, throwable.getMessage());
 	}
 
 	private static ProviderParameters providerParametersMock(Class<?>... testClasses) {

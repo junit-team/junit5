@@ -26,6 +26,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.core.LauncherFactory;
 
 /**
@@ -72,7 +73,7 @@ public class TestPlanScannerFilterTests {
 	}
 
 	private TestPlanScannerFilter newFilter() {
-		return new TestPlanScannerFilter(LauncherFactory.create());
+		return new TestPlanScannerFilter(LauncherFactory.create(), new Filter<?>[0]);
 	}
 
 	private static class EmptyClass {

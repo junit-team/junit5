@@ -20,6 +20,10 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,8 +36,11 @@ import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.core.LauncherFactory;
 
 /**
@@ -41,8 +48,21 @@ import org.junit.platform.launcher.core.LauncherFactory;
  */
 public class JUnitPlatformProvider extends AbstractProvider {
 
+	// Parameter names processed to determine which @Tags should be executed.
+	static final String EXCLUDE_GROUPS = "excludedGroups";
+	static final String EXCLUDE_TAGS = "excludeTags";
+	static final String INCLUDE_GROUPS = "groups";
+	static final String INCLUDE_TAGS = "includeTags";
+
+	static final String EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED = "The " + INCLUDE_GROUPS + " and " + INCLUDE_TAGS
+			+ " parameters (or the " + EXCLUDE_GROUPS + " and " + EXCLUDE_TAGS + " pararameters) are synonyms - "
+			+ "only one of each is allowed (though neither is required).";
+
+	static final String EXCEPTION_MESSAGE_NO_ENGINE = "JUnit Platform Precondition Violation - No engines were specified.";
+
 	private final ProviderParameters parameters;
 	private final Launcher launcher;
+	final Filter<?>[] includeAndExcludeFilters;
 
 	public JUnitPlatformProvider(ProviderParameters parameters) {
 		this(parameters, LauncherFactory.create());
@@ -51,6 +71,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	JUnitPlatformProvider(ProviderParameters parameters, Launcher launcher) {
 		this.parameters = parameters;
 		this.launcher = launcher;
+		this.includeAndExcludeFilters = getIncludeAndExcludeFilters();
 		Logger.getLogger("org.junit").setLevel(Level.WARNING);
 	}
 
@@ -77,8 +98,8 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	}
 
 	private TestsToRun scanClasspath() {
-		TestsToRun scannedClasses = parameters.getScanResult().applyFilter(new TestPlanScannerFilter(launcher),
-			parameters.getTestClassLoader());
+		TestsToRun scannedClasses = parameters.getScanResult().applyFilter(
+			new TestPlanScannerFilter(launcher, includeAndExcludeFilters), parameters.getTestClassLoader());
 		return parameters.getRunOrderCalculator().orderTestClasses(scannedClasses);
 	}
 
@@ -103,10 +124,53 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		SimpleReportEntry classEntry = new SimpleReportEntry(getClass().getName(), testClass.getName());
 		runListener.testSetStarting(classEntry);
 
-		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
+		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).filters(
+			includeAndExcludeFilters).build();
 		launcher.execute(discoveryRequest);
 
 		runListener.testSetCompleted(classEntry);
+	}
+
+	private Filter<?>[] getIncludeAndExcludeFilters() {
+		List<Filter<?>> filters = new ArrayList<>();
+
+		Optional<List<String>> includes = getGroupsOrTags(getPropertiesList(INCLUDE_GROUPS),
+			getPropertiesList(INCLUDE_TAGS));
+		if (includes.isPresent()) {
+			filters.add(TagFilter.includeTags(includes.get()));
+		}
+
+		Optional<List<String>> excludes = getGroupsOrTags(getPropertiesList(EXCLUDE_GROUPS),
+			getPropertiesList(EXCLUDE_TAGS));
+		if (excludes.isPresent()) {
+			filters.add(TagFilter.excludeTags(excludes.get()));
+		}
+
+		return filters.toArray(new Filter<?>[filters.size()]);
+	}
+
+	private Optional<List<String>> getPropertiesList(String key) {
+		List<String> compoundProperties = null;
+		String property = parameters.getProviderProperties().get(key);
+		if (property != null) {
+			compoundProperties = Arrays.asList(property.split("[, ]+"));
+		}
+		return Optional.ofNullable(compoundProperties);
+	}
+
+	private Optional<List<String>> getGroupsOrTags(Optional<List<String>> groups, Optional<List<String>> tags) {
+		Optional<List<String>> elements = Optional.empty();
+
+		Preconditions.condition(!groups.isPresent() || !tags.isPresent(), EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED);
+
+		if (groups.isPresent()) {
+			elements = groups;
+		}
+		else if (tags.isPresent()) {
+			elements = tags;
+		}
+
+		return elements;
 	}
 
 }
