@@ -10,8 +10,12 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+
+import org.junit.platform.commons.meta.API;
 import org.junit.rules.TestRule;
 
+@API(Internal)
 public interface RuleAnnotatedMember {
 	TestRule getTestRuleInstance();
 }

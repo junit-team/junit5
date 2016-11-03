@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+
 import java.lang.reflect.Member;
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,8 +24,10 @@ import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.GenericBeforeAndAfterAdvice;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.platform.commons.meta.API;
 import org.junit.rules.TestRule;
 
+@API(Experimental)
 public abstract class AbstractTestRuleSupport implements BeforeEachCallback, AfterEachCallback {
 
 	private final Class<Rule> annotationType = Rule.class;

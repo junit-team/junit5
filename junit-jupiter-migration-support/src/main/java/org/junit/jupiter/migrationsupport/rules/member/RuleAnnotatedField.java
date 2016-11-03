@@ -10,10 +10,14 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+
 import java.lang.reflect.Field;
 
+import org.junit.platform.commons.meta.API;
 import org.junit.rules.TestRule;
 
+@API(Internal)
 public class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
 
 	public RuleAnnotatedField(Object testInstance, Field testRuleField) {

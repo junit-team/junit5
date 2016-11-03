@@ -10,8 +10,12 @@
 
 package org.junit.jupiter.migrationsupport.rules.adapter;
 
-import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.platform.commons.meta.API;
+
+@API(Internal)
 public class VerifierAdapter extends AbstractTestRuleAdapter {
 
 	public VerifierAdapter(RuleAnnotatedMember annotatedMember) {

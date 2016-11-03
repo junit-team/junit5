@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -23,7 +25,9 @@ import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedField;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.platform.commons.meta.API;
 
+@API(Experimental)
 class TestRuleFieldSupport extends AbstractTestRuleSupport {
 
 	TestRuleFieldSupport(Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {

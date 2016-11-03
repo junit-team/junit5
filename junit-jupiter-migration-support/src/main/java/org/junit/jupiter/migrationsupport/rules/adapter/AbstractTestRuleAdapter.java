@@ -10,12 +10,16 @@
 
 package org.junit.jupiter.migrationsupport.rules.adapter;
 
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.rules.TestRule;
 
+@API(Internal)
 public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAdvice {
 
 	protected final TestRule target;
