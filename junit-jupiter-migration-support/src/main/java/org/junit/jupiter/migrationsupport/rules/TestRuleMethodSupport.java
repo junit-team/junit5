@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 
 import java.lang.reflect.Member;
@@ -22,8 +23,10 @@ import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMethod;
+import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.AnnotationUtils;
 
+@API(Experimental)
 class TestRuleMethodSupport extends AbstractTestRuleSupport {
 
 	TestRuleMethodSupport(Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {

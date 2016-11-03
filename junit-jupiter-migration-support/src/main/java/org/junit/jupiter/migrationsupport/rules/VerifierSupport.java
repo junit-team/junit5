@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -17,7 +19,9 @@ import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.VerifierAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.platform.commons.meta.API;
 
+@API(Experimental)
 public class VerifierSupport implements AfterEachCallback {
 
 	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = VerifierAdapter::new;

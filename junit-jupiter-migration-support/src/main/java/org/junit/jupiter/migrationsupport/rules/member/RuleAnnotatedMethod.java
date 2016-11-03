@@ -10,11 +10,15 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+
 import java.lang.reflect.Method;
 
+import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.rules.TestRule;
 
+@API(Internal)
 public class RuleAnnotatedMethod extends AbstractRuleAnnotatedMember {
 
 	public RuleAnnotatedMethod(Object testInstance, Method member) {
