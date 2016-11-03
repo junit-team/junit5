@@ -18,19 +18,17 @@ test {
 */
 
 dependencies {
-	compile(project(':junit-platform-engine'))
 	compile(project(':junit-jupiter-api'))
+	compile("junit:junit:${junit4Version}")
 
-	testCompile(project(':junit-platform-launcher'))
-	testCompile(project(':junit-platform-runner'))
-	testCompile(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
+
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
 	testRuntime(project(path: ':junit-platform-console', configuration: 'shadow'))
-
+	testRuntime(project(':junit-jupiter-engine'))
 	testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }
