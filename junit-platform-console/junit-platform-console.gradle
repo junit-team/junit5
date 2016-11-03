@@ -23,6 +23,18 @@ dependencies {
 
 sourceSets.main.compileClasspath += configurations.shadowed
 
+eclipse {
+	classpath {
+		plusConfigurations += [ configurations.shadowed ]
+	}
+}
+
+idea {
+	module {
+		scopes.PROVIDED.plus += [ configurations.shadowed ]
+	}
+}
+
 mainClassName = "org.junit.platform.console.ConsoleLauncher"
 
 javadoc {
