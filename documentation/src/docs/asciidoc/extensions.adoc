@@ -236,5 +236,13 @@ include::{testDir}/example/exception/IgnoreIOExceptionExtension.java[tags=user_g
 
 Usually, an extension is instantiated only once. So the question becomes relevant: How do
 you keep the state from one invocation of an extension to the next? The
-`ExtensionContext` API provides a `Store` exactly for this purpose. Consult the
-corresponding Javadoc for details.
+`ExtensionContext` API provides a `Store` exactly for this purpose.  Extensions may
+put values into a store for later retrieval.  See the `TimingExtension` in section
+5.6.1 of this document for an example of using the `ExtensionContext.Store` with a
+method-level scope.  It is important to remember that values stored during
+`TestExtensionContext` will not be available during the `ContainerExtensionContext`
+execution.  `ContainerExtensionContext`s may be nested, so the scope of inner contexts
+may also be limited.
+
+Consult the corresponding Javadoc for details on the methods available for storing and
+retrieving values via the `ExtensionContext.Store`.
