@@ -408,6 +408,8 @@ configure(rootProject) {
 	jar.enabled = false
 	uploadArchives.enabled = false
 
+	def ota4jDocVersion = ota4jVersion.contains('SNAPSHOT') ? 'snapshot' : ota4jVersion
+
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
 		description = "Generates aggregated Javadocs"
@@ -425,7 +427,7 @@ configure(rootProject) {
 		options.splitIndex = true
 		options.addStringOption('Xdoclint:none', '-quiet')
 		options.jFlags '-Xmx1g'
-		options.links 'https://docs.oracle.com/javase/8/docs/api/'
+		options.links 'https://docs.oracle.com/javase/8/docs/api/', "http://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/"
 
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
