@@ -425,6 +425,7 @@ configure(rootProject) {
 		options.splitIndex = true
 		options.addStringOption('Xdoclint:none', '-quiet')
 		options.jFlags '-Xmx1g'
+		options.links 'https://docs.oracle.com/javase/8/docs/api/'
 
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
