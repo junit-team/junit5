@@ -11,6 +11,7 @@
 package org.junit.jupiter.migrationsupport.rules;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.migrationsupport.rules.FailAfterAllHelper.fail;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.AfterAll;
@@ -65,11 +66,6 @@ public class ExternalResourceSupportForMultipleFieldRulesTests {
 			fail();
 		if (!afterOfRule2WasExecuted)
 			fail();
-	}
-
-	static void fail() {
-		//hack: use this blacklisted exception to fail the build, all others would be swallowed...
-		throw new OutOfMemoryError("a postcondition was violated");
 	}
 
 }
