@@ -191,7 +191,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	}
 
 	@Override
-	public List<TestExecutionSummary.Failure> getFailures() {
+	public List<Failure> getFailures() {
 		return new ArrayList<>(failures);
 	}
 
@@ -208,7 +208,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		});
 	}
 
-	private static class DefaultFailure implements TestExecutionSummary.Failure {
+	private static class DefaultFailure implements Failure {
 
 		private final TestIdentifier testIdentifier;
 		private final Throwable exception;
