@@ -38,6 +38,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :ContainerExecutionCondition:       {javadoc-root}/org/junit/jupiter/api/extension/ContainerExecutionCondition.html[ContainerExecutionCondition]
 :Disabled:                          {javadoc-root}/org/junit/jupiter/api/Disabled.html[@Disabled]
 :ExtendWith:                        {javadoc-root}/org/junit/jupiter/api/extension/ExtendWith.html[@ExtendWith]
+:ExtensionContext_Store:            {javadoc-root}/org/junit/jupiter/api/extension/ExtensionContext.Store.html[Store]
 :ParameterResolver:                 {javadoc-root}/org/junit/jupiter/api/extension/ParameterResolver.html[ParameterResolver]
 :TestExecutionCondition:            {javadoc-root}/org/junit/jupiter/api/extension/TestExecutionCondition.html[TestExecutionCondition]
 :TestExecutionExceptionHandler:     {javadoc-root}/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.html[TestExecutionExceptionHandler]
