@@ -21,7 +21,6 @@ import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.VerifierAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
-import org.junit.rules.ExternalResource;
 import org.junit.rules.TestRule;
 
 /**
@@ -39,7 +38,7 @@ import org.junit.rules.TestRule;
  *
  *
  * @since 5.0
- * @see ExternalResource
+ * @see org.junit.rules.Verifier
  * @see TestRule
  * @see Rule
  */

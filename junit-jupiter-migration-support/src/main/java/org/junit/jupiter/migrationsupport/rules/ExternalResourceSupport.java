@@ -23,7 +23,6 @@ import org.junit.jupiter.migrationsupport.rules.adapter.ExternalResourceAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
 import org.junit.rules.TestRule;
-import org.junit.rules.Verifier;
 
 /**
  * This {@code Extension} provides native support for subclasses of
@@ -40,7 +39,7 @@ import org.junit.rules.Verifier;
  *
  *
  * @since 5.0
- * @see Verifier
+ * @see org.junit.rules.ExternalResource
  * @see TestRule
  * @see Rule
  */
