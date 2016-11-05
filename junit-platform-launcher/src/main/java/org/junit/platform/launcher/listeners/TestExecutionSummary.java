@@ -141,11 +141,15 @@ public interface TestExecutionSummary {
 
 		/**
 		 * Get the identifier of the failed test or container.
+		 *
+		 * @return the {@link TestIdentifier} for this failure; never {@code null}
 		 */
 		TestIdentifier getTestIdentifier();
 
 		/**
 		 * Get the {@link Throwable} causing the failure.
+		 *
+		 * @return the {@link Throwable} for this failure; never {@code null}
 		 */
 		Throwable getException();
 	}
