@@ -1801,15 +1801,8 @@ final release.
     logManager 'org.apache.logging.log4j.jul.LogManager'
     reportsDir file('build/test-results/junit-platform') // this is the default
     // enableStandardTestTask true
-    engines {
-        include 'junit-jupiter'
-        // exclude 'junit-vintage'
-    }
-    tags {
-        include 'fast', 'smoke'
-        // exclude 'slow', 'ci'
-    }
-    includeClassNamePattern '.*Tests'
+    // selectors (optional)
+    // filters (optional)
 }</code></pre>
 </div>
 </div>
@@ -1823,8 +1816,99 @@ how to configure log4j as the <code>LogManager</code>.</p>
 <p>By default, the JUnit Gradle plugin disables the standard Gradle <code>test</code> task, but this be
 overridden via the <code>enableStandardTestTask</code> flag.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="running-tests-build-gradle-selectors">Configuring Selectors</h5>
 <div class="paragraph">
-<p>By default all engines and tags are included in the test plan. If you supply a <em>Test
+<p>By default, the plugin will scan your project&#8217;s output directories for tests. However, you can
+specify which tests to execute explicitly using the <code>selectors</code> extension element.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">junitPlatform {
+    // ...
+    selectors {
+        uris 'file:///foo.txt', 'http://example.com/'
+        uri 'foo:resource' <i class="conum" data-value="1"></i><b>(1)</b>
+        files 'foo.txt', 'bar.csv'
+        file 'qux.json' <i class="conum" data-value="2"></i><b>(2)</b>
+        directories 'foo/bar', 'bar/qux'
+        directory 'qux/bar' <i class="conum" data-value="3"></i><b>(3)</b>
+        packages 'com.acme.foo', 'com.acme.bar'
+        aPackage 'com.example.app' <i class="conum" data-value="4"></i><b>(4)</b>
+        classes 'com.acme.Foo', 'com.acme.Bar'
+        aClass 'com.example.app.Application' <i class="conum" data-value="5"></i><b>(5)</b>
+        methods 'com.acme.Foo#a', 'com.acme.Foo#b'
+        method 'com.example.app.Application#run(java.lang.String[])' <i class="conum" data-value="6"></i><b>(6)</b>
+        resources '/bar.csv', '/foo/input.json'
+        resource '/com/acme/my.properties' <i class="conum" data-value="7"></i><b>(7)</b>
+    }
+    // ...
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>URIs</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Local files</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Local directories</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Packages</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Classes, fully qualified</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Methods, fully qualified (see <a href="../api/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod-java.lang.String-">selectMethod(String) in DiscoverySelectors</a>)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>Classpath resources</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="running-tests-build-gradle-filters">Configuring Filters</h5>
+<div class="paragraph">
+<p>You can configure filters for the test plan by using the <code>filters</code> extension. By default, all
+engines and tags are included in the test plan. Only the default <code>includeClassNamePattern</code>
+(<code>^.*Tests?$</code>) is applied. You can overwrite its value like in the
+following example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">junitPlatform {
+    // ...
+    filters {
+        engines {
+            include 'junit-jupiter'
+            // exclude 'junit-vintage'
+        }
+        tags {
+            include 'fast', 'smoke'
+            // exclude 'slow', 'ci'
+        }
+        includeClassNamePattern '.*MicroTests'
+    }
+    // ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you supply a <em>Test
 Engine ID</em> via <code>engines {include &#8230;&#8203;}</code> or <code>engines {exclude &#8230;&#8203;}</code>, the JUnit Gradle
 plugin will only run tests for the desired test engines. Similarly, if you supply a <em>tag</em>
 via <code>tags {include &#8230;&#8203;}</code> or <code>tags {exclude &#8230;&#8203;}</code>, the JUnit Gradle plugin will only run
@@ -3877,7 +3961,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-11-04 17:16:16 EDT
+Last updated 2016-11-05 09:20:38 EDT
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
