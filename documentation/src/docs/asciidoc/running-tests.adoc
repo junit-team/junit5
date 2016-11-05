@@ -68,15 +68,8 @@ junitPlatform {
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 	reportsDir file('build/test-results/junit-platform') // this is the default
 	// enableStandardTestTask true
-	engines {
-		include 'junit-jupiter'
-		// exclude 'junit-vintage'
-	}
-	tags {
-		include 'fast', 'smoke'
-		// exclude 'slow', 'ci'
-	}
-	includeClassNamePattern '.*Tests'
+	// selectors (optional)
+	// filters (optional)
 }
 ----
 
@@ -88,7 +81,73 @@ how to configure log4j as the `LogManager`.
 By default, the JUnit Gradle plugin disables the standard Gradle `test` task, but this be
 overridden via the `enableStandardTestTask` flag.
 
-By default all engines and tags are included in the test plan. If you supply a _Test
+[[running-tests-build-gradle-selectors]]
+===== Configuring Selectors
+
+By default, the plugin will scan your project's output directories for tests. However, you can
+specify which tests to execute explicitly using the `selectors` extension element.
+
+[source,java,indent=0]
+[subs="verbatim,attributes"]
+----
+junitPlatform {
+	// ...
+	selectors {
+		uris 'file:///foo.txt', 'http://example.com/'
+		uri 'foo:resource' <1>
+		files 'foo.txt', 'bar.csv'
+		file 'qux.json' <2>
+		directories 'foo/bar', 'bar/qux'
+		directory 'qux/bar' <3>
+		packages 'com.acme.foo', 'com.acme.bar'
+		aPackage 'com.example.app' <4>
+		classes 'com.acme.Foo', 'com.acme.Bar'
+		aClass 'com.example.app.Application' <5>
+		methods 'com.acme.Foo#a', 'com.acme.Foo#b'
+		method 'com.example.app.Application#run(java.lang.String[])' <6>
+		resources '/bar.csv', '/foo/input.json'
+		resource '/com/acme/my.properties' <7>
+	}
+	// ...
+}
+----
+<1> URIs
+<2> Local files
+<3> Local directories
+<4> Packages
+<5> Classes, fully qualified
+<6> Methods, fully qualified (see {DiscoverySelectors_selectMethod})
+<7> Classpath resources
+
+[[running-tests-build-gradle-filters]]
+===== Configuring Filters
+
+You can configure filters for the test plan by using the `filters` extension. By default, all
+engines and tags are included in the test plan. Only the default `includeClassNamePattern`
+(`{standard-include-class-name-pattern}`) is applied. You can overwrite its value like in the
+following example.
+
+[source,java,indent=0]
+[subs="verbatim,attributes"]
+----
+junitPlatform {
+	// ...
+	filters {
+		engines {
+			include 'junit-jupiter'
+			// exclude 'junit-vintage'
+		}
+		tags {
+			include 'fast', 'smoke'
+			// exclude 'slow', 'ci'
+		}
+		includeClassNamePattern '.*MicroTests'
+	}
+	// ...
+}
+----
+
+If you supply a _Test
 Engine ID_ via `engines {include ...}` or `engines {exclude ...}`, the JUnit Gradle
 plugin will only run tests for the desired test engines. Similarly, if you supply a _tag_
 via `tags {include ...}` or `tags {exclude ...}`, the JUnit Gradle plugin will only run

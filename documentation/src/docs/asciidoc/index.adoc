@@ -20,6 +20,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :JUnitPlatform-Runner:              {javadoc-root}/org/junit/platform/runner/JUnitPlatform.html[JUnitPlatform]
 :SummaryGeneratingListener:         {javadoc-root}/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html[SummaryGeneratingListener]
 :TestEngine:                        {javadoc-root}/org/junit/platform/engine/TestEngine.html[TestEngine]
+:DiscoverySelectors_selectMethod:   {javadoc-root}/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod-java.lang.String-[selectMethod(String) in DiscoverySelectors]
 :TestExecutionListener:             {javadoc-root}/org/junit/platform/launcher/TestExecutionListener.html[TestExecutionListener]
 :standard-include-class-name-pattern: ^.*Tests?$
 
