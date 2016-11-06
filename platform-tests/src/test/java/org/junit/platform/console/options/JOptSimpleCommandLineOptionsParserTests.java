@@ -51,7 +51,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertFalse(options.isDisplayHelp()),
 			() -> assertFalse(options.isHideDetails()),
 			() -> assertFalse(options.isScanClasspath()),
-			() -> assertEquals(STANDARD_INCLUDE_PATTERN, options.getIncludeClassNamePattern()),
+			() -> assertEquals(singletonList(STANDARD_INCLUDE_PATTERN), options.getIncludedClassNamePatterns()),
 			() -> assertEquals(emptyList(), options.getIncludedTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getReportsDir()),
@@ -79,16 +79,16 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseValidIncludeClassNamePatterns() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(".*Test", parseArgLine("-n .*Test").getIncludeClassNamePattern()),
-			() -> assertEquals(".*Test", parseArgLine("--include-classname .*Test").getIncludeClassNamePattern()),
-			() -> assertEquals(".*Test", parseArgLine("--include-classname=.*Test").getIncludeClassNamePattern())
+			() -> assertEquals(singletonList(".*Test"), parseArgLine("-n .*Test").getIncludedClassNamePatterns()),
+			() -> assertEquals(asList(".*Test", ".*Tests"), parseArgLine("--include-classname .*Test --include-classname .*Tests").getIncludedClassNamePatterns()),
+			() -> assertEquals(singletonList(".*Test"), parseArgLine("--include-classname=.*Test").getIncludedClassNamePatterns())
 		);
 		// @formatter:on
 	}
 
 	@Test
 	public void usesDefaultClassNamePatternWithoutExplicitArgument() {
-		assertEquals(STANDARD_INCLUDE_PATTERN, parseArgLine("").getIncludeClassNamePattern());
+		assertEquals(singletonList(STANDARD_INCLUDE_PATTERN), parseArgLine("").getIncludedClassNamePatterns());
 	}
 
 	@Test

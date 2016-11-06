@@ -11,7 +11,9 @@
 package org.junit.platform.console.options;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.net.URI;
 import java.nio.file.Files;
@@ -42,7 +44,7 @@ public class CommandLineOptions {
 	private List<String> selectedMethods = emptyList();
 	private List<String> selectedClasspathResources = emptyList();
 
-	private String includeClassNamePattern = "^.*Tests?$";
+	private List<String> includedClassNamePatterns = singletonList(STANDARD_INCLUDE_PATTERN);
 	private List<String> includedEngines = emptyList();
 	private List<String> excludedEngines = emptyList();
 	private List<String> includedTags = emptyList();
@@ -140,12 +142,12 @@ public class CommandLineOptions {
 		this.selectedClasspathResources = selectedClasspathResources;
 	}
 
-	public String getIncludeClassNamePattern() {
-		return this.includeClassNamePattern;
+	public List<String> getIncludedClassNamePatterns() {
+		return includedClassNamePatterns;
 	}
 
-	public void setIncludeClassNamePattern(String includeClassNamePattern) {
-		this.includeClassNamePattern = includeClassNamePattern;
+	public void setIncludedClassNamePatterns(List<String> includedClassNamePatterns) {
+		this.includedClassNamePatterns = includedClassNamePatterns;
 	}
 
 	public List<String> getIncludedEngines() {
