@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
 
 /**
@@ -31,10 +30,10 @@ import org.opentest4j.MultipleFailuresError;
  * conditions in tests.
  *
  * <p>Unless otherwise noted, a <em>failed</em> assertion will throw an
- * {@link AssertionFailedError} or a subclass thereof.
+ * {@link org.opentest4j.AssertionFailedError} or a subclass thereof.
  *
  * @since 5.0
- * @see AssertionFailedError
+ * @see org.opentest4j.AssertionFailedError
  * @see Assumptions
  */
 @API(Maintained)
