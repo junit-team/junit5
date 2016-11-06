@@ -19,12 +19,12 @@ import org.junit.platform.engine.discovery.ClassNameFilter
 class FiltersExtension {
 
 	/**
-	 * List of class name patterns in the form of a regular expression to be
-	 * <em>include</em> in the test plan.
+	 * List of class name patterns in the form of regular expressions for
+	 * classes that should <em>included</em> in the test plan.
 	 *
 	 * <p>The patterns are combined using OR semantics, i.e. if the fully
 	 * qualified name of a class matches against at least one of the patterns,
-	 * the class will be included in the result set.
+	 * the class will be included in the test plan.
 	 *
 	 * <p>Defaults to {@value ClassNameFilter#STANDARD_INCLUDE_PATTERN}.
 	 */
