@@ -124,8 +124,8 @@ junitPlatform {
 
 You can configure filters for the test plan by using the `filters` extension. By default, all
 engines and tags are included in the test plan. Only the default `includeClassNamePattern`
-(`{standard-include-class-name-pattern}`) is applied. You can overwrite its value like in the
-following example.
+(`{standard-include-class-name-pattern}`) is applied. You can overwrite its value as in the
+following example. When you specify multiple patterns, they are combined using OR semantics.
 
 [source,java,indent=0]
 [subs="verbatim,attributes"]
@@ -141,7 +141,8 @@ junitPlatform {
 			include 'fast', 'smoke'
 			// exclude 'slow', 'ci'
 		}
-		includeClassNamePattern '.*MicroTests'
+		includeClassNamePattern '.*Spec'
+		includeClassNamePatterns '.*Test', '.*Tests'
 	}
 	// ...
 }
