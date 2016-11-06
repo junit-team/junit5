@@ -1885,8 +1885,8 @@ specify which tests to execute explicitly using the <code>selectors</code> exten
 <div class="paragraph">
 <p>You can configure filters for the test plan by using the <code>filters</code> extension. By default, all
 engines and tags are included in the test plan. Only the default <code>includeClassNamePattern</code>
-(<code>^.*Tests?$</code>) is applied. You can overwrite its value like in the
-following example.</p>
+(<code>^.*Tests?$</code>) is applied. You can overwrite its value as in the
+following example. When you specify multiple patterns, they are combined using OR semantics.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1901,7 +1901,8 @@ following example.</p>
             include 'fast', 'smoke'
             // exclude 'slow', 'ci'
         }
-        includeClassNamePattern '.*MicroTests'
+        includeClassNamePattern '.*Spec'
+        includeClassNamePatterns '.*Test', '.*Tests'
     }
     // ...
 }</code></pre>
@@ -3882,6 +3883,11 @@ that it can be executed as a test on the JUnit Platform).</p>
 <li>
 <p>Multiple regular expressions that are combined using OR semantics can now be passed via
 <code>@IncludeClassNamePatterns</code> to the <code>JUnitPlatform</code> runner.</p>
+</li>
+<li>
+<p>Multiple regular expressions that are combined using OR semantics can now be passed to the JUnit
+Platform Gradle plugin (see <a href="#running-tests-build-gradle-filters">Configuring Filters</a>) and the <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code>
+(see <a href="#running-tests-console-launcher-options">Options</a>).</p>
 </li>
 <li>
 <p>The <code>junit-platform-console</code> no longer has a mandatory dependency on
