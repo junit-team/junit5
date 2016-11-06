@@ -13,17 +13,16 @@ package org.junit.platform.console.tasks;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
@@ -46,44 +45,7 @@ public class DiscoveryRequestCreatorTests {
 	private final CommandLineOptions options = new CommandLineOptions();
 
 	@Test
-	public void convertsClassArgument() {
-		Class<?> testClass = getClass();
-		options.setArguments(singletonList(testClass.getName()));
-
-		LauncherDiscoveryRequest request = convert();
-
-		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
-		assertThat(classSelectors).hasSize(1);
-		assertEquals(testClass, getOnlyElement(classSelectors).getJavaClass());
-	}
-
-	@Test
-	public void convertsMethodArgument() throws Exception {
-		Class<?> testClass = getClass();
-		Method testMethod = testClass.getDeclaredMethod("convertsMethodArgument");
-		options.setArguments(singletonList(testClass.getName() + "#" + testMethod.getName()));
-
-		LauncherDiscoveryRequest request = convert();
-
-		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
-		assertThat(methodSelectors).hasSize(1);
-		assertEquals(testClass, getOnlyElement(methodSelectors).getJavaClass());
-		assertEquals(testMethod, getOnlyElement(methodSelectors).getJavaMethod());
-	}
-
-	@Test
-	public void convertsPackageArgument() {
-		String packageName = getClass().getPackage().getName();
-		options.setArguments(singletonList(packageName));
-
-		LauncherDiscoveryRequest request = convert();
-
-		List<PackageSelector> packageSelectors = request.getSelectorsByType(PackageSelector.class);
-		assertThat(packageSelectors).extracting(PackageSelector::getPackageName).containsExactly(packageName);
-	}
-
-	@Test
-	public void convertsAllOptionWithoutExplicitRootDirectories() {
+	public void convertsScanClasspathOptionWithoutExplicitRootDirectories() {
 		options.setScanClasspath(true);
 
 		LauncherDiscoveryRequest request = convert();
@@ -97,7 +59,7 @@ public class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsAllOptionWithExplicitRootDirectories() {
+	public void convertsScanClasspathOptionWithExplicitRootDirectories() {
 		options.setScanClasspath(true);
 		options.setArguments(asList(".", ".."));
 
@@ -111,7 +73,7 @@ public class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsAllOptionWithAdditionalClasspathEntries() {
+	public void convertsScanClasspathOptionWithAdditionalClasspathEntries() {
 		options.setScanClasspath(true);
 		options.setAdditionalClasspathEntries(asList(Paths.get("."), Paths.get("..")));
 
@@ -122,6 +84,16 @@ public class DiscoveryRequestCreatorTests {
 		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
 			.contains(new File(".").toURI(), new File("..").toURI());
 		// @formatter:on
+	}
+
+	@Test
+	public void doesNotSupportScanClasspathAndExplicitSelectors() {
+		options.setScanClasspath(true);
+		options.setSelectedClasses(singletonList("SomeTest"));
+
+		Throwable cause = assertThrows(PreconditionViolationException.class, this::convert);
+
+		assertThat(cause).hasMessageContaining("not supported");
 	}
 
 	@Test

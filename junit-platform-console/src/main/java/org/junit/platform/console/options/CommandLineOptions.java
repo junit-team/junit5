@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
 
@@ -140,6 +141,11 @@ public class CommandLineOptions {
 
 	public void setSelectedClasspathResources(List<String> selectedClasspathResources) {
 		this.selectedClasspathResources = selectedClasspathResources;
+	}
+
+	public boolean hasExplicitSelectors() {
+		return Stream.of(selectedUris, selectedFiles, selectedDirectories, selectedPackages, selectedClasses,
+			selectedMethods, selectedClasspathResources).anyMatch(selectors -> !selectors.isEmpty());
 	}
 
 	public List<String> getIncludedClassNamePatterns() {
