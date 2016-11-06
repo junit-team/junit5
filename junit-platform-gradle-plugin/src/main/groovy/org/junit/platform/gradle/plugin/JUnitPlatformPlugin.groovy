@@ -69,7 +69,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			junitTask.inputs.property('filters.engines.exclude', junitExtension.filters.engines.exclude)
 			junitTask.inputs.property('filters.tags.include', junitExtension.filters.tags.include)
 			junitTask.inputs.property('filters.tags.exclude', junitExtension.filters.tags.exclude)
-			junitTask.inputs.property('filters.includeClassNamePattern', junitExtension.filters.includeClassNamePattern)
+			junitTask.inputs.property('filters.includeClassNamePatterns', junitExtension.filters.includeClassNamePatterns)
 
 			def reportsDir = junitExtension.reportsDir ?: project.file("$project.buildDir/test-results/junit-platform")
 			junitTask.outputs.dir reportsDir
@@ -117,8 +117,8 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	}
 
 	private void addFilters(filters, args) {
-		if (filters.includeClassNamePattern) {
-			args.addAll(['-n', filters.includeClassNamePattern])
+		filters.includeClassNamePatterns.each { pattern ->
+			args.addAll(['-n', pattern])
 		}
 		filters.tags.include.each { tag ->
 			args.addAll(['-t', tag])

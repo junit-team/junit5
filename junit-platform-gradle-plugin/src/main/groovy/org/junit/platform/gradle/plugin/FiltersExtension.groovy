@@ -19,15 +19,36 @@ import org.junit.platform.engine.discovery.ClassNameFilter
 class FiltersExtension {
 
 	/**
-	 * A pattern in the form of a regular expression that is used to match against
-	 * fully qualified class names.
+	 * List of class name patterns in the form of a regular expression to be
+	 * <em>include</em> in the test plan.
 	 *
-	 * <p>If the fully qualified name of a class matches against the pattern, the
-	 * class will be included in the test plan; otherwise, the class will be
-	 * excluded.
+	 * <p>The patterns are combined using OR semantics, i.e. if the fully
+	 * qualified name of a class matches against at least one of the patterns,
+	 * the class will be included in the result set.
 	 *
-	 * <p>Defaults to {@value org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN}.
+	 * <p>Defaults to {@value ClassNameFilter#STANDARD_INCLUDE_PATTERN}.
 	 */
-	String includeClassNamePattern = ClassNameFilter.STANDARD_INCLUDE_PATTERN
+	List<String> includeClassNamePatterns
+
+	protected List<String> getIncludeClassNamePatterns() {
+		return includeClassNamePatterns ?: [ ClassNameFilter.STANDARD_INCLUDE_PATTERN ];
+	}
+
+	/**
+	 * Add a pattern to the list of <em>included</em> patterns.
+	 */
+	void includeClassNamePattern(String pattern) {
+		includeClassNamePatterns(pattern)
+	}
+
+	/**
+	 * Add patterns to the list of <em>included</em> patterns.
+	 */
+	void includeClassNamePatterns(String... patterns) {
+		if (includeClassNamePatterns == null) {
+			includeClassNamePatterns = []
+		}
+		includeClassNamePatterns.addAll(patterns)
+	}
 
 }

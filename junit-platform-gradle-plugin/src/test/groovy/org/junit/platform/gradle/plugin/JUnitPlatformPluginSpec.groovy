@@ -80,6 +80,7 @@ class JUnitPlatformPluginSpec extends Specification {
 
 			filters {
 				includeClassNamePattern '.*Tests?'
+				includeClassNamePatterns 'Foo', 'Bar'
 				engines {
 					include 'foo'
 					exclude 'bar'
@@ -101,7 +102,7 @@ class JUnitPlatformPluginSpec extends Specification {
 
 		junitTask.args.contains('--hide-details')
 		junitTask.args.contains('--scan-class-path')
-		junitTask.args.containsAll('-n', '.*Tests?')
+		junitTask.args.containsAll('-n', '.*Tests?', '-n', 'Foo', '-n', 'Bar')
 		junitTask.args.containsAll('-t', 'fast')
 		junitTask.args.containsAll('-T', 'slow')
 		junitTask.args.containsAll('-e', 'foo')
