@@ -18,23 +18,29 @@ import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.opentest4j.MultipleFailuresError;
 
-public class AssertAll {
+/**
+ * {@code AssertAll} is a collection of utility methods that support asserting
+ * multiple conditions in tests at once.
+ *
+ * @since 5.0
+ */
+class AssertAll {
 
-	public static void assertAll(Executable... executables) {
+	static void assertAll(Executable... executables) {
 		assertAll(null, executables);
 	}
 
-	public static void assertAll(String heading, Executable... executables) {
+	static void assertAll(String heading, Executable... executables) {
 		Preconditions.notEmpty(executables, "executables array must not be null or empty");
 		Preconditions.containsNoNullElements(executables, "individual executables must not be null");
 		assertAll(heading, Arrays.stream(executables));
 	}
 
-	public static void assertAll(Stream<Executable> executables) {
+	static void assertAll(Stream<Executable> executables) {
 		assertAll(null, executables);
 	}
 
-	public static void assertAll(String heading, Stream<Executable> executables) {
+	static void assertAll(String heading, Stream<Executable> executables) {
 		Preconditions.notNull(executables, "executables must not be null");
 		MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading);
 

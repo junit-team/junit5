@@ -10,19 +10,25 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionsUtil.format;
+import static org.junit.jupiter.api.AssertionUtils.format;
 
 import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.AssertionFailedError;
 
-public class AssertThrows {
+/**
+ * {@code AssertThrows} is a collection of utility methods that support asserting
+ * an exception of an expected type is thrown.
+ *
+ * @since 5.0
+ */
+class AssertThrows {
 
-	public static <T extends Throwable> T expectThrows(Class<T> expectedType, Executable executable) {
+	static <T extends Throwable> T expectThrows(Class<T> expectedType, Executable executable) {
 		return assertThrows(expectedType, executable);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Throwable> T assertThrows(Class<? extends Throwable> expectedType, Executable executable) {
+	static <T extends Throwable> T assertThrows(Class<? extends Throwable> expectedType, Executable executable) {
 		try {
 			executable.execute();
 		}

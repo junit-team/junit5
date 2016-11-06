@@ -10,24 +10,30 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionsUtil.buildPrefix;
-import static org.junit.jupiter.api.AssertionsUtil.nullSafeGet;
-import static org.junit.jupiter.api.AssertionsUtil.objectsAreEqual;
-import static org.junit.jupiter.api.Fail.fail;
+import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
+import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
+import static org.junit.jupiter.api.AssertionUtils.objectsAreEqual;
 
 import java.util.function.Supplier;
 
-public class AssertNotEquals {
+/**
+ * {@code AssertNotEquals} is a collection of utility methods that support asserting
+ * inequality on objects in tests.
+ *
+ * @since 5.0
+ */
+class AssertNotEquals {
 
-	public static void assertNotEquals(Object unexpected, Object actual) {
+	static void assertNotEquals(Object unexpected, Object actual) {
 		assertNotEquals(unexpected, actual, () -> null);
 	}
 
-	public static void assertNotEquals(Object unexpected, Object actual, String message) {
+	static void assertNotEquals(Object unexpected, Object actual, String message) {
 		assertNotEquals(unexpected, actual, () -> message);
 	}
 
-	public static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
+	static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
 		if (objectsAreEqual(unexpected, actual)) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}

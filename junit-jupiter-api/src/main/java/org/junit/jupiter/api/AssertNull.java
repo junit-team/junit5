@@ -10,23 +10,29 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionsUtil.buildPrefix;
-import static org.junit.jupiter.api.AssertionsUtil.nullSafeGet;
-import static org.junit.jupiter.api.Fail.fail;
+import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
+import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.function.Supplier;
 
-public class AssertNull {
+/**
+ * {@code AssertNull} is a collection of utility methods that support asserting
+ * there is no object.
+ *
+ * @since 5.0
+ */
+class AssertNull {
 
-	public static void assertNull(Object actual) {
+	static void assertNull(Object actual) {
 		assertNull(actual, () -> null);
 	}
 
-	public static void assertNull(Object actual, String message) {
+	static void assertNull(Object actual, String message) {
 		assertNull(actual, () -> message);
 	}
 
-	public static void assertNull(Object actual, Supplier<String> messageSupplier) {
+	static void assertNull(Object actual, Supplier<String> messageSupplier) {
 		if (actual != null) {
 			failNotNull(actual, nullSafeGet(messageSupplier));
 		}

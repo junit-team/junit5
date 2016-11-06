@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
+import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.AssertionsUtil.buildPrefix;
-import static org.junit.jupiter.api.AssertionsUtil.nullSafeGet;
 
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
@@ -26,17 +26,23 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.ExceptionUtils;
 
-public class AssertTimeout {
+/**
+ * {@code AssertTimeout} is a collection of utility methods that support asserting
+ * the execution of the code under test did not take longer than the timeout duration.
+ *
+ * @since 5.0
+ */
+class AssertTimeout {
 
-	public static void assertTimeout(Duration timeout, Executable executable) {
+	static void assertTimeout(Duration timeout, Executable executable) {
 		assertTimeout(timeout, executable, () -> null);
 	}
 
-	public static void assertTimeout(Duration timeout, Executable executable, String message) {
+	static void assertTimeout(Duration timeout, Executable executable, String message) {
 		assertTimeout(timeout, executable, () -> message);
 	}
 
-	public static void assertTimeout(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
+	static void assertTimeout(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
 		long timeoutInMillis = timeout.toMillis();
 		long start = System.currentTimeMillis();
 		try {
@@ -53,16 +59,15 @@ public class AssertTimeout {
 		}
 	}
 
-	public static void assertTimeoutPreemptively(Duration timeout, Executable executable) {
+	static void assertTimeoutPreemptively(Duration timeout, Executable executable) {
 		assertTimeoutPreemptively(timeout, executable, () -> null);
 	}
 
-	public static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
+	static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
 		assertTimeoutPreemptively(timeout, executable, () -> message);
 	}
 
-	public static void assertTimeoutPreemptively(Duration timeout, Executable executable,
-			Supplier<String> messageSupplier) {
+	static void assertTimeoutPreemptively(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
 		ExecutorService executorService = Executors.newSingleThreadExecutor();
 		try {
 			Future<Throwable> future = executorService.submit(() -> {

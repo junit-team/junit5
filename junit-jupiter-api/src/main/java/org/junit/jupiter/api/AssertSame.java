@@ -10,23 +10,29 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionsUtil.format;
-import static org.junit.jupiter.api.AssertionsUtil.nullSafeGet;
-import static org.junit.jupiter.api.Fail.fail;
+import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionUtils.format;
+import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.function.Supplier;
 
-public class AssertSame {
+/**
+ * {@code AssertSame} is a collection of utility methods that support asserting
+ * two objects are the same.
+ *
+ * @since 5.0
+ */
+class AssertSame {
 
-	public static void assertSame(Object expected, Object actual) {
+	static void assertSame(Object expected, Object actual) {
 		assertSame(expected, actual, () -> null);
 	}
 
-	public static void assertSame(Object expected, Object actual, String message) {
+	static void assertSame(Object expected, Object actual, String message) {
 		assertSame(expected, actual, () -> message);
 	}
 
-	public static void assertSame(Object expected, Object actual, Supplier<String> messageSupplier) {
+	static void assertSame(Object expected, Object actual, Supplier<String> messageSupplier) {
 		if (expected != actual) {
 			failNotSame(expected, actual, nullSafeGet(messageSupplier));
 		}

@@ -52,7 +52,7 @@ public final class Assertions {
 	 * <em>Fails</em> a test with the given failure {@code message}.
 	 */
 	public static void fail(String message) {
-		Fail.fail(message);
+		AssertionUtils.fail(message);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public final class Assertions {
 	 * given {@code messageSupplier}.
 	 */
 	public static void fail(Supplier<String> messageSupplier) {
-		Fail.fail(messageSupplier);
+		AssertionUtils.fail(messageSupplier);
 	}
 
 	// --- assertTrue ----------------------------------------------------------
@@ -803,7 +803,7 @@ public final class Assertions {
 	 * @see #assertArrayEquals(Object[], Object[])
 	 */
 	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual) {
-		AssertIterable.assertIterableEquals(expected, actual);
+		AssertIterableEquals.assertIterableEquals(expected, actual);
 	}
 
 	/**
@@ -827,7 +827,7 @@ public final class Assertions {
 	 * @see #assertArrayEquals(Object[], Object[], String)
 	 */
 	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, String message) {
-		AssertIterable.assertIterableEquals(expected, actual, message);
+		AssertIterableEquals.assertIterableEquals(expected, actual, message);
 	}
 
 	/**
@@ -852,7 +852,7 @@ public final class Assertions {
 	 */
 	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual,
 			Supplier<String> messageSupplier) {
-		AssertIterable.assertIterableEquals(expected, actual, messageSupplier);
+		AssertIterableEquals.assertIterableEquals(expected, actual, messageSupplier);
 	}
 
 	// --- assertNotEquals -----------------------------------------------------

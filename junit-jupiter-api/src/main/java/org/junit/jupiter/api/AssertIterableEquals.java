@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionsUtil.buildPrefix;
-import static org.junit.jupiter.api.AssertionsUtil.formatIndexes;
-import static org.junit.jupiter.api.AssertionsUtil.formatValues;
-import static org.junit.jupiter.api.AssertionsUtil.nullSafeGet;
-import static org.junit.jupiter.api.Fail.fail;
+import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
+import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionUtils.formatIndexes;
+import static org.junit.jupiter.api.AssertionUtils.formatValues;
+import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -23,18 +23,23 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-public class AssertIterable {
+/**
+ * {@code AssertIterable} is a collection of utility methods that support asserting
+ * Iterable equality in tests.
+ *
+ * @since 5.0
+ */
+class AssertIterableEquals {
 
-	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual) {
+	static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual) {
 		assertIterableEquals(expected, actual, () -> null);
 	}
 
-	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, String message) {
+	static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, String message) {
 		assertIterableEquals(expected, actual, () -> message);
 	}
 
-	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual,
-			Supplier<String> messageSupplier) {
+	static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Supplier<String> messageSupplier) {
 		assertIterableEquals(expected, actual, new ArrayDeque<>(), messageSupplier);
 	}
 

@@ -16,14 +16,27 @@ import java.util.Deque;
 import java.util.function.Supplier;
 
 import org.junit.platform.commons.util.StringUtils;
+import org.opentest4j.AssertionFailedError;
 
-public class AssertionsUtil {
+class AssertionUtils {
 
 	///CLOVER:OFF
-	private AssertionsUtil() {
+	private AssertionUtils() {
 		/* no-op */
 	}
 	///CLOVER:ON
+
+	static void fail(String message) {
+		fail(() -> message);
+	}
+
+	static void fail(Supplier<String> messageSupplier) {
+		throw new AssertionFailedError(nullSafeGet(messageSupplier));
+	}
+
+	static void fail(String message, Object expected, Object actual) {
+		throw new AssertionFailedError(message, expected, actual);
+	}
 
 	static String buildPrefix(String message) {
 		return (StringUtils.isNotBlank(message) ? message + " ==> " : "");
@@ -105,4 +118,5 @@ public class AssertionsUtil {
 	private static void failIllegalDelta(String delta) {
 		Assertions.fail("positive delta expected but was: <" + delta + ">");
 	}
+
 }

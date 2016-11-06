@@ -10,152 +10,158 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionsUtil.doublesAreEqual;
-import static org.junit.jupiter.api.AssertionsUtil.floatsAreEqual;
-import static org.junit.jupiter.api.AssertionsUtil.format;
-import static org.junit.jupiter.api.AssertionsUtil.nullSafeGet;
-import static org.junit.jupiter.api.AssertionsUtil.objectsAreEqual;
-import static org.junit.jupiter.api.Fail.fail;
+import static org.junit.jupiter.api.AssertionUtils.doublesAreEqual;
+import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionUtils.floatsAreEqual;
+import static org.junit.jupiter.api.AssertionUtils.format;
+import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
+import static org.junit.jupiter.api.AssertionUtils.objectsAreEqual;
 
 import java.util.function.Supplier;
 
-public class AssertEquals {
+/**
+ * {@code AssertEquals} is a collection of utility methods that support asserting
+ * equality on objects and primitives in tests.
+ *
+ * @since 5.0
+ */
+class AssertEquals {
 
-	public static void assertEquals(byte expected, byte actual) {
+	static void assertEquals(byte expected, byte actual) {
 		assertEquals(expected, actual, () -> null);
 	}
 
-	public static void assertEquals(byte expected, byte actual, String message) {
+	static void assertEquals(byte expected, byte actual, String message) {
 		assertEquals(expected, actual, () -> message);
 	}
 
-	public static void assertEquals(byte expected, byte actual, Supplier<String> messageSupplier) {
+	static void assertEquals(byte expected, byte actual, Supplier<String> messageSupplier) {
 		if (expected != actual) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
-	public static void assertEquals(char expected, char actual) {
+	static void assertEquals(char expected, char actual) {
 		assertEquals(expected, actual, () -> null);
 	}
 
-	public static void assertEquals(char expected, char actual, String message) {
+	static void assertEquals(char expected, char actual, String message) {
 		assertEquals(expected, actual, () -> message);
 	}
 
-	public static void assertEquals(char expected, char actual, Supplier<String> messageSupplier) {
+	static void assertEquals(char expected, char actual, Supplier<String> messageSupplier) {
 		if (expected != actual) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
-	public static void assertEquals(double expected, double actual) {
+	static void assertEquals(double expected, double actual) {
 		assertEquals(expected, actual, () -> null);
 	}
 
-	public static void assertEquals(double expected, double actual, String message) {
+	static void assertEquals(double expected, double actual, String message) {
 		assertEquals(expected, actual, () -> message);
 	}
 
-	public static void assertEquals(double expected, double actual, Supplier<String> messageSupplier) {
+	static void assertEquals(double expected, double actual, Supplier<String> messageSupplier) {
 		if (!doublesAreEqual(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
-	public static void assertEquals(double expected, double actual, double delta) {
+	static void assertEquals(double expected, double actual, double delta) {
 		assertEquals(expected, actual, delta, () -> null);
 	}
 
-	public static void assertEquals(double expected, double actual, double delta, String message) {
+	static void assertEquals(double expected, double actual, double delta, String message) {
 		assertEquals(expected, actual, delta, () -> message);
 	}
 
-	public static void assertEquals(double expected, double actual, double delta, Supplier<String> messageSupplier) {
+	static void assertEquals(double expected, double actual, double delta, Supplier<String> messageSupplier) {
 		if (!doublesAreEqual(expected, actual, delta)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
-	public static void assertEquals(float expected, float actual) {
+	static void assertEquals(float expected, float actual) {
 		assertEquals(expected, actual, () -> null);
 	}
 
-	public static void assertEquals(float expected, float actual, String message) {
+	static void assertEquals(float expected, float actual, String message) {
 		assertEquals(expected, actual, () -> message);
 	}
 
-	public static void assertEquals(float expected, float actual, Supplier<String> messageSupplier) {
+	static void assertEquals(float expected, float actual, Supplier<String> messageSupplier) {
 		if (!floatsAreEqual(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
-	public static void assertEquals(float expected, float actual, float delta) {
+	static void assertEquals(float expected, float actual, float delta) {
 		assertEquals(expected, actual, delta, () -> null);
 	}
 
-	public static void assertEquals(float expected, float actual, float delta, String message) {
+	static void assertEquals(float expected, float actual, float delta, String message) {
 		assertEquals(expected, actual, delta, () -> message);
 	}
 
-	public static void assertEquals(float expected, float actual, float delta, Supplier<String> messageSupplier) {
+	static void assertEquals(float expected, float actual, float delta, Supplier<String> messageSupplier) {
 		if (!floatsAreEqual(expected, actual, delta)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
-	public static void assertEquals(short expected, short actual) {
+	static void assertEquals(short expected, short actual) {
 		assertEquals(expected, actual, () -> null);
 	}
 
-	public static void assertEquals(short expected, short actual, String message) {
+	static void assertEquals(short expected, short actual, String message) {
 		assertEquals(expected, actual, () -> message);
 	}
 
-	public static void assertEquals(short expected, short actual, Supplier<String> messageSupplier) {
+	static void assertEquals(short expected, short actual, Supplier<String> messageSupplier) {
 		if (expected != actual) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
-	public static void assertEquals(int expected, int actual) {
+	static void assertEquals(int expected, int actual) {
 		assertEquals(expected, actual, () -> null);
 	}
 
-	public static void assertEquals(int expected, int actual, String message) {
+	static void assertEquals(int expected, int actual, String message) {
 		assertEquals(expected, actual, () -> message);
 	}
 
-	public static void assertEquals(int expected, int actual, Supplier<String> messageSupplier) {
+	static void assertEquals(int expected, int actual, Supplier<String> messageSupplier) {
 		if (expected != actual) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
-	public static void assertEquals(long expected, long actual) {
+	static void assertEquals(long expected, long actual) {
 		assertEquals(expected, actual, () -> null);
 	}
 
-	public static void assertEquals(long expected, long actual, String message) {
+	static void assertEquals(long expected, long actual, String message) {
 		assertEquals(expected, actual, () -> message);
 	}
 
-	public static void assertEquals(long expected, long actual, Supplier<String> messageSupplier) {
+	static void assertEquals(long expected, long actual, Supplier<String> messageSupplier) {
 		if (expected != actual) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
-	public static void assertEquals(Object expected, Object actual) {
+	static void assertEquals(Object expected, Object actual) {
 		assertEquals(expected, actual, () -> null);
 	}
 
-	public static void assertEquals(Object expected, Object actual, String message) {
+	static void assertEquals(Object expected, Object actual, String message) {
 		assertEquals(expected, actual, () -> message);
 	}
 
-	public static void assertEquals(Object expected, Object actual, Supplier<String> messageSupplier) {
+	static void assertEquals(Object expected, Object actual, Supplier<String> messageSupplier) {
 		if (!objectsAreEqual(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}

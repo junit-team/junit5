@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionsUtil.buildPrefix;
-import static org.junit.jupiter.api.AssertionsUtil.formatIndexes;
-import static org.junit.jupiter.api.AssertionsUtil.formatValues;
-import static org.junit.jupiter.api.AssertionsUtil.nullSafeGet;
-import static org.junit.jupiter.api.Fail.fail;
+import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
+import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionUtils.formatIndexes;
+import static org.junit.jupiter.api.AssertionUtils.formatValues;
+import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import static org.junit.platform.commons.util.ReflectionUtils.isArray;
 
 import java.util.ArrayDeque;
@@ -22,139 +22,143 @@ import java.util.Deque;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class AssertArrayEquals {
+/**
+ * {@code AssertArrayEquals} is a collection of utility methods that support asserting
+ * array equality in tests.
+ *
+ * @since 5.0
+ */
+class AssertArrayEquals {
 
-	public static void assertArrayEquals(boolean[] expected, boolean[] actual) {
+	static void assertArrayEquals(boolean[] expected, boolean[] actual) {
 		assertArrayEquals(expected, actual, () -> null);
 	}
 
-	public static void assertArrayEquals(boolean[] expected, boolean[] actual, String message) {
+	static void assertArrayEquals(boolean[] expected, boolean[] actual, String message) {
 		assertArrayEquals(expected, actual, () -> message);
 	}
 
-	public static void assertArrayEquals(boolean[] expected, boolean[] actual, Supplier<String> messageSupplier) {
+	static void assertArrayEquals(boolean[] expected, boolean[] actual, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, null, messageSupplier);
 	}
 
-	public static void assertArrayEquals(char[] expected, char[] actual, String message) {
+	static void assertArrayEquals(char[] expected, char[] actual, String message) {
 		assertArrayEquals(expected, actual, () -> message);
 	}
 
-	public static void assertArrayEquals(char[] expected, char[] actual) {
+	static void assertArrayEquals(char[] expected, char[] actual) {
 		assertArrayEquals(expected, actual, () -> null);
 	}
 
-	public static void assertArrayEquals(char[] expected, char[] actual, Supplier<String> messageSupplier) {
+	static void assertArrayEquals(char[] expected, char[] actual, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, null, messageSupplier);
 	}
 
-	public static void assertArrayEquals(byte[] expected, byte[] actual) {
+	static void assertArrayEquals(byte[] expected, byte[] actual) {
 		assertArrayEquals(expected, actual, () -> null);
 	}
 
-	public static void assertArrayEquals(byte[] expected, byte[] actual, String message) {
+	static void assertArrayEquals(byte[] expected, byte[] actual, String message) {
 		assertArrayEquals(expected, actual, () -> message);
 	}
 
-	public static void assertArrayEquals(byte[] expected, byte[] actual, Supplier<String> messageSupplier) {
+	static void assertArrayEquals(byte[] expected, byte[] actual, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, null, messageSupplier);
 	}
 
-	public static void assertArrayEquals(short[] expected, short[] actual) {
+	static void assertArrayEquals(short[] expected, short[] actual) {
 		assertArrayEquals(expected, actual, () -> null);
 	}
 
-	public static void assertArrayEquals(short[] expected, short[] actual, String message) {
+	static void assertArrayEquals(short[] expected, short[] actual, String message) {
 		assertArrayEquals(expected, actual, () -> message);
 	}
 
-	public static void assertArrayEquals(short[] expected, short[] actual, Supplier<String> messageSupplier) {
+	static void assertArrayEquals(short[] expected, short[] actual, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, null, messageSupplier);
 	}
 
-	public static void assertArrayEquals(int[] expected, int[] actual) {
+	static void assertArrayEquals(int[] expected, int[] actual) {
 		assertArrayEquals(expected, actual, () -> null);
 	}
 
-	public static void assertArrayEquals(int[] expected, int[] actual, String message) {
+	static void assertArrayEquals(int[] expected, int[] actual, String message) {
 		assertArrayEquals(expected, actual, () -> message);
 	}
 
-	public static void assertArrayEquals(int[] expected, int[] actual, Supplier<String> messageSupplier) {
+	static void assertArrayEquals(int[] expected, int[] actual, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, null, messageSupplier);
 	}
 
-	public static void assertArrayEquals(long[] expected, long[] actual) {
+	static void assertArrayEquals(long[] expected, long[] actual) {
 		assertArrayEquals(expected, actual, () -> null);
 	}
 
-	public static void assertArrayEquals(long[] expected, long[] actual, String message) {
+	static void assertArrayEquals(long[] expected, long[] actual, String message) {
 		assertArrayEquals(expected, actual, () -> message);
 	}
 
-	public static void assertArrayEquals(long[] expected, long[] actual, Supplier<String> messageSupplier) {
+	static void assertArrayEquals(long[] expected, long[] actual, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, null, messageSupplier);
 	}
 
-	public static void assertArrayEquals(float[] expected, float[] actual) {
+	static void assertArrayEquals(float[] expected, float[] actual) {
 		assertArrayEquals(expected, actual, () -> null);
 	}
 
-	public static void assertArrayEquals(float[] expected, float[] actual, String message) {
+	static void assertArrayEquals(float[] expected, float[] actual, String message) {
 		assertArrayEquals(expected, actual, () -> message);
 	}
 
-	public static void assertArrayEquals(float[] expected, float[] actual, Supplier<String> messageSupplier) {
+	static void assertArrayEquals(float[] expected, float[] actual, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, null, messageSupplier);
 	}
 
-	public static void assertArrayEquals(float[] expected, float[] actual, float delta) {
+	static void assertArrayEquals(float[] expected, float[] actual, float delta) {
 		assertArrayEquals(expected, actual, delta, () -> null);
 	}
 
-	public static void assertArrayEquals(float[] expected, float[] actual, float delta, String message) {
+	static void assertArrayEquals(float[] expected, float[] actual, float delta, String message) {
 		assertArrayEquals(expected, actual, delta, () -> message);
 	}
 
-	public static void assertArrayEquals(float[] expected, float[] actual, float delta,
-			Supplier<String> messageSupplier) {
+	static void assertArrayEquals(float[] expected, float[] actual, float delta, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, delta, null, messageSupplier);
 	}
 
-	public static void assertArrayEquals(double[] expected, double[] actual) {
+	static void assertArrayEquals(double[] expected, double[] actual) {
 		assertArrayEquals(expected, actual, () -> null);
 	}
 
-	public static void assertArrayEquals(double[] expected, double[] actual, String message) {
+	static void assertArrayEquals(double[] expected, double[] actual, String message) {
 		assertArrayEquals(expected, actual, () -> message);
 	}
 
-	public static void assertArrayEquals(double[] expected, double[] actual, Supplier<String> messageSupplier) {
+	static void assertArrayEquals(double[] expected, double[] actual, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, null, messageSupplier);
 	}
 
-	public static void assertArrayEquals(double[] expected, double[] actual, double delta) {
+	static void assertArrayEquals(double[] expected, double[] actual, double delta) {
 		assertArrayEquals(expected, actual, delta, () -> null);
 	}
 
-	public static void assertArrayEquals(double[] expected, double[] actual, double delta, String message) {
+	static void assertArrayEquals(double[] expected, double[] actual, double delta, String message) {
 		assertArrayEquals(expected, actual, delta, () -> message);
 	}
 
-	public static void assertArrayEquals(double[] expected, double[] actual, double delta,
-			Supplier<String> messageSupplier) {
+	static void assertArrayEquals(double[] expected, double[] actual, double delta, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, delta, null, messageSupplier);
 	}
 
-	public static void assertArrayEquals(Object[] expected, Object[] actual) {
+	static void assertArrayEquals(Object[] expected, Object[] actual) {
 		assertArrayEquals(expected, actual, () -> null);
 	}
 
-	public static void assertArrayEquals(Object[] expected, Object[] actual, String message) {
+	static void assertArrayEquals(Object[] expected, Object[] actual, String message) {
 		assertArrayEquals(expected, actual, () -> message);
 	}
 
-	public static void assertArrayEquals(Object[] expected, Object[] actual, Supplier<String> messageSupplier) {
+	static void assertArrayEquals(Object[] expected, Object[] actual, Supplier<String> messageSupplier) {
 		assertArrayEquals(expected, actual, new ArrayDeque<>(), messageSupplier);
 	}
 
@@ -264,7 +268,7 @@ public class AssertArrayEquals {
 		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
-			if (!AssertionsUtil.floatsAreEqual(expected[i], actual[i])) {
+			if (!AssertionUtils.floatsAreEqual(expected[i], actual[i])) {
 				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
 			}
 		}
@@ -273,7 +277,7 @@ public class AssertArrayEquals {
 	private static void assertArrayEquals(float[] expected, float[] actual, float delta, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
 
-		AssertionsUtil.assertValidDelta(delta);
+		AssertionUtils.assertValidDelta(delta);
 		if (expected == actual) {
 			return;
 		}
@@ -281,7 +285,7 @@ public class AssertArrayEquals {
 		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
-			if (!AssertionsUtil.floatsAreEqual(expected[i], actual[i], delta)) {
+			if (!AssertionUtils.floatsAreEqual(expected[i], actual[i], delta)) {
 				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
 			}
 		}
@@ -297,7 +301,7 @@ public class AssertArrayEquals {
 		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
-			if (!AssertionsUtil.doublesAreEqual(expected[i], actual[i])) {
+			if (!AssertionUtils.doublesAreEqual(expected[i], actual[i])) {
 				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
 			}
 		}
@@ -306,7 +310,7 @@ public class AssertArrayEquals {
 	private static void assertArrayEquals(double[] expected, double[] actual, double delta, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
 
-		AssertionsUtil.assertValidDelta(delta);
+		AssertionUtils.assertValidDelta(delta);
 		if (expected == actual) {
 			return;
 		}
@@ -314,7 +318,7 @@ public class AssertArrayEquals {
 		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
-			if (!AssertionsUtil.doublesAreEqual(expected[i], actual[i], delta)) {
+			if (!AssertionUtils.doublesAreEqual(expected[i], actual[i], delta)) {
 				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
 			}
 		}
