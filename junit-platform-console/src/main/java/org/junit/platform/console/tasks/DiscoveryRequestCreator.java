@@ -30,6 +30,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -40,23 +41,24 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 class DiscoveryRequestCreator {
 
 	LauncherDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
-		LauncherDiscoveryRequestBuilder requestBuilder = createRequestBuilder(options);
+		LauncherDiscoveryRequestBuilder requestBuilder = request();
+		requestBuilder.selectors(createDiscoverySelectors(options));
 		addFilters(requestBuilder, options);
 		return requestBuilder.build();
 	}
 
-	private LauncherDiscoveryRequestBuilder createRequestBuilder(CommandLineOptions options) {
+	private List<? extends DiscoverySelector> createDiscoverySelectors(CommandLineOptions options) {
 		if (options.isScanClasspath()) {
 			Preconditions.condition(!options.hasExplicitSelectors(),
 				"Scanning the classpath and using explicit selectors at the same time is not supported");
-			return createBuilderForClasspathScanning(options);
+			return createClasspathRootSelectors(options);
 		}
-		return createBuilderForExplicitSelectors(options);
+		return createExplicitDiscoverySelectors(options);
 	}
 
-	private LauncherDiscoveryRequestBuilder createBuilderForClasspathScanning(CommandLineOptions options) {
+	private List<ClasspathRootSelector> createClasspathRootSelectors(CommandLineOptions options) {
 		Set<Path> rootDirectoriesToScan = determineClasspathRootDirectories(options);
-		return request().selectors(selectClasspathRoots(rootDirectoriesToScan));
+		return selectClasspathRoots(rootDirectoriesToScan);
 	}
 
 	private Set<Path> determineClasspathRootDirectories(CommandLineOptions options) {
@@ -68,7 +70,7 @@ class DiscoveryRequestCreator {
 		return options.getArguments().stream().map(Paths::get).collect(toCollection(LinkedHashSet::new));
 	}
 
-	private LauncherDiscoveryRequestBuilder createBuilderForExplicitSelectors(CommandLineOptions options) {
+	private List<DiscoverySelector> createExplicitDiscoverySelectors(CommandLineOptions options) {
 		List<DiscoverySelector> selectors = new LinkedList<>();
 		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
 		options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
@@ -79,7 +81,7 @@ class DiscoveryRequestCreator {
 		options.getSelectedClasspathResources().stream().map(DiscoverySelectors::selectClasspathResource).forEach(
 			selectors::add);
 		Preconditions.notEmpty(selectors, "No arguments were supplied to the ConsoleLauncher");
-		return request().selectors(selectors);
+		return selectors;
 	}
 
 	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
