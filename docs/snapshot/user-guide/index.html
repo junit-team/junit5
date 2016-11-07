@@ -2675,7 +2675,7 @@ callbacks that are invoked <em>around</em> <code>@BeforeEach</code> and <code>@A
 time of a test method. <code>TimingExtension</code> implements both <code>BeforeTestExecutionCallback</code>
 and <code>AfterTestExecutionCallback</code> in order to time and log the test execution.</p>
 </div>
-<div class="listingblock">
+<div id="extensions-lifecycle-callbacks-timing-extension" class="listingblock">
 <div class="title">An extension that times and logs the execution of test methods</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import java.lang.reflect.Method;
@@ -2779,8 +2779,14 @@ but rethrow any other type of exception.</p>
 <div class="paragraph">
 <p>Usually, an extension is instantiated only once. So the question becomes relevant: How do
 you keep the state from one invocation of an extension to the next? The
-<code>ExtensionContext</code> API provides a <code>Store</code> exactly for this purpose. Consult the
-corresponding Javadoc for details.</p>
+<code>ExtensionContext</code> API provides a <code>Store</code> exactly for this purpose.  Extensions may
+put values into a store for later retrieval.  See the
+<code><a href="#extensions-lifecycle-callbacks-timing-extension">TimingExtension</a></code> for an example of using the
+<code>Store</code> with a method-level scope. It is important to remember that values stored in a
+<code>TestExtensionContext</code> during test execution will not be available in the surrounding
+<code>ContainerExtensionContext</code>. Since <code>ContainerExtensionContexts</code> may be nested, the scope of inner
+contexts may also be limited. Consult the corresponding Javadoc for details on the methods
+available for storing and retrieving values via the <code><a href="../api/org/junit/jupiter/api/extension/ExtensionContext.Store.html">Store</a></code>.</p>
 </div>
 </div>
 </div>
@@ -3979,7 +3985,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-11-07 12:26:24 EST
+Last updated 2016-11-07 14:52:23 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
