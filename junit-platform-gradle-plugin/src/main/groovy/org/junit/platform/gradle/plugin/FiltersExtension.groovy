@@ -20,7 +20,7 @@ class FiltersExtension {
 
 	/**
 	 * List of class name patterns in the form of regular expressions for
-	 * classes that should <em>included</em> in the test plan.
+	 * classes that should be <em>included</em> in the test plan.
 	 *
 	 * <p>The patterns are combined using OR semantics, i.e. if the fully
 	 * qualified name of a class matches against at least one of the patterns,
