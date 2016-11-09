@@ -10,24 +10,12 @@
 
 package org.junit.jupiter.api;
 
-import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
-import static org.junit.platform.commons.util.ReflectionUtils.isArray;
 
 import java.time.Duration;
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.Iterator;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -35,9 +23,6 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
-import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
 
 /**
@@ -66,7 +51,7 @@ public final class Assertions {
 	 * <em>Fails</em> a test with the given failure {@code message}.
 	 */
 	public static void fail(String message) {
-		throw new AssertionFailedError(message);
+		AssertionUtils.fail(message);
 	}
 
 	/**
@@ -74,7 +59,7 @@ public final class Assertions {
 	 * given {@code messageSupplier}.
 	 */
 	public static void fail(Supplier<String> messageSupplier) {
-		fail(nullSafeGet(messageSupplier));
+		AssertionUtils.fail(messageSupplier);
 	}
 
 	// --- assertTrue ----------------------------------------------------------
@@ -83,7 +68,7 @@ public final class Assertions {
 	 * <em>Asserts</em> that the supplied {@code condition} is {@code true}.
 	 */
 	public static void assertTrue(boolean condition) {
-		assertTrue(() -> condition, () -> null);
+		AssertTrue.assertTrue(condition);
 	}
 
 	/**
@@ -91,14 +76,14 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertTrue(boolean condition, Supplier<String> messageSupplier) {
-		assertTrue(() -> condition, messageSupplier);
+		AssertTrue.assertTrue(condition, messageSupplier);
 	}
 
 	/**
 	 * <em>Asserts</em> that the boolean condition supplied by {@code booleanSupplier} is {@code true}.
 	 */
 	public static void assertTrue(BooleanSupplier booleanSupplier) {
-		assertTrue(booleanSupplier, () -> null);
+		AssertTrue.assertTrue(booleanSupplier);
 	}
 
 	/**
@@ -106,7 +91,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertTrue(BooleanSupplier booleanSupplier, String message) {
-		assertTrue(booleanSupplier, () -> message);
+		AssertTrue.assertTrue(booleanSupplier, message);
 	}
 
 	/**
@@ -114,7 +99,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertTrue(boolean condition, String message) {
-		assertTrue(() -> condition, () -> message);
+		AssertTrue.assertTrue(condition, message);
 	}
 
 	/**
@@ -122,9 +107,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
-		if (!booleanSupplier.getAsBoolean()) {
-			fail(messageSupplier);
-		}
+		AssertTrue.assertTrue(booleanSupplier, messageSupplier);
 	}
 
 	// --- assertFalse ---------------------------------------------------------
@@ -133,7 +116,7 @@ public final class Assertions {
 	 * <em>Asserts</em> that the supplied {@code condition} is not {@code true}.
 	 */
 	public static void assertFalse(boolean condition) {
-		assertFalse(() -> condition, () -> null);
+		AssertFalse.assertFalse(condition);
 	}
 
 	/**
@@ -141,7 +124,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertFalse(boolean condition, String message) {
-		assertFalse(() -> condition, () -> message);
+		AssertFalse.assertFalse(condition, message);
 	}
 
 	/**
@@ -149,14 +132,14 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertFalse(boolean condition, Supplier<String> messageSupplier) {
-		assertFalse(() -> condition, messageSupplier);
+		AssertFalse.assertFalse(condition, messageSupplier);
 	}
 
 	/**
 	 * <em>Asserts</em> that the boolean condition supplied by {@code booleanSupplier} is not {@code true}.
 	 */
 	public static void assertFalse(BooleanSupplier booleanSupplier) {
-		assertFalse(booleanSupplier, () -> null);
+		AssertFalse.assertFalse(booleanSupplier);
 	}
 
 	/**
@@ -164,7 +147,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertFalse(BooleanSupplier booleanSupplier, String message) {
-		assertFalse(booleanSupplier, () -> message);
+		AssertFalse.assertFalse(booleanSupplier, message);
 	}
 
 	/**
@@ -172,9 +155,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertFalse(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
-		if (booleanSupplier.getAsBoolean()) {
-			fail(messageSupplier);
-		}
+		AssertFalse.assertFalse(booleanSupplier, messageSupplier);
 	}
 
 	// --- assertNull ----------------------------------------------------------
@@ -183,7 +164,7 @@ public final class Assertions {
 	 * <em>Asserts</em> that {@code actual} is {@code null}.
 	 */
 	public static void assertNull(Object actual) {
-		assertNull(actual, () -> null);
+		AssertNull.assertNull(actual);
 	}
 
 	/**
@@ -191,7 +172,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertNull(Object actual, String message) {
-		assertNull(actual, () -> message);
+		AssertNull.assertNull(actual, message);
 	}
 
 	/**
@@ -199,9 +180,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertNull(Object actual, Supplier<String> messageSupplier) {
-		if (actual != null) {
-			failNotNull(actual, nullSafeGet(messageSupplier));
-		}
+		AssertNull.assertNull(actual, messageSupplier);
 	}
 
 	// --- assertNotNull -------------------------------------------------------
@@ -210,7 +189,7 @@ public final class Assertions {
 	 * <em>Asserts</em> that {@code actual} is not {@code null}.
 	 */
 	public static void assertNotNull(Object actual) {
-		assertNotNull(actual, () -> null);
+		AssertNotNull.assertNotNull(actual);
 	}
 
 	/**
@@ -218,7 +197,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertNotNull(Object actual, String message) {
-		assertNotNull(actual, () -> message);
+		AssertNotNull.assertNotNull(actual, message);
 	}
 
 	/**
@@ -226,9 +205,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertNotNull(Object actual, Supplier<String> messageSupplier) {
-		if (actual == null) {
-			failNull(nullSafeGet(messageSupplier));
-		}
+		AssertNotNull.assertNotNull(actual, messageSupplier);
 	}
 
 	// --- assertEquals --------------------------------------------------------
@@ -237,14 +214,14 @@ public final class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 */
 	public static void assertEquals(short expected, short actual) {
-		assertEquals(expected, actual, () -> null);
+		AssertEquals.assertEquals(expected, actual);
 	}
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 */
 	public static void assertEquals(short expected, short actual, String message) {
-		assertEquals(expected, actual, () -> message);
+		AssertEquals.assertEquals(expected, actual, message);
 	}
 
 	/**
@@ -252,23 +229,21 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(short expected, short actual, Supplier<String> messageSupplier) {
-		if (expected != actual) {
-			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 */
 	public static void assertEquals(byte expected, byte actual) {
-		assertEquals(expected, actual, () -> null);
+		AssertEquals.assertEquals(expected, actual);
 	}
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 */
 	public static void assertEquals(byte expected, byte actual, String message) {
-		assertEquals(expected, actual, () -> message);
+		AssertEquals.assertEquals(expected, actual, message);
 	}
 
 	/**
@@ -276,23 +251,21 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(byte expected, byte actual, Supplier<String> messageSupplier) {
-		if (expected != actual) {
-			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 */
 	public static void assertEquals(int expected, int actual) {
-		assertEquals(expected, actual, () -> null);
+		AssertEquals.assertEquals(expected, actual);
 	}
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 */
 	public static void assertEquals(int expected, int actual, String message) {
-		assertEquals(expected, actual, () -> message);
+		AssertEquals.assertEquals(expected, actual, message);
 	}
 
 	/**
@@ -300,23 +273,21 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(int expected, int actual, Supplier<String> messageSupplier) {
-		if (expected != actual) {
-			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 */
 	public static void assertEquals(long expected, long actual) {
-		assertEquals(expected, actual, () -> null);
+		AssertEquals.assertEquals(expected, actual);
 	}
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 */
 	public static void assertEquals(long expected, long actual, String message) {
-		assertEquals(expected, actual, () -> message);
+		AssertEquals.assertEquals(expected, actual, message);
 	}
 
 	/**
@@ -324,23 +295,21 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(long expected, long actual, Supplier<String> messageSupplier) {
-		if (expected != actual) {
-			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 */
 	public static void assertEquals(char expected, char actual) {
-		assertEquals(expected, actual, () -> null);
+		AssertEquals.assertEquals(expected, actual);
 	}
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 */
 	public static void assertEquals(char expected, char actual, String message) {
-		assertEquals(expected, actual, () -> message);
+		AssertEquals.assertEquals(expected, actual, message);
 	}
 
 	/**
@@ -348,9 +317,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(char expected, char actual, Supplier<String> messageSupplier) {
-		if (expected != actual) {
-			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -359,7 +326,7 @@ public final class Assertions {
 	 * {@link Float#compare(float, float)}.</p>
 	 */
 	public static void assertEquals(float expected, float actual) {
-		assertEquals(expected, actual, () -> null);
+		AssertEquals.assertEquals(expected, actual);
 	}
 
 	/**
@@ -368,7 +335,7 @@ public final class Assertions {
 	 * {@link Float#compare(float, float)}.</p>
 	 */
 	public static void assertEquals(float expected, float actual, String message) {
-		assertEquals(expected, actual, () -> message);
+		AssertEquals.assertEquals(expected, actual, message);
 	}
 
 	/**
@@ -378,9 +345,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(float expected, float actual, Supplier<String> messageSupplier) {
-		if (!floatsAreEqual(expected, actual)) {
-			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -389,7 +354,7 @@ public final class Assertions {
 	 * {@link Float#compare(float, float)}.</p>
 	 */
 	public static void assertEquals(float expected, float actual, float delta) {
-		assertEquals(expected, actual, delta, () -> null);
+		AssertEquals.assertEquals(expected, actual, delta);
 	}
 
 	/**
@@ -398,7 +363,7 @@ public final class Assertions {
 	 * {@link Float#compare(float, float)}.</p>
 	 */
 	public static void assertEquals(float expected, float actual, float delta, String message) {
-		assertEquals(expected, actual, delta, () -> message);
+		AssertEquals.assertEquals(expected, actual, delta, message);
 	}
 
 	/**
@@ -408,9 +373,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(float expected, float actual, float delta, Supplier<String> messageSupplier) {
-		if (!floatsAreEqual(expected, actual, delta)) {
-			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertEquals.assertEquals(expected, actual, delta, messageSupplier);
 	}
 
 	/**
@@ -419,7 +382,7 @@ public final class Assertions {
 	 * {@link Double#compare(double, double)}.</p>
 	 */
 	public static void assertEquals(double expected, double actual) {
-		assertEquals(expected, actual, () -> null);
+		AssertEquals.assertEquals(expected, actual);
 	}
 
 	/**
@@ -428,7 +391,7 @@ public final class Assertions {
 	 * {@link Double#compare(double, double)}.</p>
 	 */
 	public static void assertEquals(double expected, double actual, String message) {
-		assertEquals(expected, actual, () -> message);
+		AssertEquals.assertEquals(expected, actual, message);
 	}
 
 	/**
@@ -438,9 +401,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(double expected, double actual, Supplier<String> messageSupplier) {
-		if (!doublesAreEqual(expected, actual)) {
-			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -449,7 +410,7 @@ public final class Assertions {
 	 * {@link Double#compare(double, double)}.</p>
 	 */
 	public static void assertEquals(double expected, double actual, double delta) {
-		assertEquals(expected, actual, delta, () -> null);
+		AssertEquals.assertEquals(expected, actual, delta);
 	}
 
 	/**
@@ -458,7 +419,7 @@ public final class Assertions {
 	 * {@link Double#compare(double, double)}.</p>
 	 */
 	public static void assertEquals(double expected, double actual, double delta, String message) {
-		assertEquals(expected, actual, delta, () -> message);
+		AssertEquals.assertEquals(expected, actual, delta, message);
 	}
 
 	/**
@@ -468,9 +429,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(double expected, double actual, double delta, Supplier<String> messageSupplier) {
-		if (!doublesAreEqual(expected, actual, delta)) {
-			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertEquals.assertEquals(expected, actual, delta, messageSupplier);
 	}
 
 	/**
@@ -480,7 +439,7 @@ public final class Assertions {
 	 * @see Object#equals(Object)
 	 */
 	public static void assertEquals(Object expected, Object actual) {
-		assertEquals(expected, actual, () -> null);
+		AssertEquals.assertEquals(expected, actual);
 	}
 
 	/**
@@ -491,7 +450,7 @@ public final class Assertions {
 	 * @see Object#equals(Object)
 	 */
 	public static void assertEquals(Object expected, Object actual, String message) {
-		assertEquals(expected, actual, () -> message);
+		AssertEquals.assertEquals(expected, actual, message);
 	}
 
 	/**
@@ -502,9 +461,7 @@ public final class Assertions {
 	 * @see Object#equals(Object)
 	 */
 	public static void assertEquals(Object expected, Object actual, Supplier<String> messageSupplier) {
-		if (!objectsAreEqual(expected, actual)) {
-			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
 	// --- assertArrayEquals ---------------------------------------------------
@@ -514,7 +471,7 @@ public final class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
 	public static void assertArrayEquals(boolean[] expected, boolean[] actual) {
-		assertArrayEquals(expected, actual, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
 	/**
@@ -523,7 +480,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(boolean[] expected, boolean[] actual, String message) {
-		assertArrayEquals(expected, actual, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
 	/**
@@ -532,7 +489,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertArrayEquals(boolean[] expected, boolean[] actual, Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, null, messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -540,7 +497,7 @@ public final class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
 	public static void assertArrayEquals(char[] expected, char[] actual) {
-		assertArrayEquals(expected, actual, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
 	/**
@@ -549,7 +506,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(char[] expected, char[] actual, String message) {
-		assertArrayEquals(expected, actual, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
 	/**
@@ -558,7 +515,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertArrayEquals(char[] expected, char[] actual, Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, null, messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -566,7 +523,7 @@ public final class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
 	public static void assertArrayEquals(byte[] expected, byte[] actual) {
-		assertArrayEquals(expected, actual, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
 	/**
@@ -575,7 +532,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(byte[] expected, byte[] actual, String message) {
-		assertArrayEquals(expected, actual, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
 	/**
@@ -584,7 +541,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertArrayEquals(byte[] expected, byte[] actual, Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, null, messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -592,7 +549,7 @@ public final class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
 	public static void assertArrayEquals(short[] expected, short[] actual) {
-		assertArrayEquals(expected, actual, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
 	/**
@@ -601,7 +558,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(short[] expected, short[] actual, String message) {
-		assertArrayEquals(expected, actual, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
 	/**
@@ -610,7 +567,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertArrayEquals(short[] expected, short[] actual, Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, null, messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -618,7 +575,7 @@ public final class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
 	public static void assertArrayEquals(int[] expected, int[] actual) {
-		assertArrayEquals(expected, actual, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
 	/**
@@ -627,7 +584,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(int[] expected, int[] actual, String message) {
-		assertArrayEquals(expected, actual, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
 	/**
@@ -636,7 +593,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertArrayEquals(int[] expected, int[] actual, Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, null, messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -644,7 +601,7 @@ public final class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
 	public static void assertArrayEquals(long[] expected, long[] actual) {
-		assertArrayEquals(expected, actual, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
 	/**
@@ -653,7 +610,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(long[] expected, long[] actual, String message) {
-		assertArrayEquals(expected, actual, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
 	/**
@@ -662,7 +619,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertArrayEquals(long[] expected, long[] actual, Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, null, messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -671,7 +628,7 @@ public final class Assertions {
 	 * {@link Float#compare(float, float)}.</p>
 	 */
 	public static void assertArrayEquals(float[] expected, float[] actual) {
-		assertArrayEquals(expected, actual, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
 	/**
@@ -681,7 +638,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(float[] expected, float[] actual, String message) {
-		assertArrayEquals(expected, actual, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
 	/**
@@ -691,7 +648,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertArrayEquals(float[] expected, float[] actual, Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, null, messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -700,7 +657,7 @@ public final class Assertions {
 	 * {@link Float#compare(float, float)}.</p>
 	 */
 	public static void assertArrayEquals(float[] expected, float[] actual, float delta) {
-		assertArrayEquals(expected, actual, delta, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual, delta);
 	}
 
 	/**
@@ -710,7 +667,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(float[] expected, float[] actual, float delta, String message) {
-		assertArrayEquals(expected, actual, delta, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, delta, message);
 	}
 
 	/**
@@ -721,7 +678,7 @@ public final class Assertions {
 	 */
 	public static void assertArrayEquals(float[] expected, float[] actual, float delta,
 			Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, delta, null, messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, delta, messageSupplier);
 	}
 
 	/**
@@ -730,7 +687,7 @@ public final class Assertions {
 	 * {@link Double#compare(double, double)}.</p>
 	 */
 	public static void assertArrayEquals(double[] expected, double[] actual) {
-		assertArrayEquals(expected, actual, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
 	/**
@@ -740,7 +697,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(double[] expected, double[] actual, String message) {
-		assertArrayEquals(expected, actual, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
 	/**
@@ -750,7 +707,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertArrayEquals(double[] expected, double[] actual, Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, null, messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
 	/**
@@ -759,7 +716,7 @@ public final class Assertions {
 	 * {@link Double#compare(double, double)}.</p>
 	 */
 	public static void assertArrayEquals(double[] expected, double[] actual, double delta) {
-		assertArrayEquals(expected, actual, delta, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual, delta);
 	}
 
 	/**
@@ -769,7 +726,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(double[] expected, double[] actual, double delta, String message) {
-		assertArrayEquals(expected, actual, delta, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, delta, message);
 	}
 
 	/**
@@ -780,7 +737,7 @@ public final class Assertions {
 	 */
 	public static void assertArrayEquals(double[] expected, double[] actual, double delta,
 			Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, delta, null, messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, delta, messageSupplier);
 	}
 
 	/**
@@ -793,7 +750,7 @@ public final class Assertions {
 	 * @see Arrays#deepEquals(Object[], Object[])
 	 */
 	public static void assertArrayEquals(Object[] expected, Object[] actual) {
-		assertArrayEquals(expected, actual, () -> null);
+		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
 	/**
@@ -807,7 +764,7 @@ public final class Assertions {
 	 * @see Arrays#deepEquals(Object[], Object[])
 	 */
 	public static void assertArrayEquals(Object[] expected, Object[] actual, String message) {
-		assertArrayEquals(expected, actual, () -> message);
+		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
 	/**
@@ -821,7 +778,7 @@ public final class Assertions {
 	 * @see Arrays#deepEquals(Object[], Object[])
 	 */
 	public static void assertArrayEquals(Object[] expected, Object[] actual, Supplier<String> messageSupplier) {
-		assertArrayEquals(expected, actual, new ArrayDeque<>(), messageSupplier);
+		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
 	// --- assertIterableEquals --------------------------------------------
@@ -845,7 +802,7 @@ public final class Assertions {
 	 * @see #assertArrayEquals(Object[], Object[])
 	 */
 	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual) {
-		assertIterableEquals(expected, actual, () -> null);
+		AssertIterableEquals.assertIterableEquals(expected, actual);
 	}
 
 	/**
@@ -869,7 +826,7 @@ public final class Assertions {
 	 * @see #assertArrayEquals(Object[], Object[], String)
 	 */
 	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, String message) {
-		assertIterableEquals(expected, actual, () -> message);
+		AssertIterableEquals.assertIterableEquals(expected, actual, message);
 	}
 
 	/**
@@ -894,7 +851,7 @@ public final class Assertions {
 	 */
 	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual,
 			Supplier<String> messageSupplier) {
-		assertIterableEquals(expected, actual, new ArrayDeque<>(), messageSupplier);
+		AssertIterableEquals.assertIterableEquals(expected, actual, messageSupplier);
 	}
 
 	// --- assertNotEquals -----------------------------------------------------
@@ -906,7 +863,7 @@ public final class Assertions {
 	 * @see Object#equals(Object)
 	 */
 	public static void assertNotEquals(Object unexpected, Object actual) {
-		assertNotEquals(unexpected, actual, () -> null);
+		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
 	/**
@@ -917,7 +874,7 @@ public final class Assertions {
 	 * @see Object#equals(Object)
 	 */
 	public static void assertNotEquals(Object unexpected, Object actual, String message) {
-		assertNotEquals(unexpected, actual, () -> message);
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
 	/**
@@ -928,9 +885,7 @@ public final class Assertions {
 	 * @see Object#equals(Object)
 	 */
 	public static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
-		if (objectsAreEqual(unexpected, actual)) {
-			failEqual(actual, nullSafeGet(messageSupplier));
-		}
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
 	// --- assertSame ----------------------------------------------------------
@@ -939,7 +894,7 @@ public final class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} refer to the same object.
 	 */
 	public static void assertSame(Object expected, Object actual) {
-		assertSame(expected, actual, () -> null);
+		AssertSame.assertSame(expected, actual);
 	}
 
 	/**
@@ -947,7 +902,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertSame(Object expected, Object actual, String message) {
-		assertSame(expected, actual, () -> message);
+		AssertSame.assertSame(expected, actual, message);
 	}
 
 	/**
@@ -955,9 +910,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertSame(Object expected, Object actual, Supplier<String> messageSupplier) {
-		if (expected != actual) {
-			failNotSame(expected, actual, nullSafeGet(messageSupplier));
-		}
+		AssertSame.assertSame(expected, actual, messageSupplier);
 	}
 
 	// --- assertNotSame -------------------------------------------------------
@@ -966,7 +919,7 @@ public final class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} do not refer to the same object.
 	 */
 	public static void assertNotSame(Object unexpected, Object actual) {
-		assertNotSame(unexpected, actual, () -> null);
+		AssertNotSame.assertNotSame(unexpected, actual);
 	}
 
 	/**
@@ -974,7 +927,7 @@ public final class Assertions {
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertNotSame(Object unexpected, Object actual, String message) {
-		assertNotSame(unexpected, actual, () -> message);
+		AssertNotSame.assertNotSame(unexpected, actual, message);
 	}
 
 	/**
@@ -982,9 +935,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertNotSame(Object unexpected, Object actual, Supplier<String> messageSupplier) {
-		if (unexpected == actual) {
-			failSame(actual, nullSafeGet(messageSupplier));
-		}
+		AssertNotSame.assertNotSame(unexpected, actual, messageSupplier);
 	}
 
 	// --- assertAll -----------------------------------------------------------
@@ -1002,7 +953,7 @@ public final class Assertions {
 	 */
 	@API(Experimental)
 	public static void assertAll(Executable... executables) throws MultipleFailuresError {
-		assertAll(null, executables);
+		AssertAll.assertAll(executables);
 	}
 
 	/**
@@ -1018,7 +969,7 @@ public final class Assertions {
 	 */
 	@API(Experimental)
 	public static void assertAll(Stream<Executable> executables) throws MultipleFailuresError {
-		assertAll(null, executables);
+		AssertAll.assertAll(executables);
 	}
 
 	/**
@@ -1034,9 +985,7 @@ public final class Assertions {
 	 */
 	@API(Experimental)
 	public static void assertAll(String heading, Executable... executables) throws MultipleFailuresError {
-		Preconditions.notEmpty(executables, "executables array must not be null or empty");
-		Preconditions.containsNoNullElements(executables, "individual executables must not be null");
-		assertAll(heading, Arrays.stream(executables));
+		AssertAll.assertAll(heading, executables);
 	}
 
 	/**
@@ -1059,24 +1008,7 @@ public final class Assertions {
 	 */
 	@API(Experimental)
 	public static void assertAll(String heading, Stream<Executable> executables) throws MultipleFailuresError {
-		Preconditions.notNull(executables, "executables must not be null");
-		MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading);
-
-		executables.forEach(executable -> {
-			try {
-				executable.execute();
-			}
-			catch (AssertionError assertionError) {
-				multipleFailuresError.addFailure(assertionError);
-			}
-			catch (Throwable t) {
-				ExceptionUtils.throwAsUncheckedException(t);
-			}
-		});
-
-		if (multipleFailuresError.hasFailures()) {
-			throw multipleFailuresError;
-		}
+		AssertAll.assertAll(heading, executables);
 	}
 
 	// --- assert exceptions ---------------------------------------------------
@@ -1091,23 +1023,8 @@ public final class Assertions {
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * simply ignore the return value.
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T extends Throwable> T assertThrows(Class<? extends Throwable> expectedType, Executable executable) {
-		try {
-			executable.execute();
-		}
-		catch (Throwable actualException) {
-			if (expectedType.isInstance(actualException)) {
-				return (T) actualException;
-			}
-			else {
-				String message = Assertions.format(expectedType.getName(), actualException.getClass().getName(),
-					"Unexpected exception type thrown");
-				throw new AssertionFailedError(message, actualException);
-			}
-		}
-		throw new AssertionFailedError(
-			String.format("Expected %s to be thrown, but nothing was thrown.", expectedType.getName()));
+		return AssertThrows.assertThrows(expectedType, executable);
 	}
 
 	/**
@@ -1115,7 +1032,7 @@ public final class Assertions {
 	 */
 	@Deprecated
 	public static <T extends Throwable> T expectThrows(Class<T> expectedType, Executable executable) {
-		return assertThrows(expectedType, executable);
+		return AssertThrows.expectThrows(expectedType, executable);
 	}
 
 	// --- assertTimeout -------------------------------------------------------
@@ -1133,7 +1050,7 @@ public final class Assertions {
 	 * @see #assertTimeoutPreemptively(Duration, Executable)
 	 */
 	public static void assertTimeout(Duration timeout, Executable executable) {
-		assertTimeout(timeout, executable, () -> null);
+		AssertTimeout.assertTimeout(timeout, executable);
 	}
 
 	/**
@@ -1151,7 +1068,7 @@ public final class Assertions {
 	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
 	 */
 	public static void assertTimeout(Duration timeout, Executable executable, String message) {
-		assertTimeout(timeout, executable, () -> message);
+		AssertTimeout.assertTimeout(timeout, executable, message);
 	}
 
 	/**
@@ -1170,20 +1087,7 @@ public final class Assertions {
 	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
 	 */
 	public static void assertTimeout(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
-		long timeoutInMillis = timeout.toMillis();
-		long start = System.currentTimeMillis();
-		try {
-			executable.execute();
-		}
-		catch (Throwable ex) {
-			ExceptionUtils.throwAsUncheckedException(ex);
-		}
-
-		long timeElapsed = System.currentTimeMillis() - start;
-		if (timeElapsed > timeoutInMillis) {
-			fail(buildPrefix(nullSafeGet(messageSupplier)) + "execution exceeded timeout of " + timeoutInMillis
-					+ " ms by " + (timeElapsed - timeoutInMillis) + " ms");
-		}
+		AssertTimeout.assertTimeout(timeout, executable, messageSupplier);
 	}
 
 	/**
@@ -1199,7 +1103,7 @@ public final class Assertions {
 	 * @see #assertTimeout(Duration, Executable)
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable) {
-		assertTimeoutPreemptively(timeout, executable, () -> null);
+		AssertTimeout.assertTimeoutPreemptively(timeout, executable);
 	}
 
 	/**
@@ -1217,7 +1121,7 @@ public final class Assertions {
 	 * @see #assertTimeout(Duration, Executable, String)
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
-		assertTimeoutPreemptively(timeout, executable, () -> message);
+		AssertTimeout.assertTimeoutPreemptively(timeout, executable, message);
 	}
 
 	/**
@@ -1237,514 +1141,7 @@ public final class Assertions {
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable,
 			Supplier<String> messageSupplier) {
-
-		ExecutorService executorService = Executors.newSingleThreadExecutor();
-		try {
-			Future<Throwable> future = executorService.submit(() -> {
-				try {
-					executable.execute();
-				}
-				catch (Throwable ex) {
-					return ex;
-				}
-				return null;
-			});
-
-			long timeoutInMillis = timeout.toMillis();
-			Throwable throwable = null;
-
-			try {
-				throwable = future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
-			}
-			catch (TimeoutException ex) {
-				fail(
-					buildPrefix(nullSafeGet(messageSupplier)) + "execution timed out after " + timeoutInMillis + " ms");
-			}
-			catch (ExecutionException ex) {
-				throwable = ex.getCause();
-			}
-			catch (Throwable ex) {
-				throwable = ex;
-			}
-
-			if (throwable != null) {
-				ExceptionUtils.throwAsUncheckedException(throwable);
-			}
-		}
-		finally {
-			executorService.shutdownNow();
-		}
-	}
-
-	// --- assertArrayEquals helpers -------------------------------------------
-
-	private static void assertArrayEquals(boolean[] expected, boolean[] actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArrayEquals(char[] expected, char[] actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArrayEquals(byte[] expected, byte[] actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArrayEquals(short[] expected, short[] actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArrayEquals(int[] expected, int[] actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArrayEquals(long[] expected, long[] actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArrayEquals(float[] expected, float[] actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			if (!floatsAreEqual(expected[i], actual[i])) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArrayEquals(float[] expected, float[] actual, float delta, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		assertValidDelta(delta);
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			if (!floatsAreEqual(expected[i], actual[i], delta)) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArrayEquals(double[] expected, double[] actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			if (!doublesAreEqual(expected[i], actual[i])) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArrayEquals(double[] expected, double[] actual, double delta, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		assertValidDelta(delta);
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			if (!doublesAreEqual(expected[i], actual[i], delta)) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArrayEquals(Object[] expected, Object[] actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == actual) {
-			return;
-		}
-		assertArraysNotNull(expected, actual, indexes, messageSupplier);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
-
-		for (int i = 0; i < expected.length; i++) {
-			Object expectedElement = expected[i];
-			Object actualElement = actual[i];
-
-			if (expectedElement == actualElement) {
-				continue;
-			}
-
-			indexes.addLast(i);
-			assertArrayElementsEqual(expectedElement, actualElement, indexes, messageSupplier);
-			indexes.removeLast();
-		}
-	}
-
-	private static void assertArrayElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected instanceof Object[] && actual instanceof Object[]) {
-			assertArrayEquals((Object[]) expected, (Object[]) actual, indexes, messageSupplier);
-		}
-		else if (expected instanceof byte[] && actual instanceof byte[]) {
-			assertArrayEquals((byte[]) expected, (byte[]) actual, indexes, messageSupplier);
-		}
-		else if (expected instanceof short[] && actual instanceof short[]) {
-			assertArrayEquals((short[]) expected, (short[]) actual, indexes, messageSupplier);
-		}
-		else if (expected instanceof int[] && actual instanceof int[]) {
-			assertArrayEquals((int[]) expected, (int[]) actual, indexes, messageSupplier);
-		}
-		else if (expected instanceof long[] && actual instanceof long[]) {
-			assertArrayEquals((long[]) expected, (long[]) actual, indexes, messageSupplier);
-		}
-		else if (expected instanceof char[] && actual instanceof char[]) {
-			assertArrayEquals((char[]) expected, (char[]) actual, indexes, messageSupplier);
-		}
-		else if (expected instanceof float[] && actual instanceof float[]) {
-			assertArrayEquals((float[]) expected, (float[]) actual, indexes, messageSupplier);
-		}
-		else if (expected instanceof double[] && actual instanceof double[]) {
-			assertArrayEquals((double[]) expected, (double[]) actual, indexes, messageSupplier);
-		}
-		else if (expected instanceof boolean[] && actual instanceof boolean[]) {
-			assertArrayEquals((boolean[]) expected, (boolean[]) actual, indexes, messageSupplier);
-		}
-		else if (!Objects.equals(expected, actual)) {
-			if (expected == null && isArray(actual)) {
-				failExpectedArrayIsNull(indexes, messageSupplier);
-			}
-			else if (isArray(expected) && actual == null) {
-				failActualArrayIsNull(indexes, messageSupplier);
-			}
-			else {
-				failArraysNotEqual(expected, actual, indexes, messageSupplier);
-			}
-		}
-	}
-
-	private static void assertArraysNotNull(Object expected, Object actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == null) {
-			failExpectedArrayIsNull(indexes, messageSupplier);
-		}
-		if (actual == null) {
-			failActualArrayIsNull(indexes, messageSupplier);
-		}
-	}
-
-	private static void failExpectedArrayIsNull(Deque<Integer> indexes, Supplier<String> messageSupplier) {
-		fail(buildPrefix(nullSafeGet(messageSupplier)) + "expected array was <null>" + formatIndexes(indexes));
-	}
-
-	private static void failActualArrayIsNull(Deque<Integer> indexes, Supplier<String> messageSupplier) {
-		fail(buildPrefix(nullSafeGet(messageSupplier)) + "actual array was <null>" + formatIndexes(indexes));
-	}
-
-	private static void assertArraysHaveSameLength(int expected, int actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected != actual) {
-			String prefix = buildPrefix(nullSafeGet(messageSupplier));
-			String message = "array lengths differ" + formatIndexes(indexes) + ", expected: <" + expected
-					+ "> but was: <" + actual + ">";
-			fail(prefix + message);
-		}
-	}
-
-	private static void failArraysNotEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		String prefix = buildPrefix(nullSafeGet(messageSupplier));
-		String message = "array contents differ" + formatIndexes(indexes) + ", " + formatValues(expected, actual);
-		fail(prefix + message);
-	}
-
-	private static Deque<Integer> nullSafeIndexes(Deque<Integer> indexes, int newIndex) {
-		Deque<Integer> result = (indexes != null ? indexes : new ArrayDeque<>());
-		result.addLast(newIndex);
-		return result;
-	}
-
-	// --- assertIterableEquals helpers ----------------------------------
-
-	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == actual) {
-			return;
-		}
-		assertIterablesNotNull(expected, actual, indexes, messageSupplier);
-
-		Iterator<?> expectedIterator = expected.iterator();
-		Iterator<?> actualIterator = actual.iterator();
-
-		int processed = 0;
-		while (expectedIterator.hasNext() && actualIterator.hasNext()) {
-			processed++;
-			Object expectedElement = expectedIterator.next();
-			Object actualElement = actualIterator.next();
-
-			if (expectedElement == actualElement) {
-				continue;
-			}
-
-			indexes.addLast(processed - 1);
-			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageSupplier);
-			indexes.removeLast();
-		}
-
-		assertIteratorsAreEmpty(expectedIterator, actualIterator, processed, indexes, messageSupplier);
-	}
-
-	private static void assertIterableElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-		if (expected instanceof Iterable && actual instanceof Iterable) {
-			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageSupplier);
-		}
-		else if (!Objects.equals(expected, actual)) {
-			assertIterablesNotNull(expected, actual, indexes, messageSupplier);
-			failIterablesNotEqual(expected, actual, indexes, messageSupplier);
-		}
-	}
-
-	private static void assertIterablesNotNull(Object expected, Object actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		if (expected == null) {
-			failExpectedIterableIsNull(indexes, messageSupplier);
-		}
-		if (actual == null) {
-			failActualIterableIsNull(indexes, messageSupplier);
-		}
-	}
-
-	private static void failExpectedIterableIsNull(Deque<Integer> indexes, Supplier<String> messageSupplier) {
-		fail(buildPrefix(nullSafeGet(messageSupplier)) + "expected iterable was <null>" + formatIndexes(indexes));
-	}
-
-	private static void failActualIterableIsNull(Deque<Integer> indexes, Supplier<String> messageSupplier) {
-		fail(buildPrefix(nullSafeGet(messageSupplier)) + "actual iterable was <null>" + formatIndexes(indexes));
-	}
-
-	private static void assertIteratorsAreEmpty(Iterator<?> expected, Iterator<?> actual, int processed,
-			Deque<Integer> indexes, Supplier<String> messageSupplier) {
-
-		if (expected.hasNext() || actual.hasNext()) {
-			AtomicInteger expectedCount = new AtomicInteger(processed);
-			expected.forEachRemaining(e -> expectedCount.incrementAndGet());
-
-			AtomicInteger actualCount = new AtomicInteger(processed);
-			actual.forEachRemaining(e -> actualCount.incrementAndGet());
-
-			String prefix = buildPrefix(nullSafeGet(messageSupplier));
-			String message = "iterable lengths differ" + formatIndexes(indexes) + ", expected: <" + expectedCount.get()
-					+ "> but was: <" + actualCount.get() + ">";
-			fail(prefix + message);
-		}
-	}
-
-	private static void failIterablesNotEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Supplier<String> messageSupplier) {
-
-		String prefix = buildPrefix(nullSafeGet(messageSupplier));
-		String message = "iterable contents differ" + formatIndexes(indexes) + ", " + formatValues(expected, actual);
-		fail(prefix + message);
-	}
-
-	// -------------------------------------------------------------------------
-
-	private static void failEqual(Object actual, String message) {
-		fail(buildPrefix(message) + "expected: not equal but was: <" + actual + ">");
-	}
-
-	private static void failNull(String message) {
-		fail(buildPrefix(message) + "expected: not <null>");
-	}
-
-	private static void failNotNull(Object actual, String message) {
-		fail(buildPrefix(message) + "expected: <null> but was: <" + actual + ">", null, actual);
-	}
-
-	private static void failSame(Object actual, String message) {
-		fail(buildPrefix(message) + "expected: not same but was: <" + actual + ">");
-	}
-
-	private static void failNotSame(Object expected, Object actual, String message) {
-		fail(format(expected, actual, message), expected, actual);
-	}
-
-	private static void failNotEqual(Object expected, Object actual, String message) {
-		fail(format(expected, actual, message), expected, actual);
-	}
-
-	private static void fail(String message, Object expected, Object actual) {
-		throw new AssertionFailedError(message, expected, actual);
-	}
-
-	private static String format(Object expected, Object actual, String message) {
-		return buildPrefix(message) + formatValues(expected, actual);
-	}
-
-	private static String formatValues(Object expected, Object actual) {
-		String expectedString = String.valueOf(expected);
-		String actualString = String.valueOf(actual);
-		if (expectedString.equals(actualString)) {
-			return "expected: " + formatClassAndValue(expected, expectedString) + " but was: "
-					+ formatClassAndValue(actual, actualString);
-		}
-		else {
-			return "expected: <" + expectedString + "> but was: <" + actualString + ">";
-		}
-	}
-
-	private static String formatClassAndValue(Object value, String valueString) {
-		String className = (value == null ? "null" : value.getClass().getName());
-		String hash = (value == null ? "" : "@" + Integer.toHexString(System.identityHashCode(value)));
-		return className + hash + "<" + valueString + ">";
-	}
-
-	private static String buildPrefix(String message) {
-		return (StringUtils.isNotBlank(message) ? message + " ==> " : "");
-	}
-
-	private static String nullSafeGet(Supplier<String> messageSupplier) {
-		return (messageSupplier != null ? messageSupplier.get() : null);
-	}
-
-	private static boolean objectsAreEqual(Object obj1, Object obj2) {
-		if (obj1 == null) {
-			return (obj2 == null);
-		}
-		else {
-			return obj1.equals(obj2);
-		}
-	}
-
-	private static boolean floatsAreEqual(float value1, float value2) {
-		return Float.floatToIntBits(value1) == Float.floatToIntBits(value2);
-	}
-
-	private static boolean floatsAreEqual(float value1, float value2, float delta) {
-		assertValidDelta(delta);
-		return floatsAreEqual(value1, value2) || Math.abs(value1 - value2) <= delta;
-	}
-
-	private static void assertValidDelta(float delta) {
-		if (Float.isNaN(delta) || delta <= 0.0) {
-			failIllegalDelta(String.valueOf(delta));
-		}
-	}
-
-	private static boolean doublesAreEqual(double value1, double value2) {
-		return Double.doubleToLongBits(value1) == Double.doubleToLongBits(value2);
-	}
-
-	private static boolean doublesAreEqual(double value1, double value2, double delta) {
-		assertValidDelta(delta);
-		return doublesAreEqual(value1, value2) || Math.abs(value1 - value2) <= delta;
-	}
-
-	private static void assertValidDelta(double delta) {
-		if (Double.isNaN(delta) || delta <= 0.0) {
-			failIllegalDelta(String.valueOf(delta));
-		}
-	}
-
-	private static void failIllegalDelta(String delta) {
-		fail("positive delta expected but was: <" + delta + ">");
-	}
-
-	private static String formatIndexes(Deque<Integer> indexes) {
-		if (indexes == null || indexes.isEmpty()) {
-			return "";
-		}
-		String indexesString = indexes.stream().map(Object::toString).collect(joining("][", "[", "]"));
-		return " at index " + indexesString;
+		AssertTimeout.assertTimeoutPreemptively(timeout, executable, messageSupplier);
 	}
 
 }
