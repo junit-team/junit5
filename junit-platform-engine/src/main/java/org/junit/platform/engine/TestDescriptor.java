@@ -87,7 +87,7 @@ public interface TestDescriptor {
 	 *
 	 * @return the set of children of this descriptor; never {@code null}
 	 * but potentially empty
-	 * @see #getAllDescendants()
+	 * @see #getDescendants()
 	 */
 	Set<? extends TestDescriptor> getChildren();
 
@@ -99,13 +99,13 @@ public interface TestDescriptor {
 	 *
 	 * @see #getChildren()
 	 */
-	default Set<? extends TestDescriptor> getAllDescendants() {
-		Set<TestDescriptor> all = new LinkedHashSet<>();
-		all.addAll(getChildren());
+	default Set<? extends TestDescriptor> getDescendants() {
+		Set<TestDescriptor> descendants = new LinkedHashSet<>();
+		descendants.addAll(getChildren());
 		for (TestDescriptor child : getChildren()) {
-			all.addAll(child.getAllDescendants());
+			descendants.addAll(child.getDescendants());
 		}
-		return all;
+		return descendants;
 	}
 
 	/**

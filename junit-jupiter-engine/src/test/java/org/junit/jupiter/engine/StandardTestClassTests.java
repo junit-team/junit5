@@ -42,14 +42,14 @@ public class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	public void standardTestClassIsCorrectlyDiscovered() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyStandardTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
+		assertEquals(5, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(SecondOfTwoTestCases.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(2 + 2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
+		assertEquals(2 + 2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
