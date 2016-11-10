@@ -32,13 +32,20 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 		return new ClassTestDescriptorBuilder(uniqueId, testClass);
 	}
 
-	public static NestedClassTestDescriptorBuilder nestedClassTestDescriptor(String uniqueId, Class<?> testClass) {
-		return new NestedClassTestDescriptorBuilder(uniqueId, testClass);
+	public static NestedClassTestDescriptorBuilder nestedClassTestDescriptor(String uniqueId,
+			ClassTestDescriptor parent, Class<?> testClass) {
+		return new NestedClassTestDescriptorBuilder(uniqueId, parent, testClass);
 	}
 
 	public T build() {
 		T testDescriptor = buildDescriptor();
-		children.forEach(builder -> testDescriptor.addChild(builder.build()));
+		children.forEach(builder -> {
+			// TODO unsafe and dirty => fix it by adjusting Builders
+			if (builder instanceof NestedClassTestDescriptorBuilder) {
+				((NestedClassTestDescriptorBuilder) builder).parent = (ClassTestDescriptor) testDescriptor;
+			}
+			testDescriptor.addChild(builder.build());
+		});
 		return testDescriptor;
 	}
 
@@ -75,13 +82,16 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
 	public static class NestedClassTestDescriptorBuilder extends ClassTestDescriptorBuilder {
 
-		public NestedClassTestDescriptorBuilder(String uniqueId, Class<?> testClass) {
+		protected ClassTestDescriptor parent;
+
+		public NestedClassTestDescriptorBuilder(String uniqueId, ClassTestDescriptor parent, Class<?> testClass) {
 			super(uniqueId, testClass);
+			this.parent = parent;
 		}
 
 		@Override
 		NestedClassTestDescriptor buildDescriptor() {
-			return new NestedClassTestDescriptor(UniqueId.root("nested-class", uniqueId), testClass);
+			return new NestedClassTestDescriptor(UniqueId.root("nested-class", uniqueId), parent, testClass);
 		}
 	}
 

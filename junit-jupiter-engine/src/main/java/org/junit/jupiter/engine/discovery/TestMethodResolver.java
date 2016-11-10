@@ -99,7 +99,7 @@ class TestMethodResolver implements ElementResolver {
 
 	protected TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,
 			UniqueId uniqueId) {
-		return new MethodTestDescriptor(uniqueId, parentClassDescriptor.getTestClass(), testMethod);
+		return new MethodTestDescriptor(uniqueId, parentClassDescriptor, testMethod);
 	}
 
 }

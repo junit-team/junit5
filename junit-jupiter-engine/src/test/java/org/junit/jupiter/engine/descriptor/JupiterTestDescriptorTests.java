@@ -39,24 +39,26 @@ import org.junit.platform.engine.UniqueId;
  */
 public class JupiterTestDescriptorTests {
 
-	private static final UniqueId uniqueId = UniqueId.root("enigma", "foo");
+	private static final UniqueId classUniqueId = UniqueId.root("enigma", "foo");
+	private static final UniqueId methodUniqueId = classUniqueId.append("machine", "bar");
 
 	@Test
 	public void constructFromMethod() throws Exception {
 		Class<?> testClass = ASampleTestCase.class;
+		ClassTestDescriptor classDescriptor = new ClassTestDescriptor(classUniqueId, testClass);
 		Method testMethod = testClass.getDeclaredMethod("test");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, testClass, testMethod);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(methodUniqueId, classDescriptor, testMethod);
 
-		assertEquals(uniqueId, descriptor.getUniqueId());
+		assertEquals(methodUniqueId, descriptor.getUniqueId());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test()", descriptor.getDisplayName(), "display name:");
 	}
 
 	@Test
 	public void constructFromMethodWithAnnotations() throws Exception {
-		JupiterTestDescriptor classDescriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
+		ClassTestDescriptor classDescriptor = new ClassTestDescriptor(classUniqueId, ASampleTestCase.class);
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("foo");
-		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor(methodUniqueId, classDescriptor, testMethod);
 		classDescriptor.addChild(methodDescriptor);
 
 		assertEquals(testMethod, methodDescriptor.getTestMethod());
@@ -74,7 +76,7 @@ public class JupiterTestDescriptorTests {
 
 	@Test
 	public void constructClassDescriptorWithAnnotations() throws Exception {
-		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(classUniqueId, ASampleTestCase.class);
 
 		assertEquals(ASampleTestCase.class, descriptor.getTestClass());
 		assertThat(descriptor.getTags()).containsExactly(TestTag.create("classTag1"), TestTag.create("classTag2"));
@@ -82,8 +84,9 @@ public class JupiterTestDescriptorTests {
 
 	@Test
 	public void constructFromMethodWithCustomTestAnnotation() throws Exception {
+		ClassTestDescriptor classDescriptor = new ClassTestDescriptor(classUniqueId, ASampleTestCase.class);
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("customTestAnnotation");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(methodUniqueId, classDescriptor, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
@@ -92,8 +95,9 @@ public class JupiterTestDescriptorTests {
 
 	@Test
 	public void constructFromMethodWithParameters() throws Exception {
+		ClassTestDescriptor classDescriptor = new ClassTestDescriptor(classUniqueId, ASampleTestCase.class);
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
-		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(methodUniqueId, classDescriptor, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(String, BigDecimal)", descriptor.getDisplayName(), "display name:");
@@ -101,17 +105,17 @@ public class JupiterTestDescriptorTests {
 
 	@Test
 	void defaultDisplayNamesForTestClasses() {
-		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, getClass());
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(classUniqueId, getClass());
 		assertEquals(getClass().getSimpleName(), descriptor.getDisplayName());
 
-		descriptor = new NestedClassTestDescriptor(uniqueId, NestedTestCase.class);
+		descriptor = new NestedClassTestDescriptor(classUniqueId, descriptor, NestedTestCase.class);
 		assertEquals(NestedTestCase.class.getSimpleName(), descriptor.getDisplayName());
 
-		descriptor = new ClassTestDescriptor(uniqueId, StaticTestCase.class);
+		descriptor = new ClassTestDescriptor(classUniqueId, StaticTestCase.class);
 		String staticDisplayName = getClass().getSimpleName() + "$" + StaticTestCase.class.getSimpleName();
 		assertEquals(staticDisplayName, descriptor.getDisplayName());
 
-		descriptor = new ClassTestDescriptor(uniqueId, StaticTestCaseLevel2.class);
+		descriptor = new ClassTestDescriptor(classUniqueId, StaticTestCaseLevel2.class);
 		staticDisplayName += "$" + StaticTestCaseLevel2.class.getSimpleName();
 		assertEquals(staticDisplayName, descriptor.getDisplayName());
 	}

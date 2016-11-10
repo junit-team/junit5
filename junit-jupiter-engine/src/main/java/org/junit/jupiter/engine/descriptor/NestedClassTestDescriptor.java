@@ -41,8 +41,8 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
-	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
-		super(uniqueId, Class::getSimpleName, testClass);
+	public NestedClassTestDescriptor(UniqueId uniqueId, ClassTestDescriptor parent, Class<?> testClass) {
+		super(uniqueId, Class::getSimpleName, testClass, parent.getExtensionRegistry());
 	}
 
 	// --- TestDescriptor ------------------------------------------------------

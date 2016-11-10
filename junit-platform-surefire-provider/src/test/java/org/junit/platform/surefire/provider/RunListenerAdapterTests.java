@@ -159,7 +159,8 @@ class RunListenerAdapterTests {
 	}
 
 	private static TestIdentifier newMethodIdentifier() throws Exception {
-		TestDescriptor testDescriptor = new MethodTestDescriptor(newId(), TestClass.class,
+		ClassTestDescriptor classDescriptor = new ClassTestDescriptor(newId(), TestClass.class);
+		TestDescriptor testDescriptor = new MethodTestDescriptor(newId(), classDescriptor,
 			TestClass.class.getDeclaredMethod("test1"));
 		return TestIdentifier.from(testDescriptor);
 	}

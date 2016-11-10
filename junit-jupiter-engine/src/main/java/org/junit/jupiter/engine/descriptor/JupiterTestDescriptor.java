@@ -78,7 +78,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		return !isContainer();
 	}
 
-	protected ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
+	protected static ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
 			ExtensionRegistry existingExtensionRegistry) {
 		// @formatter:off
 		List<Class<? extends Extension>> extensionTypes = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()

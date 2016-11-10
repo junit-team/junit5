@@ -12,6 +12,8 @@ package org.junit.jupiter.engine.discovery;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import java.util.Optional;
+
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsNestedTestClass;
@@ -55,8 +57,11 @@ class NestedTestsResolver extends TestContainerResolver {
 	}
 
 	@Override
-	protected TestDescriptor resolveClass(Class<?> testClass, UniqueId uniqueId) {
-		return new NestedClassTestDescriptor(uniqueId, testClass);
+	protected Optional<TestDescriptor> resolveClass(TestDescriptor parent, Class<?> testClass, UniqueId uniqueId) {
+		if (parent instanceof ClassTestDescriptor) {
+			return Optional.of(new NestedClassTestDescriptor(uniqueId, (ClassTestDescriptor) parent, testClass));
+		}
+		return Optional.empty();
 	}
 
 }

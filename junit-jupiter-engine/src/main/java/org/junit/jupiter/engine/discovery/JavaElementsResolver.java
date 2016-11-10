@@ -25,9 +25,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
+import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -125,7 +128,19 @@ class JavaElementsResolver {
 	private Set<TestDescriptor> resolveForAllParents(AnnotatedElement element, Set<TestDescriptor> potentialParents) {
 		Set<TestDescriptor> resolvedDescriptors = new HashSet<>();
 		potentialParents.forEach(parent -> {
-			resolvedDescriptors.addAll(resolve(element, parent));
+
+			ExtensionRegistry extensionRegistry; // TODO extensionRegistry to TestDescriptor or as Interface to generify?
+			if (parent instanceof ClassTestDescriptor) {
+				extensionRegistry = ((ClassTestDescriptor) parent).getExtensionRegistry();
+			}
+			else if (parent instanceof MethodTestDescriptor) {
+				extensionRegistry = ((ClassTestDescriptor) parent).getExtensionRegistry();
+			}
+			else {
+				extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions();
+			}
+
+			resolvedDescriptors.addAll(resolve(element, parent, extensionRegistry));
 		});
 		return resolvedDescriptors;
 	}
@@ -133,7 +148,7 @@ class JavaElementsResolver {
 	private void resolveChildren(TestDescriptor descriptor) {
 		if (descriptor instanceof ClassTestDescriptor) {
 			Class<?> testClass = ((ClassTestDescriptor) descriptor).getTestClass();
-			resolveContainedMethods(descriptor, testClass);
+			resolveContainedMethods(descriptor, testClass, ((ClassTestDescriptor) descriptor).getExtensionRegistry());
 			resolveContainedNestedClasses(descriptor, testClass);
 		}
 	}
@@ -144,15 +159,19 @@ class JavaElementsResolver {
 			nestedClass -> resolveContainerWithChildren(nestedClass, Collections.singleton(containerDescriptor)));
 	}
 
-	private void resolveContainedMethods(TestDescriptor containerDescriptor, Class<?> testClass) {
+	private void resolveContainedMethods(TestDescriptor containerDescriptor, Class<?> testClass,
+			ExtensionRegistry extensionRegistry) {
 		List<Method> testMethodCandidates = findMethods(testClass, method -> !ReflectionUtils.isPrivate(method),
 			ReflectionUtils.MethodSortOrder.HierarchyDown);
-		testMethodCandidates.forEach(method -> resolve(method, containerDescriptor));
+		testMethodCandidates.forEach(method -> resolve(method, containerDescriptor, extensionRegistry));
 	}
 
-	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
-		return this.resolvers.stream() //
-				.map(resolver -> tryToResolveWithResolver(element, parent, resolver)) //
+	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent,
+			ExtensionRegistry extensionRegistry) {
+		// TODO put resolvers to defaultExtensionRegistry such that only this must be used ;-)
+		return Stream.concat(this.resolvers.stream(),
+			extensionRegistry.getExtensions(ElementResolver.class).stream()).map(
+				resolver -> tryToResolveWithResolver(element, parent, resolver)) //
 				.filter(testDescriptors -> !testDescriptors.isEmpty()) //
 				.flatMap(Collection::stream) //
 				.collect(Collectors.toSet());

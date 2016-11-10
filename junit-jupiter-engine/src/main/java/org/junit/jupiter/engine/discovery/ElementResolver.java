@@ -16,6 +16,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -24,7 +25,7 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.0
  */
 @API(Experimental)
-interface ElementResolver {
+public interface ElementResolver extends Extension {
 
 	/**
 	 * Return a set of {@link TestDescriptor TestDescriptors} that can be
