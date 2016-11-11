@@ -31,11 +31,13 @@ import org.junit.rules.TestRule;
 public abstract class AbstractTestRuleSupport implements BeforeEachCallback, AfterEachCallback {
 
 	private final Class<Rule> annotationType = Rule.class;
-	private final Class<? extends TestRule> ruleType = TestRule.class;
+	private final Class<? extends TestRule> ruleType;
 	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator;
 
-	protected AbstractTestRuleSupport(Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {
+	protected AbstractTestRuleSupport(Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator,
+			Class<? extends TestRule> ruleType) {
 		this.adapterGenerator = adapterGenerator;
+		this.ruleType = ruleType;
 	}
 
 	protected abstract RuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member);

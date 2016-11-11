@@ -22,6 +22,7 @@ import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.ExternalResourceAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
+import org.junit.rules.ExternalResource;
 import org.junit.rules.TestRule;
 
 /**
@@ -49,8 +50,10 @@ public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCal
 
 	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = ExternalResourceAdapter::new;
 
-	private final AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator);
-	private final AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator);
+	private final AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator,
+		ExternalResource.class);
+	private final AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator,
+		ExternalResource.class);
 
 	@Override
 	public void beforeEach(TestExtensionContext context) throws Exception {

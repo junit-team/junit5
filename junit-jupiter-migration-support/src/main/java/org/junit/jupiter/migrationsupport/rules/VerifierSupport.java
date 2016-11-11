@@ -22,6 +22,11 @@ import org.junit.jupiter.migrationsupport.rules.adapter.VerifierAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
 import org.junit.rules.TestRule;
+import org.junit.rules.Verifier;
+
+//TODO: doku auf verifier umstellen
+//TODO: doku auf verifier umstellen
+//TODO: doku auf verifier umstellen
 
 /**
  * This {@code Extension} provides native support for subclasses of
@@ -47,8 +52,8 @@ public class VerifierSupport implements AfterEachCallback {
 
 	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = VerifierAdapter::new;
 
-	private AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator);
-	private AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator);
+	private AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator, Verifier.class);
+	private AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator, Verifier.class);
 
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {

@@ -26,12 +26,14 @@ import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedField;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
+import org.junit.rules.TestRule;
 
 @API(Experimental)
 class TestRuleFieldSupport extends AbstractTestRuleSupport {
 
-	TestRuleFieldSupport(Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator) {
-		super(adapterGenerator);
+	TestRuleFieldSupport(Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator,
+			Class<? extends TestRule> ruleType) {
+		super(adapterGenerator, ruleType);
 	}
 
 	@Override
