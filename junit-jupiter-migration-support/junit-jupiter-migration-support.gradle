@@ -18,9 +18,14 @@ test {
 */
 
 dependencies {
-	compile(project(':junit-jupiter-api'))
 	compile("junit:junit:${junit4Version}")
 
+	compile(project(':junit-jupiter-api'))
+	compile(project(':junit-platform-engine'))
+	compile(project(':junit-jupiter-engine'))
+
+
+	testCompile(project(':junit-platform-launcher'))
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 

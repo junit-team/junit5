@@ -28,11 +28,11 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 		this.target = annotatedMember.getTestRuleInstance();
 	}
 
-	protected void executeMethod(String name, TestRule externalResource) {
+	protected void executeMethod(String name, TestRule testRule) {
 		try {
-			Method method = externalResource.getClass().getDeclaredMethod(name);
+			Method method = testRule.getClass().getDeclaredMethod(name);
 			method.setAccessible(true);
-			ReflectionUtils.invokeMethod(method, externalResource);
+			ReflectionUtils.invokeMethod(method, testRule);
 		}
 		catch (NoSuchMethodException | SecurityException e) {
 			// TODO: decide whether this should be logged

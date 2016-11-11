@@ -22,6 +22,7 @@ public class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
 
 	public RuleAnnotatedField(Object testInstance, Field testRuleField) {
 		try {
+			testRuleField.setAccessible(true);
 			this.testRuleInstance = (TestRule) testRuleField.get(testInstance);
 		}
 		catch (IllegalAccessException e) {
