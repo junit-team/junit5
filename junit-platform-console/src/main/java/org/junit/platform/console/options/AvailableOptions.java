@@ -15,6 +15,9 @@ import static java.util.Arrays.asList;
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.LinkedList;
+import java.util.List;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -40,7 +43,8 @@ class AvailableOptions {
 	private final OptionSpec<Path> reportsDir;
 
 	// Selectors
-	private final OptionSpec<Void> scanClasspath;
+	private final OptionSpec<Path> selectedClasspathEntries;
+	// TODO remove this
 	private final OptionSpec<String> arguments;
 	private final OptionSpec<URI> selectedUris;
 	private final OptionSpec<String> selectedFiles;
@@ -87,9 +91,14 @@ class AvailableOptions {
 
 		// --- Selectors -------------------------------------------------------
 
-		scanClasspath = parser.accepts("scan-class-path", //
-			"Scan entire classpath or explicit classpath roots.");
+		selectedClasspathEntries = parser.acceptsAll(asList("scan-class-path", "scan-classpath"), //
+			"Scan entire classpath or explicit classpath roots.") //
+				.withOptionalArg() //
+				.withValuesConvertedBy(new PathConverter()) //
+				.withValuesSeparatedBy(File.pathSeparatorChar) //
+				.describedAs("path1" + File.pathSeparator + "path2" + File.pathSeparator + "...");
 
+		// TODO remove this
 		arguments = parser.nonOptions("If --scan-class-path has been specified, non-option arguments represent "
 				+ "explicit classpath roots that should be considered for scanning "
 				+ "or none if the entire classpath should be scanned.");
@@ -166,8 +175,12 @@ class AvailableOptions {
 		result.setReportsDir(detectedOptions.valueOf(this.reportsDir));
 
 		// Selectors
-		result.setScanClasspath(detectedOptions.has(this.scanClasspath));
-		result.setArguments(detectedOptions.valuesOf(this.arguments));
+		result.setScanClasspath(detectedOptions.has(this.selectedClasspathEntries));
+		// TODO simplify this
+		List<Path> selectedClasspathEntries = new LinkedList<>(detectedOptions.valuesOf(this.selectedClasspathEntries));
+		detectedOptions.valuesOf(this.arguments).stream().map(Paths::get).forEach(selectedClasspathEntries::add);
+		result.setSelectedClasspathEntries(selectedClasspathEntries);
+
 		result.setSelectedUris(detectedOptions.valuesOf(this.selectedUris));
 		result.setSelectedFiles(detectedOptions.valuesOf(this.selectedFiles));
 		result.setSelectedDirectories(detectedOptions.valuesOf(this.selectedDirectories));

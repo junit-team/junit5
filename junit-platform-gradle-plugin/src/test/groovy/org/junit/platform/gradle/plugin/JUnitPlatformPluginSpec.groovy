@@ -101,17 +101,16 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask.main == ConsoleLauncher.class.getName()
 
 		junitTask.args.contains('--hide-details')
-		junitTask.args.contains('--scan-class-path')
 		junitTask.args.containsAll('-n', '.*Tests?', '-n', 'Foo', '-n', 'Bar')
 		junitTask.args.containsAll('-t', 'fast')
 		junitTask.args.containsAll('-T', 'slow')
 		junitTask.args.containsAll('-e', 'foo')
 		junitTask.args.containsAll('-E', 'bar')
 		junitTask.args.containsAll('--reports-dir', new File('/any').getCanonicalFile().toString())
-		junitTask.args.contains(project.file('build/classes/main').absolutePath)
-		junitTask.args.contains(project.file('build/resources/main').absolutePath)
-		junitTask.args.contains(project.file('build/classes/test').absolutePath)
-		junitTask.args.contains(project.file('build/resources/test').absolutePath)
+		def classpathToBeScanned = ['build/classes/main', 'build/resources/main', 'build/classes/test', 'build/resources/test']
+				.collect { path -> project.file(path).absolutePath }
+				.join(File.pathSeparator)
+		junitTask.args.containsAll('--scan-class-path', classpathToBeScanned)
 
 		Task testTask = project.tasks.findByName('test')
 		testTask instanceof Test

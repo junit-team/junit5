@@ -36,7 +36,8 @@ public class CommandLineOptions {
 	private boolean hideDetails;
 
 	private boolean scanClasspath;
-	private List<String> arguments = emptyList();
+	private List<Path> selectedClasspathEntries = emptyList();
+
 	private List<URI> selectedUris = emptyList();
 	private List<String> selectedFiles = emptyList();
 	private List<String> selectedDirectories = emptyList();
@@ -206,12 +207,12 @@ public class CommandLineOptions {
 		this.reportsDir = reportsDir;
 	}
 
-	public List<String> getArguments() {
-		return this.arguments;
+	public List<Path> getSelectedClasspathEntries() {
+		return this.selectedClasspathEntries;
 	}
 
-	public void setArguments(List<String> arguments) {
-		this.arguments = arguments;
+	public void setSelectedClasspathEntries(List<Path> selectedClasspathEntries) {
+		this.selectedClasspathEntries = selectedClasspathEntries;
 	}
 
 }

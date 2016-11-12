@@ -136,18 +136,13 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 	private void addSelectors(project, selectors, args) {
 		if (selectors.empty) {
-			args.add('--scan-class-path')
-
 			def rootDirs = []
 			project.sourceSets.each { sourceSet ->
 				rootDirs.add(sourceSet.output.classesDir)
 				rootDirs.add(sourceSet.output.resourcesDir)
 				rootDirs.addAll(sourceSet.output.dirs.files)
 			}
-
-			rootDirs.each { File root ->
-				args.add(root.getAbsolutePath())
-			}
+			args.addAll(['--scan-class-path', rootDirs.join(File.pathSeparator)])
 		} else {
 			selectors.uris.each { uri ->
 				args.addAll(['-u', uri])

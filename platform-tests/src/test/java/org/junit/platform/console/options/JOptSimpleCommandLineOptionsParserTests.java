@@ -58,7 +58,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertEquals(emptyList(), options.getSelectedUris()),
 			() -> assertEquals(emptyList(), options.getSelectedFiles()),
 			() -> assertEquals(emptyList(), options.getSelectedDirectories()),
-			() -> assertEquals(emptyList(), options.getArguments())
+			() -> assertEquals(emptyList(), options.getSelectedClasspathEntries())
 		);
 		// @formatter:on
 	}
@@ -344,12 +344,21 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseExtraArguments() {
+	public void parseClasspathScanningEntries() {
+		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("foo"), parseArgLine("foo").getArguments()),
-			() -> assertEquals(asList("foo", "bar"), parseArgLine("-h foo bar").getArguments()),
-			() -> assertEquals(asList("foo", "bar"), parseArgLine("-h -- foo bar").getArguments())
+			() -> assertTrue(parseArgLine("--scan-class-path").isScanClasspath()),
+			() -> assertEquals(emptyList(), parseArgLine("--scan-class-path").getSelectedClasspathEntries()),
+			() -> assertTrue(parseArgLine("--scan-classpath").isScanClasspath()),
+			() -> assertEquals(emptyList(), parseArgLine("--scan-classpath").getSelectedClasspathEntries()),
+			() -> assertTrue(parseArgLine("--scan-class-path .").isScanClasspath()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--scan-class-path .").getSelectedClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--scan-class-path=.").getSelectedClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("-scan-class-path .").getSelectedClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("-scan-class-path=.").getSelectedClasspathEntries()),
+			() -> assertEquals(asList(dir, Paths.get("src/test/java")), parseArgLine("--scan-class-path . --scan-class-path src/test/java").getSelectedClasspathEntries()),
+			() -> assertEquals(asList(dir, Paths.get("src/test/java")), parseArgLine("--scan-class-path ." + File.pathSeparator + "src/test/java").getSelectedClasspathEntries())
 		);
 		// @formatter:on
 	}

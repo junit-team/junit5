@@ -61,7 +61,7 @@ public class DiscoveryRequestCreatorTests {
 	@Test
 	public void convertsScanClasspathOptionWithExplicitRootDirectories() {
 		options.setScanClasspath(true);
-		options.setArguments(asList(".", ".."));
+		options.setSelectedClasspathEntries(asList(Paths.get("."), Paths.get("..")));
 
 		LauncherDiscoveryRequest request = convert();
 

@@ -10,7 +10,6 @@
 
 package org.junit.platform.console.tasks;
 
-import static java.util.stream.Collectors.toCollection;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
@@ -20,7 +19,6 @@ import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,12 +60,12 @@ class DiscoveryRequestCreator {
 	}
 
 	private Set<Path> determineClasspathRootDirectories(CommandLineOptions options) {
-		if (options.getArguments().isEmpty()) {
+		if (options.getSelectedClasspathEntries().isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
 			rootDirs.addAll(options.getAdditionalClasspathEntries());
 			return rootDirs;
 		}
-		return options.getArguments().stream().map(Paths::get).collect(toCollection(LinkedHashSet::new));
+		return new LinkedHashSet<>(options.getSelectedClasspathEntries());
 	}
 
 	private List<DiscoverySelector> createExplicitDiscoverySelectors(CommandLineOptions options) {
