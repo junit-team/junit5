@@ -15,9 +15,6 @@ import static java.util.Arrays.asList;
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.List;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -44,8 +41,6 @@ class AvailableOptions {
 
 	// Selectors
 	private final OptionSpec<Path> selectedClasspathEntries;
-	// TODO remove this
-	private final OptionSpec<String> arguments;
 	private final OptionSpec<URI> selectedUris;
 	private final OptionSpec<String> selectedFiles;
 	private final OptionSpec<String> selectedDirectories;
@@ -97,11 +92,6 @@ class AvailableOptions {
 				.withValuesConvertedBy(new PathConverter()) //
 				.withValuesSeparatedBy(File.pathSeparatorChar) //
 				.describedAs("path1" + File.pathSeparator + "path2" + File.pathSeparator + "...");
-
-		// TODO remove this
-		arguments = parser.nonOptions("If --scan-class-path has been specified, non-option arguments represent "
-				+ "explicit classpath roots that should be considered for scanning "
-				+ "or none if the entire classpath should be scanned.");
 
 		selectedUris = parser.acceptsAll(asList("u", "select-uri"), //
 			"Select a URI for test discovery. This option can be repeated.") //
@@ -176,11 +166,7 @@ class AvailableOptions {
 
 		// Selectors
 		result.setScanClasspath(detectedOptions.has(this.selectedClasspathEntries));
-		// TODO simplify this
-		List<Path> selectedClasspathEntries = new LinkedList<>(detectedOptions.valuesOf(this.selectedClasspathEntries));
-		detectedOptions.valuesOf(this.arguments).stream().map(Paths::get).forEach(selectedClasspathEntries::add);
-		result.setSelectedClasspathEntries(selectedClasspathEntries);
-
+		result.setSelectedClasspathEntries(detectedOptions.valuesOf(this.selectedClasspathEntries));
 		result.setSelectedUris(detectedOptions.valuesOf(this.selectedUris));
 		result.setSelectedFiles(detectedOptions.valuesOf(this.selectedFiles));
 		result.setSelectedDirectories(detectedOptions.valuesOf(this.selectedDirectories));
