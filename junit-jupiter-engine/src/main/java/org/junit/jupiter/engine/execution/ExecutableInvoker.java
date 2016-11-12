@@ -213,10 +213,10 @@ public class ExecutableInvoker {
 
 			return value;
 		}
+		catch (ParameterResolutionException ex) {
+			throw ex;
+		}
 		catch (Throwable ex) {
-			if (ex instanceof ParameterResolutionException) {
-				throw (ParameterResolutionException) ex;
-			}
 			throw new ParameterResolutionException(String.format("Failed to resolve parameter [%s] in executable [%s]",
 				parameterContext.getParameter(), executable.toGenericString()), ex);
 		}
