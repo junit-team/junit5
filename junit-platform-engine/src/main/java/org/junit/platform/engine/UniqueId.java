@@ -94,7 +94,7 @@ public class UniqueId implements Cloneable, Serializable {
 	}
 
 	final Optional<Segment> getRoot() {
-		return this.segments.size() > 0 ? Optional.of(this.segments.get(0)) : Optional.empty();
+		return this.segments.isEmpty() ? Optional.empty() : Optional.of(this.segments.get(0));
 	}
 
 	/**
