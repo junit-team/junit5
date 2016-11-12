@@ -87,7 +87,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 			return invokeAllTests((TestsToRun) forkTestSet);
 		}
 		else if (forkTestSet instanceof Class) {
-			return invokeAllTests(TestsToRun.fromClass(((Class<?>) forkTestSet)));
+			return invokeAllTests(TestsToRun.fromClass((Class<?>) forkTestSet));
 		}
 		else if (forkTestSet == null) {
 			return invokeAllTests(scanClasspath());
