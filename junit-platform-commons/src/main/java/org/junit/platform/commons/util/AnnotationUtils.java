@@ -13,7 +13,6 @@ package org.junit.platform.commons.util;
 import static java.util.Arrays.asList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
@@ -278,14 +277,12 @@ public final class AnnotationUtils {
 		return (annotation != null && annotation.annotationType().getName().startsWith("java.lang.annotation"));
 	}
 
-	private static class AnnotationCacheKey implements Serializable {
-
-		private static final long serialVersionUID = 1L;
+	private static class AnnotationCacheKey {
 
 		private final AnnotatedElement element;
 		private final Class<? extends Annotation> annotationType;
 
-		public AnnotationCacheKey(AnnotatedElement element, Class<? extends Annotation> annotationType) {
+		AnnotationCacheKey(AnnotatedElement element, Class<? extends Annotation> annotationType) {
 			this.element = element;
 			this.annotationType = annotationType;
 		}
