@@ -186,7 +186,9 @@ public class UniqueId implements Cloneable, Serializable {
 	 * <em>value</em>.
 	 */
 	@API(Experimental)
-	public static class Segment {
+	public static class Segment implements Serializable {
+
+		private static final long serialVersionUID = 1L;
 
 		private final String type;
 		private final String value;
