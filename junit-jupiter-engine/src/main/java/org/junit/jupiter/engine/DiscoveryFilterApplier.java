@@ -39,9 +39,9 @@ class DiscoveryFilterApplier {
 			return;
 		}
 		TestDescriptor.Visitor filteringVisitor = descriptor -> {
-			if (descriptor instanceof ClassTestDescriptor) {
-				if (!includeClass((ClassTestDescriptor) descriptor, classNameFilters))
-					descriptor.removeFromHierarchy();
+			if (descriptor instanceof ClassTestDescriptor
+					&& !includeClass((ClassTestDescriptor) descriptor, classNameFilters)) {
+				descriptor.removeFromHierarchy();
 			}
 		};
 		engineDescriptor.accept(filteringVisitor);
@@ -56,9 +56,9 @@ class DiscoveryFilterApplier {
 		Class<?> testClass = classTestDescriptor.getTestClass();
 
 		// @formatter:off
-        return (classNameFilters.stream()
+        return classNameFilters.stream()
                 .map(filter -> filter.apply(testClass.getName()))
-                .noneMatch(FilterResult::excluded));
+                .noneMatch(FilterResult::excluded);
         // @formatter:on
 	}
 
