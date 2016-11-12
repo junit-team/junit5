@@ -64,7 +64,7 @@ public class MethodSource implements TestSource {
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		this.className = className;
 		this.methodName = methodName;
-		this.methodParameterTypes = null;
+		this.methodParameterTypes = methodParameterTypes;
 	}
 
 	/**
