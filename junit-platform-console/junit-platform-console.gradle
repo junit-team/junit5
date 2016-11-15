@@ -17,8 +17,6 @@ configurations {
 dependencies {
 	compile(project(':junit-platform-launcher'))
 	shadowed('net.sf.jopt-simple:jopt-simple:5.0.3')
-	// TODO [#556] Configure Eclipse plugin to include JOpt Simple in generated .classpath file.
-	// compile('net.sf.jopt-simple:jopt-simple:5.0.3')
 }
 
 sourceSets.main.compileClasspath += configurations.shadowed
