@@ -29,6 +29,7 @@ on GitHub.
   scanning classpath roots -- for example, in conjunction with the JUnit Platform
   Gradle plugin when no explicit packages have been selected.
 * Classpath scanning no longer loads classes that are excluded by a class name filter.
+* Classpath scanning no longer attempts to load Java 9 `module-info.class` files.
 
 ====== Deprecations and Breaking Changes
 
