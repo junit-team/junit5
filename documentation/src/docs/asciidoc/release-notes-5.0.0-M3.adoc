@@ -60,8 +60,11 @@ on GitHub.
 * The `-C`, `-D`, and `-r` short command-line options for the `ConsoleLauncher` have been
   removed in favor of using their _long_ equivalents `--disable-ansi-colors`,
   `--hide-details`, and `--reports-dir` respectively.
-* The `ConsoleLauncher` no longer supports passing package, class, or method names as non-option
-  arguments. Please use the new explicit selector options instead.
+* The `ConsoleLauncher` no longer supports passing non-option arguments. Please use the new
+  explicit selector options to specify package, class, or method names instead. Alternatively,
+  `--scan-class-path` now accepts an optional argument that can be used to select classpath entries
+  to be scanned. Multiple classpath entries may be used by separating them using the system's path
+  separator (`;` on Windows, `:` on Unix).
 * `LauncherDiscoveryRequestBuilder` no longer accepts `null` values for `selectors`, `filters`,
   or maps of configuration parameters.
 * Filters for class name, engine IDs, and tags in the Gradle plugin configuration now need to be
