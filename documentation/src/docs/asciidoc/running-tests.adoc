@@ -431,55 +431,55 @@ final release.
 
 [subs="specialchars"]
 ----
-Option                                        Description                                
-------                                        -----------                                
--h, --help                                    Display help information.                  
---disable-ansi-colors                         Disable ANSI colors in output (not         
-                                                supported by all terminals).             
---hide-details                                Hide details while tests are being         
-                                                executed. Only show the summary and test 
-                                                failures.                                
---class-path, --classpath, --cp <Path:        Provide additional classpath entries --    
-  path1:path2:...>                              for example, for adding engines and      
-                                                their dependencies. This option can be   
-                                                repeated.                                
---reports-dir <Path>                          Enable report output into a specified      
-                                                local directory (will be created if it   
-                                                does not exist).                         
---scan-class-path, --scan-classpath [Path:    Scan entire classpath or explicit          
-  path1:path2:...]                              classpath roots.                         
--u, --select-uri <URI>                        Select a URI for test discovery. This      
-                                                option can be repeated.                  
--f, --select-file <String>                    Select a file for test discovery. This     
-                                                option can be repeated.                  
--d, --select-directory <String>               Select a directory for test discovery.     
-                                                This option can be repeated.             
--p, --select-package <String>                 Select a package for test discovery. This  
-                                                option can be repeated.                  
--c, --select-class <String>                   Select a class for test discovery. This    
-                                                option can be repeated.                  
--m, --select-method <String>                  Select a method for test discovery. This   
-                                                option can be repeated.                  
--r, --select-resource <String>                Select a classpath resource for test       
-                                                discovery. This option can be repeated.  
--n, --include-classname <String>              Provide a regular expression to include    
-                                                only classes whose fully qualified names 
-                                                match. To avoid loading classes          
-                                                unnecessarily, the default pattern only  
-                                                includes class names that end with       
-                                                "Test" or "Tests". When this option is   
-                                                repeated, all patterns will be combined  
+Option                                        Description
+------                                        -----------
+-h, --help                                    Display help information.
+--disable-ansi-colors                         Disable ANSI colors in output (not
+                                                supported by all terminals).
+--hide-details                                Hide details while tests are being
+                                                executed. Only show the summary and test
+                                                failures.
+--class-path, --classpath, --cp <Path:        Provide additional classpath entries --
+  path1:path2:...>                              for example, for adding engines and
+                                                their dependencies. This option can be
+                                                repeated.
+--reports-dir <Path>                          Enable report output into a specified
+                                                local directory (will be created if it
+                                                does not exist).
+--scan-class-path, --scan-classpath [Path:    Scan entire classpath or explicit
+  path1:path2:...]                              classpath roots.
+-u, --select-uri <URI>                        Select a URI for test discovery. This
+                                                option can be repeated.
+-f, --select-file <String>                    Select a file for test discovery. This
+                                                option can be repeated.
+-d, --select-directory <String>               Select a directory for test discovery.
+                                                This option can be repeated.
+-p, --select-package <String>                 Select a package for test discovery. This
+                                                option can be repeated.
+-c, --select-class <String>                   Select a class for test discovery. This
+                                                option can be repeated.
+-m, --select-method <String>                  Select a method for test discovery. This
+                                                option can be repeated.
+-r, --select-resource <String>                Select a classpath resource for test
+                                                discovery. This option can be repeated.
+-n, --include-classname <String>              Provide a regular expression to include
+                                                only classes whose fully qualified names
+                                                match. To avoid loading classes
+                                                unnecessarily, the default pattern only
+                                                includes class names that end with
+                                                "Test" or "Tests". When this option is
+                                                repeated, all patterns will be combined
                                                 using OR semantics. (default: ^.*Tests?$)
--t, --include-tag <String>                    Provide a tag to be included in the test   
-                                                run. This option can be repeated.        
--T, --exclude-tag <String>                    Provide a tag to be excluded from the test 
-                                                run. This option can be repeated.        
--e, --include-engine <String>                 Provide the ID of an engine to be included 
-                                                in the test run. This option can be      
-                                                repeated.                                
--E, --exclude-engine <String>                 Provide the ID of an engine to be excluded 
-                                                from the test run. This option can be    
-                                                repeated.                                
+-t, --include-tag <String>                    Provide a tag to be included in the test
+                                                run. This option can be repeated.
+-T, --exclude-tag <String>                    Provide a tag to be excluded from the test
+                                                run. This option can be repeated.
+-e, --include-engine <String>                 Provide the ID of an engine to be included
+                                                in the test run. This option can be
+                                                repeated.
+-E, --exclude-engine <String>                 Provide the ID of an engine to be excluded
+                                                from the test run. This option can be
+                                                repeated.
 ----
 
 
