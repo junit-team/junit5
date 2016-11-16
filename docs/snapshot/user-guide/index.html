@@ -2241,44 +2241,55 @@ final release.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>Non-option arguments:
-If --scan-class-path has been specified, non-option arguments represent explicit
-  classpath roots that should be considered for scanning or none if the entire classpath
-  should be scanned.
-
-Option                                    Description
-------                                    -----------
--h, --help                                Display help information.
---disable-ansi-colors                     Disable ANSI colors in output (not
-                                            supported by all terminals).
---hide-details                            Hide details while tests are being
-                                            executed. Only show the summary and test
-                                            failures.
---class-path, --classpath, --cp <File:    Provide additional classpath entries --
-  path1:path2:...>                          for example, for adding engines and
-                                            their dependencies. This option can be
-                                            repeated.
---reports-dir <File>                      Enable report output into a specified
-                                            local directory (will be created if it
-                                            does not exist).
---scan-class-path                         Scan entire classpath or explicit
-                                            classpath roots.
--n, --include-classname                   Provide a regular expression to include
-                                            only classes whose fully qualified names
-                                            match. To avoid loading classes
-                                            unnecessarily, the default pattern only
-                                            includes class names that end with
-                                            "Test" or "Tests". (default: ^.*Tests?$)
--t, --include-tag                         Provide a tag to be included in the test
-                                            run. This option can be repeated.
--T, --exclude-tag                         Provide a tag to be excluded from the test
-                                            run. This option can be repeated.
--e, --include-engine                      Provide the ID of an engine to be included
-                                            in the test run. This option can be
-                                            repeated.
--E, --exclude-engine                      Provide the ID of an engine to be excluded
-                                            from the test run. This option can be
-                                            repeated.</pre>
+<pre>Option                                        Description
+------                                        -----------
+-h, --help                                    Display help information.
+--disable-ansi-colors                         Disable ANSI colors in output (not
+                                                supported by all terminals).
+--hide-details                                Hide details while tests are being
+                                                executed. Only show the summary and test
+                                                failures.
+--class-path, --classpath, --cp &lt;Path:        Provide additional classpath entries --
+  path1:path2:...&gt;                              for example, for adding engines and
+                                                their dependencies. This option can be
+                                                repeated.
+--reports-dir &lt;Path&gt;                          Enable report output into a specified
+                                                local directory (will be created if it
+                                                does not exist).
+--scan-class-path, --scan-classpath [Path:    Scan entire classpath or explicit
+  path1:path2:...]                              classpath roots.
+-u, --select-uri &lt;URI&gt;                        Select a URI for test discovery. This
+                                                option can be repeated.
+-f, --select-file &lt;String&gt;                    Select a file for test discovery. This
+                                                option can be repeated.
+-d, --select-directory &lt;String&gt;               Select a directory for test discovery.
+                                                This option can be repeated.
+-p, --select-package &lt;String&gt;                 Select a package for test discovery. This
+                                                option can be repeated.
+-c, --select-class &lt;String&gt;                   Select a class for test discovery. This
+                                                option can be repeated.
+-m, --select-method &lt;String&gt;                  Select a method for test discovery. This
+                                                option can be repeated.
+-r, --select-resource &lt;String&gt;                Select a classpath resource for test
+                                                discovery. This option can be repeated.
+-n, --include-classname &lt;String&gt;              Provide a regular expression to include
+                                                only classes whose fully qualified names
+                                                match. To avoid loading classes
+                                                unnecessarily, the default pattern only
+                                                includes class names that end with
+                                                "Test" or "Tests". When this option is
+                                                repeated, all patterns will be combined
+                                                using OR semantics. (default: ^.*Tests?$)
+-t, --include-tag &lt;String&gt;                    Provide a tag to be included in the test
+                                                run. This option can be repeated.
+-T, --exclude-tag &lt;String&gt;                    Provide a tag to be excluded from the test
+                                                run. This option can be repeated.
+-e, --include-engine &lt;String&gt;                 Provide the ID of an engine to be included
+                                                in the test run. This option can be
+                                                repeated.
+-E, --exclude-engine &lt;String&gt;                 Provide the ID of an engine to be excluded
+                                                from the test run. This option can be
+                                                repeated.</pre>
 </div>
 </div>
 </div>
@@ -3831,8 +3842,11 @@ removed in favor of using their <em>long</em> equivalents <code>--disable-ansi-c
 <code>--hide-details</code>, and <code>--reports-dir</code> respectively.</p>
 </li>
 <li>
-<p>The <code>ConsoleLauncher</code> no longer supports passing package, class, or method names as non-option
-arguments. Please use the new explicit selector options instead.</p>
+<p>The <code>ConsoleLauncher</code> no longer supports passing non-option arguments. Please use the new
+explicit selector options to specify package, class, or method names instead. Alternatively,
+<code>--scan-class-path</code> now accepts an optional argument that can be used to select classpath entries
+to be scanned. Multiple classpath entries may be used by separating them using the system&#8217;s path
+separator (<code>;</code> on Windows, <code>:</code> on Unix).</p>
 </li>
 <li>
 <p><code>LauncherDiscoveryRequestBuilder</code> no longer accepts <code>null</code> values for <code>selectors</code>, <code>filters</code>,
@@ -3988,7 +4002,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-11-15 12:01:45 EST
+Last updated 2016-11-16 05:22:51 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
