@@ -23,16 +23,25 @@ import org.junit.rules.TestRule;
 public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAdvice {
 
 	protected final TestRule target;
+	protected final Class<? extends TestRule> adapteeClass;
 
-	public AbstractTestRuleAdapter(RuleAnnotatedMember annotatedMember) {
+	public AbstractTestRuleAdapter(RuleAnnotatedMember annotatedMember, Class<? extends TestRule> adapteeClass) {
 		this.target = annotatedMember.getTestRuleInstance();
+		this.adapteeClass = adapteeClass;
+
+		this.failIfAdapteeClassIsNotAssignableFromTargetClass();
 	}
 
-	protected void executeMethod(String name, TestRule testRule) {
+	private void failIfAdapteeClassIsNotAssignableFromTargetClass() {
+		if (!this.adapteeClass.isAssignableFrom(this.target.getClass()))
+			throw new IllegalStateException(this.adapteeClass + " is not assignable from " + this.target.getClass());
+	}
+
+	protected void executeMethod(String name) {
 		try {
-			Method method = testRule.getClass().getDeclaredMethod(name);
+			Method method = target.getClass().getDeclaredMethod(name);
 			method.setAccessible(true);
-			ReflectionUtils.invokeMethod(method, testRule);
+			ReflectionUtils.invokeMethod(method, target);
 		}
 		catch (NoSuchMethodException | SecurityException e) {
 			// TODO: decide whether this should be logged

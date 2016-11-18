@@ -14,17 +14,18 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
+import org.junit.rules.Verifier;
 
 @API(Internal)
 public class VerifierAdapter extends AbstractTestRuleAdapter {
 
 	public VerifierAdapter(RuleAnnotatedMember annotatedMember) {
-		super(annotatedMember);
+		super(annotatedMember, Verifier.class);
 	}
 
 	@Override
 	public void after() {
-		super.executeMethod("verify", this.target);
+		super.executeMethod("verify");
 	}
 
 }
