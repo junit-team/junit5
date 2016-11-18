@@ -13,6 +13,7 @@ package org.junit.jupiter.migrationsupport.rules.member;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Field;
+import java.util.logging.Logger;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.rules.TestRule;
@@ -20,14 +21,15 @@ import org.junit.rules.TestRule;
 @API(Internal)
 public class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
 
+	private static final Logger LOG = Logger.getLogger(RuleAnnotatedField.class.getName());
+
 	public RuleAnnotatedField(Object testInstance, Field testRuleField) {
 		try {
 			testRuleField.setAccessible(true);
 			this.testRuleInstance = (TestRule) testRuleField.get(testInstance);
 		}
-		catch (IllegalAccessException e) {
-			// TODO: decide whether this should be logged
-			e.printStackTrace();
+		catch (IllegalAccessException exception) {
+			LOG.warning(exception.getMessage());
 		}
 	}
 

@@ -61,18 +61,18 @@ public class LauncherBasedEnableRuleMigrationSupportTests {
 
 	private final JupiterTestEngine engine = new JupiterTestEngine();
 
-	protected ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
+	private ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
 		return executeTests(request().selectors(selectClass(testClass)).build());
 	}
 
-	protected ExecutionEventRecorder executeTests(LauncherDiscoveryRequest request) {
+	private ExecutionEventRecorder executeTests(LauncherDiscoveryRequest request) {
 		TestDescriptor testDescriptor = discoverTests(request);
 		ExecutionEventRecorder eventRecorder = new ExecutionEventRecorder();
 		engine.execute(new ExecutionRequest(testDescriptor, eventRecorder, request.getConfigurationParameters()));
 		return eventRecorder;
 	}
 
-	protected TestDescriptor discoverTests(LauncherDiscoveryRequest request) {
+	private TestDescriptor discoverTests(LauncherDiscoveryRequest request) {
 		return engine.discover(request, UniqueId.forEngine(engine.getId()));
 	}
 

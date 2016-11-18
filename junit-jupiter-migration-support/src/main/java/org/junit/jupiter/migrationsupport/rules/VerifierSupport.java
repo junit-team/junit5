@@ -24,17 +24,13 @@ import org.junit.platform.commons.meta.API;
 import org.junit.rules.TestRule;
 import org.junit.rules.Verifier;
 
-//TODO: doku auf verifier umstellen
-//TODO: doku auf verifier umstellen
-//TODO: doku auf verifier umstellen
-
 /**
  * This {@code Extension} provides native support for subclasses of
- * the {@code ExternalResource} rule from JUnit 4.
+ * the {@code Verifier} rule from JUnit 4.
  * {@code Rule}-annotated fields as well as methods are supported.
 
  * <p>By using this class-level extension on a test class such
- * {@code ExternalResource} implementations in legacy code bases
+ * {@code Verifier} implementations in legacy code bases
  * can be left unchanged including the JUnit 4 rule import statements.
  *
  * <p>However, if you intend to develop a <em>new</em> extension for
