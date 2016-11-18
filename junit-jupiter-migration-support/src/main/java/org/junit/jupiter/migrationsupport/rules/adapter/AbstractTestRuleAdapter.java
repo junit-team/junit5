@@ -13,6 +13,7 @@ package org.junit.jupiter.migrationsupport.rules.adapter;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
@@ -21,6 +22,8 @@ import org.junit.rules.TestRule;
 
 @API(Internal)
 public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAdvice {
+
+	private static final Logger LOG = Logger.getLogger(AbstractTestRuleAdapter.class.getName());
 
 	protected final TestRule target;
 	protected final Class<? extends TestRule> adapteeClass;
@@ -43,9 +46,8 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 			method.setAccessible(true);
 			ReflectionUtils.invokeMethod(method, target);
 		}
-		catch (NoSuchMethodException | SecurityException e) {
-			// TODO: decide whether this should be logged
-			e.printStackTrace();
+		catch (NoSuchMethodException | SecurityException exception) {
+			LOG.warning(exception.getMessage());
 		}
 	}
 
