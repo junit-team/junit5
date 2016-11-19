@@ -20,15 +20,18 @@ import java.util.function.Function;
 import org.junit.Rule;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.GenericBeforeAndAfterAdvice;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.rules.TestRule;
 
 @API(Experimental)
-public abstract class AbstractTestRuleSupport implements BeforeEachCallback, AfterEachCallback {
+public abstract class AbstractTestRuleSupport
+		implements BeforeEachCallback, TestExecutionExceptionHandler, AfterEachCallback {
 
 	private final Class<Rule> annotationType = Rule.class;
 	private final Class<? extends TestRule> ruleType;
@@ -58,11 +61,23 @@ public abstract class AbstractTestRuleSupport implements BeforeEachCallback, Aft
 	}
 
 	@Override
+	public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
+		this.invokeAppropriateMethodOnRuleAnnotatedMembers(context, advice -> {
+			try {
+				advice.handleTestExecutionException(throwable);
+			}
+			catch (Throwable t) {
+				throw ExceptionUtils.throwAsUncheckedException(t);
+			}
+		});
+	}
+
+	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {
 		this.invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::after);
 	}
 
-	protected void invokeAppropriateMethodOnRuleAnnotatedMembers(TestExtensionContext context,
+	private void invokeAppropriateMethodOnRuleAnnotatedMembers(TestExtensionContext context,
 			Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
 		List<Member> members = this.findRuleAnnotatedMembers(context.getTestInstance());
 
