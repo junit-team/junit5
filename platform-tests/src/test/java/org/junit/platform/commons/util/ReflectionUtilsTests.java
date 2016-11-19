@@ -479,7 +479,28 @@ public class ReflectionUtilsTests {
 
 	@Test
 	void findMethodsInInterface() {
-		List<Method> methods = ReflectionUtils.findMethods(InterfaceWithOneDeclaredMethod.class, method -> true);
+		List<Method> methods = ReflectionUtils.findMethods(InterfaceWithOneDeclaredMethod.class,
+			method -> method.getName().contains("foo"));
+		assertNotNull(methods);
+		assertEquals(1, methods.size());
+
+		methods = ReflectionUtils.findMethods(InterfaceWithDefaultMethod.class,
+			method -> method.getName().contains("foo"));
+		assertNotNull(methods);
+		assertEquals(1, methods.size());
+
+		methods = ReflectionUtils.findMethods(InterfaceWithDefaultMethodImpl.class,
+			method -> method.getName().contains("foo"));
+		assertNotNull(methods);
+		assertEquals(1, methods.size());
+
+		methods = ReflectionUtils.findMethods(InterfaceWithStaticMethod.class,
+			method -> method.getName().contains("foo"));
+		assertNotNull(methods);
+		assertEquals(1, methods.size());
+
+		methods = ReflectionUtils.findMethods(InterfaceWithStaticMethodImpl.class,
+			method -> method.getName().contains("foo"));
 		assertNotNull(methods);
 		assertEquals(1, methods.size());
 	}
@@ -627,6 +648,24 @@ public class ReflectionUtilsTests {
 	interface InterfaceWithOneDeclaredMethod {
 
 		void foo();
+	}
+
+	interface InterfaceWithDefaultMethod {
+
+		default void foo() {
+		}
+	}
+
+	static class InterfaceWithDefaultMethodImpl implements InterfaceWithDefaultMethod {
+	}
+
+	interface InterfaceWithStaticMethod {
+
+		static void foo() {
+		}
+	}
+
+	static class InterfaceWithStaticMethodImpl implements InterfaceWithStaticMethod {
 	}
 
 	interface InterfaceA {

@@ -621,7 +621,7 @@ public final class ReflectionUtils {
 		List<Method> allInterfaceMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
-			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods()).filter(Method::isDefault).collect(
+			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods()).filter(m -> !isAbstract(m)).collect(
 				toList());
 
 			// @formatter:off

@@ -139,6 +139,7 @@ on GitHub.
 * New variants of `Assertions.assertAll()` that accept streams of executables (i.e.,
   `Stream<Executable>`).
 * `Assertions.assertThrows()` now returns the thrown exception.
+* `@BeforeAll` and `@AfterAll` may now be declared on static methods in interfaces.
 
 
 [[release-notes-5.0.0-m3-junit-vintage]]
