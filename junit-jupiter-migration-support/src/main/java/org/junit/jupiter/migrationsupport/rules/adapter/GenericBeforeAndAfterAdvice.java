@@ -20,6 +20,9 @@ public interface GenericBeforeAndAfterAdvice {
 	default void before() {
 	}
 
+	default void handleTestExecutionException(Throwable cause) throws Throwable {
+	}
+
 	default void after() {
 	}
 

@@ -40,14 +40,19 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 			throw new IllegalStateException(this.adapteeClass + " is not assignable from " + this.target.getClass());
 	}
 
-	protected void executeMethod(String name) {
+	protected Object executeMethod(String name) {
+		return executeMethod(name, new Class<?>[0]);
+	}
+
+	protected Object executeMethod(String name, Class<?>[] parameterTypes, Object... arguments) {
 		try {
-			Method method = target.getClass().getDeclaredMethod(name);
+			Method method = target.getClass().getDeclaredMethod(name, parameterTypes);
 			method.setAccessible(true);
-			ReflectionUtils.invokeMethod(method, target);
+			return ReflectionUtils.invokeMethod(method, target, arguments);
 		}
 		catch (NoSuchMethodException | SecurityException exception) {
 			LOG.warning(exception.getMessage());
+			return null;
 		}
 	}
 
