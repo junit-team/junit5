@@ -1901,6 +1901,10 @@ following example. When you specify multiple patterns, they are combined using O
             include 'fast', 'smoke'
             // exclude 'slow', 'ci'
         }
+        packages {
+            include 'com.sample.included1', 'com.sample.included2'
+            // exclude 'com.sample.excluded1', 'com.sample.excluded2'
+        }
         includeClassNamePattern '.*Spec'
         includeClassNamePatterns '.*Test', '.*Tests'
     }
@@ -1914,7 +1918,8 @@ Engine ID</em> via <code>engines {include &#8230;&#8203;}</code> or <code>engine
 plugin will only run tests for the desired test engines. Similarly, if you supply a <em>tag</em>
 via <code>tags {include &#8230;&#8203;}</code> or <code>tags {exclude &#8230;&#8203;}</code>, the JUnit Gradle plugin will only run
 tests that are <em>tagged</em> accordingly (e.g., via the <code>@Tag</code> annotation for JUnit Jupiter based
-tests).</p>
+tests). The same applies to package names that can be included or excluded using
+<code>packages {include &#8230;&#8203;}</code> or <code>packages {exclude &#8230;&#8203;}</code>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -2280,6 +2285,10 @@ final release.
                                                 "Test" or "Tests". When this option is
                                                 repeated, all patterns will be combined
                                                 using OR semantics. (default: ^.*Tests?$)
+--include-package &lt;String&gt;                    Provide a package to be included in the
+                                                test run. This option can be repeated.
+--exclude-package &lt;String&gt;                    Provide a package to be excluded from the
+                                                test run. This option can be repeated.
 -t, --include-tag &lt;String&gt;                    Provide a tag to be included in the test
                                                 run. This option can be repeated.
 -T, --exclude-tag &lt;String&gt;                    Provide a tag to be excluded from the test
@@ -3917,6 +3926,19 @@ Platform Gradle plugin (see <a href="#running-tests-build-gradle-filters">Config
 (see <a href="#running-tests-console-launcher-options">Options</a>).</p>
 </li>
 <li>
+<p>Package names can now be included or excluded using <code>PackageNameFilter.includePackageNames</code>
+or <code>PackageNameFilter.excludePackageNames</code>.</p>
+</li>
+<li>
+<p>Package names can now be included or excluded using <code>@IncludePackages</code> and <code>@ExcludePackages</code>
+in combination with the <code>JUnitPlatform</code> runner.</p>
+</li>
+<li>
+<p>Package names can now be included or excluded via a filter configuration to the JUnit Platform
+Gradle plugin (see <a href="#running-tests-build-gradle-filters">Configuring Filters</a>) and the <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code>
+(see <a href="#running-tests-console-launcher-options">Options</a>).</p>
+</li>
+<li>
 <p>The <code>junit-platform-console</code> no longer has a mandatory dependency on
 <a href="https://pholser.github.io/jopt-simple/">JOpt Simple</a>. Thus, it&#8217;s now possible to test custom
 code that uses a different version of that library.</p>
@@ -4005,7 +4027,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-11-18 21:05:25 EST
+Last updated 2016-11-22 09:27:12 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
