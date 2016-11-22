@@ -16,6 +16,8 @@ import static org.junit.platform.commons.meta.API.Usage.Maintained;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
+import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
@@ -136,6 +138,8 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 	private void addFiltersFromAnnotations(LauncherDiscoveryRequestBuilder requestBuilder, boolean isSuite) {
 		addIncludeClassNamePatternFilter(requestBuilder, isSuite);
+		addIncludePackagesFilter(requestBuilder);
+		addExcludePackagesFilter(requestBuilder);
 
 		addIncludedTagsFilter(requestBuilder);
 		addExcludedTagsFilter(requestBuilder);
@@ -161,6 +165,20 @@ public class JUnitPlatform extends Runner implements Filterable {
 		String[] patterns = getIncludeClassNamePatterns(isSuite);
 		if (patterns.length > 0) {
 			requestBuilder.filters(includeClassNamePatterns(patterns));
+		}
+	}
+
+	private void addIncludePackagesFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
+		String[] includedPackages = getIncludedPackages();
+		if (includedPackages.length > 0) {
+			requestBuilder.filters(includePackageNames(includedPackages));
+		}
+	}
+
+	private void addExcludePackagesFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
+		String[] excludedPackages = getExcludedPackages();
+		if (excludedPackages.length > 0) {
+			requestBuilder.filters(excludePackageNames(excludedPackages));
 		}
 	}
 
@@ -198,6 +216,14 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 	private String[] getSelectedPackageNames() {
 		return getValueFromAnnotation(SelectPackages.class, SelectPackages::value, EMPTY_STRING_ARRAY);
+	}
+
+	private String[] getIncludedPackages() {
+		return getValueFromAnnotation(IncludePackages.class, IncludePackages::value, EMPTY_STRING_ARRAY);
+	}
+
+	private String[] getExcludedPackages() {
+		return getValueFromAnnotation(ExcludePackages.class, ExcludePackages::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String[] getIncludedTags() {

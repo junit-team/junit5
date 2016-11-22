@@ -31,6 +31,7 @@ import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.FileSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UriSelector;
 import org.junit.platform.launcher.EngineFilter;
@@ -118,6 +119,22 @@ public class DiscoveryRequestCreatorTests {
 		assertThat(filter).hasSize(1);
 		assertThat(filter.get(0).toString()).contains("Foo.*Bar");
 		assertThat(filter.get(0).toString()).contains("Bar.*Foo");
+	}
+
+	@Test
+	public void convertsPackageOptions() {
+		options.setScanClasspath(true);
+		options.setIncludedPackages(asList("org.junit.included1", "org.junit.included2", "org.junit.included3"));
+		options.setExcludedPackages(asList("org.junit.excluded1"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<PackageNameFilter> packageNameFilters = request.getDiscoveryFiltersByType(PackageNameFilter.class);
+
+		assertThat(packageNameFilters).hasSize(2);
+		assertThat(packageNameFilters.get(0).toString()).contains("org.junit.included1");
+		assertThat(packageNameFilters.get(0).toString()).contains("org.junit.included2");
+		assertThat(packageNameFilters.get(0).toString()).contains("org.junit.included3");
+		assertThat(packageNameFilters.get(1).toString()).contains("org.junit.excluded1");
 	}
 
 	@Test

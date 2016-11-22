@@ -104,6 +104,13 @@ on GitHub.
 * Multiple regular expressions that are combined using OR semantics can now be passed to the JUnit
   Platform Gradle plugin (see <<running-tests-build-gradle-filters>>) and the `{ConsoleLauncher}`
   (see <<running-tests-console-launcher-options>>).
+* Package names can now be included or excluded using `PackageNameFilter.includePackageNames`
+  or `PackageNameFilter.excludePackageNames`.
+* Package names can now be included or excluded using `@IncludePackages` and `@ExcludePackages`
+  in combination with the `JUnitPlatform` runner.
+* Package names can now be included or excluded via a filter configuration to the JUnit Platform
+  Gradle plugin (see <<running-tests-build-gradle-filters>>) and the `{ConsoleLauncher}`
+  (see <<running-tests-console-launcher-options>>).
 * The `junit-platform-console` no longer has a mandatory dependency on
   https://pholser.github.io/jopt-simple/[JOpt Simple]. Thus, it's now possible to test custom
   code that uses a different version of that library.

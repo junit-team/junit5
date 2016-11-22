@@ -51,6 +51,8 @@ class AvailableOptions {
 
 	// Filters
 	private final OptionSpec<String> includeClassNamePattern;
+	private final OptionSpec<String> includePackage;
+	private final OptionSpec<String> excludePackage;
 	private final OptionSpec<String> includeTag;
 	private final OptionSpec<String> excludeTag;
 	private final OptionSpec<String> includeEngine;
@@ -132,6 +134,13 @@ class AvailableOptions {
 				.withRequiredArg() //
 				.defaultsTo(ClassNameFilter.STANDARD_INCLUDE_PATTERN);
 
+		includePackage = parser.accepts("include-package",
+			"Provide a package to be included in the test run. This option can be repeated.") //
+				.withRequiredArg();
+		excludePackage = parser.accepts("exclude-package",
+			"Provide a package to be excluded from the test run. This option can be repeated.") //
+				.withRequiredArg();
+
 		includeTag = parser.acceptsAll(asList("t", "include-tag"),
 			"Provide a tag to be included in the test run. This option can be repeated.") //
 				.withRequiredArg();
@@ -177,6 +186,8 @@ class AvailableOptions {
 
 		// Filters
 		result.setIncludedClassNamePatterns(detectedOptions.valuesOf(this.includeClassNamePattern));
+		result.setIncludedPackages(detectedOptions.valuesOf(this.includePackage));
+		result.setExcludedPackages(detectedOptions.valuesOf(this.excludePackage));
 		result.setIncludedTags(detectedOptions.valuesOf(this.includeTag));
 		result.setExcludedTags(detectedOptions.valuesOf(this.excludeTag));
 		result.setIncludedEngines(detectedOptions.valuesOf(this.includeEngine));

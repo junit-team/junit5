@@ -27,6 +27,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitPlatformExtension, project)
 		junitExtension.extensions.create('selectors', SelectorsExtension)
 		junitExtension.extensions.create('filters', FiltersExtension)
+		junitExtension.filters.extensions.create('packages', PackagesExtension)
 		junitExtension.filters.extensions.create('tags', TagsExtension)
 		junitExtension.filters.extensions.create('engines', EnginesExtension)
 
@@ -70,6 +71,8 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			junitTask.inputs.property('filters.tags.include', junitExtension.filters.tags.include)
 			junitTask.inputs.property('filters.tags.exclude', junitExtension.filters.tags.exclude)
 			junitTask.inputs.property('filters.includeClassNamePatterns', junitExtension.filters.includeClassNamePatterns)
+			junitTask.inputs.property('filters.packages.include', junitExtension.filters.packages.include)
+			junitTask.inputs.property('filters.packages.exclude', junitExtension.filters.packages.exclude)
 
 			def reportsDir = junitExtension.reportsDir ?: project.file("$project.buildDir/test-results/junit-platform")
 			junitTask.outputs.dir reportsDir
@@ -119,6 +122,12 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	private void addFilters(filters, args) {
 		filters.includeClassNamePatterns.each { pattern ->
 			args.addAll(['-n', pattern])
+		}
+		filters.packages.include.each { includedPackage ->
+			args.addAll(['--include-package',includedPackage])
+		}
+		filters.packages.exclude.each { excludedPackage ->
+			args.addAll(['--exclude-package',excludedPackage])
 		}
 		filters.tags.include.each { tag ->
 			args.addAll(['-t', tag])
