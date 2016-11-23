@@ -8,7 +8,7 @@ buildscript {
 	}
 	dependencies {
 		classpath 'com.diffplug.gradle.spotless:spotless:2.2.0'
-		classpath 'org.ajoberstar:gradle-git:1.5.1'
+		classpath 'org.ajoberstar:gradle-git:1.6.0'
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
 	}
