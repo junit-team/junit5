@@ -263,11 +263,10 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsExplicitClassNameFilterToRequestWhenDeprecatedIncludeClassNamePatternAnnotationIsPresent()
+		void addsSingleExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent()
 				throws Exception {
 
-			@SuppressWarnings("deprecation")
-			@IncludeClassNamePattern(".*Foo")
+			@IncludeClassNamePatterns(".*Foo")
 			class TestCase {
 			}
 
@@ -278,7 +277,8 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent() throws Exception {
+		void addsMultipleExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent()
+				throws Exception {
 
 			@IncludeClassNamePatterns({ ".*Foo", "Bar.*" })
 			class TestCase {
@@ -316,22 +316,6 @@ class JUnitPlatformRunnerTests {
 
 			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
 			assertThat(filters).isEmpty();
-		}
-
-		@Test
-		void throwsExceptionWhenBothIncludeClassNamePatternsAnnotationsArePresent() throws Exception {
-
-			@SuppressWarnings("deprecation")
-			@IncludeClassNamePattern("foo")
-			@IncludeClassNamePatterns("foo")
-			class TestCase {
-			}
-
-			PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-				() -> instantiateRunnerAndCaptureGeneratedRequest(TestCase.class));
-
-			assertThat(exception).hasMessage(
-				"You must not specify both @IncludeClassNamePattern and @IncludeClassNamePatterns");
 		}
 
 		@Test

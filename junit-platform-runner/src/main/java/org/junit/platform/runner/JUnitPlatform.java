@@ -246,7 +246,8 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	private String[] getIncludeClassNamePatterns(boolean isSuite) {
-		String[] patterns = getIncludeClassNamePatterns();
+		String[] patterns = getValueFromAnnotation(IncludeClassNamePatterns.class, IncludeClassNamePatterns::value,
+			new String[0]);
 		if (patterns.length == 0 && isSuite) {
 			return new String[] { STANDARD_INCLUDE_PATTERN };
 		}
@@ -259,20 +260,6 @@ public class JUnitPlatform extends Runner implements Filterable {
 		for (int i = 0; i < patterns.length; i++) {
 			patterns[i] = patterns[i].trim();
 		}
-	}
-
-	@SuppressWarnings("deprecation")
-	private String[] getIncludeClassNamePatterns() {
-		String[] patterns = getValueFromAnnotation(IncludeClassNamePatterns.class, IncludeClassNamePatterns::value,
-			new String[0]);
-		String patternFromDeprecatedAnnotation = getValueFromAnnotation(IncludeClassNamePattern.class,
-			IncludeClassNamePattern::value, EMPTY_STRING);
-		Preconditions.condition(patterns.length == 0 || patternFromDeprecatedAnnotation.isEmpty(),
-			"You must not specify both @IncludeClassNamePattern and @IncludeClassNamePatterns");
-		if (patterns.length == 0 && !patternFromDeprecatedAnnotation.isEmpty()) {
-			patterns = new String[] { patternFromDeprecatedAnnotation };
-		}
-		return patterns;
 	}
 
 	private <A extends Annotation, V> V getValueFromAnnotation(Class<A> annotationClass, Function<A, V> extractor,
