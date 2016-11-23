@@ -146,5 +146,14 @@
     "speakers": [
       "sbrannen"
     ]
+  },
+  {
+    "title": "Deep Dive into JUnit 5 - Voxxed Days Zurich 2017",
+    "date": "2017-02-23",
+    "location": "Zurich, Switzerland",
+    "link": "https://cfp-vdz.exteso.com/2017/talk/QSX-6316/Deep_Dive_into_JUnit_5",
+    "speakers": [
+      "sbrannen"
+    ]
   }
 ]
