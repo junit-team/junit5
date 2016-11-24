@@ -11,6 +11,7 @@
 package org.junit.jupiter.migrationsupport.rules;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.migrationsupport.rules.FailAfterAllHelper.fail;
 
 import java.util.ArrayList;
@@ -68,8 +69,8 @@ public class ExternalResourceSupportForMixedMethodAndFieldRulesTests {
 
 	@Test
 	void beforeMethodsOfBothRulesWereExecuted() {
-		assert beforeOfRule1WasExecuted;
-		assert beforeOfRule2WasExecuted;
+		assertTrue(beforeOfRule1WasExecuted);
+		assertTrue(beforeOfRule2WasExecuted);
 	}
 
 	@Test

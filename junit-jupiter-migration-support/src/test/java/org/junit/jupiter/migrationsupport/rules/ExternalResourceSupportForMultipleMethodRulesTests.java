@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.migrationsupport.rules.FailAfterAllHelper.fail;
 
 import org.junit.Rule;
@@ -63,8 +64,8 @@ public class ExternalResourceSupportForMultipleMethodRulesTests {
 
 	@Test
 	void beforeMethodsOfBothRulesWereExecuted() {
-		assert beforeOfRule1WasExecuted;
-		assert beforeOfRule2WasExecuted;
+		assertTrue(beforeOfRule1WasExecuted);
+		assertTrue(beforeOfRule2WasExecuted);
 	}
 
 	@AfterAll
