@@ -55,10 +55,9 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	static final String INCLUDE_TAGS = "includeTags";
 
 	static final String EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED = "The " + INCLUDE_GROUPS + " and " + INCLUDE_TAGS
-			+ " parameters (or the " + EXCLUDE_GROUPS + " and " + EXCLUDE_TAGS + " pararameters) are synonyms - "
+			+ " parameters (or the " + EXCLUDE_GROUPS + " and " + EXCLUDE_TAGS + " parameters) are synonyms - "
 			+ "only one of each is allowed (though neither is required).";
 
-	static final String EXCEPTION_MESSAGE_NO_ENGINE = "JUnit Platform Precondition Violation - No engines were specified.";
 
 	private final ProviderParameters parameters;
 	private final Launcher launcher;
