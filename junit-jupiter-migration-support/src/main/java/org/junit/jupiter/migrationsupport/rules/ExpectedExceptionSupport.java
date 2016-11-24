@@ -58,8 +58,8 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 	@Override
 	public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
 		getStore(context).put(EXCEPTION_WAS_HANDLED, TRUE);
-		this.fieldSupport.handleTestExecutionException(context, throwable);
 		this.methodSupport.handleTestExecutionException(context, throwable);
+		this.fieldSupport.handleTestExecutionException(context, throwable);
 	}
 
 	@Override
@@ -67,8 +67,8 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 		boolean exceptionWasHandled = getStore(context).getOrComputeIfAbsent(EXCEPTION_WAS_HANDLED, key -> FALSE,
 			Boolean.class);
 		if (!exceptionWasHandled) {
-			this.fieldSupport.afterEach(context);
 			this.methodSupport.afterEach(context);
+			this.fieldSupport.afterEach(context);
 		}
 	}
 
