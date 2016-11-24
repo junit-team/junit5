@@ -13,9 +13,9 @@ package org.junit.jupiter.migrationsupport.rules.adapter;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -24,9 +24,7 @@ import org.junit.rules.TestRule;
 @API(Internal)
 public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAdvice {
 
-	private static final Logger LOG = Logger.getLogger(AbstractTestRuleAdapter.class.getName());
-
-	protected final TestRule target;
+	private final TestRule target;
 
 	public AbstractTestRuleAdapter(RuleAnnotatedMember annotatedMember, Class<? extends TestRule> adapteeClass) {
 		this.target = annotatedMember.getTestRuleInstance();
@@ -44,9 +42,9 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 			method.setAccessible(true);
 			return ReflectionUtils.invokeMethod(method, target, arguments);
 		}
-		catch (NoSuchMethodException | SecurityException exception) {
-			LOG.warning(exception.getMessage());
-			return null;
+		catch (NoSuchMethodException | SecurityException ex) {
+			throw new JUnitException(
+				"Error while looking up method to call via reflection for class " + target.getClass().getName(), ex);
 		}
 	}
 
