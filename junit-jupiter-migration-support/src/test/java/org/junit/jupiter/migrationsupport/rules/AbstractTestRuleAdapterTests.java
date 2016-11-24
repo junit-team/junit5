@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.AbstractRuleAnnotatedMember;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.TemporaryFolder;
@@ -37,6 +38,23 @@ public class AbstractTestRuleAdapterTests {
 
 		assertEquals(exception.getMessage(),
 			"class org.junit.rules.Verifier is not assignable from class org.junit.rules.TemporaryFolder");
+	}
+
+	@Test
+	void exceptionsDuringMethodLookupAreWrappedAndThrown() {
+		AbstractTestRuleAdapter adapter = new AbstractTestRuleAdapter(
+			new SimpleRuleAnnotatedMember(new ErrorCollector()), Verifier.class) {
+			@Override
+			public void before() {
+				super.executeMethod("foo");
+			}
+		};
+
+		JUnitException exception = assertThrows(JUnitException.class, adapter::before);
+
+		assertEquals(exception.getMessage(),
+			"Error while looking up method to call via reflection for class org.junit.rules.ErrorCollector");
+		assertEquals(NoSuchMethodException.class, exception.getCause().getClass());
 	}
 
 	private static class TestableTestRuleAdapter extends AbstractTestRuleAdapter {
