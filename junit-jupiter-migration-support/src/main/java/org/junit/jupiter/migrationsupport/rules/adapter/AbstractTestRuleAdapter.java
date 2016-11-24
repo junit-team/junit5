@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.rules.TestRule;
 
@@ -26,18 +27,11 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 	private static final Logger LOG = Logger.getLogger(AbstractTestRuleAdapter.class.getName());
 
 	protected final TestRule target;
-	protected final Class<? extends TestRule> adapteeClass;
 
 	public AbstractTestRuleAdapter(RuleAnnotatedMember annotatedMember, Class<? extends TestRule> adapteeClass) {
 		this.target = annotatedMember.getTestRuleInstance();
-		this.adapteeClass = adapteeClass;
-
-		this.failIfAdapteeClassIsNotAssignableFromTargetClass();
-	}
-
-	private void failIfAdapteeClassIsNotAssignableFromTargetClass() {
-		if (!this.adapteeClass.isAssignableFrom(this.target.getClass()))
-			throw new IllegalStateException(this.adapteeClass + " is not assignable from " + this.target.getClass());
+		Preconditions.condition(adapteeClass.isAssignableFrom(this.target.getClass()),
+			() -> adapteeClass + " is not assignable from " + this.target.getClass());
 	}
 
 	protected Object executeMethod(String name) {
@@ -46,7 +40,7 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 
 	protected Object executeMethod(String name, Class<?>[] parameterTypes, Object... arguments) {
 		try {
-			Method method = target.getClass().getDeclaredMethod(name, parameterTypes);
+			Method method = this.target.getClass().getDeclaredMethod(name, parameterTypes);
 			method.setAccessible(true);
 			return ReflectionUtils.invokeMethod(method, target, arguments);
 		}
