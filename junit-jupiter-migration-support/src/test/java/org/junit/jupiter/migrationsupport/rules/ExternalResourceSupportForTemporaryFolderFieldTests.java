@@ -34,7 +34,6 @@ public class ExternalResourceSupportForTemporaryFolderFieldTests {
 
 	@Test
 	void checkTemporaryFolder() {
-		System.out.println("file of TemporaryFolder: " + this.file);
 		assert file.canRead();
 	}
 
