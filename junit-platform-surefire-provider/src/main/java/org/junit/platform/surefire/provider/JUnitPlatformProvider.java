@@ -58,7 +58,6 @@ public class JUnitPlatformProvider extends AbstractProvider {
 			+ " parameters (or the " + EXCLUDE_GROUPS + " and " + EXCLUDE_TAGS + " parameters) are synonyms - "
 			+ "only one of each is allowed (though neither is required).";
 
-
 	private final ProviderParameters parameters;
 	private final Launcher launcher;
 	final Filter<?>[] includeAndExcludeFilters;
