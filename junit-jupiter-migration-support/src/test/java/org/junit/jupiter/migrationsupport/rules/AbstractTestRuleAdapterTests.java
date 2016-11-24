@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.AbstractRuleAnnotatedMember;
 import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestRule;
@@ -31,10 +32,10 @@ public class AbstractTestRuleAdapterTests {
 
 	@Test
 	void constructionWithUnassignableArgumentsFails() {
-		Throwable throwable = assertThrows(IllegalStateException.class,
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> new TestableTestRuleAdapter(new SimpleRuleAnnotatedMember(new TemporaryFolder()), Verifier.class));
 
-		assertEquals(throwable.getMessage(),
+		assertEquals(exception.getMessage(),
 			"class org.junit.rules.Verifier is not assignable from class org.junit.rules.TemporaryFolder");
 	}
 
