@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,7 @@ public class ExternalResourceWithoutAdapterTests {
 			folder.newFile("temp.txt");
 		}
 		catch (Exception exception) {
-			assert exception.getMessage().equals("the temporary folder has not yet been created");
+			assertTrue(exception.getMessage().equals("the temporary folder has not yet been created"));
 		}
 	}
 

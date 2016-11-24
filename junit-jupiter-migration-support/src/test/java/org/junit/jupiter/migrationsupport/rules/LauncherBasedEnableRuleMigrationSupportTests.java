@@ -11,6 +11,7 @@
 package org.junit.jupiter.migrationsupport.rules;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -112,7 +113,7 @@ public class LauncherBasedEnableRuleMigrationSupportTests {
 
 		@Test
 		void beforeMethodOfBothRule2WasExecuted() {
-			assert beforeOfRule2WasExecuted;
+			assertTrue(beforeOfRule2WasExecuted);
 		}
 
 	}

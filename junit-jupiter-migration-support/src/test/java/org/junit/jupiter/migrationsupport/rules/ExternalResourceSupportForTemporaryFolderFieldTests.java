@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -34,7 +36,7 @@ public class ExternalResourceSupportForTemporaryFolderFieldTests {
 
 	@Test
 	void checkTemporaryFolder() {
-		assert file.canRead();
+		assertTrue(file.canRead());
 	}
 
 }
