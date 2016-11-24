@@ -26,7 +26,6 @@ public class ExternalResourceWithoutAdapterTests {
 			folder.newFile("temp.txt");
 		}
 		catch (Exception exception) {
-			System.out.println("exception = " + exception.getMessage());
 			assert exception.getMessage().equals("the temporary folder has not yet been created");
 		}
 	}
