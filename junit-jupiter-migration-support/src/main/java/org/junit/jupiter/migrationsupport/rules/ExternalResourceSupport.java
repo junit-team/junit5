@@ -63,8 +63,8 @@ public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCal
 
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {
-		this.fieldSupport.afterEach(context);
 		this.methodSupport.afterEach(context);
+		this.fieldSupport.afterEach(context);
 	}
 
 }

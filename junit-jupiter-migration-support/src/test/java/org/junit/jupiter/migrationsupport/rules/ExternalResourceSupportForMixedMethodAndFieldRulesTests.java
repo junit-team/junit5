@@ -10,16 +10,16 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.migrationsupport.rules.FailAfterAllHelper.fail;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.ExternalResource;
@@ -27,62 +27,51 @@ import org.junit.rules.ExternalResource;
 @ExtendWith(ExternalResourceSupport.class)
 public class ExternalResourceSupportForMixedMethodAndFieldRulesTests {
 
-	private static boolean beforeOfRule1WasExecuted = false;
-	private static boolean beforeOfRule2WasExecuted = false;
+	private static List<String> beforeEvents = new ArrayList<>();
+	private static List<String> afterEvents = new ArrayList<>();
 
-	private static boolean afterOfRule1WasExecuted = false;
-	private static boolean afterOfRule2WasExecuted = false;
-
-	private List<String> executions = new ArrayList<String>();
+	@BeforeAll
+	static void clear() {
+		beforeEvents.clear();
+		afterEvents.clear();
+	}
 
 	@Rule
-	public ExternalResource resource1 = new ExternalResource() {
+	public ExternalResource fieldRule = new ExternalResource() {
 		@Override
 		protected void before() throws Throwable {
-			beforeOfRule1WasExecuted = true;
-			executions.add("field");
+			beforeEvents.add("fieldRule");
 		}
 
 		@Override
 		protected void after() {
-			afterOfRule1WasExecuted = true;
-		}
-	};
-
-	private ExternalResource resource2 = new ExternalResource() {
-		@Override
-		protected void before() throws Throwable {
-			beforeOfRule2WasExecuted = true;
-			executions.add("method");
-		}
-
-		@Override
-		protected void after() {
-			afterOfRule2WasExecuted = true;
+			afterEvents.add("fieldRule");
 		}
 	};
 
 	@Rule
 	public ExternalResource getResource2() {
-		return resource2;
+		return new ExternalResource() {
+			@Override
+			protected void before() throws Throwable {
+				beforeEvents.add("methodRule");
+			}
+
+			@Override
+			protected void after() {
+				afterEvents.add("methodRule");
+			}
+		};
 	}
 
 	@Test
 	void beforeMethodsOfBothRulesWereExecuted() {
-		assertTrue(beforeOfRule1WasExecuted);
-		assertTrue(beforeOfRule2WasExecuted);
-	}
-
-	@Test
-	void fieldRuleWasExecutedBeforeMethodRule() {
-		assertEquals(Arrays.asList("field", "method"), this.executions);
+		assertEquals(asList("fieldRule", "methodRule"), beforeEvents);
 	}
 
 	@AfterAll
 	static void afterMethodsOfBothRulesWereExecuted() {
-		if (!afterOfRule1WasExecuted)
-			fail();
-		if (!afterOfRule2WasExecuted)
+		if (!asList("methodRule", "fieldRule").equals(afterEvents))
 			fail();
 	}
 
