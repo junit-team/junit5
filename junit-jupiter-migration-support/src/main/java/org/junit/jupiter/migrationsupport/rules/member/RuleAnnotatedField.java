@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.rules.TestRule;
 
 @API(Internal)
@@ -29,7 +30,7 @@ public class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
 			this.testRuleInstance = (TestRule) testRuleField.get(testInstance);
 		}
 		catch (IllegalAccessException exception) {
-			LOG.warning(exception.getMessage());
+			throw ExceptionUtils.throwAsUncheckedException(exception);
 		}
 	}
 
