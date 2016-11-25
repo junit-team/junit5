@@ -7,6 +7,9 @@ org.junit.jupiter.engine.discovery
 org.junit.jupiter.engine.discovery.predicates
 org.junit.jupiter.engine.execution
 org.junit.jupiter.engine.extension
+org.junit.jupiter.migrationsupport.rules
+org.junit.jupiter.migrationsupport.rules.adapter
+org.junit.jupiter.migrationsupport.rules.member
 org.junit.platform.commons
 org.junit.platform.commons.annotation
 org.junit.platform.commons.meta
