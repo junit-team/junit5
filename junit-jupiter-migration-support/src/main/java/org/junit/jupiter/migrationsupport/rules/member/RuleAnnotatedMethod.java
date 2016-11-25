@@ -22,7 +22,6 @@ import org.junit.rules.TestRule;
 public class RuleAnnotatedMethod extends AbstractRuleAnnotatedMember {
 
 	public RuleAnnotatedMethod(Object testInstance, Method member) {
-		//no args
 		this.testRuleInstance = (TestRule) ReflectionUtils.invokeMethod(member, testInstance);
 	}
 
