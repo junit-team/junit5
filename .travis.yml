@@ -5,12 +5,14 @@ sudo: required
 # required for oraclejdk9
 dist: trusty
 
-# required for oraclejdk9
-group: edge
-
 jdk:
   - oraclejdk8
   - oraclejdk9
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 
 matrix:
   allow_failures:
