@@ -47,7 +47,6 @@ class TestRuleFieldSupport extends AbstractTestRuleSupport {
 			Collectors.toList());
 	}
 
-	// TODO: decide whether this should be promoted to AnnotationUtils
 	private static Stream<Field> findAnnotatedFields(Object instance, Class<?> fieldType,
 			Class<? extends Annotation> annotationType) {
 		Field[] fields = instance.getClass().getFields();
