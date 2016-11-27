@@ -1,7 +1,7 @@
 [[release-notes-5.0.0-m3]]
 === 5.0.0-M3
 
-*Date of Release:* September 30, 2016
+*Date of Release:* November 30, 2016
 
 *Scope:* Third milestone release of JUnit 5 with a focus on JUnit 4 interoperability,
 additional discovery selectors, and documentation.
