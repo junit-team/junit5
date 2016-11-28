@@ -486,6 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#migrating-from-junit4-running">6.1. Running JUnit 4 Tests on the JUnit Platform</a></li>
 <li><a href="#migrating-from-junit4-tips">6.2. Migration Tips</a></li>
+<li><a href="#migrating-from-junit4-rulesupport">6.3. Limited JUnit 4 Rule Support</a></li>
 </ul>
 </li>
 <li><a href="#advanced-topics">7. Advanced Topics</a>
@@ -2879,6 +2880,49 @@ to JUnit Jupiter.</p>
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="migrating-from-junit4-rulesupport">6.3. Limited JUnit 4 Rule Support</h3>
+<div class="paragraph">
+<p>As stated above, JUnit Jupiter does not and will not support JUnit 4 rules natively.
+We realize, however, that many organizations, especially large ones,
+are likely to have large JUnit 4 codebases including custom rules.
+To serve these organziations we decided to support a selection of JUnit 4 rules
+verbatim within JUnit Jupiter.
+This support is limited to those rules that are semantically compatible,
+i.e. those that do not completely change the overall execution flow of the test.</p>
+</div>
+<div class="paragraph">
+<p>We currently support the following three Rule types including subclasses:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.junit.rules.ExternalResource</code> (including <code>org.junit.rules.TemporaryFolder</code>)</p>
+</li>
+<li>
+<p><code>org.junit.rules.Verifier</code> (including <code>org.junit.rules.ErrorCollector</code>)</p>
+</li>
+<li>
+<p><code>org.junit.rules.ExpectedException</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As in JUnit 4, Rule-annotated fields as well as methods are supported.
+By using these class-level extensions on a test class such Rule implementations
+in legacy code bases can be left unchanged including the JUnit 4 rule import statements.</p>
+</div>
+<div class="paragraph">
+<p>This limited form of Rule support can be switched on by the class-level annotation
+<code>org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport</code>.
+<code>EnableRuleMigrationSupport</code> is a meta-annotation which includes all supported extensions:
+VerifierSupport, ExternalResourceSupport, and ExpectedExceptionSupport.</p>
+</div>
+<div class="paragraph">
+<p>However, if you intend to develop a new extension for JUnit 5
+please use the new extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -4027,7 +4071,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-11-27 05:19:58 EST
+Last updated 2016-11-28 11:16:50 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
