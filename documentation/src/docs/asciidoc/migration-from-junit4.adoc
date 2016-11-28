@@ -39,3 +39,32 @@ to JUnit Jupiter.
 * `@Category` no longer exists; use `@Tag` instead.
 * `@RunWith` no longer exists; superseded by `@ExtendWith`.
 * `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith`.
+
+[[migrating-from-junit4-rulesupport]]
+=== Limited JUnit 4 Rule Support
+
+As stated above, JUnit Jupiter does not and will not support JUnit 4 rules natively.
+We realize, however, that many organizations, especially large ones,
+are likely to have large JUnit 4 codebases including custom rules.
+To serve these organziations we decided to support a selection of JUnit 4 rules
+verbatim within JUnit Jupiter.
+This support is limited to those rules that are semantically compatible,
+i.e. those that do not completely change the overall execution flow of the test.
+
+We currently support the following three Rule types including subclasses:
+
+* `org.junit.rules.ExternalResource` (including `org.junit.rules.TemporaryFolder`)
+* `org.junit.rules.Verifier` (including `org.junit.rules.ErrorCollector`)
+* `org.junit.rules.ExpectedException`
+
+As in JUnit 4, Rule-annotated fields as well as methods are supported.
+By using these class-level extensions on a test class such Rule implementations
+in legacy code bases can be left unchanged including the JUnit 4 rule import statements.
+
+This limited form of Rule support can be switched on by the class-level annotation
+`org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport`.
+`EnableRuleMigrationSupport` is a meta-annotation which includes all supported extensions:
+VerifierSupport, ExternalResourceSupport, and ExpectedExceptionSupport.
+
+However, if you intend to develop a new extension for JUnit 5
+please use the new extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.
