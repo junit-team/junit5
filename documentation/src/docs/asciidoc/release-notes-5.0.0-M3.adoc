@@ -147,6 +147,9 @@ on GitHub.
   `Stream<Executable>`).
 * `Assertions.assertThrows()` now returns the thrown exception.
 * `@BeforeAll` and `@AfterAll` may now be declared on static methods in interfaces.
+* The JUnit 4 Rules `org.junit.rules.ExternalResource`, `org.junit.rules.Verifier`,
+  `org.junit.rules.ExpectedException` including subclasses are now supported in JUnit Jupiter
+  to facilitate migration of JUnit 4 codebases.
 
 
 [[release-notes-5.0.0-m3-junit-vintage]]
