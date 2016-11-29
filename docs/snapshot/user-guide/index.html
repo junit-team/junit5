@@ -648,6 +648,11 @@ environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to
 <dd>
 <p>JUnit Jupiter test engine implementation, only required at runtime.</p>
 </dd>
+<dt class="hdlist1"><code>junit-jupiter-migration-support</code></dt>
+<dd>
+<p>Migration support from JUnit 4 to JUnit Jupiter,
+only required for running selected JUnit 4 rules.</p>
+</dd>
 </dl>
 </div>
 </li>
@@ -702,7 +707,7 @@ projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respect
 <h3 id="dependency-diagram">2.3. Dependency Diagram</h3>
 <div class="imageblock">
 <div class="content">
-<img src="images/component-diagram.svg" alt="component diagram" width="1030" height="503">
+<img src="images/component-diagram.svg" alt="component diagram" width="1315" height="503">
 </div>
 </div>
 </div>
@@ -2817,7 +2822,7 @@ available for storing and retrieving values via the <code><a href="../api/org/ju
 <div class="sectionbody">
 <div class="paragraph">
 <p>Although the JUnit Jupiter programming model and extension model will not support JUnit 4
-features such as <code>Rules</code> and <code>Runners</code>, it is not expected that source code maintainers
+features such as <code>Rules</code> and <code>Runners</code> natively, it is not expected that source code maintainers
 will need to update all of their existing tests, test extensions, and custom build test
 infrastructure to migrate to JUnit Jupiter.</p>
 </div>
@@ -2875,7 +2880,8 @@ to JUnit Jupiter.</p>
 <p><code>@RunWith</code> no longer exists; superseded by <code>@ExtendWith</code>.</p>
 </li>
 <li>
-<p><code>@Rule</code> and <code>@ClassRule</code> no longer exist; superseded by <code>@ExtendWith</code>.</p>
+<p><code>@Rule</code> and <code>@ClassRule</code> no longer exist; superseded by <code>@ExtendWith</code>;
+see the following section for partial rule support.</p>
 </li>
 </ul>
 </div>
@@ -2886,10 +2892,10 @@ to JUnit Jupiter.</p>
 <p>As stated above, JUnit Jupiter does not and will not support JUnit 4 rules natively.
 The JUnit team realizes, however, that many organizations, especially large ones,
 are likely to have large JUnit 4 codebases including custom rules.
-To serve these organziations the JUnit team has decided to support a selection of JUnit 4 rules
-verbatim within JUnit Jupiter.
-This support is limited to those rules that are semantically compatible with the
-extension model in JUnit Jupiter,
+To serve these organizations and enable a gradual migration path the JUnit team has decided
+to support a selection of JUnit 4 rules verbatim within JUnit Jupiter.
+This support is based on adapters and is limited to those rules
+that are semantically compatible to the JUnit Jupiter extension model,
 i.e. those that do not completely change the overall execution flow of the test.</p>
 </div>
 <div class="paragraph">
@@ -2912,12 +2918,12 @@ of those types:</p>
 <div class="paragraph">
 <p>As in JUnit 4, Rule-annotated fields as well as methods are supported.
 By using these class-level extensions on a test class such Rule implementations
-in legacy codebases can be left unchanged including the JUnit 4 rule import statements.</p>
+in legacy codebases can be <em>left unchanged</em> including the JUnit 4 rule import statements.</p>
 </div>
 <div class="paragraph">
 <p>This limited form of Rule support can be switched on by the class-level annotation
 <code>org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport</code>.
-<code>@EnableRuleMigrationSupport</code> is a <em>composed annotation</em> which enables all migration
+This annotation is a <em>composed annotation</em> which enables all migration
 support extensions: <code>VerifierSupport</code>, <code>ExternalResourceSupport</code>, and <code>ExpectedExceptionSupport</code>.</p>
 </div>
 <div class="paragraph">
@@ -4073,7 +4079,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-11-28 20:08:24 EST
+Last updated 2016-11-29 05:10:01 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
