@@ -84,6 +84,9 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
     JUnit Jupiter API for <<writing-tests,writing tests>> and <<extensions,extensions>>.
   `junit-jupiter-engine`::
     JUnit Jupiter test engine implementation, only required at runtime.
+  `junit-jupiter-migration-support`::
+    Migration support from JUnit 4 to JUnit Jupiter,
+    only required for running selected JUnit 4 rules.
 
 [[dependency-metadata-junit-vintage]]
 ==== JUnit Vintage
@@ -117,6 +120,7 @@ skinparam {
 package org.junit.jupiter {
     [junit-jupiter-api] as jupiterapi
     [junit-jupiter-engine] as jupiterengine
+    [junit-jupiter-migration-support] as jupitermigrationsupport
 }
 
 package org.junit.vintage {
@@ -143,6 +147,9 @@ jupiterapi ..> commons
 
 jupiterengine ..> engine
 jupiterengine ..> jupiterapi
+
+jupitermigrationsupport ..> jupiterapi
+jupitermigrationsupport ..> junit4
 
 console ..> launcher
 

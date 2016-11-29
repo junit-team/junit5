@@ -19,12 +19,9 @@ test {
 
 dependencies {
 	compile("junit:junit:${junit4Version}")
-
 	compile(project(':junit-jupiter-api'))
-	compile(project(':junit-platform-engine'))
-	compile(project(':junit-jupiter-engine'))
 
-
+    testCompile(project(':junit-jupiter-engine'))
 	testCompile(project(':junit-platform-launcher'))
 	testCompile(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
