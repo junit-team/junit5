@@ -2,7 +2,7 @@
 == Migrating from JUnit 4
 
 Although the JUnit Jupiter programming model and extension model will not support JUnit 4
-features such as `Rules` and `Runners`, it is not expected that source code maintainers
+features such as `Rules` and `Runners` natively, it is not expected that source code maintainers
 will need to update all of their existing tests, test extensions, and custom build test
 infrastructure to migrate to JUnit Jupiter.
 
@@ -38,7 +38,8 @@ to JUnit Jupiter.
 * `@Ignore` no longer exists: use `@Disabled` instead.
 * `@Category` no longer exists; use `@Tag` instead.
 * `@RunWith` no longer exists; superseded by `@ExtendWith`.
-* `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith`.
+* `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith`;
+   see the following section for partial rule support.
 
 [[migrating-from-junit4-rulesupport]]
 === Limited JUnit 4 Rule Support
@@ -46,10 +47,10 @@ to JUnit Jupiter.
 As stated above, JUnit Jupiter does not and will not support JUnit 4 rules natively.
 The JUnit team realizes, however, that many organizations, especially large ones,
 are likely to have large JUnit 4 codebases including custom rules.
-To serve these organziations the JUnit team has decided to support a selection of JUnit 4 rules
-verbatim within JUnit Jupiter.
-This support is limited to those rules that are semantically compatible with the
-extension model in JUnit Jupiter,
+To serve these organizations and enable a gradual migration path the JUnit team has decided
+to support a selection of JUnit 4 rules verbatim within JUnit Jupiter.
+This support is based on adapters and is limited to those rules
+that are semantically compatible to the JUnit Jupiter extension model,
 i.e. those that do not completely change the overall execution flow of the test.
 
 JUnit Jupiter currently supports the following three Rule types including subclasses
@@ -61,11 +62,11 @@ of those types:
 
 As in JUnit 4, Rule-annotated fields as well as methods are supported.
 By using these class-level extensions on a test class such Rule implementations
-in legacy codebases can be left unchanged including the JUnit 4 rule import statements.
+in legacy codebases can be _left unchanged_ including the JUnit 4 rule import statements.
 
 This limited form of Rule support can be switched on by the class-level annotation
 `org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport`.
-`@EnableRuleMigrationSupport` is a _composed annotation_ which enables all migration
+This annotation is a _composed annotation_ which enables all migration
 support extensions: `VerifierSupport`, `ExternalResourceSupport`, and `ExpectedExceptionSupport`.
 
 However, if you intend to develop a new extension for JUnit 5
