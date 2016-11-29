@@ -2884,15 +2884,17 @@ to JUnit Jupiter.</p>
 <h3 id="migrating-from-junit4-rulesupport">6.3. Limited JUnit 4 Rule Support</h3>
 <div class="paragraph">
 <p>As stated above, JUnit Jupiter does not and will not support JUnit 4 rules natively.
-We realize, however, that many organizations, especially large ones,
+The JUnit team realizes, however, that many organizations, especially large ones,
 are likely to have large JUnit 4 codebases including custom rules.
-To serve these organziations we decided to support a selection of JUnit 4 rules
+To serve these organziations the JUnit team has decided to support a selection of JUnit 4 rules
 verbatim within JUnit Jupiter.
-This support is limited to those rules that are semantically compatible,
+This support is limited to those rules that are semantically compatible with the
+extension model in JUnit Jupiter,
 i.e. those that do not completely change the overall execution flow of the test.</p>
 </div>
 <div class="paragraph">
-<p>We currently support the following three Rule types including subclasses:</p>
+<p>JUnit Jupiter currently supports the following three Rule types including subclasses
+of those types:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2910,13 +2912,13 @@ i.e. those that do not completely change the overall execution flow of the test.
 <div class="paragraph">
 <p>As in JUnit 4, Rule-annotated fields as well as methods are supported.
 By using these class-level extensions on a test class such Rule implementations
-in legacy code bases can be left unchanged including the JUnit 4 rule import statements.</p>
+in legacy codebases can be left unchanged including the JUnit 4 rule import statements.</p>
 </div>
 <div class="paragraph">
 <p>This limited form of Rule support can be switched on by the class-level annotation
 <code>org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport</code>.
-<code>EnableRuleMigrationSupport</code> is a meta-annotation which includes all supported extensions:
-VerifierSupport, ExternalResourceSupport, and ExpectedExceptionSupport.</p>
+<code>@EnableRuleMigrationSupport</code> is a <em>composed annotation</em> which enables all migration
+support extensions: <code>VerifierSupport</code>, <code>ExternalResourceSupport</code>, and <code>ExpectedExceptionSupport</code>.</p>
 </div>
 <div class="paragraph">
 <p>However, if you intend to develop a new extension for JUnit 5
@@ -4071,7 +4073,7 @@ examples in <a href="#writing-tests-assertions"><code>AssertionsDemo</code></a> 
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-11-28 11:16:50 EST
+Last updated 2016-11-28 20:08:24 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
