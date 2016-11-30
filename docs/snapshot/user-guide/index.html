@@ -503,10 +503,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#contributors">9. Contributors</a></li>
 <li><a href="#release-notes">10. Release Notes</a>
 <ul class="sectlevel2">
-<li><a href="#release-notes-5.0.0-alpha">10.1. 5.0.0-ALPHA</a></li>
-<li><a href="#release-notes-5.0.0-m1">10.2. 5.0.0-M1</a></li>
-<li><a href="#release-notes-5.0.0-m2">10.3. 5.0.0-M2</a></li>
-<li><a href="#release-notes-5.0.0-m3">10.4. 5.0.0-M3</a></li>
+<li><a href="#release-notes-5.0.0-alpha">5.0.0-ALPHA</a></li>
+<li><a href="#release-notes-5.0.0-m1">5.0.0-M1</a></li>
+<li><a href="#release-notes-5.0.0-m2">5.0.0-M2</a></li>
+<li><a href="#release-notes-5.0.0-m3">5.0.0-M3</a></li>
 </ul>
 </li>
 </ul>
@@ -2183,6 +2183,46 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
 </div>
 </div>
 </div>
+<div class="sect4">
+<h5 id="running-tests-build-maven-filter-tags">Filtering by tag</h5>
+<div class="paragraph">
+<p>You can filter tests by tags using the following configuration properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>to include use either <code>groups</code> or <code>includeTags</code></p>
+</li>
+<li>
+<p>to exclude use either <code>excludedGroups</code> or <code>excludeTags</code></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml" data-lang="xml">...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.19&lt;/version&gt;
+            &lt;configuration&gt;
+                &lt;properties&gt;
+                    &lt;includeTags&gt;acceptance&lt;/includeTags&gt;
+                    &lt;excludeTags&gt;integration, regression&lt;/excludeTags&gt;
+                &lt;/properties&gt;
+            &lt;/configuration&gt;
+            &lt;dependencies&gt;
+                ...
+            &lt;/dependencies&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -3157,7 +3197,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <h2 id="release-notes">10. Release Notes</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="release-notes-5.0.0-alpha">10.1. 5.0.0-ALPHA</h3>
+<h3 id="release-notes-5.0.0-alpha">5.0.0-ALPHA</h3>
 <div class="paragraph">
 <p><strong>Date of Release:</strong> February 1, 2016</p>
 </div>
@@ -3166,7 +3206,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.0.0-m1">10.2. 5.0.0-M1</h3>
+<h3 id="release-notes-5.0.0-m1">5.0.0-M1</h3>
 <div class="paragraph">
 <p><strong>Date of Release:</strong> July 7, 2016</p>
 </div>
@@ -3174,7 +3214,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <p><strong>Scope:</strong> First milestone release of JUnit 5</p>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m1-summary">10.2.1. Summary of Changes</h4>
+<h4 id="release-notes-5.0.0-m1-summary">Summary of Changes</h4>
 <div class="paragraph">
 <p>The following is a list of global changes. For details regarding changes specific to the
 Platform, Jupiter, and Vintage, consult the dedicated subsections below. For a complete
@@ -3689,7 +3729,7 @@ of retrieving a context specific name via the current test class or test method.
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.0.0-m2">10.3. 5.0.0-M2</h3>
+<h3 id="release-notes-5.0.0-m2">5.0.0-M2</h3>
 <div class="paragraph">
 <p><strong>Date of Release:</strong> July 23, 2016</p>
 </div>
@@ -3697,7 +3737,7 @@ of retrieving a context specific name via the current test class or test method.
 <p><strong>Scope:</strong> Second milestone release of JUnit 5</p>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m2-summary">10.3.1. Summary of Changes</h4>
+<h4 id="release-notes-5.0.0-m2-summary">Summary of Changes</h4>
 <div class="paragraph">
 <p>This release is primarily a bugfix release for bugs discovered since <code>5.0.0-M1</code>.</p>
 </div>
@@ -3797,7 +3837,7 @@ method-level will no longer be registered multiple times.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.0.0-m3">10.4. 5.0.0-M3</h3>
+<h3 id="release-notes-5.0.0-m3">5.0.0-M3</h3>
 <div class="paragraph">
 <p><strong>Date of Release:</strong> November 30, 2016</p>
 </div>
@@ -3805,26 +3845,15 @@ method-level will no longer be registered multiple times.</p>
 <p><strong>Scope:</strong> Third milestone release of JUnit 5 with a focus on JUnit 4 interoperability,
 additional discovery selectors, and documentation.</p>
 </div>
-<div class="sect3">
-<h4 id="release-notes-5.0.0-m3-summary">10.4.1. Summary of Changes</h4>
 <div class="paragraph">
-<p>The following is a list of global changes. For details regarding changes specific to the
-Platform, Jupiter, and Vintage, consult the dedicated subsections below. For a complete
-list of all <em>closed</em> issues and pull requests for this release, consult the
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
 <a href="https://github.com/junit-team/junit5/milestone/6?closed=1">5.0 M3</a> milestone page in the JUnit repository
 on GitHub.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>❓❓❓</p>
-</li>
-</ul>
-</div>
+<div class="sect3">
+<h4 id="release-notes-5.0.0-m3-junit-platform">JUnit Platform</h4>
 <div class="sect4">
-<h5 id="release-notes-5.0.0-m3-junit-platform">JUnit Platform</h5>
-<div class="sect5">
-<h6 id="bug-fixes-3">Bug Fixes</h6>
+<h5 id="bug-fixes-3">Bug Fixes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3845,8 +3874,8 @@ Gradle plugin when no explicit packages have been selected.</p>
 </ul>
 </div>
 </div>
-<div class="sect5">
-<h6 id="deprecations-and-breaking-changes">Deprecations and Breaking Changes</h6>
+<div class="sect4">
+<h5 id="deprecations-and-breaking-changes">Deprecations and Breaking Changes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3917,11 +3946,27 @@ or maps of configuration parameters.</p>
 <p>Filters for class name, engine IDs, and tags in the Gradle plugin configuration now need to be
 wrapped in a <code>filters</code> extension element (see <a href="#running-tests-build-gradle-filters">Configuring Filters</a>).</p>
 </li>
+<li>
+<p>The Surefire provider now supports filtering by tags using one of the following parameters:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>include: <code>groups</code>/<code>includeTags</code></p>
+</li>
+<li>
+<p>exclude: <code>excludedGroups</code>/<code>excludeTags</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>The Surefire provider is now licensed under the Apache License v2.0.</p>
+</li>
 </ul>
 </div>
 </div>
-<div class="sect5">
-<h6 id="new-features-2">New Features</h6>
+<div class="sect4">
+<h5 id="new-features-2">New Features</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3999,10 +4044,10 @@ code that uses a different version of that library.</p>
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="release-notes-5.0.0-m3-junit-jupiter">JUnit Jupiter</h4>
 <div class="sect4">
-<h5 id="release-notes-5.0.0-m3-junit-jupiter">JUnit Jupiter</h5>
-<div class="sect5">
-<h6 id="bug-fixes-4">Bug Fixes</h6>
+<h5 id="bug-fixes-4">Bug Fixes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4028,8 +4073,8 @@ methods that accept arrays or primitive types as parameters.</p>
 </ul>
 </div>
 </div>
-<div class="sect5">
-<h6 id="deprecations-and-breaking-changes-2">Deprecations and Breaking Changes</h6>
+<div class="sect4">
+<h5 id="deprecations-and-breaking-changes-2">Deprecations and Breaking Changes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4042,8 +4087,8 @@ methods that accept arrays or primitive types as parameters.</p>
 </ul>
 </div>
 </div>
-<div class="sect5">
-<h6 id="new-features-and-improvements">New Features and Improvements</h6>
+<div class="sect4">
+<h5 id="new-features-and-improvements">New Features and Improvements</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4070,11 +4115,10 @@ to facilitate migration of JUnit 4 codebases.</p>
 </div>
 </div>
 </div>
-<div class="sect4">
-<h5 id="release-notes-5.0.0-m3-junit-vintage">JUnit Vintage</h5>
+<div class="sect3">
+<h4 id="release-notes-5.0.0-m3-junit-vintage">JUnit Vintage</h4>
 <div class="paragraph">
 <p><em>No changes since 5.0.0-M2</em></p>
-</div>
 </div>
 </div>
 </div>
@@ -4084,7 +4128,7 @@ to facilitate migration of JUnit 4 codebases.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-11-29 05:10:01 EST
+Last updated 2016-11-30 03:17:57 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
