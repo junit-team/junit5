@@ -86,6 +86,7 @@ on GitHub.
   `"org.example.TestClass#testMethod(org.junit.jupiter.api.TestInfo)"`.
 * The `TestExecutionSummary` used by the `ConsoleLauncher` and the JUnit Platform Gradle
   plugin now includes statistics for all container events in addition to test events.
+* The `TestExecutionSummary` can now be used to get the list of all failures.
 * The `{ConsoleLauncher}`, the Gradle plugin, and the `{JUnitPlatform-Runner}` runner now use
   `{standard-include-class-name-pattern}` as the default pattern for class names to be included
   in the test run.
