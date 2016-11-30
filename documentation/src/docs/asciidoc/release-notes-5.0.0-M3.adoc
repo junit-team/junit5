@@ -62,6 +62,10 @@ on GitHub.
   or maps of configuration parameters.
 * Filters for class name, engine IDs, and tags in the Gradle plugin configuration now need to be
   wrapped in a `filters` extension element (see <<running-tests-build-gradle-filters>>).
+* The Surefire provider now supports filtering by tags using one of the following parameters:
+  - include: `groups`/`includeTags`
+  - exclude: `excludedGroups`/`excludeTags`
+* The Surefire provider is now licensed under the Apache License v2.0.
 
 
 ===== New Features

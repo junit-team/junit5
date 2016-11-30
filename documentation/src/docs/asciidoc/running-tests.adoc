@@ -389,6 +389,40 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 	...
 ----
 
+[[running-tests-build-maven-filter-tags]]
+===== Filtering by tag
+
+You can filter tests by tags using the following configuration properties:
+
+- to include use either `groups` or `includeTags`
+- to exclude use either `excludedGroups` or `excludeTags`
+
+[source,xml,indent=0]
+[subs="verbatim,attributes"]
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<configuration>
+			        <properties>
+						<includeTags>acceptance</includeTags>
+			            <excludeTags>integration, regression</excludeTags>
+			        </properties>
+			    </configuration>
+				<dependencies>
+					...
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+----
+
+
 [[running-tests-console-launcher]]
 === Console Launcher
 
