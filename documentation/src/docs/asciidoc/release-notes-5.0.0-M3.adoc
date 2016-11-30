@@ -141,6 +141,8 @@ on GitHub.
 * Support for lazy and preemptive _timeouts_ with lambda expressions in `Assertions`. See
   examples in <<writing-tests-assertions,`AssertionsDemo`>> and consult the
   `{Assertions}` Javadoc for further details.
+* New `assertIterableEquals()` assertion that checks that two Iterables are deeply equal (see
+  Javadoc for details).
 * New variants of `Assertions.assertAll()` that accept streams of executables (i.e.,
   `Stream<Executable>`).
 * `Assertions.assertThrows()` now returns the thrown exception.
