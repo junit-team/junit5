@@ -6,22 +6,15 @@
 *Scope:* Third milestone release of JUnit 5 with a focus on JUnit 4 interoperability,
 additional discovery selectors, and documentation.
 
-[[release-notes-5.0.0-m3-summary]]
-==== Summary of Changes
-
-The following is a list of global changes. For details regarding changes specific to the
-Platform, Jupiter, and Vintage, consult the dedicated subsections below. For a complete
-list of all _closed_ issues and pull requests for this release, consult the
+For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/6?closed=1+[5.0 M3] milestone page in the JUnit repository
 on GitHub.
 
-* ❓❓❓
-
 
 [[release-notes-5.0.0-m3-junit-platform]]
-===== JUnit Platform
+==== JUnit Platform
 
-====== Bug Fixes
+===== Bug Fixes
 
 * `ColoredPrintingTestListener`, which is used by the `ConsoleLauncher`, now outputs the
   actual exception type and its stack trace when printing an exception message.
@@ -31,7 +24,7 @@ on GitHub.
 * Classpath scanning no longer loads classes that are excluded by a class name filter.
 * Classpath scanning no longer attempts to load Java 9 `module-info.class` files.
 
-====== Deprecations and Breaking Changes
+===== Deprecations and Breaking Changes
 
 * `ClasspathSelector` has been renamed to `ClasspathRootSelector` to avoid confusion with
   `ClasspathResourceSelector`.
@@ -71,7 +64,7 @@ on GitHub.
   wrapped in a `filters` extension element (see <<running-tests-build-gradle-filters>>).
 
 
-====== New Features
+===== New Features
 
 * New `selectUri(*)` methods in `DiscoverySelectors` for selecting URIs. A `TestEngine`
   can retrieve such values by querying registered instances of `UriSelector`.
@@ -117,9 +110,9 @@ on GitHub.
 
 
 [[release-notes-5.0.0-m3-junit-jupiter]]
-===== JUnit Jupiter
+==== JUnit Jupiter
 
-====== Bug Fixes
+===== Bug Fixes
 
 * `@AfterEach` methods are now executed with _bottom-up_ semantics within a test
   class hierarchy.
@@ -132,13 +125,13 @@ on GitHub.
   methods that accept arrays or primitive types as parameters.
 * `ExtensionContext.Store` is now thread-safe.
 
-====== Deprecations and Breaking Changes
+===== Deprecations and Breaking Changes
 
 * The `Executable` functional interface has been relocated to a new dedicated
   `org.junit.jupiter.api.function` package.
 * `Assertions.expectThrows()` has been deprecated in favor of `Assertions.assertThrows()`.
 
-====== New Features and Improvements
+===== New Features and Improvements
 
 * Support for lazy and preemptive _timeouts_ with lambda expressions in `Assertions`. See
   examples in <<writing-tests-assertions,`AssertionsDemo`>> and consult the
@@ -153,6 +146,6 @@ on GitHub.
 
 
 [[release-notes-5.0.0-m3-junit-vintage]]
-===== JUnit Vintage
+==== JUnit Vintage
 
 _No changes since 5.0.0-M2_
