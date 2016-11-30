@@ -63,12 +63,11 @@ on GitHub.
 * Filters for class name, engine IDs, and tags in the Gradle plugin configuration now need to be
   wrapped in a `filters` extension element (see <<running-tests-build-gradle-filters>>).
 
-
 ===== New Features
 
-* New `selectUri(*)` methods in `DiscoverySelectors` for selecting URIs. A `TestEngine`
+* New `selectUri(...)` methods in `DiscoverySelectors` for selecting URIs. A `TestEngine`
   can retrieve such values by querying registered instances of `UriSelector`.
-* New `selectFile(*)` and `selectDirectory(*)` methods in `DiscoverySelectors` for selecting
+* New `selectFile(...)` and `selectDirectory(...)` methods in `DiscoverySelectors` for selecting
   files and directories in the file system. A `TestEngine` can retrieve such values by
   querying registered instances of `FileSelector` and `DirectorySelector`.
 * New `selectClasspathResource(String)` method in `DiscoverySelectors` for selecting
