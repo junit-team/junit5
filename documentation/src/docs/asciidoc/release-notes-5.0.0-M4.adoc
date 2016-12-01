@@ -20,7 +20,9 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* ❓
+* Removed deprecated `selectNames()` name-based discovery selector from
+  `DiscoverySelectors` in favor of the dedicated `selectPackage(String)`,
+  `selectClass(String)`, and `selectMethod(String)` methods.
 
 ===== New Features
 
@@ -36,7 +38,7 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* `Assertions.expectThrows()` has been removed in favor of `Assertions.assertThrows()`.
+* Removed deprecated `Assertions.expectThrows()` method in favor of `Assertions.assertThrows()`.
 
 ===== New Features and Improvements
 

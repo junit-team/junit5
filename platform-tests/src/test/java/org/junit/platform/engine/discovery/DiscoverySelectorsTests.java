@@ -10,17 +10,14 @@
 
 package org.junit.platform.engine.discovery;
 
-import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirectory;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNames;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
@@ -31,7 +28,6 @@ import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
-import org.junit.platform.engine.DiscoverySelector;
 
 /**
  * Unit tests for {@link DiscoverySelectors}.
@@ -262,27 +258,6 @@ public class DiscoverySelectorsTests {
 		assertEquals(spockClassName, selector.getClassName());
 		assertEquals(spockMethodName, selector.getMethodName());
 		assertEquals(spockMethodParameters, selector.getMethodParameterTypes());
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	void selectNamesWithPackageName() {
-		DiscoverySelector selector = getOnlyElement(selectNames(singleton("org.junit.platform")));
-		assertEquals(PackageSelector.class, selector.getClass());
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	void selectNameWithClassName() {
-		DiscoverySelector selector = getOnlyElement(selectNames(singleton(getClass().getName())));
-		assertEquals(ClassSelector.class, selector.getClass());
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	void selectNameWithMethodName() {
-		DiscoverySelector selector = getOnlyElement(selectNames(singleton(fullyQualifiedMethodName)));
-		assertEquals(MethodSelector.class, selector.getClass());
 	}
 
 	private static String fullyQualifiedMethodName() {

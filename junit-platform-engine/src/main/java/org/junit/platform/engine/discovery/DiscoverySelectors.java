@@ -11,7 +11,6 @@
 package org.junit.platform.engine.discovery;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.meta.API.Usage.Deprecated;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
@@ -21,9 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +28,6 @@ import java.util.regex.Pattern;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.UniqueId;
@@ -393,69 +389,6 @@ public final class DiscoverySelectors {
 		Preconditions.notNull(javaClass, "Class must not be null");
 		Preconditions.notNull(method, "Method must not be null");
 		return new MethodSelector(javaClass, method);
-	}
-
-	/**
-	 * Create a list of {@link DiscoverySelector DiscoverySelectors} for the
-	 * supplied names.
-	 *
-	 * <h3>Supported Name Types</h3>
-	 * <ul>
-	 * <li>package: fully qualified package name</li>
-	 * <li>class: fully qualified class name</li>
-	 * <li>method: fully qualified method name</li>
-	 * </ul>
-	 *
-	 * <p>The supported format for a <em>fully qualified method name</em> is
-	 * {@code [fully qualified class name]#[methodName]}. For example, the
-	 * fully qualified name for the {@code chars()} method in
-	 * {@code java.lang.String} is {@code java.lang.String#chars}. Names for
-	 * overloaded methods are not supported.
-	 *
-	 * @param names the names to select; never {@code null}
-	 * @return a list of {@code DiscoverySelectors} for the supplied names;
-	 * potentially empty
-	 * @see #selectPackage(String)
-	 * @see #selectClass(String)
-	 * @see #selectMethod(String)
-	 * @deprecated This method will be removed in 5.0 M4; use
-	 * {@link #selectPackage(String)}, {@link #selectClass(String)}, or
-	 * {@link #selectMethod(String)} instead.
-	 */
-	@Deprecated
-	@API(Deprecated)
-	public static List<DiscoverySelector> selectNames(Collection<String> names) {
-		Preconditions.notNull(names, "names collection must not be null");
-		return names.stream().map(DiscoverySelectors::selectName).collect(toList());
-	}
-
-	private static DiscoverySelector selectName(String name) throws PreconditionViolationException {
-		Preconditions.notBlank(name, "name must not be null or blank");
-
-		Optional<Class<?>> classOptional = ReflectionUtils.loadClass(name);
-		if (classOptional.isPresent()) {
-			return selectClass(classOptional.get());
-		}
-
-		Optional<Method> methodOptional;
-		try {
-			methodOptional = ReflectionUtils.loadMethod(name);
-		}
-		catch (PreconditionViolationException ex) {
-			// ignore
-			methodOptional = Optional.empty();
-		}
-		if (methodOptional.isPresent()) {
-			Method method = methodOptional.get();
-			return selectMethod(method.getDeclaringClass(), method);
-		}
-
-		if (ReflectionUtils.isPackage(name)) {
-			return selectPackage(name);
-		}
-
-		throw new PreconditionViolationException(
-			String.format("'%s' specifies neither a class, a method, nor a package.", name));
 	}
 
 	/**
