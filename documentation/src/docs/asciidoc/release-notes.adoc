@@ -11,4 +11,6 @@ include::release-notes-5.0.0-M2.adoc[]
 
 include::release-notes-5.0.0-M3.adoc[]
 
+include::release-notes-5.0.0-M4.adoc[]
+
 :numbered:
