@@ -23,10 +23,6 @@ import org.opentest4j.AssertionFailedError;
  */
 class AssertThrows {
 
-	static <T extends Throwable> T expectThrows(Class<T> expectedType, Executable executable) {
-		return assertThrows(expectedType, executable);
-	}
-
 	@SuppressWarnings("unchecked")
 	static <T extends Throwable> T assertThrows(Class<? extends Throwable> expectedType, Executable executable) {
 		try {

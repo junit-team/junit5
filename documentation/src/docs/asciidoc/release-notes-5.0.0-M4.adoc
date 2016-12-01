@@ -36,7 +36,7 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* ❓
+* `Assertions.expectThrows()` has been removed in favor of `Assertions.assertThrows()`.
 
 ===== New Features and Improvements
 

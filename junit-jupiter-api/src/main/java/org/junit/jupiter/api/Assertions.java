@@ -1027,14 +1027,6 @@ public final class Assertions {
 		return AssertThrows.assertThrows(expectedType, executable);
 	}
 
-	/**
-	 * @deprecated Use {@link #assertThrows(Class, Executable)} instead.
-	 */
-	@Deprecated
-	public static <T extends Throwable> T expectThrows(Class<T> expectedType, Executable executable) {
-		return AssertThrows.expectThrows(expectedType, executable);
-	}
-
 	// --- assertTimeout -------------------------------------------------------
 
 	/**
