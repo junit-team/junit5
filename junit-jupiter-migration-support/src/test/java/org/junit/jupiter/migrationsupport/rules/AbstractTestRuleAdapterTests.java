@@ -15,8 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
-import org.junit.jupiter.migrationsupport.rules.member.AbstractRuleAnnotatedMember;
-import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.rules.ErrorCollector;
@@ -24,6 +23,9 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestRule;
 import org.junit.rules.Verifier;
 
+/**
+ * @since 5.0
+ */
 public class AbstractTestRuleAdapterTests {
 
 	@Test
@@ -44,6 +46,7 @@ public class AbstractTestRuleAdapterTests {
 	void exceptionsDuringMethodLookupAreWrappedAndThrown() {
 		AbstractTestRuleAdapter adapter = new AbstractTestRuleAdapter(
 			new SimpleRuleAnnotatedMember(new ErrorCollector()), Verifier.class) {
+
 			@Override
 			public void before() {
 				super.executeMethod("foo");
@@ -52,22 +55,27 @@ public class AbstractTestRuleAdapterTests {
 
 		JUnitException exception = assertThrows(JUnitException.class, adapter::before);
 
-		assertEquals(exception.getMessage(),
-			"Error while looking up method to call via reflection for class org.junit.rules.ErrorCollector");
-		assertEquals(NoSuchMethodException.class, exception.getCause().getClass());
+		assertEquals(exception.getMessage(), "Failed to find method foo() in class org.junit.rules.ErrorCollector");
 	}
 
 	private static class TestableTestRuleAdapter extends AbstractTestRuleAdapter {
 
-		TestableTestRuleAdapter(RuleAnnotatedMember annotatedMember, Class<? extends TestRule> adapteeClass) {
+		TestableTestRuleAdapter(TestRuleAnnotatedMember annotatedMember, Class<? extends TestRule> adapteeClass) {
 			super(annotatedMember, adapteeClass);
 		}
 	}
 
-	private static class SimpleRuleAnnotatedMember extends AbstractRuleAnnotatedMember {
+	private static class SimpleRuleAnnotatedMember implements TestRuleAnnotatedMember {
+
+		private final TestRule testRule;
 
 		SimpleRuleAnnotatedMember(TestRule testRule) {
-			super.testRuleInstance = testRule;
+			this.testRule = testRule;
+		}
+
+		@Override
+		public TestRule getTestRule() {
+			return this.testRule;
 		}
 
 	}

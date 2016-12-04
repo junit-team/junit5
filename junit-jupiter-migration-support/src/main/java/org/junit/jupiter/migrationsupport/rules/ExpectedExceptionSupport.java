@@ -23,13 +23,13 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.ExpectedExceptionAdapter;
-import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
 import org.junit.rules.ExpectedException;
 
 /**
  * This {@code Extension} provides native support for the
- * {@code ExpectedException} rule from JUnit 4.
+ * {@link ExpectedException} rule from JUnit 4.
  *
  * <p>By using this class-level extension on a test class,
  * {@code ExpectedException} can continued to be used.
@@ -39,7 +39,7 @@ import org.junit.rules.ExpectedException;
  *
  * @since 5.0
  * @see org.junit.jupiter.api.Assertions#assertThrows
- * @see ExpectedException
+ * @see org.junit.rules.ExpectedException
  * @see org.junit.rules.TestRule
  * @see org.junit.Rule
  */
@@ -48,7 +48,7 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 
 	private static final String EXCEPTION_WAS_HANDLED = "exceptionWasHandled";
 
-	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = ExpectedExceptionAdapter::new;
+	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = ExpectedExceptionAdapter::new;
 
 	private final AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator,
 		ExpectedException.class);

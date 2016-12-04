@@ -10,24 +10,26 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-
 import java.lang.reflect.Field;
-import java.util.logging.Logger;
 
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.rules.TestRule;
 
-@API(Internal)
-public class RuleAnnotatedField extends AbstractRuleAnnotatedMember {
+/**
+ * @since 5.0
+ */
+class TestRuleAnnotatedField extends AbstractTestRuleAnnotatedMember {
 
-	private static final Logger LOG = Logger.getLogger(RuleAnnotatedField.class.getName());
+	TestRuleAnnotatedField(Object testInstance, Field field) {
+		super(retrieveTestRule(testInstance, field));
+	}
 
-	public RuleAnnotatedField(Object testInstance, Field testRuleField) {
+	private static TestRule retrieveTestRule(Object testInstance, Field field) {
 		try {
-			testRuleField.setAccessible(true);
-			this.testRuleInstance = (TestRule) testRuleField.get(testInstance);
+			if (!field.isAccessible()) {
+				field.setAccessible(true);
+			}
+			return (TestRule) field.get(testInstance);
 		}
 		catch (IllegalAccessException exception) {
 			throw ExceptionUtils.throwAsUncheckedException(exception);

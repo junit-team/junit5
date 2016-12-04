@@ -13,14 +13,17 @@ package org.junit.jupiter.migrationsupport.rules.adapter;
 import static java.lang.Boolean.TRUE;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
 import org.junit.rules.ExpectedException;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public class ExpectedExceptionAdapter extends AbstractTestRuleAdapter {
 
-	public ExpectedExceptionAdapter(RuleAnnotatedMember annotatedMember) {
+	public ExpectedExceptionAdapter(TestRuleAnnotatedMember annotatedMember) {
 		super(annotatedMember, ExpectedException.class);
 	}
 

@@ -14,6 +14,9 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import org.junit.platform.commons.meta.API;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public interface GenericBeforeAndAfterAdvice {
 

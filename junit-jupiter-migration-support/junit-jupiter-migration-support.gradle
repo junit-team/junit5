@@ -23,6 +23,7 @@ dependencies {
 
 	testCompile(project(':junit-jupiter-engine'))
 	testCompile(project(':junit-platform-launcher'))
+	testCompile(project(':junit-platform-runner'))
 	testCompile(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")

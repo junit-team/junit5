@@ -12,25 +12,28 @@ package org.junit.jupiter.migrationsupport.rules.adapter;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
+import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.platform.commons.meta.API;
 import org.junit.rules.ExternalResource;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public class ExternalResourceAdapter extends AbstractTestRuleAdapter {
 
-	public ExternalResourceAdapter(RuleAnnotatedMember annotatedMember) {
+	public ExternalResourceAdapter(TestRuleAnnotatedMember annotatedMember) {
 		super(annotatedMember, ExternalResource.class);
 	}
 
 	@Override
 	public void before() {
-		super.executeMethod("before");
+		executeMethod("before");
 	}
 
 	@Override
 	public void after() {
-		super.executeMethod("after");
+		executeMethod("after");
 	}
 
 }

@@ -10,46 +10,38 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
-
 import java.lang.reflect.Member;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.GenericBeforeAndAfterAdvice;
-import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
-import org.junit.platform.commons.meta.API;
+import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.rules.TestRule;
 
-@API(Experimental)
-public abstract class AbstractTestRuleSupport
-		implements BeforeEachCallback, TestExecutionExceptionHandler, AfterEachCallback {
+/**
+ * @since 5.0
+ */
+abstract class AbstractTestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandler, AfterEachCallback {
 
-	private final Class<Rule> annotationType = Rule.class;
 	private final Class<? extends TestRule> ruleType;
-	private final Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator;
+	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator;
 
-	protected AbstractTestRuleSupport(Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator,
+	AbstractTestRuleSupport(Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator,
 			Class<? extends TestRule> ruleType) {
 		this.adapterGenerator = adapterGenerator;
 		this.ruleType = ruleType;
 	}
 
-	protected abstract RuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member);
+	protected abstract TestRuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member);
 
 	protected abstract List<Member> findRuleAnnotatedMembers(Object testInstance);
-
-	protected Class<Rule> getAnnotationType() {
-		return this.annotationType;
-	}
 
 	protected Class<? extends TestRule> getRuleType() {
 		return this.ruleType;

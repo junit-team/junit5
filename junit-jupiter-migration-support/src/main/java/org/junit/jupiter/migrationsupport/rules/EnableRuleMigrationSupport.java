@@ -21,15 +21,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.commons.meta.API;
 
 /**
- * This class-level annotation turns on native JUnit 4 rule support
+ * This class-level annotation enables native JUnit 4 rule support
  * within JUnit Jupiter.
  *
- * <p>Currently, rules of type {@code Verifier},
- * {@code ExternalResource} as well as {@code ExpectedException} rules are
- * supported.
+ * <p>Currently, rules of type {@code Verifier}, {@code ExternalResource},
+ * and {@code ExpectedException} rules are supported.
  *
- * <p>{@code EnableRuleMigrationSupport} is a meta-annotation which
- * includes all supported extensions: {@link VerifierSupport},
+ * <p>{@code @EnableRuleMigrationSupport} is a composed annotation which
+ * enables all supported extensions: {@link VerifierSupport},
  * {@link ExternalResourceSupport}, and {@link ExpectedExceptionSupport}.
  *
  * @since 5.0
@@ -37,7 +36,7 @@ import org.junit.platform.commons.meta.API;
  * @see VerifierSupport
  * @see ExpectedExceptionSupport
  */
-@Target({ ElementType.TYPE })
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @API(Experimental)
 @ExtendWith(ExternalResourceSupport.class)

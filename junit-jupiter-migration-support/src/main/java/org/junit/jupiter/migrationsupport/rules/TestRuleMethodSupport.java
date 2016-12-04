@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 
 import java.lang.reflect.Member;
@@ -20,31 +19,33 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.junit.Rule;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
-import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMember;
-import org.junit.jupiter.migrationsupport.rules.member.RuleAnnotatedMethod;
-import org.junit.platform.commons.meta.API;
+import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
+import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMemberFactory;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.rules.TestRule;
 
-@API(Experimental)
+/**
+ * @since 5.0
+ */
 class TestRuleMethodSupport extends AbstractTestRuleSupport {
 
-	TestRuleMethodSupport(Function<RuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator,
+	TestRuleMethodSupport(Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator,
 			Class<? extends TestRule> ruleType) {
 		super(adapterGenerator, ruleType);
 	}
 
 	@Override
-	protected RuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member) {
-		return new RuleAnnotatedMethod(context.getTestInstance(), (Method) member);
+	protected TestRuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member) {
+		return TestRuleAnnotatedMemberFactory.from(context.getTestInstance(), member);
 	}
 
 	@Override
 	protected List<Member> findRuleAnnotatedMembers(Object testInstance) {
-		List<Method> annotatedMethods = AnnotationUtils.findAnnotatedMethods(testInstance.getClass(),
-			super.getAnnotationType(), HierarchyDown);
+		List<Method> annotatedMethods = AnnotationUtils.findAnnotatedMethods(testInstance.getClass(), Rule.class,
+			HierarchyDown);
 
 		Predicate<Method> methodsWithCorrectReturnType = method -> method.getReturnType().isAssignableFrom(
 			super.getRuleType());

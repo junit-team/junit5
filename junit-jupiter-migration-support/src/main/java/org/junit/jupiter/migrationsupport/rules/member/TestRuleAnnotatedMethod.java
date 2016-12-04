@@ -10,19 +10,18 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import java.lang.reflect.Method;
 
-import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.rules.TestRule;
 
-@API(Internal)
-public abstract class AbstractRuleAnnotatedMember implements RuleAnnotatedMember {
+/**
+ * @since 5.0
+ */
+class TestRuleAnnotatedMethod extends AbstractTestRuleAnnotatedMember {
 
-	protected TestRule testRuleInstance;
-
-	@Override
-	public TestRule getTestRuleInstance() {
-		return this.testRuleInstance;
+	TestRuleAnnotatedMethod(Object testInstance, Method method) {
+		super((TestRule) ReflectionUtils.invokeMethod(method, testInstance));
 	}
 
 }
