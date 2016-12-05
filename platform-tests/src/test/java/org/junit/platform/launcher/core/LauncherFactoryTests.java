@@ -37,6 +37,7 @@ class LauncherFactoryTests {
 		DefaultLauncher launcher = (DefaultLauncher) LauncherFactory.create();
 		TestExecutionListenerRegistry registry = launcher.getTestExecutionListenerRegistry();
 		List<TestExecutionListener> listeners = registry.getTestExecutionListeners();
+		assertThat(listeners).hasSize(2);
 		List<TestExecutionListener> one = listeners.stream().filter(
 			listener -> listener instanceof CustomTestExecutionListener).collect(toList());
 		assertThat(one).hasSize(1);
