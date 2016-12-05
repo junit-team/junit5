@@ -85,6 +85,10 @@ class DefaultLauncher implements Launcher {
 		execute(discoverRoot(discoveryRequest, "execution"), discoveryRequest.getConfigurationParameters());
 	}
 
+	TestExecutionListenerRegistry getTestExecutionListenerRegistry() {
+		return listenerRegistry;
+	}
+
 	private Root discoverRoot(LauncherDiscoveryRequest discoveryRequest, String phase) {
 		Root root = new Root();
 
