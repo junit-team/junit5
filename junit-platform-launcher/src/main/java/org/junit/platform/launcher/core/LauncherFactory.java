@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.TestExecutionListener;
 
 /**
  * Factory for creating {@link Launcher} instances by invoking {@link #create()}.
@@ -24,6 +25,12 @@ import org.junit.platform.launcher.Launcher;
  * text file named {@code META-INF/services/org.junit.platform.engine.TestEngine}
  * has to be added to the engine's JAR file in which the fully qualified name
  * of the implementation class of the {@link org.junit.platform.engine.TestEngine}
+ * interface is declared.
+ *
+ * <p>Test execution listeners are discovered accordingly. For that purpose, a text
+ * file named {@code META-INF/services/org.junit.platform.launcher.TestExecutionListener}
+ * has to be added to the listener's JAR file in which the fully qualified name of the
+ * implementation class of the {@link org.junit.platform.launcher.TestExecutionListener}
  * interface is declared.
  *
  * @since 1.0
@@ -39,7 +46,11 @@ public class LauncherFactory {
 	 * @throws PreconditionViolationException if no test engines are detected
 	 */
 	public static Launcher create() throws PreconditionViolationException {
-		return new DefaultLauncher(new ServiceLoaderTestEngineRegistry().loadTestEngines());
+		Launcher launcher = new DefaultLauncher(new ServiceLoaderTestEngineRegistry().loadTestEngines());
+		for (TestExecutionListener listener : new ServiceLoaderTestExecutionListenerRegistry().loadListeners()) {
+			launcher.registerTestExecutionListeners(listener);
+		}
+		return launcher;
 	}
 
 }

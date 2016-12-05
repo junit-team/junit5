@@ -40,7 +40,11 @@ import org.junit.platform.commons.meta.API;
  * {@linkplain #registerTestExecutionListeners register} one or more
  * {@link TestExecutionListener} instances in order to get feedback about the
  * progress and results of test execution. Listeners will be notified of events
- * in the order in which they were registered.
+ * in the order in which they were registered.  For example, the
+ * default implementation returned by
+ * {@link org.junit.platform.launcher.core.LauncherFactory#create LauncherFactory.create()}
+ * dynamically discovers test execution listeners via Java's
+ * {@link java.util.ServiceLoader ServiceLoader} mechanism.
  *
  * @since 1.0
  * @see LauncherDiscoveryRequest
