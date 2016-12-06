@@ -25,7 +25,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
-import org.junit.platform.launcher.listener.CustomTestExecutionListener;
+import org.junit.platform.launcher.listener.NoopTestExecutionListener;
 
 /**
  * @since 1.0
@@ -33,22 +33,13 @@ import org.junit.platform.launcher.listener.CustomTestExecutionListener;
 class LauncherFactoryTests {
 
 	@Test
-	void testCustomTestExecutionListenerServiceIsLoaded() {
+	void noopTestExecutionListenerIsLoadedViaServiceApi() {
 		DefaultLauncher launcher = (DefaultLauncher) LauncherFactory.create();
 		TestExecutionListenerRegistry registry = launcher.getTestExecutionListenerRegistry();
 		List<TestExecutionListener> listeners = registry.getTestExecutionListeners();
-		assertThat(listeners).hasSize(2);
 		List<TestExecutionListener> one = listeners.stream().filter(
-			listener -> listener instanceof CustomTestExecutionListener).collect(toList());
+			listener -> listener instanceof NoopTestExecutionListener).collect(toList());
 		assertThat(one).hasSize(1);
-		CustomTestExecutionListener listener = (CustomTestExecutionListener) one.get(0);
-		assertThat(listener.testPlanExecutionStarted).isEqualTo(0);
-		assertThat(listener.testPlanExecutionFinished).isEqualTo(0);
-		assertThat(listener.dynamicTestRegistered).isEqualTo(0);
-		assertThat(listener.executionSkipped).isEqualTo(0);
-		assertThat(listener.executionStarted).isEqualTo(0);
-		assertThat(listener.executionFinished).isEqualTo(0);
-		assertThat(listener.reportingEntryPublished).isEqualTo(0);
 	}
 
 	@Test

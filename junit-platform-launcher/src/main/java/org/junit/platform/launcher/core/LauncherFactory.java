@@ -27,11 +27,12 @@ import org.junit.platform.launcher.TestExecutionListener;
  * of the implementation class of the {@link org.junit.platform.engine.TestEngine}
  * interface is declared.
  *
- * <p>Test execution listeners are discovered accordingly. For that purpose, a text
- * file named {@code META-INF/services/org.junit.platform.launcher.TestExecutionListener}
- * has to be added to the listener's JAR file in which the fully qualified name of the
- * implementation class of the {@link org.junit.platform.launcher.TestExecutionListener}
- * interface is declared.
+ * <p>{@link org.junit.platform.launcher.TestExecutionListener}s discovered at
+ * runtime via the {@link java.util.ServiceLoader ServiceLoader} facility are
+ * automatically registered with the {@link Launcher} created by the factory.
+ * Users may register additional listeners using the
+ * {@link Launcher#registerTestExecutionListeners(TestExecutionListener...)}
+ * method on the created launcher instance.
  *
  * @since 1.0
  * @see Launcher
@@ -42,6 +43,9 @@ public class LauncherFactory {
 	/**
 	 * Factory method for creating a new {@link Launcher} using dynamically
 	 * detected test engines.
+	 *
+	 * <p>All dynamically detected {@link org.junit.platform.launcher.TestExecutionListener}s
+	 * are automatically registered in the created {@link Launcher} instance.
 	 *
 	 * @throws PreconditionViolationException if no test engines are detected
 	 */
