@@ -10,7 +10,9 @@
 
 package org.junit.jupiter.engine.discovery;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
@@ -79,6 +81,18 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, testMethod)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
+	public void discoverMultipleMethodsOfSameClass() throws NoSuchMethodException {
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, "test1"),
+			selectMethod(LocalTestCase.class, "test2")).build();
+
+		TestDescriptor engineDescriptor = discoverTests(request);
+
+		assertThat(engineDescriptor.getChildren()).hasSize(1);
+		TestDescriptor classDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(classDescriptor.getChildren()).hasSize(2);
 	}
 
 	@Test

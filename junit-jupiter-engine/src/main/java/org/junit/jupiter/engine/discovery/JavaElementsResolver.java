@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -162,16 +163,21 @@ class JavaElementsResolver {
 			ElementResolver resolver) {
 
 		Set<TestDescriptor> resolvedDescriptors = resolver.resolveElement(element, parent);
+		Set<TestDescriptor> result = new LinkedHashSet<>();
 
 		resolvedDescriptors.forEach(testDescriptor -> {
 			Optional<TestDescriptor> existingTestDescriptor = findTestDescriptorByUniqueId(
 				testDescriptor.getUniqueId());
-			if (!existingTestDescriptor.isPresent()) {
+			if (existingTestDescriptor.isPresent()) {
+				result.add(existingTestDescriptor.get());
+			}
+			else {
 				parent.addChild(testDescriptor);
+				result.add(testDescriptor);
 			}
 		});
 
-		return resolvedDescriptors;
+		return result;
 	}
 
 	@SuppressWarnings("unchecked")
