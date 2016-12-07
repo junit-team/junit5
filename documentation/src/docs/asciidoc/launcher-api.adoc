@@ -80,3 +80,14 @@ is currently supported via Java's `java.util.ServiceLoader` mechanism. For examp
 `junit-jupiter-engine` module registers its `org.junit.jupiter.engine.JupiterTestEngine`
 in a file named `org.junit.platform.engine.TestEngine` within the `/META-INF/services` in
 the `junit-jupiter-engine` JAR.
+
+[[launcher-api-listeners-custom]]
+==== Plugging in Your Own Test Execution Listeners
+
+In addition to the public `{Launcher}` API method for registering test execution
+listeners programmatically, custom `{TestExecutionListener}` implementations discovered
+at runtime via Java's `java.util.ServiceLoader` facility are automatically registered
+with the `DefaultLauncher`. For example, an `example.TestInfoPrinter` class
+implementing `{TestExecutionListener}` and declared within the
+`/META-INF/services/org.junit.platform.launcher.TestExecutionListener` file is loaded
+and registered automatically.
