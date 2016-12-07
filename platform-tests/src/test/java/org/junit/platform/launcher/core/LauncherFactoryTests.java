@@ -22,13 +22,25 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.listener.NoopTestExecutionListener;
 
 /**
  * @since 1.0
  */
 class LauncherFactoryTests {
+
+	@Test
+	void noopTestExecutionListenerIsLoadedViaServiceApi() {
+		DefaultLauncher launcher = (DefaultLauncher) LauncherFactory.create();
+		TestExecutionListenerRegistry registry = launcher.getTestExecutionListenerRegistry();
+		List<TestExecutionListener> listeners = registry.getTestExecutionListeners();
+		List<TestExecutionListener> one = listeners.stream().filter(
+			listener -> listener instanceof NoopTestExecutionListener).collect(toList());
+		assertThat(one).hasSize(1);
+	}
 
 	@Test
 	void testCreate() {
