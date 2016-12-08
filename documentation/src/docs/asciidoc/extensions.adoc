@@ -140,8 +140,8 @@ process_ test instances.
 Common use cases include injecting dependencies into the test instance, invoking custom
 initialization methods on the test instance, etc.
 
-For concrete examples, consult the source code for the `{MockitoExtension}` and the
-`{SpringExtension}`.
+For concrete examples, consult the source code for the `{MockitoExtension}`, `{SpringExtension}` and the
+`{DockerExtension}`.
 
 [[extensions-parameter-resolution]]
 === Parameter Resolution
