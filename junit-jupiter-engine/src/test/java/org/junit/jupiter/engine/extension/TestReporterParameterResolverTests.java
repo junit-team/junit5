@@ -33,7 +33,7 @@ class TestReporterParameterResolverTests {
 	TestReporterParameterResolver resolver = new TestReporterParameterResolver();
 
 	@Test
-	void testSupports() {
+	void supports() {
 		Parameter parameter1 = findParameterOfMethod("methodWithTestReporterParameter", TestReporter.class);
 		assertTrue(this.resolver.supports(parameterContext(parameter1), null));
 
@@ -42,7 +42,7 @@ class TestReporterParameterResolverTests {
 	}
 
 	@Test
-	void testResolve() {
+	void resolve() {
 		Parameter parameter = findParameterOfMethod("methodWithTestReporterParameter", TestReporter.class);
 
 		TestReporter testReporter = this.resolver.resolve(parameterContext(parameter),

@@ -43,7 +43,7 @@ class LauncherFactoryTests {
 	}
 
 	@Test
-	void testCreate() {
+	void create() {
 		Launcher launcher = LauncherFactory.create();
 		LauncherDiscoveryRequest discoveryRequest = this.createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
 
