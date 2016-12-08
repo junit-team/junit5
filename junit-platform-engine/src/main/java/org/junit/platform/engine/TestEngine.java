@@ -54,6 +54,37 @@ public interface TestEngine {
 	String getId();
 
 	/**
+	 * Get the implementation version of this test engine.
+	 *
+	 * <p>This default implementation tries to query the implementation version
+	 * from the package attributes. Packages have attributes only if the
+	 * information was defined in the manifests that accompany the classes, and
+	 * if the class loader created the package instance with the attributes
+	 * from the manifest.
+	 *
+	 * <p>If the implementation version can not be queried from the package
+	 * attributes, this method returns {@code "DEVELOPMENT"}.
+	 *
+	 * <p>It is up to the engine implementation to override this behavior with
+	 * a potentially constant version string of any kind.
+	 *
+	 * @return implementation version or {@code "DEVELOPMENT"}
+	 * @see Class#getPackage()
+	 * @see Package#getImplementationVersion()
+	 */
+	default String getVersion() {
+		String version = "DEVELOPMENT";
+		Package implementationPackage = getClass().getPackage();
+		if (implementationPackage != null) {
+			String implementationVersion = implementationPackage.getImplementationVersion();
+			if (implementationVersion != null) {
+				version = implementationVersion;
+			}
+		}
+		return version;
+	}
+
+	/**
 	 * Discover tests according to the supplied {@link EngineDiscoveryRequest}.
 	 *
 	 * <p>The supplied {@link UniqueId} must be used as the unique ID of the

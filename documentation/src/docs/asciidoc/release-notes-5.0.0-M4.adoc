@@ -29,6 +29,13 @@ on GitHub.
 * Support for loading and registering custom `TestExecutionListener`
   implementations automatically via Java's `ServiceLoader` mechanism.
 
+* Introduced new `getVersion()` method to `TestEngine` interface returning
+  the implementation version of a test engine. By default, the method tries
+  to determine the version from package attributes.
+
+* Logging information of discovered engines was enhanced to include the
+  version string supplied by the new `TestEngine::getVersion` method and other
+  at runtime available package attribute values.
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
 ==== JUnit Jupiter
