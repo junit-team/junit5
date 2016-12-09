@@ -26,7 +26,8 @@ on GitHub.
 
 ===== New Features
 
-* ❓
+* Support for loading and registering custom `TestExecutionListener`
+  implementations automatically via Java's `ServiceLoader` mechanism.
 
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
