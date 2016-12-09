@@ -3108,6 +3108,18 @@ in a file named <code>org.junit.platform.engine.TestEngine</code> within the <co
 the <code>junit-jupiter-engine</code> JAR.</p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="launcher-api-listeners-custom">7.1.4. Plugging in Your Own Test Execution Listeners</h4>
+<div class="paragraph">
+<p>In addition to the public <code><a href="../api/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method for registering test execution
+listeners programmatically, custom <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations discovered
+at runtime via Java&#8217;s <code>java.util.ServiceLoader</code> facility are automatically registered
+with the <code>DefaultLauncher</code>. For example, an <code>example.TestInfoPrinter</code> class
+implementing <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> and declared within the
+<code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file is loaded
+and registered automatically.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -4179,7 +4191,8 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Support for loading and registering custom <code>TestExecutionListener</code>
+implementations automatically via Java&#8217;s <code>ServiceLoader</code> mechanism.</p>
 </li>
 </ul>
 </div>
@@ -4231,7 +4244,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-12-08 21:04:45 EST
+Last updated 2016-12-09 00:34:06 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
