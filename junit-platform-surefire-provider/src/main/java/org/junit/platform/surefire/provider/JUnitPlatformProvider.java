@@ -134,15 +134,11 @@ public class JUnitPlatformProvider extends AbstractProvider {
 
 		Optional<List<String>> includes = getGroupsOrTags(getPropertiesList(INCLUDE_GROUPS),
 			getPropertiesList(INCLUDE_TAGS));
-		if (includes.isPresent()) {
-			filters.add(TagFilter.includeTags(includes.get()));
-		}
+		includes.map(TagFilter::includeTags).ifPresent(filters::add);
 
 		Optional<List<String>> excludes = getGroupsOrTags(getPropertiesList(EXCLUDE_GROUPS),
 			getPropertiesList(EXCLUDE_TAGS));
-		if (excludes.isPresent()) {
-			filters.add(TagFilter.excludeTags(excludes.get()));
-		}
+		excludes.map(TagFilter::excludeTags).ifPresent(filters::add);
 
 		return filters.toArray(new Filter<?>[filters.size()]);
 	}
