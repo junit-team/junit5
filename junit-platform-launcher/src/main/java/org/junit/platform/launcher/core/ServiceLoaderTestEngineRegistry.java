@@ -17,6 +17,7 @@ import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.platform.commons.util.PackageUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestEngine;
 
@@ -40,7 +41,7 @@ class ServiceLoaderTestEngineRegistry {
 		}
 		List<String> details = new ArrayList<>();
 		for (TestEngine engine : testEngines) {
-		 	details.add(engine.getId() + " (" + String.join(", ", information(engine)) + ")");
+			details.add(engine.getId() + " (" + String.join(", ", information(engine)) + ")");
 		}
 		LOG.log(level, "Discovered TestEngines with IDs: [" + String.join(", ", details) + "]");
 	}
@@ -58,14 +59,7 @@ class ServiceLoaderTestEngineRegistry {
 	}
 
 	private Optional<String> computeArtifactId(TestEngine engine) {
-		Package implementationPackage = engine.getClass().getPackage();
-		if (implementationPackage != null) {
-			String implementationTitle = implementationPackage.getImplementationTitle();
-			if (implementationTitle != null) {
-				return Optional.of("artifact ID: " + implementationTitle);
-			}
-		}
-		return Optional.empty();
+		return PackageUtils.getAttribute(engine.getClass(), p -> "artifact ID: " + p.getImplementationTitle());
 	}
 
 	private Optional<String> computeGroupId(TestEngine engine) {

@@ -13,6 +13,7 @@ package org.junit.platform.engine;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.PackageUtils;
 
 /**
  * A {@code TestEngine} facilitates <em>discovery</em> and <em>execution</em> of
@@ -73,15 +74,7 @@ public interface TestEngine {
 	 * @see Package#getImplementationVersion()
 	 */
 	default String getVersion() {
-		String version = "DEVELOPMENT";
-		Package implementationPackage = getClass().getPackage();
-		if (implementationPackage != null) {
-			String implementationVersion = implementationPackage.getImplementationVersion();
-			if (implementationVersion != null) {
-				version = implementationVersion;
-			}
-		}
-		return version;
+		return PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT");
 	}
 
 	/**
