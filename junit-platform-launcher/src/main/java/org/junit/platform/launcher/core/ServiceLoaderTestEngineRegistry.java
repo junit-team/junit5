@@ -10,8 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +17,6 @@ import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestEngine;
 
@@ -41,12 +38,11 @@ class ServiceLoaderTestEngineRegistry {
 		if (!LOG.isLoggable(level)) {
 			return;
 		}
-		List<TestEngine> engineList = CollectionUtils.toList(testEngines);
-		List<String> ids = engineList.stream().map(TestEngine::getId).collect(toList());
-		LOG.log(level, "Discovered TestEngines with IDs: " + ids);
-		for (TestEngine engine : engineList) {
-			LOG.log(level, "Details of " + engine.getId() + ": " + information(engine));
+		List<String> details = new ArrayList<>();
+		for (TestEngine engine : testEngines) {
+		 	details.add(engine.getId() + " (" + String.join(", ", information(engine)) + ")");
 		}
+		LOG.log(level, "Discovered TestEngines with IDs: [" + String.join(", ", details) + "]");
 	}
 
 	private List<String> information(TestEngine engine) {

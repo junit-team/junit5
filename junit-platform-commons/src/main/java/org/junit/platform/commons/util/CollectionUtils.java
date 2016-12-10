@@ -12,9 +12,7 @@ package org.junit.platform.commons.util;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.junit.platform.commons.meta.API;
 
@@ -51,20 +49,6 @@ public final class CollectionUtils {
 		Preconditions.condition(collection.size() == 1,
 			() -> "collection must contain exactly one element: " + collection);
 		return collection.iterator().next();
-	}
-
-	/**
-	 * Convert iterable to list.
-	 *
-	 * @param iterable iterable to iterate
-	 * @return the list populate with each iterated element
-	 * @throws PreconditionViolationException if the iterable is {@code null}
-	 */
-	public static <T> List<T> toList(Iterable<T> iterable) {
-		Preconditions.notNull(iterable, "iterable must not be null");
-		List<T> list = new ArrayList<>();
-		iterable.forEach(list::add);
-		return list;
 	}
 
 }
