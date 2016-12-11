@@ -4194,6 +4194,16 @@ on GitHub.</p>
 <p>Support for loading and registering custom <code>TestExecutionListener</code>
 implementations automatically via Java&#8217;s <code>ServiceLoader</code> mechanism.</p>
 </li>
+<li>
+<p>Introduced new <code>getVersion()</code> method to <code>TestEngine</code> interface returning
+the implementation version of a test engine. By default, the method tries
+to determine the version from package attributes.</p>
+</li>
+<li>
+<p>Logging information of discovered engines was enhanced to include the
+version string supplied by the new <code>TestEngine::getVersion</code> method and other
+at runtime available package attribute values.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -4244,7 +4254,7 @@ implementations automatically via Java&#8217;s <code>ServiceLoader</code> mechan
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-12-09 00:34:06 EST
+Last updated 2016-12-10 19:39:38 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
