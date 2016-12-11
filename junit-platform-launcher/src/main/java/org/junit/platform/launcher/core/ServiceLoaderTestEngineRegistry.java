@@ -10,12 +10,13 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
+import org.junit.platform.commons.util.PackageUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestEngine;
 
@@ -29,9 +30,35 @@ class ServiceLoaderTestEngineRegistry {
 	public Iterable<TestEngine> loadTestEngines() {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
 			ReflectionUtils.getDefaultClassLoader());
-		LOG.info(() -> "Discovered TestEngines with IDs: "
-				+ stream(testEngines.spliterator(), false).map(TestEngine::getId).collect(toList()));
+		LOG.info(() -> createDiscoveredTestEnginesMessage(testEngines));
 		return testEngines;
+	}
+
+	private String createDiscoveredTestEnginesMessage(Iterable<TestEngine> testEngines) {
+		List<String> details = new ArrayList<>();
+		for (TestEngine engine : testEngines) {
+			details.add(engine.getId() + " (" + String.join(", ", computeAttributes(engine)) + ")");
+		}
+		if (details.isEmpty()) {
+			return "No TestEngine implementation discovered.";
+		}
+		return "Discovered TestEngines with IDs: [" + String.join(", ", details) + "]";
+	}
+
+	private List<String> computeAttributes(TestEngine engine) {
+		List<String> attributes = new ArrayList<>();
+		attributes.add("version: " + engine.getVersion());
+		computeArtifactId(engine).ifPresent(id -> attributes.add("artifact ID: " + id));
+		computeGroupId(engine).ifPresent(id -> attributes.add("group ID: " + id));
+		return attributes;
+	}
+
+	private Optional<String> computeArtifactId(TestEngine engine) {
+		return PackageUtils.getAttribute(engine.getClass(), Package::getImplementationTitle);
+	}
+
+	private Optional<String> computeGroupId(TestEngine engine) {
+		return Optional.empty();
 	}
 
 }

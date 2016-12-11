@@ -13,6 +13,7 @@ package org.junit.platform.engine;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.PackageUtils;
 
 /**
  * A {@code TestEngine} facilitates <em>discovery</em> and <em>execution</em> of
@@ -52,6 +53,29 @@ public interface TestEngine {
 	 * {@code TestEngine} implementation class.
 	 */
 	String getId();
+
+	/**
+	 * Get the implementation version of this test engine.
+	 *
+	 * <p>This default implementation tries to query the implementation version
+	 * from the package attributes. Packages have attributes only if the
+	 * information was defined in the manifests that accompany the classes, and
+	 * if the class loader created the package instance with the attributes
+	 * from the manifest.
+	 *
+	 * <p>If the implementation version can not be queried from the package
+	 * attributes, this method returns {@code "DEVELOPMENT"}.
+	 *
+	 * <p>It is up to the engine implementation to override this behavior with
+	 * a potentially constant version string of any kind.
+	 *
+	 * @return implementation version or {@code "DEVELOPMENT"}
+	 * @see Class#getPackage()
+	 * @see Package#getImplementationVersion()
+	 */
+	default String getVersion() {
+		return PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT");
+	}
 
 	/**
 	 * Discover tests according to the supplied {@link EngineDiscoveryRequest}.
