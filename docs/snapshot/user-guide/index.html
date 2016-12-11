@@ -4191,18 +4191,20 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Support for loading and registering custom <code>TestExecutionListener</code>
-implementations automatically via Java&#8217;s <code>ServiceLoader</code> mechanism.</p>
+<p>Custom <code>TestExecutionListener</code> implementations can now be registered automatically via
+Java&#8217;s <code>ServiceLoader</code> mechanism.</p>
 </li>
 <li>
-<p>Introduced new <code>getVersion()</code> method to <code>TestEngine</code> interface returning
-the implementation version of a test engine. By default, the method tries
-to determine the version from package attributes.</p>
+<p>New <code>getGroupId()</code>, <code>getArtifactId()</code>, and <code>getVersion()</code> default methods in the
+<code>TestEngine</code> API for debugging and reporting purposes. By default, package attributes
+(i.e., typically from JAR manifest attributes) are used to determine the artifact ID
+and version; whereas, the group ID is empty by default. Consult the Javadoc for
+<code><a href="../api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> for details.</p>
 </li>
 <li>
-<p>Logging information of discovered engines was enhanced to include the
-version string supplied by the new <code>TestEngine::getVersion</code> method and other
-at runtime available package attribute values.</p>
+<p>Logging information for discovered test engines has been enhanced to include the group
+ID, artifact ID, and version of each test engine if available via the <code>getGroupId()</code>,
+<code>getArtifactId()</code>, and <code>getVersion()</code> methods.</p>
 </li>
 </ul>
 </div>
