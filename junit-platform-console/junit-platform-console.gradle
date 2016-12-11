@@ -1,12 +1,15 @@
 apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'com.github.jlouns.cpe'
 
 buildscript {
 	repositories {
 		jcenter()
+		maven { url "https://plugins.gradle.org/m2/" }
 	}
 	dependencies {
 		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+		classpath 'gradle.plugin.com.github.jlouns:gradle-cross-platform-exec-plugin:0.4.1'
 	}
 }
 
@@ -16,6 +19,8 @@ configurations {
 
 dependencies {
 	compile(project(':junit-platform-launcher'))
+	runtime(project(':junit-jupiter-engine'))
+	runtime(project(':junit-vintage-engine'))
 	shadowed('net.sf.jopt-simple:jopt-simple:5.0.3')
 }
 
@@ -64,3 +69,22 @@ artifacts {
 distZip.dependsOn(shadowJar)
 distTar.dependsOn(shadowJar)
 installDist.dependsOn(shadowJar)
+
+task runDist(type: CrossPlatformExec) {
+	workingDir "$buildDir/install/$project.name/bin"
+	commandLine "$project.name", '--scan-classpath', '--hide-details'
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+task checkDist {
+	doLast {
+		String text = runDist.errorOutput.toString() + runDist.standardOutput.toString()
+		assert text.contains("junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $rootProject.version)")
+		assert text.contains("junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion)")
+	}
+}
+
+runDist.dependsOn(installDist)
+checkDist.dependsOn(runDist)
+check.dependsOn(checkDist)
