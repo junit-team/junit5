@@ -18,7 +18,7 @@ import java.util.function.Function;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Collection of utilities for working with {@link Package}s.
+ * Collection of utilities for working with {@linkplain Package packages}.
  *
  * <h3>DISCLAIMER</h3>
  *
@@ -38,17 +38,24 @@ public final class PackageUtils {
 	///CLOVER:ON
 
 	/**
-	 * Package attribute value getter.
+	 * Get the package attribute for the supplied {@code type} using the
+	 * supplied {@code function}.
 	 *
-	 * <p>This method only returns a non-empty optional value holder, iff the class loader
-	 * of the passed type created a package object and the supplied function does not
-	 * return {@code null}.
+	 * <p>This method only returns a non-empty {@link Optional} value holder
+	 * if the class loader for the supplied type created a {@link Package}
+	 * object and the supplied function does not return {@code null} when
+	 * applied.
 	 *
-	 * @param type class instance to get package attribute from
-	 * @param function computes the package attribute value, may return {@code null}
-	 * @return an optional attribute value
-	 * @throws PreconditionViolationException if the type or function is {@code null}
+	 * @param type the type to get the package attribute for
+	 * @param function a function that computes the package attribute value
+	 * (e.g., {@code Package::getImplementationTitle}); never {@code null}
+	 * @return an {@code Optional} containing the attribute value; never
+	 * {@code null} but potentially empty
+	 * @throws PreconditionViolationException if the supplied type or function
+	 * is {@code null}
 	 * @see Class#getPackage()
+	 * @see Package#getImplementationTitle()
+	 * @see Package#getImplementationVersion()
 	 */
 	public static Optional<String> getAttribute(Class<?> type, Function<Package, String> function) {
 		Preconditions.notNull(type, "type must not be null");

@@ -37,7 +37,7 @@ class ServiceLoaderTestEngineRegistry {
 	private String createDiscoveredTestEnginesMessage(Iterable<TestEngine> testEngines) {
 		List<String> details = new ArrayList<>();
 		for (TestEngine engine : testEngines) {
-			details.add(engine.getId() + " (" + String.join(", ", computeAttributes(engine)) + ")");
+			details.add(String.format("%s (%s)", engine.getId(), String.join(", ", computeAttributes(engine))));
 		}
 		if (details.isEmpty()) {
 			return "No TestEngine implementation discovered.";
