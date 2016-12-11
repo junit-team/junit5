@@ -8,7 +8,10 @@
  *
  * http://www.eclipse.org/legal/epl-v10.html
  */
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.PackageUtils;
 
 /**
  * Simple test case that is used to verify proper support for classpath scanning
@@ -21,6 +24,11 @@ public class DefaultPackageTestCase {
 	@Test
 	void test() {
 		// do nothing
+	}
+
+	@Test
+	void getAttributeFromDefaultPackageMemberIsEmpty() {
+		assertFalse(PackageUtils.getAttribute(DefaultPackageTestCase.class, Object::toString).isPresent());
 	}
 
 }

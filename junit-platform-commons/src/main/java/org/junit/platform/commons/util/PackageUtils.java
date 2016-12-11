@@ -37,9 +37,22 @@ public final class PackageUtils {
 	}
 	///CLOVER:ON
 
+	/**
+	 * Package attribute value getter.
+	 *
+	 * <p>This method only returns a non-empty optional value holder, iff the class loader
+	 * of the passed type created a package object and the supplied function does not
+	 * return {@code null}.
+	 *
+	 * @param type class instance to get package attribute from
+	 * @param function computes the package attribute value, may return {@code null}
+	 * @return an optional attribute value
+	 * @throws PreconditionViolationException if the type or function is {@code null}
+	 * @see Class#getPackage()
+	 */
 	public static Optional<String> getAttribute(Class<?> type, Function<Package, String> function) {
 		Preconditions.notNull(type, "type must not be null");
-		Preconditions.notNull(type, "function must not be null");
+		Preconditions.notNull(function, "function must not be null");
 		Package typePackage = type.getPackage();
 		if (typePackage != null) {
 			String value = function.apply(typePackage);

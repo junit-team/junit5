@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.util.PackageUtils;
@@ -31,35 +30,31 @@ class ServiceLoaderTestEngineRegistry {
 	public Iterable<TestEngine> loadTestEngines() {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
 			ReflectionUtils.getDefaultClassLoader());
-		logDiscoveredTestEngines(Level.INFO, testEngines);
+		LOG.info(() -> createDiscoveredTestEnginesMessage(testEngines));
 		return testEngines;
 	}
 
-	private void logDiscoveredTestEngines(Level level, Iterable<TestEngine> testEngines) {
-		if (!LOG.isLoggable(level)) {
-			return;
-		}
+	private String createDiscoveredTestEnginesMessage(Iterable<TestEngine> testEngines) {
 		List<String> details = new ArrayList<>();
 		for (TestEngine engine : testEngines) {
-			details.add(engine.getId() + " (" + String.join(", ", information(engine)) + ")");
+			details.add(engine.getId() + " (" + String.join(", ", computeAttributes(engine)) + ")");
 		}
-		LOG.log(level, "Discovered TestEngines with IDs: [" + String.join(", ", details) + "]");
+		if (details.isEmpty()) {
+			return "No TestEngine implementation discovered.";
+		}
+		return "Discovered TestEngines with IDs: [" + String.join(", ", details) + "]";
 	}
 
-	private List<String> information(TestEngine engine) {
-		List<String> information = new ArrayList<>();
-		information.add(computeVersion(engine));
-		computeArtifactId(engine).ifPresent(information::add);
-		computeGroupId(engine).ifPresent(information::add);
-		return information;
-	}
-
-	private String computeVersion(TestEngine engine) {
-		return "version: " + engine.getVersion();
+	private List<String> computeAttributes(TestEngine engine) {
+		List<String> attributes = new ArrayList<>();
+		attributes.add("version: " + engine.getVersion());
+		computeArtifactId(engine).ifPresent(id -> attributes.add("artifact ID: " + id));
+		computeGroupId(engine).ifPresent(id -> attributes.add("group ID: " + id));
+		return attributes;
 	}
 
 	private Optional<String> computeArtifactId(TestEngine engine) {
-		return PackageUtils.getAttribute(engine.getClass(), p -> "artifact ID: " + p.getImplementationTitle());
+		return PackageUtils.getAttribute(engine.getClass(), Package::getImplementationTitle);
 	}
 
 	private Optional<String> computeGroupId(TestEngine engine) {
