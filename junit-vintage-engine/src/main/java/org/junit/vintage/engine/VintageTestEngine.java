@@ -14,6 +14,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.meta.API;
@@ -39,6 +40,14 @@ public class VintageTestEngine implements TestEngine {
 	@Override
 	public String getId() {
 		return ENGINE_ID;
+	}
+
+	/**
+	 * Returns {@code org.junit.vintage} as the group ID.
+	 */
+	@Override
+	public Optional<String> getGroupId() {
+		return Optional.of("org.junit.vintage");
 	}
 
 	@Override

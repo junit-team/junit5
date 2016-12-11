@@ -12,6 +12,8 @@ package org.junit.jupiter.engine;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import java.util.Optional;
+
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -34,6 +36,14 @@ public class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecu
 	@Override
 	public String getId() {
 		return ENGINE_ID;
+	}
+
+	/**
+	 * Returns {@code org.junit.jupiter} as the group ID.
+	 */
+	@Override
+	public Optional<String> getGroupId() {
+		return Optional.of("org.junit.jupiter");
 	}
 
 	@Override

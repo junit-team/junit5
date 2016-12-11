@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Basic assertions regarding {@link org.junit.platform.engine.TestEngine}
- * functionality.
+ * functionality in JUnit Vintage.
  *
  * @since 4.12
  */
@@ -30,8 +30,13 @@ class VintageTestEngineBasicTests {
 	}
 
 	@Test
+	void groupId() {
+		assertEquals("org.junit.vintage", vintage.getGroupId().get());
+	}
+
+	@Test
 	void version() {
-		assertEquals("DEVELOPMENT", vintage.getVersion());
+		assertEquals("DEVELOPMENT", vintage.getVersion().get());
 	}
 
 }

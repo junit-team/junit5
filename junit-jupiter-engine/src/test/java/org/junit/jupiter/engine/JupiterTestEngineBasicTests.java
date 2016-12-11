@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Basic assertions regarding {@link org.junit.platform.engine.TestEngine}
- * functionality.
+ * functionality in JUnit Jupiter.
  *
  * @since 5.0
  */
@@ -30,8 +30,13 @@ class JupiterTestEngineBasicTests {
 	}
 
 	@Test
+	void groupId() {
+		assertEquals("org.junit.jupiter", jupiter.getGroupId().get());
+	}
+
+	@Test
 	void version() {
-		assertEquals("DEVELOPMENT", jupiter.getVersion());
+		assertEquals("DEVELOPMENT", jupiter.getVersion().get());
 	}
 
 }

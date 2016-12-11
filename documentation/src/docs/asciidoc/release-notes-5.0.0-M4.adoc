@@ -28,14 +28,14 @@ on GitHub.
 
 * Custom `TestExecutionListener` implementations can now be registered automatically via
   Java's `ServiceLoader` mechanism.
-* New `getVersion()` method in the `TestEngine` API for returning the implementation
-  version of a test engine. By default, the method attempts to determine the
-  _implementation version_ from package attributes (i.e., typically from the
-  `Implementation-Version` JAR manifest attribute).
-* Logging information for discovered test engines has been enhanced to include the
-  version string supplied by the new `TestEngine::getVersion` method and other package
-  attributes available at runtime, such as the _implementation title_ which is assumed to
-  be the artifact ID (typically from the `Implementation-Title` JAR manifest attribute).
+* New `getGroupId()`, `getArtifactId()`, and `getVersion()` default methods in the
+  `TestEngine` API for debugging and reporting purposes. By default, package attributes
+  (i.e., typically from JAR manifest attributes) are used to determine the artifact ID
+  and version; whereas, the group ID is empty by default. Consult the Javadoc for
+  `{TestEngine}` for details.
+* Logging information for discovered test engines has been enhanced to include the group
+  ID, artifact ID, and version of each test engine if available via the `getGroupId()`,
+  `getArtifactId()`, and `getVersion()` methods.
 
 
 [[release-notes-5.0.0-m4-junit-jupiter]]

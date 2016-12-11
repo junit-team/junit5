@@ -12,6 +12,8 @@ package org.junit.platform.engine;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import java.util.Optional;
+
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.PackageUtils;
 
@@ -55,29 +57,6 @@ public interface TestEngine {
 	String getId();
 
 	/**
-	 * Get the implementation version of this test engine.
-	 *
-	 * <p>This default implementation tries to query the implementation version
-	 * from the package attributes. Packages have attributes only if the
-	 * information was defined in the manifests that accompany the classes, and
-	 * if the class loader created the package instance with the attributes
-	 * from the manifest.
-	 *
-	 * <p>If the implementation version can not be queried from the package
-	 * attributes, this method returns {@code "DEVELOPMENT"}.
-	 *
-	 * <p>It is up to the engine implementation to override this behavior with
-	 * a potentially constant version string of any kind.
-	 *
-	 * @return implementation version or {@code "DEVELOPMENT"}
-	 * @see Class#getPackage()
-	 * @see Package#getImplementationVersion()
-	 */
-	default String getVersion() {
-		return PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT");
-	}
-
-	/**
 	 * Discover tests according to the supplied {@link EngineDiscoveryRequest}.
 	 *
 	 * <p>The supplied {@link UniqueId} must be used as the unique ID of the
@@ -105,5 +84,88 @@ public interface TestEngine {
 	 * @param request the request to execute tests for
 	 */
 	void execute(ExecutionRequest request);
+
+	/**
+	 * Get the <em>Group ID</em> of the JAR in which this test engine is packaged.
+	 *
+	 * <p>This information is used solely for debugging and reporting purposes.
+	 *
+	 * <p>The default implementation simply returns an empty {@link Optional},
+	 * signaling that the group ID is unknown.
+	 *
+	 * <p>Concrete test engine implementations may override this method in
+	 * order to provide a known group ID.
+	 *
+	 * @return an {@code Optional} containing the group ID; never {@code null}
+	 * but potentially empty if the group ID is unknown
+	 * @see #getArtifactId()
+	 * @see #getVersion()
+	 */
+	default Optional<String> getGroupId() {
+		return Optional.empty();
+	}
+
+	/**
+	 * Get the <em>Artifact ID</em> of the JAR in which this test engine is packaged.
+	 *
+	 * <p>This information is used solely for debugging and reporting purposes.
+	 *
+	 * <p>The default implementation assumes the implementation title is equivalent
+	 * to the artifact ID and therefore attempts to query the
+	 * {@linkplain Package#getImplementationTitle() implementation title}
+	 * from the package attributes for the {@link Package} in which the engine
+	 * resides. Note that a package only has attributes if the information is
+	 * defined in the {@link java.util.jar.Manifest Manifest} of the JAR
+	 * containing that package, and if the class loader created the
+	 * {@link Package} instance with the attributes from the manifest.
+	 *
+	 * <p>If the implementation title cannot be queried from the package
+	 * attributes, the default implementation simply returns an empty
+	 * {@link Optional}.
+	 *
+	 * <p>Concrete test engine implementations may override this method in
+	 * order to determine the artifact ID by some other means.
+	 *
+	 * @return an {@code Optional} containing the artifact ID; never
+	 * {@code null} but potentially empty if the artifact ID is unknown
+	 * @see Class#getPackage()
+	 * @see Package#getImplementationTitle()
+	 * @see #getGroupId()
+	 * @see #getVersion()
+	 */
+	default Optional<String> getArtifactId() {
+		return PackageUtils.getAttribute(getClass(), Package::getImplementationTitle);
+	}
+
+	/**
+	 * Get the version of this test engine.
+	 *
+	 * <p>This information is used solely for debugging and reporting purposes.
+	 *
+	 * <p>This default implementation attempts to query the
+	 * {@linkplain Package#getImplementationVersion() implementation version}
+	 * from the package attributes for the {@link Package} in which the engine
+	 * resides. Note that a package only has attributes if the information is
+	 * defined in the {@link java.util.jar.Manifest Manifest} of the JAR
+	 * containing that package, and if the class loader created the
+	 * {@link Package} instance with the attributes from the manifest.
+	 *
+	 * <p>If the implementation version cannot be queried from the package
+	 * attributes, the default implementation returns {@code "DEVELOPMENT"}.
+	 *
+	 * <p>Concrete test engine implementations may override this method to
+	 * determine the version by some other means.
+	 *
+	 * @return an {@code Optional} containing the version; never {@code null}
+	 * but potentially empty if the version is unknown
+	 * @see Class#getPackage()
+	 * @see Package#getImplementationVersion()
+	 * @see #getGroupId()
+	 * @see #getArtifactId()
+	 */
+	default Optional<String> getVersion() {
+		return Optional.of(
+			PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT"));
+	}
 
 }

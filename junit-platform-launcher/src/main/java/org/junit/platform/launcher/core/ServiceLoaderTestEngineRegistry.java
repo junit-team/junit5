@@ -12,11 +12,9 @@ package org.junit.platform.launcher.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
-import org.junit.platform.commons.util.PackageUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestEngine;
 
@@ -47,18 +45,10 @@ class ServiceLoaderTestEngineRegistry {
 
 	private List<String> computeAttributes(TestEngine engine) {
 		List<String> attributes = new ArrayList<>();
-		attributes.add("version: " + engine.getVersion());
-		computeArtifactId(engine).ifPresent(id -> attributes.add("artifact ID: " + id));
-		computeGroupId(engine).ifPresent(id -> attributes.add("group ID: " + id));
+		engine.getGroupId().ifPresent(groupId -> attributes.add("group ID: " + groupId));
+		engine.getArtifactId().ifPresent(artifactId -> attributes.add("artifact ID: " + artifactId));
+		engine.getVersion().ifPresent(version -> attributes.add("version: " + version));
 		return attributes;
-	}
-
-	private Optional<String> computeArtifactId(TestEngine engine) {
-		return PackageUtils.getAttribute(engine.getClass(), Package::getImplementationTitle);
-	}
-
-	private Optional<String> computeGroupId(TestEngine engine) {
-		return Optional.empty();
 	}
 
 }
