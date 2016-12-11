@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  * Basic assertions regarding {@link org.junit.platform.engine.TestEngine}
  * functionality.
  *
- * @since 5.0
+ * @since 4.12
  */
 class VintageTestEngineBasicTests {
 
