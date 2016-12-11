@@ -26,16 +26,17 @@ on GitHub.
 
 ===== New Features
 
-* Support for loading and registering custom `TestExecutionListener`
-  implementations automatically via Java's `ServiceLoader` mechanism.
+* Custom `TestExecutionListener` implementations can now be registered automatically via
+  Java's `ServiceLoader` mechanism.
+* New `getVersion()` method in the `TestEngine` API for returning the implementation
+  version of a test engine. By default, the method attempts to determine the
+  _implementation version_ from package attributes (i.e., typically from the
+  `Implementation-Version` JAR manifest attribute).
+* Logging information for discovered test engines has been enhanced to include the
+  version string supplied by the new `TestEngine::getVersion` method and other package
+  attributes available at runtime, such as the _implementation title_ which is assumed to
+  be the artifact ID (typically from the `Implementation-Title` JAR manifest attribute).
 
-* Introduced new `getVersion()` method to `TestEngine` interface returning
-  the implementation version of a test engine. By default, the method tries
-  to determine the version from package attributes.
-
-* Logging information of discovered engines was enhanced to include the
-  version string supplied by the new `TestEngine::getVersion` method and other
-  at runtime available package attribute values.
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
 ==== JUnit Jupiter
