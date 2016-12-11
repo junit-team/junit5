@@ -1023,7 +1023,7 @@ public final class Assertions {
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * simply ignore the return value.
 	 */
-	public static <T extends Throwable> T assertThrows(Class<? extends Throwable> expectedType, Executable executable) {
+	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable) {
 		return AssertThrows.assertThrows(expectedType, executable);
 	}
 
