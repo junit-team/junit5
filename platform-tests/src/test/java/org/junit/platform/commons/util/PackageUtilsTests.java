@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.util.function.Supplier;
 
@@ -49,12 +50,14 @@ class PackageUtilsTests {
 
 	@Test
 	void vendorFromObjectClassIsPresent() {
+		assumeFalse(System.getProperty("java.version").startsWith("9"), "Java 9 not supported, yet");
 		assertTrue(PackageUtils.getAttribute(Object.class, Package::getSpecificationVendor).isPresent());
 		assertTrue(PackageUtils.getAttribute(Object.class, Package::getImplementationVendor).isPresent());
 	}
 
 	@Test
 	void versionSystemPropertyEqualsRuntimeClassImplementationVersion() {
+		assumeFalse(System.getProperty("java.version").startsWith("9"), "Java 9 not supported, yet");
 		Supplier<AssertionError> error = () -> new AssertionError("implementation version not available");
 		String actual = PackageUtils.getAttribute(Runtime.class, Package::getImplementationVersion).orElseThrow(error);
 		assertEquals(System.getProperty("java.version"), actual);
