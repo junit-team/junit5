@@ -14,11 +14,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import java.util.function.Supplier;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
 
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.function.Executable;
+import org.opentest4j.ValueWrapper;
 
 /**
  * Unit tests for {@link PackageUtils}.
@@ -45,22 +51,22 @@ class PackageUtilsTests {
 
 	@Test
 	void getAttributeWithFunctionReturningNullIsEmpty() {
-		assertFalse(PackageUtils.getAttribute(Object.class, p -> null).isPresent());
+		assertFalse(PackageUtils.getAttribute(ValueWrapper.class, p -> null).isPresent());
 	}
 
-	@Test
-	void vendorFromObjectClassIsPresent() {
-		assumeFalse(System.getProperty("java.version").startsWith("9"), "Java 9 not supported, yet");
-		assertTrue(PackageUtils.getAttribute(Object.class, Package::getSpecificationVendor).isPresent());
-		assertTrue(PackageUtils.getAttribute(Object.class, Package::getImplementationVendor).isPresent());
+	@TestFactory
+	List<DynamicTest> attributesFromValueWrapperClassArePresent() {
+		return Arrays.asList(dynamicTest("getName", isPresent(Package::getName)),
+			dynamicTest("getImplementationTitle", isPresent(Package::getImplementationTitle)),
+			dynamicTest("getImplementationVendor", isPresent(Package::getImplementationVendor)),
+			dynamicTest("getImplementationVersion", isPresent(Package::getImplementationVersion)),
+			dynamicTest("getSpecificationTitle", isPresent(Package::getSpecificationTitle)),
+			dynamicTest("getSpecificationVendor", isPresent(Package::getSpecificationVendor)),
+			dynamicTest("getSpecificationVersion", isPresent(Package::getSpecificationVersion)));
 	}
 
-	@Test
-	void versionSystemPropertyEqualsRuntimeClassImplementationVersion() {
-		assumeFalse(System.getProperty("java.version").startsWith("9"), "Java 9 not supported, yet");
-		Supplier<AssertionError> error = () -> new AssertionError("implementation version not available");
-		String actual = PackageUtils.getAttribute(Runtime.class, Package::getImplementationVersion).orElseThrow(error);
-		assertEquals(System.getProperty("java.version"), actual);
+	private Executable isPresent(Function<Package, String> function) {
+		return () -> assertTrue(PackageUtils.getAttribute(ValueWrapper.class, function).isPresent());
 	}
 
 }
