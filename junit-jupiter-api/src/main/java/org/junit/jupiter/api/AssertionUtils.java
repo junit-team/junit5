@@ -18,6 +18,12 @@ import java.util.function.Supplier;
 import org.junit.platform.commons.util.StringUtils;
 import org.opentest4j.AssertionFailedError;
 
+/**
+ * {@code AssertionUtils} is a collection of utility methods that are common to
+ * all assertion implementations.
+ *
+ * @since 5.0
+ */
 class AssertionUtils {
 
 	///CLOVER:OFF
