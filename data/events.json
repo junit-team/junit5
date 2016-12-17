@@ -148,6 +148,16 @@
     ]
   },
   {
+    "title": "JUnit 5 Workshop - Java User Group",
+    "date": "2017-01-25",
+    "location": "Karlsruhe, Germany",
+    "link": "http://jug-karlsruhe.de/content/junit-workshop/",
+    "speakers": [
+      "nicolaiparlog",
+      "marcphilipp"
+    ]
+  },
+  {
     "title": "Deep Dive into JUnit 5 - Voxxed Days Zurich 2017",
     "date": "2017-02-23",
     "location": "Zurich, Switzerland",
