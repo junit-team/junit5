@@ -165,5 +165,14 @@
     "speakers": [
       "sbrannen"
     ]
+  },
+  {
+    "title": "JUnit 5 - The New Testing Framework for Java and Platform for the JVM - Devoxx US 2017",
+    "date": "2017-03-23",
+    "location": "San Jose, CA",
+    "link": "http://cfp.devoxx.us/2017/talk/ZCD-4979/JUnit_5_-_The_New_Testing_Framework_for_Java_and_Platform_for_the_JVM",
+    "speakers": [
+      "marcphilipp"
+    ]
   }
 ]
