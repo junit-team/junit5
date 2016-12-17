@@ -49,12 +49,12 @@ abstract class AbstractTestRuleSupport implements BeforeEachCallback, TestExecut
 
 	@Override
 	public void beforeEach(TestExtensionContext context) throws Exception {
-		this.invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::before);
+		invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::before);
 	}
 
 	@Override
 	public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
-		this.invokeAppropriateMethodOnRuleAnnotatedMembers(context, advice -> {
+		invokeAppropriateMethodOnRuleAnnotatedMembers(context, advice -> {
 			try {
 				advice.handleTestExecutionException(throwable);
 			}
@@ -66,7 +66,7 @@ abstract class AbstractTestRuleSupport implements BeforeEachCallback, TestExecut
 
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {
-		this.invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::after);
+		invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::after);
 	}
 
 	private void invokeAppropriateMethodOnRuleAnnotatedMembers(TestExtensionContext context,
@@ -75,7 +75,7 @@ abstract class AbstractTestRuleSupport implements BeforeEachCallback, TestExecut
 
 		// @formatter:off
         members.stream()
-                .map(member -> this.createRuleAnnotatedMember(context, member))
+                .map(member -> createRuleAnnotatedMember(context, member))
                 .map(this.adapterGenerator)
 		        .forEach(methodCaller::accept);
         // @formatter:on
