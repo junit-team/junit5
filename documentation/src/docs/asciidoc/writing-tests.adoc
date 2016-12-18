@@ -272,7 +272,7 @@ class MyMockitoTest {
 === Interface Default Methods
 
 JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach` and `@AfterEach` to be declared on
-interface default methods. `@BeforeAll` and `@AfterAll` can be declared in static methods of the 
+interface default methods. `@BeforeAll` and `@AfterAll` can be declared in static methods of the
 test interface while `@ExtendWith` and `@Tag` can be declared in the test interface to configure
 extensions and tags. Here's an example:
 
