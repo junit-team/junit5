@@ -271,8 +271,73 @@ class MyMockitoTest {
 [[writing-tests-interface-default-methods]]
 === Interface Default Methods
 
-JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach`, and `@AfterEach` to be declared on
-interface default methods. One possible application of this feature is to write tests for
+JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach`, `@AfterEach`, `@BeforeAll` and `@AfterAll`
+to be declared on interface default methods. In the test interface, you can also configure extensions
+and tags using `@ExtendWith` and `@Tag`. Here's an example:
+
+[source,java]
+[subs="verbatim"]
+----
+include::{testDir}/example/testinterface/TestConsoleLogger.java[tags=user_guide]
+----
+
+[source,java]
+[subs="verbatim"]
+----
+include::{testDir}/example/testinterface/DynamicTests.java[tags=user_guide]
+----
+
+`@ExtendWidth` and `@Tag` can be placed in the test interface so that classes that implement it
+automatically inherit its tag and extension. See <<extensions-lifecycle-callbacks-before-after-execution>>
+for <<extensions-lifecycle-callbacks-timing-extension, TimingExtension>> source code.
+
+[source,java]
+[subs="verbatim"]
+----
+include::{testDir}/example/testinterface/TimeExecutionLogger.java[tags=user_guide]
+----
+
+In your test class you can then implement these test interfaces to apply.
+
+[source,java]
+[subs="verbatim"]
+----
+include::{testDir}/example/testinterface/TestInterfaceDemoTests.java[tags=user_guide]
+----
+
+Running the test results in output similar to the following:
+
+[subs="none"]
+----
+:junitPlatformTest
+15:04:32.402 [main] INFO  org.junit5.issue281.TestConsoleLogger - beforeAllTest
+15:04:32.418 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [dynamicTestsFromCollection]
+15:04:32.438 [main] INFO  org.junit5.issue281.TimingExtension - Method [dynamicTestsFromCollection] took 14 ms.
+15:04:32.441 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [dynamicTestsFromCollection]
+15:04:32.443 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [isEqualValue]
+15:04:32.445 [main] INFO  org.junit5.issue281.TimingExtension - Method [isEqualValue] took 1 ms.
+15:04:32.446 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [isEqualValue]
+15:04:32.448 [main] INFO  org.junit5.issue281.TestConsoleLogger - afterAllTest
+
+Test run finished after 129 ms
+[         3 containers found      ]
+[         0 containers skipped    ]
+[         3 containers started    ]
+[         0 containers aborted    ]
+[         3 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         0 tests skipped         ]
+[         3 tests started         ]
+[         0 tests aborted         ]
+[         3 tests successful      ]
+[         0 tests failed          ]
+
+BUILD SUCCESSFUL
+
+----
+
+Another possible application of this feature is to write tests for
 interface contracts. For example, you can write tests for how implementations of
 `Object.equals` or `Comparable.compareTo` should behave as follows.
 
