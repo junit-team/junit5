@@ -22,13 +22,15 @@ import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.GenericBeforeAndAfterAdvice;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
+import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMemberFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.rules.TestRule;
 
 /**
  * @since 5.0
  */
-abstract class AbstractTestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandler, AfterEachCallback {
+abstract class AbstractTestRuleSupport<T extends Member>
+		implements BeforeEachCallback, TestExecutionExceptionHandler, AfterEachCallback {
 
 	private final Class<? extends TestRule> ruleType;
 	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator;
@@ -39,9 +41,7 @@ abstract class AbstractTestRuleSupport implements BeforeEachCallback, TestExecut
 		this.ruleType = ruleType;
 	}
 
-	protected abstract TestRuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member);
-
-	protected abstract List<Member> findRuleAnnotatedMembers(Object testInstance);
+	protected abstract List<T> findRuleAnnotatedMembers(Object testInstance);
 
 	protected Class<? extends TestRule> getRuleType() {
 		return this.ruleType;
@@ -71,11 +71,12 @@ abstract class AbstractTestRuleSupport implements BeforeEachCallback, TestExecut
 
 	private void invokeAppropriateMethodOnRuleAnnotatedMembers(TestExtensionContext context,
 			Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
-		List<Member> members = this.findRuleAnnotatedMembers(context.getTestInstance());
+
+		List<T> members = findRuleAnnotatedMembers(context.getTestInstance());
 
 		// @formatter:off
         members.stream()
-                .map(member -> createRuleAnnotatedMember(context, member))
+                .map(member -> TestRuleAnnotatedMemberFactory.from(context.getTestInstance(), member))
                 .map(this.adapterGenerator)
 		        .forEach(methodCaller::accept);
         // @formatter:on

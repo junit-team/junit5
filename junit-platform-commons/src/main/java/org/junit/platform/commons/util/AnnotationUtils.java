@@ -11,14 +11,17 @@
 package org.junit.platform.commons.util;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -262,6 +265,34 @@ public final class AnnotationUtils {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Find all {@code public} {@linkplain Field fields} of the supplied class
+	 * or interface that are of the specified {@code fieldType} and annotated
+	 * or meta-annotated with the specified {@code annotationType}.
+	 *
+	 * <p>Consult the Javadoc for {@link Class#getFields()} for details on
+	 * inheritance and ordering.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param fieldType the type of field to find; never {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @return the list of all such fields found; never {@code null}
+	 * @see Class#getFields()
+	 */
+	public static List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<?> fieldType,
+			Class<? extends Annotation> annotationType) {
+
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(fieldType, "fieldType must not be null");
+		Preconditions.notNull(annotationType, "annotationType must not be null");
+
+		// @formatter:off
+        return Arrays.stream(clazz.getFields())
+                .filter(field -> fieldType.isAssignableFrom(field.getType()) && isAnnotated(field, annotationType))
+                .collect(toList());
+		// @formatter:on
 	}
 
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,

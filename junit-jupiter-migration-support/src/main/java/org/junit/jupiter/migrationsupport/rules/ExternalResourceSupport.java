@@ -47,9 +47,9 @@ public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCal
 
 	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = ExternalResourceAdapter::new;
 
-	private final AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator,
+	private final TestRuleFieldSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator,
 		ExternalResource.class);
-	private final AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator,
+	private final TestRuleMethodSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator,
 		ExternalResource.class);
 
 	@Override

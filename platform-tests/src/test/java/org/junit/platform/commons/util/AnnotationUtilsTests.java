@@ -15,11 +15,13 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedMethods;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.platform.commons.util.AnnotationUtils.findPublicAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
@@ -32,7 +34,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -326,7 +330,76 @@ class AnnotationUtilsTests {
 		assertThat(methods).containsExactly(interfaceMethod);
 	}
 
-	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Test
+	void findPublicAnnotatedFieldsForNullClass() {
+		assertThrows(PreconditionViolationException.class,
+			() -> findPublicAnnotatedFields(null, String.class, Annotation1.class));
+	}
+
+	@Test
+	void findPublicAnnotatedFieldsForNullFieldType() {
+		assertThrows(PreconditionViolationException.class,
+			() -> findPublicAnnotatedFields(getClass(), null, Annotation1.class));
+	}
+
+	@Test
+	void findPublicAnnotatedFieldsForNullAnnotationType() {
+		assertThrows(PreconditionViolationException.class,
+			() -> findPublicAnnotatedFields(getClass(), String.class, null));
+	}
+
+	@Test
+	void findPublicAnnotatedFieldsForPrivateField() {
+		List<Field> fields = findPublicAnnotatedFields(getClass(), Boolean.class, Annotation1.class);
+		assertNotNull(fields);
+		assertEquals(0, fields.size());
+	}
+
+	@Test
+	void findPublicAnnotatedFieldsForDirectlyAnnotatedFieldOfWrongFieldType() {
+		List<Field> fields = findPublicAnnotatedFields(getClass(), BigDecimal.class, Annotation1.class);
+		assertNotNull(fields);
+		assertEquals(0, fields.size());
+	}
+
+	@Test
+	void findPublicAnnotatedFieldsForDirectlyAnnotatedField() {
+		List<Field> fields = findPublicAnnotatedFields(getClass(), String.class, Annotation1.class);
+		assertNotNull(fields);
+		assertIterableEquals(asList("directlyAnnotatedField"), asNames(fields));
+	}
+
+	@Test
+	void findPublicAnnotatedFieldsForMetaAnnotatedField() {
+		List<Field> fields = findPublicAnnotatedFields(getClass(), Number.class, Annotation1.class);
+		assertNotNull(fields);
+		assertEquals(1, fields.size());
+		assertIterableEquals(asList("metaAnnotatedField"), asNames(fields));
+	}
+
+	@Test
+	void findPublicAnnotatedFieldsForDirectlyAnnotatedFieldInInterface() {
+		List<Field> fields = findPublicAnnotatedFields(InterfaceWithAnnotatedFields.class, String.class,
+			Annotation1.class);
+		assertNotNull(fields);
+		assertIterableEquals(asList("foo"), asNames(fields));
+	}
+
+	@Test
+	void findPublicAnnotatedFieldsForDirectlyAnnotatedFieldsInClassAndInterface() {
+		List<Field> fields = findPublicAnnotatedFields(ClassWithAnnotatedFieldsFromInterface.class, String.class,
+			Annotation1.class);
+		assertNotNull(fields);
+		assertThat(asNames(fields)).containsExactlyInAnyOrder("foo", "bar");
+	}
+
+	private List<String> asNames(List<Field> fields) {
+		return fields.stream().map(Field::getName).collect(toList());
+	}
+
+	// -------------------------------------------------------------------------
+
+	@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface Annotation1 {
 	}
@@ -347,7 +420,7 @@ class AnnotationUtilsTests {
 	@interface InheritedAnnotation {
 	}
 
-	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Annotation1
 	@interface ComposedAnnotation {
@@ -583,6 +656,33 @@ class AnnotationUtilsTests {
 		@Annotation2
 		void method3() {
 		}
+	}
+
+	@Annotation1
+	private Boolean privateDirectlyAnnotatedField;
+
+	@Annotation1
+	public String directlyAnnotatedField;
+
+	@ComposedAnnotation
+	public Integer metaAnnotatedField;
+
+	interface InterfaceWithAnnotatedFields {
+
+		@Annotation1
+		String foo = "bar";
+
+		@Annotation1
+		boolean wrongType = false;
+	}
+
+	class ClassWithAnnotatedFieldsFromInterface implements InterfaceWithAnnotatedFields {
+
+		@Annotation1
+		public String bar = "baz";
+
+		@Annotation1
+		public boolean notAString = true;
 	}
 
 }

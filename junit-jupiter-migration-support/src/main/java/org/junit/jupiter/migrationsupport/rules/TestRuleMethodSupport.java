@@ -10,27 +10,23 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
+import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
-import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMemberFactory;
-import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.rules.TestRule;
 
 /**
  * @since 5.0
  */
-class TestRuleMethodSupport extends AbstractTestRuleSupport {
+class TestRuleMethodSupport extends AbstractTestRuleSupport<Method> {
 
 	TestRuleMethodSupport(Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator,
 			Class<? extends TestRule> ruleType) {
@@ -38,24 +34,11 @@ class TestRuleMethodSupport extends AbstractTestRuleSupport {
 	}
 
 	@Override
-	protected TestRuleAnnotatedMember createRuleAnnotatedMember(TestExtensionContext context, Member member) {
-		return TestRuleAnnotatedMemberFactory.from(context.getTestInstance(), member);
-	}
+	protected List<Method> findRuleAnnotatedMembers(Object testInstance) {
+		Predicate<Method> isRuleMethod = method -> isAnnotated(method, Rule.class);
+		Predicate<Method> hasCorrectReturnType = method -> method.getReturnType().isAssignableFrom(getRuleType());
 
-	@Override
-	protected List<Member> findRuleAnnotatedMembers(Object testInstance) {
-		List<Method> annotatedMethods = AnnotationUtils.findAnnotatedMethods(testInstance.getClass(), Rule.class,
-			HierarchyDown);
-
-		Predicate<Method> methodsWithCorrectReturnType = method -> method.getReturnType().isAssignableFrom(
-			super.getRuleType());
-
-		// @formatter:off
-        return annotatedMethods.stream()
-                .filter(methodsWithCorrectReturnType)
-                .collect(Collectors.toList());
-		// @formatter:on
-
+		return findMethods(testInstance.getClass(), isRuleMethod.and(hasCorrectReturnType));
 	}
 
 }

@@ -46,8 +46,9 @@ public class VerifierSupport implements AfterEachCallback {
 
 	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = VerifierAdapter::new;
 
-	private AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator, Verifier.class);
-	private AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator, Verifier.class);
+	private final TestRuleFieldSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator, Verifier.class);
+	private final TestRuleMethodSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator,
+		Verifier.class);
 
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {

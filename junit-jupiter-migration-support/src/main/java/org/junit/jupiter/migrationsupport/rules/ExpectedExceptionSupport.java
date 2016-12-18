@@ -32,7 +32,7 @@ import org.junit.rules.ExpectedException;
  * {@link ExpectedException} rule from JUnit 4.
  *
  * <p>By using this class-level extension on a test class,
- * {@code ExpectedException} can continued to be used.
+ * {@code ExpectedException} can continue to be used.
  *
  * <p>However, you should rather switch to
  * {@link org.junit.jupiter.api.Assertions#assertThrows} for new code.
@@ -50,9 +50,9 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 
 	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = ExpectedExceptionAdapter::new;
 
-	private final AbstractTestRuleSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator,
+	private final TestRuleFieldSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator,
 		ExpectedException.class);
-	private final AbstractTestRuleSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator,
+	private final TestRuleMethodSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator,
 		ExpectedException.class);
 
 	@Override
@@ -75,4 +75,5 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 	private Store getStore(TestExtensionContext context) {
 		return context.getStore(Namespace.create(ExpectedExceptionSupport.class, context.getUniqueId()));
 	}
+
 }
