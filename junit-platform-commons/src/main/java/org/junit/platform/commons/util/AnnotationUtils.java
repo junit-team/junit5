@@ -11,7 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toCollection;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.annotation.Annotation;
@@ -291,7 +291,7 @@ public final class AnnotationUtils {
 		// @formatter:off
 		return Arrays.stream(clazz.getFields())
 				.filter(field -> fieldType.isAssignableFrom(field.getType()) && isAnnotated(field, annotationType))
-				.collect(toList());
+				.collect(toCollection(ArrayList::new));
 		// @formatter:on
 	}
 
