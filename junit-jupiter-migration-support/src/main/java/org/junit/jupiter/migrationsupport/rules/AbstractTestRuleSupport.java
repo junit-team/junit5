@@ -75,11 +75,11 @@ abstract class AbstractTestRuleSupport<T extends Member>
 		List<T> members = findRuleAnnotatedMembers(context.getTestInstance());
 
 		// @formatter:off
-        members.stream()
-                .map(member -> TestRuleAnnotatedMemberFactory.from(context.getTestInstance(), member))
-                .map(this.adapterGenerator)
-		        .forEach(methodCaller::accept);
-        // @formatter:on
+		members.stream()
+				.map(member -> TestRuleAnnotatedMemberFactory.from(context.getTestInstance(), member))
+				.map(this.adapterGenerator)
+				.forEach(methodCaller::accept);
+		// @formatter:on
 	}
 
 }

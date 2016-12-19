@@ -289,9 +289,9 @@ public final class AnnotationUtils {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
 		// @formatter:off
-        return Arrays.stream(clazz.getFields())
-                .filter(field -> fieldType.isAssignableFrom(field.getType()) && isAnnotated(field, annotationType))
-                .collect(toList());
+		return Arrays.stream(clazz.getFields())
+				.filter(field -> fieldType.isAssignableFrom(field.getType()) && isAnnotated(field, annotationType))
+				.collect(toList());
 		// @formatter:on
 	}
 
