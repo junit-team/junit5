@@ -458,7 +458,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#writing-tests-tagging-and-filtering">3.7. Tagging and Filtering</a></li>
 <li><a href="#writing-tests-nested">3.8. Nested Tests</a></li>
 <li><a href="#writing-tests-dependency-injection">3.9. Dependency Injection for Constructors and Methods</a></li>
-<li><a href="#writing-tests-interface-default-methods">3.10. Interface Default Methods</a></li>
+<li><a href="#writing-tests-test-interfaces-and-default-methods">3.10. Test Interfaces and Default Methods</a></li>
 <li><a href="#writing-tests-dynamic-tests">3.11. Dynamic Tests</a></li>
 </ul>
 </li>
@@ -1436,37 +1436,39 @@ class MyMockitoTest {
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-interface-default-methods">3.10. Interface Default Methods</h3>
+<h3 id="writing-tests-test-interfaces-and-default-methods">3.10. Test Interfaces and Default Methods</h3>
 <div class="paragraph">
-<p>JUnit Jupiter allows <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be declared on
-interface default methods. <code>@BeforeAll</code> and <code>@AfterAll</code> can be declared on static methods of the
-test interface while <code>@ExtendWith</code> and <code>@Tag</code> can be declared on the test interface to configure
-extensions and tags. Here&#8217;s an example:</p>
+<p>JUnit Jupiter allows <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be
+declared on interface default methods. In addition, <code>@BeforeAll</code> and <code>@AfterAll</code> can be
+declared on static methods in a test interface, while <code>@ExtendWith</code> and <code>@Tag</code> can be
+declared on test interfaces to configure extensions and tags. Here are some examples.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public interface TestConsoleLogger {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public interface TestLifecycleLogger {
 
-    public static final Logger LOG = Logger.getLogger(TestConsoleLogger.class.getName());
+    static final Logger LOG = Logger.getLogger(TestLifecycleLogger.class.getName());
 
     @BeforeAll
     static void beforeAllTests() {
-        LOG.info(() -&gt; "beforeAllTests");
+        LOG.info("beforeAllTests");
     }
 
     @AfterAll
     static void afterAllTests() {
-        LOG.info(() -&gt; "afterAllTests");
+        LOG.info("afterAllTests");
     }
 
     @BeforeEach
     default void beforeEachTest(TestInfo testInfo) {
-        LOG.info(() -&gt; String.format("About to execute [%s]", testInfo.getTestMethod().get().getName()));
+        LOG.info(() -&gt; String.format("About to execute [%s]",
+            testInfo.getDisplayName()));
     }
 
     @AfterEach
     default void afterEachTest(TestInfo testInfo) {
-        LOG.info(() -&gt; String.format("Finished executing [%s]", testInfo.getTestMethod().get().getName()));
+        LOG.info(() -&gt; String.format("Finished executing [%s]",
+            testInfo.getDisplayName()));
     }
 
 }</code></pre>
@@ -1474,21 +1476,24 @@ extensions and tags. Here&#8217;s an example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public interface TestInterfaceDynamicTestsDemo {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">interface TestInterfaceDynamicTestsDemo {
 
     @TestFactory
     default Collection&lt;DynamicTest&gt; dynamicTestsFromCollection() {
-        return Arrays.asList(dynamicTest("1st dynamic test in test interface", () -&gt; assertTrue(true)),
-            dynamicTest("2nd dynamic test in test interface", () -&gt; assertEquals(4, 2 * 2)));
+        return Arrays.asList(
+            dynamicTest("1st dynamic test in test interface", () -&gt; assertTrue(true)),
+            dynamicTest("2nd dynamic test in test interface", () -&gt; assertEquals(4, 2 * 2))
+        );
     }
 
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>@ExtendWidth</code> and <code>@Tag</code> can be declared on the test interface so that classes that implement it
-automatically inherit its tag and extension. See <a href="#extensions-lifecycle-callbacks-before-after-execution">Before and After Test Execution Callbacks</a>
-for <a href="#extensions-lifecycle-callbacks-timing-extension">TimingExtension</a> source code.</p>
+<p><code>@ExtendWith</code> and <code>@Tag</code> can be declared on a test interface so that classes that
+implement it automatically inherit its tags and extensions. See
+<a href="#extensions-lifecycle-callbacks-before-after-execution">Before and After Test Execution Callbacks</a> for the source code of the
+<a href="#extensions-lifecycle-callbacks-timing-extension">TimingExtension</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1503,7 +1508,7 @@ public interface TimeExecutionLogger {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public class TestInterfaceDemo implements TestConsoleLogger, TimeExecutionLogger, TestInterfaceDynamicTestsDemo {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">class TestInterfaceDemo implements TestLifecycleLogger, TimeExecutionLogger, TestInterfaceDynamicTestsDemo {
 
     @Test
     void isEqualValue() {
@@ -1514,19 +1519,19 @@ public interface TimeExecutionLogger {
 </div>
 </div>
 <div class="paragraph">
-<p>Running the test results in output similar to the following:</p>
+<p>Running the <code>TestInterfaceDemo</code> results in output similar to the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>:junitPlatformTest
-18:28:13.967 [main] INFO  org.junit5.issue281.TestConsoleLogger - beforeAllTests
-18:28:13.982 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [dynamicTestsFromCollection]
-18:28:14.000 [main] INFO  org.junit5.issue281.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
-18:28:14.004 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [dynamicTestsFromCollection]
-18:28:14.007 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [isEqualValue]
-18:28:14.008 [main] INFO  org.junit5.issue281.TimingExtension - Method [isEqualValue] took 1 ms.
-18:28:14.009 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [isEqualValue]
-18:28:14.011 [main] INFO  org.junit5.issue281.TestConsoleLogger - afterAllTests
+18:28:13.967 [main] INFO  example.testinterface.TestLifecycleLogger - beforeAllTests
+18:28:13.982 [main] INFO  example.testinterface.TestLifecycleLogger - About to execute [dynamicTestsFromCollection()]
+18:28:14.000 [main] INFO  example.testinterface.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
+18:28:14.004 [main] INFO  example.testinterface.TestLifecycleLogger - Finished executing [dynamicTestsFromCollection()]
+18:28:14.007 [main] INFO  example.testinterface.TestLifecycleLogger - About to execute [isEqualValue()]
+18:28:14.008 [main] INFO  example.testinterface.TimingExtension - Method [isEqualValue] took 1 ms.
+18:28:14.009 [main] INFO  example.testinterface.TestLifecycleLogger - Finished executing [isEqualValue()]
+18:28:14.011 [main] INFO  example.testinterface.TestLifecycleLogger - afterAllTests
 
 Test run finished after 190 ms
 [         3 containers found      ]
@@ -1546,9 +1551,9 @@ BUILD SUCCESSFUL</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Another possible application of this feature is to write tests for
-interface contracts. For example, you can write tests for how implementations of
-<code>Object.equals</code> or <code>Comparable.compareTo</code> should behave as follows.</p>
+<p>Another possible application of this feature is to write tests for interface contracts.
+For example, you can write tests for how implementations of <code>Object.equals</code> or
+<code>Comparable.compareTo</code> should behave as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4363,7 +4368,7 @@ ID, artifact ID, and version of each test engine if available via the <code>getG
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-12-19 15:46:29 EST
+Last updated 2016-12-19 17:05:11 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
