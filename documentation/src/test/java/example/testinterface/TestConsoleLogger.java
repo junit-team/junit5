@@ -24,13 +24,13 @@ public interface TestConsoleLogger {
 	public static final Logger LOG = Logger.getLogger(TestConsoleLogger.class.getName());
 
 	@BeforeAll
-	static void beforeAllTest() {
-		LOG.info(() -> "beforeAllTest");
+	static void beforeAllTests() {
+		LOG.info(() -> "beforeAllTests");
 	}
 
 	@AfterAll
-	static void afterAllTest() {
-		LOG.info(() -> "afterAllTest");
+	static void afterAllTests() {
+		LOG.info(() -> "afterAllTests");
 	}
 
 	@BeforeEach

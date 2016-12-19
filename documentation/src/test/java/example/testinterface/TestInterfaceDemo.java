@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 //tag::user_guide[]
-public class TestInterfaceDemoTests implements TestConsoleLogger, TimeExecutionLogger, DynamicTests {
+public class TestInterfaceDemo implements TestConsoleLogger, TimeExecutionLogger, TestInterfaceDynamicTestsDemo {
 
 	@Test
 	void isEqualValue() {

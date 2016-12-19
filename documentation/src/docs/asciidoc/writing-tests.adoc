@@ -271,9 +271,9 @@ class MyMockitoTest {
 [[writing-tests-interface-default-methods]]
 === Interface Default Methods
 
-JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach` and `@AfterEach` to be declared on
-interface default methods. `@BeforeAll` and `@AfterAll` can be declared in static methods of the
-test interface while `@ExtendWith` and `@Tag` can be declared in the test interface to configure
+JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach`, and `@AfterEach` to be declared on
+interface default methods. `@BeforeAll` and `@AfterAll` can be declared on static methods of the
+test interface while `@ExtendWith` and `@Tag` can be declared on the test interface to configure
 extensions and tags. Here's an example:
 
 [source,java]
@@ -285,10 +285,10 @@ include::{testDir}/example/testinterface/TestConsoleLogger.java[tags=user_guide]
 [source,java]
 [subs="verbatim"]
 ----
-include::{testDir}/example/testinterface/DynamicTests.java[tags=user_guide]
+include::{testDir}/example/testinterface/TestInterfaceDynamicTestsDemo.java[tags=user_guide]
 ----
 
-`@ExtendWidth` and `@Tag` can be placed in the test interface so that classes that implement it
+`@ExtendWidth` and `@Tag` can be declared on the test interface so that classes that implement it
 automatically inherit its tag and extension. See <<extensions-lifecycle-callbacks-before-after-execution>>
 for <<extensions-lifecycle-callbacks-timing-extension, TimingExtension>> source code.
 
@@ -298,12 +298,12 @@ for <<extensions-lifecycle-callbacks-timing-extension, TimingExtension>> source 
 include::{testDir}/example/testinterface/TimeExecutionLogger.java[tags=user_guide]
 ----
 
-In your test class you can then implement these test interfaces to apply.
+In your test class you can then implement these test interfaces to have them applied.
 
 [source,java]
 [subs="verbatim"]
 ----
-include::{testDir}/example/testinterface/TestInterfaceDemoTests.java[tags=user_guide]
+include::{testDir}/example/testinterface/TestInterfaceDemo.java[tags=user_guide]
 ----
 
 Running the test results in output similar to the following:
@@ -311,16 +311,16 @@ Running the test results in output similar to the following:
 [subs="none"]
 ----
 :junitPlatformTest
-15:04:32.402 [main] INFO  org.junit5.issue281.TestConsoleLogger - beforeAllTest
-15:04:32.418 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [dynamicTestsFromCollection]
-15:04:32.438 [main] INFO  org.junit5.issue281.TimingExtension - Method [dynamicTestsFromCollection] took 14 ms.
-15:04:32.441 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [dynamicTestsFromCollection]
-15:04:32.443 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [isEqualValue]
-15:04:32.445 [main] INFO  org.junit5.issue281.TimingExtension - Method [isEqualValue] took 1 ms.
-15:04:32.446 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [isEqualValue]
-15:04:32.448 [main] INFO  org.junit5.issue281.TestConsoleLogger - afterAllTest
+18:28:13.967 [main] INFO  org.junit5.issue281.TestConsoleLogger - beforeAllTests
+18:28:13.982 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [dynamicTestsFromCollection]
+18:28:14.000 [main] INFO  org.junit5.issue281.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
+18:28:14.004 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [dynamicTestsFromCollection]
+18:28:14.007 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [isEqualValue]
+18:28:14.008 [main] INFO  org.junit5.issue281.TimingExtension - Method [isEqualValue] took 1 ms.
+18:28:14.009 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [isEqualValue]
+18:28:14.011 [main] INFO  org.junit5.issue281.TestConsoleLogger - afterAllTests
 
-Test run finished after 129 ms
+Test run finished after 190 ms
 [         3 containers found      ]
 [         0 containers skipped    ]
 [         3 containers started    ]

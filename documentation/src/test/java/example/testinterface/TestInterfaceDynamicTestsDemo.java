@@ -21,7 +21,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
 //tag::user_guide[]
-public interface DynamicTests {
+public interface TestInterfaceDynamicTestsDemo {
 
 	@TestFactory
 	default Collection<DynamicTest> dynamicTestsFromCollection() {
