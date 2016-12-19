@@ -1439,7 +1439,114 @@ class MyMockitoTest {
 <h3 id="writing-tests-interface-default-methods">3.10. Interface Default Methods</h3>
 <div class="paragraph">
 <p>JUnit Jupiter allows <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be declared on
-interface default methods. One possible application of this feature is to write tests for
+interface default methods. <code>@BeforeAll</code> and <code>@AfterAll</code> can be declared on static methods of the
+test interface while <code>@ExtendWith</code> and <code>@Tag</code> can be declared on the test interface to configure
+extensions and tags. Here&#8217;s an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public interface TestConsoleLogger {
+
+    public static final Logger LOG = Logger.getLogger(TestConsoleLogger.class.getName());
+
+    @BeforeAll
+    static void beforeAllTests() {
+        LOG.info(() -&gt; "beforeAllTests");
+    }
+
+    @AfterAll
+    static void afterAllTests() {
+        LOG.info(() -&gt; "afterAllTests");
+    }
+
+    @BeforeEach
+    default void beforeEachTest(TestInfo testInfo) {
+        LOG.info(() -&gt; String.format("About to execute [%s]", testInfo.getTestMethod().get().getName()));
+    }
+
+    @AfterEach
+    default void afterEachTest(TestInfo testInfo) {
+        LOG.info(() -&gt; String.format("Finished executing [%s]", testInfo.getTestMethod().get().getName()));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public interface TestInterfaceDynamicTestsDemo {
+
+    @TestFactory
+    default Collection&lt;DynamicTest&gt; dynamicTestsFromCollection() {
+        return Arrays.asList(dynamicTest("1st dynamic test in test interface", () -&gt; assertTrue(true)),
+            dynamicTest("2nd dynamic test in test interface", () -&gt; assertEquals(4, 2 * 2)));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@ExtendWidth</code> and <code>@Tag</code> can be declared on the test interface so that classes that implement it
+automatically inherit its tag and extension. See <a href="#extensions-lifecycle-callbacks-before-after-execution">Before and After Test Execution Callbacks</a>
+for <a href="#extensions-lifecycle-callbacks-timing-extension">TimingExtension</a> source code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">@Tag("timed")
+@ExtendWith(TimingExtension.class)
+public interface TimeExecutionLogger {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In your test class you can then implement these test interfaces to have them applied.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public class TestInterfaceDemo implements TestConsoleLogger, TimeExecutionLogger, TestInterfaceDynamicTestsDemo {
+
+    @Test
+    void isEqualValue() {
+        assertEquals(1, 1, "is always equal");
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running the test results in output similar to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>:junitPlatformTest
+18:28:13.967 [main] INFO  org.junit5.issue281.TestConsoleLogger - beforeAllTests
+18:28:13.982 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [dynamicTestsFromCollection]
+18:28:14.000 [main] INFO  org.junit5.issue281.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
+18:28:14.004 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [dynamicTestsFromCollection]
+18:28:14.007 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [isEqualValue]
+18:28:14.008 [main] INFO  org.junit5.issue281.TimingExtension - Method [isEqualValue] took 1 ms.
+18:28:14.009 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [isEqualValue]
+18:28:14.011 [main] INFO  org.junit5.issue281.TestConsoleLogger - afterAllTests
+
+Test run finished after 190 ms
+[         3 containers found      ]
+[         0 containers skipped    ]
+[         3 containers started    ]
+[         0 containers aborted    ]
+[         3 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         0 tests skipped         ]
+[         3 tests started         ]
+[         0 tests aborted         ]
+[         3 tests successful      ]
+[         0 tests failed          ]
+
+BUILD SUCCESSFUL</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another possible application of this feature is to write tests for
 interface contracts. For example, you can write tests for how implementations of
 <code>Object.equals</code> or <code>Comparable.compareTo</code> should behave as follows.</p>
 </div>
