@@ -268,18 +268,18 @@ class MyMockitoTest {
 }
 ----
 
-[[writing-tests-interface-default-methods]]
-=== Interface Default Methods
+[[writing-tests-test-interfaces-and-default-methods]]
+=== Test Interfaces and Default Methods
 
-JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach`, and `@AfterEach` to be declared on
-interface default methods. `@BeforeAll` and `@AfterAll` can be declared on static methods of the
-test interface while `@ExtendWith` and `@Tag` can be declared on the test interface to configure
-extensions and tags. Here's an example:
+JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach`, and `@AfterEach` to be
+declared on interface default methods. In addition, `@BeforeAll` and `@AfterAll` can be
+declared on static methods in a test interface, while `@ExtendWith` and `@Tag` can be
+declared on test interfaces to configure extensions and tags. Here are some examples.
 
 [source,java]
 [subs="verbatim"]
 ----
-include::{testDir}/example/testinterface/TestConsoleLogger.java[tags=user_guide]
+include::{testDir}/example/testinterface/TestLifecycleLogger.java[tags=user_guide]
 ----
 
 [source,java]
@@ -288,9 +288,10 @@ include::{testDir}/example/testinterface/TestConsoleLogger.java[tags=user_guide]
 include::{testDir}/example/testinterface/TestInterfaceDynamicTestsDemo.java[tags=user_guide]
 ----
 
-`@ExtendWidth` and `@Tag` can be declared on the test interface so that classes that implement it
-automatically inherit its tag and extension. See <<extensions-lifecycle-callbacks-before-after-execution>>
-for <<extensions-lifecycle-callbacks-timing-extension, TimingExtension>> source code.
+`@ExtendWith` and `@Tag` can be declared on a test interface so that classes that
+implement it automatically inherit its tags and extensions. See
+<<extensions-lifecycle-callbacks-before-after-execution>> for the source code of the
+<<extensions-lifecycle-callbacks-timing-extension, TimingExtension>>.
 
 [source,java]
 [subs="verbatim"]
@@ -306,19 +307,19 @@ In your test class you can then implement these test interfaces to have them app
 include::{testDir}/example/testinterface/TestInterfaceDemo.java[tags=user_guide]
 ----
 
-Running the test results in output similar to the following:
+Running the `TestInterfaceDemo` results in output similar to the following:
 
 [subs="none"]
 ----
 :junitPlatformTest
-18:28:13.967 [main] INFO  org.junit5.issue281.TestConsoleLogger - beforeAllTests
-18:28:13.982 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [dynamicTestsFromCollection]
-18:28:14.000 [main] INFO  org.junit5.issue281.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
-18:28:14.004 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [dynamicTestsFromCollection]
-18:28:14.007 [main] INFO  org.junit5.issue281.TestConsoleLogger - About to execute [isEqualValue]
-18:28:14.008 [main] INFO  org.junit5.issue281.TimingExtension - Method [isEqualValue] took 1 ms.
-18:28:14.009 [main] INFO  org.junit5.issue281.TestConsoleLogger - Finished executing [isEqualValue]
-18:28:14.011 [main] INFO  org.junit5.issue281.TestConsoleLogger - afterAllTests
+18:28:13.967 [main] INFO  example.testinterface.TestLifecycleLogger - beforeAllTests
+18:28:13.982 [main] INFO  example.testinterface.TestLifecycleLogger - About to execute [dynamicTestsFromCollection()]
+18:28:14.000 [main] INFO  example.testinterface.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
+18:28:14.004 [main] INFO  example.testinterface.TestLifecycleLogger - Finished executing [dynamicTestsFromCollection()]
+18:28:14.007 [main] INFO  example.testinterface.TestLifecycleLogger - About to execute [isEqualValue()]
+18:28:14.008 [main] INFO  example.testinterface.TimingExtension - Method [isEqualValue] took 1 ms.
+18:28:14.009 [main] INFO  example.testinterface.TestLifecycleLogger - Finished executing [isEqualValue()]
+18:28:14.011 [main] INFO  example.testinterface.TestLifecycleLogger - afterAllTests
 
 Test run finished after 190 ms
 [         3 containers found      ]
@@ -338,9 +339,9 @@ BUILD SUCCESSFUL
 
 ----
 
-Another possible application of this feature is to write tests for
-interface contracts. For example, you can write tests for how implementations of
-`Object.equals` or `Comparable.compareTo` should behave as follows.
+Another possible application of this feature is to write tests for interface contracts.
+For example, you can write tests for how implementations of `Object.equals` or
+`Comparable.compareTo` should behave as follows.
 
 [source,java]
 [subs="verbatim"]

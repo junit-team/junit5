@@ -18,30 +18,44 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
-//tag::user_guide[]
-public interface TestConsoleLogger {
+// tag::user_guide[]
+public interface TestLifecycleLogger {
 
-	public static final Logger LOG = Logger.getLogger(TestConsoleLogger.class.getName());
+	static final Logger LOG = Logger.getLogger(TestLifecycleLogger.class.getName());
 
 	@BeforeAll
 	static void beforeAllTests() {
-		LOG.info(() -> "beforeAllTests");
+		LOG.info("beforeAllTests");
 	}
 
 	@AfterAll
 	static void afterAllTests() {
-		LOG.info(() -> "afterAllTests");
+		LOG.info("afterAllTests");
 	}
 
 	@BeforeEach
 	default void beforeEachTest(TestInfo testInfo) {
-		LOG.info(() -> String.format("About to execute [%s]", testInfo.getTestMethod().get().getName()));
+		// end::user_guide[]
+		// @formatter:off
+		// tag::user_guide[]
+		LOG.info(() -> String.format("About to execute [%s]",
+			testInfo.getDisplayName()));
+		// end::user_guide[]
+		// @formatter:on
+		// tag::user_guide[]
 	}
 
 	@AfterEach
 	default void afterEachTest(TestInfo testInfo) {
-		LOG.info(() -> String.format("Finished executing [%s]", testInfo.getTestMethod().get().getName()));
+		// end::user_guide[]
+		// @formatter:off
+		// tag::user_guide[]
+		LOG.info(() -> String.format("Finished executing [%s]",
+			testInfo.getDisplayName()));
+		// end::user_guide[]
+		// @formatter:on
+		// tag::user_guide[]
 	}
 
 }
-//end::user_guide[]
+// end::user_guide[]
