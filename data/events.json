@@ -148,6 +148,24 @@
     ]
   },
   {
+    "title": "Java User Group Mannheim",
+    "date": "2017-01-12",
+    "location": "Mannheim, Germany",
+    "link": "http://www.majug.de/2017/01/12/junit5-next-generation/",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
+    "title": "Java User Group Darmstadt",
+    "date": "2017-01-19",
+    "location": "Darmstadt, Germany",
+    "link": "http://jug-da.de/2017/01/JUnit5/",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
     "title": "JUnit 5 Workshop - Java User Group",
     "date": "2017-01-25",
     "location": "Karlsruhe, Germany",
@@ -155,6 +173,24 @@
     "speakers": [
       "nicolaiparlog",
       "marcphilipp"
+    ]
+  },
+  {
+    "title": "European Testing Conference",
+    "date": "2017-02-08",
+    "location": "Helsinki, Finland",
+    "link": "http://europeantestingconference.eu/2017/topics/#nicolai-parlog",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
+    "title": "Frankfurter Entwicklertag",
+    "date": "2017-02-16",
+    "location": "Frankfurt, Germany",
+    "link": "https://entwicklertag.de/frankfurt/2017/junit-5-next-generation-testing-jvm",
+    "speakers": [
+      "nicolaiparlog"
     ]
   },
   {
@@ -173,6 +209,15 @@
     "link": "http://cfp.devoxx.us/2017/talk/ZCD-4979/JUnit_5_-_The_New_Testing_Framework_for_Java_and_Platform_for_the_JVM",
     "speakers": [
       "marcphilipp"
+    ]
+  },
+  {
+    "title": "JavaLand",
+    "date": "2017-03-28",
+    "location": "Phantasialand (Brühl), Germany",
+    "link": "https://www.doag.org/konferenz/konferenzplaner/konferenzplaner_details.php?id=522447&locS=0&vid=529384",
+    "speakers": [
+      "nicolaiparlog"
     ]
   }
 ]
