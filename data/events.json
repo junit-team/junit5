@@ -1,6 +1,67 @@
 [
   {
-    "title": "Entwicklertag Karlsruhe",
+    "title": "JUnit 5 - Shaping the Future of Testing on the JVM",
+    "event": "Skills Matter",
+    "date": "2016-04-13",
+    "location": "London, England",
+    "link": "https://skillsmatter.com/meetups/8039-in-the-brain-of-sam-brannen",
+    "speakers": [
+      "sbrannen"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Shaping the Future of Testing on the JVM",
+    "event": "Java User Group Zurich",
+    "date": "2016-04-20",
+    "location": "Zurich, Switzerland",
+    "link": "http://www.jug.ch/html/events/2016/testing_on_the_jvm.html",
+    "speakers": [
+      "sbrannen"
+    ]
+  },
+  {
+    "title": "JUnit 5 – Was bringt die neue Version?",
+    "event": "ObjektForum Frankfurt",
+    "date": "2016-04-26",
+    "location": "Frankfurt, Germany",
+    "link": "https://www.andrena.de/event/of-ffm-april-2016",
+    "speakers": [
+      "bechte"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Shaping the Future of Testing on the JVM",
+    "event": "Spring I/O",
+    "date": "2016-05-19",
+    "location": "Barcelona, Spain",
+    "link": "http://www.springio.net/",
+    "speakers": [
+      "sbrannen"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "JEEConf 2016",
+    "date": "2016-05-21",
+    "location": "Kyiv, Ukraine",
+    "link": "http://jeeconf.com/program/junit-5-next-generation-testing-on-the-jvm/",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
+    "title": "JUnit 5 – Was bringt die neue Version?",
+    "event": "ObjektForum Stuttgart",
+    "date": "2016-06-06",
+    "location": "Stuttgart, Germany",
+    "link": "https://www.andrena.de/event/objektforum-stuttgart-juni2016",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
+    "title": "JUnit5 - Was bringt die neue Version?",
+    "event": "Entwicklertag Karlsruhe",
     "date": "2016-06-15",
     "location": "Karlsruhe, Germany",
     "link": "https://entwicklertag.de/karlsruhe/2016/junit5-was-bringt-die",
@@ -9,8 +70,39 @@
       "mmerdes"
     ]
   },
-    {
-    "title": "Java Forum Stuttgart",
+  {
+    "title": "JUnit5 - Was bringt die neue Version?",
+    "event": "ObjektForum München",
+    "date": "2016-06-20",
+    "location": "Munich, Germany",
+    "link": "https://www.andrena.de/event/objektforum-muenchen-juni2016",
+    "speakers": [
+      "mmerdes"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "Devoxx Poland",
+    "date": "2016-06-23",
+    "location": "Krakow, Poland",
+    "link": "http://cfp.devoxx.pl/2016/talk/OOT-4758",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
+    "title": "JUnit 5 Overview ",
+    "event": "Santa Barbara Java Meetup",
+    "date": "2016-06-28",
+    "location": "Santa Barbara, CA",
+    "link": "http://www.meetup.com/Santa-Barbara-Java-Meetup/events/231183261/",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
+    "title": "Neues von JUnit: Architektur, API und Erweiterbarkeit in der Version 5",
+    "event": "Java Forum Stuttgart",
     "date": "2016-07-07",
     "location": "Stuttgart, Germany",
     "link": "http://www.java-forum-stuttgart.de/de/Abstracts+Slot+1.html#art2796",
@@ -20,97 +112,18 @@
     ]
   },
   {
-    "title": "ObjektForum Stuttgart",
-    "date": "2016-06-06",
-    "location": "Stuttgart, Germany",
-    "link": "https://www.andrena.de/event/objektforum-stuttgart-juni2016",
-    "speakers": [
-      "marcphilipp"
-    ]
-  },
-  {
-    "title": "Skills Matter",
-    "date": "2016-04-13",
-    "location": "London, England",
-    "link": "https://skillsmatter.com/meetups/8039-in-the-brain-of-sam-brannen",
-    "speakers": [
-      "sbrannen"
-    ]
-  },
-  {
-    "title": "Java User Group Zurich",
-    "date": "2016-04-20",
-    "location": "Zurich, Switzerland",
-    "link": "http://www.jug.ch/html/events/2016/testing_on_the_jvm.html",
-    "speakers": [
-      "sbrannen"
-    ]
-  },
-  {
-    "title": "Spring I/O",
-    "date": "2016-05-19",
-    "location": "Barcelona, Spain",
-    "link": "http://www.springio.net/",
-    "speakers": [
-      "sbrannen"
-    ]
-  },
-  {
-    "title": "JEEConf 2016",
-    "date": "2016-05-21",
-    "location": "Kyiv, Ukraine",
-    "link": "http://jeeconf.com/program/junit-5-next-generation-testing-on-the-jvm/",
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "Virtual JUG",
+    "date": "2016-07-19",
+    "location": "the Internet",
+    "link": "http://www.meetup.com/virtualJUG/events/232090674/",
     "speakers": [
       "nicolaiparlog"
     ]
   },
   {
-    "title": "ObjektForum München",
-    "date": "2016-06-20",
-    "location": "Munich, Germany",
-    "link": "https://www.andrena.de/event/objektforum-muenchen-juni2016",
-    "speakers": [
-      "mmerdes"
-    ]
-  },
-  {
-    "title": "ObjektForum Frankfurt",
-    "date": "2016-04-26",
-    "location": "Frankfurt, Germany",
-    "link": "https://www.andrena.de/event/of-ffm-april-2016",
-    "speakers": [
-      "bechte"
-    ]
-  },
-  {
-    "title": "Devoxx Poland",
-    "date": "2016-06-23",
-    "location": "Krakow, Poland",
-    "link": "http://cfp.devoxx.pl/2016/talk/OOT-4758",
-    "speakers": [
-      "nicolaiparlog"
-    ]
-  },
-  {
-    "title": "JAX London 2016",
-    "date": "2016-10-10",
-    "location": "London, UK",
-    "link": "https://jaxlondon.com/session/junit-5-next-generation-testing-on-the-jvm/",
-    "speakers": [
-      "nicolaiparlog"
-    ]
-  },
-  {
-    "title": "Santa Barbara Java Meetup",
-    "date": "2016-06-28",
-    "location": "Santa Barbara, CA",
-    "link": "http://www.meetup.com/Santa-Barbara-Java-Meetup/events/231183261/",
-    "speakers": [
-      "marcphilipp"
-    ]
-  },
-  {
-    "title": "SpringOne Platform",
+    "title": "Testing with Spring 4.3, JUnit 5, and Beyond",
+    "event": "SpringOne Platform",
     "date": "2016-08-02",
     "location": "Las Vegas, NV",
     "link": "https://2016.event.springoneplatform.io/schedule/sessions/testing_with_spring_4_3_junit_5_and_beyond.html",
@@ -119,7 +132,8 @@
     ]
   },
   {
-    "title": "JavaZone 2016",
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "JavaZone",
     "date": "2016-09-07",
     "location": "Oslo, Norway",
     "link": "https://2016.javazone.no/program/j-unit-5-next-generation-testing-on-the-jvm",
@@ -128,7 +142,8 @@
     ]
   },
   {
-    "title": "JavaOne - JUnit5: Features, Architecture, and Extensibility [CON4015]",
+    "title": "JUnit5: Features, Architecture, and Extensibility",
+    "event": "JavaOne [CON4015]",
     "date": "2016-09-18",
     "location": "San Francisco, CA",
     "link": "https://oracle.rainfocus.com/scripts/catalog/oow16.jsp?event=javaone&search=junit5&search.event=javaone",
@@ -139,7 +154,38 @@
     ]
   },
   {
-    "title": "Deep Dive into JUnit 5 - Devoxx Belgium 2016",
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "JAX London 2016",
+    "date": "2016-10-10",
+    "location": "London, UK",
+    "link": "https://jaxlondon.com/session/junit-5-next-generation-testing-on-the-jvm/",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "Trondheim Developer Conference",
+    "date": "2016-10-31",
+    "location": "Trondheim, Norway",
+    "link": "http://2016.trondheimdc.no/program",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "Devoxx Belgium 2016",
+    "date": "2016-11-08",
+    "location": "Antwerp, Belgium",
+    "link": "http://cfp.devoxx.be/2016/talk/PPQ-9247/JUnit_5:_Next_Generation_Testing_on_the_JVM",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
+    "title": "Deep Dive into JUnit 5",
+    "event": "Devoxx Belgium 2016",
     "date": "2016-11-09",
     "location": "Antwerp, Belgium",
     "link": "http://cfp.devoxx.be/2016/talk/OJP-6150/Deep_Dive_into_JUnit_5",
@@ -148,7 +194,18 @@
     ]
   },
   {
-    "title": "JUnit 5 - Next Generation Testing on the JVM - Java User Group Mannheim",
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "JVM Group Stockholm",
+    "date": "2016-11-10",
+    "location": "Stockholm, Sweden",
+    "link": "https://www.meetup.com/Stockholm-Java-User-Group/",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "Java User Group Mannheim",
     "date": "2017-01-12",
     "location": "Mannheim, Germany",
     "link": "http://www.majug.de/2017/01/12/junit5-next-generation/",
@@ -157,7 +214,8 @@
     ]
   },
   {
-    "title": "JUnit 5 - Next Generation Testing on the JVM - Java User Group Darmstadt",
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "Java User Group Darmstadt",
     "date": "2017-01-19",
     "location": "Darmstadt, Germany",
     "link": "http://jug-da.de/2017/01/JUnit5/",
@@ -166,7 +224,8 @@
     ]
   },
   {
-    "title": "JUnit 5 Workshop - Java User Group",
+    "title": "JUnit 5 Workshop",
+    "event": "Java User Group Karlsruhe",
     "date": "2017-01-25",
     "location": "Karlsruhe, Germany",
     "link": "http://jug-karlsruhe.de/content/junit-workshop/",
@@ -176,7 +235,8 @@
     ]
   },
   {
-    "title": "JUnit 5 - Next Generation Testing on the JVM - European Testing Conference",
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "European Testing Conference",
     "date": "2017-02-08",
     "location": "Helsinki, Finland",
     "link": "http://europeantestingconference.eu/2017/topics/#nicolai-parlog",
@@ -185,7 +245,8 @@
     ]
   },
   {
-    "title": "JUnit 5 - Next Generation Testing on the JVM - Frankfurter Entwicklertag",
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "Frankfurter Entwicklertag",
     "date": "2017-02-16",
     "location": "Frankfurt, Germany",
     "link": "https://entwicklertag.de/frankfurt/2017/junit-5-next-generation-testing-jvm",
@@ -194,7 +255,8 @@
     ]
   },
   {
-    "title": "Deep Dive into JUnit 5 - Voxxed Days Zurich 2017",
+    "title": "Deep Dive into JUnit 5",
+    "event": "Voxxed Days Zurich 2017",
     "date": "2017-02-23",
     "location": "Zurich, Switzerland",
     "link": "https://cfp-vdz.exteso.com/2017/talk/QSX-6316/Deep_Dive_into_JUnit_5",
@@ -203,7 +265,8 @@
     ]
   },
   {
-    "title": "JUnit 5 - The New Testing Framework for Java and Platform for the JVM - Devoxx US 2017",
+    "title": "JUnit 5 - The New Testing Framework for Java and Platform for the JVM",
+    "event": "Devoxx US 2017",
     "date": "2017-03-23",
     "location": "San Jose, CA",
     "link": "http://cfp.devoxx.us/2017/talk/ZCD-4979/JUnit_5_-_The_New_Testing_Framework_for_Java_and_Platform_for_the_JVM",
@@ -212,7 +275,8 @@
     ]
   },
   {
-    "title": "JUnit 5 - Next Generation Testing on the JVM - JavaLand",
+    "title": "JUnit 5 - Next Generation Testing on the JVM",
+    "event": "JavaLand",
     "date": "2017-03-28",
     "location": "Phantasialand (Brühl), Germany",
     "link": "https://www.doag.org/konferenz/konferenzplaner/konferenzplaner_details.php?id=522447&locS=0&vid=529384",
