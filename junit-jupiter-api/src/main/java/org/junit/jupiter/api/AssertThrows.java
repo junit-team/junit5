@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionUtils.format;
+import static org.junit.jupiter.api.AssertionUtils.getCanonicalName;
 
 import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.AssertionFailedError;
@@ -33,13 +34,12 @@ class AssertThrows {
 				return (T) actualException;
 			}
 			else {
-				String message = format(expectedType.getName(), actualException.getClass().getName(),
-					"Unexpected exception type thrown");
+				String message = format(expectedType, actualException.getClass(), "Unexpected exception type thrown");
 				throw new AssertionFailedError(message, actualException);
 			}
 		}
 		throw new AssertionFailedError(
-			String.format("Expected %s to be thrown, but nothing was thrown.", expectedType.getName()));
+			String.format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType)));
 	}
 
 }

@@ -51,7 +51,8 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* ❓
+* `Assertions.assertThrows()` now uses canonical names for exception types when
+  generating assertion failure messages.
 
 
 [[release-notes-5.0.0-m4-junit-vintage]]

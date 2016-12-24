@@ -44,24 +44,57 @@ class AssertionUtils {
 		throw new AssertionFailedError(message, expected, actual);
 	}
 
-	static String buildPrefix(String message) {
-		return (StringUtils.isNotBlank(message) ? message + " ==> " : "");
-	}
-
 	static String nullSafeGet(Supplier<String> messageSupplier) {
 		return (messageSupplier != null ? messageSupplier.get() : null);
 	}
 
+	static String buildPrefix(String message) {
+		return (StringUtils.isNotBlank(message) ? message + " ==> " : "");
+	}
+
+	static String getCanonicalName(Class<?> clazz) {
+		try {
+			String canonicalName = clazz.getCanonicalName();
+			return (canonicalName != null ? canonicalName : clazz.getName());
+		}
+		catch (Throwable t) {
+			return clazz.getName();
+		}
+	}
+
+	static String format(Object expected, Object actual, String message) {
+		return buildPrefix(message) + formatValues(expected, actual);
+	}
+
 	static String formatValues(Object expected, Object actual) {
-		String expectedString = String.valueOf(expected);
-		String actualString = String.valueOf(actual);
+		String expectedString = toString(expected);
+		String actualString = toString(actual);
 		if (expectedString.equals(actualString)) {
-			return "expected: " + formatClassAndValue(expected, expectedString) + " but was: "
-					+ formatClassAndValue(actual, actualString);
+			return String.format("expected: %s but was: %s", formatClassAndValue(expected, expectedString),
+				formatClassAndValue(actual, actualString));
 		}
 		else {
-			return "expected: <" + expectedString + "> but was: <" + actualString + ">";
+			return String.format("expected: <%s> but was: <%s>", expectedString, actualString);
 		}
+	}
+
+	private static String formatClassAndValue(Object value, String valueString) {
+		String classAndHash = getClassName(value) + toHash(value);
+		// if it's a class, there's no need to repeat the class name contained in the valueString.
+		return (value instanceof Class ? "<" + classAndHash + ">" : classAndHash + "<" + valueString + ">");
+	}
+
+	private static String toString(Object obj) {
+		return (obj instanceof Class ? getCanonicalName((Class<?>) obj) : String.valueOf(obj));
+	}
+
+	private static String toHash(Object obj) {
+		return (obj == null ? "" : "@" + Integer.toHexString(System.identityHashCode(obj)));
+	}
+
+	private static String getClassName(Object obj) {
+		return (obj == null ? "null"
+				: obj instanceof Class ? getCanonicalName((Class<?>) obj) : obj.getClass().getName());
 	}
 
 	static String formatIndexes(Deque<Integer> indexes) {
@@ -111,18 +144,8 @@ class AssertionUtils {
 		}
 	}
 
-	static String format(Object expected, Object actual, String message) {
-		return buildPrefix(message) + formatValues(expected, actual);
-	}
-
-	private static String formatClassAndValue(Object value, String valueString) {
-		String className = (value == null ? "null" : value.getClass().getName());
-		String hash = (value == null ? "" : "@" + Integer.toHexString(System.identityHashCode(value)));
-		return className + hash + "<" + valueString + ">";
-	}
-
 	private static void failIllegalDelta(String delta) {
-		Assertions.fail("positive delta expected but was: <" + delta + ">");
+		fail("positive delta expected but was: <" + delta + ">");
 	}
 
 }
