@@ -548,9 +548,19 @@ You need the following artifacts and their dependencies on the classpath. See
 <<dependency-metadata>> for details regarding group IDs, artifact IDs, and
 versions.
 
-* `junit-jupiter-api` in _test_ scope: API for writing tests, including `@Test`, etc.
+===== Explicit Dependencies
+
+* `junit-{junit4-version}.jar` in _test_ scope: to run tests using JUnit 4.
 * `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
+* `junit-jupiter-api` in _test_ scope: API for writing tests, including `@Test`, etc.
 * `junit-jupiter-engine` in _test runtime_ scope: implementation of the Engine API for JUnit Jupiter
+
+===== Transitive Dependencies
+
+* `junit-platform-launcher` in _test_ scope
+* `junit-platform-engine` in _test_ scope
+* `junit-platform-commons` in _test_ scope
+* `opentest4j` in _test_ scope
 
 [[running-tests-junit-platform-runner-technical-names]]
 ==== Display Names vs. Technical Names
