@@ -2698,6 +2698,13 @@ determine if a given test method should be executed based on the supplied
 <code>TestExtensionContext</code>.</p>
 </div>
 <div class="paragraph">
+<p>When multiple <code>ContainerExecutionCondition</code> or <code>TestExecutionCondition</code> extensions are registered,
+a container or test, respectively, is skipped as soon as one of them returns <em>skipped</em>. Thus, there
+is no guarantee that a condition extension is called because another extension might already caused
+a container or test to be skipped. In other words, the evaluation works like the short-circuiting
+boolean OR operator.</p>
+</div>
+<div class="paragraph">
 <p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
 </div>
 <div class="sect3">
@@ -4369,7 +4376,7 @@ generating assertion failure messages.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-12-24 09:20:45 EST
+Last updated 2016-12-29 11:25:33 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
