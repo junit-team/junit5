@@ -93,10 +93,10 @@ determine if a given test method should be executed based on the supplied
 `TestExtensionContext`.
 
 When multiple `ContainerExecutionCondition` or `TestExecutionCondition` extensions are registered,
-a container or test, respectively, is skipped as soon as one of them returns _skipped_. Thus, there
-is no guarantee that a condition extension is called because another extension might already caused
-a container or test to be skipped. In other words, the evaluation works like the short-circuiting
-boolean OR operator.
+a container or test, respectively, is disabled as soon as one of the conditions returns _disabled_.
+Thus, there is no guarantee that a condition is evaluated because another extension might
+have already caused a container or test to be disabled. In other words, the evaluation works like
+the short-circuiting boolean OR operator.
 
 See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examples.
 
