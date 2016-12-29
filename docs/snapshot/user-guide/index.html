@@ -2494,18 +2494,43 @@ time being the <code>JUnitPlatform</code> runner is an easy way to get started.
 <a href="#dependency-metadata">Dependency Metadata</a> for details regarding group IDs, artifact IDs, and
 versions.</p>
 </div>
+<div class="sect4">
+<h5 id="explicit-dependencies">Explicit Dependencies</h5>
 <div class="ulist">
 <ul>
 <li>
-<p><code>junit-jupiter-api</code> in <em>test</em> scope: API for writing tests, including <code>@Test</code>, etc.</p>
+<p><code>junit-4.12.jar</code> in <em>test</em> scope: to run tests using JUnit 4.</p>
 </li>
 <li>
 <p><code>junit-platform-runner</code> in <em>test</em> scope: location of the <code>JUnitPlatform</code> runner</p>
 </li>
 <li>
+<p><code>junit-jupiter-api</code> in <em>test</em> scope: API for writing tests, including <code>@Test</code>, etc.</p>
+</li>
+<li>
 <p><code>junit-jupiter-engine</code> in <em>test runtime</em> scope: implementation of the Engine API for JUnit Jupiter</p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="transitive-dependencies">Transitive Dependencies</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>junit-platform-launcher</code> in <em>test</em> scope</p>
+</li>
+<li>
+<p><code>junit-platform-engine</code> in <em>test</em> scope</p>
+</li>
+<li>
+<p><code>junit-platform-commons</code> in <em>test</em> scope</p>
+</li>
+<li>
+<p><code>opentest4j</code> in <em>test</em> scope</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -4376,7 +4401,7 @@ generating assertion failure messages.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-12-29 11:25:33 EST
+Last updated 2016-12-29 12:18:58 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
