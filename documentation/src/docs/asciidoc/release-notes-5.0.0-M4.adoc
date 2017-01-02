@@ -36,6 +36,8 @@ on GitHub.
 * Logging information for discovered test engines has been enhanced to include the group
   ID, artifact ID, and version of each test engine if available via the `getGroupId()`,
   `getArtifactId()`, and `getVersion()` methods.
+* The `--scan-classpath` option of the `ConsoleLauncher` now allows to scan JAR files for tests
+  when they are supplied as explicit arguments (see <<running-tests-console-launcher-options>>).
 
 
 [[release-notes-5.0.0-m4-junit-jupiter]]

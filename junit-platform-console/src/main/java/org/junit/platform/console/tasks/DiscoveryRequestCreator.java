@@ -57,11 +57,11 @@ class DiscoveryRequestCreator {
 	}
 
 	private List<ClasspathRootSelector> createClasspathRootSelectors(CommandLineOptions options) {
-		Set<Path> rootDirectoriesToScan = determineClasspathRootDirectories(options);
-		return selectClasspathRoots(rootDirectoriesToScan);
+		Set<Path> classpathRoots = determineClasspathRoots(options);
+		return selectClasspathRoots(classpathRoots);
 	}
 
-	private Set<Path> determineClasspathRootDirectories(CommandLineOptions options) {
+	private Set<Path> determineClasspathRoots(CommandLineOptions options) {
 		if (options.getSelectedClasspathEntries().isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
 			rootDirs.addAll(options.getAdditionalClasspathEntries());

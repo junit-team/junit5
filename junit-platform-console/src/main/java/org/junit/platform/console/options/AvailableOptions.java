@@ -28,6 +28,8 @@ import org.junit.platform.engine.discovery.ClassNameFilter;
  */
 class AvailableOptions {
 
+	private static final String CP_OPTION = "cp";
+
 	private final OptionParser parser = new OptionParser();
 
 	// General Purpose
@@ -71,7 +73,7 @@ class AvailableOptions {
 		hideDetails = parser.accepts("hide-details",
 			"Hide details while tests are being executed. Only show the summary and test failures.");
 
-		additionalClasspathEntries = parser.acceptsAll(asList("cp", "classpath", "class-path"), //
+		additionalClasspathEntries = parser.acceptsAll(asList(CP_OPTION, "classpath", "class-path"), //
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies. "
 					+ "This option can be repeated.") //
 				.withRequiredArg() //
@@ -89,7 +91,11 @@ class AvailableOptions {
 		// --- Selectors -------------------------------------------------------
 
 		selectedClasspathEntries = parser.acceptsAll(asList("scan-class-path", "scan-classpath"), //
-			"Scan entire classpath or explicit classpath roots.") //
+			"Scan all directories on the classpath or explicit classpath roots. " //
+					+ "Without arguments, only directories on the system classpath as well as additional classpath " //
+					+ "entries supplied via -" + CP_OPTION + " (directories and JAR files) are scanned. " //
+					+ "Explicit classpath roots that are not on the classpath will be silently ignored. " //
+					+ "This option can be repeated.") //
 				.withOptionalArg() //
 				.withValuesConvertedBy(new PathConverter()) //
 				.withValuesSeparatedBy(File.pathSeparatorChar) //

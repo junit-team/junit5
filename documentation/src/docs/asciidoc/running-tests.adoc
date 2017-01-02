@@ -468,9 +468,6 @@ failed. Otherwise the exit code is `0`.
 WARNING: These options are very likely to change as we continue to work towards the
 final release.
 
-WARNING: Currently, `--scan-classpath` only scans directories, not JAR files, even when used with
-explicit classpath roots.
-
 [subs="specialchars"]
 ----
 Option                                        Description
@@ -488,8 +485,15 @@ Option                                        Description
 --reports-dir <Path>                          Enable report output into a specified
                                                 local directory (will be created if it
                                                 does not exist).
---scan-class-path, --scan-classpath [Path:    Scan entire classpath or explicit
-  path1:path2:...]                              classpath roots.
+--scan-class-path, --scan-classpath [Path:    Scan all directories on the classpath or
+  path1:path2:...]                              explicit classpath roots. Without
+                                                arguments, only directories on the
+                                                system classpath as well as additional
+                                                classpath entries supplied via -cp
+                                                (directories and JAR files) are scanned.
+                                                Explicit classpath roots that are not on
+                                                the classpath will be silently ignored.
+                                                This option can be repeated.
 -u, --select-uri <URI>                        Select a URI for test discovery. This
                                                 option can be repeated.
 -f, --select-file <String>                    Select a file for test discovery. This
