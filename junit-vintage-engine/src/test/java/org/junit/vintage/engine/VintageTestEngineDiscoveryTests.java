@@ -30,6 +30,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -223,6 +224,30 @@ class VintageTestEngineDiscoveryTests {
 			.contains(PlainJUnit3TestCaseWithSingleTestWhichFails.class.getName())
 			.doesNotContain(PlainOldJavaClassWithoutAnyTest.class.getName());
 		// @formatter:on
+	}
+
+	@Test
+	public void resolvesClasspathSelectorForJarFile() throws Exception {
+		URL jarUrl = getClass().getResource("/vintage-testjar.jar");
+		Path jarFile = Paths.get(jarUrl.toURI());
+
+		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+		try (URLClassLoader classLoader = new URLClassLoader(new URL[] { jarUrl })) {
+			Thread.currentThread().setContextClassLoader(classLoader);
+
+			LauncherDiscoveryRequest discoveryRequest = request().selectors(
+				selectClasspathRoots(singleton(jarFile))).build();
+			TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
+
+			// @formatter:off
+			assertThat(engineDescriptor.getChildren())
+					.extracting(TestDescriptor::getDisplayName)
+					.containsExactly("com.example.project.JUnit4Test");
+			// @formatter:on
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(originalClassLoader);
+		}
 	}
 
 	@Test
