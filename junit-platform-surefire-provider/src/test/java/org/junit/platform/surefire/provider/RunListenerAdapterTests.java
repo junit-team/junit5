@@ -16,11 +16,17 @@
 
 package org.junit.platform.surefire.provider;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Collections;
+import java.util.Optional;
+
+import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.RunListener;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
@@ -30,6 +36,8 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
+import org.mockito.ArgumentCaptor;
 
 /**
  * Unit tests for {@link RunListenerAdapter}.
@@ -158,6 +166,27 @@ class RunListenerAdapterTests {
 		verify(listener, never()).testSucceeded(any());
 	}
 
+	@Test
+	void notifiedWithParentDisplayNameWhenTestClassUnknown() throws Exception {
+		RunListener listener = mock(RunListener.class);
+		RunListenerAdapter adapter = new RunListenerAdapter(listener);
+
+		// Set up a test plan
+		TestPlan plan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Luke's Plan")));
+		adapter.testPlanExecutionStarted(plan);
+
+		// Use the test plan to set up child with parent.
+		final String parentDisplay = "I am your father";
+		TestIdentifier child = newSourcelessIdentifierWithParent(plan, parentDisplay);
+		adapter.executionStarted(child);
+
+		// Check that the adapter has informed Surefire that the test has been invoked,
+		// with the parent name as source (since the test case itself had no source).
+		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
+		verify(listener).testStarting(entryCaptor.capture());
+		assertEquals(parentDisplay, entryCaptor.getValue().getSourceName());
+	}
+
 	private static TestIdentifier newMethodIdentifier() throws Exception {
 		TestDescriptor testDescriptor = new MethodTestDescriptor(newId(), TestClass.class,
 			TestClass.class.getDeclaredMethod("test1"));
@@ -167,6 +196,29 @@ class RunListenerAdapterTests {
 	private static TestIdentifier newClassIdentifier() {
 		TestDescriptor testDescriptor = new ClassTestDescriptor(newId(), TestClass.class);
 		return TestIdentifier.from(testDescriptor);
+	}
+
+	private static TestIdentifier newSourcelessIdentifierWithParent(TestPlan testPlan, String parentDisplay) {
+		// A parent test identifier with a name.
+		TestDescriptor parent = mock(TestDescriptor.class);
+		when(parent.getUniqueId()).thenReturn(newId());
+		when(parent.getDisplayName()).thenReturn(parentDisplay);
+		TestIdentifier parentId = TestIdentifier.from(parent);
+
+		// The (child) test case that is to be executed as part of a test plan.
+		TestDescriptor child = mock(TestDescriptor.class);
+		when(child.getUniqueId()).thenReturn(newId());
+		when(child.isTest()).thenReturn(true);
+
+		// Ensure the child source is null yet that there is a parent -- the special case to be tested.
+		when(child.getSource()).thenReturn(Optional.empty());
+		when(child.getParent()).thenReturn(Optional.of(parent));
+		TestIdentifier childId = TestIdentifier.from(child);
+
+		testPlan.add(childId);
+		testPlan.add(parentId);
+
+		return childId;
 	}
 
 	private static TestIdentifier newEngineIdentifier() {
