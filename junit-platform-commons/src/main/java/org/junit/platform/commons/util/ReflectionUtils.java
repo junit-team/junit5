@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -454,7 +455,16 @@ public final class ReflectionUtils {
 		// @formatter:on
 	}
 
+	/**
+	 * @deprecated Use {@link #findAllClassesInClasspathRoot(URI, Predicate, Predicate)} instead.
+	 */
+	@Deprecated
 	public static List<Class<?>> findAllClassesInClasspathRoot(Path root, Predicate<Class<?>> classTester,
+			Predicate<String> classNameFilter) {
+		return findAllClassesInClasspathRoot(root.toUri(), classTester, classNameFilter);
+	}
+
+	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
 		return classpathScanner.scanForClassesInClasspathRoot(root, classTester, classNameFilter);
 	}

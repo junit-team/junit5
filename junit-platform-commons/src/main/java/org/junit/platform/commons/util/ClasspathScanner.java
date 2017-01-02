@@ -94,15 +94,13 @@ class ClasspathScanner {
 			classNameFilter);
 	}
 
-	List<Class<?>> scanForClassesInClasspathRoot(Path root, Predicate<Class<?>> classFilter,
+	List<Class<?>> scanForClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 		Preconditions.notNull(root, "root must not be null");
-		Preconditions.condition(Files.isDirectory(root),
-			() -> "root must be an existing directory: " + root.toAbsolutePath());
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 		Preconditions.notNull(classNameFilter, "classNameFilter must not be null");
 
-		return findClassesForPath(root, DEFAULT_PACKAGE_NAME, classFilter, classNameFilter);
+		return findClassesForUri(root, DEFAULT_PACKAGE_NAME, classFilter, classNameFilter);
 	}
 
 	/**
@@ -126,6 +124,9 @@ class ClasspathScanner {
 			Path baseDir = closeablePath.getPath();
 			return findClassesForPath(baseDir, basePackageName, classFilter, classNameFilter);
 		}
+		catch (PreconditionViolationException ex) {
+			throw ex;
+		}
 		catch (Exception ex) {
 			logWarning(ex, () -> "Error scanning files for URI " + baseUri);
 			return emptyList();
@@ -134,6 +135,7 @@ class ClasspathScanner {
 
 	private List<Class<?>> findClassesForPath(Path baseDir, String basePackageName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
+		Preconditions.condition(Files.exists(baseDir), () -> "baseDir must exist: " + baseDir);
 		List<Class<?>> classes = new ArrayList<>();
 		try {
 			Files.walkFileTree(baseDir, new ClassFileVisitor(classFile -> processClassFileSafely(baseDir,
