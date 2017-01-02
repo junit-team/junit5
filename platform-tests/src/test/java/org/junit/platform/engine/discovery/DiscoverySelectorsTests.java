@@ -10,24 +10,36 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirectory;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.extensions.TempDirectory;
+import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * Unit tests for {@link DiscoverySelectors}.
@@ -258,6 +270,38 @@ public class DiscoverySelectorsTests {
 		assertEquals(spockClassName, selector.getClassName());
 		assertEquals(spockMethodName, selector.getMethodName());
 		assertEquals(spockMethodParameters, selector.getMethodParameterTypes());
+	}
+
+	@Test
+	public void selectClasspathRootsWithNonExistingDirectory() throws Exception {
+		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(Paths.get("some", "local", "path")));
+
+		assertThat(selectors).isEmpty();
+	}
+
+	@Test
+	public void selectClasspathRootsWithNonExistingJarFile() throws Exception {
+		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(Paths.get("some.jar")));
+
+		assertThat(selectors).isEmpty();
+	}
+
+	@Test
+	@ExtendWith(TempDirectory.class)
+	public void selectClasspathRootsWithExistingDirectory(@Root Path tempDir) throws Exception {
+		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(tempDir));
+
+		assertThat(selectors).extracting(ClasspathRootSelector::getClasspathRoot).containsExactly(tempDir.toUri());
+	}
+
+	@Test
+	public void selectClasspathRootsWithExistingJarFile() throws Exception {
+		URI jarUri = getClass().getResource("/jartest.jar").toURI();
+		Path jarFile = Paths.get(jarUri);
+
+		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(jarFile));
+
+		assertThat(selectors).extracting(ClasspathRootSelector::getClasspathRoot).containsExactly(jarUri);
 	}
 
 	private static String fullyQualifiedMethodName() {

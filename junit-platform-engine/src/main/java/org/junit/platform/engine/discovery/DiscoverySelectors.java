@@ -177,7 +177,14 @@ public final class DiscoverySelectors {
 	}
 
 	/**
-	 * Create a list of {@code ClasspathRootSelectors} for the supplied {@code directories}.
+	 * Create a list of {@code ClasspathRootSelectors} for the supplied
+	 * <em>classpath roots</em> (directories or JAR files).
+	 *
+	 * <p>Since the supplied paths are converted to {@link URI URIs}, the
+	 * {@link java.nio.file.FileSystem} that created them must be the
+	 * {@linkplain java.nio.file.FileSystems#getDefault() default} or one that
+	 * has been created by an installed
+	 * {@link java.nio.file.spi.FileSystemProvider}.
 	 *
 	 * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
 	 * expected to modify the classpath, the classpath roots represented by the
@@ -185,19 +192,19 @@ public final class DiscoverySelectors {
 	 * {@linkplain Thread#getContextClassLoader() context class loader} of the
 	 * {@linkplain Thread thread} that uses these selectors.
 	 *
-	 * @param directories set of directories in the filesystem that represent classpath roots;
-	 * never {@code null}
-	 * @return a list of selectors for the supplied directories; directories which
-	 * do not physically exist in the filesystem will be filtered out
+	 * @param classpathRoots set of directories and JAR files in the filesystem
+	 * that represent classpath roots; never {@code null}
+	 * @return a list of selectors for the supplied classpath roots; elements
+	 * which do not physically exist in the filesystem will be filtered out
 	 * @see ClasspathRootSelector
 	 * @see Thread#getContextClassLoader()
 	 */
-	public static List<ClasspathRootSelector> selectClasspathRoots(Set<Path> directories) {
-		Preconditions.notNull(directories, "directories must not be null");
+	public static List<ClasspathRootSelector> selectClasspathRoots(Set<Path> classpathRoots) {
+		Preconditions.notNull(classpathRoots, "classpathRoots must not be null");
 
 		// @formatter:off
-		return directories.stream()
-				.filter(Files::isDirectory)
+		return classpathRoots.stream()
+				.filter(Files::exists)
 				.map(Path::toUri)
 				.map(ClasspathRootSelector::new)
 				.collect(toList());

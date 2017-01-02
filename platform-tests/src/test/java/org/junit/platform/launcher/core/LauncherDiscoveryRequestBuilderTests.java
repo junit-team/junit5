@@ -146,34 +146,6 @@ class LauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		public void unavailableFoldersAreNotStoredInDiscoveryRequest() throws Exception {
-			// @formatter:off
-			LauncherDiscoveryRequest discoveryRequest = request()
-					.selectors(
-							selectClasspathRoots(singleton(Paths.get("some", "local", "path")))
-					).build();
-			// @formatter:on
-
-			assertThat(discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).size()).isEqualTo(0);
-		}
-
-		@Test
-		@ExtendWith(TempDirectory.class)
-		public void availableFoldersAreStoredInDiscoveryRequest(@Root Path tempDir) throws Exception {
-			// @formatter:off
-			LauncherDiscoveryRequest discoveryRequest = request()
-					.selectors(
-							selectClasspathRoots(singleton(tempDir))
-					).build();
-			// @formatter:on
-
-			List<Path> folders = discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).stream().map(
-				ClasspathRootSelector::getClasspathRoot).map(Paths::get).collect(toList());
-
-			assertThat(folders).contains(tempDir);
-		}
-
-		@Test
 		public void uniqueIdsAreStoredInDiscoveryRequest() throws Exception {
 			UniqueId id1 = UniqueId.forEngine("engine").append("foo", "id1");
 			UniqueId id2 = UniqueId.forEngine("engine").append("foo", "id2");
