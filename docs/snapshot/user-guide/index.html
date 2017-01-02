@@ -2403,19 +2403,6 @@ final release.
 </tr>
 </table>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Currently, <code>--scan-classpath</code> only scans directories, not JAR files, even when used with
-explicit classpath roots.
-</td>
-</tr>
-</table>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre>Option                                        Description
@@ -2433,8 +2420,15 @@ explicit classpath roots.
 --reports-dir &lt;Path&gt;                          Enable report output into a specified
                                                 local directory (will be created if it
                                                 does not exist).
---scan-class-path, --scan-classpath [Path:    Scan entire classpath or explicit
-  path1:path2:...]                              classpath roots.
+--scan-class-path, --scan-classpath [Path:    Scan all directories on the classpath or
+  path1:path2:...]                              explicit classpath roots. Without
+                                                arguments, only directories on the
+                                                system classpath as well as additional
+                                                classpath entries supplied via -cp
+                                                (directories and JAR files) are scanned.
+                                                Explicit classpath roots that are not on
+                                                the classpath will be silently ignored.
+                                                This option can be repeated.
 -u, --select-uri &lt;URI&gt;                        Select a URI for test discovery. This
                                                 option can be repeated.
 -f, --select-file &lt;String&gt;                    Select a file for test discovery. This
@@ -4363,6 +4357,10 @@ and version; whereas, the group ID is empty by default. Consult the Javadoc for
 ID, artifact ID, and version of each test engine if available via the <code>getGroupId()</code>,
 <code>getArtifactId()</code>, and <code>getVersion()</code> methods.</p>
 </li>
+<li>
+<p>The <code>--scan-classpath</code> option of the <code>ConsoleLauncher</code> now allows to scan JAR files for tests
+when they are supplied as explicit arguments (see <a href="#running-tests-console-launcher-options">Options</a>).</p>
+</li>
 </ul>
 </div>
 </div>
@@ -4414,7 +4412,7 @@ generating assertion failure messages.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-01-02 04:39:46 EST
+Last updated 2017-01-02 15:04:11 EST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
