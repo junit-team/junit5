@@ -39,6 +39,7 @@ ext {
 	builtByValue = project.hasProperty('builtBy') ? project.builtBy : project.defaultBuiltBy
 
 	platformProjects = [
+		'junit-platform-ant-plugin',
 		'junit-platform-commons',
 		'junit-platform-console',
 		'junit-platform-engine',
