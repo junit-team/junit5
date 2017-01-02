@@ -24,8 +24,15 @@ import org.junit.platform.engine.DiscoverySelector;
  * files or resources within the physical classpath &mdash; for example, to
  * scan for test classes.
  *
+ * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
+ * expected to modify the classpath, the classpath root represented by this
+ * selector must be on the classpath of the
+ * {@linkplain Thread#getContextClassLoader() context class loader} of the
+ * {@linkplain Thread thread} that uses this selector.
+ *
  * @since 1.0
  * @see ClasspathResourceSelector
+ * @see Thread#getContextClassLoader()
  */
 @API(Experimental)
 public class ClasspathRootSelector implements DiscoverySelector {
