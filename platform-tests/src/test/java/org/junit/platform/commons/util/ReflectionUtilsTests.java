@@ -49,12 +49,24 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClass
 public class ReflectionUtilsTests {
 
 	@Test
-	void getDefaultClassLoader() {
+	void getDefaultClassLoaderWithExplicitContextClassLoader() {
 		ClassLoader original = Thread.currentThread().getContextClassLoader();
 		ClassLoader mock = mock(ClassLoader.class);
 		Thread.currentThread().setContextClassLoader(mock);
 		try {
 			assertSame(mock, ReflectionUtils.getDefaultClassLoader());
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(original);
+		}
+	}
+
+	@Test
+	void getDefaultClassLoaderWithNullContextClassLoader() {
+		ClassLoader original = Thread.currentThread().getContextClassLoader();
+		Thread.currentThread().setContextClassLoader(null);
+		try {
+			assertSame(ClassLoader.getSystemClassLoader(), ReflectionUtils.getDefaultClassLoader());
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(original);

@@ -117,7 +117,10 @@ public final class ReflectionUtils {
 
 	public static ClassLoader getDefaultClassLoader() {
 		try {
-			return Thread.currentThread().getContextClassLoader();
+			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+			if (contextClassLoader != null) {
+				return contextClassLoader;
+			}
 		}
 		catch (Throwable ex) {
 			/* ignore */
