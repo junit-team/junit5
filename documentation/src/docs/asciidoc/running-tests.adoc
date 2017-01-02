@@ -468,6 +468,9 @@ failed. Otherwise the exit code is `0`.
 WARNING: These options are very likely to change as we continue to work towards the
 final release.
 
+WARNING: Currently, `--scan-classpath` only scans directories, not JAR files, even when used with
+explicit classpath roots.
+
 [subs="specialchars"]
 ----
 Option                                        Description
