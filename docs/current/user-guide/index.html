@@ -2290,6 +2290,19 @@ final release.
 </tr>
 </table>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Currently, <code>--scan-classpath</code> only scans directories, not JAR files, even when used with
+explicit classpath roots.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre>Option                                        Description
@@ -4028,7 +4041,7 @@ Gradle plugin (see <a href="#running-tests-build-gradle-filters">Configuring Fil
 code that uses a different version of that library.</p>
 </li>
 <li>
-<p>Classpath scanning now supports JAR files.</p>
+<p>Resolution of package selectors now also scans JAR files.</p>
 </li>
 <li>
 <p>The Surefire provider now supports forking.</p>
@@ -4141,7 +4154,7 @@ to facilitate migration of JUnit 4 codebases.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-M3<br>
-Last updated 2016-11-19 11:36:33 CET
+Last updated 2017-01-02 11:32:17 CET
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
