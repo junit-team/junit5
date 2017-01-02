@@ -32,6 +32,7 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.0
@@ -39,9 +40,15 @@ import org.junit.platform.launcher.TestIdentifier;
 final class RunListenerAdapter implements TestExecutionListener {
 
 	private final RunListener runListener;
+	private TestPlan testPlan = null;
 
 	public RunListenerAdapter(RunListener runListener) {
 		this.runListener = runListener;
+	}
+
+	@Override
+	public void testPlanExecutionStarted(TestPlan testPlan) {
+		this.testPlan = testPlan;
 	}
 
 	@Override
@@ -86,7 +93,9 @@ final class RunListenerAdapter implements TestExecutionListener {
 			return new SimpleReportEntry(className, testIdentifier.getDisplayName(), stackTraceWriter, null);
 		}
 		else {
-			return ignored(testIdentifier.getUniqueId(), testIdentifier.getDisplayName(),
+			// Test source unknown. Use display names of parent and current identifier
+			// as class and method, respectively.
+			return ignored(parentDisplayName(testIdentifier), testIdentifier.getDisplayName(),
 				throwable.map(Throwable::getMessage).orElse(null));
 		}
 	}
@@ -104,6 +113,14 @@ final class RunListenerAdapter implements TestExecutionListener {
 		else {
 			return testIdentifier.getUniqueId();
 		}
+	}
+
+	private String parentDisplayName(TestIdentifier testIdentifier) {
+		if (testPlan == null) {
+			return null;
+		}
+		return testPlan.getParent(testIdentifier).map(TestIdentifier::getDisplayName).orElse(
+			testIdentifier.getUniqueId());
 	}
 
 }
