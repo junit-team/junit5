@@ -32,6 +32,10 @@ public class JupiterUniqueIdBuilder {
 		return containerId.append(TestContainerResolver.SEGMENT_TYPE, clazz.getName());
 	}
 
+	public static UniqueId uniqueIdForTopLevelClass(String className) {
+		return engineId().append(TestContainerResolver.SEGMENT_TYPE, className);
+	}
+
 	public static UniqueId uniqueIdForMethod(Class<?> clazz, String methodPart) {
 		return uniqueIdForClass(clazz).append(TestMethodResolver.SEGMENT_TYPE, methodPart);
 	}

@@ -15,7 +15,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInCl
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
 
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -49,7 +48,7 @@ public class DiscoverySelectorResolver {
 		Predicate<String> classNamePredicate = buildClassNamePredicate(request);
 
 		request.getSelectorsByType(ClasspathRootSelector.class).forEach(selector -> {
-			findAllClassesInClasspathRoot(Paths.get(selector.getClasspathRoot()), isScannableTestClass,
+			findAllClassesInClasspathRoot(selector.getClasspathRoot(), isScannableTestClass,
 				classNamePredicate).forEach(javaElementsResolver::resolveClass);
 		});
 		request.getSelectorsByType(PackageSelector.class).forEach(selector -> {

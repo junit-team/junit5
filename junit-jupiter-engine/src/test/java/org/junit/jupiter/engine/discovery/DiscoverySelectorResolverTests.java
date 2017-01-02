@@ -20,6 +20,7 @@ import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.engineId
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestFactoryMethod;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTopLevelClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -28,6 +29,8 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqu
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -397,6 +400,27 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class2WithTestCases.class, "test2()")));
 		assertTrue(
 			uniqueIds.contains(uniqueIdForMethod(ClassWithStaticInnerTestCases.ShouldBeDiscovered.class, "test1()")));
+	}
+
+	@Test
+	public void classpathResolutionForJarFiles() throws Exception {
+		URL jarUrl = getClass().getResource("/jupiter-testjar.jar");
+		Path path = Paths.get(jarUrl.toURI());
+		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(path));
+
+		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+		try (URLClassLoader classLoader = new URLClassLoader(new URL[] { jarUrl })) {
+			Thread.currentThread().setContextClassLoader(classLoader);
+
+			resolver.resolveSelectors(request().selectors(selectors).build(), engineDescriptor);
+
+			assertThat(uniqueIds()) //
+					.contains(uniqueIdForTopLevelClass("com.example.project.FirstTest")) //
+					.contains(uniqueIdForTopLevelClass("com.example.project.SecondTest"));
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(originalClassLoader);
+		}
 	}
 
 	@Test
