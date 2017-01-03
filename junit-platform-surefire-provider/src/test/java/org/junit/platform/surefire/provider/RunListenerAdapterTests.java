@@ -17,6 +17,8 @@
 package org.junit.platform.surefire.provider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -28,6 +30,7 @@ import java.util.Optional;
 
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.RunListener;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
@@ -46,131 +49,108 @@ import org.mockito.ArgumentCaptor;
  */
 class RunListenerAdapterTests {
 
+	private RunListener listener;
+	private RunListenerAdapter adapter;
+
+	@BeforeEach
+	public void setUp() {
+		listener = mock(RunListener.class);
+		adapter = new RunListenerAdapter(listener);
+	}
+
 	@Test
-	void notifiedWhenMethodExecutionStarted() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
+	void notifiedWithCorrectNamesWhenMethodExecutionStarted() throws Exception {
+		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 
 		adapter.executionStarted(newMethodIdentifier());
+		verify(listener).testStarting(entryCaptor.capture());
 
-		verify(listener).testStarting(any());
+		ReportEntry entry = entryCaptor.getValue();
+		assertEquals(MY_TEST_METHOD_NAME + "()", entry.getName());
+		assertEquals(MyTestClass.class.getName(), entry.getSourceName());
+		assertNotNull(entry.getStackTraceWriter());
 	}
 
 	@Test
 	void notNotifiedWhenClassExecutionStarted() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
-
 		adapter.executionStarted(newClassIdentifier());
-
 		verify(listener, never()).testStarting(any());
 	}
 
 	@Test
 	void notNotifiedWhenEngineExecutionStarted() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
-
 		adapter.executionStarted(newEngineIdentifier());
-
 		verify(listener, never()).testStarting(any());
 	}
 
 	@Test
 	void notifiedWhenMethodExecutionSkipped() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
-
 		adapter.executionSkipped(newMethodIdentifier(), "test");
-
 		verify(listener).testSkipped(any());
 	}
 
 	@Test
-	void notifiedWhenClassExecutionSkipped() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
+	void notifiedWithCorrectNamesWhenClassExecutionSkipped() throws Exception {
+		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 
 		adapter.executionSkipped(newClassIdentifier(), "test");
+		verify(listener).testSkipped(entryCaptor.capture());
 
-		verify(listener).testSkipped(any());
+		ReportEntry entry = entryCaptor.getValue();
+		assertTrue(MyTestClass.class.getTypeName().contains(entry.getName()));
+		assertEquals(MyTestClass.class.getName(), entry.getSourceName());
 	}
 
 	@Test
 	void notifiedWhenEngineExecutionSkipped() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
-
 		adapter.executionSkipped(newEngineIdentifier(), "test");
-
 		verify(listener).testSkipped(any());
 	}
 
 	@Test
 	void notifiedWhenMethodExecutionAborted() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
-
 		adapter.executionFinished(newMethodIdentifier(), TestExecutionResult.aborted(null));
-
 		verify(listener).testAssumptionFailure(any());
 	}
 
 	@Test
 	void notifiedWhenClassExecutionAborted() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
-
 		adapter.executionFinished(newClassIdentifier(), TestExecutionResult.aborted(null));
-
 		verify(listener).testAssumptionFailure(any());
 	}
 
 	@Test
 	void notifiedWhenMethodExecutionFailed() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
-
 		adapter.executionFinished(newMethodIdentifier(), TestExecutionResult.failed(new RuntimeException()));
-
 		verify(listener).testFailed(any());
 	}
 
 	@Test
-	void notifiedWhenClassExecutionFailed() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
+	void notifiedWithCorrectNamesWhenClassExecutionFailed() throws Exception {
+		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 
 		adapter.executionFinished(newClassIdentifier(), TestExecutionResult.failed(new RuntimeException()));
+		verify(listener).testFailed(entryCaptor.capture());
 
-		verify(listener).testFailed(any());
+		ReportEntry entry = entryCaptor.getValue();
+		assertEquals(MyTestClass.class.getName(), entry.getSourceName());
+		assertNotNull(entry.getStackTraceWriter());
 	}
 
 	@Test
 	void notifiedWhenMethodExecutionSucceeded() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
-
 		adapter.executionFinished(newMethodIdentifier(), TestExecutionResult.successful());
-
 		verify(listener).testSucceeded(any());
 	}
 
 	@Test
 	void notNotifiedWhenClassExecutionSucceeded() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
-
 		adapter.executionFinished(newClassIdentifier(), TestExecutionResult.successful());
-
 		verify(listener, never()).testSucceeded(any());
 	}
 
 	@Test
 	void notifiedWithParentDisplayNameWhenTestClassUnknown() throws Exception {
-		RunListener listener = mock(RunListener.class);
-		RunListenerAdapter adapter = new RunListenerAdapter(listener);
-
 		// Set up a test plan
 		TestPlan plan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Luke's Plan")));
 		adapter.testPlanExecutionStarted(plan);
@@ -188,13 +168,13 @@ class RunListenerAdapterTests {
 	}
 
 	private static TestIdentifier newMethodIdentifier() throws Exception {
-		TestDescriptor testDescriptor = new MethodTestDescriptor(newId(), TestClass.class,
-			TestClass.class.getDeclaredMethod("test1"));
+		TestDescriptor testDescriptor = new MethodTestDescriptor(newId(), MyTestClass.class,
+			MyTestClass.class.getDeclaredMethod(MY_TEST_METHOD_NAME));
 		return TestIdentifier.from(testDescriptor);
 	}
 
 	private static TestIdentifier newClassIdentifier() {
-		TestDescriptor testDescriptor = new ClassTestDescriptor(newId(), TestClass.class);
+		TestDescriptor testDescriptor = new ClassTestDescriptor(newId(), MyTestClass.class);
 		return TestIdentifier.from(testDescriptor);
 	}
 
@@ -230,10 +210,10 @@ class RunListenerAdapterTests {
 		return UniqueId.forEngine("engine");
 	}
 
-	private static class TestClass {
-
+	private static final String MY_TEST_METHOD_NAME = "myTestMethod";
+	private static class MyTestClass {
 		@Test
-		void test1() {
+		void myTestMethod() {
 		}
 	}
 }
