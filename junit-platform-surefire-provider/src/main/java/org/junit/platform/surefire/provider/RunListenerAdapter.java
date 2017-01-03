@@ -95,8 +95,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 		else {
 			// Test source unknown. Use display names of parent and current identifier
 			// as class and method, respectively.
-			return ignored(parentDisplayName(testIdentifier), testIdentifier.getDisplayName(),
-				throwable.map(Throwable::getMessage).orElse(null));
+			return new SimpleReportEntry(parentDisplayName(testIdentifier), testIdentifier.getDisplayName(), null);
 		}
 	}
 
