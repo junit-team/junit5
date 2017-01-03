@@ -221,6 +221,12 @@ public final class DiscoverySelectors {
 	 * <p>If the supplied classpath resource name is prefixed with a slash
 	 * ({@code /}), the slash will be removed.
 	 *
+	 * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
+	 * expected to modify the classpath, the supplied classpath resource must be
+	 * on the classpath of the
+	 * {@linkplain Thread#getContextClassLoader() context class loader} of the
+	 * {@linkplain Thread thread} that uses the resulting selector.
+	 *
 	 * @param classpathResourceName the name of the classpath resource; never
 	 * {@code null} or blank
 	 * @see ClasspathResourceSelector

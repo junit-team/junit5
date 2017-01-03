@@ -22,6 +22,12 @@ import org.junit.platform.engine.DiscoverySelector;
  * from the classpath &mdash; for example, to load XML or JSON files from the classpath,
  * potentially within JARs.
  *
+ * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
+ * expected to modify the classpath, the classpath resource represented by this
+ * selector must be on the classpath of the
+ * {@linkplain Thread#getContextClassLoader() context class loader} of the
+ * {@linkplain Thread thread} that uses it.
+ *
  * @since 1.0
  * @see ClasspathRootSelector
  * @see #getClasspathResourceName()
