@@ -47,8 +47,8 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
-	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		super(uniqueId, testClass, testMethod);
+	public TestFactoryTestDescriptor(UniqueId uniqueId, ClassTestDescriptor parentClassDescriptor, Method testMethod) {
+		super(uniqueId, parentClassDescriptor, testMethod);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------

@@ -69,12 +69,17 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	private final Class<?> testClass;
 	private final Method testMethod;
 
-	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
+	private final ExtensionRegistry extensionRegistry; // TODO not immutable
+
+	// TODO always a parent class descriptor is required. Should be ok due to even JavaElementResolver::resolveMethod first resolves parents
+	public MethodTestDescriptor(UniqueId uniqueId, ClassTestDescriptor parentClassDescriptor, Method testMethod) {
 		super(uniqueId, determineDisplayName(Preconditions.notNull(testMethod, "Method must not be null"),
 			MethodTestDescriptor::generateDefaultDisplayName));
 
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
+		this.testClass = Preconditions.notNull(parentClassDescriptor.getTestClass(), "Class must not be null");
 		this.testMethod = testMethod;
+		this.extensionRegistry = populateNewExtensionRegistryFromExtendWith(testMethod,
+			parentClassDescriptor.getExtensionRegistry());
 
 		setSource(new MethodSource(testMethod));
 	}
@@ -96,6 +101,10 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		return this.testMethod;
 	}
 
+	public ExtensionRegistry getExtensionRegistry() {
+		return extensionRegistry;
+	}
+
 	@Override
 	public boolean isTest() {
 		return true;
@@ -115,8 +124,6 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
-		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.testMethod,
-			context.getExtensionRegistry());
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
@@ -124,7 +131,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 		// @formatter:off
 		return context.extend()
-				.withExtensionRegistry(registry)
+				.withExtensionRegistry(extensionRegistry)
 				.withExtensionContext(testExtensionContext)
 				.withThrowableCollector(throwableCollector)
 				.build();
@@ -217,7 +224,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		});
 	}
 
-	private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, TestExtensionContext context,
+	protected void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, TestExtensionContext context,
 			Throwable ex) {
 
 		invokeTestExecutionExceptionHandlers(ex, registry.getExtensions(TestExecutionExceptionHandler.class), context);

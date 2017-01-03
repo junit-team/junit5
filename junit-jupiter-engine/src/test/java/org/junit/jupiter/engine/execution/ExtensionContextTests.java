@@ -28,7 +28,6 @@ import org.junit.jupiter.engine.descriptor.MethodBasedTestExtensionContext;
 import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.mockito.ArgumentCaptor;
@@ -46,8 +45,8 @@ public class ExtensionContextTests {
 
 	@Test
 	public void fromClassTestDescriptor() {
-		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
-		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
+		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor();
+		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor(outerClassDescriptor);
 
 		ClassBasedContainerExtensionContext outerExtensionContext = new ClassBasedContainerExtensionContext(null, null,
 			outerClassDescriptor);
@@ -64,9 +63,9 @@ public class ExtensionContextTests {
 
 	@Test
 	public void tagsCanBeRetrievedInExtensionContext() {
-		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
-		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
-		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
+		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor();
+		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor(outerClassDescriptor);
+		MethodTestDescriptor methodTestDescriptor = methodDescriptor(outerClassDescriptor);
 		outerClassDescriptor.addChild(methodTestDescriptor);
 
 		ClassBasedContainerExtensionContext outerExtensionContext = new ClassBasedContainerExtensionContext(null, null,
@@ -93,8 +92,8 @@ public class ExtensionContextTests {
 
 	@Test
 	public void fromMethodTestDescriptor() {
-		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
-		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
+		ClassTestDescriptor classTestDescriptor = outerClassDescriptor();
+		MethodTestDescriptor methodTestDescriptor = methodDescriptor(outerClassDescriptor());
 
 		ClassBasedContainerExtensionContext classExtensionContext = new ClassBasedContainerExtensionContext(null, null,
 			classTestDescriptor);
@@ -110,7 +109,7 @@ public class ExtensionContextTests {
 
 	@Test
 	public void reportEntriesArePublishedToExecutionContext() {
-		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(null);
+		ClassTestDescriptor classTestDescriptor = outerClassDescriptor();
 		EngineExecutionListener engineExecutionListener = Mockito.spy(EngineExecutionListener.class);
 		ExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, engineExecutionListener,
 			classTestDescriptor);
@@ -134,8 +133,8 @@ public class ExtensionContextTests {
 
 	@Test
 	public void usingStore() {
-		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
-		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
+		ClassTestDescriptor classTestDescriptor = outerClassDescriptor();
+		MethodTestDescriptor methodTestDescriptor = methodDescriptor(classTestDescriptor);
 		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);
 		MethodBasedTestExtensionContext childContext = new MethodBasedTestExtensionContext(parentContext, null,
 			methodTestDescriptor, new OuterClass(), new ThrowableCollector());
@@ -169,22 +168,20 @@ public class ExtensionContextTests {
 		assertEquals(parentValue, childStore.get(parentKey));
 	}
 
-	private ClassTestDescriptor nestedClassDescriptor() {
-		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"),
-			OuterClass.NestedClass.class);
+	private ClassTestDescriptor nestedClassDescriptor(ClassTestDescriptor parent) {
+		NestedClassTestDescriptor nestedClassTestDescriptor = new NestedClassTestDescriptor(
+			UniqueId.root("nested-class", "NestedClass"), parent, OuterClass.NestedClass.class);
+		parent.addChild(nestedClassTestDescriptor);
+		return nestedClassTestDescriptor;
 	}
 
-	private ClassTestDescriptor outerClassDescriptor(TestDescriptor child) {
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(UniqueId.root("class", "OuterClass"),
-			OuterClass.class);
-		if (child != null)
-			classTestDescriptor.addChild(child);
-		return classTestDescriptor;
+	private ClassTestDescriptor outerClassDescriptor() {
+		return new ClassTestDescriptor(UniqueId.root("class", "OuterClass"), OuterClass.class);
 	}
 
-	private MethodTestDescriptor methodDescriptor() {
+	private MethodTestDescriptor methodDescriptor(ClassTestDescriptor parent) {
 		try {
-			return new MethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClass.class,
+			return new MethodTestDescriptor(UniqueId.root("method", "aMethod"), parent,
 				OuterClass.class.getDeclaredMethod("aMethod"));
 		}
 		catch (NoSuchMethodException e) {

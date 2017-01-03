@@ -44,7 +44,7 @@ class TestContainerResolver implements ElementResolver {
 			return Collections.emptySet();
 
 		UniqueId uniqueId = createUniqueId(clazz, parent);
-		return Collections.singleton(resolveClass(clazz, uniqueId));
+		return resolveClass(parent, clazz, uniqueId).map(Collections::singleton).orElse(Collections.emptySet());
 	}
 
 	@Override
@@ -67,7 +67,7 @@ class TestContainerResolver implements ElementResolver {
 			return Optional.empty();
 
 		UniqueId uniqueId = createUniqueId(containerClass, parent);
-		return Optional.of(resolveClass(containerClass, uniqueId));
+		return resolveClass(parent, containerClass, uniqueId);
 	}
 
 	protected Class<? extends TestDescriptor> requiredParentType() {
@@ -94,8 +94,8 @@ class TestContainerResolver implements ElementResolver {
 		return parent.getUniqueId().append(getSegmentType(), getSegmentValue(testClass));
 	}
 
-	protected TestDescriptor resolveClass(Class<?> testClass, UniqueId uniqueId) {
-		return new ClassTestDescriptor(uniqueId, testClass);
+	protected Optional<TestDescriptor> resolveClass(TestDescriptor parent, Class<?> testClass, UniqueId uniqueId) {
+		return Optional.of(new ClassTestDescriptor(uniqueId, testClass));
 	}
 
 }

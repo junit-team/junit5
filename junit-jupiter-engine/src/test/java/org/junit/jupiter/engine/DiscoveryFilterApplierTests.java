@@ -154,7 +154,7 @@ class DiscoveryFilterApplierTests {
 		TestDescriptor engineDescriptor = engineDescriptor()
 			.with(
 				classTestDescriptor("matching", MatchingClass.class)
-					.with(nestedClassTestDescriptor("nested", MatchingClass.NestedClass.class))
+					.with(nestedClassTestDescriptor("nested", null, MatchingClass.NestedClass.class))
 			)
 			.build();
 		// @formatter:on

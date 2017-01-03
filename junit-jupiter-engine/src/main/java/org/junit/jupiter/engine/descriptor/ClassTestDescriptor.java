@@ -14,6 +14,7 @@ import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfter
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterEachMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
+import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Constructor;
@@ -73,12 +74,15 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private final List<Method> beforeEachMethods;
 	private final List<Method> afterEachMethods;
 
+	private final ExtensionRegistry extensionRegistry; // TODO not immutable
+
 	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
-		this(uniqueId, ClassTestDescriptor::generateDefaultDisplayName, testClass);
+		this(uniqueId, ClassTestDescriptor::generateDefaultDisplayName, testClass,
+			createRegistryWithDefaultExtensions());
 	}
 
 	protected ClassTestDescriptor(UniqueId uniqueId, Function<Class<?>, String> defaultDisplayNameGenerator,
-			Class<?> testClass) {
+			Class<?> testClass, ExtensionRegistry existingExtensionRegistry) {
 
 		super(uniqueId, determineDisplayName(Preconditions.notNull(testClass, "Class must not be null"),
 			defaultDisplayNameGenerator));
@@ -89,6 +93,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		this.afterAllMethods = findAfterAllMethods(testClass);
 		this.beforeEachMethods = findBeforeEachMethods(testClass);
 		this.afterEachMethods = findAfterEachMethods(testClass);
+		this.extensionRegistry = populateNewExtensionRegistryFromExtendWith(testClass, existingExtensionRegistry);
 
 		setSource(new ClassSource(testClass));
 	}
@@ -102,6 +107,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	public final Class<?> getTestClass() {
 		return this.testClass;
+	}
+
+	public ExtensionRegistry getExtensionRegistry() {
+		return extensionRegistry;
 	}
 
 	@Override
@@ -124,19 +133,16 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
-		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.testClass,
-			context.getExtensionRegistry());
-
-		registerBeforeEachMethodAdapters(registry);
-		registerAfterEachMethodAdapters(registry);
+		registerBeforeEachMethodAdapters(extensionRegistry); // TODO already by contructor?
+		registerAfterEachMethodAdapters(extensionRegistry);
 
 		ContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this);
 
 		// @formatter:off
 		return context.extend()
-				.withTestInstanceProvider(testInstanceProvider(context, registry, containerExtensionContext))
-				.withExtensionRegistry(registry)
+				.withTestInstanceProvider(testInstanceProvider(context, extensionRegistry, containerExtensionContext))
+				.withExtensionRegistry(extensionRegistry)
 				.withExtensionContext(containerExtensionContext)
 				.withThrowableCollector(new ThrowableCollector())
 				.build();

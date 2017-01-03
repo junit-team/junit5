@@ -53,7 +53,7 @@ class TestFactoryMethodResolver extends TestMethodResolver {
 	@Override
 	protected TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,
 			UniqueId uniqueId) {
-		return new TestFactoryTestDescriptor(uniqueId, parentClassDescriptor.getTestClass(), testMethod);
+		return new TestFactoryTestDescriptor(uniqueId, parentClassDescriptor, testMethod);
 	}
 
 }
