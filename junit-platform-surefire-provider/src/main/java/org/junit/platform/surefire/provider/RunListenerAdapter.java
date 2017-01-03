@@ -40,7 +40,7 @@ import org.junit.platform.launcher.TestPlan;
 final class RunListenerAdapter implements TestExecutionListener {
 
 	private final RunListener runListener;
-	private TestPlan testPlan = null;
+	private Optional<TestPlan> testPlan = Optional.empty();
 
 	public RunListenerAdapter(RunListener runListener) {
 		this.runListener = runListener;
@@ -48,7 +48,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		this.testPlan = testPlan;
+		this.testPlan = Optional.of(testPlan);
 	}
 
 	@Override
@@ -60,8 +60,8 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		runListener.testSkipped(
-			ignored(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName(), reason));
+		String source = getClassName(testIdentifier).orElse(parentDisplayName(testIdentifier));
+		runListener.testSkipped(ignored(source, testIdentifier.getDisplayName(), reason));
 	}
 
 	@Override
@@ -78,48 +78,42 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier, Optional<Throwable> throwable) {
-		TestSource testSource = testIdentifier.getSource().orElse(null);
-		if (testSource instanceof ClassSource) {
-			ClassSource classSource = (ClassSource) testSource;
-			String className = classSource.getJavaClass().getName();
-			StackTraceWriter stackTraceWriter = new PojoStackTraceWriter(className, "", throwable.orElse(null));
-			return new SimpleReportEntry(className, testIdentifier.getDisplayName(), stackTraceWriter, null);
-		}
-		else if (testSource instanceof MethodSource) {
-			MethodSource methodSource = (MethodSource) testSource;
-			String className = methodSource.getClassName();
-			String methodName = methodSource.getMethodName();
-			StackTraceWriter stackTraceWriter = new PojoStackTraceWriter(className, methodName, throwable.orElse(null));
-			return new SimpleReportEntry(className, testIdentifier.getDisplayName(), stackTraceWriter, null);
+		Optional<String> className = getClassName(testIdentifier);
+		if (className.isPresent()) {
+			StackTraceWriter traceWriter = new PojoStackTraceWriter(className.get(),
+				getMethodName(testIdentifier).orElse(""), throwable.orElse(null));
+			return new SimpleReportEntry(className.get(), testIdentifier.getDisplayName(), traceWriter, null);
 		}
 		else {
-			// Test source unknown. Use display names of parent and current identifier
-			// as class and method, respectively.
 			return new SimpleReportEntry(parentDisplayName(testIdentifier), testIdentifier.getDisplayName(), null);
 		}
 	}
 
-	private String getClassNameOrUniqueId(TestIdentifier testIdentifier) {
+	private Optional<String> getClassName(TestIdentifier testIdentifier) {
 		TestSource testSource = testIdentifier.getSource().orElse(null);
 		if (testSource instanceof ClassSource) {
-			ClassSource classSource = (ClassSource) testSource;
-			return classSource.getJavaClass().getName();
+			return Optional.of(((ClassSource) testSource).getJavaClass().getName());
 		}
-		else if (testSource instanceof MethodSource) {
-			MethodSource methodSource = (MethodSource) testSource;
-			return methodSource.getClassName();
+		if (testSource instanceof MethodSource) {
+			return Optional.of(((MethodSource) testSource).getClassName());
 		}
-		else {
-			return testIdentifier.getUniqueId();
+		return Optional.empty();
+	}
+
+	private Optional<String> getMethodName(TestIdentifier testIdentifier) {
+		TestSource testSource = testIdentifier.getSource().orElse(null);
+		if (testSource instanceof MethodSource) {
+			return Optional.of(((MethodSource) testSource).getMethodName());
 		}
+		return Optional.empty();
 	}
 
 	private String parentDisplayName(TestIdentifier testIdentifier) {
-		if (testPlan == null) {
-			return null;
-		}
-		return testPlan.getParent(testIdentifier).map(TestIdentifier::getDisplayName).orElse(
-			testIdentifier.getUniqueId());
+		// @formatter:off
+		return testPlan
+			.flatMap((TestPlan p) -> p.getParent(testIdentifier))
+			.map(TestIdentifier::getDisplayName)
+			.orElse(testIdentifier.getUniqueId());
+		// @formatter:on
 	}
-
 }
