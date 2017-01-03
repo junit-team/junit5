@@ -60,7 +60,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		String source = getClassName(testIdentifier).orElse(parentDisplayName(testIdentifier));
+		String source = getClassName(testIdentifier).orElseGet(() -> parentDisplayName(testIdentifier));
 		runListener.testSkipped(ignored(source, testIdentifier.getDisplayName(), reason));
 	}
 
@@ -113,7 +113,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 		return testPlan
 			.flatMap((TestPlan p) -> p.getParent(testIdentifier))
 			.map(TestIdentifier::getDisplayName)
-			.orElse(testIdentifier.getUniqueId());
+			.orElseGet(() -> testIdentifier.getUniqueId());
 		// @formatter:on
 	}
 }
