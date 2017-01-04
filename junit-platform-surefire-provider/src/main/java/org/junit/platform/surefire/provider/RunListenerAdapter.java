@@ -116,9 +116,9 @@ final class RunListenerAdapter implements TestExecutionListener {
 	private String parentDisplayName(TestIdentifier testIdentifier) {
 		// @formatter:off
 		return testPlan
-			.flatMap((TestPlan p) -> p.getParent(testIdentifier))
+			.flatMap(plan -> plan.getParent(testIdentifier))
 			.map(TestIdentifier::getDisplayName)
-			.orElseGet(() -> testIdentifier.getUniqueId());
+			.orElseGet(testIdentifier::getUniqueId);
 		// @formatter:on
 	}
 }
