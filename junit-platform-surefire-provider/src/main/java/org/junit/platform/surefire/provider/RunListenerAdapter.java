@@ -52,6 +52,11 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	@Override
+	public void testPlanExecutionFinished(TestPlan testPlan) {
+		this.testPlan = Optional.empty();
+	}
+
+	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
 		if (testIdentifier.isTest()) {
 			runListener.testStarting(createReportEntry(testIdentifier, Optional.empty()));
