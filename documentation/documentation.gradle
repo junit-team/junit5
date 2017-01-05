@@ -65,7 +65,7 @@ asciidoctor {
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
-				'source-highlighter': 'highlightjs',
+				'source-highlighter': 'coderay',
 				'highlightjs-theme': 'github',
 				'tabsize': '4',
 				'imagesdir': 'images',
