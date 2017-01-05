@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,14 +12,10 @@ package org.junit.platform.ant.plugin;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Resource;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.CommandLineOptionsParser;
 import org.junit.platform.console.options.JOptSimpleCommandLineOptionsParser;
@@ -30,29 +26,36 @@ import org.junit.platform.console.tasks.ExecuteTestsTask;
 
 public class JUnitPlatformPlugin extends Task {
 
-	private static final String classpath = "--classpath";
-	private static final String reportsDir = "--reports-dir";
+	private static final String HELP = "--help";
+	private static final String DISABLE_ANSI_COLORS = "--disable-ansi-colors";
+	private static final String HIDE_DETAILS = "--hide-details";
+	private static final String CLASSPATH = "--classpath";
+	private static final String REPORTS_DIR = "--reports-dir";
 
-	private static final String selectUris = "--select-uri";
-	private static final String selectFiles = "--select-file";
-	private static final String selectDirectories = "--select-directory";
-	private static final String selectPackages = "--select-package";
-	private static final String selectClasses = "--select-class";
-	private static final String selectMethods = "--select-method";
-	private static final String selectResources = "--select-resource";
+	private static final String SELECT_URIS = "--select-uri";
+	private static final String SELECT_FILES = "--select-file";
+	private static final String SELECT_DIRECTORIES = "--select-directory";
+	private static final String SELECT_PACKAGE = "--select-package";
+	private static final String SELECT_CLASSES = "--select-class";
+	private static final String SELECT_METHODS = "--select-method";
+	private static final String SELECT_RESOURCES = "--select-resource";
 
-	private static final String scanClasspath = "--scan-classpath";
-	private static final String includeClassnames = "--include-classname";
-	private static final String includePackage = "--include-package";
-	private static final String excludePackage = "--exclude-package";
-	private static final String includeEngine = "--include-engine";
-	private static final String excludeEngine = "--exclude-engine";
-	private static final String includeTag = "--include-tag";
-	private static final String excludeTag = "--exclude-tag";
+	private static final String SCAN_CLASSPATH = "--scan-classpath";
+	private static final String INCLUDE_CLASSNAMES = "--include-classname";
+	private static final String INCLUDE_PACKAGE = "--include-package";
+	private static final String EXCLUDE_PACKAGE = "--exclude-package";
+	private static final String INCLUDE_ENGINE = "--include-engine";
+	private static final String EXCLUDE_ENGINE = "--exclude-engine";
+	private static final String INCLUDE_TAG = "--include-tag";
+	private static final String EXCLUDE_TAG = "--exclude-tag";
 
 	private final CommandLineOptionsParser commandLineOptionsParser;
+	private final ConsoleTaskExecutor consoleTaskExecutor;
 
-	private Path path;
+	private boolean printHelp = false;
+	private boolean ansiColorsDisabled = false;
+	private boolean detailsHidden = false;
+	private Path classpath;
 	private String reportsPath;
 	private Filters filters;
 	private Selectors selectors;
@@ -60,96 +63,44 @@ public class JUnitPlatformPlugin extends Task {
 	public JUnitPlatformPlugin() {
 		super();
 		this.commandLineOptionsParser = new JOptSimpleCommandLineOptionsParser();
+		this.consoleTaskExecutor = new ConsoleTaskExecutor(System.out, System.err);
 	}
 
 	// For testing only
-	JUnitPlatformPlugin(CommandLineOptionsParser commandLineOPtionsParser) {
+	JUnitPlatformPlugin(CommandLineOptionsParser commandLineOPtionsParser, ConsoleTaskExecutor consoleTaskExecutor) {
 		super();
 		this.commandLineOptionsParser = commandLineOPtionsParser;
+		this.consoleTaskExecutor = consoleTaskExecutor;
 	}
 
+	@Override
 	public void execute() {
 		List<String> args = new ArrayList<>();
 		buildArguments(args);
 		CommandLineOptions options = commandLineOptionsParser.parse(args.toArray(new String[0]));
-		ConsoleTask task = new ExecuteTestsTask(options);
-		ConsoleTaskExecutor consoleTaskExecutor = new ConsoleTaskExecutor(System.out, System.err);
+		// TODO: add test when printing help?
+		ConsoleTask task = printHelp ? new DisplayHelpTask(commandLineOptionsParser) : new ExecuteTestsTask(options);
 		consoleTaskExecutor.executeTask(task, this::displayHelp);
 	}
-
-	private void buildArguments(List<String> args) {
-		addGeneralPurposeArgs(args);
-		addSelectors(args);
-		addFilters(args);
-	}
-
-	private void addGeneralPurposeArgs(List<String> args) {
-		if (path != null) {
-			args.add(classpath);
-			args.add(translatePath(this.path));
-		}
-		if (reportsPath != null) {
-			args.add(reportsDir);
-			args.add(reportsPath);
-		}
-	}
-
-	private String translatePath(Path pathToTranslate) {
-		Iterator<Resource> it = pathToTranslate.iterator();
-		Iterable<Resource> iterable = () -> it;
-
-		String cp = StreamSupport.stream(iterable.spliterator(), false).map(Resource::toString).collect(
-			Collectors.joining(":"));
-		return cp;
-	}
-
-	private void addSelectors(List<String> args) {
-		if (this.selectors != null) {
-			if (this.selectors.getClasspath() != null) {
-				args.add(scanClasspath);
-				args.add(translatePath(this.selectors.getClasspath()));
-			}
-			populateRepeatingArguments(args, selectUris, selectors.getUris());
-			populateRepeatingArguments(args, selectFiles, selectors.getFiles());
-			populateRepeatingArguments(args, selectDirectories, selectors.getDirectories());
-			populateRepeatingArguments(args, selectPackages, selectors.getPackages());
-			populateRepeatingArguments(args, selectClasses, selectors.getClasses());
-			populateRepeatingArguments(args, selectMethods, selectors.getMethods());
-			populateRepeatingArguments(args, selectResources, selectors.getResources());
-		}
-	}
-
-	private void addFilters(List<String> args) {
-		if (filters != null) {
-			populateRepeatingArguments(args, includeClassnames, filters.getIncludeClassNamePatterns());
-			if (filters.getPackages() != null) {
-				populateRepeatingArguments(args, includePackage, filters.getPackages().getInclude());
-				populateRepeatingArguments(args, excludePackage, filters.getPackages().getExclude());
-			}
-			if (filters.getEngines() != null) {
-				populateRepeatingArguments(args, includeEngine, filters.getEngines().getInclude());
-				populateRepeatingArguments(args, excludeEngine, filters.getEngines().getExclude());
-			}
-			if (filters.getTags() != null) {
-				populateRepeatingArguments(args, includeTag, filters.getTags().getInclude());
-				populateRepeatingArguments(args, excludeTag, filters.getTags().getExclude());
-			}
-		}
-	}
-
-	private void populateRepeatingArguments(List<String> args, String paramName, List<String> repeatableArgument) {
-		repeatableArgument.forEach(arg -> {
-			args.add(paramName);
-			args.add(arg);
-		});
-	}
-
+	
 	void displayHelp(PrintWriter out) {
 		new DisplayHelpTask(commandLineOptionsParser).execute(out);
 	}
 
-	public void addClasspath(Path path) {
-		this.path = path;
+	public void setHelp(boolean help) {
+		this.printHelp = help;
+	}
+	
+	public void setDisableAnsiColors(boolean disableAnsiColors) {
+		this.ansiColorsDisabled = disableAnsiColors;
+	}
+
+	public void setHideDetails(boolean hideDetails) {
+		this.detailsHidden = hideDetails;
+	}
+
+	public void addClasspath(Path classpath) {
+		this.classpath = classpath;
 	}
 
 	public void setReportsDir(String reportsDir) {
@@ -162,5 +113,73 @@ public class JUnitPlatformPlugin extends Task {
 
 	public void addSelectors(Selectors selectors) {
 		this.selectors = selectors;
+	}
+
+	private void buildArguments(List<String> args) {
+		addGeneralPurposeArgs(args);
+		addSelectors(args);
+		addFilters(args);
+	}
+
+	private void addGeneralPurposeArgs(List<String> args) {
+		if (printHelp) {
+			args.add(HELP);
+		}
+		if (ansiColorsDisabled) {
+			args.add(DISABLE_ANSI_COLORS);
+		}
+		if (detailsHidden) {
+			args.add(HIDE_DETAILS);
+		}
+		if (classpath != null) {
+			args.add(CLASSPATH);
+			args.add(String.join(":", this.classpath.list()));
+		}
+		if (reportsPath != null) {
+			args.add(REPORTS_DIR);
+			args.add(reportsPath);
+		}
+	}
+
+	private void addSelectors(List<String> args) {
+		if (this.selectors != null) {
+			if (this.selectors.getClasspath() != null) {
+				args.add(SCAN_CLASSPATH);
+				args.add(String.join(":", this.selectors.getClasspath().list()));
+			}
+			populateRepeatingArguments(args, SELECT_URIS, selectors.getUris());
+			populateRepeatingArguments(args, SELECT_FILES, selectors.getFiles());
+			populateRepeatingArguments(args, SELECT_DIRECTORIES, selectors.getDirectories());
+			populateRepeatingArguments(args, SELECT_PACKAGE, selectors.getPackages());
+			populateRepeatingArguments(args, SELECT_CLASSES, selectors.getClasses());
+			populateRepeatingArguments(args, SELECT_METHODS, selectors.getMethods());
+			populateRepeatingArguments(args, SELECT_RESOURCES, selectors.getResources());
+		}
+	}
+
+	private void addFilters(List<String> args) {
+		if (filters != null) {
+			populateRepeatingArguments(args, INCLUDE_CLASSNAMES, filters.getIncludeClassNamePatterns());
+
+			if (filters.getPackages() != null) {
+				populateRepeatingArguments(args, INCLUDE_PACKAGE, filters.getPackages().getInclude());
+				populateRepeatingArguments(args, EXCLUDE_PACKAGE, filters.getPackages().getExclude());
+			}
+			if (filters.getEngines() != null) {
+				populateRepeatingArguments(args, INCLUDE_ENGINE, filters.getEngines().getInclude());
+				populateRepeatingArguments(args, EXCLUDE_ENGINE, filters.getEngines().getExclude());
+			}
+			if (filters.getTags() != null) {
+				populateRepeatingArguments(args, INCLUDE_TAG, filters.getTags().getInclude());
+				populateRepeatingArguments(args, EXCLUDE_TAG, filters.getTags().getExclude());
+			}
+		}
+	}
+
+	private void populateRepeatingArguments(List<String> args, String paramName, List<String> repeatableArgument) {
+		repeatableArgument.forEach(arg -> {
+			args.add(paramName);
+			args.add(arg);
+		});
 	}
 }

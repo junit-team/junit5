@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,8 +12,11 @@ package org.junit.platform.ant.plugin;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -22,6 +25,8 @@ import org.apache.tools.ant.types.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.ant.plugin.Filters.FilterSet;
 import org.junit.platform.console.options.CommandLineOptionsParser;
+import org.junit.platform.console.tasks.ConsoleTask;
+import org.junit.platform.console.tasks.ConsoleTaskExecutor;
 import org.mockito.ArgumentCaptor;
 
 /**
@@ -34,10 +39,13 @@ class JUnitPlatformProviderTests {
 	@Test
 	void generalPurposeArguments() throws Exception {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		JUnitPlatformPlugin junitAntTask = new JUnitPlatformPlugin(commandLineOptionsParser);
+		JUnitPlatformPlugin junitAntTask = prepareJunitTask(commandLineOptionsParser);
 
 		Path classpath = new Path(new Project());
-		classpath.setPath("dummy/path");
+		classpath.setPath("test/path");
+		junitAntTask.setHelp(true);
+		junitAntTask.setDisableAnsiColors(true);
+		junitAntTask.setHideDetails(true);
 		junitAntTask.addClasspath(classpath);
 		junitAntTask.setReportsDir("reportsDirectory");
 		junitAntTask.execute();
@@ -46,23 +54,24 @@ class JUnitPlatformProviderTests {
 		verify(commandLineOptionsParser).parse(argument.capture());
 		List<String> actualListValues = argument.getAllValues();
 
-		assertAll(() -> assertEquals("--classpath", actualListValues.get(0)),
-			() -> assertEquals(classpath.toString(), actualListValues.get(1)),
-			() -> assertEquals("--reports-dir", actualListValues.get(2)),
-			() -> assertEquals("reportsDirectory", actualListValues.get(3)));
+		assertAll(() -> assertEquals("--help", actualListValues.get(0)),
+			() -> assertEquals("--disable-ansi-colors", actualListValues.get(1)),
+			() -> assertEquals("--hide-details", actualListValues.get(2)),
+			() -> assertEquals("--classpath", actualListValues.get(3)),
+			() -> assertTrue(actualListValues.get(4).endsWith("test/path")),
+			() -> assertEquals("--reports-dir", actualListValues.get(5)),
+			() -> assertEquals("reportsDirectory", actualListValues.get(6)));
 	}
 
 	@Test
 	void selectorSingleValue() throws Exception {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		JUnitPlatformPlugin junitAntTask = new JUnitPlatformPlugin(commandLineOptionsParser);
+		JUnitPlatformPlugin junitAntTask = prepareJunitTask(commandLineOptionsParser);
 
 		Selectors selectors = new Selectors();
-
 		Path scanClasspath = new Path(new Project());
-		scanClasspath.setPath("dummy/path1");
+		scanClasspath.setPath("test/path1");
 		selectors.addClasspath(scanClasspath);
-
 		selectors.setUri("u:foo");
 		selectors.setFile("qux.json");
 		selectors.setDirectory("qux/bar");
@@ -70,7 +79,6 @@ class JUnitPlatformProviderTests {
 		selectors.setClass("com.acme.foo.FooTestCase");
 		selectors.setMethod("com.acme.foo.FooTestCase#alwaysEquals");
 		selectors.setResource("/com/acme/my.properties");
-
 		junitAntTask.addSelectors(selectors);
 		junitAntTask.execute();
 
@@ -79,7 +87,7 @@ class JUnitPlatformProviderTests {
 		List<String> actualListValues = argument.getAllValues();
 
 		assertAll(() -> assertEquals("--scan-classpath", actualListValues.get(0)),
-			() -> assertEquals(scanClasspath.toString(), actualListValues.get(1)),
+			() -> assertTrue(actualListValues.get(1).endsWith("test/path1")),
 			() -> assertEquals("--select-uri", actualListValues.get(2)),
 			() -> assertEquals("u:foo", actualListValues.get(3)),
 			() -> assertEquals("--select-file", actualListValues.get(4)),
@@ -99,14 +107,12 @@ class JUnitPlatformProviderTests {
 	@Test
 	void selectorMultipleValues() throws Exception {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		JUnitPlatformPlugin junitAntTask = new JUnitPlatformPlugin(commandLineOptionsParser);
+		JUnitPlatformPlugin junitAntTask = prepareJunitTask(commandLineOptionsParser);
 
 		Selectors selectors = new Selectors();
-
 		Path scanClasspath = new Path(new Project());
-		scanClasspath.setPath("dummy/path1:dummy/path2");
+		scanClasspath.setPath("test/path1:test/path2");
 		selectors.addClasspath(scanClasspath);
-
 		selectors.setUris("u:foo, u:bar");
 		selectors.setFile("foo.txt,bar.csv");
 		selectors.setDirectories("foo/bar,bar/qux");
@@ -114,7 +120,6 @@ class JUnitPlatformProviderTests {
 		selectors.setClasses("com.acme.foo.FooTestCase, com.acme.bar.BarTestCase");
 		selectors.setMethods("com.acme.foo.FooTestCase#alwaysEquals , " + "com.acme.bar.BarTestCase#alwaysNotEquals");
 		selectors.setResources("/bar.csv,/foo/input.json");
-
 		junitAntTask.addSelectors(selectors);
 		junitAntTask.execute();
 
@@ -123,7 +128,8 @@ class JUnitPlatformProviderTests {
 		List<String> actualListValues = argument.getAllValues();
 
 		assertAll(() -> assertEquals("--scan-classpath", actualListValues.get(0)),
-			() -> assertEquals(scanClasspath.toString(), actualListValues.get(1)),
+			() -> assertTrue(actualListValues.get(1).contains("test/path1")),
+			() -> assertTrue(actualListValues.get(1).endsWith("test/path2")),
 			() -> assertEquals("--select-uri", actualListValues.get(2)),
 			() -> assertEquals("u:foo", actualListValues.get(3)),
 			() -> assertEquals("--select-uri", actualListValues.get(4)),
@@ -157,7 +163,7 @@ class JUnitPlatformProviderTests {
 	@Test
 	void filterSingleValue() throws Exception {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		JUnitPlatformPlugin junitAntTask = new JUnitPlatformPlugin(commandLineOptionsParser);
+		JUnitPlatformPlugin junitAntTask = prepareJunitTask(commandLineOptionsParser);
 
 		Filters filters = new Filters();
 		filters.setIncludeClassNamePatterns(".*TestCase");
@@ -170,7 +176,6 @@ class JUnitPlatformProviderTests {
 		FilterSet tags = filters.createTags();
 		tags.setInclude("fast");
 		tags.setExclude("slow");
-
 		junitAntTask.addFilters(filters);
 		junitAntTask.execute();
 
@@ -197,11 +202,10 @@ class JUnitPlatformProviderTests {
 	@Test
 	void filterMultipleValue() throws Exception {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		JUnitPlatformPlugin junitAntTask = new JUnitPlatformPlugin(commandLineOptionsParser);
+		JUnitPlatformPlugin junitAntTask = prepareJunitTask(commandLineOptionsParser);
 
 		Filters filters = new Filters();
 		filters.setIncludeClassNamePatterns(".*TestCase, .*Test");
-
 		FilterSet packages = filters.createPackages();
 		packages.setInclude("testpackage.included.p1,testpackage.included.p2");
 		packages.setExclude("testpackage.excluded.p1,testpackage.excluded.p2");
@@ -211,7 +215,6 @@ class JUnitPlatformProviderTests {
 		FilterSet tags = filters.createTags();
 		tags.setInclude("fast1,fast2");
 		tags.setExclude("slow1,slow2");
-
 		junitAntTask.addFilters(filters);
 		junitAntTask.execute();
 
@@ -247,5 +250,12 @@ class JUnitPlatformProviderTests {
 			() -> assertEquals("slow1", actualListValues.get(25)),
 			() -> assertEquals("--exclude-tag", actualListValues.get(26)),
 			() -> assertEquals("slow2", actualListValues.get(27)));
+	}
+
+	private JUnitPlatformPlugin prepareJunitTask(CommandLineOptionsParser commandLineOptionsParser) {
+		ConsoleTaskExecutor executor = mock(ConsoleTaskExecutor.class);
+		when(executor.executeTask(any(), any())).thenReturn(ConsoleTask.SUCCESS);
+
+		return new JUnitPlatformPlugin(commandLineOptionsParser, executor);
 	}
 }
