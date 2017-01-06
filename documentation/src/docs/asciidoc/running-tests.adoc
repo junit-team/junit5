@@ -431,8 +431,8 @@ etc.).
 [[running-tests-build-ant-junit-enable]]
 ===== Enabling the JUnit Ant Plugin
 
-To use the JUnit Ant plugin, you first need to make sure that you are running Apache
-Ant. Once you've done that, you can configure `build.xml` as follows.
+To use the JUnit Ant plugin, you first need to make sure that you have Apache Ant installed.
+Once installed, you can configure `build.xml` as follows.
 
 [source,xml,indent=0]
 [subs="verbatim,attributes"]
@@ -461,7 +461,7 @@ Once the JUnit Ant plugin has been applied, you can configure it as follows.
 [subs="verbatim,attributes"]
 ----
 	...
-	<junit>
+	<junit reportsdir="reportsDirectory" hidedetails="false">
 		<!-- optional scanclasspath -->
 		<scanclasspath>
 			...
@@ -511,22 +511,21 @@ However, you can specify which tests to execute explicitly using the `selectors`
 <3> Local directories
 <4> Packages
 <5> Classes, fully qualified
-<6> Methods, fully qualified (see {DiscoverySelectors_selectMethod})
+<6> Methods, fully qualified
 <7> Classpath resources
 
 [[running-tests-build-ant-filters]]
 ===== Configuring Filters
 
-You can configure filters for the test plan by using the `filters` extension. By default, all
-engines and tags are included in the test plan. Only the default `includeClassNamePattern`
-(`{standard-include-class-name-pattern}`) is applied. You can overwrite its value as in the
-following example. When you specify multiple patterns, they are combined using OR semantics.
+You can configure filters for the test plan by using the `filters` element. By default, all
+engines, packages, and tags are included in the test plan. When you specify multiple patterns,
+they are combined using OR semantics.
 
 [source,xml,indent=0]
 [subs="verbatim,attributes"]
 ----
 	...
-	<filters includeclassnamepattern=".*Test" includeclassnamepatterns=".*TestCase,.*Tests"> 
+	<filters includeclassnamepattern=".*Spec" includeclassnamepatterns=".*TestCase,.*Tests">
 		<packages include="com.include.p1,com.include.p2" exclude="com.exclude.p1,com.exclude.p2"/>
 		<engines include="junit-jupiter,junit-vintage" exclude="junit-engine1,junit-engine2"/>
 		<tags include="fast,module1" exclude="slow,module2"/>
@@ -549,14 +548,15 @@ In order to have the JUnit Ant plugin run any tests at all, a `TestEngine`
 implementation must be on the classpath i.e. `$CLASSPATH` environment variable.
 
 To configure support for JUnit Jupiter based tests, make sure that the JUnit Jupiter `TestEngine`
-is in your classpath environment variable similar to the following:
+is in your classpath environment variable along with other additional classpath and dependencies
+similar to the following:
 
 [subs="none"]
 ----
 export CLASSPATH="build/classes/main:build/classes/test:libs/junit-platform-commons-1.0.0-SNAPSHOT.jar:libs/junit-platform-engine-1.0.0-SNAPSHOT.jar:libs/junit-jupiter-engine-5.0.0-SNAPSHOT.jar:libs/junit-jupiter-api-5.0.0-SNAPSHOT.jar:libs/junit-vintage-engine-4.12.0-SNAPSHOT.jar:libs/junit-4.12.jar:libs/opentest4j-1.0.0-M1.jar:libs/hamcrest-core-1.3.jar"
 ----
 
-Then, configure your `javac` ant task's classpath reference to use JUnit Jupiter API: 
+Then, configure your `javac` ant task's classpath reference to use JUnit Jupiter API:
 
 [source,xml,indent=0]
 [subs="verbatim,attributes"]
@@ -569,18 +569,74 @@ Then, configure your `javac` ant task's classpath reference to use JUnit Jupiter
 		</fileset>
 		<pathelement location="build/classes/main"/>
 	</path>
-	
+
 	<target name="compile.src">
         <mkdir dir="build/classes/main"/>
         <javac srcdir="src/main/java" destdir="build/classes/main"/>
     </target>
-	
+
 	<target name="compile.test" depends="compile.src">
         <mkdir dir="build/classes/test" />
-        <javac srcdir="src/test/java" destdir="build/classes/test" 
+        <javac srcdir="src/test/java" destdir="build/classes/test"
         	classpathref="compile.test.classpath"/>
     </target>
 	...
+----
+
+[[running-tests-build-ant-junit-using]]
+===== Running the JUnit Ant Plugin
+
+Executing the `junit` task results in output similar to the following:
+
+[subs="none"]
+----
+[junit] org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
+[junit] INFO: Discovered TestEngines with IDs: [junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: 5.0.0-SNAPSHOT), junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: 4.12.0-SNAPSHOT)]
+[junit]
+[junit] Test run finished after 210 ms
+[junit] [         3 containers found      ]
+[junit] [         0 containers skipped    ]
+[junit] [         3 containers started    ]
+[junit] [         0 containers aborted    ]
+[junit] [         3 containers successful ]
+[junit] [         0 containers failed     ]
+[junit] [         3 tests found           ]
+[junit] [         1 tests skipped         ]
+[junit] [         2 tests started         ]
+[junit] [         0 tests aborted         ]
+[junit] [         2 tests successful      ]
+[junit] [         0 tests failed          ]
+[junit]
+
+BUILD SUCCESSFUL
+----
+
+If a test fails, the build will fail with output similar to the following:
+
+[subs="none"]
+----
+[junit] org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
+[junit] INFO: Discovered TestEngines with IDs: [junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: 5.0.0-SNAPSHOT), junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: 4.12.0-SNAPSHOT)]
+[junit]
+[junit] Failures (1):
+[junit]   JUnit Jupiter:SecondTest:mySecondTest()
+[junit]     MethodSource [className = 'com.example.project.SecondTest', methodName = 'mySecondTest', methodParameterTypes = '']
+[junit]     => org.opentest4j.AssertionFailedError: 2 is not equal to 1 ==> expected: <2> but was: <1>
+[junit]
+[junit] Test run finished after 210 ms
+[junit] [         3 containers found      ]
+[junit] [         0 containers skipped    ]
+[junit] [         3 containers started    ]
+[junit] [         0 containers aborted    ]
+[junit] [         3 containers successful ]
+[junit] [         0 containers failed     ]
+[junit] [         3 tests found           ]
+[junit] [         0 tests skipped         ]
+[junit] [         2 tests started         ]
+[junit] [         0 tests aborted         ]
+[junit] [         2 tests successful      ]
+[junit] [         1 tests failed          ]
+[junit]
 ----
 
 [[running-tests-console-launcher]]

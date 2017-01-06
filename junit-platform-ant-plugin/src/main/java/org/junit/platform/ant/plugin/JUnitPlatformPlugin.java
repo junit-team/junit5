@@ -28,10 +28,13 @@ import org.junit.platform.console.tasks.ConsoleTaskExecutor;
 import org.junit.platform.console.tasks.DisplayHelpTask;
 import org.junit.platform.console.tasks.ExecuteTestsTask;
 
+/**
+ * @since 1.0
+ */
 public class JUnitPlatformPlugin extends Task {
 
 	private static final String JAVA_CLASS_PATH = "java.class.path";
-	
+
 	private static final String HELP = "help";
 	private static final String DISABLE_ANSI_COLORS = "disable-ansi-colors";
 	private static final String HIDE_DETAILS = "hide-details";
@@ -86,7 +89,7 @@ public class JUnitPlatformPlugin extends Task {
 		ConsoleTask task = printHelp ? new DisplayHelpTask(commandLineOptionsParser) : new ExecuteTestsTask(options);
 		consoleTaskExecutor.executeTask(task, this::displayHelp);
 	}
-	
+
 	void displayHelp(PrintWriter out) {
 		new DisplayHelpTask(commandLineOptionsParser).execute(out);
 	}
@@ -94,7 +97,7 @@ public class JUnitPlatformPlugin extends Task {
 	public void setHelp(boolean help) {
 		this.printHelp = help;
 	}
-	
+
 	public void setDisableAnsiColors(boolean disableAnsiColors) {
 		this.ansiColorsDisabled = disableAnsiColors;
 	}
@@ -151,12 +154,13 @@ public class JUnitPlatformPlugin extends Task {
 			populateRepeatingArguments(args, SELECT_METHODS, selectors.getMethods());
 			populateRepeatingArguments(args, SELECT_RESOURCES, selectors.getResources());
 		});
-		
+
 		if (!selectors.isPresent() && scanClasspath.isPresent()) {
 			args.add("--" + SCAN_CLASSPATH);
 			args.add(String.join(":", this.scanClasspath.get().list()));
-		} else if (!selectors.isPresent() && !scanClasspath.isPresent() && 
-				getProject().getProperty(JAVA_CLASS_PATH) != null) {
+		}
+		else if (!selectors.isPresent() && !scanClasspath.isPresent()
+				&& getProject().getProperty(JAVA_CLASS_PATH) != null) {
 			args.add("--" + SCAN_CLASSPATH);
 			args.add(getProject().getProperty(JAVA_CLASS_PATH));
 		}

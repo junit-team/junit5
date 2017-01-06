@@ -38,25 +38,25 @@ import org.mockito.ArgumentCaptor;
 class JUnitPlatformProviderTests {
 
 	@Test
-	void noScanclasspathNoSelectorsNoFilters() throws Exception {
+	void emptyScanclasspathSelectorsFilters() throws Exception {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
 		JUnitPlatformPlugin junitAntTask = prepareJunitTask(commandLineOptionsParser);
-		
+
 		Project antProject = mock(Project.class);
 		when(antProject.getProperty("java.class.path")).thenReturn("test/path");
 		junitAntTask.setProject(antProject);
 		junitAntTask.execute();
 
 		verify(antProject, times(2)).getProperty("java.class.path");
-		
+
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 		verify(commandLineOptionsParser).parse(argument.capture());
 		List<String> actualListValues = argument.getAllValues();
-		
+
 		assertAll(() -> assertEquals("--scan-classpath", actualListValues.get(0)),
 			() -> assertEquals("test/path", actualListValues.get(1)));
 	}
-	
+
 	@Test
 	void generalPurposeArguments() throws Exception {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
@@ -64,7 +64,7 @@ class JUnitPlatformProviderTests {
 
 		Path classpath = new Path(new Project());
 		classpath.setPath("test/path1:test/path2");
-		
+
 		junitAntTask.setHelp(true);
 		junitAntTask.setDisableAnsiColors(true);
 		junitAntTask.setHideDetails(true);
@@ -171,7 +171,7 @@ class JUnitPlatformProviderTests {
 			() -> assertEquals("--select-resource", actualListValues.get(26)),
 			() -> assertEquals("/foo/input.json", actualListValues.get(27)));
 	}
-	
+
 	@Test
 	void filterSingleValue() throws Exception {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
@@ -191,7 +191,7 @@ class JUnitPlatformProviderTests {
 		junitAntTask.setProject(new Project());
 		junitAntTask.addFilters(filters);
 		junitAntTask.execute();
-		
+
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 		verify(commandLineOptionsParser).parse(argument.capture());
 		List<String> actualListValues = argument.getAllValues();
