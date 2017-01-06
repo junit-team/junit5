@@ -11,13 +11,6 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
-import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
-import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
-
-import java.lang.reflect.Method;
-import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.meta.API;
@@ -28,18 +21,10 @@ import org.junit.platform.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public class IsTestMethod implements Predicate<Method> {
+public class IsTestMethod extends IsTestableMethod {
 
-	@Override
-	public boolean test(Method candidate) {
-		//please do not collapse into single return
-		if (isStatic(candidate))
-			return false;
-		if (isPrivate(candidate))
-			return false;
-		if (isAbstract(candidate))
-			return false;
-		return isAnnotated(candidate, Test.class);
+	public IsTestMethod() {
+		super(Test.class);
 	}
 
 }
