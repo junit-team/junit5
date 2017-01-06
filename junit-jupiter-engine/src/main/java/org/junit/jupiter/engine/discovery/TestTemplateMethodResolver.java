@@ -15,7 +15,6 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.TestTemplate;
-import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsTestTemplateMethod;
 import org.junit.platform.commons.meta.API;
@@ -35,25 +34,17 @@ import org.junit.platform.engine.UniqueId;
  * @see TestTemplateTestDescriptor
  */
 @API(Experimental)
-class TestTemplateMethodResolver extends TestMethodResolver {
-
-	private static final IsTestTemplateMethod isTestTemplateMethod = new IsTestTemplateMethod();
+class TestTemplateMethodResolver extends AbstractMethodResolver {
 
 	static final String SEGMENT_TYPE = "test-template";
 
 	TestTemplateMethodResolver() {
-		super(SEGMENT_TYPE);
+		super(SEGMENT_TYPE, new IsTestTemplateMethod());
 	}
 
 	@Override
-	protected boolean isTestMethod(Method candidate) {
-		return isTestTemplateMethod.test(candidate);
-	}
-
-	@Override
-	protected TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,
-			UniqueId uniqueId) {
-		return new TestTemplateTestDescriptor(uniqueId, parentClassDescriptor.getTestClass(), testMethod);
+	protected TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method) {
+		return new TestTemplateTestDescriptor(uniqueId, testClass, method);
 	}
 
 }
