@@ -15,11 +15,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.function.Consumer;
 
-import org.apache.tools.ant.types.Path;
-
 public class Selectors {
 
-	private Path scanClasspath;
 	private List<String> uris = new ArrayList<String>();
 	private List<String> files = new ArrayList<String>();
 	private List<String> directories = new ArrayList<String>();
@@ -27,14 +24,6 @@ public class Selectors {
 	private List<String> classes = new ArrayList<String>();
 	private List<String> methods = new ArrayList<String>();
 	private List<String> resources = new ArrayList<String>();
-
-	public void addClasspath(Path scanClasspath) {
-		this.scanClasspath = scanClasspath;
-	}
-
-	public Path getClasspath() {
-		return this.scanClasspath;
-	}
 
 	public void setUri(String uri) {
 		setUris(uri);

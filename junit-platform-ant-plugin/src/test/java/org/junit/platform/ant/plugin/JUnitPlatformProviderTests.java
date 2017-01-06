@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,16 +38,37 @@ import org.mockito.ArgumentCaptor;
 class JUnitPlatformProviderTests {
 
 	@Test
+	void noScanclasspathNoSelectorsNoFilters() throws Exception {
+		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
+		JUnitPlatformPlugin junitAntTask = prepareJunitTask(commandLineOptionsParser);
+		
+		Project antProject = mock(Project.class);
+		when(antProject.getProperty("java.class.path")).thenReturn("test/path");
+		junitAntTask.setProject(antProject);
+		junitAntTask.execute();
+
+		verify(antProject, times(2)).getProperty("java.class.path");
+		
+		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+		verify(commandLineOptionsParser).parse(argument.capture());
+		List<String> actualListValues = argument.getAllValues();
+		
+		assertAll(() -> assertEquals("--scan-classpath", actualListValues.get(0)),
+			() -> assertEquals("test/path", actualListValues.get(1)));
+	}
+	
+	@Test
 	void generalPurposeArguments() throws Exception {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
 		JUnitPlatformPlugin junitAntTask = prepareJunitTask(commandLineOptionsParser);
 
 		Path classpath = new Path(new Project());
-		classpath.setPath("test/path");
+		classpath.setPath("test/path1:test/path2");
+		
 		junitAntTask.setHelp(true);
 		junitAntTask.setDisableAnsiColors(true);
 		junitAntTask.setHideDetails(true);
-		junitAntTask.addClasspath(classpath);
+		junitAntTask.addScanClasspath(classpath);
 		junitAntTask.setReportsDir("reportsDirectory");
 		junitAntTask.execute();
 
@@ -57,10 +79,11 @@ class JUnitPlatformProviderTests {
 		assertAll(() -> assertEquals("--help", actualListValues.get(0)),
 			() -> assertEquals("--disable-ansi-colors", actualListValues.get(1)),
 			() -> assertEquals("--hide-details", actualListValues.get(2)),
-			() -> assertEquals("--classpath", actualListValues.get(3)),
-			() -> assertTrue(actualListValues.get(4).endsWith("test/path")),
-			() -> assertEquals("--reports-dir", actualListValues.get(5)),
-			() -> assertEquals("reportsDirectory", actualListValues.get(6)));
+			() -> assertEquals("--reports-dir", actualListValues.get(3)),
+			() -> assertEquals("reportsDirectory", actualListValues.get(4)),
+			() -> assertEquals("--scan-classpath", actualListValues.get(5)),
+			() -> assertTrue(actualListValues.get(6).contains("test/path1")),
+			() -> assertTrue(actualListValues.get(6).endsWith("test/path2")));
 	}
 
 	@Test
@@ -69,9 +92,6 @@ class JUnitPlatformProviderTests {
 		JUnitPlatformPlugin junitAntTask = prepareJunitTask(commandLineOptionsParser);
 
 		Selectors selectors = new Selectors();
-		Path scanClasspath = new Path(new Project());
-		scanClasspath.setPath("test/path1");
-		selectors.addClasspath(scanClasspath);
 		selectors.setUri("u:foo");
 		selectors.setFile("qux.json");
 		selectors.setDirectory("qux/bar");
@@ -86,22 +106,20 @@ class JUnitPlatformProviderTests {
 		verify(commandLineOptionsParser).parse(argument.capture());
 		List<String> actualListValues = argument.getAllValues();
 
-		assertAll(() -> assertEquals("--scan-classpath", actualListValues.get(0)),
-			() -> assertTrue(actualListValues.get(1).endsWith("test/path1")),
-			() -> assertEquals("--select-uri", actualListValues.get(2)),
-			() -> assertEquals("u:foo", actualListValues.get(3)),
-			() -> assertEquals("--select-file", actualListValues.get(4)),
-			() -> assertEquals("qux.json", actualListValues.get(5)),
-			() -> assertEquals("--select-directory", actualListValues.get(6)),
-			() -> assertEquals("qux/bar", actualListValues.get(7)),
-			() -> assertEquals("--select-package", actualListValues.get(8)),
-			() -> assertEquals("com.acme.foo", actualListValues.get(9)),
-			() -> assertEquals("--select-class", actualListValues.get(10)),
-			() -> assertEquals("com.acme.foo.FooTestCase", actualListValues.get(11)),
-			() -> assertEquals("--select-method", actualListValues.get(12)),
-			() -> assertEquals("com.acme.foo.FooTestCase#alwaysEquals", actualListValues.get(13)),
-			() -> assertEquals("--select-resource", actualListValues.get(14)),
-			() -> assertEquals("/com/acme/my.properties", actualListValues.get(15)));
+		assertAll(() -> assertEquals("--select-uri", actualListValues.get(0)),
+			() -> assertEquals("u:foo", actualListValues.get(1)),
+			() -> assertEquals("--select-file", actualListValues.get(2)),
+			() -> assertEquals("qux.json", actualListValues.get(3)),
+			() -> assertEquals("--select-directory", actualListValues.get(4)),
+			() -> assertEquals("qux/bar", actualListValues.get(5)),
+			() -> assertEquals("--select-package", actualListValues.get(6)),
+			() -> assertEquals("com.acme.foo", actualListValues.get(7)),
+			() -> assertEquals("--select-class", actualListValues.get(8)),
+			() -> assertEquals("com.acme.foo.FooTestCase", actualListValues.get(9)),
+			() -> assertEquals("--select-method", actualListValues.get(10)),
+			() -> assertEquals("com.acme.foo.FooTestCase#alwaysEquals", actualListValues.get(11)),
+			() -> assertEquals("--select-resource", actualListValues.get(12)),
+			() -> assertEquals("/com/acme/my.properties", actualListValues.get(13)));
 	}
 
 	@Test
@@ -110,9 +128,6 @@ class JUnitPlatformProviderTests {
 		JUnitPlatformPlugin junitAntTask = prepareJunitTask(commandLineOptionsParser);
 
 		Selectors selectors = new Selectors();
-		Path scanClasspath = new Path(new Project());
-		scanClasspath.setPath("test/path1:test/path2");
-		selectors.addClasspath(scanClasspath);
 		selectors.setUris("u:foo, u:bar");
 		selectors.setFile("foo.txt,bar.csv");
 		selectors.setDirectories("foo/bar,bar/qux");
@@ -127,39 +142,36 @@ class JUnitPlatformProviderTests {
 		verify(commandLineOptionsParser).parse(argument.capture());
 		List<String> actualListValues = argument.getAllValues();
 
-		assertAll(() -> assertEquals("--scan-classpath", actualListValues.get(0)),
-			() -> assertTrue(actualListValues.get(1).contains("test/path1")),
-			() -> assertTrue(actualListValues.get(1).endsWith("test/path2")),
+		assertAll(() -> assertEquals("--select-uri", actualListValues.get(0)),
+			() -> assertEquals("u:foo", actualListValues.get(1)),
 			() -> assertEquals("--select-uri", actualListValues.get(2)),
-			() -> assertEquals("u:foo", actualListValues.get(3)),
-			() -> assertEquals("--select-uri", actualListValues.get(4)),
-			() -> assertEquals("u:bar", actualListValues.get(5)),
+			() -> assertEquals("u:bar", actualListValues.get(3)),
+			() -> assertEquals("--select-file", actualListValues.get(4)),
+			() -> assertEquals("foo.txt", actualListValues.get(5)),
 			() -> assertEquals("--select-file", actualListValues.get(6)),
-			() -> assertEquals("foo.txt", actualListValues.get(7)),
-			() -> assertEquals("--select-file", actualListValues.get(8)),
-			() -> assertEquals("bar.csv", actualListValues.get(9)),
+			() -> assertEquals("bar.csv", actualListValues.get(7)),
+			() -> assertEquals("--select-directory", actualListValues.get(8)),
+			() -> assertEquals("foo/bar", actualListValues.get(9)),
 			() -> assertEquals("--select-directory", actualListValues.get(10)),
-			() -> assertEquals("foo/bar", actualListValues.get(11)),
-			() -> assertEquals("--select-directory", actualListValues.get(12)),
-			() -> assertEquals("bar/qux", actualListValues.get(13)),
+			() -> assertEquals("bar/qux", actualListValues.get(11)),
+			() -> assertEquals("--select-package", actualListValues.get(12)),
+			() -> assertEquals("com.acme.foo", actualListValues.get(13)),
 			() -> assertEquals("--select-package", actualListValues.get(14)),
-			() -> assertEquals("com.acme.foo", actualListValues.get(15)),
-			() -> assertEquals("--select-package", actualListValues.get(16)),
-			() -> assertEquals("com.acme.bar", actualListValues.get(17)),
+			() -> assertEquals("com.acme.bar", actualListValues.get(15)),
+			() -> assertEquals("--select-class", actualListValues.get(16)),
+			() -> assertEquals("com.acme.foo.FooTestCase", actualListValues.get(17)),
 			() -> assertEquals("--select-class", actualListValues.get(18)),
-			() -> assertEquals("com.acme.foo.FooTestCase", actualListValues.get(19)),
-			() -> assertEquals("--select-class", actualListValues.get(20)),
-			() -> assertEquals("com.acme.bar.BarTestCase", actualListValues.get(21)),
+			() -> assertEquals("com.acme.bar.BarTestCase", actualListValues.get(19)),
+			() -> assertEquals("--select-method", actualListValues.get(20)),
+			() -> assertEquals("com.acme.foo.FooTestCase#alwaysEquals", actualListValues.get(21)),
 			() -> assertEquals("--select-method", actualListValues.get(22)),
-			() -> assertEquals("com.acme.foo.FooTestCase#alwaysEquals", actualListValues.get(23)),
-			() -> assertEquals("--select-method", actualListValues.get(24)),
-			() -> assertEquals("com.acme.bar.BarTestCase#alwaysNotEquals", actualListValues.get(25)),
+			() -> assertEquals("com.acme.bar.BarTestCase#alwaysNotEquals", actualListValues.get(23)),
+			() -> assertEquals("--select-resource", actualListValues.get(24)),
+			() -> assertEquals("/bar.csv", actualListValues.get(25)),
 			() -> assertEquals("--select-resource", actualListValues.get(26)),
-			() -> assertEquals("/bar.csv", actualListValues.get(27)),
-			() -> assertEquals("--select-resource", actualListValues.get(28)),
-			() -> assertEquals("/foo/input.json", actualListValues.get(29)));
+			() -> assertEquals("/foo/input.json", actualListValues.get(27)));
 	}
-
+	
 	@Test
 	void filterSingleValue() throws Exception {
 		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
@@ -176,9 +188,10 @@ class JUnitPlatformProviderTests {
 		FilterSet tags = filters.createTags();
 		tags.setInclude("fast");
 		tags.setExclude("slow");
+		junitAntTask.setProject(new Project());
 		junitAntTask.addFilters(filters);
 		junitAntTask.execute();
-
+		
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 		verify(commandLineOptionsParser).parse(argument.capture());
 		List<String> actualListValues = argument.getAllValues();
@@ -215,6 +228,7 @@ class JUnitPlatformProviderTests {
 		FilterSet tags = filters.createTags();
 		tags.setInclude("fast1,fast2");
 		tags.setExclude("slow1,slow2");
+		junitAntTask.setProject(new Project());
 		junitAntTask.addFilters(filters);
 		junitAntTask.execute();
 

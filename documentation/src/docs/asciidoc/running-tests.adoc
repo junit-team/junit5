@@ -422,6 +422,166 @@ You can filter tests by tags using the following configuration properties:
 	...
 ----
 
+==== Ant
+
+The JUnit team has developed a very basic Ant plugin that allows you to run any kind
+of test that is supported by `TestEngine` (e.g., JUnit 3, JUnit 4, JUnit Jupiter, Specsy,
+etc.).
+
+[[running-tests-build-ant-junit-enable]]
+===== Enabling the JUnit Ant Plugin
+
+To use the JUnit Ant plugin, you first need to make sure that you are running Apache
+Ant. Once you've done that, you can configure `build.xml` as follows.
+
+[source,xml,indent=0]
+[subs="verbatim,attributes"]
+----
+    ...
+    <path id="taskdef.classpath">
+		<fileset dir="libs">
+			<include name="junit-platform-ant-plugin-${ant.plugin.version}.jar"/>
+			<include name="junit-platform-console-${junit.platform.version}.jar"/>
+			<include name="junit-platform-launcher-${junit.platform.version}.jar"/>
+		</fileset>
+	</path>
+    ...
+    <taskdef name="junit" classname="org.junit.platform.ant.plugin.JUnitPlatformPlugin">
+		<classpath refid="taskdef.classpath" />
+	</taskdef>
+    ...
+----
+
+[[running-tests-build-ant-junit-configure]]
+===== Configuring the JUnit Ant Plugin
+
+Once the JUnit Ant plugin has been applied, you can configure it as follows.
+
+[source,xml,indent=0]
+[subs="verbatim,attributes"]
+----
+	...
+	<junit>
+		<!-- optional scanclasspath -->
+		<scanclasspath>
+			...
+		</scanclasspath>
+		<!-- optional filters -->
+		<filters>
+			...
+		</filters>
+		<!-- optional selectors -->
+		<selectors>
+			...
+		</selectors>
+	</junit>
+	...
+----
+
+[[running-tests-build-ant-selectors]]
+===== Configuring Selectors
+
+By default, the plugin will scan your project's classpath i.e. `$CLASSPATH` environment variable.
+However, you can specify which tests to execute explicitly using the `selectors` extension element.
+
+[source,xml,indent=0]
+[subs="verbatim,attributes"]
+----
+	...
+	<selectors
+		uris="u:foo,u:bar"
+		uri="u:qux" <1>
+		files="foo.txt,bar.csv"
+		file="qux.json" <2>
+		directories="foo/bar,bar/qux"
+		directory="qux/bar" <3>
+		packages="com.acme.foo,com.acme.bar"
+		package="com.example.app" <4>
+		classes="com.acme.Foo,com.acme.Bar"
+		class="com.example.app.Application" <5>
+		methods="com.acme.Foo#a,com.acme.Foo#b"
+		method="com.example.app.Application#run(java.lang.String[])" <6>
+		resources="/bar.csv,/foo/input.json"
+		resource="/com/acme/my.properties"> <7>
+	</selectors>
+	...
+----
+<1> URIs
+<2> Local files
+<3> Local directories
+<4> Packages
+<5> Classes, fully qualified
+<6> Methods, fully qualified (see {DiscoverySelectors_selectMethod})
+<7> Classpath resources
+
+[[running-tests-build-ant-filters]]
+===== Configuring Filters
+
+You can configure filters for the test plan by using the `filters` extension. By default, all
+engines and tags are included in the test plan. Only the default `includeClassNamePattern`
+(`{standard-include-class-name-pattern}`) is applied. You can overwrite its value as in the
+following example. When you specify multiple patterns, they are combined using OR semantics.
+
+[source,xml,indent=0]
+[subs="verbatim,attributes"]
+----
+	...
+	<filters includeclassnamepattern=".*Test" includeclassnamepatterns=".*TestCase,.*Tests"> 
+		<packages include="com.include.p1,com.include.p2" exclude="com.exclude.p1,com.exclude.p2"/>
+		<engines include="junit-jupiter,junit-vintage" exclude="junit-engine1,junit-engine2"/>
+		<tags include="fast,module1" exclude="slow,module2"/>
+	</filters>
+	...
+----
+
+If you supply a _Test
+Engine ID_ via `<engines include="..."/>` or `<engines exclude="..."/>`, the JUnit Ant
+plugin will only run tests for the desired test engines. Similarly, if you supply a _tag_
+via `<tags include="..."/>` or `<tags exclude="..."/>`, the JUnit Ant plugin will only run
+tests that are _tagged_ accordingly (e.g., via the `@Tag` annotation for JUnit Jupiter based
+tests). The same applies to package names that can be included or excluded using
+`<packages include="..."/>` or `<packages exclude="..."/>`.
+
+[[running-tests-build-ant-engines-configure]]
+===== Configuring Test Engines
+
+In order to have the JUnit Ant plugin run any tests at all, a `TestEngine`
+implementation must be on the classpath i.e. `$CLASSPATH` environment variable.
+
+To configure support for JUnit Jupiter based tests, make sure that the JUnit Jupiter `TestEngine`
+is in your classpath environment variable similar to the following:
+
+[subs="none"]
+----
+export CLASSPATH="build/classes/main:build/classes/test:libs/junit-platform-commons-1.0.0-SNAPSHOT.jar:libs/junit-platform-engine-1.0.0-SNAPSHOT.jar:libs/junit-jupiter-engine-5.0.0-SNAPSHOT.jar:libs/junit-jupiter-api-5.0.0-SNAPSHOT.jar:libs/junit-vintage-engine-4.12.0-SNAPSHOT.jar:libs/junit-4.12.jar:libs/opentest4j-1.0.0-M1.jar:libs/hamcrest-core-1.3.jar"
+----
+
+Then, configure your `javac` ant task's classpath reference to use JUnit Jupiter API: 
+
+[source,xml,indent=0]
+[subs="verbatim,attributes"]
+----
+	...
+	<path id="compile.test.classpath">
+		<fileset dir="libs">
+			<include name="junit-jupiter-api-${junit.jupiter.version}.jar"/>
+			<include name="junit-4.12.jar"/>
+		</fileset>
+		<pathelement location="build/classes/main"/>
+	</path>
+	
+	<target name="compile.src">
+        <mkdir dir="build/classes/main"/>
+        <javac srcdir="src/main/java" destdir="build/classes/main"/>
+    </target>
+	
+	<target name="compile.test" depends="compile.src">
+        <mkdir dir="build/classes/test" />
+        <javac srcdir="src/test/java" destdir="build/classes/test" 
+        	classpathref="compile.test.classpath"/>
+    </target>
+	...
+----
 
 [[running-tests-console-launcher]]
 === Console Launcher

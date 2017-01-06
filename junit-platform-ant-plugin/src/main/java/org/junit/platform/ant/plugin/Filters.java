@@ -36,9 +36,7 @@ public class Filters {
 	}
 
 	public FilterSet createPackages() {
-		if (packages == null) {
-			packages = new FilterSet();
-		}
+		packages = new FilterSet();
 		return packages;
 	}
 
@@ -47,9 +45,7 @@ public class Filters {
 	}
 
 	public FilterSet createEngines() {
-		if (engines == null) {
-			engines = new FilterSet();
-		}
+		engines = new FilterSet();
 		return engines;
 	}
 
@@ -58,9 +54,7 @@ public class Filters {
 	}
 
 	public FilterSet createTags() {
-		if (tags == null) {
-			tags = new FilterSet();
-		}
+		tags = new FilterSet();
 		return tags;
 	}
 
