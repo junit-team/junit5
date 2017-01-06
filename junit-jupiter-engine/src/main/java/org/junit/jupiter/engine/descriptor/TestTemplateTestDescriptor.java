@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -57,8 +58,9 @@ public class TestTemplateTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@Override
-	protected void invokeTestMethod(JupiterEngineExecutionContext context) {
-		// TODO #14 implement
+	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context) throws Exception {
+		throw new JUnitException(
+			"You need to register at least one TestTemplateInvocationContextProvider for this method");
 	}
 
 }
