@@ -15,7 +15,6 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryMethod;
 import org.junit.platform.commons.meta.API;
@@ -35,25 +34,17 @@ import org.junit.platform.engine.UniqueId;
  * @see TestFactoryTestDescriptor
  */
 @API(Experimental)
-class TestFactoryMethodResolver extends TestMethodResolver {
-
-	private static final IsTestFactoryMethod isTestFactoryMethod = new IsTestFactoryMethod();
+class TestFactoryMethodResolver extends AbstractMethodResolver {
 
 	static final String SEGMENT_TYPE = "test-factory";
 
 	TestFactoryMethodResolver() {
-		super(SEGMENT_TYPE);
+		super(SEGMENT_TYPE, new IsTestFactoryMethod());
 	}
 
 	@Override
-	protected boolean isTestMethod(Method candidate) {
-		return isTestFactoryMethod.test(candidate);
-	}
-
-	@Override
-	protected TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,
-			UniqueId uniqueId) {
-		return new TestFactoryTestDescriptor(uniqueId, parentClassDescriptor.getTestClass(), testMethod);
+	protected TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method) {
+		return new TestFactoryTestDescriptor(uniqueId, testClass, method);
 	}
 
 }
