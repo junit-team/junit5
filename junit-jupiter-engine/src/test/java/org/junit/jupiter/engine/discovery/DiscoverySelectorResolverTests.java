@@ -20,6 +20,7 @@ import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.engineId
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestFactoryMethod;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTopLevelClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
@@ -42,6 +43,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases;
@@ -522,6 +524,16 @@ public class DiscoverySelectorResolverTests {
 		assertThat(uniqueIds).contains(uniqueIdForMethod(TestCaseWithNesting.NestedTestCase.class, "testB()"));
 	}
 
+	@Test
+	public void testTemplateMethodResolution() {
+		ClassSelector selector = selectClass(TestClassWithTemplate.class);
+
+		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
+
+		assertThat(engineDescriptor.getDescendants()).hasSize(2);
+		assertThat(uniqueIds()).contains(uniqueIdForTestTemplateMethod(TestClassWithTemplate.class, "testTemplate()"));
+	}
+
 	private TestDescriptor descriptorByUniqueId(UniqueId uniqueId) {
 		return engineDescriptor.getDescendants().stream().filter(
 			d -> d.getUniqueId().equals(uniqueId)).findFirst().get();
@@ -604,5 +616,11 @@ class TestCaseWithNesting {
 			void testC() {
 			}
 		}
+	}
+}
+
+class TestClassWithTemplate {
+	@TestTemplate
+	void testTemplate() {
 	}
 }

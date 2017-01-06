@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -24,6 +25,7 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.TestDescriptor;
@@ -105,6 +107,24 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		assertEquals(7, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
+	@Test
+	public void discoverTestTemplateMethodByUniqueId() {
+		LauncherDiscoveryRequest spec = request().selectors(
+			selectUniqueId(uniqueIdForTestTemplateMethod(TestTemplateClass.class, "testTemplate()"))).build();
+
+		TestDescriptor engineDescriptor = discoverTests(spec);
+		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
+	public void discoverTestTemplateMethodByMethodSelector() {
+		LauncherDiscoveryRequest spec = request().selectors(
+			selectMethod(TestTemplateClass.class, "testTemplate")).build();
+
+		TestDescriptor engineDescriptor = discoverTests(spec);
+		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+	}
+
 	// -------------------------------------------------------------------
 
 	private static abstract class AbstractTestCase {
@@ -147,5 +167,13 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface CustomTestAnnotation {
+	}
+
+	private static class TestTemplateClass {
+
+		@TestTemplate
+		void testTemplate() {
+		}
+
 	}
 }
