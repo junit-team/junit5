@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -117,21 +118,26 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context) throws Exception {
 		List<TestTemplateInvocationContextProvider> providers = context.getExtensionRegistry().getExtensions(
 			TestTemplateInvocationContextProvider.class);
+		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		Preconditions.notEmpty(providers,
 			"You need to register at least one TestTemplateInvocationContextProvider for this method");
-		TestTemplateInvocationContextProvider firstProvider = providers.iterator().next();
-		Iterator<TestTemplateInvocationContext> contextIterator = firstProvider.provide(
-			(ContainerExtensionContext) context.getExtensionContext());
-		TestTemplateInvocationContext invocationContext = contextIterator.next();
-		MethodTestDescriptor methodTestDescriptor = new MethodTestDescriptor(
-			getUniqueId().append("template-invocation", "#0"), this.testClass, this.templateMethod);
-		context.getExecutionListener().dynamicTestRegistered(methodTestDescriptor);
-		context.getExecutionListener().executionStarted(methodTestDescriptor);
-		TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
-			JupiterEngineExecutionContext childContext = methodTestDescriptor.prepare(context);
-			methodTestDescriptor.execute(childContext);
+		AtomicInteger invocationIndex = new AtomicInteger();
+		providers.forEach(provider -> {
+			Iterator<TestTemplateInvocationContext> contextIterator = provider.provide(containerExtensionContext);
+			contextIterator.forEachRemaining(invocationContext -> {
+				UniqueId uniqueId = getUniqueId().append("template-invocation",
+					"#" + invocationIndex.getAndIncrement());
+				MethodTestDescriptor methodTestDescriptor = new MethodTestDescriptor(uniqueId, this.testClass,
+					this.templateMethod);
+				context.getExecutionListener().dynamicTestRegistered(methodTestDescriptor);
+				context.getExecutionListener().executionStarted(methodTestDescriptor);
+				TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
+					JupiterEngineExecutionContext childContext = methodTestDescriptor.prepare(context);
+					methodTestDescriptor.execute(childContext);
+				});
+				context.getExecutionListener().executionFinished(methodTestDescriptor, result);
+			});
 		});
-		context.getExecutionListener().executionFinished(methodTestDescriptor, result);
 		return context;
 	}
 
