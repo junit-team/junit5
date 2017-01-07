@@ -19,9 +19,11 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
@@ -39,6 +41,8 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
  */
 @API(Internal)
 public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
+
+	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
 	private final Class<?> testClass;
 	private final Method templateMethod;
@@ -109,7 +113,12 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
-		// TODO #14 implement
+		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForContainer(
+			context.getExtensionRegistry(), context.getConfigurationParameters(),
+			(ContainerExtensionContext) context.getExtensionContext());
+		if (evaluationResult.isDisabled()) {
+			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
+		}
 		return SkipResult.doNotSkip();
 	}
 
