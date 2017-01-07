@@ -25,9 +25,13 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
@@ -44,6 +48,8 @@ import org.junit.platform.engine.support.hierarchical.Node;
 @API(Internal)
 public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		implements Node<JupiterEngineExecutionContext> {
+
+	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
 	JupiterTestDescriptor(UniqueId uniqueId, String displayName) {
 		super(uniqueId, displayName);
@@ -76,6 +82,26 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	@Override
 	public boolean isLeaf() {
 		return !isContainer();
+	}
+
+	protected SkipResult shouldContainerBeSkipped(JupiterEngineExecutionContext context) {
+		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForContainer(
+			context.getExtensionRegistry(), context.getConfigurationParameters(),
+			(ContainerExtensionContext) context.getExtensionContext());
+		return toSkipResult(evaluationResult);
+	}
+
+	protected SkipResult shouldTestBeSkipped(JupiterEngineExecutionContext context) {
+		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForTest(context.getExtensionRegistry(),
+			context.getConfigurationParameters(), (TestExtensionContext) context.getExtensionContext());
+		return toSkipResult(evaluationResult);
+	}
+
+	private SkipResult toSkipResult(ConditionEvaluationResult evaluationResult) {
+		if (evaluationResult.isDisabled()) {
+			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
+		}
+		return SkipResult.doNotSkip();
 	}
 
 	protected ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
