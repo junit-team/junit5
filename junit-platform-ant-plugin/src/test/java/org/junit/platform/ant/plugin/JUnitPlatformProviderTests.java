@@ -82,8 +82,8 @@ class JUnitPlatformProviderTests {
 			() -> assertEquals("--reports-dir", actualListValues.get(3)),
 			() -> assertEquals("reportsDirectory", actualListValues.get(4)),
 			() -> assertEquals("--scan-classpath", actualListValues.get(5)),
-			() -> assertTrue(actualListValues.get(6).contains("test/path1")),
-			() -> assertTrue(actualListValues.get(6).endsWith("test/path2")));
+			// test applicable for both windows and unix path.
+			() -> assertTrue(actualListValues.get(6).matches("^.*test[/\\\\]path1:.*test[/\\\\]path2$")));
 	}
 
 	@Test

@@ -52,20 +52,20 @@ public class Selectors {
 		return this.files;
 	}
 
-	public void setDirectory(String dir) {
-		setDirectories(dir);
+	public void setDirectory(String directory) {
+		setDirectories(directory);
 	}
 
-	public void setDirectories(String dirs) {
-		tokenize(this.directories::add, dirs);
+	public void setDirectories(String directories) {
+		tokenize(this.directories::add, directories);
 	}
 
 	public List<String> getDirectories() {
 		return this.directories;
 	}
 
-	public void setPackage(String pkg) {
-		setPackages(pkg);
+	public void setPackage(String packages) {
+		setPackages(packages);
 	}
 
 	public void setPackages(String packages) {
@@ -100,12 +100,12 @@ public class Selectors {
 		return this.methods;
 	}
 
-	public void setResource(String rsc) {
-		setResources(rsc);
+	public void setResource(String resource) {
+		setResources(resource);
 	}
 
-	public void setResources(String rscs) {
-		tokenize(this.resources::add, rscs);
+	public void setResources(String resources) {
+		tokenize(this.resources::add, resources);
 	}
 
 	public List<String> getResources() {

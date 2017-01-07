@@ -446,7 +446,7 @@ Once installed, you can configure `build.xml` as follows.
 		</fileset>
 	</path>
     ...
-    <taskdef name="junit" classname="org.junit.platform.ant.plugin.JUnitPlatformPlugin">
+	<taskdef name="junit" classname="org.junit.platform.ant.plugin.JUnitPlatformPlugin">
 		<classpath refid="taskdef.classpath" />
 	</taskdef>
     ...
@@ -571,15 +571,15 @@ Then, configure your `javac` ant task's classpath reference to use JUnit Jupiter
 	</path>
 
 	<target name="compile.src">
-        <mkdir dir="build/classes/main"/>
-        <javac srcdir="src/main/java" destdir="build/classes/main"/>
-    </target>
+		<mkdir dir="build/classes/main"/>
+		<javac srcdir="src/main/java" destdir="build/classes/main"/>
+	</target>
 
 	<target name="compile.test" depends="compile.src">
-        <mkdir dir="build/classes/test" />
-        <javac srcdir="src/test/java" destdir="build/classes/test"
-        	classpathref="compile.test.classpath"/>
-    </target>
+		<mkdir dir="build/classes/test" />
+		<javac srcdir="src/test/java" destdir="build/classes/test"
+		classpathref="compile.test.classpath"/>
+	</target>
 	...
 ----
 

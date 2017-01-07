@@ -10,8 +10,6 @@
 
 package org.junit.platform.ant.plugin;
 
-import static java.util.Optional.empty;
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +62,9 @@ public class JUnitPlatformPlugin extends Task {
 	private boolean ansiColorsDisabled = false;
 	private boolean detailsHidden = false;
 	private String reportsPath;
-	private Optional<Path> scanClasspath = empty();
-	private Optional<Filters> filters = empty();
-	private Optional<Selectors> selectors = empty();
+	private Optional<Path> scanClasspath = Optional.empty();
+	private Optional<Filters> filters = Optional.empty();
+	private Optional<Selectors> selectors = Optional.empty();
 
 	public JUnitPlatformPlugin() {
 		super();
@@ -75,9 +73,8 @@ public class JUnitPlatformPlugin extends Task {
 	}
 
 	// For testing only
-	JUnitPlatformPlugin(CommandLineOptionsParser commandLineOPtionsParser, ConsoleTaskExecutor consoleTaskExecutor) {
-		super();
-		this.commandLineOptionsParser = commandLineOPtionsParser;
+	JUnitPlatformPlugin(CommandLineOptionsParser commandLineOptionsParser, ConsoleTaskExecutor consoleTaskExecutor) {
+		this.commandLineOptionsParser = commandLineOptionsParser;
 		this.consoleTaskExecutor = consoleTaskExecutor;
 	}
 
