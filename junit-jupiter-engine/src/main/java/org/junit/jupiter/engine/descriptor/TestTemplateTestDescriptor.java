@@ -126,7 +126,7 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 			Iterator<TestTemplateInvocationContext> contextIterator = provider.provide(containerExtensionContext);
 			contextIterator.forEachRemaining(invocationContext -> {
 				UniqueId uniqueId = getUniqueId().append("template-invocation",
-					"#" + invocationIndex.getAndIncrement());
+					"#" + invocationIndex.incrementAndGet());
 				MethodTestDescriptor methodTestDescriptor = new MethodTestDescriptor(uniqueId, this.testClass,
 					this.templateMethod);
 				context.getExecutionListener().dynamicTestRegistered(methodTestDescriptor);
