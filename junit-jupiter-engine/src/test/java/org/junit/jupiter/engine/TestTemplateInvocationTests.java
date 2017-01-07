@@ -21,6 +21,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.engi
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.skippedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
@@ -33,8 +34,12 @@ import java.util.List;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ContainerExecutionCondition;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.TestExecutionCondition;
+import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.engine.test.event.ExecutionEvent;
@@ -111,6 +116,33 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 				event(container("templateWithTwoInvocationsFromSingleExtension"), finishedSuccessfully())));
 	}
 
+	@Test
+	void templateWithDisabledInvocationsIsSkipped() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "templateWithDisabledInvocations")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("templateWithDisabledInvocations"), started()), //
+				event(dynamicTestRegistered("template-invocation:#1")), //
+				event(test("template-invocation:#1"), skippedWithReason("tests are always disabled")), //
+				event(container("templateWithDisabledInvocations"), finishedSuccessfully())));
+	}
+
+	@Test
+	void disabledTemplateIsSkipped() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "disabledTemplate")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("disabledTemplate"), skippedWithReason("containers are always disabled"))));
+	}
+
 	@SuppressWarnings({ "unchecked", "varargs", "rawtypes" })
 	@SafeVarargs
 	private final Condition<? super ExecutionEvent>[] wrappedInContainerEvents(Class<MyTestTemplateTestCase> clazz,
@@ -149,6 +181,18 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 			fail("invocation is expected to fail");
 		}
 
+		@ExtendWith({ SingleInvocationContextProvider.class, AlwaysDisabledTestExecutionCondition.class })
+		@TestTemplate
+		void templateWithDisabledInvocations() {
+			fail("this is never called");
+		}
+
+		@ExtendWith(AlwaysDisabledContainerExecutionCondition.class)
+		@TestTemplate
+		void disabledTemplate() {
+			fail("this is never called");
+		}
+
 	}
 
 	private static class SingleInvocationContextProvider implements TestTemplateInvocationContextProvider {
@@ -170,6 +214,20 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		@Override
 		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 			return asList(emptyTestTemplateInvocationContext(), emptyTestTemplateInvocationContext()).iterator();
+		}
+	}
+
+	private static class AlwaysDisabledTestExecutionCondition implements TestExecutionCondition {
+		@Override
+		public ConditionEvaluationResult evaluate(TestExtensionContext context) {
+			return ConditionEvaluationResult.disabled("tests are always disabled");
+		}
+	}
+
+	private static class AlwaysDisabledContainerExecutionCondition implements ContainerExecutionCondition {
+		@Override
+		public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
+			return ConditionEvaluationResult.disabled("containers are always disabled");
 		}
 	}
 
