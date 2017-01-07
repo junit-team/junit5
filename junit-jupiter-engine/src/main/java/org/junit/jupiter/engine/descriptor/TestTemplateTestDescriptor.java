@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -26,11 +27,9 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.MethodSource;
-import org.junit.platform.engine.support.hierarchical.SingleTestExecutor;
 
 /**
  * {@link TestDescriptor} for {@link org.junit.jupiter.api.TestTemplate @TestTemplate}
@@ -115,7 +114,8 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context) throws Exception {
+	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
+			Consumer<TestDescriptor> dynamicTestExecutor) throws Exception {
 		List<TestTemplateInvocationContextProvider> providers = context.getExtensionRegistry().getExtensions(
 			TestTemplateInvocationContextProvider.class);
 		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
@@ -127,15 +127,9 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 			contextIterator.forEachRemaining(invocationContext -> {
 				UniqueId uniqueId = getUniqueId().append("template-invocation",
 					"#" + invocationIndex.incrementAndGet());
-				MethodTestDescriptor methodTestDescriptor = new MethodTestDescriptor(uniqueId, this.testClass,
+				TestDescriptor invocationTestDescriptor = new MethodTestDescriptor(uniqueId, this.testClass,
 					this.templateMethod);
-				context.getExecutionListener().dynamicTestRegistered(methodTestDescriptor);
-				context.getExecutionListener().executionStarted(methodTestDescriptor);
-				TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
-					JupiterEngineExecutionContext childContext = methodTestDescriptor.prepare(context);
-					methodTestDescriptor.execute(childContext);
-				});
-				context.getExecutionListener().executionFinished(methodTestDescriptor, result);
+				dynamicTestExecutor.accept(invocationTestDescriptor);
 			});
 		});
 		return context;
