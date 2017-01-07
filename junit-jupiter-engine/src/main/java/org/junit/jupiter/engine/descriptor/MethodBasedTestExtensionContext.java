@@ -41,16 +41,6 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 	}
 
 	@Override
-	public String getUniqueId() {
-		return getTestDescriptor().getUniqueId().toString();
-	}
-
-	@Override
-	public String getDisplayName() {
-		return getTestDescriptor().getDisplayName();
-	}
-
-	@Override
 	public Optional<AnnotatedElement> getElement() {
 		return Optional.of(getTestDescriptor().getTestMethod());
 	}

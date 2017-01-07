@@ -25,17 +25,17 @@ import org.junit.platform.engine.EngineExecutionListener;
  * @since 5.0
  */
 @API(Internal)
-public final class ClassBasedContainerExtensionContext extends AbstractExtensionContext<ClassTestDescriptor>
+public final class TestTemplateContainerExtensionContext extends AbstractExtensionContext<TestTemplateTestDescriptor>
 		implements ContainerExtensionContext {
 
-	public ClassBasedContainerExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			ClassTestDescriptor testDescriptor) {
+	public TestTemplateContainerExtensionContext(ExtensionContext parent,
+			EngineExecutionListener engineExecutionListener, TestTemplateTestDescriptor testDescriptor) {
 		super(parent, engineExecutionListener, testDescriptor);
 	}
 
 	@Override
 	public Optional<AnnotatedElement> getElement() {
-		return Optional.of(getTestDescriptor().getTestClass());
+		return Optional.of(getTestDescriptor().getTemplateMethod());
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public final class ClassBasedContainerExtensionContext extends AbstractExtension
 
 	@Override
 	public Optional<Method> getTestMethod() {
-		return Optional.empty();
+		return Optional.of(getTestDescriptor().getTemplateMethod());
 	}
 
 }

@@ -13,12 +13,23 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
+import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.platform.commons.JUnitException;
+import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.hierarchical.SingleTestExecutor;
 
 /**
  * {@link TestDescriptor} for {@link org.junit.jupiter.api.TestTemplate @TestTemplate}
@@ -27,13 +38,37 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.0
  */
 @API(Internal)
-public class TestTemplateTestDescriptor extends MethodTestDescriptor {
+public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 
-	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		super(uniqueId, testClass, testMethod);
+	private final Class<?> testClass;
+	private final Method templateMethod;
+
+	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod) {
+		super(uniqueId, determineDisplayName(Preconditions.notNull(templateMethod, "Method must not be null"),
+			MethodTestDescriptor::generateDefaultDisplayName));
+
+		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
+		this.templateMethod = templateMethod;
+
+		setSource(new MethodSource(templateMethod));
+	}
+
+	public Class<?> getTestClass() {
+		return testClass;
+	}
+
+	public Method getTemplateMethod() {
+		return templateMethod;
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
+
+	@Override
+	public final Set<TestTag> getTags() {
+		Set<TestTag> methodTags = getTags(templateMethod);
+		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
+		return methodTags;
+	}
 
 	@Override
 	public boolean isTest() {
@@ -58,9 +93,46 @@ public class TestTemplateTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@Override
+	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
+		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.templateMethod,
+			context.getExtensionRegistry());
+		ContainerExtensionContext testExtensionContext = new TestTemplateContainerExtensionContext(
+			context.getExtensionContext(), context.getExecutionListener(), this);
+
+		// @formatter:off
+		return context.extend()
+				.withExtensionRegistry(registry)
+				.withExtensionContext(testExtensionContext)
+				.build();
+		// @formatter:on
+	}
+
+	@Override
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
+		// TODO #14 implement
+		return SkipResult.doNotSkip();
+	}
+
+	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context) throws Exception {
-		throw new JUnitException(
+		List<TestTemplateInvocationContextProvider> providers = context.getExtensionRegistry().getExtensions(
+			TestTemplateInvocationContextProvider.class);
+		Preconditions.notEmpty(providers,
 			"You need to register at least one TestTemplateInvocationContextProvider for this method");
+		TestTemplateInvocationContextProvider firstProvider = providers.iterator().next();
+		Iterator<TestTemplateInvocationContext> contextIterator = firstProvider.provide(
+			(ContainerExtensionContext) context.getExtensionContext());
+		TestTemplateInvocationContext invocationContext = contextIterator.next();
+		MethodTestDescriptor methodTestDescriptor = new MethodTestDescriptor(
+			getUniqueId().append("template-invocation", "#0"), this.testClass, this.templateMethod);
+		context.getExecutionListener().dynamicTestRegistered(methodTestDescriptor);
+		context.getExecutionListener().executionStarted(methodTestDescriptor);
+		TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
+			JupiterEngineExecutionContext childContext = methodTestDescriptor.prepare(context);
+			methodTestDescriptor.execute(childContext);
+		});
+		context.getExecutionListener().executionFinished(methodTestDescriptor, result);
+		return context;
 	}
 
 }
