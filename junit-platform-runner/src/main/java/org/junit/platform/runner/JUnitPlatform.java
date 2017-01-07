@@ -65,9 +65,11 @@ import org.junit.runners.model.InitializationError;
  * in order to be picked up by IDEs and build tools.
  *
  * <p>When used on a class that serves as a test suite and the
- * {@link IncludeClassNamePatterns} annotation is not present, the default
- * include pattern {@value org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN}
- * is used to avoid loading classes unnecessarily.
+ * {@link IncludeClassNamePatterns @IncludeClassNamePatterns} annotation is not
+ * present, the default include pattern {@code "^.*Tests?$"} will be used in order
+ * to avoid loading classes unnecessarily (see {@link
+ * org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN
+ * ClassNameFilter#STANDARD_INCLUDE_PATTERN}).
  *
  * @since 1.0
  * @see SelectPackages
