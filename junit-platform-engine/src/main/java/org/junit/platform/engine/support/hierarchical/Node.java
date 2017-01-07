@@ -13,9 +13,11 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.TestDescriptor;
 
 /**
  * A <em>node</em> within the execution hierarchy.
@@ -78,13 +80,36 @@ public interface Node<C extends EngineExecutionContext> {
 	 * <p>Containers typically do not implement this method since the
 	 * {@link HierarchicalTestEngine} handles execution of their children.
 	 *
+	 * <p>The supplied {@code dynamicTestExecutor} may be used to submit
+	 * additional dynamic tests for immediate execution.
+	 *
 	 * @param context the context to execute in
+	 * @param dynamicTestExecutor the executor to submit dynamic tests to
 	 * @return the new context to be used for children of this node and for the
 	 * <em>after</em> behavior of the parent of this node, if any
 	 *
 	 * @see #before
 	 * @see #after
 	 */
+	default C execute(C context, Consumer<TestDescriptor> dynamicTestExecutor) throws Exception {
+		return execute(context);
+	}
+
+	/**
+	 * Execute the <em>behavior</em> of this node.
+	 *
+	 * <p>Containers typically do not implement this method since the
+	 * {@link HierarchicalTestEngine} handles execution of their children.
+	 *
+	 * @param context the context to execute in
+	 * @return the new context to be used for children of this node and for the
+	 * <em>after</em> behavior of the parent of this node, if any
+	 *
+	 * @see #before
+	 * @see #after
+	 * @deprecated Please use {@link #execute(EngineExecutionContext, Consumer)} instead.
+	 */
+	@Deprecated
 	default C execute(C context) throws Exception {
 		return context;
 	}
