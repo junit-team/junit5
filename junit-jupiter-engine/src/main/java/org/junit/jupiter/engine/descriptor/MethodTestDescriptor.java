@@ -14,6 +14,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 
@@ -117,7 +118,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.testMethod,
 			context.getExtensionRegistry());
-		Object testInstance = context.getTestInstanceProvider().getTestInstance();
+		Object testInstance = context.getTestInstanceProvider().getTestInstance(Optional.of(registry));
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, testInstance, throwableCollector);

@@ -55,6 +55,7 @@ on GitHub.
 
 * `Assertions.assertThrows()` now uses canonical names for exception types when
   generating assertion failure messages.
+* `TestInstancePostProcessors` registered on test methods are now invoked.
 
 
 [[release-notes-5.0.0-m4-junit-vintage]]

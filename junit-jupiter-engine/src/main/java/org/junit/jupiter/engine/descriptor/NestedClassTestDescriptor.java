@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Constructor;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -59,12 +60,15 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	@Override
 	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
-
-		return () -> {
-			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance();
+		return childExtensionRegistry -> {
+			// Extensions registered for nested classes and below are not to be used for instancing outer classes
+			Optional<ExtensionRegistry> childExtensionRegistryForOuterInstance = Optional.empty();
+			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance(
+				childExtensionRegistryForOuterInstance);
 			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getTestClass());
-			Object instance = executableInvoker.invoke(constructor, outerInstance, extensionContext, registry);
-			invokeTestInstancePostProcessors(instance, registry, extensionContext);
+			Object instance = executableInvoker.invoke(constructor, outerInstance, extensionContext,
+				childExtensionRegistry.orElse(registry));
+			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(registry), extensionContext);
 			return instance;
 		};
 	}

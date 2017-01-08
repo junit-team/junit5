@@ -12,6 +12,9 @@ package org.junit.jupiter.engine.execution;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import java.util.Optional;
+
+import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 
 /**
@@ -21,6 +24,6 @@ import org.junit.platform.commons.meta.API;
 @API(Internal)
 public interface TestInstanceProvider {
 
-	Object getTestInstance() throws Exception;
+	Object getTestInstance(Optional<ExtensionRegistry> childExtensionRegistry) throws Exception;
 
 }

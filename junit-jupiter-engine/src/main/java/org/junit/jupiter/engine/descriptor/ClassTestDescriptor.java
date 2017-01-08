@@ -181,10 +181,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
-		return () -> {
+		return childExtensionRegistry -> {
 			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-			Object instance = executableInvoker.invoke(constructor, extensionContext, registry);
-			invokeTestInstancePostProcessors(instance, registry, extensionContext);
+			Object instance = executableInvoker.invoke(constructor, extensionContext,
+				childExtensionRegistry.orElse(registry));
+			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(registry), extensionContext);
 			return instance;
 		};
 	}
