@@ -69,8 +69,12 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	private final Method testMethod;
 
 	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		super(uniqueId, determineDisplayName(Preconditions.notNull(testMethod, "Method must not be null"),
-			MethodTestDescriptor::generateDefaultDisplayName));
+		this(uniqueId, determineDisplayName(Preconditions.notNull(testMethod, "Method must not be null"),
+			MethodTestDescriptor::generateDefaultDisplayName), testClass, testMethod);
+	}
+
+	public MethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
+		super(uniqueId, displayName);
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = testMethod;

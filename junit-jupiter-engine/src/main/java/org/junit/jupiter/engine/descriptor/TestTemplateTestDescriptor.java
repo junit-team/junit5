@@ -124,10 +124,11 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 		providers.forEach(provider -> {
 			Iterator<TestTemplateInvocationContext> contextIterator = provider.provide(containerExtensionContext);
 			contextIterator.forEachRemaining(invocationContext -> {
-				UniqueId uniqueId = getUniqueId().append("template-invocation",
-					"#" + invocationIndex.incrementAndGet());
-				TestDescriptor invocationTestDescriptor = new MethodTestDescriptor(uniqueId, this.testClass,
-					this.templateMethod);
+				int index = invocationIndex.incrementAndGet();
+				UniqueId uniqueId = getUniqueId().append("template-invocation", "#" + index);
+				String displayName = "[" + index + "]";
+				TestDescriptor invocationTestDescriptor = new MethodTestDescriptor(uniqueId, displayName,
+					this.testClass, this.templateMethod);
 				addChild(invocationTestDescriptor);
 				dynamicTestExecutor.accept(invocationTestDescriptor);
 			});

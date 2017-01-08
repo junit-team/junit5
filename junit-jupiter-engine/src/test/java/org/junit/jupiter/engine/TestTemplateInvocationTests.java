@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.dynamicTestRegistered;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -108,10 +109,10 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithTwoRegisteredExtensions"), started()), //
-				event(dynamicTestRegistered("template-invocation:#1")), //
+				event(dynamicTestRegistered("template-invocation:#1"), displayName("[1]")), //
 				event(test("template-invocation:#1"), started()), //
 				event(test("template-invocation:#1"), finishedWithFailure(message("invocation is expected to fail"))), //
-				event(dynamicTestRegistered("template-invocation:#2")), //
+				event(dynamicTestRegistered("template-invocation:#2"), displayName("[2]")), //
 				event(test("template-invocation:#2"), started()), //
 				event(test("template-invocation:#2"), finishedWithFailure(message("invocation is expected to fail"))), //
 				event(container("templateWithTwoRegisteredExtensions"), finishedSuccessfully())));
@@ -127,10 +128,10 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithTwoInvocationsFromSingleExtension"), started()), //
-				event(dynamicTestRegistered("template-invocation:#1")), //
+				event(dynamicTestRegistered("template-invocation:#1"), displayName("[1]")), //
 				event(test("template-invocation:#1"), started()), //
 				event(test("template-invocation:#1"), finishedWithFailure(message("invocation is expected to fail"))), //
-				event(dynamicTestRegistered("template-invocation:#2")), //
+				event(dynamicTestRegistered("template-invocation:#2"), displayName("[2]")), //
 				event(test("template-invocation:#2"), started()), //
 				event(test("template-invocation:#2"), finishedWithFailure(message("invocation is expected to fail"))), //
 				event(container("templateWithTwoInvocationsFromSingleExtension"), finishedSuccessfully())));
@@ -176,7 +177,11 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		return conditions.toArray(new Condition[0]);
 	}
 
-	private static class MyTestTemplateTestCase {
+	static class MyTestTemplateTestCase {
+
+		@Test
+		void foo() {
+		}
 
 		@TestTemplate
 		void templateWithoutRegisteredExtension() {
