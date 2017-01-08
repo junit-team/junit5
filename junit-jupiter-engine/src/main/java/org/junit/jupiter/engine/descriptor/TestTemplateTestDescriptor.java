@@ -128,6 +128,7 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 					"#" + invocationIndex.incrementAndGet());
 				TestDescriptor invocationTestDescriptor = new MethodTestDescriptor(uniqueId, this.testClass,
 					this.templateMethod);
+				addChild(invocationTestDescriptor);
 				dynamicTestExecutor.accept(invocationTestDescriptor);
 			});
 		});
