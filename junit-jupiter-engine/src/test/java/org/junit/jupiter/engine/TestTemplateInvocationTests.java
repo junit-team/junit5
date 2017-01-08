@@ -35,7 +35,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
@@ -81,6 +84,14 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 				event(test("template-invocation:#1"), started()), //
 				event(test("template-invocation:#1"), finishedWithFailure(message("invocation is expected to fail"))), //
 				event(container("templateWithSingleRegisteredExtension"), finishedSuccessfully())));
+	}
+
+	@Test
+	void parentChildRelationshipIsEstablished() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "templateWithSingleRegisteredExtension")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		TestDescriptor templateMethodDescriptor = findTestDescriptor(eventRecorder,
 			container("templateWithSingleRegisteredExtension"));
@@ -89,15 +100,15 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertThat(templateMethodDescriptor.getChildren()).isEqualTo(singleton(invocationDescriptor));
 	}
 
-	private TestDescriptor findTestDescriptor(ExecutionEventRecorder eventRecorder,
-			Condition<ExecutionEvent> condition) {
-		// @formatter:off
-		return eventRecorder.eventStream()
-				.filter(condition::matches)
-				.findAny()
-				.map(ExecutionEvent::getTestDescriptor)
-				.orElseThrow(() -> new AssertionFailedError("Could not find execution event for condition: " + condition));
-		// @formatter:on
+	@Test
+	void beforeAndAfterEachMethodsAreExecutedAroundInvocation() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(TestTemplateTestClassWithBeforeAndAfterEach.class, "testTemplateWithTwoInvocations")).build();
+
+		executeTests(request);
+
+		assertThat(TestTemplateTestClassWithBeforeAndAfterEach.lifecycleEvents).containsExactly("before:[1]",
+			"after:[1]", "before:[2]", "after:[2]");
 	}
 
 	@Test
@@ -182,6 +193,17 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 				event(container("templateWithCustomizedDisplayNames"), finishedSuccessfully())));
 	}
 
+	private TestDescriptor findTestDescriptor(ExecutionEventRecorder eventRecorder,
+			Condition<ExecutionEvent> condition) {
+		// @formatter:off
+		return eventRecorder.eventStream()
+				.filter(condition::matches)
+				.findAny()
+				.map(ExecutionEvent::getTestDescriptor)
+				.orElseThrow(() -> new AssertionFailedError("Could not find execution event for condition: " + condition));
+		// @formatter:on
+	}
+
 	@SuppressWarnings({ "unchecked", "varargs", "rawtypes" })
 	@SafeVarargs
 	private final Condition<? super ExecutionEvent>[] wrappedInContainerEvents(Class<MyTestTemplateTestCase> clazz,
@@ -242,6 +264,27 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 			fail("invocation is expected to fail");
 		}
 
+	}
+
+	static class TestTemplateTestClassWithBeforeAndAfterEach {
+
+		private static List<String> lifecycleEvents = new ArrayList<>();
+
+		@BeforeEach
+		void beforeEach(TestInfo testInfo) {
+			lifecycleEvents.add("before:" + testInfo.getDisplayName());
+		}
+
+		@AfterEach
+		void afterEach(TestInfo testInfo) {
+			lifecycleEvents.add("after:" + testInfo.getDisplayName());
+		}
+
+		@ExtendWith(TwoInvocationsContextProvider.class)
+		@TestTemplate
+		void testTemplateWithTwoInvocations() {
+			fail("invocation is expected to fail");
+		}
 	}
 
 	private static class SingleInvocationContextProvider implements TestTemplateInvocationContextProvider {
