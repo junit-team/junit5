@@ -32,6 +32,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
@@ -164,6 +165,23 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 				event(container("disabledTemplate"), skippedWithReason("containers are always disabled"))));
 	}
 
+	@Test
+	void templateWithCustomizedDisplayNamesIsInvoked() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "templateWithCustomizedDisplayNames")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("templateWithCustomizedDisplayNames"), started()), //
+				event(dynamicTestRegistered("template-invocation:#1"),
+					displayName("1 --> templateWithCustomizedDisplayNames()")), //
+				event(test("template-invocation:#1"), started()), //
+				event(test("template-invocation:#1"), finishedWithFailure(message("invocation is expected to fail"))), //
+				event(container("templateWithCustomizedDisplayNames"), finishedSuccessfully())));
+	}
+
 	@SuppressWarnings({ "unchecked", "varargs", "rawtypes" })
 	@SafeVarargs
 	private final Condition<? super ExecutionEvent>[] wrappedInContainerEvents(Class<MyTestTemplateTestCase> clazz,
@@ -218,6 +236,12 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 			fail("this is never called");
 		}
 
+		@ExtendWith(InvocationContextProviderWithCustomizedDisplayNames.class)
+		@TestTemplate
+		void templateWithCustomizedDisplayNames() {
+			fail("invocation is expected to fail");
+		}
+
 	}
 
 	private static class SingleInvocationContextProvider implements TestTemplateInvocationContextProvider {
@@ -253,6 +277,19 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		@Override
 		public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
 			return ConditionEvaluationResult.disabled("containers are always disabled");
+		}
+	}
+
+	private static class InvocationContextProviderWithCustomizedDisplayNames
+			implements TestTemplateInvocationContextProvider {
+		@Override
+		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return Stream.<TestTemplateInvocationContext> generate(() -> new TestTemplateInvocationContext() {
+				@Override
+				public String getDisplayName(int invocationIndex) {
+					return invocationIndex + " --> " + context.getDisplayName();
+				}
+			}).limit(1).iterator();
 		}
 	}
 

@@ -16,4 +16,9 @@ import org.junit.platform.commons.meta.API;
 
 @API(Experimental)
 public interface TestTemplateInvocationContext {
+
+	default String getDisplayName(int invocationIndex) {
+		return "[" + invocationIndex + "]";
+	}
+
 }
