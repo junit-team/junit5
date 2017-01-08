@@ -118,8 +118,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
-		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.testMethod,
-			context.getExtensionRegistry());
+		ExtensionRegistry registry = populateNewExtensionRegistry(context);
 		Object testInstance = context.getTestInstanceProvider().getTestInstance(Optional.of(registry));
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
@@ -132,6 +131,10 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 				.withThrowableCollector(throwableCollector)
 				.build();
 		// @formatter:on
+	}
+
+	protected ExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
+		return populateNewExtensionRegistryFromExtendWith(this.testMethod, context.getExtensionRegistry());
 	}
 
 	@Override

@@ -10,7 +10,10 @@
 
 package org.junit.jupiter.api.extension;
 
+import static java.util.Collections.emptyList;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
+
+import java.util.List;
 
 import org.junit.platform.commons.meta.API;
 
@@ -19,6 +22,10 @@ public interface TestTemplateInvocationContext {
 
 	default String getDisplayName(int invocationIndex) {
 		return "[" + invocationIndex + "]";
+	}
+
+	default List<Extension> getAdditionalExtensions() {
+		return emptyList();
 	}
 
 }

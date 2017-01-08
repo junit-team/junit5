@@ -12,6 +12,7 @@ package org.junit.jupiter.engine;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -29,6 +30,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -44,8 +46,14 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestExecutionCondition;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.engine.TestDescriptor;
@@ -193,6 +201,44 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 				event(container("templateWithCustomizedDisplayNames"), finishedSuccessfully())));
 	}
 
+	@Test
+	void templateWithDynamicParameterResolverIsInvoked() {
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(MyTestTemplateTestCase.class,
+			"templateWithDynamicParameterResolver", "java.lang.String")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("templateWithDynamicParameterResolver"), started()), //
+				event(dynamicTestRegistered("template-invocation:#1"), displayName("[1] foo")), //
+				event(test("template-invocation:#1"), started()), //
+				event(test("template-invocation:#1"), finishedWithFailure(message("foo"))), //
+				event(dynamicTestRegistered("template-invocation:#2"), displayName("[2] bar")), //
+				event(test("template-invocation:#2"), started()), //
+				event(test("template-invocation:#2"), finishedWithFailure(message("bar"))), //
+				event(container("templateWithDynamicParameterResolver"), finishedSuccessfully())));
+	}
+
+	@Test
+	void templateWithDynamicTestInstancePostProcessorIsInvoked() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "templateWithDynamicTestInstancePostProcessor")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("templateWithDynamicTestInstancePostProcessor"), started()), //
+				event(dynamicTestRegistered("template-invocation:#1")), //
+				event(test("template-invocation:#1"), started()), //
+				event(test("template-invocation:#1"), finishedWithFailure(message("foo"))), //
+				event(dynamicTestRegistered("template-invocation:#2")), //
+				event(test("template-invocation:#2"), started()), //
+				event(test("template-invocation:#2"), finishedWithFailure(message("bar"))), //
+				event(container("templateWithDynamicTestInstancePostProcessor"), finishedSuccessfully())));
+	}
+
 	private TestDescriptor findTestDescriptor(ExecutionEventRecorder eventRecorder,
 			Condition<ExecutionEvent> condition) {
 		// @formatter:off
@@ -264,6 +310,20 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 			fail("invocation is expected to fail");
 		}
 
+		@ExtendWith(StringParameterResolvingInvocationContextProvider.class)
+		@TestTemplate
+		void templateWithDynamicParameterResolver(String parameter) {
+			fail(parameter);
+		}
+
+		private String parameterInstanceVariable;
+
+		@ExtendWith(StringParameterInjectingInvocationContextProvider.class)
+		@TestTemplate
+		void templateWithDynamicTestInstancePostProcessor() {
+			fail(parameterInstanceVariable);
+		}
+
 	}
 
 	static class TestTemplateTestClassWithBeforeAndAfterEach {
@@ -333,6 +393,66 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 					return invocationIndex + " --> " + context.getDisplayName();
 				}
 			}).limit(1).iterator();
+		}
+	}
+
+	private static class StringParameterResolvingInvocationContextProvider
+			implements TestTemplateInvocationContextProvider {
+		@Override
+		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return asList(createContext("foo"), createContext("bar")).iterator();
+		}
+
+		private TestTemplateInvocationContext createContext(String argument) {
+			return new TestTemplateInvocationContext() {
+				@Override
+				public String getDisplayName(int invocationIndex) {
+					return TestTemplateInvocationContext.super.getDisplayName(invocationIndex) + " " + argument;
+				}
+
+				@Override
+				public List<Extension> getAdditionalExtensions() {
+					return singletonList(new ParameterResolver() {
+						@Override
+						public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext)
+								throws ParameterResolutionException {
+							return true;
+						}
+
+						@Override
+						public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
+								throws ParameterResolutionException {
+							return argument;
+						}
+					});
+				}
+			};
+		}
+	}
+
+	private static class StringParameterInjectingInvocationContextProvider
+			implements TestTemplateInvocationContextProvider {
+		@Override
+		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return asList(createContext("foo"), createContext("bar")).iterator();
+		}
+
+		private TestTemplateInvocationContext createContext(String argument) {
+			return new TestTemplateInvocationContext() {
+				@Override
+				public String getDisplayName(int invocationIndex) {
+					return TestTemplateInvocationContext.super.getDisplayName(invocationIndex) + " " + argument;
+				}
+
+				@Override
+				public List<Extension> getAdditionalExtensions() {
+					return singletonList((TestInstancePostProcessor) (testInstance, context) -> {
+						Field field = testInstance.getClass().getDeclaredField("parameterInstanceVariable");
+						field.setAccessible(true);
+						field.set(testInstance, argument);
+					});
+				}
+			};
 		}
 	}
 

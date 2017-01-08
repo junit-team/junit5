@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -127,8 +128,17 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 				int index = invocationIndex.incrementAndGet();
 				UniqueId uniqueId = getUniqueId().append("template-invocation", "#" + index);
 				String displayName = invocationContext.getDisplayName(index);
+				List<Extension> additionalExtensions = invocationContext.getAdditionalExtensions();
 				TestDescriptor invocationTestDescriptor = new MethodTestDescriptor(uniqueId, displayName,
-					this.testClass, this.templateMethod);
+					this.testClass, this.templateMethod) {
+					@Override
+					protected ExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
+						ExtensionRegistry registry = super.populateNewExtensionRegistry(context);
+						additionalExtensions.forEach(
+							extension -> registry.registerExtension(extension, invocationContext));
+						return registry;
+					}
+				};
 				addChild(invocationTestDescriptor);
 				dynamicTestExecutor.accept(invocationTestDescriptor);
 			});
