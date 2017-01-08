@@ -46,8 +46,10 @@ public @interface IncludeClassNamePattern {
 	/**
 	 * Regular expression used to match against fully qualified class names.
 	 *
-	 * <p>Defaults to {@code "^.*Tests?$"} which matches against class names
-	 * ending in {@code Test} or {@code Tests} (in any package).
+	 * <p>Defaults to
+	 * {@value org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN}
+	 * which matches against class names ending in {@code Test} or {@code Tests}
+	 * (in any package).
 	 */
 	String value() default ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
