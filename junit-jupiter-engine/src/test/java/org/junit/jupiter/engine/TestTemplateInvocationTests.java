@@ -12,6 +12,7 @@ package org.junit.jupiter.engine;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
@@ -42,9 +43,11 @@ import org.junit.jupiter.api.extension.TestExecutionCondition;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.opentest4j.AssertionFailedError;
 
 public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
@@ -76,6 +79,23 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 				event(test("template-invocation:#1"), started()), //
 				event(test("template-invocation:#1"), finishedWithFailure(message("invocation is expected to fail"))), //
 				event(container("templateWithSingleRegisteredExtension"), finishedSuccessfully())));
+
+		TestDescriptor templateMethodDescriptor = findTestDescriptor(eventRecorder,
+			container("templateWithSingleRegisteredExtension"));
+		TestDescriptor invocationDescriptor = findTestDescriptor(eventRecorder, test("template-invocation:#1"));
+		assertThat(invocationDescriptor.getParent()).hasValue(templateMethodDescriptor);
+		assertThat(templateMethodDescriptor.getChildren()).isEqualTo(singleton(invocationDescriptor));
+	}
+
+	private TestDescriptor findTestDescriptor(ExecutionEventRecorder eventRecorder,
+			Condition<ExecutionEvent> condition) {
+		// @formatter:off
+		return eventRecorder.eventStream()
+				.filter(condition::matches)
+				.findAny()
+				.map(ExecutionEvent::getTestDescriptor)
+				.orElseThrow(() -> new AssertionFailedError("Could not find execution event for condition: " + condition));
+		// @formatter:on
 	}
 
 	@Test
