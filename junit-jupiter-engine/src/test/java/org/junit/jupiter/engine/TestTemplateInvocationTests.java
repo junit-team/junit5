@@ -14,7 +14,9 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
@@ -42,6 +44,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
@@ -52,6 +58,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestExecutionCondition;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -239,6 +246,29 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 				event(container("templateWithDynamicTestInstancePostProcessor"), finishedSuccessfully())));
 	}
 
+	@Test
+	void lifecycleCallbacksAreExecutedForInvocation() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectClass(TestTemplateTestClassWithDynamicLifecycleCallbacks.class)).build();
+
+		executeTests(request);
+
+		// @formatter:off
+		assertThat(TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents).containsExactly(
+			"beforeEach",
+				"beforeTestExecution",
+					"testTemplate:foo",
+					"handleTestExecutionException",
+				"afterTestExecution",
+			"afterEach",
+			"beforeEach",
+				"beforeTestExecution",
+					"testTemplate:bar",
+				"afterTestExecution",
+			"afterEach");
+		// @formatter:on
+	}
+
 	private TestDescriptor findTestDescriptor(ExecutionEventRecorder eventRecorder,
 			Condition<ExecutionEvent> condition) {
 		// @formatter:off
@@ -344,6 +374,18 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		@TestTemplate
 		void testTemplateWithTwoInvocations() {
 			fail("invocation is expected to fail");
+		}
+	}
+
+	static class TestTemplateTestClassWithDynamicLifecycleCallbacks {
+
+		private static List<String> lifecycleEvents = new ArrayList<>();
+
+		@ExtendWith(InvocationContextProviderWithDynamicLifecycleCallbacks.class)
+		@TestTemplate
+		void testTemplate(TestInfo testInfo) {
+			lifecycleEvents.add("testTemplate:" + testInfo.getDisplayName());
+			assertEquals("bar", testInfo.getDisplayName());
 		}
 	}
 
@@ -453,6 +495,60 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 					});
 				}
 			};
+		}
+	}
+
+	private static class InvocationContextProviderWithDynamicLifecycleCallbacks
+			implements TestTemplateInvocationContextProvider {
+
+		@Override
+		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return asList(createContext("foo"), createContext("bar")).iterator();
+		}
+
+		private TestTemplateInvocationContext createContext(String argument) {
+			return new TestTemplateInvocationContext() {
+				@Override
+				public String getDisplayName(int invocationIndex) {
+					return argument;
+				}
+
+				@Override
+				public List<Extension> getAdditionalExtensions() {
+					return singletonList(new LifecycleCallbackExtension());
+				}
+			};
+		}
+
+		private static class LifecycleCallbackExtension implements BeforeEachCallback, BeforeTestExecutionCallback,
+				TestExecutionExceptionHandler, AfterTestExecutionCallback, AfterEachCallback {
+
+			@Override
+			public void beforeEach(TestExtensionContext context) throws Exception {
+				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("beforeEach");
+			}
+
+			@Override
+			public void beforeTestExecution(TestExtensionContext context) throws Exception {
+				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("beforeTestExecution");
+			}
+
+			@Override
+			public void handleTestExecutionException(TestExtensionContext context, Throwable throwable)
+					throws Throwable {
+				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("handleTestExecutionException");
+				throw throwable;
+			}
+
+			@Override
+			public void afterTestExecution(TestExtensionContext context) throws Exception {
+				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("afterTestExecution");
+			}
+
+			@Override
+			public void afterEach(TestExtensionContext context) throws Exception {
+				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("afterEach");
+			}
 		}
 	}
 
