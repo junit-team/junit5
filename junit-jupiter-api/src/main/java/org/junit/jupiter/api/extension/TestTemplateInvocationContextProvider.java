@@ -19,6 +19,8 @@ import org.junit.platform.commons.meta.API;
 @API(Experimental)
 public interface TestTemplateInvocationContextProvider extends Extension {
 
+	boolean supports(ContainerExtensionContext context);
+
 	Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context);
 
 }

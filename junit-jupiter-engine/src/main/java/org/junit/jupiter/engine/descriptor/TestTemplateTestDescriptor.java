@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
@@ -116,11 +117,9 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			Consumer<TestDescriptor> dynamicTestExecutor) throws Exception {
-		List<TestTemplateInvocationContextProvider> providers = context.getExtensionRegistry().getExtensions(
-			TestTemplateInvocationContextProvider.class);
 		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
-		Preconditions.notEmpty(providers,
-			"You need to register at least one TestTemplateInvocationContextProvider for this method");
+		List<TestTemplateInvocationContextProvider> providers = validateProviders(containerExtensionContext,
+			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
 		providers.forEach(provider -> {
 			Iterator<TestTemplateInvocationContext> contextIterator = provider.provide(containerExtensionContext);
@@ -144,6 +143,19 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 			});
 		});
 		return context;
+	}
+
+	private List<TestTemplateInvocationContextProvider> validateProviders(
+			ContainerExtensionContext containerExtensionContext, ExtensionRegistry extensionRegistry) {
+		List<TestTemplateInvocationContextProvider> providers = extensionRegistry.getExtensions(
+			TestTemplateInvocationContextProvider.class);
+		Preconditions.notEmpty(providers, "You must register at least one "
+				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " for this method");
+		providers = providers.stream().filter(provider -> provider.supports(containerExtensionContext)).collect(
+			toList());
+		Preconditions.notEmpty(providers, "You must register at least one "
+				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " that supports this method");
+		return providers;
 	}
 
 }

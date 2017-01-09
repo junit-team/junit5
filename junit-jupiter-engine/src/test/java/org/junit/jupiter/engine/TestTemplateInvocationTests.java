@@ -33,9 +33,12 @@ import static org.junit.platform.engine.test.event.TestExecutionResultConditions
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
@@ -81,8 +84,8 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithoutRegisteredExtension"), started()), //
-				event(container("templateWithoutRegisteredExtension"), finishedWithFailure(message(
-					"You need to register at least one TestTemplateInvocationContextProvider for this method")))));
+				event(container("templateWithoutRegisteredExtension"), finishedWithFailure(
+					message("You must register at least one TestTemplateInvocationContextProvider for this method")))));
 	}
 
 	@Test
@@ -269,6 +272,20 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		// @formatter:on
 	}
 
+	@Test
+	void extensionIsAskedForSupportBeforeItMustProvide() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "templateWithWrongParameterType", int.class.getName())).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("templateWithWrongParameterType"), started()), //
+				event(container("templateWithWrongParameterType"), finishedWithFailure(message(
+					"You must register at least one TestTemplateInvocationContextProvider that supports this method")))));
+	}
+
 	private TestDescriptor findTestDescriptor(ExecutionEventRecorder eventRecorder,
 			Condition<ExecutionEvent> condition) {
 		// @formatter:off
@@ -346,6 +363,12 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 			fail(parameter);
 		}
 
+		@ExtendWith(StringParameterResolvingInvocationContextProvider.class)
+		@TestTemplate
+		void templateWithWrongParameterType(int parameter) {
+			fail("never called");
+		}
+
 		private String parameterInstanceVariable;
 
 		@ExtendWith(StringParameterInjectingInvocationContextProvider.class)
@@ -390,6 +413,12 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 	}
 
 	private static class SingleInvocationContextProvider implements TestTemplateInvocationContextProvider {
+
+		@Override
+		public boolean supports(ContainerExtensionContext context) {
+			return true;
+		}
+
 		@Override
 		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 			return singleton(emptyTestTemplateInvocationContext()).iterator();
@@ -398,6 +427,12 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 
 	private static class AnotherInvocationContextProviderWithASingleInvocation
 			implements TestTemplateInvocationContextProvider {
+
+		@Override
+		public boolean supports(ContainerExtensionContext context) {
+			return true;
+		}
+
 		@Override
 		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 			return singleton(emptyTestTemplateInvocationContext()).iterator();
@@ -405,6 +440,12 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 	}
 
 	private static class TwoInvocationsContextProvider implements TestTemplateInvocationContextProvider {
+
+		@Override
+		public boolean supports(ContainerExtensionContext context) {
+			return true;
+		}
+
 		@Override
 		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 			return asList(emptyTestTemplateInvocationContext(), emptyTestTemplateInvocationContext()).iterator();
@@ -427,6 +468,12 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 
 	private static class InvocationContextProviderWithCustomizedDisplayNames
 			implements TestTemplateInvocationContextProvider {
+
+		@Override
+		public boolean supports(ContainerExtensionContext context) {
+			return true;
+		}
+
 		@Override
 		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 			return Stream.<TestTemplateInvocationContext> generate(() -> new TestTemplateInvocationContext() {
@@ -440,6 +487,18 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 
 	private static class StringParameterResolvingInvocationContextProvider
 			implements TestTemplateInvocationContextProvider {
+
+		@Override
+		public boolean supports(ContainerExtensionContext context) {
+			// @formatter:off
+			return context.getTestMethod()
+				.map(Method::getParameterTypes)
+				.map(Arrays::stream)
+				.map(parameters -> parameters.anyMatch(Predicate.isEqual(String.class)))
+				.orElse(false);
+			// @formatter:on
+		}
+
 		@Override
 		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 			return asList(createContext("foo"), createContext("bar")).iterator();
@@ -474,6 +533,12 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 
 	private static class StringParameterInjectingInvocationContextProvider
 			implements TestTemplateInvocationContextProvider {
+
+		@Override
+		public boolean supports(ContainerExtensionContext context) {
+			return true;
+		}
+
 		@Override
 		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 			return asList(createContext("foo"), createContext("bar")).iterator();
@@ -500,6 +565,11 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 
 	private static class InvocationContextProviderWithDynamicLifecycleCallbacks
 			implements TestTemplateInvocationContextProvider {
+
+		@Override
+		public boolean supports(ContainerExtensionContext context) {
+			return true;
+		}
 
 		@Override
 		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
