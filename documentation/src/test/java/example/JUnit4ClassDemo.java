@@ -11,7 +11,6 @@
 package example;
 
 // tag::user_guide[]
-
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
