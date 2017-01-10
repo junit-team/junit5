@@ -375,7 +375,6 @@ subprojects { subproj ->
 			licenseHeaderFile headerFile, '(package|import) '
 			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
 			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
-			removeUnusedImports()
 
 			trimTrailingWhitespace()
 			endWithNewline()
