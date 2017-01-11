@@ -23,6 +23,9 @@ on GitHub.
 * Removed deprecated `selectNames()` name-based discovery selector from
   `DiscoverySelectors` in favor of the dedicated `selectPackage(String)`,
   `selectClass(String)`, and `selectMethod(String)` methods.
+* `ClassNameFilter.includeClassNamePattern` was removed, please use
+  `ClassNameFilter.includeClassNamePatterns` instead.
+* `@IncludeClassNamePattern` was removed, please use `@IncludeClassNamePatterns` instead.
 
 ===== New Features
 

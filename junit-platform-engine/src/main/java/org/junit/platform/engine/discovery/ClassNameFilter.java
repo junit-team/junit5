@@ -33,24 +33,6 @@ public interface ClassNameFilter extends DiscoveryFilter<String> {
 	String STANDARD_INCLUDE_PATTERN = "^.*Tests?$";
 
 	/**
-	 * Create a new <em>include</em> {@link ClassNameFilter} based on the supplied
-	 * pattern.
-	 *
-	 * <p>If the fully qualified name of a class matches against the pattern,
-	 * the class will be included in the result set.
-	 *
-	 * @param pattern a regular expression to match against fully qualified
-	 * class names; never {@code null} or blank
-	 * @see Class#getName()
-	 * @deprecated This method will be removed in 5.0 M4; use
-	 * {@link #includeClassNamePatterns} instead.
-	 */
-	@Deprecated
-	static ClassNameFilter includeClassNamePattern(String pattern) {
-		return new IncludeClassNameFilter(pattern);
-	}
-
-	/**
 	 * Create a new <em>include</em> {@link ClassNameFilter} based on the
 	 * supplied patterns.
 	 *
