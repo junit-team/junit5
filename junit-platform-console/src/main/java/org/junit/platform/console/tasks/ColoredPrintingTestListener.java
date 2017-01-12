@@ -18,6 +18,8 @@ import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color
 import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.YELLOW;
 
 import java.io.PrintWriter;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.regex.Pattern;
 
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -39,10 +41,12 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 
 	private final PrintWriter out;
 	private final boolean disableAnsiColors;
+	private final Deque<TestIdentifier> containers;
 
 	ColoredPrintingTestListener(PrintWriter out, boolean disableAnsiColors) {
 		this.out = out;
 		this.disableAnsiColors = disableAnsiColors;
+		this.containers = new ArrayDeque<>();
 	}
 
 	@Override
@@ -70,13 +74,20 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
 		printlnTestDescriptor(NONE, "Started:", testIdentifier);
+		if (testIdentifier.isContainer()) {
+			containers.push(testIdentifier);
+		}
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+		if (testIdentifier.isContainer()) {
+			containers.pop();
+		}
 		Color color = determineColor(testExecutionResult.getStatus());
 		printlnTestDescriptor(color, "Finished:", testIdentifier);
 		testExecutionResult.getThrowable().ifPresent(t -> printlnException(color, t));
+		out.flush();
 	}
 
 	@Override
@@ -99,7 +110,16 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {
-		println(color, "%-10s   %s (%s)", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
+		String tile = testIdentifier.isContainer() ? "+--" : " - ";
+		String branch = "|  ";
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < containers.size(); i++) {
+			builder.append(branch);
+		}
+		builder.append(tile);
+		//println(color, "%-" + spacing + "s   %s (%s)", message, testIdentifier.getDisplayName(),
+		//	testIdentifier.getUniqueId());
+		println(color, "%s%s (%s)", builder.toString(), testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
 	private void printlnException(Color color, Throwable throwable) {
