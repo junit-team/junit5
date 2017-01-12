@@ -42,7 +42,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
