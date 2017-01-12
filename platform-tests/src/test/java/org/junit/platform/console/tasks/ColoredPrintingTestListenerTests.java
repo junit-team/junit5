@@ -13,7 +13,6 @@ package org.junit.platform.console.tasks;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.INDENTATION;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import java.io.PrintWriter;
@@ -38,11 +37,16 @@ public class ColoredPrintingTestListenerTests {
 		listener(stringWriter).executionSkipped(newTestIdentifier(), "Test" + EOL + "disabled");
 		String[] lines = lines(stringWriter);
 
-		assertEquals(3, lines.length);
+		assertEquals(7, lines.length);
 		assertAll("lines in the output", //
-			() -> assertEquals("Skipped:     demo-test ([engine:demo-engine])", lines[0]), //
-			() -> assertEquals(INDENTATION + "=> Reason: Test", lines[1]), //
-			() -> assertEquals(INDENTATION + "disabled", lines[2]));
+			() -> assertEquals("├─ demo-test not executed", lines[0]), //
+			() -> assertEquals("│       tags: []", lines[1]), //
+			() -> assertEquals("│   uniqueId: [engine:demo-engine]", lines[2]), //
+			() -> assertEquals("│     parent: []", lines[3]), //
+			() -> assertEquals("│     reason: Test", lines[4]), //
+			() -> assertEquals("│               disabled", lines[5]), //
+			() -> assertEquals("│  SKIPPED", lines[6]) //
+		);
 	}
 
 	@Test
@@ -51,11 +55,11 @@ public class ColoredPrintingTestListenerTests {
 		listener(stringWriter).reportingEntryPublished(newTestIdentifier(), ReportEntry.from("foo", "bar"));
 		String[] lines = lines(stringWriter);
 
-		assertEquals(2, lines.length);
+		assertEquals(1, lines.length);
 		assertAll("lines in the output", //
-			() -> assertEquals("Reported:    demo-test ([engine:demo-engine])", lines[0]), //
-			() -> assertTrue(lines[1].startsWith(INDENTATION + "=> Reported values: ReportEntry [timestamp =")), //
-			() -> assertTrue(lines[1].endsWith(", foo = 'bar']")));
+			() -> assertTrue(lines[0].startsWith("│    reports: ReportEntry [timestamp =")), //
+			() -> assertTrue(lines[0].endsWith(", foo = 'bar']")) //
+		);
 	}
 
 	@Test
@@ -65,12 +69,13 @@ public class ColoredPrintingTestListenerTests {
 		String[] lines = lines(stringWriter);
 
 		assertAll("lines in the output", //
-			() -> assertEquals("Finished:    demo-test ([engine:demo-engine])", lines[0]), //
-			() -> assertEquals(INDENTATION + "=> Exception: java.lang.AssertionError: Boom!", lines[1]));
+			() -> assertEquals("│     caught: java.lang.AssertionError: Boom!", lines[0]), //
+			() -> assertEquals("│  FAILED", lines[lines.length - 1]));
 	}
 
 	private ColoredPrintingTestListener listener(StringWriter stringWriter) {
-		return new ColoredPrintingTestListener(new PrintWriter(stringWriter), true);
+		return new ColoredPrintingTestListener(new PrintWriter(stringWriter), true, 50,
+			ColoredPrintingTestListener.Theme.UTF_8, true);
 	}
 
 	private static TestIdentifier newTestIdentifier() {
