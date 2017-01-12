@@ -75,7 +75,7 @@ class JUnitPlatformExtension {
 	/**
 	 * Select test execution plan detail mode.
 	 *
-	 * <p>Defaults to {@link Details#HIDDEN}.
+	 * <p>Defaults to {@link Details#NONE}.
 	 */
-	Details details = Details.HIDDEN
+	Details details = Details.NONE
 }

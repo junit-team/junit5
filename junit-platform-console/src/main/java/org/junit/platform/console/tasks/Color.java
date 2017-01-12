@@ -10,11 +10,15 @@
 
 package org.junit.platform.console.tasks;
 
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+
+import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestExecutionResult;
 
 /**
  * @since 1.0
  */
+@API(Internal)
 enum Color {
 
 	NONE(0),

@@ -10,17 +10,22 @@
 
 package org.junit.platform.console.options;
 
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+
+import org.junit.platform.commons.meta.API;
+
 /**
  * @since 1.0
  */
+@API(Internal)
 public enum Details {
 	/** No test plan execution details are printed. */
-	HIDDEN,
+	NONE,
 
 	/** Test plan execution details are rendered in a flat, line-per-line mode. */
 	FLAT,
 
-	/** Test plan execution details are rendered in a simple, compact manner. */
+	/** Test plan execution details are rendered as a simple tree. */
 	TREE,
 
 	/** Combines tree and flat mode. */

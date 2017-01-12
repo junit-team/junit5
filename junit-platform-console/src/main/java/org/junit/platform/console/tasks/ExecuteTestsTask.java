@@ -95,21 +95,21 @@ public class ExecuteTestsTask implements ConsoleTask {
 		SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
 		launcher.registerTestExecutionListeners(summaryListener);
 		// optionally, register test plan execution details printing listener
-		createDetailsPrinter(out).ifPresent(launcher::registerTestExecutionListeners);
+		createDetailsPrintingListener(out).ifPresent(launcher::registerTestExecutionListeners);
 		// optionally, register XML reports writing listener
 		createXmlWritingListener(out).ifPresent(launcher::registerTestExecutionListeners);
 		return summaryListener;
 	}
 
-	private Optional<TestExecutionListener> createDetailsPrinter(PrintWriter out) {
+	private Optional<TestExecutionListener> createDetailsPrintingListener(PrintWriter out) {
 		boolean monochrome = options.isAnsiColorOutputDisabled();
 		switch (options.getDetails()) {
 			case FLAT:
-				return Optional.of(new ColoredPrintingTestListener(out, monochrome));
+				return Optional.of(new FlatPrintingListener(out, monochrome));
 			case TREE:
-				return Optional.of(new TreePrinter(out, monochrome));
+				return Optional.of(new TreePrintingListener(out, monochrome));
 			case VERBOSE:
-				return Optional.of(new VerboseTreePrinter(out, monochrome));
+				return Optional.of(new VerboseTreePrintingListener(out, monochrome));
 			default:
 				return Optional.empty();
 		}
@@ -124,7 +124,7 @@ public class ExecuteTestsTask implements ConsoleTask {
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
 		// Otherwise the failures have already been printed in detail
-		if (EnumSet.of(Details.HIDDEN, Details.TREE).contains(options.getDetails())) {
+		if (EnumSet.of(Details.NONE, Details.TREE).contains(options.getDetails())) {
 			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);

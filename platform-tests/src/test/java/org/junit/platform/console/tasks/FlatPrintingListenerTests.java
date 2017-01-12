@@ -10,7 +10,10 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.console.tasks.FlatPrintingListener.INDENTATION;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import java.io.PrintWriter;
@@ -25,20 +28,21 @@ import org.junit.platform.launcher.TestIdentifier;
 /**
  * @since 1.0
  */
-public class TreePrinterTests {
+public class FlatPrintingListenerTests {
 
 	private static final String EOL = System.lineSeparator();
 
 	@Test
 	public void executionSkipped() {
 		StringWriter stringWriter = new StringWriter();
-		listener(stringWriter).executionSkipped(newTestIdentifier(), "Test disabled");
+		listener(stringWriter).executionSkipped(newTestIdentifier(), "Test" + EOL + "disabled");
 		String[] lines = lines(stringWriter);
 
-		assertEquals(1, lines.length);
+		assertEquals(3, lines.length);
 		assertAll("lines in the output", //
-			() -> assertEquals("├─ demo-test Test disabled", lines[0]) //
-		);
+			() -> assertEquals("Skipped:     demo-test ([engine:demo-engine])", lines[0]), //
+			() -> assertEquals(INDENTATION + "=> Reason: Test", lines[1]), //
+			() -> assertEquals(INDENTATION + "disabled", lines[2]));
 	}
 
 	@Test
@@ -47,8 +51,11 @@ public class TreePrinterTests {
 		listener(stringWriter).reportingEntryPublished(newTestIdentifier(), ReportEntry.from("foo", "bar"));
 		String[] lines = lines(stringWriter);
 
-		assertEquals(1, lines.length);
-		assertEquals("", lines[0]);
+		assertEquals(2, lines.length);
+		assertAll("lines in the output", //
+			() -> assertEquals("Reported:    demo-test ([engine:demo-engine])", lines[0]), //
+			() -> assertTrue(lines[1].startsWith(INDENTATION + "=> Reported values: ReportEntry [timestamp =")), //
+			() -> assertTrue(lines[1].endsWith(", foo = 'bar']")));
 	}
 
 	@Test
@@ -57,15 +64,13 @@ public class TreePrinterTests {
 		listener(stringWriter).executionFinished(newTestIdentifier(), failed(new AssertionError("Boom!")));
 		String[] lines = lines(stringWriter);
 
-		assertEquals(1, lines.length);
 		assertAll("lines in the output", //
-			() -> assertTrue(lines[0].startsWith("├─ demo-test")), //
-			() -> assertTrue(lines[0].endsWith("Boom!")) //
-		);
+			() -> assertEquals("Finished:    demo-test ([engine:demo-engine])", lines[0]), //
+			() -> assertEquals(INDENTATION + "=> Exception: java.lang.AssertionError: Boom!", lines[1]));
 	}
 
-	private TreePrinter listener(StringWriter stringWriter) {
-		return new TreePrinter(new PrintWriter(stringWriter), true, 50, TreePrinter.Theme.UTF_8);
+	private FlatPrintingListener listener(StringWriter stringWriter) {
+		return new FlatPrintingListener(new PrintWriter(stringWriter), true);
 	}
 
 	private static TestIdentifier newTestIdentifier() {

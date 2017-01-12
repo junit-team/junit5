@@ -475,12 +475,11 @@ Option                                        Description
 -h, --help                                    Display help information.
 --disable-ansi-colors                         Disable ANSI colors in output (not
                                                 supported by all terminals).
---hide-details                                @Deprecated. Use '--details hidden'
-                                                instead.
+--hide-details                                @Deprecated. Use '--details none' instead.
 --details <Details>                           Select output details mode while tests are
-                                                executed. Use one of: [HIDDEN, FLAT,
-                                                TREE, VERBOSE]. If hidden, only the
-                                                summary and test failures are shown.
+                                                executed. Use one of: [none, flat, tree,
+                                                verbose]. If 'none' is selected, only
+                                                the summary and test failures are shown.
                                                 (default: TREE)
 --class-path, --classpath, --cp <Path:        Provide additional classpath entries --
   path1:path2:...>                              for example, for adding engines and

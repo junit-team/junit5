@@ -71,7 +71,7 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void printsNoDetailsIfTheyAreHidden() throws Exception {
-		options.setDetails(Details.HIDDEN);
+		options.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
@@ -83,7 +83,7 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void printsFailuresEvenIfDetailsAreHidden() throws Exception {
-		options.setDetails(Details.HIDDEN);
+		options.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);

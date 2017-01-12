@@ -29,19 +29,19 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.0
  */
-class VerboseTreePrinter extends TreePrinter {
+class VerboseTreePrintingListener extends TreePrintingListener {
 
-	VerboseTreePrinter(PrintWriter out, boolean disableAnsiColors) {
+	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors) {
 		this(out, disableAnsiColors, 50, Theme.valueOf(Charset.defaultCharset()));
 	}
 
-	VerboseTreePrinter(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel, Theme theme) {
+	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel, Theme theme) {
 		super(out, disableAnsiColors, maxContainerNestingLevel, theme);
 	}
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		frames.push(new Frame(testPlan.toString()));
+		super.testPlanExecutionStarted(testPlan);
 		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
 		printf(NONE, "Test plan execution started. Number of static tests: ");
 		printf(BLUE, "%d%n", tests);
@@ -50,7 +50,7 @@ class VerboseTreePrinter extends TreePrinter {
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
-		frames.pop();
+		super.testPlanExecutionFinished(testPlan);
 		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
 		printf(NONE, "Test plan execution finished. Number of all tests: ");
 		printf(BLUE, "%d%n", tests);
@@ -78,7 +78,6 @@ class VerboseTreePrinter extends TreePrinter {
 			printf(NONE, " finished after %d ms.%n", durationInMillis(nanos));
 			return;
 		}
-		frames.peek().count(testExecutionResult);
 		long nanos = System.nanoTime() - executionStartedNanos;
 		Color color = Color.valueOf(testExecutionResult);
 		testExecutionResult.getThrowable().ifPresent(t -> printDetail(RED, "caught", readStackTrace(t)));
@@ -89,7 +88,6 @@ class VerboseTreePrinter extends TreePrinter {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		frames.peek().numberOfSkipped++;
 		printVerticals(theme.entry());
 		printf(NONE, " %s not executed%n", testIdentifier.getDisplayName());
 		printDetails(testIdentifier);

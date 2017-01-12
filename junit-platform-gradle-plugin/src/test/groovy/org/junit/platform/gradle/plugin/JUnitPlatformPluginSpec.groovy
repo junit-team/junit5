@@ -15,7 +15,6 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.platform.console.ConsoleLauncher
-import org.junit.platform.console.options.Details
 import org.junit.platform.engine.discovery.ClassNameFilter
 import spock.lang.Specification
 
@@ -65,7 +64,7 @@ class JUnitPlatformPluginSpec extends Specification {
 
 			reportsDir new File("any")
 
-			details Details.HIDDEN
+			details 'NONE'
 		}
 		then:
 		true == true
@@ -100,7 +99,7 @@ class JUnitPlatformPluginSpec extends Specification {
 
 			reportsDir new File("/any")
 
-			details Details.FLAT
+			details 'FLAT'
 		}
 		project.evaluate()
 

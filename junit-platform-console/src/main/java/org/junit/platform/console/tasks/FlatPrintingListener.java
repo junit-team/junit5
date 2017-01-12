@@ -28,7 +28,7 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.0
  */
-class ColoredPrintingTestListener implements TestExecutionListener {
+class FlatPrintingListener implements TestExecutionListener {
 
 	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
 
@@ -37,7 +37,7 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	private final PrintWriter out;
 	private final boolean disableAnsiColors;
 
-	ColoredPrintingTestListener(PrintWriter out, boolean disableAnsiColors) {
+	FlatPrintingListener(PrintWriter out, boolean disableAnsiColors) {
 		this.out = out;
 		this.disableAnsiColors = disableAnsiColors;
 	}

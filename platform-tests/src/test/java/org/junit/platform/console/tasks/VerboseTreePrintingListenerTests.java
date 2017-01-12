@@ -31,15 +31,15 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.0
  */
-public class VerboseTreePrinterTests {
+public class VerboseTreePrintingListenerTests {
 
 	private static final String EOL = System.lineSeparator();
 
 	private TestPlan testPlan = TestPlan.from(Collections.emptyList());
 
-	private TreePrinter createTreePrinter(Writer writer) {
+	private TreePrintingListener createTreePrinter(Writer writer) {
 		PrintWriter printWriter = new PrintWriter(writer);
-		return new VerboseTreePrinter(printWriter, true, 9, TreePrinter.Theme.UTF_8);
+		return new VerboseTreePrintingListener(printWriter, true, 9, TreePrintingListener.Theme.UTF_8);
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class VerboseTreePrinterTests {
 	@Test
 	public void emptyTree() throws Exception {
 		StringWriter stringWriter = new StringWriter();
-		TreePrinter listener = createTreePrinter(stringWriter);
+		TreePrintingListener listener = createTreePrinter(stringWriter);
 
 		listener.testPlanExecutionStarted(testPlan);
 		listener.testPlanExecutionFinished(testPlan);
@@ -113,7 +113,7 @@ public class VerboseTreePrinterTests {
 		TestIdentifier test11 = createTestIdentifier("test 11");
 
 		StringWriter stringWriter = new StringWriter();
-		TreePrinter listener = createTreePrinter(stringWriter);
+		TreePrintingListener listener = createTreePrinter(stringWriter);
 
 		listener.testPlanExecutionStarted(testPlan);
 		listener.executionStarted(engine1);
@@ -178,8 +178,9 @@ public class VerboseTreePrinterTests {
 		return identifier;
 	}
 
-	private VerboseTreePrinter listener(StringWriter stringWriter) {
-		return new VerboseTreePrinter(new PrintWriter(stringWriter), true, 50, TreePrinter.Theme.UTF_8);
+	private VerboseTreePrintingListener listener(StringWriter stringWriter) {
+		return new VerboseTreePrintingListener(new PrintWriter(stringWriter), true, 50,
+			TreePrintingListener.Theme.UTF_8);
 	}
 
 	private static TestIdentifier newTestIdentifier() {

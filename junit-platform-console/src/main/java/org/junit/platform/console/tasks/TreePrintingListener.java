@@ -12,7 +12,6 @@ package org.junit.platform.console.tasks;
 
 import static org.junit.platform.console.tasks.Color.BLUE;
 import static org.junit.platform.console.tasks.Color.NONE;
-import static org.junit.platform.console.tasks.Color.RED;
 import static org.junit.platform.console.tasks.Color.YELLOW;
 
 import java.io.PrintWriter;
@@ -30,7 +29,7 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.0
  */
-class TreePrinter implements TestExecutionListener {
+class TreePrintingListener implements TestExecutionListener {
 
 	private final PrintWriter out;
 	private final boolean monochrome;
@@ -39,19 +38,19 @@ class TreePrinter implements TestExecutionListener {
 	final String[] verticals;
 	long executionStartedNanos;
 
-	TreePrinter(PrintWriter out, boolean monochrome) {
+	TreePrintingListener(PrintWriter out, boolean monochrome) {
 		this(out, monochrome, 16, Theme.valueOf(Charset.defaultCharset()));
 	}
 
-	TreePrinter(PrintWriter out, boolean monochrome, int maxContainerNestingLevel, Theme theme) {
+	TreePrintingListener(PrintWriter out, boolean monochrome, int maxContainerNestingLevel, Theme theme) {
 		this.out = out;
 		this.monochrome = monochrome;
 		this.theme = theme;
-		// Create frame stack and push initial root frame.
+		// create frame stack and push initial root frame
 		this.frames = new ArrayDeque<>();
 		this.frames.push(new Frame("/"));
-		// Create and populate vertical indentation lookup table
-		this.verticals = new String[Math.max(10, maxContainerNestingLevel)];
+		// create and populate vertical indentation lookup table
+		this.verticals = new String[Math.max(10, maxContainerNestingLevel) + 1];
 		this.verticals[0] = ""; // no frame
 		this.verticals[1] = ""; // synthetic root "/" level
 		this.verticals[2] = ""; // "engine" level
@@ -72,7 +71,6 @@ class TreePrinter implements TestExecutionListener {
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		frames.peek().numberOfStarted++;
 		executionStartedNanos = System.nanoTime();
 		if (testIdentifier.isContainer()) {
 			printVerticals(theme.entry());
@@ -88,21 +86,20 @@ class TreePrinter implements TestExecutionListener {
 			frames.pop();
 			return;
 		}
-		frames.peek().count(testExecutionResult);
 		Color color = Color.valueOf(testExecutionResult);
 		printVerticals(theme.entry());
 		printf(NONE, " %s", testIdentifier.getDisplayName());
 		// printf(NONE, " %d ms", durationInMillis(System.nanoTime() - executionStartedNanos));
 		printf(color, " %s", theme.computeStatusTile(testExecutionResult));
-		testExecutionResult.getThrowable().ifPresent(t -> printf(RED, " %s", t.getMessage()));
+		testExecutionResult.getThrowable().ifPresent(t -> printf(color, " %s", t.getMessage()));
 		printf(NONE, "%n");
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		frames.peek().numberOfSkipped++;
 		printVerticals(theme.entry());
-		printf(YELLOW, " %s %s%n", testIdentifier.getDisplayName(), reason);
+		printf(testIdentifier.isContainer() ? BLUE : NONE, " %s", testIdentifier.getDisplayName());
+		printf(YELLOW, " %s %s%n", theme.skipped(), reason);
 	}
 
 	void printf(Color color, String message, Object... args) {
@@ -118,7 +115,7 @@ class TreePrinter implements TestExecutionListener {
 
 	/** Print verticals and stay in the current line. */
 	void printVerticals(String tile) {
-		printf(NONE, verticals[frames.size()]);
+		printf(NONE, verticals[Math.min(frames.size(), verticals.length)]);
 		printf(NONE, tile);
 	}
 
@@ -141,7 +138,7 @@ class TreePrinter implements TestExecutionListener {
 		 * |  |  -  exceptionTesting()
 		 * </pre>
 		 */
-		ASCII(".", "| ", "+--", "---", "[ok]", "[A]", "[X]"),
+		ASCII(".", "| ", "+--", "---", "[OK]", "[A]", "[X]", "[S]"),
 
 		/**
 		 * Extended ASCII characters are used to display the test execution tree.
@@ -156,7 +153,7 @@ class TreePrinter implements TestExecutionListener {
 		 * │  │  ├─ is instantiated with new Stack()
 		 * </pre>
 		 */
-		UTF_8(".", "│  ", "├─", "└─", "✔", "■", "✘");
+		UTF_8(".", "│  ", "├─", "└─", "✔", "■", "✘", "⏩");
 
 		static Theme valueOf(Charset charset) {
 			if (StandardCharsets.UTF_8.equals(charset)) {
@@ -199,6 +196,10 @@ class TreePrinter implements TestExecutionListener {
 			return tiles[6];
 		}
 
+		String skipped() {
+			return tiles[7];
+		}
+
 		String computeStatusTile(TestExecutionResult result) {
 			switch (result.getStatus()) {
 				case SUCCESSFUL:
@@ -216,38 +217,10 @@ class TreePrinter implements TestExecutionListener {
 	static class Frame {
 		final String uniqueId;
 		final long creationNanos;
-		int numberOfAborted;
-		int numberOfSkipped;
-		int numberOfFailed;
-		int numberOfSuccessful;
-		int numberOfStarted;
 
 		Frame(String uniqueId) {
 			this.uniqueId = uniqueId;
 			this.creationNanos = System.nanoTime();
-		}
-
-		Frame count(TestExecutionResult result) {
-			switch (result.getStatus()) {
-				case SUCCESSFUL:
-					numberOfSuccessful++;
-					return this;
-				case ABORTED:
-					numberOfAborted++;
-					return this;
-				case FAILED:
-					numberOfFailed++;
-					return this;
-				default:
-					return this;
-			}
-		}
-
-		@Override
-		public String toString() {
-			return "Frame{" + "numberOfAborted=" + numberOfAborted + ", numberOfSkipped=" + numberOfSkipped
-					+ ", numberOfFailed=" + numberOfFailed + ", numberOfSuccessful=" + numberOfSuccessful
-					+ ", numberOfStarted=" + numberOfStarted + '}';
 		}
 	}
 }
