@@ -153,7 +153,7 @@ class TreePrintingListener implements TestExecutionListener {
 		 * │  │  ├─ is instantiated with new Stack()
 		 * </pre>
 		 */
-		UTF_8(".", "│  ", "├─", "└─", "✔", "■", "✘", "⏩");
+		UTF_8(".", "│  ", "├─", "└─", "✔", "■", "✘", "↷");
 
 		static Theme valueOf(Charset charset) {
 			if (StandardCharsets.UTF_8.equals(charset)) {

@@ -37,7 +37,7 @@ public class TreePrintingListenerTests {
 
 		assertEquals(1, lines.length);
 		assertAll("lines in the output", //
-			() -> assertEquals("├─ demo-test ⏩ Test disabled", lines[0]) //
+			() -> assertEquals("├─ demo-test ↷ Test disabled", lines[0]) //
 		);
 	}
 
