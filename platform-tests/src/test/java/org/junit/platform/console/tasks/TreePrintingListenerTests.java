@@ -48,7 +48,9 @@ public class TreePrintingListenerTests {
 		String[] lines = lines(stringWriter);
 
 		assertEquals(1, lines.length);
-		assertEquals("", lines[0]);
+		assertTrue(lines[0].contains("ReportEntry"));
+		assertTrue(lines[0].contains("foo"));
+		assertTrue(lines[0].contains("bar"));
 	}
 
 	@Test
