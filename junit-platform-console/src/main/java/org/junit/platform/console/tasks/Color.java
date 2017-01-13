@@ -14,6 +14,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.launcher.TestIdentifier;
 
 /**
  * @since 1.0
@@ -42,14 +43,50 @@ enum Color {
 	static Color valueOf(TestExecutionResult result) {
 		switch (result.getStatus()) {
 			case SUCCESSFUL:
-				return GREEN;
+				return successful();
 			case ABORTED:
-				return YELLOW;
+				return aborted();
 			case FAILED:
-				return RED;
+				return failed();
 			default:
 				return NONE;
 		}
+	}
+
+	static Color valueOf(TestIdentifier testIdentifier) {
+		return testIdentifier.isContainer() ? container() : test();
+	}
+
+	static Color successful() {
+		return GREEN;
+	}
+
+	static Color aborted() {
+		return YELLOW;
+	}
+
+	static Color failed() {
+		return RED;
+	}
+
+	static Color skipped() {
+		return PURPLE;
+	}
+
+	static Color container() {
+		return CYAN;
+	}
+
+	static Color test() {
+		return BLUE;
+	}
+
+	static Color dynamic() {
+		return PURPLE;
+	}
+
+	static Color reported() {
+		return WHITE;
 	}
 
 	private final int ansiCode;

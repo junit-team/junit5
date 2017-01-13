@@ -10,9 +10,7 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.platform.console.tasks.Color.BLUE;
 import static org.junit.platform.console.tasks.Color.NONE;
-import static org.junit.platform.console.tasks.Color.YELLOW;
 
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
@@ -22,6 +20,7 @@ import java.util.Deque;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -74,7 +73,7 @@ class TreePrintingListener implements TestExecutionListener {
 		executionStartedNanos = System.nanoTime();
 		if (testIdentifier.isContainer()) {
 			printVerticals(theme.entry());
-			printf(BLUE, " %s", testIdentifier.getDisplayName());
+			printf(Color.container(), " %s", testIdentifier.getDisplayName());
 			printf(NONE, "%n");
 			frames.push(new Frame(testIdentifier.getUniqueId()));
 		}
@@ -88,7 +87,7 @@ class TreePrintingListener implements TestExecutionListener {
 		}
 		Color color = Color.valueOf(testExecutionResult);
 		printVerticals(theme.entry());
-		printf(NONE, " %s", testIdentifier.getDisplayName());
+		printf(Color.valueOf(testIdentifier), " %s", testIdentifier.getDisplayName());
 		// printf(NONE, " %d ms", durationInMillis(System.nanoTime() - executionStartedNanos));
 		printf(color, " %s", theme.computeStatusTile(testExecutionResult));
 		testExecutionResult.getThrowable().ifPresent(t -> printf(color, " %s", t.getMessage()));
@@ -98,8 +97,14 @@ class TreePrintingListener implements TestExecutionListener {
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		printVerticals(theme.entry());
-		printf(testIdentifier.isContainer() ? BLUE : NONE, " %s", testIdentifier.getDisplayName());
-		printf(YELLOW, " %s %s%n", theme.skipped(), reason);
+		printf(Color.valueOf(testIdentifier), " %s", testIdentifier.getDisplayName());
+		printf(Color.skipped(), " %s %s%n", theme.skipped(), reason);
+	}
+
+	@Override
+	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
+		printVerticals(theme.vertical());
+		printf(Color.reported(), " %s%n", entry.toString());
 	}
 
 	void printf(Color color, String message, Object... args) {
@@ -131,11 +136,11 @@ class TreePrintingListener implements TestExecutionListener {
 		 * .
 		 * +-- JUnit Vintage
 		 * |  +-- example.JUnit4Tests
-		 * |  |  -  standardJUnit4Test
+		 * |  |  -  standardJUnit4Test [OK]
 		 * +-- JUnit Jupiter
 		 * |  +-- AssertionsDemo
-		 * |  |  -  timeoutExceeded()
-		 * |  |  -  exceptionTesting()
+		 * |  |  -  timeoutExceeded() [OK]
+		 * |  |  -  exceptionTesting() [OK]
 		 * </pre>
 		 */
 		ASCII(".", "| ", "+--", "---", "[OK]", "[A]", "[X]", "[S]"),
@@ -147,10 +152,10 @@ class TreePrintingListener implements TestExecutionListener {
 		 * .
 		 * ├─ JUnit Vintage
 		 * │  ├─ example.JUnit4Tests
-		 * │  │  ├─ standardJUnit4Test
+		 * │  │  ├─ standardJUnit4Test ✔
 		 * ├─ JUnit Jupiter
 		 * │  ├─ A stack
-		 * │  │  ├─ is instantiated with new Stack()
+		 * │  │  ├─ is instantiated with new Stack() ✔
 		 * </pre>
 		 */
 		UTF_8(".", "│  ", "├─", "└─", "✔", "■", "✘", "↷");

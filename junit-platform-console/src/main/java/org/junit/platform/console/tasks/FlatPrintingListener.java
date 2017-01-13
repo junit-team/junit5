@@ -10,10 +10,7 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.platform.console.tasks.Color.BLUE;
 import static org.junit.platform.console.tasks.Color.NONE;
-import static org.junit.platform.console.tasks.Color.PURPLE;
-import static org.junit.platform.console.tasks.Color.YELLOW;
 
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
@@ -55,18 +52,18 @@ class FlatPrintingListener implements TestExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(BLUE, "Test registered:", testIdentifier);
+		printlnTestDescriptor(Color.dynamic(), "Test registered:", testIdentifier);
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		printlnTestDescriptor(YELLOW, "Skipped:", testIdentifier);
-		printlnMessage(YELLOW, "Reason", reason);
+		printlnTestDescriptor(Color.skipped(), "Skipped:", testIdentifier);
+		printlnMessage(Color.skipped(), "Reason", reason);
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(NONE, "Started:", testIdentifier);
+		printlnTestDescriptor(Color.valueOf(testIdentifier), "Started:", testIdentifier);
 	}
 
 	@Override
@@ -78,8 +75,8 @@ class FlatPrintingListener implements TestExecutionListener {
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		printlnTestDescriptor(PURPLE, "Reported:", testIdentifier);
-		printlnMessage(PURPLE, "Reported values", entry.toString());
+		printlnTestDescriptor(Color.reported(), "Reported:", testIdentifier);
+		printlnMessage(Color.reported(), "Reported values", entry.toString());
 	}
 
 	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {

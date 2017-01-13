@@ -11,12 +11,7 @@
 package org.junit.platform.console.tasks;
 
 import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
-import static org.junit.platform.console.tasks.Color.BLUE;
-import static org.junit.platform.console.tasks.Color.CYAN;
 import static org.junit.platform.console.tasks.Color.NONE;
-import static org.junit.platform.console.tasks.Color.PURPLE;
-import static org.junit.platform.console.tasks.Color.RED;
-import static org.junit.platform.console.tasks.Color.YELLOW;
 
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
@@ -44,8 +39,8 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		super.testPlanExecutionStarted(testPlan);
 		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
 		printf(NONE, "Test plan execution started. Number of static tests: ");
-		printf(BLUE, "%d%n", tests);
-		printf(BLUE, "%s%n", theme.root());
+		printf(Color.test(), "%d%n", tests);
+		printf(Color.container(), "%s%n", theme.root());
 	}
 
 	@Override
@@ -53,7 +48,7 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		super.testPlanExecutionFinished(testPlan);
 		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
 		printf(NONE, "Test plan execution finished. Number of all tests: ");
-		printf(BLUE, "%d%n", tests);
+		printf(Color.test(), "%d%n", tests);
 	}
 
 	@Override
@@ -63,8 +58,7 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 			return;
 		}
 		printVerticals(theme.entry());
-		printf(CYAN, " %s", testIdentifier.getDisplayName());
-		printf(NONE, "%n");
+		printf(Color.valueOf(testIdentifier), " %s%n", testIdentifier.getDisplayName());
 		printDetails(testIdentifier);
 	}
 
@@ -74,13 +68,13 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 			Frame frame = frames.pop();
 			long nanos = System.nanoTime() - frame.creationNanos;
 			printVerticals(theme.end());
-			printf(BLUE, " %s", testIdentifier.getDisplayName());
+			printf(Color.container(), " %s", testIdentifier.getDisplayName());
 			printf(NONE, " finished after %d ms.%n", durationInMillis(nanos));
 			return;
 		}
 		long nanos = System.nanoTime() - executionStartedNanos;
 		Color color = Color.valueOf(testExecutionResult);
-		testExecutionResult.getThrowable().ifPresent(t -> printDetail(RED, "caught", readStackTrace(t)));
+		testExecutionResult.getThrowable().ifPresent(t -> printDetail(Color.failed(), "caught", readStackTrace(t)));
 		printDetail(NONE, "duration", "%d ms%n", durationInMillis(nanos));
 		String status = theme.computeStatusTile(testExecutionResult) + " " + testExecutionResult.getStatus();
 		printDetail(color, "status", "%s%n", status);
@@ -91,20 +85,20 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		printVerticals(theme.entry());
 		printf(NONE, " %s not executed%n", testIdentifier.getDisplayName());
 		printDetails(testIdentifier);
-		printDetail(YELLOW, "reason", reason);
-		printDetail(YELLOW, "status", "SKIPPED");
+		printDetail(Color.skipped(), "reason", reason);
+		printDetail(Color.skipped(), "status", theme.skipped() + " SKIPPED");
 	}
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		printVerticals(theme.entry());
-		printf(PURPLE, " %s", testIdentifier.getDisplayName());
+		printf(Color.dynamic(), " %s", testIdentifier.getDisplayName());
 		printf(NONE, " dynamically registered%n");
 	}
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		printDetail(PURPLE, "reports", entry.toString());
+		printDetail(Color.reported(), "reports", entry.toString());
 	}
 
 	/** Print static information about the test identifier. */

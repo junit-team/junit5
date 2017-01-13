@@ -56,7 +56,7 @@ public class VerboseTreePrintingListenerTests {
 			() -> assertEquals("   parent: []", lines[3]), //
 			() -> assertEquals("   reason: Test", lines[4]), //
 			() -> assertEquals("             disabled", lines[5]), //
-			() -> assertEquals("   status: SKIPPED", lines[6]) //
+			() -> assertEquals("   status: ↷ SKIPPED", lines[6]) //
 		);
 	}
 
@@ -135,7 +135,7 @@ public class VerboseTreePrintingListenerTests {
 		listener.executionFinished(engine2, TestExecutionResult.successful());
 		listener.testPlanExecutionFinished(testPlan);
 
-		String[] lines = stringWriter.toString().split("\\r?\\n");
+		String[] lines = stringWriter.toString().split("\\R");
 		assertEquals(35, lines.length);
 		assertAll("lines in the output", //
 			() -> assertEquals("Test plan execution started. Number of static tests: 4", lines[0]), //
