@@ -32,7 +32,7 @@ class TestTemplateInvocationTestDescriptor extends MethodTestDescriptor {
 
 	static final String SEGMENT_TYPE = "template-invocation";
 
-	private final TestTemplateInvocationContext invocationContext;
+	private TestTemplateInvocationContext invocationContext;
 
 	TestTemplateInvocationTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
 			TestTemplateInvocationContext invocationContext, int index) {
@@ -46,5 +46,11 @@ class TestTemplateInvocationTestDescriptor extends MethodTestDescriptor {
 		invocationContext.getAdditionalExtensions().forEach(
 			extension -> registry.registerExtension(extension, invocationContext));
 		return registry;
+	}
+
+	@Override
+	public void after(JupiterEngineExecutionContext context) {
+		// forget invocationContext so it can be garbage collected
+		invocationContext = null;
 	}
 }
