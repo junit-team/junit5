@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
-import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -125,19 +124,7 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 			Iterator<TestTemplateInvocationContext> contextIterator = provider.provide(containerExtensionContext);
 			contextIterator.forEachRemaining(invocationContext -> {
 				int index = invocationIndex.incrementAndGet();
-				UniqueId uniqueId = getUniqueId().append("template-invocation", "#" + index);
-				String displayName = invocationContext.getDisplayName(index);
-				List<Extension> additionalExtensions = invocationContext.getAdditionalExtensions();
-				TestDescriptor invocationTestDescriptor = new MethodTestDescriptor(uniqueId, displayName,
-					this.testClass, this.templateMethod) {
-					@Override
-					protected ExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
-						ExtensionRegistry registry = super.populateNewExtensionRegistry(context);
-						additionalExtensions.forEach(
-							extension -> registry.registerExtension(extension, invocationContext));
-						return registry;
-					}
-				};
+				TestDescriptor invocationTestDescriptor = createInvocationTestDescriptor(invocationContext, index);
 				addChild(invocationTestDescriptor);
 				dynamicTestExecutor.accept(invocationTestDescriptor);
 			});
@@ -156,6 +143,12 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 		Preconditions.notEmpty(providers, "You must register at least one "
 				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " that supports this method");
 		return providers;
+	}
+
+	private TestDescriptor createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext, int index) {
+		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
+		return new TestTemplateInvocationTestDescriptor(uniqueId, this.testClass, this.templateMethod,
+			invocationContext, index);
 	}
 
 }
