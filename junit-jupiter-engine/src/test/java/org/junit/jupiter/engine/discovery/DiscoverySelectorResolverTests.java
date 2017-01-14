@@ -46,6 +46,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
+import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases;
@@ -532,6 +533,20 @@ public class DiscoverySelectorResolverTests {
 
 		assertThat(engineDescriptor.getDescendants()).hasSize(2);
 		assertThat(uniqueIds()).contains(uniqueIdForTestTemplateMethod(TestClassWithTemplate.class, "testTemplate()"));
+	}
+
+	@Test
+	public void resolvingTestTemplateInvocationByUniqueIdResolvesOnlyUpToParentTestTemplat() {
+		UniqueIdSelector selector = selectUniqueId(
+			uniqueIdForTestTemplateMethod(TestClassWithTemplate.class, "testTemplate()").append(
+				TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1"));
+
+		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
+
+		assertThat(engineDescriptor.getDescendants()).hasSize(2);
+
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(TestClassWithTemplate.class),
+			uniqueIdForTestTemplateMethod(TestClassWithTemplate.class, "testTemplate()"));
 	}
 
 	private TestDescriptor descriptorByUniqueId(UniqueId uniqueId) {
