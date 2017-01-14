@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyIterator;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
@@ -292,6 +294,20 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 					"You must register at least one TestTemplateInvocationContextProvider that supports this method")))));
 	}
 
+	@Test
+	void templateWithSupportingProviderButNoInvocationsReportsAbortedTest() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "templateWithSupportingProviderButNoInvocations")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("templateWithSupportingProviderButNoInvocations"), started()), //
+				event(container("templateWithSupportingProviderButNoInvocations"), abortedWithReason(
+					message("No supporting TestTemplateInvocationContextProvider provided an invocation context")))));
+	}
+
 	private TestDescriptor findTestDescriptor(ExecutionEventRecorder eventRecorder,
 			Condition<ExecutionEvent> condition) {
 		// @formatter:off
@@ -381,6 +397,12 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		@TestTemplate
 		void templateWithDynamicTestInstancePostProcessor() {
 			fail(parameterInstanceVariable);
+		}
+
+		@ExtendWith(InvocationContextProviderThatSupportsEverythingButProvidesNothing.class)
+		@TestTemplate
+		void templateWithSupportingProviderButNoInvocations() {
+			fail("never called");
 		}
 
 	}
@@ -625,6 +647,20 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 			public void afterEach(TestExtensionContext context) throws Exception {
 				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("afterEach");
 			}
+		}
+	}
+
+	private static class InvocationContextProviderThatSupportsEverythingButProvidesNothing
+			implements TestTemplateInvocationContextProvider {
+
+		@Override
+		public boolean supports(ContainerExtensionContext context) {
+			return true;
+		}
+
+		@Override
+		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return emptyIterator();
 		}
 	}
 
