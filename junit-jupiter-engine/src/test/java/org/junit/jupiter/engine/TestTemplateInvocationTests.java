@@ -98,9 +98,10 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithSingleRegisteredExtension"), started()), //
-				event(dynamicTestRegistered("template-invocation:#1")), //
-				event(test("template-invocation:#1"), started()), //
-				event(test("template-invocation:#1"), finishedWithFailure(message("invocation is expected to fail"))), //
+				event(dynamicTestRegistered("test-template-invocation:#1")), //
+				event(test("test-template-invocation:#1"), started()), //
+				event(test("test-template-invocation:#1"),
+					finishedWithFailure(message("invocation is expected to fail"))), //
 				event(container("templateWithSingleRegisteredExtension"), finishedSuccessfully())));
 	}
 
@@ -113,7 +114,7 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 
 		TestDescriptor templateMethodDescriptor = findTestDescriptor(eventRecorder,
 			container("templateWithSingleRegisteredExtension"));
-		TestDescriptor invocationDescriptor = findTestDescriptor(eventRecorder, test("template-invocation:#1"));
+		TestDescriptor invocationDescriptor = findTestDescriptor(eventRecorder, test("test-template-invocation:#1"));
 		assertThat(invocationDescriptor.getParent()).hasValue(templateMethodDescriptor);
 		assertThat(templateMethodDescriptor.getChildren()).isEqualTo(singleton(invocationDescriptor));
 	}
@@ -139,12 +140,14 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithTwoRegisteredExtensions"), started()), //
-				event(dynamicTestRegistered("template-invocation:#1"), displayName("[1]")), //
-				event(test("template-invocation:#1"), started()), //
-				event(test("template-invocation:#1"), finishedWithFailure(message("invocation is expected to fail"))), //
-				event(dynamicTestRegistered("template-invocation:#2"), displayName("[2]")), //
-				event(test("template-invocation:#2"), started()), //
-				event(test("template-invocation:#2"), finishedWithFailure(message("invocation is expected to fail"))), //
+				event(dynamicTestRegistered("test-template-invocation:#1"), displayName("[1]")), //
+				event(test("test-template-invocation:#1"), started()), //
+				event(test("test-template-invocation:#1"),
+					finishedWithFailure(message("invocation is expected to fail"))), //
+				event(dynamicTestRegistered("test-template-invocation:#2"), displayName("[2]")), //
+				event(test("test-template-invocation:#2"), started()), //
+				event(test("test-template-invocation:#2"),
+					finishedWithFailure(message("invocation is expected to fail"))), //
 				event(container("templateWithTwoRegisteredExtensions"), finishedSuccessfully())));
 	}
 
@@ -158,12 +161,14 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithTwoInvocationsFromSingleExtension"), started()), //
-				event(dynamicTestRegistered("template-invocation:#1"), displayName("[1]")), //
-				event(test("template-invocation:#1"), started()), //
-				event(test("template-invocation:#1"), finishedWithFailure(message("invocation is expected to fail"))), //
-				event(dynamicTestRegistered("template-invocation:#2"), displayName("[2]")), //
-				event(test("template-invocation:#2"), started()), //
-				event(test("template-invocation:#2"), finishedWithFailure(message("invocation is expected to fail"))), //
+				event(dynamicTestRegistered("test-template-invocation:#1"), displayName("[1]")), //
+				event(test("test-template-invocation:#1"), started()), //
+				event(test("test-template-invocation:#1"),
+					finishedWithFailure(message("invocation is expected to fail"))), //
+				event(dynamicTestRegistered("test-template-invocation:#2"), displayName("[2]")), //
+				event(test("test-template-invocation:#2"), started()), //
+				event(test("test-template-invocation:#2"),
+					finishedWithFailure(message("invocation is expected to fail"))), //
 				event(container("templateWithTwoInvocationsFromSingleExtension"), finishedSuccessfully())));
 	}
 
@@ -177,8 +182,8 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithDisabledInvocations"), started()), //
-				event(dynamicTestRegistered("template-invocation:#1")), //
-				event(test("template-invocation:#1"), skippedWithReason("tests are always disabled")), //
+				event(dynamicTestRegistered("test-template-invocation:#1")), //
+				event(test("test-template-invocation:#1"), skippedWithReason("tests are always disabled")), //
 				event(container("templateWithDisabledInvocations"), finishedSuccessfully())));
 	}
 
@@ -204,10 +209,11 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithCustomizedDisplayNames"), started()), //
-				event(dynamicTestRegistered("template-invocation:#1"),
+				event(dynamicTestRegistered("test-template-invocation:#1"),
 					displayName("1 --> templateWithCustomizedDisplayNames()")), //
-				event(test("template-invocation:#1"), started()), //
-				event(test("template-invocation:#1"), finishedWithFailure(message("invocation is expected to fail"))), //
+				event(test("test-template-invocation:#1"), started()), //
+				event(test("test-template-invocation:#1"),
+					finishedWithFailure(message("invocation is expected to fail"))), //
 				event(container("templateWithCustomizedDisplayNames"), finishedSuccessfully())));
 	}
 
@@ -221,12 +227,12 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithDynamicParameterResolver"), started()), //
-				event(dynamicTestRegistered("template-invocation:#1"), displayName("[1] foo")), //
-				event(test("template-invocation:#1"), started()), //
-				event(test("template-invocation:#1"), finishedWithFailure(message("foo"))), //
-				event(dynamicTestRegistered("template-invocation:#2"), displayName("[2] bar")), //
-				event(test("template-invocation:#2"), started()), //
-				event(test("template-invocation:#2"), finishedWithFailure(message("bar"))), //
+				event(dynamicTestRegistered("test-template-invocation:#1"), displayName("[1] foo")), //
+				event(test("test-template-invocation:#1"), started()), //
+				event(test("test-template-invocation:#1"), finishedWithFailure(message("foo"))), //
+				event(dynamicTestRegistered("test-template-invocation:#2"), displayName("[2] bar")), //
+				event(test("test-template-invocation:#2"), started()), //
+				event(test("test-template-invocation:#2"), finishedWithFailure(message("bar"))), //
 				event(container("templateWithDynamicParameterResolver"), finishedSuccessfully())));
 	}
 
@@ -240,12 +246,12 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithDynamicTestInstancePostProcessor"), started()), //
-				event(dynamicTestRegistered("template-invocation:#1")), //
-				event(test("template-invocation:#1"), started()), //
-				event(test("template-invocation:#1"), finishedWithFailure(message("foo"))), //
-				event(dynamicTestRegistered("template-invocation:#2")), //
-				event(test("template-invocation:#2"), started()), //
-				event(test("template-invocation:#2"), finishedWithFailure(message("bar"))), //
+				event(dynamicTestRegistered("test-template-invocation:#1")), //
+				event(test("test-template-invocation:#1"), started()), //
+				event(test("test-template-invocation:#1"), finishedWithFailure(message("foo"))), //
+				event(dynamicTestRegistered("test-template-invocation:#2")), //
+				event(test("test-template-invocation:#2"), started()), //
+				event(test("test-template-invocation:#2"), finishedWithFailure(message("bar"))), //
 				event(container("templateWithDynamicTestInstancePostProcessor"), finishedSuccessfully())));
 	}
 
