@@ -31,6 +31,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.opentest4j.TestAbortedException;
 
 /**
  * {@link TestDescriptor} for {@link org.junit.jupiter.api.TestTemplate @TestTemplate}
@@ -129,6 +130,7 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 				dynamicTestExecutor.accept(invocationTestDescriptor);
 			});
 		});
+		validateWasAtLeastInvokedOnce(invocationIndex);
 		return context;
 	}
 
@@ -149,6 +151,13 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
 		return new TestTemplateInvocationTestDescriptor(uniqueId, this.testClass, this.templateMethod,
 			invocationContext, index);
+	}
+
+	private void validateWasAtLeastInvokedOnce(AtomicInteger invocationIndex) {
+		if (invocationIndex.get() == 0) {
+			throw new TestAbortedException("No supporting "
+					+ TestTemplateInvocationContextProvider.class.getSimpleName() + " provided an invocation context");
+		}
 	}
 
 }
