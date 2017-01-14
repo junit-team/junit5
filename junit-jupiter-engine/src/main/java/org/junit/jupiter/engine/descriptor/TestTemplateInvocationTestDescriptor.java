@@ -30,7 +30,7 @@ import org.junit.platform.engine.UniqueId;
 @API(Internal)
 class TestTemplateInvocationTestDescriptor extends MethodTestDescriptor {
 
-	static final String SEGMENT_TYPE = "template-invocation";
+	static final String SEGMENT_TYPE = "test-template-invocation";
 
 	private TestTemplateInvocationContext invocationContext;
 
