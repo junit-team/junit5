@@ -109,7 +109,7 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 	/** Print single detail with a potential multi-line message. */
 	private void printDetail(Color color, String detail, String format, Object... args) {
 		// print initial verticals - expecting to be at start of the line
-		String verticals = verticals();
+		String verticals = verticals(frames.size() + 1);
 		printf(NONE, verticals);
 		String detailFormat = "%9s";
 		// omit detail string if it's empty

@@ -50,7 +50,7 @@ public class VerboseTreePrintingListenerTests {
 
 		assertEquals(7, lines.length);
 		assertAll("lines in the output", //
-			() -> assertEquals("├─ demo-test not executed", lines[0]), //
+			() -> assertEquals("├─ demo-test", lines[0]), //
 			() -> assertEquals("     tags: []", lines[1]), //
 			() -> assertEquals(" uniqueId: [engine:demo-engine]", lines[2]), //
 			() -> assertEquals("   parent: []", lines[3]), //

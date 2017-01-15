@@ -120,7 +120,11 @@ class TreePrintingListener implements TestExecutionListener {
 
 	/** Look up current verticals as a string. */
 	String verticals() {
-		return verticals[Math.min(frames.size(), verticals.length)];
+		return verticals(frames.size());
+	}
+
+	String verticals(int index) {
+		return verticals[Math.min(index, verticals.length)];
 	}
 
 	/** Print verticals and stay in the current line. */
