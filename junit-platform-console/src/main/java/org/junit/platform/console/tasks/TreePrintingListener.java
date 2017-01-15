@@ -32,10 +32,10 @@ class TreePrintingListener implements TestExecutionListener {
 
 	private final PrintWriter out;
 	private final boolean monochrome;
+	private final String[] verticals;
 	final Theme theme;
 	final Deque<Frame> frames;
-	final String[] verticals;
-	long executionStartedNanos;
+	long executionStartedNanoTime;
 
 	TreePrintingListener(PrintWriter out, boolean monochrome) {
 		this(out, monochrome, 16, Theme.valueOf(Charset.defaultCharset()));
@@ -70,7 +70,7 @@ class TreePrintingListener implements TestExecutionListener {
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		executionStartedNanos = System.nanoTime();
+		executionStartedNanoTime = System.nanoTime();
 		if (testIdentifier.isContainer()) {
 			printVerticals(theme.entry());
 			printf(Color.container(), " %s", testIdentifier.getDisplayName());
@@ -88,7 +88,7 @@ class TreePrintingListener implements TestExecutionListener {
 		Color color = Color.valueOf(testExecutionResult);
 		printVerticals(theme.entry());
 		printf(Color.valueOf(testIdentifier), " %s", testIdentifier.getDisplayName());
-		// printf(NONE, " %d ms", durationInMillis(System.nanoTime() - executionStartedNanos));
+		// printf(NONE, " %d ms", durationInMillis(System.nanoTime() - executionStartedNanoTime));
 		printf(color, " %s", theme.computeStatusTile(testExecutionResult));
 		testExecutionResult.getThrowable().ifPresent(t -> printf(color, " %s", t.getMessage()));
 		printf(NONE, "%n");
@@ -118,14 +118,19 @@ class TreePrintingListener implements TestExecutionListener {
 		out.flush();
 	}
 
+	/** Look up current verticals as a string. */
+	String verticals() {
+		return verticals[Math.min(frames.size(), verticals.length)];
+	}
+
 	/** Print verticals and stay in the current line. */
 	void printVerticals(String tile) {
-		printf(NONE, verticals[Math.min(frames.size(), verticals.length)]);
+		printf(NONE, verticals());
 		printf(NONE, tile);
 	}
 
-	long durationInMillis(long nanos) {
-		return TimeUnit.NANOSECONDS.toMillis(nanos);
+	long durationInMillis(long duration) {
+		return TimeUnit.NANOSECONDS.toMillis(duration);
 	}
 
 	enum Theme {

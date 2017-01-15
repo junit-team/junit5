@@ -26,12 +26,12 @@ import org.junit.platform.launcher.TestPlan;
  */
 class VerboseTreePrintingListener extends TreePrintingListener {
 
-	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors) {
-		this(out, disableAnsiColors, 50, Theme.valueOf(Charset.defaultCharset()));
+	VerboseTreePrintingListener(PrintWriter out, boolean monochrome) {
+		this(out, monochrome, 16, Theme.valueOf(Charset.defaultCharset()));
 	}
 
-	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel, Theme theme) {
-		super(out, disableAnsiColors, maxContainerNestingLevel, theme);
+	VerboseTreePrintingListener(PrintWriter out, boolean monochrome, int maxContainerNestingLevel, Theme theme) {
+		super(out, monochrome, maxContainerNestingLevel, theme);
 	}
 
 	@Override
@@ -66,24 +66,21 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		if (testIdentifier.isContainer()) {
 			Frame frame = frames.pop();
-			long nanos = System.nanoTime() - frame.creationNanos;
 			printVerticals(theme.end());
 			printf(Color.container(), " %s", testIdentifier.getDisplayName());
-			printf(NONE, " finished after %d ms.%n", durationInMillis(nanos));
+			printf(NONE, " finished after %d ms.%n", durationInMillis(System.nanoTime() - frame.creationNanos));
 			return;
 		}
-		long nanos = System.nanoTime() - executionStartedNanos;
-		Color color = Color.valueOf(testExecutionResult);
 		testExecutionResult.getThrowable().ifPresent(t -> printDetail(Color.failed(), "caught", readStackTrace(t)));
-		printDetail(NONE, "duration", "%d ms%n", durationInMillis(nanos));
+		printDetail(NONE, "duration", "%d ms%n", durationInMillis(System.nanoTime() - executionStartedNanoTime));
 		String status = theme.computeStatusTile(testExecutionResult) + " " + testExecutionResult.getStatus();
-		printDetail(color, "status", "%s%n", status);
+		printDetail(Color.valueOf(testExecutionResult), "status", "%s%n", status);
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		printVerticals(theme.entry());
-		printf(NONE, " %s not executed%n", testIdentifier.getDisplayName());
+		printf(Color.valueOf(testIdentifier), " %s%n", testIdentifier.getDisplayName());
 		printDetails(testIdentifier);
 		printDetail(Color.skipped(), "reason", reason);
 		printDetail(Color.skipped(), "status", theme.skipped() + " SKIPPED");
@@ -111,24 +108,24 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 
 	/** Print single detail with a potential multi-line message. */
 	private void printDetail(Color color, String detail, String format, Object... args) {
-		// Print initial verticals - expecting to be at start of the line.
-		String indent = verticals[frames.size() + 1];
-		printf(NONE, indent);
+		// print initial verticals - expecting to be at start of the line
+		String verticals = verticals();
+		printf(NONE, verticals);
 		String detailFormat = "%9s";
-		// Omit detail string if it's empty.
+		// omit detail string if it's empty
 		if (!detail.isEmpty()) {
 			printf(NONE, String.format(detailFormat + ": ", detail));
 		}
-		// Trivial case: at least one arg is given? Let printf do the entire work.
+		// trivial case: at least one arg is given? Let printf do the entire work
 		if (args.length > 0) {
 			printf(color, format, args);
 			return;
 		}
-		// Still here? Split format into separate lines and indent them from the second on.
+		// still here? Split format into separate lines and indent them from the second line on
 		String[] lines = format.split("\\R");
 		printf(color, lines[0]);
 		if (lines.length > 1) {
-			String delimiter = System.lineSeparator() + indent + String.format(detailFormat + "    ", "");
+			String delimiter = System.lineSeparator() + verticals + String.format(detailFormat + "    ", "");
 			for (int i = 1; i < lines.length; i++) {
 				printf(NONE, delimiter);
 				printf(color, lines[i]);
