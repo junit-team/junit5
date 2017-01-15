@@ -108,6 +108,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 - **Artifact IDs**:
   - `junit-jupiter-api`
   - `junit-jupiter-engine`
+  - `junit-jupiter-migration-support`
 
 ### JUnit Vintage
 
