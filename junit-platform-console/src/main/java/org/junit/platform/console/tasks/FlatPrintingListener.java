@@ -52,13 +52,13 @@ class FlatPrintingListener implements TestExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(Color.dynamic(), "Test registered:", testIdentifier);
+		printlnTestDescriptor(Color.DYNAMIC, "Test registered:", testIdentifier);
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		printlnTestDescriptor(Color.skipped(), "Skipped:", testIdentifier);
-		printlnMessage(Color.skipped(), "Reason", reason);
+		printlnTestDescriptor(Color.SKIPPED, "Skipped:", testIdentifier);
+		printlnMessage(Color.SKIPPED, "Reason", reason);
 	}
 
 	@Override
@@ -75,8 +75,8 @@ class FlatPrintingListener implements TestExecutionListener {
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		printlnTestDescriptor(Color.reported(), "Reported:", testIdentifier);
-		printlnMessage(Color.reported(), "Reported values", entry.toString());
+		printlnTestDescriptor(Color.REPORTED, "Reported:", testIdentifier);
+		printlnMessage(Color.REPORTED, "Reported values", entry.toString());
 	}
 
 	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {

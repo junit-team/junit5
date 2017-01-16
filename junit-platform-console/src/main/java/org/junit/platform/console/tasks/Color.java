@@ -43,51 +43,35 @@ enum Color {
 	static Color valueOf(TestExecutionResult result) {
 		switch (result.getStatus()) {
 			case SUCCESSFUL:
-				return successful();
+				return Color.SUCCESSFUL;
 			case ABORTED:
-				return aborted();
+				return Color.ABORTED;
 			case FAILED:
-				return failed();
+				return Color.FAILED;
 			default:
-				return NONE;
+				return Color.NONE;
 		}
 	}
 
 	static Color valueOf(TestIdentifier testIdentifier) {
-		return testIdentifier.isContainer() ? container() : test();
+		return testIdentifier.isContainer() ? CONTAINER : TEST;
 	}
 
-	static Color successful() {
-		return GREEN;
-	}
+	static Color SUCCESSFUL = GREEN;
 
-	static Color aborted() {
-		return YELLOW;
-	}
+	static Color ABORTED = YELLOW;
 
-	static Color failed() {
-		return RED;
-	}
+	static Color FAILED = RED;
 
-	static Color skipped() {
-		return PURPLE;
-	}
+	static Color SKIPPED = PURPLE;
 
-	static Color container() {
-		return CYAN;
-	}
+	static Color CONTAINER = CYAN;
 
-	static Color test() {
-		return BLUE;
-	}
+	static Color TEST = BLUE;
 
-	static Color dynamic() {
-		return PURPLE;
-	}
+	static Color DYNAMIC = PURPLE;
 
-	static Color reported() {
-		return WHITE;
-	}
+	static Color REPORTED = WHITE;
 
 	private final int ansiCode;
 

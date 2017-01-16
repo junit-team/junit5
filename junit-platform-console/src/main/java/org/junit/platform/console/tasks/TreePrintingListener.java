@@ -73,7 +73,7 @@ class TreePrintingListener implements TestExecutionListener {
 		executionStartedNanoTime = System.nanoTime();
 		if (testIdentifier.isContainer()) {
 			printVerticals(theme.entry());
-			printf(Color.container(), " %s", testIdentifier.getDisplayName());
+			printf(Color.CONTAINER, " %s", testIdentifier.getDisplayName());
 			printf(NONE, "%n");
 			frames.push(new Frame(testIdentifier.getUniqueId()));
 		}
@@ -98,13 +98,13 @@ class TreePrintingListener implements TestExecutionListener {
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		printVerticals(theme.entry());
 		printf(Color.valueOf(testIdentifier), " %s", testIdentifier.getDisplayName());
-		printf(Color.skipped(), " %s %s%n", theme.skipped(), reason);
+		printf(Color.SKIPPED, " %s %s%n", theme.skipped(), reason);
 	}
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 		printVerticals(theme.vertical());
-		printf(Color.reported(), " %s%n", entry.toString());
+		printf(Color.REPORTED, " %s%n", entry.toString());
 	}
 
 	void printf(Color color, String message, Object... args) {

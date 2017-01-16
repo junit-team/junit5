@@ -39,8 +39,8 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		super.testPlanExecutionStarted(testPlan);
 		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
 		printf(NONE, "Test plan execution started. Number of static tests: ");
-		printf(Color.test(), "%d%n", tests);
-		printf(Color.container(), "%s%n", theme.root());
+		printf(Color.TEST, "%d%n", tests);
+		printf(Color.CONTAINER, "%s%n", theme.root());
 	}
 
 	@Override
@@ -48,7 +48,7 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		super.testPlanExecutionFinished(testPlan);
 		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
 		printf(NONE, "Test plan execution finished. Number of all tests: ");
-		printf(Color.test(), "%d%n", tests);
+		printf(Color.TEST, "%d%n", tests);
 	}
 
 	@Override
@@ -67,11 +67,11 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		if (testIdentifier.isContainer()) {
 			Frame frame = frames.pop();
 			printVerticals(theme.end());
-			printf(Color.container(), " %s", testIdentifier.getDisplayName());
+			printf(Color.CONTAINER, " %s", testIdentifier.getDisplayName());
 			printf(NONE, " finished after %d ms.%n", durationInMillis(System.nanoTime() - frame.creationNanos));
 			return;
 		}
-		testExecutionResult.getThrowable().ifPresent(t -> printDetail(Color.failed(), "caught", readStackTrace(t)));
+		testExecutionResult.getThrowable().ifPresent(t -> printDetail(Color.FAILED, "caught", readStackTrace(t)));
 		printDetail(NONE, "duration", "%d ms%n", durationInMillis(System.nanoTime() - executionStartedNanoTime));
 		String status = theme.computeStatusTile(testExecutionResult) + " " + testExecutionResult.getStatus();
 		printDetail(Color.valueOf(testExecutionResult), "status", "%s%n", status);
@@ -82,20 +82,20 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		printVerticals(theme.entry());
 		printf(Color.valueOf(testIdentifier), " %s%n", testIdentifier.getDisplayName());
 		printDetails(testIdentifier);
-		printDetail(Color.skipped(), "reason", reason);
-		printDetail(Color.skipped(), "status", theme.skipped() + " SKIPPED");
+		printDetail(Color.SKIPPED, "reason", reason);
+		printDetail(Color.SKIPPED, "status", theme.skipped() + " SKIPPED");
 	}
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		printVerticals(theme.entry());
-		printf(Color.dynamic(), " %s", testIdentifier.getDisplayName());
+		printf(Color.DYNAMIC, " %s", testIdentifier.getDisplayName());
 		printf(NONE, " dynamically registered%n");
 	}
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		printDetail(Color.reported(), "reports", entry.toString());
+		printDetail(Color.REPORTED, "reports", entry.toString());
 	}
 
 	/** Print static information about the test identifier. */
