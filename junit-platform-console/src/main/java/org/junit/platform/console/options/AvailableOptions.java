@@ -11,13 +11,10 @@
 package org.junit.platform.console.options;
 
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
 
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
-import java.util.List;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -78,10 +75,9 @@ class AvailableOptions {
 		//   Exception in thread "main" joptsimple.UnrecognizedOptionException: hide-details is not a recognized option
 		parser.accepts("hide-details", "@Deprecated. Use '--details none' instead.");
 
-		List<String> names = stream(Details.values()).map(d -> d.name().toLowerCase()).collect(toList());
 		details = parser.accepts("details",
-			"Select output details mode while tests are executed. Use one of: " + names
-					+ ". If 'none' is selected, only the summary and test failures are shown.") //
+			"Select output details mode while tests are executed. Use one of: " + asList(Details.values()) + ". If '"
+					+ Details.NONE + "' is selected, only the summary and test failures are shown.") //
 				.withRequiredArg() //
 				.ofType(Details.class) //
 				.defaultsTo(CommandLineOptions.DEFAULT_DETAILS);

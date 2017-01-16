@@ -29,5 +29,11 @@ public enum Details {
 	TREE,
 
 	/** Combines tree and flat mode. */
-	VERBOSE
+	VERBOSE;
+
+	/** Return lower case name for easier usage in available options help texts. */
+	@Override
+	public String toString() {
+		return name().toLowerCase();
+	}
 }
