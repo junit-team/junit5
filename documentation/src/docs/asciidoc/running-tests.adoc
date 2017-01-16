@@ -480,7 +480,7 @@ Option                                        Description
                                                 executed. Use one of: [none, flat, tree,
                                                 verbose]. If 'none' is selected, only
                                                 the summary and test failures are shown.
-                                                (default: TREE)
+                                                (default: tree)
 --class-path, --classpath, --cp <Path:        Provide additional classpath entries --
   path1:path2:...>                              for example, for adding engines and
                                                 their dependencies. This option can be
