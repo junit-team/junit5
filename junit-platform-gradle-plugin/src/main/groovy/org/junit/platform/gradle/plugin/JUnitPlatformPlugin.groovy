@@ -129,6 +129,9 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		filters.includeClassNamePatterns.each { pattern ->
 			args.addAll(['-n', pattern])
 		}
+		filters.excludeClassNamePatterns.each { pattern ->
+			args.addAll(['-N', pattern])
+		}
 		filters.packages.include.each { includedPackage ->
 			args.addAll(['--include-package',includedPackage])
 		}

@@ -30,8 +30,22 @@ class FiltersExtension {
 	 */
 	List<String> includeClassNamePatterns
 
+	/**
+	 * List of class name patterns in the form of regular expressions for
+	 * classes that should be <em>excluded</em> from the test plan.
+	 *
+	 * <p>The patterns are combined using OR semantics, i.e. if the fully
+	 * qualified name of a class matches against at least one of the patterns,
+	 * the class will be excluded from the test plan.
+	 */
+	List<String> excludeClassNamePatterns
+
 	protected List<String> getIncludeClassNamePatterns() {
 		return includeClassNamePatterns ?: [ ClassNameFilter.STANDARD_INCLUDE_PATTERN ];
+	}
+
+	protected List<String> getExcludeClassNamePatterns() {
+		return excludeClassNamePatterns
 	}
 
 	/**
@@ -49,6 +63,23 @@ class FiltersExtension {
 			includeClassNamePatterns = []
 		}
 		includeClassNamePatterns.addAll(patterns)
+	}
+
+	/**
+	 * Add a pattern to the list of <em>excluded</em> patterns.
+	 */
+	void excludeClassNamePattern(String pattern) {
+		excludeClassNamePatterns(pattern)
+	}
+
+	/**
+	 * Add patterns to the list of <em>included</em> patterns.
+	 */
+	void excludeClassNamePatterns(String... patterns) {
+		if (excludeClassNamePatterns == null) {
+			excludeClassNamePatterns = []
+		}
+		excludeClassNamePatterns.addAll(patterns)
 	}
 
 }
