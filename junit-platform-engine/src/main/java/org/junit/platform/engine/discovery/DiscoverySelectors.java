@@ -280,13 +280,13 @@ public final class DiscoverySelectors {
 
 	/**
 	 * Create a {@code MethodSelector} for the supplied <em>fully qualified
-	 * method methodName</em>.
+	 * method name</em>.
 	 *
 	 * <p>The following formats are supported.
 	 *
 	 * <ul>
-	 * <li>{@code [fully qualified class]#[methodName]}</li>
-	 * <li>{@code [fully qualified class]#[methodName](parameter type list)}
+	 * <li>{@code [fully qualified class name]#[method name]}</li>
+	 * <li>{@code [fully qualified class name]#[method name](parameter type list)}
 	 * <ul><li>The <em>parameter type list</em> is a comma-separated list of
 	 * fully qualified class names for the types of parameters accepted by
 	 * the method.</li></ul>
