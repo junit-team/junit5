@@ -26,6 +26,7 @@ on GitHub.
 * `ClassNameFilter.includeClassNamePattern` was removed, please use
   `ClassNameFilter.includeClassNamePatterns` instead.
 * `@IncludeClassNamePattern` was removed, please use `@IncludeClassNamePatterns` instead.
+* `--hide-details` option of the `ConsoleLauncher` is deprecated, use `--details none` instead.
 
 ===== New Features
 
@@ -41,6 +42,9 @@ on GitHub.
   `getArtifactId()`, and `getVersion()` methods.
 * The `--scan-classpath` option of the `ConsoleLauncher` now allows to scan JAR files for tests
   when they are supplied as explicit arguments (see <<running-tests-console-launcher-options>>).
+* New `--details <Details>` option of the `ConsoleLauncher` now allows to select output details
+  mode while tests are executed. Use one of: `none`, `flat`, `tree` or `verbose`. If `none` is
+  selected, only the summary and test failures are shown.
 
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
