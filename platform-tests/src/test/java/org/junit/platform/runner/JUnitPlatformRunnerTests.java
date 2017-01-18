@@ -276,10 +276,36 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
+		void addsSingleClassNameFilterToRequestWhenExcludeClassNamePatternsAnnotationIsPresent() throws Exception {
+
+			@ExcludeClassNamePatterns(".*Foo")
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains(".*Foo");
+		}
+
+		@Test
 		void addsMultipleExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent()
 				throws Exception {
 
 			@IncludeClassNamePatterns({ ".*Foo", "Bar.*" })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains(".*Foo", "Bar.*");
+		}
+
+		@Test
+		void addsMultipleClassNameFilterToRequestWhenExcludeClassNamePatternsAnnotationIsPresent() throws Exception {
+
+			@ExcludeClassNamePatterns({ ".*Foo", "Bar.*" })
 			class TestCase {
 			}
 
@@ -304,7 +330,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsExplicitClassNameFilterWhenIncludeClassNamePatternsAnnotationIsPresentWithEmptyArguments()
+		void doesNotAddClassNameFilterWhenIncludeClassNamePatternsAnnotationIsPresentWithEmptyArguments()
 				throws Exception {
 
 			@IncludeClassNamePatterns({})
@@ -318,9 +344,36 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
+		void doesNotAddClassNameFilterWhenExcludeClassNamePatternsAnnotationIsPresentWithEmptyArguments()
+				throws Exception {
+
+			@ExcludeClassNamePatterns({})
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(filters).isEmpty();
+		}
+
+		@Test
 		void trimsArgumentsOfIncludeClassNamePatternsAnnotation() throws Exception {
 
 			@IncludeClassNamePatterns({ " foo", "bar " })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains("'foo'", "'bar'");
+		}
+
+		@Test
+		void trimsArgumentsOfExcludeClassNamePatternsAnnotation() throws Exception {
+
+			@ExcludeClassNamePatterns({ " foo", "bar " })
 			class TestCase {
 			}
 

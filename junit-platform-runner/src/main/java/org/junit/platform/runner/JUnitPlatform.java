@@ -14,6 +14,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
+import static org.junit.platform.engine.discovery.ClassNameFilter.excludeClassNamePatterns;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
@@ -76,6 +77,7 @@ import org.junit.runners.model.InitializationError;
  * @see SelectPackages
  * @see SelectClasses
  * @see IncludeClassNamePatterns
+ * @see ExcludeClassNamePatterns
  * @see IncludeTags
  * @see ExcludeTags
  * @see IncludeEngines
@@ -140,6 +142,8 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 	private void addFiltersFromAnnotations(LauncherDiscoveryRequestBuilder requestBuilder, boolean isSuite) {
 		addIncludeClassNamePatternFilter(requestBuilder, isSuite);
+		addExcludeClassNamePatternFilter(requestBuilder);
+
 		addIncludePackagesFilter(requestBuilder);
 		addExcludePackagesFilter(requestBuilder);
 
@@ -167,6 +171,13 @@ public class JUnitPlatform extends Runner implements Filterable {
 		String[] patterns = getIncludeClassNamePatterns(isSuite);
 		if (patterns.length > 0) {
 			requestBuilder.filters(includeClassNamePatterns(patterns));
+		}
+	}
+
+	private void addExcludeClassNamePatternFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
+		String[] patterns = getExcludeClassNamePatterns();
+		if (patterns.length > 0) {
+			requestBuilder.filters(excludeClassNamePatterns(patterns));
 		}
 	}
 
@@ -251,6 +262,19 @@ public class JUnitPlatform extends Runner implements Filterable {
 			return new String[] { STANDARD_INCLUDE_PATTERN };
 		}
 		Preconditions.containsNoNullElements(patterns, "IncludeClassNamePatterns must not contain null elements");
+		trim(patterns);
+		return patterns;
+	}
+
+	private String[] getExcludeClassNamePatterns() {
+		String[] patterns = getValueFromAnnotation(ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value,
+			new String[0]);
+
+		if (patterns.length == 0) {
+			return new String[] {};
+		}
+
+		Preconditions.containsNoNullElements(patterns, "ExcludeClassNamePatterns must not contain null elements");
 		trim(patterns);
 		return patterns;
 	}
