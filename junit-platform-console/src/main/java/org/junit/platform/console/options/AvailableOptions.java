@@ -76,8 +76,8 @@ class AvailableOptions {
 		parser.accepts("hide-details", "@Deprecated. Use '--details none' instead.");
 
 		details = parser.accepts("details",
-			"Select output details mode while tests are executed. Use one of: " + asList(Details.values()) + ". If '"
-					+ Details.NONE + "' is selected, only the summary and test failures are shown.") //
+			"Select an output details mode for when tests are executed. Use one of: " + asList(Details.values())
+					+ ". If '" + Details.NONE + "' is selected, then only the summary and test failures are shown.") //
 				.withRequiredArg() //
 				.ofType(Details.class) //
 				.defaultsTo(CommandLineOptions.DEFAULT_DETAILS);
