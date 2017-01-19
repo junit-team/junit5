@@ -148,7 +148,7 @@ class TreePrintingListener implements TestExecutionListener {
 		/**
 		 * ASCII 7-bit characters form the tree branch.
 		 *
-		 * <pre style="code">
+		 * <pre class="code">
 		 * +-- JUnit Vintage
 		 * | +-- example.JUnit4Tests
 		 * | | +-- standardJUnit4Test [OK]
@@ -167,7 +167,7 @@ class TreePrintingListener implements TestExecutionListener {
 		/**
 		 * Extended ASCII characters are used to display the test execution tree.
 		 *
-		 * <pre style="code">
+		 * <pre class="code">
 		 * .
 		 * ├─ JUnit Vintage
 		 * │  ├─ example.JUnit4Tests

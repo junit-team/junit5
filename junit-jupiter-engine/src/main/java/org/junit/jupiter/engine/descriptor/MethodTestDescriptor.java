@@ -54,7 +54,7 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
  * For example, the default display name for the following test method is
  * {@code testUser(TestInfo, User)}.
  *
- * <pre style="code">
+ * <pre class="code">
  *   {@literal @}Test
  *   void testUser(TestInfo testInfo, {@literal @}Mock User user) { ... }
  * </pre>

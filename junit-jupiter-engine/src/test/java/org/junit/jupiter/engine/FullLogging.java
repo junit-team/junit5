@@ -33,7 +33,7 @@ import org.junit.platform.commons.util.PreconditionViolationException;
  * for all specified classes for the duration of the current test container.
  *
  * <h3>Example Usage</h3>
- * <pre style="code">
+ * <pre class="code">
  * {@literal @}FullLogging(ExecutableInvoker.class)
  * class MyTestClass { ... }
  * </pre>

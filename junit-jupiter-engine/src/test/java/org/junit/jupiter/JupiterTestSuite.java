@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
  * set the following system property before running any tests &mdash; for
  * example, in <em>Run Configurations</em> in Eclipse.
  *
- * <pre style="code">
+ * <pre class="code">
  * -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
  * </pre>
  *

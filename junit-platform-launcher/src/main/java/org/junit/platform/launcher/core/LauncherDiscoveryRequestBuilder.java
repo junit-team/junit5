@@ -34,7 +34,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *
  * <h4>Example</h4>
  *
- * <pre style="code">
+ * <pre class="code">
  * import static org.junit.platform.engine.discovery.DiscoverySelectors.*;
  * import static org.junit.platform.engine.discovery.ClassNameFilter.*;
  * import static org.junit.platform.launcher.EngineFilter.*;
