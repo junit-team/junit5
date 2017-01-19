@@ -270,10 +270,6 @@ public class JUnitPlatform extends Runner implements Filterable {
 		String[] patterns = getValueFromAnnotation(ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value,
 			new String[0]);
 
-		if (patterns.length == 0) {
-			return new String[] {};
-		}
-
 		Preconditions.containsNoNullElements(patterns, "ExcludeClassNamePatterns must not contain null elements");
 		trim(patterns);
 		return patterns;

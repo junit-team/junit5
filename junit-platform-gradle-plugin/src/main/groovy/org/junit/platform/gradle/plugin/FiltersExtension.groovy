@@ -73,7 +73,7 @@ class FiltersExtension {
 	}
 
 	/**
-	 * Add patterns to the list of <em>included</em> patterns.
+	 * Add patterns to the list of <em>excluded</em> patterns.
 	 */
 	void excludeClassNamePatterns(String... patterns) {
 		if (excludeClassNamePatterns == null) {
