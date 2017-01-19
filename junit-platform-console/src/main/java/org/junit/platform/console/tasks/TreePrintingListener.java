@@ -31,28 +31,31 @@ import org.junit.platform.launcher.TestPlan;
 class TreePrintingListener implements TestExecutionListener {
 
 	private final PrintWriter out;
-	private final boolean monochrome;
+	private final boolean disableAnsiColors;
 	private final String[] verticals;
 	final Theme theme;
 	final Deque<Frame> frames;
 	long executionStartedNanoTime;
 
-	TreePrintingListener(PrintWriter out, boolean monochrome) {
-		this(out, monochrome, 16, Theme.valueOf(Charset.defaultCharset()));
+	TreePrintingListener(PrintWriter out, boolean disableAnsiColors) {
+		this(out, disableAnsiColors, 16, Theme.valueOf(Charset.defaultCharset()));
 	}
 
-	TreePrintingListener(PrintWriter out, boolean monochrome, int maxContainerNestingLevel, Theme theme) {
+	TreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel, Theme theme) {
 		this.out = out;
-		this.monochrome = monochrome;
+		this.disableAnsiColors = disableAnsiColors;
 		this.theme = theme;
+
 		// create frame stack and push initial root frame
 		this.frames = new ArrayDeque<>();
 		this.frames.push(new Frame("/"));
+
 		// create and populate vertical indentation lookup table
 		this.verticals = new String[Math.max(10, maxContainerNestingLevel) + 1];
 		this.verticals[0] = ""; // no frame
 		this.verticals[1] = ""; // synthetic root "/" level
 		this.verticals[2] = ""; // "engine" level
+
 		for (int i = 3; i < verticals.length; i++) {
 			verticals[i] = verticals[i - 1] + theme.vertical();
 		}
@@ -60,74 +63,77 @@ class TreePrintingListener implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		frames.push(new Frame(testPlan.toString()));
+		this.frames.push(new Frame(testPlan.toString()));
 	}
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
-		frames.pop();
+		this.frames.pop();
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		executionStartedNanoTime = System.nanoTime();
+		this.executionStartedNanoTime = System.nanoTime();
 		if (testIdentifier.isContainer()) {
-			printVerticals(theme.entry());
+			printVerticals(this.theme.entry());
 			printf(Color.CONTAINER, " %s", testIdentifier.getDisplayName());
 			printf(NONE, "%n");
-			frames.push(new Frame(testIdentifier.getUniqueId()));
+			this.frames.push(new Frame(testIdentifier.getUniqueId()));
 		}
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		if (testIdentifier.isContainer()) {
-			frames.pop();
+			this.frames.pop();
 			return;
 		}
 		Color color = Color.valueOf(testExecutionResult);
-		printVerticals(theme.entry());
+		printVerticals(this.theme.entry());
 		printf(Color.valueOf(testIdentifier), " %s", testIdentifier.getDisplayName());
-		// printf(NONE, " %d ms", durationInMillis(System.nanoTime() - executionStartedNanoTime));
-		printf(color, " %s", theme.computeStatusTile(testExecutionResult));
+		printf(color, " %s", this.theme.computeStatusTile(testExecutionResult));
 		testExecutionResult.getThrowable().ifPresent(t -> printf(color, " %s", t.getMessage()));
 		printf(NONE, "%n");
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		printVerticals(theme.entry());
+		printVerticals(this.theme.entry());
 		printf(Color.valueOf(testIdentifier), " %s", testIdentifier.getDisplayName());
-		printf(Color.SKIPPED, " %s %s%n", theme.skipped(), reason);
+		printf(Color.SKIPPED, " %s %s%n", this.theme.skipped(), reason);
 	}
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		printVerticals(theme.vertical());
+		printVerticals(this.theme.vertical());
 		printf(Color.REPORTED, " %s%n", entry.toString());
 	}
 
 	void printf(Color color, String message, Object... args) {
-		if (monochrome || color == NONE) {
-			out.printf(message, args);
+		if (this.disableAnsiColors || color == NONE) {
+			this.out.printf(message, args);
 		}
 		else {
 			// Use string concatenation to avoid ANSI disruption on console
-			out.printf(color + message + NONE, args);
+			this.out.printf(color + message + NONE, args);
 		}
-		out.flush();
+		this.out.flush();
 	}
 
-	/** Look up current verticals as a string. */
+	/**
+	 * Look up current verticals as a string.
+	 */
 	String verticals() {
-		return verticals(frames.size());
+		return verticals(this.frames.size());
 	}
 
 	String verticals(int index) {
 		return verticals[Math.min(index, verticals.length)];
 	}
 
-	/** Print verticals and stay in the current line. */
+	/**
+	 * Print verticals and stay in the current line.
+	 */
 	void printVerticals(String tile) {
 		printf(NONE, verticals());
 		printf(NONE, tile);
@@ -138,18 +144,22 @@ class TreePrintingListener implements TestExecutionListener {
 	}
 
 	enum Theme {
+
 		/**
 		 * ASCII 7-bit characters form the tree branch.
 		 *
-		 * <pre>
-		 * .
+		 * <pre style="code">
 		 * +-- JUnit Vintage
-		 * |  +-- example.JUnit4Tests
-		 * |  |  -  standardJUnit4Test [OK]
+		 * | +-- example.JUnit4Tests
+		 * | | +-- standardJUnit4Test [OK]
 		 * +-- JUnit Jupiter
-		 * |  +-- AssertionsDemo
-		 * |  |  -  timeoutExceeded() [OK]
-		 * |  |  -  exceptionTesting() [OK]
+		 * | +-- AssertionsDemo
+		 * | | +-- timeoutExceededWithPreemptiveTermination() [OK]
+		 * | | +-- groupedAssertions() [OK]
+		 * | | +-- standardAssertions() [OK]
+		 * | | +-- timeoutNotExceeded() [OK]
+		 * | | +-- exceptionTesting() [OK]
+		 * | | +-- timeoutExceeded() [OK]
 		 * </pre>
 		 */
 		ASCII(".", "| ", "+--", "---", "[OK]", "[A]", "[X]", "[S]"),
@@ -157,14 +167,29 @@ class TreePrintingListener implements TestExecutionListener {
 		/**
 		 * Extended ASCII characters are used to display the test execution tree.
 		 *
-		 * <pre>
+		 * <pre style="code">
 		 * .
 		 * ├─ JUnit Vintage
 		 * │  ├─ example.JUnit4Tests
 		 * │  │  ├─ standardJUnit4Test ✔
 		 * ├─ JUnit Jupiter
+		 * │  ├─ AssertionsDemo
+		 * │  │  ├─ timeoutExceeded() ✔
+		 * │  │  ├─ groupedAssertions() ✔
+		 * │  │  ├─ timeoutNotExceeded() ✔
+		 * │  │  ├─ timeoutExceededWithPreemptiveTermination() ✔
+		 * │  │  ├─ standardAssertions() ✔
+		 * │  │  ├─ exceptionTesting() ✔
 		 * │  ├─ A stack
 		 * │  │  ├─ is instantiated with new Stack() ✔
+		 * │  │  ├─ when new
+		 * │  │  │  ├─ throws EmptyStackException when popped ✔
+		 * │  │  │  ├─ throws EmptyStackException when peeked ✔
+		 * │  │  │  ├─ is empty ✔
+		 * │  │  │  ├─ after pushing an element
+		 * │  │  │  │  ├─ it is no longer empty ✔
+		 * │  │  │  │  ├─ returns the element when popped and is empty ✔
+		 * │  │  │  │  ├─ returns the element when peeked but remains not empty ✔
 		 * </pre>
 		 */
 		UTF_8(".", "│  ", "├─", "└─", "✔", "■", "✘", "↷");
@@ -229,6 +254,7 @@ class TreePrintingListener implements TestExecutionListener {
 	}
 
 	static class Frame {
+
 		final String uniqueId;
 		final long creationNanos;
 
@@ -237,4 +263,5 @@ class TreePrintingListener implements TestExecutionListener {
 			this.creationNanos = System.nanoTime();
 		}
 	}
+
 }

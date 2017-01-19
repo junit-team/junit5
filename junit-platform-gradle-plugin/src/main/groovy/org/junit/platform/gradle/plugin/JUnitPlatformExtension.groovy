@@ -73,9 +73,10 @@ class JUnitPlatformExtension {
 	boolean enableStandardTestTask = false
 
 	/**
-	 * Select test execution plan detail mode.
+	 * Select test execution plan details mode.
 	 *
 	 * <p>Defaults to {@link Details#NONE}.
 	 */
 	Details details = Details.NONE
+
 }

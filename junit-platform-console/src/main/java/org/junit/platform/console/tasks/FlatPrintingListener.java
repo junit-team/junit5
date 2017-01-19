@@ -41,13 +41,13 @@ class FlatPrintingListener implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		out.printf("Test execution started. Number of static tests: %d%n",
+		this.out.printf("Test execution started. Number of static tests: %d%n",
 			testPlan.countTestIdentifiers(TestIdentifier::isTest));
 	}
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
-		out.println("Test execution finished.");
+		this.out.println("Test execution finished.");
 	}
 
 	@Override
@@ -96,12 +96,12 @@ class FlatPrintingListener implements TestExecutionListener {
 	}
 
 	private void println(Color color, String message) {
-		if (disableAnsiColors) {
-			out.println(message);
+		if (this.disableAnsiColors) {
+			this.out.println(message);
 		}
 		else {
 			// Use string concatenation to avoid ANSI disruption on console
-			out.println(color + message + NONE);
+			this.out.println(color + message + NONE);
 		}
 	}
 
@@ -117,4 +117,5 @@ class FlatPrintingListener implements TestExecutionListener {
 	private static String indented(String message) {
 		return LINE_START_PATTERN.matcher(message).replaceAll(INDENTATION).trim();
 	}
+
 }

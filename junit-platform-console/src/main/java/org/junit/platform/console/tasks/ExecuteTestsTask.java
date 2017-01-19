@@ -102,14 +102,14 @@ public class ExecuteTestsTask implements ConsoleTask {
 	}
 
 	private Optional<TestExecutionListener> createDetailsPrintingListener(PrintWriter out) {
-		boolean monochrome = options.isAnsiColorOutputDisabled();
+		boolean disableAnsiColors = options.isAnsiColorOutputDisabled();
 		switch (options.getDetails()) {
 			case FLAT:
-				return Optional.of(new FlatPrintingListener(out, monochrome));
+				return Optional.of(new FlatPrintingListener(out, disableAnsiColors));
 			case TREE:
-				return Optional.of(new TreePrintingListener(out, monochrome));
+				return Optional.of(new TreePrintingListener(out, disableAnsiColors));
 			case VERBOSE:
-				return Optional.of(new VerboseTreePrintingListener(out, monochrome));
+				return Optional.of(new VerboseTreePrintingListener(out, disableAnsiColors));
 			default:
 				return Optional.empty();
 		}

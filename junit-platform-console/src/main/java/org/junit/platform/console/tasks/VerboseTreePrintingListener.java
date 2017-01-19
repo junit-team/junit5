@@ -26,12 +26,12 @@ import org.junit.platform.launcher.TestPlan;
  */
 class VerboseTreePrintingListener extends TreePrintingListener {
 
-	VerboseTreePrintingListener(PrintWriter out, boolean monochrome) {
-		this(out, monochrome, 16, Theme.valueOf(Charset.defaultCharset()));
+	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors) {
+		this(out, disableAnsiColors, 16, Theme.valueOf(Charset.defaultCharset()));
 	}
 
-	VerboseTreePrintingListener(PrintWriter out, boolean monochrome, int maxContainerNestingLevel, Theme theme) {
-		super(out, monochrome, maxContainerNestingLevel, theme);
+	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel, Theme theme) {
+		super(out, disableAnsiColors, maxContainerNestingLevel, theme);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 			return;
 		}
 		testExecutionResult.getThrowable().ifPresent(t -> printDetail(Color.FAILED, "caught", readStackTrace(t)));
-		printDetail(NONE, "duration", "%d ms%n", durationInMillis(System.nanoTime() - executionStartedNanoTime));
+		printDetail(NONE, "duration", "%d ms%n", durationInMillis(System.nanoTime() - this.executionStartedNanoTime));
 		String status = theme.computeStatusTile(testExecutionResult) + " " + testExecutionResult.getStatus();
 		printDetail(Color.valueOf(testExecutionResult), "status", "%s%n", status);
 	}
@@ -98,7 +98,9 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		printDetail(Color.REPORTED, "reports", entry.toString());
 	}
 
-	/** Print static information about the test identifier. */
+	/**
+	 * Print static information about the test identifier.
+	 */
 	private void printDetails(TestIdentifier testIdentifier) {
 		printDetail(NONE, "tags", "%s%n", testIdentifier.getTags());
 		printDetail(NONE, "uniqueId", "%s%n", testIdentifier.getUniqueId());
@@ -106,7 +108,9 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		testIdentifier.getSource().ifPresent(source -> printDetail(NONE, "source", "%s%n", source));
 	}
 
-	/** Print single detail with a potential multi-line message. */
+	/**
+	 * Print single detail with a potential multi-line message.
+	 */
 	private void printDetail(Color color, String detail, String format, Object... args) {
 		// print initial verticals - expecting to be at start of the line
 		String verticals = verticals(frames.size() + 1);
@@ -133,4 +137,5 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		}
 		printf(NONE, "%n");
 	}
+
 }

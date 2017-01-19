@@ -15,6 +15,7 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.JavaExec
 import org.gradle.util.GradleVersion
 import org.junit.platform.console.ConsoleLauncher
+
 /**
  * @since 1.0
  */

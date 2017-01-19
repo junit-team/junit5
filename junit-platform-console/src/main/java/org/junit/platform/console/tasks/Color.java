@@ -73,14 +73,15 @@ enum Color {
 
 	static Color REPORTED = WHITE;
 
-	private final int ansiCode;
+	private final String ansiString;
 
 	Color(int ansiCode) {
-		this.ansiCode = ansiCode;
+		this.ansiString = "\u001B[" + ansiCode + "m";
 	}
 
 	@Override
 	public String toString() {
-		return "\u001B[" + this.ansiCode + "m";
+		return this.ansiString;
 	}
+
 }
