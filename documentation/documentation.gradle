@@ -12,6 +12,7 @@ dependencies {
 }
 
 junitPlatform {
+	details 'tree'
 	filters {
 		includeClassNamePattern '.+(Tests|Demo)$'
 		tags {
