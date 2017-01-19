@@ -434,27 +434,30 @@ Here's an example of its output:
 
 [subs="none"]
 ----
-Test execution started. Number of static tests: 2
-Engine started: junit-jupiter
-Test started:     My 1st JUnit 5 test! 😎 [junit-jupiter:com.example.project.FirstTest#myFirstTest(java.lang.String)]
-Test succeeded:   My 1st JUnit 5 test! 😎 [junit-jupiter:com.example.project.FirstTest#myFirstTest(java.lang.String)]
-Test skipped:     mySecondTest [junit-jupiter:com.example.project.SecondTest#mySecondTest()]
-                  => Exception:   Skipped test method [void com.example.project.SecondTest.mySecondTest()] due to failed condition
-Engine finished: junit-jupiter
-Test execution finished.
+├─ JUnit Vintage
+│  ├─ example.JUnit4Tests
+│  │  ├─ standardJUnit4Test ✔
+├─ JUnit Jupiter
+│  ├─ StandardTests
+│  │  ├─ succeedingTest() ✔
+│  │  ├─ skippedTest() ↷ for demonstration purposes
+│  ├─ A special test case
+│  │  ├─ Custom test name containing spaces ✔
+│  │  ├─ ╯°□°）╯ ✔
+│  │  ├─ 😱 ✔
 
-Test run finished after 29 ms
-[         2 containers found      ]
+Test run finished after 64 ms
+[         5 containers found      ]
 [         0 containers skipped    ]
-[         2 containers started    ]
+[         5 containers started    ]
 [         0 containers aborted    ]
-[         2 containers successful ]
+[         5 containers successful ]
 [         0 containers failed     ]
-[         2 tests found           ]
+[         6 tests found           ]
 [         1 tests skipped         ]
-[         1 tests started         ]
+[         5 tests started         ]
 [         0 tests aborted         ]
-[         1 tests successful      ]
+[         5 tests successful      ]
 [         0 tests failed          ]
 ----
 
