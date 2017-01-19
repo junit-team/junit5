@@ -2501,9 +2501,12 @@ final release.
 -h, --help                                    Display help information.
 --disable-ansi-colors                         Disable ANSI colors in output (not
                                                 supported by all terminals).
---hide-details                                Hide details while tests are being
-                                                executed. Only show the summary and test
-                                                failures.
+--hide-details                                @Deprecated. Use '--details none' instead.
+--details &lt;Details&gt;                           Select an output details mode for when
+                                                tests are executed. Use one of: [none,
+                                                flat, tree, verbose]. If 'none' is
+                                                selected, then only the summary and test
+                                                failures are shown. (default: tree)
 --class-path, --classpath, --cp &lt;Path:        Provide additional classpath entries --
   path1:path2:...&gt;                              for example, for adding engines and
                                                 their dependencies. This option can be
@@ -4432,6 +4435,9 @@ on GitHub.</p>
 <li>
 <p><code>@IncludeClassNamePattern</code> was removed, please use <code>@IncludeClassNamePatterns</code> instead.</p>
 </li>
+<li>
+<p><code>--hide-details</code> option of the <code>ConsoleLauncher</code> is deprecated, use <code>--details none</code> instead.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -4458,6 +4464,11 @@ ID, artifact ID, and version of each test engine if available via the <code>getG
 <li>
 <p>The <code>--scan-classpath</code> option of the <code>ConsoleLauncher</code> now allows to scan JAR files for tests
 when they are supplied as explicit arguments (see <a href="#running-tests-console-launcher-options">Options</a>).</p>
+</li>
+<li>
+<p>The new <code>--details &lt;Details&gt;</code> option of the <code>ConsoleLauncher</code> now allows to select an output
+details mode for when tests are executed. Use one of: <code>none</code>, <code>flat</code>, <code>tree</code> or <code>verbose</code>. If
+<code>none</code> is selected, then only the summary and test failures are shown.</p>
 </li>
 </ul>
 </div>
@@ -4513,7 +4524,7 @@ generating assertion failure messages.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-01-16 23:17:11 EST
+Last updated 2017-01-18 19:08:33 EST
 </div>
 </div>
 </body>
