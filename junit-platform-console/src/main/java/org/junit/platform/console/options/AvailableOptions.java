@@ -80,6 +80,7 @@ class AvailableOptions {
 					+ ". If '" + Details.NONE + "' is selected, then only the summary and test failures are shown.") //
 				.withRequiredArg() //
 				.ofType(Details.class) //
+				.withValuesConvertedBy(new DetailsConverter()) //
 				.defaultsTo(CommandLineOptions.DEFAULT_DETAILS);
 
 		additionalClasspathEntries = parser.acceptsAll(asList(CP_OPTION, "classpath", "class-path"), //

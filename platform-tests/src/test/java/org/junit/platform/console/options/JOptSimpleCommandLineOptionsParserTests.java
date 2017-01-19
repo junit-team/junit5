@@ -70,11 +70,30 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseSwitches() {
 		// @formatter:off
 		assertAll(
-				() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
-				() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
+			() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
+			() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
 			() -> assertParses("scan class path", CommandLineOptions::isScanClasspath, "--scan-class-path")
 		);
 		// @formatter:on
+	}
+
+	@Test
+	public void parseValidDetails() {
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(Details.VERBOSE, parseArgLine("--details verbose").getDetails()),
+			() -> assertEquals(Details.TREE, parseArgLine("--details tree").getDetails()),
+			() -> assertEquals(Details.FLAT, parseArgLine("--details flat").getDetails()),
+			() -> assertEquals(Details.NONE, parseArgLine("--details NONE").getDetails()),
+			() -> assertEquals(Details.NONE, parseArgLine("--details none").getDetails()),
+			() -> assertEquals(Details.NONE, parseArgLine("--details None").getDetails())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidDetails() throws Exception {
+		assertOptionWithMissingRequiredArgumentThrowsException("--details");
 	}
 
 	@Test
