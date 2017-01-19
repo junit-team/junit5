@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -24,8 +25,10 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
+import org.junit.platform.console.options.Details;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -88,20 +91,40 @@ public class ExecuteTestsTask implements ConsoleTask {
 	}
 
 	private SummaryGeneratingListener registerListeners(PrintWriter out, Launcher launcher) {
+		// always register summary generating listener
 		SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
 		launcher.registerTestExecutionListeners(summaryListener);
-		if (!options.isHideDetails()) {
-			launcher.registerTestExecutionListeners(
-				new ColoredPrintingTestListener(out, options.isAnsiColorOutputDisabled()));
-		}
-		if (options.getReportsDir().isPresent()) {
-			launcher.registerTestExecutionListeners(new XmlReportsWritingListener(options.getReportsDir().get(), out));
-		}
+		// optionally, register test plan execution details printing listener
+		createDetailsPrintingListener(out).ifPresent(launcher::registerTestExecutionListeners);
+		// optionally, register XML reports writing listener
+		createXmlWritingListener(out).ifPresent(launcher::registerTestExecutionListeners);
 		return summaryListener;
 	}
 
+	private Optional<TestExecutionListener> createDetailsPrintingListener(PrintWriter out) {
+		boolean monochrome = options.isAnsiColorOutputDisabled();
+		switch (options.getDetails()) {
+			case FLAT:
+				return Optional.of(new FlatPrintingListener(out, monochrome));
+			case TREE:
+				return Optional.of(new TreePrintingListener(out, monochrome));
+			case VERBOSE:
+				return Optional.of(new VerboseTreePrintingListener(out, monochrome));
+			default:
+				return Optional.empty();
+		}
+	}
+
+	private Optional<TestExecutionListener> createXmlWritingListener(PrintWriter out) {
+		if (options.getReportsDir().isPresent()) {
+			return Optional.of(new XmlReportsWritingListener(options.getReportsDir().get(), out));
+		}
+		return Optional.empty();
+	}
+
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
-		if (options.isHideDetails()) { // Otherwise the failures have already been printed
+		// Otherwise the failures have already been printed in detail
+		if (EnumSet.of(Details.NONE, Details.TREE).contains(options.getDetails())) {
 			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);

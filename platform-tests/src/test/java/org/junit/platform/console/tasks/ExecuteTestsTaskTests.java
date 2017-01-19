@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.CommandLineOptions;
+import org.junit.platform.console.options.Details;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 
 /**
@@ -58,7 +59,7 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void printsDetailsIfTheyAreNotHidden() throws Exception {
-		options.setHideDetails(false);
+		options.setDetails(Details.FLAT);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
@@ -70,7 +71,7 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void printsNoDetailsIfTheyAreHidden() throws Exception {
-		options.setHideDetails(true);
+		options.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
@@ -82,7 +83,7 @@ public class ExecuteTestsTaskTests {
 
 	@Test
 	public void printsFailuresEvenIfDetailsAreHidden() throws Exception {
-		options.setHideDetails(true);
+		options.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);

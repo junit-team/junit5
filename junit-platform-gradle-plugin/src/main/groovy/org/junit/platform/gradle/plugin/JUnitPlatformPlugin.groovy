@@ -108,7 +108,12 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 	private List<String> buildArgs(project, junitExtension, reportsDir) {
 
-		def args = ['--hide-details']
+		def args = []
+
+		if (junitExtension.details) {
+			args.add('--details')
+			args.add(junitExtension.details.name())
+		}
 
 		addSelectors(project, junitExtension.selectors, args)
 		addFilters(junitExtension.filters, args)

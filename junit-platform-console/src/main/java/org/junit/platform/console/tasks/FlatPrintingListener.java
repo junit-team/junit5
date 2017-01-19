@@ -10,19 +10,13 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.BLUE;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.GREEN;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.NONE;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.PURPLE;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.RED;
-import static org.junit.platform.console.tasks.ColoredPrintingTestListener.Color.YELLOW;
+import static org.junit.platform.console.tasks.Color.NONE;
 
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -31,7 +25,7 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.0
  */
-class ColoredPrintingTestListener implements TestExecutionListener {
+class FlatPrintingListener implements TestExecutionListener {
 
 	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
 
@@ -40,7 +34,7 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	private final PrintWriter out;
 	private final boolean disableAnsiColors;
 
-	ColoredPrintingTestListener(PrintWriter out, boolean disableAnsiColors) {
+	FlatPrintingListener(PrintWriter out, boolean disableAnsiColors) {
 		this.out = out;
 		this.disableAnsiColors = disableAnsiColors;
 	}
@@ -58,44 +52,31 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(BLUE, "Test registered:", testIdentifier);
+		printlnTestDescriptor(Color.DYNAMIC, "Test registered:", testIdentifier);
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		printlnTestDescriptor(YELLOW, "Skipped:", testIdentifier);
-		printlnMessage(YELLOW, "Reason", reason);
+		printlnTestDescriptor(Color.SKIPPED, "Skipped:", testIdentifier);
+		printlnMessage(Color.SKIPPED, "Reason", reason);
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(NONE, "Started:", testIdentifier);
+		printlnTestDescriptor(Color.valueOf(testIdentifier), "Started:", testIdentifier);
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-		Color color = determineColor(testExecutionResult.getStatus());
+		Color color = Color.valueOf(testExecutionResult);
 		printlnTestDescriptor(color, "Finished:", testIdentifier);
 		testExecutionResult.getThrowable().ifPresent(t -> printlnException(color, t));
 	}
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		printlnTestDescriptor(PURPLE, "Reported:", testIdentifier);
-		printlnMessage(PURPLE, "Reported values", entry.toString());
-	}
-
-	private Color determineColor(Status status) {
-		switch (status) {
-			case SUCCESSFUL:
-				return GREEN;
-			case ABORTED:
-				return YELLOW;
-			case FAILED:
-				return RED;
-			default:
-				return NONE;
-		}
+		printlnTestDescriptor(Color.REPORTED, "Reported:", testIdentifier);
+		printlnMessage(Color.REPORTED, "Reported values", entry.toString());
 	}
 
 	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {
@@ -136,37 +117,4 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	private static String indented(String message) {
 		return LINE_START_PATTERN.matcher(message).replaceAll(INDENTATION).trim();
 	}
-
-	enum Color {
-
-		NONE(0),
-
-		BLACK(30),
-
-		RED(31),
-
-		GREEN(32),
-
-		YELLOW(33),
-
-		BLUE(34),
-
-		PURPLE(35),
-
-		CYAN(36),
-
-		WHITE(37);
-
-		private final int ansiCode;
-
-		Color(int ansiCode) {
-			this.ansiCode = ansiCode;
-		}
-
-		@Override
-		public String toString() {
-			return "\u001B[" + this.ansiCode + "m";
-		}
-	}
-
 }

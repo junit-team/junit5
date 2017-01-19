@@ -10,6 +10,8 @@
 package org.junit.platform.gradle.plugin
 
 import org.gradle.api.Project
+import org.junit.platform.console.options.Details
+
 /**
  * Core configuration options for the JUnit Platform Gradle plugin.
  *
@@ -70,4 +72,10 @@ class JUnitPlatformExtension {
 	 */
 	boolean enableStandardTestTask = false
 
+	/**
+	 * Select test execution plan detail mode.
+	 *
+	 * <p>Defaults to {@link Details#NONE}.
+	 */
+	Details details = Details.NONE
 }
