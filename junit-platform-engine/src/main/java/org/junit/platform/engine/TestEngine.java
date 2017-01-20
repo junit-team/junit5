@@ -102,10 +102,6 @@ public interface TestEngine {
 	 * @see #getVersion()
 	 */
 	default Optional<String> getGroupId() {
-		Optional<String> standalone = getAttribute(getClass().getClassLoader(), "Engine-GroupID-" + getId());
-		if (standalone.isPresent()) {
-			return standalone;
-		}
 		return Optional.empty();
 	}
 
@@ -138,10 +134,6 @@ public interface TestEngine {
 	 * @see #getVersion()
 	 */
 	default Optional<String> getArtifactId() {
-		Optional<String> standalone = getAttribute(getClass().getClassLoader(), "Engine-ArtifactID-" + getId());
-		if (standalone.isPresent()) {
-			return standalone;
-		}
 		return getAttribute(getClass(), Package::getImplementationTitle);
 	}
 
@@ -150,7 +142,10 @@ public interface TestEngine {
 	 *
 	 * <p>This information is used solely for debugging and reporting purposes.
 	 *
-	 * <p>This default implementation attempts to query the
+	 * <p>Initially, the default implementation tries to retrieve the engine
+	 * version from the manifest attribute named: {@code "Engine-Version-" + getId()}
+	 *
+	 * <p>Then the default implementation attempts to query the
 	 * {@linkplain Package#getImplementationVersion() implementation version}
 	 * from the package attributes for the {@link Package} in which the engine
 	 * resides. Note that a package only has attributes if the information is
@@ -173,10 +168,8 @@ public interface TestEngine {
 	 */
 	default Optional<String> getVersion() {
 		Optional<String> standalone = getAttribute(getClass().getClassLoader(), "Engine-Version-" + getId());
-		if (standalone.isPresent()) {
-			return standalone;
-		}
-		return Optional.of(getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT"));
+		return standalone.isPresent() ? standalone
+				: Optional.of(getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT"));
 	}
 
 }
