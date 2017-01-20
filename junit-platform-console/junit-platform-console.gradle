@@ -37,7 +37,14 @@ idea {
 
 jar {
 	manifest {
-		attributes 'Main-Class': 'org.junit.platform.console.ConsoleLauncher'
+		attributes(
+			'Main-Class': 'org.junit.platform.console.ConsoleLauncher',
+			// generate test engine information in single shared manifest file
+			'Engine-ArtifactID-junit-jupiter': 'junit-jupiter-engine',
+			'Engine-Version-junit-jupiter': "$rootProject.version",
+			'Engine-ArtifactID-junit-vintage': 'junit-vintage-engine',
+			'Engine-Version-junit-vintage': "$vintageVersion"
+		)
 	}
 }
 
@@ -84,9 +91,8 @@ task runStandaloneConsole(type: JavaExec) {
 task checkStandaloneConsole {
 	doLast {
 		String text = runStandaloneConsole.errorOutput.toString() + runStandaloneConsole.standardOutput.toString()
-		println text
-		//assert text.contains("junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $rootProject.version)")
-		//assert text.contains("junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion)")
+		assert text.contains("junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $rootProject.version)")
+		assert text.contains("junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion)")
 	}
 }
 

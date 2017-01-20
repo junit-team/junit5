@@ -11,11 +11,11 @@
 package org.junit.platform.engine;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.util.PackageUtils.getAttribute;
 
 import java.util.Optional;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.PackageUtils;
 
 /**
  * A {@code TestEngine} facilitates <em>discovery</em> and <em>execution</em> of
@@ -102,6 +102,10 @@ public interface TestEngine {
 	 * @see #getVersion()
 	 */
 	default Optional<String> getGroupId() {
+		Optional<String> standalone = getAttribute(getClass().getClassLoader(), "Engine-GroupID-" + getId());
+		if (standalone.isPresent()) {
+			return standalone;
+		}
 		return Optional.empty();
 	}
 
@@ -134,7 +138,11 @@ public interface TestEngine {
 	 * @see #getVersion()
 	 */
 	default Optional<String> getArtifactId() {
-		return PackageUtils.getAttribute(getClass(), Package::getImplementationTitle);
+		Optional<String> standalone = getAttribute(getClass().getClassLoader(), "Engine-ArtifactID-" + getId());
+		if (standalone.isPresent()) {
+			return standalone;
+		}
+		return getAttribute(getClass(), Package::getImplementationTitle);
 	}
 
 	/**
@@ -164,8 +172,11 @@ public interface TestEngine {
 	 * @see #getArtifactId()
 	 */
 	default Optional<String> getVersion() {
-		return Optional.of(
-			PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT"));
+		Optional<String> standalone = getAttribute(getClass().getClassLoader(), "Engine-Version-" + getId());
+		if (standalone.isPresent()) {
+			return standalone;
+		}
+		return Optional.of(getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT"));
 	}
 
 }

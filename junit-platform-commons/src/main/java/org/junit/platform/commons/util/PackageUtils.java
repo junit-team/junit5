@@ -14,6 +14,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.jar.Manifest;
 
 import org.junit.platform.commons.meta.API;
 
@@ -62,12 +63,38 @@ public final class PackageUtils {
 		Preconditions.notNull(function, "function must not be null");
 		Package typePackage = type.getPackage();
 		if (typePackage != null) {
-			String value = function.apply(typePackage);
-			if (value != null) {
-				return Optional.of(value);
-			}
+			return Optional.ofNullable(function.apply(typePackage));
 		}
 		return Optional.empty();
+	}
+
+	/**
+	 * Get the value of the specified attribute name, specified as a string,
+	 * or an empty {@link Optional} if the attribute was not found. The attribute
+	 * name is case-insensitive.
+	 *
+	 * <p>This method also returns an empty {@link Optional} value holder
+	 * if any exception is caught while loading the manifest file via the
+	 * specified class loader.
+	 *
+	 * @param loader the {@link ClassLoader} used to load the manifest with
+	 * @param name the attribute name as a string
+	 * @return an {@code Optional} containing the attribute value; never
+	 * {@code null} but potentially empty
+	 * @throws PreconditionViolationException if the supplied loader is
+	 * {@code null} or the specified name is blank
+	 * @see Manifest
+	 */
+	public static Optional<String> getAttribute(ClassLoader loader, String name) {
+		Preconditions.notNull(loader, "loader must not be null");
+		Preconditions.notBlank(name, "name must not be blank");
+		try {
+			Manifest manifest = new Manifest(loader.getResourceAsStream("META-INF/MANIFEST.MF"));
+			return Optional.ofNullable(manifest.getMainAttributes().getValue(name));
+		}
+		catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 
 }
