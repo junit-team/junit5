@@ -11,11 +11,11 @@
 package org.junit.platform.engine;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
-import static org.junit.platform.commons.util.PackageUtils.getAttribute;
 
 import java.util.Optional;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.PackageUtils;
 
 /**
  * A {@code TestEngine} facilitates <em>discovery</em> and <em>execution</em> of
@@ -134,7 +134,7 @@ public interface TestEngine {
 	 * @see #getVersion()
 	 */
 	default Optional<String> getArtifactId() {
-		return getAttribute(getClass(), Package::getImplementationTitle);
+		return PackageUtils.getAttribute(getClass(), Package::getImplementationTitle);
 	}
 
 	/**
@@ -167,9 +167,13 @@ public interface TestEngine {
 	 * @see #getArtifactId()
 	 */
 	default Optional<String> getVersion() {
-		Optional<String> standalone = getAttribute(getClass().getClassLoader(), "Engine-Version-" + getId());
-		return standalone.isPresent() ? standalone
-				: Optional.of(getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT"));
+		Optional<String> standalone = PackageUtils.getAttribute(getClass().getClassLoader(),
+			"Engine-Version-" + getId());
+		if (standalone.isPresent()) {
+			return standalone;
+		}
+		return Optional.of(
+			PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT"));
 	}
 
 }
