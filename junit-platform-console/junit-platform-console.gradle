@@ -52,8 +52,6 @@ javadoc {
 }
 
 shadowJar {
-	baseName = 'junit-console'
-	version = "$rootProject.version"
 	classifier = 'standalone'
 	configurations = [project.configurations.shadowed]
 	mergeServiceFiles()
