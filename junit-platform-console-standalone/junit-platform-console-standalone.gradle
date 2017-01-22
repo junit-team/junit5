@@ -1,0 +1,72 @@
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+	}
+}
+
+configurations {
+	standalone
+}
+
+dependencies {
+	standalone(project(':junit-platform-console'))
+	standalone(project(':junit-jupiter-engine'))
+	standalone(project(':junit-vintage-engine'))
+}
+
+jar {
+	manifest {
+		attributes(
+			'Main-Class': 'org.junit.platform.console.ConsoleLauncher',
+			// generate test engine version information in single shared manifest file
+			// pattern of key and value: `'Engine-Version-{YourTestEngine#getId()}': '47.11'`
+			'Engine-Version-junit-jupiter': "$rootProject.version",
+			'Engine-Version-junit-vintage': "$vintageVersion"
+		)
+	}
+}
+
+jar.enabled = false
+javadocJar.enabled = false
+sourcesJar.enabled  = false
+
+shadowJar {
+	classifier = null
+	configurations = [project.configurations.standalone]
+	mergeServiceFiles()
+}
+
+artifacts {
+	archives shadowJar
+}
+
+task runStandaloneConsole(type: JavaExec) {
+	workingDir "$buildDir/libs"
+	main = '-jar'
+	args = [
+			"$shadowJar.archiveName",
+			'--scan-classpath',
+			'--details', 'none'
+	]
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+task checkStandaloneConsole {
+	doLast {
+		String text = runStandaloneConsole.errorOutput.toString() + runStandaloneConsole.standardOutput.toString()
+		assert text.contains("junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $rootProject.version)")
+		assert text.contains("junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion)")
+	}
+}
+
+shadowJar.dependsOn(project(":junit-platform-console").assemble)
+runStandaloneConsole.dependsOn(shadowJar)
+checkStandaloneConsole.dependsOn(runStandaloneConsole)
+check.dependsOn(checkStandaloneConsole)

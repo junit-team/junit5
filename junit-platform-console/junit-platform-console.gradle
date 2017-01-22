@@ -1,4 +1,3 @@
-apply plugin: 'java'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
@@ -15,9 +14,7 @@ configurations {
 }
 
 dependencies {
-	shadowed(project(':junit-platform-launcher'))
-	shadowed(project(':junit-jupiter-engine'))
-	shadowed(project(':junit-vintage-engine'))
+	compile(project(':junit-platform-launcher'))
 	shadowed('net.sf.jopt-simple:jopt-simple:5.0.3')
 }
 
@@ -38,11 +35,7 @@ idea {
 jar {
 	manifest {
 		attributes(
-			'Main-Class': 'org.junit.platform.console.ConsoleLauncher',
-			// generate test engine version information in single shared manifest file
-			// pattern of key and value: `'Engine-Version-{YourTestEngine#getId()}': '47.11'`
-			'Engine-Version-junit-jupiter': "$rootProject.version",
-			'Engine-Version-junit-vintage': "$vintageVersion"
+			'Main-Class': 'org.junit.platform.console.ConsoleLauncher'
 		)
 	}
 }
@@ -51,10 +44,12 @@ javadoc {
 	classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
 }
 
+jar.enabled = false
+
 shadowJar {
-	classifier = 'standalone'
+	classifier = null
 	configurations = [project.configurations.shadowed]
-	mergeServiceFiles()
+	exclude 'META-INF/**'
 	relocate 'joptsimple', 'org.junit.platform.joptsimple'
 	transform(org.junit.platform.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
 		paths = [
@@ -68,29 +63,5 @@ shadowJar {
 }
 
 artifacts {
-	archives jar, shadowJar
+	archives shadowJar
 }
-
-task runStandaloneConsole(type: JavaExec) {
-	workingDir "$buildDir/libs"
-	main = '-jar'
-	args = [
-		"$shadowJar.archiveName",
-		'--scan-classpath',
-		'--details', 'none'
-	]
-	standardOutput = new ByteArrayOutputStream()
-	errorOutput = new ByteArrayOutputStream()
-}
-
-task checkStandaloneConsole {
-	doLast {
-		String text = runStandaloneConsole.errorOutput.toString() + runStandaloneConsole.standardOutput.toString()
-		assert text.contains("junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $rootProject.version)")
-		assert text.contains("junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion)")
-	}
-}
-
-runStandaloneConsole.dependsOn(shadowJar)
-checkStandaloneConsole.dependsOn(runStandaloneConsole)
-check.dependsOn(checkStandaloneConsole)
