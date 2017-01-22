@@ -50,9 +50,9 @@ task runStandaloneConsole(type: JavaExec) {
 	workingDir "$buildDir/libs"
 	main = '-jar'
 	args = [
-			"$shadowJar.archiveName",
-			'--scan-classpath',
-			'--details', 'none'
+		"$shadowJar.archiveName",
+		'--scan-classpath',
+		'--details', 'none'
 	]
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
