@@ -67,6 +67,8 @@ task checkStandaloneConsole {
 }
 
 shadowJar.dependsOn(project(":junit-platform-console").assemble)
+shadowJar.dependsOn(project(":junit-jupiter-engine").assemble)
+shadowJar.dependsOn(project(":junit-vintage-engine").assemble)
 runStandaloneConsole.dependsOn(shadowJar)
 checkStandaloneConsole.dependsOn(runStandaloneConsole)
 check.dependsOn(checkStandaloneConsole)
