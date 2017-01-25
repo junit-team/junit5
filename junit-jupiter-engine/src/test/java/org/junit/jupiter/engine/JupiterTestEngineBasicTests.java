@@ -35,6 +35,11 @@ class JupiterTestEngineBasicTests {
 	}
 
 	@Test
+	void artifactId() {
+		assertEquals("junit-jupiter-engine", jupiter.getArtifactId().get());
+	}
+
+	@Test
 	void version() {
 		assertEquals("DEVELOPMENT", jupiter.getVersion().get());
 	}

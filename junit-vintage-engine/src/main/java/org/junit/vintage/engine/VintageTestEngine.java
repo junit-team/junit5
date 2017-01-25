@@ -50,6 +50,14 @@ public class VintageTestEngine implements TestEngine {
 		return Optional.of("org.junit.vintage");
 	}
 
+	/**
+	 * Returns {@code junit-vintage-engine} as the artifact ID.
+	 */
+	@Override
+	public Optional<String> getArtifactId() {
+		return Optional.of("junit-vintage-engine");
+	}
+
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit Vintage");
