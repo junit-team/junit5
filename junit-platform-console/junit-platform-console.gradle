@@ -1,4 +1,4 @@
-apply plugin: 'application'
+apply plugin: 'java'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
@@ -12,11 +12,16 @@ buildscript {
 
 configurations {
 	shadowed
+	standalone
 }
 
 dependencies {
 	compile(project(':junit-platform-launcher'))
 	shadowed('net.sf.jopt-simple:jopt-simple:5.0.3')
+
+	standalone(project(':junit-platform-console'))
+	standalone(project(':junit-jupiter-engine'))
+	standalone(project(':junit-vintage-engine'))
 }
 
 sourceSets.main.compileClasspath += configurations.shadowed
@@ -33,7 +38,13 @@ idea {
 	}
 }
 
-mainClassName = "org.junit.platform.console.ConsoleLauncher"
+jar {
+	manifest {
+		attributes(
+			'Main-Class': 'org.junit.platform.console.ConsoleLauncher'
+		)
+	}
+}
 
 javadoc {
 	classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
@@ -62,10 +73,51 @@ shadowJar {
 	}
 }
 
-artifacts {
-	archives shadowJar
+task standaloneJar(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+	dependsOn(shadowJar)
+	dependsOn(project(":junit-jupiter-engine").jar)
+	dependsOn(project(":junit-vintage-engine").jar)
+
+	classifier = 'standalone'
+	configurations = [project.configurations.standalone]
+
+	mergeServiceFiles()
+	manifest {
+		inheritFrom project.tasks.jar.manifest
+		attributes(
+			// generate test engine version information in single shared manifest file
+			// pattern of key and value: `'Engine-Version-{YourTestEngine#getId()}': '47.11'`
+			'Engine-Version-junit-jupiter': "$rootProject.version",
+			'Engine-Version-junit-vintage': "$vintageVersion"
+		)
+	}
 }
 
-distZip.dependsOn(shadowJar)
-distTar.dependsOn(shadowJar)
-installDist.dependsOn(shadowJar)
+artifacts {
+	archives shadowJar
+	archives standaloneJar
+}
+
+task standaloneExec(type: JavaExec) {
+	dependsOn(standaloneJar)
+	workingDir "$buildDir/libs"
+	main = '-jar'
+	args = [
+			"$standaloneJar.archiveName",
+			'--scan-classpath',
+			'--details', 'none'
+	]
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+task standaloneCheck {
+	dependsOn(standaloneExec)
+	doLast {
+		String text = standaloneExec.errorOutput.toString() + standaloneExec.standardOutput.toString()
+		assert text.contains("junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $rootProject.version)")
+		assert text.contains("junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion)")
+	}
+}
+
+check.dependsOn(standaloneCheck)
