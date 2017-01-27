@@ -85,8 +85,8 @@ task standaloneJar(type: com.github.jengelman.gradle.plugins.shadow.tasks.Shadow
 	manifest {
 		inheritFrom project.tasks.jar.manifest
 		attributes(
-            'Specification-Title': "$project.name-standalone",
-            'Implementation-Title': "$project.name-standalone",
+			'Specification-Title': "$project.name-standalone",
+			'Implementation-Title': "$project.name-standalone",
 			// generate test engine version information in single shared manifest file
 			// pattern of key and value: `'Engine-Version-{YourTestEngine#getId()}': '47.11'`
 			'Engine-Version-junit-jupiter': "$rootProject.version",
