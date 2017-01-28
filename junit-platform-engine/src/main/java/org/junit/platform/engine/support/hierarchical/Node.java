@@ -13,7 +13,6 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -91,7 +90,7 @@ public interface Node<C extends EngineExecutionContext> {
 	 * @see #before
 	 * @see #after
 	 */
-	default C execute(C context, Consumer<TestDescriptor> dynamicTestExecutor) throws Exception {
+	default C execute(C context, DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		return execute(context);
 	}
 
@@ -107,7 +106,8 @@ public interface Node<C extends EngineExecutionContext> {
 	 *
 	 * @see #before
 	 * @see #after
-	 * @deprecated Please use {@link #execute(EngineExecutionContext, Consumer)} instead.
+	 * @deprecated Please use
+	 * {@link #execute(EngineExecutionContext, DynamicTestExecutor)} instead.
 	 */
 	@Deprecated
 	default C execute(C context) throws Exception {
@@ -195,6 +195,29 @@ public interface Node<C extends EngineExecutionContext> {
 					.toString();
 			// @formatter:on
 		}
+	}
+
+	/**
+	 * Executor for additional, dynamic test descriptors discovered during
+	 * execution of a {@link Node}.
+	 *
+	 * <p>The test descriptors will be executed by the same
+	 * {@link HierarchicalTestExecutor} that executes the submitting node.
+	 *
+	 * <p>This interface is not intended to be implemented by clients.
+	 *
+	 * @see Node#execute(EngineExecutionContext, DynamicTestExecutor)
+	 * @see HierarchicalTestExecutor
+	 */
+	interface DynamicTestExecutor {
+
+		/**
+		 * Submit a dynamic test descriptor for immediate execution.
+		 *
+		 * @param testDescriptor the test descriptor to be executed
+		 */
+		void execute(TestDescriptor testDescriptor);
+
 	}
 
 }

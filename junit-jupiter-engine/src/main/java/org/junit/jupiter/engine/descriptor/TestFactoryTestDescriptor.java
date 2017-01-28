@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicTest;
@@ -73,8 +72,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@Override
-	protected void invokeTestMethod(JupiterEngineExecutionContext context,
-			Consumer<TestDescriptor> dynamicTestExecutor) {
+	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 
 		context.getThrowableCollector().execute(() -> {
@@ -118,11 +116,11 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		throw invalidReturnTypeException(testExtensionContext);
 	}
 
-	private void registerAndExecute(DynamicTest dynamicTest, int index, Consumer<TestDescriptor> dynamicTestExecutor) {
+	private void registerAndExecute(DynamicTest dynamicTest, int index, DynamicTestExecutor dynamicTestExecutor) {
 		UniqueId uniqueId = getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
 		TestDescriptor descriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest, getSource().get());
 		addChild(descriptor);
-		dynamicTestExecutor.accept(descriptor);
+		dynamicTestExecutor.execute(descriptor);
 	}
 
 	private JUnitException invalidReturnTypeException(TestExtensionContext testExtensionContext) {

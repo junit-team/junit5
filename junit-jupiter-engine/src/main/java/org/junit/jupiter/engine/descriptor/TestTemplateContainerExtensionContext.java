@@ -25,11 +25,11 @@ import org.junit.platform.engine.EngineExecutionListener;
  * @since 5.0
  */
 @API(Internal)
-public final class TestTemplateContainerExtensionContext extends AbstractExtensionContext<TestTemplateTestDescriptor>
+final class TestTemplateContainerExtensionContext extends AbstractExtensionContext<TestTemplateTestDescriptor>
 		implements ContainerExtensionContext {
 
-	public TestTemplateContainerExtensionContext(ExtensionContext parent,
-			EngineExecutionListener engineExecutionListener, TestTemplateTestDescriptor testDescriptor) {
+	TestTemplateContainerExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+			TestTemplateTestDescriptor testDescriptor) {
 		super(parent, engineExecutionListener, testDescriptor);
 	}
 

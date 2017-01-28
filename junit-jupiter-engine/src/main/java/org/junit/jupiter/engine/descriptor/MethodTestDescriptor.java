@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -144,7 +143,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
-			Consumer<TestDescriptor> dynamicTestExecutor) throws Exception {
+			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		// @formatter:off
@@ -203,8 +202,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		}
 	}
 
-	protected void invokeTestMethod(JupiterEngineExecutionContext context,
-			Consumer<TestDescriptor> dynamicTestExecutor) {
+	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
