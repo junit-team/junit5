@@ -44,8 +44,11 @@ on GitHub.
   when they are supplied as explicit arguments (see <<running-tests-console-launcher-options>>).
 * The new `--details <Details>` option of the `ConsoleLauncher` now allows to select an output
   details mode for when tests are executed. Use one of: `none`, `flat`, `tree` or `verbose`. If
-  `none` is selected, then only the summary and test failures are shown.
-
+  `none` is selected, then only the summary and test failures are shown (see
+  <<running-tests-console-launcher-options>>).
+* An executable `junit-platform-console-{platform-version}-standalone.jar` containing the two
+  test engines Jupiter and Vintage with all dependencies is generated. It provides hassle-free
+  usage of JUnit 5 in projects that manually manage their dependencies.
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
 ==== JUnit Jupiter
