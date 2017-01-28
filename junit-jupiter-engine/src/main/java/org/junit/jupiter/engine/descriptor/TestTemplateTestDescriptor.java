@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -116,7 +115,7 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
-			Consumer<TestDescriptor> dynamicTestExecutor) throws Exception {
+			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(containerExtensionContext,
 			context.getExtensionRegistry());
@@ -127,7 +126,7 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 				int index = invocationIndex.incrementAndGet();
 				TestDescriptor invocationTestDescriptor = createInvocationTestDescriptor(invocationContext, index);
 				addChild(invocationTestDescriptor);
-				dynamicTestExecutor.accept(invocationTestDescriptor);
+				dynamicTestExecutor.execute(invocationTestDescriptor);
 			});
 		});
 		validateWasAtLeastInvokedOnce(invocationIndex);

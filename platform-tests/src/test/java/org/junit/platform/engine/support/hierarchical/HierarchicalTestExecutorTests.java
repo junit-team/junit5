@@ -35,6 +35,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.opentest4j.TestAbortedException;
@@ -337,8 +338,8 @@ public class HierarchicalTestExecutorTests {
 		MyLeaf dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
 
 		when(child.execute(any(), any())).thenAnswer(invocation -> {
-			Consumer<TestDescriptor> dynamicTestExecutor = invocation.getArgument(1);
-			dynamicTestExecutor.accept(dynamicTestDescriptor);
+			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
+			dynamicTestExecutor.execute(dynamicTestDescriptor);
 			return invocation.getArgument(0);
 		});
 		root.addChild(child);
@@ -430,7 +431,7 @@ public class HierarchicalTestExecutorTests {
 
 		@Override
 		public MyEngineExecutionContext execute(MyEngineExecutionContext context,
-				Consumer<TestDescriptor> dynamicTestExecutor) throws Exception {
+				DynamicTestExecutor dynamicTestExecutor) throws Exception {
 			return context;
 		}
 

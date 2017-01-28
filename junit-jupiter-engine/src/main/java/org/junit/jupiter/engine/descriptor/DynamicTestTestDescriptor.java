@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import java.util.function.Consumer;
-
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.engine.TestDescriptor;
@@ -45,7 +43,7 @@ class DynamicTestTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
-			Consumer<TestDescriptor> dynamicTestExecutor) throws Exception {
+			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		executeAndMaskThrowable(dynamicTest.getExecutable());
 		return context;
 	}
