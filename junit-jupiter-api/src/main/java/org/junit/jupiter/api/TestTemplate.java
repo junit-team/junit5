@@ -33,6 +33,10 @@ import org.junit.platform.commons.meta.API;
  * org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider
  * providers}.
  *
+ * <p>Each invocation of a test template method, behaves like the execution of
+ * a regular {@link Test @Test} method, i.e. it supports the same lifecycle
+ * callbacks and extensions.
+ *
  * <p>{@code @TestTemplate} methods must not be {@code private} or {@code static}
  * and must return {@code void}.
  *
