@@ -26,7 +26,12 @@ import org.junit.platform.commons.meta.API;
  * <em>test template</em> method.
  *
  * <p>In contrast to {@link Test @Test} methods, a test template is not itself
- * a test case but rather a template for test cases.
+ * a test case but rather a template for test cases. As such, it is designed to
+ * be invoked multiple times depending on the number of {@linkplain
+ * org.junit.jupiter.api.extension.TestTemplateInvocationContext invocation
+ * contexts} returned by the registered {@linkplain
+ * org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider
+ * providers}.
  *
  * <p>{@code @TestTemplate} methods must not be {@code private} or {@code static}
  * and must return {@code void}.
@@ -37,6 +42,8 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  * @see Test
+ * @see org.junit.jupiter.api.extension.TestTemplateInvocationContext
+ * @see org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
