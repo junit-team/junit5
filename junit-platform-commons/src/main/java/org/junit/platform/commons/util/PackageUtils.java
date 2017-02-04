@@ -12,8 +12,14 @@ package org.junit.platform.commons.util;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import java.io.File;
+import java.net.URL;
+import java.security.CodeSource;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 import org.junit.platform.commons.meta.API;
 
@@ -62,12 +68,43 @@ public final class PackageUtils {
 		Preconditions.notNull(function, "function must not be null");
 		Package typePackage = type.getPackage();
 		if (typePackage != null) {
-			String value = function.apply(typePackage);
-			if (value != null) {
-				return Optional.of(value);
-			}
+			return Optional.ofNullable(function.apply(typePackage));
 		}
 		return Optional.empty();
+	}
+
+	/**
+	 * Get the value of the specified attribute name, specified as a string,
+	 * or an empty {@link Optional} if the attribute was not found. The attribute
+	 * name is case-insensitive.
+	 *
+	 * <p>This method also returns an empty {@link Optional} value holder
+	 * if any exception is caught while loading the manifest file via the
+	 * JAR file of the specified type.
+	 *
+	 * @param type the type to get the attribute for
+	 * @param name the attribute name as a string
+	 * @return an {@code Optional} containing the attribute value; never
+	 * {@code null} but potentially empty
+	 * @throws PreconditionViolationException if the supplied type is
+	 * {@code null} or the specified name is blank
+	 * @see Manifest#getMainAttributes()
+	 */
+	public static Optional<String> getAttribute(Class<?> type, String name) {
+		Preconditions.notNull(type, "type must not be null");
+		Preconditions.notBlank(name, "name must not be blank");
+		try {
+			CodeSource codeSource = type.getProtectionDomain().getCodeSource();
+			URL jarUrl = codeSource.getLocation();
+			try (JarFile jarFile = new JarFile(new File(jarUrl.toURI()))) {
+				Manifest manifest = jarFile.getManifest();
+				Attributes mainAttributes = manifest.getMainAttributes();
+				return Optional.ofNullable(mainAttributes.getValue(name));
+			}
+		}
+		catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 
 }

@@ -46,6 +46,14 @@ public class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecu
 		return Optional.of("org.junit.jupiter");
 	}
 
+	/**
+	 * Returns {@code junit-jupiter-engine} as the artifact ID.
+	 */
+	@Override
+	public Optional<String> getArtifactId() {
+		return Optional.of("junit-jupiter-engine");
+	}
+
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		Preconditions.notNull(discoveryRequest, "discovery request must not be null");

@@ -142,7 +142,10 @@ public interface TestEngine {
 	 *
 	 * <p>This information is used solely for debugging and reporting purposes.
 	 *
-	 * <p>This default implementation attempts to query the
+	 * <p>Initially, the default implementation tries to retrieve the engine
+	 * version from the manifest attribute named: {@code "Engine-Version-" + getId()}
+	 *
+	 * <p>Then the default implementation attempts to query the
 	 * {@linkplain Package#getImplementationVersion() implementation version}
 	 * from the package attributes for the {@link Package} in which the engine
 	 * resides. Note that a package only has attributes if the information is
@@ -164,6 +167,10 @@ public interface TestEngine {
 	 * @see #getArtifactId()
 	 */
 	default Optional<String> getVersion() {
+		Optional<String> standalone = PackageUtils.getAttribute(getClass(), "Engine-Version-" + getId());
+		if (standalone.isPresent()) {
+			return standalone;
+		}
 		return Optional.of(
 			PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT"));
 	}
