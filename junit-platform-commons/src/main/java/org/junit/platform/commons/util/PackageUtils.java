@@ -12,6 +12,7 @@ package org.junit.platform.commons.util;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.jar.Manifest;
@@ -88,8 +89,8 @@ public final class PackageUtils {
 	public static Optional<String> getAttribute(ClassLoader loader, String name) {
 		Preconditions.notNull(loader, "loader must not be null");
 		Preconditions.notBlank(name, "name must not be blank");
-		try {
-			Manifest manifest = new Manifest(loader.getResourceAsStream("META-INF/MANIFEST.MF"));
+		try (InputStream stream = loader.getResourceAsStream("META-INF/MANIFEST.MF")) {
+			Manifest manifest = new Manifest(stream);
 			return Optional.ofNullable(manifest.getMainAttributes().getValue(name));
 		}
 		catch (Exception e) {
