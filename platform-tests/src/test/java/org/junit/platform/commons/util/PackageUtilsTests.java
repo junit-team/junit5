@@ -43,7 +43,7 @@ class PackageUtilsTests {
 	@Test
 	void getAttributeWithNullFunction() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> PackageUtils.getAttribute(getClass(), null));
+			() -> PackageUtils.getAttribute(getClass(), (Function<Package, String>) null));
 		assertEquals("function must not be null", exception.getMessage());
 	}
 
@@ -68,23 +68,23 @@ class PackageUtilsTests {
 	}
 
 	@Test
-	void getAttributeWithNullClassLoader() {
+	void getAttributeWithNullTypeAndName() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> PackageUtils.getAttribute(null, ""));
-		assertEquals("loader must not be null", exception.getMessage());
+			() -> PackageUtils.getAttribute(null, "foo"));
+		assertEquals("type must not be null", exception.getMessage());
 	}
 
 	@Test
 	void getAttributeWithNullName() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> PackageUtils.getAttribute(getClass().getClassLoader(), null));
+			() -> PackageUtils.getAttribute(getClass(), (String) null));
 		assertEquals("name must not be blank", exception.getMessage());
 	}
 
 	@Test
 	void getAttributeWithEmptyName() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> PackageUtils.getAttribute(getClass().getClassLoader(), ""));
+			() -> PackageUtils.getAttribute(getClass(), ""));
 		assertEquals("name must not be blank", exception.getMessage());
 	}
 }

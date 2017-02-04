@@ -12,9 +12,13 @@ package org.junit.platform.commons.util;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import java.io.InputStream;
+import java.io.File;
+import java.net.URL;
+import java.security.CodeSource;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import org.junit.platform.commons.meta.API;
@@ -76,22 +80,27 @@ public final class PackageUtils {
 	 *
 	 * <p>This method also returns an empty {@link Optional} value holder
 	 * if any exception is caught while loading the manifest file via the
-	 * specified class loader.
+	 * JAR file of the specified type.
 	 *
-	 * @param loader the {@link ClassLoader} used to load the manifest with
+	 * @param type the type to get the attribute for
 	 * @param name the attribute name as a string
 	 * @return an {@code Optional} containing the attribute value; never
 	 * {@code null} but potentially empty
-	 * @throws PreconditionViolationException if the supplied loader is
+	 * @throws PreconditionViolationException if the supplied type is
 	 * {@code null} or the specified name is blank
-	 * @see Manifest
+	 * @see Manifest#getMainAttributes()
 	 */
-	public static Optional<String> getAttribute(ClassLoader loader, String name) {
-		Preconditions.notNull(loader, "loader must not be null");
+	public static Optional<String> getAttribute(Class<?> type, String name) {
+		Preconditions.notNull(type, "type must not be null");
 		Preconditions.notBlank(name, "name must not be blank");
-		try (InputStream stream = loader.getResourceAsStream("META-INF/MANIFEST.MF")) {
-			Manifest manifest = new Manifest(stream);
-			return Optional.ofNullable(manifest.getMainAttributes().getValue(name));
+		try {
+			CodeSource codeSource = type.getProtectionDomain().getCodeSource();
+			URL jarUrl = codeSource.getLocation();
+			try (JarFile jarFile = new JarFile(new File(jarUrl.toURI()))) {
+				Manifest manifest = jarFile.getManifest();
+				Attributes mainAttributes = manifest.getMainAttributes();
+				return Optional.ofNullable(mainAttributes.getValue(name));
+			}
 		}
 		catch (Exception e) {
 			return Optional.empty();
