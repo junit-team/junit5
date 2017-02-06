@@ -12,6 +12,9 @@ package example;
 
 // @formatter:off
 // tag::user_guide[]
+
+import org.junit.jupiter.api.Test;
+
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -20,8 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.jupiter.api.Test;
 
 class AssertionsDemo {
 
@@ -63,6 +64,22 @@ class AssertionsDemo {
 		});
 	}
 
+	@Test
+	void timeoutNotExceededWithResult() {
+		// The following assertion succeeds, and returns the supplied object.
+		String actualResult = assertTimeout(ofMinutes(2), () -> {
+			return "a result";
+		});
+		assertEquals("a result", actualResult);
+	}
+
+	@Test
+	void timeoutNotExceededWithMethod() {
+		// The following assertion invokes a method reference and returns an object.
+		String actualGreeting = assertTimeout(ofMinutes(2), AssertionsDemo::greeting);
+		assertEquals("hello world!", actualGreeting);
+	}
+
 	// end::user_guide[]
 	@extensions.ExpectToFail
 	// tag::user_guide[]
@@ -87,6 +104,10 @@ class AssertionsDemo {
 			// Simulate task that takes more than 10 ms.
 			Thread.sleep(100);
 		});
+	}
+
+	public static String greeting() {
+		return "hello world!";
 	}
 
 }

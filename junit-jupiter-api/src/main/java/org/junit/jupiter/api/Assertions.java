@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.opentest4j.MultipleFailuresError;
@@ -1029,6 +1030,8 @@ public final class Assertions {
 
 	// --- assertTimeout -------------------------------------------------------
 
+	// --- executable ---
+
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code executable}
 	 * completes before the given {@code timeout} is exceeded.
@@ -1039,6 +1042,9 @@ public final class Assertions {
 	 *
 	 * @see #assertTimeout(Duration, Executable, String)
 	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 * @see #assertTimeout(Duration, ThrowingSupplier)
+	 * @see #assertTimeout(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeout(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeoutPreemptively(Duration, Executable)
 	 */
 	public static void assertTimeout(Duration timeout, Executable executable) {
@@ -1057,6 +1063,9 @@ public final class Assertions {
 	 *
 	 * @see #assertTimeout(Duration, Executable)
 	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 * @see #assertTimeout(Duration, ThrowingSupplier)
+	 * @see #assertTimeout(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeout(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
 	 */
 	public static void assertTimeout(Duration timeout, Executable executable, String message) {
@@ -1076,11 +1085,81 @@ public final class Assertions {
 	 *
 	 * @see #assertTimeout(Duration, Executable)
 	 * @see #assertTimeout(Duration, Executable, String)
+	 * @see #assertTimeout(Duration, ThrowingSupplier)
+	 * @see #assertTimeout(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeout(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
 	 */
 	public static void assertTimeout(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
 		AssertTimeout.assertTimeout(timeout, executable, messageSupplier);
 	}
+
+	// --- supplier ---
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier}
+	 * completes before the given {@code timeout} is exceeded.
+	 * <p>
+	 * <p>Note: the executable will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the executable will
+	 * not be preemptively aborted if the timeout is exceeded.
+	 *
+	 * @see #assertTimeout(Duration, Executable)
+	 * @see #assertTimeout(Duration, Executable, String)
+	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 * @see #assertTimeout(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeout(Duration, ThrowingSupplier, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, Executable)
+	 */
+	public static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier) {
+		return AssertTimeout.assertTimeout(timeout, supplier);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier}
+	 * completes before the given {@code timeout} is exceeded.
+	 * <p>
+	 * <p>Note: the executable will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the executable will
+	 * not be preemptively aborted if the timeout is exceeded.
+	 * <p>
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @see #assertTimeout(Duration, Executable)
+	 * @see #assertTimeout(Duration, Executable, String)
+	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 * @see #assertTimeout(Duration, ThrowingSupplier)
+	 * @see #assertTimeout(Duration, ThrowingSupplier, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
+	 */
+	public static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, String message) {
+		return AssertTimeout.assertTimeout(timeout, supplier, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier}
+	 * completes before the given {@code timeout} is exceeded.
+	 * <p>
+	 * <p>Note: the executable will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the executable will
+	 * not be preemptively aborted if the timeout is exceeded.
+	 * <p>
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @see #assertTimeout(Duration, Executable)
+	 * @see #assertTimeout(Duration, Executable, String)
+	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 * @see #assertTimeout(Duration, ThrowingSupplier)
+	 * @see #assertTimeout(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 */
+	public static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier,
+			Supplier<String> messageSupplier) {
+		return AssertTimeout.assertTimeout(timeout, supplier, messageSupplier);
+	}
+
+	// --- executable - preemptively ---
 
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code executable}
@@ -1092,6 +1171,9 @@ public final class Assertions {
 	 *
 	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeout(Duration, Executable)
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable) {
@@ -1110,6 +1192,9 @@ public final class Assertions {
 	 *
 	 * @see #assertTimeoutPreemptively(Duration, Executable)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeout(Duration, Executable, String)
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
@@ -1129,11 +1214,79 @@ public final class Assertions {
 	 *
 	 * @see #assertTimeoutPreemptively(Duration, Executable)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeout(Duration, Executable, Supplier)
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable,
 			Supplier<String> messageSupplier) {
 		AssertTimeout.assertTimeoutPreemptively(timeout, executable, messageSupplier);
+	}
+
+	// --- supplier - preemptively ---
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier}
+	 * completes before the given {@code timeout} is exceeded.
+	 * <p>
+	 * <p>Note: the executable will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the executable will
+	 * be preemptively aborted if the timeout is exceeded.
+	 *
+	 * @see #assertTimeoutPreemptively(Duration, Executable)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier)
+	 * @see #assertTimeout(Duration, Executable)
+	 */
+	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier) {
+		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier}
+	 * completes before the given {@code timeout} is exceeded.
+	 * <p>
+	 * <p>Note: the executable will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the executable will
+	 * be preemptively aborted if the timeout is exceeded.
+	 * <p>
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @see #assertTimeoutPreemptively(Duration, Executable)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier)
+	 * @see #assertTimeout(Duration, Executable, String)
+	 */
+	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
+		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier}
+	 * completes before the given {@code timeout} is exceeded.
+	 * <p>
+	 * <p>Note: the executable will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the executable will
+	 * be preemptively aborted if the timeout is exceeded.
+	 * <p>
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @see #assertTimeoutPreemptively(Duration, Executable)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 */
+	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
+			Supplier<String> messageSupplier) {
+		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
 	}
 
 }
