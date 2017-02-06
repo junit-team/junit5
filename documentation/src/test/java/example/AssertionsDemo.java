@@ -12,7 +12,6 @@ package example;
 
 // @formatter:off
 // tag::user_guide[]
-
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -26,89 +25,69 @@ import org.junit.jupiter.api.Test;
 
 class AssertionsDemo {
 
-    // end::user_guide[]
-    Address address = new Address("John", "User");
+	// end::user_guide[]
+	Address address = new Address("John", "User");
 
-    // tag::user_guide[]
-    @Test
-    void standardAssertions() {
-        assertEquals(2, 2);
-        assertEquals(4, 4, "The optional assertion message is now the last parameter.");
-        assertTrue(2 == 2, () -> "Assertion messages can be lazily evaluated -- "
-                + "to avoid constructing complex messages unnecessarily.");
-    }
+	// tag::user_guide[]
+	@Test
+	void standardAssertions() {
+		assertEquals(2, 2);
+		assertEquals(4, 4, "The optional assertion message is now the last parameter.");
+		assertTrue(2 == 2, () -> "Assertion messages can be lazily evaluated -- "
+				+ "to avoid constructing complex messages unnecessarily.");
+	}
 
-    @Test
-    void groupedAssertions() {
-        // In a grouped assertion all assertions are executed, and any
-        // failures will be reported together.
-        assertAll("address",
-                () -> assertEquals("John", address.getFirstName()),
-                () -> assertEquals("User", address.getLastName())
-        );
-    }
+	@Test
+	void groupedAssertions() {
+		// In a grouped assertion all assertions are executed, and any
+		// failures will be reported together.
+		assertAll("address",
+			() -> assertEquals("John", address.getFirstName()),
+			() -> assertEquals("User", address.getLastName())
+		);
+	}
 
-    @Test
-    void exceptionTesting() {
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-            throw new IllegalArgumentException("a message");
-        });
-        assertEquals("a message", exception.getMessage());
-    }
+	@Test
+	void exceptionTesting() {
+		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+			throw new IllegalArgumentException("a message");
+		});
+		assertEquals("a message", exception.getMessage());
+	}
 
-    @Test
-    void timeoutNotExceeded() {
-        // The following assertion succeeds.
-        assertTimeout(ofMinutes(2), () -> {
-            // Perform task that takes less than 2 minutes.
-        });
-    }
+	@Test
+	void timeoutNotExceeded() {
+		// The following assertion succeeds.
+		assertTimeout(ofMinutes(2), () -> {
+			// Perform task that takes less than 2 minutes.
+		});
+	}
 
-    @Test
-    void timeoutNotExceededWithResult() {
-        // The following assertion succeeds, and returns the supplied object.
-        String actualResult = assertTimeout(ofMinutes(2), () -> {
-            return "a result";
-        });
-        assertEquals("a result", actualResult);
-    }
+	// end::user_guide[]
+	@extensions.ExpectToFail
+	// tag::user_guide[]
+	@Test
+	void timeoutExceeded() {
+		// The following assertion fails with an error message similar to:
+		// execution exceeded timeout of 10 ms by 91 ms
+		assertTimeout(ofMillis(10), () -> {
+			// Simulate task that takes more than 10 ms.
+			Thread.sleep(100);
+		});
+	}
 
-    @Test
-    void timeoutNotExceededWithMethod() {
-        // The following assertion invokes a method reference and returns an object.
-        String actualGreeting = assertTimeout(ofMinutes(2), AssertionsDemo::greeting);
-        assertEquals("hello world!", actualGreeting);
-    }
-
-    // end::user_guide[]
-    @extensions.ExpectToFail
-    // tag::user_guide[]
-    @Test
-    void timeoutExceeded() {
-        // The following assertion fails with an error message similar to:
-        // execution exceeded timeout of 10 ms by 91 ms
-        assertTimeout(ofMillis(10), () -> {
-            // Simulate task that takes more than 10 ms.
-            Thread.sleep(100);
-        });
-    }
-
-    // end::user_guide[]
-    @extensions.ExpectToFail
-    // tag::user_guide[]
-    @Test
-    void timeoutExceededWithPreemptiveTermination() {
-        // The following assertion fails with an error message similar to:
-        // execution timed out after 10 ms
-        assertTimeoutPreemptively(ofMillis(10), () -> {
-            // Simulate task that takes more than 10 ms.
-            Thread.sleep(100);
-        });
-    }
-
-    public static String greeting() {
-        return "hello world!";
-    }
+	// end::user_guide[]
+	@extensions.ExpectToFail
+	// tag::user_guide[]
+	@Test
+	void timeoutExceededWithPreemptiveTermination() {
+		// The following assertion fails with an error message similar to:
+		// execution timed out after 10 ms
+		assertTimeoutPreemptively(ofMillis(10), () -> {
+			// Simulate task that takes more than 10 ms.
+			Thread.sleep(100);
+		});
+	}
 
 }
 // end::user_guide[]

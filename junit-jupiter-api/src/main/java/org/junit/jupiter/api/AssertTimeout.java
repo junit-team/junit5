@@ -24,7 +24,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.junit.platform.commons.util.ExceptionUtils;
 
 /**
@@ -44,26 +43,10 @@ class AssertTimeout {
 	}
 
 	static void assertTimeout(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
-		assertTimeout(timeout, () -> {
-			executable.execute();
-			return null;
-		}, messageSupplier);
-	}
-
-	static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier) {
-		return AssertTimeout.assertTimeout(timeout, supplier, () -> null);
-	}
-
-	static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, String message) {
-		return AssertTimeout.assertTimeout(timeout, supplier, () -> message);
-	}
-
-	static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
 		long timeoutInMillis = timeout.toMillis();
 		long start = System.currentTimeMillis();
-		T result = null;
 		try {
-			result = supplier.get();
+			executable.execute();
 		}
 		catch (Throwable ex) {
 			ExceptionUtils.throwAsUncheckedException(ex);
@@ -74,7 +57,6 @@ class AssertTimeout {
 			fail(buildPrefix(nullSafeGet(messageSupplier)) + "execution exceeded timeout of " + timeoutInMillis
 					+ " ms by " + (timeElapsed - timeoutInMillis) + " ms");
 		}
-		return result;
 	}
 
 	static void assertTimeoutPreemptively(Duration timeout, Executable executable) {
@@ -86,42 +68,23 @@ class AssertTimeout {
 	}
 
 	static void assertTimeoutPreemptively(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
-		assertTimeoutPreemptively(timeout, () -> {
-			executable.execute();
-			return null;
-		}, messageSupplier);
-	}
-
-	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier) {
-		return assertTimeoutPreemptively(timeout, supplier, () -> null);
-	}
-
-	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
-		return assertTimeoutPreemptively(timeout, supplier, () -> message);
-	}
-
-	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
-			Supplier<String> messageSupplier) {
 		ExecutorService executorService = Executors.newSingleThreadExecutor();
-
 		try {
-			Future<ResultOrException<T>> future = executorService.submit(() -> {
+			Future<Throwable> future = executorService.submit(() -> {
 				try {
-					return ResultOrException.result(supplier.get());
+					executable.execute();
 				}
 				catch (Throwable ex) {
-					return ResultOrException.exception(ex);
+					return ex;
 				}
+				return null;
 			});
 
 			long timeoutInMillis = timeout.toMillis();
-			T result = null;
 			Throwable throwable = null;
 
 			try {
-				ResultOrException<T> tmp = future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
-				result = tmp.getResult();
-				throwable = tmp.getException();
+				throwable = future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
 				fail(
@@ -137,44 +100,10 @@ class AssertTimeout {
 			if (throwable != null) {
 				ExceptionUtils.throwAsUncheckedException(throwable);
 			}
-			return result;
 		}
 		finally {
 			executorService.shutdownNow();
 		}
-	}
-
-	/**
-	 * Utilty class for capturing the result (or exception) of executing a {@link java.util.concurrent.Callable} task.
-	 *
-	 * @param <T> the return type
-	 */
-	static class ResultOrException<T> {
-
-		private final T result;
-		private final Throwable exception;
-
-		ResultOrException(final T result, final Throwable exception) {
-			this.result = result;
-			this.exception = exception;
-		}
-
-		static <T> ResultOrException<T> result(final T result) {
-			return new ResultOrException<>(result, null);
-		}
-
-		static <T> ResultOrException<T> exception(final Throwable exception) {
-			return new ResultOrException<>(null, exception);
-		}
-
-		public T getResult() {
-			return result;
-		}
-
-		public Throwable getException() {
-			return exception;
-		}
-
 	}
 
 }
