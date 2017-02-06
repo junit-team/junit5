@@ -11,6 +11,9 @@ package org.junit.platform.gradle.plugin
 
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.Dependency
+import org.gradle.api.internal.artifacts.configurations.ConfigurationInternal
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
@@ -222,6 +225,46 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask.args.containsAll('-c', 'com.acme.Foo', '-c', 'com.acme.Bar', '-c', 'com.example.app.Application')
 		junitTask.args.containsAll('-m', 'com.acme.Foo#a', '-m', 'com.acme.Foo#b', '-m', 'com.example.app.Application#run(java.lang.String[])')
 		junitTask.args.containsAll('-r', '/bar.csv', '-r', '/foo/input.json', '-r', '/com/acme/my.properties')
+	}
+
+	def "adds dependencies to configuration"() {
+
+		project.apply plugin: 'java'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		project.junitPlatform {
+			platformVersion '1.0.0'
+		}
+		project.evaluate()
+
+		then:
+		Configuration configuration = project.configurations.getByName("junitPlatform")
+		configuration.triggerWhenEmptyActionsIfNecessary()
+
+		configuration.getAllDependencies().containsAll(
+				project.dependencies.create("org.junit.platform:junit-platform-launcher:1.0.0"),
+				project.dependencies.create("org.junit.platform:junit-platform-console:1.0.0")
+		)
+	}
+
+	def "adds dependencies with fixed version when not explicity configured"() {
+
+		project.apply plugin: 'java'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		project.evaluate()
+
+		then:
+		Configuration configuration = project.configurations.getByName("junitPlatform")
+		configuration.triggerWhenEmptyActionsIfNecessary()
+
+		configuration.getAllDependencies()
+			.findAll { dependency -> "org.junit.platform" == dependency.getGroup() }
+			.collect { dependency -> dependency.getVersion() }
+			.findAll { version -> version.startsWith("1.") && !version.contains("+")}
+			.size() == 2
 	}
 
 }

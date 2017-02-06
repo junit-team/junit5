@@ -16,7 +16,9 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as plugin
+  version) instead of a dynamic versioning scheme (was `1.+`) by default to ensure reproducible
+  builds.
 
 ===== Deprecations and Breaking Changes
 

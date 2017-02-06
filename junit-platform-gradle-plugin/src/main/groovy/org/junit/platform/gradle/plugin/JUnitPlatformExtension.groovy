@@ -28,9 +28,9 @@ class JUnitPlatformExtension {
 	/**
 	 * The version of the JUnit Platform to use.
 	 *
-	 * <p>Defaults to {@code '1.+'}.
+	 * <p>Defaults to the version of the plugin.
 	 */
-	String platformVersion = '1.+'
+	String platformVersion
 
 	/**
 	 * The fully qualified class name of the {@link java.util.logging.LogManager}

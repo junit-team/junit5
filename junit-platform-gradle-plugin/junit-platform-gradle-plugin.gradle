@@ -10,3 +10,11 @@ dependencies {
 	}
 	testRuntime("junit:junit:${junit4Version}")
 }
+
+processResources {
+	inputs.properties( version: version.toString() )
+	from(sourceSets.main.resources.srcDirs) {
+		include '**/version.properties'
+		filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: version.toString()])
+	}
+}

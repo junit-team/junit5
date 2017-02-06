@@ -43,6 +43,9 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		def configuration = project.configurations.maybeCreate('junitPlatform')
 		configuration.defaultDependencies { deps ->
 			def version = junitExtension.platformVersion
+			if (version == null) {
+				version = readVersionFromPropertiesFile()
+			}
 			deps.add(project.dependencies.create("org.junit.platform:junit-platform-launcher:${version}"))
 			deps.add(project.dependencies.create("org.junit.platform:junit-platform-console:${version}"))
 		}
@@ -50,6 +53,14 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		project.afterEvaluate {
 			configure(project, junitExtension)
 		}
+	}
+
+	private String readVersionFromPropertiesFile() {
+		Properties properties = new Properties()
+		getClass().getResourceAsStream("version.properties").withCloseable { inputStream ->
+			properties.load(inputStream)
+		}
+		return properties.getProperty("version")
 	}
 
 	private void configure(Project project, JUnitPlatformExtension junitExtension) {
