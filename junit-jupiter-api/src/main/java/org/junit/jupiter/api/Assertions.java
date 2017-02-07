@@ -1099,9 +1099,11 @@ public final class Assertions {
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code supplier}
 	 * completes before the given {@code timeout} is exceeded.
-	 * <p>
-	 * <p>Note: the executable will be executed in the same thread as that
-	 * of the calling code. Consequently, execution of the executable will
+	 *
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 *
+	 * <p>Note: the {@code supplier} will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the {@code supplier} will
 	 * not be preemptively aborted if the timeout is exceeded.
 	 *
 	 * @see #assertTimeout(Duration, Executable)
@@ -1118,9 +1120,11 @@ public final class Assertions {
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code supplier}
 	 * completes before the given {@code timeout} is exceeded.
-	 * <p>
-	 * <p>Note: the executable will be executed in the same thread as that
-	 * of the calling code. Consequently, execution of the executable will
+	 *
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 *
+	 * <p>Note: the {@code supplier} will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the {@code supplier} will
 	 * not be preemptively aborted if the timeout is exceeded.
 	 * <p>
 	 * <p>Fails with the supplied failure {@code message}.
@@ -1139,9 +1143,11 @@ public final class Assertions {
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code supplier}
 	 * completes before the given {@code timeout} is exceeded.
-	 * <p>
-	 * <p>Note: the executable will be executed in the same thread as that
-	 * of the calling code. Consequently, execution of the executable will
+	 *
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 *
+	 * <p>Note: the {@code supplier} will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the {@code supplier} will
 	 * not be preemptively aborted if the timeout is exceeded.
 	 * <p>
 	 * <p>If necessary, the failure message will be retrieved lazily from the
@@ -1229,9 +1235,11 @@ public final class Assertions {
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code supplier}
 	 * completes before the given {@code timeout} is exceeded.
-	 * <p>
-	 * <p>Note: the executable will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the executable will
+	 *
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 *
+	 * <p>Note: the {@code supplier} will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the {@code supplier} will
 	 * be preemptively aborted if the timeout is exceeded.
 	 *
 	 * @see #assertTimeoutPreemptively(Duration, Executable)
@@ -1248,11 +1256,13 @@ public final class Assertions {
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code supplier}
 	 * completes before the given {@code timeout} is exceeded.
-	 * <p>
-	 * <p>Note: the executable will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the executable will
+	 *
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 *
+	 * <p>Note: the {@code supplier} will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the {@code supplier} will
 	 * be preemptively aborted if the timeout is exceeded.
-	 * <p>
+	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
 	 * @see #assertTimeoutPreemptively(Duration, Executable)
@@ -1269,11 +1279,13 @@ public final class Assertions {
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code supplier}
 	 * completes before the given {@code timeout} is exceeded.
-	 * <p>
-	 * <p>Note: the executable will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the executable will
+	 *
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 *
+	 * <p>Note: the {@code supplier} will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the {@code supplier} will
 	 * be preemptively aborted if the timeout is exceeded.
-	 * <p>
+	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
 	 * supplied {@code messageSupplier}.
 	 *

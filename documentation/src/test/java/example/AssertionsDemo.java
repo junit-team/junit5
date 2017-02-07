@@ -105,7 +105,7 @@ class AssertionsDemo {
 		});
 	}
 
-	public static String greeting() {
+	private static String greeting() {
 		return "hello world!";
 	}
 

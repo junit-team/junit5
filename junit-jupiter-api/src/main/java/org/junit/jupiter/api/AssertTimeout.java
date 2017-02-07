@@ -109,7 +109,8 @@ class AssertTimeout {
 			Future<T> future = executorService.submit(() -> {
 				try {
 					return supplier.get();
-				} catch (Throwable throwable) {
+				}
+				catch (Throwable throwable) {
 					throw ExceptionUtils.throwAsUncheckedException(throwable);
 				}
 			});
@@ -117,14 +118,19 @@ class AssertTimeout {
 			long timeoutInMillis = timeout.toMillis();
 			try {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
-			} catch (TimeoutException ex) {
-				throw new AssertionFailedError(buildPrefix(nullSafeGet(messageSupplier)) + "execution timed out after " + timeoutInMillis + " ms");
-			} catch (ExecutionException ex) {
+			}
+			catch (TimeoutException ex) {
+				throw new AssertionFailedError(
+					buildPrefix(nullSafeGet(messageSupplier)) + "execution timed out after " + timeoutInMillis + " ms");
+			}
+			catch (ExecutionException ex) {
 				throw ExceptionUtils.throwAsUncheckedException(ex.getCause());
-			} catch (Throwable ex) {
+			}
+			catch (Throwable ex) {
 				throw ExceptionUtils.throwAsUncheckedException(ex);
 			}
-		} finally {
+		}
+		finally {
 			executorService.shutdownNow();
 		}
 	}

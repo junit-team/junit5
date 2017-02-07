@@ -30,7 +30,7 @@ import org.junit.platform.commons.meta.API;
  * {@link Error}, or {@link AssertionError} (in testing
  * scenarios), there may be use cases where a {@code ThrowingSupplier} needs to
  * explicitly throw a {@code Throwable}. In order to support such specialized
- * use cases, {@link #get}  is declared to throw {@code Throwable}.
+ * use cases, {@link #get} is declared to throw {@code Throwable}.
  *
  * @see java.util.function.Supplier
  * @see org.junit.jupiter.api.DynamicTest#stream
