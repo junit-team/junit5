@@ -1075,6 +1075,22 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
     }
 
     <span class="annotation">@Test</span>
+    <span class="type">void</span> timeoutNotExceededWithResult() {
+        <span class="comment">// The following assertion succeeds, and returns the supplied object.</span>
+        <span class="predefined-type">String</span> actualResult = assertTimeout(ofMinutes(<span class="integer">2</span>), () -&gt; {
+            <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">a result</span><span class="delimiter">&quot;</span></span>;
+        });
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">a result</span><span class="delimiter">&quot;</span></span>, actualResult);
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> timeoutNotExceededWithMethod() {
+        <span class="comment">// The following assertion invokes a method reference and returns an object.</span>
+        <span class="predefined-type">String</span> actualGreeting = assertTimeout(ofMinutes(<span class="integer">2</span>), AssertionsDemo::greeting);
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">hello world!</span><span class="delimiter">&quot;</span></span>, actualGreeting);
+    }
+
+    <span class="annotation">@Test</span>
     <span class="type">void</span> timeoutExceeded() {
         <span class="comment">// The following assertion fails with an error message similar to:</span>
         <span class="comment">// execution exceeded timeout of 10 ms by 91 ms</span>
@@ -1092,6 +1108,10 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
             <span class="comment">// Simulate task that takes more than 10 ms.</span>
             <span class="predefined-type">Thread</span>.sleep(<span class="integer">100</span>);
         });
+    }
+
+    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> greeting() {
+        <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">hello world!</span><span class="delimiter">&quot;</span></span>;
     }
 
 }</code></pre>
