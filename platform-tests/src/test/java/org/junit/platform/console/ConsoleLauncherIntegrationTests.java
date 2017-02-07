@@ -55,7 +55,7 @@ public class ConsoleLauncherIntegrationTests {
 		assertTrue(standardErr.isEmpty());
 
 		String standardOutText = new String(this.out.toByteArray());
-		System.out.println(standardOutText);
+		assertThat(standardOutText).isNotBlank();
 		return standardOutText;
 	}
 
