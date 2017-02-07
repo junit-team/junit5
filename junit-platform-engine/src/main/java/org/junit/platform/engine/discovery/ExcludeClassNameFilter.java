@@ -23,39 +23,39 @@ import org.junit.platform.engine.FilterResult;
  * patterns in the form of regular expressions.
  *
  * <p>If the fully qualified name of a class matches against at least one
- * pattern, the class will be included.
+ * pattern, the class will be excluded.
  *
  * @since 1.0
  */
-class IncludeClassNameFilter extends AbstractClassNameFilter {
+class ExcludeClassNameFilter extends AbstractClassNameFilter {
 
-	IncludeClassNameFilter(String... patterns) {
+	ExcludeClassNameFilter(String... patterns) {
 		super(patterns);
 	}
 
 	@Override
 	public FilterResult apply(String className) {
 		return findMatchingPattern(className) //
-				.map(pattern -> included(formatInclusionReason(className, pattern))) //
-				.orElseGet(() -> excluded(formatExclusionReason(className)));
+				.map(pattern -> excluded(formatExclusionReason(className, pattern))) //
+				.orElseGet(() -> included(formatInclusionReason(className)));
 	}
 
-	private String formatExclusionReason(String className) {
-		return String.format("Class name [%s] does not match any included pattern: %s", className, patternDescription);
+	private String formatExclusionReason(String className, Pattern pattern) {
+		return String.format("Class name [%s] matches excluded pattern: '%s'", className, pattern);
 	}
 
-	private String formatInclusionReason(String className, Pattern pattern) {
-		return String.format("Class name [%s] matches included pattern: '%s'", className, pattern);
+	private String formatInclusionReason(String className) {
+		return String.format("Class name [%s] does not match any excluded pattern: %s", className, patternDescription);
 	}
 
 	@Override
 	public Predicate<String> toPredicate() {
-		return className -> findMatchingPattern(className).isPresent();
+		return className -> !findMatchingPattern(className).isPresent();
 	}
 
 	@Override
 	public String toString() {
-		return "Includes class names that match regular expression " + patternDescription;
+		return "Excludes class names that match regular expression " + patternDescription;
 	}
 
 }

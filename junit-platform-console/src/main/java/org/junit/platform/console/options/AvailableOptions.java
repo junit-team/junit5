@@ -53,6 +53,7 @@ class AvailableOptions {
 
 	// Filters
 	private final OptionSpec<String> includeClassNamePattern;
+	private final OptionSpec<String> excludeClassNamePattern;
 	private final OptionSpec<String> includePackage;
 	private final OptionSpec<String> excludePackage;
 	private final OptionSpec<String> includeTag;
@@ -149,6 +150,10 @@ class AvailableOptions {
 					+ "When this option is repeated, all patterns will be combined using OR semantics.") //
 				.withRequiredArg() //
 				.defaultsTo(ClassNameFilter.STANDARD_INCLUDE_PATTERN);
+		excludeClassNamePattern = parser.acceptsAll(asList("N", "exclude-classname"),
+			"Provide a regular expression to exclude those classes whose fully qualified names match. " //
+					+ "When this option is repeated, all patterns will be combined using OR semantics.") //
+				.withRequiredArg();
 
 		includePackage = parser.accepts("include-package",
 			"Provide a package to be included in the test run. This option can be repeated.") //
@@ -202,6 +207,7 @@ class AvailableOptions {
 
 		// Filters
 		result.setIncludedClassNamePatterns(detectedOptions.valuesOf(this.includeClassNamePattern));
+		result.setExcludedClassNamePatterns(detectedOptions.valuesOf(this.excludeClassNamePattern));
 		result.setIncludedPackages(detectedOptions.valuesOf(this.includePackage));
 		result.setExcludedPackages(detectedOptions.valuesOf(this.excludePackage));
 		result.setIncludedTags(detectedOptions.valuesOf(this.includeTag));

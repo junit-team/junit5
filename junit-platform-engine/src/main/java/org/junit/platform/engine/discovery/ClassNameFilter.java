@@ -48,4 +48,20 @@ public interface ClassNameFilter extends DiscoveryFilter<String> {
 		return new IncludeClassNameFilter(patterns);
 	}
 
+	/**
+	 * Create a new <em>exclude</em> {@link ClassNameFilter} based on the
+	 * supplied patterns.
+	 *
+	 * <p>The patterns are combined using OR semantics, i.e. if the fully
+	 * qualified name of a class matches against at least one of the patterns,
+	 * the class will be excluded from the result set.
+	 *
+	 * @param patterns regular expressions to match against fully qualified
+	 * class names; never {@code null}, empty, or containing {@code null}
+	 * @see Class#getName()
+	 */
+	static ClassNameFilter excludeClassNamePatterns(String... patterns) {
+		return new ExcludeClassNameFilter(patterns);
+	}
+
 }

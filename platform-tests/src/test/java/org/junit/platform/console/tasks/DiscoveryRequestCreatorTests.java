@@ -122,6 +122,19 @@ public class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
+	public void convertsExcludeClassNamePatternOption() {
+		options.setScanClasspath(true);
+		options.setExcludedClassNamePatterns(asList("Foo.*Bar", "Bar.*Foo"));
+
+		LauncherDiscoveryRequest request = convert();
+
+		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+		assertThat(filter).hasSize(2);
+		assertThat(filter.get(1).toString()).contains("Foo.*Bar");
+		assertThat(filter.get(1).toString()).contains("Bar.*Foo");
+	}
+
+	@Test
 	public void convertsPackageOptions() {
 		options.setScanClasspath(true);
 		options.setIncludedPackages(asList("org.junit.included1", "org.junit.included2", "org.junit.included3"));
