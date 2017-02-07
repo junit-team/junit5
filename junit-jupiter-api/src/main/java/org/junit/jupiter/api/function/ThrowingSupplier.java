@@ -12,8 +12,6 @@ package org.junit.jupiter.api.function;
 
 import static org.junit.platform.commons.meta.API.Usage.Stable;
 
-import java.time.Duration;
-
 import org.junit.platform.commons.meta.API;
 
 /**
@@ -25,7 +23,7 @@ import org.junit.platform.commons.meta.API;
  * {@link java.util.function.Supplier}, except that a {@code ThrowingSupplier}
  * can throw any kind of exception, including checked exceptions.
  *
- * <p><h4>Rationale for throwing {@code Throwable} instead of {@code Exception}</h4>
+ * <h4>Rationale for throwing {@code Throwable} instead of {@code Exception}</h4>
  *
  * <p>Although Java applications typically throw exceptions that are instances
  * of {@link Exception}, {@link RuntimeException},
@@ -36,7 +34,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @see java.util.function.Supplier
  * @see org.junit.jupiter.api.DynamicTest#stream
- * @see org.junit.jupiter.api.Assertions#assertTimeout(Duration, ThrowingSupplier)
+ * @see org.junit.jupiter.api.Assertions#assertTimeout(java.time.Duration, ThrowingSupplier)
  * @see Executable
  * @since 5.0
  */

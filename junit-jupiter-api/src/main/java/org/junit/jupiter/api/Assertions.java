@@ -1126,7 +1126,7 @@ public final class Assertions {
 	 * <p>Note: the {@code supplier} will be executed in the same thread as that
 	 * of the calling code. Consequently, execution of the {@code supplier} will
 	 * not be preemptively aborted if the timeout is exceeded.
-	 * <p>
+	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
 	 * @see #assertTimeout(Duration, Executable)
@@ -1149,7 +1149,7 @@ public final class Assertions {
 	 * <p>Note: the {@code supplier} will be executed in the same thread as that
 	 * of the calling code. Consequently, execution of the {@code supplier} will
 	 * not be preemptively aborted if the timeout is exceeded.
-	 * <p>
+	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
 	 * supplied {@code messageSupplier}.
 	 *
