@@ -56,6 +56,9 @@ on GitHub.
   similar to the
   https://github.com/junit-team/junit4/wiki/Download-and-Install#plain-old-jar[plain-old JAR]
   known from JUnit 4.
+* New `--exclude-classname` (`--N`) option added to the `ConsoleLauncher` accepting a regular
+  expression to exclude those classes whose fully qualified names match. When this option is
+  repeated, all patterns will be combined using OR semantics.
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
 ==== JUnit Jupiter
