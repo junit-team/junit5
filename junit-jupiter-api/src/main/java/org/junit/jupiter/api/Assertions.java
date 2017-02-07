@@ -1036,8 +1036,8 @@ public final class Assertions {
 	 * <em>Asserts</em> that execution of the supplied {@code executable}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>Note: the executable will be executed in the same thread as that
-	 * of the calling code. Consequently, execution of the executable will
+	 * <p>Note: the {@code executable} will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the {@code executable} will
 	 * not be preemptively aborted if the timeout is exceeded.
 	 *
 	 * @see #assertTimeout(Duration, Executable, String)
@@ -1055,8 +1055,8 @@ public final class Assertions {
 	 * <em>Asserts</em> that execution of the supplied {@code executable}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>Note: the executable will be executed in the same thread as that
-	 * of the calling code. Consequently, execution of the executable will
+	 * <p>Note: the {@code executable} will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the {@code executable} will
 	 * not be preemptively aborted if the timeout is exceeded.
 	 *
 	 * <p>Fails with the supplied failure {@code message}.
@@ -1076,8 +1076,8 @@ public final class Assertions {
 	 * <em>Asserts</em> that execution of the supplied {@code executable}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>Note: the executable will be executed in the same thread as that
-	 * of the calling code. Consequently, execution of the executable will
+	 * <p>Note: the {@code executable} will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the {@code executable} will
 	 * not be preemptively aborted if the timeout is exceeded.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
@@ -1171,8 +1171,8 @@ public final class Assertions {
 	 * <em>Asserts</em> that execution of the supplied {@code executable}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>Note: the executable will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the executable will
+	 * <p>Note: the {@code executable} will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the {@code executable} will
 	 * be preemptively aborted if the timeout is exceeded.
 	 *
 	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
@@ -1190,8 +1190,8 @@ public final class Assertions {
 	 * <em>Asserts</em> that execution of the supplied {@code executable}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>Note: the executable will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the executable will
+	 * <p>Note: the {@code executable} will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the {@code executable} will
 	 * be preemptively aborted if the timeout is exceeded.
 	 *
 	 * <p>Fails with the supplied failure {@code message}.
@@ -1211,8 +1211,8 @@ public final class Assertions {
 	 * <em>Asserts</em> that execution of the supplied {@code executable}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>Note: the executable will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the executable will
+	 * <p>Note: the {@code executable} will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the {@code executable} will
 	 * be preemptively aborted if the timeout is exceeded.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
