@@ -9,7 +9,7 @@ was released on November 30, 2016.
 
 ## Roadmap
 
-Consult the wiki for details on the current [JUnit 5 roadmap](https://github.com/junit-team/junit5/wiki#roadmap).
+Consult the wiki for details on the current [JUnit 5 roadmap](https://github.com/junit-team/junit5/wiki/Roadmap).
 
 ## Documentation
 
