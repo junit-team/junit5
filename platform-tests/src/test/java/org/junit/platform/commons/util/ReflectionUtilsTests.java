@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -666,17 +666,19 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
-	@Disabled("https://github.com/junit-team/junit5/issues/333")
+	@Disabled("https://github.com/junit-team/junit5/issues/333 - index 4 and 5 are swapped")
 	void findBridgeMethods() throws Exception {
 		assertFalse(Modifier.isPublic(MethodBridgeChild.class.getSuperclass().getModifiers()));
 		Method beforeMethod = MethodBridgeChild.class.getMethod("beforeEach");
 		assumeTrue(beforeMethod.isBridge());
 		assumeTrue(beforeMethod.isAnnotationPresent(BeforeEach.class));
+		Method afterMethod = MethodBridgeChild.class.getMethod("afterEach");
+		assumeTrue(afterMethod.isBridge());
+		assumeTrue(afterMethod.isAnnotationPresent(AfterEach.class));
 
 		List<Method> methods = ReflectionUtils.findMethods(MethodBridgeChild.class, method -> true);
 		assertEquals(7, methods.size());
-		Set<String> bridges = methods.stream().filter(Method::isBridge).map(Method::getName).collect(
-			Collectors.toSet());
+		Set<String> bridges = methods.stream().filter(Method::isBridge).map(Method::getName).collect(toSet());
 		assertEquals(2, bridges.size());
 		assertTrue(bridges.contains("beforeEach"));
 		assertTrue(bridges.contains("afterEach"));
@@ -685,7 +687,6 @@ public class ReflectionUtilsTests {
 			DiscoverySelectors.selectClass(MethodBridgeChild.class)).build();
 		Launcher launcher = LauncherFactory.create();
 		launcher.execute(request);
-		// bridgeMethodNameSequence.forEach(System.out::println);
 		assertAll("bridge method sequence test",
 			() -> assertEquals("static parent.beforeAll()", bridgeMethodNameSequence.get(0)),
 			() -> assertEquals("parent.beforeEach()", bridgeMethodNameSequence.get(1)),
