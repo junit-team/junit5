@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
 import static org.mockito.Mockito.mock;
@@ -27,12 +28,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
@@ -40,6 +49,11 @@ import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.launcher.core.LauncherFactory;
 
 /**
  * Unit tests for {@link ReflectionUtils}.
@@ -651,6 +665,37 @@ public class ReflectionUtilsTests {
 			MethodShadowingChild.class.getMethod("method5", Long.class));
 	}
 
+	@Test
+	@Disabled("https://github.com/junit-team/junit5/issues/333")
+	void findBridgeMethods() throws Exception {
+		assertFalse(Modifier.isPublic(MethodBridgeChild.class.getSuperclass().getModifiers()));
+		Method beforeMethod = MethodBridgeChild.class.getMethod("beforeEach");
+		assumeTrue(beforeMethod.isBridge());
+		assumeTrue(beforeMethod.isAnnotationPresent(BeforeEach.class));
+
+		List<Method> methods = ReflectionUtils.findMethods(MethodBridgeChild.class, method -> true);
+		assertEquals(7, methods.size());
+		Set<String> bridges = methods.stream().filter(Method::isBridge).map(Method::getName).collect(
+			Collectors.toSet());
+		assertEquals(2, bridges.size());
+		assertTrue(bridges.contains("beforeEach"));
+		assertTrue(bridges.contains("afterEach"));
+
+		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(
+			DiscoverySelectors.selectClass(MethodBridgeChild.class)).build();
+		Launcher launcher = LauncherFactory.create();
+		launcher.execute(request);
+		// bridgeMethodNameSequence.forEach(System.out::println);
+		assertAll("bridge method sequence test",
+			() -> assertEquals("static parent.beforeAll()", bridgeMethodNameSequence.get(0)),
+			() -> assertEquals("parent.beforeEach()", bridgeMethodNameSequence.get(1)),
+			() -> assertEquals("child.anotherBeforeEach()", bridgeMethodNameSequence.get(2)),
+			() -> assertEquals("child.test()", bridgeMethodNameSequence.get(3)),
+			() -> assertEquals("child.anotherAfterEach()", bridgeMethodNameSequence.get(4)),
+			() -> assertEquals("parent.afterEach()", bridgeMethodNameSequence.get(5)),
+			() -> assertEquals("static parent.afterAll()", bridgeMethodNameSequence.get(6)));
+	}
+
 	private static void createDirectories(Path... paths) throws IOException {
 		for (Path path : paths) {
 			Files.createDirectory(path);
@@ -879,6 +924,50 @@ public class ReflectionUtilsTests {
 		}
 
 		public void method5(Long i) {
+		}
+	}
+
+	private static List<String> bridgeMethodNameSequence = new ArrayList<>();
+
+	static class MethodBridgeParent {
+
+		@BeforeAll
+		static void beforeAll() {
+			bridgeMethodNameSequence.add("static parent.beforeAll()");
+		}
+
+		@AfterAll
+		static void afterAll() {
+			bridgeMethodNameSequence.add("static parent.afterAll()");
+		}
+
+		@BeforeEach
+		public void beforeEach() {
+			bridgeMethodNameSequence.add("parent.beforeEach()");
+		}
+
+		@AfterEach
+		public void afterEach() {
+			bridgeMethodNameSequence.add("parent.afterEach()");
+		}
+	}
+
+	// modifier "public" is necessary for creating bridge methods by the compiler
+	public static class MethodBridgeChild extends MethodBridgeParent {
+
+		@BeforeEach
+		public void anotherBeforeEach() {
+			bridgeMethodNameSequence.add("child.anotherBeforeEach()");
+		}
+
+		@Test
+		public void test() {
+			bridgeMethodNameSequence.add("child.test()");
+		}
+
+		@AfterEach
+		public void anotherAfterEach() {
+			bridgeMethodNameSequence.add("child.anotherAfterEach()");
 		}
 	}
 
