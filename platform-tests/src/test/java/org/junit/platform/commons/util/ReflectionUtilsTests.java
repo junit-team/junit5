@@ -41,7 +41,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
@@ -676,25 +675,10 @@ public class ReflectionUtilsTests {
 		assertFalse(afterMethod.isBridge());
 		assumeTrue(afterMethod.isAnnotationPresent(AfterEach.class));
 
-		List<Method> methods = ReflectionUtils.findMethods(MethodNoBridgeChild.class, method -> true);
-		assertEquals(7, methods.size());
-		Set<String> bridges = methods.stream().filter(Method::isBridge).map(Method::getName).collect(toSet());
-		assertEquals(0, bridges.size());
-
-		bridgeMethodSequence.clear();
-		execute(MethodNoBridgeChild.class);
-		assertAll("none-bridge method sequence test",
-			() -> assertEquals("static parent.beforeAll()", bridgeMethodSequence.get(0)),
-			() -> assertEquals("parent.beforeEach()", bridgeMethodSequence.get(1)),
-			() -> assertEquals("child.anotherBeforeEach()", bridgeMethodSequence.get(2)),
-			() -> assertEquals("child.test()", bridgeMethodSequence.get(3)),
-			() -> assertEquals("child.anotherAfterEach()", bridgeMethodSequence.get(4)),
-			() -> assertEquals("parent.afterEach()", bridgeMethodSequence.get(5)),
-			() -> assertEquals("static parent.afterAll()", bridgeMethodSequence.get(6)));
+		findMethodsAndExecuteClass(MethodNoBridgeChild.class);
 	}
 
 	@Test
-	@Disabled("https://github.com/junit-team/junit5/issues/333 - index 4 and 5 are swapped")
 	void handleBridgeMethods() throws Exception {
 		assertFalse(Modifier.isPublic(MethodBridgeChild.class.getSuperclass().getModifiers()));
 		assertTrue(Modifier.isPublic(MethodBridgeChild.class.getModifiers()));
@@ -705,15 +689,24 @@ public class ReflectionUtilsTests {
 		assumeTrue(afterMethod.isBridge());
 		assumeTrue(afterMethod.isAnnotationPresent(AfterEach.class));
 
-		List<Method> methods = ReflectionUtils.findMethods(MethodBridgeChild.class, method -> true);
-		assertEquals(7, methods.size());
+		findMethodsAndExecuteClass(MethodBridgeChild.class);
+	}
+
+	private void findMethodsAndExecuteClass(Class<?> testClass) {
+		List<Method> methods = ReflectionUtils.findMethods(testClass, method -> true);
+		assertThat(methods).hasSize(7);
 		Set<String> bridges = methods.stream().filter(Method::isBridge).map(Method::getName).collect(toSet());
-		assertEquals(2, bridges.size());
-		assertTrue(bridges.contains("beforeEach"));
-		assertTrue(bridges.contains("afterEach"));
+		assertThat(bridges).isEmpty();
 
 		bridgeMethodSequence.clear();
-		execute(MethodBridgeChild.class);
+		// @formatter:off
+		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
+			.request()
+			.selectors(DiscoverySelectors.selectClass(testClass))
+			.build();
+		// @formatter:on
+		Launcher launcher = LauncherFactory.create();
+		launcher.execute(request);
 		assertAll("bridge method sequence test",
 			() -> assertEquals("static parent.beforeAll()", bridgeMethodSequence.get(0)),
 			() -> assertEquals("parent.beforeEach()", bridgeMethodSequence.get(1)),
@@ -728,17 +721,6 @@ public class ReflectionUtilsTests {
 		for (Path path : paths) {
 			Files.createDirectory(path);
 		}
-	}
-
-	private static void execute(Class<?> testClass) {
-		// @formatter:off
-		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
-			.request()
-			.selectors(DiscoverySelectors.selectClass(testClass))
-			.build();
-		// @formatter:on
-		Launcher launcher = LauncherFactory.create();
-		launcher.execute(request);
 	}
 
 	interface InterfaceWithOneDeclaredMethod {
