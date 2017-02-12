@@ -666,9 +666,42 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
+	void handleNoneBridgeMethods() throws Exception {
+		assertFalse(Modifier.isPublic(MethodNoBridgeChild.class.getSuperclass().getModifiers()));
+		assertFalse(Modifier.isPublic(MethodNoBridgeChild.class.getModifiers()));
+		Method beforeMethod = MethodNoBridgeChild.class.getMethod("beforeEach");
+		assertFalse(beforeMethod.isBridge());
+		assumeTrue(beforeMethod.isAnnotationPresent(BeforeEach.class));
+		Method afterMethod = MethodNoBridgeChild.class.getMethod("afterEach");
+		assertFalse(afterMethod.isBridge());
+		assumeTrue(afterMethod.isAnnotationPresent(AfterEach.class));
+
+		List<Method> methods = ReflectionUtils.findMethods(MethodNoBridgeChild.class, method -> true);
+		assertEquals(7, methods.size());
+		Set<String> bridges = methods.stream().filter(Method::isBridge).map(Method::getName).collect(toSet());
+		assertEquals(0, bridges.size());
+
+		bridgeMethodSequence.clear();
+		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(
+			DiscoverySelectors.selectClass(MethodNoBridgeChild.class)).build();
+		Launcher launcher = LauncherFactory.create();
+		launcher.execute(request);
+		assertAll("none-bridge method sequence test",
+			() -> assertEquals("static parent.beforeAll()", bridgeMethodSequence.get(0)),
+			() -> assertEquals("parent.beforeEach()", bridgeMethodSequence.get(1)),
+			() -> assertEquals("child.anotherBeforeEach()", bridgeMethodSequence.get(2)),
+			() -> assertEquals("child.test()", bridgeMethodSequence.get(3)),
+			() -> assertEquals("child.anotherAfterEach()", bridgeMethodSequence.get(4)),
+			() -> assertEquals("parent.afterEach()", bridgeMethodSequence.get(5)),
+			() -> assertEquals("static parent.afterAll()", bridgeMethodSequence.get(6)) //
+		);
+	}
+
+	@Test
 	@Disabled("https://github.com/junit-team/junit5/issues/333 - index 4 and 5 are swapped")
-	void findBridgeMethods() throws Exception {
+	void handleBridgeMethods() throws Exception {
 		assertFalse(Modifier.isPublic(MethodBridgeChild.class.getSuperclass().getModifiers()));
+		assertTrue(Modifier.isPublic(MethodBridgeChild.class.getModifiers()));
 		Method beforeMethod = MethodBridgeChild.class.getMethod("beforeEach");
 		assumeTrue(beforeMethod.isBridge());
 		assumeTrue(beforeMethod.isAnnotationPresent(BeforeEach.class));
@@ -683,18 +716,20 @@ public class ReflectionUtilsTests {
 		assertTrue(bridges.contains("beforeEach"));
 		assertTrue(bridges.contains("afterEach"));
 
-		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(
+    bridgeMethodSequence.clear();
+    LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(
 			DiscoverySelectors.selectClass(MethodBridgeChild.class)).build();
 		Launcher launcher = LauncherFactory.create();
 		launcher.execute(request);
 		assertAll("bridge method sequence test",
-			() -> assertEquals("static parent.beforeAll()", bridgeMethodNameSequence.get(0)),
-			() -> assertEquals("parent.beforeEach()", bridgeMethodNameSequence.get(1)),
-			() -> assertEquals("child.anotherBeforeEach()", bridgeMethodNameSequence.get(2)),
-			() -> assertEquals("child.test()", bridgeMethodNameSequence.get(3)),
-			() -> assertEquals("child.anotherAfterEach()", bridgeMethodNameSequence.get(4)),
-			() -> assertEquals("parent.afterEach()", bridgeMethodNameSequence.get(5)),
-			() -> assertEquals("static parent.afterAll()", bridgeMethodNameSequence.get(6)));
+			() -> assertEquals("static parent.beforeAll()", bridgeMethodSequence.get(0)),
+			() -> assertEquals("parent.beforeEach()", bridgeMethodSequence.get(1)),
+			() -> assertEquals("child.anotherBeforeEach()", bridgeMethodSequence.get(2)),
+			() -> assertEquals("child.test()", bridgeMethodSequence.get(3)),
+			() -> assertEquals("child.anotherAfterEach()", bridgeMethodSequence.get(4)),
+			() -> assertEquals("parent.afterEach()", bridgeMethodSequence.get(5)),
+			() -> assertEquals("static parent.afterAll()", bridgeMethodSequence.get(6)) //
+		);
 	}
 
 	private static void createDirectories(Path... paths) throws IOException {
@@ -928,28 +963,28 @@ public class ReflectionUtilsTests {
 		}
 	}
 
-	private static List<String> bridgeMethodNameSequence = new ArrayList<>();
+	private static List<String> bridgeMethodSequence = new ArrayList<>();
 
 	static class MethodBridgeParent {
 
 		@BeforeAll
 		static void beforeAll() {
-			bridgeMethodNameSequence.add("static parent.beforeAll()");
+			bridgeMethodSequence.add("static parent.beforeAll()");
 		}
 
 		@AfterAll
 		static void afterAll() {
-			bridgeMethodNameSequence.add("static parent.afterAll()");
+			bridgeMethodSequence.add("static parent.afterAll()");
 		}
 
 		@BeforeEach
 		public void beforeEach() {
-			bridgeMethodNameSequence.add("parent.beforeEach()");
+			bridgeMethodSequence.add("parent.beforeEach()");
 		}
 
 		@AfterEach
 		public void afterEach() {
-			bridgeMethodNameSequence.add("parent.afterEach()");
+			bridgeMethodSequence.add("parent.afterEach()");
 		}
 	}
 
@@ -958,17 +993,36 @@ public class ReflectionUtilsTests {
 
 		@BeforeEach
 		public void anotherBeforeEach() {
-			bridgeMethodNameSequence.add("child.anotherBeforeEach()");
+			bridgeMethodSequence.add("child.anotherBeforeEach()");
 		}
 
 		@Test
 		public void test() {
-			bridgeMethodNameSequence.add("child.test()");
+			bridgeMethodSequence.add("child.test()");
 		}
 
 		@AfterEach
 		public void anotherAfterEach() {
-			bridgeMethodNameSequence.add("child.anotherAfterEach()");
+			bridgeMethodSequence.add("child.anotherAfterEach()");
+		}
+	}
+
+	// modifier "public" is not present for not creating bridge methods by the compiler
+	static class MethodNoBridgeChild extends MethodBridgeParent {
+
+		@BeforeEach
+		public void anotherBeforeEach() {
+			bridgeMethodSequence.add("child.anotherBeforeEach()");
+		}
+
+		@Test
+		public void test() {
+			bridgeMethodSequence.add("child.test()");
+		}
+
+		@AfterEach
+		public void anotherAfterEach() {
+			bridgeMethodSequence.add("child.anotherAfterEach()");
 		}
 	}
 
