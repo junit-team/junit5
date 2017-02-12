@@ -10,9 +10,6 @@
 
 package org.junit.jupiter.engine.bridge;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,21 +24,12 @@ class PackagePrivateParent {
 
 	@BeforeAll
 	static void beforeAll() {
-		bridgeMethodSequence.clear();
 		bridgeMethodSequence.add("static parent.beforeAll()");
 	}
 
 	@AfterAll
 	static void afterAll() {
 		bridgeMethodSequence.add("static parent.afterAll()");
-		assertAll("bridge method sequence test",
-			() -> assertEquals("static parent.beforeAll()", bridgeMethodSequence.get(0)),
-			() -> assertEquals("parent.beforeEach()", bridgeMethodSequence.get(1)),
-			() -> assertEquals("child.anotherBeforeEach()", bridgeMethodSequence.get(2)),
-			() -> assertEquals("child.test()", bridgeMethodSequence.get(3)),
-			() -> assertEquals("child.anotherAfterEach()", bridgeMethodSequence.get(4)),
-			() -> assertEquals("parent.afterEach()", bridgeMethodSequence.get(5)),
-			() -> assertEquals("static parent.afterAll()", bridgeMethodSequence.get(6)));
 	}
 
 	@BeforeEach

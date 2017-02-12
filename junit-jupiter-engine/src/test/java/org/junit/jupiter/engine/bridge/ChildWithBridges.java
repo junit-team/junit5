@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 // modifier "public" is necessary for creating bridge methods by the compiler
-public class ChildWithBridgeTests extends PackagePrivateParent {
+public class ChildWithBridges extends PackagePrivateParent {
 
 	@BeforeEach
 	public void anotherBeforeEach() {
