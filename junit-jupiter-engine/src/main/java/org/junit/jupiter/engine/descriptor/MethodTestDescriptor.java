@@ -15,7 +15,6 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.BiFunction;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -34,12 +33,8 @@ import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.
@@ -60,42 +55,16 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
  * @since 5.0
  */
 @API(Internal)
-public class MethodTestDescriptor extends JupiterTestDescriptor {
+public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
-	private final Class<?> testClass;
-	private final Method testMethod;
-
 	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		this(uniqueId, determineDisplayName(Preconditions.notNull(testMethod, "Method must not be null"),
-			MethodTestDescriptor::generateDefaultDisplayName), testClass, testMethod);
+		super(uniqueId, testClass, testMethod);
 	}
 
-	public MethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
-		super(uniqueId, displayName);
-
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.testMethod = testMethod;
-
-		setSource(new MethodSource(testMethod));
-	}
-
-	// --- TestDescriptor ------------------------------------------------------
-
-	@Override
-	public final Set<TestTag> getTags() {
-		Set<TestTag> methodTags = getTags(getTestMethod());
-		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
-		return methodTags;
-	}
-
-	public final Class<?> getTestClass() {
-		return this.testClass;
-	}
-
-	public final Method getTestMethod() {
-		return this.testMethod;
+	MethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
+		super(uniqueId, displayName, testClass, testMethod);
 	}
 
 	@Override
@@ -106,11 +75,6 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	@Override
 	public boolean isContainer() {
 		return false;
-	}
-
-	protected static String generateDefaultDisplayName(Method testMethod) {
-		return String.format("%s(%s)", testMethod.getName(),
-			StringUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes()));
 	}
 
 	// --- Node ----------------------------------------------------------------
@@ -133,7 +97,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	protected ExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
-		return populateNewExtensionRegistryFromExtendWith(this.testMethod, context.getExtensionRegistry());
+		return populateNewExtensionRegistryFromExtendWith(this.getTestMethod(), context.getExtensionRegistry());
 	}
 
 	@Override

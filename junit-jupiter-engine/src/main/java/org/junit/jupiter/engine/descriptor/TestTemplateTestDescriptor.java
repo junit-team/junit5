@@ -16,7 +16,6 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
@@ -27,9 +26,7 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -39,36 +36,10 @@ import org.opentest4j.TestAbortedException;
  * @since 5.0
  */
 @API(Internal)
-public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
-
-	private final Class<?> testClass;
-	private final Method templateMethod;
+public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 
 	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod) {
-		super(uniqueId, determineDisplayName(Preconditions.notNull(templateMethod, "Method must not be null"),
-			MethodTestDescriptor::generateDefaultDisplayName));
-
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.templateMethod = templateMethod;
-
-		setSource(new MethodSource(templateMethod));
-	}
-
-	public Class<?> getTestClass() {
-		return testClass;
-	}
-
-	public Method getTemplateMethod() {
-		return templateMethod;
-	}
-
-	// --- TestDescriptor ------------------------------------------------------
-
-	@Override
-	public final Set<TestTag> getTags() {
-		Set<TestTag> methodTags = getTags(templateMethod);
-		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
-		return methodTags;
+		super(uniqueId, testClass, templateMethod);
 	}
 
 	@Override
@@ -95,7 +66,7 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
-		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.templateMethod,
+		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.getTestMethod(),
 			context.getExtensionRegistry());
 		ContainerExtensionContext testExtensionContext = new TestTemplateContainerExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this);
@@ -148,7 +119,7 @@ public class TestTemplateTestDescriptor extends JupiterTestDescriptor {
 
 	private TestDescriptor createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext, int index) {
 		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
-		return new TestTemplateInvocationTestDescriptor(uniqueId, this.testClass, this.templateMethod,
+		return new TestTemplateInvocationTestDescriptor(uniqueId, this.getTestClass(), this.getTestMethod(),
 			invocationContext, index);
 	}
 
