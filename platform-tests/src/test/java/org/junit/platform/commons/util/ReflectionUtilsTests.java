@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
 import static org.mockito.Mockito.mock;
@@ -32,15 +31,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
@@ -48,11 +42,6 @@ import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
-import org.junit.platform.launcher.core.LauncherFactory;
 
 /**
  * Unit tests for {@link ReflectionUtils}.
@@ -665,56 +654,16 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
-	void handleNoneBridgeMethods() throws Exception {
-		assertFalse(Modifier.isPublic(MethodNoBridgeChild.class.getSuperclass().getModifiers()));
-		assertFalse(Modifier.isPublic(MethodNoBridgeChild.class.getModifiers()));
-		Method beforeMethod = MethodNoBridgeChild.class.getMethod("beforeEach");
-		assertFalse(beforeMethod.isBridge());
-		assumeTrue(beforeMethod.isAnnotationPresent(BeforeEach.class));
-		Method afterMethod = MethodNoBridgeChild.class.getMethod("afterEach");
-		assertFalse(afterMethod.isBridge());
-		assumeTrue(afterMethod.isAnnotationPresent(AfterEach.class));
+	void findMethodsIgnoresBridgeMethods() throws Exception {
+		assertFalse(Modifier.isPublic(PublicChildClass.class.getSuperclass().getModifiers()));
+		assertTrue(Modifier.isPublic(PublicChildClass.class.getModifiers()));
+		assertTrue(PublicChildClass.class.getDeclaredMethod("method1").isBridge());
+		assertTrue(PublicChildClass.class.getDeclaredMethod("method3").isBridge());
 
-		findMethodsAndExecuteClass(MethodNoBridgeChild.class);
-	}
-
-	@Test
-	void handleBridgeMethods() throws Exception {
-		assertFalse(Modifier.isPublic(MethodBridgeChild.class.getSuperclass().getModifiers()));
-		assertTrue(Modifier.isPublic(MethodBridgeChild.class.getModifiers()));
-		Method beforeMethod = MethodBridgeChild.class.getMethod("beforeEach");
-		assumeTrue(beforeMethod.isBridge());
-		assumeTrue(beforeMethod.isAnnotationPresent(BeforeEach.class));
-		Method afterMethod = MethodBridgeChild.class.getMethod("afterEach");
-		assumeTrue(afterMethod.isBridge());
-		assumeTrue(afterMethod.isAnnotationPresent(AfterEach.class));
-
-		findMethodsAndExecuteClass(MethodBridgeChild.class);
-	}
-
-	private void findMethodsAndExecuteClass(Class<?> testClass) {
-		List<Method> methods = ReflectionUtils.findMethods(testClass, method -> true);
-		assertThat(methods).hasSize(7);
-		Set<String> bridges = methods.stream().filter(Method::isBridge).map(Method::getName).collect(toSet());
-		assertThat(bridges).isEmpty();
-
-		bridgeMethodSequence.clear();
-		// @formatter:off
-		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
-			.request()
-			.selectors(DiscoverySelectors.selectClass(testClass))
-			.build();
-		// @formatter:on
-		Launcher launcher = LauncherFactory.create();
-		launcher.execute(request);
-		assertAll("bridge method sequence test",
-			() -> assertEquals("static parent.beforeAll()", bridgeMethodSequence.get(0)),
-			() -> assertEquals("parent.beforeEach()", bridgeMethodSequence.get(1)),
-			() -> assertEquals("child.anotherBeforeEach()", bridgeMethodSequence.get(2)),
-			() -> assertEquals("child.test()", bridgeMethodSequence.get(3)),
-			() -> assertEquals("child.anotherAfterEach()", bridgeMethodSequence.get(4)),
-			() -> assertEquals("parent.afterEach()", bridgeMethodSequence.get(5)),
-			() -> assertEquals("static parent.afterAll()", bridgeMethodSequence.get(6)));
+		List<Method> methods = ReflectionUtils.findMethods(PublicChildClass.class, method -> true);
+		List<String> names = methods.stream().map(Method::getName).collect(toList());
+		assertThat(names).containsOnly("method1", "method2", "method3", "otherMethod1", "otherMethod2");
+		assertTrue(methods.stream().filter(Method::isBridge).count() == 0);
 	}
 
 	private static void createDirectories(Path... paths) throws IOException {
@@ -948,66 +897,15 @@ public class ReflectionUtilsTests {
 		}
 	}
 
-	private static List<String> bridgeMethodSequence = new ArrayList<>();
+	// "public" modifier is necessary here, the compiler creates a bridge method
+	public static class PublicChildClass extends ParentClass {
 
-	static class MethodBridgeParent {
-
-		@BeforeAll
-		static void beforeAll() {
-			bridgeMethodSequence.add("static parent.beforeAll()");
+		@Override
+		public void otherMethod1() {
 		}
 
-		@AfterAll
-		static void afterAll() {
-			bridgeMethodSequence.add("static parent.afterAll()");
-		}
-
-		@BeforeEach
-		public void beforeEach() {
-			bridgeMethodSequence.add("parent.beforeEach()");
-		}
-
-		@AfterEach
-		public void afterEach() {
-			bridgeMethodSequence.add("parent.afterEach()");
-		}
-	}
-
-	// modifier "public" is necessary for creating bridge methods by the compiler
-	public static class MethodBridgeChild extends MethodBridgeParent {
-
-		@BeforeEach
-		public void anotherBeforeEach() {
-			bridgeMethodSequence.add("child.anotherBeforeEach()");
-		}
-
-		@Test
-		public void test() {
-			bridgeMethodSequence.add("child.test()");
-		}
-
-		@AfterEach
-		public void anotherAfterEach() {
-			bridgeMethodSequence.add("child.anotherAfterEach()");
-		}
-	}
-
-	// modifier "public" is not present for not creating bridge methods by the compiler
-	static class MethodNoBridgeChild extends MethodBridgeParent {
-
-		@BeforeEach
-		public void anotherBeforeEach() {
-			bridgeMethodSequence.add("child.anotherBeforeEach()");
-		}
-
-		@Test
-		public void test() {
-			bridgeMethodSequence.add("child.test()");
-		}
-
-		@AfterEach
-		public void anotherAfterEach() {
-			bridgeMethodSequence.add("child.anotherAfterEach()");
+		@Override
+		public void otherMethod2() {
 		}
 	}
 
