@@ -17,6 +17,9 @@ configurations {
 
 dependencies {
 	compile(project(':junit-platform-launcher'))
+	testCompile(project(':junit-jupiter-api'))
+	testCompile("junit:junit:${junit4Version}")
+
 	shadowed('net.sf.jopt-simple:jopt-simple:5.0.3')
 
 	standalone(project(':junit-platform-console'))
@@ -51,6 +54,7 @@ javadoc {
 }
 
 jar.enabled = false
+test.enabled = false // prevent supposed-to-fail integration tests from failing the build
 
 shadowJar {
 	// Generate shadow jar only if the underlying manifest was regenerated.
@@ -100,25 +104,55 @@ artifacts {
 	archives standaloneJar
 }
 
-task standaloneExec(type: JavaExec) {
-	dependsOn(standaloneJar)
-	workingDir "$buildDir/libs"
+task standaloneExec(type: JavaExec, dependsOn: [standaloneJar, testClasses]) {
+	ignoreExitValue = true
+	workingDir = "$buildDir/libs"
 	main = '-jar'
 	args = [
 			"$standaloneJar.archiveName",
 			'--scan-classpath',
-			'--details', 'none'
+			'--include-classname', '.*',
+			'--classpath', "$buildDir/classes/test",
+			'--details', 'tree'
 	]
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 }
 
-task standaloneCheck {
-	dependsOn(standaloneExec)
+task standaloneCheck(dependsOn: standaloneExec) {
 	doLast {
 		String text = standaloneExec.errorOutput.toString() + standaloneExec.standardOutput.toString()
+		// engines -- output depends on default logging configuration
 		assert text.contains("junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $rootProject.version)")
 		assert text.contains("junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion)")
+		// tree node names
+		assert text.contains("JUnit Jupiter")
+		assert text.contains("JupiterIntegration")
+		assert text.contains("abort()") && text.contains("Assumption failed: integration-test-abort")
+		assert text.contains("successful()")
+		assert text.contains("disabled()") && text.contains("integration-test-disabled")
+		assert text.contains("fail()") && text.contains("integration-test-fail")
+		assert text.contains("JUnit Vintage")
+		assert text.contains("VintageIntegration")
+		assert text.contains("ignored") && text.contains("integr4tion test")
+		assert text.contains("f4il") && text.contains("f4iled")
+		assert text.contains("succ3ssful")
+		// summary
+		assert text.contains("Test run finished after")
+		// container summary
+		assert text.contains("4 containers found")
+		assert text.contains("0 containers skipped")
+		assert text.contains("4 containers started")
+		assert text.contains("0 containers aborted")
+		assert text.contains("4 containers successful")
+		assert text.contains("0 containers failed")
+		// tests summary
+		assert text.contains("7 tests found")
+		assert text.contains("2 tests skipped")
+		assert text.contains("5 tests started")
+		assert text.contains("1 tests aborted")
+		assert text.contains("2 tests successful")
+		assert text.contains("2 tests failed")
 	}
 }
 
