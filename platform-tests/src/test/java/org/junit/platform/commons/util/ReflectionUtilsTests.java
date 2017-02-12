@@ -682,10 +682,7 @@ public class ReflectionUtilsTests {
 		assertEquals(0, bridges.size());
 
 		bridgeMethodSequence.clear();
-		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(
-			DiscoverySelectors.selectClass(MethodNoBridgeChild.class)).build();
-		Launcher launcher = LauncherFactory.create();
-		launcher.execute(request);
+		execute(MethodNoBridgeChild.class);
 		assertAll("none-bridge method sequence test",
 			() -> assertEquals("static parent.beforeAll()", bridgeMethodSequence.get(0)),
 			() -> assertEquals("parent.beforeEach()", bridgeMethodSequence.get(1)),
@@ -693,8 +690,7 @@ public class ReflectionUtilsTests {
 			() -> assertEquals("child.test()", bridgeMethodSequence.get(3)),
 			() -> assertEquals("child.anotherAfterEach()", bridgeMethodSequence.get(4)),
 			() -> assertEquals("parent.afterEach()", bridgeMethodSequence.get(5)),
-			() -> assertEquals("static parent.afterAll()", bridgeMethodSequence.get(6)) //
-		);
+			() -> assertEquals("static parent.afterAll()", bridgeMethodSequence.get(6)));
 	}
 
 	@Test
@@ -717,10 +713,7 @@ public class ReflectionUtilsTests {
 		assertTrue(bridges.contains("afterEach"));
 
 		bridgeMethodSequence.clear();
-		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(
-			DiscoverySelectors.selectClass(MethodBridgeChild.class)).build();
-		Launcher launcher = LauncherFactory.create();
-		launcher.execute(request);
+		execute(MethodBridgeChild.class);
 		assertAll("bridge method sequence test",
 			() -> assertEquals("static parent.beforeAll()", bridgeMethodSequence.get(0)),
 			() -> assertEquals("parent.beforeEach()", bridgeMethodSequence.get(1)),
@@ -728,14 +721,24 @@ public class ReflectionUtilsTests {
 			() -> assertEquals("child.test()", bridgeMethodSequence.get(3)),
 			() -> assertEquals("child.anotherAfterEach()", bridgeMethodSequence.get(4)),
 			() -> assertEquals("parent.afterEach()", bridgeMethodSequence.get(5)),
-			() -> assertEquals("static parent.afterAll()", bridgeMethodSequence.get(6)) //
-		);
+			() -> assertEquals("static parent.afterAll()", bridgeMethodSequence.get(6)));
 	}
 
 	private static void createDirectories(Path... paths) throws IOException {
 		for (Path path : paths) {
 			Files.createDirectory(path);
 		}
+	}
+
+	private static void execute(Class<?> testClass) {
+		// @formatter:off
+		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
+			.request()
+			.selectors(DiscoverySelectors.selectClass(testClass))
+			.build();
+		// @formatter:on
+		Launcher launcher = LauncherFactory.create();
+		launcher.execute(request);
 	}
 
 	interface InterfaceWithOneDeclaredMethod {
