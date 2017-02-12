@@ -716,8 +716,8 @@ public class ReflectionUtilsTests {
 		assertTrue(bridges.contains("beforeEach"));
 		assertTrue(bridges.contains("afterEach"));
 
-    bridgeMethodSequence.clear();
-    LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(
+		bridgeMethodSequence.clear();
+		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(
 			DiscoverySelectors.selectClass(MethodBridgeChild.class)).build();
 		Launcher launcher = LauncherFactory.create();
 		launcher.execute(request);
