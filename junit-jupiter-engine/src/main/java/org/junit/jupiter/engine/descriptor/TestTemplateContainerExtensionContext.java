@@ -35,7 +35,7 @@ final class TestTemplateContainerExtensionContext extends AbstractExtensionConte
 
 	@Override
 	public Optional<AnnotatedElement> getElement() {
-		return Optional.of(getTestDescriptor().getTemplateMethod());
+		return Optional.of(getTestDescriptor().getTestMethod());
 	}
 
 	@Override
@@ -45,7 +45,7 @@ final class TestTemplateContainerExtensionContext extends AbstractExtensionConte
 
 	@Override
 	public Optional<Method> getTestMethod() {
-		return Optional.of(getTestDescriptor().getTemplateMethod());
+		return Optional.of(getTestDescriptor().getTestMethod());
 	}
 
 }
