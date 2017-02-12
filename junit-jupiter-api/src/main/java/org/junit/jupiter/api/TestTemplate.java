@@ -31,7 +31,8 @@ import org.junit.platform.commons.meta.API;
  * org.junit.jupiter.api.extension.TestTemplateInvocationContext invocation
  * contexts} returned by the registered {@linkplain
  * org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider
- * providers}.
+ * providers}. Must be used together with at least one provider. Otherwise,
+ * execution will fail.
  *
  * <p>Each invocation of a test template method, behaves like the execution of
  * a regular {@link Test @Test} method, i.e. it supports the same lifecycle
