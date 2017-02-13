@@ -530,6 +530,11 @@ Option                                        Description
                                                 "Test" or "Tests". When this option is
                                                 repeated, all patterns will be combined
                                                 using OR semantics. (default: ^.*Tests?$)
+-N, --exclude-classname <String>              Provide a regular expression to exclude
+                                                those classes whose fully qualified
+                                                names match. When this option is
+                                                repeated, all patterns will be combined
+                                                using OR semantics.
 --include-package <String>                    Provide a package to be included in the
                                                 test run. This option can be repeated.
 --exclude-package <String>                    Provide a package to be excluded from the
