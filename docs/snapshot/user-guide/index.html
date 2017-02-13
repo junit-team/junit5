@@ -2578,6 +2578,11 @@ final release.
                                                 "Test" or "Tests". When this option is
                                                 repeated, all patterns will be combined
                                                 using OR semantics. (default: ^.*Tests?$)
+-N, --exclude-classname &lt;String&gt;              Provide a regular expression to exclude
+                                                those classes whose fully qualified
+                                                names match. When this option is
+                                                repeated, all patterns will be combined
+                                                using OR semantics.
 --include-package &lt;String&gt;                    Provide a package to be included in the
                                                 test run. This option can be repeated.
 --exclude-package &lt;String&gt;                    Provide a package to be excluded from the
@@ -4516,6 +4521,11 @@ similar to the
 <a href="https://github.com/junit-team/junit4/wiki/Download-and-Install#plain-old-jar">plain-old JAR</a>
 known from JUnit 4.</p>
 </li>
+<li>
+<p>New <code>--exclude-classname</code> (<code>--N</code>) option added to the <code>ConsoleLauncher</code> accepting a regular
+expression to exclude those classes whose fully qualified names match. When this option is
+repeated, all patterns will be combined using OR semantics.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -4570,7 +4580,7 @@ generating assertion failure messages.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-02-07 14:01:43 EST
+Last updated 2017-02-13 03:10:39 EST
 </div>
 </div>
 </body>
