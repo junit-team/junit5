@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -651,6 +653,19 @@ public class ReflectionUtilsTests {
 			MethodShadowingChild.class.getMethod("method5", Long.class));
 	}
 
+	@Test
+	void findMethodsIgnoresBridgeMethods() throws Exception {
+		assertFalse(Modifier.isPublic(PublicChildClass.class.getSuperclass().getModifiers()));
+		assertTrue(Modifier.isPublic(PublicChildClass.class.getModifiers()));
+		assertTrue(PublicChildClass.class.getDeclaredMethod("method1").isBridge());
+		assertTrue(PublicChildClass.class.getDeclaredMethod("method3").isBridge());
+
+		List<Method> methods = ReflectionUtils.findMethods(PublicChildClass.class, method -> true);
+		List<String> names = methods.stream().map(Method::getName).collect(toList());
+		assertThat(names).containsOnly("method1", "method2", "method3", "otherMethod1", "otherMethod2");
+		assertTrue(methods.stream().filter(Method::isBridge).count() == 0);
+	}
+
 	private static void createDirectories(Path... paths) throws IOException {
 		for (Path path : paths) {
 			Files.createDirectory(path);
@@ -879,6 +894,18 @@ public class ReflectionUtilsTests {
 		}
 
 		public void method5(Long i) {
+		}
+	}
+
+	// "public" modifier is necessary here, the compiler creates a bridge method
+	public static class PublicChildClass extends ParentClass {
+
+		@Override
+		public void otherMethod1() {
+		}
+
+		@Override
+		public void otherMethod2() {
 		}
 	}
 

@@ -19,6 +19,7 @@ on GitHub.
 * The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as plugin
   version) instead of a dynamic versioning scheme (was `1.+`) by default to ensure reproducible
   builds.
+* All `findMethods()` implementations in `ReflectionUtils` no longer return bridge methods.
 
 ===== Deprecations and Breaking Changes
 
@@ -66,6 +67,9 @@ on GitHub.
 ===== Bug Fixes
 
 * Fix bug that prevented discovery of two or more methods of the same class.
+* Enforce correct execution order of overridden `@BeforeEach`/`@AfterEach` methods when declared
+  at multiple class hierarchy levels. It's now always `super.before`, `this.before`, `this.test`,
+  `this.after` and `super.after`, even when the compiler added bridge methods.
 
 ===== Deprecations and Breaking Changes
 

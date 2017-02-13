@@ -573,9 +573,11 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
 
-		// TODO [#333] Determine if we need to support bridged methods.
-
-		List<Method> localMethods = Arrays.asList(clazz.getDeclaredMethods());
+		// @formatter:off
+		List<Method> localMethods = Arrays.stream(clazz.getDeclaredMethods())
+				.filter(method -> !method.isBridge()) // [#333] don't collect bridge methods
+				.collect(toList());
+		// @formatter:on
 
 		// @formatter:off
 		List<Method> superclassMethods = getSuperclassMethods(clazz, sortOrder).stream()
