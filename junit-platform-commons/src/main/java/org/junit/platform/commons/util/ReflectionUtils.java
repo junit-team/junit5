@@ -575,7 +575,7 @@ public final class ReflectionUtils {
 
 		// @formatter:off
 		List<Method> localMethods = Arrays.stream(clazz.getDeclaredMethods())
-				.filter(method ->  !method.isBridge()) // [#333] don't collect bridge methods
+				.filter(method -> !method.isBridge()) // [#333] don't collect bridge methods
 				.collect(toList());
 		// @formatter:on
 
