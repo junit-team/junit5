@@ -12,7 +12,12 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.toCollection;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -20,7 +25,9 @@ import java.util.Set;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
@@ -29,7 +36,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
 /**
  * @since 5.0
  */
-abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext {
+abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext, ExtensionContext.Util {
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
@@ -75,6 +82,41 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@Override
 	public Set<String> getTags() {
 		return testDescriptor.getTags().stream().map(TestTag::getName).collect(toCollection(LinkedHashSet::new));
+	}
+
+	@Override
+	public Util getUtil() {
+		// The current implementation is done "in same instance".
+		// If more methods are added, consider creating a dedicated Util class.
+		return this;
+	}
+
+	@Override
+	public boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType) {
+		return AnnotationUtils.isAnnotated(element, annotationType);
+	}
+
+	@Override
+	public <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
+		return AnnotationUtils.findAnnotation(element, annotationType);
+	}
+
+	@Override
+	public <A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element, Class<A> annotationType) {
+		return AnnotationUtils.findRepeatableAnnotations(element, annotationType);
+	}
+
+	@Override
+	public List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<?> fieldType,
+			Class<? extends Annotation> annotationType) {
+		return AnnotationUtils.findPublicAnnotatedFields(clazz, fieldType, annotationType);
+	}
+
+	@Override
+	public List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
+			boolean sortOrderHierarchyDown) {
+		MethodSortOrder order = sortOrderHierarchyDown ? MethodSortOrder.HierarchyDown : MethodSortOrder.HierarchyUp;
+		return AnnotationUtils.findAnnotatedMethods(clazz, annotationType, order);
 	}
 
 }

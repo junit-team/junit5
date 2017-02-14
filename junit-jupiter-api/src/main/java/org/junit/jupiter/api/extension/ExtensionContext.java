@@ -12,11 +12,14 @@ package org.junit.jupiter.api.extension;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -35,6 +38,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.0
  * @see Store
  * @see Namespace
+ * @see Util
  */
 @API(Experimental)
 public interface ExtensionContext {
@@ -340,6 +344,63 @@ public interface ExtensionContext {
 			return parts.hashCode();
 		}
 
+	}
+
+	/**
+	 * Get the {@link Util} instance providing access to commonly used helper methods.
+	 *
+	 * @return the util instance; never {@code null}
+	 */
+	Util getUtil();
+
+	/**
+	 * Groups commonly used helper methods used by extensions.
+	 */
+	interface Util {
+
+		/**
+		 * Determine if an annotation of {@code annotationType} is either <em>present</em> or <em>meta-present</em> on the
+		 * supplied {@code element}.
+		 *
+		 * @see org.junit.platform.commons.util.AnnotationUtils#isAnnotated(AnnotatedElement, Class)
+		 */
+		boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType);
+
+		/**
+		 * Find the first annotation of {@code annotationType} that is either <em>present</em> or <em>meta-present</em> on
+		 * the supplied {@code element}.
+		 *
+		 * @see org.junit.platform.commons.util.AnnotationUtils#findAnnotation(AnnotatedElement, Class)
+		 */
+		<A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType);
+
+		/**
+		 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of {@code annotationType} that are either
+		 * <em>present</em>, <em>indirectly present</em>, or <em>meta-present</em> on the supplied {@link AnnotatedElement}.
+		 *
+		 * @see org.junit.platform.commons.util.AnnotationUtils#findRepeatableAnnotations(AnnotatedElement, Class)
+		 */
+		<A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element, Class<A> annotationType);
+
+		/**
+		 * Find all {@code public} {@linkplain Field fields} of the supplied class or interface that are of the specified
+		 * {@code fieldType} and annotated or meta-annotated with the specified {@code annotationType}.
+		 *
+		 * @see org.junit.platform.commons.util.AnnotationUtils#findPublicAnnotatedFields(Class, Class, Class)
+		 */
+		List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<?> fieldType,
+				Class<? extends Annotation> annotationType);
+
+		/**
+		 * Find all {@linkplain Method methods} of the supplied class or interface that are annotated or meta-annotated
+		 * with the specified {@code annotationType}.
+		 *
+		 * @param sortOrderHierarchyDown {@code true} translates to
+		 *   {@code ReflectionUtils.MethodSortOrder#HierarchyDown}, {@code false} is interpreted as
+		 *   {@code ReflectionUtils.MethodSortOrder#HierarchyUp}.
+		 */
+		List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
+				boolean sortOrderHierarchyDown);
 	}
 
 }

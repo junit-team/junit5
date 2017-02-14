@@ -12,8 +12,15 @@ package org.junit.jupiter.engine.execution;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +34,9 @@ import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestExtensionContext;
 import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
+import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -169,6 +179,54 @@ public class ExtensionContextTests {
 		assertEquals(parentValue, childStore.get(parentKey));
 	}
 
+	@Test
+	void utilMethodsDelegateToInternalUtils() throws Exception {
+		ExtensionContext.Util util = new ClassBasedContainerExtensionContext(null, null, null).getUtil();
+
+		assertEquals(AnnotationUtils.isAnnotated(OuterClass.class, Tag.class),
+			util.isAnnotated(OuterClass.class, Tag.class));
+		assertEquals(AnnotationUtils.isAnnotated(OuterClass.class, Override.class),
+			util.isAnnotated(OuterClass.class, Override.class));
+
+		assertEquals(AnnotationUtils.findAnnotation(OuterClass.class, Tag.class),
+			util.findAnnotation(OuterClass.class, Tag.class));
+		assertEquals(AnnotationUtils.findAnnotation(OuterClass.class, Override.class),
+			util.findAnnotation(OuterClass.class, Override.class));
+
+		Method bMethod = OuterClass.class.getDeclaredMethod("bMethod");
+		assertEquals(AnnotationUtils.findRepeatableAnnotations(bMethod, Tag.class),
+			util.findRepeatableAnnotations(bMethod, Tag.class));
+		Object expected = assertThrows(PreconditionViolationException.class,
+			() -> AnnotationUtils.findRepeatableAnnotations(bMethod, Override.class));
+		Object actual = assertThrows(PreconditionViolationException.class,
+			() -> util.findRepeatableAnnotations(bMethod, Override.class));
+		assertSame(expected.getClass(), actual.getClass(), "expected same exception class");
+		assertEquals(expected.toString(), actual.toString(), "expected equal exception toString representation");
+
+		assertEquals(
+			AnnotationUtils.findAnnotatedMethods(OuterClass.class, Tag.class,
+				ReflectionUtils.MethodSortOrder.HierarchyDown),
+			util.findAnnotatedMethods(OuterClass.class, Tag.class, true));
+		assertEquals(
+			AnnotationUtils.findAnnotatedMethods(OuterClass.class, Tag.class,
+				ReflectionUtils.MethodSortOrder.HierarchyUp),
+			util.findAnnotatedMethods(OuterClass.class, Tag.class, false));
+
+		assertEquals(
+			AnnotationUtils.findAnnotatedMethods(OuterClass.class, Override.class,
+				ReflectionUtils.MethodSortOrder.HierarchyDown),
+			util.findAnnotatedMethods(OuterClass.class, Override.class, true));
+		assertEquals(
+			AnnotationUtils.findAnnotatedMethods(OuterClass.class, Override.class,
+				ReflectionUtils.MethodSortOrder.HierarchyUp),
+			util.findAnnotatedMethods(OuterClass.class, Override.class, false));
+
+		assertEquals(AnnotationUtils.findPublicAnnotatedFields(OuterClass.class, String.class, FieldMarker.class),
+			util.findPublicAnnotatedFields(OuterClass.class, String.class, FieldMarker.class));
+		assertEquals(AnnotationUtils.findPublicAnnotatedFields(OuterClass.class, Throwable.class, Override.class),
+			util.findPublicAnnotatedFields(OuterClass.class, Throwable.class, Override.class));
+	}
+
 	private ClassTestDescriptor nestedClassDescriptor() {
 		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"),
 			OuterClass.NestedClass.class);
@@ -192,8 +250,19 @@ public class ExtensionContextTests {
 		}
 	}
 
+	@Target({ ElementType.FIELD })
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface FieldMarker {
+	}
+
 	@Tag("outer-tag")
 	static class OuterClass {
+
+		@FieldMarker
+		public static String publicStaticAnnotatedField = "static";
+
+		@FieldMarker
+		public static String publicNormalAnnotatedField = "normal";
 
 		@Tag("nested-tag")
 		class NestedClass {
@@ -202,6 +271,10 @@ public class ExtensionContextTests {
 		@Tag("method-tag")
 		void aMethod() {
 		}
-	}
 
+		@Tag("method-tag-1")
+		@Tag("method-tag-2")
+		void bMethod() {
+		}
+	}
 }
