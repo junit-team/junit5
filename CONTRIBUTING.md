@@ -20,6 +20,12 @@ As a general rule, the style and formatting of commit messages should follow the
 
 ## Pull Requests
 
+Our [Definition of Done](https://github.com/junit-team/junit5/wiki/Definition-of-Done)
+offers some guidelines on what we expect from a pull request.
+Feel free to open a pull request that does not fulfill all criteria, e.g. to discuss
+a certain change before polishing it, but please be aware that we will only merge it
+in case the DoD is met.
+
 Please add the following lines to your pull request description:
 
 ```markdown
