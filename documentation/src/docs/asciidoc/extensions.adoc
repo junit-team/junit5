@@ -251,3 +251,11 @@ put values into a store for later retrieval.  See the
 `ContainerExtensionContext`. Since `ContainerExtensionContexts` may be nested, the scope of inner
 contexts may also be limited. Consult the corresponding Javadoc for details on the methods
 available for storing and retrieving values via the `{ExtensionContext_Store}`.
+
+[[extensions-supported-utilities]]
+=== Supported Utilities in Extensions
+
+The JUnit Platform Commons artifact exposes package `{junit-platform-support-package}` which
+contains maintained utility methods handling `Annotation`, reflection and classpath scanning tasks.
+Extension authors are encouraged to use these supported methods to align expected the behaviour
+with the JUnit Platform.
