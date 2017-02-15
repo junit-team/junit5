@@ -24,6 +24,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
 import org.junit.platform.engine.test.TestDescriptorStub;
 
 /**
@@ -44,7 +45,7 @@ class TestIdentifierTests {
 	void serialization() throws Exception {
 		TestIdentifier identifier = serializeAndDeserialize(//
 			new TestIdentifier("uniqueId", "displayName", Optional.of(new ClassSource(TestIdentifierTests.class)),
-				singleton(TestTag.create("aTag")), true, false, Optional.of("parentId")));
+				singleton(TestTag.create("aTag")), true, false, Optional.of("parentId"), new DefaultLegacyReportingInfo("method", "class")));
 
 		assertEquals("uniqueId", identifier.getUniqueId());
 		assertEquals("displayName", identifier.getDisplayName());

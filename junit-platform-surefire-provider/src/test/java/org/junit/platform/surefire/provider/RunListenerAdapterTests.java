@@ -37,6 +37,7 @@ import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -180,9 +181,11 @@ class RunListenerAdapterTests {
 
 	private static TestIdentifier newSourcelessIdentifierWithParent(TestPlan testPlan, String parentDisplay) {
 		// A parent test identifier with a name.
+		final DefaultLegacyReportingInfo emptyLegacyReportingInfo = new DefaultLegacyReportingInfo("", "");
 		TestDescriptor parent = mock(TestDescriptor.class);
 		when(parent.getUniqueId()).thenReturn(newId());
 		when(parent.getDisplayName()).thenReturn(parentDisplay);
+		when(parent.getLegacyReportingInfo()).thenReturn(emptyLegacyReportingInfo);
 		TestIdentifier parentId = TestIdentifier.from(parent);
 
 		// The (child) test case that is to be executed as part of a test plan.
@@ -193,6 +196,7 @@ class RunListenerAdapterTests {
 		// Ensure the child source is null yet that there is a parent -- the special case to be tested.
 		when(child.getSource()).thenReturn(Optional.empty());
 		when(child.getParent()).thenReturn(Optional.of(parent));
+		when(child.getLegacyReportingInfo()).thenReturn(emptyLegacyReportingInfo);
 		TestIdentifier childId = TestIdentifier.from(child);
 
 		testPlan.add(childId);

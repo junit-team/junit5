@@ -26,6 +26,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
 
 /**
  * Immutable data transfer object that represents a test or container which is
@@ -46,6 +47,7 @@ public final class TestIdentifier implements Serializable {
 	private final Set<TestTag> tags;
 	private final boolean test;
 	private final boolean container;
+	private final DefaultLegacyReportingInfo legacyReportingInfo;
 
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
@@ -61,11 +63,12 @@ public final class TestIdentifier implements Serializable {
 		boolean container = !test || !testDescriptor.getChildren().isEmpty();
 		Optional<String> parentId = testDescriptor.getParent().map(
 			parentDescriptor -> parentDescriptor.getUniqueId().toString());
-		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId);
+		final DefaultLegacyReportingInfo legacyReportingInfo = DefaultLegacyReportingInfo.from(testDescriptor.getLegacyReportingInfo());
+		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId, legacyReportingInfo);
 	}
 
 	TestIdentifier(String uniqueId, String displayName, Optional<TestSource> source, Set<TestTag> tags, boolean test,
-			boolean container, Optional<String> parentId) {
+				   boolean container, Optional<String> parentId, DefaultLegacyReportingInfo legacyReportingInfo) {
 		this.uniqueId = uniqueId;
 		this.parentId = parentId.orElse(null);
 		this.displayName = displayName;
@@ -73,6 +76,7 @@ public final class TestIdentifier implements Serializable {
 		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
 		this.test = test;
 		this.container = container;
+		this.legacyReportingInfo = legacyReportingInfo;
 	}
 
 	/**

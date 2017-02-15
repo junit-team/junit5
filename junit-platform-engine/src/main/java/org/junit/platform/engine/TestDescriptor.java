@@ -12,11 +12,15 @@ package org.junit.platform.engine;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * Mutable descriptor for a test or container that has been discovered by a
@@ -179,6 +183,20 @@ public interface TestDescriptor {
 		visitor.visit(this);
 		// Create a copy of the set in order to avoid a ConcurrentModificationException
 		new LinkedHashSet<>(this.getChildren()).forEach(child -> child.accept(visitor));
+	}
+
+
+	default LegacyReportingInfo getLegacyReportingInfo() {
+		final String displayName = getDisplayName();
+		final Optional<String> className = getParent().map(TestDescriptor::getDisplayName);
+
+		return new DefaultLegacyReportingInfo(displayName, className.orElse(null));
+	}
+
+	interface LegacyReportingInfo {
+		Optional<String> getMethodName();
+
+		Optional<String> getClassName();
 	}
 
 	/**
