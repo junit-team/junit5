@@ -186,4 +186,7 @@ public final class TestIdentifier implements Serializable {
 		// @formatter:on
 	}
 
+	public DefaultLegacyReportingInfo getLegacyReportingInfo() {
+		return legacyReportingInfo;
+	}
 }

@@ -29,6 +29,7 @@ import org.apache.maven.surefire.report.StackTraceWriter;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -65,7 +66,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		String source = getClassName(testIdentifier).orElseGet(() -> parentDisplayName(testIdentifier));
+		String source = testIdentifier.getLegacyReportingInfo().getClassName().orElseGet(() -> parentDisplayName(testIdentifier));
 		runListener.testSkipped(ignored(source, testIdentifier.getDisplayName(), reason));
 	}
 
@@ -83,14 +84,15 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier, Optional<Throwable> throwable) {
-		Optional<String> className = getClassName(testIdentifier);
+		final DefaultLegacyReportingInfo legacyReportingInfo = testIdentifier.getLegacyReportingInfo();
+		Optional<String> className = legacyReportingInfo.getClassName();
 		if (className.isPresent()) {
 			StackTraceWriter traceWriter = new PojoStackTraceWriter(className.get(),
 				getMethodName(testIdentifier).orElse(""), throwable.orElse(null));
-			return new SimpleReportEntry(className.get(), testIdentifier.getDisplayName(), traceWriter, null);
+			return new SimpleReportEntry(className.get(), legacyReportingInfo.getMethodName().orElse(""), traceWriter, null);
 		}
 		else {
-			return new SimpleReportEntry(parentDisplayName(testIdentifier), testIdentifier.getDisplayName(), null);
+			return new SimpleReportEntry(parentDisplayName(testIdentifier), legacyReportingInfo.getMethodName().orElse(""), null);
 		}
 	}
 
