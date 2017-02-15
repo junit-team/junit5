@@ -15,6 +15,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :junit-platform-console:            {javadoc-root}/org/junit/platform/console/package-summary.html[junit-platform-console]
 :junit-platform-engine:             {javadoc-root}/org/junit/platform/engine/package-summary.html[junit-platform-engine]
 :junit-platform-launcher:           {javadoc-root}/org/junit/platform/launcher/package-summary.html[junit-platform-launcher]
+:junit-platform-support-package:    {javadoc-root}/org/junit/platform/commons/support/package-summary.html[org.junit.platform.commons.support]
 :API:                               {javadoc-root}/org/junit/platform/commons/meta/API.html[@API]
 :Launcher:                          {javadoc-root}/org/junit/platform/launcher/Launcher.html[Launcher]
 :ConsoleLauncher:                   {javadoc-root}/org/junit/platform/console/ConsoleLauncher.html[ConsoleLauncher]

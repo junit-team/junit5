@@ -64,6 +64,10 @@ on GitHub.
 * New `--exclude-classname` (`--N`) option added to the `ConsoleLauncher` accepting a regular
   expression to exclude those classes whose fully qualified names match. When this option is
   repeated, all patterns will be combined using OR semantics.
+* Introduce JUnit Platform support package `org.junit.platform.commons.support` which contains
+  maintained utility methods handling `Annotation`, reflection and classpath scanning tasks.
+  `TestEngine` and `Extension` authors are encouraged to use these supported methods
+  to align the behaviour with the JUnit Platform.
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
 ==== JUnit Jupiter
