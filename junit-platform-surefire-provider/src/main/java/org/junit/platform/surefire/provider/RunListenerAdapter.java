@@ -63,7 +63,8 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		String source = testIdentifier.getLegacyReportingInfo().getClassName().orElseGet(() -> parentDisplayName(testIdentifier));
+		String source = testIdentifier.getLegacyReportingInfo().getClassName().orElseGet(
+			() -> parentDisplayName(testIdentifier));
 		runListener.testSkipped(ignored(source, testIdentifier.getDisplayName(), reason));
 	}
 
@@ -85,8 +86,8 @@ final class RunListenerAdapter implements TestExecutionListener {
 		Optional<String> className = legacyReportingInfo.getClassName();
 		final String methodName = legacyReportingInfo.getMethodName().orElse("");
 		if (className.isPresent()) {
-			StackTraceWriter traceWriter = new PojoStackTraceWriter(className.get(),
-				methodName, throwable.orElse(null));
+			StackTraceWriter traceWriter = new PojoStackTraceWriter(className.get(), methodName,
+				throwable.orElse(null));
 			return new SimpleReportEntry(className.get(), methodName, traceWriter, null);
 		}
 		else {

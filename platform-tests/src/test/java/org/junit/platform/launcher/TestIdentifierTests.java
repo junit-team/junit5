@@ -45,7 +45,8 @@ class TestIdentifierTests {
 	void serialization() throws Exception {
 		TestIdentifier identifier = serializeAndDeserialize(//
 			new TestIdentifier("uniqueId", "displayName", Optional.of(new ClassSource(TestIdentifierTests.class)),
-				singleton(TestTag.create("aTag")), true, false, Optional.of("parentId"), new DefaultLegacyReportingInfo("method", "class")));
+				singleton(TestTag.create("aTag")), true, false, Optional.of("parentId"),
+				new DefaultLegacyReportingInfo("method", "class")));
 
 		assertEquals("uniqueId", identifier.getUniqueId());
 		assertEquals("displayName", identifier.getDisplayName());

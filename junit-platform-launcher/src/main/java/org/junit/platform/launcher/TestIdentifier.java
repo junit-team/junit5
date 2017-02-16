@@ -63,12 +63,13 @@ public final class TestIdentifier implements Serializable {
 		boolean container = !test || !testDescriptor.getChildren().isEmpty();
 		Optional<String> parentId = testDescriptor.getParent().map(
 			parentDescriptor -> parentDescriptor.getUniqueId().toString());
-		final DefaultLegacyReportingInfo legacyReportingInfo = DefaultLegacyReportingInfo.from(testDescriptor.getLegacyReportingInfo());
+		final DefaultLegacyReportingInfo legacyReportingInfo = DefaultLegacyReportingInfo.from(
+			testDescriptor.getLegacyReportingInfo());
 		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId, legacyReportingInfo);
 	}
 
 	TestIdentifier(String uniqueId, String displayName, Optional<TestSource> source, Set<TestTag> tags, boolean test,
-				   boolean container, Optional<String> parentId, DefaultLegacyReportingInfo legacyReportingInfo) {
+			boolean container, Optional<String> parentId, DefaultLegacyReportingInfo legacyReportingInfo) {
 		this.uniqueId = uniqueId;
 		this.parentId = parentId.orElse(null);
 		this.displayName = displayName;
