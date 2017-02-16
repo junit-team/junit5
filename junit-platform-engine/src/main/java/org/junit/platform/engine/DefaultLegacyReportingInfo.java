@@ -8,12 +8,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.platform.engine.support.descriptor;
+package org.junit.platform.engine;
 
 import java.io.Serializable;
 import java.util.Optional;
-
-import org.junit.platform.engine.TestDescriptor;
 
 public class DefaultLegacyReportingInfo implements TestDescriptor.LegacyReportingInfo, Serializable {
 	private static final long serialVersionUID = 2896941058543948169L;

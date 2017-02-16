@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
 
 /**
  * Mutable descriptor for a test or container that has been discovered by a

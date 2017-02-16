@@ -23,10 +23,10 @@ import java.util.Set;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DefaultLegacyReportingInfo;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
-import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
 
 /**
  * Immutable data transfer object that represents a test or container which is

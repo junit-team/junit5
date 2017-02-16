@@ -44,11 +44,11 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.DefaultLegacyReportingInfo;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
-import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.

@@ -20,11 +20,11 @@ import static org.junit.platform.commons.util.SerializationUtils.serializeAndDes
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.DefaultLegacyReportingInfo;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
-import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
 import org.junit.platform.engine.test.TestDescriptorStub;
 
 /**
