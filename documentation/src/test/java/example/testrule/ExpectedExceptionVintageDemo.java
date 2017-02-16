@@ -10,6 +10,7 @@
 
 package example.testrule;
 
+//tag::user_guide[]
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -34,3 +35,4 @@ public class ExpectedExceptionVintageDemo {
 	}
 
 }
+//end::user_guide[]
