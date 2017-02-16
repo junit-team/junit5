@@ -9,14 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.surefire.provider.JUnitPlatformProviderTests.newTestsToRun;
 import static org.junit.platform.surefire.provider.JUnitPlatformProviderTests.providerParametersMock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class LegacyReportingTests {
+	private static final String[] classNames = {"org.junit.platform.surefire.provider.LegacyReportingTests$Sub1Tests",
+			"org.junit.platform.surefire.provider.LegacyReportingTests$Sub2Tests"};
+
 
 	@Test
 	public void testLegacyXmlReport() throws TestSetFailedException, InvocationTargetException {
@@ -30,8 +34,9 @@ public class LegacyReportingTests {
 
 		ArgumentCaptor<ReportEntry> reportEntryArgumentCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 		verify(reporter, times(2)).testSucceeded(reportEntryArgumentCaptor.capture());
-		final ReportEntry value = reportEntryArgumentCaptor.getValue();
-		assertTrue(value.getSourceName().endsWith("Sub2Tests"));
+
+		final List<ReportEntry> allValues = reportEntryArgumentCaptor.getAllValues();
+		assertThat(allValues).extracting(ReportEntry::getSourceName).containsExactly(classNames);
 	}
 
 

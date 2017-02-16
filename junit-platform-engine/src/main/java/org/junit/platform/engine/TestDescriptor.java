@@ -12,15 +12,12 @@ package org.junit.platform.engine;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
-
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
-import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * Mutable descriptor for a test or container that has been discovered by a
@@ -185,7 +182,11 @@ public interface TestDescriptor {
 		new LinkedHashSet<>(this.getChildren()).forEach(child -> child.accept(visitor));
 	}
 
-
+	/**
+	 * Does a logical level display name resolution for legacy reporting formats, instead of a source level name resolution.
+	 *
+	 * @return A LegacyReportingInfo containing the logical method and class display names.
+	 */
 	default LegacyReportingInfo getLegacyReportingInfo() {
 		final String displayName = getDisplayName();
 		final Optional<String> className = getParent().map(TestDescriptor::getDisplayName);

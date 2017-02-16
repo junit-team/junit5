@@ -73,7 +73,7 @@ class TestInfoParameterResolverTests {
 	@BeforeAll
 	@AfterAll
 	static void beforeAndAfterAll(TestInfo testInfo) {
-		assertEquals(TestInfoParameterResolverTests.class.getSimpleName(), testInfo.getDisplayName());
+		assertEquals(TestInfoParameterResolverTests.class.getCanonicalName(), testInfo.getDisplayName());
 	}
 
 }

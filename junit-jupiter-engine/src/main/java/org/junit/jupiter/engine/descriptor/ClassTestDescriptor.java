@@ -48,6 +48,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -114,10 +115,13 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		return true;
 	}
 
+	@Override
+	public LegacyReportingInfo getLegacyReportingInfo() {
+		return new DefaultLegacyReportingInfo(null, this.getDisplayName());
+	}
+
 	private static String generateDefaultDisplayName(Class<?> testClass) {
-		String name = testClass.getName();
-		int index = name.lastIndexOf('.');
-		return name.substring(index + 1);
+		return testClass.getName();
 	}
 
 	// --- Node ----------------------------------------------------------------

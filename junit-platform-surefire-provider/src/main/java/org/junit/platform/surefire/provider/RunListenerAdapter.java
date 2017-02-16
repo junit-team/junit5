@@ -26,11 +26,8 @@ import org.apache.maven.surefire.report.PojoStackTraceWriter;
 import org.apache.maven.surefire.report.RunListener;
 import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.report.StackTraceWriter;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.support.descriptor.ClassSource;
-import org.junit.platform.engine.support.descriptor.DefaultLegacyReportingInfo;
-import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -84,35 +81,17 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier, Optional<Throwable> throwable) {
-		final DefaultLegacyReportingInfo legacyReportingInfo = testIdentifier.getLegacyReportingInfo();
+		final TestDescriptor.LegacyReportingInfo legacyReportingInfo = testIdentifier.getLegacyReportingInfo();
 		Optional<String> className = legacyReportingInfo.getClassName();
+		final String methodName = legacyReportingInfo.getMethodName().orElse("");
 		if (className.isPresent()) {
 			StackTraceWriter traceWriter = new PojoStackTraceWriter(className.get(),
-				getMethodName(testIdentifier).orElse(""), throwable.orElse(null));
-			return new SimpleReportEntry(className.get(), legacyReportingInfo.getMethodName().orElse(""), traceWriter, null);
+				methodName, throwable.orElse(null));
+			return new SimpleReportEntry(className.get(), methodName, traceWriter, null);
 		}
 		else {
-			return new SimpleReportEntry(parentDisplayName(testIdentifier), legacyReportingInfo.getMethodName().orElse(""), null);
+			return new SimpleReportEntry(parentDisplayName(testIdentifier), methodName, null);
 		}
-	}
-
-	private Optional<String> getClassName(TestIdentifier testIdentifier) {
-		TestSource testSource = testIdentifier.getSource().orElse(null);
-		if (testSource instanceof ClassSource) {
-			return Optional.of(((ClassSource) testSource).getJavaClass().getName());
-		}
-		if (testSource instanceof MethodSource) {
-			return Optional.of(((MethodSource) testSource).getClassName());
-		}
-		return Optional.empty();
-	}
-
-	private Optional<String> getMethodName(TestIdentifier testIdentifier) {
-		TestSource testSource = testIdentifier.getSource().orElse(null);
-		if (testSource instanceof MethodSource) {
-			return Optional.of(((MethodSource) testSource).getMethodName());
-		}
-		return Optional.empty();
 	}
 
 	private String parentDisplayName(TestIdentifier testIdentifier) {
