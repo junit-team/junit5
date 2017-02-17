@@ -30,6 +30,6 @@ import org.junit.platform.commons.meta.API;
 @ExtendWith(ParameterizedTestExtension.class)
 public @interface ParameterizedTest {
 
-	String[] value() default {};
+	String name() default "[{index}] {arguments}";
 
 }

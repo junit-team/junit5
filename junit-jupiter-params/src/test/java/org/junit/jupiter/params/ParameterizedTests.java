@@ -38,8 +38,8 @@ class ParameterizedTests {
 		List<ExecutionEvent> executionEvents = execute(
 			selectMethod(TestCase.class, "testWithTwoSingleStringArgumentsProvider", String.class.getName()));
 		assertThat(executionEvents) //
-				.haveExactly(1, event(test(), displayName("[1]"), finishedWithFailure(message("foo")))) //
-				.haveExactly(1, event(test(), displayName("[2]"), finishedWithFailure(message("bar"))));
+				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 	}
 
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
