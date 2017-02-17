@@ -56,6 +56,21 @@ public final class Assertions {
 	}
 
 	/**
+	 * <em>Fails</em> a test with the given failure {@code message} as well
+	 * as the underlying {@code cause}.
+	 */
+	public static void fail(String message, Throwable cause) {
+		AssertionUtils.fail(message, cause);
+	}
+
+	/**
+	 * <em>Fails</em> a test with the given underlying {@code cause}.
+	 */
+	public static void fail(Throwable cause) {
+		AssertionUtils.fail(cause);
+	}
+
+	/**
 	 * <em>Fails</em> a test with the failure message retrieved from the
 	 * given {@code messageSupplier}.
 	 */
