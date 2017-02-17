@@ -76,6 +76,12 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	private static TestTemplateInvocationContext toTestTemplateInvocationContext(Object[] arguments) {
 		return new TestTemplateInvocationContext() {
 			@Override
+			public String getDisplayName(int invocationIndex) {
+				// TODO #14 support multiple params
+				return TestTemplateInvocationContext.super.getDisplayName(invocationIndex) + " " + arguments[0];
+			}
+
+			@Override
 			public List<Extension> getAdditionalExtensions() {
 				return singletonList(new ParameterResolver() {
 
