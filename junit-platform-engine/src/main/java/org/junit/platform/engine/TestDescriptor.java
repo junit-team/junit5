@@ -53,6 +53,10 @@ public interface TestDescriptor {
 	 */
 	String getDisplayName();
 
+	default String getLegacyReportingName() {
+		return getDisplayName();
+	}
+
 	/**
 	 * Get the set of {@linkplain TestTag tags} associated with this descriptor.
 	 *

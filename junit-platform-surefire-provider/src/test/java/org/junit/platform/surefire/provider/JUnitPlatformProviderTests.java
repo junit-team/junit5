@@ -21,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,8 +32,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.surefire.providerapi.ProviderParameters;
+import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
+import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.RunOrderCalculator;
 import org.apache.maven.surefire.util.ScanResult;
 import org.apache.maven.surefire.util.TestsToRun;
@@ -45,6 +47,7 @@ import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.mockito.ArgumentCaptor;
 
 /**
  * Unit tests for {@link JUnitPlatformProvider}.
@@ -282,5 +285,36 @@ class JUnitPlatformProviderTests {
 			assertEquals(1, summary.getTestsAbortedCount());
 			assertEquals(1, summary.getTestsFailedCount());
 		}
+	}
+
+	@Test
+	public void usesClassNamesForXmlReport() throws TestSetFailedException, InvocationTargetException {
+		String[] classNames = { "org.junit.platform.surefire.provider.JUnitPlatformProviderTests$Sub1Tests",
+				"org.junit.platform.surefire.provider.JUnitPlatformProviderTests$Sub2Tests" };
+		ProviderParameters providerParameters = providerParametersMock(Sub1Tests.class, Sub2Tests.class);
+
+		JUnitPlatformProvider jUnitPlatformProvider = new JUnitPlatformProvider(providerParameters);
+		TestsToRun testsToRun = newTestsToRun(Sub1Tests.class, Sub2Tests.class);
+
+		jUnitPlatformProvider.invoke(testsToRun);
+		RunListener reporter = providerParameters.getReporterFactory().createReporter();
+
+		ArgumentCaptor<ReportEntry> reportEntryArgumentCaptor = ArgumentCaptor.forClass(ReportEntry.class);
+		verify(reporter, times(2)).testSucceeded(reportEntryArgumentCaptor.capture());
+
+		List<ReportEntry> allValues = reportEntryArgumentCaptor.getAllValues();
+		assertThat(allValues).extracting(ReportEntry::getSourceName).containsExactly(classNames);
+	}
+
+	public static class AbstractTestClass {
+		@Test
+		void test() {
+		}
+	}
+
+	public static class Sub1Tests extends AbstractTestClass {
+	}
+
+	public static class Sub2Tests extends AbstractTestClass {
 	}
 }

@@ -65,8 +65,8 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		String source = getClassName(testIdentifier).orElseGet(() -> parentDisplayName(testIdentifier));
-		runListener.testSkipped(ignored(source, testIdentifier.getDisplayName(), reason));
+		String source = sourceLegacyReportingName(testIdentifier);
+		runListener.testSkipped(ignored(source, testIdentifier.getLegacyReportingName(), reason));
 	}
 
 	@Override
@@ -84,14 +84,18 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier, Optional<Throwable> throwable) {
 		Optional<String> className = getClassName(testIdentifier);
-		if (className.isPresent()) {
-			StackTraceWriter traceWriter = new PojoStackTraceWriter(className.get(),
-				getMethodName(testIdentifier).orElse(""), throwable.orElse(null));
-			return new SimpleReportEntry(className.get(), testIdentifier.getDisplayName(), traceWriter, null);
-		}
-		else {
-			return new SimpleReportEntry(parentDisplayName(testIdentifier), testIdentifier.getDisplayName(), null);
-		}
+
+		Optional<StackTraceWriter> stackTraceWriter = throwable.flatMap(
+			t -> className.map(name -> new PojoStackTraceWriter(name, getMethodName(testIdentifier).orElse(""), t)));
+
+		String source = sourceLegacyReportingName(testIdentifier);
+		return new SimpleReportEntry(source, testIdentifier.getLegacyReportingName(), stackTraceWriter.orElse(null),
+			null);
+	}
+
+	private String sourceLegacyReportingName(TestIdentifier testIdentifier) {
+		return testPlan.flatMap(plan -> plan.getParent(testIdentifier)).map(
+			TestIdentifier::getLegacyReportingName).orElse("<unrooted>");
 	}
 
 	private Optional<String> getClassName(TestIdentifier testIdentifier) {
@@ -117,7 +121,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 		// @formatter:off
 		return testPlan
 			.flatMap(plan -> plan.getParent(testIdentifier))
-			.map(TestIdentifier::getDisplayName)
+			.map(TestIdentifier::getLegacyReportingName)
 			.orElseGet(testIdentifier::getUniqueId);
 		// @formatter:on
 	}

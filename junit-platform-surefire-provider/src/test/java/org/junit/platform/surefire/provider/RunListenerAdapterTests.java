@@ -16,9 +16,7 @@
 
 package org.junit.platform.surefire.provider;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -62,13 +60,18 @@ class RunListenerAdapterTests {
 	void notifiedWithCorrectNamesWhenMethodExecutionStarted() throws Exception {
 		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 
-		adapter.executionStarted(newMethodIdentifier());
+		TestPlan testPlan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Luke's Plan")));
+		adapter.testPlanExecutionStarted(testPlan);
+
+		TestIdentifier methodIdentifier = newMethodIdentifierOnTestPlan(testPlan);
+
+		adapter.executionStarted(methodIdentifier);
 		verify(listener).testStarting(entryCaptor.capture());
 
 		ReportEntry entry = entryCaptor.getValue();
 		assertEquals(MY_TEST_METHOD_NAME + "()", entry.getName());
 		assertEquals(MyTestClass.class.getName(), entry.getSourceName());
-		assertNotNull(entry.getStackTraceWriter());
+		assertNull(entry.getStackTraceWriter());
 	}
 
 	@Test
@@ -92,13 +95,17 @@ class RunListenerAdapterTests {
 	@Test
 	void notifiedWithCorrectNamesWhenClassExecutionSkipped() throws Exception {
 		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
+		TestPlan testPlan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Luke's Plan")));
+		adapter.testPlanExecutionStarted(testPlan);
 
-		adapter.executionSkipped(newClassIdentifier(), "test");
+		TestIdentifier classIdentifier = newClassIdentifierOnTestPlan(testPlan);
+
+		adapter.executionSkipped(classIdentifier, "test");
 		verify(listener).testSkipped(entryCaptor.capture());
 
 		ReportEntry entry = entryCaptor.getValue();
 		assertTrue(MyTestClass.class.getTypeName().contains(entry.getName()));
-		assertEquals(MyTestClass.class.getName(), entry.getSourceName());
+		assertEquals("<unrooted>", entry.getSourceName());
 	}
 
 	@Test
@@ -128,12 +135,15 @@ class RunListenerAdapterTests {
 	@Test
 	void notifiedWithCorrectNamesWhenClassExecutionFailed() throws Exception {
 		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
+		TestPlan testPlan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Luke's Plan")));
+		adapter.testPlanExecutionStarted(testPlan);
 
-		adapter.executionFinished(newClassIdentifier(), TestExecutionResult.failed(new RuntimeException()));
+		adapter.executionFinished(newClassIdentifierOnTestPlan(testPlan),
+			TestExecutionResult.failed(new RuntimeException()));
 		verify(listener).testFailed(entryCaptor.capture());
 
 		ReportEntry entry = entryCaptor.getValue();
-		assertEquals(MyTestClass.class.getName(), entry.getSourceName());
+		assertEquals("<unrooted>", entry.getSourceName());
 		assertNotNull(entry.getStackTraceWriter());
 	}
 
@@ -170,7 +180,24 @@ class RunListenerAdapterTests {
 	private static TestIdentifier newMethodIdentifier() throws Exception {
 		TestDescriptor testDescriptor = new MethodTestDescriptor(newId(), MyTestClass.class,
 			MyTestClass.class.getDeclaredMethod(MY_TEST_METHOD_NAME));
+		testDescriptor.setParent(new ClassTestDescriptor(newId(), MyTestClass.class));
 		return TestIdentifier.from(testDescriptor);
+	}
+
+	private static TestIdentifier newMethodIdentifierOnTestPlan(TestPlan plan) throws Exception {
+		TestDescriptor testDescriptor = new MethodTestDescriptor(UniqueId.forEngine("method"), MyTestClass.class,
+			MyTestClass.class.getDeclaredMethod(MY_TEST_METHOD_NAME));
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(UniqueId.forEngine("class"),
+			MyTestClass.class);
+		testDescriptor.setParent(classTestDescriptor);
+
+		TestIdentifier classTestIdentifier = TestIdentifier.from(classTestDescriptor);
+		TestIdentifier testMethodIdentifier = TestIdentifier.from(testDescriptor);
+
+		plan.add(classTestIdentifier);
+		plan.add(testMethodIdentifier);
+
+		return testMethodIdentifier;
 	}
 
 	private static TestIdentifier newClassIdentifier() {
@@ -178,11 +205,20 @@ class RunListenerAdapterTests {
 		return TestIdentifier.from(testDescriptor);
 	}
 
+	private static TestIdentifier newClassIdentifierOnTestPlan(TestPlan plan) {
+		TestDescriptor testDescriptor = new ClassTestDescriptor(newId(), MyTestClass.class);
+		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
+		plan.add(testIdentifier);
+
+		return testIdentifier;
+	}
+
 	private static TestIdentifier newSourcelessIdentifierWithParent(TestPlan testPlan, String parentDisplay) {
 		// A parent test identifier with a name.
 		TestDescriptor parent = mock(TestDescriptor.class);
 		when(parent.getUniqueId()).thenReturn(newId());
 		when(parent.getDisplayName()).thenReturn(parentDisplay);
+		when(parent.getLegacyReportingName()).thenReturn(parentDisplay);
 		TestIdentifier parentId = TestIdentifier.from(parent);
 
 		// The (child) test case that is to be executed as part of a test plan.
