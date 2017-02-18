@@ -255,6 +255,16 @@
     ]
   },
   {
+    "title": "JUnit 5: Testing Framework für Java und Plattform für die JVM",
+    "event": "ObjektForum Mannheim",
+    "date": "2017-02-20",
+    "location": "Mannheim, Germany",
+    "link": "https://www.andrena.de/event/objektforum-mannheim",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
     "title": "Deep Dive into JUnit 5",
     "event": "Voxxed Days Zurich 2017",
     "date": "2017-02-23",
@@ -282,6 +292,26 @@
     "link": "https://www.doag.org/konferenz/konferenzplaner/konferenzplaner_details.php?id=522447&locS=0&vid=529384",
     "speakers": [
       "nicolaiparlog"
+    ]
+  },
+  {
+    "title": "JUnit 5: Architecture and Design Patterns",
+    "event": "TU Delft",
+    "date": "2017-04-04",
+    "location": "Delft, The Netherlands",
+    "link": "http://swerl.tudelft.nl/bin/view/Main/WebHome",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
+    "title": "JUnit 5 - The New Testing Framework for Java and Platform for the JVM",
+    "event": "Heisenbug Conference",
+    "date": "2017-06-05",
+    "location": "St. Petersburg, Russia",
+    "link": "https://heisenbug-piter.ru/en/",
+    "speakers": [
+      "marcphilipp"
     ]
   }
 ]
