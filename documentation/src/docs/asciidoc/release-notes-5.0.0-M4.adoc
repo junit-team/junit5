@@ -80,6 +80,8 @@ on GitHub.
 * `Assertions.assertThrows()` now uses canonical names for exception types when
   generating assertion failure messages.
 * `TestInstancePostProcessors` registered on test methods are now invoked.
+* There are two new signatures `Assertions.fail` - `Assertions.fail(Throwable cause)` and
+  `Assertions.fail(String message, Throwable cause)`.
 
 
 [[release-notes-5.0.0-m4-junit-vintage]]
