@@ -14,11 +14,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
-public class BridgeTests extends AbstractJupiterTestEngineTests {
+class BridgeTests extends AbstractJupiterTestEngineTests {
+
+	static List<String> sequence = new ArrayList<>();
 
 	@Test
 	void childHasBridgeMethods() throws Exception {
@@ -43,10 +51,21 @@ public class BridgeTests extends AbstractJupiterTestEngineTests {
 		assertEquals(withoutBridges, withBridges);
 	}
 
+	@TestFactory
+	List<DynamicTest> ensureSingleTestMethodExecute() {
+		return Arrays.asList(
+			DynamicTest.dynamicTest("Byte", //
+				() -> assertEquals("[test(Byte) BEGIN, test(N), test(Byte) END.]", //
+					execute(NumberTestGroup.ByteTests.class))),
+			DynamicTest.dynamicTest("Short", //
+				() -> assertEquals("[test(Short) BEGIN, test(N), test(Short) END.]", //
+					execute(NumberTestGroup.ShortTests.class))));
+	}
+
 	private String execute(Class<?> testClass) {
-		PackagePrivateParent.bridgeMethodSequence.clear();
+		sequence.clear();
 		ExecutionEventRecorder recorder = executeTestsForClass(testClass);
 		assertEquals(1, recorder.getTestFinishedCount());
-		return PackagePrivateParent.bridgeMethodSequence.toString();
+		return sequence.toString();
 	}
 }
