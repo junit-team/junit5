@@ -17,8 +17,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -92,7 +94,11 @@ class TreePrintingListener implements TestExecutionListener {
 		printVerticals(this.theme.entry());
 		printf(Color.valueOf(testIdentifier), " %s", testIdentifier.getDisplayName());
 		printf(color, " %s", this.theme.computeStatusTile(testExecutionResult));
-		testExecutionResult.getThrowable().ifPresent(t -> printf(color, " %s", t.getMessage()));
+		Optional<Throwable> throwable = testExecutionResult.getThrowable();
+		if (throwable.isPresent()) {
+			printMessage(color, " " + throwable.get().getMessage());
+			return;
+		}
 		printf(NONE, "%n");
 	}
 
@@ -100,13 +106,14 @@ class TreePrintingListener implements TestExecutionListener {
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		printVerticals(this.theme.entry());
 		printf(Color.valueOf(testIdentifier), " %s", testIdentifier.getDisplayName());
-		printf(Color.SKIPPED, " %s %s%n", this.theme.skipped(), reason);
+		printf(Color.SKIPPED, " %s", this.theme.skipped());
+		printMessage(Color.SKIPPED, " " + reason);
 	}
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 		printVerticals(this.theme.vertical());
-		printf(Color.REPORTED, " %s%n", entry.toString());
+		printMessage(Color.REPORTED, "  " + entry.toString());
 	}
 
 	void printf(Color color, String message, Object... args) {
@@ -114,10 +121,27 @@ class TreePrintingListener implements TestExecutionListener {
 			this.out.printf(message, args);
 		}
 		else {
-			// Use string concatenation to avoid ANSI disruption on console
 			this.out.printf(color + message + NONE, args);
 		}
 		this.out.flush();
+	}
+
+	/**
+	 * Prints potential multi-line message.
+	 */
+	private void printMessage(Color color, String message) {
+		String[] lines = message.split("\\R");
+		printf(color, lines[0]);
+		if (lines.length > 1) {
+			String verticals = verticals(frames.size() + 1);
+			for (int i = 1; i < lines.length; i++) {
+				printf(NONE, "%n%s", verticals);
+				if (StringUtils.isNotBlank(lines[i])) {
+					printf(color, "    " + lines[i]);
+				}
+			}
+		}
+		printf(NONE, "%n");
 	}
 
 	/**
