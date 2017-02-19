@@ -10,73 +10,81 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.platform.engine.TestExecutionResult.failed;
+import static java.lang.String.format;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.util.List;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.UniqueId;
+import org.junit.platform.console.tasks.TreePrintingListener.Theme;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.engine.test.TestDescriptorStub;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 
 /**
  * @since 1.0
  */
-public class TreePrintingListenerTests {
+class TreePrintingListenerTests {
 
-	private static final String EOL = System.lineSeparator();
-
-	@Test
-	public void executionSkipped() {
-		StringWriter stringWriter = new StringWriter();
-		listener(stringWriter).executionSkipped(newTestIdentifier(), "Test disabled");
-		String[] lines = lines(stringWriter);
-
-		assertEquals(1, lines.length);
-		assertAll("lines in the output", //
-			() -> assertEquals("├─ demo-test ↷ Test disabled", lines[0]) //
-		);
-	}
+	private final TestExecutionListenerSupport support = new TestExecutionListenerSupport();
+	private final TestExecutionListener listener = new TreePrintingListener(support.out(), true, 50, Theme.UTF_8);
 
 	@Test
-	public void reportingEntryPublished() {
-		StringWriter stringWriter = new StringWriter();
-		listener(stringWriter).reportingEntryPublished(newTestIdentifier(), ReportEntry.from("foo", "bar"));
-		String[] lines = lines(stringWriter);
-
-		assertEquals(1, lines.length);
-		assertTrue(lines[0].contains("ReportEntry"));
-		assertTrue(lines[0].contains("foo"));
-		assertTrue(lines[0].contains("bar"));
+	void executionSkipped() {
+		Consumer<TestExecutionListener> singleLineReason = listener -> listener.executionSkipped(
+			support.createTest("skipped-1"), "Test disabled");
+		Consumer<TestExecutionListener> multiLineReason = listener -> listener.executionSkipped(
+			support.createTest("skipped-4"), "Test\ndis\n\r\nab\rled");
+		List<String> lines = support.execute(listener, singleLineReason.andThen(multiLineReason));
+		assertEquals("│  │  ├─ skipped-1 ↷ Test disabled", lines.get(6));
+		assertEquals("│  │  ├─ skipped-4 ↷ Test", lines.get(7));
+		assertEquals("│  │  │      dis", lines.get(8));
+		assertEquals("│  │  │  ", lines.get(9));
+		assertEquals("│  │  │      ab", lines.get(10));
+		assertEquals("│  │  │      led", lines.get(11));
 	}
 
 	@Test
-	public void executionFinishedWithFailure() {
-		StringWriter stringWriter = new StringWriter();
-		listener(stringWriter).executionFinished(newTestIdentifier(), failed(new AssertionError("Boom!")));
-		String[] lines = lines(stringWriter);
-
-		assertEquals(1, lines.length);
-		assertAll("lines in the output", //
-			() -> assertTrue(lines[0].startsWith("├─ demo-test")), //
-			() -> assertTrue(lines[0].endsWith("Boom!")) //
-		);
+	void reportingEntryPublished() {
+		Consumer<TestExecutionListener> singleLineReports = listener -> {
+			TestIdentifier id = support.createTest("report-foo-bars");
+			listener.executionStarted(id);
+			listener.reportingEntryPublished(id, ReportEntry.from("foo", "bar-1"));
+			listener.reportingEntryPublished(id, ReportEntry.from("foo", "bar-2"));
+			listener.executionFinished(id, TestExecutionResult.successful());
+		};
+		Consumer<TestExecutionListener> multiLineReport = listener -> {
+			TestIdentifier id = support.createTest("report-multi-line");
+			listener.executionStarted(id);
+			listener.reportingEntryPublished(id, ReportEntry.from("foo", "b\na\nr"));
+			listener.executionFinished(id, TestExecutionResult.successful());
+		};
+		List<String> lines = support.execute(listener, singleLineReports.andThen(multiLineReport));
+		assertFrames("│  │  │    ReportEntry [timestamp = ", ", foo = 'bar-1']", lines.get(6));
+		assertFrames("│  │  │    ReportEntry [timestamp = ", ", foo = 'bar-2']", lines.get(7));
+		assertEquals("│  │  ├─ report-foo-bars ✔", lines.get(8));
+		assertFrames("│  │  │    ReportEntry [timestamp = ", ", foo = 'b", lines.get(9));
+		assertEquals("│  │  │      a", lines.get(10));
+		assertEquals("│  │  │      r']", lines.get(11));
+		assertEquals("│  │  ├─ report-multi-line ✔", lines.get(12));
 	}
 
-	private TreePrintingListener listener(StringWriter stringWriter) {
-		return new TreePrintingListener(new PrintWriter(stringWriter), true, 50, TreePrintingListener.Theme.UTF_8);
+	private static void assertFrames(String leftFrame, String rightFrame, String actual) {
+		assertTrue(actual.startsWith(leftFrame), format("'%s' doesn't start with: %s", actual, leftFrame));
+		assertTrue(actual.endsWith(rightFrame), format("'%s' doesn't end with: %s", actual, rightFrame));
 	}
 
-	private static TestIdentifier newTestIdentifier() {
-		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.forEngine("demo-engine"), "demo-test");
-		return TestIdentifier.from(testDescriptor);
+	@Test
+	void executionFinishedWithFailure() {
+		List<String> lines = support.execute(listener, l -> l.executionFinished(support.createTest("oops"),
+			TestExecutionResult.failed(new AssertionError("B\no\n\nom\r\n!"))));
+		assertEquals("│  │  ├─ oops ✘ B", lines.get(6));
+		assertEquals("│  │  │      o", lines.get(7));
+		assertEquals("│  │  │  ", lines.get(8));
+		assertEquals("│  │  │      om", lines.get(9));
+		assertEquals("│  │  │      !", lines.get(10));
 	}
-
-	private String[] lines(StringWriter stringWriter) {
-		return stringWriter.toString().split(EOL);
-	}
-
 }
