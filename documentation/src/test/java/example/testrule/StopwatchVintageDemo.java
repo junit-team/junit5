@@ -31,8 +31,8 @@ public class StopwatchVintageDemo {
 
 	private static void logInfo(Description description, String status, long nanos) {
 		String testName = description.getMethodName();
-		logger.info(String.format("Test %s %s, spent %d microseconds", testName, status,
-				TimeUnit.NANOSECONDS.toMicros(nanos)));
+		logger.info(
+			String.format("Test %s %s, spent %d microseconds", testName, status, TimeUnit.NANOSECONDS.toMicros(nanos)));
 	}
 
 	@Rule

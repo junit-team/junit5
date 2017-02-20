@@ -37,7 +37,7 @@ public class StopwatchExtension implements BeforeTestExecutionCallback, AfterTes
 	/**
 	 * Creates a {@code Stopwatch} for this test and saves it in the
 	 * {@code Store} for future duration calculations.
-	 * 
+	 *
 	 * @see org.junit.jupiter.api.extension.BeforeTestExecutionCallback#beforeTestExecution(org.junit.jupiter.api.extension.TestExtensionContext)
 	 */
 	@Override
@@ -49,7 +49,7 @@ public class StopwatchExtension implements BeforeTestExecutionCallback, AfterTes
 	 * When the test concludes, this method retrieves the {@Stopwatch} from the
 	 * {@code Store} and emits a {@code ReportEntry} detailing the test's
 	 * duration.
-	 * 
+	 *
 	 * @see org.junit.jupiter.api.extension.AfterTestExecutionCallback#afterTestExecution(org.junit.jupiter.api.extension.TestExtensionContext)
 	 */
 	@Override
@@ -68,7 +68,7 @@ public class StopwatchExtension implements BeforeTestExecutionCallback, AfterTes
 	/**
 	 * Indicates that this {@code ParameterResolver} will supply a
 	 * {@code Stopwatch} initialized at the beginning of this test.
-	 * 
+	 *
 	 * @see org.junit.jupiter.api.extension.ParameterResolver#supports(org.junit.jupiter.api.extension.ParameterContext,
 	 *      org.junit.jupiter.api.extension.ExtensionContext)
 	 */
@@ -81,7 +81,7 @@ public class StopwatchExtension implements BeforeTestExecutionCallback, AfterTes
 	/**
 	 * Retrieves the {@code Stopwatch} associated with this test from the
 	 * {@code Store} and returns it for use within the test body.
-	 * 
+	 *
 	 * @see org.junit.jupiter.api.extension.ParameterResolver#resolve(org.junit.jupiter.api.extension.ParameterContext,
 	 *      org.junit.jupiter.api.extension.ExtensionContext)
 	 */
