@@ -1,5 +1,16 @@
+/*
+ * Copyright 2015-2017 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+
 package example.testrule;
 
+// tag:user_guide
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -14,15 +25,6 @@ public class RuleChainJupiterDemo {
 	public void example1() {
 		assertTrue(true);
 	}
-	
-	@Test
-	@ExtendWith({
-		OuterLoggingExtension.class,
-		MiddleLoggingExtension.class,
-		InnerLoggingExtension.class
-	})
-	public void example2() {
-		assertTrue(true);
-	}
-	
+
 }
+// end:user_guide
