@@ -80,7 +80,9 @@ on GitHub.
 * `Assertions.assertThrows()` now uses canonical names for exception types when
   generating assertion failure messages.
 * `TestInstancePostProcessors` registered on test methods are now invoked.
-
+* `@ExtendWith` now supports a `disabledOnDebug` flag with a default value of false so that
+  one or more `Extensions` can be disabled when the JVM is in debug mode.  This function
+  mimics the `DisableOnDebug` rule wrapper in JUnit 4.
 
 [[release-notes-5.0.0-m4-junit-vintage]]
 ==== JUnit Vintage
