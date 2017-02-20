@@ -35,7 +35,7 @@ public class AssertionsAssertTimeoutTests {
 
 	private static ThreadLocal<AtomicBoolean> changed = ThreadLocal.withInitial(() -> new AtomicBoolean(false));
 
-	// --- executable ---
+	// --- executable ----------------------------------------------------------
 
 	@Test
 	void assertTimeoutForExecutableThatCompletesBeforeTheTimeout() {
@@ -80,7 +80,7 @@ public class AssertionsAssertTimeoutTests {
 		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 50 ms by");
 	}
 
-	// --- supplier ---
+	// --- supplier ------------------------------------------------------------
 
 	@Test
 	void assertTimeoutForSupplierThatCompletesBeforeTheTimeout() {
@@ -96,7 +96,7 @@ public class AssertionsAssertTimeoutTests {
 	@Test
 	void assertTimeoutForSupplierThatThrowsAnException() {
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			String result = assertTimeout(ofMillis(500), () -> {
+			assertTimeout(ofMillis(500), () -> {
 				ExceptionUtils.throwAsUncheckedException(new RuntimeException("not this time"));
 				return "Tempus Fugit";
 			});
@@ -108,7 +108,7 @@ public class AssertionsAssertTimeoutTests {
 	@Test
 	void assertTimeoutForSupplierThatThrowsAnAssertionFailedError() {
 		AssertionFailedError exception = assertThrows(AssertionFailedError.class, () -> {
-			String result = assertTimeout(ofMillis(500), () -> {
+			assertTimeout(ofMillis(500), () -> {
 				fail("enigma");
 				return "Tempus Fugit";
 			});
@@ -120,7 +120,7 @@ public class AssertionsAssertTimeoutTests {
 	@Test
 	void assertTimeoutForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			String result = assertTimeout(ofMillis(50), () -> {
+			assertTimeout(ofMillis(50), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			});
@@ -132,7 +132,7 @@ public class AssertionsAssertTimeoutTests {
 	@Test
 	void assertTimeoutWithMessageForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			String result = assertTimeout(ofMillis(50), () -> {
+			assertTimeout(ofMillis(50), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			}, "Tempus Fugit");
@@ -144,7 +144,7 @@ public class AssertionsAssertTimeoutTests {
 	@Test
 	void assertTimeoutWithMessageSupplierForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			String result = assertTimeout(ofMillis(50), () -> {
+			assertTimeout(ofMillis(50), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			}, () -> "Tempus" + " " + "Fugit");
@@ -215,7 +215,7 @@ public class AssertionsAssertTimeoutTests {
 	@Test
 	void assertTimeoutPreemptivelyForSupplierThatThrowsAnException() {
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			String result = assertTimeoutPreemptively(ofMillis(500), () -> {
+			assertTimeoutPreemptively(ofMillis(500), () -> {
 				ExceptionUtils.throwAsUncheckedException(new RuntimeException("not this time"));
 				return "Tempus Fugit";
 			});
@@ -227,7 +227,7 @@ public class AssertionsAssertTimeoutTests {
 	@Test
 	void assertTimeoutPreemptivelyForSupplierThatThrowsAnAssertionFailedError() {
 		AssertionFailedError exception = assertThrows(AssertionFailedError.class, () -> {
-			String result = assertTimeoutPreemptively(ofMillis(500), () -> {
+			assertTimeoutPreemptively(ofMillis(500), () -> {
 				fail("enigma");
 				return "Tempus Fugit";
 			});
@@ -239,7 +239,7 @@ public class AssertionsAssertTimeoutTests {
 	@Test
 	void assertTimeoutPreemptivelyForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			String result = assertTimeoutPreemptively(ofMillis(50), () -> {
+			assertTimeoutPreemptively(ofMillis(50), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			});
@@ -251,7 +251,7 @@ public class AssertionsAssertTimeoutTests {
 	@Test
 	void assertTimeoutPreemptivelyWithMessageForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			String result = assertTimeoutPreemptively(ofMillis(50), () -> {
+			assertTimeoutPreemptively(ofMillis(50), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			}, "Tempus Fugit");
@@ -263,7 +263,7 @@ public class AssertionsAssertTimeoutTests {
 	@Test
 	void assertTimeoutPreemptivelyWithMessageSupplierForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			String result = assertTimeoutPreemptively(ofMillis(50), () -> {
+			assertTimeoutPreemptively(ofMillis(50), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			}, () -> "Tempus" + " " + "Fugit");
