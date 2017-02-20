@@ -5,6 +5,9 @@ build/
 # Ignore Gradle GUI config
 gradle-app.setting
 
+# Maven
+target/
+
 # Eclipse
 .classpath
 .settings/
