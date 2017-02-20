@@ -14,21 +14,25 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-// modifier "public" is *not* present for not creating bridge methods by the compiler
-class ChildWithoutBridges extends PackagePrivateParent {
+/**
+ * @since 5.0
+ */
+// modifier "public" is necessary for creating bridge methods by the compiler
+public class ChildWithBridgeMethods extends PackagePrivateParent {
 
 	@BeforeEach
 	public void anotherBeforeEach() {
-		BridgeTests.sequence.add("child.anotherBeforeEach()");
+		BridgeMethodTests.sequence.add("child.anotherBeforeEach()");
 	}
 
 	@Test
 	public void test() {
-		BridgeTests.sequence.add("child.test()");
+		BridgeMethodTests.sequence.add("child.test()");
 	}
 
 	@AfterEach
 	public void anotherAfterEach() {
-		BridgeTests.sequence.add("child.anotherAfterEach()");
+		BridgeMethodTests.sequence.add("child.anotherAfterEach()");
 	}
+
 }

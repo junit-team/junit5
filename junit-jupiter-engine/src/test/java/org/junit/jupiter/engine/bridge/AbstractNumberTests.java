@@ -10,15 +10,23 @@
 
 package org.junit.jupiter.engine.bridge;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+/**
+ * @since 5.0
+ */
 @ExtendWith(NumberResolver.class)
-class NumberBase<N extends Number> {
+abstract class AbstractNumberTests<N extends Number> {
 
+	@Test
 	void test(N number) {
-		BridgeTests.sequence.add("test(N)");
-		Assertions.assertNotNull(number);
-		Assertions.assertEquals(123, number.intValue());
+		BridgeMethodTests.sequence.add("test(N)");
+		assertNotNull(number);
+		assertEquals(123, number.intValue());
 	}
+
 }

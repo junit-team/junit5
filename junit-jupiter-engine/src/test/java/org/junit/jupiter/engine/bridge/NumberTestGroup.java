@@ -12,27 +12,31 @@ package org.junit.jupiter.engine.bridge;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @since 5.0
+ */
 interface NumberTestGroup {
 
-	class ByteTests extends NumberBase<Byte> {
+	class ByteTestCase extends AbstractNumberTests<Byte> {
 
 		@Test
 		@Override
 		void test(Byte value) {
-			BridgeTests.sequence.add("test(Byte) BEGIN");
+			BridgeMethodTests.sequence.add("test(Byte) BEGIN");
 			super.test(value);
-			BridgeTests.sequence.add("test(Byte) END.");
+			BridgeMethodTests.sequence.add("test(Byte) END.");
 		}
 	}
 
-	class ShortTests extends NumberBase<Short> {
+	class ShortTestCase extends AbstractNumberTests<Short> {
 
 		@Test
 		@Override
 		void test(Short value) {
-			BridgeTests.sequence.add("test(Short) BEGIN");
+			BridgeMethodTests.sequence.add("test(Short) BEGIN");
 			super.test(value);
-			BridgeTests.sequence.add("test(Short) END.");
+			BridgeMethodTests.sequence.add("test(Short) END.");
 		}
 	}
+
 }
