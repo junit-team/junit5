@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.bridge;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(NumberResolver.class)
 abstract class AbstractNumberTests<N extends Number> {
 
+	@Test
 	void test(N number) {
 		BridgeMethodTests.sequence.add("test(N)");
 		assertNotNull(number);

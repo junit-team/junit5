@@ -672,8 +672,19 @@ public final class ReflectionUtils {
 		if (!lower.getName().equals(upper.getName())) {
 			return false;
 		}
-
-		return Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes());
+		if (lower.getParameterCount() != upper.getParameterCount()) {
+			return false;
+		}
+		// Check for method sub-signatures.
+		// https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2
+		for (int i = 0; i < lower.getParameterCount(); i++) {
+			Class<?> lowerType = lower.getParameterTypes()[i];
+			Class<?> upperType = upper.getParameterTypes()[i];
+			if (!upperType.isAssignableFrom(lowerType)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private static <T extends AccessibleObject> T makeAccessible(T object) {
