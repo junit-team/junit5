@@ -15,25 +15,29 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
+/**
+ * @since 5.0
+ */
 class PackagePrivateParent {
 
 	@BeforeAll
 	static void beforeAll() {
-		BridgeTests.sequence.add("static parent.beforeAll()");
+		BridgeMethodTests.sequence.add("static parent.beforeAll()");
 	}
 
 	@AfterAll
 	static void afterAll() {
-		BridgeTests.sequence.add("static parent.afterAll()");
+		BridgeMethodTests.sequence.add("static parent.afterAll()");
 	}
 
 	@BeforeEach
 	public void beforeEach() {
-		BridgeTests.sequence.add("parent.beforeEach()");
+		BridgeMethodTests.sequence.add("parent.beforeEach()");
 	}
 
 	@AfterEach
 	public void afterEach() {
-		BridgeTests.sequence.add("parent.afterEach()");
+		BridgeMethodTests.sequence.add("parent.afterEach()");
 	}
+
 }
