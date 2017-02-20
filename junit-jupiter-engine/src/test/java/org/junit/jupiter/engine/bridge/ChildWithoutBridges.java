@@ -19,16 +19,16 @@ class ChildWithoutBridges extends PackagePrivateParent {
 
 	@BeforeEach
 	public void anotherBeforeEach() {
-		bridgeMethodSequence.add("child.anotherBeforeEach()");
+		BridgeTests.sequence.add("child.anotherBeforeEach()");
 	}
 
 	@Test
 	public void test() {
-		bridgeMethodSequence.add("child.test()");
+		BridgeTests.sequence.add("child.test()");
 	}
 
 	@AfterEach
 	public void anotherAfterEach() {
-		bridgeMethodSequence.add("child.anotherAfterEach()");
+		BridgeTests.sequence.add("child.anotherAfterEach()");
 	}
 }

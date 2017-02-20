@@ -10,9 +10,6 @@
 
 package org.junit.jupiter.engine.bridge;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,25 +17,23 @@ import org.junit.jupiter.api.BeforeEach;
 
 class PackagePrivateParent {
 
-	static List<String> bridgeMethodSequence = new ArrayList<>();
-
 	@BeforeAll
 	static void beforeAll() {
-		bridgeMethodSequence.add("static parent.beforeAll()");
+		BridgeTests.sequence.add("static parent.beforeAll()");
 	}
 
 	@AfterAll
 	static void afterAll() {
-		bridgeMethodSequence.add("static parent.afterAll()");
+		BridgeTests.sequence.add("static parent.afterAll()");
 	}
 
 	@BeforeEach
 	public void beforeEach() {
-		bridgeMethodSequence.add("parent.beforeEach()");
+		BridgeTests.sequence.add("parent.beforeEach()");
 	}
 
 	@AfterEach
 	public void afterEach() {
-		bridgeMethodSequence.add("parent.afterEach()");
+		BridgeTests.sequence.add("parent.afterEach()");
 	}
 }
