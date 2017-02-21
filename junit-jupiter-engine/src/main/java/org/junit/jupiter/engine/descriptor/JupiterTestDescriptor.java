@@ -16,6 +16,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -44,6 +45,19 @@ import org.junit.platform.engine.support.hierarchical.Node;
 @API(Internal)
 public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		implements Node<JupiterEngineExecutionContext> {
+
+	private static boolean jvmInDebug = false;
+
+	static {
+		// Shamelessly copied from JUnit 4
+		// https://github.com/junit-team/junit4/blob/master/src/main/java/org/junit/rules/DisableOnDebug.java
+		final List<String> arguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
+		for (final String argument : arguments) {
+			if ("-Xdebug".equals(argument) || argument.startsWith("-agentlib:jdwp")) {
+				jvmInDebug = true;
+			}
+		}
+	}
 
 	JupiterTestDescriptor(UniqueId uniqueId, String displayName) {
 		super(uniqueId, displayName);
@@ -82,6 +96,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 			ExtensionRegistry existingExtensionRegistry) {
 		// @formatter:off
 		List<Class<? extends Extension>> extensionTypes = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
+				.filter(e -> !(e.disableOnDebug() && jvmInDebug))
 				.map(ExtendWith::value)
 				.flatMap(Arrays::stream)
 				.collect(toList());

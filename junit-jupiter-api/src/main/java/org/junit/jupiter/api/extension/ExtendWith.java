@@ -58,4 +58,10 @@ public @interface ExtendWith {
 	 */
 	Class<? extends Extension>[] value();
 
+	/**
+	 * Indicates that this {@link Extension} should not be registered if the
+	 * JVM was launched in debug mode.
+	 */
+	boolean disableOnDebug() default false;
+
 }
