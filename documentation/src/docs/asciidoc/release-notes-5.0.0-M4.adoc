@@ -20,6 +20,8 @@ on GitHub.
   version) instead of a dynamic versioning scheme (was `1.+`) by default to ensure reproducible
   builds.
 * All `findMethods()` implementations in `ReflectionUtils` no longer return bridge methods.
+  Shadowed https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2[override-equal]
+  methods are also no longer included in the result collection.
 
 ===== Deprecations and Breaking Changes
 
@@ -30,6 +32,8 @@ on GitHub.
   `ClassNameFilter.includeClassNamePatterns` instead.
 * `@IncludeClassNamePattern` was removed, please use `@IncludeClassNamePatterns` instead.
 * `--hide-details` option of the `ConsoleLauncher` is deprecated, use `--details none` instead.
+* The ZIP distribution containing the console launcher is no longer provided. It is replaced
+  by an executable standalone JAR distribution. For details, see "New Features" section below.
 
 ===== New Features
 
