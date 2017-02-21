@@ -4457,7 +4457,9 @@ version) instead of a dynamic versioning scheme (was <code>1.+</code>) by defaul
 builds.</p>
 </li>
 <li>
-<p>All <code>findMethods()</code> implementations in <code>ReflectionUtils</code> no longer return bridge methods.</p>
+<p>All <code>findMethods()</code> implementations in <code>ReflectionUtils</code> no longer return bridge methods.
+Shadowed <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2">override-equal</a>
+methods are also no longer included in the result collection.</p>
 </li>
 </ul>
 </div>
@@ -4480,6 +4482,10 @@ builds.</p>
 </li>
 <li>
 <p><code>--hide-details</code> option of the <code>ConsoleLauncher</code> is deprecated, use <code>--details none</code> instead.</p>
+</li>
+<li>
+<p>The ZIP distribution containing the console launcher is no longer provided. It is replaced
+by an executable standalone JAR distribution. For details, see "New Features" section below.</p>
 </li>
 </ul>
 </div>
@@ -4588,7 +4594,7 @@ generating assertion failure messages.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-02-20 09:01:18 EST
+Last updated 2017-02-21 07:00:00 EST
 </div>
 </div>
 </body>
