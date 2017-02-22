@@ -26,17 +26,27 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.jupiter.params.sources.StringSource;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
-class ParameterizedTests {
+class ParameterizedTestIntegrationTests {
 
 	@Test
 	void executesWithSingleArgumentsProviderWithMultipleInvocations() {
 		List<ExecutionEvent> executionEvents = execute(
 			selectMethod(TestCase.class, "testWithTwoSingleStringArgumentsProvider", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+	}
+
+	@Test
+	void executesWithStringSource() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(TestCase.class, "testWithStringSource", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -50,6 +60,12 @@ class ParameterizedTests {
 		@ParameterizedTest
 		@ArgumentsSource(TwoSingleStringArgumentsProvider.class)
 		void testWithTwoSingleStringArgumentsProvider(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@StringSource({ "foo", "bar" })
+		void testWithStringSource(String argument) {
 			fail(argument);
 		}
 	}
