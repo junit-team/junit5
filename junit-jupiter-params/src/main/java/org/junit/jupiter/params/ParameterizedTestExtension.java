@@ -55,6 +55,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 		Method templateMethod = Preconditions.notNull(context.getTestMethod().orElse(null),
 			"test method must not be null");
+		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
 		// @formatter:off
 		return findRepeatableAnnotations(templateMethod, ArgumentsSource.class)
 				.stream()
@@ -63,9 +64,15 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.peek(provider -> initialize(templateMethod, provider))
 				.flatMap(ParameterizedTestExtension::toArgumentsStream)
 				.map(Arguments::getArguments)
-				.map(ParameterizedTestExtension::toTestTemplateInvocationContext)
+				.map(arguments -> toTestTemplateInvocationContext(formatter, arguments))
 				.iterator();
 		// @formatter:on
+	}
+
+	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod) {
+		ParameterizedTest parameterizedTestAnnotation = AnnotationUtils.findAnnotation(templateMethod,
+			ParameterizedTest.class).get();
+		return new ParameterizedTestNameFormatter(parameterizedTestAnnotation.name());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -99,12 +106,12 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		}
 	}
 
-	private static TestTemplateInvocationContext toTestTemplateInvocationContext(Object[] arguments) {
+	private static TestTemplateInvocationContext toTestTemplateInvocationContext(
+			ParameterizedTestNameFormatter formatter, Object[] arguments) {
 		return new TestTemplateInvocationContext() {
 			@Override
 			public String getDisplayName(int invocationIndex) {
-				// TODO #14 support multiple params
-				return TestTemplateInvocationContext.super.getDisplayName(invocationIndex) + " " + arguments[0];
+				return formatter.format(invocationIndex, arguments);
 			}
 
 			@Override
@@ -120,7 +127,12 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 					@Override
 					public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
 							throws ParameterResolutionException {
-						return arguments[parameterContext.getIndex()];
+						Object argument = arguments[parameterContext.getIndex()];
+						if (argument instanceof String
+								&& parameterContext.getParameter().getType().equals(Integer.TYPE)) {
+							return Integer.parseInt((String) argument);
+						}
+						return argument;
 					}
 				});
 			}

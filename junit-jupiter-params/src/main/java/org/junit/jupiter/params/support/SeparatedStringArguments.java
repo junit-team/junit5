@@ -19,7 +19,7 @@ import org.junit.jupiter.params.Arguments;
 
 public class SeparatedStringArguments implements Arguments {
 
-	private static final Pattern DEFAULT_SEPARATOR_PATTERN = Pattern.compile("[^\\\\]?[,|]");
+	private static final Pattern DEFAULT_SEPARATOR_PATTERN = Pattern.compile("[,|]");
 
 	private final String line;
 	private final Pattern separatorPattern;

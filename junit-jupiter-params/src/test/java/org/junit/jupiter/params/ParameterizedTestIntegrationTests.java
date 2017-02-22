@@ -52,6 +52,15 @@ class ParameterizedTestIntegrationTests {
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 	}
 
+	@Test
+	void executesWithCustomName() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(TestCase.class, "testWithCustomName", String.class.getName() + "," + Integer.TYPE.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("foo and 23"), finishedWithFailure(message("foo, 23")))) //
+				.haveExactly(1, event(test(), displayName("bar and 42"), finishedWithFailure(message("bar, 42"))));
+	}
+
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
 		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
 	}
@@ -67,6 +76,12 @@ class ParameterizedTestIntegrationTests {
 		@StringSource({ "foo", "bar" })
 		void testWithStringSource(String argument) {
 			fail(argument);
+		}
+
+		@ParameterizedTest(name = "{0} and {1}")
+		@StringSource({ "foo, 23", "bar, 42" })
+		void testWithCustomName(String argument, int i) {
+			fail(argument + ", " + i);
 		}
 	}
 
