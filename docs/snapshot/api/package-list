@@ -13,6 +13,7 @@ org.junit.jupiter.migrationsupport.rules.member
 org.junit.platform.commons
 org.junit.platform.commons.annotation
 org.junit.platform.commons.meta
+org.junit.platform.commons.support
 org.junit.platform.commons.util
 org.junit.platform.console
 org.junit.platform.console.options

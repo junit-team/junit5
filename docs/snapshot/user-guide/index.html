@@ -571,6 +571,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#extensions-lifecycle-callbacks">5.6. Test Lifecycle Callbacks</a></li>
 <li><a href="#extensions-exception-handling">5.7. Exception Handling</a></li>
 <li><a href="#extensions-keeping-state">5.8. Keeping State in Extensions</a></li>
+<li><a href="#extensions-supported-utilities">5.9. Supported Utilities in Extensions</a></li>
 </ul>
 </li>
 <li><a href="#migrating-from-junit4">6. Migrating from JUnit 4</a>
@@ -3139,6 +3140,15 @@ contexts may also be limited. Consult the corresponding Javadoc for details on t
 available for storing and retrieving values via the <code><a href="../api/org/junit/jupiter/api/extension/ExtensionContext.Store.html">Store</a></code>.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="extensions-supported-utilities">5.9. Supported Utilities in Extensions</h3>
+<div class="paragraph">
+<p>The JUnit Platform Commons artifact exposes package <code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> which
+contains maintained utility methods handling <code>Annotation</code>, reflection and classpath scanning tasks.
+Extension authors are encouraged to use these supported methods to align expected the behaviour
+with the JUnit Platform.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -4535,6 +4545,12 @@ known from JUnit 4.</p>
 expression to exclude those classes whose fully qualified names match. When this option is
 repeated, all patterns will be combined using OR semantics.</p>
 </li>
+<li>
+<p>Introduce JUnit Platform support package <code>org.junit.platform.commons.support</code> which contains
+maintained utility methods handling <code>Annotation</code>, reflection and classpath scanning tasks.
+<code>TestEngine</code> and <code>Extension</code> authors are encouraged to use these supported methods
+to align the behaviour with the JUnit Platform.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -4598,7 +4614,7 @@ generating assertion failure messages.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-02-23 14:15:39 EST
+Last updated 2017-02-23 18:26:45 EST
 </div>
 </div>
 </body>
