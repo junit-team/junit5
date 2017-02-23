@@ -245,8 +245,8 @@ class XmlReportWriter {
 	}
 
 	private String buildReportEntryDescription(ReportEntry reportEntry, int entryNumber) {
-		StringBuilder builder = new StringBuilder((format("Report Entry #{0} (timestamp: {1})\n", entryNumber,
-			ISO_LOCAL_DATE_TIME.format(reportEntry.getTimestamp()))));
+		StringBuilder builder = new StringBuilder(format("Report Entry #{0} (timestamp: {1})\n", entryNumber,
+			ISO_LOCAL_DATE_TIME.format(reportEntry.getTimestamp())));
 
 		reportEntry.getKeyValuePairs().entrySet().forEach(
 			entry -> builder.append(format("\t- {0}: {1}\n", entry.getKey(), entry.getValue())));
@@ -274,12 +274,11 @@ class XmlReportWriter {
 	private void writeNonStandardAttributesToSystemOutElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
 			throws XMLStreamException {
 
-		StringBuilder builder = new StringBuilder("\n");
-		builder.append("unique-id: ").append(testIdentifier.getUniqueId()).append("\n");
-		builder.append("display-name: ").append(testIdentifier.getDisplayName()).append("\n");
+		String cData = "\nunique-id: " + testIdentifier.getUniqueId() //
+				+ "\ndisplay-name: " + testIdentifier.getDisplayName() + "\n";
 
 		writer.writeStartElement("system-out");
-		writer.writeCData(builder.toString());
+		writer.writeCData(cData);
 		writer.writeEndElement();
 		newLine(writer);
 	}

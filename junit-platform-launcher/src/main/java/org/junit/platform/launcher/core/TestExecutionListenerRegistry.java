@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -32,9 +33,7 @@ class TestExecutionListenerRegistry {
 	}
 
 	void registerListeners(TestExecutionListener... listeners) {
-		for (TestExecutionListener listener : listeners) {
-			this.testExecutionListeners.add(listener);
-		}
+		Collections.addAll(this.testExecutionListeners, listeners);
 	}
 
 	private void notifyTestExecutionListeners(Consumer<TestExecutionListener> consumer) {

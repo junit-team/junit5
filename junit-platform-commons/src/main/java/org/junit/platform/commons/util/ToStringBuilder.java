@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
@@ -98,13 +97,7 @@ public class ToStringBuilder {
 
 	@Override
 	public String toString() {
-		// @formatter:off
-		return new StringBuilder(this.type.getSimpleName()).append(" ")
-			.append("[")
-			.append(this.values.stream().collect(joining(", ")))
-			.append("]")
-			.toString();
-		// @formatter:on
+		return this.type.getSimpleName() + " [" + String.join(", ", this.values) + "]";
 	}
 
 }
