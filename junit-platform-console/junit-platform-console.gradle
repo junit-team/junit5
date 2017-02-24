@@ -107,6 +107,7 @@ artifacts {
 task standaloneExec(type: JavaExec, dependsOn: [standaloneJar, testClasses]) {
 	ignoreExitValue = true
 	workingDir = "$buildDir/libs"
+	jvmArgs = ['-ea', "-Djava.util.logging.config.file=$buildDir/resources/test/logging.properties"]
 	main = '-jar'
 	args = [
 			"$standaloneJar.archiveName",
