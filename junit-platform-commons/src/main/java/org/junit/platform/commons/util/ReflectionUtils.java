@@ -564,6 +564,9 @@ public final class ReflectionUtils {
 		return findMethods(clazz, predicate, MethodSortOrder.HierarchyDown);
 	}
 
+	/**
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethods(Class, Predicate, org.junit.platform.commons.support.MethodSortOrder)
+	 */
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "predicate must not be null");

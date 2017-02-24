@@ -13,6 +13,7 @@ package org.junit.platform.commons.support;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,6 +33,7 @@ class ReflectionSupportTests {
 
 	private final Predicate<Class<?>> allTypes = type -> true;
 	private final Predicate<String> allNames = name -> true;
+	private final Predicate<Method> allMethods = name -> true;
 
 	@TestFactory
 	List<DynamicTest> findAllClassesInClasspathRootDelegates() throws Throwable {
@@ -62,4 +64,15 @@ class ReflectionSupportTests {
 			ReflectionSupport.findAllClassesInPackage("org.junit", allTypes, allNames));
 	}
 
+	@Test
+	void findMethodsDelegates() {
+		assertEquals(
+			ReflectionUtils.findMethods(ReflectionSupportTests.class, allMethods,
+				ReflectionUtils.MethodSortOrder.HierarchyUp),
+			ReflectionSupport.findMethods(ReflectionSupportTests.class, allMethods, MethodSortOrder.HierarchyUp));
+		assertEquals(
+			ReflectionUtils.findMethods(ReflectionSupportTests.class, allMethods,
+				ReflectionUtils.MethodSortOrder.HierarchyDown),
+			ReflectionSupport.findMethods(ReflectionSupportTests.class, allMethods, MethodSortOrder.HierarchyDown));
+	}
 }

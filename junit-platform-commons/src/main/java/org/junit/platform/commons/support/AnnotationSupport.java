@@ -117,7 +117,7 @@ public final class AnnotationSupport {
 	 *
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
-	 * @param sortOrder the method sort order
+	 * @param sortOrder the method sort order; never {@code null}
 	 * @return the list of all such methods found; never {@code null}
 	 */
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
