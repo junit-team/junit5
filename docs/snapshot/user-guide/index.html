@@ -4467,7 +4467,7 @@ version) instead of a dynamic versioning scheme (was <code>1.+</code>) by defaul
 builds.</p>
 </li>
 <li>
-<p>All <code>findMethods()</code> implementations in <code>ReflectionUtils</code> no longer return bridge methods.
+<p>All <code>findMethods()</code> implementations in <code>ReflectionUtils</code> no longer return synthetic methods.
 Shadowed <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2">override-equal</a>
 methods are also no longer included in the result collection.</p>
 </li>
@@ -4567,7 +4567,7 @@ to align the behaviour with the JUnit Platform.</p>
 <li>
 <p>Enforce correct execution order of overridden <code>@BeforeEach</code>/<code>@AfterEach</code> methods when declared
 at multiple class hierarchy levels. It&#8217;s now always <code>super.before</code>, <code>this.before</code>, <code>this.test</code>,
-<code>this.after</code> and <code>super.after</code>, even when the compiler added bridge methods.</p>
+<code>this.after</code> and <code>super.after</code>, even when the compiler added synthetic methods.</p>
 </li>
 </ul>
 </div>
@@ -4614,7 +4614,7 @@ generating assertion failure messages.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-02-24 11:40:55 EST
+Last updated 2017-02-24 12:24:34 EST
 </div>
 </div>
 </body>
