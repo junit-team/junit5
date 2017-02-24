@@ -12,6 +12,7 @@ package org.junit.platform.commons.support;
 
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
 import java.util.function.Predicate;
@@ -62,4 +63,21 @@ public final class ReflectionSupport {
 			Predicate<String> classNameFilter) {
 		return ReflectionUtils.findAllClassesInPackage(basePackageName, classTester, classNameFilter);
 	}
+
+	/**
+	 * Find all {@linkplain Method methods} of the supplied class or interface
+	 * that match the specified {@code predicate}.
+	 *
+	 * <p>If you're are looking for methods annotated with a certain annotation
+	 * type, consider using {@linkplain AnnotationSupport#findAnnotatedMethods(Class, Class, MethodSortOrder)}.
+	 *
+	 * @param clazz the class or interface in which to find the methods; never {@code null}
+	 * @param predicate the method filter; never {@code null}
+	 * @param sortOrder the method sort order; never {@code null}
+	 * @return the list of all such methods found; never {@code null}
+	 */
+	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
+		return ReflectionUtils.findMethods(clazz, predicate, ReflectionUtils.MethodSortOrder.valueOf(sortOrder.name()));
+	}
+
 }
