@@ -28,7 +28,7 @@ class ServiceLoaderTestEngineRegistry {
 	public Iterable<TestEngine> loadTestEngines() {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
 			ReflectionUtils.getDefaultClassLoader());
-		LOG.info(() -> createDiscoveredTestEnginesMessage(testEngines));
+		LOG.config(() -> createDiscoveredTestEnginesMessage(testEngines));
 		return testEngines;
 	}
 
