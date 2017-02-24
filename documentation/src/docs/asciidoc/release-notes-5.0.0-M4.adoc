@@ -19,7 +19,7 @@ on GitHub.
 * The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as plugin
   version) instead of a dynamic versioning scheme (was `1.+`) by default to ensure reproducible
   builds.
-* All `findMethods()` implementations in `ReflectionUtils` no longer return bridge methods.
+* All `findMethods()` implementations in `ReflectionUtils` no longer return synthetic methods.
   Shadowed https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2[override-equal]
   methods are also no longer included in the result collection.
 
@@ -77,7 +77,7 @@ on GitHub.
 * Fix bug that prevented discovery of two or more methods of the same class.
 * Enforce correct execution order of overridden `@BeforeEach`/`@AfterEach` methods when declared
   at multiple class hierarchy levels. It's now always `super.before`, `this.before`, `this.test`,
-  `this.after` and `super.after`, even when the compiler added bridge methods.
+  `this.after` and `super.after`, even when the compiler added synthetic methods.
 
 ===== Deprecations and Breaking Changes
 
