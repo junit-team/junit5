@@ -394,6 +394,9 @@ Technically speaking, a `@TestFactory` method must return a `Stream`,
 These `DynamicTest` instances will then be executed lazily,
 enabling dynamic and even non-deterministic generation of test cases.
 
+any Stream returned by a {@code @TestFactory} will be properly closed,
+making it safe to use a resource for example Files.lines().
+
 As with `@Test` methods, `@TestFactory` methods must not be `private` or `static`
 and may optionally declare parameters to be resolved by `ParameterResolvers`.
 
