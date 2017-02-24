@@ -585,17 +585,11 @@ public final class ReflectionUtils {
 
 		// @formatter:off
 		List<Method> localMethods = Arrays.stream(clazz.getDeclaredMethods())
-				.filter(method -> !method.isBridge()) // [#333] don't collect bridge methods
+				.filter(method -> !method.isSynthetic())
 				.collect(toList());
-		// @formatter:on
-
-		// @formatter:off
 		List<Method> superclassMethods = getSuperclassMethods(clazz, sortOrder).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
-		// @formatter:on
-
-		// @formatter:off
 		List<Method> interfaceMethods = getInterfaceMethods(clazz, sortOrder).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());

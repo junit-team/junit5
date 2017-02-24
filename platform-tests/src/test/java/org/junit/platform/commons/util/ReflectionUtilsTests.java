@@ -556,6 +556,13 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
+	void findMethodsIgnoresSyntheticMethods() {
+		List<Method> methods = ReflectionUtils.findMethods(ClassWithSyntheticMethod.class, method -> true);
+		assertNotNull(methods);
+		assertEquals(0, methods.size());
+	}
+
+	@Test
 	void findMethodsUsingHierarchyUpMode() throws Exception {
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("method"),
 			HierarchyUp)).containsExactly(ChildClass.class.getMethod("method4"), ParentClass.class.getMethod("method3"),
@@ -670,6 +677,12 @@ public class ReflectionUtilsTests {
 		for (Path path : paths) {
 			Files.createDirectory(path);
 		}
+	}
+
+	class ClassWithSyntheticMethod {
+		Runnable foo = InterfaceWithStaticMethod::foo;
+		Runnable bar = StaticClass::staticMethod;
+		Comparable<Number> synthetic = number -> 0;
 	}
 
 	interface InterfaceWithOneDeclaredMethod {
