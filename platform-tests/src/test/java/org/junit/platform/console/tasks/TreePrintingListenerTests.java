@@ -41,10 +41,10 @@ class TreePrintingListenerTests {
 		List<String> lines = support.execute(listener, singleLineReason.andThen(multiLineReason));
 		assertEquals("│  │  ├─ skipped-1 ↷ Test disabled", lines.get(6));
 		assertEquals("│  │  ├─ skipped-4 ↷ Test", lines.get(7));
-		assertEquals("│  │  │      dis", lines.get(8));
+		assertEquals("│  │  │       dis", lines.get(8));
 		assertEquals("│  │  │  ", lines.get(9));
-		assertEquals("│  │  │      ab", lines.get(10));
-		assertEquals("│  │  │      led", lines.get(11));
+		assertEquals("│  │  │       ab", lines.get(10));
+		assertEquals("│  │  │       led", lines.get(11));
 	}
 
 	@Test
@@ -63,13 +63,13 @@ class TreePrintingListenerTests {
 			listener.executionFinished(id, TestExecutionResult.successful());
 		};
 		List<String> lines = support.execute(listener, singleLineReports.andThen(multiLineReport));
-		assertFrames("│  │  │    ReportEntry [timestamp = ", ", foo = 'bar-1']", lines.get(6));
-		assertFrames("│  │  │    ReportEntry [timestamp = ", ", foo = 'bar-2']", lines.get(7));
-		assertEquals("│  │  ├─ report-foo-bars ✔", lines.get(8));
-		assertFrames("│  │  │    ReportEntry [timestamp = ", ", foo = 'b", lines.get(9));
-		assertEquals("│  │  │      a", lines.get(10));
-		assertEquals("│  │  │      r']", lines.get(11));
-		assertEquals("│  │  ├─ report-multi-line ✔", lines.get(12));
+		assertEquals("│  │  ├─ report-foo-bars ✔ reported:", lines.get(6));
+		assertFrames("│  │  │     ReportEntry [timestamp = ", ", foo = 'bar-1']", lines.get(7));
+		assertFrames("│  │  │     ReportEntry [timestamp = ", ", foo = 'bar-2']", lines.get(8));
+		assertEquals("│  │  ├─ report-multi-line ✔ reported:", lines.get(9));
+		assertFrames("│  │  │     ReportEntry [timestamp = ", ", foo = 'b", lines.get(10));
+		assertEquals("│  │  │       a", lines.get(11));
+		assertEquals("│  │  │       r']", lines.get(12));
 	}
 
 	private static void assertFrames(String leftFrame, String rightFrame, String actual) {
@@ -82,9 +82,23 @@ class TreePrintingListenerTests {
 		List<String> lines = support.execute(listener, l -> l.executionFinished(support.createTest("oops"),
 			TestExecutionResult.failed(new AssertionError("B\no\n\nom\r\n!"))));
 		assertEquals("│  │  ├─ oops ✘ B", lines.get(6));
-		assertEquals("│  │  │      o", lines.get(7));
+		assertEquals("│  │  │       o", lines.get(7));
 		assertEquals("│  │  │  ", lines.get(8));
-		assertEquals("│  │  │      om", lines.get(9));
-		assertEquals("│  │  │      !", lines.get(10));
+		assertEquals("│  │  │       om", lines.get(9));
+		assertEquals("│  │  │       !", lines.get(10));
+	}
+
+	@Test
+	void executionReportAndFail() {
+		Consumer<TestExecutionListener> reportAndFail = listener -> {
+			TestIdentifier id = support.createTest("report-and-fail");
+			listener.executionStarted(id);
+			listener.reportingEntryPublished(id, ReportEntry.from("foo", "bar"));
+			listener.executionFinished(id, TestExecutionResult.failed(new AssertionError("Boom!")));
+		};
+		List<String> lines = support.execute(listener, reportAndFail);
+		assertEquals("│  │  ├─ report-and-fail ✘ reported:", lines.get(6));
+		assertFrames("│  │  │     ReportEntry [timestamp = ", ", foo = 'bar']", lines.get(7));
+		assertEquals("│  │  │     exception message: Boom!", lines.get(8));
 	}
 }

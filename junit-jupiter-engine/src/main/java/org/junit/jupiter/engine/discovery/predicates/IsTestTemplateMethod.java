@@ -12,19 +12,19 @@ package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a method is a JUnit Jupiter test method.
+ * Test if a method is a JUnit Jupiter test template method.
  *
  * @since 5.0
  */
 @API(Internal)
-public class IsTestMethod extends IsTestableMethod {
+public class IsTestTemplateMethod extends IsTestableMethod {
 
-	public IsTestMethod() {
-		super(Test.class);
+	public IsTestTemplateMethod() {
+		super(TestTemplate.class);
 	}
 
 }

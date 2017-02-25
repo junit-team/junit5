@@ -8,23 +8,24 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.engine.discovery.predicates;
+package org.junit.platform.commons.support;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
-import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a method is a JUnit Jupiter test method.
- *
- * @since 5.0
+ * @since 1.0
  */
-@API(Internal)
-public class IsTestMethod extends IsTestableMethod {
+@API(Maintained)
+public enum MethodSortOrder {
+	/**
+	 * Sort methods from top to bottom.
+	 */
+	HierarchyDown,
 
-	public IsTestMethod() {
-		super(Test.class);
-	}
-
+	/**
+	 * Sort methods from bottom to top.
+	 */
+	HierarchyUp
 }

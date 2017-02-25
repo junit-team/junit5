@@ -36,6 +36,14 @@ class AssertionUtils {
 		fail(() -> message);
 	}
 
+	static void fail(String message, Throwable cause) {
+		throw new AssertionFailedError(message, cause);
+	}
+
+	static void fail(Throwable cause) {
+		throw new AssertionFailedError(null, cause);
+	}
+
 	static void fail(Supplier<String> messageSupplier) {
 		throw new AssertionFailedError(nullSafeGet(messageSupplier));
 	}

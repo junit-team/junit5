@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.TestDescriptor;
 
 /**
  * A <em>node</em> within the execution hierarchy.
@@ -78,13 +79,37 @@ public interface Node<C extends EngineExecutionContext> {
 	 * <p>Containers typically do not implement this method since the
 	 * {@link HierarchicalTestEngine} handles execution of their children.
 	 *
+	 * <p>The supplied {@code dynamicTestExecutor} may be used to submit
+	 * additional dynamic tests for immediate execution.
+	 *
 	 * @param context the context to execute in
+	 * @param dynamicTestExecutor the executor to submit dynamic tests to
 	 * @return the new context to be used for children of this node and for the
 	 * <em>after</em> behavior of the parent of this node, if any
 	 *
 	 * @see #before
 	 * @see #after
 	 */
+	default C execute(C context, DynamicTestExecutor dynamicTestExecutor) throws Exception {
+		return execute(context);
+	}
+
+	/**
+	 * Execute the <em>behavior</em> of this node.
+	 *
+	 * <p>Containers typically do not implement this method since the
+	 * {@link HierarchicalTestEngine} handles execution of their children.
+	 *
+	 * @param context the context to execute in
+	 * @return the new context to be used for children of this node and for the
+	 * <em>after</em> behavior of the parent of this node, if any
+	 *
+	 * @see #before
+	 * @see #after
+	 * @deprecated Please use
+	 * {@link #execute(EngineExecutionContext, DynamicTestExecutor)} instead.
+	 */
+	@Deprecated
 	default C execute(C context) throws Exception {
 		return context;
 	}
@@ -170,6 +195,29 @@ public interface Node<C extends EngineExecutionContext> {
 					.toString();
 			// @formatter:on
 		}
+	}
+
+	/**
+	 * Executor for additional, dynamic test descriptors discovered during
+	 * execution of a {@link Node}.
+	 *
+	 * <p>The test descriptors will be executed by the same
+	 * {@link HierarchicalTestExecutor} that executes the submitting node.
+	 *
+	 * <p>This interface is not intended to be implemented by clients.
+	 *
+	 * @see Node#execute(EngineExecutionContext, DynamicTestExecutor)
+	 * @see HierarchicalTestExecutor
+	 */
+	interface DynamicTestExecutor {
+
+		/**
+		 * Submit a dynamic test descriptor for immediate execution.
+		 *
+		 * @param testDescriptor the test descriptor to be executed
+		 */
+		void execute(TestDescriptor testDescriptor);
+
 	}
 
 }

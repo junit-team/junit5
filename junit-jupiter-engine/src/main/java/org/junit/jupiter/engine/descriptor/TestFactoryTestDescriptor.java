@@ -27,11 +27,8 @@ import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.hierarchical.SingleTestExecutor;
 
 /**
  * {@link TestDescriptor} for {@link org.junit.jupiter.api.TestFactory @TestFactory}
@@ -44,7 +41,6 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 
 	public static final String DYNAMIC_TEST_SEGMENT_TYPE = "dynamic-test";
 
-	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
@@ -76,9 +72,8 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@Override
-	protected void invokeTestMethod(JupiterEngineExecutionContext context) {
+	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
-		EngineExecutionListener listener = context.getExecutionListener();
 
 		context.getThrowableCollector().execute(() -> {
 			Method method = testExtensionContext.getTestMethod().get();
@@ -89,7 +84,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 			try {
 				AtomicInteger index = new AtomicInteger();
 				toDynamicTestStream(testExtensionContext, testFactoryMethodResult).forEach(
-					dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), listener));
+					dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), dynamicTestExecutor));
 			}
 			catch (ClassCastException ex) {
 				throw invalidReturnTypeException(testExtensionContext);
@@ -121,16 +116,11 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		throw invalidReturnTypeException(testExtensionContext);
 	}
 
-	private void registerAndExecute(DynamicTest dynamicTest, int index, EngineExecutionListener listener) {
+	private void registerAndExecute(DynamicTest dynamicTest, int index, DynamicTestExecutor dynamicTestExecutor) {
 		UniqueId uniqueId = getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
 		TestDescriptor descriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest, getSource().get());
-
 		addChild(descriptor);
-		listener.dynamicTestRegistered(descriptor);
-
-		listener.executionStarted(descriptor);
-		TestExecutionResult result = singleTestExecutor.executeSafely(dynamicTest.getExecutable()::execute);
-		listener.executionFinished(descriptor, result);
+		dynamicTestExecutor.execute(descriptor);
 	}
 
 	private JUnitException invalidReturnTypeException(TestExtensionContext testExtensionContext) {

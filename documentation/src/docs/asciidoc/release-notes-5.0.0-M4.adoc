@@ -19,7 +19,9 @@ on GitHub.
 * The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as plugin
   version) instead of a dynamic versioning scheme (was `1.+`) by default to ensure reproducible
   builds.
-* All `findMethods()` implementations in `ReflectionUtils` no longer return bridge methods.
+* All `findMethods()` implementations in `ReflectionUtils` no longer return synthetic methods.
+  Shadowed https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2[override-equal]
+  methods are also no longer included in the result collection.
 
 ===== Deprecations and Breaking Changes
 
@@ -30,6 +32,8 @@ on GitHub.
   `ClassNameFilter.includeClassNamePatterns` instead.
 * `@IncludeClassNamePattern` was removed, please use `@IncludeClassNamePatterns` instead.
 * `--hide-details` option of the `ConsoleLauncher` is deprecated, use `--details none` instead.
+* The ZIP distribution containing the console launcher is no longer provided. It is replaced
+  by an executable standalone JAR distribution. For details, see "New Features" section below.
 
 ===== New Features
 
@@ -60,6 +64,10 @@ on GitHub.
 * New `--exclude-classname` (`--N`) option added to the `ConsoleLauncher` accepting a regular
   expression to exclude those classes whose fully qualified names match. When this option is
   repeated, all patterns will be combined using OR semantics.
+* Introduce JUnit Platform support package `org.junit.platform.commons.support` which contains
+  maintained utility methods handling `Annotation`, reflection and classpath scanning tasks.
+  `TestEngine` and `Extension` authors are encouraged to use these supported methods
+  to align the behaviour with the JUnit Platform.
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
 ==== JUnit Jupiter
@@ -69,7 +77,7 @@ on GitHub.
 * Fix bug that prevented discovery of two or more methods of the same class.
 * Enforce correct execution order of overridden `@BeforeEach`/`@AfterEach` methods when declared
   at multiple class hierarchy levels. It's now always `super.before`, `this.before`, `this.test`,
-  `this.after` and `super.after`, even when the compiler added bridge methods.
+  `this.after` and `super.after`, even when the compiler added synthetic methods.
 
 ===== Deprecations and Breaking Changes
 
@@ -80,6 +88,8 @@ on GitHub.
 * `Assertions.assertThrows()` now uses canonical names for exception types when
   generating assertion failure messages.
 * `TestInstancePostProcessors` registered on test methods are now invoked.
+* There are two new signatures `Assertions.fail` - `Assertions.fail(Throwable cause)` and
+  `Assertions.fail(String message, Throwable cause)`.
 
 
 [[release-notes-5.0.0-m4-junit-vintage]]

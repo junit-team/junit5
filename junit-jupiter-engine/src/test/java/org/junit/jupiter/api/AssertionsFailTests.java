@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -66,6 +67,59 @@ public class AssertionsFailTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "");
+		}
+	}
+
+	@Test
+	void failWithStringAndThrowable() {
+		try {
+			fail("message", new Throwable("cause"));
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "message");
+			Throwable cause = ex.getCause();
+			assertMessageContains(cause, "cause");
+		}
+	}
+
+	@Test
+	void failWithThrowable() {
+		try {
+			fail((String) null, new Throwable("cause"));
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "");
+			Throwable cause = ex.getCause();
+			assertMessageContains(cause, "cause");
+		}
+	}
+
+	@Test
+	void failWithStringAndNullThrowable() {
+		try {
+			fail("message", (Throwable) null);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "message");
+			if (ex.getCause() != null) {
+				throw new AssertionError("Cause should have been null");
+			}
+		}
+	}
+
+	@Test
+	void failWithNullStringAndThrowable() {
+		try {
+			fail((String) null, new Throwable("cause"));
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "");
+			Throwable cause = ex.getCause();
+			assertMessageContains(cause, "cause");
 		}
 	}
 

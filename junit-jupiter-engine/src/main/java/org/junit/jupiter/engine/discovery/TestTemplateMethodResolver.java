@@ -14,37 +14,37 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.Method;
 
-import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
-import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryMethod;
+import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
+import org.junit.jupiter.engine.discovery.predicates.IsTestTemplateMethod;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * {@code TestFactoryMethodResolver} is an {@link ElementResolver}
+ * {@code TestTemplateMethodResolver} is an {@link ElementResolver}
  * that is able to resolve test factory methods annotated with
- * {@link TestFactory @TestFactory}.
+ * {@link TestTemplate @TestTemplate}.
  *
- * <p>It will create {@link TestFactoryTestDescriptor} instances.
+ * <p>It will create {@link TestTemplateTestDescriptor} instances.
  *
  * @since 5.0
  * @see ElementResolver
- * @see TestFactory
- * @see TestFactoryTestDescriptor
+ * @see TestTemplate
+ * @see TestTemplateTestDescriptor
  */
 @API(Experimental)
-class TestFactoryMethodResolver extends AbstractMethodResolver {
+class TestTemplateMethodResolver extends AbstractMethodResolver {
 
-	static final String SEGMENT_TYPE = "test-factory";
+	static final String SEGMENT_TYPE = "test-template";
 
-	TestFactoryMethodResolver() {
-		super(SEGMENT_TYPE, new IsTestFactoryMethod());
+	TestTemplateMethodResolver() {
+		super(SEGMENT_TYPE, new IsTestTemplateMethod());
 	}
 
 	@Override
 	protected TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method) {
-		return new TestFactoryTestDescriptor(uniqueId, testClass, method);
+		return new TestTemplateTestDescriptor(uniqueId, testClass, method);
 	}
 
 }

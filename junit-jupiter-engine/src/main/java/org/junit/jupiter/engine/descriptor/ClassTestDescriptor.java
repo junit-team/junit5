@@ -26,7 +26,6 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -34,7 +33,6 @@ import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
-import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
@@ -63,7 +61,6 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
 @API(Internal)
 public class ClassTestDescriptor extends JupiterTestDescriptor {
 
-	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final Class<?> testClass;
@@ -145,13 +142,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
-		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForContainer(
-			context.getExtensionRegistry(), context.getConfigurationParameters(),
-			(ContainerExtensionContext) context.getExtensionContext());
-		if (evaluationResult.isDisabled()) {
-			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
-		}
-		return SkipResult.doNotSkip();
+		return shouldContainerBeSkipped(context);
 	}
 
 	@Override

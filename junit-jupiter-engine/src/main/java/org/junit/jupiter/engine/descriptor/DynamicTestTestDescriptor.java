@@ -11,20 +11,23 @@
 package org.junit.jupiter.engine.descriptor;
 
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 
 /**
  * {@link TestDescriptor} for a {@link DynamicTest}.
  *
  * @since 5.0
  */
-class DynamicTestTestDescriptor extends AbstractTestDescriptor {
+class DynamicTestTestDescriptor extends JupiterTestDescriptor {
+
+	private final DynamicTest dynamicTest;
 
 	public DynamicTestTestDescriptor(UniqueId uniqueId, DynamicTest dynamicTest, TestSource source) {
 		super(uniqueId, dynamicTest.getDisplayName());
+		this.dynamicTest = dynamicTest;
 		setSource(source);
 	}
 
@@ -38,4 +41,10 @@ class DynamicTestTestDescriptor extends AbstractTestDescriptor {
 		return false;
 	}
 
+	@Override
+	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
+			DynamicTestExecutor dynamicTestExecutor) throws Exception {
+		executeAndMaskThrowable(dynamicTest.getExecutable());
+		return context;
+	}
 }

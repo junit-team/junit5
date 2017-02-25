@@ -16,7 +16,9 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +37,7 @@ class TreePrintingListener implements TestExecutionListener {
 	private final PrintWriter out;
 	private final boolean disableAnsiColors;
 	private final String[] verticals;
+	private final List<ReportEntry> reportEntries;
 	final Theme theme;
 	final Deque<Frame> frames;
 	long executionStartedNanoTime;
@@ -47,6 +50,7 @@ class TreePrintingListener implements TestExecutionListener {
 		this.out = out;
 		this.disableAnsiColors = disableAnsiColors;
 		this.theme = theme;
+		this.reportEntries = new ArrayList<>();
 
 		// create frame stack and push initial root frame
 		this.frames = new ArrayDeque<>();
@@ -94,12 +98,28 @@ class TreePrintingListener implements TestExecutionListener {
 		printVerticals(this.theme.entry());
 		printf(Color.valueOf(testIdentifier), " %s", testIdentifier.getDisplayName());
 		printf(color, " %s", this.theme.computeStatusTile(testExecutionResult));
+		boolean needsLineSeparator = true;
+		if (!reportEntries.isEmpty()) {
+			printf(NONE, " reported:%n");
+			for (ReportEntry entry : reportEntries) {
+				printVerticals(this.theme.vertical());
+				printMessage(Color.REPORTED, "   " + entry.toString());
+			}
+			reportEntries.clear();
+			needsLineSeparator = false;
+		}
 		Optional<Throwable> throwable = testExecutionResult.getThrowable();
 		if (throwable.isPresent()) {
+			if (!needsLineSeparator) {
+				printVerticals(this.theme.vertical());
+				printf(NONE, "   exception message:");
+			}
 			printMessage(color, " " + throwable.get().getMessage());
-			return;
+			needsLineSeparator = false;
 		}
-		printf(NONE, "%n");
+		if (needsLineSeparator) {
+			printf(NONE, "%n");
+		}
 	}
 
 	@Override
@@ -112,8 +132,7 @@ class TreePrintingListener implements TestExecutionListener {
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		printVerticals(this.theme.vertical());
-		printMessage(Color.REPORTED, "  " + entry.toString());
+		reportEntries.add(entry);
 	}
 
 	void printf(Color color, String message, Object... args) {
@@ -137,7 +156,7 @@ class TreePrintingListener implements TestExecutionListener {
 			for (int i = 1; i < lines.length; i++) {
 				printf(NONE, "%n%s", verticals);
 				if (StringUtils.isNotBlank(lines[i])) {
-					printf(color, "    " + lines[i]);
+					printf(color, "     " + lines[i]);
 				}
 			}
 		}
@@ -147,7 +166,7 @@ class TreePrintingListener implements TestExecutionListener {
 	/**
 	 * Look up current verticals as a string.
 	 */
-	String verticals() {
+	private String verticals() {
 		return verticals(this.frames.size());
 	}
 

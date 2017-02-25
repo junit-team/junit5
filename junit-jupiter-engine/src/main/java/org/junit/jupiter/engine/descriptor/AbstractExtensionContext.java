@@ -53,6 +53,16 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	}
 
 	@Override
+	public String getUniqueId() {
+		return getTestDescriptor().getUniqueId().toString();
+	}
+
+	@Override
+	public String getDisplayName() {
+		return getTestDescriptor().getDisplayName();
+	}
+
+	@Override
 	public void publishReportEntry(Map<String, String> values) {
 		engineExecutionListener.reportingEntryPublished(this.testDescriptor, ReportEntry.from(values));
 	}

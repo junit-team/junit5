@@ -77,7 +77,11 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			C context = preparedContext;
 			try {
 				context = node.before(context);
-				context = node.execute(context);
+				C dynamicTestContext = context;
+				context = node.execute(context, dynamicTestDescriptor -> {
+					this.listener.dynamicTestRegistered(dynamicTestDescriptor);
+					execute(dynamicTestDescriptor, dynamicTestContext);
+				});
 
 				// If a node is NOT a leaf, execute its children recursively.
 				// Note: executing children for a leaf could result in accidental
