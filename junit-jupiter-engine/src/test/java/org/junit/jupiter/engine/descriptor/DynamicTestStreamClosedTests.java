@@ -48,8 +48,9 @@ class DynamicTestStreamClosedTests {
 		testMethod = DynamicCloseHookedStreamTest.class.getMethod("customStream");
 		when(testExtensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 
-		Stream<DynamicTest> stream = Stream.<DynamicTest> of().onClose(() -> isClosed = true);
-		when(testExtensionContext.getTestInstance()).thenReturn(new DynamicCloseHookedStreamTest(stream));
+		Stream<DynamicTest> stream = Stream.empty();
+		Stream<DynamicTest> onCloseStream = stream.onClose(() -> isClosed = true);
+		when(testExtensionContext.getTestInstance()).thenReturn(new DynamicCloseHookedStreamTest(onCloseStream));
 
 		TestFactoryTestDescriptor descriptor = new TestFactoryTestDescriptor(UniqueId.forEngine("engine"),
 			DynamicCloseHookedStreamTest.class, testMethod);
