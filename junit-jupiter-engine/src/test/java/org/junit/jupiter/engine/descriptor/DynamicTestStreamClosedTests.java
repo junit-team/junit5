@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -29,14 +28,14 @@ import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.Node;
 
-public class DynamicTestStreamClosedTests {
+class DynamicTestStreamClosedTests {
 	private JupiterEngineExecutionContext context;
 	private Method testMethod;
 	private TestExtensionContext testExtensionContext;
 	private boolean isClosed;
 
 	@BeforeEach
-	public void before() {
+	void before() {
 		testExtensionContext = mock(TestExtensionContext.class);
 		isClosed = false;
 
@@ -45,7 +44,7 @@ public class DynamicTestStreamClosedTests {
 	}
 
 	@Test
-	public void streamsFromTestFactoriesShouldBeClosed() throws NoSuchMethodException {
+	void streamsFromTestFactoriesShouldBeClosed() throws NoSuchMethodException {
 		testMethod = DynamicCloseHookedStreamTest.class.getMethod("customStream");
 		when(testExtensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 
@@ -60,7 +59,7 @@ public class DynamicTestStreamClosedTests {
 	}
 
 	@Test
-	public void streamsFromTestFactoriesShouldBeClosedWhenTheyThrow() throws NoSuchMethodException {
+	void streamsFromTestFactoriesShouldBeClosedWhenTheyThrow() throws NoSuchMethodException {
 		testMethod = StreamOfIntClosedTest.class.getMethod("customStream");
 		when(testExtensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 
@@ -74,11 +73,10 @@ public class DynamicTestStreamClosedTests {
 		assertTrue(isClosed);
 	}
 
-	@Disabled
-	public static class DynamicCloseHookedStreamTest {
+	private static class DynamicCloseHookedStreamTest {
 		private Stream<DynamicTest> mockStream;
 
-		public DynamicCloseHookedStreamTest(Stream<DynamicTest> mockStream) {
+		DynamicCloseHookedStreamTest(Stream<DynamicTest> mockStream) {
 			this.mockStream = mockStream;
 		}
 
@@ -88,11 +86,10 @@ public class DynamicTestStreamClosedTests {
 		}
 	}
 
-	@Disabled
-	public static class StreamOfIntClosedTest {
+	private static class StreamOfIntClosedTest {
 		private Stream<Integer> mockStream;
 
-		public StreamOfIntClosedTest(Stream<Integer> mockStream) {
+		StreamOfIntClosedTest(Stream<Integer> mockStream) {
 			this.mockStream = mockStream;
 		}
 
