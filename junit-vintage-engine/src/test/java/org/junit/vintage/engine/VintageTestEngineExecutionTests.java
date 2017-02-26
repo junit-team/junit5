@@ -17,12 +17,14 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.asse
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finished;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.result;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.skippedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.type;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.uniqueIdSubstring;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
@@ -31,11 +33,13 @@ import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Condition;
 import org.junit.AssumptionViolatedException;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.test.event.ExecutionEvent;
+import org.junit.platform.engine.test.event.ExecutionEvent.Type;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.runner.Description;
@@ -464,19 +468,20 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@Test
-	public void executesJunit4TestCaseWithErrorCollectorStoringMultipleFailures() {
-		Class<?> testClass = Junit4TestCaseWithErrorCollectorStoringMultipleFailures.class;
+	void executesJUnit4TestCaseWithErrorCollectorStoringMultipleFailures() {
+		Class<?> testClass = JUnit4TestCaseWithErrorCollectorStoringMultipleFailures.class;
+
 		List<ExecutionEvent> executionEvents = execute(testClass);
-		assertRecordedExecutionEventsContainsExactly(executionEvents, event(engine(), started()), //
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("example"), started()), //
-			event(test("example"), result(new Condition<>(testExecutionResult -> {
-				Throwable throwable = testExecutionResult.getThrowable().get();
-				MultipleFailuresError multipleFailuresError = (MultipleFailuresError) throwable;
-				return multipleFailuresError.getFailures().size() == 3;
-			}, "Must contain multiple errors (3)"))), //
+			event(test("example"),
+				finishedWithFailure(allOf(isA(MultipleFailuresError.class), //
+					new Condition<>(throwable -> ((MultipleFailuresError) throwable).getFailures().size() == 3,
+						"Must contain multiple errors (3)")))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
-
 	}
 }

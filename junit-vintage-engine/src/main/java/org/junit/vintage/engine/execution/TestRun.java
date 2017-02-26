@@ -12,6 +12,7 @@ package org.junit.vintage.engine.execution;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.failed;
@@ -25,7 +26,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.platform.engine.TestDescriptor;
@@ -149,7 +149,7 @@ class TestRun {
 
 	void storeResult(TestDescriptor testDescriptor, TestExecutionResult result) {
 		List<TestExecutionResult> testExecutionResults = executionResults.computeIfAbsent(testDescriptor,
-			td -> new ArrayList<>());
+			key -> new ArrayList<>());
 		testExecutionResults.add(result);
 	}
 
@@ -159,18 +159,16 @@ class TestRun {
 		if (testExecutionResults == null) {
 			return successful();
 		}
-		else if (testExecutionResults.size() == 1) {
+		if (testExecutionResults.size() == 1) {
 			return testExecutionResults.get(0);
 		}
-		else {
-			// @formatter:off
-			List<Throwable> failures = testExecutionResults
-					.stream()
-					.map(TestExecutionResult::getThrowable)
-					.map(Optional::get)
-					.collect(Collectors.toList());
-			// @formatter:on
-			return failed(new MultipleFailuresError("", failures));
-		}
+		// @formatter:off
+		List<Throwable> failures = testExecutionResults
+				.stream()
+				.map(TestExecutionResult::getThrowable)
+				.map(Optional::get)
+				.collect(toList());
+		// @formatter:on
+		return failed(new MultipleFailuresError("", failures));
 	}
 }

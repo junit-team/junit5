@@ -17,7 +17,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
-public class Junit4TestCaseWithErrorCollectorStoringMultipleFailures {
+public class JUnit4TestCaseWithErrorCollectorStoringMultipleFailures {
 	@Rule
 	public ErrorCollector collector = new ErrorCollector();
 
