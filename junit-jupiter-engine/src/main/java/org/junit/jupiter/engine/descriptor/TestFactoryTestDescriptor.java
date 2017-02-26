@@ -81,9 +81,10 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 			Object testFactoryMethodResult = executableInvoker.invoke(method, instance, testExtensionContext,
 				context.getExtensionRegistry());
 
-			try {
+			try (Stream<DynamicTest> dynamicTestStream = toDynamicTestStream(testExtensionContext,
+				testFactoryMethodResult)) {
 				AtomicInteger index = new AtomicInteger();
-				toDynamicTestStream(testExtensionContext, testFactoryMethodResult).forEach(
+				dynamicTestStream.forEach(
 					dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), dynamicTestExecutor));
 			}
 			catch (ClassCastException ex) {
