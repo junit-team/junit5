@@ -19,6 +19,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.engi
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.result;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.skippedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
@@ -31,6 +32,7 @@ import static org.junit.runner.Description.createTestDescription;
 
 import java.util.List;
 
+import org.assertj.core.api.Condition;
 import org.junit.AssumptionViolatedException;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.test.event.ExecutionEvent;
@@ -42,6 +44,7 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.vintage.engine.samples.junit4.*;
+import org.opentest4j.MultipleFailuresError;
 
 /**
  * @since 4.12
@@ -458,5 +461,22 @@ class VintageTestEngineExecutionTests {
 		VintageTestEngine engine = new VintageTestEngine();
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		return ExecutionEventRecorder.execute(engine, discoveryRequest);
+	}
+
+	@Test
+	public void executesJunit4TestCaseWithErrorCollectorStoringMultipleFailures() {
+		Class<?> testClass = Junit4TestCaseWithErrorCollectorStoringMultipleFailures.class;
+		List<ExecutionEvent> executionEvents = execute(testClass);
+		assertRecordedExecutionEventsContainsExactly(executionEvents, event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(test("example"), started()), //
+			event(test("example"), result(new Condition<>(testExecutionResult -> {
+				Throwable throwable = testExecutionResult.getThrowable().get();
+				MultipleFailuresError multipleFailuresError = (MultipleFailuresError) throwable;
+				return multipleFailuresError.getFailures().size() == 3;
+			}, "Must contain multiple errors (3)"))), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+
 	}
 }
