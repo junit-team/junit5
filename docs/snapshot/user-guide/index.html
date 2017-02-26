@@ -1788,6 +1788,10 @@ These <code>DynamicTest</code> instances will then be executed lazily,
 enabling dynamic and even non-deterministic generation of test cases.</p>
 </div>
 <div class="paragraph">
+<p>Any <code>Stream</code> returned by a <code>@TestFactory</code> will be properly closed by calling <code>stream.close()</code>,
+making it safe to use a resource such as <code>Files.lines()</code>.</p>
+</div>
+<div class="paragraph">
 <p>As with <code>@Test</code> methods, <code>@TestFactory</code> methods must not be <code>private</code> or <code>static</code>
 and may optionally declare parameters to be resolved by <code>ParameterResolvers</code>.</p>
 </div>
