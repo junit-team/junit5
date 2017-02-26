@@ -95,4 +95,8 @@ on GitHub.
 [[release-notes-5.0.0-m4-junit-vintage]]
 ==== JUnit Vintage
 
-_No changes since 5.0.0-M3_
+===== Bug Fixes
+
+* Fix bug that caused only the last failure of a test to be reported, e.g. when using the
+  `ErrorCollector` rule only the last failed check was reported. Now, all failures are reported
+  using an `org.opentest4j.MultipleFailuresError`.
