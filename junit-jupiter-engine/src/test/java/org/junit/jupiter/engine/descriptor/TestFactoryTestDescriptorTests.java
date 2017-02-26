@@ -28,74 +28,61 @@ import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.Node;
 
-class DynamicTestStreamClosedTests {
+class TestFactoryTestDescriptorTests {
+
 	private JupiterEngineExecutionContext context;
-	private Method testMethod;
 	private TestExtensionContext testExtensionContext;
+	private TestFactoryTestDescriptor descriptor;
 	private boolean isClosed;
 
 	@BeforeEach
-	void before() {
+	void before() throws Exception {
 		testExtensionContext = mock(TestExtensionContext.class);
 		isClosed = false;
 
 		context = new JupiterEngineExecutionContext(null, null).extend().withThrowableCollector(
 			new ThrowableCollector()).withExtensionContext(testExtensionContext).build();
+
+		Method testMethod = CustomStreamTestCase.class.getDeclaredMethod("customStream");
+		descriptor = new TestFactoryTestDescriptor(UniqueId.forEngine("engine"), CustomStreamTestCase.class,
+			testMethod);
+		when(testExtensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 	}
 
 	@Test
-	void streamsFromTestFactoriesShouldBeClosed() throws NoSuchMethodException {
-		testMethod = DynamicCloseHookedStreamTest.class.getMethod("customStream");
-		when(testExtensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
+	void streamsFromTestFactoriesShouldBeClosed() {
+		Stream<DynamicTest> dynamicTestStream = Stream.empty();
+		prepareMockForTestInstanceWithCustomStream(dynamicTestStream);
 
-		Stream<DynamicTest> stream = Stream.empty();
-		Stream<DynamicTest> onCloseStream = stream.onClose(() -> isClosed = true);
-		when(testExtensionContext.getTestInstance()).thenReturn(new DynamicCloseHookedStreamTest(onCloseStream));
-
-		TestFactoryTestDescriptor descriptor = new TestFactoryTestDescriptor(UniqueId.forEngine("engine"),
-			DynamicCloseHookedStreamTest.class, testMethod);
-
-		descriptor.invokeTestMethod(context, mock(Node.DynamicTestExecutor.class));
-		assertTrue(isClosed);
-	}
-
-	@Test
-	void streamsFromTestFactoriesShouldBeClosedWhenTheyThrow() throws NoSuchMethodException {
-		testMethod = StreamOfIntClosedTest.class.getMethod("customStream");
-		when(testExtensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
-
-		Stream<Integer> mockStream = Stream.of(1, 2).onClose(() -> isClosed = true);
-		when(testExtensionContext.getTestInstance()).thenReturn(new StreamOfIntClosedTest(mockStream));
-
-		TestFactoryTestDescriptor descriptor = new TestFactoryTestDescriptor(UniqueId.forEngine("engine"),
-			StreamOfIntClosedTest.class, testMethod);
 		descriptor.invokeTestMethod(context, mock(Node.DynamicTestExecutor.class));
 
 		assertTrue(isClosed);
 	}
 
-	private static class DynamicCloseHookedStreamTest {
-		private Stream<DynamicTest> mockStream;
+	@Test
+	void streamsFromTestFactoriesShouldBeClosedWhenTheyThrow() {
+		Stream<Integer> integerStream = Stream.of(1, 2);
+		prepareMockForTestInstanceWithCustomStream(integerStream);
 
-		DynamicCloseHookedStreamTest(Stream<DynamicTest> mockStream) {
-			this.mockStream = mockStream;
-		}
+		descriptor.invokeTestMethod(context, mock(Node.DynamicTestExecutor.class));
 
-		@TestFactory
-		public Stream<DynamicTest> customStream() {
-			return mockStream;
-		}
+		assertTrue(isClosed);
 	}
 
-	private static class StreamOfIntClosedTest {
-		private Stream<Integer> mockStream;
+	private void prepareMockForTestInstanceWithCustomStream(Stream<?> stream) {
+		Stream<?> mockStream = stream.onClose(() -> isClosed = true);
+		when(testExtensionContext.getTestInstance()).thenReturn(new CustomStreamTestCase(mockStream));
+	}
 
-		StreamOfIntClosedTest(Stream<Integer> mockStream) {
+	private static class CustomStreamTestCase {
+		private final Stream<?> mockStream;
+
+		CustomStreamTestCase(Stream<?> mockStream) {
 			this.mockStream = mockStream;
 		}
 
 		@TestFactory
-		public Stream<Integer> customStream() {
+		Stream<?> customStream() {
 			return mockStream;
 		}
 	}
