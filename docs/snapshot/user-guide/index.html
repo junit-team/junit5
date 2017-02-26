@@ -4603,8 +4603,17 @@ generating assertion failure messages.</p>
 </div>
 <div class="sect3">
 <h4 id="release-notes-5.0.0-m4-junit-vintage">JUnit Vintage</h4>
-<div class="paragraph">
-<p><em>No changes since 5.0.0-M3</em></p>
+<div class="sect4">
+<h5 id="bug-fixes-7">Bug Fixes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Fix bug that caused only the last failure of a test to be reported, e.g. when using the
+<code>ErrorCollector</code> rule only the last failed check was reported. Now, all failures are reported
+using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
