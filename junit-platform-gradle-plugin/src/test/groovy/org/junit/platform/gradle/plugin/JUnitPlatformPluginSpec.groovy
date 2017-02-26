@@ -246,8 +246,11 @@ class JUnitPlatformPluginSpec extends Specification {
 		Configuration configuration = project.configurations.getByName("junitPlatform")
 		configuration.triggerWhenEmptyActionsIfNecessary()
 
-		configuration.getAllDependencies().containsAll(
+		configuration.getAllDependencies().contains(
 				project.dependencies.create("org.junit.platform:junit-platform-launcher:1.0.0"),
+		)
+
+		configuration.getAllDependencies().contains(
 				project.dependencies.create("org.junit.platform:junit-platform-console:1.0.0")
 		)
 	}
