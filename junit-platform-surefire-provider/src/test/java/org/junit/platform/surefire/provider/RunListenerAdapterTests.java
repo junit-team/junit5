@@ -66,7 +66,8 @@ class RunListenerAdapterTests {
 		TestPlan testPlan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Luke's Plan")));
 		adapter.testPlanExecutionStarted(testPlan);
 
-		TestIdentifier methodIdentifier = newMethodIdentifierOnTestPlan(testPlan);
+		TestIdentifier methodIdentifier = identifiersAsParentOnTestPlan(testPlan, newClassDescriptor(),
+			newMethodDescriptor());
 
 		adapter.executionStarted(methodIdentifier);
 		verify(listener).testStarting(entryCaptor.capture());
@@ -101,14 +102,15 @@ class RunListenerAdapterTests {
 		TestPlan testPlan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Luke's Plan")));
 		adapter.testPlanExecutionStarted(testPlan);
 
-		TestIdentifier classIdentifier = newClassIdentifierOnTestPlan(testPlan);
+		TestIdentifier classIdentifier = identifiersAsParentOnTestPlan(testPlan, newEngineDescriptor(),
+			newClassDescriptor());
 
 		adapter.executionSkipped(classIdentifier, "test");
 		verify(listener).testSkipped(entryCaptor.capture());
 
 		ReportEntry entry = entryCaptor.getValue();
 		assertTrue(MyTestClass.class.getTypeName().contains(entry.getName()));
-		assertEquals("<unrooted>", entry.getSourceName());
+		assertEquals("engine", entry.getSourceName());
 	}
 
 	@Test
@@ -141,12 +143,12 @@ class RunListenerAdapterTests {
 		TestPlan testPlan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Luke's Plan")));
 		adapter.testPlanExecutionStarted(testPlan);
 
-		adapter.executionFinished(newClassIdentifierOnTestPlan(testPlan),
+		adapter.executionFinished(identifiersAsParentOnTestPlan(testPlan, newEngineDescriptor(), newClassDescriptor()),
 			TestExecutionResult.failed(new RuntimeException()));
 		verify(listener).testFailed(entryCaptor.capture());
 
 		ReportEntry entry = entryCaptor.getValue();
-		assertEquals("<unrooted>", entry.getSourceName());
+		assertEquals("engine", entry.getSourceName());
 		assertNotNull(entry.getStackTraceWriter());
 	}
 
@@ -181,39 +183,20 @@ class RunListenerAdapterTests {
 	}
 
 	private static TestIdentifier newMethodIdentifier() throws Exception {
-		TestDescriptor testDescriptor = new MethodTestDescriptor(newId(), MyTestClass.class,
-			MyTestClass.class.getDeclaredMethod(MY_TEST_METHOD_NAME));
-		testDescriptor.setParent(new ClassTestDescriptor(newId(), MyTestClass.class));
-		return TestIdentifier.from(testDescriptor);
+		return TestIdentifier.from(newMethodDescriptor());
 	}
 
-	private static TestIdentifier newMethodIdentifierOnTestPlan(TestPlan plan) throws Exception {
-		TestDescriptor testDescriptor = new MethodTestDescriptor(UniqueId.forEngine("method"), MyTestClass.class,
+	private static TestDescriptor newMethodDescriptor() throws Exception {
+		return new MethodTestDescriptor(UniqueId.forEngine("method"), MyTestClass.class,
 			MyTestClass.class.getDeclaredMethod(MY_TEST_METHOD_NAME));
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(UniqueId.forEngine("class"),
-			MyTestClass.class);
-		testDescriptor.setParent(classTestDescriptor);
-
-		TestIdentifier classTestIdentifier = TestIdentifier.from(classTestDescriptor);
-		TestIdentifier testMethodIdentifier = TestIdentifier.from(testDescriptor);
-
-		plan.add(classTestIdentifier);
-		plan.add(testMethodIdentifier);
-
-		return testMethodIdentifier;
 	}
 
 	private static TestIdentifier newClassIdentifier() {
-		TestDescriptor testDescriptor = new ClassTestDescriptor(newId(), MyTestClass.class);
-		return TestIdentifier.from(testDescriptor);
+		return TestIdentifier.from(newClassDescriptor());
 	}
 
-	private static TestIdentifier newClassIdentifierOnTestPlan(TestPlan plan) {
-		TestDescriptor testDescriptor = new ClassTestDescriptor(newId(), MyTestClass.class);
-		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
-		plan.add(testIdentifier);
-
-		return testIdentifier;
+	private static TestDescriptor newClassDescriptor() {
+		return new ClassTestDescriptor(UniqueId.forEngine("class"), MyTestClass.class);
 	}
 
 	private static TestIdentifier newSourcelessIdentifierWithParent(TestPlan testPlan, String parentDisplay) {
@@ -241,8 +224,25 @@ class RunListenerAdapterTests {
 	}
 
 	private static TestIdentifier newEngineIdentifier() {
-		TestDescriptor testDescriptor = new EngineDescriptor(newId(), "engine");
+		TestDescriptor testDescriptor = newEngineDescriptor();
 		return TestIdentifier.from(testDescriptor);
+	}
+
+	private static EngineDescriptor newEngineDescriptor() {
+		return new EngineDescriptor(UniqueId.forEngine("engine"), "engine");
+	}
+
+	private static TestIdentifier identifiersAsParentOnTestPlan(TestPlan plan, TestDescriptor parent,
+			TestDescriptor child) {
+		child.setParent(parent);
+
+		TestIdentifier parentIdentifier = TestIdentifier.from(parent);
+		TestIdentifier childIdentifier = TestIdentifier.from(child);
+
+		plan.add(parentIdentifier);
+		plan.add(childIdentifier);
+
+		return childIdentifier;
 	}
 
 	private static UniqueId newId() {
