@@ -32,6 +32,7 @@ import java.util.Optional;
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.RunListener;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
@@ -182,6 +183,22 @@ class RunListenerAdapterTests {
 		assertEquals(parentDisplay, entryCaptor.getValue().getSourceName());
 	}
 
+	@Test
+	void displayNamesIgnoredInReport() throws NoSuchMethodException {
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(newId(), MyTestClass.class,
+			MyTestClass.class.getDeclaredMethod("myNamedTestMethod"));
+
+		TestIdentifier factoryIdentifier = TestIdentifier.from(descriptor);
+		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
+
+		adapter.executionSkipped(factoryIdentifier, "");
+		verify(listener).testSkipped(entryCaptor.capture());
+
+		ReportEntry value = entryCaptor.getValue();
+
+		assertEquals("myNamedTestMethod()", value.getName());
+	}
+
 	private static TestIdentifier newMethodIdentifier() throws Exception {
 		return TestIdentifier.from(newMethodDescriptor());
 	}
@@ -253,6 +270,11 @@ class RunListenerAdapterTests {
 	private static class MyTestClass {
 		@Test
 		void myTestMethod() {
+		}
+
+		@DisplayName("name")
+		@Test
+		void myNamedTestMethod() {
 		}
 	}
 }
