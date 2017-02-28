@@ -60,10 +60,11 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
-	licenseHeaderFileProvider = { project ->
+	licenseHeaderFileProvider = { project -> (
 		project.name == 'junit-platform-surefire-provider'
 			? 'apache-license-2.0.java'
 			: 'eclipse-public-license-1.0.java'
+		)
 	}
 
 	cloverTestProjects = [
@@ -175,8 +176,8 @@ allprojects { subproj ->
 		def instrumentedJavaSourcesDir = file("$cloverDir/instrumentedSources/java")
 
 		task cloverTaskdef {
-			def cloverLicensePath = project.hasProperty('clover.license.path')
-					? project.property('clover.license.path') : rootProject.file('clover.license').absolutePath
+			def cloverLicensePath = (project.hasProperty('clover.license.path')
+					? project.property('clover.license.path') : rootProject.file('clover.license').absolutePath)
 			ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
 			ant.property(name: 'clover.license.path', value: cloverLicensePath)
 		}
