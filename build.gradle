@@ -151,8 +151,12 @@ allprojects { subproj ->
 
 	checkstyle {
 		toolVersion = 6.11
-		configFile = rootProject.file('src/checkstyle/checkstyle.xml')
-		sourceSets = [ sourceSets.main ]
+	}
+	checkstyleMain {
+		configFile = rootProject.file('src/checkstyle/checkstyleMain.xml')
+	}
+	checkstyleTest {
+		configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
 	}
 
 	if (project.hasProperty('enableClover') && subproj.name != "documentation") {
