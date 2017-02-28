@@ -10,18 +10,23 @@
 
 package org.junit.platform.console;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.StringUtils.isBlank;
+import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.console.options.CommandLineOptionsParser;
 import org.junit.platform.console.options.JOptSimpleCommandLineOptionsParser;
-import org.junit.platform.console.tasks.ConsoleTaskExecutor;
 
 /**
  * @since 1.0
@@ -34,20 +39,20 @@ public class ConsoleLauncherWrapper {
 	private final ByteArrayOutputStream err = new ByteArrayOutputStream();
 	private final ConsoleLauncher consoleLauncher;
 
-	public ConsoleLauncherWrapper() {
+	ConsoleLauncherWrapper() {
 		this(StandardCharsets.UTF_8);
 	}
 
-	public ConsoleLauncherWrapper(Charset charset) {
+	private ConsoleLauncherWrapper(Charset charset) {
 		this(charset, new JOptSimpleCommandLineOptionsParser());
 	}
 
-	public ConsoleLauncherWrapper(Charset charset, CommandLineOptionsParser parser) {
+	private ConsoleLauncherWrapper(Charset charset, CommandLineOptionsParser parser) {
 		this.charset = charset;
 		try {
 			PrintStream streamOut = new PrintStream(out, false, charset.name());
 			PrintStream streamErr = new PrintStream(err, false, charset.name());
-			this.consoleLauncher = new ConsoleLauncher(parser, new ConsoleTaskExecutor(streamOut, streamErr));
+			this.consoleLauncher = new ConsoleLauncher(parser, streamOut, streamErr);
 		}
 		catch (UnsupportedEncodingException exception) {
 			throw new AssertionError("Charset instance created but unsupported?!", exception);
@@ -55,10 +60,26 @@ public class ConsoleLauncherWrapper {
 	}
 
 	public ConsoleLauncherWrapperResult execute(String... args) {
-		int code = consoleLauncher.execute(args);
+		return execute(0, args);
+	}
+
+	public ConsoleLauncherWrapperResult execute(int expectedExitCode, String... args) {
+		return execute(Optional.of(expectedExitCode), args);
+	}
+
+	public ConsoleLauncherWrapperResult execute(Optional<Integer> expectedCode, String... args) {
+		ConsoleLauncherExecutionResult result = consoleLauncher.execute(args);
+		int code = result.getExitCode();
 		String outText = new String(out.toByteArray(), charset);
 		String errText = new String(err.toByteArray(), charset);
-		return new ConsoleLauncherWrapperResult(args, charset, code, outText, errText);
+		if (expectedCode.isPresent()) {
+			int expectedValue = expectedCode.get();
+			assertAll( //
+				() -> assertEquals(expectedValue, code, "ConsoleLauncher execute code mismatch!"), //
+				() -> assertTrue(expectedValue == 0 ? isBlank(errText) : isNotBlank(errText)) //
+			);
+		}
+		return new ConsoleLauncherWrapperResult(args, charset, outText, errText, result);
 	}
 
 }

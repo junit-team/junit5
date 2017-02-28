@@ -27,11 +27,8 @@ class ConsoleLauncherIntegrationTests {
 
 	@Test
 	void executeWithoutArgumentsFailsAndPrintsHelpInformation() {
-		ConsoleLauncherWrapperResult result = new ConsoleLauncherWrapper().execute();
+		ConsoleLauncherWrapperResult result = new ConsoleLauncherWrapper().execute(-1);
 		assertAll("empty args array results in display of help information and an exception stacktrace", //
-			() -> assertArrayEquals(new String[0], result.args), //
-			() -> assertEquals(StandardCharsets.UTF_8, result.charset), //
-			() -> assertEquals(-1, result.code), //
 			() -> assertTrue(result.out.contains("help information")), //
 			() -> assertTrue(result.err.contains("No arguments were supplied to the ConsoleLauncher")) //
 		);
@@ -40,14 +37,7 @@ class ConsoleLauncherIntegrationTests {
 	@Test
 	void executeWithoutExcludeClassnameOptionDoesNotExcludeClasses() {
 		String[] args = { "-e", "junit-jupiter", "-p", "org.junit.platform.console.subpackage" };
-		ConsoleLauncherWrapperResult result = new ConsoleLauncherWrapper().execute(args);
-		assertAll("all subpackage test classes are found and executed", //
-			() -> assertArrayEquals(args, result.args), //
-			() -> assertEquals(StandardCharsets.UTF_8, result.charset), //
-			() -> assertEquals(0, result.code), //
-			() -> assertTrue(result.out.contains("2 tests found")), //
-			() -> assertTrue(isBlank(result.err)) //
-		);
+		assertEquals(2, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
 	}
 
 	@Test
@@ -59,7 +49,7 @@ class ConsoleLauncherIntegrationTests {
 			() -> assertArrayEquals(args, result.args), //
 			() -> assertEquals(StandardCharsets.UTF_8, result.charset), //
 			() -> assertEquals(0, result.code), //
-			() -> assertTrue(result.out.contains("0 tests found")), //
+			() -> assertEquals(0, result.getTestsFoundCount()), //
 			() -> assertTrue(isBlank(result.err)) //
 		);
 	}
