@@ -37,27 +37,26 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
  * @since 1.0
  */
 @API(Internal)
-public class ExecuteTestsTask implements ConsoleTask {
+public class ConsoleTestExecutor {
 
 	private final CommandLineOptions options;
 	private final Supplier<Launcher> launcherSupplier;
 
-	public ExecuteTestsTask(CommandLineOptions options) {
+	public ConsoleTestExecutor(CommandLineOptions options) {
 		this(options, LauncherFactory::create);
 	}
 
 	// for tests only
-	ExecuteTestsTask(CommandLineOptions options, Supplier<Launcher> launcherSupplier) {
+	ConsoleTestExecutor(CommandLineOptions options, Supplier<Launcher> launcherSupplier) {
 		this.options = options;
 		this.launcherSupplier = launcherSupplier;
 	}
 
-	@Override
-	public int execute(PrintWriter out) throws Exception {
+	public TestExecutionSummary execute(PrintWriter out) throws Exception {
 		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> executeTests(out));
 	}
 
-	private int executeTests(PrintWriter out) {
+	private TestExecutionSummary executeTests(PrintWriter out) {
 		Launcher launcher = launcherSupplier.get();
 		SummaryGeneratingListener summaryListener = registerListeners(out, launcher);
 
@@ -67,7 +66,7 @@ public class ExecuteTestsTask implements ConsoleTask {
 		TestExecutionSummary summary = summaryListener.getSummary();
 		printSummary(summary, out);
 
-		return computeExitCode(summary);
+		return summary;
 	}
 
 	private Optional<ClassLoader> createCustomClassLoader() {
@@ -128,10 +127,6 @@ public class ExecuteTestsTask implements ConsoleTask {
 			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);
-	}
-
-	private int computeExitCode(TestExecutionSummary summary) {
-		return (summary.getTotalFailureCount() == 0 ? SUCCESS : TESTS_FAILED);
 	}
 
 }

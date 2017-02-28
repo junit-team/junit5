@@ -312,7 +312,7 @@ public final class DiscoverySelectors {
 
 		Matcher matcher = fullyQualifiedMethodNamePattern.matcher(fullyQualifiedMethodName);
 		Preconditions.condition(matcher.matches(),
-			"fullyQualifiedMethodName is not a valid fully qualified method name");
+			fullyQualifiedMethodName + " is not a valid fully qualified method name");
 
 		String className = matcher.group(1);
 		String methodName = matcher.group(2);
