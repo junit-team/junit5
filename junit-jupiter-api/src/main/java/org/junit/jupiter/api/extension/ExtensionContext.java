@@ -14,9 +14,10 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -307,9 +308,9 @@ public interface ExtensionContext {
 
 		/**
 		 * Create a namespace which restricts access to data to all extensions
-		 * which use the same {@code parts} for creating a namespace.
+		 * which use the same sequence of {@code parts} for creating a namespace.
 		 *
-		 * <p>The order of the {@code parts} is not significant.
+		 * <p>The order of the {@code parts} is significant.
 		 *
 		 * <p>Internally the {@code parts} are compared using {@link Object#equals(Object)}.
 		 */
@@ -319,10 +320,10 @@ public interface ExtensionContext {
 			return new Namespace(parts);
 		}
 
-		private final Set<?> parts;
+		private final List<?> parts;
 
 		private Namespace(Object... parts) {
-			this.parts = new HashSet<>(Arrays.asList(parts));
+			this.parts = new ArrayList<>(Arrays.asList(parts));
 		}
 
 		@Override

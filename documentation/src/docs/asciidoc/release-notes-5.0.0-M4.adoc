@@ -82,6 +82,8 @@ on GitHub.
 ===== Deprecations and Breaking Changes
 
 * Removed deprecated `Assertions.expectThrows()` method in favor of `Assertions.assertThrows()`.
+* `ExtensionContext.Namespace`s with the same parts but in a different order are no longer considered
+  equal to each other.
 
 ===== New Features and Improvements
 
