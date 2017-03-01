@@ -11,19 +11,19 @@ junitPlatform {
 }
 
 dependencies {
-	compile(project(':junit-platform-launcher'))
-	compile('org.apache.maven.surefire:surefire-api:2.19.1')
-	compile('org.apache.maven.surefire:common-java5:2.19.1')
+	api(project(':junit-platform-launcher'))
+	implementation('org.apache.maven.surefire:surefire-api:2.19.1')
+	implementation('org.apache.maven.surefire:common-java5:2.19.1')
 
-	testCompile(project(':junit-jupiter-api'))
-	testCompile(project(':junit-platform-runner'))
-	testCompile(project(':junit-jupiter-engine'))
-	testCompile("org.mockito:mockito-core:${mockitoVersion}")
-	testCompile("org.assertj:assertj-core:${assertJVersion}")
+	testImplementation(project(':junit-jupiter-api'))
+	testImplementation(project(':junit-platform-runner'))
+	testImplementation(project(':junit-jupiter-engine'))
+	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
-	testRuntime(project(path: ':junit-platform-console', configuration: 'shadow'))
-	testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-	testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }

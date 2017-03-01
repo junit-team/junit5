@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
@@ -16,9 +16,9 @@ configurations {
 }
 
 dependencies {
-	compile(project(':junit-platform-launcher'))
-	testCompile(project(':junit-jupiter-api'))
-	testCompile("junit:junit:${junit4Version}")
+	api(project(':junit-platform-launcher'))
+	testImplementation(project(':junit-jupiter-api'))
+	testImplementation("junit:junit:${junit4Version}")
 
 	shadowed('net.sf.jopt-simple:jopt-simple:5.0.3')
 

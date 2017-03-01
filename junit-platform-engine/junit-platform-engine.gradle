@@ -12,8 +12,8 @@ artifacts {
 }
 
 dependencies {
-	compile(project(':junit-platform-commons'))
-	compile("org.opentest4j:opentest4j:${ota4jVersion}")
+	api(project(':junit-platform-commons'))
+	api("org.opentest4j:opentest4j:${ota4jVersion}")
 
-	testCompile("org.assertj:assertj-core:${assertJVersion}")
+	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 }

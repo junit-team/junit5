@@ -30,18 +30,18 @@ test {
 */
 
 dependencies {
-	testCompile(project(':junit-jupiter-api'))
-	testCompile(project(':junit-platform-runner'))
-	testCompile(project(':junit-platform-launcher'))
+	testImplementation(project(':junit-jupiter-api'))
+	testImplementation(project(':junit-platform-runner'))
+	testImplementation(project(':junit-platform-launcher'))
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
-	testRuntime(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
 
-	testRuntime(project(':junit-vintage-engine'))
-	testRuntime(project(':junit-jupiter-engine'))
-	testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-	testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+	testRuntimeOnly(project(':junit-vintage-engine'))
+	testRuntimeOnly(project(':junit-jupiter-engine'))
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }
 
 asciidoctorj {

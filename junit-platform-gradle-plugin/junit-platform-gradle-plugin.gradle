@@ -1,14 +1,14 @@
 apply plugin: 'groovy'
 
 dependencies {
-	compile localGroovy()
-	compile gradleApi()
-	compile(project(path: ':junit-platform-console', configuration: 'shadow'))
-	compile(project(':junit-platform-launcher'))
-	testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+	implementation localGroovy()
+	implementation gradleApi()
+	api(project(path: ':junit-platform-console', configuration: 'shadow'))
+	api(project(':junit-platform-launcher'))
+	testImplementation('org.spockframework:spock-core:1.0-groovy-2.4') {
 		transitive = false
 	}
-	testRuntime("junit:junit:${junit4Version}")
+	testRuntimeOnly("junit:junit:${junit4Version}")
 }
 
 processResources {
