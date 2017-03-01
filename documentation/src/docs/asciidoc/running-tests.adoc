@@ -430,13 +430,13 @@ The `{ConsoleLauncher}` is a command-line Java application that lets you launch
 the JUnit Platform from the console. For example, it can be used to run JUnit
 Vintage and JUnit Jupiter tests and print test execution results to the console.
 
-An executable `junit-platform-console-{platform-version}-standalone.jar` with all dependencies
+An executable `junit-platform-console-standalone-{platform-version}.jar` with all dependencies
 included is provided at the central Maven repository under the
-https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console[junit-platform-console]
+https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
 directory. You can https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run] the
 application like shown below:
 
-`java -jar junit-platform-console-{platform-version}-standalone.jar <<<running-tests-console-launcher-options>>>`
+`java -jar junit-platform-console-standalone-{platform-version}.jar <<<running-tests-console-launcher-options>>>`
 
 Here's an example of its output:
 
