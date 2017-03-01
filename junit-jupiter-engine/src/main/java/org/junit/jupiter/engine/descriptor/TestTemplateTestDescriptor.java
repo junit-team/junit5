@@ -14,7 +14,6 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -91,15 +90,12 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(containerExtensionContext,
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
-		providers.forEach(provider -> {
-			Iterator<TestTemplateInvocationContext> contextIterator = provider.provide(containerExtensionContext);
-			contextIterator.forEachRemaining(invocationContext -> {
-				int index = invocationIndex.incrementAndGet();
-				TestDescriptor invocationTestDescriptor = createInvocationTestDescriptor(invocationContext, index);
-				addChild(invocationTestDescriptor);
-				dynamicTestExecutor.execute(invocationTestDescriptor);
-			});
-		});
+		// @formatter:off
+		providers.stream()
+				.flatMap(provider -> provider.provide(containerExtensionContext))
+				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
+				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
+		// @formatter:on
 		validateWasAtLeastInvokedOnce(invocationIndex);
 		return context;
 	}
@@ -124,6 +120,11 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
 		return new TestTemplateInvocationTestDescriptor(uniqueId, this.getTestClass(), this.getTestMethod(),
 			invocationContext, index);
+	}
+
+	private void execute(DynamicTestExecutor dynamicTestExecutor, TestDescriptor testDescriptor) {
+		addChild(testDescriptor);
+		dynamicTestExecutor.execute(testDescriptor);
 	}
 
 	private void validateWasAtLeastInvokedOnce(AtomicInteger invocationIndex) {
