@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(StopwatchExtension.class)
+@ExtendWith(StopwatchExtension.class) // <1>
 public class StopwatchJupiterDemo {
 
 	@Test
@@ -43,10 +43,10 @@ public class StopwatchJupiterDemo {
 	}
 
 	@Test
-	public void performanceTest(Stopwatch stopwatch) throws InterruptedException {
+	public void performanceTest(Stopwatch stopwatch) throws InterruptedException { // <2>
 		long delta = 30;
 		Thread.sleep(300L);
-		assertEquals(300d, stopwatch.runtime(MILLISECONDS), delta);
+		assertEquals(300d, stopwatch.runtime(MILLISECONDS), delta); // <3>
 		Thread.sleep(500L);
 		assertEquals(800d, stopwatch.runtime(MILLISECONDS), delta);
 	}
