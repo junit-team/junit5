@@ -13,6 +13,7 @@ package org.junit.jupiter.api.extension;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
 
@@ -67,15 +68,19 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 * <p>This method is only called by the framework if {@link #supports} has
 	 * previously returned {@code true} for the same
 	 * {@link ContainerExtensionContext}. Thus, it must not return an empty
-	 * {@code Iterator}.
+	 * {@code Stream}.
+	 *
+	 * <p>The returned {@code Stream} will be properly closed by calling
+	 * {@link Stream#close()}, making it safe to use a resource such as
+	 * {@link java.nio.file.Files#lines(java.nio.file.Path) Files.lines()}.
 	 *
 	 * @param context the container extension context for the test template
 	 * method about to be invoked; never {@code null}
-	 * @return an Iterator of TestTemplateInvocationContext instances for the
+	 * @return a Stream of TestTemplateInvocationContext instances for the
 	 * invocation of the test template method; never {@code null} or empty
 	 * @see #supports
 	 * @see ContainerExtensionContext
 	 */
-	Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context);
+	Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context);
 
 }

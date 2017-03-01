@@ -16,7 +16,6 @@ import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -52,7 +51,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	@Override
-	public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 		Method templateMethod = Preconditions.notNull(context.getTestMethod().orElse(null),
 			"test method must not be null");
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
@@ -64,8 +63,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.peek(provider -> initialize(templateMethod, provider))
 				.flatMap(ParameterizedTestExtension::toArgumentsStream)
 				.map(Arguments::getArguments)
-				.map(arguments -> toTestTemplateInvocationContext(formatter, arguments))
-				.iterator();
+				.map(arguments -> toTestTemplateInvocationContext(formatter, arguments));
 		// @formatter:on
 	}
 
