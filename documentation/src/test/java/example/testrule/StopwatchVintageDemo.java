@@ -10,6 +10,7 @@
 
 package example.testrule;
 
+// tag::user_guide[]
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -63,7 +64,9 @@ public class StopwatchVintageDemo {
 	}
 
 	@Test
+	// end::user_guide[]
 	@Ignore
+	// tag::user_guide[]
 	public void fails() {
 		fail();
 	}
@@ -83,3 +86,4 @@ public class StopwatchVintageDemo {
 	}
 
 }
+// end::user_guide[]
