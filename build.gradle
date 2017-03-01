@@ -78,7 +78,7 @@ ext {
 
 allprojects { subproj ->
 
-	apply plugin: 'java'
+	apply plugin: 'java-library'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'com.diffplug.gradle.spotless'

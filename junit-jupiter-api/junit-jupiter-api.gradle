@@ -1,4 +1,4 @@
 dependencies {
-	compile("org.opentest4j:opentest4j:${ota4jVersion}")
-	compile(project(':junit-platform-commons'))
+	api("org.opentest4j:opentest4j:${ota4jVersion}")
+	api(project(':junit-platform-commons'))
 }
