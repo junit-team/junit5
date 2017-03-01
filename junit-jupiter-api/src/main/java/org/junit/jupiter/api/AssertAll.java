@@ -10,7 +10,9 @@
 
 package org.junit.jupiter.api;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.function.Executable;
@@ -42,19 +44,21 @@ class AssertAll {
 
 	static void assertAll(String heading, Stream<Executable> executables) {
 		Preconditions.notNull(executables, "executables must not be null");
-		MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading);
 
+		List<Throwable> failures = new ArrayList<>();
 		executables.forEach(executable -> {
 			try {
 				executable.execute();
 			}
 			catch (AssertionError assertionError) {
-				multipleFailuresError.addFailure(assertionError);
+				failures.add(assertionError);
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
 			}
 		});
+
+		MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading, failures);
 
 		if (multipleFailuresError.hasFailures()) {
 			throw multipleFailuresError;

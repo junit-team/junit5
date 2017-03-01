@@ -12,16 +12,15 @@ package org.junit.platform.console;
 
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
+import java.io.PrintStream;
 import java.io.PrintWriter;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.CommandLineOptionsParser;
 import org.junit.platform.console.options.JOptSimpleCommandLineOptionsParser;
-import org.junit.platform.console.tasks.ConsoleTask;
-import org.junit.platform.console.tasks.ConsoleTaskExecutor;
-import org.junit.platform.console.tasks.DisplayHelpTask;
-import org.junit.platform.console.tasks.ExecuteTestsTask;
+import org.junit.platform.console.tasks.ConsoleTestExecutor;
+import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
  * The {@code ConsoleLauncher} is a stand-alone application for launching the
@@ -34,35 +33,48 @@ public class ConsoleLauncher {
 
 	@API(Maintained)
 	public static void main(String... args) {
-		ConsoleLauncher consoleLauncher = new ConsoleLauncher(new JOptSimpleCommandLineOptionsParser(),
-			new ConsoleTaskExecutor(System.out, System.err));
-		int exitCode = consoleLauncher.execute(args);
+		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
+		ConsoleLauncher consoleLauncher = new ConsoleLauncher(parser, System.out, System.err);
+		int exitCode = consoleLauncher.execute(args).getExitCode();
 		System.exit(exitCode);
 	}
 
 	private final CommandLineOptionsParser commandLineOptionsParser;
-	private final ConsoleTaskExecutor consoleTaskExecutor;
+	private final PrintStream outStream;
+	private final PrintStream errStream;
 
-	ConsoleLauncher(CommandLineOptionsParser commandLineOptionsParser, ConsoleTaskExecutor consoleTaskExecutor) {
+	ConsoleLauncher(CommandLineOptionsParser commandLineOptionsParser, PrintStream out, PrintStream err) {
 		this.commandLineOptionsParser = commandLineOptionsParser;
-		this.consoleTaskExecutor = consoleTaskExecutor;
+		this.outStream = out;
+		this.errStream = err;
 	}
 
-	int execute(String... args) {
+	ConsoleLauncherExecutionResult execute(String... args) {
 		CommandLineOptions options = commandLineOptionsParser.parse(args);
-		ConsoleTask task = determineTask(options);
-		return consoleTaskExecutor.executeTask(task, this::displayHelp);
-	}
-
-	private ConsoleTask determineTask(CommandLineOptions options) {
-		if (options.isDisplayHelp()) {
-			return new DisplayHelpTask(commandLineOptionsParser);
+		try (PrintWriter out = new PrintWriter(outStream)) {
+			if (options.isDisplayHelp()) {
+				commandLineOptionsParser.printHelp(out);
+				return ConsoleLauncherExecutionResult.success();
+			}
+			return executeTests(options, out);
 		}
-		return new ExecuteTestsTask(options);
+		finally {
+			outStream.flush();
+			errStream.flush();
+		}
 	}
 
-	void displayHelp(PrintWriter out) {
-		new DisplayHelpTask(commandLineOptionsParser).execute(out);
+	private ConsoleLauncherExecutionResult executeTests(CommandLineOptions options, PrintWriter out) {
+		try {
+			TestExecutionSummary testExecutionSummary = new ConsoleTestExecutor(options).execute(out);
+			return ConsoleLauncherExecutionResult.forSummary(testExecutionSummary);
+		}
+		catch (Exception exception) {
+			exception.printStackTrace(errStream);
+			errStream.println();
+			commandLineOptionsParser.printHelp(out);
+		}
+		return ConsoleLauncherExecutionResult.failed();
 	}
 
 }

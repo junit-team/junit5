@@ -10,53 +10,48 @@
 
 package org.junit.platform.console;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.commons.util.StringUtils.isBlank;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.console.options.JOptSimpleCommandLineOptionsParser;
-import org.junit.platform.console.tasks.ConsoleTaskExecutor;
 
 /**
  * @since 1.0
  */
-public class ConsoleLauncherIntegrationTests {
-
-	private ByteArrayOutputStream out = new ByteArrayOutputStream();
-	private ByteArrayOutputStream err = new ByteArrayOutputStream();
-
-	private ConsoleLauncher consoleLauncher = new ConsoleLauncher(new JOptSimpleCommandLineOptionsParser(),
-		new ConsoleTaskExecutor(new PrintStream(out), new PrintStream(err)));
+class ConsoleLauncherIntegrationTests {
 
 	@Test
-	public void runningConsoleLauncherWithoutExcludeClassnameOptionDoesNotExcludeClasses() {
-		String[] args = { "-e", "junit-jupiter", "-p", "org.junit.platform.console.subpackage" };
-		String standardOutText = this.executeLauncherAndFetchStandardOut(args);
-		assertThat(standardOutText).contains("2 tests found ");
+	void executeWithoutArgumentsFailsAndPrintsHelpInformation() {
+		ConsoleLauncherWrapperResult result = new ConsoleLauncherWrapper().execute(-1);
+		assertAll("empty args array results in display of help information and an exception stacktrace", //
+			() -> assertTrue(result.out.contains("help information")), //
+			() -> assertTrue(result.err.contains("No arguments were supplied to the ConsoleLauncher")) //
+		);
 	}
 
 	@Test
-	public void runningConsoleLauncherWithExcludeClassnameOptionExcludesClasses() {
+	void executeWithoutExcludeClassnameOptionDoesNotExcludeClasses() {
+		String[] args = { "-e", "junit-jupiter", "-p", "org.junit.platform.console.subpackage" };
+		assertEquals(2, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
+	}
+
+	@Test
+	void executeWithExcludeClassnameOptionExcludesClasses() {
 		String[] args = { "-e", "junit-jupiter", "-p", "org.junit.platform.console.subpackage", "--exclude-classname",
 				"^org\\.junit\\.platform\\.console\\.subpackage\\..*" };
-		String standardOutText = this.executeLauncherAndFetchStandardOut(args);
-		assertThat(standardOutText).contains("0 tests found ");
-	}
-
-	private String executeLauncherAndFetchStandardOut(String[] args) {
-		int exitCode = this.consoleLauncher.execute(args);
-		assertEquals(0, exitCode);
-
-		String standardErr = new String(this.err.toByteArray());
-		assertTrue(standardErr.isEmpty());
-
-		String standardOutText = new String(this.out.toByteArray());
-		assertThat(standardOutText).isNotBlank();
-		return standardOutText;
+		ConsoleLauncherWrapperResult result = new ConsoleLauncherWrapper().execute(args);
+		assertAll("all subpackage test classes are excluded by the class name filter", //
+			() -> assertArrayEquals(args, result.args), //
+			() -> assertEquals(StandardCharsets.UTF_8, result.charset), //
+			() -> assertEquals(0, result.code), //
+			() -> assertEquals(0, result.getTestsFoundCount()), //
+			() -> assertTrue(isBlank(result.err)) //
+		);
 	}
 
 }

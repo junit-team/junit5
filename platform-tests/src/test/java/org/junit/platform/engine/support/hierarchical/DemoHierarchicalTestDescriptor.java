@@ -13,9 +13,6 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip;
 import static org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip;
 
-import java.util.function.Consumer;
-
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;

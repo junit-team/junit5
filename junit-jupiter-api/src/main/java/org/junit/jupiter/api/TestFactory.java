@@ -34,6 +34,10 @@ import org.junit.platform.commons.meta.API;
  * will then be executed lazily, enabling dynamic and even non-deterministic
  * generation of test cases.
  *
+ * <p>Any {@code Stream} returned by a {@code @TestFactory} will be properly
+ * closed by calling {@code stream.close()}, making it safe to use a resource
+ * such as {@code Files.lines()}.
+ *
  * <p>{@code @TestFactory} methods may optionally declare parameters to be
  * resolved by {@link org.junit.jupiter.api.extension.ParameterResolver
  * ParameterResolvers}.

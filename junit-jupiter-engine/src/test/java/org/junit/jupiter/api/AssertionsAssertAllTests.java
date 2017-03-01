@@ -90,7 +90,7 @@ public class AssertionsAssertAllTests {
 		// @formatter:on
 
 		assertTrue(multipleFailuresError != null);
-		List<AssertionError> failures = multipleFailuresError.getFailures();
+		List<Throwable> failures = multipleFailuresError.getFailures();
 		assertTrue(failures.size() == 2);
 		assertTrue(failures.get(0).getClass().equals(AssertionFailedError.class));
 	}
@@ -104,7 +104,7 @@ public class AssertionsAssertAllTests {
 		// @formatter:on
 
 		assertTrue(multipleFailuresError != null);
-		List<AssertionError> failures = multipleFailuresError.getFailures();
+		List<Throwable> failures = multipleFailuresError.getFailures();
 		assertTrue(failures.size() == 2);
 		assertTrue(failures.get(0).getClass().equals(AssertionFailedError.class));
 	}

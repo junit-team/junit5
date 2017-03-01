@@ -24,6 +24,7 @@ import java.io.StringWriter;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.console.ConsoleLauncherExecutionResult;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.Details;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
@@ -31,7 +32,7 @@ import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine
 /**
  * @since 1.0
  */
-public class ExecuteTestsTaskTests {
+class ConsoleTestExecutorTests {
 
 	private static final Runnable FAILING_BLOCK = () -> fail("should fail");
 	private static final Runnable SUCCEEDING_TEST = () -> {
@@ -46,11 +47,11 @@ public class ExecuteTestsTaskTests {
 	}
 
 	@Test
-	public void printsSummary() throws Exception {
+	void printsSummary() throws Exception {
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
-		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
 
 		assertThat(stringWriter.toString()).contains("Test run finished after", "2 tests found", "0 tests skipped",
@@ -58,95 +59,95 @@ public class ExecuteTestsTaskTests {
 	}
 
 	@Test
-	public void printsDetailsIfTheyAreNotHidden() throws Exception {
+	void printsDetailsIfTheyAreNotHidden() throws Exception {
 		options.setDetails(Details.FLAT);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
-		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
 
 		assertThat(stringWriter.toString()).contains("Test execution started.");
 	}
 
 	@Test
-	public void printsNoDetailsIfTheyAreHidden() throws Exception {
+	void printsNoDetailsIfTheyAreHidden() throws Exception {
 		options.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
-		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
 
 		assertThat(stringWriter.toString()).doesNotContain("Test execution started.");
 	}
 
 	@Test
-	public void printsFailuresEvenIfDetailsAreHidden() throws Exception {
+	void printsFailuresEvenIfDetailsAreHidden() throws Exception {
 		options.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
-		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
 
 		assertThat(stringWriter.toString()).contains("Failures (2)", "failingTest", "failingContainer");
 	}
 
 	@Test
-	public void hasStatusCode0ForSucceedingTest() throws Exception {
+	void hasStatusCode0ForSucceedingTest() throws Exception {
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
 
-		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
-		int exitCode = task.execute(dummyWriter());
+		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
+		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(task.execute(dummyWriter()));
 
 		assertThat(exitCode).isEqualTo(0);
 	}
 
 	@Test
-	public void hasStatusCode1ForFailingTest() throws Exception {
+	void hasStatusCode1ForFailingTest() throws Exception {
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
-		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
-		int exitCode = task.execute(dummyWriter());
+		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
+		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(task.execute(dummyWriter()));
 
 		assertThat(exitCode).isEqualTo(1);
 	}
 
 	@Test
-	public void hasStatusCode1ForFailingContainer() throws Exception {
+	void hasStatusCode1ForFailingContainer() throws Exception {
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
-		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
-		int exitCode = task.execute(dummyWriter());
+		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
+		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(task.execute(dummyWriter()));
 
 		assertThat(exitCode).isEqualTo(1);
 	}
 
 	@Test
-	public void usesCustomClassLoaderIfAdditionalClassPathEntriesArePresent() throws Exception {
+	void usesCustomClassLoaderIfAdditionalClassPathEntriesArePresent() throws Exception {
 		options.setAdditionalClasspathEntries(singletonList(Paths.get(".")));
 
 		ClassLoader oldClassLoader = getDefaultClassLoader();
 		dummyTestEngine.addTest("failingTest",
 			() -> assertSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
-		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
 
 		assertThat(stringWriter.toString()).contains("failingTest", "should fail", "1 tests failed");
 	}
 
 	@Test
-	public void usesSameClassLoaderIfNoAdditionalClassPathEntriesArePresent() throws Exception {
+	void usesSameClassLoaderIfNoAdditionalClassPathEntriesArePresent() throws Exception {
 		options.setAdditionalClasspathEntries(emptyList());
 
 		ClassLoader oldClassLoader = getDefaultClassLoader();
 		dummyTestEngine.addTest("failingTest",
 			() -> assertNotSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
-		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
 
 		assertThat(stringWriter.toString()).contains("failingTest", "should fail", "1 tests failed");

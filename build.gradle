@@ -60,10 +60,11 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
-	licenseHeaderFileProvider = { project ->
+	licenseHeaderFileProvider = { project -> (
 		project.name == 'junit-platform-surefire-provider'
 			? 'apache-license-2.0.java'
 			: 'eclipse-public-license-1.0.java'
+		)
 	}
 
 	cloverTestProjects = [
@@ -151,8 +152,12 @@ allprojects { subproj ->
 
 	checkstyle {
 		toolVersion = 6.11
-		configFile = rootProject.file('src/checkstyle/checkstyle.xml')
-		sourceSets = [ sourceSets.main ]
+	}
+	checkstyleMain {
+		configFile = rootProject.file('src/checkstyle/checkstyleMain.xml')
+	}
+	checkstyleTest {
+		configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
 	}
 
 	if (project.hasProperty('enableClover') && subproj.name != "documentation") {
@@ -171,8 +176,8 @@ allprojects { subproj ->
 		def instrumentedJavaSourcesDir = file("$cloverDir/instrumentedSources/java")
 
 		task cloverTaskdef {
-			def cloverLicensePath = project.hasProperty('clover.license.path')
-					? project.property('clover.license.path') : rootProject.file('clover.license').absolutePath
+			def cloverLicensePath = (project.hasProperty('clover.license.path')
+					? project.property('clover.license.path') : rootProject.file('clover.license').absolutePath)
 			ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
 			ant.property(name: 'clover.license.path', value: cloverLicensePath)
 		}
@@ -548,7 +553,7 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = 'Generates gradlew and gradlew.bat scripts'
-		gradleVersion = '3.3'
+		gradleVersion = '3.4'
 	}
 
 }
