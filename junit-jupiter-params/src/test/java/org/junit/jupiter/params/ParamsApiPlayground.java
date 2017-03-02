@@ -14,15 +14,22 @@ import static java.util.Collections.singleton;
 
 import java.time.LocalDate;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
+import org.junit.jupiter.params.sources.EnumSource;
 import org.junit.jupiter.params.sources.FileSource;
 import org.junit.jupiter.params.sources.MethodSource;
 import org.junit.jupiter.params.sources.StringSource;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
 
 public class ParamsApiPlayground {
+
+	@ParameterizedTest
+	@EnumSource(TimeUnit.class)
+	void testWithParametersFromEnum(TimeUnit unit) {
+	}
 
 	@ParameterizedTest
 	@StringSource({ "foo, 1", "bar, 2" })
