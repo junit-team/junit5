@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
 import org.junit.jupiter.params.sources.EnumSource;
 import org.junit.jupiter.params.sources.FileSource;
@@ -79,7 +80,7 @@ public class ParamsApiPlayground {
 
 	static class MyArgumentsProvider implements ArgumentsProvider {
 		@Override
-		public Iterator<? extends Arguments> arguments() {
+		public Iterator<? extends Arguments> arguments(ContainerExtensionContext context) {
 			return Stream.of("foo", "bar").map(ObjectArrayArguments::create).iterator();
 		}
 	}

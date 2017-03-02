@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.sources.StringSource;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
@@ -87,7 +88,7 @@ class ParameterizedTestIntegrationTests {
 
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
 		@Override
-		public Iterator<? extends Arguments> arguments() throws Exception {
+		public Iterator<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception {
 			return asList(ObjectArrayArguments.create("foo"), ObjectArrayArguments.create("bar")).iterator();
 		}
 	}

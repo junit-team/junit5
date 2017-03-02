@@ -14,23 +14,33 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
+
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.AnnotationInitialized;
 import org.junit.jupiter.params.Arguments;
 import org.junit.jupiter.params.ArgumentsProvider;
-import org.junit.jupiter.params.support.SeparatedStringArguments;
+import org.junit.jupiter.params.support.ObjectArrayArguments;
 
 class StringArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<StringSource> {
 
-	private String[] values;
+	private String[] lines;
+	private char delimiter;
 
 	@Override
 	public void initialize(StringSource annotation) {
-		values = annotation.value();
+		lines = annotation.value();
+		delimiter = annotation.delimiter();
 	}
 
 	@Override
-	public Iterator<? extends Arguments> arguments() throws IOException {
-		return Arrays.stream(values).map(SeparatedStringArguments::create).iterator();
+	public Iterator<? extends Arguments> arguments(ContainerExtensionContext context) throws IOException {
+		CsvParserSettings settings = new CsvParserSettings();
+		settings.getFormat().setDelimiter(delimiter);
+		settings.setAutoConfigurationEnabled(false);
+		CsvParser csvParser = new CsvParser(settings);
+		return Arrays.stream(lines).map(csvParser::parseLine).map(ObjectArrayArguments::create).iterator();
 	}
 
 }

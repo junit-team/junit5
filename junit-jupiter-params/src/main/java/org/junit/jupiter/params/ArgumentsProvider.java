@@ -12,8 +12,14 @@ package org.junit.jupiter.params;
 
 import java.util.Iterator;
 
-public interface ArgumentsProvider {
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
 
-	Iterator<? extends Arguments> arguments() throws Exception;
+public interface ArgumentsProvider extends AutoCloseable {
 
+	Iterator<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception;
+
+	@Override
+	default void close() {
+		// do nothing by default
+	}
 }

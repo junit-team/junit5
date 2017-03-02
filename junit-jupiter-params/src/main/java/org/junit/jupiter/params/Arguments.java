@@ -12,6 +12,6 @@ package org.junit.jupiter.params;
 
 public interface Arguments {
 
-	Object[] getArguments();
+	Object[] get();
 
 }

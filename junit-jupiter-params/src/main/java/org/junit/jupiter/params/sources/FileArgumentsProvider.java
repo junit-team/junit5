@@ -17,25 +17,54 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
+
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.AnnotationInitialized;
 import org.junit.jupiter.params.Arguments;
 import org.junit.jupiter.params.ArgumentsProvider;
-import org.junit.jupiter.params.support.SeparatedStringArguments;
+import org.junit.jupiter.params.support.ObjectArrayArguments;
 
 class FileArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<FileSource> {
 
 	private Path path;
 	private Charset charset;
+	private CsvParserSettings settings;
+	private CsvParser csvParser;
 
 	@Override
-	public void initialize(FileSource annotation) {
-		path = Paths.get(annotation.value());
+	public void initialize(FileSource annotation) throws IOException {
+		path = Paths.get(annotation.path());
 		charset = Charset.forName(annotation.encoding());
+		settings = new CsvParserSettings();
+		settings.getFormat().setDelimiter(annotation.delimiter());
+		settings.getFormat().setLineSeparator(annotation.lineSeparator());
+		settings.setAutoConfigurationEnabled(false);
 	}
 
 	@Override
-	public Iterator<? extends Arguments> arguments() throws IOException {
-		return Files.lines(path, charset).map(SeparatedStringArguments::create).iterator();
+	public Iterator<? extends Arguments> arguments(ContainerExtensionContext context) throws IOException {
+		csvParser = new CsvParser(settings);
+		csvParser.beginParsing(Files.newBufferedReader(path, charset));
+		return new Iterator<Arguments>() {
+			@Override
+			public boolean hasNext() {
+				return !csvParser.getContext().isStopped();
+			}
+
+			@Override
+			public Arguments next() {
+				Object[] arguments = csvParser.parseNext();
+				return ObjectArrayArguments.create(arguments);
+			}
+		};
 	}
 
+	@Override
+	public void close() {
+		if (csvParser != null) {
+			csvParser.stopParsing();
+		}
+	}
 }

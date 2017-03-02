@@ -25,7 +25,7 @@ public class ObjectArrayArguments implements Arguments {
 	}
 
 	@Override
-	public Object[] getArguments() {
+	public Object[] get() {
 		return arguments;
 	}
 }
