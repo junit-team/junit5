@@ -14,6 +14,6 @@ import java.lang.annotation.Annotation;
 
 public interface AnnotationInitialized<A extends Annotation> {
 
-	void initialize(A annotation);
+	void initialize(A annotation) throws Exception;
 
 }

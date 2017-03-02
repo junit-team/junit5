@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.AnnotationInitialized;
 import org.junit.jupiter.params.Arguments;
 import org.junit.jupiter.params.ArgumentsProvider;
@@ -29,7 +30,7 @@ class EnumArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<
 	}
 
 	@Override
-	public Iterator<? extends Arguments> arguments() throws IOException {
+	public Iterator<? extends Arguments> arguments(ContainerExtensionContext context) throws IOException {
 		return Arrays.stream(enumClass.getEnumConstants()).map(ObjectArrayArguments::create).iterator();
 	}
 
