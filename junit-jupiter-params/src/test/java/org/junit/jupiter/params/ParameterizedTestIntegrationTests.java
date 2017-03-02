@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.params;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -21,8 +20,8 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
@@ -88,8 +87,8 @@ class ParameterizedTestIntegrationTests {
 
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
 		@Override
-		public Iterator<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception {
-			return asList(ObjectArrayArguments.create("foo"), ObjectArrayArguments.create("bar")).iterator();
+		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception {
+			return Stream.of(ObjectArrayArguments.create("foo"), ObjectArrayArguments.create("bar"));
 		}
 	}
 }

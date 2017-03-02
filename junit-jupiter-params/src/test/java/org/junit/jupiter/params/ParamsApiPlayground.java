@@ -13,7 +13,6 @@ package org.junit.jupiter.params;
 import static java.util.Collections.singleton;
 
 import java.time.LocalDate;
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -80,8 +79,8 @@ public class ParamsApiPlayground {
 
 	static class MyArgumentsProvider implements ArgumentsProvider {
 		@Override
-		public Iterator<? extends Arguments> arguments(ContainerExtensionContext context) {
-			return Stream.of("foo", "bar").map(ObjectArrayArguments::create).iterator();
+		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
+			return Stream.of("foo", "bar").map(ObjectArrayArguments::create);
 		}
 	}
 
