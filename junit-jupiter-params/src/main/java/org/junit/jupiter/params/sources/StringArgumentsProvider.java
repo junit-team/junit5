@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.params.sources;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -35,7 +34,7 @@ class StringArgumentsProvider implements ArgumentsProvider, AnnotationInitialize
 	}
 
 	@Override
-	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws IOException {
+	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
 		settings.setAutoConfigurationEnabled(false);

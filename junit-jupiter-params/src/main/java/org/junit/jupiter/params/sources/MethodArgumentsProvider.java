@@ -44,13 +44,17 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationInitialize
 		Method method = ReflectionUtils.findMethod(testClass, methodName) //
 				.orElseThrow(() -> new JUnitException("Could not find method: " + methodName));
 		Object methodResult = ReflectionUtils.invokeMethod(method, null);
-		return toStream(methodResult).map(item -> {
-			if (item instanceof Arguments) {
-				return (Arguments) item;
-			}
-			// TODO #14 make sure Object[] works, too
-			return ObjectArrayArguments.create(item);
-		});
+		return toStream(methodResult).map(this::toArguments);
+	}
+
+	private Arguments toArguments(Object item) {
+		if (item instanceof Arguments) {
+			return (Arguments) item;
+		}
+		if (item instanceof Object[]) {
+			return ObjectArrayArguments.create((Object[]) item);
+		}
+		return ObjectArrayArguments.create(item);
 	}
 
 	private static Stream<?> toStream(Object object) {
@@ -67,9 +71,8 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationInitialize
 		if (object instanceof Iterator) {
 			return stream(spliteratorUnknownSize((Iterator<?>) object, ORDERED), false);
 		}
-		// TODO #14 better error message
 		throw new PreconditionViolationException(
-			"Cannot convert instance of type " + object.getClass().getName() + " into a Stream: " + object);
+			"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object);
 	}
 
 }
