@@ -12,7 +12,6 @@ package org.junit.jupiter.params.sources;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -22,12 +21,15 @@ import org.junit.jupiter.params.ArgumentsSource;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Repeatable(FileSources.class)
 @ArgumentsSource(FileArgumentsProvider.class)
 public @interface FileSource {
 
-	String value();
+	String path();
 
 	String encoding() default "UTF-8";
+
+	String lineSeparator() default "\n";
+
+	char delimiter() default ',';
 
 }
