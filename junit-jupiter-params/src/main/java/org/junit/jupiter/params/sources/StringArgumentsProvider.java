@@ -12,7 +12,7 @@ package org.junit.jupiter.params.sources;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
@@ -35,12 +35,12 @@ class StringArgumentsProvider implements ArgumentsProvider, AnnotationInitialize
 	}
 
 	@Override
-	public Iterator<? extends Arguments> arguments(ContainerExtensionContext context) throws IOException {
+	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws IOException {
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
 		settings.setAutoConfigurationEnabled(false);
 		CsvParser csvParser = new CsvParser(settings);
-		return Arrays.stream(lines).map(csvParser::parseLine).map(ObjectArrayArguments::create).iterator();
+		return Arrays.stream(lines).map(csvParser::parseLine).map(ObjectArrayArguments::create);
 	}
 
 }

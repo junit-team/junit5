@@ -10,7 +10,12 @@
 
 package org.junit.jupiter.params.sources;
 
+import static java.util.Spliterator.ORDERED;
+import static java.util.Spliterators.spliteratorUnknownSize;
+import static java.util.stream.StreamSupport.stream;
+
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -20,13 +25,12 @@ import org.junit.jupiter.params.Arguments;
 import org.junit.jupiter.params.ArgumentsProvider;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 class MethodArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<MethodSource> {
 
 	private String methodName;
-	private Object source;
 
 	@Override
 	public void initialize(MethodSource annotation) {
@@ -34,54 +38,38 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationInitialize
 	}
 
 	@Override
-	public Iterator<Arguments> arguments(ContainerExtensionContext context) {
+	public Stream<Arguments> arguments(ContainerExtensionContext context) {
 		Class<?> testClass = context.getTestClass() //
 				.orElseThrow(() -> new JUnitException("Cannot invoke method without test class: " + methodName));
 		Method method = ReflectionUtils.findMethod(testClass, methodName) //
 				.orElseThrow(() -> new JUnitException("Could not find method: " + methodName));
-		source = ReflectionUtils.invokeMethod(method, null);
-		if (source instanceof Iterator) {
-			return decorate((Iterator<?>) source);
+		Object methodResult = ReflectionUtils.invokeMethod(method, null);
+		return toStream(methodResult).map(item -> {
+			if (item instanceof Arguments) {
+				return (Arguments) item;
+			}
+			// TODO #14 make sure Object[] works, too
+			return ObjectArrayArguments.create(item);
+		});
+	}
+
+	private static Stream<?> toStream(Object object) {
+		// TODO Duplication with TestFactoryTestDescriptor
+		if (object instanceof Stream) {
+			return (Stream<?>) object;
 		}
-		if (source instanceof Iterable) {
-			return decorate(((Iterable<?>) source).iterator());
+		if (object instanceof Collection) {
+			return ((Collection<?>) object).stream();
 		}
-		if (source instanceof Stream) {
-			return decorate(((Stream<?>) source).iterator());
+		if (object instanceof Iterable) {
+			return stream(((Iterable<?>) object).spliterator(), false);
+		}
+		if (object instanceof Iterator) {
+			return stream(spliteratorUnknownSize((Iterator<?>) object, ORDERED), false);
 		}
 		// TODO #14 better error message
-		throw new JUnitException("Illegal return type: " + source.getClass().getName());
-	}
-
-	@Override
-	public void close() {
-		if (source instanceof AutoCloseable) {
-			try {
-				((AutoCloseable) source).close();
-			}
-			catch (Exception e) {
-				ExceptionUtils.throwAsUncheckedException(e);
-			}
-		}
-	}
-
-	private Iterator<Arguments> decorate(Iterator<?> iterator) {
-		return new Iterator<Arguments>() {
-			@Override
-			public boolean hasNext() {
-				return iterator.hasNext();
-			}
-
-			@Override
-			public Arguments next() {
-				Object nextItem = iterator.next();
-				if (nextItem instanceof Arguments) {
-					return (Arguments) nextItem;
-				}
-				// TODO #14 make sure Object[] works, too
-				return ObjectArrayArguments.create(nextItem);
-			}
-		};
+		throw new PreconditionViolationException(
+			"Cannot convert instance of type " + object.getClass().getName() + " into a Stream: " + object);
 	}
 
 }

@@ -10,12 +10,17 @@
 
 package org.junit.jupiter.params.sources;
 
+import static java.util.Spliterators.spliteratorUnknownSize;
+import static java.util.stream.StreamSupport.stream;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
@@ -31,7 +36,6 @@ class FileArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<
 	private Path path;
 	private Charset charset;
 	private CsvParserSettings settings;
-	private CsvParser csvParser;
 
 	@Override
 	public void initialize(FileSource annotation) throws IOException {
@@ -44,10 +48,10 @@ class FileArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<
 	}
 
 	@Override
-	public Iterator<? extends Arguments> arguments(ContainerExtensionContext context) throws IOException {
-		csvParser = new CsvParser(settings);
+	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws IOException {
+		CsvParser csvParser = new CsvParser(settings);
 		csvParser.beginParsing(Files.newBufferedReader(path, charset));
-		return new Iterator<Arguments>() {
+		Iterator<Arguments> iterator = new Iterator<Arguments>() {
 			@Override
 			public boolean hasNext() {
 				return !csvParser.getContext().isStopped();
@@ -59,12 +63,7 @@ class FileArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<
 				return ObjectArrayArguments.create(arguments);
 			}
 		};
-	}
-
-	@Override
-	public void close() {
-		if (csvParser != null) {
-			csvParser.stopParsing();
-		}
+		return stream(spliteratorUnknownSize(iterator, Spliterator.ORDERED), false) //
+				.onClose(() -> csvParser.stopParsing());
 	}
 }

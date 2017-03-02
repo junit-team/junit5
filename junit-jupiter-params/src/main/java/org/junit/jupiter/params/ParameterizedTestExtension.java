@@ -17,11 +17,8 @@ import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.Extension;
@@ -52,7 +49,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-		// TODO #14 Close providers
+		// TODO #14 Test that Streams returned by providers are closed
 		Method templateMethod = Preconditions.notNull(context.getTestMethod().orElse(null),
 			"test method must not be null");
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
@@ -62,7 +59,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.map(ArgumentsSource::value)
 				.map(ReflectionUtils::newInstance)
 				.peek(provider -> initialize(templateMethod, provider))
-				.flatMap(provider -> toArgumentsStream(provider, context))
+				.flatMap(provider -> arguments(provider, context))
 				.map(Arguments::get)
 				.map(arguments -> toTestTemplateInvocationContext(formatter, arguments));
 		// @formatter:on
@@ -99,11 +96,10 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		}
 	}
 
-	private static Stream<? extends Arguments> toArgumentsStream(ArgumentsProvider provider,
+	private static Stream<? extends Arguments> arguments(ArgumentsProvider provider,
 			ContainerExtensionContext context) {
 		try {
-			return StreamSupport.stream(
-				Spliterators.spliteratorUnknownSize(provider.arguments(context), Spliterator.ORDERED), false);
+			return provider.arguments(context);
 		}
 		catch (Exception e) {
 			// TODO #14 Test

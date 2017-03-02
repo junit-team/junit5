@@ -10,16 +10,12 @@
 
 package org.junit.jupiter.params;
 
-import java.util.Iterator;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 
-public interface ArgumentsProvider extends AutoCloseable {
+public interface ArgumentsProvider {
 
-	Iterator<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception;
+	Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception;
 
-	@Override
-	default void close() {
-		// do nothing by default
-	}
 }

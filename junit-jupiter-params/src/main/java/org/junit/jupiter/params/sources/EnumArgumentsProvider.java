@@ -12,7 +12,7 @@ package org.junit.jupiter.params.sources;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.AnnotationInitialized;
@@ -30,8 +30,8 @@ class EnumArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<
 	}
 
 	@Override
-	public Iterator<? extends Arguments> arguments(ContainerExtensionContext context) throws IOException {
-		return Arrays.stream(enumClass.getEnumConstants()).map(ObjectArrayArguments::create).iterator();
+	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws IOException {
+		return Arrays.stream(enumClass.getEnumConstants()).map(ObjectArrayArguments::create);
 	}
 
 }
