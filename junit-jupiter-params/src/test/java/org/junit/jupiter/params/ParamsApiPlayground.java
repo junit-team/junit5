@@ -37,13 +37,17 @@ public class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
+	@StringSource(value = { "foo | 1", "bar | 2" }, delimiter = '|')
+	void testWithParametersFromAnnotationWithCustomDelimiter(String parameter, int i) {
+	}
+
+	@ParameterizedTest
 	@StringSource({ "31.12.2016", "01.01.2017" })
 	void testWithExplicitConverter(@JavaTimeConversionPattern("dd.mm.YYYY") LocalDate parameter) {
 	}
 
 	@ParameterizedTest
 	@MethodSource("first")
-	@MethodSource("second")
 	void testWithParametersFromMethods(String parameter) {
 	}
 
@@ -53,15 +57,14 @@ public class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
-	@FileSource("foo.csv")
-	@FileSource("bar.csv")
+	@FileSource(path = "foo.csv")
 	void testWithParametersFromFile(String parameter) {
 	}
 
 	@ParameterizedTest
 	@StringSource("foo")
 	@MethodSource("first")
-	@FileSource("classpath:bar.csv")
+	@FileSource(path = "classpath:bar.csv")
 	@ArgumentsSource(MyArgumentsProvider.class)
 	void testWithMultipleDifferentSources(String parameter) {
 	}
