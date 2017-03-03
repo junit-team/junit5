@@ -32,6 +32,11 @@ public class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
+	@EnumSource(value = TimeUnit.class, names = { "DAYS", "MINUTES" })
+	void testWithParametersFromEnumWithNamedSubset(TimeUnit unit) {
+	}
+
+	@ParameterizedTest
 	@StringSource({ "foo, 1", "bar, 2" })
 	void testWithParametersFromAnnotation(String parameter, int i) {
 	}
