@@ -22,6 +22,7 @@ import org.junit.jupiter.params.sources.CsvFileSource;
 import org.junit.jupiter.params.sources.CsvSource;
 import org.junit.jupiter.params.sources.EnumSource;
 import org.junit.jupiter.params.sources.MethodSource;
+import org.junit.jupiter.params.sources.ValueSource;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
 
 public class ParamsApiPlayground {
@@ -34,6 +35,11 @@ public class ParamsApiPlayground {
 	@ParameterizedTest
 	@EnumSource(value = TimeUnit.class, names = { "DAYS", "MINUTES" })
 	void testWithParametersFromEnumWithNamedSubset(TimeUnit unit) {
+	}
+
+	@ParameterizedTest
+	@ValueSource(longs = { 1_000, 2_000 })
+	void testWithParametersFromLongArray(long number) {
 	}
 
 	@ParameterizedTest
@@ -51,7 +57,7 @@ public class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "31.12.2016", "01.01.2017" })
+	@ValueSource(strings = { "31.12.2016", "01.01.2017" })
 	void testWithExplicitConverter(@JavaTimeConversionPattern("dd.mm.YYYY") LocalDate parameter) {
 	}
 
