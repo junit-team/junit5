@@ -95,6 +95,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 - **Artifact IDs**:
   - `junit-platform-commons`
   - `junit-platform-console`
+  - `junit-platform-console-standalone` (currently only available as `1.0.0-SNAPSHOT`)
   - `junit-platform-engine`
   - `junit-platform-gradle-plugin`
   - `junit-platform-launcher`

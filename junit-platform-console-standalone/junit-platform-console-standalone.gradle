@@ -10,20 +10,16 @@ buildscript {
 	}
 }
 
-configurations {
-	shadowed
-}
-
 dependencies {
-	shadowed(project(':junit-platform-console'))
-	shadowed(project(':junit-jupiter-engine'))
-	shadowed(project(':junit-vintage-engine'))
+	shadow(project(':junit-platform-console'))
+	shadow(project(':junit-jupiter-engine'))
+	shadow(project(':junit-vintage-engine'))
 
 	testCompileOnly(project(':junit-jupiter-api'))
 	testCompileOnly("junit:junit:${junit4Version}")
 }
 
-sourceSets.main.compileClasspath += configurations.shadowed
+sourceSets.main.compileClasspath += configurations.shadow
 
 jar {
 	manifest {
@@ -34,7 +30,7 @@ jar {
 }
 
 javadoc {
-	classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
+	classpath = project.sourceSets.main.compileClasspath + configurations.shadow
 }
 
 jar.enabled = false
@@ -50,7 +46,7 @@ shadowJar {
 	dependsOn(project(':junit-platform-console').shadowJar)
 
 	classifier = null
-	configurations = [project.configurations.shadowed]
+	configurations = [project.configurations.shadow]
 	mergeServiceFiles()
 	manifest {
 		inheritFrom project.tasks.jar.manifest
