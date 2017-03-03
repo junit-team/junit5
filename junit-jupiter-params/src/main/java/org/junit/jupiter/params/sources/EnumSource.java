@@ -26,4 +26,9 @@ public @interface EnumSource {
 
 	Class<? extends Enum<?>> value();
 
+	/**
+	 * @return names of enum constants to provide; if no name is given, all declared enum constants are provided.
+	 */
+	String[] names() default {};
+
 }
