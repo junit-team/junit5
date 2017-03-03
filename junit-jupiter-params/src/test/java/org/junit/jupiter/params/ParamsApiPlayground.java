@@ -39,7 +39,7 @@ public class ParamsApiPlayground {
 
 	@ParameterizedTest
 	@ValueSource(longs = { 1_000, 2_000 })
-	void testWithParametersFromLongArray(long number) {
+	void testWithParametersFromLongArray(Long number) {
 	}
 
 	@ParameterizedTest
@@ -58,7 +58,7 @@ public class ParamsApiPlayground {
 
 	@ParameterizedTest
 	@ValueSource(strings = { "31.12.2016", "01.01.2017" })
-	void testWithExplicitConverter(@JavaTimeConversionPattern("dd.mm.YYYY") LocalDate parameter) {
+	void testWithExplicitConverter(@JavaTimeConversionPattern("dd.MM.yyyy") LocalDate parameter) {
 	}
 
 	@ParameterizedTest
@@ -79,8 +79,8 @@ public class ParamsApiPlayground {
 	@ParameterizedTest
 	@CsvSource("foo")
 	@MethodSource("first")
-	@CsvFileSource(path = "classpath:bar.csv")
 	@ArgumentsSource(MyArgumentsProvider.class)
+	@CsvFileSource(path = "classpath:bar.csv")
 	void testWithMultipleDifferentSources(String parameter) {
 	}
 
