@@ -30,9 +30,10 @@ import java.util.Map;
 
 import org.junit.jupiter.params.AnnotationInitialized;
 import org.junit.jupiter.params.ArgumentConversionException;
-import org.junit.jupiter.params.ArgumentConverter;
+import org.junit.jupiter.params.support.SimpleArgumentConverter;
 
-class JavaTimeArgumentConverter implements ArgumentConverter, AnnotationInitialized<JavaTimeConversionPattern> {
+class JavaTimeArgumentConverter extends SimpleArgumentConverter
+		implements AnnotationInitialized<JavaTimeConversionPattern> {
 
 	private static final Map<Class<?>, TemporalQuery<?>> TEMPORAL_QUERIES;
 	static {

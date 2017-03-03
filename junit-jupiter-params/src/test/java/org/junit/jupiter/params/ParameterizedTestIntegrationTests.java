@@ -25,8 +25,10 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.sources.CsvSource;
+import org.junit.jupiter.params.sources.ValueSource;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.test.event.ExecutionEvent;
@@ -61,6 +63,15 @@ class ParameterizedTestIntegrationTests {
 				.haveExactly(1, event(test(), displayName("bar and 42"), finishedWithFailure(message("bar, 42"))));
 	}
 
+	@Test
+	void executesWithExplicitConverter() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(TestCase.class, "testWithExplicitConverter", Integer.TYPE.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] O"), finishedWithFailure(message("length: 1")))) //
+				.haveExactly(1, event(test(), displayName("[2] XXX"), finishedWithFailure(message("length: 3"))));
+	}
+
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
 		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
 	}
@@ -83,12 +94,25 @@ class ParameterizedTestIntegrationTests {
 		void testWithCustomName(String argument, int i) {
 			fail(argument + ", " + i);
 		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "O", "XXX" })
+		void testWithExplicitConverter(@ConvertWith(StringLengthConverter.class) int length) {
+			fail("length: " + length);
+		}
 	}
 
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
 		@Override
 		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception {
 			return Stream.of(ObjectArrayArguments.create("foo"), ObjectArrayArguments.create("bar"));
+		}
+	}
+
+	private static class StringLengthConverter implements ArgumentConverter {
+		@Override
+		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+			return String.valueOf(source).length();
 		}
 	}
 }

@@ -15,7 +15,9 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
@@ -48,14 +50,13 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		// TODO #14 Test that Streams returned by providers are closed
 		Method templateMethod = Preconditions.notNull(context.getTestMethod().orElse(null),
 			"test method must not be null");
-		AnnotationInitializer annotationInitializer = new AnnotationInitializer(templateMethod);
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
 		// @formatter:off
 		return findRepeatableAnnotations(templateMethod, ArgumentsSource.class)
 				.stream()
 				.map(ArgumentsSource::value)
 				.map(ReflectionUtils::newInstance)
-				.peek(annotationInitializer::initialize)
+				.map(provider -> AnnotationInitializer.initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, context))
 				.map(Arguments::get)
 				.map(arguments -> toTestTemplateInvocationContext(formatter, arguments));
@@ -101,11 +102,15 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 					public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
 							throws ParameterResolutionException {
 						Object argument = arguments[parameterContext.getIndex()];
-						if (argument instanceof String
-								&& parameterContext.getParameter().getType().equals(Integer.TYPE)) {
-							return Integer.parseInt((String) argument);
-						}
-						return argument;
+						Parameter parameter = parameterContext.getParameter();
+						Optional<ConvertWith> annotation = AnnotationUtils.findAnnotation(parameter, ConvertWith.class);
+						// @formatter:off
+						ArgumentConverter argumentConverter = annotation.map(ConvertWith::value)
+								.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
+								.map(converter -> AnnotationInitializer.initialize(parameter, converter))
+								.orElse(DefaultArgumentConverter.INSTANCE);
+						// @formatter:on
+						return argumentConverter.convert(argument, parameterContext);
 					}
 				});
 			}

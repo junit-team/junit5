@@ -22,14 +22,8 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 
 class AnnotationInitializer {
 
-	private final AnnotatedElement annotatedElement;
-
-	public AnnotationInitializer(AnnotatedElement annotatedElement) {
-		this.annotatedElement = annotatedElement;
-	}
-
 	@SuppressWarnings("unchecked")
-	public void initialize(Object instance) {
+	static <T> T initialize(AnnotatedElement annotatedElement, T instance) {
 		if (instance instanceof AnnotationInitialized) {
 			Predicate<Method> methodPredicate = method -> method.getName().equals("initialize")
 					&& method.getParameterCount() == 1
@@ -42,9 +36,10 @@ class AnnotationInitializer {
 							+ annotationType.getName() + " annotation"));
 			callInitialize((AnnotationInitialized) instance, annotation);
 		}
+		return instance;
 	}
 
-	private <A extends Annotation> void callInitialize(AnnotationInitialized<A> instance, A annotation) {
+	private static <A extends Annotation> void callInitialize(AnnotationInitialized<A> instance, A annotation) {
 		try {
 			instance.initialize(annotation);
 		}

@@ -24,6 +24,10 @@ import org.junit.jupiter.params.ConvertWith;
 @ConvertWith(JavaTimeArgumentConverter.class)
 public @interface JavaTimeConversionPattern {
 
+	/**
+	 *
+	 * @see java.time.format.DateTimeFormatterBuilder#appendPattern(String)
+	 */
 	String value();
 
 }
