@@ -34,7 +34,7 @@ import org.junit.jupiter.params.ArgumentsProvider;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
 import org.junit.platform.commons.JUnitException;
 
-class FileArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<FileSource> {
+class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<CsvFileSource> {
 
 	private final BiFunction<Path, Charset, Reader> readerProvider;
 
@@ -42,7 +42,7 @@ class FileArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<
 	private Charset charset;
 	private CsvParserSettings settings;
 
-	public FileArgumentsProvider() {
+	public CsvFileArgumentsProvider() {
 		this((path, charset) -> {
 			try {
 				return Files.newBufferedReader(path, charset);
@@ -53,12 +53,12 @@ class FileArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<
 		});
 	}
 
-	FileArgumentsProvider(BiFunction<Path, Charset, Reader> readerProvider) {
+	CsvFileArgumentsProvider(BiFunction<Path, Charset, Reader> readerProvider) {
 		this.readerProvider = readerProvider;
 	}
 
 	@Override
-	public void initialize(FileSource annotation) {
+	public void initialize(CsvFileSource annotation) {
 		path = Paths.get(annotation.path());
 		charset = Charset.forName(annotation.encoding());
 		settings = new CsvParserSettings();

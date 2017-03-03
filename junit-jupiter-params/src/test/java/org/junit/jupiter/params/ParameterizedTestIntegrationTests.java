@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.jupiter.params.sources.StringSource;
+import org.junit.jupiter.params.sources.CsvSource;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.test.event.ExecutionEvent;
@@ -73,13 +73,13 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@ParameterizedTest
-		@StringSource({ "foo", "bar" })
+		@CsvSource({ "foo", "bar" })
 		void testWithStringSource(String argument) {
 			fail(argument);
 		}
 
 		@ParameterizedTest(name = "{0} and {1}")
-		@StringSource({ "foo, 23", "bar, 42" })
+		@CsvSource({ "foo, 23", "bar, 42" })
 		void testWithCustomName(String argument, int i) {
 			fail(argument + ", " + i);
 		}
