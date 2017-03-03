@@ -14,10 +14,8 @@ import static java.util.Collections.singletonList;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
@@ -28,12 +26,10 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder;
 
 class ParameterizedTestExtension implements TestTemplateInvocationContextProvider {
 
@@ -52,13 +48,14 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		// TODO #14 Test that Streams returned by providers are closed
 		Method templateMethod = Preconditions.notNull(context.getTestMethod().orElse(null),
 			"test method must not be null");
+		AnnotationInitializer annotationInitializer = new AnnotationInitializer(templateMethod);
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
 		// @formatter:off
 		return findRepeatableAnnotations(templateMethod, ArgumentsSource.class)
 				.stream()
 				.map(ArgumentsSource::value)
 				.map(ReflectionUtils::newInstance)
-				.peek(provider -> initialize(templateMethod, provider))
+				.peek(annotationInitializer::initialize)
 				.flatMap(provider -> arguments(provider, context))
 				.map(Arguments::get)
 				.map(arguments -> toTestTemplateInvocationContext(formatter, arguments));
@@ -69,31 +66,6 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		ParameterizedTest parameterizedTestAnnotation = AnnotationUtils.findAnnotation(templateMethod,
 			ParameterizedTest.class).get();
 		return new ParameterizedTestNameFormatter(parameterizedTestAnnotation.name());
-	}
-
-	@SuppressWarnings("unchecked")
-	private void initialize(Method templateMethod, ArgumentsProvider provider) {
-		if (provider instanceof AnnotationInitialized) {
-			Predicate<Method> methodPredicate = method -> method.getName().equals("initialize")
-					&& method.getParameterCount() == 1
-					&& Annotation.class.isAssignableFrom(method.getParameterTypes()[0]);
-			Method method = ReflectionUtils.findMethods(provider.getClass(), methodPredicate,
-				MethodSortOrder.HierarchyUp).get(0);
-			Class<? extends Annotation> annotationType = (Class<? extends Annotation>) method.getParameterTypes()[0];
-			Annotation annotation = AnnotationUtils.findAnnotation(templateMethod, annotationType) //
-					.orElseThrow(() -> new JUnitException(provider.getClass().getName() + " needs to be used with a "
-							+ annotationType.getName() + " annotation"));
-			callInitialize((AnnotationInitialized) provider, annotation);
-		}
-	}
-
-	private <A extends Annotation> void callInitialize(AnnotationInitialized<A> provider, A annotation) {
-		try {
-			provider.initialize(annotation);
-		}
-		catch (Exception ex) {
-			throw new JUnitException("Failed to initialize provider: " + provider, ex);
-		}
 	}
 
 	private static Stream<? extends Arguments> arguments(ArgumentsProvider provider,
