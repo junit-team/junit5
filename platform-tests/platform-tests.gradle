@@ -14,7 +14,6 @@ dependencies {
 	// --- Things we are testing --------------------------------------------------
 	testImplementation(project(':junit-platform-commons'))
 	testImplementation(project(path: ':junit-platform-console', configuration: 'shadow'))
-	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadowed'))
 	testImplementation(project(':junit-platform-engine'))
 	testImplementation(project(':junit-platform-launcher'))
 
