@@ -55,7 +55,7 @@ class FileArgumentsProviderTests {
 	}
 
 	private Stream<Object[]> provideArguments(StringReader reader, String lineSeparator, char delimiter) {
-		FileSource annotation = mock(FileSource.class);
+		CsvFileSource annotation = mock(CsvFileSource.class);
 		String expectedPath = "foo/bar";
 		String expectedCharset = "ISO-8859-1";
 		when(annotation.path()).thenReturn(expectedPath);
@@ -63,7 +63,7 @@ class FileArgumentsProviderTests {
 		when(annotation.lineSeparator()).thenReturn(lineSeparator);
 		when(annotation.delimiter()).thenReturn(delimiter);
 
-		FileArgumentsProvider provider = new FileArgumentsProvider((path, charset) -> {
+		CsvFileArgumentsProvider provider = new CsvFileArgumentsProvider((path, charset) -> {
 			assertThat(path).isEqualTo(Paths.get(expectedPath));
 			assertThat(charset).isEqualTo(Charset.forName(expectedCharset));
 			return reader;

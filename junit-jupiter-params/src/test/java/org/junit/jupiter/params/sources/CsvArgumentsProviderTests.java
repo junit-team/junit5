@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.Arguments;
 
-class StringArgumentsProviderTests {
+class CsvArgumentsProviderTests {
 
 	@Test
 	void providesSingleArgument() {
@@ -57,11 +57,11 @@ class StringArgumentsProviderTests {
 	}
 
 	private Stream<Object[]> provideArguments(char delimiter, String... value) {
-		StringSource annotation = mock(StringSource.class);
+		CsvSource annotation = mock(CsvSource.class);
 		when(annotation.value()).thenReturn(value);
 		when(annotation.delimiter()).thenReturn(delimiter);
 
-		StringArgumentsProvider provider = new StringArgumentsProvider();
+		CsvArgumentsProvider provider = new CsvArgumentsProvider();
 		provider.initialize(annotation);
 		return provider.arguments(null).map(Arguments::get);
 	}

@@ -21,8 +21,8 @@ import org.junit.jupiter.params.ArgumentsSource;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ArgumentsSource(StringArgumentsProvider.class)
-public @interface StringSource {
+@ArgumentsSource(CsvArgumentsProvider.class)
+public @interface CsvSource {
 
 	String[] value();
 

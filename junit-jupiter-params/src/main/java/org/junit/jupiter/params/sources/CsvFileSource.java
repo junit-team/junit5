@@ -21,8 +21,8 @@ import org.junit.jupiter.params.ArgumentsSource;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ArgumentsSource(FileArgumentsProvider.class)
-public @interface FileSource {
+@ArgumentsSource(CsvFileArgumentsProvider.class)
+public @interface CsvFileSource {
 
 	String path();
 

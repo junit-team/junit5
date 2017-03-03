@@ -22,13 +22,13 @@ import org.junit.jupiter.params.Arguments;
 import org.junit.jupiter.params.ArgumentsProvider;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
 
-class StringArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<StringSource> {
+class CsvArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<CsvSource> {
 
 	private String[] lines;
 	private char delimiter;
 
 	@Override
-	public void initialize(StringSource annotation) {
+	public void initialize(CsvSource annotation) {
 		lines = annotation.value();
 		delimiter = annotation.delimiter();
 	}

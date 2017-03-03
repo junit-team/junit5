@@ -18,10 +18,10 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
+import org.junit.jupiter.params.sources.CsvFileSource;
+import org.junit.jupiter.params.sources.CsvSource;
 import org.junit.jupiter.params.sources.EnumSource;
-import org.junit.jupiter.params.sources.FileSource;
 import org.junit.jupiter.params.sources.MethodSource;
-import org.junit.jupiter.params.sources.StringSource;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
 
 public class ParamsApiPlayground {
@@ -37,17 +37,21 @@ public class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
-	@StringSource({ "foo, 1", "bar, 2" })
+	@CsvSource({ "foo, 1", "bar, 2" })
 	void testWithParametersFromAnnotation(String parameter, int i) {
 	}
 
 	@ParameterizedTest
-	@StringSource(value = { "foo | 1", "bar | 2" }, delimiter = '|')
+	@CsvSource(value = { //
+			"foo      | 1", //
+			"bar      | 2", //
+			"baz, qux | 3" //
+	}, delimiter = '|')
 	void testWithParametersFromAnnotationWithCustomDelimiter(String parameter, int i) {
 	}
 
 	@ParameterizedTest
-	@StringSource({ "31.12.2016", "01.01.2017" })
+	@CsvSource({ "31.12.2016", "01.01.2017" })
 	void testWithExplicitConverter(@JavaTimeConversionPattern("dd.mm.YYYY") LocalDate parameter) {
 	}
 
@@ -62,14 +66,14 @@ public class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
-	@FileSource(path = "foo.csv")
+	@CsvFileSource(path = "foo.csv")
 	void testWithParametersFromFile(String parameter) {
 	}
 
 	@ParameterizedTest
-	@StringSource("foo")
+	@CsvSource("foo")
 	@MethodSource("first")
-	@FileSource(path = "classpath:bar.csv")
+	@CsvFileSource(path = "classpath:bar.csv")
 	@ArgumentsSource(MyArgumentsProvider.class)
 	void testWithMultipleDifferentSources(String parameter) {
 	}
