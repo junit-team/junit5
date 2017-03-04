@@ -14,7 +14,7 @@ import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
 
-import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -27,24 +27,28 @@ import org.junit.platform.commons.util.ReflectionUtils;
 
 class MethodArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<MethodSource> {
 
-	private String methodName;
+	private String[] methodNames;
 
 	@Override
 	public void initialize(MethodSource annotation) {
-		methodName = annotation.value();
+		methodNames = annotation.names();
 	}
 
 	@Override
 	public Stream<Arguments> arguments(ContainerExtensionContext context) {
 		Class<?> testClass = context.getTestClass() //
-				.orElseThrow(() -> new JUnitException("Cannot invoke method without test class: " + methodName));
-		Method method = ReflectionUtils.findMethod(testClass, methodName) //
-				.orElseThrow(() -> new JUnitException("Could not find method: " + methodName));
-		Object methodResult = ReflectionUtils.invokeMethod(method, null);
-		return toStream(methodResult).map(this::toArguments);
+				.orElseThrow(() -> new JUnitException("Cannot invoke method without test class"));
+		// @formatter:off
+		return Arrays.stream(methodNames)
+				.map(methodName -> ReflectionUtils.findMethod(testClass, methodName) //
+                        .orElseThrow(() -> new JUnitException("Could not find method: " + methodName)))
+				.map(method -> ReflectionUtils.invokeMethod(method, null))
+				.flatMap(MethodArgumentsProvider::toStream)
+				.map(MethodArgumentsProvider::toArguments);
+		// @formatter:on
 	}
 
-	private Arguments toArguments(Object item) {
+	private static Arguments toArguments(Object item) {
 		if (item instanceof Arguments) {
 			return (Arguments) item;
 		}

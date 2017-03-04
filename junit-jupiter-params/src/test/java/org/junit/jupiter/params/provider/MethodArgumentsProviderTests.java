@@ -61,9 +61,17 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
+	void providesArgumentsUsingMultipleMethods() {
+		Stream<Object[]> arguments = provideArguments("stringStreamProvider", "stringIterableProvider");
+
+		assertThat(arguments).containsExactly(new Object[] { "foo" }, new Object[] { "bar" }, new Object[] { "foo" },
+			new Object[] { "bar" });
+	}
+
+	@Test
 	void throwsExceptionForIllegalReturnType() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments("providerWithIllegalReturnType"));
+			() -> provideArguments("providerWithIllegalReturnType").toArray());
 
 		assertThat(exception).hasMessageContaining("Cannot convert instance of java.lang.Integer into a Stream");
 	}
@@ -84,14 +92,16 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionWhenMethodDoesNotExists() {
-		JUnitException exception = assertThrows(JUnitException.class, () -> provideArguments("unknownMethod"));
+		JUnitException exception = assertThrows(JUnitException.class,
+			() -> provideArguments("unknownMethod").toArray());
 
 		assertThat(exception).hasMessageContaining("Could not find method");
 	}
 
 	@Test
 	void throwsExceptionWhenNoTestClassIsAvailable() {
-		JUnitException exception = assertThrows(JUnitException.class, () -> provideArguments(null, "someMethod"));
+		JUnitException exception = assertThrows(JUnitException.class,
+			() -> provideArguments((Class<?>) null, "someMethod"));
 
 		assertThat(exception).hasMessageContaining("Cannot invoke method without test class");
 	}
@@ -140,13 +150,13 @@ class MethodArgumentsProviderTests {
 		}
 	}
 
-	private Stream<Object[]> provideArguments(String methodName) {
-		return provideArguments(TestCase.class, methodName);
+	private Stream<Object[]> provideArguments(String... methodNames) {
+		return provideArguments(TestCase.class, methodNames);
 	}
 
-	private Stream<Object[]> provideArguments(Class<?> testClass, String methodName) {
+	private Stream<Object[]> provideArguments(Class<?> testClass, String... methodNames) {
 		MethodSource annotation = mock(MethodSource.class);
-		when(annotation.value()).thenReturn(methodName);
+		when(annotation.names()).thenReturn(methodNames);
 
 		ContainerExtensionContext context = mock(ContainerExtensionContext.class);
 		when(context.getTestClass()).thenReturn(Optional.ofNullable(testClass));

@@ -22,6 +22,6 @@ import java.lang.annotation.Target;
 @ArgumentsSource(MethodArgumentsProvider.class)
 public @interface MethodSource {
 
-	String value();
+	String[] names();
 
 }
