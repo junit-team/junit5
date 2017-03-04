@@ -34,6 +34,8 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<C
 	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
+		settings.getFormat().setQuote('\'');
+		settings.getFormat().setQuoteEscape('\'');
 		settings.setAutoConfigurationEnabled(false);
 		CsvParser csvParser = new CsvParser(settings);
 		return Arrays.stream(lines).map(csvParser::parseLine).map(ObjectArrayArguments::create);

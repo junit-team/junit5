@@ -51,7 +51,7 @@ class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "foo, 1", "bar, 2" })
+	@CsvSource({ "foo, 1", "bar, 2", "'baz, qux', 3" })
 	void testWithParametersFromAnnotation(String parameter, int i) {
 	}
 
