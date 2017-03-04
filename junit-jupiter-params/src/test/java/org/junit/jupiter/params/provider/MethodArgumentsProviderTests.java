@@ -46,7 +46,7 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void providesArgumentsUsingIterator() {
-		Stream<Object[]> arguments = provideArguments("stringIterableProvider");
+		Stream<Object[]> arguments = provideArguments("stringIteratorProvider");
 
 		assertThat(arguments).containsExactly(new Object[] { "foo" }, new Object[] { "bar" });
 	}
