@@ -3,4 +3,4 @@
  * corresponding {@link org.junit.jupiter.params.ArgumentsSource} annotations.
  */
 
-package org.junit.jupiter.params.sources;
+package org.junit.jupiter.params.provider;

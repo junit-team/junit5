@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.params.sources;
+package org.junit.jupiter.params.provider;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -21,15 +21,14 @@ import org.junit.jupiter.params.ArgumentsSource;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ArgumentsSource(ValueArgumentsProvider.class)
-public @interface ValueSource {
+@ArgumentsSource(EnumArgumentsProvider.class)
+public @interface EnumSource {
 
-	String[] strings() default {};
+	Class<? extends Enum<?>> value();
 
-	int[] ints() default {};
-
-	long[] longs() default {};
-
-	double[] doubles() default {};
+	/**
+	 * @return names of enum constants to provide; if no name is given, all declared enum constants are provided.
+	 */
+	String[] names() default {};
 
 }
