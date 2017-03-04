@@ -39,7 +39,7 @@ public class ParamsApiPlayground {
 
 	@ParameterizedTest
 	@ValueSource(longs = { 1_000, 2_000 })
-	void testWithParametersFromLongArray(Long number) {
+	void testWithParametersFromLongArray(long number) {
 	}
 
 	@ParameterizedTest
