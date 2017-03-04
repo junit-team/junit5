@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.params.sources;
+package org.junit.jupiter.params.provider;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -21,11 +21,9 @@ import org.junit.jupiter.params.ArgumentsSource;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ArgumentsSource(CsvArgumentsProvider.class)
-public @interface CsvSource {
+@ArgumentsSource(MethodArgumentsProvider.class)
+public @interface MethodSource {
 
-	String[] value();
-
-	char delimiter() default ',';
+	String value();
 
 }

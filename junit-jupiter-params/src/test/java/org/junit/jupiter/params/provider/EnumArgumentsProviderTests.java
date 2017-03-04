@@ -8,12 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.params.sources;
+package org.junit.jupiter.params.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.params.sources.EnumArgumentsProviderTests.EnumWithTwoConstants.BAR;
-import static org.junit.jupiter.params.sources.EnumArgumentsProviderTests.EnumWithTwoConstants.FOO;
+import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithTwoConstants.BAR;
+import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithTwoConstants.FOO;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
