@@ -8,12 +8,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.params;
+package org.junit.jupiter.params.converter;
 
 import org.junit.jupiter.api.extension.ParameterContext;
 
-public interface ArgumentConverter {
+public abstract class SimpleArgumentConverter implements ArgumentConverter {
 
-	Object convert(Object input, ParameterContext context) throws ArgumentConversionException;
+	@Override
+	public final Object convert(Object input, ParameterContext context) throws ArgumentConversionException {
+		return convert(input, context.getParameter().getType());
+	}
+
+	protected abstract Object convert(Object input, Class<?> targetType);
 
 }

@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.Arguments;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 class ValueArgumentsProviderTests {

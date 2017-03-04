@@ -8,26 +8,27 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.params;
+package org.junit.jupiter.params.provider;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.junit.platform.commons.meta.API;
 
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Repeatable(ArgumentsSources.class)
 @API(Experimental)
-public @interface ArgumentsSource {
+public @interface ArgumentsSources {
 
-	Class<? extends ArgumentsProvider> value();
+	/**
+	 * An array of one or more {@link ArgumentsSource} annotations.
+	 */
+	ArgumentsSource[] value();
 
 }

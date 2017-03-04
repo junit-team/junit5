@@ -8,14 +8,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.params;
+package org.junit.jupiter.params.provider;
 
-import java.util.stream.Stream;
+public interface Arguments {
 
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
-
-public interface ArgumentsProvider {
-
-	Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception;
+	Object[] get();
 
 }

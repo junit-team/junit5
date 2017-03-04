@@ -1,6 +1,8 @@
 /**
  * Support classes for building
- * {@link org.junit.jupiter.params.ArgumentsProvider ArgumentsProviders}.
+ * {@linkplain org.junit.jupiter.params.provider.ArgumentsProvider providers}
+ * and
+ * {@linkplain org.junit.jupiter.params.converter.ArgumentConverter converters}.
  */
 
 package org.junit.jupiter.params.support;

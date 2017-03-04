@@ -28,9 +28,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.jupiter.params.AnnotationInitialized;
-import org.junit.jupiter.params.ArgumentConversionException;
-import org.junit.jupiter.params.support.SimpleArgumentConverter;
+import org.junit.jupiter.params.support.AnnotationInitialized;
 
 class JavaTimeArgumentConverter extends SimpleArgumentConverter
 		implements AnnotationInitialized<JavaTimeConversionPattern> {
