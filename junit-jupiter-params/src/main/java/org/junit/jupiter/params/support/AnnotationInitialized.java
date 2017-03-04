@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.params;
+package org.junit.jupiter.params.support;
 
 import java.lang.annotation.Annotation;
 

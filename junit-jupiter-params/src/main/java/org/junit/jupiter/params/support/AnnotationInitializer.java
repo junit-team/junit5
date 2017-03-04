@@ -8,7 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.params;
+package org.junit.jupiter.params.support;
+
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -16,14 +18,16 @@ import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 
-class AnnotationInitializer {
+@API(Internal)
+public final class AnnotationInitializer {
 
 	@SuppressWarnings("unchecked")
-	static <T> T initialize(AnnotatedElement annotatedElement, T instance) {
+	public static <T> T initialize(AnnotatedElement annotatedElement, T instance) {
 		if (instance instanceof AnnotationInitialized) {
 			Predicate<Method> methodPredicate = method -> method.getName().equals("initialize")
 					&& method.getParameterCount() == 1

@@ -8,9 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.params.support;
-
-import org.junit.jupiter.params.Arguments;
+package org.junit.jupiter.params.provider;
 
 public class ObjectArrayArguments implements Arguments {
 

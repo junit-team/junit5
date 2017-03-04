@@ -22,7 +22,6 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.Arguments;
 
 class FileArgumentsProviderTests {
 

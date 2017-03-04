@@ -8,11 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.params;
+package org.junit.jupiter.params.converter;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -31,12 +32,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 
-class DefaultArgumentConverter implements ArgumentConverter {
+@API(Internal)
+public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
-	static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
+	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
 
 	private static final Map<Class<?>, Class<?>> WRAPPER_TYPES;
 	static {
@@ -59,14 +61,7 @@ class DefaultArgumentConverter implements ArgumentConverter {
 		// nothing to initialize
 	}
 
-	// TODO #14 use SimpleArgumentConverter
-
-	@Override
-	public Object convert(Object input, ParameterContext context) throws ArgumentConversionException {
-		return convert(input, context.getParameter().getType());
-	}
-
-	Object convert(Object input, Class<?> targetClass) {
+	protected Object convert(Object input, Class<?> targetClass) {
 		if (input == null) {
 			if (targetClass.isPrimitive()) {
 				throw new ArgumentConversionException(
