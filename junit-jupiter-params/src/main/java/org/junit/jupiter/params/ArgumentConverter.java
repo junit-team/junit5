@@ -14,6 +14,6 @@ import org.junit.jupiter.api.extension.ParameterContext;
 
 public interface ArgumentConverter {
 
-	Object convert(Object source, ParameterContext context) throws ArgumentConversionException;
+	Object convert(Object input, ParameterContext context) throws ArgumentConversionException;
 
 }

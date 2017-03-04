@@ -111,8 +111,8 @@ class ParameterizedTestIntegrationTests {
 
 	private static class StringLengthConverter implements ArgumentConverter {
 		@Override
-		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
-			return String.valueOf(source).length();
+		public Object convert(Object input, ParameterContext context) throws ArgumentConversionException {
+			return String.valueOf(input).length();
 		}
 	}
 }

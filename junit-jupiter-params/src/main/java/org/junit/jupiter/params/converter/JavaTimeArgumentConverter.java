@@ -61,13 +61,13 @@ class JavaTimeArgumentConverter extends SimpleArgumentConverter
 	}
 
 	@Override
-	public Object convert(Object source, Class<?> targetClass) throws ArgumentConversionException {
+	public Object convert(Object input, Class<?> targetClass) throws ArgumentConversionException {
 		if (!TEMPORAL_QUERIES.containsKey(targetClass)) {
-			throw new ArgumentConversionException("Cannot convert to " + targetClass.getName() + ": " + source);
+			throw new ArgumentConversionException("Cannot convert to " + targetClass.getName() + ": " + input);
 		}
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
 		TemporalQuery<?> temporalQuery = TEMPORAL_QUERIES.get(targetClass);
-		return formatter.parse(source.toString(), temporalQuery);
+		return formatter.parse(input.toString(), temporalQuery);
 	}
 
 }
