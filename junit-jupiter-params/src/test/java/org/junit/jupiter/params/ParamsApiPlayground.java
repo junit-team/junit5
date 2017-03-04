@@ -75,8 +75,8 @@ class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
-	@MethodSource("first")
-	void testWithParametersFromMethods(String parameter) {
+	@MethodSource(names = "first")
+	void testWithParametersFromMethod(String parameter) {
 	}
 
 	@ParameterizedTest
@@ -91,18 +91,18 @@ class ParamsApiPlayground {
 
 	@ParameterizedTest
 	@CsvSource("foo")
-	@MethodSource("first")
+	@MethodSource(names = { "first", "second" })
 	@ArgumentsSource(MyArgumentsProvider.class)
 	@CsvFileSource(path = "classpath:bar.csv")
 	void testWithMultipleDifferentSources(String parameter) {
 	}
 
 	static Iterable<String> first() {
-		return singleton("foo");
+		return singleton("first");
 	}
 
 	static Iterable<String> second() {
-		return singleton("foo");
+		return singleton("second");
 	}
 
 	static class MyArgumentsProvider implements ArgumentsProvider {
