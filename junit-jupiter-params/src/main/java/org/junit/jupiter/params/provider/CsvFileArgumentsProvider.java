@@ -13,12 +13,11 @@ package org.junit.jupiter.params.provider;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
 
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.BiFunction;
@@ -30,33 +29,27 @@ import com.univocity.parsers.csv.CsvParserSettings;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.support.AnnotationInitialized;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.Preconditions;
 
 class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<CsvFileSource> {
 
-	private final BiFunction<Path, Charset, Reader> readerProvider;
+	private final BiFunction<Class<?>, String, InputStream> inputStreamProvider;
 
-	private Path path;
+	private String resource;
 	private Charset charset;
 	private CsvParserSettings settings;
 
-	public CsvFileArgumentsProvider() {
-		this((path, charset) -> {
-			try {
-				return Files.newBufferedReader(path, charset);
-			}
-			catch (IOException e) {
-				throw new JUnitException("Error opening CSV file", e);
-			}
-		});
+	CsvFileArgumentsProvider() {
+		this(Class::getResourceAsStream);
 	}
 
-	CsvFileArgumentsProvider(BiFunction<Path, Charset, Reader> readerProvider) {
-		this.readerProvider = readerProvider;
+	CsvFileArgumentsProvider(BiFunction<Class<?>, String, InputStream> inputStreamProvider) {
+		this.inputStreamProvider = inputStreamProvider;
 	}
 
 	@Override
 	public void initialize(CsvFileSource annotation) {
-		path = Paths.get(annotation.path());
+		resource = annotation.resource();
 		charset = Charset.forName(annotation.encoding());
 		settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(annotation.delimiter());
@@ -67,20 +60,44 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationInitializ
 	@Override
 	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
 		CsvParser csvParser = new CsvParser(settings);
-		csvParser.beginParsing(readerProvider.apply(path, charset));
-		Iterator<Arguments> iterator = new Iterator<Arguments>() {
-			@Override
-			public boolean hasNext() {
-				return !csvParser.getContext().isStopped();
-			}
-
-			@Override
-			public Arguments next() {
-				Object[] arguments = csvParser.parseNext();
-				return ObjectArrayArguments.create(arguments);
-			}
-		};
-		return stream(spliteratorUnknownSize(iterator, Spliterator.ORDERED), false) //
+		csvParser.beginParsing(openReader(context));
+		return stream(spliteratorUnknownSize(new CsvParserIterator(csvParser), Spliterator.ORDERED), false) //
 				.onClose(csvParser::stopParsing);
+	}
+
+	private Reader openReader(ContainerExtensionContext context) {
+		Class<?> testClass = context.getTestClass().orElseThrow(
+			() -> new JUnitException("Cannot load classpath resource without test class"));
+		InputStream inputStream = Preconditions.notNull(inputStreamProvider.apply(testClass, resource),
+			() -> "Classpath resource does not exist: " + resource);
+		return new BufferedReader(new InputStreamReader(inputStream, charset));
+	}
+
+	private static class CsvParserIterator implements Iterator<Arguments> {
+
+		private final CsvParser csvParser;
+
+		private Object[] nextArguments;
+
+		CsvParserIterator(CsvParser csvParser) {
+			this.csvParser = csvParser;
+			advance();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return nextArguments != null;
+		}
+
+		@Override
+		public Arguments next() {
+			Arguments result = ObjectArrayArguments.create(nextArguments);
+			advance();
+			return result;
+		}
+
+		private void advance() {
+			nextArguments = csvParser.parseNext();
+		}
 	}
 }

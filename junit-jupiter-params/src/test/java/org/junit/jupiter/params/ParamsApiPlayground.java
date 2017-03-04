@@ -85,15 +85,20 @@ class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
-	@CsvFileSource(path = "foo.csv")
-	void testWithParametersFromFile(String parameter) {
+	@CsvFileSource(resource = "/single-column.csv")
+	void testWithSingleParameterFromCsvFile(String parameter) {
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resource = "two-column.csv")
+	void testWithTwoParametersFromCsvFile(String parameter, int i) {
 	}
 
 	@ParameterizedTest
 	@CsvSource("foo")
 	@MethodSource(names = { "first", "second" })
 	@ArgumentsSource(MyArgumentsProvider.class)
-	@CsvFileSource(path = "classpath:bar.csv")
+	@CsvFileSource(resource = "/single-column.csv")
 	void testWithMultipleDifferentSources(String parameter) {
 	}
 
