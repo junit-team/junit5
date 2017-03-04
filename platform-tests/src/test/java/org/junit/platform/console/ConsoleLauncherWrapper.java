@@ -43,7 +43,7 @@ public class ConsoleLauncherWrapper {
 		this(StandardCharsets.UTF_8);
 	}
 
-	ConsoleLauncherWrapper(Charset charset) {
+	private ConsoleLauncherWrapper(Charset charset) {
 		this(charset, new JOptSimpleCommandLineOptionsParser());
 	}
 

@@ -19,6 +19,7 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult.Status;
 
 /**

@@ -11,10 +11,10 @@
 package org.junit.platform.console.tasks;
 
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -28,10 +28,6 @@ class TreePrintingListener implements TestExecutionListener {
 
 	private final Deque<TreeNode> stack;
 	private final TreePrinter treePrinter;
-
-	TreePrintingListener(PrintWriter out, boolean disableAnsiColors) {
-		this(out, disableAnsiColors, Theme.valueOf(Charset.defaultCharset()));
-	}
 
 	TreePrintingListener(PrintWriter out, boolean disableAnsiColors, Theme theme) {
 		this.treePrinter = new TreePrinter(out, theme, disableAnsiColors);

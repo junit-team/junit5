@@ -26,6 +26,7 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.Details;
+import org.junit.platform.console.options.Theme;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -102,13 +103,14 @@ public class ConsoleTestExecutor {
 
 	private Optional<TestExecutionListener> createDetailsPrintingListener(PrintWriter out) {
 		boolean disableAnsiColors = options.isAnsiColorOutputDisabled();
+		Theme theme = options.getTheme();
 		switch (options.getDetails()) {
 			case FLAT:
 				return Optional.of(new FlatPrintingListener(out, disableAnsiColors));
 			case TREE:
-				return Optional.of(new TreePrintingListener(out, disableAnsiColors));
+				return Optional.of(new TreePrintingListener(out, disableAnsiColors, theme));
 			case VERBOSE:
-				return Optional.of(new VerboseTreePrintingListener(out, disableAnsiColors));
+				return Optional.of(new VerboseTreePrintingListener(out, disableAnsiColors, 16, theme));
 			default:
 				return Optional.empty();
 		}

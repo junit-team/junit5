@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.console.options;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
@@ -64,15 +64,7 @@ public enum Theme {
 	 */
 	UNICODE("╷", "│  ", "├─", "└─", "✔", "■", "✘", "↷");
 
-	public static void setDefaultTheme(Theme defaultTheme) {
-		System.getProperties().put(Theme.class, defaultTheme);
-	}
-
-	static Theme valueOf(Charset charset) {
-		Object defaultTheme = System.getProperties().get(Theme.class);
-		if (defaultTheme != null) {
-			return (Theme) defaultTheme;
-		}
+	public static Theme valueOf(Charset charset) {
 		if (StandardCharsets.UTF_8.equals(charset)) {
 			return UNICODE;
 		}
@@ -87,43 +79,43 @@ public enum Theme {
 		this.blank = new String(new char[vertical().length()]).replace('\0', ' ');
 	}
 
-	String root() {
+	public String root() {
 		return tiles[0];
 	}
 
-	String vertical() {
+	public String vertical() {
 		return tiles[1];
 	}
 
-	String blank() {
+	public String blank() {
 		return blank;
 	}
 
-	String entry() {
+	public String entry() {
 		return tiles[2];
 	}
 
-	String end() {
+	public String end() {
 		return tiles[3];
 	}
 
-	String successful() {
+	public String successful() {
 		return tiles[4];
 	}
 
-	String aborted() {
+	public String aborted() {
 		return tiles[5];
 	}
 
-	String failed() {
+	public String failed() {
 		return tiles[6];
 	}
 
-	String skipped() {
+	public String skipped() {
 		return tiles[7];
 	}
 
-	String status(TestExecutionResult result) {
+	public String status(TestExecutionResult result) {
 		switch (result.getStatus()) {
 			case SUCCESSFUL:
 				return successful();
@@ -135,4 +127,14 @@ public enum Theme {
 				return result.getStatus().name();
 		}
 	}
+
+	/**
+	 * Return lower case {@link #name} for easier usage in help text for
+	 * available options.
+	 */
+	@Override
+	public String toString() {
+		return name().toLowerCase();
+	}
+
 }
