@@ -14,10 +14,10 @@ import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.platform.console.tasks.Color.NONE;
 
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -35,10 +35,6 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 	private final Deque<Long> frames;
 	private final String[] verticals;
 	private long executionStartedMillis;
-
-	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors) {
-		this(out, disableAnsiColors, 16, Theme.valueOf(Charset.defaultCharset()));
-	}
 
 	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel, Theme theme) {
 		this.out = out;

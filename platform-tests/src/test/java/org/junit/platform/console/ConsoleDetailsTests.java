@@ -17,7 +17,6 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.console.options.Details;
-import org.junit.platform.console.tasks.Theme;
+import org.junit.platform.console.options.Theme;
 
 /**
  * @since 1.0
@@ -39,19 +38,19 @@ class ConsoleDetailsTests {
 	static class Container {
 
 		@Test
-		@Expect(details = Details.TREE, theme = Theme.UNICODE, charsetName = "UTF-8", //
+		@Expect(details = Details.TREE, theme = Theme.UNICODE, //
 				lines = { "╷", //
 						"└─ JUnit Jupiter ✔", //
 						"   └─ ConsoleDetailsTests$Container ✔", //
 						"      └─ failWithSingleLineMessage() ✘ single line fail message" //
 				})
-		@Expect(details = Details.TREE, theme = Theme.ASCII, charsetName = "ISO_8859_1", //
+		@Expect(details = Details.TREE, theme = Theme.ASCII, //
 				lines = { ".", //
 						"'-- JUnit Jupiter [OK]", //
 						"  '-- ConsoleDetailsTests$Container [OK]", //
 						"    '-- failWithSingleLineMessage() [X] single line fail message" //
 				})
-		@Expect(details = Details.FLAT, theme = Theme.UNICODE, charsetName = "UTF-8", //
+		@Expect(details = Details.FLAT, theme = Theme.UNICODE, //
 				lines = { //
 						"Test execution started. Number of static tests: 1", //
 						"Started:     JUnit Jupiter ([engine:junit-jupiter])", //
@@ -65,7 +64,7 @@ class ConsoleDetailsTests {
 		}
 
 		@Test
-		@Expect(details = Details.TREE, theme = Theme.UNICODE, charsetName = "UTF-8", //
+		@Expect(details = Details.TREE, theme = Theme.UNICODE, //
 				lines = { "╷", //
 						"└─ JUnit Jupiter ✔", //
 						"   └─ ConsoleDetailsTests$Container ✔", //
@@ -74,7 +73,7 @@ class ConsoleDetailsTests {
 						"fail", //
 						"message" //
 				})
-		@Expect(details = Details.TREE, theme = Theme.ASCII, charsetName = "ISO_8859_1", //
+		@Expect(details = Details.TREE, theme = Theme.ASCII, //
 				lines = { ".", //
 						"'-- JUnit Jupiter [OK]", //
 						"  '-- ConsoleDetailsTests$Container [OK]", //
@@ -83,7 +82,7 @@ class ConsoleDetailsTests {
 						"fail", //
 						"message" //
 				})
-		@Expect(details = Details.FLAT, theme = Theme.UNICODE, charsetName = "UTF-8", //
+		@Expect(details = Details.FLAT, theme = Theme.UNICODE, //
 				lines = { //
 						"Test execution started. Number of static tests: 1", //
 						"Started:     JUnit Jupiter ([engine:junit-jupiter])", //
@@ -113,8 +112,6 @@ class ConsoleDetailsTests {
 
 		Theme theme();
 
-		String charsetName();
-
 		String[] lines();
 	}
 
@@ -123,17 +120,17 @@ class ConsoleDetailsTests {
 		List<DynamicTest> tests = new ArrayList<>();
 		for (Method method : AnnotationUtils.findAnnotatedMethods(Container.class, Test.class, HierarchyDown)) {
 			for (Expect expect : method.getAnnotationsByType(Expect.class)) {
-				String displayName = method.getName() + " " + expect.details() + " " + expect.charsetName();
+				String displayName = method.getName() + " " + expect.details() + " " + expect.theme();
 				DynamicTest test = DynamicTest.dynamicTest(displayName, () -> {
 					String[] args = { //
 							"--include-engine", "junit-jupiter", //
 							"--details", expect.details().name(), //
+							"--details-theme", expect.theme().name(), //
 							"--disable-ansi-colors", "true", //
 							"--include-classname", ".*", //
 							"--select-method", method.getDeclaringClass().getName() + "#" + method.getName() //
 					};
-					Theme.setDefaultTheme(expect.theme());
-					ConsoleLauncherWrapper wrapper = new ConsoleLauncherWrapper(Charset.forName(expect.charsetName()));
+					ConsoleLauncherWrapper wrapper = new ConsoleLauncherWrapper();
 					ConsoleLauncherWrapperResult result = wrapper.execute(Optional.empty(), args);
 					String expected = String.join(System.lineSeparator(), expect.lines());
 					int max = expect.lines().length;
