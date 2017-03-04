@@ -22,11 +22,12 @@ import org.junit.platform.engine.TestExecutionResult;
  * @since 1.0
  */
 @API(Internal)
-enum Theme {
+public enum Theme {
 
 	/**
 	 * ASCII 7-bit characters form the tree branch.
-	 * <p>
+	 *
+	 * <p>Example test plan execution tree:
 	 * <pre class="code">
 	 * +-- engine alpha
 	 * | '-- container BEGIN
@@ -45,7 +46,8 @@ enum Theme {
 
 	/**
 	 * Unicode (extended ASCII) characters are used to display the test execution tree.
-	 * <p>
+	 *
+	 * <p>Example test plan execution tree:
 	 * <pre class="code">
 	 * ├─ engine alpha ✔
 	 * │  └─ container BEGIN ✔
@@ -60,11 +62,19 @@ enum Theme {
 	 *       └─ failing ✘ BäMM
 	 * </pre>
 	 */
-	UTF_8("╷", "│  ", "├─", "└─", "✔", "■", "✘", "↷");
+	UNICODE("╷", "│  ", "├─", "└─", "✔", "■", "✘", "↷");
+
+	public static void setDefaultTheme(Theme defaultTheme) {
+		System.getProperties().put(Theme.class, defaultTheme);
+	}
 
 	static Theme valueOf(Charset charset) {
+		Object defaultTheme = System.getProperties().get(Theme.class);
+		if (defaultTheme != null) {
+			return (Theme) defaultTheme;
+		}
 		if (StandardCharsets.UTF_8.equals(charset)) {
-			return UTF_8;
+			return UNICODE;
 		}
 		return ASCII;
 	}

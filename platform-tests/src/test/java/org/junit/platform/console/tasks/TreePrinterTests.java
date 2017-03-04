@@ -48,7 +48,7 @@ class TreePrinterTests {
 
 	@Test
 	void emptyTree() {
-		new TreePrinter(out, Theme.UTF_8, true).print(new TreeNode("<root>"));
+		new TreePrinter(out, Theme.UNICODE, true).print(new TreeNode("<root>"));
 		assertIterableEquals(Collections.singletonList("╷"), actual());
 	}
 
@@ -59,7 +59,7 @@ class TreePrinterTests {
 		root.addChild(new TreeNode(createEngineId("e-1", "engine one")).setResult(successful()));
 		root.addChild(new TreeNode(createEngineId("e-2", "engine two")).setResult(failed(null)));
 		root.addChild(new TreeNode(createEngineId("e-3", "engine three")).setResult(aborted(null)));
-		new TreePrinter(out, Theme.UTF_8, true).print(root);
+		new TreePrinter(out, Theme.UNICODE, true).print(root);
 		assertIterableEquals(
 			Arrays.asList( //
 				"╷", //

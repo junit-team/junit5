@@ -43,7 +43,7 @@ public class ConsoleLauncherWrapper {
 		this(StandardCharsets.UTF_8);
 	}
 
-	private ConsoleLauncherWrapper(Charset charset) {
+	ConsoleLauncherWrapper(Charset charset) {
 		this(charset, new JOptSimpleCommandLineOptionsParser());
 	}
 
@@ -74,7 +74,7 @@ public class ConsoleLauncherWrapper {
 		String errText = new String(err.toByteArray(), charset);
 		if (expectedCode.isPresent()) {
 			int expectedValue = expectedCode.get();
-			assertAll( //
+			assertAll("wrapped execution failed:\n" + outText + "\n", //
 				() -> assertEquals(expectedValue, code, "ConsoleLauncher execute code mismatch!"), //
 				() -> assertTrue(expectedValue == 0 ? isBlank(errText) : isNotBlank(errText)) //
 			);
