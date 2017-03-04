@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.params.converter;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -39,7 +38,6 @@ class JavaTimeArgumentConverter extends SimpleArgumentConverter
 		queries.put(ChronoLocalDate.class, ChronoLocalDate::from);
 		queries.put(ChronoLocalDateTime.class, ChronoLocalDateTime::from);
 		queries.put(ChronoZonedDateTime.class, ChronoZonedDateTime::from);
-		queries.put(Instant.class, Instant::from);
 		queries.put(LocalDate.class, LocalDate::from);
 		queries.put(LocalDateTime.class, LocalDateTime::from);
 		queries.put(LocalTime.class, LocalTime::from);
