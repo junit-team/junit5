@@ -43,16 +43,16 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void understandsQuotes() {
-		Stream<Object[]> arguments = provideArguments(',', "\"foo, bar\"");
+		Stream<Object[]> arguments = provideArguments(',', "'foo, bar'");
 
 		assertThat(arguments).containsExactly(new String[] { "foo, bar" });
 	}
 
 	@Test
 	void understandsEscapeCharacters() {
-		Stream<Object[]> arguments = provideArguments(',', "\"foo or \"\"bar\"\"\", baz");
+		Stream<Object[]> arguments = provideArguments(',', "'foo or ''bar''', baz");
 
-		assertThat(arguments).containsExactly(new String[] { "foo or \"bar\"", "baz" });
+		assertThat(arguments).containsExactly(new String[] { "foo or 'bar'", "baz" });
 	}
 
 	private Stream<Object[]> provideArguments(char delimiter, String... value) {
