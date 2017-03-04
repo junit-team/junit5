@@ -25,7 +25,7 @@ import org.junit.jupiter.params.sources.MethodSource;
 import org.junit.jupiter.params.sources.ValueSource;
 import org.junit.jupiter.params.support.ObjectArrayArguments;
 
-public class ParamsApiPlayground {
+class ParamsApiPlayground {
 
 	@ParameterizedTest
 	@EnumSource(TimeUnit.class)
@@ -35,6 +35,11 @@ public class ParamsApiPlayground {
 	@ParameterizedTest
 	@EnumSource(value = TimeUnit.class, names = { "DAYS", "MINUTES" })
 	void testWithParametersFromEnumWithNamedSubset(TimeUnit unit) {
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "DAYS", "MINUTES" })
+	void testWithImplicitEnumConverter(TimeUnit unit) {
 	}
 
 	@ParameterizedTest
@@ -57,8 +62,13 @@ public class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
+	@ValueSource(strings = { "2016-12-31", "2017-01-01" })
+	void testWithImplicitJavaTimeConverter(LocalDate parameter) {
+	}
+
+	@ParameterizedTest
 	@ValueSource(strings = { "31.12.2016", "01.01.2017" })
-	void testWithExplicitConverter(@JavaTimeConversionPattern("dd.MM.yyyy") LocalDate parameter) {
+	void testWithExplicitJavaTimeConverter(@JavaTimeConversionPattern("dd.MM.yyyy") LocalDate parameter) {
 	}
 
 	@ParameterizedTest
