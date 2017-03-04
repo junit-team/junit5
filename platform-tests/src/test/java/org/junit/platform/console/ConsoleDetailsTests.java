@@ -69,18 +69,18 @@ class ConsoleDetailsTests {
 						"└─ JUnit Jupiter ✔", //
 						"   └─ ConsoleDetailsTests$Container ✔", //
 						"      └─ failWithMultiLineMessage() ✘ multi", //
-						"line", //
-						"fail", //
-						"message" //
+						"            │  line", //
+						"            │  fail", //
+						"            │  message" //
 				})
 		@Expect(details = Details.TREE, theme = Theme.ASCII, //
 				lines = { ".", //
 						"'-- JUnit Jupiter [OK]", //
 						"  '-- ConsoleDetailsTests$Container [OK]", //
 						"    '-- failWithMultiLineMessage() [X] multi", //
-						"line", //
-						"fail", //
-						"message" //
+						"        | line", //
+						"        | fail", //
+						"        | message" //
 				})
 		@Expect(details = Details.FLAT, theme = Theme.UNICODE, //
 				lines = { //
