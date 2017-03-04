@@ -42,7 +42,7 @@ class VerboseTreePrintingListenerTests {
 
 	private TestExecutionListener createTreePrinter(Writer writer) {
 		PrintWriter printWriter = new PrintWriter(writer);
-		return new VerboseTreePrintingListener(printWriter, true, 9, Theme.UTF_8);
+		return new VerboseTreePrintingListener(printWriter, true, 9, Theme.UNICODE);
 	}
 
 	@Test
@@ -182,7 +182,7 @@ class VerboseTreePrintingListenerTests {
 	}
 
 	private VerboseTreePrintingListener listener(StringWriter stringWriter) {
-		return new VerboseTreePrintingListener(new PrintWriter(stringWriter), true, 50, Theme.UTF_8);
+		return new VerboseTreePrintingListener(new PrintWriter(stringWriter), true, 50, Theme.UNICODE);
 	}
 
 	private static TestIdentifier newTestIdentifier() {

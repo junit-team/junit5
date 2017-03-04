@@ -17,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -27,13 +25,11 @@ import org.junit.platform.launcher.TestIdentifier;
 /**
  * @since 1.0
  */
-@Disabled("revamping tree generation")
-class TreePrintingListenerTests {
+public class TreePrintingListenerTests {
 
 	private final TestExecutionListenerSupport support = new TestExecutionListenerSupport();
-	private final TestExecutionListener listener = new TreePrintingListener(support.out(), true, Theme.UTF_8);
+	private final TestExecutionListener listener = new TreePrintingListener(support.out(), true, Theme.UNICODE);
 
-	@Test
 	void executionSkipped() {
 		Consumer<TestExecutionListener> singleLineReason = listener -> listener.executionSkipped(
 			support.createTest("skipped-1"), "Test disabled");
@@ -48,7 +44,6 @@ class TreePrintingListenerTests {
 		assertEquals("│  │  │       led", lines.get(11));
 	}
 
-	@Test
 	void reportingEntryPublished() {
 		Consumer<TestExecutionListener> singleLineReports = listener -> {
 			TestIdentifier id = support.createTest("report-foo-bars");
@@ -78,7 +73,6 @@ class TreePrintingListenerTests {
 		assertTrue(actual.endsWith(rightFrame), format("'%s' doesn't end with: %s", actual, rightFrame));
 	}
 
-	@Test
 	void executionFinishedWithFailure() {
 		List<String> lines = support.execute(listener, l -> l.executionFinished(support.createTest("oops"),
 			TestExecutionResult.failed(new AssertionError("B\no\n\nom\r\n!"))));
@@ -89,7 +83,6 @@ class TreePrintingListenerTests {
 		assertEquals("│  │  │       !", lines.get(10));
 	}
 
-	@Test
 	void executionReportAndFail() {
 		Consumer<TestExecutionListener> reportAndFail = listener -> {
 			TestIdentifier id = support.createTest("report-and-fail");
@@ -102,4 +95,5 @@ class TreePrintingListenerTests {
 		assertFrames("│  │  │     ReportEntry [timestamp = ", ", foo = 'bar']", lines.get(7));
 		assertEquals("│  │  │     exception message: Boom!", lines.get(8));
 	}
+
 }

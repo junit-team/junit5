@@ -70,6 +70,13 @@ class TreePrinter {
 			}
 			out.print(" ");
 			out.print(icon);
+			if (node.result != null) {
+				if (node.result.getThrowable().isPresent()) {
+					Throwable throwable = node.result.getThrowable().get();
+					out.print(" ");
+					out.print(throwable.getMessage());
+				}
+			}
 			out.println();
 		}
 		if (node.children.isEmpty()) {
