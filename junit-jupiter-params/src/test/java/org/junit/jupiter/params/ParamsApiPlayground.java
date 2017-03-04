@@ -85,12 +85,12 @@ class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
-	@CsvFileSource(resource = "/single-column.csv")
+	@CsvFileSource(resources = "/single-column.csv")
 	void testWithSingleParameterFromCsvFile(String parameter) {
 	}
 
 	@ParameterizedTest
-	@CsvFileSource(resource = "two-column.csv")
+	@CsvFileSource(resources = "two-column.csv")
 	void testWithTwoParametersFromCsvFile(String parameter, int i) {
 	}
 
@@ -98,7 +98,7 @@ class ParamsApiPlayground {
 	@CsvSource("foo")
 	@MethodSource(names = { "first", "second" })
 	@ArgumentsSource(MyArgumentsProvider.class)
-	@CsvFileSource(resource = "/single-column.csv")
+	@CsvFileSource(resources = { "/single-column.csv", "two-column.csv" })
 	void testWithMultipleDifferentSources(String parameter) {
 	}
 

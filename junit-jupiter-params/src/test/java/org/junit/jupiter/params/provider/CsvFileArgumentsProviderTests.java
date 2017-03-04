@@ -60,8 +60,8 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
-	void readsFromClasspathResources() {
-		CsvFileSource annotation = annotation("/single-column.csv", "ISO-8859-1", "\n", ',');
+	void readsFromSingleClasspathResource() {
+		CsvFileSource annotation = annotation("ISO-8859-1", "\n", ',', "/single-column.csv");
 
 		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
 
@@ -70,21 +70,30 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
+	void readsFromMultipleClasspathResources() {
+		CsvFileSource annotation = annotation("ISO-8859-1", "\n", ',', "/single-column.csv", "/single-column.csv");
+
+		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).hasSize(8);
+	}
+
+	@Test
 	void throwsExceptionForMissingClasspathResource() {
-		CsvFileSource annotation = annotation("does-not-exist.csv", "UTF-8", "\n", ',');
+		CsvFileSource annotation = annotation("UTF-8", "\n", ',', "does-not-exist.csv");
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> provide(new CsvFileArgumentsProvider(), annotation));
+			() -> provide(new CsvFileArgumentsProvider(), annotation).toArray());
 
 		assertThat(exception).hasMessageContaining("Classpath resource does not exist: does-not-exist.csv");
 	}
 
-	private CsvFileSource annotation(String path, String charset, String value, char value2) {
+	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, String... resources) {
 		CsvFileSource annotation = mock(CsvFileSource.class);
-		when(annotation.resource()).thenReturn(path);
+		when(annotation.resources()).thenReturn(resources);
 		when(annotation.encoding()).thenReturn(charset);
-		when(annotation.lineSeparator()).thenReturn(value);
-		when(annotation.delimiter()).thenReturn(value2);
+		when(annotation.lineSeparator()).thenReturn(lineSeparator);
+		when(annotation.delimiter()).thenReturn(delimiter);
 		return annotation;
 	}
 
@@ -94,7 +103,7 @@ class CsvFileArgumentsProviderTests {
 
 	private Stream<Object[]> provideArguments(InputStream inputStream, String lineSeparator, char delimiter) {
 		String expectedResource = "foo/bar";
-		CsvFileSource annotation = annotation(expectedResource, "ISO-8859-1", lineSeparator, delimiter);
+		CsvFileSource annotation = annotation("ISO-8859-1", lineSeparator, delimiter, expectedResource);
 
 		CsvFileArgumentsProvider provider = new CsvFileArgumentsProvider((testClass, resource) -> {
 			assertThat(resource).isEqualTo(expectedResource);
