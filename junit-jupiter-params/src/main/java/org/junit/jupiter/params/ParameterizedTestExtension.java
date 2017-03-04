@@ -10,27 +10,15 @@
 
 package org.junit.jupiter.params;
 
-import static java.util.Collections.singletonList;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
-import org.junit.jupiter.api.extension.Extension;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.jupiter.params.converter.ArgumentConverter;
-import org.junit.jupiter.params.converter.ConvertWith;
-import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -66,7 +54,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.map(provider -> AnnotationInitializer.initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, context))
 				.map(Arguments::get)
-				.map(arguments -> toTestTemplateInvocationContext(formatter, arguments));
+				.map(arguments -> new ParameterizedTestInvocationContext(formatter, arguments));
 		// @formatter:on
 	}
 
@@ -87,40 +75,4 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		}
 	}
 
-	private static TestTemplateInvocationContext toTestTemplateInvocationContext(
-			ParameterizedTestNameFormatter formatter, Object[] arguments) {
-		return new TestTemplateInvocationContext() {
-			@Override
-			public String getDisplayName(int invocationIndex) {
-				return formatter.format(invocationIndex, arguments);
-			}
-
-			@Override
-			public List<Extension> getAdditionalExtensions() {
-				return singletonList(new ParameterResolver() {
-
-					@Override
-					public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext)
-							throws ParameterResolutionException {
-						return parameterContext.getIndex() < arguments.length;
-					}
-
-					@Override
-					public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
-							throws ParameterResolutionException {
-						Object argument = arguments[parameterContext.getIndex()];
-						Parameter parameter = parameterContext.getParameter();
-						Optional<ConvertWith> annotation = AnnotationUtils.findAnnotation(parameter, ConvertWith.class);
-						// @formatter:off
-						ArgumentConverter argumentConverter = annotation.map(ConvertWith::value)
-								.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
-								.map(converter -> AnnotationInitializer.initialize(parameter, converter))
-								.orElse(DefaultArgumentConverter.INSTANCE);
-						// @formatter:on
-						return argumentConverter.convert(argument, parameterContext);
-					}
-				});
-			}
-		};
-	}
 }
