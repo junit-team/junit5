@@ -64,7 +64,7 @@ class TreePrinterTests {
 		assertIterableEquals(
 			Arrays.asList( //
 				"╷", //
-				"├─ engine zero ↷", //
+				"├─ engine zero ↷ none", //
 				"├─ engine one ✔", //
 				"├─ engine two ✘", //
 				"└─ engine three ■"), //
