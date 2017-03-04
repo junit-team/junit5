@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 @ArgumentsSource(CsvFileArgumentsProvider.class)
 public @interface CsvFileSource {
 
-	String resource();
+	String[] resources();
 
 	String encoding() default "UTF-8";
 

@@ -13,11 +13,9 @@ package org.junit.jupiter.params.provider;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.BiFunction;
@@ -35,7 +33,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationInitializ
 
 	private final BiFunction<Class<?>, String, InputStream> inputStreamProvider;
 
-	private String resource;
+	private String[] resources;
 	private Charset charset;
 	private CsvParserSettings settings;
 
@@ -49,7 +47,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationInitializ
 
 	@Override
 	public void initialize(CsvFileSource annotation) {
-		resource = annotation.resource();
+		resources = annotation.resources();
 		charset = Charset.forName(annotation.encoding());
 		settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(annotation.delimiter());
@@ -59,18 +57,30 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationInitializ
 
 	@Override
 	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
-		CsvParser csvParser = new CsvParser(settings);
-		csvParser.beginParsing(openReader(context));
-		return stream(spliteratorUnknownSize(new CsvParserIterator(csvParser), Spliterator.ORDERED), false) //
-				.onClose(csvParser::stopParsing);
+		// @formatter:off
+		return Arrays.stream(resources)
+				.map(resource -> openInputStream(context, resource))
+				.map(this::createCsvParser)
+				.flatMap(this::toStream);
+		// @formatter:on
 	}
 
-	private Reader openReader(ContainerExtensionContext context) {
+	private InputStream openInputStream(ContainerExtensionContext context, String resource) {
 		Class<?> testClass = context.getTestClass().orElseThrow(
 			() -> new JUnitException("Cannot load classpath resource without test class"));
-		InputStream inputStream = Preconditions.notNull(inputStreamProvider.apply(testClass, resource),
+		return Preconditions.notNull(inputStreamProvider.apply(testClass, resource),
 			() -> "Classpath resource does not exist: " + resource);
-		return new BufferedReader(new InputStreamReader(inputStream, charset));
+	}
+
+	private CsvParser createCsvParser(InputStream inputStream) {
+		CsvParser csvParser = new CsvParser(settings);
+		csvParser.beginParsing(inputStream, charset);
+		return csvParser;
+	}
+
+	private Stream<Arguments> toStream(CsvParser csvParser) {
+		return stream(spliteratorUnknownSize(new CsvParserIterator(csvParser), Spliterator.ORDERED), false) //
+				.onClose(csvParser::stopParsing);
 	}
 
 	private static class CsvParserIterator implements Iterator<Arguments> {
