@@ -10,23 +10,32 @@
 
 package org.junit.platform.console;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.Details;
 import org.junit.platform.console.options.Theme;
 
@@ -35,113 +44,106 @@ import org.junit.platform.console.options.Theme;
  */
 class ConsoleDetailsTests {
 
-	static class Container {
-
+	@DisplayName("Basic")
+	static class Basic {
 		@Test
-		@Expect(details = Details.TREE, theme = Theme.UNICODE, //
-				lines = { "╷", //
-						"└─ JUnit Jupiter ✔", //
-						"   └─ ConsoleDetailsTests$Container ✔", //
-						"      └─ failWithSingleLineMessage() ✘ single line fail message" //
-				})
-		@Expect(details = Details.TREE, theme = Theme.ASCII, //
-				lines = { ".", //
-						"'-- JUnit Jupiter [OK]", //
-						"  '-- ConsoleDetailsTests$Container [OK]", //
-						"    '-- failWithSingleLineMessage() [X] single line fail message" //
-				})
-		@Expect(details = Details.FLAT, theme = Theme.UNICODE, //
-				lines = { //
-						"Test execution started. Number of static tests: 1", //
-						"Started:     JUnit Jupiter ([engine:junit-jupiter])", //
-						"Started:     ConsoleDetailsTests$Container ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Container])", //
-						"Started:     failWithSingleLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Container]/[method:failWithSingleLineMessage()])", //
-						"Finished:    failWithSingleLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Container]/[method:failWithSingleLineMessage()])", //
-						"             => Exception: org.opentest4j.AssertionFailedError: single line fail message" //
-				})
-		void failWithSingleLineMessage() {
-			Assertions.fail("single line fail message");
+		void empty() {
 		}
 
 		@Test
-		@Expect(details = Details.TREE, theme = Theme.UNICODE, //
-				lines = { "╷", //
-						"└─ JUnit Jupiter ✔", //
-						"   └─ ConsoleDetailsTests$Container ✔", //
-						"      └─ failWithMultiLineMessage() ✘ multi", //
-						"            │  line", //
-						"            │  fail", //
-						"            │  message" //
-				})
-		@Expect(details = Details.TREE, theme = Theme.ASCII, //
-				lines = { ".", //
-						"'-- JUnit Jupiter [OK]", //
-						"  '-- ConsoleDetailsTests$Container [OK]", //
-						"    '-- failWithMultiLineMessage() [X] multi", //
-						"        | line", //
-						"        | fail", //
-						"        | message" //
-				})
-		@Expect(details = Details.FLAT, theme = Theme.UNICODE, //
-				lines = { //
-						"Test execution started. Number of static tests: 1", //
-						"Started:     JUnit Jupiter ([engine:junit-jupiter])", //
-						"Started:     ConsoleDetailsTests$Container ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Container])", //
-						"Started:     failWithMultiLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Container]/[method:failWithMultiLineMessage()])", //
-						"Finished:    failWithMultiLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Container]/[method:failWithMultiLineMessage()])", //
-						"             => Exception: org.opentest4j.AssertionFailedError: multi", //
-						"             line", //
-						"             fail", //
-						"             message" //
-				})
-		void failWithMultiLineMessage() {
-			Assertions.fail("multi\nline\nfail\nmessage");
+		@DisplayName(".oO fancy display name Oo.")
+		void changeDisplayName() {
 		}
-
-	}
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface Expectations {
-		Expect[] value();
-	}
-
-	@Repeatable(Expectations.class)
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface Expect {
-		Details details();
-
-		Theme theme();
-
-		String[] lines();
 	}
 
 	@TestFactory
-	List<DynamicTest> foreach() throws Exception {
+	@DisplayName("Basic tests and annotations usage")
+	List<DynamicTest> basic() throws Exception {
+		return build(Basic.class, Files.createTempDirectory("console-details-basic-"));
+	}
+
+	private List<DynamicTest> build(Class<?> containerClass, Path temp) {
+		String containerName = containerClass.getSimpleName();
 		List<DynamicTest> tests = new ArrayList<>();
-		for (Method method : AnnotationUtils.findAnnotatedMethods(Container.class, Test.class, HierarchyDown)) {
-			for (Expect expect : method.getAnnotationsByType(Expect.class)) {
-				String displayName = method.getName() + " " + expect.details() + " " + expect.theme();
-				DynamicTest test = DynamicTest.dynamicTest(displayName, () -> {
+		for (Method method : AnnotationUtils.findAnnotatedMethods(containerClass, Test.class, HierarchyDown)) {
+			for (Details details : Details.values()) {
+				for (Theme theme : Theme.values()) {
+					String caption = String.join("-", containerName, method.getName(), details.toString(),
+						theme.toString());
+					String dirName = "console/details/" + containerName;
+					String outName = caption + ".out.txt";
 					String[] args = { //
 							"--include-engine", "junit-jupiter", //
-							"--details", expect.details().name(), //
-							"--details-theme", expect.theme().name(), //
+							"--details", details.name(), //
+							"--details-theme", theme.name(), //
 							"--disable-ansi-colors", "true", //
-							"--include-classname", ".*", //
-							"--select-method", method.getDeclaringClass().getName() + "#" + method.getName() //
+							"--include-classname", containerClass.getCanonicalName(), //
+							"--select-method", ReflectionUtils.getFullyQualifiedMethodName(method) //
 					};
-					ConsoleLauncherWrapper wrapper = new ConsoleLauncherWrapper();
-					ConsoleLauncherWrapperResult result = wrapper.execute(Optional.empty(), args);
-					String expected = String.join(System.lineSeparator(), expect.lines());
-					int max = expect.lines().length;
-					List<String> actualLines = Arrays.asList(result.out.split("\\R", max + 1)).subList(0, max);
-					String actual = String.join(System.lineSeparator(), actualLines);
-					assertEquals(expected, actual, result.out);
-				});
-				tests.add(test);
+					String displayName = method.getName() + "() details=" + details.name() + " theme=" + theme.name();
+					tests.add(DynamicTest.dynamicTest(displayName, new Executor(temp, dirName, outName, args)));
+				}
 			}
 		}
 		return tests;
 	}
 
+	private static class Executor implements Executable {
+		private final Path temp;
+		private final String dirName;
+		private final String outName;
+		private final String[] args;
+
+		private Executor(Path temp, String dirName, String outName, String... args) {
+			this.temp = temp;
+			this.dirName = dirName;
+			this.outName = outName;
+			this.args = args;
+		}
+
+		@Override
+		public void execute() throws Throwable {
+			ConsoleLauncherWrapper wrapper = new ConsoleLauncherWrapper();
+			ConsoleLauncherWrapperResult result = wrapper.execute(Optional.empty(), args);
+
+			URL url = getClass().getClassLoader().getResource(dirName + "/" + outName);
+			if (url == null) {
+				if (temp != null) {
+					Path path = Files.write(temp.resolve(outName), result.out.getBytes(UTF_8));
+					System.out.println("Wrote " + path);
+					return;
+				}
+				fail("could not load resource: " + dirName + "/" + outName);
+			}
+
+			List<String> expectedLines = Files.readAllLines(Paths.get(url.toURI()), UTF_8);
+			int max = expectedLines.size();
+			List<String> actualLines = Arrays.asList(result.out.split("\\R", max + 1)).subList(0, max);
+
+			for (int i = 0; i < max; i++) {
+				String actualLine = actualLines.get(i);
+				String expectedLine = expectedLines.get(i);
+				if (expectedLine.equals(actualLine)) {
+					continue;
+				}
+				int lineNumber = i + 1;
+				Supplier<String> messageSupplier = () -> {
+					StringBuilder builder = new StringBuilder();
+					builder.append("\nline number   = ").append(lineNumber);
+					builder.append("\nactual string = ").append(actualLine);
+					builder.append("\nregex pattern = ").append(expectedLine);
+					return builder.toString();
+				};
+				try {
+					Pattern pattern = Pattern.compile(expectedLine);
+					Matcher matcher = pattern.matcher(actualLine);
+					assertTrue(matcher.matches(), messageSupplier);
+				}
+				catch (PatternSyntaxException exception) {
+					fail("expected line #" + lineNumber + " is not a valid regex pattern" + messageSupplier.get(),
+						exception);
+				}
+			}
+		}
+	}
 }
