@@ -82,7 +82,7 @@ public final class AnnotationSupport {
 	 *
 	 * @param element the element to search on, potentially {@code null}
 	 * @param annotationType the repeatable annotation type to search for; never {@code null}
-	 * @return the list of all such annotations found; never {@code null}
+	 * @return the list of all such annotations found; neither {@code null} nor mutable
 	 * @see java.lang.annotation.Repeatable
 	 * @see java.lang.annotation.Inherited
 	 */
@@ -103,7 +103,7 @@ public final class AnnotationSupport {
 	 * @param clazz the class or interface in which to find the fields; never {@code null}
 	 * @param fieldType the type of field to find; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
-	 * @return the list of all such fields found; never {@code null}
+	 * @return the list of all such fields found; neither {@code null} nor mutable
 	 * @see Class#getFields()
 	 */
 	public static List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<?> fieldType,
@@ -120,7 +120,7 @@ public final class AnnotationSupport {
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @param traversalMode the hierarchy traversal mode; never {@code null}
-	 * @return the list of all such methods found; never {@code null}
+	 * @return the list of all such methods found; neither {@code null} nor mutable
 	 */
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
 			HierarchyTraversalMode traversalMode) {

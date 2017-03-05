@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.findNestedClasses;
@@ -25,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
@@ -125,9 +125,7 @@ class JavaElementsResolver {
 
 	private Set<TestDescriptor> resolveForAllParents(AnnotatedElement element, Set<TestDescriptor> potentialParents) {
 		Set<TestDescriptor> resolvedDescriptors = new HashSet<>();
-		potentialParents.forEach(parent -> {
-			resolvedDescriptors.addAll(resolve(element, parent));
-		});
+		potentialParents.forEach(parent -> resolvedDescriptors.addAll(resolve(element, parent)));
 		return resolvedDescriptors;
 	}
 
@@ -156,7 +154,7 @@ class JavaElementsResolver {
 				.map(resolver -> tryToResolveWithResolver(element, parent, resolver)) //
 				.filter(testDescriptors -> !testDescriptors.isEmpty()) //
 				.flatMap(Collection::stream) //
-				.collect(Collectors.toSet());
+				.collect(toSet());
 	}
 
 	private Set<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,

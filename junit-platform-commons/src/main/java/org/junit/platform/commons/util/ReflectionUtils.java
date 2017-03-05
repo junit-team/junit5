@@ -13,6 +13,7 @@ package org.junit.platform.commons.util;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
@@ -505,7 +506,9 @@ public final class ReflectionUtils {
 	 */
 	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
-		return classpathScanner.scanForClassesInClasspathRoot(root, classTester, classNameFilter);
+		// unmodifiable since returned by public, non-internal method(s)
+		return Collections.unmodifiableList(
+			classpathScanner.scanForClassesInClasspathRoot(root, classTester, classNameFilter));
 	}
 
 	/**
@@ -513,7 +516,9 @@ public final class ReflectionUtils {
 	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
-		return classpathScanner.scanForClassesInPackage(basePackageName, classTester, classNameFilter);
+		// unmodifiable since returned by public, non-internal method(s)
+		return Collections.unmodifiableList(
+			classpathScanner.scanForClassesInPackage(basePackageName, classTester, classNameFilter));
 	}
 
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
@@ -609,7 +614,8 @@ public final class ReflectionUtils {
 		// @formatter:off
 		return findAllMethodsInHierarchy(clazz, traversalMode).stream()
 				.filter(predicate)
-				.collect(toList());
+				// unmodifiable since returned by public, non-internal method(s)
+				.collect(toUnmodifiableList());
 		// @formatter:on
 	}
 
@@ -677,10 +683,11 @@ public final class ReflectionUtils {
 		List<Method> allInterfaceMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
-			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods()).filter(m -> !isAbstract(m)).collect(
-				toList());
-
 			// @formatter:off
+			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods())
+					.filter(m -> !isAbstract(m))
+					.collect(toList());
+
 			List<Method> subInterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
 					.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 					.collect(toList());
