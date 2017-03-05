@@ -110,8 +110,11 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 			TestTemplateInvocationContextProvider.class);
 		Preconditions.notEmpty(providers, "You must register at least one "
 				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " for this method");
-		providers = providers.stream().filter(provider -> provider.supports(containerExtensionContext)).collect(
-			toList());
+		// @formatter:off
+		providers = providers.stream()
+				.filter(provider -> provider.supports(containerExtensionContext))
+				.collect(toList());
+		// @formatter:on
 		Preconditions.notEmpty(providers, "You must register at least one "
 				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " that supports this method");
 		return providers;

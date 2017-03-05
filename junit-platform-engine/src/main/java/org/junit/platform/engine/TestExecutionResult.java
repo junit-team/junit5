@@ -110,10 +110,12 @@ public class TestExecutionResult {
 
 	@Override
 	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("status", status);
-		builder.append("throwable", throwable);
-		return builder.toString();
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("status", status)
+				.append("throwable", throwable)
+				.toString();
+		// @formatter:on
 	}
 
 }

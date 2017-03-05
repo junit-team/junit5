@@ -16,6 +16,10 @@ import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
+
+import java.util.List;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
@@ -55,6 +59,14 @@ class CollectionUtilsTests {
 			CollectionUtils.getOnlyElement(asList("foo", "bar"));
 		});
 		assertEquals("collection must contain exactly one element: [foo, bar]", exception.getMessage());
+	}
+
+	@Test
+	void toUnmodifiableListThrowsOnMutation() {
+		assertThrows(UnsupportedOperationException.class, () -> {
+			List<Integer> numbers = IntStream.range(0, 10).mapToObj(Integer::valueOf).collect(toUnmodifiableList());
+			numbers.set(0, 1);
+		});
 	}
 
 }

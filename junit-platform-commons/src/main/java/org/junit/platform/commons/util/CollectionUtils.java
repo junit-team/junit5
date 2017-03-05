@@ -10,9 +10,14 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collector;
 
 import org.junit.platform.commons.meta.API;
 
@@ -49,6 +54,28 @@ public final class CollectionUtils {
 		Preconditions.condition(collection.size() == 1,
 			() -> "collection must contain exactly one element: " + collection);
 		return collection.iterator().next();
+	}
+
+	/**
+	 * Returns a {@code Collector} that accumulates the input elements into a
+	 * new unmodifiable list, in encounter order.
+	 *
+	 * <p>There are no guarantees on the type or serializability of the list
+	 * returned, so if more control over the returned list is required,
+	 * consider creating a new {@code Collector} implementation like the
+	 * following:
+	 * <pre>{@code
+	 *     public static <T> Collector<T, ?, List<T>> toUnmodifiableList(Supplier<List<T>> listSupplier) {
+	 *         return collectingAndThen(toCollection(listSupplier), Collections::unmodifiableList);
+	 *     }
+	 * }</pre>
+	 *
+	 * @param <T> the type of the input elements
+	 * @return a {@code Collector} which collects all the input elements into
+	 * an unmodifiable list, in encounter order
+	 */
+	public static <T> Collector<T, ?, List<T>> toUnmodifiableList() {
+		return collectingAndThen(toList(), Collections::unmodifiableList);
 	}
 
 }

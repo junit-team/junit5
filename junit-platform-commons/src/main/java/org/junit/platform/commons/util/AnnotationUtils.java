@@ -11,8 +11,8 @@
 package org.junit.platform.commons.util;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toCollection;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
@@ -178,7 +178,8 @@ public final class AnnotationUtils {
 		// duplicates, but we need to maintain the original order.
 		Set<A> found = new LinkedHashSet<>(16);
 		findRepeatableAnnotations(element, annotationType, containerType, inherited, found, new HashSet<>(16));
-		return new ArrayList<>(found);
+		// unmodifiable since returned from public, non-internal method(s)
+		return Collections.unmodifiableList(new ArrayList<>(found));
 	}
 
 	private static <A extends Annotation> void findRepeatableAnnotations(AnnotatedElement element,
@@ -255,7 +256,7 @@ public final class AnnotationUtils {
 		// @formatter:off
 		return Arrays.stream(clazz.getFields())
 				.filter(field -> fieldType.isAssignableFrom(field.getType()) && isAnnotated(field, annotationType))
-				.collect(toCollection(ArrayList::new));
+				.collect(toUnmodifiableList());
 		// @formatter:on
 	}
 
