@@ -328,7 +328,7 @@ public class ReflectionUtilsTests {
 	}
 
 	private static String fqmn(Class<?> clazz, String methodName, Class<?>... params) {
-		return String.format("%s#%s(%s)", clazz.getName(), methodName, StringUtils.nullSafeToString(params));
+		return ReflectionUtils.getFullyQualifiedMethodName(clazz, methodName, params);
 	}
 
 	private static void assertFqmn(String fqmn) {

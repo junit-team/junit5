@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestExecutionResult;
@@ -26,12 +27,12 @@ import org.junit.platform.launcher.TestIdentifier;
  */
 @API(Internal)
 class TreeNode {
-	final String caption;
+	private final String caption;
 	private final long creation;
 	long duration;
-	String reason;
-	TestIdentifier identifier;
-	TestExecutionResult result;
+	private String reason;
+	private TestIdentifier identifier;
+	private TestExecutionResult result;
 	List<ReportEntry> reports = Collections.emptyList();
 	List<TreeNode> children = Collections.emptyList();
 	boolean visible;
@@ -73,5 +74,21 @@ class TreeNode {
 		this.result = result;
 		this.duration = System.currentTimeMillis() - creation;
 		return this;
+	}
+
+	public String caption() {
+		return caption;
+	}
+
+	Optional<String> reason() {
+		return Optional.ofNullable(reason);
+	}
+
+	Optional<TestExecutionResult> result() {
+		return Optional.ofNullable(result);
+	}
+
+	Optional<TestIdentifier> identifier() {
+		return Optional.ofNullable(identifier);
 	}
 }
