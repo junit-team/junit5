@@ -11,19 +11,19 @@
 package org.junit.platform.console;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -92,31 +92,30 @@ class ConsoleDetailsTests {
 
 	@TestFactory
 	@DisplayName("Basic tests and annotations usage")
-	List<DynamicTest> basic() throws Exception {
-		return build(Basic.class, Files.createTempDirectory("console-details-basic-"));
+	List<DynamicTest> basic() {
+		return scanContainerClassAndCreateDynamicTests(Basic.class);
 	}
 
 	@TestFactory
 	@DisplayName("Skipped and disabled tests")
-	List<DynamicTest> skipped() throws Exception {
-		return build(Skip.class, Files.createTempDirectory("console-details-skip-"));
+	List<DynamicTest> skipped() {
+		return scanContainerClassAndCreateDynamicTests(Skip.class);
 	}
 
 	@TestFactory
 	@DisplayName("Failed tests")
-	List<DynamicTest> failed() throws Exception {
-		return build(Fail.class, Files.createTempDirectory("console-details-fail-"));
+	List<DynamicTest> failed() {
+		return scanContainerClassAndCreateDynamicTests(Fail.class);
 	}
 
-	private List<DynamicTest> build(Class<?> containerClass, Path temp) throws Exception {
+	private List<DynamicTest> scanContainerClassAndCreateDynamicTests(Class<?> containerClass) {
 		String containerName = containerClass.getSimpleName();
 		List<DynamicTest> tests = new ArrayList<>();
 		for (Method method : AnnotationUtils.findAnnotatedMethods(containerClass, Test.class, HierarchyDown)) {
 			for (Details details : Details.values()) {
 				for (Theme theme : Theme.values()) {
-					String caption = String.join("-", containerName, method.getName(), details.toString(),
-						theme.toString());
-					String dirName = "console/details/" + containerName;
+					String caption = containerName + "-" + method.getName() + "-" + details + "-" + theme;
+					String dirName = "console/details/" + containerName.toLowerCase();
 					String outName = caption + ".out.txt";
 					String[] args = { //
 							"--include-engine", "junit-jupiter", //
@@ -126,28 +125,20 @@ class ConsoleDetailsTests {
 							"--include-classname", containerClass.getCanonicalName(), //
 							"--select-method", ReflectionUtils.getFullyQualifiedMethodName(method) //
 					};
-					String displayName = method.getName() + "() details=" + details.name() + " theme=" + theme.name();
-					tests.add(DynamicTest.dynamicTest(displayName, new Runner(temp, dirName, outName, args)));
+					String displayName = method.getName() + " theme=" + theme.name() + "() details=" + details.name();
+					tests.add(DynamicTest.dynamicTest(displayName, new Runner(dirName, outName, args)));
 				}
 			}
-		}
-		try {
-			Files.delete(temp);
-		}
-		catch (DirectoryNotEmptyException ignore) {
-			// ignore
 		}
 		return tests;
 	}
 
 	private static class Runner implements Executable {
-		private final Path temp;
 		private final String dirName;
 		private final String outName;
 		private final String[] args;
 
-		private Runner(Path temp, String dirName, String outName, String... args) {
-			this.temp = temp;
+		private Runner(String dirName, String outName, String... args) {
 			this.dirName = dirName;
 			this.outName = outName;
 			this.args = args;
@@ -158,18 +149,27 @@ class ConsoleDetailsTests {
 			ConsoleLauncherWrapper wrapper = new ConsoleLauncherWrapper();
 			ConsoleLauncherWrapperResult result = wrapper.execute(Optional.empty(), args);
 
-			URL url = getClass().getClassLoader().getResource(dirName + "/" + outName);
-			if (url == null) {
-				// if (temp != null) {
-				//	Path path = Files.write(temp.resolve(outName), result.out.getBytes(UTF_8));
-				//					System.out.println("Wrote " + path);
-				//					return;
-				// }
+			Optional<URL> optionalUrl = getResourceUrl(dirName + "/" + outName);
+			if (!optionalUrl.isPresent()) {
+				if (Boolean.getBoolean("org.junit.platform.console.ConsoleDetailsTests.writeResultOut")) {
+					// do not use Files.createTempDirectory(prefix) as we want one folder for one container
+					Path temp = Paths.get(System.getProperty("java.io.tmpdir"), dirName.replace('/', '-'));
+					Files.createDirectories(temp);
+					Path path = Files.write(temp.resolve(outName), result.out.getBytes(UTF_8));
+					System.out.println("wrote resource " + path);
+					return;
+				}
 				fail("could not load resource: " + dirName + "/" + outName);
+				return;
 			}
 
-			List<String> expectedLines = Files.readAllLines(Paths.get(url.toURI()), UTF_8);
-			List<String> actualLines = Arrays.asList(result.out.split("\\R"));
+			URL url = optionalUrl.orElseThrow(AssertionError::new);
+			Path path = Paths.get(url.toURI());
+			assumeTrue(path.toFile().exists(), "path does not exist: " + path);
+			assumeTrue(path.toFile().canRead(), "can not read: " + path);
+
+			List<String> expectedLines = Files.readAllLines(path, UTF_8);
+			List<String> actualLines = asList(result.out.split("\\R"));
 
 			int expectedSize = expectedLines.size();
 			int actualSize = actualLines.size();
@@ -181,7 +181,7 @@ class ConsoleDetailsTests {
 
 			if (expectedSize == actualSize) {
 				for (int i = 0; i < expectedSize; i++) {
-					assertTrue(compare(expectedLines.get(i), actualLines.get(i)));
+					assertMatches(expectedLines.get(i), actualLines.get(i), i, i);
 				}
 				return;
 			}
@@ -195,16 +195,16 @@ class ConsoleDetailsTests {
 				if (expectedLine.equals(actualLine)) {
 					continue;
 				}
-				// "S T A C K T R A C E" marker found in expected line: fast forward actual line until next match
+				// "S T A C K T R A C E" marker found as expected line: fast forward actual line until next match
 				if (expectedLine.equals("S T A C K T R A C E")) {
-					int peekExpectedIndex = e + 1;
-					if (peekExpectedIndex >= expectedSize) {
+					int nextExpectedIndex = e + 1;
+					if (nextExpectedIndex >= expectedSize) {
 						// trivial case: marker was last line in expected list
 						return;
 					}
-					expectedLine = expectedLines.get(peekExpectedIndex);
+					expectedLine = expectedLines.get(nextExpectedIndex);
 					int ahead = a;
-					while (!compare(expectedLine, actualLine, false)) {
+					while (!matches(expectedLine, actualLine, false)) {
 						actualLine = actualLines.get(ahead++);
 						if (ahead >= actualSize) {
 							fail("ran out of bounds");
@@ -214,17 +214,22 @@ class ConsoleDetailsTests {
 					continue;
 				}
 				// now, assert equality of expect and actual line
-				String message = "\nexpected:" + e + " = " + expectedLine + "\nactual:" + a + " = " + actualLine;
-				assertTrue(compare(expectedLine, actualLine), message);
+				assertMatches(expectedLine, actualLine, e, a);
 			}
 
 		}
 
-		private boolean compare(String expectedLine, String actualLine) {
-			return compare(expectedLine, actualLine, true);
+		private void assertMatches(String expectedLine, String actualLine, int expectedIndex, int actualIndex) {
+			assertTrue(matches(expectedLine, actualLine), //
+				() -> String.format("%nexpected:%d = %s%nactual:%d = %s", //
+					expectedIndex, expectedLine, actualIndex, actualLine));
 		}
 
-		private boolean compare(String expectedLine, String actualLine, boolean failOnPatternSyntaxException) {
+		private boolean matches(String expectedLine, String actualLine) {
+			return matches(expectedLine, actualLine, true);
+		}
+
+		private boolean matches(String expectedLine, String actualLine, boolean failOnPatternSyntaxException) {
 			if (expectedLine.equals(actualLine)) {
 				return true;
 			}
@@ -243,4 +248,23 @@ class ConsoleDetailsTests {
 
 	}
 
+	private static Optional<URL> getResourceUrl(String resource) throws Exception {
+		List<ClassLoader> classLoaders = new ArrayList<>();
+		classLoaders.add(Thread.currentThread().getContextClassLoader());
+		classLoaders.add(ConsoleDetailsTests.class.getClassLoader());
+		classLoaders.add(ClassLoader.getSystemClassLoader());
+		for (ClassLoader classLoader : classLoaders) {
+			URL url = classLoader.getResource(resource);
+			if (url != null) {
+				return Optional.of(url);
+			}
+		}
+		// now scan and find...
+		Optional<Path> path = Files.find(Paths.get("build/resources/test"), 9,
+			(p, bfa) -> p.endsWith(resource) && bfa.isRegularFile()).findAny();
+		if (path.isPresent()) {
+			return Optional.of(path.get().toAbsolutePath().toUri().toURL());
+		}
+		return Optional.empty();
+	}
 }
