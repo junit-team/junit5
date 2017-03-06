@@ -34,25 +34,12 @@ import java.util.function.Function;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 @API(Internal)
 public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
-
-	private static final Map<Class<?>, Class<?>> WRAPPER_TYPES;
-	static {
-		Map<Class<?>, Class<?>> wrapperTypes = new HashMap<>();
-		wrapperTypes.put(Boolean.TYPE, Boolean.class);
-		wrapperTypes.put(Character.TYPE, Character.class);
-		wrapperTypes.put(Byte.TYPE, Byte.class);
-		wrapperTypes.put(Short.TYPE, Short.class);
-		wrapperTypes.put(Integer.TYPE, Integer.class);
-		wrapperTypes.put(Long.TYPE, Long.class);
-		wrapperTypes.put(Float.TYPE, Float.class);
-		wrapperTypes.put(Double.TYPE, Double.class);
-		WRAPPER_TYPES = unmodifiableMap(wrapperTypes);
-	}
 
 	private final List<StringConversion> stringConversions = unmodifiableList(
 		asList(new PrimitiveStringConversion(), new EnumStringConversion(), new JavaTimeStringConversion()));
@@ -69,11 +56,16 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			}
 			return null;
 		}
-		return convertToReferenceType(input, WRAPPER_TYPES.getOrDefault(targetClass, targetClass));
+		return convertToReferenceType(input, toWrapperType(targetClass));
+	}
+
+	private Class<?> toWrapperType(Class<?> targetClass) {
+		Class<?> wrapperType = ReflectionUtils.getWrapperType(targetClass);
+		return wrapperType != null ? wrapperType : targetClass;
 	}
 
 	private Object convertToReferenceType(Object input, Class<?> targetClass) {
-		if (isMatchingType(input, targetClass)) {
+		if (targetClass.isInstance(input)) {
 			return input;
 		}
 		if (input instanceof String) {
@@ -91,14 +83,6 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		}
 		throw new ArgumentConversionException("No implicit conversion to convert object of type "
 				+ input.getClass().getName() + " to type " + targetClass.getName());
-	}
-
-	private boolean isMatchingType(Object input, Class<?> targetClass) {
-		return targetClass.isInstance(input) || isWrapperClass(input, targetClass);
-	}
-
-	private boolean isWrapperClass(Object input, Class<?> targetClass) {
-		return targetClass.isPrimitive() && input.getClass().equals(WRAPPER_TYPES.get(targetClass));
 	}
 
 	interface StringConversion {
