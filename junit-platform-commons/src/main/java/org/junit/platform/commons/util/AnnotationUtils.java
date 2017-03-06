@@ -228,7 +228,7 @@ public final class AnnotationUtils {
 					// Note: it's not a legitimate container annotation if it doesn't declare
 					// a 'value' attribute that returns an array of the contained annotation type.
 					// Thus we proceed without verifying this assumption.
-					Method method = ReflectionUtils.getMethod(containerType, "value").get();
+					Method method = ReflectionUtils.getMethod(containerType, "value").orElseThrow(AssertionError::new);
 					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
 					found.addAll((Collection<? extends A>) asList(containedAnnotations));
 				}
@@ -256,6 +256,10 @@ public final class AnnotationUtils {
 				.filter(field -> fieldType.isAssignableFrom(field.getType()) && isAnnotated(field, annotationType))
 				.collect(toCollection(ArrayList::new));
 		// @formatter:on
+	}
+
+	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType) {
+		return findAnnotatedMethods(clazz, annotationType, MethodSortOrder.HierarchyDown);
 	}
 
 	/**
