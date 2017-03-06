@@ -15,9 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -49,15 +47,6 @@ class MethodArgumentsProviderTests {
 		Stream<Object[]> arguments = provideArguments("stringIteratorProvider");
 
 		assertThat(arguments).containsExactly(new Object[] { "foo" }, new Object[] { "bar" });
-	}
-
-	@Test
-	void providesArgumentsUsingCollection() {
-		try (Stream<Object[]> arguments = provideArguments("stringCollectionProvider")) {
-			assertThat(arguments).containsExactly(new Object[] { "foo" }, new Object[] { "bar" });
-		}
-
-		assertThat(TestCase.collectionStreamClosed.get()).describedAs("collectionStreamClosed").isTrue();
 	}
 
 	@Test
@@ -120,21 +109,6 @@ class MethodArgumentsProviderTests {
 
 		static Iterator<String> stringIteratorProvider() {
 			return Arrays.asList("foo", "bar").iterator();
-		}
-
-		@SuppressWarnings("serial")
-		static Collection<String> stringCollectionProvider() {
-			return new ArrayList<String>() {
-				{
-					add("foo");
-					add("bar");
-				}
-
-				@Override
-				public Stream<String> stream() {
-					return super.stream().onClose(() -> collectionStreamClosed.set(true));
-				}
-			};
 		}
 
 		static Object providerWithIllegalReturnType() {
