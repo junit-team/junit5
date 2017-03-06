@@ -10,13 +10,13 @@
 
 package org.junit.platform.console;
 
+import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -24,7 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,6 +37,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -90,6 +93,36 @@ class ConsoleDetailsTests {
 
 	}
 
+	@DisplayName("Report")
+	static class Report {
+
+		@Test
+		void reportSingleEntryWithSingleMapping(TestReporter reporter) {
+			reporter.publishEntry("foo", "bar");
+		}
+
+		@Test
+		void reportMultiEntriesWithSingleMapping(TestReporter reporter) {
+			reporter.publishEntry("foo", "bar");
+			reporter.publishEntry("far", "boo");
+		}
+
+		@Test
+		void reportMultiEntriesWithMultiMappings(TestReporter reporter) {
+			Map<String, String> values = new LinkedHashMap<>();
+			values.put("user name", "dk38");
+			values.put("award year", "1974");
+			reporter.publishEntry(values);
+			reporter.publishEntry("single", "mapping");
+			Map<String, String> more = new LinkedHashMap<>();
+			more.put("user name", "st77");
+			more.put("award year", "1977");
+			more.put("last seen", "2001");
+			reporter.publishEntry(more);
+		}
+
+	}
+
 	@TestFactory
 	@DisplayName("Basic tests and annotations usage")
 	List<DynamicTest> basic() {
@@ -108,10 +141,17 @@ class ConsoleDetailsTests {
 		return scanContainerClassAndCreateDynamicTests(Fail.class);
 	}
 
+	@TestFactory
+	@DisplayName("Tests publishing report entries")
+	@Disabled("Tests publishing report entries is in progress...")
+	List<DynamicTest> reports() {
+		return scanContainerClassAndCreateDynamicTests(Report.class);
+	}
+
 	private List<DynamicTest> scanContainerClassAndCreateDynamicTests(Class<?> containerClass) {
 		String containerName = containerClass.getSimpleName();
 		List<DynamicTest> tests = new ArrayList<>();
-		for (Method method : AnnotationUtils.findAnnotatedMethods(containerClass, Test.class, HierarchyDown)) {
+		for (Method method : AnnotationUtils.findAnnotatedMethods(containerClass, Test.class)) {
 			for (Details details : Details.values()) {
 				for (Theme theme : Theme.values()) {
 					String caption = containerName + "-" + method.getName() + "-" + details + "-" + theme;
@@ -149,18 +189,18 @@ class ConsoleDetailsTests {
 			ConsoleLauncherWrapper wrapper = new ConsoleLauncherWrapper();
 			ConsoleLauncherWrapperResult result = wrapper.execute(Optional.empty(), args);
 
-			Optional<URL> optionalUrl = getResourceUrl(dirName + "/" + outName);
+			String resourceName = dirName + "/" + outName;
+			Optional<URL> optionalUrl = Optional.ofNullable(getClass().getClassLoader().getResource(resourceName));
 			if (!optionalUrl.isPresent()) {
 				if (Boolean.getBoolean("org.junit.platform.console.ConsoleDetailsTests.writeResultOut")) {
 					// do not use Files.createTempDirectory(prefix) as we want one folder for one container
 					Path temp = Paths.get(System.getProperty("java.io.tmpdir"), dirName.replace('/', '-'));
 					Files.createDirectories(temp);
 					Path path = Files.write(temp.resolve(outName), result.out.getBytes(UTF_8));
-					System.out.println("wrote resource " + path);
-					return;
+					assumeTrue(false,
+						format("resource `%s` not found\nwrote console stdout to: %s", resourceName, path));
 				}
-				fail("could not load resource: " + dirName + "/" + outName);
-				return;
+				fail("could not load resource named `" + resourceName + "`");
 			}
 
 			URL url = optionalUrl.orElseThrow(AssertionError::new);
@@ -170,15 +210,18 @@ class ConsoleDetailsTests {
 
 			List<String> expectedLines = Files.readAllLines(path, UTF_8);
 			List<String> actualLines = asList(result.out.split("\\R"));
-
 			int expectedSize = expectedLines.size();
 			int actualSize = actualLines.size();
 
+			// trivial case: when expecting more then actual produced lines, something is wrong
 			if (expectedSize > actualSize) {
+				// use standard assertEquals(Object, Object, message) to let IDEs present the difference
 				assertEquals(String.join(System.lineSeparator(), expectedLines), result.out, //
 					"more lines expected [" + expectedSize + "] then actually produced [" + actualSize + "]");
+				fail("should not happen as expectedLines != result.out was assumed");
 			}
 
+			// simple case: both list are equally sized, just compare line-by-line
 			if (expectedSize == actualSize) {
 				for (int i = 0; i < expectedSize; i++) {
 					assertMatches(expectedLines.get(i), actualLines.get(i), i, i);
@@ -221,8 +264,8 @@ class ConsoleDetailsTests {
 
 		private void assertMatches(String expectedLine, String actualLine, int expectedIndex, int actualIndex) {
 			assertTrue(matches(expectedLine, actualLine), //
-				() -> String.format("%nexpected:%d = %s%nactual:%d = %s", //
-					expectedIndex, expectedLine, actualIndex, actualLine));
+				() -> format("%nexpected:%d = %s%nactual:%d = %s", expectedIndex, expectedLine, actualIndex,
+					actualLine));
 		}
 
 		private boolean matches(String expectedLine, String actualLine) {
@@ -248,23 +291,4 @@ class ConsoleDetailsTests {
 
 	}
 
-	private static Optional<URL> getResourceUrl(String resource) throws Exception {
-		List<ClassLoader> classLoaders = new ArrayList<>();
-		classLoaders.add(Thread.currentThread().getContextClassLoader());
-		classLoaders.add(ConsoleDetailsTests.class.getClassLoader());
-		classLoaders.add(ClassLoader.getSystemClassLoader());
-		for (ClassLoader classLoader : classLoaders) {
-			URL url = classLoader.getResource(resource);
-			if (url != null) {
-				return Optional.of(url);
-			}
-		}
-		// now scan and find...
-		Optional<Path> path = Files.find(Paths.get("build/resources/test"), 9,
-			(p, bfa) -> p.endsWith(resource) && bfa.isRegularFile()).findAny();
-		if (path.isPresent()) {
-			return Optional.of(path.get().toAbsolutePath().toUri().toURL());
-		}
-		return Optional.empty();
-	}
 }
