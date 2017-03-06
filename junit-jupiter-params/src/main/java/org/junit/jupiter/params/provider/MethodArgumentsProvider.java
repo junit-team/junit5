@@ -10,19 +10,13 @@
 
 package org.junit.jupiter.params.provider;
 
-import static java.util.Spliterator.ORDERED;
-import static java.util.Spliterators.spliteratorUnknownSize;
-import static java.util.stream.StreamSupport.stream;
-
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.support.AnnotationInitialized;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 class MethodArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<MethodSource> {
@@ -43,7 +37,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationInitialize
 				.map(methodName -> ReflectionUtils.findMethod(testClass, methodName) //
                         .orElseThrow(() -> new JUnitException("Could not find method: " + methodName)))
 				.map(method -> ReflectionUtils.invokeMethod(method, null))
-				.flatMap(MethodArgumentsProvider::toStream)
+				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);
 		// @formatter:on
 	}
@@ -56,24 +50,6 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationInitialize
 			return ObjectArrayArguments.create((Object[]) item);
 		}
 		return ObjectArrayArguments.create(item);
-	}
-
-	private static Stream<?> toStream(Object object) {
-		// TODO Duplication with TestFactoryTestDescriptor
-		if (object instanceof Stream) {
-			return (Stream<?>) object;
-		}
-		if (object instanceof Collection) {
-			return ((Collection<?>) object).stream();
-		}
-		if (object instanceof Iterable) {
-			return stream(((Iterable<?>) object).spliterator(), false);
-		}
-		if (object instanceof Iterator) {
-			return stream(spliteratorUnknownSize((Iterator<?>) object, ORDERED), false);
-		}
-		throw new PreconditionViolationException(
-			"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object);
 	}
 
 }
