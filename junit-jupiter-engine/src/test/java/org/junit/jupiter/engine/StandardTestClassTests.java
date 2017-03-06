@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -13,7 +13,7 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterEach;
@@ -40,22 +40,22 @@ public class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void standardTestClassIsCorrectlyDiscovered() {
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(MyStandardTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(MyStandardTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
+		assertEquals(5, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(SecondOfTwoTestCases.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(SecondOfTwoTestCases.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(2 + 2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
+		assertEquals(2 + 2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsExecuted() {
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(FirstOfTwoTestCases.class),
-			selectJavaClass(SecondOfTwoTestCases.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(FirstOfTwoTestCases.class),
+			selectClass(SecondOfTwoTestCases.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

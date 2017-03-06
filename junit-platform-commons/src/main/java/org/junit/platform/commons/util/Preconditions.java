@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -70,36 +70,81 @@ public final class Preconditions {
 	}
 
 	/**
-	 * Assert that the supplied array and none of the objects it contains are
-	 * {@code null}.
+	 * Assert that the supplied array is neither {@code null} nor <em>empty</em>.
 	 *
-	 * @param objects the array to check
+	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
+	 * array contains any {@code null} elements.
+	 *
+	 * @param array the array to check
 	 * @param message precondition violation message
 	 * @return the supplied array as a convenience
-	 * @throws PreconditionViolationException if the supplied array or any of
-	 * the objects its contains is {@code null}
-	 * @see #notNull(Object, Supplier)
+	 * @throws PreconditionViolationException if the supplied array is
+	 * {@code null} or <em>empty</em>
+	 * @see #containsNoNullElements(Object[], String)
+	 * @see #condition(boolean, String)
 	 */
-	public static Object[] notNull(Object[] objects, String message) throws PreconditionViolationException {
-		notNull(objects, () -> StringUtils.isNotBlank(message) ? message : "Object array must not be null");
-		Arrays.stream(objects).forEach(object -> notNull(object, () -> message));
-
-		return objects;
+	public static <T> T[] notEmpty(T[] array, String message) throws PreconditionViolationException {
+		condition(array != null && array.length > 0, message);
+		return array;
 	}
 
 	/**
-	 * Assert that the supplied {@link Collection} is not {@code null} or empty.
+	 * Assert that the supplied {@link Collection} is neither {@code null} nor empty.
+	 *
+	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
+	 * collection contains any {@code null} elements.
 	 *
 	 * @param collection the collection to check
 	 * @param message precondition violation message
 	 * @return the supplied collection as a convenience
 	 * @throws PreconditionViolationException if the supplied collection is {@code null} or empty
-	 * @see #condition(boolean, Supplier)
+	 * @see #containsNoNullElements(Collection, String)
+	 * @see #condition(boolean, String)
 	 */
 	public static <T extends Collection<?>> T notEmpty(T collection, String message)
 			throws PreconditionViolationException {
-		condition(collection != null && !collection.isEmpty(), () -> message);
-		collection.forEach(object -> notNull(object, () -> message));
+		condition(collection != null && !collection.isEmpty(), message);
+		return collection;
+	}
+
+	/**
+	 * Assert that the supplied array contains no {@code null} elements.
+	 *
+	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
+	 * array is {@code null} or <em>empty</em>.
+	 *
+	 * @param array the array to check
+	 * @param message precondition violation message
+	 * @return the supplied array as a convenience
+	 * @throws PreconditionViolationException if the supplied array contains
+	 * any {@code null} elements
+	 * @see #notNull(Object, String)
+	 */
+	public static <T> T[] containsNoNullElements(T[] array, String message) throws PreconditionViolationException {
+		if (array != null) {
+			Arrays.stream(array).forEach(object -> notNull(object, message));
+		}
+		return array;
+	}
+
+	/**
+	 * Assert that the supplied collection contains no {@code null} elements.
+	 *
+	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
+	 * collection is {@code null} or <em>empty</em>.
+	 *
+	 * @param collection the collection to check
+	 * @param message precondition violation message
+	 * @return the supplied collection as a convenience
+	 * @throws PreconditionViolationException if the supplied collection contains
+	 * any {@code null} elements
+	 * @see #notNull(Object, String)
+	 */
+	public static <T extends Collection<?>> T containsNoNullElements(T collection, String message)
+			throws PreconditionViolationException {
+		if (collection != null) {
+			collection.forEach(object -> notNull(object, message));
+		}
 		return collection;
 	}
 

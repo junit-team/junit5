@@ -1,0 +1,7 @@
+repositories {
+	jcenter()
+}
+
+dependencies {
+	compile 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+}

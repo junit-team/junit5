@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -14,22 +14,22 @@ import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPa
 
 import java.util.function.Predicate;
 
-import org.junit.platform.engine.discovery.JavaPackageSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
 
 /**
  * @since 4.12
  */
-class PackageNameSelectorResolver extends DiscoverySelectorResolver<JavaPackageSelector> {
+class PackageNameSelectorResolver extends DiscoverySelectorResolver<PackageSelector> {
 
 	private final Predicate<String> classNamePredicate;
 
 	PackageNameSelectorResolver(Predicate<String> classNamePredicate) {
-		super(JavaPackageSelector.class);
+		super(PackageSelector.class);
 		this.classNamePredicate = classNamePredicate;
 	}
 
 	@Override
-	void resolve(JavaPackageSelector selector, TestClassCollector collector) {
+	void resolve(PackageSelector selector, TestClassCollector collector) {
 		findAllClassesInPackage(selector.getPackageName(), classTester, classNamePredicate).forEach(
 			collector::addCompletely);
 	}

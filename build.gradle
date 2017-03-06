@@ -7,17 +7,16 @@ buildscript {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
-		classpath 'com.diffplug.gradle.spotless:spotless:2.0.0'
-		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-		classpath 'org.ajoberstar:gradle-git:1.5.1'
+		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.0.0'
+		classpath 'org.ajoberstar:gradle-git:1.6.0'
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
 	}
 }
 
 plugins {
-	id 'com.gradle.build-scan' version '1.0'
-	id 'net.nemerosa.versioning' version '2.4.0'
+	id 'com.gradle.build-scan' version '1.3'
+	id 'net.nemerosa.versioning' version '2.5.0'
 }
 
 buildScan {
@@ -42,6 +41,7 @@ ext {
 	platformProjects = [
 		'junit-platform-commons',
 		'junit-platform-console',
+		'junit-platform-console-standalone',
 		'junit-platform-engine',
 		'junit-platform-gradle-plugin',
 		'junit-platform-launcher',
@@ -51,7 +51,8 @@ ext {
 
 	jupiterProjects = [
 		'junit-jupiter-api',
-		'junit-jupiter-engine'
+		'junit-jupiter-engine',
+		'junit-jupiter-migration-support'
 	]
 
 	vintageProjects = [
@@ -60,27 +61,40 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
+	licenseHeaderFileProvider = { project -> (
+		project.name == 'junit-platform-surefire-provider'
+			? 'apache-license-2.0.java'
+			: 'eclipse-public-license-1.0.java'
+		)
+	}
+
 	cloverTestProjects = [
 		'junit-jupiter-engine',
+		'junit-jupiter-migration-support',
 		'junit-vintage-engine',
 		'junit-platform-surefire-provider',
 		'platform-tests'
 	]
 }
 
-allprojects {
+allprojects { subproj ->
 
-	apply plugin: 'java'
+	apply plugin: 'java-library'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
 	apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates
+	apply from: "$rootDir/gradle/degraph.gradle"
 
 	repositories {
 		// mavenLocal()
 		mavenCentral()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+	}
+
+	tasks.withType(Test) { task ->
+		task.testLogging.exceptionFormat = 'full'
 	}
 
 	tasks.withType(JavaCompile) {
@@ -139,35 +153,15 @@ allprojects {
 
 	checkstyle {
 		toolVersion = 6.11
-		configFile = rootProject.file('src/checkstyle/checkstyle.xml')
-		sourceSets = [ sourceSets.main ]
+	}
+	checkstyleMain {
+		configFile = rootProject.file('src/checkstyle/checkstyleMain.xml')
+	}
+	checkstyleTest {
+		configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
 	}
 
-	spotless {
-		java {
-			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), '(package|import) '
-			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
-			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
-
-			trimTrailingWhitespace()
-			endWithNewline()
-
-			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
-		}
-
-		format 'groovy', {
-			target '**/*.groovy'
-			indentWithTabs()
-			trimTrailingWhitespace()
-			endWithNewline()
-			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), "package "
-
-			customReplaceRegex 'class-level Javadoc indentation fix', /^\*/, ' *'
-			customReplaceRegex 'nested Javadoc indentation fix', /\t\*/, '\t *'
-		}
-	}
-
-	if (project.hasProperty('enableClover')) {
+	if (project.hasProperty('enableClover') && subproj.name != "documentation") {
 
 		configurations {
 			clover
@@ -183,8 +177,8 @@ allprojects {
 		def instrumentedJavaSourcesDir = file("$cloverDir/instrumentedSources/java")
 
 		task cloverTaskdef {
-			def cloverLicensePath = project.hasProperty('clover.license.path')
-					? project.property('clover.license.path') : rootProject.file('clover.license').absolutePath
+			def cloverLicensePath = (project.hasProperty('clover.license.path')
+					? project.property('clover.license.path') : rootProject.file('clover.license').absolutePath)
 			ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
 			ant.property(name: 'clover.license.path', value: cloverLicensePath)
 		}
@@ -252,7 +246,7 @@ subprojects { subproj ->
 		}
 
 		tasks.withType(Jar) {
-			from(rootProject.projectDir) {
+			from(project.projectDir) {
 				include 'LICENSE.md'
 				into 'META-INF'
 			}
@@ -380,6 +374,30 @@ subprojects { subproj ->
 		}
 	}
 
+	spotless {
+		def headerFile = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
+
+		java {
+			licenseHeaderFile headerFile, '(package|import) '
+			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
+			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+
+			trimTrailingWhitespace()
+			endWithNewline()
+		}
+
+		format 'groovy', {
+			target 'src/**/*.groovy'
+			indentWithTabs()
+			trimTrailingWhitespace()
+			endWithNewline()
+			licenseHeaderFile headerFile, "package "
+
+			replaceRegex 'class-level Javadoc indentation fix', /^\*/, ' *'
+			replaceRegex 'nested Javadoc indentation fix', /\t\*/, '\t *'
+		}
+	}
+
 	afterEvaluate {
 		if (project.hasProperty('enableClover') && subproj.name in cloverTestProjects) {
 			cloverAggregateDatabases.dependsOn subproj.tasks.test
@@ -392,51 +410,11 @@ configure(rootProject) {
 	description = 'JUnit 5'
 
 	apply plugin: "org.ajoberstar.github-pages"
-	apply plugin: 'org.junit.platform.gradle.plugin'
 
 	jar.enabled = false
 	uploadArchives.enabled = false
 
-	dependencies {
-
-		// No need to detect cycles for: platform-tests, documentation
-		rootProject.subprojects.findAll {it.name.startsWith('junit-')}.each { project ->
-			testCompile(project)
-		}
-
-		testCompile("de.schauderhaft.degraph:degraph-check:${degraphVersion}")
-
-		testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-		testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
-	}
-
-	junitPlatform {
-		engines {
-			include 'junit-jupiter'
-		}
-		includeClassNamePattern 'org.junit.platform.meta.DependencyTests'
-		logManager 'org.apache.logging.log4j.jul.LogManager'
-	}
-
-	task degraph() {
-		description = 'Runs DeGraph tests.'
-		// configured in afterEvaluate
-	}
-
-	afterEvaluate {
-		// The following is a hack which allows the custom `degraph`
-		// task to serve as an "alias" for the `junitPlatformTest` task.
-		// In addition, the following removes the dependency from the
-		// `test` task to the `junitPlatformTest` task (which is
-		// created by the JUnit Platform Gradle Plugin) and adds a
-		// dependency from `check` to `degraph`. Consequently,
-		// executing `gradle test` will not run the DeGraph tests, but
-		// `gradle degraph` or `gradle check` will.
-		def junitPlatformTestTask = tasks.getByName('junitPlatformTest')
-		degraph.dependsOn(junitPlatformTestTask)
-		test.dependsOn.remove(junitPlatformTestTask)
-		check.dependsOn(degraph)
-	}
+	def ota4jDocVersion = ota4jVersion.contains('SNAPSHOT') ? 'snapshot' : ota4jVersion
 
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
@@ -455,6 +433,7 @@ configure(rootProject) {
 		options.splitIndex = true
 		options.addStringOption('Xdoclint:none', '-quiet')
 		options.jFlags '-Xmx1g'
+		options.links 'https://docs.oracle.com/javase/8/docs/api/', "http://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/"
 
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
@@ -575,7 +554,7 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = 'Generates gradlew and gradlew.bat scripts'
-		gradleVersion = '3.0'
+		gradleVersion = '3.4'
 	}
 
 }

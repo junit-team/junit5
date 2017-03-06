@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -350,6 +350,21 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private static class ExtendWithOnMethodTestCase {
+
+		/**
+		 * This set-up / tear-down method is here to verify that {@code @BeforeEach}
+		 * and {@code @AfterEach} methods are properly invoked using the same
+		 * {@code ExtensionRegistry} as the one used for the corresponding
+		 * {@code @Test} method.
+		 *
+		 * @see <a href="https://github.com/junit-team/junit5/issues/523">#523</a>
+		 */
+		@BeforeEach
+		@AfterEach
+		void setUpAndTearDown(CustomType customType, @CustomAnnotation String value) {
+			assertNotNull(customType);
+			assertNotNull(value);
+		}
 
 		@Test
 		@ExtendWith(CustomTypeParameterResolver.class)

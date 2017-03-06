@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -46,7 +46,7 @@ public final class TagFilter {
 	 * @param tags the included tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter includeTags(String... tags) {
-		Preconditions.notNull(tags, "tags must not be null");
+		Preconditions.notNull(tags, "tags array must not be null");
 		return includeTags(asList(tags));
 	}
 
@@ -59,7 +59,8 @@ public final class TagFilter {
 	 * @param tags the included tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter includeTags(List<String> tags) {
-		Preconditions.notEmpty(tags, "tags must not be null or empty");
+		Preconditions.notEmpty(tags, "tags list must not be null or empty");
+		Preconditions.containsNoNullElements(tags, "individual tags must not be null");
 		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).anyMatch(tags::contains));
 	}
 
@@ -72,7 +73,7 @@ public final class TagFilter {
 	 * @param tags the excluded tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter excludeTags(String... tags) {
-		Preconditions.notNull(tags, "tags must not be null");
+		Preconditions.notNull(tags, "tags array must not be null");
 		return excludeTags(asList(tags));
 	}
 
@@ -85,7 +86,8 @@ public final class TagFilter {
 	 * @param tags the excluded tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter excludeTags(List<String> tags) {
-		Preconditions.notEmpty(tags, "tags must not be null or empty");
+		Preconditions.notEmpty(tags, "tags list must not be null or empty");
+		Preconditions.containsNoNullElements(tags, "individual tags must not be null");
 		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).noneMatch(tags::contains));
 	}
 

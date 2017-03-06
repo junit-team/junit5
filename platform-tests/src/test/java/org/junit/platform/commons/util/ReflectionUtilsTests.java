@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
 import static org.mockito.Mockito.mock;
@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -50,12 +51,24 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClass
 public class ReflectionUtilsTests {
 
 	@Test
-	void getDefaultClassLoader() {
+	void getDefaultClassLoaderWithExplicitContextClassLoader() {
 		ClassLoader original = Thread.currentThread().getContextClassLoader();
 		ClassLoader mock = mock(ClassLoader.class);
 		Thread.currentThread().setContextClassLoader(mock);
 		try {
 			assertSame(mock, ReflectionUtils.getDefaultClassLoader());
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(original);
+		}
+	}
+
+	@Test
+	void getDefaultClassLoaderWithNullContextClassLoader() {
+		ClassLoader original = Thread.currentThread().getContextClassLoader();
+		Thread.currentThread().setContextClassLoader(null);
+		try {
+			assertSame(ClassLoader.getSystemClassLoader(), ReflectionUtils.getDefaultClassLoader());
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(original);
@@ -116,7 +129,7 @@ public class ReflectionUtilsTests {
 			ReflectionUtils.newInstance(C.class, ((Object[]) null));
 		});
 
-		RuntimeException exception = expectThrows(RuntimeException.class,
+		RuntimeException exception = assertThrows(RuntimeException.class,
 			() -> ReflectionUtils.newInstance(Exploder.class));
 		assertThat(exception).hasMessage("boom");
 	}
@@ -454,11 +467,11 @@ public class ReflectionUtilsTests {
 		assertThat(ReflectionUtils.findMethod(Files.class, "copy", Path.class, OutputStream.class)).contains(
 			Files.class.getMethod("copy", Path.class, OutputStream.class));
 
-		RuntimeException exception = expectThrows(PreconditionViolationException.class,
+		RuntimeException exception = assertThrows(PreconditionViolationException.class,
 			() -> ReflectionUtils.findMethod(String.class, null));
 		assertThat(exception).hasMessage("method name must not be null or empty");
 
-		exception = expectThrows(PreconditionViolationException.class,
+		exception = assertThrows(PreconditionViolationException.class,
 			() -> ReflectionUtils.findMethod(String.class, "   "));
 		assertThat(exception).hasMessage("method name must not be null or empty");
 	}
@@ -480,7 +493,28 @@ public class ReflectionUtilsTests {
 
 	@Test
 	void findMethodsInInterface() {
-		List<Method> methods = ReflectionUtils.findMethods(InterfaceWithOneDeclaredMethod.class, method -> true);
+		List<Method> methods = ReflectionUtils.findMethods(InterfaceWithOneDeclaredMethod.class,
+			method -> method.getName().contains("foo"));
+		assertNotNull(methods);
+		assertEquals(1, methods.size());
+
+		methods = ReflectionUtils.findMethods(InterfaceWithDefaultMethod.class,
+			method -> method.getName().contains("foo"));
+		assertNotNull(methods);
+		assertEquals(1, methods.size());
+
+		methods = ReflectionUtils.findMethods(InterfaceWithDefaultMethodImpl.class,
+			method -> method.getName().contains("foo"));
+		assertNotNull(methods);
+		assertEquals(1, methods.size());
+
+		methods = ReflectionUtils.findMethods(InterfaceWithStaticMethod.class,
+			method -> method.getName().contains("foo"));
+		assertNotNull(methods);
+		assertEquals(1, methods.size());
+
+		methods = ReflectionUtils.findMethods(InterfaceWithStaticMethodImpl.class,
+			method -> method.getName().contains("foo"));
 		assertNotNull(methods);
 		assertEquals(1, methods.size());
 	}
@@ -517,6 +551,13 @@ public class ReflectionUtilsTests {
 		assertEquals(0, methods.size());
 
 		methods = ReflectionUtils.findMethods(Integer[].class, method -> true);
+		assertNotNull(methods);
+		assertEquals(0, methods.size());
+	}
+
+	@Test
+	void findMethodsIgnoresSyntheticMethods() {
+		List<Method> methods = ReflectionUtils.findMethods(ClassWithSyntheticMethod.class, method -> true);
 		assertNotNull(methods);
 		assertEquals(0, methods.size());
 	}
@@ -619,15 +660,52 @@ public class ReflectionUtilsTests {
 			MethodShadowingChild.class.getMethod("method5", Long.class));
 	}
 
+	@Test
+	void findMethodsIgnoresBridgeMethods() throws Exception {
+		assertFalse(Modifier.isPublic(PublicChildClass.class.getSuperclass().getModifiers()));
+		assertTrue(Modifier.isPublic(PublicChildClass.class.getModifiers()));
+		assertTrue(PublicChildClass.class.getDeclaredMethod("method1").isBridge());
+		assertTrue(PublicChildClass.class.getDeclaredMethod("method3").isBridge());
+
+		List<Method> methods = ReflectionUtils.findMethods(PublicChildClass.class, method -> true);
+		List<String> names = methods.stream().map(Method::getName).collect(toList());
+		assertThat(names).containsOnly("method1", "method2", "method3", "otherMethod1", "otherMethod2");
+		assertTrue(methods.stream().filter(Method::isBridge).count() == 0);
+	}
+
 	private static void createDirectories(Path... paths) throws IOException {
 		for (Path path : paths) {
 			Files.createDirectory(path);
 		}
 	}
 
+	class ClassWithSyntheticMethod {
+		Runnable foo = InterfaceWithStaticMethod::foo;
+		Runnable bar = StaticClass::staticMethod;
+		Comparable<Number> synthetic = number -> 0;
+	}
+
 	interface InterfaceWithOneDeclaredMethod {
 
 		void foo();
+	}
+
+	interface InterfaceWithDefaultMethod {
+
+		default void foo() {
+		}
+	}
+
+	static class InterfaceWithDefaultMethodImpl implements InterfaceWithDefaultMethod {
+	}
+
+	interface InterfaceWithStaticMethod {
+
+		static void foo() {
+		}
+	}
+
+	static class InterfaceWithStaticMethodImpl implements InterfaceWithStaticMethod {
 	}
 
 	interface InterfaceA {
@@ -829,6 +907,18 @@ public class ReflectionUtilsTests {
 		}
 
 		public void method5(Long i) {
+		}
+	}
+
+	// "public" modifier is necessary here, the compiler creates a bridge method
+	public static class PublicChildClass extends ParentClass {
+
+		@Override
+		public void otherMethod1() {
+		}
+
+		@Override
+		public void otherMethod2() {
 		}
 	}
 

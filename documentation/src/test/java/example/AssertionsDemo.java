@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -16,10 +16,10 @@ import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +49,7 @@ class AssertionsDemo {
 
 	@Test
 	void exceptionTesting() {
-		Throwable exception = expectThrows(IllegalArgumentException.class, () -> {
+		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
 			throw new IllegalArgumentException("a message");
 		});
 		assertEquals("a message", exception.getMessage());
@@ -61,6 +61,22 @@ class AssertionsDemo {
 		assertTimeout(ofMinutes(2), () -> {
 			// Perform task that takes less than 2 minutes.
 		});
+	}
+
+	@Test
+	void timeoutNotExceededWithResult() {
+		// The following assertion succeeds, and returns the supplied object.
+		String actualResult = assertTimeout(ofMinutes(2), () -> {
+			return "a result";
+		});
+		assertEquals("a result", actualResult);
+	}
+
+	@Test
+	void timeoutNotExceededWithMethod() {
+		// The following assertion invokes a method reference and returns an object.
+		String actualGreeting = assertTimeout(ofMinutes(2), AssertionsDemo::greeting);
+		assertEquals("hello world!", actualGreeting);
 	}
 
 	// end::user_guide[]
@@ -87,6 +103,10 @@ class AssertionsDemo {
 			// Simulate task that takes more than 10 ms.
 			Thread.sleep(100);
 		});
+	}
+
+	private static String greeting() {
+		return "hello world!";
 	}
 
 }

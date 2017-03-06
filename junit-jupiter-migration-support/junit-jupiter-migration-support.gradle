@@ -1,0 +1,37 @@
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+junitPlatform {
+	filters {
+		engines {
+			include 'junit-jupiter'
+		}
+		includeClassNamePattern '.*Tests?'
+	}
+	logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+
+/*
+test {
+	scanForTestClasses = false
+	include(['org/junit/jupiter/JupiterTestSuite.class'])
+}
+*/
+
+dependencies {
+	api("junit:junit:${junit4Version}")
+	api(project(':junit-jupiter-api'))
+
+	testImplementation(project(':junit-jupiter-engine'))
+	testImplementation(project(':junit-platform-launcher'))
+	testImplementation(project(':junit-platform-runner'))
+	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
+	testImplementation("org.assertj:assertj-core:${assertJVersion}")
+	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+
+	// Include junit-platform-console so that the JUnit Gradle plugin
+	// uses the local version of the ConsoleLauncher.
+	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly(project(':junit-jupiter-engine'))
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+}

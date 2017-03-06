@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -33,12 +33,11 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 
 /**
@@ -151,14 +150,12 @@ class XmlReportWriter {
 		Optional<TestSource> optionalSource = testIdentifier.getSource();
 		if (optionalSource.isPresent()) {
 			TestSource source = optionalSource.get();
-			if (source instanceof JavaClassSource) {
-				return ((JavaClassSource) source).getJavaClass().getName();
+			if (source instanceof ClassSource) {
+				return ((ClassSource) source).getJavaClass().getName();
 			}
-			else if (source instanceof JavaMethodSource) {
-				JavaMethodSource javaMethodSource = (JavaMethodSource) source;
-				List<Class<?>> parameterTypes = javaMethodSource.getJavaMethodParameterTypes();
-				return String.format("%s(%s)", javaMethodSource.getJavaMethodName(), StringUtils.nullSafeToString(
-					Class::getName, parameterTypes.toArray(new Class<?>[parameterTypes.size()])));
+			else if (source instanceof MethodSource) {
+				MethodSource methodSource = (MethodSource) source;
+				return String.format("%s(%s)", methodSource.getMethodName(), methodSource.getMethodParameterTypes());
 			}
 		}
 
@@ -170,11 +167,11 @@ class XmlReportWriter {
 		Optional<TestSource> optionalSource = testIdentifier.getSource();
 		if (optionalSource.isPresent()) {
 			TestSource source = optionalSource.get();
-			if (source instanceof JavaClassSource) {
-				return ((JavaClassSource) source).getJavaClass().getName();
+			if (source instanceof ClassSource) {
+				return ((ClassSource) source).getClassName();
 			}
-			else if (source instanceof JavaMethodSource) {
-				return ((JavaMethodSource) source).getJavaClass().getName();
+			else if (source instanceof MethodSource) {
+				return ((MethodSource) source).getClassName();
 			}
 		}
 
@@ -248,8 +245,8 @@ class XmlReportWriter {
 	}
 
 	private String buildReportEntryDescription(ReportEntry reportEntry, int entryNumber) {
-		StringBuilder builder = new StringBuilder((format("Report Entry #{0} (timestamp: {1})\n", entryNumber,
-			ISO_LOCAL_DATE_TIME.format(reportEntry.getTimestamp()))));
+		StringBuilder builder = new StringBuilder(format("Report Entry #{0} (timestamp: {1})\n", entryNumber,
+			ISO_LOCAL_DATE_TIME.format(reportEntry.getTimestamp())));
 
 		reportEntry.getKeyValuePairs().entrySet().forEach(
 			entry -> builder.append(format("\t- {0}: {1}\n", entry.getKey(), entry.getValue())));
@@ -277,12 +274,11 @@ class XmlReportWriter {
 	private void writeNonStandardAttributesToSystemOutElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
 			throws XMLStreamException {
 
-		StringBuilder builder = new StringBuilder("\n");
-		builder.append("unique-id: ").append(testIdentifier.getUniqueId()).append("\n");
-		builder.append("display-name: ").append(testIdentifier.getDisplayName()).append("\n");
+		String cData = "\nunique-id: " + testIdentifier.getUniqueId() //
+				+ "\ndisplay-name: " + testIdentifier.getDisplayName() + "\n";
 
 		writer.writeStartElement("system-out");
-		writer.writeCData(builder.toString());
+		writer.writeCData(cData);
 		writer.writeEndElement();
 		newLine(writer);
 	}

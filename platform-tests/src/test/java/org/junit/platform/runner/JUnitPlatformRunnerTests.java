@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -28,8 +28,8 @@ import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposes
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
 import static org.junit.runner.manipulation.Filter.matchMethodDescription;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -51,13 +51,14 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
-import org.junit.platform.engine.discovery.JavaClassSelector;
-import org.junit.platform.engine.discovery.JavaPackageSelector;
+import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.PackageNameFilter;
+import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalContainerDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
@@ -94,9 +95,9 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<JavaClassSelector> selectors = request.getSelectorsByType(JavaClassSelector.class);
+			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
 			assertThat(selectors).hasSize(1);
-			JavaClassSelector classSelector = getOnlyElement(selectors);
+			ClassSelector classSelector = getOnlyElement(selectors);
 			assertEquals(TestCase.class, classSelector.getJavaClass());
 		}
 
@@ -109,7 +110,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<JavaClassSelector> selectors = request.getSelectorsByType(JavaClassSelector.class);
+			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
 			assertThat(selectors).hasSize(2);
 			assertEquals(Short.class, selectors.get(0).getJavaClass());
 			assertEquals(Byte.class, selectors.get(1).getJavaClass());
@@ -124,10 +125,46 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<JavaPackageSelector> selectors = request.getSelectorsByType(JavaPackageSelector.class);
+			List<PackageSelector> selectors = request.getSelectorsByType(PackageSelector.class);
 			assertThat(selectors).hasSize(2);
 			assertEquals("foo", selectors.get(0).getPackageName());
 			assertEquals("bar", selectors.get(1).getPackageName());
+		}
+
+		@Test
+		void addsPackageFiltersToRequestWhenIncludePackageAnnotationIsPresent() throws Exception {
+
+			@IncludePackages({ "includedpackage1", "includedpackage2" })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<PackageNameFilter> filters = request.getDiscoveryFiltersByType(PackageNameFilter.class);
+			assertThat(filters).hasSize(1);
+
+			PackageNameFilter filter = filters.get(0);
+			assertTrue(filter.apply("includedpackage1.TestClass").included());
+			assertTrue(filter.apply("includedpackage2.TestClass").included());
+			assertTrue(filter.apply("excludedpackage1.TestClass").excluded());
+		}
+
+		@Test
+		void addsPackageFiltersToRequestWhenExcludePackageAnnotationIsPresent() throws Exception {
+
+			@ExcludePackages({ "excludedpackage1", "excludedpackage2" })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<PackageNameFilter> filters = request.getDiscoveryFiltersByType(PackageNameFilter.class);
+			assertThat(filters).hasSize(1);
+
+			PackageNameFilter filter = filters.get(0);
+			assertTrue(filter.apply("includedpackage1.TestClass").included());
+			assertTrue(filter.apply("excludedpackage1.TestClass").excluded());
+			assertTrue(filter.apply("excludedpackage2.TestClass").excluded());
 		}
 
 		@Test
@@ -225,9 +262,10 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsExplicitClassNameFilterToRequestWhenFilterClassNameAnnotationIsPresent() throws Exception {
+		void addsSingleExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent()
+				throws Exception {
 
-			@IncludeClassNamePattern(".*Foo")
+			@IncludeClassNamePatterns(".*Foo")
 			class TestCase {
 			}
 
@@ -235,6 +273,114 @@ class JUnitPlatformRunnerTests {
 
 			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
 			assertThat(getOnlyElement(filters).toString()).contains(".*Foo");
+		}
+
+		@Test
+		void addsSingleClassNameFilterToRequestWhenExcludeClassNamePatternsAnnotationIsPresent() throws Exception {
+
+			@ExcludeClassNamePatterns(".*Foo")
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains(".*Foo");
+		}
+
+		@Test
+		void addsMultipleExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent()
+				throws Exception {
+
+			@IncludeClassNamePatterns({ ".*Foo", "Bar.*" })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains(".*Foo", "Bar.*");
+		}
+
+		@Test
+		void addsMultipleClassNameFilterToRequestWhenExcludeClassNamePatternsAnnotationIsPresent() throws Exception {
+
+			@ExcludeClassNamePatterns({ ".*Foo", "Bar.*" })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains(".*Foo", "Bar.*");
+		}
+
+		@Test
+		void usesStandardIncludePatternWhenIncludeClassNamePatternsAnnotationIsPresentWithoutArguments()
+				throws Exception {
+
+			@IncludeClassNamePatterns
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains(STANDARD_INCLUDE_PATTERN);
+		}
+
+		@Test
+		void doesNotAddClassNameFilterWhenIncludeClassNamePatternsAnnotationIsPresentWithEmptyArguments()
+				throws Exception {
+
+			@IncludeClassNamePatterns({})
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(filters).isEmpty();
+		}
+
+		@Test
+		void doesNotAddClassNameFilterWhenExcludeClassNamePatternsAnnotationIsPresentWithEmptyArguments()
+				throws Exception {
+
+			@ExcludeClassNamePatterns({})
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(filters).isEmpty();
+		}
+
+		@Test
+		void trimsArgumentsOfIncludeClassNamePatternsAnnotation() throws Exception {
+
+			@IncludeClassNamePatterns({ " foo", "bar " })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains("'foo'", "'bar'");
+		}
+
+		@Test
+		void trimsArgumentsOfExcludeClassNamePatternsAnnotation() throws Exception {
+
+			@ExcludeClassNamePatterns({ " foo", "bar " })
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			assertThat(getOnlyElement(filters).toString()).contains("'foo'", "'bar'");
 		}
 
 		@Test
@@ -388,7 +534,7 @@ class JUnitPlatformRunnerTests {
 			when(engine.getId()).thenReturn("engine");
 			when(engine.discover(any(), eq(uniqueEngineId))).thenReturn(engineDescriptor);
 			doAnswer(invocation -> {
-				ExecutionRequest request = invocation.getArgumentAt(0, ExecutionRequest.class);
+				ExecutionRequest request = invocation.getArgument(0);
 				EngineExecutionListener listener = request.getEngineExecutionListener();
 				listener.executionStarted(engineDescriptor);
 				listener.executionSkipped(container, "deliberately skipped container");
@@ -416,10 +562,10 @@ class JUnitPlatformRunnerTests {
 			DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
 			DemoHierarchicalContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
-				"containerDisplayName", new JavaClassSource(getClass()));
+				"containerDisplayName", new ClassSource(getClass()));
 			containerDescriptor.addChild(
 				new DemoHierarchicalTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
-					"testDisplayName", new JavaMethodSource(failingTest), () -> {
+					"testDisplayName", new MethodSource(failingTest), () -> {
 					}));
 
 			JUnitPlatform platformRunner = new JUnitPlatform(TestClass.class, createLauncher(engine));
@@ -452,10 +598,10 @@ class JUnitPlatformRunnerTests {
 			DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
 			DemoHierarchicalContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
-				"containerDisplayName", new JavaClassSource(getClass()));
+				"containerDisplayName", new ClassSource(getClass()));
 			containerDescriptor.addChild(
 				new DemoHierarchicalTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
-					"testDisplayName", new JavaMethodSource(failingTest), () -> {
+					"testDisplayName", new MethodSource(failingTest), () -> {
 					}));
 
 			JUnitPlatform platformRunner = new JUnitPlatform(TestClassWithTechnicalNames.class, createLauncher(engine));

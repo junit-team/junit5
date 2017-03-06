@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,7 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.List;
@@ -22,8 +22,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.listener.NoopTestExecutionListener;
 
 /**
  * @since 1.0
@@ -31,7 +33,17 @@ import org.junit.platform.launcher.TestPlan;
 class LauncherFactoryTests {
 
 	@Test
-	void testCreate() {
+	void noopTestExecutionListenerIsLoadedViaServiceApi() {
+		DefaultLauncher launcher = (DefaultLauncher) LauncherFactory.create();
+		TestExecutionListenerRegistry registry = launcher.getTestExecutionListenerRegistry();
+		List<TestExecutionListener> listeners = registry.getTestExecutionListeners();
+		List<TestExecutionListener> one = listeners.stream().filter(
+			listener -> listener instanceof NoopTestExecutionListener).collect(toList());
+		assertThat(one).hasSize(1);
+	}
+
+	@Test
+	void create() {
 		Launcher launcher = LauncherFactory.create();
 		LauncherDiscoveryRequest discoveryRequest = this.createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
 
@@ -56,8 +68,8 @@ class LauncherFactoryTests {
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
 		// @formatter:off
 		return request()
-				.selectors(selectJavaClass(JUnit4Example.class))
-				.selectors(selectJavaClass(JUnit5Example.class))
+				.selectors(selectClass(JUnit4Example.class))
+				.selectors(selectClass(JUnit5Example.class))
 				.build();
 		// @formatter:on
 	}

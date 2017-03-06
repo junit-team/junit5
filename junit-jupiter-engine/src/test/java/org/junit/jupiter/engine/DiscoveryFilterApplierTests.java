@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -25,6 +25,7 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
+import org.junit.platform.engine.discovery.PackageNameFilter;
 
 /**
  * Microtests for {@link DiscoveryFilterApplier}.
@@ -36,10 +37,96 @@ class DiscoveryFilterApplierTests {
 	DiscoveryFilterApplier applier = new DiscoveryFilterApplier();
 
 	@Test
+	void packageNameFilterInclude_nonMatchingPackagesAreExcluded() {
+
+		EngineDiscoveryRequest request = request().filters(
+			PackageNameFilter.includePackageNames("org.junit.jupiter.engine.unknown")).build();
+
+		// @formatter:off
+		TestDescriptor engineDescriptor = engineDescriptor()
+				.with(
+						classTestDescriptor("matching", MatchingClass.class)
+				)
+				.build();
+		// @formatter:on
+
+		applier.applyAllFilters(request, engineDescriptor);
+
+		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
+			TestDescriptor::getUniqueId).collect(Collectors.toList());
+		Assertions.assertEquals(0, includedDescriptors.size());
+	}
+
+	@Test
+	void packageNameFilterInclude_matchingPackagesAreIncluded() {
+
+		EngineDiscoveryRequest request = request().filters(
+			PackageNameFilter.includePackageNames("org.junit.jupiter.engine")).build();
+
+		// @formatter:off
+		TestDescriptor engineDescriptor = engineDescriptor()
+				.with(
+						classTestDescriptor("matching", MatchingClass.class)
+				)
+				.build();
+		// @formatter:on
+
+		applier.applyAllFilters(request, engineDescriptor);
+
+		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
+			TestDescriptor::getUniqueId).collect(Collectors.toList());
+		Assertions.assertEquals(1, includedDescriptors.size());
+		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
+	}
+
+	@Test
+	void packageNameFilterExclude_matchingPackagesAreExcluded() {
+
+		EngineDiscoveryRequest request = request().filters(
+			PackageNameFilter.excludePackageNames("org.junit.jupiter.engine")).build();
+
+		// @formatter:off
+		TestDescriptor engineDescriptor = engineDescriptor()
+				.with(
+						classTestDescriptor("matching", MatchingClass.class)
+				)
+				.build();
+		// @formatter:on
+
+		applier.applyAllFilters(request, engineDescriptor);
+
+		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
+			TestDescriptor::getUniqueId).collect(Collectors.toList());
+		Assertions.assertEquals(0, includedDescriptors.size());
+	}
+
+	@Test
+	void packageNameFilterExclude_nonMatchingPackagesAreIncluded() {
+
+		EngineDiscoveryRequest request = request().filters(
+			PackageNameFilter.excludePackageNames("org.junit.jupiter.engine.unknown")).build();
+
+		// @formatter:off
+		TestDescriptor engineDescriptor = engineDescriptor()
+				.with(
+						classTestDescriptor("matching", MatchingClass.class)
+				)
+				.build();
+		// @formatter:on
+
+		applier.applyAllFilters(request, engineDescriptor);
+
+		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
+			TestDescriptor::getUniqueId).collect(Collectors.toList());
+		Assertions.assertEquals(1, includedDescriptors.size());
+		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
+	}
+
+	@Test
 	void nonMatchingClassesAreExcluded() {
 
 		EngineDiscoveryRequest request = request().filters(
-			ClassNameFilter.includeClassNamePattern(".*\\$MatchingClass")).build();
+			ClassNameFilter.includeClassNamePatterns(".*\\$MatchingClass")).build();
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
@@ -52,7 +139,7 @@ class DiscoveryFilterApplierTests {
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		List<UniqueId> includedDescriptors = engineDescriptor.getAllDescendants().stream().map(
+		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
 			TestDescriptor::getUniqueId).collect(Collectors.toList());
 		Assertions.assertEquals(1, includedDescriptors.size());
 		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
@@ -61,7 +148,7 @@ class DiscoveryFilterApplierTests {
 	@Test
 	void nestedTestClassesAreAlwaysIncludedWhenTheirParentIs() {
 		EngineDiscoveryRequest request = request().filters(
-			ClassNameFilter.includeClassNamePattern(".*\\$MatchingClass")).build();
+			ClassNameFilter.includeClassNamePatterns(".*\\$MatchingClass")).build();
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
@@ -74,7 +161,7 @@ class DiscoveryFilterApplierTests {
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		List<UniqueId> includedDescriptors = engineDescriptor.getAllDescendants().stream().map(
+		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
 			TestDescriptor::getUniqueId).collect(Collectors.toList());
 		Assertions.assertEquals(2, includedDescriptors.size());
 		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));

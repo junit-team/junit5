@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,13 +11,17 @@
 package org.junit.platform.console.options;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
 
@@ -27,14 +31,27 @@ import org.junit.platform.commons.meta.API;
 @API(Internal)
 public class CommandLineOptions {
 
+	static final Details DEFAULT_DETAILS = Details.TREE;
+
 	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
-	private boolean hideDetails;
+	private Details details = DEFAULT_DETAILS;
 
 	private boolean scanClasspath;
-	private List<String> arguments = emptyList();
+	private List<Path> selectedClasspathEntries = emptyList();
 
-	private String includeClassNamePattern = "^.*Tests?$";
+	private List<URI> selectedUris = emptyList();
+	private List<String> selectedFiles = emptyList();
+	private List<String> selectedDirectories = emptyList();
+	private List<String> selectedPackages = emptyList();
+	private List<String> selectedClasses = emptyList();
+	private List<String> selectedMethods = emptyList();
+	private List<String> selectedClasspathResources = emptyList();
+
+	private List<String> includedClassNamePatterns = singletonList(STANDARD_INCLUDE_PATTERN);
+	private List<String> excludedClassNamePatterns = emptyList();
+	private List<String> includedPackages = emptyList();
+	private List<String> excludedPackages = emptyList();
 	private List<String> includedEngines = emptyList();
 	private List<String> excludedEngines = emptyList();
 	private List<String> includedTags = emptyList();
@@ -68,20 +85,105 @@ public class CommandLineOptions {
 		this.scanClasspath = scanClasspath;
 	}
 
-	public boolean isHideDetails() {
-		return this.hideDetails;
+	public Details getDetails() {
+		return details;
 	}
 
-	public void setHideDetails(boolean hideDetails) {
-		this.hideDetails = hideDetails;
+	public void setDetails(Details details) {
+		this.details = details;
 	}
 
-	public String getIncludeClassNamePattern() {
-		return this.includeClassNamePattern;
+	public List<URI> getSelectedUris() {
+		return selectedUris;
 	}
 
-	public void setIncludeClassNamePattern(String includeClassNamePattern) {
-		this.includeClassNamePattern = includeClassNamePattern;
+	public void setSelectedUris(List<URI> selectedUris) {
+		this.selectedUris = selectedUris;
+	}
+
+	public List<String> getSelectedFiles() {
+		return selectedFiles;
+	}
+
+	public void setSelectedFiles(List<String> selectedFiles) {
+		this.selectedFiles = selectedFiles;
+	}
+
+	public List<String> getSelectedDirectories() {
+		return selectedDirectories;
+	}
+
+	public void setSelectedDirectories(List<String> selectedDirectories) {
+		this.selectedDirectories = selectedDirectories;
+	}
+
+	public List<String> getSelectedPackages() {
+		return selectedPackages;
+	}
+
+	public void setSelectedPackages(List<String> selectedPackages) {
+		this.selectedPackages = selectedPackages;
+	}
+
+	public List<String> getSelectedClasses() {
+		return selectedClasses;
+	}
+
+	public void setSelectedClasses(List<String> selectedClasses) {
+		this.selectedClasses = selectedClasses;
+	}
+
+	public List<String> getSelectedMethods() {
+		return selectedMethods;
+	}
+
+	public void setSelectedMethods(List<String> selectedMethods) {
+		this.selectedMethods = selectedMethods;
+	}
+
+	public List<String> getSelectedClasspathResources() {
+		return selectedClasspathResources;
+	}
+
+	public void setSelectedClasspathResources(List<String> selectedClasspathResources) {
+		this.selectedClasspathResources = selectedClasspathResources;
+	}
+
+	public boolean hasExplicitSelectors() {
+		return Stream.of(selectedUris, selectedFiles, selectedDirectories, selectedPackages, selectedClasses,
+			selectedMethods, selectedClasspathResources).anyMatch(selectors -> !selectors.isEmpty());
+	}
+
+	public List<String> getIncludedClassNamePatterns() {
+		return includedClassNamePatterns;
+	}
+
+	public void setIncludedClassNamePatterns(List<String> includedClassNamePatterns) {
+		this.includedClassNamePatterns = includedClassNamePatterns;
+	}
+
+	public List<String> getExcludedClassNamePatterns() {
+		return excludedClassNamePatterns;
+	}
+
+	public void setExcludedClassNamePatterns(List<String> excludedClassNamePatterns) {
+		this.excludedClassNamePatterns = excludedClassNamePatterns;
+	}
+
+	public List<String> getIncludedPackages() {
+		return this.includedPackages;
+	}
+
+	public void setIncludedPackages(List<String> includedPackages) {
+		this.includedPackages = includedPackages;
+	}
+
+	public List<String> getExcludedPackages() {
+		return this.excludedPackages;
+	}
+
+	public void setExcludedPackages(List<String> excludedPackages) {
+		this.excludedPackages = excludedPackages;
 	}
 
 	public List<String> getIncludedEngines() {
@@ -134,12 +236,12 @@ public class CommandLineOptions {
 		this.reportsDir = reportsDir;
 	}
 
-	public List<String> getArguments() {
-		return this.arguments;
+	public List<Path> getSelectedClasspathEntries() {
+		return this.selectedClasspathEntries;
 	}
 
-	public void setArguments(List<String> arguments) {
-		this.arguments = arguments;
+	public void setSelectedClasspathEntries(List<Path> selectedClasspathEntries) {
+		this.selectedClasspathEntries = selectedClasspathEntries;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.toSet;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -25,8 +24,8 @@ import java.util.function.Predicate;
 
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.runner.Description;
@@ -97,18 +96,17 @@ class JUnitPlatformTestTree {
 		Optional<TestSource> optionalSource = testIdentifier.getSource();
 		if (optionalSource.isPresent()) {
 			TestSource source = optionalSource.get();
-			if (source instanceof JavaClassSource) {
-				return ((JavaClassSource) source).getJavaClass().getName();
+			if (source instanceof ClassSource) {
+				return ((ClassSource) source).getJavaClass().getName();
 			}
-			else if (source instanceof JavaMethodSource) {
-				JavaMethodSource javaMethodSource = (JavaMethodSource) source;
-				List<Class<?>> parameterTypes = javaMethodSource.getJavaMethodParameterTypes();
-				if (parameterTypes.size() == 0) {
-					return javaMethodSource.getJavaMethodName();
+			else if (source instanceof MethodSource) {
+				MethodSource methodSource = (MethodSource) source;
+				String methodParameterTypes = methodSource.getMethodParameterTypes();
+				if (StringUtils.isBlank(methodParameterTypes)) {
+					return methodSource.getMethodName();
 				}
 				else {
-					return String.format("%s(%s)", javaMethodSource.getJavaMethodName(), StringUtils.nullSafeToString(
-						Class::getName, parameterTypes.toArray(new Class<?>[parameterTypes.size()])));
+					return String.format("%s(%s)", methodSource.getMethodName(), methodParameterTypes);
 				}
 			}
 		}

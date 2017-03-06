@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -34,7 +34,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *
  * <h4>Example</h4>
  *
- * <pre style="code">
+ * <pre class="code">
  * import static org.junit.platform.engine.discovery.DiscoverySelectors.*;
  * import static org.junit.platform.engine.discovery.ClassNameFilter.*;
  * import static org.junit.platform.launcher.EngineFilter.*;
@@ -44,15 +44,15 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *
  *   LauncherDiscoveryRequestBuilder.request()
  *     .selectors(
- *        selectJavaPackage("org.example.user"),
- *        selectJavaClass("org.example.payment.PaymentTests"),
- *        selectJavaClass(ShippingTests.class),
- *        selectJavaMethod("org.example.order.OrderTests#test1"),
- *        selectJavaMethod("org.example.order.OrderTests#test2()"),
- *        selectJavaMethod("org.example.order.OrderTests#test3(java.lang.String)"),
- *        selectJavaMethod("org.example.order.OrderTests", "test4"),
- *        selectJavaMethod(OrderTests.class, "test5"),
- *        selectJavaMethod(OrderTests.class, testMethod),
+ *        selectPackage("org.example.user"),
+ *        selectClass("org.example.payment.PaymentTests"),
+ *        selectClass(ShippingTests.class),
+ *        selectMethod("org.example.order.OrderTests#test1"),
+ *        selectMethod("org.example.order.OrderTests#test2()"),
+ *        selectMethod("org.example.order.OrderTests#test3(java.lang.String)"),
+ *        selectMethod("org.example.order.OrderTests", "test4"),
+ *        selectMethod(OrderTests.class, "test5"),
+ *        selectMethod(OrderTests.class, testMethod),
  *        selectClasspathRoots(Collections.singleton(new File("/my/local/path1"))),
  *        selectUniqueId("unique-id-1"),
  *        selectUniqueId("unique-id-2")
@@ -62,8 +62,8 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *        // excludeEngines("junit-vintage"),
  *        includeTags("fast"),
  *        // excludeTags("slow"),
- *        includeClassNamePattern(".*Test[s]?")
- *        // includeClassNamePattern("org\.example\.tests.*")
+ *        includeClassNamePatterns(".*Test[s]?")
+ *        // includeClassNamePatterns("org\.example\.tests.*")
  *     )
  *     .configurationParameter("key1", "value1")
  *     .configurationParameters(configParameterMap)
@@ -87,6 +87,8 @@ public final class LauncherDiscoveryRequestBuilder {
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
+	 *
+	 * @return a new builder
 	 */
 	public static LauncherDiscoveryRequestBuilder request() {
 		return new LauncherDiscoveryRequestBuilder();
@@ -95,29 +97,33 @@ public final class LauncherDiscoveryRequestBuilder {
 	/**
 	 * Add all of the supplied {@code selectors} to the request.
 	 *
-	 * @param selectors the {@code DiscoverySelectors} to add
+	 * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
+	 * @return this builder for method chaining
 	 */
 	public LauncherDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
-		if (selectors != null) {
-			selectors(Arrays.asList(selectors));
-		}
+		Preconditions.notNull(selectors, "selectors array must not be null");
+		selectors(Arrays.asList(selectors));
 		return this;
 	}
 
 	/**
 	 * Add all of the supplied {@code selectors} to the request.
 	 *
-	 * @param selectors the {@code DiscoverySelectors} to add
+	 * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
+	 * @return this builder for method chaining
 	 */
 	public LauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
-		if (selectors != null) {
-			this.selectors.addAll(selectors);
-		}
+		Preconditions.notNull(selectors, "selectors list must not be null");
+		Preconditions.containsNoNullElements(selectors, "individual selectors must not be null");
+		this.selectors.addAll(selectors);
 		return this;
 	}
 
 	/**
 	 * Add all of the supplied {@code filters} to the request.
+	 *
+	 * <p>The {@code filters} are combined using AND semantics, i.e. all of them
+	 * have to include a resource for it to end up in the test plan.
 	 *
 	 * <p><strong>Warning</strong>: be cautious when registering multiple competing
 	 * {@link EngineFilter#includeEngines include} {@code EngineFilters} or multiple
@@ -125,17 +131,23 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * for the same discovery request since doing so will likely lead to
 	 * undesirable results (i.e., zero engines being active).
 	 *
-	 * @param filters the {@code Filter}s to add
+	 * @param filters the {@code Filter}s to add; never {@code null}
+	 * @return this builder for method chaining
 	 */
 	public LauncherDiscoveryRequestBuilder filters(Filter<?>... filters) {
-		if (filters != null) {
-			Arrays.stream(filters).forEach(this::storeFilter);
-		}
+		Preconditions.notNull(filters, "filters array must not be null");
+		Preconditions.containsNoNullElements(filters, "individual filters must not be null");
+		Arrays.stream(filters).forEach(this::storeFilter);
 		return this;
 	}
 
 	/**
 	 * Add the supplied <em>configuration parameter</em> to the request.
+	 *
+	 * @param key the configuration parameter key under which to store the
+	 * value; never {@code null} or blank
+	 * @param value the value to store
+	 * @return this builder for method chaining
 	 */
 	public LauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
 		Preconditions.notBlank(key, "configuration parameter key must not be null or blank");
@@ -144,14 +156,16 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Add all of the supplied {@code configurationParameters} to the request.
+	 * Add all of the supplied configuration parameters to the request.
 	 *
-	 * @param configurationParameters the map of configuration parameters to add
+	 * @param configurationParameters the map of configuration parameters to add;
+	 * never {@code null}
+	 * @return this builder for method chaining
+	 * @see #configurationParameter(String, String)
 	 */
 	public LauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
-		if (configurationParameters != null) {
-			configurationParameters.forEach(this::configurationParameter);
-		}
+		Preconditions.notNull(configurationParameters, "configuration parameters map must not be null");
+		configurationParameters.forEach(this::configurationParameter);
 		return this;
 	}
 

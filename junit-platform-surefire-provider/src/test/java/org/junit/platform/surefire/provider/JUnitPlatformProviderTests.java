@@ -1,11 +1,17 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
- * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
- * accompanies this distribution and is available at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.junit.platform.surefire.provider;
@@ -14,14 +20,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.surefire.providerapi.ProviderParameters;
 import org.apache.maven.surefire.report.ReporterFactory;
@@ -31,6 +39,7 @@ import org.apache.maven.surefire.util.ScanResult;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
@@ -104,6 +113,82 @@ class JUnitPlatformProviderTests {
 		assertThat(executionListener.summaries).hasSize(2);
 		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
 		TestClass2.verifyExecutionSummary(executionListener.summaries.get(1));
+	}
+
+	@Test
+	void bothGroupsAndIncludeTagsThrowsException() {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.INCLUDE_GROUPS, "groupOne, groupTwo");
+		properties.put(JUnitPlatformProvider.INCLUDE_TAGS, "tagOne, tagTwo");
+		verifyPreconditionViolationException(properties);
+	}
+
+	@Test
+	void bothExcludedGroupsAndExcludeTagsThrowsException() {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.EXCLUDE_GROUPS, "groupOne, groupTwo");
+		properties.put(JUnitPlatformProvider.EXCLUDE_TAGS, "tagOne, tagTwo");
+		verifyPreconditionViolationException(properties);
+	}
+
+	@Test
+	void onlyGroupsIsDeclared() throws Exception {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.INCLUDE_GROUPS, "groupOne, groupTwo");
+
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+
+		assertEquals(1, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
+	void onlyExcludeTagsIsDeclared() throws Exception {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.EXCLUDE_TAGS, "tagOne, tagTwo");
+
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+
+		assertEquals(1, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
+	void bothIncludeAndExcludeAreAllowed() throws Exception {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.INCLUDE_TAGS, "tagOne, tagTwo");
+		properties.put(JUnitPlatformProvider.EXCLUDE_TAGS, "tagThree, tagFour");
+
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+
+		assertEquals(2, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
+	void noFiltersAreCreatedIfNoPropertiesAreDeclared() throws Exception {
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+
+		assertEquals(0, provider.includeAndExcludeFilters.length);
+	}
+
+	private void verifyPreconditionViolationException(Map<String, String> properties) {
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		Throwable throwable = assertThrows(PreconditionViolationException.class, () -> {
+			new JUnitPlatformProvider(providerParameters);
+		});
+
+		assertEquals(JUnitPlatformProvider.EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED, throwable.getMessage());
 	}
 
 	private static ProviderParameters providerParametersMock(Class<?>... testClasses) {

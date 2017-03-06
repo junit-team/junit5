@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -21,6 +21,12 @@ import org.junit.platform.engine.DiscoverySelector;
  * so that {@link org.junit.platform.engine.TestEngine TestEngines} can load resources
  * from the classpath &mdash; for example, to load XML or JSON files from the classpath,
  * potentially within JARs.
+ *
+ * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
+ * expected to modify the classpath, the classpath resource represented by this
+ * selector must be on the classpath of the
+ * {@linkplain Thread#getContextClassLoader() context class loader} of the
+ * {@linkplain Thread thread} that uses it.
  *
  * @since 1.0
  * @see ClasspathRootSelector

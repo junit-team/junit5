@@ -1,21 +1,28 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
- * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
- * accompanies this distribution and is available at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.junit.platform.surefire.provider;
 
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.function.Predicate;
 
 import org.apache.maven.surefire.util.ScannerFilter;
+import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
@@ -30,15 +37,18 @@ final class TestPlanScannerFilter implements ScannerFilter {
 			|| testIdentifier.isContainer();
 
 	private final Launcher launcher;
+	private final Filter<?>[] includeAndExcludeFilters;
 
-	public TestPlanScannerFilter(Launcher launcher) {
+	public TestPlanScannerFilter(Launcher launcher, Filter<?>[] includeAndExcludeFilters) {
 		this.launcher = launcher;
+		this.includeAndExcludeFilters = includeAndExcludeFilters;
 	}
 
 	@Override
 	@SuppressWarnings("rawtypes")
 	public boolean accept(Class testClass) {
-		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectJavaClass(testClass)).build();
+		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).filters(
+			includeAndExcludeFilters).build();
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 		return testPlan.countTestIdentifiers(hasTests) > 0;
 	}

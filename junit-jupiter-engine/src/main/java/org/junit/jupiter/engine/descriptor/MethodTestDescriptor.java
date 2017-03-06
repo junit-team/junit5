@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -14,33 +14,27 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
-import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.
@@ -53,7 +47,7 @@ import org.junit.platform.engine.support.descriptor.JavaMethodSource;
  * For example, the default display name for the following test method is
  * {@code testUser(TestInfo, User)}.
  *
- * <pre style="code">
+ * <pre class="code">
  *   {@literal @}Test
  *   void testUser(TestInfo testInfo, {@literal @}Mock User user) { ... }
  * </pre>
@@ -61,39 +55,16 @@ import org.junit.platform.engine.support.descriptor.JavaMethodSource;
  * @since 5.0
  */
 @API(Internal)
-public class MethodTestDescriptor extends JupiterTestDescriptor {
+public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 
-	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
-	private final Class<?> testClass;
-	private final Method testMethod;
-
 	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		super(uniqueId, determineDisplayName(Preconditions.notNull(testMethod, "Method must not be null"),
-			MethodTestDescriptor::generateDefaultDisplayName));
-
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.testMethod = testMethod;
-
-		setSource(new JavaMethodSource(testMethod));
+		super(uniqueId, testClass, testMethod);
 	}
 
-	// --- TestDescriptor ------------------------------------------------------
-
-	@Override
-	public final Set<TestTag> getTags() {
-		Set<TestTag> methodTags = getTags(getTestMethod());
-		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
-		return methodTags;
-	}
-
-	public final Class<?> getTestClass() {
-		return this.testClass;
-	}
-
-	public final Method getTestMethod() {
-		return this.testMethod;
+	MethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
+		super(uniqueId, displayName, testClass, testMethod);
 	}
 
 	@Override
@@ -106,43 +77,37 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		return false;
 	}
 
-	protected static String generateDefaultDisplayName(Method testMethod) {
-		return String.format("%s(%s)", testMethod.getName(),
-			StringUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes()));
-	}
-
 	// --- Node ----------------------------------------------------------------
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
-		ExtensionRegistry extensionRegistry = populateNewExtensionRegistryFromExtendWith(this.testMethod,
-			context.getExtensionRegistry());
-		Object testInstance = context.getTestInstanceProvider().getTestInstance();
+		ExtensionRegistry registry = populateNewExtensionRegistry(context);
+		Object testInstance = context.getTestInstanceProvider().getTestInstance(Optional.of(registry));
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, testInstance, throwableCollector);
 
 		// @formatter:off
 		return context.extend()
-				.withExtensionRegistry(extensionRegistry)
+				.withExtensionRegistry(registry)
 				.withExtensionContext(testExtensionContext)
 				.withThrowableCollector(throwableCollector)
 				.build();
 		// @formatter:on
 	}
 
-	@Override
-	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
-		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForTest(context.getExtensionRegistry(),
-			context.getConfigurationParameters(), (TestExtensionContext) context.getExtensionContext());
-		if (evaluationResult.isDisabled()) {
-			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
-		}
-		return SkipResult.doNotSkip();
+	protected ExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
+		return populateNewExtensionRegistryFromExtendWith(this.getTestMethod(), context.getExtensionRegistry());
 	}
 
 	@Override
-	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context) throws Exception {
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
+		return shouldTestBeSkipped(context);
+	}
+
+	@Override
+	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
+			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		// @formatter:off
@@ -152,7 +117,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 				if (throwableCollector.isEmpty()) {
 					invokeBeforeTestExecutionCallbacks(context);
 					if (throwableCollector.isEmpty()) {
-						invokeTestMethod(context);
+						invokeTestMethod(context, dynamicTestExecutor);
 					}
 					invokeAfterTestExecutionCallbacks(context);
 				}
@@ -172,8 +137,9 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeBeforeEachMethods(JupiterEngineExecutionContext context) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
 		invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
-			((extensionContext, callback) -> () -> callback.invokeBeforeEachMethod(extensionContext)),
+			((extensionContext, adapter) -> () -> adapter.invokeBeforeEachMethod(extensionContext, registry)),
 			BeforeEachMethodAdapter.class);
 	}
 
@@ -186,6 +152,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	private <T extends Extension> void invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(
 			JupiterEngineExecutionContext context, BiFunction<TestExtensionContext, T, Executable> generator,
 			Class<T> type) {
+
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
@@ -199,7 +166,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		}
 	}
 
-	protected void invokeTestMethod(JupiterEngineExecutionContext context) {
+	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
@@ -245,8 +212,9 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeAfterEachMethods(JupiterEngineExecutionContext context) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
 		invokeAllAfterMethodsOrCallbacks(context,
-			((extensionContext, callback) -> () -> callback.invokeAfterEachMethod(extensionContext)),
+			((extensionContext, adapter) -> () -> adapter.invokeAfterEachMethod(extensionContext, registry)),
 			AfterEachMethodAdapter.class);
 	}
 
@@ -257,6 +225,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	private <T extends Extension> void invokeAllAfterMethodsOrCallbacks(JupiterEngineExecutionContext context,
 			BiFunction<TestExtensionContext, T, Executable> generator, Class<T> type) {
+
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
@@ -265,7 +234,6 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 			Executable executable = generator.apply(testExtensionContext, callback);
 			throwableCollector.execute(executable);
 		});
-
 	}
 
 }

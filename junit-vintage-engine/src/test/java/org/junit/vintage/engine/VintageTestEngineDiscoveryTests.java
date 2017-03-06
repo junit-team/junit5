@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -20,16 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.FunctionUtils.where;
-import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,11 +41,12 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.runner.manipulation.Filter;
 import org.junit.vintage.engine.samples.PlainOldJavaClassWithoutAnyTest;
@@ -225,11 +227,35 @@ class VintageTestEngineDiscoveryTests {
 	}
 
 	@Test
+	public void resolvesClasspathSelectorForJarFile() throws Exception {
+		URL jarUrl = getClass().getResource("/vintage-testjar.jar");
+		Path jarFile = Paths.get(jarUrl.toURI());
+
+		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+		try (URLClassLoader classLoader = new URLClassLoader(new URL[] { jarUrl })) {
+			Thread.currentThread().setContextClassLoader(classLoader);
+
+			LauncherDiscoveryRequest discoveryRequest = request().selectors(
+				selectClasspathRoots(singleton(jarFile))).build();
+			TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
+
+			// @formatter:off
+			assertThat(engineDescriptor.getChildren())
+					.extracting(TestDescriptor::getDisplayName)
+					.containsExactly("com.example.project.JUnit4Test");
+			// @formatter:on
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(originalClassLoader);
+		}
+	}
+
+	@Test
 	void resolvesApplyingClassNameFilters() throws Exception {
 		Path root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClasspathRoots(singleton(root))).filters(
-			includeClassNamePattern(".*JUnit4.*"), includeClassNamePattern(".*Plain.*")).build();
+			includeClassNamePatterns(".*JUnit4.*"), includeClassNamePatterns(".*Plain.*")).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -247,7 +273,7 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(
-			selectJavaPackage(testClass.getPackage().getName())).build();
+			selectPackage(testClass.getPackage().getName())).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -264,7 +290,7 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
 
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(
-			selectJavaPackage(testClass.getPackage().getName())).build();
+			selectPackage(testClass.getPackage().getName())).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -324,7 +350,7 @@ class VintageTestEngineDiscoveryTests {
 	void resolvesMethodSelectorForSingleMethod() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(
-			selectJavaMethod(testClass, testClass.getMethod("failingTest"))).build();
+			selectMethod(testClass, testClass.getMethod("failingTest"))).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -340,8 +366,8 @@ class VintageTestEngineDiscoveryTests {
 	void resolvesMethodSelectorForTwoMethodsOfSameClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(
-			selectJavaMethod(testClass, testClass.getMethod("failingTest")),
-			selectJavaMethod(testClass, testClass.getMethod("successfulTest"))).build();
+			selectMethod(testClass, testClass.getMethod("failingTest")),
+			selectMethod(testClass, testClass.getMethod("successfulTest"))).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -470,9 +496,8 @@ class VintageTestEngineDiscoveryTests {
 	void ignoresMoreFineGrainedSelectorsWhenClassIsSelectedAsWell() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		LauncherDiscoveryRequest discoveryRequest = request().selectors( //
-			selectJavaMethod(testClass, testClass.getMethod("failingTest")), //
-			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "abortedTest")),
-			selectJavaClass(testClass) //
+			selectMethod(testClass, testClass.getMethod("failingTest")), //
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "abortedTest")), selectClass(testClass) //
 		).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
@@ -487,7 +512,7 @@ class VintageTestEngineDiscoveryTests {
 	void resolvesCombinationOfMethodAndUniqueIdSelector() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		LauncherDiscoveryRequest discoveryRequest = request().selectors( //
-			selectJavaMethod(testClass, testClass.getMethod("failingTest")), //
+			selectMethod(testClass, testClass.getMethod("failingTest")), //
 			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "abortedTest") //
 			)).build();
 
@@ -508,7 +533,7 @@ class VintageTestEngineDiscoveryTests {
 	void ignoresRedundantSelector() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		LauncherDiscoveryRequest discoveryRequest = request().selectors( //
-			selectJavaMethod(testClass, testClass.getMethod("failingTest")), //
+			selectMethod(testClass, testClass.getMethod("failingTest")), //
 			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "failingTest") //
 			)).build();
 
@@ -527,8 +552,8 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		// @formatter:off
 		LauncherDiscoveryRequest request = request()
-				.selectors(selectJavaMethod(testClass, testClass.getMethod("failingTest")))
-				.filters(includeClassNamePattern("Foo"))
+				.selectors(selectMethod(testClass, testClass.getMethod("failingTest")))
+				.filters(includeClassNamePatterns("Foo"))
 				.build();
 		// @formatter:on
 
@@ -540,7 +565,7 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> testClass = IgnoredJUnit4TestCase.class;
 		// @formatter:off
 		LauncherDiscoveryRequest request = request()
-				.selectors(selectJavaMethod(testClass, testClass.getMethod("test")))
+				.selectors(selectMethod(testClass, testClass.getMethod("test")))
 				.build();
 		// @formatter:on
 
@@ -555,7 +580,7 @@ class VintageTestEngineDiscoveryTests {
 	@Test
 	void usesCustomUniqueIdsWhenPresent() throws Exception {
 		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIds.class;
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(testClass)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(request);
 
@@ -575,7 +600,7 @@ class VintageTestEngineDiscoveryTests {
 	@Test
 	void resolvesTestSourceForParameterizedTests() throws Exception {
 		Class<?> testClass = ParameterizedTestCase.class;
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(testClass)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(request);
 
@@ -668,20 +693,21 @@ class VintageTestEngineDiscoveryTests {
 	}
 
 	private static void assertClassSource(Class<?> expectedClass, TestDescriptor testDescriptor) {
-		assertThat(testDescriptor.getSource()).containsInstanceOf(JavaClassSource.class);
-		JavaClassSource classSource = (JavaClassSource) testDescriptor.getSource().get();
+		assertThat(testDescriptor.getSource()).containsInstanceOf(ClassSource.class);
+		ClassSource classSource = (ClassSource) testDescriptor.getSource().get();
 		assertThat(classSource.getJavaClass()).isEqualTo(expectedClass);
 	}
 
 	private static void assertMethodSource(Method expectedMethod, TestDescriptor testDescriptor) {
-		assertThat(testDescriptor.getSource()).containsInstanceOf(JavaMethodSource.class);
-		JavaMethodSource methodSource = (JavaMethodSource) testDescriptor.getSource().get();
-		assertThat(methodSource.getJavaClass()).isEqualTo(expectedMethod.getDeclaringClass());
-		assertThat(methodSource.getJavaMethodName()).isEqualTo(expectedMethod.getName());
-		assertThat(methodSource.getJavaMethodParameterTypes()).containsExactly(expectedMethod.getParameterTypes());
+		assertThat(testDescriptor.getSource()).containsInstanceOf(MethodSource.class);
+		MethodSource methodSource = (MethodSource) testDescriptor.getSource().get();
+		assertThat(methodSource.getClassName()).isEqualTo(expectedMethod.getDeclaringClass().getName());
+		assertThat(methodSource.getMethodName()).isEqualTo(expectedMethod.getName());
+		assertThat(methodSource.getMethodParameterTypes()).isEqualTo(
+			StringUtils.nullSafeToString(expectedMethod.getParameterTypes()));
 	}
 
 	private static LauncherDiscoveryRequest discoveryRequestForClass(Class<?> testClass) {
-		return request().selectors(selectJavaClass(testClass)).build();
+		return request().selectors(selectClass(testClass)).build();
 	}
 }

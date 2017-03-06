@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,19 +10,20 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.opentest4j.TestAbortedException;
@@ -114,7 +116,7 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(child).prepare(rootContext);
 		inOrder.verify(child).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(child);
-		inOrder.verify(child).execute(rootContext);
+		inOrder.verify(child).execute(eq(rootContext), any());
 		inOrder.verify(listener).executionFinished(eq(child), aTestExecutionResult.capture());
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
@@ -126,7 +128,7 @@ public class HierarchicalTestExecutorTests {
 	public void skippingAContainer() throws Exception {
 
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
-		stub(child.shouldBeSkipped(rootContext)).toReturn(Node.SkipResult.skip("in test"));
+		when(child.shouldBeSkipped(rootContext)).thenReturn(Node.SkipResult.skip("in test"));
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -147,7 +149,7 @@ public class HierarchicalTestExecutorTests {
 	public void skippingALeaf() throws Exception {
 
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "child leaf")));
-		stub(child.shouldBeSkipped(rootContext)).toReturn(Node.SkipResult.skip("in test"));
+		when(child.shouldBeSkipped(rootContext)).thenReturn(Node.SkipResult.skip("in test"));
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -169,7 +171,7 @@ public class HierarchicalTestExecutorTests {
 
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		RuntimeException anException = new RuntimeException("in skip");
-		stub(child.shouldBeSkipped(rootContext)).toThrow(anException);
+		when(child.shouldBeSkipped(rootContext)).thenThrow(anException);
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, child);
@@ -197,7 +199,7 @@ public class HierarchicalTestExecutorTests {
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		root.addChild(child);
 		RuntimeException anException = new RuntimeException("in test");
-		stub(root.before(rootContext)).toThrow(anException);
+		when(root.before(rootContext)).thenThrow(anException);
 
 		InOrder inOrder = inOrder(listener, root, child);
 
@@ -236,7 +238,7 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionStarted(root);
 		inOrder.verify(root).before(rootContext);
 		inOrder.verify(listener).executionStarted(child);
-		inOrder.verify(child).execute(rootContext);
+		inOrder.verify(child).execute(eq(rootContext), any());
 		inOrder.verify(listener).executionFinished(eq(child), any(TestExecutionResult.class));
 		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
@@ -251,7 +253,7 @@ public class HierarchicalTestExecutorTests {
 
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
 		RuntimeException anException = new RuntimeException("in test");
-		stub(child.execute(rootContext)).toThrow(anException);
+		when(child.execute(eq(rootContext), any())).thenThrow(anException);
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -262,7 +264,7 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionStarted(root);
 		inOrder.verify(root).before(rootContext);
 		inOrder.verify(listener).executionStarted(child);
-		inOrder.verify(child).execute(rootContext);
+		inOrder.verify(child).execute(eq(rootContext), any());
 		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
 		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
@@ -278,7 +280,7 @@ public class HierarchicalTestExecutorTests {
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		root.addChild(child);
 		TestAbortedException anAbortedException = new TestAbortedException("in BeforeAll");
-		stub(root.before(rootContext)).toThrow(anAbortedException);
+		when(root.before(rootContext)).thenThrow(anAbortedException);
 
 		InOrder inOrder = inOrder(listener, root, child);
 
@@ -304,7 +306,7 @@ public class HierarchicalTestExecutorTests {
 
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
 		TestAbortedException anAbortedException = new TestAbortedException("in test");
-		stub(child.execute(rootContext)).toThrow(anAbortedException);
+		when(child.execute(eq(rootContext), any())).thenThrow(anAbortedException);
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -315,7 +317,7 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionStarted(root);
 		inOrder.verify(root).before(rootContext);
 		inOrder.verify(listener).executionStarted(child);
-		inOrder.verify(child).execute(rootContext);
+		inOrder.verify(child).execute(eq(rootContext), any());
 		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
 		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
@@ -325,6 +327,43 @@ public class HierarchicalTestExecutorTests {
 		assertSame(childExecutionResult.getValue().getThrowable().get(), anAbortedException);
 	}
 
+	@Test
+	public void executesDynamicTestDescriptors() throws Exception {
+
+		UniqueId leafUniqueId = UniqueId.root("leaf", "child leaf");
+		MyLeaf child = spy(new MyLeaf(leafUniqueId));
+		MyLeaf dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
+
+		when(child.execute(any(), any())).thenAnswer(invocation -> {
+			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
+			dynamicTestExecutor.execute(dynamicTestDescriptor);
+			return invocation.getArgument(0);
+		});
+		root.addChild(child);
+
+		InOrder inOrder = inOrder(listener, root, child, dynamicTestDescriptor);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> aTestExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(listener).executionStarted(root);
+		inOrder.verify(child).prepare(rootContext);
+		inOrder.verify(child).shouldBeSkipped(rootContext);
+		inOrder.verify(listener).executionStarted(child);
+		inOrder.verify(child).execute(eq(rootContext), any());
+		inOrder.verify(listener).dynamicTestRegistered(dynamicTestDescriptor);
+		inOrder.verify(dynamicTestDescriptor).prepare(rootContext);
+		inOrder.verify(dynamicTestDescriptor).shouldBeSkipped(rootContext);
+		inOrder.verify(listener).executionStarted(dynamicTestDescriptor);
+		inOrder.verify(dynamicTestDescriptor).execute(eq(rootContext), any());
+		inOrder.verify(listener).executionFinished(eq(dynamicTestDescriptor), aTestExecutionResult.capture());
+		inOrder.verify(listener).executionFinished(eq(child), aTestExecutionResult.capture());
+		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
+
+		assertThat(aTestExecutionResult.getAllValues()).extracting(TestExecutionResult::getStatus).containsExactly(
+			TestExecutionResult.Status.SUCCESSFUL, TestExecutionResult.Status.SUCCESSFUL);
+	}
+
 	/**
 	 * Verifies support for blacklisted exceptions.
 	 */
@@ -332,10 +371,10 @@ public class HierarchicalTestExecutorTests {
 	public void outOfMemoryErrorInShouldBeSkipped() throws Exception {
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		OutOfMemoryError outOfMemoryError = new OutOfMemoryError("in skip");
-		stub(child.shouldBeSkipped(rootContext)).toThrow(outOfMemoryError);
+		when(child.shouldBeSkipped(rootContext)).thenThrow(outOfMemoryError);
 		root.addChild(child);
 
-		Throwable actualException = expectThrows(OutOfMemoryError.class, () -> executor.execute());
+		Throwable actualException = assertThrows(OutOfMemoryError.class, () -> executor.execute());
 		assertSame(outOfMemoryError, actualException);
 	}
 
@@ -346,10 +385,10 @@ public class HierarchicalTestExecutorTests {
 	public void outOfMemoryErrorInLeafExecution() throws Exception {
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
 		OutOfMemoryError outOfMemoryError = new OutOfMemoryError("in test");
-		stub(child.execute(rootContext)).toThrow(outOfMemoryError);
+		when(child.execute(eq(rootContext), any())).thenThrow(outOfMemoryError);
 		root.addChild(child);
 
-		Throwable actualException = expectThrows(OutOfMemoryError.class, () -> executor.execute());
+		Throwable actualException = assertThrows(OutOfMemoryError.class, () -> executor.execute());
 		assertSame(outOfMemoryError, actualException);
 	}
 
@@ -388,7 +427,8 @@ public class HierarchicalTestExecutorTests {
 		}
 
 		@Override
-		public MyEngineExecutionContext execute(MyEngineExecutionContext context) throws Exception {
+		public MyEngineExecutionContext execute(MyEngineExecutionContext context,
+				DynamicTestExecutor dynamicTestExecutor) throws Exception {
 			return context;
 		}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -52,7 +52,8 @@ public interface Filter<T> {
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	static <T> Filter<T> composeFilters(Filter<T>... filters) {
-		Preconditions.notNull(filters, "Filters must not be null");
+		Preconditions.notNull(filters, "filters array must not be null");
+		Preconditions.containsNoNullElements(filters, "individual filters must not be null");
 
 		if (filters.length == 0) {
 			return alwaysIncluded();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -27,6 +27,7 @@ class ClassFileVisitor extends SimpleFileVisitor<Path> {
 
 	static final String CLASS_FILE_SUFFIX = ".class";
 	private static final String PACKAGE_INFO_FILE_NAME = "package-info" + CLASS_FILE_SUFFIX;
+	private static final String MODULE_INFO_FILE_NAME = "module-info" + CLASS_FILE_SUFFIX;
 
 	private final Consumer<Path> classFileConsumer;
 
@@ -36,7 +37,7 @@ class ClassFileVisitor extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
-		if (isNotPackageInfo(file) && isClassFile(file)) {
+		if (isNotPackageInfo(file) && isNotModuleInfo(file) && isClassFile(file)) {
 			classFileConsumer.accept(file);
 		}
 		return CONTINUE;
@@ -58,6 +59,10 @@ class ClassFileVisitor extends SimpleFileVisitor<Path> {
 
 	private static boolean isNotPackageInfo(Path path) {
 		return !path.endsWith(PACKAGE_INFO_FILE_NAME);
+	}
+
+	private static boolean isNotModuleInfo(Path path) {
+		return !path.endsWith(MODULE_INFO_FILE_NAME);
 	}
 
 	private static boolean isClassFile(Path file) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -13,6 +13,7 @@ package org.junit.platform.console.options;
 import static java.util.Arrays.asList;
 
 import java.io.File;
+import java.net.URI;
 import java.nio.file.Path;
 
 import joptsimple.OptionParser;
@@ -27,23 +28,34 @@ import org.junit.platform.engine.discovery.ClassNameFilter;
  */
 class AvailableOptions {
 
+	private static final String CP_OPTION = "cp";
+
 	private final OptionParser parser = new OptionParser();
 
 	// General Purpose
 	private final OptionSpec<Void> help;
 	private final OptionSpec<Void> disableAnsiColors;
-	private final OptionSpec<Void> hideDetails;
+	private final OptionSpec<Details> details;
 	private final OptionSpec<Path> additionalClasspathEntries;
 
 	// Reports
 	private final OptionSpec<Path> reportsDir;
 
 	// Selectors
-	private final OptionSpec<Void> scanClasspath;
-	private final OptionSpec<String> arguments;
+	private final OptionSpec<Path> selectedClasspathEntries;
+	private final OptionSpec<URI> selectedUris;
+	private final OptionSpec<String> selectedFiles;
+	private final OptionSpec<String> selectedDirectories;
+	private final OptionSpec<String> selectedPackages;
+	private final OptionSpec<String> selectedClasses;
+	private final OptionSpec<String> selectedMethods;
+	private final OptionSpec<String> selectedClasspathResources;
 
 	// Filters
 	private final OptionSpec<String> includeClassNamePattern;
+	private final OptionSpec<String> excludeClassNamePattern;
+	private final OptionSpec<String> includePackage;
+	private final OptionSpec<String> excludePackage;
 	private final OptionSpec<String> includeTag;
 	private final OptionSpec<String> excludeTag;
 	private final OptionSpec<String> includeEngine;
@@ -59,10 +71,20 @@ class AvailableOptions {
 		disableAnsiColors = parser.accepts("disable-ansi-colors",
 			"Disable ANSI colors in output (not supported by all terminals).");
 
-		hideDetails = parser.accepts("hide-details",
-			"Hide details while tests are being executed. Only show the summary and test failures.");
+		// TODO Remove "hide-details" before final release. Only here to make "legacy" Gradle plugin happy.
+		// If removed, an old Gradle:junitPlatformTest will report:
+		//   Exception in thread "main" joptsimple.UnrecognizedOptionException: hide-details is not a recognized option
+		parser.accepts("hide-details", "@Deprecated. Use '--details none' instead.");
 
-		additionalClasspathEntries = parser.acceptsAll(asList("cp", "classpath", "class-path"), //
+		details = parser.accepts("details",
+			"Select an output details mode for when tests are executed. Use one of: " + asList(Details.values())
+					+ ". If '" + Details.NONE + "' is selected, then only the summary and test failures are shown.") //
+				.withRequiredArg() //
+				.ofType(Details.class) //
+				.withValuesConvertedBy(new DetailsConverter()) //
+				.defaultsTo(CommandLineOptions.DEFAULT_DETAILS);
+
+		additionalClasspathEntries = parser.acceptsAll(asList(CP_OPTION, "classpath", "class-path"), //
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies. "
 					+ "This option can be repeated.") //
 				.withRequiredArg() //
@@ -79,21 +101,66 @@ class AvailableOptions {
 
 		// --- Selectors -------------------------------------------------------
 
-		scanClasspath = parser.accepts("scan-class-path", //
-			"Scan entire classpath or explicit classpath roots.");
+		selectedClasspathEntries = parser.acceptsAll(asList("scan-class-path", "scan-classpath"), //
+			"Scan all directories on the classpath or explicit classpath roots. " //
+					+ "Without arguments, only directories on the system classpath as well as additional classpath " //
+					+ "entries supplied via -" + CP_OPTION + " (directories and JAR files) are scanned. " //
+					+ "Explicit classpath roots that are not on the classpath will be silently ignored. " //
+					+ "This option can be repeated.") //
+				.withOptionalArg() //
+				.withValuesConvertedBy(new PathConverter()) //
+				.withValuesSeparatedBy(File.pathSeparatorChar) //
+				.describedAs("path1" + File.pathSeparator + "path2" + File.pathSeparator + "...");
 
-		arguments = parser.nonOptions("If --scan-class-path has been specified, non-option arguments represent "
-				+ "explicit classpath roots that should be considered for scanning "
-				+ "or none if the entire classpath should be scanned.");
+		selectedUris = parser.acceptsAll(asList("u", "select-uri"), //
+			"Select a URI for test discovery. This option can be repeated.") //
+				.withRequiredArg() //
+				.withValuesConvertedBy(new URIConverter());
+
+		selectedFiles = parser.acceptsAll(asList("f", "select-file"), //
+			"Select a file for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
+		selectedDirectories = parser.acceptsAll(asList("d", "select-directory"), //
+			"Select a directory for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
+		selectedPackages = parser.acceptsAll(asList("p", "select-package"), //
+			"Select a package for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
+		selectedClasses = parser.acceptsAll(asList("c", "select-class"), //
+			"Select a class for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
+		selectedMethods = parser.acceptsAll(asList("m", "select-method"), //
+			"Select a method for test discovery. This option can be repeated.") //
+				.withRequiredArg();
+
+		selectedClasspathResources = parser.acceptsAll(asList("r", "select-resource"), //
+			"Select a classpath resource for test discovery. This option can be repeated.") //
+				.withRequiredArg();
 
 		// --- Filters ---------------------------------------------------------
 
 		includeClassNamePattern = parser.acceptsAll(asList("n", "include-classname"),
 			"Provide a regular expression to include only classes whose fully qualified names match. " //
 					+ "To avoid loading classes unnecessarily, the default pattern only includes class " //
-					+ "names that end with \"Test\" or \"Tests\".") //
+					+ "names that end with \"Test\" or \"Tests\". " //
+					+ "When this option is repeated, all patterns will be combined using OR semantics.") //
 				.withRequiredArg() //
 				.defaultsTo(ClassNameFilter.STANDARD_INCLUDE_PATTERN);
+		excludeClassNamePattern = parser.acceptsAll(asList("N", "exclude-classname"),
+			"Provide a regular expression to exclude those classes whose fully qualified names match. " //
+					+ "When this option is repeated, all patterns will be combined using OR semantics.") //
+				.withRequiredArg();
+
+		includePackage = parser.accepts("include-package",
+			"Provide a package to be included in the test run. This option can be repeated.") //
+				.withRequiredArg();
+		excludePackage = parser.accepts("exclude-package",
+			"Provide a package to be excluded from the test run. This option can be repeated.") //
+				.withRequiredArg();
 
 		includeTag = parser.acceptsAll(asList("t", "include-tag"),
 			"Provide a tag to be included in the test run. This option can be repeated.") //
@@ -121,18 +188,28 @@ class AvailableOptions {
 		// General Purpose
 		result.setDisplayHelp(detectedOptions.has(this.help));
 		result.setAnsiColorOutputDisabled(detectedOptions.has(this.disableAnsiColors));
-		result.setHideDetails(detectedOptions.has(this.hideDetails));
+		result.setDetails(detectedOptions.valueOf(this.details));
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
 
 		// Reports
 		result.setReportsDir(detectedOptions.valueOf(this.reportsDir));
 
 		// Selectors
-		result.setScanClasspath(detectedOptions.has(this.scanClasspath));
-		result.setArguments(detectedOptions.valuesOf(this.arguments));
+		result.setScanClasspath(detectedOptions.has(this.selectedClasspathEntries));
+		result.setSelectedClasspathEntries(detectedOptions.valuesOf(this.selectedClasspathEntries));
+		result.setSelectedUris(detectedOptions.valuesOf(this.selectedUris));
+		result.setSelectedFiles(detectedOptions.valuesOf(this.selectedFiles));
+		result.setSelectedDirectories(detectedOptions.valuesOf(this.selectedDirectories));
+		result.setSelectedPackages(detectedOptions.valuesOf(this.selectedPackages));
+		result.setSelectedClasses(detectedOptions.valuesOf(this.selectedClasses));
+		result.setSelectedMethods(detectedOptions.valuesOf(this.selectedMethods));
+		result.setSelectedClasspathResources(detectedOptions.valuesOf(this.selectedClasspathResources));
 
 		// Filters
-		result.setIncludeClassNamePattern(detectedOptions.valueOf(this.includeClassNamePattern));
+		result.setIncludedClassNamePatterns(detectedOptions.valuesOf(this.includeClassNamePattern));
+		result.setExcludedClassNamePatterns(detectedOptions.valuesOf(this.excludeClassNamePattern));
+		result.setIncludedPackages(detectedOptions.valuesOf(this.includePackage));
+		result.setExcludedPackages(detectedOptions.valuesOf(this.excludePackage));
 		result.setIncludedTags(detectedOptions.valuesOf(this.includeTag));
 		result.setExcludedTags(detectedOptions.valuesOf(this.excludeTag));
 		result.setIncludedEngines(detectedOptions.valuesOf(this.includeEngine));

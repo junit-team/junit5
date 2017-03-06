@@ -68,15 +68,8 @@ junitPlatform {
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 	reportsDir file('build/test-results/junit-platform') // this is the default
 	// enableStandardTestTask true
-	engines {
-		include 'junit-jupiter'
-		// exclude 'junit-vintage'
-	}
-	tags {
-		include 'fast', 'smoke'
-		// exclude 'slow', 'ci'
-	}
-	includeClassNamePattern '.*Tests'
+	// selectors (optional)
+	// filters (optional)
 }
 ----
 
@@ -88,12 +81,84 @@ how to configure log4j as the `LogManager`.
 By default, the JUnit Gradle plugin disables the standard Gradle `test` task, but this be
 overridden via the `enableStandardTestTask` flag.
 
-By default all engines and tags are included in the test plan. If you supply a _Test
+[[running-tests-build-gradle-selectors]]
+===== Configuring Selectors
+
+By default, the plugin will scan your project's output directories for tests. However, you can
+specify which tests to execute explicitly using the `selectors` extension element.
+
+[source,java,indent=0]
+[subs="verbatim,attributes"]
+----
+junitPlatform {
+	// ...
+	selectors {
+		uris 'file:///foo.txt', 'http://example.com/'
+		uri 'foo:resource' <1>
+		files 'foo.txt', 'bar.csv'
+		file 'qux.json' <2>
+		directories 'foo/bar', 'bar/qux'
+		directory 'qux/bar' <3>
+		packages 'com.acme.foo', 'com.acme.bar'
+		aPackage 'com.example.app' <4>
+		classes 'com.acme.Foo', 'com.acme.Bar'
+		aClass 'com.example.app.Application' <5>
+		methods 'com.acme.Foo#a', 'com.acme.Foo#b'
+		method 'com.example.app.Application#run(java.lang.String[])' <6>
+		resources '/bar.csv', '/foo/input.json'
+		resource '/com/acme/my.properties' <7>
+	}
+	// ...
+}
+----
+<1> URIs
+<2> Local files
+<3> Local directories
+<4> Packages
+<5> Classes, fully qualified
+<6> Methods, fully qualified (see {DiscoverySelectors_selectMethod})
+<7> Classpath resources
+
+[[running-tests-build-gradle-filters]]
+===== Configuring Filters
+
+You can configure filters for the test plan by using the `filters` extension. By default, all
+engines and tags are included in the test plan. Only the default `includeClassNamePattern`
+(`{standard-include-class-name-pattern}`) is applied. You can overwrite its value as in the
+following example. When you specify multiple patterns, they are combined using OR semantics.
+
+[source,java,indent=0]
+[subs="verbatim,attributes"]
+----
+junitPlatform {
+	// ...
+	filters {
+		engines {
+			include 'junit-jupiter'
+			// exclude 'junit-vintage'
+		}
+		tags {
+			include 'fast', 'smoke'
+			// exclude 'slow', 'ci'
+		}
+		packages {
+			include 'com.sample.included1', 'com.sample.included2'
+			// exclude 'com.sample.excluded1', 'com.sample.excluded2'
+		}
+		includeClassNamePattern '.*Spec'
+		includeClassNamePatterns '.*Test', '.*Tests'
+	}
+	// ...
+}
+----
+
+If you supply a _Test
 Engine ID_ via `engines {include ...}` or `engines {exclude ...}`, the JUnit Gradle
 plugin will only run tests for the desired test engines. Similarly, if you supply a _tag_
 via `tags {include ...}` or `tags {exclude ...}`, the JUnit Gradle plugin will only run
 tests that are _tagged_ accordingly (e.g., via the `@Tag` annotation for JUnit Jupiter based
-tests).
+tests). The same applies to package names that can be included or excluded using
+`packages {include ...}` or `packages {exclude ...}`.
 
 [[running-tests-build-gradle-engines-configure]]
 ===== Configuring Test Engines
@@ -169,7 +234,7 @@ If a test fails, the build will fail with output similar to the following:
 
 Test failures (1):
   JUnit Jupiter:SecondTest:mySecondTest()
-    JavaMethodSource [javaClass = 'com.example.project.SecondTest', javaMethodName = 'mySecondTest', javaMethodParameterTypes = '']
+    MethodSource [className = 'com.example.project.SecondTest', methodName = 'mySecondTest', methodParameterTypes = '']
     => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
 Test run finished after 99 ms
@@ -324,6 +389,40 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 	...
 ----
 
+[[running-tests-build-maven-filter-tags]]
+===== Filtering by tag
+
+You can filter tests by tags using the following configuration properties:
+
+- to include use either `groups` or `includeTags`
+- to exclude use either `excludedGroups` or `excludeTags`
+
+[source,xml,indent=0]
+[subs="verbatim,attributes"]
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<configuration>
+			        <properties>
+						<includeTags>acceptance</includeTags>
+			            <excludeTags>integration, regression</excludeTags>
+			        </properties>
+			    </configuration>
+				<dependencies>
+					...
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+----
+
+
 [[running-tests-console-launcher]]
 === Console Launcher
 
@@ -331,31 +430,42 @@ The `{ConsoleLauncher}` is a command-line Java application that lets you launch
 the JUnit Platform from the console. For example, it can be used to run JUnit
 Vintage and JUnit Jupiter tests and print test execution results to the console.
 
+An executable `junit-platform-console-standalone-{platform-version}.jar` with all dependencies
+included is provided at the central Maven repository under the
+https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
+directory. You can https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run] the
+application like shown below:
+
+`java -jar junit-platform-console-standalone-{platform-version}.jar <<<running-tests-console-launcher-options>>>`
+
 Here's an example of its output:
 
 [subs="none"]
 ----
-Test execution started. Number of static tests: 2
-Engine started: junit-jupiter
-Test started:     My 1st JUnit 5 test! 😎 [junit-jupiter:com.example.project.FirstTest#myFirstTest(java.lang.String)]
-Test succeeded:   My 1st JUnit 5 test! 😎 [junit-jupiter:com.example.project.FirstTest#myFirstTest(java.lang.String)]
-Test skipped:     mySecondTest [junit-jupiter:com.example.project.SecondTest#mySecondTest()]
-                  => Exception:   Skipped test method [void com.example.project.SecondTest.mySecondTest()] due to failed condition
-Engine finished: junit-jupiter
-Test execution finished.
+├─ JUnit Vintage
+│  ├─ example.JUnit4Tests
+│  │  ├─ standardJUnit4Test ✔
+├─ JUnit Jupiter
+│  ├─ StandardTests
+│  │  ├─ succeedingTest() ✔
+│  │  ├─ skippedTest() ↷ for demonstration purposes
+│  ├─ A special test case
+│  │  ├─ Custom test name containing spaces ✔
+│  │  ├─ ╯°□°）╯ ✔
+│  │  ├─ 😱 ✔
 
-Test run finished after 29 ms
-[         2 containers found      ]
+Test run finished after 64 ms
+[         5 containers found      ]
 [         0 containers skipped    ]
-[         2 containers started    ]
+[         5 containers started    ]
 [         0 containers aborted    ]
-[         2 containers successful ]
+[         5 containers successful ]
 [         0 containers failed     ]
-[         2 tests found           ]
+[         6 tests found           ]
 [         1 tests skipped         ]
-[         1 tests started         ]
+[         5 tests started         ]
 [         0 tests aborted         ]
-[         1 tests successful      ]
+[         5 tests successful      ]
 [         0 tests failed          ]
 ----
 
@@ -369,46 +479,76 @@ failed. Otherwise the exit code is `0`.
 WARNING: These options are very likely to change as we continue to work towards the
 final release.
 
-[subs="none"]
+[subs="specialchars"]
 ----
-Non-option arguments:
-If --scan-class-path has been specified, non-option arguments represent explicit
-  classpath roots that should be considered for scanning or none if the entire classpath
-  should be scanned.
-
-Option                                    Description
-------                                    -----------
--h, --help                                Display help information.
---disable-ansi-colors                     Disable ANSI colors in output (not
-                                            supported by all terminals).
---hide-details                            Hide details while tests are being
-                                            executed. Only show the summary and test
-                                            failures.
---class-path, --classpath, --cp <File:    Provide additional classpath entries --
-  path1:path2:...>                          for example, for adding engines and
-                                            their dependencies. This option can be
-                                            repeated.
---reports-dir <File>                      Enable report output into a specified
-                                            local directory (will be created if it
-                                            does not exist).
---scan-class-path                         Scan entire classpath or explicit
-                                            classpath roots.
--n, --include-classname                   Provide a regular expression to include
-                                            only classes whose fully qualified names
-                                            match. To avoid loading classes
-                                            unnecessarily, the default pattern only
-                                            includes class names that end with
-                                            "Test" or "Tests". (default: ^.*Tests?$)
--t, --include-tag                         Provide a tag to be included in the test
-                                            run. This option can be repeated.
--T, --exclude-tag                         Provide a tag to be excluded from the test
-                                            run. This option can be repeated.
--e, --include-engine                      Provide the ID of an engine to be included
-                                            in the test run. This option can be
-                                            repeated.
--E, --exclude-engine                      Provide the ID of an engine to be excluded
-                                            from the test run. This option can be
-                                            repeated.
+Option                                        Description
+------                                        -----------
+-h, --help                                    Display help information.
+--disable-ansi-colors                         Disable ANSI colors in output (not
+                                                supported by all terminals).
+--hide-details                                @Deprecated. Use '--details none' instead.
+--details <Details>                           Select an output details mode for when
+                                                tests are executed. Use one of: [none,
+                                                flat, tree, verbose]. If 'none' is
+                                                selected, then only the summary and test
+                                                failures are shown. (default: tree)
+--class-path, --classpath, --cp <Path:        Provide additional classpath entries --
+  path1:path2:...>                              for example, for adding engines and
+                                                their dependencies. This option can be
+                                                repeated.
+--reports-dir <Path>                          Enable report output into a specified
+                                                local directory (will be created if it
+                                                does not exist).
+--scan-class-path, --scan-classpath [Path:    Scan all directories on the classpath or
+  path1:path2:...]                              explicit classpath roots. Without
+                                                arguments, only directories on the
+                                                system classpath as well as additional
+                                                classpath entries supplied via -cp
+                                                (directories and JAR files) are scanned.
+                                                Explicit classpath roots that are not on
+                                                the classpath will be silently ignored.
+                                                This option can be repeated.
+-u, --select-uri <URI>                        Select a URI for test discovery. This
+                                                option can be repeated.
+-f, --select-file <String>                    Select a file for test discovery. This
+                                                option can be repeated.
+-d, --select-directory <String>               Select a directory for test discovery.
+                                                This option can be repeated.
+-p, --select-package <String>                 Select a package for test discovery. This
+                                                option can be repeated.
+-c, --select-class <String>                   Select a class for test discovery. This
+                                                option can be repeated.
+-m, --select-method <String>                  Select a method for test discovery. This
+                                                option can be repeated.
+-r, --select-resource <String>                Select a classpath resource for test
+                                                discovery. This option can be repeated.
+-n, --include-classname <String>              Provide a regular expression to include
+                                                only classes whose fully qualified names
+                                                match. To avoid loading classes
+                                                unnecessarily, the default pattern only
+                                                includes class names that end with
+                                                "Test" or "Tests". When this option is
+                                                repeated, all patterns will be combined
+                                                using OR semantics. (default: ^.*Tests?$)
+-N, --exclude-classname <String>              Provide a regular expression to exclude
+                                                those classes whose fully qualified
+                                                names match. When this option is
+                                                repeated, all patterns will be combined
+                                                using OR semantics.
+--include-package <String>                    Provide a package to be included in the
+                                                test run. This option can be repeated.
+--exclude-package <String>                    Provide a package to be excluded from the
+                                                test run. This option can be repeated.
+-t, --include-tag <String>                    Provide a tag to be included in the test
+                                                run. This option can be repeated.
+-T, --exclude-tag <String>                    Provide a tag to be excluded from the test
+                                                run. This option can be repeated.
+-e, --include-engine <String>                 Provide the ID of an engine to be included
+                                                in the test run. This option can be
+                                                repeated.
+-E, --exclude-engine <String>                 Provide the ID of an engine to be excluded
+                                                from the test run. This option can be
+                                                repeated.
 ----
 
 
@@ -434,9 +574,19 @@ You need the following artifacts and their dependencies on the classpath. See
 <<dependency-metadata>> for details regarding group IDs, artifact IDs, and
 versions.
 
-* `junit-jupiter-api` in _test_ scope: API for writing tests, including `@Test`, etc.
+===== Explicit Dependencies
+
+* `junit-{junit4-version}.jar` in _test_ scope: to run tests using JUnit 4.
 * `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
+* `junit-jupiter-api` in _test_ scope: API for writing tests, including `@Test`, etc.
 * `junit-jupiter-engine` in _test runtime_ scope: implementation of the Engine API for JUnit Jupiter
+
+===== Transitive Dependencies
+
+* `junit-platform-launcher` in _test_ scope
+* `junit-platform-engine` in _test_ scope
+* `junit-platform-commons` in _test_ scope
+* `opentest4j` in _test_ scope
 
 [[running-tests-junit-platform-runner-technical-names]]
 ==== Display Names vs. Technical Names

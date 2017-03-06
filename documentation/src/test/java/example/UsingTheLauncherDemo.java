@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,9 +11,9 @@
 package example;
 
 // tag::imports[]
-import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.launcher.Launcher;
@@ -37,10 +37,10 @@ class UsingTheLauncherDemo {
 		// tag::discovery[]
 		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
 			.selectors(
-				selectJavaPackage("com.example.mytests"),
-				selectJavaClass(MyTestClass.class)
+				selectPackage("com.example.mytests"),
+				selectClass(MyTestClass.class)
 			)
-			.filters(includeClassNamePattern(".*Test"))
+			.filters(includeClassNamePatterns(".*Test"))
 			.build();
 
 		TestPlan plan = LauncherFactory.create().discover(request);
@@ -54,10 +54,10 @@ class UsingTheLauncherDemo {
 		// tag::execution[]
 		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
 			.selectors(
-				selectJavaPackage("com.example.mytests"),
-				selectJavaClass(MyTestClass.class)
+				selectPackage("com.example.mytests"),
+				selectClass(MyTestClass.class)
 			)
-			.filters(includeClassNamePattern(".*Test"))
+			.filters(includeClassNamePatterns(".*Test"))
 			.build();
 
 		Launcher launcher = LauncherFactory.create();

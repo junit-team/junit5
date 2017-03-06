@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,7 +11,6 @@
 package org.junit.platform.engine.discovery;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.meta.API.Usage.Deprecated;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
@@ -21,15 +20,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.UniqueId;
 
@@ -40,12 +39,14 @@ import org.junit.platform.engine.UniqueId;
  * @since 1.0
  * @see ClasspathRootSelector
  * @see ClasspathResourceSelector
- * @see JavaClassSelector
- * @see JavaMethodSelector
- * @see JavaPackageSelector
+ * @see ClassSelector
+ * @see MethodSelector
+ * @see PackageSelector
  */
 @API(Experimental)
 public final class DiscoverySelectors {
+
+	private static Pattern fullyQualifiedMethodNamePattern = Pattern.compile("([^#]+)#([^(]+)(?:\\((.*)\\))?");
 
 	///CLOVER:OFF
 	private DiscoverySelectors() {
@@ -176,20 +177,34 @@ public final class DiscoverySelectors {
 	}
 
 	/**
-	 * Create a list of {@code ClasspathRootSelectors} for the supplied {@code directories}.
+	 * Create a list of {@code ClasspathRootSelectors} for the supplied
+	 * <em>classpath roots</em> (directories or JAR files).
 	 *
-	 * @param directories set of directories in the filesystem that represent classpath roots;
-	 * never {@code null}
-	 * @return a list of selectors for the supplied directories; directories which
-	 * do not physically exist in the filesystem will be filtered out
+	 * <p>Since the supplied paths are converted to {@link URI URIs}, the
+	 * {@link java.nio.file.FileSystem} that created them must be the
+	 * {@linkplain java.nio.file.FileSystems#getDefault() default} or one that
+	 * has been created by an installed
+	 * {@link java.nio.file.spi.FileSystemProvider}.
+	 *
+	 * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
+	 * expected to modify the classpath, the classpath roots represented by the
+	 * resulting selectors must be on the classpath of the
+	 * {@linkplain Thread#getContextClassLoader() context class loader} of the
+	 * {@linkplain Thread thread} that uses these selectors.
+	 *
+	 * @param classpathRoots set of directories and JAR files in the filesystem
+	 * that represent classpath roots; never {@code null}
+	 * @return a list of selectors for the supplied classpath roots; elements
+	 * which do not physically exist in the filesystem will be filtered out
 	 * @see ClasspathRootSelector
+	 * @see Thread#getContextClassLoader()
 	 */
-	public static List<ClasspathRootSelector> selectClasspathRoots(Set<Path> directories) {
-		Preconditions.notNull(directories, "directories must not be null");
+	public static List<ClasspathRootSelector> selectClasspathRoots(Set<Path> classpathRoots) {
+		Preconditions.notNull(classpathRoots, "classpathRoots must not be null");
 
 		// @formatter:off
-		return directories.stream()
-				.filter(Files::isDirectory)
+		return classpathRoots.stream()
+				.filter(Files::exists)
 				.map(Path::toUri)
 				.map(ClasspathRootSelector::new)
 				.collect(toList());
@@ -206,6 +221,12 @@ public final class DiscoverySelectors {
 	 * <p>If the supplied classpath resource name is prefixed with a slash
 	 * ({@code /}), the slash will be removed.
 	 *
+	 * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
+	 * expected to modify the classpath, the supplied classpath resource must be
+	 * on the classpath of the
+	 * {@linkplain Thread#getContextClassLoader() context class loader} of the
+	 * {@linkplain Thread thread} that uses the resulting selector.
+	 *
 	 * @param classpathResourceName the name of the classpath resource; never
 	 * {@code null} or blank
 	 * @see ClasspathResourceSelector
@@ -219,53 +240,53 @@ public final class DiscoverySelectors {
 	}
 
 	/**
-	 * Create a {@code JavaPackageSelector} for the supplied package name.
+	 * Create a {@code PackageSelector} for the supplied package name.
 	 *
 	 * <p>The default package is represented by an empty string ({@code ""}).
 	 *
 	 * @param packageName the package name to select; never {@code null} and
 	 * never containing whitespace only
-	 * @see JavaPackageSelector
+	 * @see PackageSelector
 	 */
-	public static JavaPackageSelector selectJavaPackage(String packageName) {
+	public static PackageSelector selectPackage(String packageName) {
 		Preconditions.notNull(packageName, "Package name must not be null");
 		Preconditions.condition(packageName.equals("") || packageName.trim().length() != 0,
 			"Package name must not contain only whitespace");
-		return new JavaPackageSelector(packageName.trim());
+		return new PackageSelector(packageName.trim());
 	}
 
 	/**
-	 * Create a {@code JavaClassSelector} for the supplied {@link Class}.
+	 * Create a {@code ClassSelector} for the supplied {@link Class}.
 	 *
 	 * @param clazz the class to select; never {@code null}
-	 * @see JavaClassSelector
+	 * @see ClassSelector
 	 */
-	public static JavaClassSelector selectJavaClass(Class<?> clazz) {
+	public static ClassSelector selectClass(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		return new JavaClassSelector(clazz);
+		return new ClassSelector(clazz);
 	}
 
 	/**
-	 * Create a {@code JavaClassSelector} for the supplied class name.
+	 * Create a {@code ClassSelector} for the supplied class name.
 	 *
 	 * @param className the fully qualified name of the class to select;
 	 * never {@code null} or blank
-	 * @see JavaClassSelector
+	 * @see ClassSelector
 	 */
-	public static JavaClassSelector selectJavaClass(String className) {
+	public static ClassSelector selectClass(String className) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
-		return new JavaClassSelector(loadClass(className));
+		return new ClassSelector(className);
 	}
 
 	/**
-	 * Create a {@code JavaMethodSelector} for the supplied <em>fully qualified
+	 * Create a {@code MethodSelector} for the supplied <em>fully qualified
 	 * method name</em>.
 	 *
 	 * <p>The following formats are supported.
 	 *
 	 * <ul>
-	 * <li>{@code [fully qualified class name]#[methodName]}</li>
-	 * <li>{@code [fully qualified class name]#[methodName](parameter type list)}
+	 * <li>{@code [fully qualified class name]#[method name]}</li>
+	 * <li>{@code [fully qualified class name]#[method name](parameter type list)}
 	 * <ul><li>The <em>parameter type list</em> is a comma-separated list of
 	 * fully qualified class names for the types of parameters accepted by
 	 * the method.</li></ul>
@@ -282,126 +303,112 @@ public final class DiscoverySelectors {
 	 * <tr><td>{@link String#substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
 	 * </table>
 	 *
-	 * @param name the fully qualified name of the method to select; never
+	 * @param fullyQualifiedMethodName the fully qualified name of the method to select; never
 	 * {@code null} or blank
-	 * @throws PreconditionViolationException if the supplied name is {@code null},
-	 * blank, or does not specify a unique method
-	 * @see JavaMethodSelector
+	 * @see MethodSelector
 	 */
-	public static JavaMethodSelector selectJavaMethod(String name) throws PreconditionViolationException {
-		Preconditions.notBlank(name, "Method name must not be null or blank");
+	public static MethodSelector selectMethod(String fullyQualifiedMethodName) throws PreconditionViolationException {
+		Preconditions.notBlank(fullyQualifiedMethodName, "fullyQualifiedMethodName must not be null or blank");
 
-		Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
-		Method method = methodOptional.orElseThrow(() -> new PreconditionViolationException(
-			String.format("'%s' could not be resolved to a unique method", name)));
+		Matcher matcher = fullyQualifiedMethodNamePattern.matcher(fullyQualifiedMethodName);
+		Preconditions.condition(matcher.matches(),
+			fullyQualifiedMethodName + " is not a valid fully qualified method name");
 
-		return selectJavaMethod(method.getDeclaringClass(), method);
+		String className = matcher.group(1);
+		String methodName = matcher.group(2);
+		String methodParameters = matcher.group(3);
+		if (StringUtils.isNotBlank(methodParameters)) {
+			return selectMethod(className, methodName, methodParameters);
+		}
+		else {
+			return selectMethod(className, methodName);
+		}
 	}
 
 	/**
-	 * Create a {@code JavaMethodSelector} for the supplied class name and method name.
+	 * Create a {@code MethodSelector} for the supplied class name and method name.
 	 *
 	 * @param className the fully qualified name of the class in which the method
 	 * is declared, or a subclass thereof; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @see JavaMethodSelector
+	 * @see MethodSelector
 	 */
-	public static JavaMethodSelector selectJavaMethod(String className, String methodName) {
+	public static MethodSelector selectMethod(String className, String methodName) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		Class<?> clazz = loadClass(className);
-		return selectJavaMethod(clazz, findMethod(clazz, methodName));
+		return new MethodSelector(className, methodName);
 	}
 
 	/**
-	 * Create a {@code JavaMethodSelector} for the supplied {@link Class} and method name.
+	 * Create a {@code MethodSelector} for the supplied class name, method name,
+	 * and method parameter types.
 	 *
-	 * @param clazz the class in which the method is declared, or a subclass thereof;
+	 * <p>The parameter types {@code String} is typically a comma-separated list
+	 * of atomic types, fully qualified class names, or array types; however,
+	 * the exact syntax depends on the underlying test engine.
+	 *
+	 * @param className the fully qualified name of the class in which the method
+	 * is declared, or a subclass thereof; never {@code null} or blank
+	 * @param methodName the name of the method to select; never {@code null} or blank
+	 * @param methodParameterTypes the method parameter types as a single string; never
+	 * {@code null} or blank
+	 * @see MethodSelector
+	 */
+	public static MethodSelector selectMethod(String className, String methodName, String methodParameterTypes) {
+		Preconditions.notBlank(className, "Class name must not be null or blank");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		Preconditions.notBlank(methodParameterTypes, "Parameter types must not be null or blank");
+		return new MethodSelector(className, methodName, methodParameterTypes);
+	}
+
+	/**
+	 * Create a {@code MethodSelector} for the supplied {@link Class} and method name.
+	 *
+	 * @param javaClass the class in which the method is declared, or a subclass thereof;
 	 * never {@code null}
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @see JavaMethodSelector
+	 * @see MethodSelector
 	 */
-	public static JavaMethodSelector selectJavaMethod(Class<?> clazz, String methodName) {
-		Preconditions.notNull(clazz, "Class must not be null");
+	public static MethodSelector selectMethod(Class<?> javaClass, String methodName) {
+		Preconditions.notNull(javaClass, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		return selectJavaMethod(clazz, findMethod(clazz, methodName));
+		return new MethodSelector(javaClass, methodName);
 	}
 
 	/**
-	 * Create a {@code JavaMethodSelector} for the supplied {@link Class} and {@link Method}.
+	 * Create a {@code MethodSelector} for the supplied {@link Class}, method name,
+	 * and method parameter types.
 	 *
-	 * @param clazz the class in which the method is declared, or a subclass thereof;
+	 * <p>The parameter types {@code String} is typically a comma-separated list
+	 * of atomic types, fully qualified class names, or array types; however,
+	 * the exact syntax depends on the underlying test engine.
+	 *
+	 * @param javaClass the class in which the method is declared, or a subclass thereof;
+	 * never {@code null}
+	 * @param methodName the name of the method to select; never {@code null} or blank
+	 * @param methodParameterTypes the method parameter types as a single string; never
+	 * {@code null} or blank
+	 * @see MethodSelector
+	 */
+	public static MethodSelector selectMethod(Class<?> javaClass, String methodName, String methodParameterTypes) {
+		Preconditions.notNull(javaClass, "Class must not be null");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		Preconditions.notBlank(methodParameterTypes, "Parameter types name must not be null or blank");
+		return new MethodSelector(javaClass, methodName, methodParameterTypes);
+	}
+
+	/**
+	 * Create a {@code MethodSelector} for the supplied {@link Class} and {@link Method}.
+	 *
+	 * @param javaClass the class in which the method is declared, or a subclass thereof;
 	 * never {@code null}
 	 * @param method the method to select; never {@code null}
-	 * @see JavaMethodSelector
+	 * @see MethodSelector
 	 */
-	public static JavaMethodSelector selectJavaMethod(Class<?> clazz, Method method) {
-		Preconditions.notNull(clazz, "Class must not be null");
+	public static MethodSelector selectMethod(Class<?> javaClass, Method method) {
+		Preconditions.notNull(javaClass, "Class must not be null");
 		Preconditions.notNull(method, "Method must not be null");
-		return new JavaMethodSelector(clazz, method);
-	}
-
-	/**
-	 * Create a list of {@link DiscoverySelector DiscoverySelectors} for the
-	 * supplied names.
-	 *
-	 * <h3>Supported Name Types</h3>
-	 * <ul>
-	 * <li>package: fully qualified package name</li>
-	 * <li>class: fully qualified class name</li>
-	 * <li>method: fully qualified method name</li>
-	 * </ul>
-	 *
-	 * <p>The supported format for a <em>fully qualified method name</em> is
-	 * {@code [fully qualified class name]#[methodName]}. For example, the
-	 * fully qualified name for the {@code chars()} method in
-	 * {@code java.lang.String} is {@code java.lang.String#chars}. Names for
-	 * overloaded methods are not supported.
-	 *
-	 * @param names the names to select; never {@code null}
-	 * @return a list of {@code DiscoverySelectors} for the supplied names;
-	 * potentially empty
-	 * @see #selectJavaPackage(String)
-	 * @see #selectJavaClass(String)
-	 * @see #selectJavaMethod(String)
-	 * @deprecated This method will be removed in 5.0 M4; use
-	 * {@link #selectJavaPackage(String)}, {@link #selectJavaClass(String)}, or
-	 * {@link #selectJavaMethod(String)} instead.
-	 */
-	@Deprecated
-	@API(Deprecated)
-	public static List<DiscoverySelector> selectNames(Collection<String> names) {
-		Preconditions.notNull(names, "names collection must not be null");
-		return names.stream().map(DiscoverySelectors::selectName).collect(toList());
-	}
-
-	private static DiscoverySelector selectName(String name) throws PreconditionViolationException {
-		Preconditions.notBlank(name, "name must not be null or blank");
-
-		Optional<Class<?>> classOptional = ReflectionUtils.loadClass(name);
-		if (classOptional.isPresent()) {
-			return selectJavaClass(classOptional.get());
-		}
-
-		Optional<Method> methodOptional;
-		try {
-			methodOptional = ReflectionUtils.loadMethod(name);
-		}
-		catch (PreconditionViolationException ex) {
-			// ignore
-			methodOptional = Optional.empty();
-		}
-		if (methodOptional.isPresent()) {
-			Method method = methodOptional.get();
-			return selectJavaMethod(method.getDeclaringClass(), method);
-		}
-
-		if (ReflectionUtils.isPackage(name)) {
-			return selectJavaPackage(name);
-		}
-
-		throw new PreconditionViolationException(
-			String.format("'%s' specifies neither a class, a method, nor a package.", name));
+		return new MethodSelector(javaClass, method);
 	}
 
 	/**
@@ -424,16 +431,6 @@ public final class DiscoverySelectors {
 	public static UniqueIdSelector selectUniqueId(String uniqueId) {
 		Preconditions.notBlank(uniqueId, "Unique ID must not be null or blank");
 		return new UniqueIdSelector(UniqueId.parse(uniqueId));
-	}
-
-	private static Class<?> loadClass(String className) {
-		return ReflectionUtils.loadClass(className).orElseThrow(
-			() -> new PreconditionViolationException("Could not load class with name: " + className));
-	}
-
-	private static Method findMethod(Class<?> clazz, String methodName) {
-		return ReflectionUtils.findMethod(clazz, methodName).orElseThrow(() -> new PreconditionViolationException(
-			String.format("Could not find method with name [%s] in class [%s].", methodName, clazz.getName())));
 	}
 
 }

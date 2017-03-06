@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine;
 
-import org.junit.platform.runner.IncludeClassNamePattern;
+import org.junit.platform.runner.IncludeClassNamePatterns;
 import org.junit.platform.runner.IncludeEngines;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.runner.SelectPackages;
@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
  * set the following system property before running any tests &mdash; for
  * example, in <em>Run Configurations</em> in Eclipse.
  *
- * <pre style="code">
+ * <pre class="code">
  * -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
  * </pre>
  *
@@ -33,7 +33,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)
 @SelectPackages("org.junit.vintage.engine")
-@IncludeClassNamePattern(".*Tests?")
+@IncludeClassNamePatterns(".*Tests?")
 @IncludeEngines("junit-jupiter")
 public class VintageTestEngineTestSuite {
 }

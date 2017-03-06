@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,8 +11,9 @@
 package org.junit.jupiter.engine.execution;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.function.Function;
 
@@ -157,7 +158,7 @@ public class ExtensionValuesStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = expectThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(ExtensionContextException.class,
 				() -> store.get(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());
@@ -207,7 +208,7 @@ public class ExtensionValuesStoreTests {
 			// But declare that our function creates a String...
 			Function<String, String> defaultCreator = k -> "enigma";
 
-			Exception exception = expectThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(ExtensionContextException.class,
 				() -> store.getOrComputeIfAbsent(namespace, key, defaultCreator, String.class));
 			assertEquals("Object stored under key [pi] is not of required type [java.lang.String]",
 				exception.getMessage());
@@ -241,7 +242,7 @@ public class ExtensionValuesStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = expectThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(ExtensionContextException.class,
 				() -> store.remove(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());
@@ -313,6 +314,22 @@ public class ExtensionValuesStoreTests {
 	class CompositeNamespaceTests {
 
 		@Test
+		void namespacesEqualForSamePartsSequence() {
+			Namespace ns1 = Namespace.create("part1", "part2");
+			Namespace ns2 = Namespace.create("part1", "part2");
+
+			assertEquals(ns1, ns2);
+		}
+
+		@Test
+		void orderOfNamespacePartsDoesMatter() {
+			Namespace ns1 = Namespace.create("part1", "part2");
+			Namespace ns2 = Namespace.create("part2", "part1");
+
+			assertNotEquals(ns1, ns2);
+		}
+
+		@Test
 		void additionNamespacePartMakesADifferenc() {
 
 			Namespace ns1 = Namespace.create("part1", "part2");
@@ -327,18 +344,6 @@ public class ExtensionValuesStoreTests {
 			assertEquals(value, store.get(ns1, key));
 			assertEquals(value, store.get(ns3, key));
 			assertEquals(value2, store.get(ns2, key));
-		}
-
-		@Test
-		void orderOfNamespacePartsDoesNotMatter() {
-
-			Namespace ns1 = Namespace.create("part1", "part2");
-			Namespace ns2 = Namespace.create("part2", "part1");
-
-			parentStore.put(ns1, key, value);
-
-			assertEquals(value, store.get(ns1, key));
-			assertEquals(value, store.get(ns2, key));
 		}
 
 	}

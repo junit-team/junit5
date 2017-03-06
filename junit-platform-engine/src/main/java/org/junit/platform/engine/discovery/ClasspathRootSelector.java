@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -24,8 +24,15 @@ import org.junit.platform.engine.DiscoverySelector;
  * files or resources within the physical classpath &mdash; for example, to
  * scan for test classes.
  *
+ * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
+ * expected to modify the classpath, the classpath root represented by this
+ * selector must be on the classpath of the
+ * {@linkplain Thread#getContextClassLoader() context class loader} of the
+ * {@linkplain Thread thread} that uses this selector.
+ *
  * @since 1.0
  * @see ClasspathResourceSelector
+ * @see Thread#getContextClassLoader()
  */
 @API(Experimental)
 public class ClasspathRootSelector implements DiscoverySelector {

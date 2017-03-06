@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -40,7 +40,11 @@ import org.junit.platform.commons.meta.API;
  * {@linkplain #registerTestExecutionListeners register} one or more
  * {@link TestExecutionListener} instances in order to get feedback about the
  * progress and results of test execution. Listeners will be notified of events
- * in the order in which they were registered.
+ * in the order in which they were registered.  For example, the
+ * default implementation returned by
+ * {@link org.junit.platform.launcher.core.LauncherFactory#create LauncherFactory.create()}
+ * dynamically discovers test execution listeners via Java's
+ * {@link java.util.ServiceLoader ServiceLoader} mechanism.
  *
  * @since 1.0
  * @see LauncherDiscoveryRequest
@@ -56,7 +60,7 @@ public interface Launcher {
 	 * Register one or more listeners for test execution.
 	 *
 	 * @param listeners the listeners to be notified of test execution events;
-	 * never {@code null}
+	 * never {@code null} or empty
 	 */
 	void registerTestExecutionListeners(TestExecutionListener... listeners);
 

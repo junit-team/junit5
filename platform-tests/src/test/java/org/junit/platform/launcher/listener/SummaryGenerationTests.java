@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.listener;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,17 +18,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
  * @since 1.0
@@ -128,6 +131,26 @@ class SummaryGenerationTests {
 	}
 
 	@Test
+	public void canGetListOfFailures() {
+		RuntimeException failedException = new RuntimeException("Pow!");
+		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "1"), "failingTest") {
+			@Override
+			public Optional<TestSource> getSource() {
+				return Optional.of(new ClassSource(Object.class));
+			}
+		};
+		TestIdentifier failingTest = TestIdentifier.from(testDescriptor);
+		listener.testPlanExecutionStarted(testPlan);
+		listener.executionStarted(failingTest);
+		listener.executionFinished(failingTest, TestExecutionResult.failed(failedException));
+		listener.testPlanExecutionFinished(testPlan);
+		final List<TestExecutionSummary.Failure> failures = listener.getSummary().getFailures();
+		assertThat(failures).hasSize(1);
+		assertThat(failures.get(0).getException()).isEqualTo(failedException);
+		assertThat(failures.get(0).getTestIdentifier()).isEqualTo(failingTest);
+	}
+
+	@Test
 	void reportingCorrectFailures() throws Exception {
 		RuntimeException failedException = new RuntimeException("failed");
 
@@ -135,7 +158,7 @@ class SummaryGenerationTests {
 
 			@Override
 			public Optional<TestSource> getSource() {
-				return Optional.of(new JavaClassSource(Object.class));
+				return Optional.of(new ClassSource(Object.class));
 			}
 		};
 		TestIdentifier failed = TestIdentifier.from(testDescriptor);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -13,23 +13,27 @@ package org.junit.platform.console.tasks;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.discovery.ClassNameFilter;
+import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
-import org.junit.platform.engine.discovery.JavaClassSelector;
-import org.junit.platform.engine.discovery.JavaMethodSelector;
-import org.junit.platform.engine.discovery.JavaPackageSelector;
+import org.junit.platform.engine.discovery.DirectorySelector;
+import org.junit.platform.engine.discovery.FileSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.PackageNameFilter;
+import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.UriSelector;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -42,44 +46,7 @@ public class DiscoveryRequestCreatorTests {
 	private final CommandLineOptions options = new CommandLineOptions();
 
 	@Test
-	public void convertsClassArgument() {
-		Class<?> testClass = getClass();
-		options.setArguments(singletonList(testClass.getName()));
-
-		LauncherDiscoveryRequest request = convert();
-
-		List<JavaClassSelector> classSelectors = request.getSelectorsByType(JavaClassSelector.class);
-		assertThat(classSelectors).hasSize(1);
-		assertEquals(testClass, getOnlyElement(classSelectors).getJavaClass());
-	}
-
-	@Test
-	public void convertsMethodArgument() throws Exception {
-		Class<?> testClass = getClass();
-		Method testMethod = testClass.getDeclaredMethod("convertsMethodArgument");
-		options.setArguments(singletonList(testClass.getName() + "#" + testMethod.getName()));
-
-		LauncherDiscoveryRequest request = convert();
-
-		List<JavaMethodSelector> methodSelectors = request.getSelectorsByType(JavaMethodSelector.class);
-		assertThat(methodSelectors).hasSize(1);
-		assertEquals(testClass, getOnlyElement(methodSelectors).getJavaClass());
-		assertEquals(testMethod, getOnlyElement(methodSelectors).getJavaMethod());
-	}
-
-	@Test
-	public void convertsPackageArgument() {
-		String packageName = getClass().getPackage().getName();
-		options.setArguments(singletonList(packageName));
-
-		LauncherDiscoveryRequest request = convert();
-
-		List<JavaPackageSelector> packageSelectors = request.getSelectorsByType(JavaPackageSelector.class);
-		assertThat(packageSelectors).extracting(JavaPackageSelector::getPackageName).containsExactly(packageName);
-	}
-
-	@Test
-	public void convertsAllOptionWithoutExplicitRootDirectories() {
+	public void convertsScanClasspathOptionWithoutExplicitRootDirectories() {
 		options.setScanClasspath(true);
 
 		LauncherDiscoveryRequest request = convert();
@@ -93,9 +60,9 @@ public class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsAllOptionWithExplicitRootDirectories() {
+	public void convertsScanClasspathOptionWithExplicitRootDirectories() {
 		options.setScanClasspath(true);
-		options.setArguments(asList(".", ".."));
+		options.setSelectedClasspathEntries(asList(Paths.get("."), Paths.get("..")));
 
 		LauncherDiscoveryRequest request = convert();
 
@@ -107,7 +74,7 @@ public class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsAllOptionWithAdditionalClasspathEntries() {
+	public void convertsScanClasspathOptionWithAdditionalClasspathEntries() {
 		options.setScanClasspath(true);
 		options.setAdditionalClasspathEntries(asList(Paths.get("."), Paths.get("..")));
 
@@ -118,6 +85,16 @@ public class DiscoveryRequestCreatorTests {
 		assertThat(classpathRootSelectors).extracting(ClasspathRootSelector::getClasspathRoot)
 			.contains(new File(".").toURI(), new File("..").toURI());
 		// @formatter:on
+	}
+
+	@Test
+	public void doesNotSupportScanClasspathAndExplicitSelectors() {
+		options.setScanClasspath(true);
+		options.setSelectedClasses(singletonList("SomeTest"));
+
+		Throwable cause = assertThrows(PreconditionViolationException.class, this::convert);
+
+		assertThat(cause).hasMessageContaining("not supported");
 	}
 
 	@Test
@@ -134,13 +111,43 @@ public class DiscoveryRequestCreatorTests {
 	@Test
 	public void convertsExplicitIncludeClassNamePatternOption() {
 		options.setScanClasspath(true);
-		options.setIncludeClassNamePattern("Foo.*Bar");
+		options.setIncludedClassNamePatterns(asList("Foo.*Bar", "Bar.*Foo"));
 
 		LauncherDiscoveryRequest request = convert();
 
 		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
 		assertThat(filter).hasSize(1);
 		assertThat(filter.get(0).toString()).contains("Foo.*Bar");
+		assertThat(filter.get(0).toString()).contains("Bar.*Foo");
+	}
+
+	@Test
+	public void convertsExcludeClassNamePatternOption() {
+		options.setScanClasspath(true);
+		options.setExcludedClassNamePatterns(asList("Foo.*Bar", "Bar.*Foo"));
+
+		LauncherDiscoveryRequest request = convert();
+
+		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+		assertThat(filter).hasSize(2);
+		assertThat(filter.get(1).toString()).contains("Foo.*Bar");
+		assertThat(filter.get(1).toString()).contains("Bar.*Foo");
+	}
+
+	@Test
+	public void convertsPackageOptions() {
+		options.setScanClasspath(true);
+		options.setIncludedPackages(asList("org.junit.included1", "org.junit.included2", "org.junit.included3"));
+		options.setExcludedPackages(asList("org.junit.excluded1"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<PackageNameFilter> packageNameFilters = request.getDiscoveryFiltersByType(PackageNameFilter.class);
+
+		assertThat(packageNameFilters).hasSize(2);
+		assertThat(packageNameFilters.get(0).toString()).contains("org.junit.included1");
+		assertThat(packageNameFilters.get(0).toString()).contains("org.junit.included2");
+		assertThat(packageNameFilters.get(0).toString()).contains("org.junit.included3");
+		assertThat(packageNameFilters.get(1).toString()).contains("org.junit.excluded1");
 	}
 
 	@Test
@@ -169,6 +176,86 @@ public class DiscoveryRequestCreatorTests {
 		assertThat(engineFilters).hasSize(2);
 		assertThat(engineFilters.get(0).toString()).contains("includes", "[engine1, engine2, engine3]");
 		assertThat(engineFilters.get(1).toString()).contains("excludes", "[engine2]");
+	}
+
+	@Test
+	public void convertsUriSelectors() {
+		options.setSelectedUris(asList(URI.create("a"), URI.create("b")));
+
+		LauncherDiscoveryRequest request = convert();
+		List<UriSelector> uriSelectors = request.getSelectorsByType(UriSelector.class);
+
+		assertThat(uriSelectors).extracting(UriSelector::getUri).containsExactly(URI.create("a"), URI.create("b"));
+	}
+
+	@Test
+	public void convertsFileSelectors() {
+		options.setSelectedFiles(asList("foo.txt", "bar.csv"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<FileSelector> fileSelectors = request.getSelectorsByType(FileSelector.class);
+
+		assertThat(fileSelectors).extracting(FileSelector::getRawPath).containsExactly("foo.txt", "bar.csv");
+	}
+
+	@Test
+	public void convertsDirectorySelectors() {
+		options.setSelectedDirectories(asList("foo/bar", "bar/qux"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<DirectorySelector> directorySelectors = request.getSelectorsByType(DirectorySelector.class);
+
+		assertThat(directorySelectors).extracting(DirectorySelector::getRawPath).containsExactly("foo/bar", "bar/qux");
+	}
+
+	@Test
+	public void convertsPackageSelectors() {
+		options.setSelectedPackages(asList("com.acme.foo", "com.example.bar"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<PackageSelector> packageSelectors = request.getSelectorsByType(PackageSelector.class);
+
+		assertThat(packageSelectors).extracting(PackageSelector::getPackageName).containsExactly("com.acme.foo",
+			"com.example.bar");
+	}
+
+	@Test
+	public void convertsClassSelectors() {
+		options.setSelectedClasses(asList("com.acme.Foo", "com.example.Bar"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
+
+		assertThat(classSelectors).extracting(ClassSelector::getClassName).containsExactly("com.acme.Foo",
+			"com.example.Bar");
+	}
+
+	@Test
+	public void convertsMethodSelectors() {
+		options.setSelectedMethods(asList("com.acme.Foo#m()", "com.example.Bar#method(java.lang.Object)"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
+
+		assertThat(methodSelectors).hasSize(2);
+		assertThat(methodSelectors.get(0).getClassName()).isEqualTo("com.acme.Foo");
+		assertThat(methodSelectors.get(0).getMethodName()).isEqualTo("m");
+		assertThat(methodSelectors.get(0).getMethodParameterTypes()).isNull();
+		assertThat(methodSelectors.get(1).getClassName()).isEqualTo("com.example.Bar");
+		assertThat(methodSelectors.get(1).getMethodName()).isEqualTo("method");
+		assertThat(methodSelectors.get(1).getMethodParameterTypes()).isEqualTo("java.lang.Object");
+	}
+
+	@Test
+	public void convertsClasspathResourceSelectors() {
+		options.setSelectedClasspathResources(asList("foo.csv", "com/example/bar.json"));
+
+		LauncherDiscoveryRequest request = convert();
+		List<ClasspathResourceSelector> classpathResourceSelectors = request.getSelectorsByType(
+			ClasspathResourceSelector.class);
+
+		assertThat(classpathResourceSelectors).extracting(
+			ClasspathResourceSelector::getClasspathResourceName).containsExactly("foo.csv", "com/example/bar.json");
 	}
 
 	private LauncherDiscoveryRequest convert() {

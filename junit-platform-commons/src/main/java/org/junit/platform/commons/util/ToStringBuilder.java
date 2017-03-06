@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
@@ -98,13 +97,7 @@ public class ToStringBuilder {
 
 	@Override
 	public String toString() {
-		// @formatter:off
-		return new StringBuilder(this.type.getSimpleName()).append(" ")
-			.append("[")
-			.append(this.values.stream().collect(joining(", ")))
-			.append("]")
-			.toString();
-		// @formatter:on
+		return this.type.getSimpleName() + " [" + String.join(", ", this.values) + "]";
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -68,7 +68,8 @@ class DefaultLauncher implements Launcher {
 
 	@Override
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		Preconditions.notNull(listeners, "listeners must not be null");
+		Preconditions.notEmpty(listeners, "listeners array must not be null or empty");
+		Preconditions.containsNoNullElements(listeners, "individual listeners must not be null");
 		this.listenerRegistry.registerListeners(listeners);
 	}
 
@@ -82,6 +83,10 @@ class DefaultLauncher implements Launcher {
 	public void execute(LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
 		execute(discoverRoot(discoveryRequest, "execution"), discoveryRequest.getConfigurationParameters());
+	}
+
+	TestExecutionListenerRegistry getTestExecutionListenerRegistry() {
+		return listenerRegistry;
 	}
 
 	private Root discoverRoot(LauncherDiscoveryRequest discoveryRequest, String phase) {

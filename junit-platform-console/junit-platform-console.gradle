@@ -1,8 +1,70 @@
-apply plugin: 'application'
+apply plugin: 'java-library'
+apply plugin: 'com.github.johnrengelman.shadow'
 
-dependencies {
-	compile(project(':junit-platform-launcher'))
-	compile('net.sf.jopt-simple:jopt-simple:5.0.2')
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+	}
 }
 
-mainClassName = "org.junit.platform.console.ConsoleLauncher"
+dependencies {
+	api(project(':junit-platform-launcher'))
+
+	shadow('net.sf.jopt-simple:jopt-simple:5.0.3')
+}
+
+sourceSets.main.compileClasspath += configurations.shadow
+
+eclipse {
+	classpath {
+		plusConfigurations += [ configurations.shadow ]
+	}
+}
+
+idea {
+	module {
+		scopes.PROVIDED.plus += [ configurations.shadow ]
+	}
+}
+
+jar {
+	manifest {
+		attributes(
+			'Main-Class': 'org.junit.platform.console.ConsoleLauncher'
+		)
+	}
+}
+
+javadoc {
+	classpath = project.sourceSets.main.compileClasspath + configurations.shadow
+}
+
+jar.enabled = false
+
+shadowJar {
+	// Generate shadow jar only if the underlying manifest was regenerated.
+	// See https://github.com/junit-team/junit5/issues/631
+	onlyIf {
+		(project.generateManifest || !shadowJar.archivePath.exists())
+	}
+	classifier = null
+	configurations = [project.configurations.shadow]
+	exclude 'META-INF/**'
+	relocate 'joptsimple', 'org.junit.platform.joptsimple'
+	transform(org.junit.platform.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
+		paths = [
+			'joptsimple/ExceptionMessages.properties',
+			'joptsimple/HelpFormatterMessages.properties'
+		]
+		keyTransformer = { key ->
+			key.replaceAll('^(joptsimple\\..*)$', 'org.junit.platform.$1')
+		}
+	}
+}
+
+artifacts {
+	archives shadowJar
+}

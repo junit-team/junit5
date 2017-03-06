@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,40 +10,32 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.engine.FilterResult.excluded;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.extensions.TempDirectory;
-import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClasspathRootSelector;
-import org.junit.platform.engine.discovery.JavaClassSelector;
-import org.junit.platform.engine.discovery.JavaMethodSelector;
-import org.junit.platform.engine.discovery.JavaPackageSelector;
+import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.DiscoveryFilterStub;
@@ -65,12 +57,12 @@ class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							selectJavaPackage("org.junit.platform.engine")
+							selectPackage("org.junit.platform.engine")
 					).build();
 			// @formatter:on
 
-			List<String> packageSelectors = discoveryRequest.getSelectorsByType(JavaPackageSelector.class).stream().map(
-				JavaPackageSelector::getPackageName).collect(toList());
+			List<String> packageSelectors = discoveryRequest.getSelectorsByType(PackageSelector.class).stream().map(
+				PackageSelector::getPackageName).collect(toList());
 			assertThat(packageSelectors).contains("org.junit.platform.engine");
 		}
 
@@ -79,14 +71,14 @@ class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							selectJavaClass(LauncherDiscoveryRequestBuilderTests.class.getName()),
-							selectJavaClass(SampleTestClass.class)
+							selectClass(LauncherDiscoveryRequestBuilderTests.class.getName()),
+							selectClass(SampleTestClass.class)
 					)
 				.build();
 			// @formatter:on
 
-			List<Class<?>> classes = discoveryRequest.getSelectorsByType(JavaClassSelector.class).stream().map(
-				JavaClassSelector::getJavaClass).collect(toList());
+			List<Class<?>> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream().map(
+				ClassSelector::getJavaClass).collect(toList());
 			assertThat(classes).contains(SampleTestClass.class, LauncherDiscoveryRequestBuilderTests.class);
 		}
 
@@ -94,14 +86,14 @@ class LauncherDiscoveryRequestBuilderTests {
 		public void methodsByFullyQualifiedNameAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
-					.selectors(selectJavaMethod(fullyQualifiedMethodName()))
+					.selectors(selectMethod(fullyQualifiedMethodName()))
 					.build();
 			// @formatter:on
 
-			List<JavaMethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(JavaMethodSelector.class);
+			List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			JavaMethodSelector methodSelector = methodSelectors.get(0);
+			MethodSelector methodSelector = methodSelectors.get(0);
 			assertThat(methodSelector.getJavaClass()).isEqualTo(LauncherDiscoveryRequestBuilderTests.class);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(fullyQualifiedMethod());
 		}
@@ -113,14 +105,14 @@ class LauncherDiscoveryRequestBuilderTests {
 
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
-					.selectors(selectJavaMethod(SampleTestClass.class.getName(), "test"))
+					.selectors(selectMethod(SampleTestClass.class.getName(), "test"))
 					.build();
 			// @formatter:on
 
-			List<JavaMethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(JavaMethodSelector.class);
+			List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			JavaMethodSelector methodSelector = methodSelectors.get(0);
+			MethodSelector methodSelector = methodSelectors.get(0);
 			assertThat(methodSelector.getJavaClass()).isEqualTo(testClass);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(testMethod);
 		}
@@ -133,44 +125,16 @@ class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:off
 			DefaultDiscoveryRequest discoveryRequest = (DefaultDiscoveryRequest) request()
 					.selectors(
-							selectJavaMethod(SampleTestClass.class, "test")
+							selectMethod(SampleTestClass.class, "test")
 					).build();
 			// @formatter:on
 
-			List<JavaMethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(JavaMethodSelector.class);
+			List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			JavaMethodSelector methodSelector = methodSelectors.get(0);
+			MethodSelector methodSelector = methodSelectors.get(0);
 			assertThat(methodSelector.getJavaClass()).isEqualTo(testClass);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(testMethod);
-		}
-
-		@Test
-		public void unavailableFoldersAreNotStoredInDiscoveryRequest() throws Exception {
-			// @formatter:off
-			LauncherDiscoveryRequest discoveryRequest = request()
-					.selectors(
-							selectClasspathRoots(singleton(Paths.get("some", "local", "path")))
-					).build();
-			// @formatter:on
-
-			assertThat(discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).size()).isEqualTo(0);
-		}
-
-		@Test
-		@ExtendWith(TempDirectory.class)
-		public void availableFoldersAreStoredInDiscoveryRequest(@Root Path tempDir) throws Exception {
-			// @formatter:off
-			LauncherDiscoveryRequest discoveryRequest = request()
-					.selectors(
-							selectClasspathRoots(singleton(tempDir))
-					).build();
-			// @formatter:on
-
-			List<Path> folders = discoveryRequest.getSelectorsByType(ClasspathRootSelector.class).stream().map(
-				ClasspathRootSelector::getClasspathRoot).map(Paths::get).collect(toList());
-
-			assertThat(folders).contains(tempDir);
 		}
 
 		@Test
@@ -254,7 +218,7 @@ class LauncherDiscoveryRequestBuilderTests {
 
 		@Test
 		public void exceptionForIllegalFilterClass() throws Exception {
-			Exception exception = expectThrows(PreconditionViolationException.class,
+			Exception exception = assertThrows(PreconditionViolationException.class,
 				() -> request().filters(o -> excluded("reason")));
 
 			assertThat(exception).hasMessageStartingWith("Filter");

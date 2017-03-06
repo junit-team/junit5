@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,51 +10,52 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.engine.FilterResult.includedIf;
+import static org.junit.platform.engine.FilterResult.excluded;
+import static org.junit.platform.engine.FilterResult.included;
 
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.FilterResult;
 
 /**
- * {@link ClassNameFilter} that matches fully qualified class names against a
- * pattern in the form of a regular expression.
+ * {@link ClassNameFilter} that matches fully qualified class names against
+ * patterns in the form of regular expressions.
  *
- * <p>If the fully qualified name of a class matches against the pattern, the
- * class will be included.
+ * <p>If the fully qualified name of a class matches against at least one
+ * pattern, the class will be included.
  *
  * @since 1.0
  */
-class IncludeClassNameFilter implements ClassNameFilter {
+class IncludeClassNameFilter extends AbstractClassNameFilter {
 
-	private final Pattern pattern;
-
-	IncludeClassNameFilter(String pattern) {
-		Preconditions.notBlank(pattern, "pattern must not be null or blank");
-		this.pattern = Pattern.compile(pattern);
+	IncludeClassNameFilter(String... patterns) {
+		super(patterns);
 	}
 
 	@Override
 	public FilterResult apply(String className) {
-		return includedIf(matchesPattern(className), //
-			() -> String.format("Class name [%s] matches pattern: %s", className, this.pattern), //
-			() -> String.format("Class name [%s] does not match pattern: %s", className, this.pattern));
+		return findMatchingPattern(className) //
+				.map(pattern -> included(formatInclusionReason(className, pattern))) //
+				.orElseGet(() -> excluded(formatExclusionReason(className)));
+	}
+
+	private String formatExclusionReason(String className) {
+		return String.format("Class name [%s] does not match any included pattern: %s", className, patternDescription);
+	}
+
+	private String formatInclusionReason(String className, Pattern pattern) {
+		return String.format("Class name [%s] matches included pattern: '%s'", className, pattern);
 	}
 
 	@Override
 	public Predicate<String> toPredicate() {
-		return this::matchesPattern;
-	}
-
-	private boolean matchesPattern(String className) {
-		return this.pattern.matcher(className).matches();
+		return className -> findMatchingPattern(className).isPresent();
 	}
 
 	@Override
 	public String toString() {
-		return "Includes class names with regular expression: " + this.pattern;
+		return "Includes class names that match regular expression " + patternDescription;
 	}
 
 }

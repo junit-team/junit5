@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -22,12 +22,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -35,7 +33,6 @@ import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
-import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
@@ -48,7 +45,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -64,7 +61,6 @@ import org.junit.platform.engine.support.descriptor.JavaClassSource;
 @API(Internal)
 public class ClassTestDescriptor extends JupiterTestDescriptor {
 
-	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final Class<?> testClass;
@@ -91,7 +87,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		this.beforeEachMethods = findBeforeEachMethods(testClass);
 		this.afterEachMethods = findAfterEachMethods(testClass);
 
-		setSource(new JavaClassSource(testClass));
+		setSource(new ClassSource(testClass));
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -146,13 +142,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
-		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForContainer(
-			context.getExtensionRegistry(), context.getConfigurationParameters(),
-			(ContainerExtensionContext) context.getExtensionContext());
-		if (evaluationResult.isDisabled()) {
-			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
-		}
-		return SkipResult.doNotSkip();
+		return shouldContainerBeSkipped(context);
 	}
 
 	@Override
@@ -182,10 +172,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
-		return () -> {
+		return childExtensionRegistry -> {
 			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-			Object instance = executableInvoker.invoke(constructor, extensionContext, registry);
-			invokeTestInstancePostProcessors(instance, registry, extensionContext);
+			Object instance = executableInvoker.invoke(constructor, extensionContext,
+				childExtensionRegistry.orElse(registry));
+			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(registry), extensionContext);
 			return instance;
 		};
 	}
@@ -258,17 +249,17 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void registerMethodsAsExtensions(List<Method> methods, ExtensionRegistry registry,
-			BiFunction<ExtensionRegistry, Method, Extension> extensionSynthesizer) {
+			Function<Method, Extension> extensionSynthesizer) {
 
-		methods.forEach(method -> registry.registerExtension(extensionSynthesizer.apply(registry, method), method));
+		methods.forEach(method -> registry.registerExtension(extensionSynthesizer.apply(method), method));
 	}
 
-	private BeforeEachMethodAdapter synthesizeBeforeEachMethodAdapter(ExtensionRegistry registry, Method method) {
-		return extensionContext -> invokeMethodInTestExtensionContext(method, extensionContext, registry);
+	private BeforeEachMethodAdapter synthesizeBeforeEachMethodAdapter(Method method) {
+		return (extensionContext, registry) -> invokeMethodInTestExtensionContext(method, extensionContext, registry);
 	}
 
-	private AfterEachMethodAdapter synthesizeAfterEachMethodAdapter(ExtensionRegistry registry, Method method) {
-		return extensionContext -> invokeMethodInTestExtensionContext(method, extensionContext, registry);
+	private AfterEachMethodAdapter synthesizeAfterEachMethodAdapter(Method method) {
+		return (extensionContext, registry) -> invokeMethodInTestExtensionContext(method, extensionContext, registry);
 	}
 
 	private void invokeMethodInTestExtensionContext(Method method, TestExtensionContext context,

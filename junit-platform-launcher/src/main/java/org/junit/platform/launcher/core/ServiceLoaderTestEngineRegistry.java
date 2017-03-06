@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,9 +10,8 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
@@ -29,9 +28,27 @@ class ServiceLoaderTestEngineRegistry {
 	public Iterable<TestEngine> loadTestEngines() {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
 			ReflectionUtils.getDefaultClassLoader());
-		LOG.info(() -> "Discovered TestEngines with IDs: "
-				+ stream(testEngines.spliterator(), false).map(TestEngine::getId).collect(toList()));
+		LOG.config(() -> createDiscoveredTestEnginesMessage(testEngines));
 		return testEngines;
+	}
+
+	private String createDiscoveredTestEnginesMessage(Iterable<TestEngine> testEngines) {
+		List<String> details = new ArrayList<>();
+		for (TestEngine engine : testEngines) {
+			details.add(String.format("%s (%s)", engine.getId(), String.join(", ", computeAttributes(engine))));
+		}
+		if (details.isEmpty()) {
+			return "No TestEngine implementation discovered.";
+		}
+		return "Discovered TestEngines with IDs: [" + String.join(", ", details) + "]";
+	}
+
+	private List<String> computeAttributes(TestEngine engine) {
+		List<String> attributes = new ArrayList<>();
+		engine.getGroupId().ifPresent(groupId -> attributes.add("group ID: " + groupId));
+		engine.getArtifactId().ifPresent(artifactId -> attributes.add("artifact ID: " + artifactId));
+		engine.getVersion().ifPresent(version -> attributes.add("version: " + version));
+		return attributes;
 	}
 
 }

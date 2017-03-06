@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,6 +12,7 @@ package org.junit.platform.engine.test.event;
 
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Index.atIndex;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
@@ -49,7 +50,7 @@ public class ExecutionEventConditions {
 	public static void assertRecordedExecutionEventsContainsExactly(List<ExecutionEvent> executionEvents,
 			Condition<? super ExecutionEvent>... conditions) {
 		SoftAssertions softly = new SoftAssertions();
-		softly.assertThat(executionEvents).hasSize(conditions.length);
+		assertThat(executionEvents).hasSize(conditions.length);
 		for (int i = 0; i < conditions.length; i++) {
 			softly.assertThat(executionEvents).has(conditions[i], atIndex(i));
 		}

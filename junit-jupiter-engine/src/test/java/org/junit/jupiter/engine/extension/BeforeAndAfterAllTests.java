@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
@@ -132,7 +132,7 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 			String... expectedCalls) {
 
 		callSequence.clear();
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(testClass)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(testsStarted, eventRecorder.getTestStartedCount(), "# tests started");

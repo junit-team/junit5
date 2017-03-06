@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -13,8 +13,10 @@ package org.junit.platform.launcher.listeners;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.launcher.TestIdentifier;
 
 /**
  * Summary of test plan execution.
@@ -126,5 +128,30 @@ public interface TestExecutionSummary {
 	 * @see #printTo(PrintWriter)
 	 */
 	void printFailuresTo(PrintWriter writer);
+
+	/**
+	 * Get a list of the failures of the test plan execution.
+	 */
+	List<Failure> getFailures();
+
+	/**
+	 * Failure of a test or container.
+	 */
+	interface Failure {
+
+		/**
+		 * Get the identifier of the failed test or container.
+		 *
+		 * @return the {@link TestIdentifier} for this failure; never {@code null}
+		 */
+		TestIdentifier getTestIdentifier();
+
+		/**
+		 * Get the {@link Throwable} causing the failure.
+		 *
+		 * @return the {@link Throwable} for this failure; never {@code null}
+		 */
+		Throwable getException();
+	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,7 +12,7 @@ package org.junit.jupiter.engine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.Disabled;
@@ -29,8 +29,7 @@ public class DisabledTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestClass() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaClass(DisabledTestClassTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestClassTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1, eventRecorder.getContainerSkippedCount(), "# container skipped");
@@ -38,14 +37,17 @@ public class DisabledTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void executeTestsWithDisabledTestMethods() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaClass(DisabledTestMethodsTestCase.class)).build();
+	public void executeTestsWithDisabledTestMethods() throws Exception {
+		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestMethodsTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(1, eventRecorder.getTestSkippedCount(), "# tests skipped");
+
+		String method = DisabledTestMethodsTestCase.class.getDeclaredMethod("disabledTest").toString();
+		String reason = eventRecorder.getSkippedTestEvents().get(0).getPayload(String.class).get();
+		assertEquals(method + " is @Disabled", reason);
 	}
 
 	// -------------------------------------------------------------------

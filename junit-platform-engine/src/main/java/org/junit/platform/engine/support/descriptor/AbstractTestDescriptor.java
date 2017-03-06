@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -104,13 +104,13 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		if (getUniqueId().equals(uniqueId)) {
 			return Optional.of(this);
 		}
-		for (TestDescriptor child : this.children) {
-			Optional<? extends TestDescriptor> result = child.findByUniqueId(uniqueId);
-			if (result.isPresent()) {
-				return result;
-			}
-		}
-		return Optional.empty();
+		// @formatter:off
+		return this.children.stream()
+				.map(child -> child.findByUniqueId(uniqueId))
+				.filter(Optional::isPresent)
+				.findAny()
+				.orElse(Optional.empty());
+		// @formatter:on
 	}
 
 	@Override

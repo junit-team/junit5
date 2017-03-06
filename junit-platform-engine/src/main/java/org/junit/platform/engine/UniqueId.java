@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -94,7 +94,7 @@ public class UniqueId implements Cloneable, Serializable {
 	}
 
 	final Optional<Segment> getRoot() {
-		return this.segments.size() > 0 ? Optional.of(this.segments.get(0)) : Optional.empty();
+		return this.segments.isEmpty() ? Optional.empty() : Optional.of(this.segments.get(0));
 	}
 
 	/**
@@ -186,7 +186,9 @@ public class UniqueId implements Cloneable, Serializable {
 	 * <em>value</em>.
 	 */
 	@API(Experimental)
-	public static class Segment {
+	public static class Segment implements Serializable {
+
+		private static final long serialVersionUID = 1L;
 
 		private final String type;
 		private final String value;

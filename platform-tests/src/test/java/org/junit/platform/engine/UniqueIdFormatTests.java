@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,8 +11,8 @@
 package org.junit.platform.engine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -114,7 +114,7 @@ class UniqueIdFormatTests {
 
 		@Test
 		default void parseMalformedUid() {
-			Throwable throwable = expectThrows(JUnitException.class, () -> getFormat().parse("malformed UID"));
+			Throwable throwable = assertThrows(JUnitException.class, () -> getFormat().parse("malformed UID"));
 			assertTrue(throwable.getMessage().contains("malformed UID"));
 		}
 

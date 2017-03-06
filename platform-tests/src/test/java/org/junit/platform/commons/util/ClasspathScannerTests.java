@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -121,6 +122,23 @@ class ClasspathScannerTests {
 		assertThrows(OutOfMemoryError.class,
 			() -> this.classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(),
 				outOfMemoryErrorSimulationFilter, className -> true));
+	}
+
+	@Test
+	void scanForClassesInClasspathRootWithinJarFile() throws Exception {
+		URL jarfile = getClass().getResource("/jartest.jar");
+
+		try (URLClassLoader classLoader = new URLClassLoader(new URL[] { jarfile })) {
+			ClasspathScanner classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::loadClass);
+
+			List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(jarfile.toURI(), clazz -> true,
+				className -> true);
+			List<String> classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
+			assertThat(classNames).hasSize(3) //
+					.contains("org.junit.platform.jartest.notincluded.NotIncluded",
+						"org.junit.platform.jartest.included.recursive.RecursivelyIncluded",
+						"org.junit.platform.jartest.included.Included");
+		}
 	}
 
 	@Test
@@ -228,7 +246,7 @@ class ClasspathScannerTests {
 	@Test
 	void findAllClassesInClasspathRoot() throws Exception {
 		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTests.class;
-		Path root = getTestClasspathRoot();
+		URI root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, thisClassOnly, className -> true);
 		assertSame(ClasspathScannerTests.class, classes.get(0));
 	}
@@ -255,7 +273,7 @@ class ClasspathScannerTests {
 		Path symlink1 = Files.createSymbolicLink(tempDir.resolve("symlink1"), directory);
 		Files.createSymbolicLink(directory.resolve("symlink2"), symlink1);
 
-		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(symlink1, clazz -> true,
+		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(symlink1.toUri(), clazz -> true,
 			className -> true);
 
 		assertThat(classes).isEmpty();
@@ -269,7 +287,7 @@ class ClasspathScannerTests {
 
 	@Test
 	void findAllClassesInClasspathRootWithFilter() throws Exception {
-		Path root = getTestClasspathRoot();
+		URI root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, clazz -> true, className -> true);
 
 		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
@@ -285,7 +303,7 @@ class ClasspathScannerTests {
 	@Test
 	void findAllClassesInClasspathRootForNonExistingRoot() throws Exception {
 		assertThrows(PreconditionViolationException.class,
-			() -> classpathScanner.scanForClassesInClasspathRoot(Paths.get("does_not_exist"), clazz -> true,
+			() -> classpathScanner.scanForClassesInClasspathRoot(Paths.get("does_not_exist").toUri(), clazz -> true,
 				className -> true));
 	}
 
@@ -299,16 +317,16 @@ class ClasspathScannerTests {
 	void onlyLoadsClassesInClasspathRootThatAreIncludedByTheClassNameFilter() throws Exception {
 		Predicate<Class<?>> classFilter = clazz -> true;
 		Predicate<String> classNameFilter = name -> ClasspathScannerTests.class.getName().equals(name);
-		Path root = getTestClasspathRoot();
+		URI root = getTestClasspathRoot();
 
 		classpathScanner.scanForClassesInClasspathRoot(root, classFilter, classNameFilter);
 
 		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
 	}
 
-	private Path getTestClasspathRoot() throws Exception {
+	private URI getTestClasspathRoot() throws Exception {
 		URL location = getClass().getProtectionDomain().getCodeSource().getLocation();
-		return Paths.get(location.toURI());
+		return location.toURI();
 	}
 
 	class MemberClassToBeFound {

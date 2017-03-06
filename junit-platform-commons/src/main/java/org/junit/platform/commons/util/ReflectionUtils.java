@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -51,7 +52,11 @@ import org.junit.platform.commons.meta.API;
  * itself. <strong>Any usage by external parties is not supported.</strong>
  * Use at your own risk!
  *
+ * <p>Some utilities are published via the maintained {@code ReflectionSupport}
+ * class.
+ *
  * @since 1.0
+ * @see org.junit.platform.commons.support.ReflectionSupport
  */
 @API(Internal)
 public final class ReflectionUtils {
@@ -117,7 +122,10 @@ public final class ReflectionUtils {
 
 	public static ClassLoader getDefaultClassLoader() {
 		try {
-			return Thread.currentThread().getContextClassLoader();
+			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+			if (contextClassLoader != null) {
+				return contextClassLoader;
+			}
 		}
 		catch (Throwable ex) {
 			/* ignore */
@@ -230,7 +238,8 @@ public final class ReflectionUtils {
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
 		Preconditions.notNull(clazz, "class must not be null");
-		Preconditions.notNull(args, "none of the arguments may be null");
+		Preconditions.notNull(args, "argument array must not be null");
+		Preconditions.containsNoNullElements(args, "individual arguments must not be null");
 
 		try {
 			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
@@ -450,11 +459,26 @@ public final class ReflectionUtils {
 		// @formatter:on
 	}
 
+	/**
+	 * @deprecated Use {@link #findAllClassesInClasspathRoot(URI, Predicate, Predicate)} instead.
+	 */
+	@Deprecated
 	public static List<Class<?>> findAllClassesInClasspathRoot(Path root, Predicate<Class<?>> classTester,
+			Predicate<String> classNameFilter) {
+		return findAllClassesInClasspathRoot(root.toUri(), classTester, classNameFilter);
+	}
+
+	/**
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInClasspathRoot(URI, Predicate, Predicate)
+	 */
+	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
 		return classpathScanner.scanForClassesInClasspathRoot(root, classTester, classNameFilter);
 	}
 
+	/**
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInPackage(String, Predicate, Predicate)
+	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
 		return classpathScanner.scanForClassesInPackage(basePackageName, classTester, classNameFilter);
@@ -540,6 +564,9 @@ public final class ReflectionUtils {
 		return findMethods(clazz, predicate, MethodSortOrder.HierarchyDown);
 	}
 
+	/**
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethods(Class, Predicate, org.junit.platform.commons.support.MethodSortOrder)
+	 */
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "predicate must not be null");
@@ -559,17 +586,13 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
 
-		// TODO [#333] Determine if we need to support bridged methods.
-
-		List<Method> localMethods = Arrays.asList(clazz.getDeclaredMethods());
-
 		// @formatter:off
+		List<Method> localMethods = Arrays.stream(clazz.getDeclaredMethods())
+				.filter(method -> !method.isSynthetic())
+				.collect(toList());
 		List<Method> superclassMethods = getSuperclassMethods(clazz, sortOrder).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
-		// @formatter:on
-
-		// @formatter:off
 		List<Method> interfaceMethods = getInterfaceMethods(clazz, sortOrder).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
@@ -620,7 +643,7 @@ public final class ReflectionUtils {
 		List<Method> allInterfaceMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
-			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods()).filter(Method::isDefault).collect(
+			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods()).filter(m -> !isAbstract(m)).collect(
 				toList());
 
 			// @formatter:off
@@ -656,8 +679,19 @@ public final class ReflectionUtils {
 		if (!lower.getName().equals(upper.getName())) {
 			return false;
 		}
-
-		return Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes());
+		if (lower.getParameterCount() != upper.getParameterCount()) {
+			return false;
+		}
+		// Check for method sub-signatures.
+		// https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2
+		for (int i = 0; i < lower.getParameterCount(); i++) {
+			Class<?> lowerType = lower.getParameterTypes()[i];
+			Class<?> upperType = upper.getParameterTypes()[i];
+			if (!upperType.isAssignableFrom(lowerType)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private static <T extends AccessibleObject> T makeAccessible(T object) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -14,8 +14,10 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -125,6 +127,17 @@ public interface ExtensionContext {
 	 * {@code null} or blank
 	 */
 	void publishReportEntry(Map<String, String> map);
+
+	/**
+	 * Publish the specified key-value pair to be consumed by an
+	 * {@code org.junit.platform.engine.EngineExecutionListener}.
+	 *
+	 * @param key the key of the published pair; never {@code null} or blank
+	 * @param value the value of the published pair; never {@code null} or blank
+	 */
+	default void publishReportEntry(String key, String value) {
+		this.publishReportEntry(Collections.singletonMap(key, value));
+	}
 
 	/**
 	 * Get the {@link Store} for the default, global {@link Namespace}.
@@ -295,21 +308,22 @@ public interface ExtensionContext {
 
 		/**
 		 * Create a namespace which restricts access to data to all extensions
-		 * which use the same {@code parts} for creating a namespace.
+		 * which use the same sequence of {@code parts} for creating a namespace.
 		 *
-		 * <p>The order of the {@code parts} is not significant.
+		 * <p>The order of the {@code parts} is significant.
 		 *
-		 * <p>Internally the {@code parts} are compared using {@code Object.equals(Object)}.
+		 * <p>Internally the {@code parts} are compared using {@link Object#equals(Object)}.
 		 */
 		public static Namespace create(Object... parts) {
-			Preconditions.notNull(parts, "There must be at least one reference object to create a namespace");
+			Preconditions.notEmpty(parts, "parts array must not be null or empty");
+			Preconditions.containsNoNullElements(parts, "individual parts must not be null");
 			return new Namespace(parts);
 		}
 
-		private final Set<?> parts;
+		private final List<?> parts;
 
 		private Namespace(Object... parts) {
-			this.parts = new HashSet<>(Arrays.asList(parts));
+			this.parts = new ArrayList<>(Arrays.asList(parts));
 		}
 
 		@Override

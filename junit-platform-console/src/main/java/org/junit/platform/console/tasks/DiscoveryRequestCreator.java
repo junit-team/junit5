@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,36 +10,29 @@
 
 package org.junit.platform.console.tasks;
 
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
-import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassNameFilter.excludeClassNamePatterns;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
+import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
+import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.lang.reflect.Method;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
-import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.discovery.JavaClassSelector;
-import org.junit.platform.engine.discovery.JavaMethodSelector;
-import org.junit.platform.engine.discovery.JavaPackageSelector;
+import org.junit.platform.engine.discovery.ClasspathRootSelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
@@ -49,39 +42,64 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 class DiscoveryRequestCreator {
 
 	LauncherDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
-		LauncherDiscoveryRequestBuilder requestBuilder = createRequestBuilder(options);
+		LauncherDiscoveryRequestBuilder requestBuilder = request();
+		requestBuilder.selectors(createDiscoverySelectors(options));
 		addFilters(requestBuilder, options);
 		return requestBuilder.build();
 	}
 
-	private LauncherDiscoveryRequestBuilder createRequestBuilder(CommandLineOptions options) {
+	private List<? extends DiscoverySelector> createDiscoverySelectors(CommandLineOptions options) {
 		if (options.isScanClasspath()) {
-			return createBuilderForClasspathScanning(options);
+			Preconditions.condition(!options.hasExplicitSelectors(),
+				"Scanning the classpath and using explicit selectors at the same time is not supported");
+			return createClasspathRootSelectors(options);
 		}
-		return createNameBasedBuilder(options);
+		return createExplicitDiscoverySelectors(options);
 	}
 
-	private LauncherDiscoveryRequestBuilder createBuilderForClasspathScanning(CommandLineOptions options) {
-		Set<Path> rootDirectoriesToScan = determineClasspathRootDirectories(options);
-		return request().selectors(selectClasspathRoots(rootDirectoriesToScan));
+	private List<ClasspathRootSelector> createClasspathRootSelectors(CommandLineOptions options) {
+		Set<Path> classpathRoots = determineClasspathRoots(options);
+		return selectClasspathRoots(classpathRoots);
 	}
 
-	private Set<Path> determineClasspathRootDirectories(CommandLineOptions options) {
-		if (options.getArguments().isEmpty()) {
+	private Set<Path> determineClasspathRoots(CommandLineOptions options) {
+		if (options.getSelectedClasspathEntries().isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
 			rootDirs.addAll(options.getAdditionalClasspathEntries());
 			return rootDirs;
 		}
-		return options.getArguments().stream().map(Paths::get).collect(toCollection(LinkedHashSet::new));
+		return new LinkedHashSet<>(options.getSelectedClasspathEntries());
 	}
 
-	private LauncherDiscoveryRequestBuilder createNameBasedBuilder(CommandLineOptions options) {
-		Preconditions.notEmpty(options.getArguments(), "No arguments were supplied to the ConsoleLauncher");
-		return request().selectors(selectNames(options.getArguments()));
+	private List<DiscoverySelector> createExplicitDiscoverySelectors(CommandLineOptions options) {
+		List<DiscoverySelector> selectors = new LinkedList<>();
+		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
+		options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
+		options.getSelectedDirectories().stream().map(DiscoverySelectors::selectDirectory).forEach(selectors::add);
+		options.getSelectedPackages().stream().map(DiscoverySelectors::selectPackage).forEach(selectors::add);
+		options.getSelectedClasses().stream().map(DiscoverySelectors::selectClass).forEach(selectors::add);
+		options.getSelectedMethods().stream().map(DiscoverySelectors::selectMethod).forEach(selectors::add);
+		options.getSelectedClasspathResources().stream().map(DiscoverySelectors::selectClasspathResource).forEach(
+			selectors::add);
+		Preconditions.notEmpty(selectors, "No arguments were supplied to the ConsoleLauncher");
+		return selectors;
 	}
 
 	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
-		requestBuilder.filters(includeClassNamePattern(options.getIncludeClassNamePattern()));
+		requestBuilder.filters(includeClassNamePatterns(options.getIncludedClassNamePatterns().toArray(new String[0])));
+
+		if (!options.getExcludedClassNamePatterns().isEmpty()) {
+			requestBuilder.filters(
+				excludeClassNamePatterns(options.getExcludedClassNamePatterns().toArray(new String[0])));
+		}
+
+		if (!options.getIncludedPackages().isEmpty()) {
+			requestBuilder.filters(includePackageNames(options.getIncludedPackages()));
+		}
+
+		if (!options.getExcludedPackages().isEmpty()) {
+			requestBuilder.filters(excludePackageNames(options.getExcludedPackages()));
+		}
 
 		if (!options.getIncludedTags().isEmpty()) {
 			requestBuilder.filters(includeTags(options.getIncludedTags()));
@@ -98,70 +116,6 @@ class DiscoveryRequestCreator {
 		if (!options.getExcludedEngines().isEmpty()) {
 			requestBuilder.filters(excludeEngines(options.getExcludedEngines()));
 		}
-	}
-
-	/**
-	 * Create a list of {@link DiscoverySelector DiscoverySelectors} for the
-	 * supplied names.
-	 *
-	 * <p>Consult the documentation for {@link #selectName(String)} for details
-	 * on what types of names are supported.
-	 *
-	 * @param names the names to select; never {@code null}
-	 * @return a list of {@code DiscoverySelectors} for the supplied names;
-	 * potentially empty
-	 */
-	private static List<DiscoverySelector> selectNames(Collection<String> names) {
-		Preconditions.notNull(names, "names collection must not be null");
-		return names.stream().map(DiscoveryRequestCreator::selectName).collect(toList());
-	}
-
-	/**
-	 * Create a {@link DiscoverySelector} for the supplied name.
-	 *
-	 * <h3>Supported Name Types</h3>
-	 * <ul>
-	 * <li>package: fully qualified package name</li>
-	 * <li>class: fully qualified class name</li>
-	 * <li>method: fully qualified method name</li>
-	 * </ul>
-	 *
-	 * @param name the name to select; never {@code null} or blank
-	 * @return an instance of {@link JavaClassSelector}, {@link JavaMethodSelector}, or
-	 * {@link JavaPackageSelector}
-	 * @throws PreconditionViolationException if the supplied name is {@code null},
-	 * blank, or does not specify a class, method, or package
-	 */
-	private static DiscoverySelector selectName(String name) throws PreconditionViolationException {
-		Preconditions.notBlank(name, "name must not be null or blank");
-
-		try {
-			Optional<Class<?>> classOptional = ReflectionUtils.loadClass(name);
-			if (classOptional.isPresent()) {
-				return selectJavaClass(classOptional.get());
-			}
-		}
-		catch (Exception ex) {
-			// ignore
-		}
-
-		try {
-			Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
-			if (methodOptional.isPresent()) {
-				Method method = methodOptional.get();
-				return selectJavaMethod(method.getDeclaringClass(), method);
-			}
-		}
-		catch (Exception ex) {
-			// ignore
-		}
-
-		if (ReflectionUtils.isPackage(name)) {
-			return selectJavaPackage(name);
-		}
-
-		throw new PreconditionViolationException(
-			String.format("'%s' specifies neither a class, a method, nor a package.", name));
 	}
 
 }

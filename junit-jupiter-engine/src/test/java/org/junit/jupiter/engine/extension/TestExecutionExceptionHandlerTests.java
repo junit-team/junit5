@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
@@ -61,8 +61,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 	@Test
 	void exceptionHandlerRethrowsException() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaMethod(ATestCase.class, "testRethrow")).build();
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testRethrow")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -79,8 +78,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 	@Test
 	void exceptionHandlerSwallowsException() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaMethod(ATestCase.class, "testSwallow")).build();
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSwallow")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -97,8 +95,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 	@Test
 	void exceptionHandlerConvertsException() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaMethod(ATestCase.class, "testConvert")).build();
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testConvert")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -115,8 +112,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 	@Test
 	void severalHandlersAreCalledInOrder() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaMethod(ATestCase.class, "testSeveral")).build();
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSeveral")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

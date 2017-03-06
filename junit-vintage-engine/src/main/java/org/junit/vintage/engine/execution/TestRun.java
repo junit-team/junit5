@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,10 +12,13 @@ package org.junit.vintage.engine.execution;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -30,6 +33,7 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.runner.Description;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
+import org.opentest4j.MultipleFailuresError;
 
 /**
  * @since 4.12
@@ -40,7 +44,7 @@ class TestRun {
 	private final Logger logger;
 	private final Set<? extends TestDescriptor> runnerDescendants;
 	private final Map<Description, List<VintageTestDescriptor>> descriptionToDescriptors;
-	private final Map<TestDescriptor, TestExecutionResult> executionResults = new LinkedHashMap<>();
+	private final Map<TestDescriptor, List<TestExecutionResult>> executionResults = new LinkedHashMap<>();
 	private final Set<TestDescriptor> skippedDescriptors = new LinkedHashSet<>();
 	private final Set<TestDescriptor> startedDescriptors = new LinkedHashSet<>();
 	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
@@ -48,7 +52,7 @@ class TestRun {
 	TestRun(RunnerTestDescriptor runnerTestDescriptor, Logger logger) {
 		this.runnerTestDescriptor = runnerTestDescriptor;
 		this.logger = logger;
-		runnerDescendants = runnerTestDescriptor.getAllDescendants();
+		runnerDescendants = runnerTestDescriptor.getDescendants();
 		// @formatter:off
 		descriptionToDescriptors = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
 			.map(VintageTestDescriptor.class::cast)
@@ -144,11 +148,27 @@ class TestRun {
 	}
 
 	void storeResult(TestDescriptor testDescriptor, TestExecutionResult result) {
-		executionResults.put(testDescriptor, result);
+		List<TestExecutionResult> testExecutionResults = executionResults.computeIfAbsent(testDescriptor,
+			key -> new ArrayList<>());
+		testExecutionResults.add(result);
 	}
 
 	TestExecutionResult getStoredResultOrSuccessful(TestDescriptor testDescriptor) {
-		return executionResults.getOrDefault(testDescriptor, successful());
-	}
+		List<TestExecutionResult> testExecutionResults = executionResults.get(testDescriptor);
 
+		if (testExecutionResults == null) {
+			return successful();
+		}
+		if (testExecutionResults.size() == 1) {
+			return testExecutionResults.get(0);
+		}
+		// @formatter:off
+		List<Throwable> failures = testExecutionResults
+				.stream()
+				.map(TestExecutionResult::getThrowable)
+				.map(Optional::get)
+				.collect(toList());
+		// @formatter:on
+		return failed(new MultipleFailuresError("", failures));
+	}
 }

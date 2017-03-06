@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -15,7 +15,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInCl
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
 
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -24,10 +23,10 @@ import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
-import org.junit.platform.engine.discovery.JavaClassSelector;
-import org.junit.platform.engine.discovery.JavaMethodSelector;
-import org.junit.platform.engine.discovery.JavaPackageSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
@@ -49,17 +48,17 @@ public class DiscoverySelectorResolver {
 		Predicate<String> classNamePredicate = buildClassNamePredicate(request);
 
 		request.getSelectorsByType(ClasspathRootSelector.class).forEach(selector -> {
-			findAllClassesInClasspathRoot(Paths.get(selector.getClasspathRoot()), isScannableTestClass,
+			findAllClassesInClasspathRoot(selector.getClasspathRoot(), isScannableTestClass,
 				classNamePredicate).forEach(javaElementsResolver::resolveClass);
 		});
-		request.getSelectorsByType(JavaPackageSelector.class).forEach(selector -> {
+		request.getSelectorsByType(PackageSelector.class).forEach(selector -> {
 			findAllClassesInPackage(selector.getPackageName(), isScannableTestClass, classNamePredicate).forEach(
 				javaElementsResolver::resolveClass);
 		});
-		request.getSelectorsByType(JavaClassSelector.class).forEach(selector -> {
+		request.getSelectorsByType(ClassSelector.class).forEach(selector -> {
 			javaElementsResolver.resolveClass(selector.getJavaClass());
 		});
-		request.getSelectorsByType(JavaMethodSelector.class).forEach(selector -> {
+		request.getSelectorsByType(MethodSelector.class).forEach(selector -> {
 			javaElementsResolver.resolveMethod(selector.getJavaClass(), selector.getJavaMethod());
 		});
 		request.getSelectorsByType(UniqueIdSelector.class).forEach(selector -> {
@@ -74,6 +73,7 @@ public class DiscoverySelectorResolver {
 		resolvers.add(new NestedTestsResolver());
 		resolvers.add(new TestMethodResolver());
 		resolvers.add(new TestFactoryMethodResolver());
+		resolvers.add(new TestTemplateMethodResolver());
 		return new JavaElementsResolver(engineDescriptor, resolvers);
 	}
 

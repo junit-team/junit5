@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,9 +12,9 @@ package org.junit.platform.launcher.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
@@ -37,6 +37,7 @@ import org.junit.platform.engine.test.TestEngineSpy;
 import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -53,18 +54,48 @@ class DefaultLauncherTests {
 
 	@Test
 	void constructLauncherWithoutAnyEngines() {
-		Throwable exception = expectThrows(PreconditionViolationException.class, () -> createLauncher());
+		Throwable exception = assertThrows(PreconditionViolationException.class, () -> createLauncher());
 
 		assertThat(exception).hasMessageContaining("Cannot create Launcher without at least one TestEngine");
 	}
 
 	@Test
 	void constructLauncherWithMultipleTestEnginesWithDuplicateIds() {
-		JUnitException exception = expectThrows(JUnitException.class,
+		JUnitException exception = assertThrows(JUnitException.class,
 			() -> createLauncher(new DemoHierarchicalTestEngine("dummy id"),
 				new DemoHierarchicalTestEngine("dummy id")));
 
 		assertThat(exception).hasMessageContaining("multiple engines with the same ID");
+	}
+
+	@Test
+	void registerTestExecutionListenersWithNullArray() {
+		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> launcher.registerTestExecutionListeners((TestExecutionListener[]) null));
+
+		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
+	}
+
+	@Test
+	void registerTestExecutionListenersWithEmptyArray() {
+		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[0]));
+
+		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
+	}
+
+	@Test
+	void registerTestExecutionListenersWithArrayContainingNullElements() {
+		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[] { null }));
+
+		assertThat(exception).hasMessageContaining("individual listeners must not be null");
 	}
 
 	@Test
@@ -87,7 +118,7 @@ class DefaultLauncherTests {
 			}
 		};
 
-		Throwable exception = expectThrows(PreconditionViolationException.class,
+		Throwable exception = assertThrows(PreconditionViolationException.class,
 			() -> createLauncher(engine).discover(request().build()));
 
 		assertThat(exception).hasMessage(
@@ -103,7 +134,7 @@ class DefaultLauncherTests {
 
 		DefaultLauncher launcher = createLauncher(engine);
 
-		TestPlan testPlan = launcher.discover(request().selectors(selectJavaPackage("any")).build());
+		TestPlan testPlan = launcher.discover(request().selectors(selectPackage("any")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -255,7 +286,7 @@ class DefaultLauncherTests {
 
 		TestPlan testPlan = launcher.discover( //
 			request() //
-					.selectors(selectJavaPackage("any")) //
+					.selectors(selectPackage("any")) //
 					.filters(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
 					.build());
 

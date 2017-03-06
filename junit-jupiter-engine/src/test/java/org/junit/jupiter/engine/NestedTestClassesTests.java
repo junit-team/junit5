@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,7 +12,7 @@ package org.junit.jupiter.engine;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterEach;
@@ -34,9 +34,9 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void nestedTestsAreCorrectlyDiscovered() {
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(TestCaseWithNesting.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
+		assertEquals(5, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -53,10 +53,9 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void doublyNestedTestsAreCorrectlyDiscovered() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectJavaClass(TestCaseWithDoubleNesting.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithDoubleNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(8, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
+		assertEquals(8, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test

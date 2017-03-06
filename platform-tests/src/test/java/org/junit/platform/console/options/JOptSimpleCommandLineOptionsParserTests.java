@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -20,21 +20,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import joptsimple.OptionException;
-
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * @since 1.0
@@ -50,13 +49,20 @@ class JOptSimpleCommandLineOptionsParserTests {
 		assertAll(
 			() -> assertFalse(options.isAnsiColorOutputDisabled()),
 			() -> assertFalse(options.isDisplayHelp()),
-			() -> assertFalse(options.isHideDetails()),
+			() -> assertEquals(CommandLineOptions.DEFAULT_DETAILS, options.getDetails()),
 			() -> assertFalse(options.isScanClasspath()),
-			() -> assertEquals(STANDARD_INCLUDE_PATTERN, options.getIncludeClassNamePattern()),
+			() -> assertEquals(singletonList(STANDARD_INCLUDE_PATTERN), options.getIncludedClassNamePatterns()),
+			() -> assertEquals(emptyList(), options.getExcludedClassNamePatterns()),
+			() -> assertEquals(emptyList(), options.getIncludedPackages()),
+			() -> assertEquals(emptyList(), options.getExcludedPackages()),
 			() -> assertEquals(emptyList(), options.getIncludedTags()),
+			() -> assertEquals(emptyList(), options.getExcludedTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getReportsDir()),
-			() -> assertEquals(emptyList(), options.getArguments())
+			() -> assertEquals(emptyList(), options.getSelectedUris()),
+			() -> assertEquals(emptyList(), options.getSelectedFiles()),
+			() -> assertEquals(emptyList(), options.getSelectedDirectories()),
+			() -> assertEquals(emptyList(), options.getSelectedClasspathEntries())
 		);
 		// @formatter:on
 	}
@@ -65,33 +71,95 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseSwitches() {
 		// @formatter:off
 		assertAll(
-				() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
-				() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
-			() -> assertParses("hide details", CommandLineOptions::isHideDetails, "--hide-details"),
+			() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
+			() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
 			() -> assertParses("scan class path", CommandLineOptions::isScanClasspath, "--scan-class-path")
 		);
 		// @formatter:on
 	}
 
 	@Test
+	public void parseValidDetails() {
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(Details.VERBOSE, parseArgLine("--details verbose").getDetails()),
+			() -> assertEquals(Details.TREE, parseArgLine("--details tree").getDetails()),
+			() -> assertEquals(Details.FLAT, parseArgLine("--details flat").getDetails()),
+			() -> assertEquals(Details.NONE, parseArgLine("--details NONE").getDetails()),
+			() -> assertEquals(Details.NONE, parseArgLine("--details none").getDetails()),
+			() -> assertEquals(Details.NONE, parseArgLine("--details None").getDetails())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidDetails() throws Exception {
+		assertOptionWithMissingRequiredArgumentThrowsException("--details");
+	}
+
+	@Test
 	public void parseValidIncludeClassNamePatterns() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(".*Test", parseArgLine("-n .*Test").getIncludeClassNamePattern()),
-			() -> assertEquals(".*Test", parseArgLine("--include-classname .*Test").getIncludeClassNamePattern()),
-			() -> assertEquals(".*Test", parseArgLine("--include-classname=.*Test").getIncludeClassNamePattern())
+			() -> assertEquals(singletonList(".*Test"), parseArgLine("-n .*Test").getIncludedClassNamePatterns()),
+			() -> assertEquals(asList(".*Test", ".*Tests"), parseArgLine("--include-classname .*Test --include-classname .*Tests").getIncludedClassNamePatterns()),
+			() -> assertEquals(singletonList(".*Test"), parseArgLine("--include-classname=.*Test").getIncludedClassNamePatterns())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseValidExcludeClassNamePatterns() {
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(singletonList(".*Test"), parseArgLine("-N .*Test").getExcludedClassNamePatterns()),
+			() -> assertEquals(asList(".*Test", ".*Tests"), parseArgLine("--exclude-classname .*Test --exclude-classname .*Tests").getExcludedClassNamePatterns()),
+			() -> assertEquals(singletonList(".*Test"), parseArgLine("--exclude-classname=.*Test").getExcludedClassNamePatterns())
 		);
 		// @formatter:on
 	}
 
 	@Test
 	public void usesDefaultClassNamePatternWithoutExplicitArgument() {
-		assertEquals(STANDARD_INCLUDE_PATTERN, parseArgLine("").getIncludeClassNamePattern());
+		assertEquals(singletonList(STANDARD_INCLUDE_PATTERN), parseArgLine("").getIncludedClassNamePatterns());
 	}
 
 	@Test
 	public void parseInvalidIncludeClassNamePatterns() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("-n", "--include-classname");
+	}
+
+	@Test
+	public void parseInvalidExcludeClassNamePatterns() throws Exception {
+		assertOptionWithMissingRequiredArgumentThrowsException("-N", "--exclude-classname");
+	}
+
+	@Test
+	public void parseValidIncludedPackages() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(asList("org.junit.included"),
+						parseArgLine("--include-package org.junit.included").getIncludedPackages()),
+				() -> assertEquals(asList("org.junit.included"),
+						parseArgLine("--include-package=org.junit.included").getIncludedPackages()),
+				() -> assertEquals(asList("org.junit.included1", "org.junit.included2"),
+						parseArgLine("--include-package org.junit.included1 --include-package org.junit.included2").getIncludedPackages())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseValidExcludedPackages() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(asList("org.junit.excluded"),
+						parseArgLine("--exclude-package org.junit.excluded").getExcludedPackages()),
+				() -> assertEquals(asList("org.junit.excluded"),
+						parseArgLine("--exclude-package=org.junit.excluded").getExcludedPackages()),
+				() -> assertEquals(asList("org.junit.excluded1", "org.junit.excluded2"),
+						parseArgLine("--exclude-package org.junit.excluded1 --exclude-package org.junit.excluded2").getExcludedPackages())
+		);
+		// @formatter:on
 	}
 
 	@Test
@@ -201,12 +269,162 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseExtraArguments() {
+	public void parseValidUriSelectors() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("foo"), parseArgLine("foo").getArguments()),
-			() -> assertEquals(asList("foo", "bar"), parseArgLine("-h foo bar").getArguments()),
-			() -> assertEquals(asList("foo", "bar"), parseArgLine("-h -- foo bar").getArguments())
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("-u file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("--u file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("-select-uri file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("-select-uri=file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("--select-uri file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("--select-uri=file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(asList(new URI("file:///foo.txt"), new URI("http://localhost")), parseArgLine("-u file:///foo.txt -u http://localhost").getSelectedUris())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidUriSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-u", "--select-uri", "-u unknown-scheme:");
+	}
+
+	@Test
+	public void parseValidFileSelectors() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("-f foo.txt").getSelectedFiles()),
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("--f foo.txt").getSelectedFiles()),
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("-select-file foo.txt").getSelectedFiles()),
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("-select-file=foo.txt").getSelectedFiles()),
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("--select-file foo.txt").getSelectedFiles()),
+				() -> assertEquals(singletonList("foo.txt"), parseArgLine("--select-file=foo.txt").getSelectedFiles()),
+				() -> assertEquals(asList("foo.txt", "bar.csv"), parseArgLine("-f foo.txt -f bar.csv").getSelectedFiles())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidFileSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-f", "--select-file");
+	}
+
+	@Test
+	public void parseValidDirectorySelectors() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("-d foo/bar").getSelectedDirectories()),
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("--d foo/bar").getSelectedDirectories()),
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("-select-directory foo/bar").getSelectedDirectories()),
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("-select-directory=foo/bar").getSelectedDirectories()),
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("--select-directory foo/bar").getSelectedDirectories()),
+				() -> assertEquals(singletonList("foo/bar"), parseArgLine("--select-directory=foo/bar").getSelectedDirectories()),
+				() -> assertEquals(asList("foo/bar", "bar/qux"), parseArgLine("-d foo/bar -d bar/qux").getSelectedDirectories())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidDirectorySelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-d", "--select-directory");
+	}
+
+	@Test
+	public void parseValidPackageSelectors() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-p com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("--p com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-select-package com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-select-package=com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("--select-package com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("--select-package=com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(asList("com.acme.foo", "com.example.bar"), parseArgLine("-p com.acme.foo -p com.example.bar").getSelectedPackages())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidPackageSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-p", "--select-package");
+	}
+
+	@Test
+	public void parseValidClassSelectors() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("-c com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("--c com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("-select-class com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("-select-class=com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("--select-class com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("--select-class=com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(asList("com.acme.Foo", "com.example.Bar"), parseArgLine("-c com.acme.Foo -c com.example.Bar").getSelectedClasses())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidClassSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-c", "--select-class");
+	}
+
+	@Test
+	public void parseValidMethodSelectors() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("-m com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("--m com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("-select-method com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("-select-method=com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("--select-method com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("--select-method=com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(asList("com.acme.Foo#m()", "com.example.Bar#method(java.lang.Object)"),
+						parseArgLine("-m com.acme.Foo#m() -m com.example.Bar#method(java.lang.Object)").getSelectedMethods())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidMethodSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-m", "--select-method");
+	}
+
+	@Test
+	public void parseValidClasspathResourceSelectors() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("/foo.csv"), parseArgLine("-r /foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(singletonList("/foo.csv"), parseArgLine("--r /foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(singletonList("/foo.csv"), parseArgLine("-select-resource /foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(singletonList("/foo.csv"), parseArgLine("-select-resource=/foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(singletonList("/foo.csv"), parseArgLine("--select-resource /foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(singletonList("/foo.csv"), parseArgLine("--select-resource=/foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(asList("/foo.csv", "bar.json"), parseArgLine("-r /foo.csv -r bar.json").getSelectedClasspathResources())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidClasspathResourceSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-r", "--select-resource");
+	}
+
+	@Test
+	public void parseClasspathScanningEntries() {
+		Path dir = Paths.get(".");
+		// @formatter:off
+		assertAll(
+			() -> assertTrue(parseArgLine("--scan-class-path").isScanClasspath()),
+			() -> assertEquals(emptyList(), parseArgLine("--scan-class-path").getSelectedClasspathEntries()),
+			() -> assertTrue(parseArgLine("--scan-classpath").isScanClasspath()),
+			() -> assertEquals(emptyList(), parseArgLine("--scan-classpath").getSelectedClasspathEntries()),
+			() -> assertTrue(parseArgLine("--scan-class-path .").isScanClasspath()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--scan-class-path .").getSelectedClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("--scan-class-path=.").getSelectedClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("-scan-class-path .").getSelectedClasspathEntries()),
+			() -> assertEquals(singletonList(dir), parseArgLine("-scan-class-path=.").getSelectedClasspathEntries()),
+			() -> assertEquals(asList(dir, Paths.get("src/test/java")), parseArgLine("--scan-class-path . --scan-class-path src/test/java").getSelectedClasspathEntries()),
+			() -> assertEquals(asList(dir, Paths.get("src/test/java")), parseArgLine("--scan-class-path ." + File.pathSeparator + "src/test/java").getSelectedClasspathEntries())
 		);
 		// @formatter:on
 	}
@@ -239,14 +457,14 @@ class JOptSimpleCommandLineOptionsParserTests {
 		};
 
 		CommandLineOptionsParser parser = createParser();
-		RuntimeException exception = expectThrows(RuntimeException.class, () -> parser.printHelp(writer));
+		RuntimeException exception = assertThrows(RuntimeException.class, () -> parser.printHelp(writer));
 
 		assertThat(exception).hasCauseInstanceOf(IOException.class);
 		assertThat(exception.getCause()).hasMessage("Something went wrong");
 	}
 
 	private void assertOptionWithMissingRequiredArgumentThrowsException(String... options) {
-		assertAll(stream(options).map(opt -> () -> assertThrows(OptionException.class, () -> parseArgLine(opt))));
+		assertAll(stream(options).map(opt -> () -> assertThrows(JUnitException.class, () -> parseArgLine(opt))));
 	}
 
 	private void assertParses(String name, Predicate<CommandLineOptions> property, String... argLines) {

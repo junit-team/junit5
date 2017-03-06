@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -18,6 +18,7 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassNameFilter;
+import org.junit.platform.engine.discovery.PackageNameFilter;
 
 /**
  * Class for applying all {@link org.junit.platform.engine.DiscoveryFilter}s to all
@@ -32,6 +33,36 @@ class DiscoveryFilterApplier {
 	 */
 	void applyAllFilters(EngineDiscoveryRequest discoveryRequest, TestDescriptor engineDescriptor) {
 		applyClassNameFilters(discoveryRequest.getDiscoveryFiltersByType(ClassNameFilter.class), engineDescriptor);
+		applyPackageNameFilters(discoveryRequest.getDiscoveryFiltersByType(PackageNameFilter.class), engineDescriptor);
+	}
+
+	private void applyPackageNameFilters(List<PackageNameFilter> packageNameFilters, TestDescriptor engineDescriptor) {
+		if (packageNameFilters.isEmpty()) {
+			return;
+		}
+		TestDescriptor.Visitor filteringVisitor = descriptor -> {
+			if (descriptor instanceof ClassTestDescriptor) {
+				if (!includePackage((ClassTestDescriptor) descriptor, packageNameFilters))
+					descriptor.removeFromHierarchy();
+			}
+		};
+		engineDescriptor.accept(filteringVisitor);
+	}
+
+	private boolean includePackage(ClassTestDescriptor classTestDescriptor,
+			List<PackageNameFilter> packageNameFilters) {
+
+		// Nested Tests are never filtered out
+		if (classTestDescriptor instanceof NestedClassTestDescriptor)
+			return true;
+
+		Class<?> testClass = classTestDescriptor.getTestClass();
+
+		// @formatter:off
+		return (packageNameFilters.stream()
+				.map(filter -> filter.apply(testClass.getPackage().getName()))
+				.noneMatch(FilterResult::excluded));
+		// @formatter:on
 	}
 
 	private void applyClassNameFilters(List<ClassNameFilter> classNameFilters, TestDescriptor engineDescriptor) {
@@ -39,9 +70,9 @@ class DiscoveryFilterApplier {
 			return;
 		}
 		TestDescriptor.Visitor filteringVisitor = descriptor -> {
-			if (descriptor instanceof ClassTestDescriptor) {
-				if (!includeClass((ClassTestDescriptor) descriptor, classNameFilters))
-					descriptor.removeFromHierarchy();
+			if (descriptor instanceof ClassTestDescriptor
+					&& !includeClass((ClassTestDescriptor) descriptor, classNameFilters)) {
+				descriptor.removeFromHierarchy();
 			}
 		};
 		engineDescriptor.accept(filteringVisitor);
@@ -56,9 +87,9 @@ class DiscoveryFilterApplier {
 		Class<?> testClass = classTestDescriptor.getTestClass();
 
 		// @formatter:off
-        return (classNameFilters.stream()
+        return classNameFilters.stream()
                 .map(filter -> filter.apply(testClass.getName()))
-                .noneMatch(FilterResult::excluded));
+                .noneMatch(FilterResult::excluded);
         // @formatter:on
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -32,12 +32,20 @@ public class JupiterUniqueIdBuilder {
 		return containerId.append(TestContainerResolver.SEGMENT_TYPE, clazz.getName());
 	}
 
+	public static UniqueId uniqueIdForTopLevelClass(String className) {
+		return engineId().append(TestContainerResolver.SEGMENT_TYPE, className);
+	}
+
 	public static UniqueId uniqueIdForMethod(Class<?> clazz, String methodPart) {
 		return uniqueIdForClass(clazz).append(TestMethodResolver.SEGMENT_TYPE, methodPart);
 	}
 
 	public static UniqueId uniqueIdForTestFactoryMethod(Class<?> clazz, String methodPart) {
 		return uniqueIdForClass(clazz).append(TestFactoryMethodResolver.SEGMENT_TYPE, methodPart);
+	}
+
+	public static UniqueId uniqueIdForTestTemplateMethod(Class<?> clazz, String methodPart) {
+		return uniqueIdForClass(clazz).append(TestTemplateMethodResolver.SEGMENT_TYPE, methodPart);
 	}
 
 	public static UniqueId engineId() {

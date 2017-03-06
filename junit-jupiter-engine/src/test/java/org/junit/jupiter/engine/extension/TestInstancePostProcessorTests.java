@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
@@ -37,9 +37,14 @@ public class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTes
 
 	private static final List<String> callSequence = new ArrayList<>();
 
+	@BeforeEach
+	void resetCallSequence() {
+		callSequence.clear();
+	}
+
 	@Test
 	public void instancePostProcessorsInNestedClasses() {
-		LauncherDiscoveryRequest request = request().selectors(selectJavaClass(OuterTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -47,7 +52,7 @@ public class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTes
 		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 
 		// @formatter:off
-		assertEquals(asList(
+		assertThat(callSequence).containsExactly(
 
 			// OuterTestCase
 			"fooPostProcessTestInstance:OuterTestCase",
@@ -62,9 +67,22 @@ public class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTes
 					"beforeOuterMethod",
 						"beforeInnerMethod",
 							"testInner"
-
-		), callSequence, "wrong call sequence");
+		);
 		// @formatter:on
+	}
+
+	@Test
+	public void testSpecificTestInstancePostProcessorIsCalled() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectClass(TestCaseWithTestSpecificTestInstancePostProcessor.class)).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+
+		assertThat(callSequence).containsExactly(
+			"fooPostProcessTestInstance:TestCaseWithTestSpecificTestInstancePostProcessor", "beforeEachMethod", "test");
 	}
 
 	// -------------------------------------------------------------------
@@ -114,6 +132,28 @@ public class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTes
 			}
 		}
 
+	}
+
+	private static class TestCaseWithTestSpecificTestInstancePostProcessor implements Named {
+
+		private String name;
+
+		@Override
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		@BeforeEach
+		void beforeEachMethod() {
+			callSequence.add("beforeEachMethod");
+		}
+
+		@ExtendWith(FooInstancePostProcessor.class)
+		@Test
+		void test() {
+			callSequence.add("test");
+			assertEquals("foo", name);
+		}
 	}
 
 	private static class FooInstancePostProcessor implements TestInstancePostProcessor {

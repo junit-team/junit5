@@ -1,10 +1,23 @@
+plugins {
+	id 'org.asciidoctor.convert' version '1.5.3'
+	// for asciidoctor-diagram support
+	id 'com.github.jruby-gradle.base' version '1.3.3'
+}
+
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
+dependencies {
+	gems 'rubygems:asciidoctor-diagram:1.5.0'
+}
+
 junitPlatform {
-	includeClassNamePattern '.+(Tests|Demo)$'
-	tags {
-		exclude 'exclude'
+	details 'tree'
+	filters {
+		includeClassNamePattern '.+(Tests|Demo)$'
+		tags {
+			exclude 'exclude'
+		}
 	}
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
@@ -17,23 +30,34 @@ test {
 */
 
 dependencies {
-	testCompile(project(':junit-jupiter-api'))
-	testCompile(project(':junit-platform-runner'))
-	testCompile(project(':junit-platform-launcher'))
+	testImplementation(project(':junit-jupiter-api'))
+	testImplementation(project(':junit-platform-runner'))
+	testImplementation(project(':junit-platform-launcher'))
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
-	testRuntime(project(':junit-platform-console'))
+	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
 
-	testRuntime(project(':junit-vintage-engine'))
-	testRuntime(project(':junit-jupiter-engine'))
-	testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-	testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+	testRuntimeOnly(project(':junit-vintage-engine'))
+	testRuntimeOnly(project(':junit-jupiter-engine'))
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+}
+
+asciidoctorj {
+	version = '1.5.4.1'
 }
 
 asciidoctor {
+
+	// for asciidoctor-diagram support
+	dependsOn jrubyPrepare
+	requires = ['asciidoctor-diagram']
+	gemPath = jrubyPrepare.outputDir
+
 	separateOutputDirs = false
 	sources { include 'index.adoc' }
+
 	attributes	'jupiter-version': project.property('version'),
 				'platform-version': project.property('platformVersion'),
 				'vintage-version': project.property('vintageVersion'),
@@ -42,8 +66,7 @@ asciidoctor {
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
-				'source-highlighter': 'highlightjs',
-				'highlightjs-theme': 'github',
+				'source-highlighter': 'coderay',
 				'tabsize': '4',
 				'imagesdir': 'images',
 				'toc': 'left',

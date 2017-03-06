@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -53,7 +53,7 @@ public interface TestInfo {
 	 * default display names for the following test classes are
 	 * {@code TopLevelTests}, {@code NestedTests}, and {@code TopLevelTests$StaticTests}.
 	 *
-	 * <pre style="code">
+	 * <pre class="code">
 	 *   class TopLevelTests {
 	 *
 	 *      {@literal @}Nested
@@ -69,7 +69,7 @@ public interface TestInfo {
 	 * of the parameter types in parentheses. For example, the default display
 	 * name for the following test method is {@code testUser(TestInfo, User)}.
 	 *
-	 * <pre style="code">
+	 * <pre class="code">
 	 *   {@literal @}Test
 	 *   void testUser(TestInfo testInfo, {@literal @}Mock User user) {}
 	 * </pre>

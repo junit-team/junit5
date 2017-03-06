@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -27,10 +28,12 @@ class TestExecutionListenerRegistry {
 
 	private final List<TestExecutionListener> testExecutionListeners = new LinkedList<>();
 
+	List<TestExecutionListener> getTestExecutionListeners() {
+		return testExecutionListeners;
+	}
+
 	void registerListeners(TestExecutionListener... listeners) {
-		for (TestExecutionListener listener : listeners) {
-			this.testExecutionListeners.add(listener);
-		}
+		Collections.addAll(this.testExecutionListeners, listeners);
 	}
 
 	private void notifyTestExecutionListeners(Consumer<TestExecutionListener> consumer) {

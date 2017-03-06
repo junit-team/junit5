@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,7 +11,7 @@
 package org.junit.vintage.engine;
 
 import static org.assertj.core.api.Assertions.allOf;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectJavaClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
@@ -31,6 +31,7 @@ import static org.junit.runner.Description.createTestDescription;
 
 import java.util.List;
 
+import org.assertj.core.api.Condition;
 import org.junit.AssumptionViolatedException;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.test.event.ExecutionEvent;
@@ -41,7 +42,31 @@ import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
-import org.junit.vintage.engine.samples.junit4.*;
+import org.junit.vintage.engine.samples.junit4.EnclosedJUnit4TestCase;
+import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithExceptionThrowingRunner;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithIgnoredJUnit4TestCase;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithAssumptionFailureInBeforeClass;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorCollectorStoringMultipleFailures;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorInAfterClass;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithExceptionThrowingRunner;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIds;
+import org.junit.vintage.engine.samples.junit4.MalformedJUnit4TestCase;
+import org.junit.vintage.engine.samples.junit4.ParameterizedTestCase;
+import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
+import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
+import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
+import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
+import org.opentest4j.MultipleFailuresError;
 
 /**
  * @since 4.12
@@ -456,7 +481,25 @@ class VintageTestEngineExecutionTests {
 
 	private static List<ExecutionEvent> execute(Class<?> testClass) {
 		VintageTestEngine engine = new VintageTestEngine();
-		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectJavaClass(testClass)).build();
+		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		return ExecutionEventRecorder.execute(engine, discoveryRequest);
+	}
+
+	@Test
+	void executesJUnit4TestCaseWithErrorCollectorStoringMultipleFailures() {
+		Class<?> testClass = JUnit4TestCaseWithErrorCollectorStoringMultipleFailures.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(test("example"), started()), //
+			event(test("example"),
+				finishedWithFailure(allOf(isA(MultipleFailuresError.class), //
+					new Condition<>(throwable -> ((MultipleFailuresError) throwable).getFailures().size() == 3,
+						"Must contain multiple errors (3)")))), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
 	}
 }

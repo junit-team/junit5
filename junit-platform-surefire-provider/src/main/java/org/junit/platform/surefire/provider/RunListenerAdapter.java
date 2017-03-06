@@ -1,11 +1,17 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
- * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
- * accompanies this distribution and is available at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.junit.platform.surefire.provider;
@@ -22,10 +28,11 @@ import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.report.StackTraceWriter;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.support.descriptor.JavaClassSource;
-import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.0
@@ -33,9 +40,20 @@ import org.junit.platform.launcher.TestIdentifier;
 final class RunListenerAdapter implements TestExecutionListener {
 
 	private final RunListener runListener;
+	private Optional<TestPlan> testPlan = Optional.empty();
 
 	public RunListenerAdapter(RunListener runListener) {
 		this.runListener = runListener;
+	}
+
+	@Override
+	public void testPlanExecutionStarted(TestPlan testPlan) {
+		this.testPlan = Optional.of(testPlan);
+	}
+
+	@Override
+	public void testPlanExecutionFinished(TestPlan testPlan) {
+		this.testPlan = Optional.empty();
 	}
 
 	@Override
@@ -47,8 +65,8 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		runListener.testSkipped(
-			ignored(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName(), reason));
+		String source = getClassName(testIdentifier).orElseGet(() -> parentDisplayName(testIdentifier));
+		runListener.testSkipped(ignored(source, testIdentifier.getDisplayName(), reason));
 	}
 
 	@Override
@@ -65,39 +83,42 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier, Optional<Throwable> throwable) {
-		TestSource testSource = testIdentifier.getSource().orElse(null);
-		if (testSource instanceof JavaClassSource) {
-			JavaClassSource javaClassSource = (JavaClassSource) testSource;
-			String className = javaClassSource.getJavaClass().getName();
-			StackTraceWriter stackTraceWriter = new PojoStackTraceWriter(className, "", throwable.orElse(null));
-			return new SimpleReportEntry(className, testIdentifier.getDisplayName(), stackTraceWriter, null);
-		}
-		else if (testSource instanceof JavaMethodSource) {
-			JavaMethodSource javaMethodSource = (JavaMethodSource) testSource;
-			String className = javaMethodSource.getJavaClass().getName();
-			String methodName = javaMethodSource.getJavaMethodName();
-			StackTraceWriter stackTraceWriter = new PojoStackTraceWriter(className, methodName, throwable.orElse(null));
-			return new SimpleReportEntry(className, testIdentifier.getDisplayName(), stackTraceWriter, null);
+		Optional<String> className = getClassName(testIdentifier);
+		if (className.isPresent()) {
+			StackTraceWriter traceWriter = new PojoStackTraceWriter(className.get(),
+				getMethodName(testIdentifier).orElse(""), throwable.orElse(null));
+			return new SimpleReportEntry(className.get(), testIdentifier.getDisplayName(), traceWriter, null);
 		}
 		else {
-			return ignored(testIdentifier.getUniqueId(), testIdentifier.getDisplayName(),
-				throwable.map(Throwable::getMessage).orElse(null));
+			return new SimpleReportEntry(parentDisplayName(testIdentifier), testIdentifier.getDisplayName(), null);
 		}
 	}
 
-	private String getClassNameOrUniqueId(TestIdentifier testIdentifier) {
+	private Optional<String> getClassName(TestIdentifier testIdentifier) {
 		TestSource testSource = testIdentifier.getSource().orElse(null);
-		if (testSource instanceof JavaClassSource) {
-			JavaClassSource javaClassSource = (JavaClassSource) testSource;
-			return javaClassSource.getJavaClass().getName();
+		if (testSource instanceof ClassSource) {
+			return Optional.of(((ClassSource) testSource).getJavaClass().getName());
 		}
-		else if (testSource instanceof JavaMethodSource) {
-			JavaMethodSource javaMethodSource = (JavaMethodSource) testSource;
-			return javaMethodSource.getJavaClass().getName();
+		if (testSource instanceof MethodSource) {
+			return Optional.of(((MethodSource) testSource).getClassName());
 		}
-		else {
-			return testIdentifier.getUniqueId();
-		}
+		return Optional.empty();
 	}
 
+	private Optional<String> getMethodName(TestIdentifier testIdentifier) {
+		TestSource testSource = testIdentifier.getSource().orElse(null);
+		if (testSource instanceof MethodSource) {
+			return Optional.of(((MethodSource) testSource).getMethodName());
+		}
+		return Optional.empty();
+	}
+
+	private String parentDisplayName(TestIdentifier testIdentifier) {
+		// @formatter:off
+		return testPlan
+			.flatMap(plan -> plan.getParent(testIdentifier))
+			.map(TestIdentifier::getDisplayName)
+			.orElseGet(testIdentifier::getUniqueId);
+		// @formatter:on
+	}
 }
