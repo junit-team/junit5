@@ -16,4 +16,3 @@ Test run finished after [\d]+ ms
 [         0 tests aborted         ]
 [         1 tests successful      ]
 [         0 tests failed          ]
-

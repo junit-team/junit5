@@ -1,3 +1,10 @@
+╷
+└─ JUnit Jupiter ✔
+   └─ Skip ✔
+      └─ skipWithMultiLineMessage() ↷ multi
+               line
+               fail
+               message
 
 Test run finished after [\d]+ ms
 [         2 containers found      ]
@@ -7,8 +14,8 @@ Test run finished after [\d]+ ms
 [         2 containers successful ]
 [         0 containers failed     ]
 [         1 tests found           ]
-[         0 tests skipped         ]
-[         1 tests started         ]
+[         1 tests skipped         ]
+[         0 tests started         ]
 [         0 tests aborted         ]
-[         1 tests successful      ]
+[         0 tests successful      ]
 [         0 tests failed          ]
