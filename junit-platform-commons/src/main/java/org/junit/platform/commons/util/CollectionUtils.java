@@ -17,6 +17,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -89,7 +90,7 @@ public final class CollectionUtils {
 	 * @param object the object to convert into a stream
 	 * @return the resulting stream
 	 * @throws PreconditionViolationException if the object is neither a Stream,
-	 * a Collection, an Iterable, nor an Iterator
+	 * a Collection, an Iterable, an Iterator, nor an Object Array.
 	 */
 	public static Stream<?> toStream(Object object) {
 		if (object instanceof Stream) {
@@ -103,6 +104,9 @@ public final class CollectionUtils {
 		}
 		if (object instanceof Iterator) {
 			return stream(spliteratorUnknownSize((Iterator<?>) object, ORDERED), false);
+		}
+		if (object instanceof Object[]) {
+			return Arrays.stream((Object[]) object);
 		}
 		throw new PreconditionViolationException(
 			"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object);

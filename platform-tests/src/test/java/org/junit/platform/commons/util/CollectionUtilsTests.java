@@ -129,6 +129,16 @@ class CollectionUtilsTests {
 		assertThat(result).containsExactly("foo", "bar");
 	}
 
+	@SuppressWarnings("unchecked")
+	@Test
+	void toStreamWithArray() {
+		String[] input = { "foo", "bar" };
+
+		Stream<String> result = (Stream<String>) CollectionUtils.toStream(input);
+
+		assertThat(result).containsExactly("foo", "bar");
+	}
+
 	@Test
 	void toStreamWithUnknownObject() {
 		Object unknownObject = "unknown";
