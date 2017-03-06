@@ -50,7 +50,7 @@ import org.junit.platform.console.options.Theme;
 class ConsoleDetailsTests {
 
 	@DisplayName("Basic")
-	static class Basic {
+	private static class Basic {
 
 		@Test
 		void empty() {
@@ -64,7 +64,7 @@ class ConsoleDetailsTests {
 	}
 
 	@DisplayName("Skip")
-	static class Skip {
+	private static class Skip {
 
 		@Test
 		@Disabled("single line skip reason")
@@ -79,7 +79,7 @@ class ConsoleDetailsTests {
 	}
 
 	@DisplayName("Fail")
-	static class Fail {
+	private static class Fail {
 
 		@Test
 		void failWithSingleLineMessage() {
@@ -94,7 +94,7 @@ class ConsoleDetailsTests {
 	}
 
 	@DisplayName("Report")
-	static class Report {
+	private static class Report {
 
 		@Test
 		void reportSingleEntryWithSingleMapping(TestReporter reporter) {

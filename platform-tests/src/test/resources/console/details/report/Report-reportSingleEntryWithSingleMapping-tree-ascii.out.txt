@@ -2,7 +2,7 @@
 '-- JUnit Jupiter [OK]
   '-- Report [OK]
     '-- reportSingleEntryWithSingleMapping(TestReporter) [OK]
-        ....-..-..T..:..:...... foo = `bar`
+        ....-..-..T..:...* foo = `bar`
 
 Test run finished after [\d]+ ms
 [         2 containers found      ]
