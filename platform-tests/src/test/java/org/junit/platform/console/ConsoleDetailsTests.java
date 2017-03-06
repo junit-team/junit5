@@ -143,7 +143,6 @@ class ConsoleDetailsTests {
 
 	@TestFactory
 	@DisplayName("Tests publishing report entries")
-	@Disabled("Tests publishing report entries is in progress...")
 	List<DynamicTest> reports() {
 		return scanContainerClassAndCreateDynamicTests(Report.class);
 	}
