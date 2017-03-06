@@ -42,6 +42,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.DefaultLegacyReportingInfo;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -111,10 +112,13 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		return true;
 	}
 
+	@Override
+	public LegacyReportingInfo getLegacyReportingInfo() {
+		return new DefaultLegacyReportingInfo(null, this.getDisplayName());
+	}
+
 	private static String generateDefaultDisplayName(Class<?> testClass) {
-		String name = testClass.getName();
-		int index = name.lastIndexOf('.');
-		return name.substring(index + 1);
+		return testClass.getName();
 	}
 
 	// --- Node ----------------------------------------------------------------

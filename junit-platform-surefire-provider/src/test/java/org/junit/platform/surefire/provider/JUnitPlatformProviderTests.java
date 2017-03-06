@@ -191,7 +191,7 @@ class JUnitPlatformProviderTests {
 		assertEquals(JUnitPlatformProvider.EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED, throwable.getMessage());
 	}
 
-	private static ProviderParameters providerParametersMock(Class<?>... testClasses) {
+	static ProviderParameters providerParametersMock(Class<?>... testClasses) {
 		TestsToRun testsToRun = newTestsToRun(testClasses);
 
 		ScanResult scanResult = mock(ScanResult.class);
@@ -212,7 +212,7 @@ class JUnitPlatformProviderTests {
 		return providerParameters;
 	}
 
-	private static TestsToRun newTestsToRun(Class<?>... testClasses) {
+	static TestsToRun newTestsToRun(Class<?>... testClasses) {
 		List<Class<?>> classesList = Arrays.asList(testClasses);
 		return new TestsToRun(new LinkedHashSet<>(classesList));
 	}

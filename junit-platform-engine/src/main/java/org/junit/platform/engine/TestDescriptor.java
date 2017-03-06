@@ -182,6 +182,24 @@ public interface TestDescriptor {
 	}
 
 	/**
+	 * Does a logical level display name resolution for legacy reporting formats, instead of a source level name resolution.
+	 *
+	 * @return A LegacyReportingInfo containing the logical method and class display names.
+	 */
+	default LegacyReportingInfo getLegacyReportingInfo() {
+		final String displayName = getDisplayName();
+		final Optional<String> className = getParent().map(TestDescriptor::getDisplayName);
+
+		return new DefaultLegacyReportingInfo(displayName, className.orElse(null));
+	}
+
+	interface LegacyReportingInfo {
+		Optional<String> getMethodName();
+
+		Optional<String> getClassName();
+	}
+
+	/**
 	 * Visitor for the tree-like {@link TestDescriptor} structure.
 	 *
 	 * @see TestDescriptor#accept

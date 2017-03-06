@@ -20,6 +20,7 @@ import static org.junit.platform.commons.util.SerializationUtils.serializeAndDes
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.DefaultLegacyReportingInfo;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -44,10 +45,13 @@ class TestIdentifierTests {
 	void serialization() throws Exception {
 		TestIdentifier identifier = serializeAndDeserialize(//
 			new TestIdentifier("uniqueId", "displayName", Optional.of(new ClassSource(TestIdentifierTests.class)),
-				singleton(TestTag.create("aTag")), true, false, Optional.of("parentId")));
+				singleton(TestTag.create("aTag")), true, false, Optional.of("parentId"),
+				new DefaultLegacyReportingInfo("method", "class")));
 
 		assertEquals("uniqueId", identifier.getUniqueId());
 		assertEquals("displayName", identifier.getDisplayName());
+		assertThat(identifier.getLegacyReportingInfo().getMethodName()).contains("method");
+		assertThat(identifier.getLegacyReportingInfo().getClassName()).contains("class");
 		assertThat(identifier.getSource()).contains(new ClassSource(TestIdentifierTests.class));
 		assertEquals(singleton(TestTag.create("aTag")), identifier.getTags());
 		assertTrue(identifier.isTest());
