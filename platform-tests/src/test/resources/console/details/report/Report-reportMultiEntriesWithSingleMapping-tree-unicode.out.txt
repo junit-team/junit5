@@ -2,8 +2,8 @@
 └─ JUnit Jupiter ✔
    └─ Report ✔
       └─ reportMultiEntriesWithSingleMapping(TestReporter) ✔
-            ....-..-..T..:..:...... foo = `bar`
-            ....-..-..T..:..:...... far = `boo`
+            ....-..-..T..:...* foo = `bar`
+            ....-..-..T..:...* far = `boo`
 
 Test run finished after [\d]+ ms
 [         2 containers found      ]

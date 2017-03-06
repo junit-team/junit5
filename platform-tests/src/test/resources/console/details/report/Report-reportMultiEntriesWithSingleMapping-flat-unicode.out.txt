@@ -3,9 +3,9 @@ Started:     JUnit Jupiter ([engine:junit-jupiter])
 Started:     Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report])
 Started:     reportMultiEntriesWithSingleMapping(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithSingleMapping(org.junit.jupiter.api.TestReporter)])
 Reported:    reportMultiEntriesWithSingleMapping(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithSingleMapping(org.junit.jupiter.api.TestReporter)])
-             => Reported values: ReportEntry \[timestamp = ....-..-..T..:..:......, foo = 'bar'\]
+             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, foo = 'bar'\]
 Reported:    reportMultiEntriesWithSingleMapping(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithSingleMapping(org.junit.jupiter.api.TestReporter)])
-             => Reported values: ReportEntry \[timestamp = ....-..-..T..:..:......, far = 'boo'\]
+             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, far = 'boo'\]
 Finished:    reportMultiEntriesWithSingleMapping(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithSingleMapping(org.junit.jupiter.api.TestReporter)])
 Finished:    Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report])
 Finished:    JUnit Jupiter ([engine:junit-jupiter])

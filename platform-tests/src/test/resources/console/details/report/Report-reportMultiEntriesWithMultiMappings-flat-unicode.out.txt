@@ -3,11 +3,11 @@ Started:     JUnit Jupiter ([engine:junit-jupiter])
 Started:     Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report])
 Started:     reportMultiEntriesWithMultiMappings(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithMultiMappings(org.junit.jupiter.api.TestReporter)])
 Reported:    reportMultiEntriesWithMultiMappings(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithMultiMappings(org.junit.jupiter.api.TestReporter)])
-             => Reported values: ReportEntry \[timestamp = ....-..-..T..:..:......, user name = 'dk38', award year = '1974'\]
+             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, user name = 'dk38', award year = '1974'\]
 Reported:    reportMultiEntriesWithMultiMappings(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithMultiMappings(org.junit.jupiter.api.TestReporter)])
-             => Reported values: ReportEntry \[timestamp = ....-..-..T..:..:......, single = 'mapping'\]
+             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, single = 'mapping'\]
 Reported:    reportMultiEntriesWithMultiMappings(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithMultiMappings(org.junit.jupiter.api.TestReporter)])
-             => Reported values: ReportEntry \[timestamp = ....-..-..T..:..:......, user name = 'st77', award year = '1977', last seen = '2001'\]
+             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, user name = 'st77', award year = '1977', last seen = '2001'\]
 Finished:    reportMultiEntriesWithMultiMappings(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithMultiMappings(org.junit.jupiter.api.TestReporter)])
 Finished:    Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report])
 Finished:    JUnit Jupiter ([engine:junit-jupiter])

@@ -7,8 +7,8 @@ Test plan execution started. Number of static tests: 1
 │  │  │   uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithSingleMapping(org.junit.jupiter.api.TestReporter)]
 │  │  │     parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]
 │  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Report', methodName = 'reportMultiEntriesWithSingleMapping', methodParameterTypes = 'org.junit.jupiter.api.TestReporter']
-\│  \│  \│    reports: ReportEntry \[timestamp = ....-..-..T..:..:......, foo = 'bar'\]
-\│  \│  \│    reports: ReportEntry \[timestamp = ....-..-..T..:..:......, far = 'boo'\]
+\│  \│  \│    reports: ReportEntry \[timestamp = ....-..-..T..:...*, foo = 'bar'\]
+\│  \│  \│    reports: ReportEntry \[timestamp = ....-..-..T..:...*, far = 'boo'\]
 │  │  │   duration: [\d]+ ms
 │  │  │     status: ✔ SUCCESSFUL
 │  └─ Report finished after [\d]+ ms.

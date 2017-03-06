@@ -2,11 +2,11 @@
 '-- JUnit Jupiter [OK]
   '-- Report [OK]
     '-- reportMultiEntriesWithMultiMappings(TestReporter) [OK]
-        ....-..-..T..:..:......
+        ....-..-..T..:...*
           user name = `dk38`
           award year = `1974`
-        ....-..-..T..:..:...... single = `mapping`
-        ....-..-..T..:..:......
+        ....-..-..T..:...* single = `mapping`
+        ....-..-..T..:...*
           user name = `st77`
           award year = `1977`
           last seen = `2001`
