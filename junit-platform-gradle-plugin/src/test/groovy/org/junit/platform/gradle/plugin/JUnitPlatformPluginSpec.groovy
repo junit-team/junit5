@@ -14,6 +14,7 @@ import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.internal.artifacts.configurations.ConfigurationInternal
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
@@ -32,11 +33,20 @@ class JUnitPlatformPluginSpec extends Specification {
 		project = ProjectBuilder.builder().build()
 	}
 
+	def "plugin does not fail when it is the only plugin applied"() {
+		when:
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+		project.evaluate()
+
+		then:
+		noExceptionThrown()
+	}
 
 	def "applying the plugin"() {
 		when:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 		then:
+		project.plugins.hasPlugin(JavaPlugin)
 		project.plugins.hasPlugin(JUnitPlatformPlugin)
 		project.plugins.getPlugin(JUnitPlatformPlugin) instanceof JUnitPlatformPlugin
 		project.extensions.findByName('junitPlatform') instanceof JUnitPlatformExtension
@@ -44,7 +54,6 @@ class JUnitPlatformPluginSpec extends Specification {
 
 	def "setting junitPlatform properties"() {
 
-		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -76,7 +85,6 @@ class JUnitPlatformPluginSpec extends Specification {
 
 	def "creating junitPlatformTest task"() {
 
-		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -136,7 +144,6 @@ class JUnitPlatformPluginSpec extends Specification {
 
 	def "uses standard class name pattern"() {
 
-		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -149,7 +156,6 @@ class JUnitPlatformPluginSpec extends Specification {
 
 	def "enableStandardTestTask set to true"() {
 
-		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -176,7 +182,6 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "users can set buildDir to be a GString, and it will be converted to file"() {
-		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -192,7 +197,6 @@ class JUnitPlatformPluginSpec extends Specification {
 
 	def "selectors can be specified"() {
 
-		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -233,7 +237,6 @@ class JUnitPlatformPluginSpec extends Specification {
 
 	def "adds dependencies to configuration"() {
 
-		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -255,9 +258,8 @@ class JUnitPlatformPluginSpec extends Specification {
 		)
 	}
 
-	def "adds dependencies with fixed version when not explicity configured"() {
+	def "adds dependencies with fixed version when not explicitly configured"() {
 
-		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
