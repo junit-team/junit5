@@ -11,6 +11,7 @@
 package org.junit.platform.console.tasks;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.console.tasks.Color.CONTAINER;
 import static org.junit.platform.console.tasks.Color.FAILED;
 import static org.junit.platform.console.tasks.Color.GREEN;
@@ -21,6 +22,7 @@ import static org.junit.platform.console.tasks.Color.YELLOW;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.StringUtils;
@@ -126,11 +128,12 @@ class TreePrinter {
 		out.println();
 		out.print(indent);
 		out.print(reportEntry.getTimestamp());
-		if (reportEntry.getKeyValuePairs().size() == 1) {
-			printReportEntry(" ", reportEntry.getKeyValuePairs().entrySet().iterator().next());
+		Set<Map.Entry<String, String>> entries = reportEntry.getKeyValuePairs().entrySet();
+		if (entries.size() == 1) {
+			printReportEntry(" ", getOnlyElement(entries));
 			return;
 		}
-		for (Map.Entry<String, String> entry : reportEntry.getKeyValuePairs().entrySet()) {
+		for (Map.Entry<String, String> entry : entries) {
 			out.println();
 			printReportEntry(indent + theme.blank(), entry);
 		}
