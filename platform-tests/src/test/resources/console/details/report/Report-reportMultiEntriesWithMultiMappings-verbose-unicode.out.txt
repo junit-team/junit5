@@ -7,13 +7,13 @@ Test plan execution started. Number of static tests: 1
 │  │  │   uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportMultiEntriesWithMultiMappings(org.junit.jupiter.api.TestReporter)]
 │  │  │     parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]
 │  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Report', methodName = 'reportMultiEntriesWithMultiMappings', methodParameterTypes = 'org.junit.jupiter.api.TestReporter']
-\│  \│  \│    reports: ReportEntry \[timestamp = ....-..-..T..:...*, user name = 'dk38', award year = '1974'\]
-\│  \│  \│    reports: ReportEntry \[timestamp = ....-..-..T..:...*, single = 'mapping'\]
-\│  \│  \│    reports: ReportEntry \[timestamp = ....-..-..T..:...*, user name = 'st77', award year = '1977', last seen = '2001'\]
-\│  \│  \│   duration: [\d]+ ms
+│  │  │    reports: ReportEntry \[timestamp = ....-..-..T..:...*, user name = 'dk38', award year = '1974'\]
+│  │  │    reports: ReportEntry \[timestamp = ....-..-..T..:...*, single = 'mapping'\]
+│  │  │    reports: ReportEntry \[timestamp = ....-..-..T..:...*, user name = 'st77', award year = '1977', last seen = '2001'\]
+│  │  │   duration: [\d]+ ms
 │  │  │     status: ✔ SUCCESSFUL
-\│  └─ Report finished after [\d]+ ms.
-└─ JUnit Jupiter finished after [\d]+ ms.
+│  └─ Report finished after [\d]+ ms\.
+└─ JUnit Jupiter finished after [\d]+ ms\.
 Test plan execution finished. Number of all tests: 1
 
 Test run finished after [\d]+ ms

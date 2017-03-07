@@ -9,8 +9,8 @@ Test plan execution started. Number of static tests: 1
 │  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Skip', methodName = 'skipWithSingleLineReason', methodParameterTypes = '']
 │  │  │     reason: single line skip reason
 │  │  │     status: ↷ SKIPPED
-│  └─ Skip finished after [\d]+ ms.
-\└─ JUnit Jupiter finished after [\d]+ ms.
+│  └─ Skip finished after [\d]+ ms\.
+└─ JUnit Jupiter finished after [\d]+ ms\.
 Test plan execution finished. Number of all tests: 1
 
 Test run finished after [\d]+ ms

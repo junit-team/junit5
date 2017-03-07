@@ -7,9 +7,9 @@ Test plan execution started. Number of static tests: 1
 │  │  │   uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic]/[method:empty()]
 │  │  │     parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic]
 │  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Basic', methodName = 'empty', methodParameterTypes = '']
-\│  \│  \│   duration: [\d]+ ms
+│  │  │   duration: [\d]+ ms
 │  │  │     status: ✔ SUCCESSFUL
-\│  └─ Basic finished after [\d]+ ms\.
+│  └─ Basic finished after [\d]+ ms\.
 └─ JUnit Jupiter finished after [\d]+ ms\.
 Test plan execution finished. Number of all tests: 1
 
