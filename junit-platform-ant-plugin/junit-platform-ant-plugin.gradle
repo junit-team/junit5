@@ -1,0 +1,25 @@
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+junitPlatform {
+	filters {
+		engines {
+			include 'junit-jupiter'
+		}
+		includeClassNamePattern '.*Tests?'
+	}
+	logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+
+dependencies {
+	compile(project(path: ':junit-platform-console', configuration: 'shadow'))
+	compile(project(':junit-platform-launcher'))
+	compile("org.apache.ant:ant:${antVersion}")
+
+	testCompile(project(':junit-platform-runner'))
+	testCompile(project(':junit-jupiter-api'))
+	testCompile("org.mockito:mockito-core:${mockitoVersion}")
+
+	testRuntime(project(':junit-jupiter-engine'))
+	testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+}
