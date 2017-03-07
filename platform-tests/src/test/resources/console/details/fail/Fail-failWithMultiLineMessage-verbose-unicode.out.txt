@@ -12,10 +12,10 @@ Test plan execution started. Number of static tests: 1
 │  │  │               fail
 │  │  │               message
 S T A C K T R A C E
-\│  \│  \│   duration: [\d]+ ms
+│  │  │   duration: [\d]+ ms
 │  │  │     status: ✘ FAILED
-\│  └─ Fail finished after [\d]+ ms.
-└─ JUnit Jupiter finished after [\d]+ ms.
+│  └─ Fail finished after [\d]+ ms\.
+└─ JUnit Jupiter finished after [\d]+ ms\.
 Test plan execution finished. Number of all tests: 1
 
 Test run finished after [\d]+ ms

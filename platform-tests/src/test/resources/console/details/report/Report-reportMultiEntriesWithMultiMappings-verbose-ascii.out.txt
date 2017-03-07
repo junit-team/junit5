@@ -12,8 +12,8 @@ Test plan execution started. Number of static tests: 1
 \| \| \|   reports: ReportEntry \[timestamp = ....-..-..T..:...*, user name = 'st77', award year = '1977', last seen = '2001'\]
 \| \| \|  duration: [\d]+ ms
 | | |    status: [OK] SUCCESSFUL
-\| '-- Report finished after [\d]+ ms.
-'-- JUnit Jupiter finished after [\d]+ ms.
+\| '-- Report finished after [\d]+ ms\.
+'-- JUnit Jupiter finished after [\d]+ ms\.
 Test plan execution finished. Number of all tests: 1
 
 Test run finished after [\d]+ ms

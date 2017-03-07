@@ -7,11 +7,11 @@ Test plan execution started. Number of static tests: 1
 │  │  │   uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportSingleEntryWithSingleMapping(org.junit.jupiter.api.TestReporter)]
 │  │  │     parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]
 │  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Report', methodName = 'reportSingleEntryWithSingleMapping', methodParameterTypes = 'org.junit.jupiter.api.TestReporter']
-\│  \│  \│    reports: ReportEntry \[timestamp = ....-..-..T..:...*, foo = 'bar'\]
-\│  \│  \│   duration: [\d]+ ms
+│  │  │    reports: ReportEntry \[timestamp = ....-..-..T..:...*, foo = 'bar'\]
+│  │  │   duration: [\d]+ ms
 │  │  │     status: ✔ SUCCESSFUL
-\│  └─ Report finished after [\d]+ ms.
-└─ JUnit Jupiter finished after [\d]+ ms.
+│  └─ Report finished after [\d]+ ms\.
+└─ JUnit Jupiter finished after [\d]+ ms\.
 Test plan execution finished. Number of all tests: 1
 
 Test run finished after [\d]+ ms
