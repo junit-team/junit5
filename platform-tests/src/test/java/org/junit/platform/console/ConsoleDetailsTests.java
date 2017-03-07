@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
+import static org.junit.platform.commons.util.ReflectionUtils.getFullyQualifiedMethodName;
 
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -39,8 +41,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.function.Executable;
-import org.junit.platform.commons.util.AnnotationUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.Details;
 import org.junit.platform.console.options.Theme;
 
@@ -150,21 +150,23 @@ class ConsoleDetailsTests {
 	private List<DynamicTest> scanContainerClassAndCreateDynamicTests(Class<?> containerClass) {
 		String containerName = containerClass.getSimpleName();
 		List<DynamicTest> tests = new ArrayList<>();
-		for (Method method : AnnotationUtils.findAnnotatedMethods(containerClass, Test.class)) {
+		for (Method method : findMethods(containerClass, m -> m.isAnnotationPresent(Test.class))) {
+			String methodName = method.getName();
+			Class<?>[] types = method.getParameterTypes();
 			for (Details details : Details.values()) {
 				for (Theme theme : Theme.values()) {
-					String caption = containerName + "-" + method.getName() + "-" + details + "-" + theme;
-					String dirName = "console/details/" + containerName.toLowerCase();
-					String outName = caption + ".out.txt";
+					String caption = containerName + "-" + methodName + "-" + details + "-" + theme;
 					String[] args = { //
 							"--include-engine", "junit-jupiter", //
 							"--details", details.name(), //
 							"--details-theme", theme.name(), //
 							"--disable-ansi-colors", "true", //
 							"--include-classname", containerClass.getCanonicalName(), //
-							"--select-method", ReflectionUtils.getFullyQualifiedMethodName(method) //
+							"--select-method", getFullyQualifiedMethodName(containerClass, methodName, types) //
 					};
-					String displayName = method.getName() + " theme=" + theme.name() + "() details=" + details.name();
+					String displayName = methodName + "() details=" + details + " theme=" + theme;
+					String dirName = "console/details/" + containerName.toLowerCase();
+					String outName = caption + ".out.txt";
 					tests.add(DynamicTest.dynamicTest(displayName, new Runner(dirName, outName, args)));
 				}
 			}

@@ -85,7 +85,6 @@ class TreePrinter {
 		out.print(" ");
 		out.print(caption);
 		if (node.duration > 10000 && node.children.isEmpty()) {
-			// out.print(new String(new char[60 - (indent + bullet + node.caption).length()]).replace('\0', ' '));
 			out.print(" ");
 			out.print(duration);
 		}
@@ -118,10 +117,6 @@ class TreePrinter {
 		}
 		Throwable throwable = result.getThrowable().get();
 		printMessage(FAILED, indent, throwable.getMessage());
-		// ...or print entire stacktrace?
-		// out.println();
-		// out.print(indent + color(FAILED, theme.vertical()));
-		// printMessage(FAILED, indent, ExceptionUtils.readStackTrace(throwable));
 	}
 
 	private void printReportEntry(String indent, ReportEntry reportEntry) {
@@ -147,9 +142,6 @@ class TreePrinter {
 		out.print("`");
 	}
 
-	/**
-	 * Prints potential multi-line message.
-	 */
 	private void printMessage(Color color, String indent, String message) {
 		String[] lines = message.split("\\R");
 		out.print(" ");
@@ -159,7 +151,7 @@ class TreePrinter {
 				out.println();
 				out.print(indent);
 				if (StringUtils.isNotBlank(lines[i])) {
-					String extra = theme.blank(); // i + 1 < lines.length ? theme.vertical() : theme.end() + " ";
+					String extra = theme.blank();
 					out.print(color(color, extra + lines[i]));
 				}
 			}
