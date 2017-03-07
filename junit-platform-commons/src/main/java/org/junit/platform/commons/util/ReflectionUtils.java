@@ -370,7 +370,6 @@ public final class ReflectionUtils {
 	 * never {@code null} or blank
 	 * @return an {@code Optional} containing the method; never {@code null} but
 	 * potentially empty
-	 * @see #getFullyQualifiedMethodName(Method)
 	 */
 	public static Optional<Method> loadMethod(String fullyQualifiedMethodName) {
 		Preconditions.notBlank(fullyQualifiedMethodName, "fully qualified method name must not be null or blank");
@@ -416,36 +415,6 @@ public final class ReflectionUtils {
 		Preconditions.notNull(params, "params must not be null");
 
 		return String.format("%s#%s(%s)", clazz.getName(), methodName, StringUtils.nullSafeToString(params));
-	}
-
-	/**
-	 * Build the <em>fully qualified name</em> of the passed method.
-	 *
-	 * @param method the method to build the fully qualified name for; never {@code null}
-	 * @return fully qualified method name; never {@code null}
-	 * @see #loadMethod(String)
-	 */
-	public static String getFullyQualifiedMethodName(Method method) {
-		Preconditions.notNull(method, "method must not be null");
-
-		StringBuilder builder = new StringBuilder();
-		builder.append(method.getDeclaringClass().getName());
-		builder.append('#');
-		builder.append(method.getName());
-		if (method.getParameterCount() == 0) {
-			return builder.toString();
-		}
-		Class<?>[] types = method.getParameterTypes();
-		builder.append('(');
-		builder.append(types[0].getName());
-		if (types.length > 1) {
-			for (int i = 1; i < types.length; i++) {
-				builder.append(',');
-				builder.append(types[i].getName());
-			}
-		}
-		builder.append(')');
-		return builder.toString();
 	}
 
 	private static Optional<Object> getOuterInstance(Object inner) {
