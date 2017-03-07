@@ -46,6 +46,7 @@ public final class TestIdentifier implements Serializable {
 	private final Set<TestTag> tags;
 	private final boolean test;
 	private final boolean container;
+	private final String legacyReportingName;
 
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
@@ -61,11 +62,12 @@ public final class TestIdentifier implements Serializable {
 		boolean container = !test || !testDescriptor.getChildren().isEmpty();
 		Optional<String> parentId = testDescriptor.getParent().map(
 			parentDescriptor -> parentDescriptor.getUniqueId().toString());
-		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId);
+		String legacyReportingName = testDescriptor.getLegacyReportingName();
+		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId, legacyReportingName);
 	}
 
 	TestIdentifier(String uniqueId, String displayName, Optional<TestSource> source, Set<TestTag> tags, boolean test,
-			boolean container, Optional<String> parentId) {
+			boolean container, Optional<String> parentId, String legacyReportingName) {
 		this.uniqueId = uniqueId;
 		this.parentId = parentId.orElse(null);
 		this.displayName = displayName;
@@ -73,6 +75,7 @@ public final class TestIdentifier implements Serializable {
 		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
 		this.test = test;
 		this.container = container;
+		this.legacyReportingName = legacyReportingName;
 	}
 
 	/**
@@ -153,6 +156,10 @@ public final class TestIdentifier implements Serializable {
 		return this.tags;
 	}
 
+	public String getLegacyReportingName() {
+		return legacyReportingName;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof TestIdentifier) {
@@ -174,6 +181,7 @@ public final class TestIdentifier implements Serializable {
 				.append("uniqueId", this.uniqueId)
 				.append("parentId", this.parentId)
 				.append("displayName", this.displayName)
+				.append("legacyReportingName", this.legacyReportingName)
 				.append("source", this.source)
 				.append("tags", this.tags)
 				.append("test", this.test)
