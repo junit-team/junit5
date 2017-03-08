@@ -102,14 +102,10 @@ class GroupDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public boolean isTest() {
-		return false;
+	public Type getType() {
+		return Type.CONTAINER;
 	}
 
-	@Override
-	public boolean isContainer() {
-		return true;
-	}
 }
 
 class LeafDescriptor extends AbstractTestDescriptor {
@@ -119,12 +115,8 @@ class LeafDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public boolean isTest() {
-		return true;
+	public Type getType() {
+		return Type.TEST;
 	}
 
-	@Override
-	public boolean isContainer() {
-		return false;
-	}
 }

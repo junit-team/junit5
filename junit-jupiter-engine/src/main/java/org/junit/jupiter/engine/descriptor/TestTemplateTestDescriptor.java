@@ -42,13 +42,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	@Override
-	public boolean isTest() {
-		return false;
-	}
-
-	@Override
-	public boolean isContainer() {
-		return true;
+	public Type getType() {
+		return Type.CONTAINER;
 	}
 
 	@Override

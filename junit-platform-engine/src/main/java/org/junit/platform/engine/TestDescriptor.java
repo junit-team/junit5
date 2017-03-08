@@ -149,20 +149,70 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Determine if this descriptor describes a container.
+	 * Determine this descriptor's {@link Type}.
+	 *
+	 * @return the descriptor type; never {@code null}.
+	 * @see #isContainer()
+	 * @see #isTest()
 	 */
-	boolean isContainer();
+	Type getType();
+
+	/**
+	 * Determine if this descriptor describes a container.
+	 *
+	 * <p>This default implementation delegates to {@link Type#isContainer()}.
+	 */
+	default boolean isContainer() {
+		return getType().isContainer();
+	}
 
 	/**
 	 * Determine if this descriptor describes a test.
+	 *
+	 * <p>This default implementation delegates to {@link Type#isTest()}.
 	 */
-	boolean isTest();
+	default boolean isTest() {
+		return getType().isTest();
+	}
 
 	/**
 	 * Determine if this descriptor or any of its descendants describes a test.
+	 *
+	 * <p>This default implementation recursively calls itself until a descriptor
+	 * returns {@code true} to {@link #isTest()}; starting with this descriptor
+	 * instance.
 	 */
 	default boolean hasTests() {
-		return (isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests));
+		return isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests);
+	}
+
+	/**
+	 * Remove this descriptor from hierarchy unless it is a root or has tests.
+	 *
+	 * <p>An engine implementation may override this method and do it differently
+	 * or skip pruning altogether.
+	 *
+	 * @see #isRoot()
+	 * @see #hasTests()
+	 * @see #removeFromHierarchy()
+	 */
+	default void prune() {
+		if (isRoot() || hasTests()) {
+			return;
+		}
+		removeFromHierarchy();
+	}
+
+	/**
+	 * Remove this and descendant descriptors from hierarchy.
+	 *
+	 * <p>The default implementation passes the potentially overridden
+	 * {@link #prune()} as a {@link Visitor} to this instance. I.e. it removes
+	 * itself and descendants unless it is a root descriptor or itself is test
+	 * or any of its children describes a test.
+	 */
+	default void pruneTree() {
+		accept(TestDescriptor::prune);
 	}
 
 	/**
@@ -201,4 +251,43 @@ public interface TestDescriptor {
 		void visit(TestDescriptor descriptor);
 	}
 
+	/**
+	 * Descriptor type constants.
+	 */
+	enum Type {
+
+		/**
+		 * Engine descriptor type.
+		 */
+		ENGINE,
+
+		/**
+		 * Generic container descriptor type.
+		 */
+		CONTAINER,
+
+		/**
+		 * Test descriptor type.
+		 */
+		TEST,
+
+		/**
+		 * Container <em>and</em> test descriptor type.
+		 */
+		CONTAINER_AND_TEST;
+
+		/**
+		 * @return {@code true} if this descriptor type can contain other descriptors, else {@code false}.
+		 */
+		public boolean isContainer() {
+			return this == ENGINE || this == CONTAINER || this == CONTAINER_AND_TEST;
+		}
+
+		/**
+		 * @return {@code true} if this descriptor type is a test, else {@code false}.
+		 */
+		public boolean isTest() {
+			return this == TEST || this == CONTAINER_AND_TEST;
+		}
+	}
 }

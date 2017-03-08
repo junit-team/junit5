@@ -77,13 +77,8 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public boolean isTest() {
-		return description.isTest();
-	}
-
-	@Override
-	public boolean isContainer() {
-		return description.isSuite();
+	public Type getType() {
+		return description.isTest() ? Type.TEST : Type.CONTAINER;
 	}
 
 	@Override
