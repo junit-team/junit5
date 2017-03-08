@@ -7,7 +7,7 @@ buildscript {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
-		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.0.0'
+		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.1.0'
 		classpath 'org.ajoberstar:gradle-git:1.6.0'
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
@@ -381,6 +381,7 @@ subprojects { subproj ->
 			licenseHeaderFile headerFile, '(package|import) '
 			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
 			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+			removeUnusedImports()
 
 			trimTrailingWhitespace()
 			endWithNewline()
