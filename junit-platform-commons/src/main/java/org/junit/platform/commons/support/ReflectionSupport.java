@@ -69,15 +69,18 @@ public final class ReflectionSupport {
 	 * that match the specified {@code predicate}.
 	 *
 	 * <p>If you're are looking for methods annotated with a certain annotation
-	 * type, consider using {@linkplain AnnotationSupport#findAnnotatedMethods(Class, Class, MethodSortOrder)}.
+	 * type, consider using {@linkplain AnnotationSupport#findAnnotatedMethods(Class, Class, HierarchyTraversalMode)}.
 	 *
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param predicate the method filter; never {@code null}
-	 * @param sortOrder the method sort order; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
 	 * @return the list of all such methods found; never {@code null}
 	 */
-	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
-		return ReflectionUtils.findMethods(clazz, predicate, ReflectionUtils.MethodSortOrder.valueOf(sortOrder.name()));
+	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
+			HierarchyTraversalMode traversalMode) {
+
+		return ReflectionUtils.findMethods(clazz, predicate,
+			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
 	}
 
 }

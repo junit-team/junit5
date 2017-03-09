@@ -88,6 +88,7 @@ public final class AnnotationSupport {
 	 */
 	public static <A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element,
 			Class<A> annotationType) {
+
 		return AnnotationUtils.findRepeatableAnnotations(element, annotationType);
 	}
 
@@ -107,6 +108,7 @@ public final class AnnotationSupport {
 	 */
 	public static List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<?> fieldType,
 			Class<? extends Annotation> annotationType) {
+
 		return AnnotationUtils.findPublicAnnotatedFields(clazz, fieldType, annotationType);
 	}
 
@@ -117,13 +119,14 @@ public final class AnnotationSupport {
 	 *
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
-	 * @param sortOrder the method sort order; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
 	 * @return the list of all such methods found; never {@code null}
 	 */
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
-			MethodSortOrder sortOrder) {
+			HierarchyTraversalMode traversalMode) {
+
 		return AnnotationUtils.findAnnotatedMethods(clazz, annotationType,
-			ReflectionUtils.MethodSortOrder.valueOf(sortOrder.name()));
+			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
 	}
 
 }

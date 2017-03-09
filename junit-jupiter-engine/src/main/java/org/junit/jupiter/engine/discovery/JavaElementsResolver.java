@@ -147,7 +147,7 @@ class JavaElementsResolver {
 
 	private void resolveContainedMethods(TestDescriptor containerDescriptor, Class<?> testClass) {
 		List<Method> testMethodCandidates = findMethods(testClass, method -> !ReflectionUtils.isPrivate(method),
-			ReflectionUtils.MethodSortOrder.HierarchyDown);
+			ReflectionUtils.HierarchyTraversalMode.TOP_DOWN);
 		testMethodCandidates.forEach(method -> resolve(method, containerDescriptor));
 	}
 

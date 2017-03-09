@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder;
+import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 
 /**
  * Collection of utilities for working with {@linkplain Annotation annotations}.
@@ -260,15 +260,15 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotatedMethods(Class, Class, org.junit.platform.commons.support.MethodSortOrder)
+	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotatedMethods(Class, Class, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
-			MethodSortOrder sortOrder) {
+			HierarchyTraversalMode traversalMode) {
 
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
-		return ReflectionUtils.findMethods(clazz, method -> isAnnotated(method, annotationType), sortOrder);
+		return ReflectionUtils.findMethods(clazz, method -> isAnnotated(method, annotationType), traversalMode);
 	}
 
 	private static boolean isInJavaLangAnnotationPackage(Annotation annotation) {

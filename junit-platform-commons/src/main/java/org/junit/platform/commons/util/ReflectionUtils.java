@@ -13,6 +13,8 @@ package org.junit.platform.commons.util;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
 import java.io.File;
 import java.lang.reflect.AccessibleObject;
@@ -67,8 +69,21 @@ public final class ReflectionUtils {
 	}
 	///CLOVER:ON
 
-	public enum MethodSortOrder {
-		HierarchyDown, HierarchyUp
+	/**
+	 * Modes in which a hierarchy can be traversed &mdash; for example, when
+	 * searching for methods or fields within a class hierarchy.
+	 */
+	public enum HierarchyTraversalMode {
+
+		/**
+		 * Traverse the hierarchy using top-down semantics.
+		 */
+		TOP_DOWN,
+
+		/**
+		 * Traverse the hierarchy using bottom-up semantics.
+		 */
+		BOTTOM_UP;
 	}
 
 	// Pattern: [fully qualified class name]#[methodName]((comma-separated list of parameter type names))
@@ -578,19 +593,21 @@ public final class ReflectionUtils {
 	}
 
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate) {
-		return findMethods(clazz, predicate, MethodSortOrder.HierarchyDown);
+		return findMethods(clazz, predicate, TOP_DOWN);
 	}
 
 	/**
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethods(Class, Predicate, org.junit.platform.commons.support.MethodSortOrder)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
-	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
+	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
+			HierarchyTraversalMode traversalMode) {
+
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notNull(predicate, "predicate must not be null");
-		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
-		return findAllMethodsInHierarchy(clazz, sortOrder).stream()
+		return findAllMethodsInHierarchy(clazz, traversalMode).stream()
 				.filter(predicate)
 				.collect(toList());
 		// @formatter:on
@@ -599,29 +616,29 @@ public final class ReflectionUtils {
 	/**
 	 * Return all methods in superclass hierarchy except from Object.
 	 */
-	private static List<Method> findAllMethodsInHierarchy(Class<?> clazz, MethodSortOrder sortOrder) {
+	private static List<Method> findAllMethodsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
 		List<Method> localMethods = Arrays.stream(clazz.getDeclaredMethods())
 				.filter(method -> !method.isSynthetic())
 				.collect(toList());
-		List<Method> superclassMethods = getSuperclassMethods(clazz, sortOrder).stream()
+		List<Method> superclassMethods = getSuperclassMethods(clazz, traversalMode).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
-		List<Method> interfaceMethods = getInterfaceMethods(clazz, sortOrder).stream()
+		List<Method> interfaceMethods = getInterfaceMethods(clazz, traversalMode).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
 		// @formatter:on
 
 		List<Method> methods = new ArrayList<>();
-		if (sortOrder == MethodSortOrder.HierarchyDown) {
+		if (traversalMode == TOP_DOWN) {
 			methods.addAll(superclassMethods);
 			methods.addAll(interfaceMethods);
 		}
 		methods.addAll(localMethods);
-		if (sortOrder == MethodSortOrder.HierarchyUp) {
+		if (traversalMode == BOTTOM_UP) {
 			methods.addAll(interfaceMethods);
 			methods.addAll(superclassMethods);
 		}
@@ -653,9 +670,9 @@ public final class ReflectionUtils {
 		}
 	}
 
-	private static List<Method> getInterfaceMethods(Class<?> clazz, MethodSortOrder sortOrder) {
+	private static List<Method> getInterfaceMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		List<Method> allInterfaceMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
@@ -664,28 +681,28 @@ public final class ReflectionUtils {
 				toList());
 
 			// @formatter:off
-			List<Method> subInterfaceMethods = getInterfaceMethods(ifc, sortOrder).stream()
+			List<Method> subInterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
 					.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 					.collect(toList());
 			// @formatter:on
 
-			if (sortOrder == MethodSortOrder.HierarchyDown) {
+			if (traversalMode == TOP_DOWN) {
 				allInterfaceMethods.addAll(subInterfaceMethods);
 			}
 			allInterfaceMethods.addAll(localMethods);
-			if (sortOrder == MethodSortOrder.HierarchyUp) {
+			if (traversalMode == BOTTOM_UP) {
 				allInterfaceMethods.addAll(subInterfaceMethods);
 			}
 		}
 		return allInterfaceMethods;
 	}
 
-	private static List<Method> getSuperclassMethods(Class<?> clazz, MethodSortOrder sortOrder) {
+	private static List<Method> getSuperclassMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Class<?> superclass = clazz.getSuperclass();
 		if (superclass == null || superclass == Object.class) {
 			return Collections.emptyList();
 		}
-		return findAllMethodsInHierarchy(superclass, sortOrder);
+		return findAllMethodsInHierarchy(superclass, traversalMode);
 	}
 
 	private static boolean isMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {

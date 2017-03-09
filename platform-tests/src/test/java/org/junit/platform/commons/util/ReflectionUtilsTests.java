@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
-import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
+import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
@@ -484,9 +484,9 @@ public class ReflectionUtilsTests {
 
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findMethods(null, null, null));
 		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethods(null, clazz -> true, HierarchyUp));
+			() -> ReflectionUtils.findMethods(null, clazz -> true, BOTTOM_UP));
 		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethods(String.class, null, HierarchyUp));
+			() -> ReflectionUtils.findMethods(String.class, null, BOTTOM_UP));
 		assertThrows(PreconditionViolationException.class,
 			() -> ReflectionUtils.findMethods(String.class, clazz -> true, null));
 	}
@@ -565,64 +565,64 @@ public class ReflectionUtilsTests {
 	@Test
 	void findMethodsUsingHierarchyUpMode() throws Exception {
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("method"),
-			HierarchyUp)).containsExactly(ChildClass.class.getMethod("method4"), ParentClass.class.getMethod("method3"),
+			BOTTOM_UP)).containsExactly(ChildClass.class.getMethod("method4"), ParentClass.class.getMethod("method3"),
 				GrandparentInterface.class.getMethod("method2"), GrandparentClass.class.getMethod("method1"));
 
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("other"),
-			HierarchyUp)).containsExactly(ChildClass.class.getMethod("otherMethod3"),
+			BOTTOM_UP)).containsExactly(ChildClass.class.getMethod("otherMethod3"),
 				ParentClass.class.getMethod("otherMethod2"), GrandparentClass.class.getMethod("otherMethod1"));
 
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().equals("method2"),
-			HierarchyUp)).containsExactly(ParentClass.class.getMethod("method2"));
+			BOTTOM_UP)).containsExactly(ParentClass.class.getMethod("method2"));
 
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().equals("wrongName"),
-			HierarchyUp)).isEmpty();
+			BOTTOM_UP)).isEmpty();
 
 		assertThat(ReflectionUtils.findMethods(ParentClass.class, method -> method.getName().contains("method"),
-			HierarchyUp)).containsExactly(ParentClass.class.getMethod("method3"),
+			BOTTOM_UP)).containsExactly(ParentClass.class.getMethod("method3"),
 				GrandparentInterface.class.getMethod("method2"), GrandparentClass.class.getMethod("method1"));
 	}
 
 	@Test
 	void findMethodsUsingHierarchyDownMode() throws Exception {
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("method"),
-			HierarchyDown)).containsExactly(GrandparentClass.class.getMethod("method1"),
+			TOP_DOWN)).containsExactly(GrandparentClass.class.getMethod("method1"),
 				GrandparentInterface.class.getMethod("method2"), ParentClass.class.getMethod("method3"),
 				ChildClass.class.getMethod("method4"));
 
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("other"),
-			HierarchyDown)).containsExactly(GrandparentClass.class.getMethod("otherMethod1"),
+			TOP_DOWN)).containsExactly(GrandparentClass.class.getMethod("otherMethod1"),
 				ParentClass.class.getMethod("otherMethod2"), ChildClass.class.getMethod("otherMethod3"));
 
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().equals("method2"),
-			HierarchyDown)).containsExactly(ParentClass.class.getMethod("method2"));
+			TOP_DOWN)).containsExactly(ParentClass.class.getMethod("method2"));
 
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().equals("wrongName"),
-			HierarchyDown)).isEmpty();
+			TOP_DOWN)).isEmpty();
 
 		assertThat(ReflectionUtils.findMethods(ParentClass.class, method -> method.getName().contains("method"),
-			HierarchyDown)).containsExactly(GrandparentClass.class.getMethod("method1"),
+			TOP_DOWN)).containsExactly(GrandparentClass.class.getMethod("method1"),
 				GrandparentInterface.class.getMethod("method2"), ParentClass.class.getMethod("method3"));
 	}
 
 	@Test
 	void findMethodsWithShadowingUsingHierarchyUpMode() throws Exception {
 		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("1"),
-			HierarchyUp)).containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
+			BOTTOM_UP)).containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
 
 		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("2"),
-			HierarchyUp)).containsExactly(
+			BOTTOM_UP)).containsExactly(
 				MethodShadowingParent.class.getMethod("method2", int.class, int.class, int.class),
 				MethodShadowingInterface.class.getMethod("method2", int.class, int.class));
 
 		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("4"),
-			HierarchyUp)).containsExactly(MethodShadowingChild.class.getMethod("method4", boolean.class));
+			BOTTOM_UP)).containsExactly(MethodShadowingChild.class.getMethod("method4", boolean.class));
 
 		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("5"),
-			HierarchyUp)).containsExactly(MethodShadowingChild.class.getMethod("method5", Long.class),
+			BOTTOM_UP)).containsExactly(MethodShadowingChild.class.getMethod("method5", Long.class),
 				MethodShadowingParent.class.getMethod("method5", String.class));
 
-		List<Method> methods = ReflectionUtils.findMethods(MethodShadowingChild.class, method -> true, HierarchyUp);
+		List<Method> methods = ReflectionUtils.findMethods(MethodShadowingChild.class, method -> true, BOTTOM_UP);
 		assertEquals(6, methods.size());
 		assertThat(methods.subList(0, 3)).containsOnly(MethodShadowingChild.class.getMethod("method4", boolean.class),
 			MethodShadowingChild.class.getMethod("method1", String.class),
@@ -636,20 +636,20 @@ public class ReflectionUtilsTests {
 	@Test
 	void findMethodsWithShadowingUsingHierarchyDownMode() throws Exception {
 		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("1"),
-			HierarchyDown)).containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
+			TOP_DOWN)).containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
 
 		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("2"),
-			HierarchyDown)).containsExactly(MethodShadowingInterface.class.getMethod("method2", int.class, int.class),
+			TOP_DOWN)).containsExactly(MethodShadowingInterface.class.getMethod("method2", int.class, int.class),
 				MethodShadowingParent.class.getMethod("method2", int.class, int.class, int.class));
 
 		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("4"),
-			HierarchyDown)).containsExactly(MethodShadowingChild.class.getMethod("method4", boolean.class));
+			TOP_DOWN)).containsExactly(MethodShadowingChild.class.getMethod("method4", boolean.class));
 
 		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("5"),
-			HierarchyDown)).containsExactly(MethodShadowingParent.class.getMethod("method5", String.class),
+			TOP_DOWN)).containsExactly(MethodShadowingParent.class.getMethod("method5", String.class),
 				MethodShadowingChild.class.getMethod("method5", Long.class));
 
-		List<Method> methods = ReflectionUtils.findMethods(MethodShadowingChild.class, method -> true, HierarchyDown);
+		List<Method> methods = ReflectionUtils.findMethods(MethodShadowingChild.class, method -> true, TOP_DOWN);
 		assertEquals(6, methods.size());
 		assertEquals(MethodShadowingInterface.class.getMethod("method2", int.class, int.class), methods.get(0));
 		assertThat(methods.subList(1, 3)).containsOnly(
