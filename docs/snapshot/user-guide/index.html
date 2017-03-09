@@ -3156,10 +3156,10 @@ available for storing and retrieving values via the <code><a href="../api/org/ju
 <div class="sect2">
 <h3 id="extensions-supported-utilities">5.9. Supported Utilities in Extensions</h3>
 <div class="paragraph">
-<p>The JUnit Platform Commons artifact exposes package <code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> which
-contains maintained utility methods handling <code>Annotation</code>, reflection and classpath scanning tasks.
-Extension authors are encouraged to use these supported methods to align expected the behaviour
-with the JUnit Platform.</p>
+<p>The JUnit Platform Commons artifact exposes a package named <code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that
+contains <em>maintained</em> utility methods for working with annotations, reflection, and classpath
+scanning tasks. <code>TestEngine</code> and <code>Extension</code> authors are encouraged to use these supported methods
+in order to align with the behavior of the JUnit Platform.</p>
 </div>
 </div>
 </div>
@@ -4475,14 +4475,14 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as plugin
+<p>The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as the plugin
 version) instead of a dynamic versioning scheme (was <code>1.+</code>) by default to ensure reproducible
 builds.</p>
 </li>
 <li>
 <p>All <code>findMethods()</code> implementations in <code>ReflectionUtils</code> no longer return synthetic methods.
 Shadowed <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2">override-equal</a>
-methods are also no longer included in the result collection.</p>
+methods are also no longer included in the results.</p>
 </li>
 <li>
 <p>Introduced <code>getLegacyName()</code> in <code>TestIdentifier</code> and <code>TestDescriptor</code>.
@@ -4502,18 +4502,18 @@ method names through <code>getLegacyName()</code> instead of using the source lo
 <code>selectClass(String)</code>, and <code>selectMethod(String)</code> methods.</p>
 </li>
 <li>
-<p><code>ClassNameFilter.includeClassNamePattern</code> was removed, please use
+<p><code>ClassNameFilter.includeClassNamePattern</code> was removed; please use
 <code>ClassNameFilter.includeClassNamePatterns</code> instead.</p>
 </li>
 <li>
-<p><code>@IncludeClassNamePattern</code> was removed, please use <code>@IncludeClassNamePatterns</code> instead.</p>
+<p><code>@IncludeClassNamePattern</code> was removed; please use <code>@IncludeClassNamePatterns</code> instead.</p>
 </li>
 <li>
-<p><code>--hide-details</code> option of the <code>ConsoleLauncher</code> is deprecated, use <code>--details none</code> instead.</p>
+<p>The <code>--hide-details</code> option of the <code>ConsoleLauncher</code> is deprecated; use <code>--details none</code> instead.</p>
 </li>
 <li>
-<p>The ZIP distribution containing the console launcher is no longer provided. It is replaced
-by an executable standalone JAR distribution. For details, see "New Features" section below.</p>
+<p>The ZIP distribution containing the console launcher is no longer provided. It has been replaced
+by an executable standalone JAR distribution. For details, see the "New Features" section below.</p>
 </li>
 <li>
 <p>The <code>MethodSortOrder</code> enum in <code>ReflectionUtils</code> has been renamed to <code>HierarchyTraversalMode</code>. Those
@@ -4568,10 +4568,10 @@ expression to exclude those classes whose fully qualified names match. When this
 repeated, all patterns will be combined using OR semantics.</p>
 </li>
 <li>
-<p>Introduce JUnit Platform support package <code>org.junit.platform.commons.support</code> which contains
-maintained utility methods handling <code>Annotation</code>, reflection and classpath scanning tasks.
+<p>New JUnit Platform support package <code>org.junit.platform.commons.support</code> that contains
+<em>maintained</em> utility methods for annotation, reflection, and classpath scanning tasks.
 <code>TestEngine</code> and <code>Extension</code> authors are encouraged to use these supported methods
-to align the behaviour with the JUnit Platform.</p>
+in order to align with the behavior of the JUnit Platform.</p>
 </li>
 </ul>
 </div>
@@ -4584,12 +4584,12 @@ to align the behaviour with the JUnit Platform.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fix bug that prevented discovery of two or more methods of the same class.</p>
+<p>Fixed bug that prevented discovery of two or more methods of the same class.</p>
 </li>
 <li>
-<p>Enforce correct execution order of overridden <code>@BeforeEach</code>/<code>@AfterEach</code> methods when declared
-at multiple class hierarchy levels. It&#8217;s now always <code>super.before</code>, <code>this.before</code>, <code>this.test</code>,
-<code>this.after</code> and <code>super.after</code>, even when the compiler added synthetic methods.</p>
+<p>The correct execution order of overridden <code>@BeforeEach</code>/<code>@AfterEach</code> methods is now enforced when declared
+at multiple levels within a class hierarchy. It&#8217;s now always <code>super.before</code>, <code>this.before</code>, <code>this.test</code>,
+<code>this.after</code>, and <code>super.after</code>, even if the compiler adds synthetic methods.</p>
 </li>
 </ul>
 </div>
@@ -4602,7 +4602,7 @@ at multiple class hierarchy levels. It&#8217;s now always <code>super.before</co
 <p>Removed deprecated <code>Assertions.expectThrows()</code> method in favor of <code>Assertions.assertThrows()</code>.</p>
 </li>
 <li>
-<p>`ExtensionContext.Namespace`s with the same parts but in a different order are no longer considered
+<p>`ExtensionContext.Namespace`s composed of the same parts but in a different order are no longer considered
 equal to each other.</p>
 </li>
 </ul>
@@ -4620,7 +4620,7 @@ generating assertion failure messages.</p>
 <p><code>TestInstancePostProcessors</code> registered on test methods are now invoked.</p>
 </li>
 <li>
-<p>There are two new signatures <code>Assertions.fail</code> - <code>Assertions.fail(Throwable cause)</code> and
+<p>There are two new signatures for <code>Assertions.fail</code>: <code>Assertions.fail(Throwable cause)</code> and
 <code>Assertions.fail(String message, Throwable cause)</code>.</p>
 </li>
 </ul>
@@ -4634,8 +4634,8 @@ generating assertion failure messages.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fix bug that caused only the last failure of a test to be reported, e.g. when using the
-<code>ErrorCollector</code> rule only the last failed check was reported. Now, all failures are reported
+<p>Fixed bug that caused only the last failure of a test to be reported. For example, when using the
+<code>ErrorCollector</code> rule, only the last failed check was reported. Now, all failures are reported
 using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 </li>
 </ul>
