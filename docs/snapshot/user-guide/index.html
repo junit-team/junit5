@@ -2546,11 +2546,14 @@ final release.
 --disable-ansi-colors                         Disable ANSI colors in output (not
                                                 supported by all terminals).
 --hide-details                                @Deprecated. Use '--details none' instead.
---details &lt;Details&gt;                           Select an output details mode for when
+--details &lt;[none,flat,tree,verbose]&gt;          Select an output details mode for when
                                                 tests are executed. Use one of: [none,
                                                 flat, tree, verbose]. If 'none' is
                                                 selected, then only the summary and test
                                                 failures are shown. (default: tree)
+--details-theme &lt;[ascii,unicode]&gt;             Select an output details tree theme for
+                                                when tests are executed. Use one of:
+                                                [ascii, unicode] (default: unicode)
 --class-path, --classpath, --cp &lt;Path:        Provide additional classpath entries --
   path1:path2:...&gt;                              for example, for adding engines and
                                                 their dependencies. This option can be
@@ -4642,7 +4645,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-08 14:36:46 EST
+Last updated 2017-03-08 20:06:58 EST
 </div>
 </div>
 </body>
