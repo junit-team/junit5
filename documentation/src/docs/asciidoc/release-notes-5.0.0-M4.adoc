@@ -16,12 +16,12 @@ on GitHub.
 
 ===== Bug Fixes
 
-* The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as plugin
+* The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as the plugin
   version) instead of a dynamic versioning scheme (was `1.+`) by default to ensure reproducible
   builds.
 * All `findMethods()` implementations in `ReflectionUtils` no longer return synthetic methods.
   Shadowed https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2[override-equal]
-  methods are also no longer included in the result collection.
+  methods are also no longer included in the results.
 * Introduced `getLegacyName()` in `TestIdentifier` and `TestDescriptor`.
   This allows the JUnit Platform Gradle Plugin and the Surefire Provider to resolve the class and
   method names through `getLegacyName()` instead of using the source location.
@@ -31,12 +31,12 @@ on GitHub.
 * Removed deprecated `selectNames()` name-based discovery selector from
   `DiscoverySelectors` in favor of the dedicated `selectPackage(String)`,
   `selectClass(String)`, and `selectMethod(String)` methods.
-* `ClassNameFilter.includeClassNamePattern` was removed, please use
+* `ClassNameFilter.includeClassNamePattern` was removed; please use
   `ClassNameFilter.includeClassNamePatterns` instead.
-* `@IncludeClassNamePattern` was removed, please use `@IncludeClassNamePatterns` instead.
-* `--hide-details` option of the `ConsoleLauncher` is deprecated, use `--details none` instead.
-* The ZIP distribution containing the console launcher is no longer provided. It is replaced
-  by an executable standalone JAR distribution. For details, see "New Features" section below.
+* `@IncludeClassNamePattern` was removed; please use `@IncludeClassNamePatterns` instead.
+* The `--hide-details` option of the `ConsoleLauncher` is deprecated; use `--details none` instead.
+* The ZIP distribution containing the console launcher is no longer provided. It has been replaced
+  by an executable standalone JAR distribution. For details, see the "New Features" section below.
 * The `MethodSortOrder` enum in `ReflectionUtils` has been renamed to `HierarchyTraversalMode`. Those
   affected should now use `ReflectionSupport` instead of `ReflectionUtils`.
 
@@ -69,25 +69,25 @@ on GitHub.
 * New `--exclude-classname` (`--N`) option added to the `ConsoleLauncher` accepting a regular
   expression to exclude those classes whose fully qualified names match. When this option is
   repeated, all patterns will be combined using OR semantics.
-* Introduce JUnit Platform support package `org.junit.platform.commons.support` which contains
-  maintained utility methods handling `Annotation`, reflection and classpath scanning tasks.
+* New JUnit Platform support package `org.junit.platform.commons.support` that contains
+  _maintained_ utility methods for annotation, reflection, and classpath scanning tasks.
   `TestEngine` and `Extension` authors are encouraged to use these supported methods
-  to align the behaviour with the JUnit Platform.
+  in order to align with the behavior of the JUnit Platform.
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
 ==== JUnit Jupiter
 
 ===== Bug Fixes
 
-* Fix bug that prevented discovery of two or more methods of the same class.
-* Enforce correct execution order of overridden `@BeforeEach`/`@AfterEach` methods when declared
-  at multiple class hierarchy levels. It's now always `super.before`, `this.before`, `this.test`,
-  `this.after` and `super.after`, even when the compiler added synthetic methods.
+* Fixed bug that prevented discovery of two or more methods of the same class.
+* The correct execution order of overridden `@BeforeEach`/`@AfterEach` methods is now enforced when declared
+  at multiple levels within a class hierarchy. It's now always `super.before`, `this.before`, `this.test`,
+  `this.after`, and `super.after`, even if the compiler adds synthetic methods.
 
 ===== Deprecations and Breaking Changes
 
 * Removed deprecated `Assertions.expectThrows()` method in favor of `Assertions.assertThrows()`.
-* `ExtensionContext.Namespace`s with the same parts but in a different order are no longer considered
+* `ExtensionContext.Namespace`s composed of the same parts but in a different order are no longer considered
   equal to each other.
 
 ===== New Features and Improvements
@@ -95,7 +95,7 @@ on GitHub.
 * `Assertions.assertThrows()` now uses canonical names for exception types when
   generating assertion failure messages.
 * `TestInstancePostProcessors` registered on test methods are now invoked.
-* There are two new signatures `Assertions.fail` - `Assertions.fail(Throwable cause)` and
+* There are two new signatures for `Assertions.fail`: `Assertions.fail(Throwable cause)` and
   `Assertions.fail(String message, Throwable cause)`.
 
 
@@ -104,6 +104,6 @@ on GitHub.
 
 ===== Bug Fixes
 
-* Fix bug that caused only the last failure of a test to be reported, e.g. when using the
-  `ErrorCollector` rule only the last failed check was reported. Now, all failures are reported
+* Fixed bug that caused only the last failure of a test to be reported. For example, when using the
+  `ErrorCollector` rule, only the last failed check was reported. Now, all failures are reported
   using an `org.opentest4j.MultipleFailuresError`.
