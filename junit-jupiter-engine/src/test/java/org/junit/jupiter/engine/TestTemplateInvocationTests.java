@@ -74,6 +74,9 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.opentest4j.AssertionFailedError;
 
+/**
+ * @since 5.0
+ */
 public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
@@ -323,6 +326,7 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 	@SafeVarargs
 	private final Condition<? super ExecutionEvent>[] wrappedInContainerEvents(Class<MyTestTemplateTestCase> clazz,
 			Condition<? super ExecutionEvent>... wrappedConditions) {
+
 		List<Condition<? super ExecutionEvent>> conditions = new ArrayList<>();
 		conditions.add(event(engine(), started()));
 		conditions.add(event(container(clazz), started()));

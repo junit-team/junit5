@@ -125,4 +125,5 @@ public final class AnnotationSupport {
 		return AnnotationUtils.findAnnotatedMethods(clazz, annotationType,
 			ReflectionUtils.MethodSortOrder.valueOf(sortOrder.name()));
 	}
+
 }

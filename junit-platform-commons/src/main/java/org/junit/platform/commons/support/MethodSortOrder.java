@@ -19,6 +19,7 @@ import org.junit.platform.commons.meta.API;
  */
 @API(Maintained)
 public enum MethodSortOrder {
+
 	/**
 	 * Sort methods from top to bottom.
 	 */
@@ -27,5 +28,6 @@ public enum MethodSortOrder {
 	/**
 	 * Sort methods from bottom to top.
 	 */
-	HierarchyUp
+	HierarchyUp;
+
 }
