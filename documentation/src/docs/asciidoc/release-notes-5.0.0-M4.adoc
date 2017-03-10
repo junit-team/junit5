@@ -29,6 +29,8 @@ on GitHub.
   method names through `getLegacyName()` instead of using the source location.
 * JAR files that contain spaces in their paths (`%20`) are now properly decoded before being
   used in classpath scanning routines.
+* Updated `findNestedClasses()` in `ReflectionUtils` so that searches for nested classes also
+  return inherited nested classes (regardless of whether they are static or not).
 
 ===== Deprecations and Breaking Changes
 
@@ -90,6 +92,7 @@ on GitHub.
 ===== Bug Fixes
 
 * Fixed bug that prevented discovery of two or more methods of the same class.
+* Fixed bug that prevented discovery of `@Nested` non-static test classes declared in super classes.
 * The correct execution order of overridden `@BeforeEach`/`@AfterEach` methods is now enforced when declared
   at multiple levels within a class hierarchy. It's now always `super.before`, `this.before`, `this.test`,
   `this.after`, and `super.after`, even if the compiler adds synthetic methods.

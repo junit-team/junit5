@@ -81,6 +81,18 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@Test
+	public void inheritedNestedTestsAreExecuted() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithInheritedNested.class);
+
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+
+		assertEquals(3, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(3, eventRecorder.getContainerFinishedCount(), "# containers finished");
+	}
+
 	// -------------------------------------------------------------------
 
 	private static class TestCaseWithNesting {
@@ -172,6 +184,39 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 				}
 			}
 		}
+	}
+
+	interface InterfaceWithNestedClass {
+
+		@Nested
+		class NestedInInterface {
+
+			@Test
+			void notExecutedByImplementingClass() {
+				Assertions.fail("class in interface is static and should have been filtered out");
+			}
+		}
+
+	}
+
+	static abstract class AbstractSuperClass implements InterfaceWithNestedClass {
+
+		@Nested
+		class NestedInAbstractClass {
+
+			@Test
+			void successful() {
+			}
+
+			@Test
+			void failing() {
+				Assertions.fail("something went wrong");
+			}
+		}
+	}
+
+	static class TestCaseWithInheritedNested extends AbstractSuperClass {
+		// empty on purpose
 	}
 
 }
