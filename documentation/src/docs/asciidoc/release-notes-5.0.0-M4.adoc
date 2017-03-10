@@ -19,6 +19,8 @@ on GitHub.
 * The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as the plugin
   version) instead of a dynamic versioning scheme (was `1.+`) by default to ensure reproducible
   builds.
+* The JUnit Platform Gradle plugin explicitly applies the Gradle built-in `java` plugin as
+  it has an implicit dependency on it being applied.
 * All `findMethods()` implementations in `ReflectionUtils` no longer return synthetic methods.
   Shadowed https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2[override-equal]
   methods are also no longer included in the results.
