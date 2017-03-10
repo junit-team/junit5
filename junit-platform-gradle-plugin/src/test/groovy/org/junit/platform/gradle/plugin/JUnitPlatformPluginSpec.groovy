@@ -80,7 +80,7 @@ class JUnitPlatformPluginSpec extends Specification {
 			details 'NONE'
 		}
 		then:
-		true == true
+		noExceptionThrown()
 	}
 
 	def "creating junitPlatformTest task"() {
