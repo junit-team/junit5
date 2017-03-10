@@ -528,7 +528,21 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "predicate must not be null");
 
-		return Arrays.stream(clazz.getDeclaredClasses()).filter(predicate).collect(toList());
+		Set<Class<?>> candidates = findNestedClasses(clazz, new LinkedHashSet<>());
+		return candidates.stream().filter(predicate).collect(toList());
+	}
+
+	private static Set<Class<?>> findNestedClasses(Class<?> clazz, Set<Class<?>> candidates) {
+		for (Class<?> candidate = clazz; candidate != null; candidate = candidate.getSuperclass()) {
+			Class<?>[] declaredClasses = candidate.getDeclaredClasses();
+			candidates.addAll(Arrays.asList(declaredClasses));
+			for (Class<?> interfaceType : candidate.getInterfaces()) {
+				declaredClasses = interfaceType.getDeclaredClasses();
+				candidates.addAll(Arrays.asList(declaredClasses));
+				findNestedClasses(interfaceType, candidates);
+			}
+		}
+		return candidates;
 	}
 
 	/**
