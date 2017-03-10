@@ -81,6 +81,18 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@Test
+	public void inheritedNestedTestsAreExecuted() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithInheritedNesting.class);
+
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+
+		assertEquals(3, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(3, eventRecorder.getContainerFinishedCount(), "# containers finished");
+	}
+
 	// -------------------------------------------------------------------
 
 	private static class TestCaseWithNesting {
@@ -172,6 +184,30 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 				}
 			}
 		}
+	}
+
+	private static class TestCaseWithNestingSuperClass {
+
+		@Nested
+		class NestedTestCase {
+
+			@Test
+			void successful() {
+			}
+
+			@Test
+			void failing() {
+				Assertions.fail("Something went horribly wrong");
+			}
+		}
+	}
+
+	private static class TestCaseWithInheritedNesting extends TestCaseWithNestingSuperClass {
+
+		// works if nested test class is inherited
+		// @Nested
+		// class MyNestedTestCase extends TestCaseWithNestingSuperClass.NestedTestCase { }
+
 	}
 
 }
