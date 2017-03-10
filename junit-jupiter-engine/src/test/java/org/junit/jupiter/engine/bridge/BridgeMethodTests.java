@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.bridge;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -58,8 +59,8 @@ class BridgeMethodTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void compareMethodExecutionSequenceOrder() {
-		String withoutBridgeMethods = execute(ChildWithoutBridgeMethods.class);
-		String withBridgeMethods = execute(ChildWithBridgeMethods.class);
+		String withoutBridgeMethods = execute(1, ChildWithoutBridgeMethods.class);
+		String withBridgeMethods = execute(1, ChildWithBridgeMethods.class);
 		assertEquals(withoutBridgeMethods, withBridgeMethods);
 	}
 
@@ -68,16 +69,35 @@ class BridgeMethodTests extends AbstractJupiterTestEngineTests {
 		return Arrays.asList(
 			dynamicTest("Byte", //
 				() -> assertEquals("[test(Byte) BEGIN, test(N), test(Byte) END.]", //
-					execute(ByteTestCase.class))),
+					execute(1, ByteTestCase.class))),
 			dynamicTest("Short", //
 				() -> assertEquals("[test(Short) BEGIN, test(N), test(Short) END.]", //
-					execute(ShortTestCase.class))));
+					execute(1, ShortTestCase.class))));
 	}
 
-	private String execute(Class<?> testClass) {
+	@Test
+	void inheritedNonGenericMethodsAreExecuted() {
+		String b = execute(4, AbstractNonGenericTests.B.class);
+		assertAll("Missing expected test(s) in sequence: " + b, //
+			() -> assertTrue(b.contains("A.test(Number)")), //
+			() -> assertTrue(b.contains("mA()")), //
+			() -> assertTrue(b.contains("mB()")), //
+			() -> assertTrue(b.contains("B.test(Byte)")) //
+		);
+		String c = execute(5, AbstractNonGenericTests.C.class);
+		assertAll("Missing expected test(s) in sequence: " + c, //
+			() -> assertTrue(c.contains("A.test(Number)")), //
+			() -> assertTrue(c.contains("mA()")), //
+			() -> assertTrue(c.contains("mB()")), //
+			() -> assertTrue(c.contains("mC()")), //
+			() -> assertTrue(c.contains("C.test(Byte)")) //
+		);
+	}
+
+	private String execute(int expectedTestFinishedCount, Class<?> testClass) {
 		sequence.clear();
 		ExecutionEventRecorder recorder = executeTestsForClass(testClass);
-		assertEquals(1, recorder.getTestFinishedCount());
+		assertEquals(expectedTestFinishedCount, recorder.getTestFinishedCount());
 		return sequence.toString();
 	}
 

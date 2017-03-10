@@ -673,10 +673,32 @@ public class ReflectionUtilsTests {
 		assertTrue(methods.stream().filter(Method::isBridge).count() == 0);
 	}
 
+	@Test
+	void isGeneric() throws Exception {
+		for (Method method : Generic.class.getMethods()) {
+			assertTrue(ReflectionUtils.isGeneric(method));
+		}
+		for (Method method : PublicClass.class.getMethods()) {
+			assertFalse(ReflectionUtils.isGeneric(method));
+		}
+	}
+
 	private static void createDirectories(Path... paths) throws IOException {
 		for (Path path : paths) {
 			Files.createDirectory(path);
 		}
+	}
+
+	interface Generic<A, B, C extends A> {
+		A foo();
+
+		B foo(A a, B b);
+
+		C foo(C[][] cs);
+
+		<X> int foo(X x);
+
+		<X> X foo(int i);
 	}
 
 	class ClassWithSyntheticMethod {

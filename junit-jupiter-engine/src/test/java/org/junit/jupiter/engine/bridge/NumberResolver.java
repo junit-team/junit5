@@ -32,6 +32,9 @@ class NumberResolver implements ParameterResolver {
 			throws ParameterResolutionException {
 
 		Class<?> type = parameterContext.getParameter().getType();
+		if (type == Number.class) {
+			return 42;
+		}
 		try {
 			return type.getMethod("valueOf", String.class).invoke(null, "123");
 		}

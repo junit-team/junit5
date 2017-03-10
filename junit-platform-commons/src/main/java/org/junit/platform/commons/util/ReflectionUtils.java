@@ -22,10 +22,13 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -723,7 +726,11 @@ public final class ReflectionUtils {
 		if (lower.getParameterCount() != upper.getParameterCount()) {
 			return false;
 		}
-		// Check for method sub-signatures.
+		// trivial case: parameter types exactly match
+		if (Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes())) {
+			return true;
+		}
+		// param count is equal, but types do not match exactly: check for method sub-signatures
 		// https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2
 		for (int i = 0; i < lower.getParameterCount(); i++) {
 			Class<?> lowerType = lower.getParameterTypes()[i];
@@ -732,7 +739,27 @@ public final class ReflectionUtils {
 				return false;
 			}
 		}
-		return true;
+		// lower is sub-signature of upper: check for generics in upper method
+		if (isGeneric(upper)) {
+			return true;
+		}
+		return false;
+	}
+
+	static boolean isGeneric(Method method) {
+		if (isGeneric(method.getGenericReturnType())) {
+			return true;
+		}
+		for (Type type : method.getGenericParameterTypes()) {
+			if (isGeneric(type)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean isGeneric(Type type) {
+		return type instanceof TypeVariable || type instanceof GenericArrayType;
 	}
 
 	private static <T extends AccessibleObject> T makeAccessible(T object) {
