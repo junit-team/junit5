@@ -21,8 +21,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,10 +59,10 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 	}
 
 	@Override
-	public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 		// grabbing the parent ensures the paremeters are stored in the same store.
 		return context.getParent().flatMap(ParameterizedExtension::parameters).map(
-			ParameterizedExtension::testTemplateContextsFromParameters).orElse(Collections.emptyIterator());
+			ParameterizedExtension::testTemplateContextsFromParameters).orElse(Stream.empty());
 	}
 
 	/**
@@ -204,8 +202,8 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 			m -> m.isAnnotationPresent(Parameterized.Parameters.class)).stream().findFirst();
 	}
 
-	private static Iterator<TestTemplateInvocationContext> testTemplateContextsFromParameters(Collection<Object[]> o) {
-		return o.stream().map(ParameterizedExtension::contextFactory).iterator();
+	private static Stream<TestTemplateInvocationContext> testTemplateContextsFromParameters(Collection<Object[]> o) {
+		return o.stream().map(ParameterizedExtension::contextFactory);
 	}
 
 	private static TestTemplateInvocationContext contextFactory(Object[] parameters) {
