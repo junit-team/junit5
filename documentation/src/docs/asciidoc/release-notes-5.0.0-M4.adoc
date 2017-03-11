@@ -27,6 +27,8 @@ on GitHub.
 * Introduced `getLegacyName()` in `TestIdentifier` and `TestDescriptor`.
   This allows the JUnit Platform Gradle Plugin and the Surefire Provider to resolve the class and
   method names through `getLegacyName()` instead of using the source location.
+* JAR files that contain spaces in their paths (`%20`) are now properly decoded before being
+  used in classpath scanning routines.
 
 ===== Deprecations and Breaking Changes
 
