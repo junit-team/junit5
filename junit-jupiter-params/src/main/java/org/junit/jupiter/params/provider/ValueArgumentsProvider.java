@@ -19,15 +19,15 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
-import org.junit.jupiter.params.support.AnnotationInitialized;
+import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.util.Preconditions;
 
-class ValueArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<ValueSource> {
+class ValueArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<ValueSource> {
 
 	private Object[] arguments;
 
 	@Override
-	public void initialize(ValueSource source) {
+	public void accept(ValueSource source) {
 		List<Object> arrays = Stream.of(source.strings(), source.ints(), source.longs(), source.doubles()) //
 				.filter(array -> Array.getLength(array) > 0) //
 				.collect(toList());

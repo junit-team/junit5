@@ -14,17 +14,17 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
-import org.junit.jupiter.params.support.AnnotationInitialized;
+import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
-class MethodArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<MethodSource> {
+class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<MethodSource> {
 
 	private String[] methodNames;
 
 	@Override
-	public void initialize(MethodSource annotation) {
+	public void accept(MethodSource annotation) {
 		methodNames = annotation.names();
 	}
 

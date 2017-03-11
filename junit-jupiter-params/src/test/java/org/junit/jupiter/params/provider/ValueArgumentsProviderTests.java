@@ -76,7 +76,7 @@ class ValueArgumentsProviderTests {
 		when(annotation.doubles()).thenReturn(doubles);
 
 		ValueArgumentsProvider provider = new ValueArgumentsProvider();
-		provider.initialize(annotation);
+		provider.accept(annotation);
 		return provider.arguments(null).map(Arguments::get);
 	}
 

@@ -30,7 +30,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class ParamsApiPlayground {
 
-	@ParameterizedTest
+	@ParameterizedTest(name = "{0}")
 	@EnumSource(TimeUnit.class)
 	void testWithParametersFromEnum(TimeUnit unit) {
 	}
@@ -51,8 +51,8 @@ class ParamsApiPlayground {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "foo, 1", "bar, 2", "'baz, qux', 3" })
-	void testWithParametersFromAnnotation(String parameter, int i) {
+	@CsvSource({ "foo, 1, 3", "bar, 2, 42", "'baz, qux', 3" })
+	void testWithParametersFromAnnotation(String parameter, int i, long j) {
 	}
 
 	@ParameterizedTest

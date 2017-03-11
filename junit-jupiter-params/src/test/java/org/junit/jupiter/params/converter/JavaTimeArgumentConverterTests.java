@@ -112,7 +112,7 @@ class JavaTimeArgumentConverterTests {
 		JavaTimeArgumentConverter converter = new JavaTimeArgumentConverter();
 		JavaTimeConversionPattern annotation = mock(JavaTimeConversionPattern.class);
 		when(annotation.value()).thenReturn(pattern);
-		converter.initialize(annotation);
+		converter.accept(annotation);
 
 		return converter.convert(input, targetClass);
 	}

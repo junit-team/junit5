@@ -11,9 +11,7 @@
 package org.junit.jupiter.params.support;
 
 import java.lang.annotation.Annotation;
+import java.util.function.Consumer;
 
-public interface AnnotationInitialized<A extends Annotation> {
-
-	void initialize(A annotation);
-
+public interface AnnotationConsumer<A extends Annotation> extends Consumer<A> {
 }
