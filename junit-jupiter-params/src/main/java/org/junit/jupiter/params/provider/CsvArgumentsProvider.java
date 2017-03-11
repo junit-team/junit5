@@ -17,15 +17,15 @@ import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
-import org.junit.jupiter.params.support.AnnotationInitialized;
+import org.junit.jupiter.params.support.AnnotationConsumer;
 
-class CsvArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<CsvSource> {
+class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvSource> {
 
 	private String[] lines;
 	private char delimiter;
 
 	@Override
-	public void initialize(CsvSource annotation) {
+	public void accept(CsvSource annotation) {
 		lines = annotation.value();
 		delimiter = annotation.delimiter();
 	}

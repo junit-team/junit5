@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
-import org.junit.jupiter.params.support.AnnotationInitialized;
+import org.junit.jupiter.params.support.AnnotationConsumer;
 
-class EnumArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<EnumSource> {
+class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<EnumSource> {
 
 	private Class<? extends Enum<?>> enumClass;
 	private Set<String> names = Collections.emptySet();
 
 	@Override
-	public void initialize(EnumSource annotation) {
+	public void accept(EnumSource annotation) {
 		enumClass = annotation.value();
 		if (annotation.names().length > 0) {
 			names = Stream.of(annotation.names()).collect(Collectors.toSet());

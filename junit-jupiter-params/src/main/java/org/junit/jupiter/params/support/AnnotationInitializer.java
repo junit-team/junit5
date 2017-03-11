@@ -28,8 +28,8 @@ public final class AnnotationInitializer {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T initialize(AnnotatedElement annotatedElement, T instance) {
-		if (instance instanceof AnnotationInitialized) {
-			Predicate<Method> methodPredicate = method -> method.getName().equals("initialize")
+		if (instance instanceof AnnotationConsumer) {
+			Predicate<Method> methodPredicate = method -> method.getName().equals("accept")
 					&& method.getParameterCount() == 1
 					&& Annotation.class.isAssignableFrom(method.getParameterTypes()[0]);
 			Method method = ReflectionUtils.findMethods(instance.getClass(), methodPredicate,
@@ -38,14 +38,14 @@ public final class AnnotationInitializer {
 			Annotation annotation = AnnotationUtils.findAnnotation(annotatedElement, annotationType) //
 					.orElseThrow(() -> new JUnitException(instance.getClass().getName() + " needs to be used with a "
 							+ annotationType.getName() + " annotation"));
-			callInitialize((AnnotationInitialized) instance, annotation);
+			callInitialize((AnnotationConsumer) instance, annotation);
 		}
 		return instance;
 	}
 
-	private static <A extends Annotation> void callInitialize(AnnotationInitialized<A> instance, A annotation) {
+	private static <A extends Annotation> void callInitialize(AnnotationConsumer<A> instance, A annotation) {
 		try {
-			instance.initialize(annotation);
+			instance.accept(annotation);
 		}
 		catch (Exception ex) {
 			throw new JUnitException("Failed to initialize instance: " + instance, ex);

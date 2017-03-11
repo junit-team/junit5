@@ -25,11 +25,11 @@ import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
-import org.junit.jupiter.params.support.AnnotationInitialized;
+import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
-class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationInitialized<CsvFileSource> {
+class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvFileSource> {
 
 	private final BiFunction<Class<?>, String, InputStream> inputStreamProvider;
 
@@ -46,7 +46,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationInitializ
 	}
 
 	@Override
-	public void initialize(CsvFileSource annotation) {
+	public void accept(CsvFileSource annotation) {
 		resources = annotation.resources();
 		charset = Charset.forName(annotation.encoding());
 		settings = new CsvParserSettings();

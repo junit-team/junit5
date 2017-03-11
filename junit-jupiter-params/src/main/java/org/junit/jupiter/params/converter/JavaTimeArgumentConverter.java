@@ -27,10 +27,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.jupiter.params.support.AnnotationInitialized;
+import org.junit.jupiter.params.support.AnnotationConsumer;
 
 class JavaTimeArgumentConverter extends SimpleArgumentConverter
-		implements AnnotationInitialized<JavaTimeConversionPattern> {
+		implements AnnotationConsumer<JavaTimeConversionPattern> {
 
 	private static final Map<Class<?>, TemporalQuery<?>> TEMPORAL_QUERIES;
 	static {
@@ -52,7 +52,7 @@ class JavaTimeArgumentConverter extends SimpleArgumentConverter
 	private String pattern;
 
 	@Override
-	public void initialize(JavaTimeConversionPattern annotation) {
+	public void accept(JavaTimeConversionPattern annotation) {
 		pattern = annotation.value();
 	}
 

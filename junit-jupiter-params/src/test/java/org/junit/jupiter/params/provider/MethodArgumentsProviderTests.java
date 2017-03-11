@@ -136,7 +136,7 @@ class MethodArgumentsProviderTests {
 		when(context.getTestClass()).thenReturn(Optional.ofNullable(testClass));
 
 		MethodArgumentsProvider provider = new MethodArgumentsProvider();
-		provider.initialize(annotation);
+		provider.accept(annotation);
 		return provider.arguments(context).map(Arguments::get);
 	}
 }
