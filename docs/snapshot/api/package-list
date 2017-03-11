@@ -10,6 +10,10 @@ org.junit.jupiter.engine.extension
 org.junit.jupiter.migrationsupport.rules
 org.junit.jupiter.migrationsupport.rules.adapter
 org.junit.jupiter.migrationsupport.rules.member
+org.junit.jupiter.params
+org.junit.jupiter.params.converter
+org.junit.jupiter.params.provider
+org.junit.jupiter.params.support
 org.junit.platform.commons
 org.junit.platform.commons.annotation
 org.junit.platform.commons.meta
