@@ -20,6 +20,7 @@ import static org.junit.platform.commons.util.ClassFileVisitor.CLASS_FILE_SUFFIX
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -78,7 +79,7 @@ class ClasspathScanner {
 			return packageName.isEmpty() // default package
 					|| getClassLoader().getResources(packagePath(packageName.trim())).hasMoreElements();
 		}
-		catch (Exception ex) {
+		catch (IOException | RuntimeException ex) {
 			return false;
 		}
 	}
@@ -127,7 +128,7 @@ class ClasspathScanner {
 		catch (PreconditionViolationException ex) {
 			throw ex;
 		}
-		catch (Exception ex) {
+		catch (URISyntaxException | IOException | RuntimeException ex) {
 			logWarning(ex, () -> "Error scanning files for URI " + baseUri);
 			return emptyList();
 		}
@@ -256,7 +257,7 @@ class ClasspathScanner {
 			}
 			return uris;
 		}
-		catch (Exception ex) {
+		catch (URISyntaxException | IOException | RuntimeException ex) {
 			logWarning(ex, () -> "Error reading URIs from class loader for base package " + basePackageName);
 			return emptyList();
 		}

@@ -13,6 +13,8 @@ package org.junit.platform.commons.util;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.Optional;
@@ -102,7 +104,7 @@ public final class PackageUtils {
 				return Optional.ofNullable(mainAttributes.getValue(name));
 			}
 		}
-		catch (Exception e) {
+		catch (URISyntaxException | IOException | RuntimeException e) {
 			return Optional.empty();
 		}
 	}
