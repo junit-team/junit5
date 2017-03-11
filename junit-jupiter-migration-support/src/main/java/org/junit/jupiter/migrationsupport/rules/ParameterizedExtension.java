@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -48,7 +47,7 @@ import org.junit.runners.Parameterized;
 public class ParameterizedExtension implements TestTemplateInvocationContextProvider, ParameterResolver {
 	private static ExtensionContext.Namespace parameters = ExtensionContext.Namespace.create(
 		ParameterizedExtension.class);;
-	private AtomicInteger parametersCollectionIndex = new AtomicInteger();
+	private int parametersCollectionIndex = 0;
 
 	/**
 	 * Indicate whether we can provide parameterized support.
@@ -93,7 +92,7 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 		int parameterIndex = parameterContext.getIndex();
 		//move to the next set of parametersFields
 		if (lastParameterToBeResolved(parameterContext)) {
-			this.parametersCollectionIndex.incrementAndGet();
+			this.parametersCollectionIndex++;
 		}
 
 		return parameters[parameterIndex];
@@ -111,10 +110,9 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 	 */
 	private Object[] resolveParametersForConstructor(ExtensionContext extensionContext, int parameterCount)
 			throws ParameterResolutionException {
-		return parameters(extensionContext).map(ArrayList::new).map(
-			l -> l.get(this.parametersCollectionIndex.get())).filter(
-				params -> params.length == parameterCount).orElseThrow(
-					ParameterizedExtension::unMatchedAmountOfParametersException);
+		return parameters(extensionContext).map(ArrayList::new).map(l -> l.get(this.parametersCollectionIndex)).filter(
+			params -> params.length == parameterCount).orElseThrow(
+				ParameterizedExtension::unMatchedAmountOfParametersException);
 	}
 
 	private static boolean hasCorrectParameterFields(ExtensionContext context) {
