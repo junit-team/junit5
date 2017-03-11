@@ -157,7 +157,7 @@ allprojects { subproj ->
 	}
 
 	checkstyle {
-		toolVersion = 6.11
+		toolVersion = '7.6'
 	}
 	checkstyleMain {
 		configFile = rootProject.file('src/checkstyle/checkstyleMain.xml')
