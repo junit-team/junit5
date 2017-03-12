@@ -85,14 +85,23 @@ public final class CollectionUtils {
 	}
 
 	/**
-	 * Convert a well-known object into a {@code Stream}.
+	 * Convert an object of one of the following supported types into a {@code Stream}.
 	 *
-	 * @param object the object to convert into a stream
+	 * <ul>
+	 * <li>{@link Stream}</li>
+	 * <li>{@link Collection}</li>
+	 * <li>{@link Iterable}</li>
+	 * <li>{@link Iterator}</li>
+	 * <li>{@link Object} array</li>
+	 * </ul>
+	 *
+	 * @param object the object to convert into a stream; never {@code null}
 	 * @return the resulting stream
-	 * @throws PreconditionViolationException if the object is neither a Stream,
-	 * a Collection, an Iterable, an Iterator, nor an Object Array.
+	 * @throws PreconditionViolationException if the supplied object is {@code null}
+	 * or not one of the supported types
 	 */
 	public static Stream<?> toStream(Object object) {
+		Preconditions.notNull(object, "Object must not be null");
 		if (object instanceof Stream) {
 			return (Stream<?>) object;
 		}

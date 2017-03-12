@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -70,10 +69,23 @@ class CollectionUtilsTests {
 
 	@Test
 	void toUnmodifiableListThrowsOnMutation() {
-		assertThrows(UnsupportedOperationException.class, () -> {
-			List<Integer> numbers = IntStream.range(0, 10).mapToObj(Integer::valueOf).collect(toUnmodifiableList());
-			numbers.set(0, 1);
-		});
+		List<Integer> numbers = Stream.of(1).collect(toUnmodifiableList());
+		assertThrows(UnsupportedOperationException.class, () -> numbers.clear());
+	}
+
+	@Test
+	void toStreamWithNull() {
+		Exception exception = assertThrows(PreconditionViolationException.class, () -> CollectionUtils.toStream(null));
+
+		assertThat(exception).hasMessage("Object must not be null");
+	}
+
+	@Test
+	void toStreamWithUnsupportedObjectType() {
+		Exception exception = assertThrows(PreconditionViolationException.class,
+			() -> CollectionUtils.toStream("unknown"));
+
+		assertThat(exception).hasMessage("Cannot convert instance of java.lang.String into a Stream: unknown");
 	}
 
 	@Test
@@ -90,6 +102,7 @@ class CollectionUtilsTests {
 	void toStreamWithCollection() {
 		AtomicBoolean collectionStreamClosed = new AtomicBoolean(false);
 		Collection<String> input = new ArrayList<String>() {
+
 			{
 				add("foo");
 				add("bar");
@@ -112,7 +125,14 @@ class CollectionUtilsTests {
 	@SuppressWarnings("unchecked")
 	@Test
 	void toStreamWithIterable() {
-		Iterable<String> input = asList("foo", "bar");
+
+		Iterable<String> input = new Iterable<String>() {
+
+			@Override
+			public Iterator<String> iterator() {
+				return asList("foo", "bar").iterator();
+			}
+		};
 
 		Stream<String> result = (Stream<String>) CollectionUtils.toStream(input);
 
@@ -132,21 +152,9 @@ class CollectionUtilsTests {
 	@SuppressWarnings("unchecked")
 	@Test
 	void toStreamWithArray() {
-		String[] input = { "foo", "bar" };
-
-		Stream<String> result = (Stream<String>) CollectionUtils.toStream(input);
+		Stream<String> result = (Stream<String>) CollectionUtils.toStream(new String[] { "foo", "bar" });
 
 		assertThat(result).containsExactly("foo", "bar");
-	}
-
-	@Test
-	void toStreamWithUnknownObject() {
-		Object unknownObject = "unknown";
-
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> CollectionUtils.toStream(unknownObject));
-
-		assertThat(exception).hasMessage("Cannot convert instance of java.lang.String into a Stream: unknown");
 	}
 
 }
