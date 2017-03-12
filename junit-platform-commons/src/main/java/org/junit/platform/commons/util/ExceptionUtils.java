@@ -71,7 +71,7 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * Reads the stacktrace of the supplied {@link Throwable} into a String.
+	 * Read the stacktrace of the supplied {@link Throwable} into a String.
 	 */
 	public static String readStackTrace(Throwable throwable) {
 		Preconditions.notNull(throwable, "Throwable must not be null");
