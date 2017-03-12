@@ -77,8 +77,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, testExtensionContext,
 				context.getExtensionRegistry());
 
-			try (Stream<DynamicTest> dynamicTestStream = toDynamicTestStream(testExtensionContext,
-				testFactoryMethodResult)) {
+			try (Stream<DynamicTest> dynamicTestStream = toDynamicTestStream(testFactoryMethodResult)) {
 				AtomicInteger index = new AtomicInteger();
 				dynamicTestStream.forEach(
 					dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), dynamicTestExecutor));
@@ -90,8 +89,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Stream<DynamicTest> toDynamicTestStream(TestExtensionContext testExtensionContext,
-			Object testFactoryMethodResult) {
+	private Stream<DynamicTest> toDynamicTestStream(Object testFactoryMethodResult) {
 		try {
 			return (Stream<DynamicTest>) CollectionUtils.toStream(testFactoryMethodResult);
 		}
