@@ -568,10 +568,6 @@ public final class ReflectionUtils {
 		}
 	}
 
-	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
-		return findMethod(clazz, methodName, resolveParameterTypes(parameterTypeNames));
-	}
-
 	private static Class<?>[] resolveParameterTypes(String parameterTypeNames) {
 		if (StringUtils.isBlank(parameterTypeNames)) {
 			return EMPTY_CLASS_ARRAY;
@@ -589,6 +585,46 @@ public final class ReflectionUtils {
 			() -> new JUnitException(String.format("Failed to load parameter type [%s]", typeName)));
 	}
 
+	/**
+	 * Find the first {@link Method} of the supplied class or interface that
+	 * meets the specified criteria, beginning with the specified class or
+	 * interface and traversing up the type hierarchy until such a method is
+	 * found or the type hierarchy is exhausted.
+	 *
+	 * <p>Note, however, that the current algorithm traverses the entire
+	 * type hierarchy even after having found a match.
+	 *
+	 * @param clazz the class or interface in which to find the method; never {@code null}
+	 * @param methodName the name of the method to find; never {@code null} or empty
+	 * @param parameterTypeNames the fully qualified names of the types of parameters
+	 * accepted by the method, if any, provided as a comma-separated list
+	 * @return an {@code Optional} containing the method found; never {@code null}
+	 * but potentially empty if no such method could be found
+	 * @see #findMethod(Class, String, Class...)
+	 * @see HierarchyTraversalMode#BOTTOM_UP
+	 */
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
+		return findMethod(clazz, methodName, resolveParameterTypes(parameterTypeNames));
+	}
+
+	/**
+	 * Find the first {@link Method} of the supplied class or interface that
+	 * meets the specified criteria, beginning with the specified class or
+	 * interface and traversing up the type hierarchy until such a method is
+	 * found or the type hierarchy is exhausted.
+	 *
+	 * <p>Note, however, that the current algorithm traverses the entire
+	 * type hierarchy even after having found a match.
+	 *
+	 * @param clazz the class or interface in which to find the method; never {@code null}
+	 * @param methodName the name of the method to find; never {@code null} or empty
+	 * @param parameterTypes the types of parameters accepted by the method, if any;
+	 * never {@code null}
+	 * @return an {@code Optional} containing the method found; never {@code null}
+	 * but potentially empty if no such method could be found
+	 * @see #findMethod(Class, String, String)
+	 * @see HierarchyTraversalMode#BOTTOM_UP
+	 */
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "method name must not be null or empty");
@@ -596,15 +632,33 @@ public final class ReflectionUtils {
 		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
 				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
 
-		List<Method> candidates = findMethods(clazz, nameAndParameterTypesMatch);
+		List<Method> candidates = findMethods(clazz, nameAndParameterTypesMatch, BOTTOM_UP);
 		return (!candidates.isEmpty() ? Optional.of(candidates.get(0)) : Optional.empty());
 	}
 
+	/**
+	 * Find all {@linkplain Method methods} of the supplied class or interface
+	 * that match the specified {@code predicate}, using top-down search semantics
+	 * within the type hierarchy.
+	 *
+	 * @param clazz the class or interface in which to find the methods; never {@code null}
+	 * @param predicate the method filter; never {@code null}
+	 * @return an immutable list of all such methods found; never {@code null}
+	 * @see HierarchyTraversalMode#TOP_DOWN
+	 * @see #findMethods(Class, Predicate, HierarchyTraversalMode)
+	 */
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate) {
 		return findMethods(clazz, predicate, TOP_DOWN);
 	}
 
 	/**
+	 * Find all {@linkplain Method methods} of the supplied class or interface
+	 * that match the specified {@code predicate}.
+	 *
+	 * @param clazz the class or interface in which to find the methods; never {@code null}
+	 * @param predicate the method filter; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @return an immutable list of all such methods found; never {@code null}
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,

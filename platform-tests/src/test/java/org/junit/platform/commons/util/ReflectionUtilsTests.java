@@ -467,6 +467,9 @@ public class ReflectionUtilsTests {
 		assertThat(ReflectionUtils.findMethod(Files.class, "copy", Path.class, OutputStream.class)).contains(
 			Files.class.getMethod("copy", Path.class, OutputStream.class));
 
+		assertThat(ReflectionUtils.findMethod(MethodShadowingChild.class, "method1", String.class)).contains(
+			MethodShadowingChild.class.getMethod("method1", String.class));
+
 		RuntimeException exception = assertThrows(PreconditionViolationException.class,
 			() -> ReflectionUtils.findMethod(String.class, null));
 		assertThat(exception).hasMessage("method name must not be null or empty");
@@ -703,6 +706,7 @@ public class ReflectionUtilsTests {
 	}
 
 	class ClassWithSyntheticMethod {
+
 		Runnable foo = InterfaceWithStaticMethod::foo;
 		Runnable bar = StaticClass::staticMethod;
 		Comparable<Number> synthetic = number -> 0;
