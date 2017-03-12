@@ -11,7 +11,7 @@
 package org.junit.jupiter.params.support;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.util.ReflectionUtils.*;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 
 import java.lang.annotation.Annotation;
