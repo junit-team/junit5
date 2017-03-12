@@ -689,16 +689,17 @@ public class ReflectionUtilsTests {
 		}
 	}
 
-	interface Generic<A, B, C extends A> {
-		A foo();
+	interface Generic<X, Y, Z extends X> {
 
-		B foo(A a, B b);
+		X foo();
 
-		C foo(C[][] cs);
+		Y foo(X x, Y y);
 
-		<X> int foo(X x);
+		Z foo(Z[][] zees);
 
-		<X> X foo(int i);
+		<T> int foo(T t);
+
+		<T> T foo(int i);
 	}
 
 	class ClassWithSyntheticMethod {
