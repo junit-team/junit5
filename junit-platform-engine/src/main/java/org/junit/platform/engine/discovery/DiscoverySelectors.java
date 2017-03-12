@@ -46,8 +46,7 @@ import org.junit.platform.engine.UniqueId;
 @API(Experimental)
 public final class DiscoverySelectors {
 
-	private static final Pattern FULLY_QUALIFIED_METHOD_NAME_PATTERN = Pattern.compile(
-		"([^#]+)#([^(]+)(?:\\((.*)\\))?");
+	private static final Pattern fullyQualifiedMethodNamePattern = Pattern.compile("([^#]+)#([^(]+)(?:\\((.*)\\))?");
 
 	///CLOVER:OFF
 	private DiscoverySelectors() {
@@ -312,7 +311,7 @@ public final class DiscoverySelectors {
 	public static MethodSelector selectMethod(String fullyQualifiedMethodName) throws PreconditionViolationException {
 		Preconditions.notBlank(fullyQualifiedMethodName, "fullyQualifiedMethodName must not be null or blank");
 
-		Matcher matcher = FULLY_QUALIFIED_METHOD_NAME_PATTERN.matcher(fullyQualifiedMethodName);
+		Matcher matcher = fullyQualifiedMethodNamePattern.matcher(fullyQualifiedMethodName);
 		Preconditions.condition(matcher.matches(),
 			fullyQualifiedMethodName + " is not a valid fully qualified method name");
 
