@@ -19,6 +19,9 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
+/**
+ * @since 5.0
+ */
 class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<MethodSource> {
 
 	private String[] methodNames;
@@ -34,7 +37,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 				.orElseThrow(() -> new JUnitException("Cannot invoke method without test class"));
 		// @formatter:off
 		return Arrays.stream(methodNames)
-				.map(methodName -> ReflectionUtils.findMethod(testClass, methodName) //
+				.map(methodName -> ReflectionUtils.findMethod(testClass, methodName)
                         .orElseThrow(() -> new JUnitException("Could not find method: " + methodName)))
 				.map(method -> ReflectionUtils.invokeMethod(method, null))
 				.flatMap(CollectionUtils::toStream)

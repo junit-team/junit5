@@ -11,6 +11,8 @@
 package org.junit.jupiter.params.support;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.ReflectionUtils.*;
+import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -20,35 +22,40 @@ import java.util.function.Predicate;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.AnnotationUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public final class AnnotationInitializer {
 
-	@SuppressWarnings("unchecked")
+	// @formatter:off
+	private static final Predicate<Method> isAnnotationConsumerAcceptMethod = method ->
+			method.getName().equals("accept")
+			&& method.getParameterCount() == 1
+			&& method.getParameterTypes()[0].isAnnotation();
+	// @formatter:on
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> T initialize(AnnotatedElement annotatedElement, T instance) {
 		if (instance instanceof AnnotationConsumer) {
-			Predicate<Method> methodPredicate = method -> method.getName().equals("accept")
-					&& method.getParameterCount() == 1
-					&& Annotation.class.isAssignableFrom(method.getParameterTypes()[0]);
-			Method method = ReflectionUtils.findMethods(instance.getClass(), methodPredicate,
-				HierarchyTraversalMode.BOTTOM_UP).get(0);
+			Method method = findMethods(instance.getClass(), isAnnotationConsumerAcceptMethod, BOTTOM_UP).get(0);
 			Class<? extends Annotation> annotationType = (Class<? extends Annotation>) method.getParameterTypes()[0];
 			Annotation annotation = AnnotationUtils.findAnnotation(annotatedElement, annotationType) //
-					.orElseThrow(() -> new JUnitException(instance.getClass().getName() + " needs to be used with a "
-							+ annotationType.getName() + " annotation"));
-			callInitialize((AnnotationConsumer) instance, annotation);
+					.orElseThrow(() -> new JUnitException(instance.getClass().getName()
+							+ " must be used with an annotation of type " + annotationType.getName()));
+			initializeAnnotationConsumer((AnnotationConsumer) instance, annotation);
 		}
 		return instance;
 	}
 
-	private static <A extends Annotation> void callInitialize(AnnotationConsumer<A> instance, A annotation) {
+	private static <A extends Annotation> void initializeAnnotationConsumer(AnnotationConsumer<A> instance,
+			A annotation) {
 		try {
 			instance.accept(annotation);
 		}
 		catch (Exception ex) {
-			throw new JUnitException("Failed to initialize instance: " + instance, ex);
+			throw new JUnitException("Failed to initialize AnnotationConsumer: " + instance, ex);
 		}
 	}
 

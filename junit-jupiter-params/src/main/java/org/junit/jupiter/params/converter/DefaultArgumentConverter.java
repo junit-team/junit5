@@ -48,6 +48,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		// nothing to initialize
 	}
 
+	@Override
 	protected Object convert(Object input, Class<?> targetClass) {
 		if (input == null) {
 			if (targetClass.isPrimitive()) {
