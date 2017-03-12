@@ -17,10 +17,15 @@ import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumW
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.PreconditionViolationException;
 
+/**
+ * @since 5.0
+ */
 class EnumArgumentsProviderTests {
 
 	@Test
@@ -46,16 +51,16 @@ class EnumArgumentsProviderTests {
 
 	@Test
 	void duplicateConstantNameIsDetected() {
-		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+		Exception exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(EnumWithTwoConstants.class, "FOO", "BAR", "FOO"));
-		assertThat(exception).hasMessageContaining("Duplicate constant name(s) found");
+		assertThat(exception).hasMessageContaining("Duplicate enum constant name(s) found");
 	}
 
 	@Test
 	void invalidConstantNameIsDetected() {
-		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+		Exception exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(EnumWithTwoConstants.class, "F00", "B4R"));
-		assertThat(exception).hasMessageContaining("Invalid constant name(s) found");
+		assertThat(exception).hasMessageContaining("Invalid enum constant name(s) found");
 	}
 
 	enum EnumWithTwoConstants {
@@ -66,6 +71,8 @@ class EnumArgumentsProviderTests {
 		EnumSource annotation = mock(EnumSource.class);
 		when(annotation.value()).thenAnswer(invocation -> enumClass);
 		when(annotation.names()).thenAnswer(invocation -> names);
+		when(annotation.toString()).thenReturn(String.format("@EnumSource(value=%s.class, names={%s})",
+			enumClass.getSimpleName(), Arrays.toString(names)));
 
 		EnumArgumentsProvider provider = new EnumArgumentsProvider();
 		provider.accept(annotation);

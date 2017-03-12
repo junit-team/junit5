@@ -10,46 +10,48 @@
 
 package org.junit.jupiter.params.provider;
 
-import java.util.Arrays;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toSet;
+
 import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import org.junit.platform.commons.util.Preconditions;
 
+/**
+ * @since 5.0
+ */
 class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<EnumSource> {
 
 	private Class<? extends Enum<?>> enumClass;
 	private Set<String> names = Collections.emptySet();
 
 	@Override
-	public void accept(EnumSource annotation) {
-		enumClass = annotation.value();
-		if (annotation.names().length > 0) {
-			names = Stream.of(annotation.names()).collect(Collectors.toSet());
-			if (names.size() != annotation.names().length) {
-				throw new IllegalArgumentException(
-					"Duplicate constant name(s) found in: " + Arrays.asList(annotation.names()));
-			}
-			@SuppressWarnings("rawtypes")
-			Set<String> allSet = Arrays.stream(enumClass.getEnumConstants()).map(Enum::name).collect(
-				Collectors.toSet());
-			if (!allSet.containsAll(names)) {
-				throw new IllegalArgumentException(
-					"Invalid constant name(s) found in: " + names + ". Valid names are: " + allSet);
-			}
-		}
-	}
+	public void accept(EnumSource enumSource) {
+		enumClass = enumSource.value();
+		if (enumSource.names().length > 0) {
 
-	private boolean select(Enum<?> constant) {
-		return names == Collections.EMPTY_SET || names.contains(constant.name());
+			names = stream(enumSource.names()).collect(toSet());
+			Preconditions.condition(names.size() == enumSource.names().length,
+				() -> "Duplicate enum constant name(s) found in annotation: " + enumSource);
+
+			Set<String> allSet = stream(enumClass.getEnumConstants()).map(Enum::name).collect(toSet());
+			Preconditions.condition(allSet.containsAll(names),
+				() -> "Invalid enum constant name(s) found in annotation: " + enumSource + ". Valid names include: "
+						+ allSet);
+		}
 	}
 
 	@Override
 	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
-		return Arrays.stream(enumClass.getEnumConstants()).filter(this::select).map(ObjectArrayArguments::create);
+		return stream(enumClass.getEnumConstants()).filter(this::select).map(ObjectArrayArguments::create);
+	}
+
+	private boolean select(Enum<?> constant) {
+		return names == Collections.EMPTY_SET || names.contains(constant.name());
 	}
 
 }
