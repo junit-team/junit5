@@ -63,18 +63,18 @@ public final class CollectionUtils {
 	}
 
 	/**
-	 * Returns a {@code Collector} that accumulates the input elements into a
+	 * Return a {@code Collector} that accumulates the input elements into a
 	 * new unmodifiable list, in encounter order.
 	 *
 	 * <p>There are no guarantees on the type or serializability of the list
 	 * returned, so if more control over the returned list is required,
 	 * consider creating a new {@code Collector} implementation like the
 	 * following:
-	 * <pre>{@code
-	 *     public static <T> Collector<T, ?, List<T>> toUnmodifiableList(Supplier<List<T>> listSupplier) {
-	 *         return collectingAndThen(toCollection(listSupplier), Collections::unmodifiableList);
-	 *     }
-	 * }</pre>
+	 * <pre class="code">
+	 * public static &lt;T&gt; Collector&lt;T, ?, List&lt;T&gt;&gt; toUnmodifiableList(Supplier&lt;List&lt;T&gt;&gt; listSupplier) {
+	 *     return Collectors.collectingAndThen(Collectors.toCollection(listSupplier), Collections::unmodifiableList);
+	 * }
+	 * </pre>
 	 *
 	 * @param <T> the type of the input elements
 	 * @return a {@code Collector} which collects all the input elements into
@@ -111,4 +111,5 @@ public final class CollectionUtils {
 		throw new PreconditionViolationException(
 			"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object);
 	}
+
 }
