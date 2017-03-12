@@ -30,6 +30,7 @@ class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Enu
 	private Set<String> names = Collections.emptySet();
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public void accept(EnumSource enumSource) {
 		enumClass = enumSource.value();
 		if (enumSource.names().length > 0) {
