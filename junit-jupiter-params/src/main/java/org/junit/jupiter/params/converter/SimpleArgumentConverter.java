@@ -12,13 +12,16 @@ package org.junit.jupiter.params.converter;
 
 import org.junit.jupiter.api.extension.ParameterContext;
 
+/**
+ * @since 5.0
+ */
 public abstract class SimpleArgumentConverter implements ArgumentConverter {
 
 	@Override
-	public final Object convert(Object input, ParameterContext context) throws ArgumentConversionException {
-		return convert(input, context.getParameter().getType());
+	public final Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+		return convert(source, context.getParameter().getType());
 	}
 
-	protected abstract Object convert(Object input, Class<?> targetType);
+	protected abstract Object convert(Object source, Class<?> targetType);
 
 }

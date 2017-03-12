@@ -26,7 +26,6 @@ import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,73 +35,76 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
 
-	private final List<StringConversion> stringConversions = unmodifiableList(
-		asList(new PrimitiveStringConversion(), new EnumStringConversion(), new JavaTimeStringConversion()));
+	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(
+		asList(new StringToPrimitiveConverter(), new StringToEnumConverter(), new StringToJavaTimeConverter()));
 
 	private DefaultArgumentConverter() {
 		// nothing to initialize
 	}
 
 	@Override
-	protected Object convert(Object input, Class<?> targetClass) {
-		if (input == null) {
-			if (targetClass.isPrimitive()) {
+	protected Object convert(Object source, Class<?> targetType) {
+		if (source == null) {
+			if (targetType.isPrimitive()) {
 				throw new ArgumentConversionException(
-					"Cannot convert null to primitive value of type " + targetClass.getName());
+					"Cannot convert null to primitive value of type " + targetType.getName());
 			}
 			return null;
 		}
-		return convertToReferenceType(input, toWrapperType(targetClass));
+		return convertToTargetType(source, toWrapperType(targetType));
 	}
 
-	private Class<?> toWrapperType(Class<?> targetClass) {
-		Class<?> wrapperType = ReflectionUtils.getWrapperType(targetClass);
-		return wrapperType != null ? wrapperType : targetClass;
+	private Class<?> toWrapperType(Class<?> targetType) {
+		Class<?> wrapperType = ReflectionUtils.getWrapperType(targetType);
+		return wrapperType != null ? wrapperType : targetType;
 	}
 
-	private Object convertToReferenceType(Object input, Class<?> targetClass) {
-		if (targetClass.isInstance(input)) {
-			return input;
+	private Object convertToTargetType(Object source, Class<?> targetType) {
+		if (targetType.isInstance(source)) {
+			return source;
 		}
-		if (input instanceof String) {
-			Optional<StringConversion> conversion = stringConversions.stream().filter(
-				candidate -> candidate.isResponsible(targetClass)).findFirst();
-			if (conversion.isPresent()) {
+		if (source instanceof String) {
+			Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
+				candidate -> candidate.canConvert(targetType)).findFirst();
+			if (converter.isPresent()) {
 				try {
-					return conversion.get().convert((String) input, targetClass);
+					return converter.get().convert((String) source, targetType);
 				}
 				catch (Exception ex) {
 					throw new ArgumentConversionException(
-						"Error converting String to type " + targetClass.getName() + ": " + input, ex);
+						"Failed to convert String [" + source + "] to type " + targetType.getName(), ex);
 				}
 			}
 		}
 		throw new ArgumentConversionException("No implicit conversion to convert object of type "
-				+ input.getClass().getName() + " to type " + targetClass.getName());
+				+ source.getClass().getName() + " to type " + targetType.getName());
 	}
 
-	interface StringConversion {
+	interface StringToObjectConverter {
 
-		boolean isResponsible(Class<?> targetClass);
+		boolean canConvert(Class<?> targetType);
 
-		Object convert(String input, Class<?> targetClass) throws Exception;
+		Object convert(String source, Class<?> targetType) throws Exception;
 
 	}
 
-	static class PrimitiveStringConversion implements StringConversion {
+	static class StringToPrimitiveConverter implements StringToObjectConverter {
 
 		private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
 		static {
 			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
 			converters.put(Boolean.class, Boolean::valueOf);
-			converters.put(Character.class, input -> {
-				Preconditions.condition(input.length() == 1, () -> "String must have length of 1: " + input);
-				return input.charAt(0);
+			converters.put(Character.class, source -> {
+				Preconditions.condition(source.length() == 1, () -> "String must have length of 1: " + source);
+				return source.charAt(0);
 			});
 			converters.put(Byte.class, Byte::valueOf);
 			converters.put(Short.class, Short::valueOf);
@@ -114,39 +116,39 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		}
 
 		@Override
-		public boolean isResponsible(Class<?> targetClass) {
-			return CONVERTERS.containsKey(targetClass);
+		public boolean canConvert(Class<?> targetType) {
+			return CONVERTERS.containsKey(targetType);
 		}
 
 		@Override
-		public Object convert(String input, Class<?> targetClass) {
-			return CONVERTERS.get(targetClass).apply(input);
+		public Object convert(String source, Class<?> targetType) {
+			return CONVERTERS.get(targetType).apply(source);
 		}
 	}
 
-	static class EnumStringConversion implements StringConversion {
+	static class StringToEnumConverter implements StringToObjectConverter {
 
 		@Override
-		public boolean isResponsible(Class<?> targetClass) {
-			return targetClass.isEnum();
+		public boolean canConvert(Class<?> targetType) {
+			return targetType.isEnum();
 		}
 
 		@Override
-		public Object convert(String input, Class<?> targetClass) throws Exception {
-			return valueOf(targetClass, input);
+		public Object convert(String source, Class<?> targetType) throws Exception {
+			return valueOf(targetType, source);
 		}
 
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		private Object valueOf(Class targetClass, String input) {
-			return Enum.valueOf(targetClass, input);
+		private Object valueOf(Class targetType, String source) {
+			return Enum.valueOf(targetType, source);
 		}
 	}
 
-	static class JavaTimeStringConversion implements StringConversion {
+	static class StringToJavaTimeConverter implements StringToObjectConverter {
 
 		private static final Map<Class<?>, Function<CharSequence, ?>> CONVERTERS;
 		static {
-			Map<Class<?>, Function<CharSequence, ?>> converters = new LinkedHashMap<>();
+			Map<Class<?>, Function<CharSequence, ?>> converters = new HashMap<>();
 			converters.put(Instant.class, Instant::parse);
 			converters.put(LocalDate.class, LocalDate::parse);
 			converters.put(LocalDateTime.class, LocalDateTime::parse);
@@ -160,13 +162,14 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		}
 
 		@Override
-		public boolean isResponsible(Class<?> targetClass) {
-			return CONVERTERS.containsKey(targetClass);
+		public boolean canConvert(Class<?> targetType) {
+			return CONVERTERS.containsKey(targetType);
 		}
 
 		@Override
-		public Object convert(String input, Class<?> targetClass) throws Exception {
-			return CONVERTERS.get(targetClass).apply(input);
+		public Object convert(String source, Class<?> targetType) throws Exception {
+			return CONVERTERS.get(targetType).apply(source);
 		}
 	}
+
 }
