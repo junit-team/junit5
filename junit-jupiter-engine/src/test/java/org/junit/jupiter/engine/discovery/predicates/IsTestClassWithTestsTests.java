@@ -20,6 +20,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestTemplate;
 
 public class IsTestClassWithTestsTests {
 
@@ -40,6 +41,10 @@ public class IsTestClassWithTestsTests {
 		assertTrue(isTestClassWithTests.test(ClassWithNestedTestCases.class));
 	}
 
+	@Test
+	void classWithTestTemplateEvaluatesToTrue() {
+		assertTrue(isTestClassWithTests.test(ClassWithTestTemplate.class));
+	}
 }
 
 //class name must not end with 'Tests', otherwise it would be picked up by the suite
@@ -80,4 +85,13 @@ class ClassWithNestedTestCases {
 		}
 
 	}
+}
+
+//class name must not end with 'Tests', otherwise it would be picked up by the suite
+class ClassWithTestTemplate {
+
+	@TestTemplate
+	void first(int a) {
+	}
+
 }
