@@ -42,9 +42,15 @@ public class AssertionsAssertLinesMatchTests {
 
 	@Test
 	void assertLinesMatchesUsingFastForwardCommand() {
-		List<String> expected = Arrays.asList("first line", "{{ skip lines until next matches }}", "last line");
+		List<String> expected = Arrays.asList("first line", ">> skip lines until next matches >>", "last line");
 		List<String> actual = Arrays.asList("first line", "second line", "third line", "last line");
 		AssertLinesMatch.assertLinesMatch(expected, actual);
 	}
 
+	@Test
+	void assertLinesMatchesUsingFastForwardCommandWithLimit() {
+		List<String> expected = Arrays.asList("first line", ">> 1 >>", "last line");
+		List<String> actual = Arrays.asList("first line", "skipped", "last line");
+		AssertLinesMatch.assertLinesMatch(expected, actual);
+	}
 }

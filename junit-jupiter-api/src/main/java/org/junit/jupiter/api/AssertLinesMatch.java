@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.junit.platform.commons.util.Preconditions;
+import org.opentest4j.AssertionFailedError;
 
 /**
  * {@code AssertLinesMatch} is a collection of utility methods that support asserting
@@ -53,18 +54,21 @@ class AssertLinesMatch {
 
 		// simple case: both list are equally sized, compare them line-by-line
 		if (expectedSize == actualSize) {
-			for (int i = 0; i < expectedSize; i++) {
-				assertMatches(expectedLines.get(i), actualLines.get(i), i, i);
+			try {
+				for (int i = 0; i < expectedSize; i++) {
+					assertMatches(expectedLines.get(i), actualLines.get(i), i, i);
+				}
+				return;
 			}
-			return;
+			catch (AssertionFailedError ignore) {
+				// fall through and try with fast-forward support
+			}
 		}
 
-		assertLinesMatchWithDSL(expectedLines, actualLines);
+		assertLinesMatchWithFastForward(expectedLines, actualLines);
 	}
 
-	private static void assertLinesMatchWithDSL(List<String> expectedLines, List<String> actualLines) {
-		assert expectedLines.size() < actualLines.size() : "unexpected lines sizes";
-
+	private static void assertLinesMatchWithFastForward(List<String> expectedLines, List<String> actualLines) {
 		for (int e = 0, a = 0; e < expectedLines.size() && a < actualLines.size(); e++, a++) {
 			String expectedLine = expectedLines.get(e);
 			String actualLine = actualLines.get(a);
@@ -74,6 +78,7 @@ class AssertLinesMatch {
 			}
 			// fast forward markers found in expected line: fast forward actual line until next match
 			if (isFastForwardLine(expectedLine.trim())) {
+				int fastForwardLimit = parseFastForwardLimit(expectedLine);
 				int nextExpectedIndex = e + 1;
 				if (nextExpectedIndex >= expectedLines.size()) {
 					// trivial case: marker was last line in expected list
@@ -83,6 +88,9 @@ class AssertLinesMatch {
 				int ahead = a;
 				while (!matches(expectedLine, actualLine, false)) {
 					actualLine = actualLines.get(ahead++);
+					if (ahead - a > fastForwardLimit) {
+						break;
+					}
 					if (ahead > actualLines.size()) {
 						fail("ran out of actual bounds");
 					}
@@ -96,12 +104,17 @@ class AssertLinesMatch {
 	}
 
 	private static boolean isFastForwardLine(String line) {
-		return line.equals("S T A C K T R A C E") || line.startsWith("{{") && line.endsWith("}}");
+		return line.equals("S T A C K T R A C E") || line.startsWith(">>") && line.endsWith(">>");
 	}
 
-	private static int getUpperLimit(String fastForwardLine) {
-		// TODO implement and use
-		return Integer.MAX_VALUE;
+	private static int parseFastForwardLimit(String fastForwardLine) {
+		String text = fastForwardLine.trim().substring(2, fastForwardLine.length() - 2).trim();
+		try {
+			return Integer.parseInt(text);
+		}
+		catch (NumberFormatException e) {
+			return Integer.MAX_VALUE;
+		}
 	}
 
 	private static void assertMatches(String expectedLine, String actualLine, int expectedIndex, int actualIndex) {
