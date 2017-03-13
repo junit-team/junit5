@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -868,6 +869,12 @@ public final class Assertions {
 	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual,
 			Supplier<String> messageSupplier) {
 		AssertIterableEquals.assertIterableEquals(expected, actual, messageSupplier);
+	}
+
+	// --- assertLinesMatch ----------------------------------------------------
+
+	public static void assertLinesMatch(List<String> expected, List<String> actual) {
+		AssertLinesMatch.assertLinesMatch(expected, actual);
 	}
 
 	// --- assertNotEquals -----------------------------------------------------
