@@ -13,8 +13,6 @@ package org.junit.platform.console;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
@@ -30,10 +28,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
@@ -211,85 +207,8 @@ class ConsoleDetailsTests {
 
 			List<String> expectedLines = Files.readAllLines(path, UTF_8);
 			List<String> actualLines = asList(result.out.split("\\R"));
-			int expectedSize = expectedLines.size();
-			int actualSize = actualLines.size();
 
-			// trivial case: when expecting more then actual produced lines, something is wrong
-			if (expectedSize > actualSize) {
-				// use standard assertEquals(Object, Object, message) to let IDEs present the difference
-				assertEquals(String.join(System.lineSeparator(), expectedLines), result.out, //
-					"more lines expected [" + expectedSize + "] then actually produced [" + actualSize + "]");
-				fail("should not happen as expectedLines != result.out was assumed");
-			}
-
-			// simple case: both list are equally sized, just compare line-by-line
-			if (expectedSize == actualSize) {
-				for (int i = 0; i < expectedSize; i++) {
-					assertMatches(expectedLines.get(i), actualLines.get(i), i, i);
-				}
-				return;
-			}
-
-			assert expectedSize < actualSize;
-
-			for (int e = 0, a = 0; e < expectedSize && a < actualSize; e++, a++) {
-				String expectedLine = expectedLines.get(e);
-				String actualLine = actualLines.get(a);
-				// trivial case: take the fast path when both lines are equal
-				if (expectedLine.equals(actualLine)) {
-					continue;
-				}
-				// "S T A C K T R A C E" marker found as expected line: fast forward actual line until next match
-				if (expectedLine.equals("S T A C K T R A C E")) {
-					int nextExpectedIndex = e + 1;
-					if (nextExpectedIndex >= expectedSize) {
-						// trivial case: marker was last line in expected list
-						return;
-					}
-					expectedLine = expectedLines.get(nextExpectedIndex);
-					int ahead = a;
-					while (!matches(expectedLine, actualLine, false)) {
-						actualLine = actualLines.get(ahead++);
-						if (ahead >= actualSize) {
-							fail("ran out of bounds");
-						}
-					}
-					a = ahead - 2; // "side-effect" assignment to for-loop variable on purpose
-					continue;
-				}
-				// now, assert equality of expect and actual line
-				assertMatches(expectedLine, actualLine, e, a);
-			}
-
+			Assertions.assertLinesMatch(expectedLines, actualLines);
 		}
-
-		private void assertMatches(String expectedLine, String actualLine, int expectedIndex, int actualIndex) {
-			assertTrue(matches(expectedLine, actualLine), //
-				() -> format("%nexpected:%d = %s%nactual:%d = %s", expectedIndex, expectedLine, actualIndex,
-					actualLine));
-		}
-
-		private boolean matches(String expectedLine, String actualLine) {
-			return matches(expectedLine, actualLine, true);
-		}
-
-		private boolean matches(String expectedLine, String actualLine, boolean failOnPatternSyntaxException) {
-			if (expectedLine.equals(actualLine)) {
-				return true;
-			}
-			try {
-				Pattern pattern = Pattern.compile(expectedLine);
-				Matcher matcher = pattern.matcher(actualLine);
-				return matcher.matches();
-			}
-			catch (PatternSyntaxException exception) {
-				if (failOnPatternSyntaxException) {
-					fail("expected line is not a valid regex pattern" + expectedLine, exception);
-				}
-				return false;
-			}
-		}
-
 	}
-
 }
