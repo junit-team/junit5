@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -108,6 +109,12 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
+		executeTestBetweenBeforeAndAfterHooks(context, c -> invokeTestMethod(c, dynamicTestExecutor));
+		return context;
+	}
+
+	protected void executeTestBetweenBeforeAndAfterHooks(JupiterEngineExecutionContext context,
+			Consumer<JupiterEngineExecutionContext> testExecutor) {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		// @formatter:off
@@ -117,7 +124,7 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 				if (throwableCollector.isEmpty()) {
 					invokeBeforeTestExecutionCallbacks(context);
 					if (throwableCollector.isEmpty()) {
-						invokeTestMethod(context, dynamicTestExecutor);
+						testExecutor.accept(context);
 					}
 					invokeAfterTestExecutionCallbacks(context);
 				}
@@ -127,8 +134,6 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 		// @formatter:on
 
 		throwableCollector.assertEmpty();
-
-		return context;
 	}
 
 	private void invokeBeforeEachCallbacks(JupiterEngineExecutionContext context) {

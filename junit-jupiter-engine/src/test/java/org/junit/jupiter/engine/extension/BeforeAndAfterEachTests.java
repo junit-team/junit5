@@ -13,17 +13,21 @@ package org.junit.jupiter.engine.extension;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -146,6 +150,38 @@ public class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 				"localTestMethod",
 			"barAfterEachCallback",
 			"fooAfterEachCallback"
+
+		), callSequence, "wrong call sequence");
+		// @formatter:on
+	}
+
+	@Test
+	public void beforeEachAndAfterEachCallbacksOnDynamicTests() {
+		LauncherDiscoveryRequest request = request().selectors(selectClass(DynamicTestTestCase.class)).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+
+		// @formatter:off
+		assertEquals(asList(
+				// first dynamic test
+				"fooBeforeEachCallback",
+				"beforeEachMethod",
+				"localTestMethod1",
+				"afterEachMethod",
+				"fooAfterEachCallback",
+
+				// second dynamic test
+				"fooBeforeEachCallback",
+				"beforeEachMethod",
+				"localTestMethod2",
+				"afterEachMethod",
+				"fooAfterEachCallback"
 
 		), callSequence, "wrong call sequence");
 		// @formatter:on
@@ -380,6 +416,26 @@ public class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 			void afterEachInnerMethod() {
 				callSequence.add("afterEachInnerMethod");
 			}
+		}
+	}
+
+	@ExtendWith(FooMethodLevelCallbacks.class)
+	private static class DynamicTestTestCase {
+
+		@BeforeEach
+		void beforeEach() {
+			callSequence.add("beforeEachMethod");
+		}
+
+		@TestFactory
+		List<DynamicTest> localTest() {
+			return Arrays.asList(dynamicTest("dynamicTest1", () -> callSequence.add("localTestMethod1")),
+				dynamicTest("dynamicTest2", () -> callSequence.add("localTestMethod2")));
+		}
+
+		@AfterEach
+		void afterEach() {
+			callSequence.add("afterEachMethod");
 		}
 	}
 
