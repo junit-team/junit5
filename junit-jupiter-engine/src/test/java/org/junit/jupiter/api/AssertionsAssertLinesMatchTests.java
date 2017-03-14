@@ -10,9 +10,13 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertLinesMatch.isFastForwardLine;
+import static org.junit.jupiter.api.AssertLinesMatch.parseFastForwardLimit;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -97,5 +101,34 @@ public class AssertionsAssertLinesMatchTests {
 		List<String> actual = Arrays.asList("first line", "skipped", "last line");
 		Error error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
 		assertEquals("terminal fast-forward(100) error: fast-forward(2) expected", error.getMessage());
+	}
+
+	@Test
+	void assertLinesMatchIsFastForwardLine() {
+		assertAll("valid fast-forward lines", //
+			() -> assertTrue(isFastForwardLine(">>>>")), () -> assertTrue(isFastForwardLine(">> >>")),
+			() -> assertTrue(isFastForwardLine(">> stacktrace >>")),
+			() -> assertTrue(isFastForwardLine(">> single line, non Integer.parse()-able comment >>")),
+			() -> assertTrue(isFastForwardLine(">>9>>")), () -> assertTrue(isFastForwardLine(">> 9 >>")),
+			() -> assertTrue(isFastForwardLine(">> -9 >>")));
+	}
+
+	@Test
+	void assertLinesMatchParseFastForwardLimit() {
+		assertAll("valid fast-forward limits", //
+			() -> assertEquals(Integer.MAX_VALUE, parseFastForwardLimit(">>>>")),
+			() -> assertEquals(Integer.MAX_VALUE, parseFastForwardLimit(">> >>")),
+			() -> assertEquals(Integer.MAX_VALUE, parseFastForwardLimit(">> stacktrace >>")),
+			() -> assertEquals(Integer.MAX_VALUE, parseFastForwardLimit(">> non Integer.parse()-able comment >>")),
+			() -> assertEquals(9, parseFastForwardLimit(">>9>>")),
+			() -> assertEquals(9, parseFastForwardLimit(">> 9 >>")));
+	}
+
+	@Test
+	void assertLinesMatchMatches() {
+		assertAll("valid fast-forward lines", //
+			() -> assertTrue(AssertLinesMatch.matches("123", "123")),
+			() -> assertTrue(AssertLinesMatch.matches(".*", "123")),
+			() -> assertTrue(AssertLinesMatch.matches("\\d+", "123")));
 	}
 }

@@ -873,8 +873,47 @@ public final class Assertions {
 
 	// --- assertLinesMatch ----------------------------------------------------
 
-	public static void assertLinesMatch(List<String> expected, List<String> actual) {
-		AssertLinesMatch.assertLinesMatch(expected, actual);
+	/**
+	 * <em>Asserts</em> that {@code expected} list of {@linkplain String}s matches {@code actual}
+	 * list.
+	 *
+	 * <p>This method differs from other assertions that effectively only check {@link String#equals(Object)},
+	 * in that it uses the following staged match-making algorithm:
+	 *
+	 * <p>For each pair of expected and actual lines do
+	 * <ol>
+	 *   <li>check if {@code expected.equals(actual)} - if yes, continue with next pair</li>
+	 *   <li>otherwise treat {@code expected} as a regular expression and check via
+	 *   {@link String#matches(String)} - if yes, continue with next pair</li>
+	 *   <li>otherwise check if {@code expected} line is a fast-forward marker, if yes apply
+	 *   fast-forward actual lines accordingly (see below) and goto 1.</li>
+	 * </ol>
+	 *
+	 * <p>A valid fast-forward marker is an expected line that starts and ends with the literal
+	 * {@code >>} and contains at least 4 characters. Examples:
+	 * <ul>
+	 *   <li>{@code >>>>}<br>{@code >> stacktrace >>}<br>{@code >> single line, non Integer.parse()-able comment >>}
+	 *   <br>Skip arbitrary number of actual lines, until first matching subsequent expected line is found. Any
+	 *   character between the fast-forward literals are discarded.</li>
+	 *   <li>{@code ">> 21 >>"}
+	 *   <br>Skip strictly 21 lines. If they can't be skipped for any reason, an assertion error is raised.</li>
+	 * </ul>
+	 *
+	 * <p>Example showing all three kinds of expected line formats:
+	 * <pre>{@code
+	 * │  │  │     caught: AssertionFailedError: single line fail message
+	 * >> S T A C K T R A C E >>
+	 * │  │  │   duration: [\d]+ ms
+	 * │  │  │     status: ✘ FAILED
+	 * │  └─ test() finished after [\d]+ ms\.
+	 * └─ JUnit Jupiter finished after [\d]+ ms\.
+	 * Test plan execution finished. Number of all tests: 1
+	 *
+	 * Test run finished after [\d]+ ms
+	 * }</pre>
+	 */
+	public static void assertLinesMatch(List<String> expectedLines, List<String> actualLines) {
+		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines);
 	}
 
 	// --- assertNotEquals -----------------------------------------------------
