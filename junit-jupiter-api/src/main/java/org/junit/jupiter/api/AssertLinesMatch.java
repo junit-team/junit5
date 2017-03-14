@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,48 +71,74 @@ class AssertLinesMatch {
 	}
 
 	private static void assertLinesMatchWithFastForward(List<String> expectedLines, List<String> actualLines) {
-		for (int e = 0, a = 0; e < expectedLines.size() && a < actualLines.size(); e++, a++) {
-			String expectedLine = expectedLines.get(e);
-			String actualLine = actualLines.get(a);
-			// trivial case: take the fast path when both lines are equal
-			if (expectedLine.equals(actualLine)) {
+		Deque<String> expectedDeque = new LinkedList<>(expectedLines);
+		Deque<String> actualDeque = new LinkedList<>(actualLines);
+		while (!expectedDeque.isEmpty()) {
+			String expectedLine = expectedDeque.pop();
+			String actualLine = actualDeque.peek();
+			// trivial case: take the fast path when they simply match
+			if (matches(expectedLine, actualLine, false)) {
+				actualDeque.pop();
 				continue;
 			}
-			// fast forward markers found in expected line: fast forward actual line until next match
-			if (isFastForwardLine(expectedLine.trim())) {
+			// fast-forward markers found in expected line: fast-forward actual line...
+			if (isFastForwardLine(expectedLine)) {
 				int fastForwardLimit = parseFastForwardLimit(expectedLine);
-				int nextExpectedIndex = e + 1;
-				if (nextExpectedIndex >= expectedLines.size()) {
-					// trivial case: marker was last line in expected list
-					return;
-				}
-				expectedLine = expectedLines.get(nextExpectedIndex);
-				int ahead = a;
-				while (!matches(expectedLine, actualLine, false)) {
-					actualLine = actualLines.get(ahead++);
-					if (ahead - a > fastForwardLimit) {
-						break;
+				// value was given
+				if (fastForwardLimit != Integer.MAX_VALUE) {
+					if (fastForwardLimit > actualDeque.size()) {
+						fail(format("fast-forward %d lines failed, only %d lines left", fastForwardLimit,
+							actualDeque.size()));
 					}
-					if (ahead > actualLines.size()) {
-						fail("ran out of actual bounds");
+					if (expectedDeque.isEmpty()) {
+						assertEquals(fastForwardLimit, actualDeque.size(), "wrong number of actual lines remaining");
+						return; // perfect match
+					}
+					// fast-forward now: actualDeque.pop(fastForwardLimit)
+					for (int i = 0; i < fastForwardLimit; i++) {
+						actualDeque.pop();
+					}
+					if (actualDeque.isEmpty()) {
+						fail(format("%d more lines expected, actual lines is empty", expectedDeque.size()));
 					}
 				}
-				a = ahead - 2; // "side-effect" assignment to for-loop variable on purpose
-				continue;
+				else {
+					if (expectedDeque.isEmpty()) {
+						return; // ignore all remaining actual lines
+					}
+					// scan actual lines deque for next match
+					while (!actualDeque.isEmpty()) {
+						actualLine = actualDeque.pop();
+						if (matches(expectedDeque.peek(), actualLine, false)) {
+							actualDeque.push(actualLine);
+							break;
+						}
+					}
+				}
+				expectedLine = expectedDeque.pop();
 			}
-			// now, assert equality of expect and actual line
-			assertMatches(expectedLine, actualLine, e, a);
+			// now, assert equality of current expected and actual line
+			int expectedIndex = expectedLines.size() - expectedDeque.size();
+			int actualIndex = actualLines.size() - actualDeque.size();
+			assertMatches(expectedLine, actualDeque.pop(), expectedIndex, actualIndex);
 		}
+		if (actualDeque.isEmpty()) {
+			return;
+		}
+		fail("more actual lines than expected: " + actualDeque.size());
 	}
 
 	private static boolean isFastForwardLine(String line) {
+		line = line.trim();
 		return line.equals("S T A C K T R A C E") || line.startsWith(">>") && line.endsWith(">>");
 	}
 
 	private static int parseFastForwardLimit(String fastForwardLine) {
 		String text = fastForwardLine.trim().substring(2, fastForwardLine.length() - 2).trim();
 		try {
-			return Integer.parseInt(text);
+			int limit = Integer.parseInt(text);
+			Preconditions.condition(limit > 0, "fast-forward must greater than zero, it is: " + limit);
+			return limit;
 		}
 		catch (NumberFormatException e) {
 			return Integer.MAX_VALUE;
