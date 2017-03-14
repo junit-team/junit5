@@ -13,7 +13,6 @@ package org.junit.jupiter.api;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -77,11 +76,19 @@ public class AssertionsAssertLinesMatchTests {
 	}
 
 	@Test
+	void assertLinesMatchMoreActualLinesThenExpectedFails() {
+		List<String> expected = Arrays.asList("first line", "second line", "third line");
+		List<String> actual = Arrays.asList("first line", "second line", "third line", "last line");
+		Error error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
+		assertEquals("more actual lines than expected: 1", error.getMessage());
+	}
+
+	@Test
 	void assertLinesMatchUsingFastForwardMarkerWithTooLowLimitFails() {
 		List<String> expected = Arrays.asList("first line", ">> 1 >>");
 		List<String> actual = Arrays.asList("first line", "skipped", "last line");
 		Error error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
-		assertTrue(error.getMessage().contains("wrong number of actual lines remaining"));
+		assertEquals("terminal fast-forward(1) error: fast-forward(2) expected", error.getMessage());
 	}
 
 	@Test
@@ -89,6 +96,6 @@ public class AssertionsAssertLinesMatchTests {
 		List<String> expected = Arrays.asList("first line", ">> 100 >>");
 		List<String> actual = Arrays.asList("first line", "skipped", "last line");
 		Error error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
-		assertEquals("fast-forward 100 lines failed, only 2 lines left", error.getMessage());
+		assertEquals("terminal fast-forward(100) error: fast-forward(2) expected", error.getMessage());
 	}
 }
