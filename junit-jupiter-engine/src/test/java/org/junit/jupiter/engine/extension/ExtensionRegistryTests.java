@@ -22,6 +22,7 @@ import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistr
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
@@ -36,8 +37,16 @@ public class ExtensionRegistryTests {
 
 	private final ExtensionRegistry registry = createRegistryWithDefaultExtensions();
 
+	@AfterEach
+	void cleanProperties() {
+		System.clearProperty("org.junit.jupiter.engine.extension.ExtensionRegistry.withServiceLoader");
+	}
+
 	@Test
-	void newRegistryWithoutParentHasDefaultExtensions() {
+	void newRegistryWithoutParentHasDefaultExtensions_usingServiceLocator() {
+		System.setProperty("org.junit.jupiter.engine.extension.ExtensionRegistry.withServiceLoader", "true");
+
+		ExtensionRegistry registry = createRegistryWithDefaultExtensions();
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
 		assertEquals(4, extensions.size());
@@ -50,6 +59,20 @@ public class ExtensionRegistryTests {
 		assertEquals(1, countExtensions(registry, ContainerExecutionCondition.class));
 		assertEquals(1, countExtensions(registry, TestExecutionCondition.class));
 		assertEquals(1, countExtensions(registry, BeforeAllCallback.class));
+	}
+
+	@Test
+	void newRegistryWithoutParentHasDefaultExtensions() {
+		List<Extension> extensions = registry.getExtensions(Extension.class);
+
+		assertEquals(3, extensions.size());
+		assertExtensionRegistered(registry, DisabledCondition.class);
+		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
+		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
+
+		assertEquals(2, countExtensions(registry, ParameterResolver.class));
+		assertEquals(1, countExtensions(registry, ContainerExecutionCondition.class));
+		assertEquals(1, countExtensions(registry, TestExecutionCondition.class));
 	}
 
 	@Test
