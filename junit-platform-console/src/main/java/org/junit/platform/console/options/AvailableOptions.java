@@ -36,6 +36,7 @@ class AvailableOptions {
 	private final OptionSpec<Void> help;
 	private final OptionSpec<Void> disableAnsiColors;
 	private final OptionSpec<Details> details;
+	private final OptionSpec<Theme> theme;
 	private final OptionSpec<Path> additionalClasspathEntries;
 
 	// Reports
@@ -83,6 +84,13 @@ class AvailableOptions {
 				.ofType(Details.class) //
 				.withValuesConvertedBy(new DetailsConverter()) //
 				.defaultsTo(CommandLineOptions.DEFAULT_DETAILS);
+
+		theme = parser.accepts("details-theme",
+			"Select an output details tree theme for when tests are executed. Use one of: " + asList(Theme.values())) //
+				.withRequiredArg() //
+				.ofType(Theme.class) //
+				.withValuesConvertedBy(new ThemeConverter()) //
+				.defaultsTo(CommandLineOptions.DEFAULT_THEME);
 
 		additionalClasspathEntries = parser.acceptsAll(asList(CP_OPTION, "classpath", "class-path"), //
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies. "
@@ -189,6 +197,7 @@ class AvailableOptions {
 		result.setDisplayHelp(detectedOptions.has(this.help));
 		result.setAnsiColorOutputDisabled(detectedOptions.has(this.disableAnsiColors));
 		result.setDetails(detectedOptions.valueOf(this.details));
+		result.setTheme(detectedOptions.valueOf(this.theme));
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
 
 		// Reports

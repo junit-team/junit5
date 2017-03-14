@@ -487,11 +487,14 @@ Option                                        Description
 --disable-ansi-colors                         Disable ANSI colors in output (not
                                                 supported by all terminals).
 --hide-details                                @Deprecated. Use '--details none' instead.
---details <Details>                           Select an output details mode for when
+--details <[none,flat,tree,verbose]>          Select an output details mode for when
                                                 tests are executed. Use one of: [none,
                                                 flat, tree, verbose]. If 'none' is
                                                 selected, then only the summary and test
                                                 failures are shown. (default: tree)
+--details-theme <[ascii,unicode]>             Select an output details tree theme for
+                                                when tests are executed. Use one of:
+                                                [ascii, unicode] (default: unicode)
 --class-path, --classpath, --cp <Path:        Provide additional classpath entries --
   path1:path2:...>                              for example, for adding engines and
                                                 their dependencies. This option can be

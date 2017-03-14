@@ -10,8 +10,8 @@
 
 package org.junit.platform.engine.discovery;
 
-import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ import org.junit.platform.engine.UniqueId;
 @API(Experimental)
 public final class DiscoverySelectors {
 
-	private static Pattern fullyQualifiedMethodNamePattern = Pattern.compile("([^#]+)#([^(]+)(?:\\((.*)\\))?");
+	private static final Pattern fullyQualifiedMethodNamePattern = Pattern.compile("([^#]+)#([^(]+)(?:\\((.*)\\))?");
 
 	///CLOVER:OFF
 	private DiscoverySelectors() {
@@ -207,7 +207,8 @@ public final class DiscoverySelectors {
 				.filter(Files::exists)
 				.map(Path::toUri)
 				.map(ClasspathRootSelector::new)
-				.collect(toList());
+				// unmodifiable since selectClasspathRoots is a public, non-internal method
+				.collect(toUnmodifiableList());
 		// @formatter:on
 	}
 

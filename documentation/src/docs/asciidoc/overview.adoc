@@ -59,6 +59,10 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
   `junit-platform-console`::
     Support for discovering and executing tests on the JUnit Platform from the console. See
     <<running-tests-console-launcher>> for details.
+  `junit-platform-console-standalone`::
+    An executable JAR with all dependencies included is provided at Maven Central under the
+    https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
+    directory. See <<running-tests-console-launcher>> for details.
   `junit-platform-engine`::
     Public API for test engines. See <<launcher-api-engines-custom>> for details.
   `junit-platform-gradle-plugin`::

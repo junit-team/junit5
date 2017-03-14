@@ -126,7 +126,16 @@ class ClasspathScannerTests {
 
 	@Test
 	void scanForClassesInClasspathRootWithinJarFile() throws Exception {
-		URL jarfile = getClass().getResource("/jartest.jar");
+		scanForClassesInClasspathRootWithinJarFile("/jartest.jar");
+	}
+
+	@Test
+	void scanForClassesInClasspathRootWithinJarWithSpacesInPath() throws Exception {
+		scanForClassesInClasspathRootWithinJarFile("/folder with spaces/jar test with spaces.jar");
+	}
+
+	private void scanForClassesInClasspathRootWithinJarFile(String resourceName) throws Exception {
+		URL jarfile = getClass().getResource(resourceName);
 
 		try (URLClassLoader classLoader = new URLClassLoader(new URL[] { jarfile })) {
 			ClasspathScanner classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::loadClass);

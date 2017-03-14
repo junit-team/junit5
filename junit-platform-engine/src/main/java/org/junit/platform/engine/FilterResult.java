@@ -104,9 +104,9 @@ public class FilterResult {
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-			.append("included", this.included)
-			.append("reason", this.reason.orElse("<unknown>"))
-			.toString();
+				.append("included", this.included)
+				.append("reason", this.reason.orElse("<unknown>"))
+				.toString();
 		// @formatter:on
 	}
 

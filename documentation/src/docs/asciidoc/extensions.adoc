@@ -255,7 +255,7 @@ available for storing and retrieving values via the `{ExtensionContext_Store}`.
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
 
-The JUnit Platform Commons artifact exposes package `{junit-platform-support-package}` which
-contains maintained utility methods handling `Annotation`, reflection and classpath scanning tasks.
-Extension authors are encouraged to use these supported methods to align expected the behaviour
-with the JUnit Platform.
+The JUnit Platform Commons artifact exposes a package named `{junit-platform-support-package}` that
+contains _maintained_ utility methods for working with annotations, reflection, and classpath
+scanning tasks. `TestEngine` and `Extension` authors are encouraged to use these supported methods
+in order to align with the behavior of the JUnit Platform.

@@ -68,11 +68,11 @@ class ReflectionSupportTests {
 	void findMethodsDelegates() {
 		assertEquals(
 			ReflectionUtils.findMethods(ReflectionSupportTests.class, allMethods,
-				ReflectionUtils.MethodSortOrder.HierarchyUp),
-			ReflectionSupport.findMethods(ReflectionSupportTests.class, allMethods, MethodSortOrder.HierarchyUp));
+				ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP),
+			ReflectionSupport.findMethods(ReflectionSupportTests.class, allMethods, HierarchyTraversalMode.BOTTOM_UP));
 		assertEquals(
 			ReflectionUtils.findMethods(ReflectionSupportTests.class, allMethods,
-				ReflectionUtils.MethodSortOrder.HierarchyDown),
-			ReflectionSupport.findMethods(ReflectionSupportTests.class, allMethods, MethodSortOrder.HierarchyDown));
+				ReflectionUtils.HierarchyTraversalMode.TOP_DOWN),
+			ReflectionSupport.findMethods(ReflectionSupportTests.class, allMethods, HierarchyTraversalMode.TOP_DOWN));
 	}
 }

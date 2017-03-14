@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyIterator;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,8 +37,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -74,7 +73,10 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.opentest4j.AssertionFailedError;
 
-public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
+/**
+ * @since 5.0
+ */
+class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void templateWithoutRegisteredExtensionReportsFailure() {
@@ -308,6 +310,25 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 					message("No supporting TestTemplateInvocationContextProvider provided an invocation context")))));
 	}
 
+	@Test
+	void templateWithCloseableStream() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "templateWithCloseableStream")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertThat(InvocationContextProviderWithCloseableStream.streamClosed.get()).describedAs(
+			"streamClosed").isTrue();
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("templateWithCloseableStream"), started()), //
+				event(dynamicTestRegistered("test-template-invocation:#1")), //
+				event(test("test-template-invocation:#1"), started()), //
+				event(test("test-template-invocation:#1"), finishedSuccessfully()), //
+				event(container("templateWithCloseableStream"), finishedSuccessfully())));
+	}
+
 	private TestDescriptor findTestDescriptor(ExecutionEventRecorder eventRecorder,
 			Condition<ExecutionEvent> condition) {
 		// @formatter:off
@@ -323,6 +344,7 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 	@SafeVarargs
 	private final Condition<? super ExecutionEvent>[] wrappedInContainerEvents(Class<MyTestTemplateTestCase> clazz,
 			Condition<? super ExecutionEvent>... wrappedConditions) {
+
 		List<Condition<? super ExecutionEvent>> conditions = new ArrayList<>();
 		conditions.add(event(engine(), started()));
 		conditions.add(event(container(clazz), started()));
@@ -333,10 +355,6 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 	}
 
 	static class MyTestTemplateTestCase {
-
-		@Test
-		void foo() {
-		}
 
 		@TestTemplate
 		void templateWithoutRegisteredExtension() {
@@ -388,10 +406,10 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		@ExtendWith(StringParameterResolvingInvocationContextProvider.class)
 		@TestTemplate
 		void templateWithWrongParameterType(int parameter) {
-			fail("never called");
+			fail("never called: " + parameter);
 		}
 
-		private String parameterInstanceVariable;
+		String parameterInstanceVariable;
 
 		@ExtendWith(StringParameterInjectingInvocationContextProvider.class)
 		@TestTemplate
@@ -405,6 +423,10 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 			fail("never called");
 		}
 
+		@ExtendWith(InvocationContextProviderWithCloseableStream.class)
+		@TestTemplate
+		void templateWithCloseableStream() {
+		}
 	}
 
 	static class TestTemplateTestClassWithBeforeAndAfterEach {
@@ -448,8 +470,8 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		}
 
 		@Override
-		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-			return singleton(emptyTestTemplateInvocationContext()).iterator();
+		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return Stream.of(emptyTestTemplateInvocationContext());
 		}
 	}
 
@@ -462,8 +484,8 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		}
 
 		@Override
-		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-			return singleton(emptyTestTemplateInvocationContext()).iterator();
+		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return Stream.of(emptyTestTemplateInvocationContext());
 		}
 	}
 
@@ -475,8 +497,8 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		}
 
 		@Override
-		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-			return asList(emptyTestTemplateInvocationContext(), emptyTestTemplateInvocationContext()).iterator();
+		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return Stream.of(emptyTestTemplateInvocationContext(), emptyTestTemplateInvocationContext());
 		}
 	}
 
@@ -503,13 +525,13 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		}
 
 		@Override
-		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 			return Stream.<TestTemplateInvocationContext> generate(() -> new TestTemplateInvocationContext() {
 				@Override
 				public String getDisplayName(int invocationIndex) {
 					return invocationIndex + " --> " + context.getDisplayName();
 				}
-			}).limit(1).iterator();
+			}).limit(1);
 		}
 	}
 
@@ -528,8 +550,8 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		}
 
 		@Override
-		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-			return asList(createContext("foo"), createContext("bar")).iterator();
+		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return Stream.of(createContext("foo"), createContext("bar"));
 		}
 
 		private TestTemplateInvocationContext createContext(String argument) {
@@ -568,8 +590,8 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		}
 
 		@Override
-		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-			return asList(createContext("foo"), createContext("bar")).iterator();
+		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return Stream.of(createContext("foo"), createContext("bar"));
 		}
 
 		private TestTemplateInvocationContext createContext(String argument) {
@@ -600,8 +622,8 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		}
 
 		@Override
-		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-			return asList(createContext("foo"), createContext("bar")).iterator();
+		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return Stream.of(createContext("foo"), createContext("bar"));
 		}
 
 		private TestTemplateInvocationContext createContext(String argument) {
@@ -635,7 +657,7 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 			public void handleTestExecutionException(TestExtensionContext context, Throwable throwable)
 					throws Throwable {
 				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("handleTestExecutionException");
-				throw throwable;
+				throw new AssertionError(throwable);
 			}
 
 			@Override
@@ -659,8 +681,23 @@ public class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests 
 		}
 
 		@Override
-		public Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-			return emptyIterator();
+		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return Stream.empty();
+		}
+	}
+
+	private static class InvocationContextProviderWithCloseableStream implements TestTemplateInvocationContextProvider {
+
+		private static AtomicBoolean streamClosed = new AtomicBoolean(false);
+
+		@Override
+		public boolean supports(ContainerExtensionContext context) {
+			return true;
+		}
+
+		@Override
+		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+			return Stream.of(emptyTestTemplateInvocationContext()).onClose(() -> streamClosed.set(true));
 		}
 	}
 

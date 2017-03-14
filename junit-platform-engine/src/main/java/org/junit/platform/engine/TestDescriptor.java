@@ -12,6 +12,7 @@ package org.junit.platform.engine;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -53,6 +54,10 @@ public interface TestDescriptor {
 	 */
 	String getDisplayName();
 
+	default String getLegacyReportingName() {
+		return getDisplayName();
+	}
+
 	/**
 	 * Get the set of {@linkplain TestTag tags} associated with this descriptor.
 	 *
@@ -83,16 +88,16 @@ public interface TestDescriptor {
 	void setParent(TestDescriptor parent);
 
 	/**
-	 * Get the set of <em>children</em> of this descriptor.
+	 * Get the immutable set of <em>children</em> of this descriptor.
 	 *
-	 * @return the set of children of this descriptor; never {@code null}
-	 * but potentially empty
+	 * @return the set of children of this descriptor; neither {@code null}
+	 * nor mutable, but potentially empty
 	 * @see #getDescendants()
 	 */
 	Set<? extends TestDescriptor> getChildren();
 
 	/**
-	 * Get the set of all <em>descendants</em> of this descriptor.
+	 * Get the immutable set of all <em>descendants</em> of this descriptor.
 	 *
 	 * <p>A <em>descendant</em> is a child of this descriptor or a child of one of
 	 * its children, recursively.
@@ -105,7 +110,7 @@ public interface TestDescriptor {
 		for (TestDescriptor child : getChildren()) {
 			descendants.addAll(child.getDescendants());
 		}
-		return descendants;
+		return Collections.unmodifiableSet(descendants);
 	}
 
 	/**

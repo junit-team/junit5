@@ -24,8 +24,8 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findPublicAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
-import static org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
+import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -271,18 +271,18 @@ class AnnotationUtilsTests {
 	@Test
 	void findAnnotatedMethodsForNullClass() {
 		assertThrows(PreconditionViolationException.class,
-			() -> findAnnotatedMethods(null, Annotation1.class, HierarchyDown));
+			() -> findAnnotatedMethods(null, Annotation1.class, TOP_DOWN));
 	}
 
 	@Test
 	void findAnnotatedMethodsForNullAnnotationType() {
 		assertThrows(PreconditionViolationException.class,
-			() -> findAnnotatedMethods(ClassWithAnnotatedMethods.class, null, HierarchyDown));
+			() -> findAnnotatedMethods(ClassWithAnnotatedMethods.class, null, TOP_DOWN));
 	}
 
 	@Test
 	void findAnnotatedMethodsForAnnotationThatIsNotPresent() {
-		assertThat(findAnnotatedMethods(ClassWithAnnotatedMethods.class, Fast.class, HierarchyDown)).isEmpty();
+		assertThat(findAnnotatedMethods(ClassWithAnnotatedMethods.class, Fast.class, TOP_DOWN)).isEmpty();
 	}
 
 	@Test
@@ -290,7 +290,7 @@ class AnnotationUtilsTests {
 		Method method2 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method2");
 		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
 
-		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation2.class, HierarchyDown);
+		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation2.class, TOP_DOWN);
 
 		assertThat(methods).containsOnly(method2, method3);
 	}
@@ -301,7 +301,7 @@ class AnnotationUtilsTests {
 		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
 		Method superMethod = SuperClassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
 
-		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, HierarchyUp);
+		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, BOTTOM_UP);
 
 		assertEquals(3, methods.size());
 		assertThat(methods.subList(0, 2)).containsOnly(method1, method3);
@@ -314,7 +314,7 @@ class AnnotationUtilsTests {
 		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
 		Method superMethod = SuperClassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
 
-		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, HierarchyDown);
+		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, TOP_DOWN);
 
 		assertEquals(3, methods.size());
 		assertEquals(superMethod, methods.get(0));
@@ -325,7 +325,7 @@ class AnnotationUtilsTests {
 	void findAnnotatedMethodsForAnnotationUsedInInterface() throws Exception {
 		Method interfaceMethod = InterfaceWithAnnotatedDefaultMethod.class.getDeclaredMethod("interfaceMethod");
 
-		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation3.class, HierarchyUp);
+		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation3.class, BOTTOM_UP);
 
 		assertThat(methods).containsExactly(interfaceMethod);
 	}

@@ -15,17 +15,24 @@ import static org.junit.platform.commons.meta.API.Usage.Maintained;
 import org.junit.platform.commons.meta.API;
 
 /**
+ * Modes in which a hierarchy can be traversed &mdash; for example, when
+ * searching for methods or fields within a class hierarchy.
+ *
  * @since 1.0
+ * @see #TOP_DOWN
+ * @see #BOTTOM_UP
  */
 @API(Maintained)
-public enum MethodSortOrder {
-	/**
-	 * Sort methods from top to bottom.
-	 */
-	HierarchyDown,
+public enum HierarchyTraversalMode {
 
 	/**
-	 * Sort methods from bottom to top.
+	 * Traverse the hierarchy using top-down semantics.
 	 */
-	HierarchyUp
+	TOP_DOWN,
+
+	/**
+	 * Traverse the hierarchy using bottom-up semantics.
+	 */
+	BOTTOM_UP;
+
 }

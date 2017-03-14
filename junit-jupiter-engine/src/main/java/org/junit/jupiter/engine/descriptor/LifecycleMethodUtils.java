@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder;
+import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 
 /**
  * Collection of utilities for working with test lifecycle methods.
@@ -38,25 +38,25 @@ final class LifecycleMethodUtils {
 	///CLOVER:ON
 
 	static List<Method> findBeforeAllMethods(Class<?> testClass) {
-		List<Method> methods = findAnnotatedMethods(testClass, BeforeAll.class, MethodSortOrder.HierarchyDown);
+		List<Method> methods = findAnnotatedMethods(testClass, BeforeAll.class, HierarchyTraversalMode.TOP_DOWN);
 		methods.forEach(method -> assertStatic(BeforeAll.class, method));
 		return methods;
 	}
 
 	static List<Method> findAfterAllMethods(Class<?> testClass) {
-		List<Method> methods = findAnnotatedMethods(testClass, AfterAll.class, MethodSortOrder.HierarchyUp);
+		List<Method> methods = findAnnotatedMethods(testClass, AfterAll.class, HierarchyTraversalMode.BOTTOM_UP);
 		methods.forEach(method -> assertStatic(AfterAll.class, method));
 		return methods;
 	}
 
 	static List<Method> findBeforeEachMethods(Class<?> testClass) {
-		List<Method> methods = findAnnotatedMethods(testClass, BeforeEach.class, MethodSortOrder.HierarchyDown);
+		List<Method> methods = findAnnotatedMethods(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN);
 		methods.forEach(method -> assertNonStatic(BeforeEach.class, method));
 		return methods;
 	}
 
 	static List<Method> findAfterEachMethods(Class<?> testClass) {
-		List<Method> methods = findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyUp);
+		List<Method> methods = findAnnotatedMethods(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP);
 		methods.forEach(method -> assertNonStatic(AfterEach.class, method));
 		return methods;
 	}

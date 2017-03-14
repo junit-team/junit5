@@ -111,6 +111,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		return true;
 	}
 
+	@Override
+	public String getLegacyReportingName() {
+		return testClass.getName();
+	}
+
 	private static String generateDefaultDisplayName(Class<?> testClass) {
 		String name = testClass.getName();
 		int index = name.lastIndexOf('.');
