@@ -11,7 +11,7 @@ Test plan execution started. Number of static tests: 1
 │  │  │               line
 │  │  │               fail
 │  │  │               message
-S T A C K T R A C E
+>> S T A C K T R A C E >>
 │  │  │   duration: [\d]+ ms
 │  │  │     status: ✘ FAILED
 │  └─ Fail finished after [\d]+ ms\.

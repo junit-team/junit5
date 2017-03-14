@@ -8,7 +8,7 @@ Test plan execution started. Number of static tests: 1
 │  │  │     parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail]
 │  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Fail', methodName = 'failWithSingleLineMessage', methodParameterTypes = '']
 │  │  │     caught: org.opentest4j.AssertionFailedError: single line fail message
-S T A C K T R A C E
+>> S T A C K T R A C E >>
 │  │  │   duration: [\d]+ ms
 │  │  │     status: ✘ FAILED
 │  └─ Fail finished after [\d]+ ms\.
