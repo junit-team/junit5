@@ -16,11 +16,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.commons.util.Preconditions.condition;
 import static org.junit.platform.commons.util.Preconditions.notNull;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
@@ -43,7 +41,7 @@ class AssertLinesMatch {
 		int expectedSize = expectedLines.size();
 		int actualSize = actualLines.size();
 
-		// trivial case: when expecting more then actual lines available, something is wrong
+		// trivial case: when expecting more than actual lines available, something is wrong
 		if (expectedSize > actualSize) {
 			// use standard assertEquals(Object, Object, message) to let IDEs present the textual difference
 			String expected = String.join(System.lineSeparator(), expectedLines);
@@ -71,8 +69,8 @@ class AssertLinesMatch {
 	}
 
 	private static void assertLinesMatchWithFastForward(List<String> expectedLines, List<String> actualLines) {
-		Deque<String> expectedDeque = new LinkedList<>(expectedLines);
-		Deque<String> actualDeque = new LinkedList<>(actualLines);
+		Deque<String> expectedDeque = new ArrayDeque<>(expectedLines);
+		Deque<String> actualDeque = new ArrayDeque<>(actualLines);
 
 		while (!expectedDeque.isEmpty()) {
 			String expectedLine = expectedDeque.pop();
@@ -132,16 +130,16 @@ class AssertLinesMatch {
 		}
 	}
 
-	private static boolean isFastForwardLine(String line) {
+	static boolean isFastForwardLine(String line) {
 		line = line.trim();
-		return line.startsWith(">>") && line.endsWith(">>");
+		return line.length() >= 4 && line.startsWith(">>") && line.endsWith(">>");
 	}
 
-	private static int parseFastForwardLimit(String fastForwardLine) {
+	static int parseFastForwardLimit(String fastForwardLine) {
 		String text = fastForwardLine.trim().substring(2, fastForwardLine.length() - 2).trim();
 		try {
 			int limit = Integer.parseInt(text);
-			condition(limit > 0, "fast-forward must greater than zero, it is: " + limit);
+			condition(limit > 0, "fast-forward limit must be greater than zero, it is: " + limit);
 			return limit;
 		}
 		catch (NumberFormatException e) {
@@ -149,14 +147,12 @@ class AssertLinesMatch {
 		}
 	}
 
-	private static boolean matches(String expectedLine, String actualLine) {
+	static boolean matches(String expectedLine, String actualLine) {
 		if (expectedLine.equals(actualLine)) {
 			return true;
 		}
 		try {
-			Pattern pattern = Pattern.compile(expectedLine);
-			Matcher matcher = pattern.matcher(actualLine);
-			return matcher.matches();
+			return actualLine.matches(expectedLine);
 		}
 		catch (PatternSyntaxException ignore) {
 			return false;
