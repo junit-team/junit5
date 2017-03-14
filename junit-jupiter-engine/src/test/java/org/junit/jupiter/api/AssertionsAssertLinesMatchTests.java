@@ -10,8 +10,16 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import org.opentest4j.AssertionFailedError;
 
 /**
  * Unit tests for JUnit Jupiter {@link Assertions}.
@@ -21,36 +29,66 @@ import java.util.List;
 public class AssertionsAssertLinesMatchTests {
 
 	@Test
-	void assertLinesMatchesToSelf() {
+	void assertLinesMatchSameListInstance() {
 		List<String> list = Arrays.asList("first line", "second line", "third line", "last line");
-		AssertLinesMatch.assertLinesMatch(list, list);
+		assertLinesMatch(list, list);
 	}
 
 	@Test
-	void assertLinesMatchesPlainEqualLists() {
+	void assertLinesMatchPlainEqualLists() {
 		List<String> expected = Arrays.asList("first line", "second line", "third line", "last line");
 		List<String> actual = Arrays.asList("first line", "second line", "third line", "last line");
-		AssertLinesMatch.assertLinesMatch(expected, actual);
+		assertLinesMatch(expected, actual);
 	}
 
 	@Test
-	void assertLinesMatchesUsingRegexPatterns() {
+	void assertLinesMatchUsingRegexPatterns() {
 		List<String> expected = Arrays.asList("^first.+line", "second\\s*line", "th.rd l.ne", "last line$");
 		List<String> actual = Arrays.asList("first line", "second line", "third line", "last line");
-		AssertLinesMatch.assertLinesMatch(expected, actual);
+		assertLinesMatch(expected, actual);
 	}
 
 	@Test
-	void assertLinesMatchesUsingFastForwardCommand() {
-		List<String> expected = Arrays.asList("first line", ">> skip lines until next matches >>", "last line");
-		List<String> actual = Arrays.asList("first line", "second line", "third line", "last line");
-		AssertLinesMatch.assertLinesMatch(expected, actual);
+	void assertLinesMatchUsingFastForwardMarkerAtEndOfExpectedLines() {
+		List<String> expected = Arrays.asList("first line", ">> ignore all following lines >>");
+		List<String> actual = Arrays.asList("first line", "I", "II", "III", "IV", "V", "VI", "last line");
+		assertLinesMatch(expected, actual);
 	}
 
 	@Test
-	void assertLinesMatchesUsingFastForwardCommandWithLimit() {
+	void assertLinesMatchUsingFastForwardMarker() {
+		List<String> expected = Arrays.asList("first line", ">> skip lines until next matches >>", "V", "last line");
+		List<String> actual = Arrays.asList("first line", "I", "II", "III", "IV", "V", "last line");
+		assertLinesMatch(expected, actual);
+	}
+
+	@Test
+	void assertLinesMatchUsingFastForwardMarkerWithLimit1() {
 		List<String> expected = Arrays.asList("first line", ">> 1 >>", "last line");
 		List<String> actual = Arrays.asList("first line", "skipped", "last line");
-		AssertLinesMatch.assertLinesMatch(expected, actual);
+		assertLinesMatch(expected, actual);
+	}
+
+	@Test
+	void assertLinesMatchUsingFastForwardMarkerWithLimit3() {
+		List<String> expected = Collections.singletonList(">> 3 >>");
+		List<String> actual = Arrays.asList("first line", "skipped", "last line");
+		assertLinesMatch(expected, actual);
+	}
+
+	@Test
+	void assertLinesMatchUsingFastForwardMarkerWithTooLowLimitFails() {
+		List<String> expected = Arrays.asList("first line", ">> 1 >>");
+		List<String> actual = Arrays.asList("first line", "skipped", "last line");
+		Error error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
+		assertTrue(error.getMessage().contains("wrong number of actual lines remaining"));
+	}
+
+	@Test
+	void assertLinesMatchUsingFastForwardMarkerWithTooHighLimitFails() {
+		List<String> expected = Arrays.asList("first line", ">> 100 >>");
+		List<String> actual = Arrays.asList("first line", "skipped", "last line");
+		Error error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
+		assertEquals("fast-forward 100 lines failed, only 2 lines left", error.getMessage());
 	}
 }

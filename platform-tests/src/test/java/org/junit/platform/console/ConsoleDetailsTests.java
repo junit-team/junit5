@@ -13,6 +13,7 @@ package org.junit.platform.console;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
@@ -29,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
@@ -208,7 +208,7 @@ class ConsoleDetailsTests {
 			List<String> expectedLines = Files.readAllLines(path, UTF_8);
 			List<String> actualLines = asList(result.out.split("\\R"));
 
-			Assertions.assertLinesMatch(expectedLines, actualLines);
+			assertLinesMatch(expectedLines, actualLines);
 		}
 	}
 }
