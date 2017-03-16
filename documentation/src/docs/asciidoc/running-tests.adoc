@@ -9,6 +9,12 @@
 IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2.
 For details please see the https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/[post on the IntelliJ IDEA blog].
 
+==== Eclipse Beta Support
+
+Eclipse 4.7 (_Oxygen_) has beta support for the JUnit Platform and JUnit Jupiter. For
+details on how to set it up, please consult the
+https://wiki.eclipse.org/JDT_UI/JUnit_5[Eclipse JDT UI/JUnit 5] wiki page.
+
 ==== Other IDEs
 
 At the time of this writing, there is no direct support for running tests on the JUnit
