@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.platform.runner;
+package org.junit.platform.suite.api;
 
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
@@ -22,23 +22,28 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @ExcludeTags} specifies the {@linkplain #value tags} to be excluded
- * when running a test suite via {@code @RunWith(JUnitPlatform.class)}.
+ * {@code @ExcludeEngines} specifies the {@linkplain #value IDs} of
+ * {@link org.junit.platform.engine.TestEngine TestEngines} to be excluded
+ * when running a test suite on the JUnit Platform.
+ *
+ * <h4>JUnit 4 Suite Support</h4>
+ * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
+ * {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 1.0
- * @see JUnitPlatform
- * @see IncludeTags
- * @see org.junit.platform.launcher.TagFilter#excludeTags
+ * @see IncludeEngines
+ * @see org.junit.platform.launcher.EngineFilter#excludeEngines
+ * @see org.junit.platform.runner.JUnitPlatform
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
 @API(Maintained)
-public @interface ExcludeTags {
+public @interface ExcludeEngines {
 
 	/**
-	 * One or more tags to exclude.
+	 * One or more Engine IDs to be excluded from the test plan.
 	 */
 	String[] value();
 

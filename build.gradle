@@ -46,6 +46,7 @@ ext {
 		'junit-platform-gradle-plugin',
 		'junit-platform-launcher',
 		'junit-platform-runner',
+		'junit-platform-suite-api',
 		'junit-platform-surefire-provider'
 	]
 
@@ -231,7 +232,7 @@ subprojects { subproj ->
 			options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 			options.author = true
 			options.header = project.name
-			options.addStringOption('Xdoclint:html,syntax,reference', '-quiet')
+			options.addStringOption('Xdoclint:html,syntax', '-quiet')
 		}
 
 		task sourcesJar(type: Jar, dependsOn: classes) {

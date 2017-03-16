@@ -32,12 +32,15 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
+* All _test suite_ annotations from the `org.junit.platform.runner` package have been
+  moved to the `org.junit.platform.suite.api` package in the new `junit-platform-suite-api`
+  module. This includes annotations such as `@SelectClasses`, `@SelectPackages`, etc.
 * Removed deprecated `selectNames()` name-based discovery selector from
   `DiscoverySelectors` in favor of the dedicated `selectPackage(String)`,
   `selectClass(String)`, and `selectMethod(String)` methods.
 * `ClassNameFilter.includeClassNamePattern` was removed; please use
   `ClassNameFilter.includeClassNamePatterns` instead.
-* `@IncludeClassNamePattern` was removed; please use `@IncludeClassNamePatterns` instead.
+* `@IncludeClassNamePattern` has been removed; please use `@IncludeClassNamePatterns` instead.
 * The `--hide-details` option of the `ConsoleLauncher` is deprecated; use `--details none` instead.
 * The ZIP distribution containing the console launcher is no longer provided. It has been replaced
   by an executable standalone JAR distribution. For details, see the "New Features" section below.

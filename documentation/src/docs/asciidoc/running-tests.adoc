@@ -643,5 +643,5 @@ pattern `{standard-include-class-name-pattern}`.
 .Additional Configuration Options
 NOTE: There are more configuration options for discovering and filtering tests than just
 `@SelectPackages`. Please consult the
-{javadoc-root}/org/junit/platform/runner/package-summary.html[Javadoc] for further
+{javadoc-root}/org/junit/platform/suite/api/package-summary.html[Javadoc] for further
 details.
