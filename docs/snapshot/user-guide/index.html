@@ -1984,11 +1984,11 @@ details on how to set it up, please consult the
 <h4 id="other-ides">4.1.3. Other IDEs</h4>
 <div class="paragraph">
 <p>At the time of this writing, there is no direct support for running tests on the JUnit
-Platform within IDEs other than IntelliJ IDEA.
-However, the JUnit team provides two intermediate solutions so that
-you can go ahead and try out JUnit 5 within your IDE today. You can use the
-<a href="#running-tests-console-launcher">Console Launcher</a> manually or execute tests with a
-<a href="#running-tests-junit-platform-runner">JUnit 4 based Runner</a>.</p>
+Platform within IDEs other than with IntelliJ IDEA or the beta support in Eclipse.
+However, the JUnit team provides two intermediate solutions so that you can go ahead and
+try out JUnit 5 within your IDE today. You can use the <a href="#running-tests-console-launcher">Console Launcher</a>
+manually or execute tests with a <a href="#running-tests-junit-platform-runner">JUnit 4 based
+Runner</a>.</p>
 </div>
 </div>
 </div>
@@ -1998,9 +1998,9 @@ you can go ahead and try out JUnit 5 within your IDE today. You can use the
 <h4 id="running-tests-build-gradle">4.2.1. Gradle</h4>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic Gradle plugin that allows you to run any kind
-of test that is supported by a <code>TestEngine</code> (e.g., JUnit 3, JUnit 4, JUnit Jupiter, Specsy,
-etc.). See <code>build.gradle</code> in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project for an example of the
-plugin in action.</p>
+of test that is supported by a <code>TestEngine</code> (e.g., JUnit 3, JUnit 4, JUnit Jupiter,
+:Specsy:, etc.). See <code>build.gradle</code> in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project for an
+example of the plugin in action.</p>
 </div>
 <div class="sect4">
 <h5 id="running-tests-build-gradle-junit-enable">Enabling the JUnit Gradle Plugin</h5>
@@ -2057,20 +2057,20 @@ final release.
 </div>
 <div class="paragraph">
 <p>Setting <code>logManager</code> instructs the JUnit Gradle plugin to set the
-<code>java.util.logging.manager</code> system property to the supplied fully qualified class name of
-the <code>java.util.logging.LogManager</code> implementation to use. The above example demonstrates
-how to configure log4j as the <code>LogManager</code>.</p>
+<code>java.util.logging.manager</code> system property to the supplied <em>fully qualified class</em> name
+of the <code>java.util.logging.LogManager</code> implementation to use. The above example
+demonstrates how to configure log4j as the <code>LogManager</code>.</p>
 </div>
 <div class="paragraph">
-<p>By default, the JUnit Gradle plugin disables the standard Gradle <code>test</code> task, but this be
-overridden via the <code>enableStandardTestTask</code> flag.</p>
+<p>By default, the JUnit Gradle plugin disables the standard Gradle <code>test</code> task, but this
+can be overridden via the <code>enableStandardTestTask</code> flag.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="running-tests-build-gradle-selectors">Configuring Selectors</h5>
 <div class="paragraph">
-<p>By default, the plugin will scan your project&#8217;s output directories for tests. However, you can
-specify which tests to execute explicitly using the <code>selectors</code> extension element.</p>
+<p>By default, the plugin will scan your project&#8217;s output directories for tests. However,
+you can specify which tests to execute explicitly using the <code>selectors</code> extension element.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2116,11 +2116,11 @@ specify which tests to execute explicitly using the <code>selectors</code> exten
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Classes, fully qualified</td>
+<td>Classes, fully qualified class names</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Methods, fully qualified (see <a href="../api/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod-java.lang.String-">selectMethod(String) in DiscoverySelectors</a>)</td>
+<td>Methods, fully qualified method names (see <a href="../api/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod-java.lang.String-">selectMethod(String) in DiscoverySelectors</a>)</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="7"></i><b>7</b></td>
@@ -2132,10 +2132,11 @@ specify which tests to execute explicitly using the <code>selectors</code> exten
 <div class="sect4">
 <h5 id="running-tests-build-gradle-filters">Configuring Filters</h5>
 <div class="paragraph">
-<p>You can configure filters for the test plan by using the <code>filters</code> extension. By default, all
-engines and tags are included in the test plan. Only the default <code>includeClassNamePattern</code>
-(<code>^.*Tests?$</code>) is applied. You can overwrite its value as in the
-following example. When you specify multiple patterns, they are combined using OR semantics.</p>
+<p>You can configure filters for the test plan by using the <code>filters</code> extension. By default,
+all engines and tags are included in the test plan. Only the default
+<code>includeClassNamePattern</code> (<code>^.*Tests?$</code>) is applied. You can
+override the default pattern as in the following example. When you specify multiple
+patterns, they are combined using OR semantics.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2162,13 +2163,12 @@ following example. When you specify multiple patterns, they are combined using O
 </div>
 </div>
 <div class="paragraph">
-<p>If you supply a <em>Test
-Engine ID</em> via <code>engines {include &#8230;&#8203;}</code> or <code>engines {exclude &#8230;&#8203;}</code>, the JUnit Gradle
-plugin will only run tests for the desired test engines. Similarly, if you supply a <em>tag</em>
-via <code>tags {include &#8230;&#8203;}</code> or <code>tags {exclude &#8230;&#8203;}</code>, the JUnit Gradle plugin will only run
-tests that are <em>tagged</em> accordingly (e.g., via the <code>@Tag</code> annotation for JUnit Jupiter based
-tests). The same applies to package names that can be included or excluded using
-<code>packages {include &#8230;&#8203;}</code> or <code>packages {exclude &#8230;&#8203;}</code>.</p>
+<p>If you supply a <em>Test Engine ID</em> via <code>engines {include &#8230;&#8203;}</code> or <code>engines {exclude &#8230;&#8203;}</code>,
+the JUnit Gradle plugin will only run tests for the desired test engines. Similarly, if
+you supply a <em>tag</em> via <code>tags {include &#8230;&#8203;}</code> or <code>tags {exclude &#8230;&#8203;}</code>, the JUnit Gradle
+plugin will only run tests that are <em>tagged</em> accordingly (e.g., via the <code>@Tag</code> annotation
+for JUnit Jupiter based tests). The same applies to package names that can be included or
+excluded using <code>packages {include &#8230;&#8203;}</code> or <code>packages {exclude &#8230;&#8203;}</code>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -2211,9 +2211,10 @@ similar to the following.</p>
 <code>junitPlatformTest</code> task at your disposal.</p>
 </div>
 <div class="paragraph">
-<p>Invoking <code>gradlew clean junitPlatformTest</code> (or <code>gradlew clean test</code>) from the command
-line will execute all tests within the project whose class names match the regular
-expression supplied via <code>includeClassNamePattern</code> (defaults to <code>^.*Tests?$</code>).</p>
+<p>Invoking <code>gradlew junitPlatformTest</code> (or <code>gradlew test</code>) from the command line will
+execute all tests within the project whose class names match the regular expression
+supplied via the <code>includeClassNamePattern</code> (which defaults to
+<code>^.*Tests?$</code>).</p>
 </div>
 <div class="paragraph">
 <p>Executing the <code>junitPlatformTest</code> task in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project results
@@ -2297,7 +2298,7 @@ The <em>exit value</em> is <code>1</code> if any containers or tests failed; oth
 <div class="title">Current Limitations of the JUnit Gradle Plugin</div>
 The results of any tests run via the JUnit Gradle plugin will not be included
          in the standard test report generated by Gradle; however, the test results can
-		 be aggregated. See the <code>reportsDir</code> property of the plugin.
+		 typically be aggregated on a CI server. See the <code>reportsDir</code> property of the plugin.
 </td>
 </tr>
 </table>
@@ -2342,7 +2343,7 @@ to the runtime classpath.</p>
 </div>
 <div class="paragraph">
 <p>To configure support for JUnit Jupiter based tests, configure a <code>test</code> dependency on the JUnit
-Jupiter API and add the JUnit Jupiter <code>TestEngine</code> implementation to the dependencies of the
+Jupiter API, and add the JUnit Jupiter <code>TestEngine</code> implementation to the dependencies of the
 <code>maven-surefire-plugin</code> similar to the following.</p>
 </div>
 <div class="listingblock">
@@ -2427,17 +2428,17 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-maven-filter-tags">Filtering by tag</h5>
+<h5 id="running-tests-build-maven-filter-tags">Filtering by tags</h5>
 <div class="paragraph">
-<p>You can filter tests by tags using the following configuration properties:</p>
+<p>You can filter tests by tags using the following configuration properties.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>to include use either <code>groups</code> or <code>includeTags</code></p>
+<p>to include a tag, use either <code>groups</code> or <code>includeTags</code></p>
 </li>
 <li>
-<p>to exclude use either <code>excludedGroups</code> or <code>excludeTags</code></p>
+<p>to exclude a tag, use either <code>excludedGroups</code> or <code>excludeTags</code></p>
 </li>
 </ul>
 </div>
@@ -2476,11 +2477,11 @@ the JUnit Platform from the console. For example, it can be used to run JUnit
 Vintage and JUnit Jupiter tests and print test execution results to the console.</p>
 </div>
 <div class="paragraph">
-<p>An executable <code>junit-platform-console-standalone-1.0.0-SNAPSHOT.jar</code> with all dependencies
-included is provided at the central Maven repository under the
+<p>An executable <code>junit-platform-console-standalone-1.0.0-SNAPSHOT.jar</code> with all
+dependencies included is published in the central Maven repository under the
 <a href="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone">junit-platform-console-standalone</a>
 directory. You can <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/run.html">run</a> the
-application like shown below:</p>
+standalone <code>ConsoleLauncher</code> as shown below.</p>
 </div>
 <div class="paragraph">
 <p><code>java -jar junit-platform-console-standalone-1.0.0-SNAPSHOT.jar &lt;<a href="#running-tests-console-launcher-options">Options</a>&gt;</code></p>
@@ -2713,7 +2714,7 @@ characters. To enable technical names for reporting purposes, simply declare the
 <code>@RunWith(JUnitPlatform.class)</code> directly. Please note that the test methods in the
 following example are annotated with <code>org.junit.jupiter.api.Test</code> (JUnit Jupiter), not
 <code>org.junit.Test</code> (JUnit Vintage). Moreover, in this case the test class must be <code>public</code>;
-otherwise, IDEs won&#8217;t recognize it as a test class.</p>
+otherwise, IDEs won&#8217;t recognize it as a JUnit 4 test class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4670,7 +4671,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-16 17:16:33 EDT
+Last updated 2017-03-16 17:34:48 EDT
 </div>
 </div>
 </body>
