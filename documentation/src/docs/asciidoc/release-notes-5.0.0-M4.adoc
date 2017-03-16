@@ -107,7 +107,10 @@ on GitHub.
 * `TestInstancePostProcessors` registered on test methods are now invoked.
 * There are two new signatures for `Assertions.fail`: `Assertions.fail(Throwable cause)` and
   `Assertions.fail(String message, Throwable cause)`.
-
+* New `Assertions.assertLinesMatch()` comparing lists of `String` featuring `Object::equals` and
+  regular expression checks. It also provides a fast-forward mechanism to skip actual lines that
+  are expected to change in each invocation, e.g. duration, timestamps and stack traces.
+  Consult the Javadoc for `{Assertions}` for details.
 
 [[release-notes-5.0.0-m4-junit-vintage]]
 ==== JUnit Vintage

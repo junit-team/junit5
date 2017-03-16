@@ -118,7 +118,7 @@ class AssertLinesMatch {
 			}
 
 			int number = expectedLines.size() - expectedDeque.size(); // 1-based line number
-			fail(expectedLines, actualLines, "expected line #%d:`%s` don't match", number, snippet(expectedLine));
+			fail(expectedLines, actualLines, "expected line #%d:`%s` doesn't match", number, snippet(expectedLine));
 		}
 
 		// after math
@@ -156,7 +156,7 @@ class AssertLinesMatch {
 		String text = fastForwardLine.trim().substring(2, fastForwardLine.length() - 2).trim();
 		try {
 			int limit = Integer.parseInt(text);
-			condition(limit > 0, "fast-forward limit must be greater than zero, it is: " + limit);
+			condition(limit > 0, () -> format("fast-forward(%d) limit must be greater than zero", limit));
 			return limit;
 		}
 		catch (NumberFormatException e) {

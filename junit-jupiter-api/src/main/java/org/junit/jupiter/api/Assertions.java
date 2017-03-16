@@ -878,7 +878,7 @@ public final class Assertions {
 	 * list.
 	 *
 	 * <p>This method differs from other assertions that effectively only check {@link String#equals(Object)},
-	 * in that it uses the following staged match-making algorithm:
+	 * in that it uses the following staged matching algorithm:
 	 *
 	 * <p>For each pair of expected and actual lines do
 	 * <ol>

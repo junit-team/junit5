@@ -12,8 +12,10 @@ package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertLinesMatch.isFastForwardLine;
 import static org.junit.jupiter.api.AssertLinesMatch.parseFastForwardLimit;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.opentest4j.AssertionFailedError;
@@ -112,7 +115,7 @@ public class AssertionsAssertLinesMatchTests {
 		List<String> actual = Arrays.asList("first line", "sec0nd line", "third line");
 		Error error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
 		List<String> expectedErrorMessageLines = Arrays.asList( //
-			"expected line #2:`second line` don't match ==> expected: <first line", //
+			"expected line #2:`second line` doesn't match ==> expected: <first line", //
 			"second line", //
 			"third line> but was: <first line", //
 			"sec0nd line", //
@@ -193,13 +196,28 @@ public class AssertionsAssertLinesMatchTests {
 			() -> assertEquals(Integer.MAX_VALUE, parseFastForwardLimit(">> non Integer.parse()-able comment >>")),
 			() -> assertEquals(9, parseFastForwardLimit(">>9>>")),
 			() -> assertEquals(9, parseFastForwardLimit(">> 9 >>")));
+		Throwable error = assertThrows(PreconditionViolationException.class, () -> parseFastForwardLimit(">>0>>"));
+		assertMessageEquals(error, "fast-forward(0) limit must be greater than zero");
+		error = assertThrows(PreconditionViolationException.class, () -> parseFastForwardLimit(">>-1>>"));
+		assertMessageEquals(error, "fast-forward(-1) limit must be greater than zero");
+		error = assertThrows(PreconditionViolationException.class, () -> parseFastForwardLimit(">>-2147483648>>"));
+		assertMessageEquals(error, "fast-forward(-2147483648) limit must be greater than zero");
 	}
 
 	@Test
 	void assertLinesMatchMatches() {
-		assertAll("valid fast-forward lines", //
+		Random random = new Random();
+		assertAll("do match", //
+			() -> assertTrue(
+				AssertLinesMatch.matches("duration: [\\d]+ ms", "duration: " + random.nextInt(1000) + " ms")),
 			() -> assertTrue(AssertLinesMatch.matches("123", "123")),
 			() -> assertTrue(AssertLinesMatch.matches(".*", "123")),
 			() -> assertTrue(AssertLinesMatch.matches("\\d+", "123")));
+		assertAll("don't match", //
+			() -> assertFalse(
+				AssertLinesMatch.matches("duration: [\\d]+ ms", "duration: " + random.nextGaussian() + " ms")),
+			() -> assertFalse(AssertLinesMatch.matches("12", "123")),
+			() -> assertFalse(AssertLinesMatch.matches("..+", "1")),
+			() -> assertFalse(AssertLinesMatch.matches("\\d\\d+", "1")));
 	}
 }
