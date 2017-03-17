@@ -386,7 +386,9 @@ subprojects { subproj ->
 			licenseHeaderFile headerFile, '(package|import) '
 			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
 			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
-			removeUnusedImports()
+			if (org.gradle.api.JavaVersion.current() == org.gradle.api.JavaVersion.VERSION_1_8) {
+				removeUnusedImports()
+			}
 
 			trimTrailingWhitespace()
 			endWithNewline()
