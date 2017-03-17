@@ -32,7 +32,7 @@ Runner>>.
 
 The JUnit team has developed a very basic Gradle plugin that allows you to run any kind
 of test that is supported by a `TestEngine` (e.g., JUnit 3, JUnit 4, JUnit Jupiter,
-:Specsy:, etc.). See `build.gradle` in the `{junit5-gradle-consumer}` project for an
+{Specsy}, etc.). See `build.gradle` in the `{junit5-gradle-consumer}` project for an
 example of the plugin in action.
 
 [[running-tests-build-gradle-junit-enable]]
