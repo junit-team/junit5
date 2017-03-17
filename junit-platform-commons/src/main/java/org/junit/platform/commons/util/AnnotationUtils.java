@@ -33,6 +33,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 
@@ -229,8 +230,11 @@ public final class AnnotationUtils {
 					// Note: it's not a legitimate containing annotation type if it doesn't declare
 					// a 'value' attribute that returns an array of the contained annotation type.
 					// See https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.6.3
-					// Thus we proceed without verifying this assumption.
-					Method method = ReflectionUtils.getMethod(containerType, "value").orElseThrow(AssertionError::new);
+					Method method = ReflectionUtils.getMethod(containerType, "value").orElseThrow(
+						() -> new JUnitException(String.format(
+							"Container annotation type '%s' must declare a 'value' attribute of type %s[].",
+							containerType, annotationType)));
+
 					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
 					found.addAll((Collection<? extends A>) asList(containedAnnotations));
 				}
