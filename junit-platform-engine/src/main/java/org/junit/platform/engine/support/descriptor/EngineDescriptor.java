@@ -16,8 +16,8 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * An {@code EngineDescriptor} is a {@link org.junit.platform.engine.TestDescriptor} for a specific
- * {@link org.junit.platform.engine.TestEngine}.
+ * An {@code EngineDescriptor} is a {@link org.junit.platform.engine.TestDescriptor
+ * TestDescriptor} for a specific {@link org.junit.platform.engine.TestEngine TestEngine}.
  *
  * @since 1.0
  */
@@ -42,11 +42,12 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 	/**
 	 * Always returns {@link org.junit.platform.engine.TestDescriptor.Type#ENGINE}.
 	 *
-	 * @see org.junit.platform.engine.TestDescriptor#isContainer() Test2()
+	 * @see org.junit.platform.engine.TestDescriptor#isContainer()
 	 * @see org.junit.platform.engine.TestDescriptor#isTest()
 	 */
 	@Override
 	public final Type getType() {
 		return Type.ENGINE;
 	}
+
 }
