@@ -54,6 +54,15 @@ public interface TestDescriptor {
 	 */
 	String getDisplayName();
 
+	/**
+	 * Get the name of this descriptor in a format that is suitable for legacy
+	 * reporting infrastructure &mdash; for example, for reporting systems built
+	 * on the Ant-based XML reporting format for JUnit 4.
+	 *
+	 * <p>The default implementation simply delegates to {@link #getDisplayName()}.
+	 *
+	 * @return the legacy reporting name; never {@code null}
+	 */
 	default String getLegacyReportingName() {
 		return getDisplayName();
 	}
@@ -149,7 +158,7 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Determine this descriptor's {@link Type}.
+	 * Determine the {@link Type} of this descriptor.
 	 *
 	 * @return the descriptor type; never {@code null}.
 	 * @see #isContainer()
@@ -160,7 +169,7 @@ public interface TestDescriptor {
 	/**
 	 * Determine if this descriptor describes a container.
 	 *
-	 * <p>This default implementation delegates to {@link Type#isContainer()}.
+	 * <p>The default implementation delegates to {@link Type#isContainer()}.
 	 */
 	default boolean isContainer() {
 		return getType().isContainer();
@@ -169,7 +178,7 @@ public interface TestDescriptor {
 	/**
 	 * Determine if this descriptor describes a test.
 	 *
-	 * <p>This default implementation delegates to {@link Type#isTest()}.
+	 * <p>The default implementation delegates to {@link Type#isTest()}.
 	 */
 	default boolean isTest() {
 		return getType().isTest();
@@ -178,19 +187,19 @@ public interface TestDescriptor {
 	/**
 	 * Determine if this descriptor or any of its descendants describes a test.
 	 *
-	 * <p>This default implementation recursively calls itself until a descriptor
-	 * returns {@code true} to {@link #isTest()}; starting with this descriptor
-	 * instance.
+	 * <p>The default implementation returns {@code true} if {@link #isTest()}
+	 * returns {@code true} and otherwise recurses through this descriptors
+	 * {@linkplain #getChildren() children} to determine if they have tests.
 	 */
 	default boolean hasTests() {
 		return isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests);
 	}
 
 	/**
-	 * Remove this descriptor from hierarchy unless it is a root or has tests.
+	 * Remove this descriptor from the hierarchy unless it is a root or has tests.
 	 *
-	 * <p>An engine implementation may override this method and do it differently
-	 * or skip pruning altogether.
+	 * <p>An concrete {@link TestEngine} may override this method in order to implement
+	 * a different algorithm or to skip pruning altogether.
 	 *
 	 * @see #isRoot()
 	 * @see #hasTests()
@@ -204,12 +213,14 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Remove this and descendant descriptors from hierarchy.
+	 * Remove this descriptor and its descendants from the hierarchy.
 	 *
-	 * <p>The default implementation passes the potentially overridden
-	 * {@link #prune()} as a {@link Visitor} to this instance. I.e. it removes
-	 * itself and descendants unless it is a root descriptor or itself is test
-	 * or any of its children describes a test.
+	 * <p>The default implementation supplies the {@link #prune()} method as a
+	 * {@link Visitor} to this descriptor, thereby effectively removing this
+	 * descriptor and all of its descendants.
+	 *
+	 * @see #accept(Visitor)
+	 * @see #prune()
 	 */
 	default void pruneTree() {
 		accept(TestDescriptor::prune);
@@ -241,6 +252,7 @@ public interface TestDescriptor {
 	 *
 	 * @see TestDescriptor#accept
 	 */
+	@FunctionalInterface
 	interface Visitor {
 
 		/**
@@ -252,42 +264,46 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Descriptor type constants.
+	 * Supported types for {@link TestDescriptor TestDescriptors}.
 	 */
 	enum Type {
 
 		/**
-		 * Engine descriptor type.
+		 * Denotes that the {@link TestDescriptor} is for a {@link TestEngine}.
 		 */
 		ENGINE,
 
 		/**
-		 * Generic container descriptor type.
+		 * Denotes that the {@link TestDescriptor} is for a <em>container</em>.
 		 */
 		CONTAINER,
 
 		/**
-		 * Test descriptor type.
+		 * Denotes that the {@link TestDescriptor} is for a <em>test</em>.
 		 */
 		TEST,
 
 		/**
-		 * Container <em>and</em> test descriptor type.
+		 * Denotes that the {@link TestDescriptor} is for a <em>test</em>
+		 * that may potentially also be a <em>container</em>.
 		 */
 		CONTAINER_AND_TEST;
 
 		/**
-		 * @return {@code true} if this descriptor type can contain other descriptors, else {@code false}.
+		 * @return {@code true} if this type represents a descriptor that can
+		 * contain other descriptors
 		 */
 		public boolean isContainer() {
 			return this == ENGINE || this == CONTAINER || this == CONTAINER_AND_TEST;
 		}
 
 		/**
-		 * @return {@code true} if this descriptor type is a test, else {@code false}.
+		 * @return {@code true} if this type represents a descriptor for a test
 		 */
 		public boolean isTest() {
 			return this == TEST || this == CONTAINER_AND_TEST;
 		}
+
 	}
+
 }
