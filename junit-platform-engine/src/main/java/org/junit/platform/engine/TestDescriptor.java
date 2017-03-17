@@ -198,7 +198,7 @@ public interface TestDescriptor {
 	/**
 	 * Remove this descriptor from the hierarchy unless it is a root or has tests.
 	 *
-	 * <p>An concrete {@link TestEngine} may override this method in order to implement
+	 * <p>A concrete {@link TestEngine} may override this method in order to implement
 	 * a different algorithm or to skip pruning altogether.
 	 *
 	 * @see #isRoot()
