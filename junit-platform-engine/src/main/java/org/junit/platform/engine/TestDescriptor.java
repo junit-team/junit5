@@ -188,7 +188,7 @@ public interface TestDescriptor {
 	 * Determine if this descriptor or any of its descendants describes a test.
 	 *
 	 * <p>The default implementation returns {@code true} if {@link #isTest()}
-	 * returns {@code true} and otherwise recurses through this descriptors
+	 * returns {@code true} and otherwise recurses through this descriptor's
 	 * {@linkplain #getChildren() children} to determine if they have tests.
 	 */
 	default boolean hasTests() {
