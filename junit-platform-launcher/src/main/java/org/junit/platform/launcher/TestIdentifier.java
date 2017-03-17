@@ -59,7 +59,7 @@ public final class TestIdentifier implements Serializable {
 		Optional<TestSource> source = testDescriptor.getSource();
 		Set<TestTag> tags = testDescriptor.getTags();
 		boolean test = testDescriptor.isTest();
-		boolean container = !test || !testDescriptor.getChildren().isEmpty();
+		boolean container = testDescriptor.isContainer();
 		Optional<String> parentId = testDescriptor.getParent().map(
 			parentDescriptor -> parentDescriptor.getUniqueId().toString());
 		String legacyReportingName = testDescriptor.getLegacyReportingName();

@@ -111,6 +111,15 @@ on GitHub.
   regular expression checks. It also provides a fast-forward mechanism to skip actual lines that
   are expected to change in each invocation, e.g. duration, timestamps and stack traces.
   Consult the Javadoc for `{Assertions}` for details.
+* Squashed logic behind `TestDescriptor.isTest()` and `TestDescriptor.isContainer()` from two
+  independent boolean properties into a single enumeration, namely `TestDescriptor.Type`. See
+  next bullet point for details.
+* Introduced `TestDescriptor.Type` enumeration with `TestDescriptor.getType()` accessor defining
+  all possible descriptor types. `TestDescriptor.isTest()` and `TestDescriptor.isContainer()`
+  only delegate to `TestDescriptor.Type` constants now.
+* Introduced `TestDescriptor.prune()` and `TestDescriptor.pruneTree()` which allows engine writers
+  customize what happens when pruning is triggered by the JUnit Platform.
+
 
 [[release-notes-5.0.0-m4-junit-vintage]]
 ==== JUnit Vintage

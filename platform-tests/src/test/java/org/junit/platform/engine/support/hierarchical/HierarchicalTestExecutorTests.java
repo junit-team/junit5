@@ -404,18 +404,13 @@ public class HierarchicalTestExecutorTests {
 		}
 
 		@Override
-		public boolean isTest() {
-			return false;
-		}
-
-		@Override
-		public boolean isContainer() {
-			return true;
+		public Type getType() {
+			return Type.CONTAINER;
 		}
 
 		@Override
 		public boolean isLeaf() {
-			return !isContainer();
+			return isTest();
 		}
 
 	}
@@ -433,18 +428,13 @@ public class HierarchicalTestExecutorTests {
 		}
 
 		@Override
-		public boolean isTest() {
-			return true;
-		}
-
-		@Override
-		public boolean isContainer() {
-			return false;
+		public Type getType() {
+			return Type.TEST;
 		}
 
 		@Override
 		public boolean isLeaf() {
-			return !isContainer();
+			return isTest();
 		}
 	}
 
