@@ -4656,6 +4656,12 @@ generating assertion failure messages.</p>
 <p>There are two new signatures for <code>Assertions.fail</code>: <code>Assertions.fail(Throwable cause)</code> and
 <code>Assertions.fail(String message, Throwable cause)</code>.</p>
 </li>
+<li>
+<p>New <code>Assertions.assertLinesMatch()</code> comparing lists of <code>String</code> featuring <code>Object::equals</code> and
+regular expression checks. It also provides a fast-forward mechanism to skip actual lines that
+are expected to change in each invocation, e.g. duration, timestamps and stack traces.
+Consult the Javadoc for <code><a href="../api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.Assertions</a></code> for details.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -4682,7 +4688,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-16 17:34:48 EDT
+Last updated 2017-03-17 04:34:19 EDT
 </div>
 </div>
 </body>
