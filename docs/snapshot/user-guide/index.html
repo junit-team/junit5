@@ -4662,6 +4662,20 @@ regular expression checks. It also provides a fast-forward mechanism to skip act
 are expected to change in each invocation, e.g. duration, timestamps and stack traces.
 Consult the Javadoc for <code><a href="../api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.Assertions</a></code> for details.</p>
 </li>
+<li>
+<p>Squashed logic behind <code>TestDescriptor.isTest()</code> and <code>TestDescriptor.isContainer()</code> from two
+independent boolean properties into a single enumeration, namely <code>TestDescriptor.Type</code>. See
+next bullet point for details.</p>
+</li>
+<li>
+<p>Introduced <code>TestDescriptor.Type</code> enumeration with <code>TestDescriptor.getType()</code> accessor defining
+all possible descriptor types. <code>TestDescriptor.isTest()</code> and <code>TestDescriptor.isContainer()</code>
+only delegate to <code>TestDescriptor.Type</code> constants now.</p>
+</li>
+<li>
+<p>Introduced <code>TestDescriptor.prune()</code> and <code>TestDescriptor.pruneTree()</code> which allows engine writers
+customize what happens when pruning is triggered by the JUnit Platform.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -4688,7 +4702,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-17 11:00:38 EDT
+Last updated 2017-03-17 10:44:31 EDT
 </div>
 </div>
 </body>
