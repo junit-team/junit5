@@ -104,14 +104,14 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 			ContainerExtensionContext containerExtensionContext, ExtensionRegistry extensionRegistry) {
 		List<TestTemplateInvocationContextProvider> providers = extensionRegistry.getExtensions(
 			TestTemplateInvocationContextProvider.class);
-		Preconditions.notEmpty(providers, "You must register at least one "
+		Preconditions.notEmpty(providers, () -> "You must register at least one "
 				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " for this method");
 		// @formatter:off
 		providers = providers.stream()
 				.filter(provider -> provider.supports(containerExtensionContext))
 				.collect(toList());
 		// @formatter:on
-		Preconditions.notEmpty(providers, "You must register at least one "
+		Preconditions.notEmpty(providers, () -> "You must register at least one "
 				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " that supports this method");
 		return providers;
 	}
