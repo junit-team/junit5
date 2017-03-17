@@ -32,6 +32,7 @@ org.junit.platform.launcher
 org.junit.platform.launcher.core
 org.junit.platform.launcher.listeners
 org.junit.platform.runner
+org.junit.platform.suite.api
 org.junit.platform.surefire.provider
 org.junit.vintage.engine
 org.junit.vintage.engine.descriptor

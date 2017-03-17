@@ -711,8 +711,14 @@ See <a href="#launcher-api">JUnit Platform Launcher API</a> for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-runner</code></dt>
 <dd>
-<p>Runner and annotations for configuring and executing tests on the JUnit Platform in a JUnit 4
+<p>Runner for executing tests and test suites on the JUnit Platform in a JUnit 4
 environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to Run the JUnit Platform</a> for details.</p>
+</dd>
+<dt class="hdlist1"><code>junit-platform-suite-api</code></dt>
+<dd>
+<p>   Annotations for configuring test suites on the JUnit Platform. Supported by the
+<a href="#running-tests-junit-platform-runner">JUnitPlatform runner</a> and possibly by third-party
+<code>TestEngine</code> implementations.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-surefire-provider</code></dt>
 <dd>
@@ -2750,7 +2756,7 @@ following example.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.junit.platform.runner.JUnitPlatform</span>;
-<span class="keyword">import</span> <span class="include">org.junit.platform.runner.SelectPackages</span>;
+<span class="keyword">import</span> <span class="include">org.junit.platform.suite.api.SelectPackages</span>;
 <span class="keyword">import</span> <span class="include">org.junit.runner.RunWith</span>;
 
 <span class="annotation">@RunWith</span>(JUnitPlatform.class)
@@ -2774,7 +2780,7 @@ pattern <code>^.*Tests?$</code>.</p>
 <div class="title">Additional Configuration Options</div>
 There are more configuration options for discovering and filtering tests than just
 <code>@SelectPackages</code>. Please consult the
-<a href="../api/org/junit/platform/runner/package-summary.html">Javadoc</a> for further
+<a href="../api/org/junit/platform/suite/api/package-summary.html">Javadoc</a> for further
 details.
 </td>
 </tr>
@@ -4514,6 +4520,11 @@ used in classpath scanning routines.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>All <em>test suite</em> annotations from the <code>org.junit.platform.runner</code> package have been
+moved to the <code>org.junit.platform.suite.api</code> package in the new <code>junit-platform-suite-api</code>
+module. This includes annotations such as <code>@SelectClasses</code>, <code>@SelectPackages</code>, etc.</p>
+</li>
+<li>
 <p>Removed deprecated <code>selectNames()</code> name-based discovery selector from
 <code>DiscoverySelectors</code> in favor of the dedicated <code>selectPackage(String)</code>,
 <code>selectClass(String)</code>, and <code>selectMethod(String)</code> methods.</p>
@@ -4523,7 +4534,7 @@ used in classpath scanning routines.</p>
 <code>ClassNameFilter.includeClassNamePatterns</code> instead.</p>
 </li>
 <li>
-<p><code>@IncludeClassNamePattern</code> was removed; please use <code>@IncludeClassNamePatterns</code> instead.</p>
+<p><code>@IncludeClassNamePattern</code> has been removed; please use <code>@IncludeClassNamePatterns</code> instead.</p>
 </li>
 <li>
 <p>The <code>--hide-details</code> option of the <code>ConsoleLauncher</code> is deprecated; use <code>--details none</code> instead.</p>
