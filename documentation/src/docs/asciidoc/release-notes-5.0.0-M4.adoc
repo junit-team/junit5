@@ -102,14 +102,14 @@ on GitHub.
 ===== Deprecations and Breaking Changes
 
 * Removed deprecated `Assertions.expectThrows()` method in favor of `Assertions.assertThrows()`.
-* `ExtensionContext.Namespace`s composed of the same parts but in a different order are no longer considered
+* ``ExtensionContext.Namespace``s composed of the same parts but in a different order are no longer considered
   equal to each other.
 
 ===== New Features and Improvements
 
 * `Assertions.assertThrows()` now uses canonical names for exception types when
   generating assertion failure messages.
-* `TestInstancePostProcessor`s registered on test methods are now invoked.
+* ``TestInstancePostProcessor``s registered on test methods are now invoked.
 * There are two new signatures for `Assertions.fail`: `Assertions.fail(Throwable cause)` and
   `Assertions.fail(String message, Throwable cause)`.
 * New `Assertions.assertLinesMatch()` comparing lists of `String`, featuring `Object::equals` and
