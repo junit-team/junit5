@@ -526,23 +526,26 @@ public final class ReflectionUtils {
 
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notNull(predicate, "predicate must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
 
-		Set<Class<?>> candidates = findNestedClasses(clazz, new LinkedHashSet<>());
+		Set<Class<?>> candidates = new LinkedHashSet<>();
+		findNestedClasses(clazz, candidates);
 		return candidates.stream().filter(predicate).collect(toList());
 	}
 
-	private static Set<Class<?>> findNestedClasses(Class<?> clazz, Set<Class<?>> candidates) {
-		for (Class<?> candidate = clazz; candidate != null; candidate = candidate.getSuperclass()) {
-			Class<?>[] declaredClasses = candidate.getDeclaredClasses();
-			candidates.addAll(Arrays.asList(declaredClasses));
-			for (Class<?> interfaceType : candidate.getInterfaces()) {
-				declaredClasses = interfaceType.getDeclaredClasses();
-				candidates.addAll(Arrays.asList(declaredClasses));
-				findNestedClasses(interfaceType, candidates);
-			}
+	private static void findNestedClasses(Class<?> clazz, Set<Class<?>> candidates) {
+		if (clazz == Object.class || clazz == null) {
+			return;
 		}
-		return candidates;
+
+		// Search class hierarchy
+		candidates.addAll(Arrays.asList(clazz.getDeclaredClasses()));
+		findNestedClasses(clazz.getSuperclass(), candidates);
+
+		// Search interface hierarchy
+		for (Class<?> interfaceType : clazz.getInterfaces()) {
+			findNestedClasses(interfaceType, candidates);
+		}
 	}
 
 	/**
