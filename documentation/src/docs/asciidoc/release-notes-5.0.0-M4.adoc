@@ -1,10 +1,10 @@
 [[release-notes-5.0.0-m4]]
 === 5.0.0-M4
 
-*Date of Release:* ❓
+*Date of Release:* April 1, 2017
 
-*Scope:* Fourth milestone release of JUnit 5 with a focus on parameterized tests,
-enhanced dynamic tests, and documentation.
+*Scope:* Fourth milestone release of JUnit 5 with a focus on parameterized tests and
+documentation.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/7?closed=1+[5.0 M4] milestone page in the JUnit repository
@@ -19,7 +19,7 @@ on GitHub.
 * The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as the plugin
   version) instead of a dynamic versioning scheme (was `1.+`) by default to ensure reproducible
   builds.
-* The JUnit Platform Gradle plugin explicitly applies the Gradle built-in `java` plugin as
+* The JUnit Platform Gradle plugin now explicitly applies the Gradle built-in `java` plugin as
   it has an implicit dependency on it being applied.
 * All `findMethods()` implementations in `ReflectionUtils` no longer return synthetic methods.
   Shadowed https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2[override-equal]
@@ -86,12 +86,14 @@ on GitHub.
   `TestEngine` and `Extension` authors are encouraged to use these supported methods
   in order to align with the behavior of the JUnit Platform.
 
+
 [[release-notes-5.0.0-m4-junit-jupiter]]
 ==== JUnit Jupiter
 
 ===== Bug Fixes
 
-* Fixed bug that prevented discovery of two or more methods of the same class.
+* Fixed bug that prevented discovery of two or more methods in the same class when selected
+  via a method selector.
 * Fixed bug that prevented discovery of `@Nested` non-static test classes declared in super classes.
 * The correct execution order of overridden `@BeforeEach`/`@AfterEach` methods is now enforced when declared
   at multiple levels within a class hierarchy. It's now always `super.before`, `this.before`, `this.test`,
@@ -107,21 +109,21 @@ on GitHub.
 
 * `Assertions.assertThrows()` now uses canonical names for exception types when
   generating assertion failure messages.
-* `TestInstancePostProcessors` registered on test methods are now invoked.
+* `TestInstancePostProcessor`s registered on test methods are now invoked.
 * There are two new signatures for `Assertions.fail`: `Assertions.fail(Throwable cause)` and
   `Assertions.fail(String message, Throwable cause)`.
-* New `Assertions.assertLinesMatch()` comparing lists of `String` featuring `Object::equals` and
+* New `Assertions.assertLinesMatch()` comparing lists of `String`, featuring `Object::equals` and
   regular expression checks. It also provides a fast-forward mechanism to skip actual lines that
-  are expected to change in each invocation, e.g. duration, timestamps and stack traces.
-  Consult the Javadoc for `{Assertions}` for details.
+  are expected to change in each invocation, e.g. duration, timestamps, and stack traces.
+  Consult the JavaDoc for `{Assertions}` for details.
 * Squashed logic behind `TestDescriptor.isTest()` and `TestDescriptor.isContainer()` from two
   independent boolean properties into a single enumeration, namely `TestDescriptor.Type`. See
   next bullet point for details.
 * Introduced `TestDescriptor.Type` enumeration with `TestDescriptor.getType()` accessor defining
   all possible descriptor types. `TestDescriptor.isTest()` and `TestDescriptor.isContainer()`
   only delegate to `TestDescriptor.Type` constants now.
-* Introduced `TestDescriptor.prune()` and `TestDescriptor.pruneTree()` which allows engine writers
-  customize what happens when pruning is triggered by the JUnit Platform.
+* Introduced `TestDescriptor.prune()` and `TestDescriptor.pruneTree()` which allow engine authors
+  to customize what happens when pruning is triggered by the JUnit Platform.
 
 
 [[release-notes-5.0.0-m4-junit-vintage]]
