@@ -4472,11 +4472,11 @@ to facilitate migration of JUnit 4 codebases.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m4">5.0.0-M4</h3>
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> April 1, 2017</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> Fourth milestone release of JUnit 5 with a focus on parameterized tests,
-enhanced dynamic tests, and documentation.</p>
+<p><strong>Scope:</strong> Fourth milestone release of JUnit 5 with a focus on parameterized tests and
+documentation.</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -4495,7 +4495,7 @@ version) instead of a dynamic versioning scheme (was <code>1.+</code>) by defaul
 builds.</p>
 </li>
 <li>
-<p>The JUnit Platform Gradle plugin explicitly applies the Gradle built-in <code>java</code> plugin as
+<p>The JUnit Platform Gradle plugin now explicitly applies the Gradle built-in <code>java</code> plugin as
 it has an implicit dependency on it being applied.</p>
 </li>
 <li>
@@ -4504,9 +4504,9 @@ Shadowed <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#j
 methods are also no longer included in the results.</p>
 </li>
 <li>
-<p>Introduced <code>getLegacyName()</code> in <code>TestIdentifier</code> and <code>TestDescriptor</code>.
-This allows the JUnit Platform Gradle Plugin and the Surefire Provider to resolve the class and
-method names through <code>getLegacyName()</code> instead of using the source location.</p>
+<p>Introduced <code>getLegacyReportingName()</code> in <code>TestIdentifier</code> and <code>TestDescriptor</code>. This
+allows the JUnit Platform Gradle Plugin and the Surefire Provider to resolve the class
+and method names through <code>getLegacyReportingName()</code> instead of using the source location.</p>
 </li>
 <li>
 <p>JAR files that contain spaces in their paths (<code>%20</code>) are now properly decoded before being
@@ -4621,7 +4621,8 @@ in order to align with the behavior of the JUnit Platform.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fixed bug that prevented discovery of two or more methods of the same class.</p>
+<p>Fixed bug that prevented discovery of two or more methods in the same class when selected
+via a method selector.</p>
 </li>
 <li>
 <p>Fixed bug that prevented discovery of <code>@Nested</code> non-static test classes declared in super classes.</p>
@@ -4642,7 +4643,7 @@ at multiple levels within a class hierarchy. It&#8217;s now always <code>super.b
 <p>Removed deprecated <code>Assertions.expectThrows()</code> method in favor of <code>Assertions.assertThrows()</code>.</p>
 </li>
 <li>
-<p>`ExtensionContext.Namespace`s composed of the same parts but in a different order are no longer considered
+<p><code>ExtensionContext.Namespace</code>s composed of the same parts but in a different order are no longer considered
 equal to each other.</p>
 </li>
 </ul>
@@ -4657,17 +4658,17 @@ equal to each other.</p>
 generating assertion failure messages.</p>
 </li>
 <li>
-<p><code>TestInstancePostProcessors</code> registered on test methods are now invoked.</p>
+<p><code>TestInstancePostProcessor</code>s registered on test methods are now invoked.</p>
 </li>
 <li>
 <p>There are two new signatures for <code>Assertions.fail</code>: <code>Assertions.fail(Throwable cause)</code> and
 <code>Assertions.fail(String message, Throwable cause)</code>.</p>
 </li>
 <li>
-<p>New <code>Assertions.assertLinesMatch()</code> comparing lists of <code>String</code> featuring <code>Object::equals</code> and
+<p>New <code>Assertions.assertLinesMatch()</code> comparing lists of <code>String</code>, featuring <code>Object::equals</code> and
 regular expression checks. It also provides a fast-forward mechanism to skip actual lines that
-are expected to change in each invocation, e.g. duration, timestamps and stack traces.
-Consult the Javadoc for <code><a href="../api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.Assertions</a></code> for details.</p>
+are expected to change in each invocation, e.g. duration, timestamps, and stack traces.
+Consult the JavaDoc for <code><a href="../api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.Assertions</a></code> for details.</p>
 </li>
 <li>
 <p>Squashed logic behind <code>TestDescriptor.isTest()</code> and <code>TestDescriptor.isContainer()</code> from two
@@ -4680,8 +4681,8 @@ all possible descriptor types. <code>TestDescriptor.isTest()</code> and <code>Te
 only delegate to <code>TestDescriptor.Type</code> constants now.</p>
 </li>
 <li>
-<p>Introduced <code>TestDescriptor.prune()</code> and <code>TestDescriptor.pruneTree()</code> which allows engine writers
-customize what happens when pruning is triggered by the JUnit Platform.</p>
+<p>Introduced <code>TestDescriptor.prune()</code> and <code>TestDescriptor.pruneTree()</code> which allow engine authors
+to customize what happens when pruning is triggered by the JUnit Platform.</p>
 </li>
 </ul>
 </div>
@@ -4709,7 +4710,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-18 03:29:23 EDT
+Last updated 2017-03-18 09:56:40 EDT
 </div>
 </div>
 </body>
