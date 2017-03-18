@@ -10,9 +10,14 @@
 
 package org.junit.jupiter.params.provider;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+
+import org.junit.platform.commons.meta.API;
+
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class ObjectArrayArguments implements Arguments {
 
 	private final Object[] arguments;

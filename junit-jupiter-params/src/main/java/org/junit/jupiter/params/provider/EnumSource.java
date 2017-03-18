@@ -10,11 +10,15 @@
 
 package org.junit.jupiter.params.provider;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.junit.platform.commons.meta.API;
 
 /**
  * @since 5.0
@@ -22,6 +26,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@API(Experimental)
 @ArgumentsSource(EnumArgumentsProvider.class)
 public @interface EnumSource {
 
