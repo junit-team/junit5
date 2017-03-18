@@ -42,11 +42,11 @@ public final class TestIdentifier implements Serializable {
 	private final String uniqueId;
 	private final String parentId;
 	private final String displayName;
+	private final String legacyReportingName;
 	private final TestSource source;
 	private final Set<TestTag> tags;
 	private final boolean test;
 	private final boolean container;
-	private final String legacyReportingName;
 
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
@@ -133,7 +133,7 @@ public final class TestIdentifier implements Serializable {
 	 * @see org.junit.platform.engine.TestDescriptor#getLegacyReportingName()
 	 */
 	public String getLegacyReportingName() {
-		return legacyReportingName;
+		return this.legacyReportingName;
 	}
 
 	/**
