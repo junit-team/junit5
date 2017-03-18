@@ -7,16 +7,16 @@ buildscript {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
-		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.0.0'
+		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.1.0'
 		classpath 'org.ajoberstar:gradle-git:1.6.0'
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
 	}
 }
 
 plugins {
 	id 'com.gradle.build-scan' version '1.3'
-	id 'net.nemerosa.versioning' version '2.5.0'
+	id 'net.nemerosa.versioning' version '2.6.0'
 }
 
 buildScan {
@@ -41,17 +41,20 @@ ext {
 	platformProjects = [
 		'junit-platform-commons',
 		'junit-platform-console',
+		'junit-platform-console-standalone',
 		'junit-platform-engine',
 		'junit-platform-gradle-plugin',
 		'junit-platform-launcher',
 		'junit-platform-runner',
+		'junit-platform-suite-api',
 		'junit-platform-surefire-provider'
 	]
 
 	jupiterProjects = [
 		'junit-jupiter-api',
 		'junit-jupiter-engine',
-		'junit-jupiter-migration-support'
+		'junit-jupiter-migration-support',
+		'junit-jupiter-params'
 	]
 
 	vintageProjects = [
@@ -70,6 +73,7 @@ ext {
 	cloverTestProjects = [
 		'junit-jupiter-engine',
 		'junit-jupiter-migration-support',
+		'junit-jupiter-params',
 		'junit-vintage-engine',
 		'junit-platform-surefire-provider',
 		'platform-tests'
@@ -78,7 +82,7 @@ ext {
 
 allprojects { subproj ->
 
-	apply plugin: 'java'
+	apply plugin: 'java-library'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'com.diffplug.gradle.spotless'
@@ -99,6 +103,7 @@ allprojects { subproj ->
 	tasks.withType(JavaCompile) {
 		sourceCompatibility = rootProject.sourceCompatibility
 		targetCompatibility = rootProject.targetCompatibility
+		options.encoding = 'UTF-8'
 	}
 
 	// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
@@ -147,6 +152,7 @@ allprojects { subproj ->
 	]
 
 	compileTestJava {
+		options.encoding = 'UTF-8'
 		options.compilerArgs += '-parameters'
 	}
 
@@ -226,7 +232,7 @@ subprojects { subproj ->
 			options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 			options.author = true
 			options.header = project.name
-			options.addStringOption('Xdoclint:html,syntax,reference', '-quiet')
+			options.addStringOption('Xdoclint:html,syntax', '-quiet')
 		}
 
 		task sourcesJar(type: Jar, dependsOn: classes) {
@@ -380,6 +386,9 @@ subprojects { subproj ->
 			licenseHeaderFile headerFile, '(package|import) '
 			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
 			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+			if (org.gradle.api.JavaVersion.current() == org.gradle.api.JavaVersion.VERSION_1_8) {
+				removeUnusedImports()
+			}
 
 			trimTrailingWhitespace()
 			endWithNewline()
@@ -553,7 +562,7 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = 'Generates gradlew and gradlew.bat scripts'
-		gradleVersion = '3.4'
+		gradleVersion = '3.4.1'
 	}
 
 }

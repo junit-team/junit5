@@ -34,10 +34,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.engine.support.descriptor.ClassSource;
-import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 
 /**
@@ -147,38 +144,13 @@ class XmlReportWriter {
 	}
 
 	private String getName(TestIdentifier testIdentifier) {
-		Optional<TestSource> optionalSource = testIdentifier.getSource();
-		if (optionalSource.isPresent()) {
-			TestSource source = optionalSource.get();
-			if (source instanceof ClassSource) {
-				return ((ClassSource) source).getJavaClass().getName();
-			}
-			else if (source instanceof MethodSource) {
-				MethodSource methodSource = (MethodSource) source;
-				return String.format("%s(%s)", methodSource.getMethodName(), methodSource.getMethodParameterTypes());
-			}
-		}
-
-		// Else fall back to display name
-		return testIdentifier.getDisplayName();
+		return testIdentifier.getLegacyReportingName();
 	}
 
 	private String getClassName(TestIdentifier testIdentifier) {
-		Optional<TestSource> optionalSource = testIdentifier.getSource();
-		if (optionalSource.isPresent()) {
-			TestSource source = optionalSource.get();
-			if (source instanceof ClassSource) {
-				return ((ClassSource) source).getClassName();
-			}
-			else if (source instanceof MethodSource) {
-				return ((MethodSource) source).getClassName();
-			}
-		}
-
-		// Else fall back to display name of parent
 		// @formatter:off
 		return reportData.getTestPlan().getParent(testIdentifier)
-				.map(TestIdentifier::getDisplayName)
+				.map(TestIdentifier::getLegacyReportingName)
 				.orElse("<unrooted>");
 		// @formatter:on
 	}

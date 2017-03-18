@@ -98,6 +98,24 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
+	public void parseValidDetailsTheme() {
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(Theme.ASCII, parseArgLine("--details-theme ascii").getTheme()),
+			() -> assertEquals(Theme.ASCII, parseArgLine("--details-theme ASCII").getTheme()),
+			() -> assertEquals(Theme.UNICODE, parseArgLine("--details-theme unicode").getTheme()),
+			() -> assertEquals(Theme.UNICODE, parseArgLine("--details-theme UNICODE").getTheme()),
+			() -> assertEquals(Theme.UNICODE, parseArgLine("--details-theme uniCode").getTheme())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidDetailsTheme() throws Exception {
+		assertOptionWithMissingRequiredArgumentThrowsException("--details-theme");
+	}
+
+	@Test
 	public void parseValidIncludeClassNamePatterns() {
 		// @formatter:off
 		assertAll(

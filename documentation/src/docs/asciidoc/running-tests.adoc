@@ -9,14 +9,20 @@
 IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2.
 For details please see the https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/[post on the IntelliJ IDEA blog].
 
+==== Eclipse Beta Support
+
+Eclipse 4.7 (_Oxygen_) has beta support for the JUnit Platform and JUnit Jupiter. For
+details on how to set it up, please consult the
+https://wiki.eclipse.org/JDT_UI/JUnit_5[Eclipse JDT UI/JUnit 5] wiki page.
+
 ==== Other IDEs
 
 At the time of this writing, there is no direct support for running tests on the JUnit
-Platform within IDEs other than IntelliJ IDEA.
-However, the JUnit team provides two intermediate solutions so that
-you can go ahead and try out JUnit 5 within your IDE today. You can use the
-<<running-tests-console-launcher>> manually or execute tests with a
-<<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
+Platform within IDEs other than with IntelliJ IDEA or the beta support in Eclipse.
+However, the JUnit team provides two intermediate solutions so that you can go ahead and
+try out JUnit 5 within your IDE today. You can use the <<running-tests-console-launcher>>
+manually or execute tests with a <<running-tests-junit-platform-runner,JUnit 4 based
+Runner>>.
 
 [[running-tests-build]]
 === Build Support
@@ -25,9 +31,9 @@ you can go ahead and try out JUnit 5 within your IDE today. You can use the
 ==== Gradle
 
 The JUnit team has developed a very basic Gradle plugin that allows you to run any kind
-of test that is supported by a `TestEngine` (e.g., JUnit 3, JUnit 4, JUnit Jupiter, Specsy,
-etc.). See `build.gradle` in the `{junit5-gradle-consumer}` project for an example of the
-plugin in action.
+of test that is supported by a `TestEngine` (e.g., JUnit 3, JUnit 4, JUnit Jupiter,
+{Specsy}, etc.). See `build.gradle` in the `{junit5-gradle-consumer}` project for an
+example of the plugin in action.
 
 [[running-tests-build-gradle-junit-enable]]
 ===== Enabling the JUnit Gradle Plugin
@@ -74,18 +80,18 @@ junitPlatform {
 ----
 
 Setting `logManager` instructs the JUnit Gradle plugin to set the
-`java.util.logging.manager` system property to the supplied fully qualified class name of
-the `java.util.logging.LogManager` implementation to use. The above example demonstrates
-how to configure log4j as the `LogManager`.
+`java.util.logging.manager` system property to the supplied _fully qualified class_ name
+of the `java.util.logging.LogManager` implementation to use. The above example
+demonstrates how to configure log4j as the `LogManager`.
 
-By default, the JUnit Gradle plugin disables the standard Gradle `test` task, but this be
-overridden via the `enableStandardTestTask` flag.
+By default, the JUnit Gradle plugin disables the standard Gradle `test` task, but this
+can be overridden via the `enableStandardTestTask` flag.
 
 [[running-tests-build-gradle-selectors]]
 ===== Configuring Selectors
 
-By default, the plugin will scan your project's output directories for tests. However, you can
-specify which tests to execute explicitly using the `selectors` extension element.
+By default, the plugin will scan your project's output directories for tests. However,
+you can specify which tests to execute explicitly using the `selectors` extension element.
 
 [source,java,indent=0]
 [subs="verbatim,attributes"]
@@ -115,17 +121,18 @@ junitPlatform {
 <2> Local files
 <3> Local directories
 <4> Packages
-<5> Classes, fully qualified
-<6> Methods, fully qualified (see {DiscoverySelectors_selectMethod})
+<5> Classes, fully qualified class names
+<6> Methods, fully qualified method names (see {DiscoverySelectors_selectMethod})
 <7> Classpath resources
 
 [[running-tests-build-gradle-filters]]
 ===== Configuring Filters
 
-You can configure filters for the test plan by using the `filters` extension. By default, all
-engines and tags are included in the test plan. Only the default `includeClassNamePattern`
-(`{standard-include-class-name-pattern}`) is applied. You can overwrite its value as in the
-following example. When you specify multiple patterns, they are combined using OR semantics.
+You can configure filters for the test plan by using the `filters` extension. By default,
+all engines and tags are included in the test plan. Only the default
+`includeClassNamePattern` (`{standard-include-class-name-pattern}`) is applied. You can
+override the default pattern as in the following example. When you specify multiple
+patterns, they are combined using OR semantics.
 
 [source,java,indent=0]
 [subs="verbatim,attributes"]
@@ -152,13 +159,12 @@ junitPlatform {
 }
 ----
 
-If you supply a _Test
-Engine ID_ via `engines {include ...}` or `engines {exclude ...}`, the JUnit Gradle
-plugin will only run tests for the desired test engines. Similarly, if you supply a _tag_
-via `tags {include ...}` or `tags {exclude ...}`, the JUnit Gradle plugin will only run
-tests that are _tagged_ accordingly (e.g., via the `@Tag` annotation for JUnit Jupiter based
-tests). The same applies to package names that can be included or excluded using
-`packages {include ...}` or `packages {exclude ...}`.
+If you supply a _Test Engine ID_ via `engines {include ...}` or `engines {exclude ...}`,
+the JUnit Gradle plugin will only run tests for the desired test engines. Similarly, if
+you supply a _tag_ via `tags {include ...}` or `tags {exclude ...}`, the JUnit Gradle
+plugin will only run tests that are _tagged_ accordingly (e.g., via the `@Tag` annotation
+for JUnit Jupiter based tests). The same applies to package names that can be included or
+excluded using `packages {include ...}` or `packages {exclude ...}`.
 
 [[running-tests-build-gradle-engines-configure]]
 ===== Configuring Test Engines
@@ -198,9 +204,10 @@ dependencies {
 Once the JUnit Gradle plugin has been applied and configured, you have a new
 `junitPlatformTest` task at your disposal.
 
-Invoking `gradlew clean junitPlatformTest` (or `gradlew clean test`) from the command
-line will execute all tests within the project whose class names match the regular
-expression supplied via `includeClassNamePattern` (defaults to `{standard-include-class-name-pattern}`).
+Invoking `gradlew junitPlatformTest` (or `gradlew test`) from the command line will
+execute all tests within the project whose class names match the regular expression
+supplied via the `includeClassNamePattern` (which defaults to
+`{standard-include-class-name-pattern}`).
 
 Executing the `junitPlatformTest` task in the `{junit5-gradle-consumer}` project results
 in output similar to the following:
@@ -265,7 +272,7 @@ NOTE: The _exit value_ is `1` if any containers or tests failed; otherwise, it i
 .Current Limitations of the JUnit Gradle Plugin
 WARNING: The results of any tests run via the JUnit Gradle plugin will not be included
          in the standard test report generated by Gradle; however, the test results can
-		 be aggregated. See the `reportsDir` property of the plugin.
+		 typically be aggregated on a CI server. See the `reportsDir` property of the plugin.
 
 [[running-tests-build-maven]]
 ==== Maven
@@ -305,7 +312,7 @@ In order to have Maven Surefire run any tests at all, a `TestEngine` implementat
 to the runtime classpath.
 
 To configure support for JUnit Jupiter based tests, configure a `test` dependency on the JUnit
-Jupiter API and add the JUnit Jupiter `TestEngine` implementation to the dependencies of the
+Jupiter API, and add the JUnit Jupiter `TestEngine` implementation to the dependencies of the
 `maven-surefire-plugin` similar to the following.
 
 [source,xml,indent=0]
@@ -390,12 +397,12 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 ----
 
 [[running-tests-build-maven-filter-tags]]
-===== Filtering by tag
+===== Filtering by tags
 
-You can filter tests by tags using the following configuration properties:
+You can filter tests by tags using the following configuration properties.
 
-- to include use either `groups` or `includeTags`
-- to exclude use either `excludedGroups` or `excludeTags`
+- to include a tag, use either `groups` or `includeTags`
+- to exclude a tag, use either `excludedGroups` or `excludeTags`
 
 [source,xml,indent=0]
 [subs="verbatim,attributes"]
@@ -430,13 +437,13 @@ The `{ConsoleLauncher}` is a command-line Java application that lets you launch
 the JUnit Platform from the console. For example, it can be used to run JUnit
 Vintage and JUnit Jupiter tests and print test execution results to the console.
 
-An executable `junit-platform-console-{platform-version}-standalone.jar` with all dependencies
-included is provided at the central Maven repository under the
-https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console[junit-platform-console]
+An executable `junit-platform-console-standalone-{platform-version}.jar` with all
+dependencies included is published in the central Maven repository under the
+https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
 directory. You can https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run] the
-application like shown below:
+standalone `ConsoleLauncher` as shown below.
 
-`java -jar junit-platform-console-{platform-version}-standalone.jar <<<running-tests-console-launcher-options>>>`
+`java -jar junit-platform-console-standalone-{platform-version}.jar <<<running-tests-console-launcher-options>>>`
 
 Here's an example of its output:
 
@@ -487,11 +494,14 @@ Option                                        Description
 --disable-ansi-colors                         Disable ANSI colors in output (not
                                                 supported by all terminals).
 --hide-details                                @Deprecated. Use '--details none' instead.
---details <Details>                           Select an output details mode for when
+--details <[none,flat,tree,verbose]>          Select an output details mode for when
                                                 tests are executed. Use one of: [none,
                                                 flat, tree, verbose]. If 'none' is
                                                 selected, then only the summary and test
                                                 failures are shown. (default: tree)
+--details-theme <[ascii,unicode]>             Select an output details tree theme for
+                                                when tests are executed. Use one of:
+                                                [ascii, unicode] (default: unicode)
 --class-path, --classpath, --cp <Path:        Provide additional classpath entries --
   path1:path2:...>                              for example, for adding engines and
                                                 their dependencies. This option can be
@@ -606,7 +616,7 @@ One way to use the `JUnitPlatform` runner is to annotate a test class with
 `@RunWith(JUnitPlatform.class)` directly. Please note that the test methods in the
 following example are annotated with `org.junit.jupiter.api.Test` (JUnit Jupiter), not
 `org.junit.Test` (JUnit Vintage). Moreover, in this case the test class must be `public`;
-otherwise, IDEs won't recognize it as a test class.
+otherwise, IDEs won't recognize it as a JUnit 4 test class.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -633,5 +643,5 @@ pattern `{standard-include-class-name-pattern}`.
 .Additional Configuration Options
 NOTE: There are more configuration options for discovering and filtering tests than just
 `@SelectPackages`. Please consult the
-{javadoc-root}/org/junit/platform/runner/package-summary.html[Javadoc] for further
+{javadoc-root}/org/junit/platform/suite/api/package-summary.html[Javadoc] for further
 details.

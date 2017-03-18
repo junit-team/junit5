@@ -76,11 +76,11 @@ class TestInfoParameterResolver implements ParameterResolver {
 		public String toString() {
 			// @formatter:off
 			return new ToStringBuilder(this)
-				.append("displayName", this.displayName)
-				.append("tags", this.tags)
-				.append("testClass", this.testClass)
-				.append("testMethod", this.testMethod)
-				.toString();
+					.append("displayName", this.displayName)
+					.append("tags", this.tags)
+					.append("testClass", this.testClass)
+					.append("testMethod", this.testMethod)
+					.toString();
 			// @formatter:on
 		}
 

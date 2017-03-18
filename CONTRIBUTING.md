@@ -48,6 +48,9 @@ respectively. For IntelliJ IDEA there's a
 [plugin](https://plugins.jetbrains.com/plugin/6546) you can use in conjunction with the
 Eclipse settings.
 
+It is forbidden to use _wildcard imports_ (e.g., `import static org.junit.jupiter.api.Assertions.*;`)
+in Java code.
+
 Text in `*.adoc` and `*.md` files should be wrapped at 90 characters whenever technically
 possible.
 

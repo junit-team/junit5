@@ -1,0 +1,77 @@
+apply plugin: 'org.junit.platform.gradle.plugin'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+	}
+}
+
+junitPlatform {
+	filters {
+		engines {
+			include 'junit-jupiter'
+		}
+		includeClassNamePattern '.*Tests?'
+	}
+	logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+
+dependencies {
+	api(project(':junit-jupiter-api'))
+
+	shadow('com.univocity:univocity-parsers:2.3.1')
+
+	testImplementation("org.assertj:assertj-core:${assertJVersion}")
+	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
+	testImplementation(project(':junit-jupiter-engine'))
+	testImplementation(project(':junit-platform-launcher'))
+	testImplementation(project(':junit-platform-runner'))
+
+	// Include junit-platform-console so that the JUnit Gradle plugin
+	// uses the local version of the ConsoleLauncher.
+	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+}
+
+sourceSets.main.compileClasspath += configurations.shadow
+sourceSets.test.runtimeClasspath += configurations.shadow
+
+eclipse {
+	classpath {
+		plusConfigurations += [ configurations.shadow ]
+	}
+}
+
+idea {
+	module {
+		scopes.PROVIDED.plus += [ configurations.shadow ]
+	}
+}
+
+javadoc {
+	classpath = project.sourceSets.main.compileClasspath + configurations.shadow
+}
+
+jar.enabled = false
+
+shadowJar {
+	// Generate shadow jar only if the underlying manifest was regenerated.
+	// See https://github.com/junit-team/junit5/issues/631
+	onlyIf {
+		(project.generateManifest || !shadowJar.archivePath.exists())
+	}
+	classifier = null
+	configurations = [project.configurations.shadow]
+	exclude 'META-INF/**'
+	relocate 'com.univocity', 'org.junit.jupiter.params.com.univocity'
+}
+
+artifacts {
+	archives shadowJar
+}

@@ -12,7 +12,7 @@ package org.junit.jupiter.api.extension;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
-import java.util.Iterator;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
 
@@ -23,21 +23,22 @@ import org.junit.platform.commons.meta.API;
  * {@link org.junit.jupiter.api.TestTemplate @TestTemplate} method.
  *
  * <p>This extension point makes it possible to execute a test template in
- * different contexts, e.g. with different parameters, by preparing the test
- * class instance differently, or multiple times without modifying the context.
+ * different contexts &mdash; for example, with different parameters, by
+ * preparing the test class instance differently, or multiple times without
+ * modifying the context.
  *
  * <p>This interface defines two methods: {@link #supports} and
  * {@link #provide}. The former is called by the framework to determine whether
  * this extension wants to act on a test template that is about to be executed.
- * If so, the latter is called and must return an {@link Iterator} of
+ * If so, the latter is called and must return a {@link Stream} of
  * {@link TestTemplateInvocationContext} instances. Otherwise, this provider is
  * ignored for the execution of the current test template.
  *
  * <p>A provider that has returned {@code true} from its {@link #supports}
  * method is called <em>active</em>. When multiple providers are active for a
- * test template method, the {@code Iterators} returned by their
- * {@link #provide} methods will be chained, i.e. the test template method will
- * be invoked using the contexts of all active providers.
+ * test template method, the {@code Streams} returned by their {@link #provide}
+ * methods will be chained, and the test template method will be invoked using
+ * the contexts of all active providers.
  *
  * <p>Implementations must provide a no-args constructor.
  *
@@ -67,15 +68,20 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 * <p>This method is only called by the framework if {@link #supports} has
 	 * previously returned {@code true} for the same
 	 * {@link ContainerExtensionContext}. Thus, it must not return an empty
-	 * {@code Iterator}.
+	 * {@code Stream}.
+	 *
+	 * <p>The returned {@code Stream} will be properly closed by calling
+	 * {@link Stream#close()}, making it safe to use a resource such as
+	 * {@link java.nio.file.Files#lines(java.nio.file.Path) Files.lines()}.
 	 *
 	 * @param context the container extension context for the test template
 	 * method about to be invoked; never {@code null}
-	 * @return an Iterator of TestTemplateInvocationContext instances for the
-	 * invocation of the test template method; never {@code null} or empty
+	 * @return a {@code Stream} of {@code TestTemplateInvocationContext}
+	 * instances for the invocation of the test template method; never {@code null}
+	 * or empty
 	 * @see #supports
 	 * @see ContainerExtensionContext
 	 */
-	Iterator<TestTemplateInvocationContext> provide(ContainerExtensionContext context);
+	Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context);
 
 }

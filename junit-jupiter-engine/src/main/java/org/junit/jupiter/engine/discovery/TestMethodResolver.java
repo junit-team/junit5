@@ -32,6 +32,7 @@ class TestMethodResolver extends AbstractMethodResolver {
 		super(SEGMENT_TYPE, new IsTestMethod());
 	}
 
+	@Override
 	protected TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method) {
 		return new MethodTestDescriptor(uniqueId, testClass, method);
 	}

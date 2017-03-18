@@ -11,7 +11,7 @@
 package org.junit.vintage.engine.samples.junit4;
 
 import org.junit.platform.runner.JUnitPlatform;
-import org.junit.platform.runner.SelectClasses;
+import org.junit.platform.suite.api.SelectClasses;
 import org.junit.runner.RunWith;
 
 /**

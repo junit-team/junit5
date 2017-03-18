@@ -42,7 +42,7 @@ public final class ReflectionSupport {
 	 * @param root the root URI to start scanning
 	 * @param classTester the class type filter; never {@code null}
 	 * @param classNameFilter the class name filter; never {@code null}
-	 * @return the list of all such classes found; never {@code null}
+	 * @return the list of all such classes found; neither {@code null} nor mutable
 	 */
 	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
@@ -57,7 +57,7 @@ public final class ReflectionSupport {
 	 * @param basePackageName the base package name to start scanning
 	 * @param classTester the class type filter; never {@code null}
 	 * @param classNameFilter the class name filter; never {@code null}
-	 * @return the list of all such classes found; never {@code null}
+	 * @return the list of all such classes found; neither {@code null} nor mutable
 	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
@@ -69,15 +69,18 @@ public final class ReflectionSupport {
 	 * that match the specified {@code predicate}.
 	 *
 	 * <p>If you're are looking for methods annotated with a certain annotation
-	 * type, consider using {@linkplain AnnotationSupport#findAnnotatedMethods(Class, Class, MethodSortOrder)}.
+	 * type, consider using {@linkplain AnnotationSupport#findAnnotatedMethods(Class, Class, HierarchyTraversalMode)}.
 	 *
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param predicate the method filter; never {@code null}
-	 * @param sortOrder the method sort order; never {@code null}
-	 * @return the list of all such methods found; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @return the list of all such methods found; neither {@code null} nor mutable
 	 */
-	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
-		return ReflectionUtils.findMethods(clazz, predicate, ReflectionUtils.MethodSortOrder.valueOf(sortOrder.name()));
+	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
+			HierarchyTraversalMode traversalMode) {
+
+		return ReflectionUtils.findMethods(clazz, predicate,
+			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
 	}
 
 }

@@ -102,13 +102,13 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public final boolean isTest() {
-		return false;
+	public Type getType() {
+		return Type.CONTAINER;
 	}
 
 	@Override
-	public final boolean isContainer() {
-		return true;
+	public String getLegacyReportingName() {
+		return testClass.getName();
 	}
 
 	private static String generateDefaultDisplayName(Class<?> testClass) {

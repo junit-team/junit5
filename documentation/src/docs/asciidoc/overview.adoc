@@ -59,6 +59,10 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
   `junit-platform-console`::
     Support for discovering and executing tests on the JUnit Platform from the console. See
     <<running-tests-console-launcher>> for details.
+  `junit-platform-console-standalone`::
+    An executable JAR with all dependencies included is provided at Maven Central under the
+    https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
+    directory. See <<running-tests-console-launcher>> for details.
   `junit-platform-engine`::
     Public API for test engines. See <<launcher-api-engines-custom>> for details.
   `junit-platform-gradle-plugin`::
@@ -68,8 +72,12 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
     Public API for configuring and launching test plans -- typically used by IDEs and build tools.
     See <<launcher-api>> for details.
   `junit-platform-runner`::
-    Runner and annotations for configuring and executing tests on the JUnit Platform in a JUnit 4
+    Runner for executing tests and test suites on the JUnit Platform in a JUnit 4
     environment. See <<running-tests-junit-platform-runner>> for details.
+  `junit-platform-suite-api`::
+    Annotations for configuring test suites on the JUnit Platform. Supported by the
+	<<running-tests-junit-platform-runner,JUnitPlatform runner>> and possibly by third-party
+	`TestEngine` implementations.
   `junit-platform-surefire-provider`::
     Support for discovering and executing tests on the JUnit Platform using
     <<running-tests-build-maven,Maven Surefire>>.
@@ -135,6 +143,7 @@ package org.junit.platform {
     [junit-platform-gradle-plugin] as gradle
     [junit-platform-launcher] as launcher
     [junit-platform-runner] as runner
+    [junit-platform-suite-api] as suiteapi
     [junit-platform-surefire-provider] as surefire
 }
 
@@ -161,7 +170,10 @@ engine ..> opentest4j
 engine ..> commons
 
 runner ..> launcher
+runner ..> suiteapi
 runner ..> junit4
+
+suiteapi ..> commons
 
 surefire ..> launcher
 

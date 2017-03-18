@@ -39,7 +39,7 @@ public final class FunctionUtils {
 	///CLOVER:ON
 
 	/**
-	 * Returns a predicate that first applies the specified function and then
+	 * Return a predicate that first applies the specified function and then
 	 * tests the specified predicate against the result of the function.
 	 *
 	 * @param function the function to apply

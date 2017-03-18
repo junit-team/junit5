@@ -13,16 +13,22 @@ package org.junit.platform.commons.util;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
+import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
 import java.io.File;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -67,8 +73,21 @@ public final class ReflectionUtils {
 	}
 	///CLOVER:ON
 
-	public enum MethodSortOrder {
-		HierarchyDown, HierarchyUp
+	/**
+	 * Modes in which a hierarchy can be traversed &mdash; for example, when
+	 * searching for methods or fields within a class hierarchy.
+	 */
+	public enum HierarchyTraversalMode {
+
+		/**
+		 * Traverse the hierarchy using top-down semantics.
+		 */
+		TOP_DOWN,
+
+		/**
+		 * Traverse the hierarchy using bottom-up semantics.
+		 */
+		BOTTOM_UP;
 	}
 
 	// Pattern: [fully qualified class name]#[methodName]((comma-separated list of parameter type names))
@@ -400,6 +419,23 @@ public final class ReflectionUtils {
 		return Optional.empty();
 	}
 
+	/**
+	 * Build the <em>fully qualified name</em> of the passed parameters.
+	 *
+	 * @param clazz the class that declares the method; never {@code null}
+	 * @param methodName the name of the method; never {@code null}
+	 * @param params the parameter types of the method; may be {@code null} or empty
+	 * @return fully qualified method name; never {@code null}
+	 * @see #loadMethod(String)
+	 */
+	public static String getFullyQualifiedMethodName(Class<?> clazz, String methodName, Class<?>... params) {
+		Preconditions.notNull(clazz, "clazz must not be null");
+		Preconditions.notNull(methodName, "methodName must not be null");
+		Preconditions.notNull(params, "params must not be null");
+
+		return String.format("%s#%s(%s)", clazz.getName(), methodName, StringUtils.nullSafeToString(params));
+	}
+
 	private static Optional<Object> getOuterInstance(Object inner) {
 		// This is risky since it depends on the name of the field which is nowhere guaranteed
 		// but has been stable so far in all JDKs
@@ -473,7 +509,9 @@ public final class ReflectionUtils {
 	 */
 	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
-		return classpathScanner.scanForClassesInClasspathRoot(root, classTester, classNameFilter);
+		// unmodifiable since returned by public, non-internal method(s)
+		return Collections.unmodifiableList(
+			classpathScanner.scanForClassesInClasspathRoot(root, classTester, classNameFilter));
 	}
 
 	/**
@@ -481,14 +519,33 @@ public final class ReflectionUtils {
 	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
-		return classpathScanner.scanForClassesInPackage(basePackageName, classTester, classNameFilter);
+		// unmodifiable since returned by public, non-internal method(s)
+		return Collections.unmodifiableList(
+			classpathScanner.scanForClassesInPackage(basePackageName, classTester, classNameFilter));
 	}
 
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notNull(predicate, "predicate must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
 
-		return Arrays.stream(clazz.getDeclaredClasses()).filter(predicate).collect(toList());
+		Set<Class<?>> candidates = new LinkedHashSet<>();
+		findNestedClasses(clazz, candidates);
+		return candidates.stream().filter(predicate).collect(toList());
+	}
+
+	private static void findNestedClasses(Class<?> clazz, Set<Class<?>> candidates) {
+		if (clazz == Object.class || clazz == null) {
+			return;
+		}
+
+		// Search class hierarchy
+		candidates.addAll(Arrays.asList(clazz.getDeclaredClasses()));
+		findNestedClasses(clazz.getSuperclass(), candidates);
+
+		// Search interface hierarchy
+		for (Class<?> interfaceType : clazz.getInterfaces()) {
+			findNestedClasses(interfaceType, candidates);
+		}
 	}
 
 	/**
@@ -528,10 +585,6 @@ public final class ReflectionUtils {
 		}
 	}
 
-	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
-		return findMethod(clazz, methodName, resolveParameterTypes(parameterTypeNames));
-	}
-
 	private static Class<?>[] resolveParameterTypes(String parameterTypeNames) {
 		if (StringUtils.isBlank(parameterTypeNames)) {
 			return EMPTY_CLASS_ARRAY;
@@ -549,6 +602,46 @@ public final class ReflectionUtils {
 			() -> new JUnitException(String.format("Failed to load parameter type [%s]", typeName)));
 	}
 
+	/**
+	 * Find the first {@link Method} of the supplied class or interface that
+	 * meets the specified criteria, beginning with the specified class or
+	 * interface and traversing up the type hierarchy until such a method is
+	 * found or the type hierarchy is exhausted.
+	 *
+	 * <p>Note, however, that the current algorithm traverses the entire
+	 * type hierarchy even after having found a match.
+	 *
+	 * @param clazz the class or interface in which to find the method; never {@code null}
+	 * @param methodName the name of the method to find; never {@code null} or empty
+	 * @param parameterTypeNames the fully qualified names of the types of parameters
+	 * accepted by the method, if any, provided as a comma-separated list
+	 * @return an {@code Optional} containing the method found; never {@code null}
+	 * but potentially empty if no such method could be found
+	 * @see #findMethod(Class, String, Class...)
+	 * @see HierarchyTraversalMode#BOTTOM_UP
+	 */
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
+		return findMethod(clazz, methodName, resolveParameterTypes(parameterTypeNames));
+	}
+
+	/**
+	 * Find the first {@link Method} of the supplied class or interface that
+	 * meets the specified criteria, beginning with the specified class or
+	 * interface and traversing up the type hierarchy until such a method is
+	 * found or the type hierarchy is exhausted.
+	 *
+	 * <p>Note, however, that the current algorithm traverses the entire
+	 * type hierarchy even after having found a match.
+	 *
+	 * @param clazz the class or interface in which to find the method; never {@code null}
+	 * @param methodName the name of the method to find; never {@code null} or empty
+	 * @param parameterTypes the types of parameters accepted by the method, if any;
+	 * never {@code null}
+	 * @return an {@code Optional} containing the method found; never {@code null}
+	 * but potentially empty if no such method could be found
+	 * @see #findMethod(Class, String, String)
+	 * @see HierarchyTraversalMode#BOTTOM_UP
+	 */
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "method name must not be null or empty");
@@ -556,55 +649,76 @@ public final class ReflectionUtils {
 		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
 				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
 
-		List<Method> candidates = findMethods(clazz, nameAndParameterTypesMatch);
+		List<Method> candidates = findMethods(clazz, nameAndParameterTypesMatch, BOTTOM_UP);
 		return (!candidates.isEmpty() ? Optional.of(candidates.get(0)) : Optional.empty());
 	}
 
+	/**
+	 * Find all {@linkplain Method methods} of the supplied class or interface
+	 * that match the specified {@code predicate}, using top-down search semantics
+	 * within the type hierarchy.
+	 *
+	 * @param clazz the class or interface in which to find the methods; never {@code null}
+	 * @param predicate the method filter; never {@code null}
+	 * @return an immutable list of all such methods found; never {@code null}
+	 * @see HierarchyTraversalMode#TOP_DOWN
+	 * @see #findMethods(Class, Predicate, HierarchyTraversalMode)
+	 */
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate) {
-		return findMethods(clazz, predicate, MethodSortOrder.HierarchyDown);
+		return findMethods(clazz, predicate, TOP_DOWN);
 	}
 
 	/**
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethods(Class, Predicate, org.junit.platform.commons.support.MethodSortOrder)
+	 * Find all {@linkplain Method methods} of the supplied class or interface
+	 * that match the specified {@code predicate}.
+	 *
+	 * @param clazz the class or interface in which to find the methods; never {@code null}
+	 * @param predicate the method filter; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @return an immutable list of all such methods found; never {@code null}
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
-	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
+	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
+			HierarchyTraversalMode traversalMode) {
+
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notNull(predicate, "predicate must not be null");
-		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
-		return findAllMethodsInHierarchy(clazz, sortOrder).stream()
+		return findAllMethodsInHierarchy(clazz, traversalMode).stream()
 				.filter(predicate)
-				.collect(toList());
+				// unmodifiable since returned by public, non-internal method(s)
+				.collect(toUnmodifiableList());
 		// @formatter:on
 	}
 
 	/**
 	 * Return all methods in superclass hierarchy except from Object.
 	 */
-	private static List<Method> findAllMethodsInHierarchy(Class<?> clazz, MethodSortOrder sortOrder) {
+	private static List<Method> findAllMethodsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
 		List<Method> localMethods = Arrays.stream(clazz.getDeclaredMethods())
 				.filter(method -> !method.isSynthetic())
 				.collect(toList());
-		List<Method> superclassMethods = getSuperclassMethods(clazz, sortOrder).stream()
+		List<Method> superclassMethods = getSuperclassMethods(clazz, traversalMode).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
-		List<Method> interfaceMethods = getInterfaceMethods(clazz, sortOrder).stream()
+		List<Method> interfaceMethods = getInterfaceMethods(clazz, traversalMode).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
 		// @formatter:on
 
 		List<Method> methods = new ArrayList<>();
-		if (sortOrder == MethodSortOrder.HierarchyDown) {
+		if (traversalMode == TOP_DOWN) {
 			methods.addAll(superclassMethods);
 			methods.addAll(interfaceMethods);
 		}
 		methods.addAll(localMethods);
-		if (sortOrder == MethodSortOrder.HierarchyUp) {
+		if (traversalMode == BOTTOM_UP) {
 			methods.addAll(interfaceMethods);
 			methods.addAll(superclassMethods);
 		}
@@ -636,39 +750,40 @@ public final class ReflectionUtils {
 		}
 	}
 
-	private static List<Method> getInterfaceMethods(Class<?> clazz, MethodSortOrder sortOrder) {
+	private static List<Method> getInterfaceMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		List<Method> allInterfaceMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
-			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods()).filter(m -> !isAbstract(m)).collect(
-				toList());
-
 			// @formatter:off
-			List<Method> subInterfaceMethods = getInterfaceMethods(ifc, sortOrder).stream()
+			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods())
+					.filter(m -> !isAbstract(m))
+					.collect(toList());
+
+			List<Method> subInterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
 					.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 					.collect(toList());
 			// @formatter:on
 
-			if (sortOrder == MethodSortOrder.HierarchyDown) {
+			if (traversalMode == TOP_DOWN) {
 				allInterfaceMethods.addAll(subInterfaceMethods);
 			}
 			allInterfaceMethods.addAll(localMethods);
-			if (sortOrder == MethodSortOrder.HierarchyUp) {
+			if (traversalMode == BOTTOM_UP) {
 				allInterfaceMethods.addAll(subInterfaceMethods);
 			}
 		}
 		return allInterfaceMethods;
 	}
 
-	private static List<Method> getSuperclassMethods(Class<?> clazz, MethodSortOrder sortOrder) {
+	private static List<Method> getSuperclassMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Class<?> superclass = clazz.getSuperclass();
 		if (superclass == null || superclass == Object.class) {
 			return Collections.emptyList();
 		}
-		return findAllMethodsInHierarchy(superclass, sortOrder);
+		return findAllMethodsInHierarchy(superclass, traversalMode);
 	}
 
 	private static boolean isMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {
@@ -682,7 +797,11 @@ public final class ReflectionUtils {
 		if (lower.getParameterCount() != upper.getParameterCount()) {
 			return false;
 		}
-		// Check for method sub-signatures.
+		// trivial case: parameter types exactly match
+		if (Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes())) {
+			return true;
+		}
+		// param count is equal, but types do not match exactly: check for method sub-signatures
 		// https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2
 		for (int i = 0; i < lower.getParameterCount(); i++) {
 			Class<?> lowerType = lower.getParameterTypes()[i];
@@ -691,7 +810,27 @@ public final class ReflectionUtils {
 				return false;
 			}
 		}
-		return true;
+		// lower is sub-signature of upper: check for generics in upper method
+		if (isGeneric(upper)) {
+			return true;
+		}
+		return false;
+	}
+
+	static boolean isGeneric(Method method) {
+		if (isGeneric(method.getGenericReturnType())) {
+			return true;
+		}
+		for (Type type : method.getGenericParameterTypes()) {
+			if (isGeneric(type)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean isGeneric(Type type) {
+		return type instanceof TypeVariable || type instanceof GenericArrayType;
 	}
 
 	private static <T extends AccessibleObject> T makeAccessible(T object) {

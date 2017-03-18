@@ -130,7 +130,7 @@ public interface TestExecutionSummary {
 	void printFailuresTo(PrintWriter writer);
 
 	/**
-	 * Get a list of the failures of the test plan execution.
+	 * Get an immutable list of the failures of the test plan execution.
 	 */
 	List<Failure> getFailures();
 

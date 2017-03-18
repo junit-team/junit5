@@ -1,0 +1,122 @@
+apply plugin: 'java-library'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+	}
+}
+
+dependencies {
+	shadow(project(':junit-platform-console'))
+	shadow(project(':junit-jupiter-engine'))
+	shadow(project(':junit-vintage-engine'))
+
+	testCompileOnly(project(':junit-jupiter-api'))
+	testCompileOnly("junit:junit:${junit4Version}")
+}
+
+sourceSets.main.compileClasspath += configurations.shadow
+
+jar {
+	manifest {
+		attributes(
+			'Main-Class': 'org.junit.platform.console.ConsoleLauncher'
+		)
+	}
+}
+
+javadoc {
+	classpath = project.sourceSets.main.compileClasspath + configurations.shadow
+}
+
+jar.enabled = false
+test.enabled = false // prevent supposed-to-fail integration tests from failing the build
+
+shadowJar {
+	// Generate shadow jar only if the underlying manifest was regenerated.
+	// See https://github.com/junit-team/junit5/issues/631
+	onlyIf {
+		(project.generateManifest || !shadowJar.archivePath.exists())
+	}
+
+	dependsOn(project(':junit-platform-console').shadowJar)
+
+	classifier = null
+	configurations = [project.configurations.shadow]
+	mergeServiceFiles()
+	manifest {
+		inheritFrom project.tasks.jar.manifest
+		attributes(
+			'Specification-Title': "$project.name-standalone",
+			'Implementation-Title': "$project.name-standalone",
+			// generate test engine version information in single shared manifest file
+			// pattern of key and value: `'Engine-Version-{YourTestEngine#getId()}': '47.11'`
+			'Engine-Version-junit-jupiter': "$rootProject.version",
+			'Engine-Version-junit-vintage': "$vintageVersion"
+		)
+	}
+}
+
+
+artifacts {
+	archives shadowJar
+}
+
+task standaloneExec(type: JavaExec, dependsOn: [shadowJar, testClasses]) {
+	ignoreExitValue = true
+	workingDir = "$buildDir/libs"
+	jvmArgs = ['-ea', "-Djava.util.logging.config.file=$buildDir/resources/test/logging.properties"]
+	main = '-jar'
+	args = [
+		"$shadowJar.archiveName",
+		'--scan-classpath',
+		'--include-classname', 'standalone.*',
+		'--classpath', "$buildDir/classes/test",
+		'--details', 'tree'
+	]
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+task standaloneCheck(dependsOn: standaloneExec) {
+	doLast {
+		String text = standaloneExec.errorOutput.toString() + standaloneExec.standardOutput.toString()
+		// engines -- output depends on default logging configuration
+		assert text.contains("junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $rootProject.version)")
+		assert text.contains("junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion)")
+		// tree node names
+		assert text.contains("JUnit Jupiter")
+		assert text.contains("JupiterIntegration")
+		assert text.contains("abort()") && text.contains("Assumption failed: integration-test-abort")
+		assert text.contains("successful()")
+		assert text.contains("disabled()") && text.contains("integration-test-disabled")
+		assert text.contains("fail()") && text.contains("integration-test-fail")
+		assert text.contains("JUnit Vintage")
+		assert text.contains("VintageIntegration")
+		assert text.contains("ignored") && text.contains("integr4tion test")
+		assert text.contains("f4il") && text.contains("f4iled")
+		assert text.contains("succ3ssful")
+		// summary
+		assert text.contains("Test run finished after")
+		// container summary
+		assert text.contains("4 containers found")
+		assert text.contains("0 containers skipped")
+		assert text.contains("4 containers started")
+		assert text.contains("0 containers aborted")
+		assert text.contains("4 containers successful")
+		assert text.contains("0 containers failed")
+		// tests summary
+		assert text.contains("7 tests found")
+		assert text.contains("2 tests skipped")
+		assert text.contains("5 tests started")
+		assert text.contains("1 tests aborted")
+		assert text.contains("2 tests successful")
+		assert text.contains("2 tests failed")
+	}
+}
+
+check.dependsOn(standaloneCheck)

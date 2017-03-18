@@ -1,0 +1,22 @@
+Test execution started. Number of static tests: 1
+Started:     JUnit Jupiter ([engine:junit-jupiter])
+Started:     Basic ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic])
+Started:     .oO fancy display name Oo. ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic]/[method:changeDisplayName()])
+Finished:    .oO fancy display name Oo. ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic]/[method:changeDisplayName()])
+Finished:    Basic ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic])
+Finished:    JUnit Jupiter ([engine:junit-jupiter])
+Test execution finished.
+
+Test run finished after [\d]+ ms
+[         2 containers found      ]
+[         0 containers skipped    ]
+[         2 containers started    ]
+[         0 containers aborted    ]
+[         2 containers successful ]
+[         0 containers failed     ]
+[         1 tests found           ]
+[         0 tests skipped         ]
+[         1 tests started         ]
+[         0 tests aborted         ]
+[         1 tests successful      ]
+[         0 tests failed          ]

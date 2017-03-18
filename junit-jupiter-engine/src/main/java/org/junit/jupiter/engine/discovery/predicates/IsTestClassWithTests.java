@@ -31,7 +31,10 @@ public class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestFactoryMethod isTestFactoryMethod = new IsTestFactoryMethod();
 
-	private static final Predicate<Method> isTestOrTestFactoryMethod = isTestMethod.or(isTestFactoryMethod);
+	private static final IsTestTemplateMethod isTestTemplateMethod = new IsTestTemplateMethod();
+
+	private static final Predicate<Method> isTestOrTestFactoryOrTestTemplateMethod = isTestMethod.or(
+		isTestFactoryMethod).or(isTestTemplateMethod);
 
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
 
@@ -43,11 +46,11 @@ public class IsTestClassWithTests implements Predicate<Class<?>> {
 		if (!isPotentialTestContainer.test(candidate)) {
 			return false;
 		}
-		return hasTestOrTestFactoryMethods(candidate) || hasNestedTests(candidate);
+		return hasTestOrTestFactoryOrTestTemplateMethods(candidate) || hasNestedTests(candidate);
 	}
 
-	private boolean hasTestOrTestFactoryMethods(Class<?> candidate) {
-		return !ReflectionUtils.findMethods(candidate, isTestOrTestFactoryMethod).isEmpty();
+	private boolean hasTestOrTestFactoryOrTestTemplateMethods(Class<?> candidate) {
+		return !ReflectionUtils.findMethods(candidate, isTestOrTestFactoryOrTestTemplateMethod).isEmpty();
 	}
 
 	private boolean hasNestedTests(Class<?> candidate) {

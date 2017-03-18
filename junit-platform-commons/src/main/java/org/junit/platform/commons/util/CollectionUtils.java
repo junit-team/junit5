@@ -10,9 +10,20 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.Spliterator.ORDERED;
+import static java.util.Spliterators.spliteratorUnknownSize;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
 
@@ -49,6 +60,65 @@ public final class CollectionUtils {
 		Preconditions.condition(collection.size() == 1,
 			() -> "collection must contain exactly one element: " + collection);
 		return collection.iterator().next();
+	}
+
+	/**
+	 * Return a {@code Collector} that accumulates the input elements into a
+	 * new unmodifiable list, in encounter order.
+	 *
+	 * <p>There are no guarantees on the type or serializability of the list
+	 * returned, so if more control over the returned list is required,
+	 * consider creating a new {@code Collector} implementation like the
+	 * following:
+	 * <pre class="code">
+	 * public static &lt;T&gt; Collector&lt;T, ?, List&lt;T&gt;&gt; toUnmodifiableList(Supplier&lt;List&lt;T&gt;&gt; listSupplier) {
+	 *     return Collectors.collectingAndThen(Collectors.toCollection(listSupplier), Collections::unmodifiableList);
+	 * }
+	 * </pre>
+	 *
+	 * @param <T> the type of the input elements
+	 * @return a {@code Collector} which collects all the input elements into
+	 * an unmodifiable list, in encounter order
+	 */
+	public static <T> Collector<T, ?, List<T>> toUnmodifiableList() {
+		return collectingAndThen(toList(), Collections::unmodifiableList);
+	}
+
+	/**
+	 * Convert an object of one of the following supported types into a {@code Stream}.
+	 *
+	 * <ul>
+	 * <li>{@link Stream}</li>
+	 * <li>{@link Collection}</li>
+	 * <li>{@link Iterable}</li>
+	 * <li>{@link Iterator}</li>
+	 * <li>{@link Object} array</li>
+	 * </ul>
+	 *
+	 * @param object the object to convert into a stream; never {@code null}
+	 * @return the resulting stream
+	 * @throws PreconditionViolationException if the supplied object is {@code null}
+	 * or not one of the supported types
+	 */
+	public static Stream<?> toStream(Object object) {
+		Preconditions.notNull(object, "Object must not be null");
+		if (object instanceof Stream) {
+			return (Stream<?>) object;
+		}
+		if (object instanceof Collection) {
+			return ((Collection<?>) object).stream();
+		}
+		if (object instanceof Iterable) {
+			return stream(((Iterable<?>) object).spliterator(), false);
+		}
+		if (object instanceof Iterator) {
+			return stream(spliteratorUnknownSize((Iterator<?>) object, ORDERED), false);
+		}
+		if (object instanceof Object[]) {
+			return Arrays.stream((Object[]) object);
+		}
+		throw new PreconditionViolationException(
+			"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object);
 	}
 
 }

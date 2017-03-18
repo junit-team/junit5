@@ -29,12 +29,6 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  */
 class Root {
 
-	private static final TestDescriptor.Visitor REMOVE_DESCRIPTORS_WITHOUT_TESTS = descriptor -> {
-		if (!descriptor.isRoot() && !descriptor.hasTests()) {
-			descriptor.removeFromHierarchy();
-		}
-	};
-
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>(4);
 
 	/**
@@ -74,7 +68,7 @@ class Root {
 	 * pruning, it will <strong>not</strong> be removed.
 	 */
 	void prune() {
-		acceptInAllTestEngines(REMOVE_DESCRIPTORS_WITHOUT_TESTS);
+		acceptInAllTestEngines(TestDescriptor::prune);
 	}
 
 	private boolean isExcluded(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {

@@ -12,21 +12,20 @@ junitPlatform {
 
 dependencies {
 	// --- Things we are testing --------------------------------------------------
-	testCompile(project(':junit-platform-commons'))
-	testCompile(project(path: ':junit-platform-console', configuration: 'shadow'))
-	testRuntime(project(path: ':junit-platform-console', configuration: 'shadowed'))
-	testCompile(project(':junit-platform-engine'))
-	testCompile(project(':junit-platform-launcher'))
+	testImplementation(project(':junit-platform-commons'))
+	testImplementation(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testImplementation(project(':junit-platform-engine'))
+	testImplementation(project(':junit-platform-launcher'))
 
 	// --- Things we are testing with ---------------------------------------------
-	testCompile(project(':junit-jupiter-api'))
-	testCompile(project(':junit-platform-runner'))
-	testCompile(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
-	testCompile("org.assertj:assertj-core:${assertJVersion}")
-	testCompile("org.mockito:mockito-core:${mockitoVersion}")
+	testImplementation(project(':junit-jupiter-api'))
+	testImplementation(project(':junit-platform-runner'))
+	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
+	testImplementation("org.assertj:assertj-core:${assertJVersion}")
+	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
 
 	// --- Test run-time dependencies ---------------------------------------------
-	testRuntime(project(':junit-jupiter-engine'))
-	testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-	testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+	testRuntimeOnly(project(':junit-jupiter-engine'))
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }

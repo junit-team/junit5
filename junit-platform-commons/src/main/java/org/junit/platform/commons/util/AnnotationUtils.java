@@ -11,8 +11,8 @@
 package org.junit.platform.commons.util;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toCollection;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
@@ -33,8 +33,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder;
+import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 
 /**
  * Collection of utilities for working with {@linkplain Annotation annotations}.
@@ -178,7 +179,8 @@ public final class AnnotationUtils {
 		// duplicates, but we need to maintain the original order.
 		Set<A> found = new LinkedHashSet<>(16);
 		findRepeatableAnnotations(element, annotationType, containerType, inherited, found, new HashSet<>(16));
-		return new ArrayList<>(found);
+		// unmodifiable since returned from public, non-internal method(s)
+		return Collections.unmodifiableList(new ArrayList<>(found));
 	}
 
 	private static <A extends Annotation> void findRepeatableAnnotations(AnnotatedElement element,
@@ -225,10 +227,14 @@ public final class AnnotationUtils {
 				}
 				// Container?
 				else if (candidate.annotationType().equals(containerType)) {
-					// Note: it's not a legitimate container annotation if it doesn't declare
+					// Note: it's not a legitimate containing annotation type if it doesn't declare
 					// a 'value' attribute that returns an array of the contained annotation type.
-					// Thus we proceed without verifying this assumption.
-					Method method = ReflectionUtils.getMethod(containerType, "value").get();
+					// See https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.6.3
+					Method method = ReflectionUtils.getMethod(containerType, "value").orElseThrow(
+						() -> new JUnitException(String.format(
+							"Container annotation type '%s' must declare a 'value' attribute of type %s[].",
+							containerType, annotationType)));
+
 					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
 					found.addAll((Collection<? extends A>) asList(containedAnnotations));
 				}
@@ -254,20 +260,20 @@ public final class AnnotationUtils {
 		// @formatter:off
 		return Arrays.stream(clazz.getFields())
 				.filter(field -> fieldType.isAssignableFrom(field.getType()) && isAnnotated(field, annotationType))
-				.collect(toCollection(ArrayList::new));
+				.collect(toUnmodifiableList());
 		// @formatter:on
 	}
 
 	/**
-	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotatedMethods(Class, Class, org.junit.platform.commons.support.MethodSortOrder)
+	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotatedMethods(Class, Class, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
-			MethodSortOrder sortOrder) {
+			HierarchyTraversalMode traversalMode) {
 
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
-		return ReflectionUtils.findMethods(clazz, method -> isAnnotated(method, annotationType), sortOrder);
+		return ReflectionUtils.findMethods(clazz, method -> isAnnotated(method, annotationType), traversalMode);
 	}
 
 	private static boolean isInJavaLangAnnotationPackage(Annotation annotation) {

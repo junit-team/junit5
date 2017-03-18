@@ -95,10 +95,12 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 - **Artifact IDs**:
   - `junit-platform-commons`
   - `junit-platform-console`
+  - `junit-platform-console-standalone` (currently only available as `1.0.0-SNAPSHOT`)
   - `junit-platform-engine`
   - `junit-platform-gradle-plugin`
   - `junit-platform-launcher`
   - `junit-platform-runner`
+  - `junit-platform-suite-api` (currently only available as `1.0.0-SNAPSHOT`)
   - `junit-platform-surefire-provider`
 
 ### JUnit Jupiter
@@ -109,6 +111,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
   - `junit-jupiter-api`
   - `junit-jupiter-engine`
   - `junit-jupiter-migration-support`
+  - `junit-jupiter-params` (currently only available as `5.0.0-SNAPSHOT`)
 
 ### JUnit Vintage
 

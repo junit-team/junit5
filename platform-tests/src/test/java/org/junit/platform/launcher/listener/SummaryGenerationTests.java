@@ -195,13 +195,8 @@ class SummaryGenerationTests {
 			new TestDescriptorStub(UniqueId.root("container", uniqueId), uniqueId) {
 
 				@Override
-				public boolean isContainer() {
-					return true;
-				}
-
-				@Override
-				public boolean isTest() {
-					return false;
+				public Type getType() {
+					return Type.CONTAINER;
 				}
 			});
 		testPlan.add(identifier);

@@ -16,6 +16,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -32,10 +33,12 @@ import org.junit.platform.commons.meta.API;
 public class CommandLineOptions {
 
 	static final Details DEFAULT_DETAILS = Details.TREE;
+	static final Theme DEFAULT_THEME = Theme.valueOf(Charset.defaultCharset());
 
 	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
 	private Details details = DEFAULT_DETAILS;
+	private Theme theme = DEFAULT_THEME;
 
 	private boolean scanClasspath;
 	private List<Path> selectedClasspathEntries = emptyList();
@@ -91,6 +94,14 @@ public class CommandLineOptions {
 
 	public void setDetails(Details details) {
 		this.details = details;
+	}
+
+	public Theme getTheme() {
+		return theme;
+	}
+
+	public void setTheme(Theme theme) {
+		this.theme = theme;
 	}
 
 	public List<URI> getSelectedUris() {

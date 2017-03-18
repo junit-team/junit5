@@ -12,8 +12,11 @@ package org.junit.platform.console;
 
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.console.options.CommandLineOptions;
@@ -42,16 +45,23 @@ public class ConsoleLauncher {
 	private final CommandLineOptionsParser commandLineOptionsParser;
 	private final PrintStream outStream;
 	private final PrintStream errStream;
+	private final Charset charset;
 
 	ConsoleLauncher(CommandLineOptionsParser commandLineOptionsParser, PrintStream out, PrintStream err) {
+		this(commandLineOptionsParser, out, err, Charset.defaultCharset());
+	}
+
+	ConsoleLauncher(CommandLineOptionsParser commandLineOptionsParser, PrintStream out, PrintStream err,
+			Charset charset) {
 		this.commandLineOptionsParser = commandLineOptionsParser;
 		this.outStream = out;
 		this.errStream = err;
+		this.charset = charset;
 	}
 
 	ConsoleLauncherExecutionResult execute(String... args) {
 		CommandLineOptions options = commandLineOptionsParser.parse(args);
-		try (PrintWriter out = new PrintWriter(outStream)) {
+		try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outStream, charset)))) {
 			if (options.isDisplayHelp()) {
 				commandLineOptionsParser.printHelp(out);
 				return ConsoleLauncherExecutionResult.success();

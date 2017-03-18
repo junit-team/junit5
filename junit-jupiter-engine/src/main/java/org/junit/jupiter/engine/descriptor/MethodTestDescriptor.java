@@ -68,13 +68,8 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	@Override
-	public boolean isTest() {
-		return true;
-	}
-
-	@Override
-	public boolean isContainer() {
-		return false;
+	public Type getType() {
+		return Type.TEST;
 	}
 
 	// --- Node ----------------------------------------------------------------
@@ -172,9 +167,9 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 
 		throwableCollector.execute(() -> {
 			try {
-				Method method = testExtensionContext.getTestMethod().get();
 				Object instance = testExtensionContext.getTestInstance();
-				executableInvoker.invoke(method, instance, testExtensionContext, context.getExtensionRegistry());
+				executableInvoker.invoke(getTestMethod(), instance, testExtensionContext,
+					context.getExtensionRegistry());
 			}
 			catch (Throwable throwable) {
 				invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), testExtensionContext, throwable);

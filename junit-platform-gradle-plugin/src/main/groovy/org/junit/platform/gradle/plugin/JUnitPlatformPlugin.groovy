@@ -21,10 +21,11 @@ import org.junit.platform.console.ConsoleLauncher
  */
 class JUnitPlatformPlugin implements Plugin<Project> {
 
-	private static final String EXTENSION_NAME = 'junitPlatform';
-	private static final String TASK_NAME      = 'junitPlatformTest';
+	private static final String EXTENSION_NAME = 'junitPlatform'
+	private static final String TASK_NAME      = 'junitPlatformTest'
 
 	void apply(Project project) {
+		project.pluginManager.apply('java')
 		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitPlatformExtension, project)
 		junitExtension.extensions.create('selectors', SelectorsExtension)
 		junitExtension.extensions.create('filters', FiltersExtension)

@@ -14,29 +14,52 @@ import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.platform.console.tasks.Color.NONE;
 
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
+import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.0
  */
-class VerboseTreePrintingListener extends TreePrintingListener {
+class VerboseTreePrintingListener implements TestExecutionListener {
 
-	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors) {
-		this(out, disableAnsiColors, 16, Theme.valueOf(Charset.defaultCharset()));
-	}
+	private final PrintWriter out;
+	private final boolean disableAnsiColors;
+	private final Theme theme;
+	private final Deque<Long> frames;
+	private final String[] verticals;
+	private long executionStartedMillis;
 
 	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel, Theme theme) {
-		super(out, disableAnsiColors, maxContainerNestingLevel, theme);
+		this.out = out;
+		this.disableAnsiColors = disableAnsiColors;
+		this.theme = theme;
+
+		// create frame stack and push initial root frame
+		this.frames = new ArrayDeque<>();
+		this.frames.push(0L);
+
+		// create and populate vertical indentation lookup table
+		this.verticals = new String[Math.max(10, maxContainerNestingLevel) + 1];
+		this.verticals[0] = ""; // no frame
+		this.verticals[1] = ""; // synthetic root "/" level
+		this.verticals[2] = ""; // "engine" level
+
+		for (int i = 3; i < verticals.length; i++) {
+			verticals[i] = verticals[i - 1] + theme.vertical();
+		}
 	}
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		super.testPlanExecutionStarted(testPlan);
+		frames.push(System.currentTimeMillis());
+
 		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
 		printf(NONE, "Test plan execution started. Number of static tests: ");
 		printf(Color.TEST, "%d%n", tests);
@@ -45,7 +68,8 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
-		super.testPlanExecutionFinished(testPlan);
+		frames.pop();
+
 		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
 		printf(NONE, "Test plan execution finished. Number of all tests: ");
 		printf(Color.TEST, "%d%n", tests);
@@ -53,7 +77,13 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		super.executionStarted(testIdentifier);
+		this.executionStartedMillis = System.currentTimeMillis();
+		if (testIdentifier.isContainer()) {
+			printVerticals(theme.entry());
+			printf(Color.CONTAINER, " %s", testIdentifier.getDisplayName());
+			printf(NONE, "%n");
+			frames.push(System.currentTimeMillis());
+		}
 		if (testIdentifier.isContainer()) {
 			return;
 		}
@@ -65,15 +95,15 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		if (testIdentifier.isContainer()) {
-			Frame frame = frames.pop();
+			Long creationMillis = frames.pop();
 			printVerticals(theme.end());
 			printf(Color.CONTAINER, " %s", testIdentifier.getDisplayName());
-			printf(NONE, " finished after %d ms.%n", durationInMillis(System.nanoTime() - frame.creationNanos));
+			printf(NONE, " finished after %d ms.%n", System.currentTimeMillis() - creationMillis);
 			return;
 		}
 		testExecutionResult.getThrowable().ifPresent(t -> printDetail(Color.FAILED, "caught", readStackTrace(t)));
-		printDetail(NONE, "duration", "%d ms%n", durationInMillis(System.nanoTime() - this.executionStartedNanoTime));
-		String status = theme.computeStatusTile(testExecutionResult) + " " + testExecutionResult.getStatus();
+		printDetail(NONE, "duration", "%d ms%n", System.currentTimeMillis() - executionStartedMillis);
+		String status = theme.status(testExecutionResult) + " " + testExecutionResult.getStatus();
 		printDetail(Color.valueOf(testExecutionResult), "status", "%s%n", status);
 	}
 
@@ -106,6 +136,29 @@ class VerboseTreePrintingListener extends TreePrintingListener {
 		printDetail(NONE, "uniqueId", "%s%n", testIdentifier.getUniqueId());
 		printDetail(NONE, "parent", "%s%n", testIdentifier.getParentId().orElse("[]"));
 		testIdentifier.getSource().ifPresent(source -> printDetail(NONE, "source", "%s%n", source));
+	}
+
+	private String verticals() {
+		return verticals(frames.size());
+	}
+
+	private String verticals(int index) {
+		return verticals[Math.min(index, verticals.length)];
+	}
+
+	private void printVerticals(String tile) {
+		printf(NONE, verticals());
+		printf(NONE, tile);
+	}
+
+	private void printf(Color color, String message, Object... args) {
+		if (disableAnsiColors || color == NONE) {
+			out.printf(message, args);
+		}
+		else {
+			out.printf(color + message + NONE, args);
+		}
+		out.flush();
 	}
 
 	/**

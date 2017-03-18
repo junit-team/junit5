@@ -42,6 +42,7 @@ public final class TestIdentifier implements Serializable {
 	private final String uniqueId;
 	private final String parentId;
 	private final String displayName;
+	private final String legacyReportingName;
 	private final TestSource source;
 	private final Set<TestTag> tags;
 	private final boolean test;
@@ -58,14 +59,15 @@ public final class TestIdentifier implements Serializable {
 		Optional<TestSource> source = testDescriptor.getSource();
 		Set<TestTag> tags = testDescriptor.getTags();
 		boolean test = testDescriptor.isTest();
-		boolean container = !test || !testDescriptor.getChildren().isEmpty();
+		boolean container = testDescriptor.isContainer();
 		Optional<String> parentId = testDescriptor.getParent().map(
 			parentDescriptor -> parentDescriptor.getUniqueId().toString());
-		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId);
+		String legacyReportingName = testDescriptor.getLegacyReportingName();
+		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId, legacyReportingName);
 	}
 
 	TestIdentifier(String uniqueId, String displayName, Optional<TestSource> source, Set<TestTag> tags, boolean test,
-			boolean container, Optional<String> parentId) {
+			boolean container, Optional<String> parentId, String legacyReportingName) {
 		this.uniqueId = uniqueId;
 		this.parentId = parentId.orElse(null);
 		this.displayName = displayName;
@@ -73,6 +75,7 @@ public final class TestIdentifier implements Serializable {
 		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
 		this.test = test;
 		this.container = container;
+		this.legacyReportingName = legacyReportingName;
 	}
 
 	/**
@@ -117,6 +120,20 @@ public final class TestIdentifier implements Serializable {
 	 */
 	public String getDisplayName() {
 		return this.displayName;
+	}
+
+	/**
+	 * Get the name of this identifier in a format that is suitable for legacy
+	 * reporting infrastructure &mdash; for example, for reporting systems built
+	 * on the Ant-based XML reporting format for JUnit 4.
+	 *
+	 * <p>The default implementation simply delegates to {@link #getDisplayName()}.
+	 *
+	 * @return the legacy reporting name; never {@code null} or blank
+	 * @see org.junit.platform.engine.TestDescriptor#getLegacyReportingName()
+	 */
+	public String getLegacyReportingName() {
+		return this.legacyReportingName;
 	}
 
 	/**
@@ -174,6 +191,7 @@ public final class TestIdentifier implements Serializable {
 				.append("uniqueId", this.uniqueId)
 				.append("parentId", this.parentId)
 				.append("displayName", this.displayName)
+				.append("legacyReportingName", this.legacyReportingName)
 				.append("source", this.source)
 				.append("tags", this.tags)
 				.append("test", this.test)

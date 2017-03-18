@@ -10,12 +10,14 @@
 
 package org.junit.platform.launcher.listeners;
 
+import static java.util.stream.Collectors.joining;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -192,13 +194,13 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	@Override
 	public List<Failure> getFailures() {
-		return new ArrayList<>(failures);
+		return Collections.unmodifiableList(failures);
 	}
 
 	private String describeTest(TestIdentifier testIdentifier) {
 		List<String> descriptionParts = new ArrayList<>();
 		collectTestDescription(Optional.of(testIdentifier), descriptionParts);
-		return descriptionParts.stream().collect(Collectors.joining(":"));
+		return descriptionParts.stream().collect(joining(":"));
 	}
 
 	private void collectTestDescription(Optional<TestIdentifier> optionalIdentifier, List<String> descriptionParts) {
