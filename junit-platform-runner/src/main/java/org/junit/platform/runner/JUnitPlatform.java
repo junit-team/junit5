@@ -37,6 +37,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -128,7 +129,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	public void run(RunNotifier notifier) {
 		JUnitPlatformRunnerListener listener = new JUnitPlatformRunnerListener(this.testTree, notifier);
 		this.launcher.registerTestExecutionListeners(listener);
-		this.launcher.execute(this.discoveryRequest);
+		this.launcher.execute(this.discoveryRequest, new TestExecutionListener[0]);
 	}
 
 	private JUnitPlatformTestTree generateTestTree() {

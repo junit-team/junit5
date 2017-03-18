@@ -66,7 +66,7 @@ class UsingTheLauncherDemo {
 		TestExecutionListener listener = new SummaryGeneratingListener();
 		launcher.registerTestExecutionListeners(listener);
 
-		launcher.execute(request);
+		launcher.execute(request, new TestExecutionListener[0]);
 		// end::execution[]
 		// @formatter:on
 	}
