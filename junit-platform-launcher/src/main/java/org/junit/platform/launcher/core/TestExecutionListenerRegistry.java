@@ -10,8 +10,8 @@
 
 package org.junit.platform.launcher.core;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -26,7 +26,18 @@ import org.junit.platform.launcher.TestPlan;
  */
 class TestExecutionListenerRegistry {
 
-	private final List<TestExecutionListener> testExecutionListeners = new LinkedList<>();
+	private final List<TestExecutionListener> testExecutionListeners;
+
+	TestExecutionListenerRegistry() {
+		this(null);
+	}
+
+	TestExecutionListenerRegistry(TestExecutionListenerRegistry source) {
+		this.testExecutionListeners = new ArrayList<>();
+		if (source != null) {
+			this.testExecutionListeners.addAll(source.testExecutionListeners);
+		}
+	}
 
 	List<TestExecutionListener> getTestExecutionListeners() {
 		return testExecutionListeners;

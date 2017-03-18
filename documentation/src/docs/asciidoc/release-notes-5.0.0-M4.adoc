@@ -48,6 +48,11 @@ on GitHub.
   by an executable standalone JAR distribution. For details, see the "New Features" section below.
 * The `MethodSortOrder` enum in `ReflectionUtils` has been renamed to `HierarchyTraversalMode`. Those
   affected should now use `ReflectionSupport` instead of `ReflectionUtils`.
+* The method `execute(LauncherDiscoveryRequest launcherDiscoveryRequest)` in `Launcher` has been
+  deprecated and will be removed in milestone M5. Instead use the following new method that registers
+  supplied ``TestExecutionListener``s in addition to already registered listeners but only for the
+  supplied `LauncherDiscoveryRequest`:
+  `execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners)`
 
 ===== New Features
 
