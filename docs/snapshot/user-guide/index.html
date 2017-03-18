@@ -4512,6 +4512,10 @@ method names through <code>getLegacyName()</code> instead of using the source lo
 <p>JAR files that contain spaces in their paths (<code>%20</code>) are now properly decoded before being
 used in classpath scanning routines.</p>
 </li>
+<li>
+<p>Updated <code>findNestedClasses()</code> in <code>ReflectionUtils</code> so that searches for nested classes also
+return inherited nested classes (regardless of whether they are static or not).</p>
+</li>
 </ul>
 </div>
 </div>
@@ -4620,6 +4624,9 @@ in order to align with the behavior of the JUnit Platform.</p>
 <p>Fixed bug that prevented discovery of two or more methods of the same class.</p>
 </li>
 <li>
+<p>Fixed bug that prevented discovery of <code>@Nested</code> non-static test classes declared in super classes.</p>
+</li>
+<li>
 <p>The correct execution order of overridden <code>@BeforeEach</code>/<code>@AfterEach</code> methods is now enforced when declared
 at multiple levels within a class hierarchy. It&#8217;s now always <code>super.before</code>, <code>this.before</code>, <code>this.test</code>,
 <code>this.after</code>, and <code>super.after</code>, even if the compiler adds synthetic methods.</p>
@@ -4702,7 +4709,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-17 18:02:50 EDT
+Last updated 2017-03-18 03:29:23 EDT
 </div>
 </div>
 </body>
