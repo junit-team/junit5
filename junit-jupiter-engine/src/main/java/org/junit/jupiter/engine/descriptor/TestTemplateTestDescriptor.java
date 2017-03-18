@@ -14,8 +14,9 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -84,13 +85,18 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(containerExtensionContext,
 			context.getExtensionRegistry());
-		AtomicInteger invocationIndex = new AtomicInteger();
-		// @formatter:off
-		providers.stream()
-				.flatMap(provider -> provider.provide(containerExtensionContext))
-				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
-				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
-		// @formatter:on
+
+		int invocationIndex = 0;
+		for (TestTemplateInvocationContextProvider provider : providers) {
+			Stream<TestTemplateInvocationContext> invocationContextStream = provider.provide(containerExtensionContext);
+			Iterator<TestTemplateInvocationContext> contextIterator = invocationContextStream.iterator();
+			while (contextIterator.hasNext()) {
+				TestDescriptor invocationTestDescriptor = createInvocationTestDescriptor(contextIterator.next(),
+					++invocationIndex);
+				execute(dynamicTestExecutor, invocationTestDescriptor);
+			}
+			invocationContextStream.close();
+		}
 		validateWasAtLeastInvokedOnce(invocationIndex);
 		return context;
 	}
@@ -122,8 +128,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		dynamicTestExecutor.execute(testDescriptor);
 	}
 
-	private void validateWasAtLeastInvokedOnce(AtomicInteger invocationIndex) {
-		if (invocationIndex.get() == 0) {
+	private void validateWasAtLeastInvokedOnce(int invocationIndex) {
+		if (invocationIndex == 0) {
 			throw new TestAbortedException("No supporting "
 					+ TestTemplateInvocationContextProvider.class.getSimpleName() + " provided an invocation context");
 		}
