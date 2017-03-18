@@ -17,6 +17,9 @@ import java.util.List;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 
+/**
+ * @since 5.0
+ */
 class ParameterizedTestInvocationContext implements TestTemplateInvocationContext {
 
 	private final ParameterizedTestNameFormatter formatter;

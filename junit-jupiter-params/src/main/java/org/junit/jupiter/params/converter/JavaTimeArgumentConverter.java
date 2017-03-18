@@ -29,6 +29,9 @@ import java.util.Map;
 
 import org.junit.jupiter.params.support.AnnotationConsumer;
 
+/**
+ * @since 5.0
+ */
 class JavaTimeArgumentConverter extends SimpleArgumentConverter
 		implements AnnotationConsumer<JavaTimeConversionPattern> {
 

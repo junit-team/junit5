@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.params.provider;
 
+/**
+ * @since 5.0
+ */
 public interface Arguments {
 
 	Object[] get();

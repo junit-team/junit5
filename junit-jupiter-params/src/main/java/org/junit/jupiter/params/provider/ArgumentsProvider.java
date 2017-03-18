@@ -14,6 +14,9 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 
+/**
+ * @since 5.0
+ */
 public interface ArgumentsProvider {
 
 	Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception;

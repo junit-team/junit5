@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.params.provider;
 
+/**
+ * @since 5.0
+ */
 public class ObjectArrayArguments implements Arguments {
 
 	private final Object[] arguments;

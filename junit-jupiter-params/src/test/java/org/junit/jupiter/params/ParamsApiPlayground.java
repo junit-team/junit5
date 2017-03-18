@@ -28,6 +28,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ObjectArrayArguments;
 import org.junit.jupiter.params.provider.ValueSource;
 
+/**
+ * @since 5.0
+ */
 class ParamsApiPlayground {
 
 	@ParameterizedTest(name = "{0}")
@@ -111,6 +114,7 @@ class ParamsApiPlayground {
 	}
 
 	static class MyArgumentsProvider implements ArgumentsProvider {
+
 		@Override
 		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
 			return Stream.of("foo", "bar").map(ObjectArrayArguments::create);

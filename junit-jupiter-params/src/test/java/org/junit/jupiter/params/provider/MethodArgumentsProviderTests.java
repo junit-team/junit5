@@ -26,6 +26,9 @@ import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
+/**
+ * @since 5.0
+ */
 class MethodArgumentsProviderTests {
 
 	@Test

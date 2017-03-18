@@ -15,6 +15,9 @@ import static java.util.stream.Collectors.joining;
 import java.text.MessageFormat;
 import java.util.stream.IntStream;
 
+/**
+ * @since 5.0
+ */
 class ParameterizedTestNameFormatter {
 
 	private final String namePattern;

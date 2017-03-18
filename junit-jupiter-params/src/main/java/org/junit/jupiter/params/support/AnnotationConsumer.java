@@ -13,5 +13,8 @@ package org.junit.jupiter.params.support;
 import java.lang.annotation.Annotation;
 import java.util.function.Consumer;
 
+/**
+ * @since 5.0
+ */
 public interface AnnotationConsumer<A extends Annotation> extends Consumer<A> {
 }

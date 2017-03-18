@@ -12,6 +12,9 @@ package org.junit.jupiter.params.converter;
 
 import org.junit.platform.commons.JUnitException;
 
+/**
+ * @since 5.0
+ */
 public class ArgumentConversionException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

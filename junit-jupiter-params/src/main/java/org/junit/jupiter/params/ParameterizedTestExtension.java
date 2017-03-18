@@ -28,6 +28,9 @@ import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
+/**
+ * @since 5.0
+ */
 class ParameterizedTestExtension implements TestTemplateInvocationContextProvider {
 
 	@Override

@@ -26,6 +26,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @since 5.0
+ */
 class DefaultArgumentConverterTests {
 
 	@Test

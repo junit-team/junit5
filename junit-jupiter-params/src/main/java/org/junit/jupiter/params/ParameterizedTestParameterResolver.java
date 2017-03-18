@@ -24,6 +24,9 @@ import org.junit.jupiter.params.support.AnnotationInitializer;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
+/**
+ * @since 5.0
+ */
 class ParameterizedTestParameterResolver implements ParameterResolver {
 
 	private final Object[] arguments;

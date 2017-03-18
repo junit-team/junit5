@@ -20,6 +20,9 @@ import java.lang.annotation.Target;
 
 import org.junit.platform.commons.meta.API;
 
+/**
+ * @since 5.0
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

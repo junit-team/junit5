@@ -19,6 +19,9 @@ import com.univocity.parsers.csv.CsvParserSettings;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 
+/**
+ * @since 5.0
+ */
 class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvSource> {
 
 	private String[] lines;

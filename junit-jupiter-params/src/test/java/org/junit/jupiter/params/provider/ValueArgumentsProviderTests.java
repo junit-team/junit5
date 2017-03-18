@@ -20,6 +20,9 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
+/**
+ * @since 5.0
+ */
 class ValueArgumentsProviderTests {
 
 	@Test

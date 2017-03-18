@@ -14,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @since 5.0
+ */
 class ParameterizedTestNameFormatterTests {
 
 	@Test
