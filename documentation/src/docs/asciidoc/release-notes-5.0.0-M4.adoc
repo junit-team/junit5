@@ -24,9 +24,9 @@ on GitHub.
 * All `findMethods()` implementations in `ReflectionUtils` no longer return synthetic methods.
   Shadowed https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2[override-equal]
   methods are also no longer included in the results.
-* Introduced `getLegacyName()` in `TestIdentifier` and `TestDescriptor`.
-  This allows the JUnit Platform Gradle Plugin and the Surefire Provider to resolve the class and
-  method names through `getLegacyName()` instead of using the source location.
+* Introduced `getLegacyReportingName()` in `TestIdentifier` and `TestDescriptor`. This
+  allows the JUnit Platform Gradle Plugin and the Surefire Provider to resolve the class
+  and method names through `getLegacyReportingName()` instead of using the source location.
 * JAR files that contain spaces in their paths (`%20`) are now properly decoded before being
   used in classpath scanning routines.
 * Updated `findNestedClasses()` in `ReflectionUtils` so that searches for nested classes also

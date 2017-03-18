@@ -61,7 +61,7 @@ public interface TestDescriptor {
 	 *
 	 * <p>The default implementation simply delegates to {@link #getDisplayName()}.
 	 *
-	 * @return the legacy reporting name; never {@code null}
+	 * @return the legacy reporting name; never {@code null} or blank
 	 */
 	default String getLegacyReportingName() {
 		return getDisplayName();

@@ -123,6 +123,20 @@ public final class TestIdentifier implements Serializable {
 	}
 
 	/**
+	 * Get the name of this identifier in a format that is suitable for legacy
+	 * reporting infrastructure &mdash; for example, for reporting systems built
+	 * on the Ant-based XML reporting format for JUnit 4.
+	 *
+	 * <p>The default implementation simply delegates to {@link #getDisplayName()}.
+	 *
+	 * @return the legacy reporting name; never {@code null} or blank
+	 * @see org.junit.platform.engine.TestDescriptor#getLegacyReportingName()
+	 */
+	public String getLegacyReportingName() {
+		return legacyReportingName;
+	}
+
+	/**
 	 * Determine if this identifier represents a test.
 	 */
 	public boolean isTest() {
@@ -154,10 +168,6 @@ public final class TestIdentifier implements Serializable {
 	 */
 	public Set<TestTag> getTags() {
 		return this.tags;
-	}
-
-	public String getLegacyReportingName() {
-		return legacyReportingName;
 	}
 
 	@Override
