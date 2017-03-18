@@ -534,8 +534,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#installation">2. Installation</a>
 <ul class="sectlevel2">
 <li><a href="#dependency-metadata">2.1. Dependency Metadata</a></li>
-<li><a href="#dependency-metadata-junit-jupiter-samples">2.2. JUnit Jupiter Sample Projects</a></li>
-<li><a href="#dependency-diagram">2.3. Dependency Diagram</a></li>
+<li><a href="#dependency-diagram">2.2. Dependency Diagram</a></li>
+<li><a href="#dependency-metadata-junit-jupiter-samples">2.3. JUnit Jupiter Sample Projects</a></li>
 </ul>
 </li>
 <li><a href="#writing-tests">3. Writing Tests</a>
@@ -753,6 +753,10 @@ environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to
 <dd>
 <p>JUnit Jupiter test engine implementation, only required at runtime.</p>
 </dd>
+<dt class="hdlist1"><code>junit-jupiter-params</code></dt>
+<dd>
+<p>Support for <em>parameterized tests</em> in JUnit Jupiter.</p>
+</dd>
 <dt class="hdlist1"><code>junit-jupiter-migration-support</code></dt>
 <dd>
 <p>Migration support from JUnit 4 to JUnit Jupiter,
@@ -791,7 +795,15 @@ written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="dependency-metadata-junit-jupiter-samples">2.2. JUnit Jupiter Sample Projects</h3>
+<h3 id="dependency-diagram">2.2. Dependency Diagram</h3>
+<div class="imageblock">
+<div class="content">
+<img src="images/component-diagram.svg" alt="component diagram" width="1490" height="503">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="dependency-metadata-junit-jupiter-samples">2.3. JUnit Jupiter Sample Projects</h3>
 <div class="paragraph">
 <p>The <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository hosts a collection of sample
 projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respective
@@ -806,14 +818,6 @@ projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respect
 <p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project.</p>
 </li>
 </ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="dependency-diagram">2.3. Dependency Diagram</h3>
-<div class="imageblock">
-<div class="content">
-<img src="images/component-diagram.svg" alt="component diagram" width="1315" height="503">
-</div>
 </div>
 </div>
 </div>
@@ -4710,7 +4714,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-18 09:56:40 EDT
+Last updated 2017-03-17 04:34:19 EDT
 </div>
 </div>
 </body>
