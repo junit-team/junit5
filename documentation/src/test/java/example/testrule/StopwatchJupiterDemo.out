@@ -1,0 +1,11 @@
+tag::user_guide[]
+├─ StopwatchJupiterDemo ✔
+│  ├─ succeeds() ✔
+│  │     2017-03-19T14:55:26.023 Method execution time (in uS) = `218`
+│  ├─ fails() ✘ Time a failing test
+│  │     2017-03-19T14:55:26.025 Method execution time (in uS) = `197`
+│  ├─ skips() ■ Assumption failed: assumption is not true
+│  │     2017-03-19T14:55:26.027 Method execution time (in uS) = `129`
+│  └─ performanceTest(Stopwatch) ✔
+│        2017-03-19T14:55:26.829 Method execution time (in uS) = `801527`
+end::user_guide[]

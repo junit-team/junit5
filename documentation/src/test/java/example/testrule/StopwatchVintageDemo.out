@@ -1,0 +1,14 @@
+tag::user_guide[]
+Mar 19, 2017 7:21:25 AM java.util.logging.LogManager$RootLogger log
+INFO: Test succeeds succeeded, spent 687 microseconds
+Mar 19, 2017 7:21:25 AM java.util.logging.LogManager$RootLogger log
+INFO: Test succeeds finished, spent 687 microseconds
+Mar 19, 2017 7:21:26 AM java.util.logging.LogManager$RootLogger log
+INFO: Test performanceTest succeeded, spent 800549 microseconds
+Mar 19, 2017 7:21:26 AM java.util.logging.LogManager$RootLogger log
+INFO: Test performanceTest finished, spent 800549 microseconds
+Mar 19, 2017 7:21:26 AM java.util.logging.LogManager$RootLogger log
+INFO: Test skips skipped, spent 6925 microseconds
+Mar 19, 2017 7:21:26 AM java.util.logging.LogManager$RootLogger log
+INFO: Test skips finished, spent 6925 microseconds
+end::user_guide[]

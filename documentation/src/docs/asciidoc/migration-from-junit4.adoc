@@ -71,3 +71,99 @@ support extensions: `VerifierSupport`, `ExternalResourceSupport`, and `ExpectedE
 
 However, if you intend to develop a new extension for JUnit 5
 please use the new extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.
+
+[[migrating-from-junit4-rule-replacement]]
+=== Replacing JUnit 4 Rules
+
+JUnit 5 may only have limited JUnit 4 rule support but the use-cases that originally
+led to the creation of the built-in JUnit 4 rules are still important.  This section
+provides patterns that demonstrate how a test writer might accomplish the same tasks
+using the framework provided by JUnit 5.
+
+Below you'll find  a section for each of the JUnit 4 rules that shows the original sample
+code (sometimes modified so that it will actually execute) as well as an example that
+provides the same functionality in JUnit 5.
+
+==== DisableOnDebug
+
+As the only discernable use for this rule is to disable the `Timeout` rule, the
+JUnit 5 team has decided not to support this functionality at this time.
+
+==== ErrorCollector (Verifier)
+
+==== ExpectedException
+
+==== RuleChain
+
+==== Stopwatch
+
+JUnit 4's `Stopwatch` rule performs two functions - it allows a test writer to
+determine the result of the test as well as the execution time of the test.  The
+following code is a combination of the two examples provided with the JUnit 4
+Stopwatch rule.
+
+[caption="StopwatchVintageDemo.java"]
+[source,java,indent=0]
+[subs="verbatim"]
+----
+include::{testDir}/example/testrule/StopwatchVintageDemo.java[tags=user_guide]
+----
+
+Executing this code results in the following log output:
+
+[caption="StopwatchVintageDemo.out"]
+[source,text,indent=0]
+[subs="verbatim"]
+----
+include::{testDir}/example/testrule/StopwatchVintageDemo.out[tags=user_guide]
+----
+
+Note that there are two lines output to the log files for each of the tests that
+are run since one line is output by the methods that indicate the test results
+(succeeded, failed, skipped) and a second line is output regardless of the test
+outcome (finished).
+
+JUnit 5 provides the result of the test to the all registered `TestExecutionListener`
+(s), so the `StopwatchExtension` and `Stopwatch` object which can be injected into
+the test via `ParameterResolution` simply need to allow the test execution time to
+be recorded and then provide it to the `TestExecutionListener` .  Here's the
+JUnit 5 code that provides (along with the `StopwatchExtension` ) the equivalent
+functionality:
+
+[caption="StopwatchJupiterDemo.java"]
+[source,java,indent=0]
+[subs="verbatim"]
+----
+include::{testDir}/example/testrule/StopwatchJupiterDemo.java[tags=user_guide]
+----
+
+There are three important points to note in this code:
+
+1.  We add the `StopwatchExtension` to the class-under-test - this will result in the
+execution time of each test being output to the `TestExecutionListener` as a
+`ReportEntry` .  Since `ReportEntry` objects are key/value pairs, a custom
+`TestExecutionListener` could conceivably perform operations on the values returned
+by the extension.  (e.g. to sum all execution times).
+
+2.  An instance of a `Stopwatch` is injected into the test when we want to make
+assertions about the execution time.
+
+3.  When we're making an assertion about the test's execution time, we can choose the
+`TimeUnit` for the comparison but since the result is a double, we must also provide
+a delta that's sufficient to account for deviations in the system's timing.
+
+When this code is executed, it produces the following output (shown using the
+default Gradle test tree printer):
+
+[caption="StopwatchJupiterDemo.out"]
+[source,text,indent=0]
+[subs="verbatim"]
+----
+include::{testDir}/example/testrule/StopwatchJupiterDemo.out[tags=user_guide]
+----
+
+==== TemporaryFolder (ExternalResource)
+
+==== TestName (TestWatcher)
+
+==== Timeout

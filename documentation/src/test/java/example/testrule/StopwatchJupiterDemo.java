@@ -18,14 +18,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(StopwatchExtension.class) // <1>
 public class StopwatchJupiterDemo {
 
 	@Test
-	public void succeeds(TestReporter testReporter) throws InterruptedException {
+	public void succeeds() throws InterruptedException {
 		assertTrue(true);
 	}
 
