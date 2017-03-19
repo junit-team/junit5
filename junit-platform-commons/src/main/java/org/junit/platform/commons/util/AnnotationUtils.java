@@ -66,6 +66,24 @@ public final class AnnotationUtils {
 	private static final Map<AnnotationCacheKey, Annotation> annotationCache = new ConcurrentHashMap<>(256);
 
 	/**
+	 * Determine if an annotation of {@code annotationType} is either
+	 * <em>present</em> or <em>meta-present</em> on the supplied optional
+	 * {@code element}.
+	 *
+	 * @see #findAnnotation(Optional, Class)
+	 */
+	public static boolean isAnnotated(Optional<? extends AnnotatedElement> element,
+			Class<? extends Annotation> annotationType) {
+
+		return findAnnotation(element, annotationType).isPresent();
+	}
+
+	/**
+	 * Determine if an annotation of {@code annotationType} is either
+	 * <em>present</em> or <em>meta-present</em> on the supplied
+	 * {@code element}.
+	 *
+	 * @see #findAnnotation(AnnotatedElement, Class)
 	 * @see org.junit.platform.commons.support.AnnotationSupport#isAnnotated(AnnotatedElement, Class)
 	 */
 	public static boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType) {
