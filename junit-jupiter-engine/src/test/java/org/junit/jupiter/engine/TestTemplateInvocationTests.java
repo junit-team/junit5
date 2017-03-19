@@ -79,20 +79,6 @@ import org.opentest4j.AssertionFailedError;
 class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void templateWithoutRegisteredExtensionReportsFailure() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyTestTemplateTestCase.class, "templateWithoutRegisteredExtension")).build();
-
-		ExecutionEventRecorder eventRecorder = executeTests(request);
-
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
-			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
-				event(container("templateWithoutRegisteredExtension"), started()), //
-				event(container("templateWithoutRegisteredExtension"), finishedWithFailure(message(s -> s.startsWith(
-					"You must register at least one TestTemplateInvocationContextProvider for @TestTemplate method ["))))));
-	}
-
-	@Test
 	void templateWithSingleRegisteredExtensionIsInvoked() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithSingleRegisteredExtension")).build();
