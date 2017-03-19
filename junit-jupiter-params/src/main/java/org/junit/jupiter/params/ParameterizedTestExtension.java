@@ -35,12 +35,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	@Override
 	public boolean supports(ContainerExtensionContext context) {
-		// @formatter:off
-		return context.getTestMethod()
-				.filter(method -> isAnnotated(method, ParameterizedTest.class))
-				.map(method -> true)
-				.orElse(false);
-		// @formatter:on
+		return isAnnotated(context.getTestMethod(), ParameterizedTest.class);
 	}
 
 	@Override
