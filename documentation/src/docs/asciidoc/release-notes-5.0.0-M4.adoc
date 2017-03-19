@@ -3,8 +3,8 @@
 
 *Date of Release:* April 1, 2017
 
-*Scope:* Fourth milestone release of JUnit 5 with a focus on parameterized tests and
-documentation.
+*Scope:* Fourth milestone release of JUnit 5 with a focus on test templates, repeated
+tests, and parameterized tests.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/7?closed=1+[5.0 M4] milestone page in the JUnit repository
