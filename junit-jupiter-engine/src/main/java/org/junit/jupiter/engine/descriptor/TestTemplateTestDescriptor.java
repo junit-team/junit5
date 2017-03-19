@@ -60,7 +60,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
-		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.getTestMethod(),
+		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(getTestMethod(),
 			context.getExtensionRegistry());
 		ContainerExtensionContext testExtensionContext = new TestTemplateContainerExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this);
@@ -81,6 +81,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
+
 		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(containerExtensionContext,
 			context.getExtensionRegistry());
@@ -91,30 +92,33 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
 				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
 		// @formatter:on
-		validateWasAtLeastInvokedOnce(invocationIndex);
+		validateWasAtLeastInvokedOnce(invocationIndex.get());
 		return context;
 	}
 
 	private List<TestTemplateInvocationContextProvider> validateProviders(
 			ContainerExtensionContext containerExtensionContext, ExtensionRegistry extensionRegistry) {
+
 		List<TestTemplateInvocationContextProvider> providers = extensionRegistry.getExtensions(
 			TestTemplateInvocationContextProvider.class);
-		Preconditions.notEmpty(providers, () -> "You must register at least one "
-				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " for this method");
+		Preconditions.notEmpty(providers,
+			() -> String.format("You must register at least one %s for @TestTemplate method [%s]",
+				TestTemplateInvocationContextProvider.class.getSimpleName(), getTestMethod()));
 		// @formatter:off
 		providers = providers.stream()
 				.filter(provider -> provider.supports(containerExtensionContext))
 				.collect(toList());
 		// @formatter:on
-		Preconditions.notEmpty(providers, () -> "You must register at least one "
-				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " that supports this method");
+		Preconditions.notEmpty(providers,
+			() -> String.format("You must register at least one %s that supports @TestTemplate method [%s]",
+				TestTemplateInvocationContextProvider.class.getSimpleName(), getTestMethod()));
 		return providers;
 	}
 
 	private TestDescriptor createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext, int index) {
 		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
-		return new TestTemplateInvocationTestDescriptor(uniqueId, this.getTestClass(), this.getTestMethod(),
-			invocationContext, index);
+		return new TestTemplateInvocationTestDescriptor(uniqueId, getTestClass(), getTestMethod(), invocationContext,
+			index);
 	}
 
 	private void execute(DynamicTestExecutor dynamicTestExecutor, TestDescriptor testDescriptor) {
@@ -122,8 +126,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		dynamicTestExecutor.execute(testDescriptor);
 	}
 
-	private void validateWasAtLeastInvokedOnce(AtomicInteger invocationIndex) {
-		if (invocationIndex.get() == 0) {
+	private void validateWasAtLeastInvokedOnce(int invocationIndex) {
+		if (invocationIndex == 0) {
 			throw new TestAbortedException("No supporting "
 					+ TestTemplateInvocationContextProvider.class.getSimpleName() + " provided an invocation context");
 		}
