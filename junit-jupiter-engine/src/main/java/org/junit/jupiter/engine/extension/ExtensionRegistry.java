@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECT_PROPERTY_NAME;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +59,7 @@ public class ExtensionRegistry {
 	public static ExtensionRegistry createRegistryWithDefaultExtensions() {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
 		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
-		if (Boolean.getBoolean("org.junit.jupiter.engine.extension.ExtensionRegistry.withServiceLoader")) {
+		if (Boolean.getBoolean(EXTENSIONS_AUTODETECT_PROPERTY_NAME)) {
 			ServiceLoader.load(Extension.class, ReflectionUtils.getDefaultClassLoader()).forEach(
 				extensionRegistry::registerDefaultExtension);
 		}

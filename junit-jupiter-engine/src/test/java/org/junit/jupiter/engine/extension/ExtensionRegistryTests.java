@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryFrom;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
+import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECT_PROPERTY_NAME;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,12 +40,12 @@ public class ExtensionRegistryTests {
 
 	@AfterEach
 	void cleanProperties() {
-		System.clearProperty("org.junit.jupiter.engine.extension.ExtensionRegistry.withServiceLoader");
+		System.clearProperty(EXTENSIONS_AUTODETECT_PROPERTY_NAME);
 	}
 
 	@Test
 	void newRegistryWithoutParentHasDefaultExtensions_usingServiceLocator() {
-		System.setProperty("org.junit.jupiter.engine.extension.ExtensionRegistry.withServiceLoader", "true");
+		System.setProperty(EXTENSIONS_AUTODETECT_PROPERTY_NAME, "true");
 
 		ExtensionRegistry registry = createRegistryWithDefaultExtensions();
 		List<Extension> extensions = registry.getExtensions(Extension.class);
