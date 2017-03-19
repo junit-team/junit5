@@ -99,16 +99,16 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 	private List<TestTemplateInvocationContextProvider> validateProviders(
 			ContainerExtensionContext containerExtensionContext, ExtensionRegistry extensionRegistry) {
 
-		List<TestTemplateInvocationContextProvider> providers = extensionRegistry.getExtensions(
-			TestTemplateInvocationContextProvider.class);
 		// @formatter:off
-		providers = providers.stream()
+		List<TestTemplateInvocationContextProvider> providers = extensionRegistry.stream(TestTemplateInvocationContextProvider.class)
 				.filter(provider -> provider.supports(containerExtensionContext))
 				.collect(toList());
 		// @formatter:on
+
 		Preconditions.notEmpty(providers,
 			() -> String.format("You must register at least one %s that supports @TestTemplate method [%s]",
 				TestTemplateInvocationContextProvider.class.getSimpleName(), getTestMethod()));
+
 		return providers;
 	}
 
