@@ -12,8 +12,8 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECT_PROPERTY_NAME;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;

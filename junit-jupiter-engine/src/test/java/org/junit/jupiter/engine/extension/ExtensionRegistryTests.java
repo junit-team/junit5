@@ -16,9 +16,9 @@ import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryFrom;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
-import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECT_PROPERTY_NAME;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
