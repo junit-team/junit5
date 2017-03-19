@@ -3399,7 +3399,7 @@ Launcher launcher = LauncherFactory.create();
 TestExecutionListener listener = <span class="keyword">new</span> SummaryGeneratingListener();
 launcher.registerTestExecutionListeners(listener);
 
-launcher.execute(request);</code></pre>
+launcher.execute(request, <span class="keyword">new</span> TestExecutionListener[<span class="integer">0</span>]);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4554,6 +4554,13 @@ by an executable standalone JAR distribution. For details, see the "New Features
 <li>
 <p>The <code>MethodSortOrder</code> enum in <code>ReflectionUtils</code> has been renamed to <code>HierarchyTraversalMode</code>. Those
 affected should now use <code>ReflectionSupport</code> instead of <code>ReflectionUtils</code>.</p>
+</li>
+<li>
+<p>The method <code>execute(LauncherDiscoveryRequest launcherDiscoveryRequest)</code> in <code>Launcher</code> has been
+deprecated and will be removed in milestone M5. Instead use the following new method that registers
+supplied <code>TestExecutionListener</code>s in addition to already registered listeners but only for the
+supplied <code>LauncherDiscoveryRequest</code>:
+<code>execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener&#8230;&#8203; listeners)</code></p>
 </li>
 </ul>
 </div>
