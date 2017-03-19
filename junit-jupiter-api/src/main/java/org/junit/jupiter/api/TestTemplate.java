@@ -35,7 +35,7 @@ import org.junit.platform.commons.meta.API;
  * execution will fail.
  *
  * <p>Each invocation of a test template method behaves like the execution of
- * a regular {@link Test @Test} method, i.e. it supports the same lifecycle
+ * a regular {@link Test @Test} method with full support for the same lifecycle
  * callbacks and extensions.
  *
  * <p>{@code @TestTemplate} methods must not be {@code private} or {@code static}
