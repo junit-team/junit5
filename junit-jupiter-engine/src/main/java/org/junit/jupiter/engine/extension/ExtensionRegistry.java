@@ -45,8 +45,11 @@ public class ExtensionRegistry {
 
 	private static final Logger LOG = Logger.getLogger(ExtensionRegistry.class.getName());
 
-	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(
-		Arrays.asList(new DisabledCondition(), new TestInfoParameterResolver(), new TestReporterParameterResolver()));
+	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
+		new DisabledCondition(), //
+		new RepeatedTestExtension(), //
+		new TestInfoParameterResolver(), //
+		new TestReporterParameterResolver()));
 
 	/**
 	 * Factory for creating and populating a new root registry with the default

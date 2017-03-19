@@ -27,6 +27,7 @@ import org.junit.jupiter.api.extension.ContainerExecutionCondition;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestExecutionCondition;
+import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
 /**
  * @since 5.0
@@ -39,14 +40,16 @@ public class ExtensionRegistryTests {
 	void newRegistryWithoutParentHasDefaultExtensions() {
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
-		assertEquals(3, extensions.size());
+		assertEquals(4, extensions.size());
 		assertExtensionRegistered(registry, DisabledCondition.class);
+		assertExtensionRegistered(registry, RepeatedTestExtension.class);
 		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
 		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
 
 		assertEquals(2, countExtensions(registry, ParameterResolver.class));
 		assertEquals(1, countExtensions(registry, ContainerExecutionCondition.class));
 		assertEquals(1, countExtensions(registry, TestExecutionCondition.class));
+		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
 	}
 
 	@Test
