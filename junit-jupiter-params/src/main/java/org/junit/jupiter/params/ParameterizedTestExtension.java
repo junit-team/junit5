@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
@@ -23,7 +24,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.AnnotationInitializer;
-import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -57,9 +57,8 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod) {
-		ParameterizedTest parameterizedTestAnnotation = AnnotationUtils.findAnnotation(templateMethod,
-			ParameterizedTest.class).get();
-		return new ParameterizedTestNameFormatter(parameterizedTestAnnotation.name());
+		String name = findAnnotation(templateMethod, ParameterizedTest.class).get().name();
+		return new ParameterizedTestNameFormatter(name);
 	}
 
 	private static Stream<? extends Arguments> arguments(ArgumentsProvider provider,
