@@ -1,4 +1,5 @@
 dependencies {
 	api(project(':junit-platform-launcher'))
+	api(project(':junit-platform-suite-api'))
 	api("junit:junit:${junit4Version}")
 }

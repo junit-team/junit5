@@ -10,8 +10,15 @@
 
 package org.junit.jupiter.params.converter;
 
-import org.junit.jupiter.api.extension.ParameterContext;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.meta.API;
+
+/**
+ * @since 5.0
+ */
+@API(Experimental)
 public interface ArgumentConverter {
 
 	Object convert(Object input, ParameterContext context) throws ArgumentConversionException;

@@ -27,6 +27,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
+/**
+ * @since 5.0
+ */
 class CsvFileArgumentsProviderTests {
 
 	@Test
@@ -47,6 +50,7 @@ class CsvFileArgumentsProviderTests {
 	void closesInputStream() {
 		AtomicBoolean closed = new AtomicBoolean(false);
 		InputStream inputStream = new ByteArrayInputStream("foo".getBytes()) {
+
 			@Override
 			public void close() throws IOException {
 				closed.set(true);

@@ -22,6 +22,9 @@ import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.util.Preconditions;
 
+/**
+ * @since 5.0
+ */
 class ValueArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<ValueSource> {
 
 	private Object[] arguments;

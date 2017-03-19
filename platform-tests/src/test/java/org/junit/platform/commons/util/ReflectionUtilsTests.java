@@ -42,6 +42,8 @@ import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
+import org.junit.platform.commons.util.ReflectionUtilsTests.Interface45.Nested5;
+import org.junit.platform.commons.util.ReflectionUtilsTests.InterfaceWithNestedClass.Nested4;
 
 /**
  * Unit tests for {@link ReflectionUtils}.
@@ -409,6 +411,9 @@ public class ReflectionUtilsTests {
 
 		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, ReflectionUtils::isStatic))
 			.containsExactly(Nested3.class);
+
+		assertThat(ReflectionUtils.findNestedClasses(ClassExtendingClassWithNestedClasses.class, clazz -> true))
+			.containsOnly(Nested1.class, Nested2.class, Nested3.class, Nested4.class, Nested5.class);
 		// @formatter:on
 	}
 
@@ -863,6 +868,21 @@ public class ReflectionUtilsTests {
 
 		static class Nested3 {
 		}
+	}
+
+	interface InterfaceWithNestedClass {
+
+		class Nested4 {
+		}
+	}
+
+	interface Interface45 extends InterfaceWithNestedClass {
+
+		class Nested5 {
+		}
+	}
+
+	static class ClassExtendingClassWithNestedClasses extends ClassWithNestedClasses implements Interface45 {
 	}
 
 	static class GrandparentClass {

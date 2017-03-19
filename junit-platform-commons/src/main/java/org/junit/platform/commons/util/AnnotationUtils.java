@@ -33,6 +33,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 
@@ -65,6 +66,24 @@ public final class AnnotationUtils {
 	private static final Map<AnnotationCacheKey, Annotation> annotationCache = new ConcurrentHashMap<>(256);
 
 	/**
+	 * Determine if an annotation of {@code annotationType} is either
+	 * <em>present</em> or <em>meta-present</em> on the supplied optional
+	 * {@code element}.
+	 *
+	 * @see #findAnnotation(Optional, Class)
+	 */
+	public static boolean isAnnotated(Optional<? extends AnnotatedElement> element,
+			Class<? extends Annotation> annotationType) {
+
+		return findAnnotation(element, annotationType).isPresent();
+	}
+
+	/**
+	 * Determine if an annotation of {@code annotationType} is either
+	 * <em>present</em> or <em>meta-present</em> on the supplied
+	 * {@code element}.
+	 *
+	 * @see #findAnnotation(AnnotatedElement, Class)
 	 * @see org.junit.platform.commons.support.AnnotationSupport#isAnnotated(AnnotatedElement, Class)
 	 */
 	public static boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType) {
@@ -229,8 +248,11 @@ public final class AnnotationUtils {
 					// Note: it's not a legitimate containing annotation type if it doesn't declare
 					// a 'value' attribute that returns an array of the contained annotation type.
 					// See https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.6.3
-					// Thus we proceed without verifying this assumption.
-					Method method = ReflectionUtils.getMethod(containerType, "value").orElseThrow(AssertionError::new);
+					Method method = ReflectionUtils.getMethod(containerType, "value").orElseThrow(
+						() -> new JUnitException(String.format(
+							"Container annotation type '%s' must declare a 'value' attribute of type %s[].",
+							containerType, annotationType)));
+
 					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
 					found.addAll((Collection<? extends A>) asList(containedAnnotations));
 				}

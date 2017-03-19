@@ -10,10 +10,10 @@
 
 package org.junit.platform;
 
-import org.junit.platform.runner.IncludeClassNamePatterns;
-import org.junit.platform.runner.IncludeEngines;
 import org.junit.platform.runner.JUnitPlatform;
-import org.junit.platform.runner.SelectPackages;
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.SelectPackages;
 import org.junit.runner.RunWith;
 
 /**

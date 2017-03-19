@@ -102,13 +102,8 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public final boolean isTest() {
-		return false;
-	}
-
-	@Override
-	public final boolean isContainer() {
-		return true;
+	public Type getType() {
+		return Type.CONTAINER;
 	}
 
 	@Override

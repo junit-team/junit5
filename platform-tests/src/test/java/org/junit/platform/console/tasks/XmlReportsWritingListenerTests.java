@@ -52,6 +52,7 @@ import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescri
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.opentest4j.AssertionFailedError;
@@ -414,7 +415,8 @@ class XmlReportsWritingListenerTests {
 		XmlReportsWritingListener reportListener = new XmlReportsWritingListener(tempDirectory.toString(), out, clock);
 		Launcher launcher = createLauncher(engine);
 		launcher.registerTestExecutionListeners(reportListener);
-		launcher.execute(request().selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))).build());
+		launcher.execute(request().selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))).build(),
+			new TestExecutionListener[0]);
 	}
 
 	private String readValidXmlFile(Path xmlFile) throws Exception {

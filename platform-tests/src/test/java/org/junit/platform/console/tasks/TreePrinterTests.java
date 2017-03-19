@@ -74,13 +74,8 @@ class TreePrinterTests {
 	private TestIdentifier createEngineId(String uniqueId, String displayName) {
 		return TestIdentifier.from(new AbstractTestDescriptor(UniqueId.forEngine(uniqueId), displayName) {
 			@Override
-			public boolean isContainer() {
-				return false;
-			}
-
-			@Override
-			public boolean isTest() {
-				return false;
+			public Type getType() {
+				return Type.ENGINE;
 			}
 		});
 	}

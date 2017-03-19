@@ -72,8 +72,12 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
     Public API for configuring and launching test plans -- typically used by IDEs and build tools.
     See <<launcher-api>> for details.
   `junit-platform-runner`::
-    Runner and annotations for configuring and executing tests on the JUnit Platform in a JUnit 4
+    Runner for executing tests and test suites on the JUnit Platform in a JUnit 4
     environment. See <<running-tests-junit-platform-runner>> for details.
+  `junit-platform-suite-api`::
+    Annotations for configuring test suites on the JUnit Platform. Supported by the
+	<<running-tests-junit-platform-runner,JUnitPlatform runner>> and possibly by third-party
+	`TestEngine` implementations.
   `junit-platform-surefire-provider`::
     Support for discovering and executing tests on the JUnit Platform using
     <<running-tests-build-maven,Maven Surefire>>.
@@ -88,6 +92,8 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
     JUnit Jupiter API for <<writing-tests,writing tests>> and <<extensions,extensions>>.
   `junit-jupiter-engine`::
     JUnit Jupiter test engine implementation, only required at runtime.
+  `junit-jupiter-params`::
+    Support for _parameterized tests_ in JUnit Jupiter.
   `junit-jupiter-migration-support`::
     Migration support from JUnit 4 to JUnit Jupiter,
     only required for running selected JUnit 4 rules.
@@ -102,16 +108,6 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
     JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e. tests
     written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.
 
-[[dependency-metadata-junit-jupiter-samples]]
-=== JUnit Jupiter Sample Projects
-
-The {junit5-samples-repo}[`junit5-samples`] repository hosts a collection of sample
-projects based on JUnit Jupiter and JUnit Vintage. You'll find the respective
-`build.gradle` and `pom.xml` in the projects below.
-
-* For Gradle, check out the `{junit5-gradle-consumer}` project.
-* For Maven, check out the `{junit5-maven-consumer}` project.
-
 [[dependency-diagram]]
 === Dependency Diagram
 
@@ -122,13 +118,14 @@ skinparam {
 }
 
 package org.junit.jupiter {
-    [junit-jupiter-api] as jupiterapi
-    [junit-jupiter-engine] as jupiterengine
-    [junit-jupiter-migration-support] as jupitermigrationsupport
+    [junit-jupiter-api] as jupiter_api
+    [junit-jupiter-engine] as jupiter_engine
+    [junit-jupiter-params] as jupiter_params
+    [junit-jupiter-migration-support] as jupiter_migration_support
 }
 
 package org.junit.vintage {
-    [junit-vintage-engine] as vintage
+    [junit-vintage-engine] as vintage_engine
     [junit:junit] as junit4
 }
 
@@ -139,6 +136,7 @@ package org.junit.platform {
     [junit-platform-gradle-plugin] as gradle
     [junit-platform-launcher] as launcher
     [junit-platform-runner] as runner
+    [junit-platform-suite-api] as suite_api
     [junit-platform-surefire-provider] as surefire
 }
 
@@ -146,14 +144,15 @@ package org.opentest4j {
     [opentest4j]
 }
 
-jupiterapi ..> opentest4j
-jupiterapi ..> commons
+jupiter_api ..> opentest4j
+jupiter_api ..> commons
 
-jupiterengine ..> engine
-jupiterengine ..> jupiterapi
+jupiter_engine ..> engine
+jupiter_engine ..> jupiter_api
 
-jupitermigrationsupport ..> jupiterapi
-jupitermigrationsupport ..> junit4
+jupiter_params ..> jupiter_api
+jupiter_migration_support ..> jupiter_api
+jupiter_migration_support ..> junit4
 
 console ..> launcher
 
@@ -165,10 +164,23 @@ engine ..> opentest4j
 engine ..> commons
 
 runner ..> launcher
+runner ..> suite_api
 runner ..> junit4
+
+suite_api ..> commons
 
 surefire ..> launcher
 
-vintage ..> engine
-vintage ..> junit4
+vintage_engine ..> engine
+vintage_engine ..> junit4
 ----
+
+[[dependency-metadata-junit-jupiter-samples]]
+=== JUnit Jupiter Sample Projects
+
+The {junit5-samples-repo}[`junit5-samples`] repository hosts a collection of sample
+projects based on JUnit Jupiter and JUnit Vintage. You'll find the respective
+`build.gradle` and `pom.xml` in the projects below.
+
+* For Gradle, check out the `{junit5-gradle-consumer}` project.
+* For Maven, check out the `{junit5-maven-consumer}` project.

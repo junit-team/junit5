@@ -84,7 +84,25 @@ public final class Preconditions {
 	 * @see #condition(boolean, String)
 	 */
 	public static <T> T[] notEmpty(T[] array, String message) throws PreconditionViolationException {
-		condition(array != null && array.length > 0, message);
+		return notEmpty(array, () -> message);
+	}
+
+	/**
+	 * Assert that the supplied array is neither {@code null} nor <em>empty</em>.
+	 *
+	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
+	 * array contains any {@code null} elements.
+	 *
+	 * @param array the array to check
+	 * @param messageSupplier precondition violation message supplier
+	 * @return the supplied array as a convenience
+	 * @throws PreconditionViolationException if the supplied array is
+	 * {@code null} or <em>empty</em>
+	 * @see #containsNoNullElements(Object[], String)
+	 * @see #condition(boolean, String)
+	 */
+	public static <T> T[] notEmpty(T[] array, Supplier<String> messageSupplier) throws PreconditionViolationException {
+		condition(array != null && array.length > 0, messageSupplier);
 		return array;
 	}
 
@@ -103,7 +121,27 @@ public final class Preconditions {
 	 */
 	public static <T extends Collection<?>> T notEmpty(T collection, String message)
 			throws PreconditionViolationException {
-		condition(collection != null && !collection.isEmpty(), message);
+
+		return notEmpty(collection, () -> message);
+	}
+
+	/**
+	 * Assert that the supplied {@link Collection} is neither {@code null} nor empty.
+	 *
+	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
+	 * collection contains any {@code null} elements.
+	 *
+	 * @param collection the collection to check
+	 * @param messageSupplier precondition violation message supplier
+	 * @return the supplied collection as a convenience
+	 * @throws PreconditionViolationException if the supplied collection is {@code null} or empty
+	 * @see #containsNoNullElements(Collection, String)
+	 * @see #condition(boolean, String)
+	 */
+	public static <T extends Collection<?>> T notEmpty(T collection, Supplier<String> messageSupplier)
+			throws PreconditionViolationException {
+
+		condition(collection != null && !collection.isEmpty(), messageSupplier);
 		return collection;
 	}
 
@@ -121,8 +159,27 @@ public final class Preconditions {
 	 * @see #notNull(Object, String)
 	 */
 	public static <T> T[] containsNoNullElements(T[] array, String message) throws PreconditionViolationException {
+		return containsNoNullElements(array, () -> message);
+	}
+
+	/**
+	 * Assert that the supplied array contains no {@code null} elements.
+	 *
+	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
+	 * array is {@code null} or <em>empty</em>.
+	 *
+	 * @param array the array to check
+	 * @param messageSupplier precondition violation message supplier
+	 * @return the supplied array as a convenience
+	 * @throws PreconditionViolationException if the supplied array contains
+	 * any {@code null} elements
+	 * @see #notNull(Object, String)
+	 */
+	public static <T> T[] containsNoNullElements(T[] array, Supplier<String> messageSupplier)
+			throws PreconditionViolationException {
+
 		if (array != null) {
-			Arrays.stream(array).forEach(object -> notNull(object, message));
+			Arrays.stream(array).forEach(object -> notNull(object, messageSupplier));
 		}
 		return array;
 	}
@@ -142,8 +199,28 @@ public final class Preconditions {
 	 */
 	public static <T extends Collection<?>> T containsNoNullElements(T collection, String message)
 			throws PreconditionViolationException {
+
+		return containsNoNullElements(collection, () -> message);
+	}
+
+	/**
+	 * Assert that the supplied collection contains no {@code null} elements.
+	 *
+	 * <p><strong>WARNING</strong>: this method does NOT check if the supplied
+	 * collection is {@code null} or <em>empty</em>.
+	 *
+	 * @param collection the collection to check
+	 * @param messageSupplier precondition violation message supplier
+	 * @return the supplied collection as a convenience
+	 * @throws PreconditionViolationException if the supplied collection contains
+	 * any {@code null} elements
+	 * @see #notNull(Object, String)
+	 */
+	public static <T extends Collection<?>> T containsNoNullElements(T collection, Supplier<String> messageSupplier)
+			throws PreconditionViolationException {
+
 		if (collection != null) {
-			collection.forEach(object -> notNull(object, message));
+			collection.forEach(object -> notNull(object, messageSupplier));
 		}
 		return collection;
 	}
@@ -203,6 +280,7 @@ public final class Preconditions {
 	 */
 	public static void condition(boolean predicate, Supplier<String> messageSupplier)
 			throws PreconditionViolationException {
+
 		if (!predicate) {
 			throw new PreconditionViolationException(messageSupplier.get());
 		}

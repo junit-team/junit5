@@ -68,13 +68,8 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	@Override
-	public boolean isTest() {
-		return true;
-	}
-
-	@Override
-	public boolean isContainer() {
-		return false;
+	public Type getType() {
+		return Type.TEST;
 	}
 
 	// --- Node ----------------------------------------------------------------
@@ -97,7 +92,7 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	protected ExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
-		return populateNewExtensionRegistryFromExtendWith(this.getTestMethod(), context.getExtensionRegistry());
+		return populateNewExtensionRegistryFromExtendWith(getTestMethod(), context.getExtensionRegistry());
 	}
 
 	@Override

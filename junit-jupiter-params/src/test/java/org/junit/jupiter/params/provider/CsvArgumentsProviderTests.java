@@ -18,6 +18,9 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @since 5.0
+ */
 class CsvArgumentsProviderTests {
 
 	@Test

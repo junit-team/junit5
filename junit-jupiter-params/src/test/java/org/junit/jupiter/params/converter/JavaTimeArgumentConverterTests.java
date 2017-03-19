@@ -32,6 +32,9 @@ import java.time.chrono.ChronoZonedDateTime;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @since 5.0
+ */
 class JavaTimeArgumentConverterTests {
 
 	@Test

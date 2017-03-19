@@ -42,11 +42,11 @@ public final class TestIdentifier implements Serializable {
 	private final String uniqueId;
 	private final String parentId;
 	private final String displayName;
+	private final String legacyReportingName;
 	private final TestSource source;
 	private final Set<TestTag> tags;
 	private final boolean test;
 	private final boolean container;
-	private final String legacyReportingName;
 
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
@@ -59,7 +59,7 @@ public final class TestIdentifier implements Serializable {
 		Optional<TestSource> source = testDescriptor.getSource();
 		Set<TestTag> tags = testDescriptor.getTags();
 		boolean test = testDescriptor.isTest();
-		boolean container = !test || !testDescriptor.getChildren().isEmpty();
+		boolean container = testDescriptor.isContainer();
 		Optional<String> parentId = testDescriptor.getParent().map(
 			parentDescriptor -> parentDescriptor.getUniqueId().toString());
 		String legacyReportingName = testDescriptor.getLegacyReportingName();
@@ -123,6 +123,20 @@ public final class TestIdentifier implements Serializable {
 	}
 
 	/**
+	 * Get the name of this identifier in a format that is suitable for legacy
+	 * reporting infrastructure &mdash; for example, for reporting systems built
+	 * on the Ant-based XML reporting format for JUnit 4.
+	 *
+	 * <p>The default implementation simply delegates to {@link #getDisplayName()}.
+	 *
+	 * @return the legacy reporting name; never {@code null} or blank
+	 * @see org.junit.platform.engine.TestDescriptor#getLegacyReportingName()
+	 */
+	public String getLegacyReportingName() {
+		return this.legacyReportingName;
+	}
+
+	/**
 	 * Determine if this identifier represents a test.
 	 */
 	public boolean isTest() {
@@ -154,10 +168,6 @@ public final class TestIdentifier implements Serializable {
 	 */
 	public Set<TestTag> getTags() {
 		return this.tags;
-	}
-
-	public String getLegacyReportingName() {
-		return legacyReportingName;
 	}
 
 	@Override

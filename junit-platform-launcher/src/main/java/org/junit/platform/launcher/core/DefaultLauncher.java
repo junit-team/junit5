@@ -80,9 +80,11 @@ class DefaultLauncher implements Launcher {
 	}
 
 	@Override
-	public void execute(LauncherDiscoveryRequest discoveryRequest) {
+	public void execute(LauncherDiscoveryRequest discoveryRequest, TestExecutionListener... listeners) {
 		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
-		execute(discoverRoot(discoveryRequest, "execution"), discoveryRequest.getConfigurationParameters());
+		Preconditions.notNull(listeners, "TestExecutionListener array must not be null");
+		Preconditions.containsNoNullElements(listeners, "individual listeners must not be null");
+		execute(discoverRoot(discoveryRequest, "execution"), discoveryRequest.getConfigurationParameters(), listeners);
 	}
 
 	TestExecutionListenerRegistry getTestExecutionListenerRegistry() {
@@ -122,9 +124,11 @@ class DefaultLauncher implements Launcher {
 		return root;
 	}
 
-	private void execute(Root root, ConfigurationParameters configurationParameters) {
+	private void execute(Root root, ConfigurationParameters configurationParameters,
+			TestExecutionListener... listeners) {
+		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
 		TestPlan testPlan = TestPlan.from(root.getEngineDescriptors());
-		TestExecutionListener testExecutionListener = this.listenerRegistry.getCompositeTestExecutionListener();
+		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 		testExecutionListener.testPlanExecutionStarted(testPlan);
 		ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
 			testExecutionListener);
@@ -133,6 +137,15 @@ class DefaultLauncher implements Launcher {
 			testEngine.execute(new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
 		}
 		testExecutionListener.testPlanExecutionFinished(testPlan);
+	}
+
+	private TestExecutionListenerRegistry buildListenerRegistryForExecution(TestExecutionListener... listeners) {
+		if (listeners.length == 0) {
+			return this.listenerRegistry;
+		}
+		TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry(this.listenerRegistry);
+		registry.registerListeners(listeners);
+		return registry;
 	}
 
 }

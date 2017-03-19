@@ -40,6 +40,9 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
+/**
+ * @since 5.0
+ */
 class ParameterizedTestIntegrationTests {
 
 	@Test
@@ -83,6 +86,7 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	static class TestCase {
+
 		@ParameterizedTest
 		@ArgumentsSource(TwoSingleStringArgumentsProvider.class)
 		void testWithTwoSingleStringArgumentsProvider(String argument) {
@@ -109,6 +113,7 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
+
 		@Override
 		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception {
 			return Stream.of(ObjectArrayArguments.create("foo"), ObjectArrayArguments.create("bar"));
@@ -116,6 +121,7 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	private static class StringLengthConverter implements ArgumentConverter {
+
 		@Override
 		public Object convert(Object input, ParameterContext context) throws ArgumentConversionException {
 			return String.valueOf(input).length();

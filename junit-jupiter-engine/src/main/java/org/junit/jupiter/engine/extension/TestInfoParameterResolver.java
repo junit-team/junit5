@@ -78,10 +78,14 @@ class TestInfoParameterResolver implements ParameterResolver {
 			return new ToStringBuilder(this)
 					.append("displayName", this.displayName)
 					.append("tags", this.tags)
-					.append("testClass", this.testClass)
-					.append("testMethod", this.testMethod)
+					.append("testClass", nullSafeToString(this.testClass))
+					.append("testMethod", nullSafeToString(this.testMethod))
 					.toString();
 			// @formatter:on
+		}
+
+		private static Object nullSafeToString(Optional<?> optional) {
+			return optional != null ? optional.orElse(null) : null;
 		}
 
 	}

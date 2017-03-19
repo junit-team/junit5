@@ -4,7 +4,7 @@ Started:     Fail ([engine:junit-jupiter]/[class:org.junit.platform.console.Cons
 Started:     failWithSingleLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail]/[method:failWithSingleLineMessage()])
 Finished:    failWithSingleLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail]/[method:failWithSingleLineMessage()])
              => Exception: org.opentest4j.AssertionFailedError: single line fail message
-S T A C K T R A C E
+>> S T A C K T R A C E >>
 Finished:    Fail ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail])
 Finished:    JUnit Jupiter ([engine:junit-jupiter])
 Test execution finished.

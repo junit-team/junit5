@@ -79,20 +79,6 @@ import org.opentest4j.AssertionFailedError;
 class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void templateWithoutRegisteredExtensionReportsFailure() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyTestTemplateTestCase.class, "templateWithoutRegisteredExtension")).build();
-
-		ExecutionEventRecorder eventRecorder = executeTests(request);
-
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
-			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
-				event(container("templateWithoutRegisteredExtension"), started()), //
-				event(container("templateWithoutRegisteredExtension"), finishedWithFailure(
-					message("You must register at least one TestTemplateInvocationContextProvider for this method")))));
-	}
-
-	@Test
 	void templateWithSingleRegisteredExtensionIsInvoked() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithSingleRegisteredExtension")).build();
@@ -292,8 +278,8 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithWrongParameterType"), started()), //
-				event(container("templateWithWrongParameterType"), finishedWithFailure(message(
-					"You must register at least one TestTemplateInvocationContextProvider that supports this method")))));
+				event(container("templateWithWrongParameterType"), finishedWithFailure(message(s -> s.startsWith(
+					"You must register at least one TestTemplateInvocationContextProvider that supports @TestTemplate method ["))))));
 	}
 
 	@Test
@@ -503,6 +489,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private static class AlwaysDisabledTestExecutionCondition implements TestExecutionCondition {
+
 		@Override
 		public ConditionEvaluationResult evaluate(TestExtensionContext context) {
 			return ConditionEvaluationResult.disabled("tests are always disabled");
@@ -510,6 +497,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private static class AlwaysDisabledContainerExecutionCondition implements ContainerExecutionCondition {
+
 		@Override
 		public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
 			return ConditionEvaluationResult.disabled("containers are always disabled");
@@ -527,6 +515,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
 			return Stream.<TestTemplateInvocationContext> generate(() -> new TestTemplateInvocationContext() {
+
 				@Override
 				public String getDisplayName(int invocationIndex) {
 					return invocationIndex + " --> " + context.getDisplayName();
@@ -556,6 +545,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		private TestTemplateInvocationContext createContext(String argument) {
 			return new TestTemplateInvocationContext() {
+
 				@Override
 				public String getDisplayName(int invocationIndex) {
 					return TestTemplateInvocationContext.super.getDisplayName(invocationIndex) + " " + argument;
@@ -564,6 +554,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 				@Override
 				public List<Extension> getAdditionalExtensions() {
 					return singletonList(new ParameterResolver() {
+
 						@Override
 						public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext)
 								throws ParameterResolutionException {
@@ -596,6 +587,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		private TestTemplateInvocationContext createContext(String argument) {
 			return new TestTemplateInvocationContext() {
+
 				@Override
 				public String getDisplayName(int invocationIndex) {
 					return TestTemplateInvocationContext.super.getDisplayName(invocationIndex) + " " + argument;
@@ -628,6 +620,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		private TestTemplateInvocationContext createContext(String argument) {
 			return new TestTemplateInvocationContext() {
+
 				@Override
 				public String getDisplayName(int invocationIndex) {
 					return argument;

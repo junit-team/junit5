@@ -34,8 +34,8 @@ import org.junit.platform.commons.meta.API;
  * providers}. Must be used together with at least one provider. Otherwise,
  * execution will fail.
  *
- * <p>Each invocation of a test template method, behaves like the execution of
- * a regular {@link Test @Test} method, i.e. it supports the same lifecycle
+ * <p>Each invocation of a test template method behaves like the execution of
+ * a regular {@link Test @Test} method with full support for the same lifecycle
  * callbacks and extensions.
  *
  * <p>{@code @TestTemplate} methods must not be {@code private} or {@code static}

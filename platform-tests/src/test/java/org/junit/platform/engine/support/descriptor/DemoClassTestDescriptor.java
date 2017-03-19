@@ -46,18 +46,9 @@ public class DemoClassTestDescriptor extends AbstractTestDescriptor {
 		// @formatter:on
 	}
 
-	public final Class<?> getTestClass() {
-		return this.testClass;
-	}
-
 	@Override
-	public final boolean isTest() {
-		return false;
-	}
-
-	@Override
-	public final boolean isContainer() {
-		return true;
+	public Type getType() {
+		return Type.CONTAINER;
 	}
 
 }

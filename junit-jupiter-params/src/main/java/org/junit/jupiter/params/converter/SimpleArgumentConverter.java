@@ -10,11 +10,15 @@
 
 package org.junit.jupiter.params.converter;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.meta.API;
 
 /**
  * @since 5.0
  */
+@API(Experimental)
 public abstract class SimpleArgumentConverter implements ArgumentConverter {
 
 	@Override

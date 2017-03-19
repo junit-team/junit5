@@ -54,6 +54,15 @@ public interface TestDescriptor {
 	 */
 	String getDisplayName();
 
+	/**
+	 * Get the name of this descriptor in a format that is suitable for legacy
+	 * reporting infrastructure &mdash; for example, for reporting systems built
+	 * on the Ant-based XML reporting format for JUnit 4.
+	 *
+	 * <p>The default implementation simply delegates to {@link #getDisplayName()}.
+	 *
+	 * @return the legacy reporting name; never {@code null} or blank
+	 */
 	default String getLegacyReportingName() {
 		return getDisplayName();
 	}
@@ -149,20 +158,72 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Determine if this descriptor describes a container.
+	 * Determine the {@link Type} of this descriptor.
+	 *
+	 * @return the descriptor type; never {@code null}.
+	 * @see #isContainer()
+	 * @see #isTest()
 	 */
-	boolean isContainer();
+	Type getType();
+
+	/**
+	 * Determine if this descriptor describes a container.
+	 *
+	 * <p>The default implementation delegates to {@link Type#isContainer()}.
+	 */
+	default boolean isContainer() {
+		return getType().isContainer();
+	}
 
 	/**
 	 * Determine if this descriptor describes a test.
+	 *
+	 * <p>The default implementation delegates to {@link Type#isTest()}.
 	 */
-	boolean isTest();
+	default boolean isTest() {
+		return getType().isTest();
+	}
 
 	/**
 	 * Determine if this descriptor or any of its descendants describes a test.
+	 *
+	 * <p>The default implementation returns {@code true} if {@link #isTest()}
+	 * returns {@code true} and otherwise recurses through this descriptor's
+	 * {@linkplain #getChildren() children} to determine if they have tests.
 	 */
 	default boolean hasTests() {
-		return (isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests));
+		return isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests);
+	}
+
+	/**
+	 * Remove this descriptor from the hierarchy unless it is a root or has tests.
+	 *
+	 * <p>A concrete {@link TestEngine} may override this method in order to implement
+	 * a different algorithm or to skip pruning altogether.
+	 *
+	 * @see #isRoot()
+	 * @see #hasTests()
+	 * @see #removeFromHierarchy()
+	 */
+	default void prune() {
+		if (isRoot() || hasTests()) {
+			return;
+		}
+		removeFromHierarchy();
+	}
+
+	/**
+	 * Remove this descriptor and its descendants from the hierarchy.
+	 *
+	 * <p>The default implementation supplies the {@link #prune()} method as a
+	 * {@link Visitor} to this descriptor, thereby effectively removing this
+	 * descriptor and all of its descendants.
+	 *
+	 * @see #accept(Visitor)
+	 * @see #prune()
+	 */
+	default void pruneTree() {
+		accept(TestDescriptor::prune);
 	}
 
 	/**
@@ -191,6 +252,7 @@ public interface TestDescriptor {
 	 *
 	 * @see TestDescriptor#accept
 	 */
+	@FunctionalInterface
 	interface Visitor {
 
 		/**
@@ -199,6 +261,49 @@ public interface TestDescriptor {
 		 * @param descriptor the {@code TestDescriptor} to visit; never {@code null}
 		 */
 		void visit(TestDescriptor descriptor);
+	}
+
+	/**
+	 * Supported types for {@link TestDescriptor TestDescriptors}.
+	 */
+	enum Type {
+
+		/**
+		 * Denotes that the {@link TestDescriptor} is for a {@link TestEngine}.
+		 */
+		ENGINE,
+
+		/**
+		 * Denotes that the {@link TestDescriptor} is for a <em>container</em>.
+		 */
+		CONTAINER,
+
+		/**
+		 * Denotes that the {@link TestDescriptor} is for a <em>test</em>.
+		 */
+		TEST,
+
+		/**
+		 * Denotes that the {@link TestDescriptor} is for a <em>test</em>
+		 * that may potentially also be a <em>container</em>.
+		 */
+		CONTAINER_AND_TEST;
+
+		/**
+		 * @return {@code true} if this type represents a descriptor that can
+		 * contain other descriptors
+		 */
+		public boolean isContainer() {
+			return this == ENGINE || this == CONTAINER || this == CONTAINER_AND_TEST;
+		}
+
+		/**
+		 * @return {@code true} if this type represents a descriptor for a test
+		 */
+		public boolean isTest() {
+			return this == TEST || this == CONTAINER_AND_TEST;
+		}
+
 	}
 
 }

@@ -29,6 +29,9 @@ import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
+/**
+ * @since 5.0
+ */
 class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvFileSource> {
 
 	private final BiFunction<Class<?>, String, InputStream> inputStreamProvider;

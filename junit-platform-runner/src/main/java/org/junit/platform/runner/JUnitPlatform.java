@@ -37,10 +37,22 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
+import org.junit.platform.suite.api.ExcludeClassNamePatterns;
+import org.junit.platform.suite.api.ExcludeEngines;
+import org.junit.platform.suite.api.ExcludePackages;
+import org.junit.platform.suite.api.ExcludeTags;
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.IncludePackages;
+import org.junit.platform.suite.api.IncludeTags;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -117,7 +129,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	public void run(RunNotifier notifier) {
 		JUnitPlatformRunnerListener listener = new JUnitPlatformRunnerListener(this.testTree, notifier);
 		this.launcher.registerTestExecutionListeners(listener);
-		this.launcher.execute(this.discoveryRequest);
+		this.launcher.execute(this.discoveryRequest, new TestExecutionListener[0]);
 	}
 
 	private JUnitPlatformTestTree generateTestTree() {

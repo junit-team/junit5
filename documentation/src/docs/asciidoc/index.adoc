@@ -63,6 +63,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 
 :AssertJ:                           http://joel-costigliola.github.io/assertj/[AssertJ]
 :Hamcrest:                          http://hamcrest.org/JavaHamcrest/[Hamcrest]
+:Specsy:                            http://specsy.org/[Specsy]
 :SpringExtension:                   https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
 :Truth:                             http://google.github.io/truth/[Truth]
 

@@ -22,8 +22,7 @@ import org.junit.platform.commons.meta.API;
  * single invocation of a {@linkplain org.junit.jupiter.api.TestTemplate test
  * template}.
  *
- * <p>Each context is provided by a
- * {@link TestTemplateInvocationContextProvider}.
+ * <p>Each context is provided by a {@link TestTemplateInvocationContextProvider}.
  *
  * @since 5.0
  * @see org.junit.jupiter.api.TestTemplate
@@ -40,6 +39,9 @@ public interface TestTemplateInvocationContext {
 	 * {@linkplain TestTemplateInvocationContextProvider providers}, only the
 	 * first active provider receives indices starting with {@code 1}.
 	 *
+	 * <p>The default implementation returns the supplied {@code invocationIndex}
+	 * wrapped in brackets &mdash; for example, {@code [1]}, {@code [42]}, etc.
+	 *
 	 * @param invocationIndex the index of this invocation (1-based).
 	 * @return the display name for this invocation; never {@code null} or blank
 	 */
@@ -54,6 +56,8 @@ public interface TestTemplateInvocationContext {
 	 * invocation of the test template. Thus, it does not make sense to return
 	 * an extension that acts solely on the container level (e.g.
 	 * {@link BeforeAllCallback}).
+	 *
+	 * <p>The default implementation returns an empty list.
 	 *
 	 * @return the additional extensions for this invocation; never {@code null}
 	 * but potentially empty

@@ -10,10 +10,10 @@
 
 package example;
 
-import org.junit.platform.runner.ExcludeTags;
-import org.junit.platform.runner.IncludeClassNamePatterns;
 import org.junit.platform.runner.JUnitPlatform;
-import org.junit.platform.runner.SelectPackages;
+import org.junit.platform.suite.api.ExcludeTags;
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
+import org.junit.platform.suite.api.SelectPackages;
 import org.junit.runner.RunWith;
 
 /**

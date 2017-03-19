@@ -64,7 +64,7 @@ public class DiscoverySelectorResolver {
 		request.getSelectorsByType(UniqueIdSelector.class).forEach(selector -> {
 			javaElementsResolver.resolveUniqueId(selector.getUniqueId());
 		});
-		pruneTree(engineDescriptor);
+		engineDescriptor.pruneTree();
 	}
 
 	private JavaElementsResolver createJavaElementsResolver(TestDescriptor engineDescriptor) {
@@ -75,15 +75,6 @@ public class DiscoverySelectorResolver {
 		resolvers.add(new TestFactoryMethodResolver());
 		resolvers.add(new TestTemplateMethodResolver());
 		return new JavaElementsResolver(engineDescriptor, resolvers);
-	}
-
-	private void pruneTree(TestDescriptor root) {
-		TestDescriptor.Visitor removeChildrenWithoutTests = (descriptor) -> {
-			if (!descriptor.isRoot() && !descriptor.hasTests()) {
-				descriptor.removeFromHierarchy();
-			}
-		};
-		root.accept(removeChildrenWithoutTests);
 	}
 
 }

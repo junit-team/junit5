@@ -100,6 +100,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
   - `junit-platform-gradle-plugin`
   - `junit-platform-launcher`
   - `junit-platform-runner`
+  - `junit-platform-suite-api` (currently only available as `1.0.0-SNAPSHOT`)
   - `junit-platform-surefire-provider`
 
 ### JUnit Jupiter

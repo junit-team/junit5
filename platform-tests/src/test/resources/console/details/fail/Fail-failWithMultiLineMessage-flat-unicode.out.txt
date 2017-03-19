@@ -7,7 +7,7 @@ Finished:    failWithMultiLineMessage() ([engine:junit-jupiter]/[class:org.junit
              line
              fail
              message
-S T A C K T R A C E
+>> S T A C K T R A C E >>
 Finished:    Fail ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail])
 Finished:    JUnit Jupiter ([engine:junit-jupiter])
 Test execution finished.

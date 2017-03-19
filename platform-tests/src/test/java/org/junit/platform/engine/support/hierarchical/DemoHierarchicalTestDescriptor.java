@@ -40,13 +40,8 @@ public class DemoHierarchicalTestDescriptor extends AbstractTestDescriptor imple
 	}
 
 	@Override
-	public boolean isTest() {
-		return !isContainer();
-	}
-
-	@Override
-	public boolean isContainer() {
-		return this.executeBlock == null;
+	public Type getType() {
+		return this.executeBlock != null ? Type.TEST : Type.CONTAINER;
 	}
 
 	@Override

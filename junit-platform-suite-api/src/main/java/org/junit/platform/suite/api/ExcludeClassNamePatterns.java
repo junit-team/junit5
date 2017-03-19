@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.platform.runner;
+package org.junit.platform.suite.api;
 
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
@@ -20,20 +20,23 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.engine.discovery.ClassNameFilter;
 
 /**
  * {@code @ExcludeClassNamePatterns} specifies regular expressions that are used
- * to match against fully qualified class names when running a test suite via
+ * to match against fully qualified class names when running a test suite on the
+ * JUnit Platform.
+ *
+ * <p>The patterns are combined using OR semantics: if the fully qualified name
+ * of a class matches against at least one of the patterns, the class will be
+ * excluded from the test plan.
+ *
+ * <h4>JUnit 4 Suite Support</h4>
+ * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
  * {@code @RunWith(JUnitPlatform.class)}.
  *
- * <p>The patterns are combined using OR semantics, i.e. if the fully
- * qualified name of a class matches against at least one of the patterns,
- * the class will be excluded from the test plan.
- *
  * @since 1.0
- * @see JUnitPlatform
- * @see ClassNameFilter#excludeClassNamePatterns
+ * @see org.junit.platform.engine.discovery.ClassNameFilter#excludeClassNamePatterns
+ * @see org.junit.platform.runner.JUnitPlatform
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

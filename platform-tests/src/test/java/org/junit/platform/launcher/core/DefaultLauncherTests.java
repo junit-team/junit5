@@ -40,6 +40,7 @@ import org.junit.platform.launcher.PostDiscoveryFilterStub;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 
 /**
  * @since 1.0
@@ -299,7 +300,7 @@ class DefaultLauncherTests {
 		TestEngineSpy engine = new TestEngineSpy();
 
 		DefaultLauncher launcher = createLauncher(engine);
-		launcher.execute(request().build());
+		launcher.execute(request().build(), new TestExecutionListener[0]);
 
 		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
 		assertThat(configurationParameters.get("key").isPresent()).isFalse();
@@ -311,7 +312,7 @@ class DefaultLauncherTests {
 		TestEngineSpy engine = new TestEngineSpy();
 
 		DefaultLauncher launcher = createLauncher(engine);
-		launcher.execute(request().configurationParameter("key", "value").build());
+		launcher.execute(request().configurationParameter("key", "value").build(), new TestExecutionListener[0]);
 
 		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
 		assertThat(configurationParameters.size()).isEqualTo(1);
@@ -327,7 +328,7 @@ class DefaultLauncherTests {
 			TestEngineSpy engine = new TestEngineSpy();
 
 			DefaultLauncher launcher = createLauncher(engine);
-			launcher.execute(request().build());
+			launcher.execute(request().build(), new TestExecutionListener[0]);
 
 			ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
 			assertThat(configurationParameters.size()).isEqualTo(0);
@@ -340,4 +341,16 @@ class DefaultLauncherTests {
 		}
 	}
 
+	@Test
+	void withAdditionalListener() {
+		TestEngineSpy engine = new TestEngineSpy();
+		SummaryGeneratingListener listener = new SummaryGeneratingListener();
+
+		DefaultLauncher launcher = createLauncher(engine);
+		launcher.execute(request().build(), listener);
+
+		assertThat(listener.getSummary()).isNotNull();
+		assertThat(listener.getSummary().getContainersFoundCount()).isEqualTo(1);
+		assertThat(listener.getSummary().getTestsFoundCount()).isEqualTo(1);
+	}
 }

@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @since 5.0
+ */
 class ObjectArrayArgumentsTests {
 
 	@Test
