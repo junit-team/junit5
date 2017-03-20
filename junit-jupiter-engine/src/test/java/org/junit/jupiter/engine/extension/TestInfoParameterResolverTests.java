@@ -36,7 +36,7 @@ import org.junit.jupiter.api.TestInfo;
 class TestInfoParameterResolverTests {
 
 	private static List<String> allDisplayNames = Arrays.asList("defaultDisplayName(TestInfo)", "custom display name",
-		"getTags(TestInfo)");
+		"getTags(TestInfo)", "customDisplayNameThatIsEmpty(TestInfo)");
 
 	@Test
 	void defaultDisplayName(TestInfo testInfo) {
@@ -47,6 +47,13 @@ class TestInfoParameterResolverTests {
 	@DisplayName("custom display name")
 	void providedDisplayName(TestInfo testInfo) {
 		assertEquals("custom display name", testInfo.getDisplayName());
+	}
+
+	// TODO Update test to expect an exception once #743 is fixed.
+	@Test
+	@DisplayName("")
+	void customDisplayNameThatIsEmpty(TestInfo testInfo) {
+		assertEquals("customDisplayNameThatIsEmpty(TestInfo)", testInfo.getDisplayName());
 	}
 
 	@Test
