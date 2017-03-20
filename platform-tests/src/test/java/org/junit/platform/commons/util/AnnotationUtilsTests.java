@@ -23,10 +23,12 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedMetho
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findPublicAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
+import static org.junit.platform.commons.util.AnnotationUtils.getDefaultValue;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
@@ -48,6 +50,46 @@ import org.junit.jupiter.api.Test;
  * @since 1.0
  */
 class AnnotationUtilsTests {
+
+	@Test
+	void getDefaultValueForNullAnnotation() {
+		assertThrows(PreconditionViolationException.class, () -> getDefaultValue(null, "foo", String.class));
+	}
+
+	@Test
+	void getDefaultValueForNullAttributeName() {
+		Annotation annotation = AnnotationWithDefaultValueClass.class.getAnnotations()[0];
+		assertThrows(PreconditionViolationException.class, () -> getDefaultValue(annotation, null, String.class));
+	}
+
+	@Test
+	void getDefaultValueForNullAttributeType() {
+		Annotation annotation = AnnotationWithDefaultValueClass.class.getAnnotations()[0];
+		assertThrows(PreconditionViolationException.class, () -> getDefaultValue(annotation, "foo", null));
+	}
+
+	@Test
+	void getDefaultValueForNonMatchingAttributeType() {
+		Annotation annotation = AnnotationWithDefaultValueClass.class.getAnnotations()[0];
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> getDefaultValue(annotation, "value", Integer.class));
+
+		assertThat(exception.getMessage()).contains("Attribute 'value' in annotation",
+			AnnotationWithDefaultValue.class.getName(), "is of type java.lang.String, not java.lang.Integer");
+	}
+
+	@Test
+	void getDefaultValueForEmptyAttributeName() {
+		Annotation annotation = AnnotationWithDefaultValueClass.class.getAnnotations()[0];
+		assertThrows(PreconditionViolationException.class, () -> getDefaultValue(annotation, "  \t ", String.class));
+	}
+
+	@Test
+	void getDefaultValueForAttributeWithDefault() {
+		Annotation annotation = AnnotationWithDefaultValueClass.class.getAnnotations()[0];
+		Optional<String> defaultValue = getDefaultValue(annotation, "value", String.class);
+		assertThat(defaultValue).contains("default");
+	}
 
 	@Test
 	void findAnnotationForNullOptional() {
@@ -399,6 +441,13 @@ class AnnotationUtilsTests {
 
 	// -------------------------------------------------------------------------
 
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface AnnotationWithDefaultValue {
+
+		String value() default "default";
+	}
+
 	@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface Annotation1 {
@@ -493,6 +542,10 @@ class AnnotationUtilsTests {
 	@Inherited
 	@ExtendWith("bar")
 	@interface ExtendWithBar {
+	}
+
+	@AnnotationWithDefaultValue
+	static class AnnotationWithDefaultValueClass {
 	}
 
 	@Annotation1
