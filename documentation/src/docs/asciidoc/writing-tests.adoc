@@ -21,6 +21,7 @@ module.
 | Annotation         | Description
 
 | `@Test`            | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations.
+| `@RepeatedTest`    | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>
 | `@TestFactory`     | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>
 | `@DisplayName`     | Declares a custom display name for the test class or test method
 | `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_.
@@ -371,6 +372,46 @@ include::{testDir}/example/defaultmethods/StringTests.java[tags=user_guide]
 ----
 
 The above tests are merely meant as examples and therefore not complete.
+
+
+[[writing-tests-repeated-tests]]
+=== Repeated Tests
+
+JUnit Jupiter provides the ability to repeat a test a specified number of times simply by
+annotating a method with `@RepeatedTest` and specifying the total number of repetitions
+desired. Each invocation of a repeated test behaves like the execution of a regular
+`@Test` method with full support for the same lifecycle callbacks and extensions.
+
+The following example demonstrates how to declare a test named `myRepeatedTest()` that
+will be automatically repeated 10 times.
+
+[source,java]
+[subs="verbatim"]
+----
+@RepeatedTest(10)
+void myRepeatedTest() {
+    /* ... */
+}
+----
+
+In addition to specifying the number of repetitions, a custom display name can be
+configured for each repetition via the `name` attribute of the `@RepeatedTest`
+annotation. Furthermore, the display name can be a pattern composed of a combination of
+static text and dynamic placeholders. The following placeholders are currently supported.
+
+- `{displayName}`: display name of the `@RepeatedTest` method
+- `{currentRepetition}`: the current repetition count
+- `{totalRepetitions}`: the total number of repetitions
+
+The default display name for a given repetition is generated based on the following
+pattern: `"{displayName} :: repetition {currentRepetition} of {totalRepetitions}"`. Thus,
+the display names for individual repetitions of the previous `myRepeatedTest()` example
+would be: `myRepeatedTest() :: repetition 1 of 10`, `myRepeatedTest() :: repetition 2 of
+10`, etc.
+
+In order to retrieve information about the current repetition and the total number of
+repetitions programmatically, a developer can choose to have an instance of
+`RepetitionInfo` injected into a `@RepeatedTest`, `@BeforeEach`, or `@AfterEach` method.
 
 
 [[writing-tests-dynamic-tests]]
