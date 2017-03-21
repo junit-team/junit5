@@ -7,6 +7,7 @@
 	</Appenders>
 	<Loggers>
 		<Logger name="org.junit" level="warn" />
+		<Logger name="example" level="warn" />
 		<Root level="error">
 			<AppenderRef ref="Console" />
 		</Root>

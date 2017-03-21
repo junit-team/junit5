@@ -382,15 +382,15 @@ annotating a method with `@RepeatedTest` and specifying the total number of repe
 desired. Each invocation of a repeated test behaves like the execution of a regular
 `@Test` method with full support for the same lifecycle callbacks and extensions.
 
-The following example demonstrates how to declare a test named `myRepeatedTest()` that
+The following example demonstrates how to declare a test named `repeatedTest()` that
 will be automatically repeated 10 times.
 
 [source,java]
 [subs="verbatim"]
 ----
 @RepeatedTest(10)
-void myRepeatedTest() {
-    /* ... */
+void repeatedTest() {
+	// ...
 }
 ----
 
@@ -405,13 +405,69 @@ static text and dynamic placeholders. The following placeholders are currently s
 
 The default display name for a given repetition is generated based on the following
 pattern: `"{displayName} :: repetition {currentRepetition} of {totalRepetitions}"`. Thus,
-the display names for individual repetitions of the previous `myRepeatedTest()` example
-would be: `myRepeatedTest() :: repetition 1 of 10`, `myRepeatedTest() :: repetition 2 of
-10`, etc.
+the display names for individual repetitions of the previous `repeatedTest()` example
+would be: `repeatedTest() :: repetition 1 of 10`, `repeatedTest() :: repetition 2 of 10`,
+etc.
 
 In order to retrieve information about the current repetition and the total number of
 repetitions programmatically, a developer can choose to have an instance of
 `RepetitionInfo` injected into a `@RepeatedTest`, `@BeforeEach`, or `@AfterEach` method.
+
+[[writing-tests-repeated-tests-examples]]
+=== Repeated Test Examples
+
+The `RepeatedTestsDemo` class at the end of this section demonstrates several examples of
+repeated tests.
+
+The `repeatedTest()` method is identical to example from the previous section.
+`repeatedTestWithRepetitionInfo()` demonstrates how to have an instance of
+`RepetitionInfo` injected into a test to access the total number of repetitions for the
+current repeated test.
+
+The next method, `repeatedTestWithCustomDisplayName()` combines a custom display name
+with a custom display name pattern and then uses `TestInfo` to verify the format of the
+generated display name. `Repeat!` is the `{displayName}` which comes from the
+`@DisplayName` declaration, and `1/1` comes from `{currentRepetition}/{totalRepetitions}`.
+
+`repeatedTestInGerman()` demonstrates the ability to translate display names of repeated
+tests into foreign languages -- in this case German, resulting in names for individual
+repetitions such as: `Wiederholung 1 von 5`, `Wiederholung 2 von 5`, etc.
+
+Since the `beforeEach()` method is annotated with `@BeforeEach` it will get executed
+before each repetition of each repeated test. By having the `TestInfo` and
+`RepetitionInfo` injected into the method, we see that it's possible to obtain
+information about the currently executing repeated test. Executing `RepeatedTestsDemo`
+with the `INFO` log level enabled results in the following output.
+
+----
+INFO - About to execute repetition 1 of 10 for repeatedTest
+INFO - About to execute repetition 2 of 10 for repeatedTest
+INFO - About to execute repetition 3 of 10 for repeatedTest
+INFO - About to execute repetition 4 of 10 for repeatedTest
+INFO - About to execute repetition 5 of 10 for repeatedTest
+INFO - About to execute repetition 6 of 10 for repeatedTest
+INFO - About to execute repetition 7 of 10 for repeatedTest
+INFO - About to execute repetition 8 of 10 for repeatedTest
+INFO - About to execute repetition 9 of 10 for repeatedTest
+INFO - About to execute repetition 10 of 10 for repeatedTest
+INFO - About to execute repetition 1 of 5 for repeatedTestWithRepetitionInfo
+INFO - About to execute repetition 2 of 5 for repeatedTestWithRepetitionInfo
+INFO - About to execute repetition 3 of 5 for repeatedTestWithRepetitionInfo
+INFO - About to execute repetition 4 of 5 for repeatedTestWithRepetitionInfo
+INFO - About to execute repetition 5 of 5 for repeatedTestWithRepetitionInfo
+INFO - About to execute repetition 1 of 1 for repeatedTestWithCustomDisplayName
+INFO - About to execute repetition 1 of 5 for repeatedTestInGerman
+INFO - About to execute repetition 2 of 5 for repeatedTestInGerman
+INFO - About to execute repetition 3 of 5 for repeatedTestInGerman
+INFO - About to execute repetition 4 of 5 for repeatedTestInGerman
+INFO - About to execute repetition 5 of 5 for repeatedTestInGerman
+----
+
+[source,java]
+[subs="verbatim"]
+----
+include::{testDir}/example/RepeatedTestsDemo.java[tags=user_guide]
+----
 
 
 [[writing-tests-dynamic-tests]]
