@@ -1895,7 +1895,21 @@ INFO - About to execute repetition 5 of 5 for repeatedTestInGerman</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">    <span class="annotation">@BeforeEach</span>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+
+<span class="keyword">import</span> <span class="include">java.util.logging.Logger</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.DisplayName</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.RepeatedTest</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.RepetitionInfo</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestInfo</span>;
+
+<span class="type">class</span> <span class="class">RepeatedTestsDemo</span> {
+
+    <span class="directive">private</span> <span class="predefined-type">Logger</span> logger = <span class="comment">// ...</span>
+
+    <span class="annotation">@BeforeEach</span>
     <span class="type">void</span> beforeEach(TestInfo testInfo, RepetitionInfo repetitionInfo) {
         <span class="type">int</span> currentRepetition = repetitionInfo.getCurrentRepetition();
         <span class="type">int</span> totalRepetitions = repetitionInfo.getTotalRepetitions();
@@ -4874,7 +4888,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-21 15:24:23 EDT
+Last updated 2017-03-21 18:43:04 EDT
 </div>
 </div>
 </body>
