@@ -469,6 +469,38 @@ INFO - About to execute repetition 5 of 5 for repeatedTestInGerman
 include::{testDir}/example/RepeatedTestsDemo.java[tags=user_guide]
 ----
 
+When using the `ConsoleLauncher` or the `junitPlatformTest` Gradle plugin with the
+unicode theme enabled, execution of `RepeatedTestsDemo` results in the following output
+to the console.
+
+----
+├─ RepeatedTestsDemo ✔
+│  ├─ repeatedTest() ✔
+│  │  ├─ repeatedTest() :: repetition 1 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 2 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 3 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 4 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 5 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 6 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 7 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 8 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 9 of 10 ✔
+│  │  └─ repeatedTest() :: repetition 10 of 10 ✔
+│  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) ✔
+│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 1 of 5 ✔
+│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 2 of 5 ✔
+│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 3 of 5 ✔
+│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 4 of 5 ✔
+│  │  └─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 5 of 5 ✔
+│  ├─ Repeat! ✔
+│  │  └─ Repeat! 1/1 ✔
+│  └─ repeatedTestInGerman() ✔
+│     ├─ Wiederholung 1 von 5 ✔
+│     ├─ Wiederholung 2 von 5 ✔
+│     ├─ Wiederholung 3 von 5 ✔
+│     ├─ Wiederholung 4 von 5 ✔
+│     └─ Wiederholung 5 von 5 ✔
+----
 
 [[writing-tests-dynamic-tests]]
 === Dynamic Tests
