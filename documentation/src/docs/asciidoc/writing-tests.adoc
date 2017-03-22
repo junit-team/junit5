@@ -197,7 +197,7 @@ resolve parameters at runtime. If a test constructor or a `@Test`, `@TestFactory
 `@BeforeEach`, `@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts a parameter, the
 parameter must be resolved at runtime by a registered `ParameterResolver`.
 
-There are currently two built-in resolvers that are registered automatically.
+There are currently three built-in resolvers that are registered automatically.
 
 * `{TestInfoParameterResolver}`: if a method parameter is of type `{TestInfo}`, the
   `TestInfoParameterResolver` will supply an instance of `TestInfo` corresponding to the
@@ -214,6 +214,14 @@ rule from JUnit 4. Here is an example of its usage.
 ----
 include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
 ----
+
+* `RepetitionInfoParameterResolver`: if a method parameter in a `@RepeatedTest`,
+  `@BeforeEach`, or `@AfterEach` method is of type `{RepetitionInfo}`, the
+  `RepetitionInfoParameterResolver` will supply an instance of `RepetitionInfo`.
+  `RepetitionInfo` can then be used to retrieve information about the current repetition
+  and the total number of repetitions for the corresponding `@RepeatedTest`. Note,
+  however, that `RepetitionInfoParameterResolver` is not registered outside the context
+  of a `@RepeatedTest`. See <<writing-tests-repeated-tests-examples>>.
 
 * `{TestReporterParameterResolver}`: if a method parameter is of type `{TestReporter}`, the
   `TestReporterParameterResolver` will supply an instance of `TestReporter`.
