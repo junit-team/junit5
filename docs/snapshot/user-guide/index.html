@@ -1426,7 +1426,7 @@ resolve parameters at runtime. If a test constructor or a <code>@Test</code>, <c
 parameter must be resolved at runtime by a registered <code>ParameterResolver</code>.</p>
 </div>
 <div class="paragraph">
-<p>There are currently two built-in resolvers that are registered automatically.</p>
+<p>There are currently three built-in resolvers that are registered automatically.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1480,6 +1480,15 @@ rule from JUnit 4. Here is an example of its usage.</p>
 </div>
 <div class="ulist">
 <ul>
+<li>
+<p><code>RepetitionInfoParameterResolver</code>: if a method parameter in a <code>@RepeatedTest</code>,
+<code>@BeforeEach</code>, or <code>@AfterEach</code> method is of type <code><a href="../api/org/junit/jupiter/api/RepetitionInfo.html">RepetitionInfo</a></code>, the
+<code>RepetitionInfoParameterResolver</code> will supply an instance of <code>RepetitionInfo</code>.
+<code>RepetitionInfo</code> can then be used to retrieve information about the current repetition
+and the total number of repetitions for the corresponding <code>@RepeatedTest</code>. Note,
+however, that <code>RepetitionInfoParameterResolver</code> is not registered outside the context
+of a <code>@RepeatedTest</code>. See <a href="#writing-tests-repeated-tests-examples">Repeated Test Examples</a>.</p>
+</li>
 <li>
 <p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="../api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>, the
 <code>TestReporterParameterResolver</code> will supply an instance of <code>TestReporter</code>.
@@ -4923,7 +4932,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-21 18:43:04 EDT
+Last updated 2017-03-22 10:06:14 EDT
 </div>
 </div>
 </body>
