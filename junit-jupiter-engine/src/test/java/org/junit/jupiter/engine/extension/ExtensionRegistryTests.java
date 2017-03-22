@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
@@ -39,6 +40,7 @@ public class ExtensionRegistryTests {
 
 	private final ExtensionRegistry registry = createRegistryWithDefaultExtensions();
 
+	@BeforeEach
 	@AfterEach
 	void cleanProperties() {
 		System.clearProperty(EXTENSIONS_AUTODETECT_PROPERTY_NAME);
@@ -51,7 +53,7 @@ public class ExtensionRegistryTests {
 		ExtensionRegistry registry = createRegistryWithDefaultExtensions();
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
-		assertEquals(4, extensions.size());
+		assertEquals(5, extensions.size());
 		assertExtensionRegistered(registry, DisabledCondition.class);
 		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
 		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
