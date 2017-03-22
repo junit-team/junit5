@@ -21,6 +21,7 @@ module.
 | Annotation         | Description
 
 | `@Test`            | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations.
+| `@RepeatedTest`    | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>
 | `@TestFactory`     | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>
 | `@DisplayName`     | Declares a custom display name for the test class or test method
 | `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_.
@@ -196,7 +197,7 @@ resolve parameters at runtime. If a test constructor or a `@Test`, `@TestFactory
 `@BeforeEach`, `@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts a parameter, the
 parameter must be resolved at runtime by a registered `ParameterResolver`.
 
-There are currently two built-in resolvers that are registered automatically.
+There are currently three built-in resolvers that are registered automatically.
 
 * `{TestInfoParameterResolver}`: if a method parameter is of type `{TestInfo}`, the
   `TestInfoParameterResolver` will supply an instance of `TestInfo` corresponding to the
@@ -213,6 +214,14 @@ rule from JUnit 4. Here is an example of its usage.
 ----
 include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
 ----
+
+* `RepetitionInfoParameterResolver`: if a method parameter in a `@RepeatedTest`,
+  `@BeforeEach`, or `@AfterEach` method is of type `{RepetitionInfo}`, the
+  `RepetitionInfoParameterResolver` will supply an instance of `RepetitionInfo`.
+  `RepetitionInfo` can then be used to retrieve information about the current repetition
+  and the total number of repetitions for the corresponding `@RepeatedTest`. Note,
+  however, that `RepetitionInfoParameterResolver` is not registered outside the context
+  of a `@RepeatedTest`. See <<writing-tests-repeated-tests-examples>>.
 
 * `{TestReporterParameterResolver}`: if a method parameter is of type `{TestReporter}`, the
   `TestReporterParameterResolver` will supply an instance of `TestReporter`.
@@ -372,6 +381,134 @@ include::{testDir}/example/defaultmethods/StringTests.java[tags=user_guide]
 
 The above tests are merely meant as examples and therefore not complete.
 
+
+[[writing-tests-repeated-tests]]
+=== Repeated Tests
+
+JUnit Jupiter provides the ability to repeat a test a specified number of times simply by
+annotating a method with `@RepeatedTest` and specifying the total number of repetitions
+desired. Each invocation of a repeated test behaves like the execution of a regular
+`@Test` method with full support for the same lifecycle callbacks and extensions.
+
+The following example demonstrates how to declare a test named `repeatedTest()` that
+will be automatically repeated 10 times.
+
+[source,java]
+[subs="verbatim"]
+----
+@RepeatedTest(10)
+void repeatedTest() {
+	// ...
+}
+----
+
+In addition to specifying the number of repetitions, a custom display name can be
+configured for each repetition via the `name` attribute of the `@RepeatedTest`
+annotation. Furthermore, the display name can be a pattern composed of a combination of
+static text and dynamic placeholders. The following placeholders are currently supported.
+
+- `{displayName}`: display name of the `@RepeatedTest` method
+- `{currentRepetition}`: the current repetition count
+- `{totalRepetitions}`: the total number of repetitions
+
+The default display name for a given repetition is generated based on the following
+pattern: `"{displayName} :: repetition {currentRepetition} of {totalRepetitions}"`. Thus,
+the display names for individual repetitions of the previous `repeatedTest()` example
+would be: `repeatedTest() :: repetition 1 of 10`, `repeatedTest() :: repetition 2 of 10`,
+etc.
+
+In order to retrieve information about the current repetition and the total number of
+repetitions programmatically, a developer can choose to have an instance of
+`RepetitionInfo` injected into a `@RepeatedTest`, `@BeforeEach`, or `@AfterEach` method.
+
+[[writing-tests-repeated-tests-examples]]
+=== Repeated Test Examples
+
+The `RepeatedTestsDemo` class at the end of this section demonstrates several examples of
+repeated tests.
+
+The `repeatedTest()` method is identical to example from the previous section.
+`repeatedTestWithRepetitionInfo()` demonstrates how to have an instance of
+`RepetitionInfo` injected into a test to access the total number of repetitions for the
+current repeated test.
+
+The next method, `repeatedTestWithCustomDisplayName()` combines a custom display name
+with a custom display name pattern and then uses `TestInfo` to verify the format of the
+generated display name. `Repeat!` is the `{displayName}` which comes from the
+`@DisplayName` declaration, and `1/1` comes from `{currentRepetition}/{totalRepetitions}`.
+
+`repeatedTestInGerman()` demonstrates the ability to translate display names of repeated
+tests into foreign languages -- in this case German, resulting in names for individual
+repetitions such as: `Wiederholung 1 von 5`, `Wiederholung 2 von 5`, etc.
+
+Since the `beforeEach()` method is annotated with `@BeforeEach` it will get executed
+before each repetition of each repeated test. By having the `TestInfo` and
+`RepetitionInfo` injected into the method, we see that it's possible to obtain
+information about the currently executing repeated test. Executing `RepeatedTestsDemo`
+with the `INFO` log level enabled results in the following output.
+
+----
+INFO - About to execute repetition 1 of 10 for repeatedTest
+INFO - About to execute repetition 2 of 10 for repeatedTest
+INFO - About to execute repetition 3 of 10 for repeatedTest
+INFO - About to execute repetition 4 of 10 for repeatedTest
+INFO - About to execute repetition 5 of 10 for repeatedTest
+INFO - About to execute repetition 6 of 10 for repeatedTest
+INFO - About to execute repetition 7 of 10 for repeatedTest
+INFO - About to execute repetition 8 of 10 for repeatedTest
+INFO - About to execute repetition 9 of 10 for repeatedTest
+INFO - About to execute repetition 10 of 10 for repeatedTest
+INFO - About to execute repetition 1 of 5 for repeatedTestWithRepetitionInfo
+INFO - About to execute repetition 2 of 5 for repeatedTestWithRepetitionInfo
+INFO - About to execute repetition 3 of 5 for repeatedTestWithRepetitionInfo
+INFO - About to execute repetition 4 of 5 for repeatedTestWithRepetitionInfo
+INFO - About to execute repetition 5 of 5 for repeatedTestWithRepetitionInfo
+INFO - About to execute repetition 1 of 1 for repeatedTestWithCustomDisplayName
+INFO - About to execute repetition 1 of 5 for repeatedTestInGerman
+INFO - About to execute repetition 2 of 5 for repeatedTestInGerman
+INFO - About to execute repetition 3 of 5 for repeatedTestInGerman
+INFO - About to execute repetition 4 of 5 for repeatedTestInGerman
+INFO - About to execute repetition 5 of 5 for repeatedTestInGerman
+----
+
+[source,java]
+[subs="verbatim"]
+----
+include::{testDir}/example/RepeatedTestsDemo.java[tags=user_guide]
+----
+
+When using the `ConsoleLauncher` or the `junitPlatformTest` Gradle plugin with the
+unicode theme enabled, execution of `RepeatedTestsDemo` results in the following output
+to the console.
+
+----
+├─ RepeatedTestsDemo ✔
+│  ├─ repeatedTest() ✔
+│  │  ├─ repeatedTest() :: repetition 1 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 2 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 3 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 4 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 5 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 6 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 7 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 8 of 10 ✔
+│  │  ├─ repeatedTest() :: repetition 9 of 10 ✔
+│  │  └─ repeatedTest() :: repetition 10 of 10 ✔
+│  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) ✔
+│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 1 of 5 ✔
+│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 2 of 5 ✔
+│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 3 of 5 ✔
+│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 4 of 5 ✔
+│  │  └─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 5 of 5 ✔
+│  ├─ Repeat! ✔
+│  │  └─ Repeat! 1/1 ✔
+│  └─ repeatedTestInGerman() ✔
+│     ├─ Wiederholung 1 von 5 ✔
+│     ├─ Wiederholung 2 von 5 ✔
+│     ├─ Wiederholung 3 von 5 ✔
+│     ├─ Wiederholung 4 von 5 ✔
+│     └─ Wiederholung 5 von 5 ✔
+----
 
 [[writing-tests-dynamic-tests]]
 === Dynamic Tests

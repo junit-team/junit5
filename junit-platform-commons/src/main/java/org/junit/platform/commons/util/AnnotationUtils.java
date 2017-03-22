@@ -66,6 +66,44 @@ public final class AnnotationUtils {
 	private static final Map<AnnotationCacheKey, Annotation> annotationCache = new ConcurrentHashMap<>(256);
 
 	/**
+	 * Get the <em>default</em> value of the named attribute from the supplied
+	 * {@link Annotation}.
+	 *
+	 * @param annotation the annotation from which to retrieve the default
+	 * value; never {@code null}
+	 * @param attributeName the name of the attribute for which the default
+	 * value should be retrieved; never {@code null} or empty
+	 * @param attributeType the required type of the attribute; never {@code null}
+	 * @return an {@code Optional} containing the default value; potentially
+	 * <em>empty</em> if the attribute does not have a default value.
+	 */
+	public static <T> Optional<T> getDefaultValue(Annotation annotation, String attributeName, Class<T> attributeType) {
+		Preconditions.notNull(annotation, "Annotation must not be null");
+		Preconditions.notBlank(attributeName, "attributeName must not be null or blank");
+		Preconditions.notNull(attributeType, "attributeType must not be null");
+
+		Method attribute = null;
+		try {
+			attribute = annotation.annotationType().getDeclaredMethod(attributeName);
+		}
+		catch (Exception ex) {
+			return Optional.empty();
+		}
+
+		Object defaultValue = attribute.getDefaultValue();
+		if (defaultValue == null) {
+			return Optional.empty();
+		}
+
+		Preconditions.condition(attributeType.isInstance(defaultValue),
+			() -> String.format("Attribute '%s' in annotation %s is of type %s, not %s", attributeName,
+				annotation.annotationType().getName(), defaultValue.getClass().getName(), attributeType.getName()));
+
+		return Optional.of(attributeType.cast(defaultValue));
+
+	}
+
+	/**
 	 * Determine if an annotation of {@code annotationType} is either
 	 * <em>present</em> or <em>meta-present</em> on the supplied optional
 	 * {@code element}.
