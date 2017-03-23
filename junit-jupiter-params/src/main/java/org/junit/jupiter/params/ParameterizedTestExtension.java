@@ -66,11 +66,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		String name = parameterizedTest.name().trim();
 
 		// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-		// handling exceptions during the TestEngine discovery phase.
-		//
-		// Preconditions.notBlank(name, () -> String.format(
-		//     "Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.", templateMethod));
-		//
+		// handling validation exceptions during the TestEngine discovery phase.
 		if (StringUtils.isBlank(name)) {
 			logger.warning(String.format(
 				"Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.",

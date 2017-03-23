@@ -60,7 +60,6 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 
 		// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
 		// handling validation exceptions during the TestEngine discovery phase.
-
 		if (repetitions < 1) {
 			String message = "Configuration error: @RepeatedTest on method [%s] must be declared with a positive 'value'. Defaulting to 1 repetition.";
 			logger.warning(String.format(message, method));
@@ -76,11 +75,7 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		String pattern = repeatedTest.name().trim();
 
 		// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-		// handling exceptions during the TestEngine discovery phase.
-		//
-		// Preconditions.notBlank(name, () -> String.format(
-		//    "Configuration error: @RepeatedTest on method [%s] must be declared with a non-empty name.", method));
-		//
+		// handling validation exceptions during the TestEngine discovery phase.
 		if (StringUtils.isBlank(pattern)) {
 			logger.warning(String.format(
 				"Configuration error: @RepeatedTest on method [%s] must be declared with a non-empty name.", method));

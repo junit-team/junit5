@@ -77,13 +77,9 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		Optional<DisplayName> displayNameAnnotation = findAnnotation(element, DisplayName.class);
 		if (displayNameAnnotation.isPresent()) {
 			String displayName = displayNameAnnotation.get().value().trim();
-			// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-			// handling exceptions during the TestEngine discovery phase. Otherwise, the entire
-			// TestEngine dies without executing anything.
-			//
-			// Preconditions.notBlank(displayName,
-			//     () -> String.format("@DisplayName on [%s] must be declared with a non-empty value", element));
 
+			// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
+			// handling validation exceptions during the TestEngine discovery phase.
 			if (StringUtils.isBlank(displayName)) {
 				logger.warning(String.format(
 					"Configuration error: @DisplayName on [%s] must be declared with a non-empty value.", element));
