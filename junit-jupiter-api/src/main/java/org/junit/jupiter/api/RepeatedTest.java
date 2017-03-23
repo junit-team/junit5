@@ -95,7 +95,7 @@ public @interface RepeatedTest {
 	/**
 	 * The number of repetitions.
 	 *
-	 * <p>Any value less than {@code 1} will be treated as {@code 1}.
+	 * @return the number of repetitions; must be greater than zero
 	 */
 	int value();
 

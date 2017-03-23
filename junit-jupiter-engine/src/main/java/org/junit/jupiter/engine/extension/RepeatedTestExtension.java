@@ -45,7 +45,7 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		Method testMethod = Preconditions.notNull(context.getTestMethod().orElse(null), "test method must not be null");
 		String displayName = context.getDisplayName();
 		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
-		int totalRepetitions = totalRepetitions(repeatedTest);
+		int totalRepetitions = totalRepetitions(repeatedTest, testMethod);
 		RepeatedTestDisplayNameFormatter formatter = displayNameFormatter(repeatedTest, testMethod, displayName);
 
 		// @formatter:off
@@ -55,8 +55,19 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		// @formatter:on
 	}
 
-	private int totalRepetitions(RepeatedTest repeatedTest) {
-		return Math.max(1, repeatedTest.value());
+	private int totalRepetitions(RepeatedTest repeatedTest, Method method) {
+		int repetitions = repeatedTest.value();
+
+		// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
+		// handling validation exceptions during the TestEngine discovery phase.
+
+		if (repetitions < 1) {
+			String message = "Configuration error: @RepeatedTest on method [%s] must be declared with a positive 'value'. Defaulting to 1 repetition.";
+			logger.warning(String.format(message, method));
+			repetitions = 1;
+		}
+
+		return repetitions;
 	}
 
 	private RepeatedTestDisplayNameFormatter displayNameFormatter(RepeatedTest repeatedTest, Method method,
