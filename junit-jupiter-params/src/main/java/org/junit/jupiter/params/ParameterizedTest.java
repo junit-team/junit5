@@ -33,6 +33,12 @@ import org.junit.platform.commons.meta.API;
 @ExtendWith(ParameterizedTestExtension.class)
 public @interface ParameterizedTest {
 
+	/**
+	 * TODO Document name().
+	 *
+	 * @return a custom display name; never blank or consisting solely of
+	 * whitespace
+	 */
 	String name() default "[{index}] {arguments}";
 
 }

@@ -412,10 +412,14 @@ static text and dynamic placeholders. The following placeholders are currently s
 - `{totalRepetitions}`: the total number of repetitions
 
 The default display name for a given repetition is generated based on the following
-pattern: `"{displayName} :: repetition {currentRepetition} of {totalRepetitions}"`. Thus,
-the display names for individual repetitions of the previous `repeatedTest()` example
-would be: `repeatedTest() :: repetition 1 of 10`, `repeatedTest() :: repetition 2 of 10`,
-etc.
+pattern: `"repetition {currentRepetition} of {totalRepetitions}"`. Thus, the display
+names for individual repetitions of the previous `repeatedTest()` example would be:
+`repetition 1 of 10`, `repetition 2 of 10`, etc. If you would like the display name of
+the `@RepeatedTest` method included in the name of each repetition, you can define your
+own custom pattern or use the predefined `RepeatedTest.LONG_DISPLAY_NAME` pattern. The
+latter is equal to `"{displayName} :: repetition {currentRepetition} of
+{totalRepetitions}"` which results in display names for individual repetitions like
+`repeatedTest() :: repetition 1 of 10`, `repeatedTest() :: repetition 2 of 10`, etc.
 
 In order to retrieve information about the current repetition and the total number of
 repetitions programmatically, a developer can choose to have an instance of
@@ -427,15 +431,19 @@ repetitions programmatically, a developer can choose to have an instance of
 The `RepeatedTestsDemo` class at the end of this section demonstrates several examples of
 repeated tests.
 
-The `repeatedTest()` method is identical to example from the previous section.
+The `repeatedTest()` method is identical to example from the previous section; whereas,
 `repeatedTestWithRepetitionInfo()` demonstrates how to have an instance of
 `RepetitionInfo` injected into a test to access the total number of repetitions for the
 current repeated test.
 
-The next method, `repeatedTestWithCustomDisplayName()` combines a custom display name
-with a custom display name pattern and then uses `TestInfo` to verify the format of the
-generated display name. `Repeat!` is the `{displayName}` which comes from the
-`@DisplayName` declaration, and `1/1` comes from `{currentRepetition}/{totalRepetitions}`.
+The next two methods demonstrate how to include a custom `@DisplayName` for the
+`@RepeatedTest` method in the display name of each repetition. `customDisplayName()`
+combines a custom display name with a custom pattern and then uses `TestInfo` to verify
+the format of the generated display name. `Repeat!` is the `{displayName}` which comes
+from the `@DisplayName` declaration, and `1/1` comes from
+`{currentRepetition}/{totalRepetitions}`. In contrast,
+`customDisplayNameWithLongPattern()` uses the aforementioned predefined
+`RepeatedTest.LONG_DISPLAY_NAME` pattern.
 
 `repeatedTestInGerman()` demonstrates the ability to translate display names of repeated
 tests into foreign languages -- in this case German, resulting in names for individual
@@ -448,27 +456,28 @@ information about the currently executing repeated test. Executing `RepeatedTest
 with the `INFO` log level enabled results in the following output.
 
 ----
-INFO - About to execute repetition 1 of 10 for repeatedTest
-INFO - About to execute repetition 2 of 10 for repeatedTest
-INFO - About to execute repetition 3 of 10 for repeatedTest
-INFO - About to execute repetition 4 of 10 for repeatedTest
-INFO - About to execute repetition 5 of 10 for repeatedTest
-INFO - About to execute repetition 6 of 10 for repeatedTest
-INFO - About to execute repetition 7 of 10 for repeatedTest
-INFO - About to execute repetition 8 of 10 for repeatedTest
-INFO - About to execute repetition 9 of 10 for repeatedTest
-INFO - About to execute repetition 10 of 10 for repeatedTest
-INFO - About to execute repetition 1 of 5 for repeatedTestWithRepetitionInfo
-INFO - About to execute repetition 2 of 5 for repeatedTestWithRepetitionInfo
-INFO - About to execute repetition 3 of 5 for repeatedTestWithRepetitionInfo
-INFO - About to execute repetition 4 of 5 for repeatedTestWithRepetitionInfo
-INFO - About to execute repetition 5 of 5 for repeatedTestWithRepetitionInfo
-INFO - About to execute repetition 1 of 1 for repeatedTestWithCustomDisplayName
-INFO - About to execute repetition 1 of 5 for repeatedTestInGerman
-INFO - About to execute repetition 2 of 5 for repeatedTestInGerman
-INFO - About to execute repetition 3 of 5 for repeatedTestInGerman
-INFO - About to execute repetition 4 of 5 for repeatedTestInGerman
-INFO - About to execute repetition 5 of 5 for repeatedTestInGerman
+INFO: About to execute repetition 1 of 10 for repeatedTest
+INFO: About to execute repetition 2 of 10 for repeatedTest
+INFO: About to execute repetition 3 of 10 for repeatedTest
+INFO: About to execute repetition 4 of 10 for repeatedTest
+INFO: About to execute repetition 5 of 10 for repeatedTest
+INFO: About to execute repetition 6 of 10 for repeatedTest
+INFO: About to execute repetition 7 of 10 for repeatedTest
+INFO: About to execute repetition 8 of 10 for repeatedTest
+INFO: About to execute repetition 9 of 10 for repeatedTest
+INFO: About to execute repetition 10 of 10 for repeatedTest
+INFO: About to execute repetition 1 of 5 for repeatedTestWithRepetitionInfo
+INFO: About to execute repetition 2 of 5 for repeatedTestWithRepetitionInfo
+INFO: About to execute repetition 3 of 5 for repeatedTestWithRepetitionInfo
+INFO: About to execute repetition 4 of 5 for repeatedTestWithRepetitionInfo
+INFO: About to execute repetition 5 of 5 for repeatedTestWithRepetitionInfo
+INFO: About to execute repetition 1 of 1 for customDisplayName
+INFO: About to execute repetition 1 of 1 for customDisplayNameWithLongPattern
+INFO: About to execute repetition 1 of 5 for repeatedTestInGerman
+INFO: About to execute repetition 2 of 5 for repeatedTestInGerman
+INFO: About to execute repetition 3 of 5 for repeatedTestInGerman
+INFO: About to execute repetition 4 of 5 for repeatedTestInGerman
+INFO: About to execute repetition 5 of 5 for repeatedTestInGerman
 ----
 
 [source,java]
@@ -484,24 +493,26 @@ to the console.
 ----
 ├─ RepeatedTestsDemo ✔
 │  ├─ repeatedTest() ✔
-│  │  ├─ repeatedTest() :: repetition 1 of 10 ✔
-│  │  ├─ repeatedTest() :: repetition 2 of 10 ✔
-│  │  ├─ repeatedTest() :: repetition 3 of 10 ✔
-│  │  ├─ repeatedTest() :: repetition 4 of 10 ✔
-│  │  ├─ repeatedTest() :: repetition 5 of 10 ✔
-│  │  ├─ repeatedTest() :: repetition 6 of 10 ✔
-│  │  ├─ repeatedTest() :: repetition 7 of 10 ✔
-│  │  ├─ repeatedTest() :: repetition 8 of 10 ✔
-│  │  ├─ repeatedTest() :: repetition 9 of 10 ✔
-│  │  └─ repeatedTest() :: repetition 10 of 10 ✔
+│  │  ├─ repetition 1 of 10 ✔
+│  │  ├─ repetition 2 of 10 ✔
+│  │  ├─ repetition 3 of 10 ✔
+│  │  ├─ repetition 4 of 10 ✔
+│  │  ├─ repetition 5 of 10 ✔
+│  │  ├─ repetition 6 of 10 ✔
+│  │  ├─ repetition 7 of 10 ✔
+│  │  ├─ repetition 8 of 10 ✔
+│  │  ├─ repetition 9 of 10 ✔
+│  │  └─ repetition 10 of 10 ✔
 │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) ✔
-│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 1 of 5 ✔
-│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 2 of 5 ✔
-│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 3 of 5 ✔
-│  │  ├─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 4 of 5 ✔
-│  │  └─ repeatedTestWithRepetitionInfo(RepetitionInfo) :: repetition 5 of 5 ✔
+│  │  ├─ repetition 1 of 5 ✔
+│  │  ├─ repetition 2 of 5 ✔
+│  │  ├─ repetition 3 of 5 ✔
+│  │  ├─ repetition 4 of 5 ✔
+│  │  └─ repetition 5 of 5 ✔
 │  ├─ Repeat! ✔
 │  │  └─ Repeat! 1/1 ✔
+│  ├─ Details... ✔
+│  │  └─ Details... :: repetition 1 of 1 ✔
 │  └─ repeatedTestInGerman() ✔
 │     ├─ Wiederholung 1 von 5 ✔
 │     ├─ Wiederholung 2 von 5 ✔
@@ -509,6 +520,7 @@ to the console.
 │     ├─ Wiederholung 4 von 5 ✔
 │     └─ Wiederholung 5 von 5 ✔
 ----
+
 
 [[writing-tests-dynamic-tests]]
 === Dynamic Tests

@@ -87,7 +87,7 @@ class ParameterizedTestIntegrationTests {
 
 	static class TestCase {
 
-		@ParameterizedTest
+		@ParameterizedTest(name = "  \t   ")
 		@ArgumentsSource(TwoSingleStringArgumentsProvider.class)
 		void testWithTwoSingleStringArgumentsProvider(String argument) {
 			fail(argument);

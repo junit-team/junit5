@@ -49,8 +49,14 @@ class RepeatedTestsDemo {
 
 	@RepeatedTest(value = 1, name = "{displayName} {currentRepetition}/{totalRepetitions}")
 	@DisplayName("Repeat!")
-	void repeatedTestWithCustomDisplayName(TestInfo testInfo) {
+	void customDisplayName(TestInfo testInfo) {
 		assertEquals(testInfo.getDisplayName(), "Repeat! 1/1");
+	}
+
+	@RepeatedTest(value = 1, name = RepeatedTest.LONG_DISPLAY_NAME)
+	@DisplayName("Details...")
+	void customDisplayNameWithLongPattern(TestInfo testInfo) {
+		assertEquals(testInfo.getDisplayName(), "Details... :: repetition 1 of 1");
 	}
 
 	@RepeatedTest(value = 5, name = "Wiederholung {currentRepetition} von {totalRepetitions}")

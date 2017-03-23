@@ -20,8 +20,10 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -49,6 +51,8 @@ import org.junit.platform.engine.support.hierarchical.Node;
 public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		implements Node<JupiterEngineExecutionContext> {
 
+	private static final Logger logger = Logger.getLogger(JupiterTestDescriptor.class.getName());
+
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
 	JupiterTestDescriptor(UniqueId uniqueId, String displayName) {
@@ -69,12 +73,23 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	protected static <E extends AnnotatedElement> String determineDisplayName(E element,
 			Function<E, String> defaultDisplayNameGenerator) {
-		// @formatter:off
-		return findAnnotation(element, DisplayName.class)
-				.map(DisplayName::value)
-				.filter(StringUtils::isNotBlank)
-				.orElseGet(() -> defaultDisplayNameGenerator.apply(element));
-		// @formatter:on
+
+		Optional<DisplayName> displayNameAnnotation = findAnnotation(element, DisplayName.class);
+		if (displayNameAnnotation.isPresent()) {
+			String displayName = displayNameAnnotation.get().value().trim();
+
+			// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
+			// handling validation exceptions during the TestEngine discovery phase.
+			if (StringUtils.isBlank(displayName)) {
+				logger.warning(String.format(
+					"Configuration error: @DisplayName on [%s] must be declared with a non-empty value.", element));
+			}
+			else {
+				return displayName;
+			}
+		}
+		// else
+		return defaultDisplayNameGenerator.apply(element);
 	}
 
 	// --- Node ----------------------------------------------------------------

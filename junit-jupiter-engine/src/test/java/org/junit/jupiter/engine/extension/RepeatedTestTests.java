@@ -22,7 +22,8 @@ import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInfo;
 
 /**
- * Integration tests for {@link RepeatedTest}.
+ * Integration tests for {@link RepeatedTest @RepeatedTest} and supporting
+ * infrastructure.
  *
  * @since 5.0
  */
@@ -33,11 +34,11 @@ class RepeatedTestTests {
 	@BeforeEach
 	@AfterEach
 	void beforeAndAfterEach(TestInfo testInfo, RepetitionInfo repetitionInfo) {
-		if (testInfo.getDisplayName().startsWith("repeatedOnce")) {
+		if (testInfo.getTestMethod().get().getName().equals("repeatedOnce")) {
 			assertThat(repetitionInfo.getCurrentRepetition()).isEqualTo(1);
 			assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(1);
 		}
-		else if (testInfo.getDisplayName().startsWith("repeatedFortyTwoTimes")) {
+		else if (testInfo.getTestMethod().get().getName().equals("repeatedFortyTwoTimes")) {
 			assertThat(repetitionInfo.getCurrentRepetition()).isBetween(1, 42);
 			assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(42);
 		}
@@ -50,53 +51,45 @@ class RepeatedTestTests {
 
 	@RepeatedTest(-99)
 	void negativeRepeatCount(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("negativeRepeatCount(TestInfo) :: repetition 1 of 1");
+		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
 	}
 
 	@RepeatedTest(0)
 	void zeroRepeatCount(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("zeroRepeatCount(TestInfo) :: repetition 1 of 1");
+		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
 	}
 
 	@RepeatedTest(1)
 	void repeatedOnce(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("repeatedOnce(TestInfo) :: repetition 1 of 1");
+		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
 	}
 
 	@RepeatedTest(42)
 	void repeatedFortyTwoTimes(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).startsWith("repeatedFortyTwoTimes(TestInfo) :: repetition ");
+		assertThat(testInfo.getDisplayName()).matches("repetition \\d+ of 42");
 		fortyTwo++;
-	}
-
-	@RepeatedTest(1)
-	void defaultDisplayName(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("defaultDisplayName(TestInfo) :: repetition 1 of 1");
 	}
 
 	@RepeatedTest(value = 1, name = "")
 	void defaultDisplayNameWithEmptyPattern(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo(
-			"defaultDisplayNameWithEmptyPattern(TestInfo) :: repetition 1 of 1");
+		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
 	}
 
 	@RepeatedTest(value = 1, name = " \t  ")
 	void defaultDisplayNameWithBlankPattern(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo(
-			"defaultDisplayNameWithBlankPattern(TestInfo) :: repetition 1 of 1");
+		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
 	}
 
 	@RepeatedTest(1)
 	@DisplayName("Repeat!")
 	void customDisplayName(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("Repeat! :: repetition 1 of 1");
+		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
 	}
 
 	@RepeatedTest(1)
 	@DisplayName("   \t ")
 	void customDisplayNameWithBlankName(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo(
-			"customDisplayNameWithBlankName(TestInfo) :: repetition 1 of 1");
+		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
 	}
 
 	@RepeatedTest(value = 1, name = "{displayName}")
@@ -115,6 +108,12 @@ class RepeatedTestTests {
 	@DisplayName("Repeat!")
 	void customDisplayNameWithPatternIncludingDisplayNameAndCurrentRepetition(TestInfo testInfo) {
 		assertThat(testInfo.getDisplayName()).isEqualTo("Repetition #1 for Repeat!");
+	}
+
+	@RepeatedTest(value = 1, name = RepeatedTest.LONG_DISPLAY_NAME)
+	@DisplayName("Repeat!")
+	void customDisplayNameWithPredefinedLongPattern(TestInfo testInfo) {
+		assertThat(testInfo.getDisplayName()).isEqualTo("Repeat! :: repetition 1 of 1");
 	}
 
 	@RepeatedTest(value = 1, name = "{displayName} {currentRepetition}/{totalRepetitions}")
