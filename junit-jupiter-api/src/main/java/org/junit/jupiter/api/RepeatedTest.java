@@ -117,6 +117,11 @@ public @interface RepeatedTest {
 	 * names such as {@code "myRepeatedTest() :: repetition 1 of 2"},
 	 * {@code "myRepeatedTest() :: repetition 2 of 2"}, etc.
 	 *
+	 * <p>Alternatively, you can provide a custom display name, optionally
+	 * using the aforementioned placeholders.
+	 *
+	 * @return a custom display name; never blank or consisting solely of
+	 * whitespace
 	 * @see #SHORT_DISPLAY_NAME
 	 * @see #LONG_DISPLAY_NAME
 	 * @see #DISPLAY_NAME_PLACEHOLDER

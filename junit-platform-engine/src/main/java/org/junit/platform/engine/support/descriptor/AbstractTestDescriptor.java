@@ -59,7 +59,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	 */
 	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName) {
 		this.uniqueId = Preconditions.notNull(uniqueId, "UniqueId must not be null");
-		this.displayName = Preconditions.notNull(displayName, "displayName must not be null or blank");
+		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
 	}
 
 	@Override

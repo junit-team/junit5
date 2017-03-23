@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -32,6 +33,8 @@ import org.junit.platform.commons.util.StringUtils;
  */
 class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 
+	private static final Logger logger = Logger.getLogger(RepeatedTestExtension.class.getName());
+
 	@Override
 	public boolean supports(ContainerExtensionContext context) {
 		return isAnnotated(context.getTestMethod(), RepeatedTest.class);
@@ -43,7 +46,7 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		String displayName = context.getDisplayName();
 		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
 		int totalRepetitions = totalRepetitions(repeatedTest);
-		RepeatedTestDisplayNameFormatter formatter = displayNameFormatter(repeatedTest, displayName);
+		RepeatedTestDisplayNameFormatter formatter = displayNameFormatter(repeatedTest, testMethod, displayName);
 
 		// @formatter:off
 		return IntStream
@@ -56,13 +59,23 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		return Math.max(1, repeatedTest.value());
 	}
 
-	private RepeatedTestDisplayNameFormatter displayNameFormatter(RepeatedTest repeatedTest, String displayName) {
+	private RepeatedTestDisplayNameFormatter displayNameFormatter(RepeatedTest repeatedTest, Method method,
+			String displayName) {
 
-		String pattern = repeatedTest.name();
-		// TODO Check precondition in conjunction with #743: name must actually NOT be blank.
+		String pattern = repeatedTest.name().trim();
+
+		// TODO Replace logging with precondition check once we have a proper mechanism for
+		// handling exceptions during the TestEngine discovery phase.
+		//
+		// Preconditions.notBlank(name, () -> String.format(
+		//    "Configuration error: @RepeatedTest on method [%s] must be declared with a non-empty name.", method));
+		//
 		if (StringUtils.isBlank(pattern)) {
+			logger.warning(String.format(
+				"Configuration error: @RepeatedTest on method [%s] must be declared with a non-empty name.", method));
 			pattern = AnnotationUtils.getDefaultValue(repeatedTest, "name", String.class).get();
 		}
+
 		return new RepeatedTestDisplayNameFormatter(pattern, displayName);
 	}
 

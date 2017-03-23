@@ -21,8 +21,8 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @DisplayName} is used to declare a custom display name for the
- * annotated test class or test method.
+ * {@code @DisplayName} is used to declare a {@linkplain #value custom display
+ * name} for the annotated test class or test method.
  *
  * <p>Display names are typically used for test reporting in IDEs and build
  * tools and may contain spaces, special characters, and even emoji.
@@ -37,6 +37,12 @@ import org.junit.platform.commons.meta.API;
 @API(Experimental)
 public @interface DisplayName {
 
+	/**
+	 * Custom display name for the annotated class or method.
+	 *
+	 * @return a custom display name; never blank or consisting solely of
+	 * whitespace
+	 */
 	String value();
 
 }

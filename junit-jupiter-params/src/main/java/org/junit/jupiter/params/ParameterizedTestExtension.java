@@ -15,6 +15,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
@@ -24,14 +25,18 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.AnnotationInitializer;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 
 /**
  * @since 5.0
  */
 class ParameterizedTestExtension implements TestTemplateInvocationContextProvider {
+
+	private static final Logger logger = Logger.getLogger(ParameterizedTestExtension.class.getName());
 
 	@Override
 	public boolean supports(ContainerExtensionContext context) {
@@ -57,7 +62,22 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod) {
-		String name = findAnnotation(templateMethod, ParameterizedTest.class).get().name();
+		ParameterizedTest parameterizedTest = findAnnotation(templateMethod, ParameterizedTest.class).get();
+		String name = parameterizedTest.name().trim();
+
+		// TODO Replace logging with precondition check once we have a proper mechanism for
+		// handling exceptions during the TestEngine discovery phase.
+		//
+		// Preconditions.notBlank(name, () -> String.format(
+		//     "Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.", templateMethod));
+		//
+		if (StringUtils.isBlank(name)) {
+			logger.warning(String.format(
+				"Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.",
+				templateMethod));
+			name = AnnotationUtils.getDefaultValue(parameterizedTest, "name", String.class).get();
+		}
+
 		return new ParameterizedTestNameFormatter(name);
 	}
 
