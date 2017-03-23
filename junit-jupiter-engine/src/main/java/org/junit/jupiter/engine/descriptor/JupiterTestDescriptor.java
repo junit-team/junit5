@@ -77,7 +77,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		Optional<DisplayName> displayNameAnnotation = findAnnotation(element, DisplayName.class);
 		if (displayNameAnnotation.isPresent()) {
 			String displayName = displayNameAnnotation.get().value().trim();
-			// TODO Replace logging with precondition check once we have a proper mechanism for
+			// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
 			// handling exceptions during the TestEngine discovery phase. Otherwise, the entire
 			// TestEngine dies without executing anything.
 			//
