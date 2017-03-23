@@ -4923,6 +4923,12 @@ only delegate to <code>TestDescriptor.Type</code> constants now.</p>
 <p>Introduced <code>TestDescriptor.prune()</code> and <code>TestDescriptor.pruneTree()</code> which allow engine authors
 to customize what happens when pruning is triggered by the JUnit Platform.</p>
 </li>
+<li>
+<p><code>TestIdentifier</code> now also uses the new enumeration <code>TestDescriptor.Type</code> to store the
+underlying type. It can be retrieved via the new <code>TestIdentifier.getType()</code> getter and
+<code>TestIdentifier.isTest()</code> and <code>TestIdentifier.isContainer()</code> only delegate to
+<code>TestDescriptor.Type</code> constants now.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -4949,7 +4955,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-23 10:09:44 EDT
+Last updated 2017-03-22 20:20:36 EDT
 </div>
 </div>
 </body>
