@@ -131,7 +131,10 @@ on GitHub.
   only delegate to `TestDescriptor.Type` constants now.
 * Introduced `TestDescriptor.prune()` and `TestDescriptor.pruneTree()` which allow engine authors
   to customize what happens when pruning is triggered by the JUnit Platform.
-
+* `TestIdentifier` now also uses the new enumeration `TestDescriptor.Type` to store the
+  underlying type. It can be retrieved via the new `TestIdentifier.getType()` getter and
+  `TestIdentifier.isTest()` and `TestIdentifier.isContainer()` only delegate to
+  `TestDescriptor.Type` constants now.
 
 [[release-notes-5.0.0-m4-junit-vintage]]
 ==== JUnit Vintage
