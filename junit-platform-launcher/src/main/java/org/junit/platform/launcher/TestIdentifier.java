@@ -45,8 +45,7 @@ public final class TestIdentifier implements Serializable {
 	private final String legacyReportingName;
 	private final TestSource source;
 	private final Set<TestTag> tags;
-	private final boolean test;
-	private final boolean container;
+	private final TestDescriptor.Type type;
 
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
@@ -56,25 +55,24 @@ public final class TestIdentifier implements Serializable {
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		String uniqueId = testDescriptor.getUniqueId().toString();
 		String displayName = testDescriptor.getDisplayName();
-		Optional<TestSource> source = testDescriptor.getSource();
+		TestSource source = testDescriptor.getSource().orElse(null);
 		Set<TestTag> tags = testDescriptor.getTags();
-		boolean test = testDescriptor.isTest();
-		boolean container = testDescriptor.isContainer();
-		Optional<String> parentId = testDescriptor.getParent().map(
-			parentDescriptor -> parentDescriptor.getUniqueId().toString());
+		TestDescriptor.Type type = testDescriptor.getType();
+		String parentId = testDescriptor.getParent().map(
+			parentDescriptor -> parentDescriptor.getUniqueId().toString()).orElse(null);
 		String legacyReportingName = testDescriptor.getLegacyReportingName();
-		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId, legacyReportingName);
+		return new TestIdentifier(uniqueId, displayName, source, tags, type, parentId, legacyReportingName);
 	}
 
-	TestIdentifier(String uniqueId, String displayName, Optional<TestSource> source, Set<TestTag> tags, boolean test,
-			boolean container, Optional<String> parentId, String legacyReportingName) {
+	TestIdentifier(String uniqueId, String displayName, TestSource source, Set<TestTag> tags, TestDescriptor.Type type,
+			String parentId, String legacyReportingName) {
+		Preconditions.notNull(type, "TestDescriptor.Type must not be null");
 		this.uniqueId = uniqueId;
-		this.parentId = parentId.orElse(null);
+		this.parentId = parentId;
 		this.displayName = displayName;
-		this.source = source.orElse(null);
+		this.source = source;
 		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
-		this.test = test;
-		this.container = container;
+		this.type = type;
 		this.legacyReportingName = legacyReportingName;
 	}
 
@@ -137,17 +135,34 @@ public final class TestIdentifier implements Serializable {
 	}
 
 	/**
+	 * Get the underlying descriptor type.
+	 *
+	 * @return the underlying descriptor type; never {@code null}
+	 */
+	public TestDescriptor.Type getType() {
+		return type;
+	}
+
+	/**
 	 * Determine if this identifier represents a test.
+	 *
+	 * @return {@code true} if the underlying descriptor type represents a test,
+	 * {@code false} otherwise
+	 * @see TestDescriptor.Type#isTest()
 	 */
 	public boolean isTest() {
-		return this.test;
+		return getType().isTest();
 	}
 
 	/**
 	 * Determine if this identifier represents a container.
+	 *
+	 * @return {@code true} if the underlying descriptor type represents a container,
+	 * {@code false} otherwise
+	 * @see TestDescriptor.Type#isContainer()
 	 */
 	public boolean isContainer() {
-		return this.container;
+		return getType().isContainer();
 	}
 
 	/**
@@ -194,8 +209,7 @@ public final class TestIdentifier implements Serializable {
 				.append("legacyReportingName", this.legacyReportingName)
 				.append("source", this.source)
 				.append("tags", this.tags)
-				.append("test", this.test)
-				.append("container", this.container)
+				.append("type", this.type)
 				.toString();
 		// @formatter:on
 	}
