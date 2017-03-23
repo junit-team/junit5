@@ -76,10 +76,21 @@ public @interface RepeatedTest {
 	String TOTAL_REPETITIONS_PLACEHOLDER = "{totalRepetitions}";
 
 	/**
-	 * Default display name pattern for a repeated test: {@value #DEFAULT_DISPLAY_NAME}
+	 * <em>Short</em> display name pattern for a repeated test: {@value #SHORT_DISPLAY_NAME}
+	 *
+	 * @see #CURRENT_REPETITION_PLACEHOLDER
+	 * @see #TOTAL_REPETITIONS_PLACEHOLDER
+	 * @see #LONG_DISPLAY_NAME
 	 */
-	String DEFAULT_DISPLAY_NAME = DISPLAY_NAME_PLACEHOLDER + " :: repetition " + CURRENT_REPETITION_PLACEHOLDER + " of "
-			+ TOTAL_REPETITIONS_PLACEHOLDER;
+	String SHORT_DISPLAY_NAME = "repetition " + CURRENT_REPETITION_PLACEHOLDER + " of " + TOTAL_REPETITIONS_PLACEHOLDER;
+
+	/**
+	 * <em>Long</em> display name pattern for a repeated test: {@value #LONG_DISPLAY_NAME}
+	 *
+	 * @see #DISPLAY_NAME_PLACEHOLDER
+	 * @see #SHORT_DISPLAY_NAME
+	 */
+	String LONG_DISPLAY_NAME = DISPLAY_NAME_PLACEHOLDER + " :: " + SHORT_DISPLAY_NAME;
 
 	/**
 	 * The number of repetitions.
@@ -89,7 +100,7 @@ public @interface RepeatedTest {
 	int value();
 
 	/**
-	 * The display name for each repeated test invocation.
+	 * The display name for each repetition of the repeated test.
 	 *
 	 * <h4>Supported placeholders</h4>
 	 * <ul>
@@ -98,12 +109,21 @@ public @interface RepeatedTest {
 	 * <li>{@value #TOTAL_REPETITIONS_PLACEHOLDER}</li>
 	 * </ul>
 	 *
-	 * <p>Defaults to <code>{@value #DEFAULT_DISPLAY_NAME}</code>, resulting in
+	 * <p>Defaults to {@link #SHORT_DISPLAY_NAME}, resulting in
+	 * names such as {@code "repetition 1 of 2"}, {@code "repetition 2 of 2"},
+	 * etc.
+	 *
+	 * <p>Can be set to <code>{@link #LONG_DISPLAY_NAME}</code>, resulting in
 	 * names such as {@code "myRepeatedTest() :: repetition 1 of 2"},
 	 * {@code "myRepeatedTest() :: repetition 2 of 2"}, etc.
 	 *
+	 * @see #SHORT_DISPLAY_NAME
+	 * @see #LONG_DISPLAY_NAME
+	 * @see #DISPLAY_NAME_PLACEHOLDER
+	 * @see #CURRENT_REPETITION_PLACEHOLDER
+	 * @see #TOTAL_REPETITIONS_PLACEHOLDER
 	 * @see TestInfo#getDisplayName()
 	 */
-	String name() default DEFAULT_DISPLAY_NAME;
+	String name() default SHORT_DISPLAY_NAME;
 
 }
