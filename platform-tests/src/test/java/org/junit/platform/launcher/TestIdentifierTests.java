@@ -17,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.SerializationUtils.serializeAndDeserialize;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
@@ -41,16 +39,32 @@ class TestIdentifierTests {
 	}
 
 	@Test
+	void inheritsTypeFromDescriptor() {
+		TestDescriptor descriptor = new TestDescriptorStub(UniqueId.root("aType", "uniqueId"), "displayName");
+		TestIdentifier identifier = TestIdentifier.from(descriptor);
+		assertEquals(TestDescriptor.Type.TEST, identifier.getType());
+		assertTrue(identifier.isTest());
+		assertFalse(identifier.isContainer());
+
+		descriptor.addChild(new TestDescriptorStub(UniqueId.root("aChild", "uniqueId"), "displayName"));
+		identifier = TestIdentifier.from(descriptor);
+		assertEquals(TestDescriptor.Type.CONTAINER, identifier.getType());
+		assertFalse(identifier.isTest());
+		assertTrue(identifier.isContainer());
+	}
+
+	@Test
 	void serialization() throws Exception {
 		TestIdentifier identifier = serializeAndDeserialize(//
-			new TestIdentifier("uniqueId", "displayName", Optional.of(new ClassSource(TestIdentifierTests.class)),
-				singleton(TestTag.create("aTag")), true, false, Optional.of("parentId"), "reportingName"));
+			new TestIdentifier("uniqueId", "displayName", new ClassSource(TestIdentifierTests.class),
+				singleton(TestTag.create("aTag")), TestDescriptor.Type.TEST, "parentId", "reportingName"));
 
 		assertEquals("uniqueId", identifier.getUniqueId());
 		assertEquals("displayName", identifier.getDisplayName());
 		assertEquals("reportingName", identifier.getLegacyReportingName());
 		assertThat(identifier.getSource()).contains(new ClassSource(TestIdentifierTests.class));
 		assertEquals(singleton(TestTag.create("aTag")), identifier.getTags());
+		assertEquals(TestDescriptor.Type.TEST, identifier.getType());
 		assertTrue(identifier.isTest());
 		assertFalse(identifier.isContainer());
 		assertThat(identifier.getParentId()).contains("parentId");
