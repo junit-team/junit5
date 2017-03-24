@@ -16,15 +16,12 @@ import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryFrom;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
@@ -38,19 +35,11 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
  */
 public class ExtensionRegistryTests {
 
-	private final ExtensionRegistry registry = createRegistryWithDefaultExtensions();
-
-	@BeforeEach
-	@AfterEach
-	void cleanProperties() {
-		System.clearProperty(EXTENSIONS_AUTODETECT_PROPERTY_NAME);
-	}
+	private final ExtensionRegistry registry = createRegistryWithDefaultExtensions(false);
 
 	@Test
 	void newRegistryWithoutParentHasDefaultExtensionsUsingServiceLocator() {
-		System.setProperty(EXTENSIONS_AUTODETECT_PROPERTY_NAME, "true");
-
-		ExtensionRegistry registry = createRegistryWithDefaultExtensions();
+		ExtensionRegistry registry = createRegistryWithDefaultExtensions(true);
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
 		assertEquals(5, extensions.size());

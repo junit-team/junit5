@@ -46,7 +46,7 @@ class ExecutableInvokerTests {
 	private Method method;
 
 	private final ExtensionContext extensionContext = mock(ExtensionContext.class);
-	private ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions();
+	private ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(false);
 
 	@Test
 	void constructorInjection() throws Exception {

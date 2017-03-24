@@ -48,7 +48,7 @@ class JupiterEngineExecutionContextTests {
 	void extendWithAllAttributes() {
 		ClassBasedContainerExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, null,
 			null);
-		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions();
+		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(false);
 		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
@@ -65,7 +65,7 @@ class JupiterEngineExecutionContextTests {
 	void canOverrideAttributeWhenContextIsExtended() {
 		ClassBasedContainerExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, null,
 			null);
-		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions();
+		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(false);
 		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
 		ClassBasedContainerExtensionContext newExtensionContext = new ClassBasedContainerExtensionContext(
 			extensionContext, null, null);

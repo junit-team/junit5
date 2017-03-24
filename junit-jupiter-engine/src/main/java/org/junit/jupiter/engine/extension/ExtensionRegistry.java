@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
-import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECT_PROPERTY_NAME;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
@@ -57,12 +56,14 @@ public class ExtensionRegistry {
 	 * Factory for creating and populating a new root registry with the default
 	 * extensions.
 	 *
+	 * @param autoDetect {@code true} to detect extensions also using
+	 * service loader, {@code false} otherwise
 	 * @return a new {@code ExtensionRegistry}
 	 */
-	public static ExtensionRegistry createRegistryWithDefaultExtensions() {
+	public static ExtensionRegistry createRegistryWithDefaultExtensions(boolean autoDetect) {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
 		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
-		if (Boolean.getBoolean(EXTENSIONS_AUTODETECT_PROPERTY_NAME)) {
+		if (autoDetect) {
 			ServiceLoader.load(Extension.class, ReflectionUtils.getDefaultClassLoader()).forEach(
 				extensionRegistry::registerDefaultExtension);
 		}
