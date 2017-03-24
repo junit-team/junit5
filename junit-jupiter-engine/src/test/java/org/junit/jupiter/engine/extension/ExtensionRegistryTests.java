@@ -47,7 +47,7 @@ public class ExtensionRegistryTests {
 	}
 
 	@Test
-	void newRegistryWithoutParentHasDefaultExtensions_usingServiceLocator() {
+	void newRegistryWithoutParentHasDefaultExtensionsUsingServiceLocator() {
 		System.setProperty(EXTENSIONS_AUTODETECT_PROPERTY_NAME, "true");
 
 		ExtensionRegistry registry = createRegistryWithDefaultExtensions();
