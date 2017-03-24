@@ -45,7 +45,6 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-		// TODO #14 Test that Streams returned by providers are closed
 		Method templateMethod = Preconditions.notNull(context.getTestMethod().orElse(null),
 			"test method must not be null");
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
@@ -77,13 +76,12 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		return new ParameterizedTestNameFormatter(name);
 	}
 
-	private static Stream<? extends Arguments> arguments(ArgumentsProvider provider,
+	protected static Stream<? extends Arguments> arguments(ArgumentsProvider provider,
 			ContainerExtensionContext context) {
 		try {
 			return provider.arguments(context);
 		}
 		catch (Exception e) {
-			// TODO #14 Test
 			throw ExceptionUtils.throwAsUncheckedException(e);
 		}
 	}
