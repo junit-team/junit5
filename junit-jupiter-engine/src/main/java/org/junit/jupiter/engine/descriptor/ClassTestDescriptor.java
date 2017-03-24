@@ -26,6 +26,7 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeTestInstantiationCallback;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -173,10 +174,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
 		return childExtensionRegistry -> {
+			ExtensionRegistry extensionRegistry = childExtensionRegistry.orElse(registry);
+			invokeBeforeTestInstantiationCallbacks(extensionRegistry, extensionContext);
 			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-			Object instance = executableInvoker.invoke(constructor, extensionContext,
-				childExtensionRegistry.orElse(registry));
-			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(registry), extensionContext);
+			Object instance = executableInvoker.invoke(constructor, extensionContext, extensionRegistry);
+			invokeTestInstancePostProcessors(instance, extensionRegistry, extensionContext);
 			return instance;
 		};
 	}
@@ -186,6 +188,15 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		registry.stream(TestInstancePostProcessor.class).forEach(
 			extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, context)));
+	}
+
+	private void invokeBeforeTestInstantiationCallbacks(ExtensionRegistry registry, ExtensionContext extensionContext) {
+		ContainerExtensionContext context = (ContainerExtensionContext) extensionContext;
+		ThrowableCollector throwableCollector = new ThrowableCollector();
+		for (BeforeTestInstantiationCallback callback : registry.getExtensions(BeforeTestInstantiationCallback.class)) {
+			throwableCollector.execute(() -> callback.beforeTestInstantiation(context));
+			throwableCollector.assertEmpty();
+		}
 	}
 
 	private void invokeBeforeAllCallbacks(JupiterEngineExecutionContext context) {
