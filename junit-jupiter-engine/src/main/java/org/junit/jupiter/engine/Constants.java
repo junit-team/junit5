@@ -12,8 +12,6 @@ package org.junit.jupiter.engine;
 
 import java.util.ServiceLoader;
 
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
-
 /**
  * Collection of constants related to the {@link JupiterTestEngine}.
  *
@@ -65,7 +63,7 @@ public final class Constants {
 
 	/**
 	 * Property name used to enable test extensions to be loaded using the {@link ServiceLoader}  additional
-	 * to the global default ones within {@link ExtensionRegistry#createRegistryWithDefaultExtensions()}.
+	 * to the global default ones within {@code ExtensionRegistry.createRegistryWithDefaultExtensions()}.
 	 *
 	 * The default behavior is not to load any extensions using the service loader.
 	 */
