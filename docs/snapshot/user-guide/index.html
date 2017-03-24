@@ -4917,17 +4917,17 @@ next bullet point for details.</p>
 <li>
 <p>Introduced <code>TestDescriptor.Type</code> enumeration with <code>TestDescriptor.getType()</code> accessor defining
 all possible descriptor types. <code>TestDescriptor.isTest()</code> and <code>TestDescriptor.isContainer()</code>
-only delegate to <code>TestDescriptor.Type</code> constants now.</p>
+now delegate to <code>TestDescriptor.Type</code> constants.</p>
 </li>
 <li>
 <p>Introduced <code>TestDescriptor.prune()</code> and <code>TestDescriptor.pruneTree()</code> which allow engine authors
 to customize what happens when pruning is triggered by the JUnit Platform.</p>
 </li>
 <li>
-<p><code>TestIdentifier</code> now also uses the new enumeration <code>TestDescriptor.Type</code> to store the
-underlying type. It can be retrieved via the new <code>TestIdentifier.getType()</code> getter and
-<code>TestIdentifier.isTest()</code> and <code>TestIdentifier.isContainer()</code> only delegate to
-<code>TestDescriptor.Type</code> constants now.</p>
+<p><code>TestIdentifier</code> now uses the new <code>TestDescriptor.Type</code> enumeration to store the
+underlying type. It can be retrieved via the new <code>TestIdentifier.getType()</code> method.
+Furthermore, <code>TestIdentifier.isTest()</code> and <code>TestIdentifier.isContainer()</code> now delegate
+to <code>TestDescriptor.Type</code> constants.</p>
 </li>
 </ul>
 </div>
@@ -4955,7 +4955,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-22 20:20:36 EDT
+Last updated 2017-03-23 09:19:39 EDT
 </div>
 </div>
 </body>
