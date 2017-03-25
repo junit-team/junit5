@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
+import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
@@ -19,15 +20,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.engine.Constants;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 
 /**
  * An {@code ExtensionRegistry} holds all registered extensions (i.e.
@@ -55,11 +59,26 @@ public class ExtensionRegistry {
 	 * Factory for creating and populating a new root registry with the default
 	 * extensions.
 	 *
-	 * @return a new {@code ExtensionRegistry}
+	 * <p>If the {@link Constants#EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME}
+	 * configuration parameter has been set to {@code true}, extensions will be
+	 * auto-detected using Java's {@link ServiceLoader} mechanism and automatically
+	 * registered after the default extensions.
+	 *
+	 * @param configParams configuration parameters used to retrieve the extension
+	 * auto-detection flag; never {@code null}
+	 * @return a new {@code ExtensionRegistry}; never {@code null}
 	 */
-	public static ExtensionRegistry createRegistryWithDefaultExtensions() {
+	public static ExtensionRegistry createRegistryWithDefaultExtensions(ConfigurationParameters configParams) {
+
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
 		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
+
+		String autoDetectionParameter = configParams.get(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME).orElse(null);
+		if (Boolean.parseBoolean(autoDetectionParameter)) {
+			ServiceLoader.load(Extension.class, ReflectionUtils.getDefaultClassLoader())//
+					.forEach(extensionRegistry::registerDefaultExtension);
+		}
+
 		return extensionRegistry;
 	}
 
@@ -70,7 +89,7 @@ public class ExtensionRegistry {
 	 * @param parentRegistry the parent registry
 	 * @param extensionTypes the types of extensions to be registered in
 	 * the new registry
-	 * @return a new {@code ExtensionRegistry}
+	 * @return a new {@code ExtensionRegistry}; never {@code null}
 	 */
 	public static ExtensionRegistry createRegistryFrom(ExtensionRegistry parentRegistry,
 			List<Class<? extends Extension>> extensionTypes) {

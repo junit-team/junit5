@@ -31,6 +31,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 
 /**
  * Unit tests for {@link ExecutableInvoker}.
@@ -46,7 +47,10 @@ class ExecutableInvokerTests {
 	private Method method;
 
 	private final ExtensionContext extensionContext = mock(ExtensionContext.class);
-	private ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions();
+
+	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+
+	private ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configParams);
 
 	@Test
 	void constructorInjection() throws Exception {

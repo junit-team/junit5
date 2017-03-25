@@ -59,6 +59,14 @@ public final class Constants {
 	 */
 	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = "*";
 
+	/**
+	 * Property name used to enable auto-detection and registration of extensions via
+	 * Java's {@link java.util.ServiceLoader} mechanism: {@value}
+	 *
+	 * <p>The default behavior is not to perform auto-detection.
+	 */
+	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.extensions.autodetection.enabled";
+
 	private Constants() {
 		/* no-op */
 	}

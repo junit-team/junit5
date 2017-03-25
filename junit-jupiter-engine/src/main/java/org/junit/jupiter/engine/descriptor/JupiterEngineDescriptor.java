@@ -14,6 +14,7 @@ import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistr
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
@@ -31,7 +32,13 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 
 	@Override
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) {
-		return context.extend().withExtensionRegistry(createRegistryWithDefaultExtensions()).build();
+		ExtensionRegistry extensionRegistry = createRegistryWithDefaultExtensions(context.getConfigurationParameters());
+
+		// @formatter:off
+		return context.extend()
+				.withExtensionRegistry(extensionRegistry)
+				.build();
+		// @formatter:on
 	}
 
 }

@@ -135,6 +135,8 @@ on GitHub.
   underlying type. It can be retrieved via the new `TestIdentifier.getType()` method.
   Furthermore, `TestIdentifier.isTest()` and `TestIdentifier.isContainer()` now delegate
   to `TestDescriptor.Type` constants.
+* Extensions can now be registered automatically via Java's `ServiceLoader` mechanism.
+  See <<extensions-registration-automatic>>.
 
 
 [[release-notes-5.0.0-m4-junit-vintage]]
