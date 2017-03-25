@@ -31,6 +31,24 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	@Override
 	public Optional<String> get(String key) {
+		return Optional.ofNullable(getProperty(key));
+	}
+
+	@Override
+	public Optional<Boolean> getBoolean(String key) {
+		String property = getProperty(key);
+		if (property != null) {
+			return Optional.of(Boolean.parseBoolean(property));
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public int size() {
+		return this.configurationParameters.size();
+	}
+
+	private String getProperty(String key) {
 		Preconditions.notBlank(key, "key must not be null or blank");
 		String value = this.configurationParameters.get(key);
 		if (value == null) {
@@ -41,12 +59,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				/* ignore */
 			}
 		}
-		return Optional.ofNullable(value);
-	}
-
-	@Override
-	public int size() {
-		return this.configurationParameters.size();
+		return value;
 	}
 
 	@Override

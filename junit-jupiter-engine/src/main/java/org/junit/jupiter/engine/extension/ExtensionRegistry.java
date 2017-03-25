@@ -69,12 +69,10 @@ public class ExtensionRegistry {
 	 * @return a new {@code ExtensionRegistry}; never {@code null}
 	 */
 	public static ExtensionRegistry createRegistryWithDefaultExtensions(ConfigurationParameters configParams) {
-
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
 		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
-		String autoDetectionParameter = configParams.get(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME).orElse(null);
-		if (Boolean.parseBoolean(autoDetectionParameter)) {
+		if (configParams.getBoolean(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME).orElse(Boolean.FALSE)) {
 			ServiceLoader.load(Extension.class, ReflectionUtils.getDefaultClassLoader())//
 					.forEach(extensionRegistry::registerDefaultExtension);
 		}
