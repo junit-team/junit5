@@ -11,19 +11,20 @@ JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concep
 [[extensions-registration]]
 === Registering Extensions
 
-Extensions can be registered declaratively via `{ExtendWith}`.
+Extensions can be registered explicitly via
+<<extensions-registration-declarative,`{ExtendWith}`>> or automatically via Java's
+<<extensions-registration-automatic,`ServiceLoader` mechanism>>.
 
 [[extensions-registration-declarative]]
 ==== Declarative Extension Registration
 
 Developers can register one or more extensions _declaratively_ by annotating a test
-class, test method, or custom _<<writing-tests-meta-annotations,composed annotation>>_
-with `@ExtendWith(...)` and supplying class references for the extensions to register.
+interface, test class, test method, or custom _<<writing-tests-meta-annotations,composed
+annotation>>_ with `@ExtendWith(...)` and supplying class references for the extensions
+to register.
 
 For example, to register a custom `MockitoExtension` for a particular test method, you
-would annotate the test method as follows. For special cases there is also the possiblilty
-to use <<extensions-registration-service-loader,service loader based>> extension
-registration.
+would annotate the test method as follows.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -73,20 +74,34 @@ class MyTestsV2 {
 The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the
 `FooExtension` and `BarExtension`, in exactly that order.
 
-[[extensions-registration-service-loader]]
-==== Service Loader Extension Registration
+[[extensions-registration-automatic]]
+==== Automatic Extension Registration
 
-Besides to the default <<extensions-registration-declarative,extension registration>>
-behaviour using annotations as described before, there is a also an enhanced extension
-registration mechanism using the Java service loader facility.
+In addition to <<extensions-registration-declarative,declarative extension registration>>
+support using annotations, JUnit Jupiter also supports _global extension registration_
+via Java's `java.util.ServiceLoader` mechanism, allowing third-party extensions to be
+auto-detected and automatically registered based on what is available in the classpath.
 
-This feature is not enabled by default and must be activated setting the following system
-property:
+Specifically, a custom extension can be registered by supplying its fully qualified class
+name in a file named `org.junit.jupiter.api.extension.Extension` within the
+`/META-INF/services` folder in its enclosing JAR file.
 
-`-Djunit.extensions.auto-detect=true`
+[[extensions-registration-automatic-enabling]]
+===== Enabling Automatic Extension Detection
 
-When being enabled the extension registry will be initialized using the global extensions
-and then all extensions available thru the service loader will be added afterwards.
+Auto-detection is an advanced feature and is therefore not enabled by default. To enable
+it, simply set the `junit.extensions.autodetection.enabled` configuration key to `true`.
+This can be supplied as a JVM system property or as a _configuration parameter_ in the
+`LauncherDiscoveryRequest` that is passed to the `Launcher`.
+
+For example, to enable auto-detection of extensions, you can start your JVM with the
+following system property.
+
+`-Djunit.extensions.autodetection.enabled=true`
+
+When auto-detection is enabled, extensions discovered via the `ServiceLoader` mechanism
+will be added to the extension registry after JUnit Jupiter's global extensions (e.g.,
+support for `TestInfo`, `TestReporter`, etc.).
 
 [[extensions-registration-inheritance]]
 ==== Extension Inheritance

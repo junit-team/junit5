@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
@@ -32,9 +32,13 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 
 	@Override
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) {
-		boolean autoDetect = Boolean.parseBoolean(
-			context.getConfigurationParameters().get(EXTENSIONS_AUTODETECT_PROPERTY_NAME).orElse("false"));
-		return context.extend().withExtensionRegistry(createRegistryWithDefaultExtensions(autoDetect)).build();
+		ExtensionRegistry extensionRegistry = createRegistryWithDefaultExtensions(context.getConfigurationParameters());
+
+		// @formatter:off
+		return context.extend()
+				.withExtensionRegistry(extensionRegistry)
+				.build();
+		// @formatter:on
 	}
 
 }

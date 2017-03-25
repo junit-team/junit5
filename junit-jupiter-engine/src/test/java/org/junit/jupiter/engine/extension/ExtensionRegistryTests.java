@@ -18,8 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryFrom;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.Test;
@@ -29,47 +32,42 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestExecutionCondition;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.engine.Constants;
+import org.junit.platform.engine.ConfigurationParameters;
 
 /**
+ * Tests for the {@link ExtensionRegistry}.
+ *
  * @since 5.0
  */
 public class ExtensionRegistryTests {
 
-	private final ExtensionRegistry registry = createRegistryWithDefaultExtensions(false);
+	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 
-	@Test
-	void newRegistryWithoutParentHasDefaultExtensionsUsingServiceLocator() {
-		ExtensionRegistry registry = createRegistryWithDefaultExtensions(true);
-		List<Extension> extensions = registry.getExtensions(Extension.class);
-
-		assertEquals(5, extensions.size());
-		assertExtensionRegistered(registry, DisabledCondition.class);
-		assertExtensionRegistered(registry, RepeatedTestExtension.class);
-		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
-		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
-		assertExtensionRegistered(registry, ServiceLoaderExtension.class);
-
-		assertEquals(2, countExtensions(registry, ParameterResolver.class));
-		assertEquals(1, countExtensions(registry, ContainerExecutionCondition.class));
-		assertEquals(1, countExtensions(registry, TestExecutionCondition.class));
-		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
-		assertEquals(1, countExtensions(registry, BeforeAllCallback.class));
-	}
+	private ExtensionRegistry registry = createRegistryWithDefaultExtensions(configParams);
 
 	@Test
 	void newRegistryWithoutParentHasDefaultExtensions() {
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
 		assertEquals(4, extensions.size());
-		assertExtensionRegistered(registry, DisabledCondition.class);
-		assertExtensionRegistered(registry, RepeatedTestExtension.class);
-		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
-		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
+		assertDefaultGlobalExtensionAreRegistered();
+	}
 
-		assertEquals(2, countExtensions(registry, ParameterResolver.class));
-		assertEquals(1, countExtensions(registry, ContainerExecutionCondition.class));
-		assertEquals(1, countExtensions(registry, TestExecutionCondition.class));
-		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
+	@Test
+	void newRegistryWithoutParentHasDefaultExtensionsPlusAutodetectedExtensionsLoadedViaServiceLoader() {
+
+		when(configParams.get(Constants.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME)).thenReturn(
+			Optional.of("true"));
+		registry = createRegistryWithDefaultExtensions(configParams);
+
+		List<Extension> extensions = registry.getExtensions(Extension.class);
+
+		assertEquals(5, extensions.size());
+		assertDefaultGlobalExtensionAreRegistered();
+
+		assertExtensionRegistered(registry, ServiceLoaderExtension.class);
+		assertEquals(1, countExtensions(registry, BeforeAllCallback.class));
 	}
 
 	@Test
@@ -155,6 +153,18 @@ public class ExtensionRegistryTests {
 	private void assertExtensionRegistered(ExtensionRegistry registry, Class<? extends Extension> extensionType) {
 		assertFalse(registry.getExtensions(extensionType).isEmpty(),
 			() -> extensionType.getSimpleName() + " should be present");
+	}
+
+	private void assertDefaultGlobalExtensionAreRegistered() {
+		assertExtensionRegistered(registry, DisabledCondition.class);
+		assertExtensionRegistered(registry, RepeatedTestExtension.class);
+		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
+		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
+
+		assertEquals(2, countExtensions(registry, ParameterResolver.class));
+		assertEquals(1, countExtensions(registry, ContainerExecutionCondition.class));
+		assertEquals(1, countExtensions(registry, TestExecutionCondition.class));
+		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
 	}
 
 	// -------------------------------------------------------------------------
