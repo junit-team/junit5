@@ -24,6 +24,7 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
@@ -70,14 +71,33 @@ public class ExtensionRegistry {
 	 */
 	public static ExtensionRegistry createRegistryWithDefaultExtensions(ConfigurationParameters configParams) {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
+
+		// @formatter:off
+		LOG.finest(() -> "Registering default extensions: " + DEFAULT_EXTENSIONS.stream()
+						.map(extension -> extension.getClass().getName())
+						.collect(toList()));
+		// @formatter:on
+
 		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
 		if (configParams.getBoolean(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME).orElse(Boolean.FALSE)) {
-			ServiceLoader.load(Extension.class, ReflectionUtils.getDefaultClassLoader())//
-					.forEach(extensionRegistry::registerDefaultExtension);
+			registerAutoDetectedExtensions(extensionRegistry);
 		}
 
 		return extensionRegistry;
+	}
+
+	private static void registerAutoDetectedExtensions(ExtensionRegistry extensionRegistry) {
+		Iterable<Extension> extensions = ServiceLoader.load(Extension.class, ReflectionUtils.getDefaultClassLoader());
+
+		// @formatter:off
+		LOG.config(() -> "Registering auto-detected extensions: "
+				+ StreamSupport.stream(extensions.spliterator(), false)
+						.map(extension -> extension.getClass().getName())
+						.collect(toList()));
+		// @formatter:on
+
+		extensions.forEach(extensionRegistry::registerDefaultExtension);
 	}
 
 	/**
