@@ -180,7 +180,8 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, TestExtensionContext context,
 			Throwable ex) {
 
-		invokeTestExecutionExceptionHandlers(ex, registry.getExtensions(TestExecutionExceptionHandler.class), context);
+		invokeTestExecutionExceptionHandlers(ex, registry.getReversedExtensions(TestExecutionExceptionHandler.class),
+			context);
 	}
 
 	private void invokeTestExecutionExceptionHandlers(Throwable ex, List<TestExecutionExceptionHandler> handlers,

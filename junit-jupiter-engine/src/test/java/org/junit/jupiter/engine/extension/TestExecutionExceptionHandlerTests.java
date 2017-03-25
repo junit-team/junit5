@@ -155,10 +155,10 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		}
 
 		@Test
-		@ExtendWith(ConvertException.class)
-		@ExtendWith(RethrowException.class)
-		@ExtendWith(SwallowException.class)
 		@ExtendWith(ShouldNotBeCalled.class)
+		@ExtendWith(SwallowException.class)
+		@ExtendWith(RethrowException.class)
+		@ExtendWith(ConvertException.class)
 		void testSeveral() {
 			throw new RuntimeException("unchecked");
 		}
