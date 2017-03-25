@@ -115,6 +115,8 @@ on GitHub.
 * The correct execution order of overridden `@BeforeEach`/`@AfterEach` methods is now enforced when declared
   at multiple levels within a class hierarchy. It's now always `super.before`, `this.before`, `this.test`,
   `this.after`, and `super.after`, even if the compiler adds synthetic methods.
+* ``TestExecutionExceptionHandler``s are now invoked in the opposite order in which they
+  were registered, analogous to all other "_after_" extensions.
 
 ===== Deprecations and Breaking Changes
 
