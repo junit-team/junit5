@@ -4914,16 +4914,21 @@ to <code>TestDescriptor.Type</code> constants.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fixed bug that prevented discovery of two or more methods in the same class when selected
-via a method selector.</p>
+<p>Fixed bug that prevented discovery of two or more methods in the same class when
+selected via a method selector.</p>
 </li>
 <li>
-<p>Fixed bug that prevented discovery of <code>@Nested</code> non-static test classes declared in super classes.</p>
+<p><code>@Nested</code> non-static test classes are now detected when declared in super classes.</p>
 </li>
 <li>
-<p>The correct execution order of overridden <code>@BeforeEach</code>/<code>@AfterEach</code> methods is now enforced when declared
-at multiple levels within a class hierarchy. It&#8217;s now always <code>super.before</code>, <code>this.before</code>, <code>this.test</code>,
-<code>this.after</code>, and <code>super.after</code>, even if the compiler adds synthetic methods.</p>
+<p>The correct execution order of overridden <code>@BeforeEach</code> and <code>@AfterEach</code> methods is now
+enforced when declared at multiple levels within a class hierarchy. It&#8217;s now always
+<code>super.before</code>, <code>this.before</code>, <code>this.test</code>, <code>this.after</code>, and <code>super.after</code>, even if
+the compiler adds synthetic methods.</p>
+</li>
+<li>
+<p><code>TestExecutionExceptionHandler</code>s are now invoked in the opposite order in which they
+were registered, analogous to all other "<em>after</em>" extensions.</p>
 </li>
 </ul>
 </div>
