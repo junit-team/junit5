@@ -51,7 +51,7 @@ public class ExtensionRegistryTests {
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
 		assertEquals(4, extensions.size());
-		assertDefaultGlobalExtensionAreRegistered();
+		assertDefaultGlobalExtensionsAreRegistered();
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class ExtensionRegistryTests {
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
 		assertEquals(5, extensions.size());
-		assertDefaultGlobalExtensionAreRegistered();
+		assertDefaultGlobalExtensionsAreRegistered();
 
 		assertExtensionRegistered(registry, ServiceLoaderExtension.class);
 		assertEquals(1, countExtensions(registry, BeforeAllCallback.class));
@@ -155,7 +155,7 @@ public class ExtensionRegistryTests {
 			() -> extensionType.getSimpleName() + " should be present");
 	}
 
-	private void assertDefaultGlobalExtensionAreRegistered() {
+	private void assertDefaultGlobalExtensionsAreRegistered() {
 		assertExtensionRegistered(registry, DisabledCondition.class);
 		assertExtensionRegistered(registry, RepeatedTestExtension.class);
 		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
