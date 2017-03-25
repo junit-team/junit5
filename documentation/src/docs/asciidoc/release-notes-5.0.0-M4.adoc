@@ -54,7 +54,7 @@ on GitHub.
   supplied `LauncherDiscoveryRequest`:
   `execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners)`
 
-===== New Features
+===== New Features and Improvements
 
 * Custom `TestExecutionListener` implementations can now be registered automatically via
   Java's `ServiceLoader` mechanism.
@@ -90,6 +90,18 @@ on GitHub.
   _maintained_ utility methods for annotation, reflection, and classpath scanning tasks.
   `TestEngine` and `Extension` authors are encouraged to use these supported methods
   in order to align with the behavior of the JUnit Platform.
+* Squashed logic behind `TestDescriptor.isTest()` and `TestDescriptor.isContainer()` from two
+  independent `boolean` properties into a single enumeration, namely `TestDescriptor.Type`. See
+  next bullet point for details.
+* Introduced `TestDescriptor.Type` enumeration with `TestDescriptor.getType()` accessor defining
+  all possible descriptor types. `TestDescriptor.isTest()` and `TestDescriptor.isContainer()`
+  now delegate to `TestDescriptor.Type` constants.
+* Introduced `TestDescriptor.prune()` and `TestDescriptor.pruneTree()` which allow engine authors
+  to customize what happens when pruning is triggered by the JUnit Platform.
+* `TestIdentifier` now uses the new `TestDescriptor.Type` enumeration to store the
+  underlying type. It can be retrieved via the new `TestIdentifier.getType()` method.
+  Furthermore, `TestIdentifier.isTest()` and `TestIdentifier.isContainer()` now delegate
+  to `TestDescriptor.Type` constants.
 
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
@@ -117,24 +129,12 @@ on GitHub.
 * `Assertions.assertThrows()` now uses canonical names for exception types when
   generating assertion failure messages.
 * ``TestInstancePostProcessor``s registered on test methods are now invoked.
-* There are two new signatures for `Assertions.fail`: `Assertions.fail(Throwable cause)` and
+* New variants of `Assertions.fail`: `Assertions.fail(Throwable cause)` and
   `Assertions.fail(String message, Throwable cause)`.
-* New `Assertions.assertLinesMatch()` comparing lists of `String`, featuring `Object::equals` and
-  regular expression checks. It also provides a fast-forward mechanism to skip actual lines that
-  are expected to change in each invocation, e.g. duration, timestamps, and stack traces.
-  Consult the JavaDoc for `{Assertions}` for details.
-* Squashed logic behind `TestDescriptor.isTest()` and `TestDescriptor.isContainer()` from two
-  independent boolean properties into a single enumeration, namely `TestDescriptor.Type`. See
-  next bullet point for details.
-* Introduced `TestDescriptor.Type` enumeration with `TestDescriptor.getType()` accessor defining
-  all possible descriptor types. `TestDescriptor.isTest()` and `TestDescriptor.isContainer()`
-  now delegate to `TestDescriptor.Type` constants.
-* Introduced `TestDescriptor.prune()` and `TestDescriptor.pruneTree()` which allow engine authors
-  to customize what happens when pruning is triggered by the JUnit Platform.
-* `TestIdentifier` now uses the new `TestDescriptor.Type` enumeration to store the
-  underlying type. It can be retrieved via the new `TestIdentifier.getType()` method.
-  Furthermore, `TestIdentifier.isTest()` and `TestIdentifier.isContainer()` now delegate
-  to `TestDescriptor.Type` constants.
+* New `Assertions.assertLinesMatch()` comparing lists of strings, featuring `Object::equals`
+  and regular expression checks. `assertLinesMatch()` also provides a fast-forward mechanism
+  to skip lines that are expected to change in each invocation -- for example, duration,
+  timestamps, stack traces, etc. Consult the JavaDoc for `{Assertions}` for details.
 * Extensions can now be registered automatically via Java's `ServiceLoader` mechanism.
   See <<extensions-registration-automatic>>.
 
