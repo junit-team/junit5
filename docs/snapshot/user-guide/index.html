@@ -3032,14 +3032,17 @@ JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concep
 <div class="sect2">
 <h3 id="extensions-registration">5.2. Registering Extensions</h3>
 <div class="paragraph">
-<p>Extensions can be registered declaratively via <code><a href="../api/org/junit/jupiter/api/extension/ExtendWith.html">@ExtendWith</a></code>.</p>
+<p>Extensions can be registered explicitly via
+<a href="#extensions-registration-declarative"><code><a href="../api/org/junit/jupiter/api/extension/ExtendWith.html">@ExtendWith</a></code></a> or automatically via Java&#8217;s
+<a href="#extensions-registration-automatic"><code>ServiceLoader</code> mechanism</a>.</p>
 </div>
 <div class="sect3">
 <h4 id="extensions-registration-declarative">5.2.1. Declarative Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register one or more extensions <em>declaratively</em> by annotating a test
-class, test method, or custom <em><a href="#writing-tests-meta-annotations">composed annotation</a></em>
-with <code>@ExtendWith(&#8230;&#8203;)</code> and supplying class references for the extensions to register.</p>
+interface, test class, test method, or custom <em><a href="#writing-tests-meta-annotations">composed
+annotation</a></em> with <code>@ExtendWith(&#8230;&#8203;)</code> and supplying class references for the extensions
+to register.</p>
 </div>
 <div class="paragraph">
 <p>For example, to register a custom <code>MockitoExtension</code> for a particular test method, you
@@ -3095,7 +3098,42 @@ subclasses, you would annotate the test class as follows.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-registration-inheritance">5.2.2. Extension Inheritance</h4>
+<h4 id="extensions-registration-automatic">5.2.2. Automatic Extension Registration</h4>
+<div class="paragraph">
+<p>In addition to <a href="#extensions-registration-declarative">declarative extension registration</a>
+support using annotations, JUnit Jupiter also supports <em>global extension registration</em>
+via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism, allowing third-party extensions to be
+auto-detected and automatically registered based on what is available in the classpath.</p>
+</div>
+<div class="paragraph">
+<p>Specifically, a custom extension can be registered by supplying its fully qualified class
+name in a file named <code>org.junit.jupiter.api.extension.Extension</code> within the
+<code>/META-INF/services</code> folder in its enclosing JAR file.</p>
+</div>
+<div class="sect4">
+<h5 id="extensions-registration-automatic-enabling">Enabling Automatic Extension Detection</h5>
+<div class="paragraph">
+<p>Auto-detection is an advanced feature and is therefore not enabled by default. To enable
+it, simply set the <code>junit.extensions.autodetection.enabled</code> configuration key to <code>true</code>.
+This can be supplied as a JVM system property or as a <em>configuration parameter</em> in the
+<code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>.</p>
+</div>
+<div class="paragraph">
+<p>For example, to enable auto-detection of extensions, you can start your JVM with the
+following system property.</p>
+</div>
+<div class="paragraph">
+<p><code>-Djunit.extensions.autodetection.enabled=true</code></p>
+</div>
+<div class="paragraph">
+<p>When auto-detection is enabled, extensions discovered via the <code>ServiceLoader</code> mechanism
+will be added to the extension registry after JUnit Jupiter&#8217;s global extensions (e.g.,
+support for <code>TestInfo</code>, <code>TestReporter</code>, etc.).</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="extensions-registration-inheritance">5.2.3. Extension Inheritance</h4>
 <div class="paragraph">
 <p>Registered extensions are inherited within test class hierarchies with top-down
 semantics. Similarly, extensions registered at the class-level are inherited at the
@@ -4790,7 +4828,7 @@ supplied <code>LauncherDiscoveryRequest</code>:
 </div>
 </div>
 <div class="sect4">
-<h5 id="new-features-3">New Features</h5>
+<h5 id="new-features-and-improvements-2">New Features and Improvements</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4845,6 +4883,26 @@ repeated, all patterns will be combined using OR semantics.</p>
 <code>TestEngine</code> and <code>Extension</code> authors are encouraged to use these supported methods
 in order to align with the behavior of the JUnit Platform.</p>
 </li>
+<li>
+<p>Squashed logic behind <code>TestDescriptor.isTest()</code> and <code>TestDescriptor.isContainer()</code> from two
+independent <code>boolean</code> properties into a single enumeration, namely <code>TestDescriptor.Type</code>. See
+next bullet point for details.</p>
+</li>
+<li>
+<p>Introduced <code>TestDescriptor.Type</code> enumeration with <code>TestDescriptor.getType()</code> accessor defining
+all possible descriptor types. <code>TestDescriptor.isTest()</code> and <code>TestDescriptor.isContainer()</code>
+now delegate to <code>TestDescriptor.Type</code> constants.</p>
+</li>
+<li>
+<p>Introduced <code>TestDescriptor.prune()</code> and <code>TestDescriptor.pruneTree()</code> which allow engine authors
+to customize what happens when pruning is triggered by the JUnit Platform.</p>
+</li>
+<li>
+<p><code>TestIdentifier</code> now uses the new <code>TestDescriptor.Type</code> enumeration to store the
+underlying type. It can be retrieved via the new <code>TestIdentifier.getType()</code> method.
+Furthermore, <code>TestIdentifier.isTest()</code> and <code>TestIdentifier.isContainer()</code> now delegate
+to <code>TestDescriptor.Type</code> constants.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -4885,7 +4943,7 @@ equal to each other.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="new-features-and-improvements-2">New Features and Improvements</h5>
+<h5 id="new-features-and-improvements-3">New Features and Improvements</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4900,34 +4958,18 @@ generating assertion failure messages.</p>
 <p><code>TestInstancePostProcessor</code>s registered on test methods are now invoked.</p>
 </li>
 <li>
-<p>There are two new signatures for <code>Assertions.fail</code>: <code>Assertions.fail(Throwable cause)</code> and
+<p>New variants of <code>Assertions.fail</code>: <code>Assertions.fail(Throwable cause)</code> and
 <code>Assertions.fail(String message, Throwable cause)</code>.</p>
 </li>
 <li>
-<p>New <code>Assertions.assertLinesMatch()</code> comparing lists of <code>String</code>, featuring <code>Object::equals</code> and
-regular expression checks. It also provides a fast-forward mechanism to skip actual lines that
-are expected to change in each invocation, e.g. duration, timestamps, and stack traces.
-Consult the JavaDoc for <code><a href="../api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.Assertions</a></code> for details.</p>
+<p>New <code>Assertions.assertLinesMatch()</code> comparing lists of strings, featuring <code>Object::equals</code>
+and regular expression checks. <code>assertLinesMatch()</code> also provides a fast-forward mechanism
+to skip lines that are expected to change in each invocation&#8201;&#8212;&#8201;for example, duration,
+timestamps, stack traces, etc. Consult the JavaDoc for <code><a href="../api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.Assertions</a></code> for details.</p>
 </li>
 <li>
-<p>Squashed logic behind <code>TestDescriptor.isTest()</code> and <code>TestDescriptor.isContainer()</code> from two
-independent boolean properties into a single enumeration, namely <code>TestDescriptor.Type</code>. See
-next bullet point for details.</p>
-</li>
-<li>
-<p>Introduced <code>TestDescriptor.Type</code> enumeration with <code>TestDescriptor.getType()</code> accessor defining
-all possible descriptor types. <code>TestDescriptor.isTest()</code> and <code>TestDescriptor.isContainer()</code>
-now delegate to <code>TestDescriptor.Type</code> constants.</p>
-</li>
-<li>
-<p>Introduced <code>TestDescriptor.prune()</code> and <code>TestDescriptor.pruneTree()</code> which allow engine authors
-to customize what happens when pruning is triggered by the JUnit Platform.</p>
-</li>
-<li>
-<p><code>TestIdentifier</code> now uses the new <code>TestDescriptor.Type</code> enumeration to store the
-underlying type. It can be retrieved via the new <code>TestIdentifier.getType()</code> method.
-Furthermore, <code>TestIdentifier.isTest()</code> and <code>TestIdentifier.isContainer()</code> now delegate
-to <code>TestDescriptor.Type</code> constants.</p>
+<p>Extensions can now be registered automatically via Java&#8217;s <code>ServiceLoader</code> mechanism.
+See <a href="#extensions-registration-automatic">Automatic Extension Registration</a>.</p>
 </li>
 </ul>
 </div>
@@ -4955,7 +4997,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-23 09:19:39 EDT
+Last updated 2017-03-25 12:20:24 EDT
 </div>
 </div>
 </body>
