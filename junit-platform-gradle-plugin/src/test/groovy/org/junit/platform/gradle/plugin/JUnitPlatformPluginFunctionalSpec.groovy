@@ -230,10 +230,10 @@ class AdderTest {
 
 		when:
 		result = GradleRunner.create()
-												.withProjectDir(testProjectDir.root)
-												.withPluginClasspath(pluginClasspath)
-												.withArguments('test')
-												.build()
+			.withProjectDir(testProjectDir.root)
+			.withPluginClasspath(pluginClasspath)
+			.withArguments('test')
+			.build()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.UP_TO_DATE
@@ -243,8 +243,7 @@ class AdderTest {
 		Path testPath = Paths.get(testProjectDir.root.toString(), 'src', 'test', 'java', 'org', 'junit', 'gradletest', 'AdderTest.java')
 		Files.createDirectories(testPath.parent)
 		testPath.withWriter {
-			it.write(
-		'''
+			it.write('''
 package org.junit.gradletest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
