@@ -81,7 +81,6 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 		result.output.contains('1 tests successful')
 	}
 
-
 	def "failing test fails build with 'java' plugin"() {
 		given:
 		javaFile()
@@ -214,6 +213,33 @@ class AdderTest {
 '''
 			)
 		}
+	}
+
+	def "when tests are executed again after no changes then the junitPlatformTest task is UP-TO-DATE"() {
+		given:
+		javaPlugin()
+		javaFile()
+		succeedingTestFile()
+
+		when:
+		BuildResult result = GradleRunner.create()
+																		.withProjectDir(testProjectDir.root)
+																		.withPluginClasspath(pluginClasspath)
+																		.withArguments('test')
+																		.build()
+
+		then:
+		result.task(':junitPlatformTest').outcome == TaskOutcome.SUCCESS
+
+		when:
+		result = GradleRunner.create()
+												.withProjectDir(testProjectDir.root)
+												.withPluginClasspath(pluginClasspath)
+												.withArguments('test')
+												.build()
+
+		then:
+		result.task(':junitPlatformTest').outcome == TaskOutcome.UP_TO_DATE
 	}
 
 	private void succeedingTestFile() {
