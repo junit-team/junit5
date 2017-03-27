@@ -18,6 +18,7 @@ import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.platform.console.ConsoleLauncher
 import org.junit.platform.engine.discovery.ClassNameFilter
+import spock.lang.Issue
 import spock.lang.Specification
 
 /**
@@ -25,7 +26,7 @@ import spock.lang.Specification
  */
 class JUnitPlatformPluginSpec extends Specification {
 
-	Project project
+	private Project project
 
 	def setup() {
 		project = ProjectBuilder.builder().build()
@@ -274,5 +275,19 @@ class JUnitPlatformPluginSpec extends Specification {
 			.collect { dependency -> dependency.getVersion() }
 			.findAll { version -> version.startsWith("1.") && !version.contains("+")}
 			.size() == 2
+	}
+
+	@Issue('https://github.com/junit-team/junit5/issues/708')
+	def "can configure the junitPlatformTest task during the configuration phase"() {
+		given:
+		String customDescription = 'My custom description'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		final junitPlatformTest = project.tasks.getByName('junitPlatformTest')
+		junitPlatformTest.description = customDescription
+
+		then:
+		junitPlatformTest.description == customDescription
 	}
 }
