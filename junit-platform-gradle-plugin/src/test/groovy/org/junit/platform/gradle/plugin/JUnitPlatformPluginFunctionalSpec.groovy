@@ -51,10 +51,10 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
 		BuildResult result = GradleRunner.create()
-																		.withProjectDir(testProjectDir.root)
-																		.withPluginClasspath(pluginClasspath)
-																		.withArguments('build')
-																		.build()
+			.withProjectDir(testProjectDir.root)
+			.withPluginClasspath(pluginClasspath)
+			.withArguments('build')
+			.build()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.SUCCESS
@@ -70,10 +70,10 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
 		BuildResult result = GradleRunner.create()
-																		.withProjectDir(testProjectDir.root)
-																		.withPluginClasspath(pluginClasspath)
-																		.withArguments('build')
-																		.build()
+			.withProjectDir(testProjectDir.root)
+			.withPluginClasspath(pluginClasspath)
+			.withArguments('build')
+			.build()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.SUCCESS
@@ -89,10 +89,10 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
 		BuildResult result = GradleRunner.create()
-																		.withProjectDir(testProjectDir.root)
-																		.withPluginClasspath(pluginClasspath)
-																		.withArguments('build')
-																		.buildAndFail()
+			.withProjectDir(testProjectDir.root)
+			.withPluginClasspath(pluginClasspath)
+			.withArguments('build')
+			.buildAndFail()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.FAILED
@@ -107,10 +107,10 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
 		BuildResult result = GradleRunner.create()
-																		.withProjectDir(testProjectDir.root)
-																		.withPluginClasspath(pluginClasspath)
-																		.withArguments('build')
-																		.buildAndFail()
+			.withProjectDir(testProjectDir.root)
+			.withPluginClasspath(pluginClasspath)
+			.withArguments('build')
+			.buildAndFail()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.FAILED
@@ -175,7 +175,6 @@ junitPlatform {
 	private void javaFile() {
 		Path javaFile = Paths.get(testProjectDir.root.toString(), 'src', 'main', 'java', 'org', 'junit', 'gradletest', 'Adder.java')
 		Files.createDirectories(javaFile.parent)
-		// @formatter:off
 		javaFile.withWriter {
 			it.write(
 				'''
@@ -188,13 +187,11 @@ public class Adder {
 }
 ''')
 		}
-		// @formatter:on
 	}
 
 	private void failingTestFile() {
 		Path testPath = Paths.get(testProjectDir.root.toString(), 'src', 'test', 'java', 'org', 'junit', 'gradletest', 'AdderTest.java')
 		Files.createDirectories(testPath.parent)
-		// @formatter:off
 		testPath.withWriter {
 			it.write('''
 package org.junit.gradletest;
@@ -223,10 +220,10 @@ class AdderTest {
 
 		when:
 		BuildResult result = GradleRunner.create()
-																		.withProjectDir(testProjectDir.root)
-																		.withPluginClasspath(pluginClasspath)
-																		.withArguments('test')
-																		.build()
+			.withProjectDir(testProjectDir.root)
+			.withPluginClasspath(pluginClasspath)
+			.withArguments('test')
+			.build()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.SUCCESS
@@ -245,7 +242,6 @@ class AdderTest {
 	private void succeedingTestFile() {
 		Path testPath = Paths.get(testProjectDir.root.toString(), 'src', 'test', 'java', 'org', 'junit', 'gradletest', 'AdderTest.java')
 		Files.createDirectories(testPath.parent)
-		// @formatter:off
 		testPath.withWriter {
 			it.write(
 		'''
