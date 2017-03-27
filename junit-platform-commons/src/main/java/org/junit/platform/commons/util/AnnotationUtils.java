@@ -82,9 +82,10 @@ public final class AnnotationUtils {
 		Preconditions.notBlank(attributeName, "attributeName must not be null or blank");
 		Preconditions.notNull(attributeType, "attributeType must not be null");
 
+		Class<? extends Annotation> annotationType = annotation.annotationType();
 		Method attribute = null;
 		try {
-			attribute = annotation.annotationType().getDeclaredMethod(attributeName);
+			attribute = annotationType.getDeclaredMethod(attributeName);
 		}
 		catch (Exception ex) {
 			return Optional.empty();
@@ -97,7 +98,7 @@ public final class AnnotationUtils {
 
 		Preconditions.condition(attributeType.isInstance(defaultValue),
 			() -> String.format("Attribute '%s' in annotation %s is of type %s, not %s", attributeName,
-				annotation.annotationType().getName(), defaultValue.getClass().getName(), attributeType.getName()));
+				annotationType.getName(), defaultValue.getClass().getName(), attributeType.getName()));
 
 		return Optional.of(attributeType.cast(defaultValue));
 
@@ -202,9 +203,9 @@ public final class AnnotationUtils {
 			Annotation[] candidates, AnnotationCacheKey key, Set<Annotation> visited) {
 
 		for (Annotation candidateAnnotation : candidates) {
-			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
-				Optional<A> metaAnnotation = findAnnotation(candidateAnnotation.annotationType(), annotationType,
-					visited);
+			Class<? extends Annotation> candidateAnnotationType = candidateAnnotation.annotationType();
+			if (!isInJavaLangAnnotationPackage(candidateAnnotationType) && visited.add(candidateAnnotation)) {
+				Optional<A> metaAnnotation = findAnnotation(candidateAnnotationType, annotationType, visited);
 				if (metaAnnotation.isPresent()) {
 					annotationCache.put(key, metaAnnotation.get());
 					return metaAnnotation;
@@ -276,13 +277,14 @@ public final class AnnotationUtils {
 			Set<Annotation> visited) {
 
 		for (Annotation candidate : candidates) {
-			if (!isInJavaLangAnnotationPackage(candidate) && visited.add(candidate)) {
+			Class<? extends Annotation> candidateAnnotationType = candidate.annotationType();
+			if (!isInJavaLangAnnotationPackage(candidateAnnotationType) && visited.add(candidate)) {
 				// Exact match?
-				if (candidate.annotationType().equals(annotationType)) {
+				if (candidateAnnotationType.equals(annotationType)) {
 					found.add(annotationType.cast(candidate));
 				}
 				// Container?
-				else if (candidate.annotationType().equals(containerType)) {
+				else if (candidateAnnotationType.equals(containerType)) {
 					// Note: it's not a legitimate containing annotation type if it doesn't declare
 					// a 'value' attribute that returns an array of the contained annotation type.
 					// See https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.6.3
@@ -296,8 +298,8 @@ public final class AnnotationUtils {
 				}
 				// Otherwise search recursively through the meta-annotation hierarchy...
 				else {
-					findRepeatableAnnotations(candidate.annotationType(), annotationType, containerType, inherited,
-						found, visited);
+					findRepeatableAnnotations(candidateAnnotationType, annotationType, containerType, inherited, found,
+						visited);
 				}
 			}
 		}
@@ -332,8 +334,8 @@ public final class AnnotationUtils {
 		return ReflectionUtils.findMethods(clazz, method -> isAnnotated(method, annotationType), traversalMode);
 	}
 
-	private static boolean isInJavaLangAnnotationPackage(Annotation annotation) {
-		return (annotation != null && annotation.annotationType().getName().startsWith("java.lang.annotation"));
+	private static boolean isInJavaLangAnnotationPackage(Class<? extends Annotation> annotationType) {
+		return (annotationType != null && annotationType.getName().startsWith("java.lang.annotation"));
 	}
 
 	private static class AnnotationCacheKey {
