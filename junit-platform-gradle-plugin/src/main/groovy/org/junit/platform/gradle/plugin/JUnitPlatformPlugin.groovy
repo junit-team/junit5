@@ -12,6 +12,7 @@ package org.junit.platform.gradle.plugin
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.tasks.JavaExec
 import org.gradle.util.GradleVersion
 import org.junit.platform.console.ConsoleLauncher
@@ -65,48 +66,47 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	}
 
 	private void configure(Project project, JUnitPlatformExtension junitExtension) {
-		project.task(
-				TASK_NAME,
-				type: JavaExec,
-				group: 'verification',
-				description: 'Runs tests on the JUnit Platform.') { junitTask ->
+		project.tasks.create(TASK_NAME, JavaExec) { junitTask ->
+			junitTask.with {
+				group = JavaBasePlugin.VERIFICATION_GROUP
+				description = 'Runs tests on the JUnit Platform.'
+				inputs.property('enableStandardTestTask', junitExtension.enableStandardTestTask)
+				inputs.property('selectors.uris', junitExtension.selectors.uris)
+				inputs.property('selectors.files', junitExtension.selectors.files)
+				inputs.property('selectors.directories', junitExtension.selectors.directories)
+				inputs.property('selectors.packages', junitExtension.selectors.packages)
+				inputs.property('selectors.classes', junitExtension.selectors.classes)
+				inputs.property('selectors.methods', junitExtension.selectors.methods)
+				inputs.property('selectors.resources', junitExtension.selectors.resources)
+				inputs.property('filters.engines.include', junitExtension.filters.engines.include)
+				inputs.property('filters.engines.exclude', junitExtension.filters.engines.exclude)
+				inputs.property('filters.tags.include', junitExtension.filters.tags.include)
+				inputs.property('filters.tags.exclude', junitExtension.filters.tags.exclude)
+				inputs.property('filters.includeClassNamePatterns', junitExtension.filters.includeClassNamePatterns)
+				inputs.property('filters.packages.include', junitExtension.filters.packages.include)
+				inputs.property('filters.packages.exclude', junitExtension.filters.packages.exclude)
 
-			junitTask.inputs.property('enableStandardTestTask', junitExtension.enableStandardTestTask)
-			junitTask.inputs.property('selectors.uris', junitExtension.selectors.uris)
-			junitTask.inputs.property('selectors.files', junitExtension.selectors.files)
-			junitTask.inputs.property('selectors.directories', junitExtension.selectors.directories)
-			junitTask.inputs.property('selectors.packages', junitExtension.selectors.packages)
-			junitTask.inputs.property('selectors.classes', junitExtension.selectors.classes)
-			junitTask.inputs.property('selectors.methods', junitExtension.selectors.methods)
-			junitTask.inputs.property('selectors.resources', junitExtension.selectors.resources)
-			junitTask.inputs.property('filters.engines.include', junitExtension.filters.engines.include)
-			junitTask.inputs.property('filters.engines.exclude', junitExtension.filters.engines.exclude)
-			junitTask.inputs.property('filters.tags.include', junitExtension.filters.tags.include)
-			junitTask.inputs.property('filters.tags.exclude', junitExtension.filters.tags.exclude)
-			junitTask.inputs.property('filters.includeClassNamePatterns', junitExtension.filters.includeClassNamePatterns)
-			junitTask.inputs.property('filters.packages.include', junitExtension.filters.packages.include)
-			junitTask.inputs.property('filters.packages.exclude', junitExtension.filters.packages.exclude)
+				def reportsDir = junitExtension.reportsDir ?: project.file("$project.buildDir/test-results/junit-platform")
+				outputs.dir reportsDir
 
-			def reportsDir = junitExtension.reportsDir ?: project.file("$project.buildDir/test-results/junit-platform")
-			junitTask.outputs.dir reportsDir
+				if (junitExtension.logManager) {
+					systemProperty 'java.util.logging.manager', junitExtension.logManager
+				}
 
-			if (junitExtension.logManager) {
-				systemProperty 'java.util.logging.manager', junitExtension.logManager
+				configureTaskDependencies(project, it, junitExtension)
+
+				// Build the classpath from the user's test runtime classpath and the JUnit
+				// Platform modules.
+				//
+				// Note: the user's test runtime classpath must come first; otherwise, code
+				// instrumented by Clover in JUnit's build will be shadowed by JARs pulled in
+				// via the junitPlatform configuration... leading to zero code coverage for
+				// the respective modules.
+				classpath = project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform
+
+				main = ConsoleLauncher.class.getName()
+				args buildArgs(project, junitExtension, reportsDir)
 			}
-
-			configureTaskDependencies(project, junitTask, junitExtension)
-
-			// Build the classpath from the user's test runtime classpath and the JUnit
-			// Platform modules.
-			//
-			// Note: the user's test runtime classpath must come first; otherwise, code
-			// instrumented by Clover in JUnit's build will be shadowed by JARs pulled in
-			// via the junitPlatform configuration... leading to zero code coverage for
-			// the respective modules.
-			junitTask.classpath = project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform
-
-			junitTask.main = ConsoleLauncher.class.getName()
-			junitTask.args buildArgs(project, junitExtension, reportsDir)
 		}
 	}
 
@@ -197,5 +197,4 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			}
 		}
 	}
-
 }
