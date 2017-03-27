@@ -51,7 +51,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "setting junitPlatform properties"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -82,7 +82,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "creating junitPlatformTest task"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -141,7 +141,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "uses standard class name pattern"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -153,7 +153,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "enableStandardTestTask set to true"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -167,6 +167,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "when buildDir is set to non-standard location, it will be honored"() {
+		given:
 		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
@@ -180,6 +181,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "users can set buildDir to be a GString, and it will be converted to file"() {
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -194,7 +196,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "selectors can be specified"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -234,7 +236,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "adds dependencies to configuration"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -257,7 +259,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "adds dependencies with fixed version when not explicitly configured"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -273,5 +275,4 @@ class JUnitPlatformPluginSpec extends Specification {
 			.findAll { version -> version.startsWith("1.") && !version.contains("+")}
 			.size() == 2
 	}
-
 }
