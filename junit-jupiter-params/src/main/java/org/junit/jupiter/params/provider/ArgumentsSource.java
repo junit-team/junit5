@@ -25,6 +25,8 @@ import org.junit.platform.commons.meta.API;
  * {@code @ArgumentsSource} is a {@linkplain Repeatable repeatable} annotation
  * that is used to register {@linkplain ArgumentsProvider providers} for the
  * annotated test class or test method.
+ *
+ * @see org.junit.jupiter.params.provider.ArgumentsProvider
  * @since 5.0
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })

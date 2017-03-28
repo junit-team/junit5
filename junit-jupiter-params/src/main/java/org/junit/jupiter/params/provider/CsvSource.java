@@ -21,6 +21,15 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
+ * {@code @CsvSource} is a special {@link ArgumentsSource} which reads
+ * comma-separated values (CSV) from its {@code value} field.
+ *
+ * These values are then provided as arguments to {@code @ParameterizedTest}
+ * methods using a {@code @CsvArgumentsProvider}.
+ *
+ * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.provider.CsvArgumentsProvider
+ * @see org.junit.jupiter.params.ParameterizedTest
  * @since 5.0
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })

@@ -21,6 +21,9 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
+ * {@code @ArgumentsSources}  is a simple container for one or more {@link ArgumentsSource} annotations.
+ *
+ * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @since 5.0
  */
 @Target(ElementType.METHOD)

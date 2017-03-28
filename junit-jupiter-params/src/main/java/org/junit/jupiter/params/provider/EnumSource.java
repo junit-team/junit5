@@ -21,6 +21,18 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
+ * {@code @EnumSource} is a special {@link ArgumentsSource} which provides
+ * access to the possible values of an {@code Enum}.
+ *
+ * The contents of these resources are then provided as arguments to
+ * {@code @ParameterizedTest} methods using an {@code @EnumArgumentsProvider}.
+ *
+ * The available values can be restricted by listing the desired values
+ * in the {@code names} field.
+ *
+ * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.provider.EnumArgumentsProvider
+ * @see org.junit.jupiter.params.ParameterizedTest
  * @since 5.0
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })

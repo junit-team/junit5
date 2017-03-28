@@ -21,6 +21,16 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
+ * {@code @MethodSource} is a special {@link ArgumentsSource} which provides
+ * access to the values returned by static methods of the class in which the
+ * annotation is used.
+ *
+ * These values are then provided as arguments to {@code @ParameterizedTest}
+ * methods using a {@code @MethodArgumentsProvider}.
+ *
+ * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.provider.MethodArgumentsProvider
+ * @see org.junit.jupiter.params.ParameterizedTest
  * @since 5.0
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
