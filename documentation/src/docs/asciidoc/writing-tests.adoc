@@ -638,10 +638,106 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsSource_examp
 ----
 
 
+[[writing-tests-parameterized-tests-argument-conversion]]
+==== Argument Conversion
+
+[[writing-tests-parameterized-tests-argument-conversion-implicit]]
+===== Implicit Conversion
+
+To support use cases like `@CsvSource`, JUnit Jupiter provides a number of built-in implicit conversions. The conversion process depends on the declared type of each method parameter.
+
+For example, if a `@ParameterizedTest` declares a parameter of type `TimeUnit` and the actual type supplied by the declared source is a `String`, it will automatically be converted into the corresponding enum constant.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_example]
+----
+
+`String` instances are currently implicitly converted to the following target types.
+
+[cols="10,90"]
+|===
+| Target Type | Example
+
+| `boolean`/`Boolean` | `"true"` → `true`
+| `byte`/`Byte` | `"1"` → `(byte) 1`
+| `char`/`Character` | `"o"` → `'o'`
+| `short`/`Short` | `"1"` → `(short) 1`
+| `int`/`Integer` | `"1"` → `1`
+| `long`/`Long` | `"1"` → `1L`
+| `float`/`Float` | `"1.0"` → `1.0f`
+| `double`/`Double` | `"1.0"` → `1.0d`
+| `Enum` subclass | `"SECONDS"` → `TimeUnit.SECONDS`
+| `java.time.Instant` | `"1970-01-01T00:00:00Z"` → `Instant.ofEpochMilli(0)`
+| `java.time.LocalDate` | `"2017-03-14"` → `LocalDate.of(2017, 3, 14)`
+| `java.time.LocalDateTime` | `"2017-03-14T12:34:56.789"` → `LocalDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000)`
+| `java.time.LocalTime` | `"12:34:56.789"` → `LocalTime.of(12, 34, 56, 789_000_000)`
+| `java.time.OffsetDateTime` | `"2017-03-14T12:34:56.789Z"` → `OffsetDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)`
+| `java.time.OffsetTime` | `"12:34:56.789Z"` → `OffsetTime.of(12, 34, 56, 789_000_000, ZoneOffset.UTC)`
+| `java.time.Year` | `"2017"` → `Year.of(2017)`
+| `java.time.YearMonth` | `"2017-03"` → `YearMonth.of(2017, 3)`
+| `java.time.ZonedDateTime` | `"2017-03-14T12:34:56.789Z"` → `ZonedDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)`
+|===
+
+[[writing-tests-parameterized-tests-argument-conversion-explicit]]
+===== Explicit Conversion
+
+Instead of using implicit argument conversion you may explicitly specify an `ArgumentConverter` to use for a certain parameter using the `@ConvertWith` annotation like in the following example.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_example]
+----
+
+Explicit argument converters are meant to be implemented by test authors. Thus, `junit-jupiter-params` only provides a single explicit argument converter that may also serve as a reference implementation: `JavaTimeArgumentConverter`. It is used via the composed annotation `JavaTimeConversionPattern`.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_java_time_converter]
+----
+
+
+[[writing-tests-parameterized-tests-display-names]]
+==== Customizing Display Names
+
+By default, the display name of a parameterized test invocation containers the invocation index and the `String` representation of all arguments. You can customize the invocation display names by using the `name` parameter of the `@ParameterizedTest` annotation like in the following example.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=custom_display_names]
+----
+
+When executing this method using the `ConsoleLauncher` you will see output similar to the following.
+
+[source]
+[subs="verbatim"]
+----
+Display name of container ✔
+├─ 1 ==> first='foo', second=1 ✔
+├─ 2 ==> first='bar', second=2 ✔
+└─ 3 ==> first='baz, qux', second=3 ✔
+----
+
+The following placeholders are available:
+
+[cols="20,80"]
+|===
+| Placeholder       | Description
+
+| `{index}`         | the current invocation index (1-based)
+| `{arguments}`     | the complete, comma-separated arguments list
+| `{0}`, `{1}`, ... | an individual argument
+|===
+
+
 [[writing-tests-parameterized-tests-lifecycle-interop]]
 ==== Lifecycle and Interoperability
 
-Each invocation of a parameterized test has the same lifecycle as regular `@Test` methods. For example, `@BeforeEach` methods will be executed before each invocation. You may at will mix regular `@Test` methods and `@ParameterizedTest` methods within the same test class.
+Each invocation of a parameterized test has the same lifecycle as regular `@Test` methods. For example, `@BeforeEach` methods will be executed before each invocation. Similar to <<writing-tests-dynamic-tests>>, invocations will appear one by one in the test tree of an IDE. You may at will mix regular `@Test` methods and `@ParameterizedTest` methods within the same test class.
 
 You may use `ParameterResolver` extensions with `@ParameterizedTest` methods. However, method parameters that are resolved by argument sources need to come first in the argument list.
 

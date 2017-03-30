@@ -10,15 +10,21 @@
 
 package example;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
+import org.junit.jupiter.params.converter.SimpleArgumentConverter;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -120,4 +126,44 @@ class ParameterizedTestDemo {
 		testReporter.publishEntry("argument", argument);
 	}
 	// end::ParameterResolver_example[]
+
+	// tag::implicit_conversion_example[]
+	@ParameterizedTest
+	@ValueSource(strings = "SECONDS")
+	void testWithImplicitArgumentConversion(TimeUnit argument) {
+		assertNotNull(argument.name());
+	}
+	// end::implicit_conversion_example[]
+
+	// tag::explicit_conversion_example[]
+	@ParameterizedTest
+	@EnumSource(TimeUnit.class)
+	void testWithExplicitArgumentConversion(@ConvertWith(ToStringArgumentConverter.class) String argument) {
+		assertNotNull(TimeUnit.valueOf(argument));
+	}
+
+	static class ToStringArgumentConverter extends SimpleArgumentConverter {
+		@Override
+		protected Object convert(Object source, Class<?> targetType) {
+			assertEquals(String.class, targetType, "Can only convert to String");
+			return String.valueOf(source);
+		}
+	}
+	// end::explicit_conversion_example[]
+
+	// tag::explicit_java_time_converter[]
+	@ParameterizedTest
+	@ValueSource(strings = { "01.01.2017", "31.12.2017" })
+	void testWithExplicitJavaTimeConverter(@JavaTimeConversionPattern("dd.MM.yyyy") LocalDate argument) {
+		assertEquals(2017, argument.getYear());
+	}
+	// end::explicit_java_time_converter[]
+
+	// tag::custom_display_names[]
+	@DisplayName("Display name of container")
+	@ParameterizedTest(name = "{index} ==> first=''{0}'', second={1}")
+	@CsvSource({ "foo, 1", "bar, 2", "'baz, qux', 3" })
+	void testWithCustomDisplayNames(String first, int second) {
+	}
+	// end::custom_display_names[]
 }
