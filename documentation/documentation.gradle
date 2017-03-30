@@ -31,6 +31,7 @@ test {
 
 dependencies {
 	testImplementation(project(':junit-jupiter-api'))
+	testImplementation(project(path: ':junit-jupiter-params', configuration: 'shadow'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-launcher'))
 
@@ -66,6 +67,7 @@ asciidoctor {
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
+				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
 				'source-highlighter': 'coderay',
 				'tabsize': '4',
 				'imagesdir': 'images',

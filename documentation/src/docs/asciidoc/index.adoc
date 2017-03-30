@@ -28,6 +28,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Chri
 
 :api-package:                       {javadoc-root}/org/junit/jupiter/api/package-summary.html[org.junit.jupiter.api]
 :extension-api-package:             {javadoc-root}/org/junit/jupiter/api/extension/package-summary.html[org.junit.jupiter.api.extension]
+:params-provider-package:                       {javadoc-root}/org/junit/jupiter/params/provider/package-summary.html[org.junit.jupiter.params.provider]
 :junit-jupiter-engine:              {javadoc-root}/org/junit/jupiter/engine/package-summary.html[junit-jupiter-engine]
 :AfterAllCallback:                  {javadoc-root}/org/junit/jupiter/api/extension/AfterAllCallback.html[AfterAllCallback]
 :AfterEachCallback:                 {javadoc-root}/org/junit/jupiter/api/extension/AfterEachCallback.html[AfterEachCallback]
