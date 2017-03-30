@@ -525,7 +525,10 @@ to the console.
 [[writing-tests-parameterized-tests]]
 === Parameterized Tests
 
-Parameterized tests make it possible to run a test multiple times with different arguments. They are declared just like regular `@Test` methods, but use the `@ParameterizedTest` annotation instead. In addition, you must declare at least one _source_ that will provide the arguments for each invocation.
+Parameterized tests make it possible to run a test multiple times with different arguments. They are
+declared just like regular `@Test` methods, but use the `@ParameterizedTest` annotation instead. In
+addition, you must declare at least one _source_ that will provide the arguments for each
+invocation.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -533,7 +536,9 @@ Parameterized tests make it possible to run a test multiple times with different
 include::{testDir}/example/ParameterizedTestDemo.java[tags=first_example]
 ----
 
-This parameterized test uses the `@ValueSource` annotation to specify a `String` array as the source of arguments. When executing this method, each invocation will be reported separately. For instance, the `ConsoleLauncher` will print output similar to the following.
+This parameterized test uses the `@ValueSource` annotation to specify a `String` array as the source
+of arguments. When executing this method, each invocation will be reported separately. For instance,
+the `ConsoleLauncher` will print output similar to the following.
 
 [source]
 [subs="verbatim"]
@@ -546,17 +551,22 @@ testWithStringParameter(String) ✔
 [[writing-tests-parameterized-tests-setup]]
 ==== Required Setup
 
-In order to use parameterized tests you need to add a dependency to the `junit-jupiter-params` artifact. Please refer to <<dependency-metadata>> for details.
+In order to use parameterized tests you need to add a dependency to the `junit-jupiter-params`
+artifact. Please refer to <<dependency-metadata>> for details.
 
 [[writing-tests-parameterized-tests-sources]]
 ==== Sources of Arguments
 
-Out of the box, JUnit Jupiter already provides quite a few _source_ annotations. The following subsections provide a brief overview and an example for each of them. Please refer to the Javadoc in the `{params-provider-package}` package for additional information.
+Out of the box, JUnit Jupiter already provides quite a few _source_ annotations. The following
+subsections provide a brief overview and an example for each of them. Please refer to the Javadoc in
+the `{params-provider-package}` package for additional information.
 
 [[writing-tests-parameterized-tests-sources-ValueSource]]
 ===== @ValueSource
 
-`@ValueSource` is one of the simplest possible sources. It lets you specify an array of literals of primitive types (either `String`, `int`, `long`, or `double`) and can only be used for providing a single parameter per invocation.
+`@ValueSource` is one of the simplest possible sources. It lets you specify an array of literals of
+primitive types (either `String`, `int`, `long`, or `double`) and can only be used for providing a
+single parameter per invocation.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -567,7 +577,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ValueSource_example]
 [[writing-tests-parameterized-tests-sources-EnumSource]]
 ===== @EnumSource
 
-`@EnumSource` provides a convenient way to use `Enum` constants. The annotation provides an optional `names` parameter that lets you specify which constants shall be used. If omitted, all constants will be used like in the following example.
+`@EnumSource` provides a convenient way to use `Enum` constants. The annotation provides an optional
+`names` parameter that lets you specify which constants shall be used. If omitted, all constants
+will be used like in the following example.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -578,9 +590,12 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example]
 [[writing-tests-parameterized-tests-sources-MethodSource]]
 ===== @MethodSource
 
-`@MethodSource` allows to refer to one or multiple methods of the test class. Each method must return a `Stream`, an `Iterable`, an `Iterator`, or an array of arguments. In addition, each method must be `static` and don't use any parameters.
+`@MethodSource` allows to refer to one or multiple methods of the test class. Each method must
+return a `Stream`, an `Iterable`, an `Iterator`, or an array of arguments. In addition, each method
+must be `static` and don't use any parameters.
 
-If you only need a single parameter, you can return instances of the parameter type directly as demonstrated by the following example.
+If you only need a single parameter, you can return instances of the parameter type directly as
+demonstrated by the following example.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -610,7 +625,8 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvSource_example]
 [[writing-tests-parameterized-tests-sources-CsvFileSource]]
 ===== @CsvFileSource
 
-`@CsvFileSource` lets you use CSV files from the classpath. Each line leads to one invocation of the parameterized test.
+`@CsvFileSource` lets you use CSV files from the classpath. Each line leads to one invocation of the
+parameterized test.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -618,7 +634,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvSource_example]
 include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example]
 ----
 
-The used `two-column.csv` file could look like this.
+The referenced `two-column.csv` file could look like this:
 
 [source,csv,indent=0]
 [subs="verbatim"]
@@ -644,9 +660,12 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsSource_examp
 [[writing-tests-parameterized-tests-argument-conversion-implicit]]
 ===== Implicit Conversion
 
-To support use cases like `@CsvSource`, JUnit Jupiter provides a number of built-in implicit conversions. The conversion process depends on the declared type of each method parameter.
+To support use cases like `@CsvSource`, JUnit Jupiter provides a number of built-in implicit
+conversions. The conversion process depends on the declared type of each method parameter.
 
-For example, if a `@ParameterizedTest` declares a parameter of type `TimeUnit` and the actual type supplied by the declared source is a `String`, it will automatically be converted into the corresponding enum constant.
+For example, if a `@ParameterizedTest` declares a parameter of type `TimeUnit` and the actual type
+supplied by the declared source is a `String`, it will automatically be converted into the
+corresponding enum constant.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -683,7 +702,8 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 [[writing-tests-parameterized-tests-argument-conversion-explicit]]
 ===== Explicit Conversion
 
-Instead of using implicit argument conversion you may explicitly specify an `ArgumentConverter` to use for a certain parameter using the `@ConvertWith` annotation like in the following example.
+Instead of using implicit argument conversion you may explicitly specify an `ArgumentConverter` to
+use for a certain parameter using the `@ConvertWith` annotation like in the following example.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -691,7 +711,10 @@ Instead of using implicit argument conversion you may explicitly specify an `Arg
 include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_example]
 ----
 
-Explicit argument converters are meant to be implemented by test authors. Thus, `junit-jupiter-params` only provides a single explicit argument converter that may also serve as a reference implementation: `JavaTimeArgumentConverter`. It is used via the composed annotation `JavaTimeConversionPattern`.
+Explicit argument converters are meant to be implemented by test authors. Thus,
+`junit-jupiter-params` only provides a single explicit argument converter that may also serve as a
+reference implementation: `JavaTimeArgumentConverter`. It is used via the composed annotation
+`JavaTimeConversionPattern`.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -703,7 +726,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_java_time_co
 [[writing-tests-parameterized-tests-display-names]]
 ==== Customizing Display Names
 
-By default, the display name of a parameterized test invocation containers the invocation index and the `String` representation of all arguments. You can customize the invocation display names by using the `name` parameter of the `@ParameterizedTest` annotation like in the following example.
+By default, the display name of a parameterized test invocation containers the invocation index and
+the `String` representation of all arguments. You can customize the invocation display names by
+using the `name` parameter of the `@ParameterizedTest` annotation like in the following example.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -737,9 +762,13 @@ The following placeholders are available:
 [[writing-tests-parameterized-tests-lifecycle-interop]]
 ==== Lifecycle and Interoperability
 
-Each invocation of a parameterized test has the same lifecycle as regular `@Test` methods. For example, `@BeforeEach` methods will be executed before each invocation. Similar to <<writing-tests-dynamic-tests>>, invocations will appear one by one in the test tree of an IDE. You may at will mix regular `@Test` methods and `@ParameterizedTest` methods within the same test class.
+Each invocation of a parameterized test has the same lifecycle as regular `@Test` methods. For
+example, `@BeforeEach` methods will be executed before each invocation. Similar to
+<<writing-tests-dynamic-tests>>, invocations will appear one by one in the test tree of an IDE. You
+may at will mix regular `@Test` methods and `@ParameterizedTest` methods within the same test class.
 
-You may use `ParameterResolver` extensions with `@ParameterizedTest` methods. However, method parameters that are resolved by argument sources need to come first in the argument list.
+You may use `ParameterResolver` extensions with `@ParameterizedTest` methods. However, method
+parameters that are resolved by argument sources need to come first in the argument list.
 
 [source,java,indent=0]
 [subs="verbatim"]
