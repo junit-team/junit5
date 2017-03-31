@@ -291,3 +291,17 @@ The JUnit Platform Commons artifact exposes a package named `{junit-platform-sup
 contains _maintained_ utility methods for working with annotations, reflection, and classpath
 scanning tasks. `TestEngine` and `Extension` authors are encouraged to use these supported methods
 in order to align with the behavior of the JUnit Platform.
+
+=== Relative Order of User-provided and Extension Code
+
+When executing a test class with several test methods a number of callbacks are called in addition
+to the user-provided test and lifecycle methods.
+The following diagramm illustrates the relative order of user-provided and extension code.
+
+[[extensions-lifecycle]]
+image::extensions_lifecycle.png[caption="Figure 2: ", title="User-provided and extension code"]
+
+User-provided test and lifecycle methods are shown in orange and callback code provided by
+extensions in blue. The grey box denotes the execution of a single test method and will be
+repeated for every test method in the test class.
+
