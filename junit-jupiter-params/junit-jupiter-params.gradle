@@ -70,6 +70,10 @@ shadowJar {
 	configurations = [project.configurations.shadow]
 	exclude 'META-INF/**'
 	relocate 'com.univocity', 'org.junit.jupiter.params.com.univocity'
+	from(projectDir) {
+		include 'LICENSE-univocity-parsers.md'
+		into 'META-INF'
+	}
 }
 
 artifacts {
