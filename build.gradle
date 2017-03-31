@@ -256,6 +256,10 @@ subprojects { subproj ->
 				include 'LICENSE.md'
 				into 'META-INF'
 			}
+			from(project.rootDir) {
+				include 'LICENSE-notice.md'
+				into 'META-INF'
+			}
 		}
 
 		def signArtifacts = !project.version.contains('SNAPSHOT')
