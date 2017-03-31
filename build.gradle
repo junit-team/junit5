@@ -335,6 +335,11 @@ subprojects { subproj ->
 								name 'Sam Brannen'
 								email 'sam@sambrannen.com'
 							}
+							developer {
+								id 'sormuras'
+								name 'Christian Stein'
+								email 'sormuras@gmail.com'
+							}
 						}
 					}
 				}
