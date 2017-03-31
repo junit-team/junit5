@@ -287,25 +287,27 @@ available for storing and retrieving values via the `{ExtensionContext_Store}`.
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
 
-The JUnit Platform Commons artifact exposes a package named `{junit-platform-support-package}` that
-contains _maintained_ utility methods for working with annotations, reflection, and classpath
-scanning tasks. `TestEngine` and `Extension` authors are encouraged to use these supported methods
-in order to align with the behavior of the JUnit Platform.
+The JUnit Platform Commons artifact exposes a package named
+`{junit-platform-support-package}` that contains _maintained_ utility methods for working
+with annotations, reflection, and classpath scanning tasks. `TestEngine` and `Extension`
+authors are encouraged to use these supported methods in order to align with the behavior
+of the JUnit Platform.
 
-=== Relative Order of User-provided and Extension Code
+[[extensions-execution-order]]
+=== Relative Execution Order of User Code and Extensions
 
-When executing a test class with several test methods a number of callbacks are called in addition
-to the user-provided test and lifecycle methods.
-The following diagramm illustrates the relative order of user-provided and extension code.
+When executing a test class that contains one or more test methods, a number of extension
+callbacks are called in addition to the user-provided test and lifecycle methods. The
+following diagram illustrates the relative order of user-provided code and extension code.
 
 [[extensions-lifecycle]]
-image::extensions_lifecycle.png[caption="Figure 2: ", title="User-provided and extension code"]
+image::extensions_lifecycle.png[caption="Figure 2: ", title="User code and extension code"]
 
-User-provided test and lifecycle methods are shown in orange and callback code provided by
-extensions in blue. The grey box denotes the execution of a single test method and will be
-repeated for every test method in the test class.
+User-provided test and lifecycle methods are shown in orange, with callback code provided
+by extensions shown in blue. The grey box denotes the execution of a single test method
+and will be repeated for every test method in the test class.
 
-The following table further explains the twelve steps in Figure 2:
+The following table further explains the twelve steps in Figure 2.
 
 [cols="5,15,80"]
 |===
@@ -329,7 +331,7 @@ The following table further explains the twelve steps in Figure 2:
 
 | 5
 | interface `org.junit.jupiter.api.extension.BeforeTestExecutionCallback`
-| extension code executed just before a test is executed
+| extension code executed immediately before a test is executed
 
 | 6
 | annotation `org.junit.jupiter.api.Test`
@@ -337,11 +339,11 @@ The following table further explains the twelve steps in Figure 2:
 
 | 7
 | interface `org.junit.jupiter.api.extension.TestExecutionExceptionHandler`
-| extension code for manipulating exceptions that occurred during a test
+| extension code for handling exceptions thrown during a test
 
 | 8
 | interface `org.junit.jupiter.api.extension.AfterTestExecutionCallback`
-| extension code executed right after a test is executed and its exception is handled
+| extension code executed immediately after test execution and its corresponding exception handlers
 
 | 9
 | annotation `org.junit.jupiter.api.AfterEach`
@@ -361,7 +363,7 @@ The following table further explains the twelve steps in Figure 2:
 
 |===
 
-In the most simple case only step 6 -- the actual test method -- is ever executed,
-all other user- or extension-provided code may not be present.
-For more details on the various extension callbacks please consult the respective Javadoc
-documentation.
+In the simplest case only the actual test method will be executed (step 6); all other
+steps are optional depending on the presence of user code or extension support for the
+corresponding lifecycle callback. For further details on the various lifecycle callbacks
+please consult the respective JavaDoc for each annotation and extension.
