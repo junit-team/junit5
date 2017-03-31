@@ -24,6 +24,8 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.AnnotationUtils;
 
 /**
+ * {@code @AnnotationInitializer} is an internal helper class for initializing annotations.
+ *
  * @since 5.0
  */
 @API(Internal)

@@ -18,6 +18,12 @@ import java.util.function.Consumer;
 import org.junit.platform.commons.meta.API;
 
 /**
+ * {@code @AnnotationConsumer} is a {@code @FunctionalInterface} for consuming
+ * {@code Annotation}s.
+ *
+ * It is typically implemented by implementations of {@code ArgumentsProvider}
+ * signalling that they can {@code accept} a certain annotation.
+ *
  * @since 5.0
  */
 @API(Experimental)
