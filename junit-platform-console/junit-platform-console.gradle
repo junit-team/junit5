@@ -63,6 +63,10 @@ shadowJar {
 			key.replaceAll('^(joptsimple\\..*)$', 'org.junit.platform.$1')
 		}
 	}
+    from(projectDir) {
+        include 'LICENSE-jopt-simple.md'
+        into 'META-INF'
+    }
 }
 
 artifacts {
