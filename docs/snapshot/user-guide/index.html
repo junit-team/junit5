@@ -552,8 +552,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-dependency-injection">3.9. Dependency Injection for Constructors and Methods</a></li>
 <li><a href="#writing-tests-test-interfaces-and-default-methods">3.10. Test Interfaces and Default Methods</a></li>
 <li><a href="#writing-tests-repeated-tests">3.11. Repeated Tests</a></li>
-<li><a href="#writing-tests-repeated-tests-examples">3.12. Repeated Test Examples</a></li>
-<li><a href="#writing-tests-dynamic-tests">3.13. Dynamic Tests</a></li>
+<li><a href="#writing-tests-dynamic-tests">3.12. Dynamic Tests</a></li>
 </ul>
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
@@ -575,7 +574,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#extensions-exception-handling">5.7. Exception Handling</a></li>
 <li><a href="#extensions-keeping-state">5.8. Keeping State in Extensions</a></li>
 <li><a href="#extensions-supported-utilities">5.9. Supported Utilities in Extensions</a></li>
-<li><a href="#relative-order-of-user-provided-and-extension-code">5.10. Relative Order of User-provided and Extension Code</a></li>
+<li><a href="#extensions-execution-order">5.10. Relative Execution Order of User Code and Extensions</a></li>
 </ul>
 </li>
 <li><a href="#migrating-from-junit4">6. Migrating from JUnit 4</a>
@@ -1852,9 +1851,8 @@ latter is equal to <code>"{displayName} :: repetition {currentRepetition} of
 repetitions programmatically, a developer can choose to have an instance of
 <code>RepetitionInfo</code> injected into a <code>@RepeatedTest</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code> method.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="writing-tests-repeated-tests-examples">3.12. Repeated Test Examples</h3>
+<div class="sect3">
+<h4 id="writing-tests-repeated-tests-examples">3.11.1. Repeated Test Examples</h4>
 <div class="paragraph">
 <p>The <code>RepeatedTestsDemo</code> class at the end of this section demonstrates several examples of
 repeated tests.</p>
@@ -2006,8 +2004,9 @@ to the console.</p>
 </div>
 </div>
 </div>
+</div>
 <div class="sect2">
-<h3 id="writing-tests-dynamic-tests">3.13. Dynamic Tests</h3>
+<h3 id="writing-tests-dynamic-tests">3.12. Dynamic Tests</h3>
 <div class="paragraph">
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in <a href="#writing-tests-annotations">Annotations</a>
 is very similar to the <code>@Test</code> annotation in JUnit 4.
@@ -2068,7 +2067,7 @@ methods; however, this might be complemented by a registration facility in a lat
 release.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-dynamic-tests-examples">3.13.1. Dynamic Test Examples</h4>
+<h4 id="writing-tests-dynamic-tests-examples">3.12.1. Dynamic Test Examples</h4>
 <div class="paragraph">
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories and dynamic tests.</p>
 </div>
@@ -3439,32 +3438,33 @@ available for storing and retrieving values via the <code><a href="../api/org/ju
 <div class="sect2">
 <h3 id="extensions-supported-utilities">5.9. Supported Utilities in Extensions</h3>
 <div class="paragraph">
-<p>The JUnit Platform Commons artifact exposes a package named <code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that
-contains <em>maintained</em> utility methods for working with annotations, reflection, and classpath
-scanning tasks. <code>TestEngine</code> and <code>Extension</code> authors are encouraged to use these supported methods
-in order to align with the behavior of the JUnit Platform.</p>
+<p>The JUnit Platform Commons artifact exposes a package named
+<code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that contains <em>maintained</em> utility methods for working
+with annotations, reflection, and classpath scanning tasks. <code>TestEngine</code> and <code>Extension</code>
+authors are encouraged to use these supported methods in order to align with the behavior
+of the JUnit Platform.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="relative-order-of-user-provided-and-extension-code">5.10. Relative Order of User-provided and Extension Code</h3>
+<h3 id="extensions-execution-order">5.10. Relative Execution Order of User Code and Extensions</h3>
 <div class="paragraph">
-<p>When executing a test class with several test methods a number of callbacks are called in addition
-to the user-provided test and lifecycle methods.
-The following diagramm illustrates the relative order of user-provided and extension code.</p>
+<p>When executing a test class that contains one or more test methods, a number of extension
+callbacks are called in addition to the user-provided test and lifecycle methods. The
+following diagram illustrates the relative order of user-provided code and extension code.</p>
 </div>
 <div id="extensions-lifecycle" class="imageblock">
 <div class="content">
 <img src="images/extensions_lifecycle.png" alt="extensions lifecycle">
 </div>
-<div class="title">Figure 2: User-provided and extension code</div>
+<div class="title">Figure 2: User code and extension code</div>
 </div>
 <div class="paragraph">
-<p>User-provided test and lifecycle methods are shown in orange and callback code provided by
-extensions in blue. The grey box denotes the execution of a single test method and will be
-repeated for every test method in the test class.</p>
+<p>User-provided test and lifecycle methods are shown in orange, with callback code provided
+by extensions shown in blue. The grey box denotes the execution of a single test method
+and will be repeated for every test method in the test class.</p>
 </div>
 <div class="paragraph">
-<p>The following table further explains the twelve steps in Figure 2:</p>
+<p>The following table further explains the twelve steps in Figure 2.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -3503,7 +3503,7 @@ repeated for every test method in the test class.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">interface <code>org.junit.jupiter.api.extension.BeforeTestExecutionCallback</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">extension code executed just before a test is executed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extension code executed immediately before a test is executed</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
@@ -3513,12 +3513,12 @@ repeated for every test method in the test class.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">interface <code>org.junit.jupiter.api.extension.TestExecutionExceptionHandler</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">extension code for manipulating exceptions that occurred during a test</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extension code for handling exceptions thrown during a test</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">interface <code>org.junit.jupiter.api.extension.AfterTestExecutionCallback</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">extension code executed right after a test is executed and its exception is handled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extension code executed immediately after test execution and its corresponding exception handlers</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">9</p></td>
@@ -3543,10 +3543,10 @@ repeated for every test method in the test class.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>In the most simple case only step 6&#8201;&#8212;&#8201;the actual test method&#8201;&#8212;&#8201;is ever executed,
-all other user- or extension-provided code may not be present.
-For more details on the various extension callbacks please consult the respective Javadoc
-documentation.</p>
+<p>In the simplest case only the actual test method will be executed (step 6); all other
+steps are optional depending on the presence of user code or extension support for the
+corresponding lifecycle callback. For further details on the various lifecycle callbacks
+please consult the respective JavaDoc for each annotation and extension.</p>
 </div>
 </div>
 </div>
