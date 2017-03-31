@@ -304,3 +304,63 @@ image::extensions_lifecycle.png[caption="Figure 2: ", title="User-provided and e
 User-provided test and lifecycle methods are shown in orange and callback code provided by
 extensions in blue. The grey box denotes the execution of a single test method and will be
 repeated for every test method in the test class.
+
+The following table further explains the twelve steps in Figure 2:
+
+|===
+| Step   | Interface/Annotation |Description
+
+| 1
+| interface `org.junit.jupiter.api.extension.BeforeAllCallback`
+| extension code executed before all tests of the container are executed
+
+| 2
+| annotation `org.junit.jupiter.api.BeforeAll`
+| user code executed before all tests of the container are executed
+
+| 3
+| interface `org.junit.jupiter.api.extension.BeforeEachCallback`
+| extension code executed before each test is executed
+
+| 4
+| annotation `org.junit.jupiter.api.BeforeEach`
+| user code executed before each test is executed
+
+| 5
+| interface `org.junit.jupiter.api.extension.BeforeTestExecutionCallback`
+| extension code executed just before a test is executed
+
+| 6
+| annotation `org.junit.jupiter.api.Test`
+| user code of the actual test method
+
+| 7
+| interface `org.junit.jupiter.api.extension.TestExecutionExceptionHandler`
+| extension code for manipulating exceptions that occurred during a test
+
+| 8
+| interface `org.junit.jupiter.api.extension.AfterTestExecutionCallback`
+| extension code executed right after a test is executed and its exception is handled
+
+| 9
+| annotation `org.junit.jupiter.api.AfterEach`
+| user code executed after each test is executed
+
+| 10
+| interface `org.junit.jupiter.api.extension.AfterEachCallback`
+| extension code executed after each test is executed
+
+| 11
+| annotation `org.junit.jupiter.api.AfterAll`
+| user code executed after all tests of the container are executed
+
+| 12
+| interface `org.junit.jupiter.api.extension.AfterAllCallback`
+| extension code executed after all tests of the container are executed
+
+|===
+
+In the most simple case only step 6 - the actual test method - is ever executed,
+all other user- or extension-provided code may not be present.
+For more details on the various extension callbacks please consult the respective Javadoc
+documentation.
