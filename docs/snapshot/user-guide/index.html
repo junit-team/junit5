@@ -3462,6 +3462,91 @@ The following diagramm illustrates the relative order of user-provided and exten
 extensions in blue. The grey box denotes the execution of a single test method and will be
 repeated for every test method in the test class.</p>
 </div>
+<div class="paragraph">
+<p>The following table further explains the twelve steps in Figure 2:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Step</th>
+<th class="tableblock halign-left valign-top">Interface/Annotation</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">interface <code>org.junit.jupiter.api.extension.BeforeAllCallback</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extension code executed before all tests of the container are executed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">annotation <code>org.junit.jupiter.api.BeforeAll</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user code executed before all tests of the container are executed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">interface <code>org.junit.jupiter.api.extension.BeforeEachCallback</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extension code executed before each test is executed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">annotation <code>org.junit.jupiter.api.BeforeEach</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user code executed before each test is executed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">interface <code>org.junit.jupiter.api.extension.BeforeTestExecutionCallback</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extension code executed just before a test is executed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">annotation <code>org.junit.jupiter.api.Test</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user code of the actual test method</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">interface <code>org.junit.jupiter.api.extension.TestExecutionExceptionHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extension code for manipulating exceptions that occurred during a test</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">interface <code>org.junit.jupiter.api.extension.AfterTestExecutionCallback</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extension code executed right after a test is executed and its exception is handled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">annotation <code>org.junit.jupiter.api.AfterEach</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user code executed after each test is executed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">interface <code>org.junit.jupiter.api.extension.AfterEachCallback</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extension code executed after each test is executed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">annotation <code>org.junit.jupiter.api.AfterAll</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user code executed after all tests of the container are executed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">interface <code>org.junit.jupiter.api.extension.AfterAllCallback</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extension code executed after all tests of the container are executed</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In the most simple case only step 6 - the actual test method - is ever executed,
+all other user- or extension-provided code may not be present.
+For more details on the various extension callbacks please consult the respective Javadoc
+documentation.</p>
+</div>
 </div>
 </div>
 </div>
@@ -5022,7 +5107,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-03-31 07:46:49 EDT
+Last updated 2017-03-31 09:14:38 EDT
 </div>
 </div>
 </body>
