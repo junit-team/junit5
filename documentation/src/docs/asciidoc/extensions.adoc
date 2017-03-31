@@ -304,4 +304,3 @@ image::extensions_lifecycle.png[caption="Figure 2: ", title="User-provided and e
 User-provided test and lifecycle methods are shown in orange and callback code provided by
 extensions in blue. The grey box denotes the execution of a single test method and will be
 repeated for every test method in the test class.
-
