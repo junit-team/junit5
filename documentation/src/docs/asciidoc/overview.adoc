@@ -93,7 +93,7 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
   `junit-jupiter-engine`::
     JUnit Jupiter test engine implementation, only required at runtime.
   `junit-jupiter-params`::
-    Support for _parameterized tests_ in JUnit Jupiter.
+    Support for <<writing-tests-parameterized-tests,parameterized tests>> in JUnit Jupiter.
   `junit-jupiter-migration-support`::
     Migration support from JUnit 4 to JUnit Jupiter,
     only required for running selected JUnit 4 rules.

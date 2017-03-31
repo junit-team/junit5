@@ -544,8 +544,8 @@ the `ConsoleLauncher` will print output similar to the following.
 [subs="verbatim"]
 ----
 testWithStringParameter(String) ✔
-├─ [1] a ✔
-└─ [2] b ✔
+├─ [1] Hello ✔
+└─ [2] World ✔
 ----
 
 [[writing-tests-parameterized-tests-setup]]

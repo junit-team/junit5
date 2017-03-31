@@ -39,7 +39,7 @@ class ParameterizedTestDemo {
 
 	// tag::first_example[]
 	@ParameterizedTest
-	@ValueSource(strings = { "a", "b" })
+	@ValueSource(strings = { "Hello", "World" })
 	void testWithStringParameter(String argument) {
 		assertNotNull(argument);
 	}
