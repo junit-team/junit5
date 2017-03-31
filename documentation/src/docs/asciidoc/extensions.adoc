@@ -307,8 +307,9 @@ repeated for every test method in the test class.
 
 The following table further explains the twelve steps in Figure 2:
 
+[cols="5,15,80"]
 |===
-| Step   | Interface/Annotation |Description
+| Step | Interface/Annotation | Description
 
 | 1
 | interface `org.junit.jupiter.api.extension.BeforeAllCallback`
@@ -360,7 +361,7 @@ The following table further explains the twelve steps in Figure 2:
 
 |===
 
-In the most simple case only step 6 - the actual test method - is ever executed,
+In the most simple case only step 6 -- the actual test method -- is ever executed,
 all other user- or extension-provided code may not be present.
 For more details on the various extension callbacks please consult the respective Javadoc
 documentation.
