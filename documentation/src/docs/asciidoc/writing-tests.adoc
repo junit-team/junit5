@@ -634,10 +634,9 @@ parameterized test.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example]
 ----
 
-The referenced `two-column.csv` file could look like this:
-
 [source,csv,indent=0]
 [subs="verbatim"]
+.two-column.csv
 ----
 include::{testResourcesDir}/two-column.csv[]
 ----
