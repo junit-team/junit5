@@ -16,6 +16,10 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.meta.API;
 
 /**
+ * {@code @ArgumentConverter} is an abtract base class for {@code @ArgumentConverter}
+ * implementations.
+ *
+ * @see org.junit.jupiter.params.converter.ArgumentConverter
  * @since 5.0
  */
 @API(Experimental)

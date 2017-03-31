@@ -18,9 +18,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.platform.commons.meta.API;
 
 /**
+ * {@code @ConvertWith} is an annotation that allows to to specify an explicit
+ * {@link org.junit.jupiter.params.converter.ArgumentConverter}.
+
+ * <p>This annotation may be applied to method parameters of
+ * {@link ParameterizedTest} methods which need to have their {@code Arguments}
+ * converted before consuming them.
+ *
+ * @see org.junit.jupiter.params.ParameterizedTest
+ * @see org.junit.jupiter.params.converter.ArgumentConverter
  * @since 5.0
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.PARAMETER })

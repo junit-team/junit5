@@ -36,6 +36,16 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
+ * {@code @DefaultArgumentConverter} is the default implementation for the
+ * {@code @ArgumentConverter} abstraction.
+ *
+ * The {@code @DefaultArgumentConverter} is able to convert from strings to
+ * a number of primitive (Byte, Short, Integer, Long, Float, and Double)
+ * and date types.
+ *
+ * If the source and target types are identical the object is left unchanged.
+ *
+ * @see org.junit.jupiter.params.converter.ArgumentConverter
  * @since 5.0
  */
 @API(Internal)

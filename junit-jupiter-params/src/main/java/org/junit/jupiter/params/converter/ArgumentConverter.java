@@ -16,6 +16,15 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.meta.API;
 
 /**
+ * {@code @ArgumentConverter} is an abtraction that allows an input object to
+ * be converted to an instance of a different class.
+ *
+ * Such an {@code @ArgumentConverter} is applied to the method parameter
+ * of a {@link org.junit.jupiter.params.ParameterizedTest} method with the help of an
+ * {@link org.junit.jupiter.params.converter.ConvertWith} annotation.
+ *
+ * @see org.junit.jupiter.params.ParameterizedTest
+ * @see org.junit.jupiter.params.converter.ConvertWith
  * @since 5.0
  */
 @API(Experimental)

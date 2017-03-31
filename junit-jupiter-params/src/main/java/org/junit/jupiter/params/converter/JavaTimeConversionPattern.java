@@ -18,9 +18,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.platform.commons.meta.API;
 
 /**
+ * {@code @JavaTimeConversionPattern} is an annotation that allows a time
+ * conversion pattern to be specified on a method parameter of a
+ * {@link ParameterizedTest} method.
+ *
+ * @see org.junit.jupiter.params.ParameterizedTest
+ * @see java.time.format.DateTimeFormatterBuilder#appendPattern(String)
  * @since 5.0
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.PARAMETER })
