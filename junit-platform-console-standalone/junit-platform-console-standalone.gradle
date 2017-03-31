@@ -13,9 +13,11 @@ buildscript {
 dependencies {
 	shadow(project(':junit-platform-console'))
 	shadow(project(':junit-jupiter-engine'))
+	shadow(project(':junit-jupiter-params'))
 	shadow(project(':junit-vintage-engine'))
 
 	testCompileOnly(project(':junit-jupiter-api'))
+	testCompileOnly(project(path: ':junit-jupiter-params', configuration: 'shadow'))
 	testCompileOnly("junit:junit:${junit4Version}")
 }
 
@@ -43,7 +45,10 @@ shadowJar {
 		(project.generateManifest || !shadowJar.archivePath.exists())
 	}
 
-	dependsOn(project(':junit-platform-console').shadowJar)
+	dependsOn(
+		project(':junit-platform-console').shadowJar,
+		project(':junit-jupiter-params').shadowJar
+	)
 
 	classifier = null
 	configurations = [project.configurations.shadow]
@@ -100,21 +105,23 @@ task standaloneCheck(dependsOn: standaloneExec) {
 		assert text.contains("ignored") && text.contains("integr4tion test")
 		assert text.contains("f4il") && text.contains("f4iled")
 		assert text.contains("succ3ssful")
+		assert text.contains("JupiterParamsIntegration")
+		assert text.contains("[1] argument=test")
 		// summary
 		assert text.contains("Test run finished after")
 		// container summary
-		assert text.contains("4 containers found")
+		assert text.contains("6 containers found")
 		assert text.contains("0 containers skipped")
-		assert text.contains("4 containers started")
+		assert text.contains("6 containers started")
 		assert text.contains("0 containers aborted")
-		assert text.contains("4 containers successful")
+		assert text.contains("6 containers successful")
 		assert text.contains("0 containers failed")
 		// tests summary
-		assert text.contains("7 tests found")
+		assert text.contains("8 tests found")
 		assert text.contains("2 tests skipped")
-		assert text.contains("5 tests started")
+		assert text.contains("6 tests started")
 		assert text.contains("1 tests aborted")
-		assert text.contains("2 tests successful")
+		assert text.contains("3 tests successful")
 		assert text.contains("2 tests failed")
 	}
 }
