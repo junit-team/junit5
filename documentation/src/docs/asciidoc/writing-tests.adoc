@@ -426,7 +426,7 @@ repetitions programmatically, a developer can choose to have an instance of
 `RepetitionInfo` injected into a `@RepeatedTest`, `@BeforeEach`, or `@AfterEach` method.
 
 [[writing-tests-repeated-tests-examples]]
-=== Repeated Test Examples
+==== Repeated Test Examples
 
 The `RepeatedTestsDemo` class at the end of this section demonstrates several examples of
 repeated tests.
