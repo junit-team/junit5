@@ -26,9 +26,9 @@ import org.junit.platform.commons.meta.API;
  * conversion pattern to be specified on a method parameter of a
  * {@link ParameterizedTest} method.
  *
+ * @since 5.0
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see java.time.format.DateTimeFormatterBuilder#appendPattern(String)
- * @since 5.0
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)

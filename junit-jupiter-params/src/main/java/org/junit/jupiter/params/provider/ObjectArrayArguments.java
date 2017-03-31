@@ -17,16 +17,16 @@ import org.junit.platform.commons.meta.API;
 /**
  * Concrete implementation of the {@code Arguments} abstraction.
  *
- * It provides access to an array of objects to be used for invoking a
+ * <p>It provides access to an array of objects to be used for invoking a
  * {@code @ParameterizedTest} method.
  *
- * A {@link java.util.stream.Stream} of such {@code Arguments} will
+ * <p>A {@link java.util.stream.Stream} of such {@code Arguments} will
  * typically be accessed via {@linkplain ArgumentsProvider providers}.
  *
+ * @since 5.0
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
- * @since 5.0
  */
 @API(Experimental)
 public class ObjectArrayArguments implements Arguments {
@@ -45,4 +45,5 @@ public class ObjectArrayArguments implements Arguments {
 	public Object[] get() {
 		return arguments;
 	}
+
 }

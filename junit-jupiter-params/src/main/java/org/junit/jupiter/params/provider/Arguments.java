@@ -18,13 +18,13 @@ import org.junit.platform.commons.meta.API;
  * {@code Arguments} is an abstraction that provides access to an array of
  * objects to be used for invoking a {@code @ParameterizedTest} method.
  *
- * A {@link java.util.stream.Stream} of such {@code Arguments} will
- * typically be accessed via {@linkplain ArgumentsProvider providers}.
+ * <p>A {@link java.util.stream.Stream} of such {@code Arguments} will
+ * typically be provided by an {@link ArgumentsProvider}.
  *
+ * @since 5.0
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
- * @since 5.0
  */
 @API(Experimental)
 public interface Arguments {

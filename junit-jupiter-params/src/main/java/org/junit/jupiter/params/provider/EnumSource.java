@@ -22,18 +22,18 @@ import org.junit.platform.commons.meta.API;
 
 /**
  * {@code @EnumSource} is a special {@link ArgumentsSource} which provides
- * access to the possible values of an {@code Enum}.
+ * access to the possible constants of specified {@linkplain #value Enum}.
  *
- * The contents of these resources are then provided as arguments to
- * {@code @ParameterizedTest} methods using an {@code @EnumArgumentsProvider}.
+ * <p>The enum constants are then provided as arguments to {@code @ParameterizedTest}
+ * methods using an {@code @EnumArgumentsProvider}.
  *
- * The available values can be restricted by listing the desired values
- * in the {@code names} field.
+ * <p>The set of enum constants can be restricted by listing the desired values
+ * via the {@link #names} attribute.
  *
+ * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.EnumArgumentsProvider
  * @see org.junit.jupiter.params.ParameterizedTest
- * @since 5.0
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -42,10 +42,19 @@ import org.junit.platform.commons.meta.API;
 @ArgumentsSource(EnumArgumentsProvider.class)
 public @interface EnumSource {
 
+	/**
+	 * The enum type that serves as the source of the enum constants.
+	 *
+	 * @see #names
+	 */
 	Class<? extends Enum<?>> value();
 
 	/**
-	 * @return names of enum constants to provide; if no name is given, all declared enum constants are provided.
+	 * The names of enum constants to provide.
+	 *
+	 * <p>If no names are specified, all declared enum constants will be provided.
+	 *
+	 * @see #value
 	 */
 	String[] names() default {};
 

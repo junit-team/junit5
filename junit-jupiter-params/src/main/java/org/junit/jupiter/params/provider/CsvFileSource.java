@@ -21,16 +21,16 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @CsvFileSource} is a special {@link ArgumentsSource} which reads files
- * with comma-separated values (CSV) from one or more classpath resources.
+ * {@code @CsvFileSource} is a special {@link ArgumentsSource} which is used to
+ * declare comma-separated values (CSV) files from one or more classpath resources.
  *
- * The contents of these resources are then provided as arguments to
+ * <p>The lines of these CSV files are then provided as arguments to
  * {@code @ParameterizedTest} methods using a {@code @CsvFileArgumentsProvider}.
  *
+ * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.CsvFileArgumentsProvider
  * @see org.junit.jupiter.params.ParameterizedTest
- * @since 5.0
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

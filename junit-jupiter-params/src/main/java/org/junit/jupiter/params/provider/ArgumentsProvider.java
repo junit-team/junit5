@@ -18,15 +18,17 @@ import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.platform.commons.meta.API;
 
 /**
- *  Implementations of {@code ArgumentsProvider} are responsible for providing a
- *  {@link java.util.stream.Stream} of {@code Arguments}.
- *  Such a stream will then be used for invoking a {@code @ParameterizedTest} method.
- *  {@code ArgumentsProvider}s are registered via {@code @ArgumentsSource} annotations.
+ * Implementations of {@code ArgumentsProvider} are responsible for providing a
+ * {@link Stream} of {@code Arguments}.
  *
+ * <p>Such a stream will then be used for invoking a {@code @ParameterizedTest} method.
+ *
+ * <p>{@code ArgumentsProvider}s are registered via {@code @ArgumentsSource} annotations.
+ *
+ * @since 5.0
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.Arguments
- * @since 5.0
  */
 @API(Experimental)
 public interface ArgumentsProvider {

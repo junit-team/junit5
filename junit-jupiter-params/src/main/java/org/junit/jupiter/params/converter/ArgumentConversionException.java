@@ -16,12 +16,12 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @ArgumentConversionException} is an exception that can
+ * {@code ArgumentConversionException} is an exception that can
  * occur when an object is converted to another object by an implementation
  * of an {@code org.junit.jupiter.params.converter.ArgumentConverter}.
  *
- * @see org.junit.jupiter.params.converter.ArgumentConverter
  * @since 5.0
+ * @see org.junit.jupiter.params.converter.ArgumentConverter
  */
 @API(Experimental)
 public class ArgumentConversionException extends JUnitException {

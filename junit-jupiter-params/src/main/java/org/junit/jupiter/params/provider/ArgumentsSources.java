@@ -21,10 +21,15 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @ArgumentsSources}  is a simple container for one or more {@link ArgumentsSource} annotations.
+ * {@code @ArgumentsSources} is a simple container for one or more
+ * {@link ArgumentsSource} annotations.
  *
- * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * <p>Note, however, that use of the {@code @ArgumentsSources} container is completely
+ * optional since {@code @ArgumentsSource} is a {@linkplain java.lang.annotation.Repeatable
+ * repeatable} annotation.
+ *
  * @since 5.0
+ * @see org.junit.jupiter.params.provider.ArgumentsSource
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

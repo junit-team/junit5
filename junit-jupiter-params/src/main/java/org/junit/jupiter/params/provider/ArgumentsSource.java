@@ -26,8 +26,8 @@ import org.junit.platform.commons.meta.API;
  * that is used to register {@linkplain ArgumentsProvider providers} for the
  * annotated test class or test method.
  *
- * @see org.junit.jupiter.params.provider.ArgumentsProvider
  * @since 5.0
+ * @see org.junit.jupiter.params.provider.ArgumentsProvider
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

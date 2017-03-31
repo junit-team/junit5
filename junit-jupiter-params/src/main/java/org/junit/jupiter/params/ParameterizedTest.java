@@ -37,7 +37,7 @@ import org.junit.platform.commons.meta.API;
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}
  * at the end of the method's parameter list.
  *
- * <p>Method parameters may use the
+ * <p>Method parameters may use
  * {@link org.junit.jupiter.params.converter.ConvertWith @ConvertWith}
  * or a corresponding composed annotation to specify an explicit
  * {@link org.junit.jupiter.params.converter.ArgumentConverter}.
@@ -48,6 +48,7 @@ import org.junit.platform.commons.meta.API;
  *
  * <p>{@code @ParameterizedTest} methods must not be {@code private} or {@code static}.
  *
+ * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.CsvFileSource
  * @see org.junit.jupiter.params.provider.CsvSource
@@ -55,7 +56,6 @@ import org.junit.platform.commons.meta.API;
  * @see org.junit.jupiter.params.provider.MethodSource
  * @see org.junit.jupiter.params.provider.ValueSource
  * @see org.junit.jupiter.params.converter.ConvertWith
- * @since 5.0
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
