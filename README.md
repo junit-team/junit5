@@ -4,8 +4,8 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 
 The project is currently in _Phase 5_, working toward additional [_milestone_](https://github.com/junit-team/junit5/milestones) releases.
 
-[JUnit 5.0.0-M3](https://github.com/junit-team/junit5/releases/tag/r5.0.0-M3)
-was released on November 30, 2016.
+[JUnit 5.0.0-M4](https://github.com/junit-team/junit5/releases/tag/r5.0.0-M4)
+was released on April 1, 2017.
 
 ## Roadmap
 
@@ -91,32 +91,32 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.0.0-M3` or `1.0.0-SNAPSHOT`
+- **Version**: `1.0.0-M4` or `1.0.0-SNAPSHOT`
 - **Artifact IDs**:
   - `junit-platform-commons`
   - `junit-platform-console`
-  - `junit-platform-console-standalone` (currently only available as `1.0.0-SNAPSHOT`)
+  - `junit-platform-console-standalone`
   - `junit-platform-engine`
   - `junit-platform-gradle-plugin`
   - `junit-platform-launcher`
   - `junit-platform-runner`
-  - `junit-platform-suite-api` (currently only available as `1.0.0-SNAPSHOT`)
+  - `junit-platform-suite-api`
   - `junit-platform-surefire-provider`
 
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.0.0-M3` or `5.0.0-SNAPSHOT`
+- **Version**: `5.0.0-M4` or `5.0.0-SNAPSHOT`
 - **Artifact IDs**:
   - `junit-jupiter-api`
   - `junit-jupiter-engine`
   - `junit-jupiter-migration-support`
-  - `junit-jupiter-params` (currently only available as `5.0.0-SNAPSHOT`)
+  - `junit-jupiter-params`
 
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `4.12.0-M3` or `4.12.0-SNAPSHOT`
+- **Version**: `4.12.0-M4` or `4.12.0-SNAPSHOT`
 - **Artifact ID**: `junit-vintage-engine`
 
 
