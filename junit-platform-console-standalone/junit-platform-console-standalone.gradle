@@ -52,6 +52,19 @@ shadowJar {
 
 	classifier = null
 	configurations = [project.configurations.shadow]
+
+	// https://github.com/junit-team/junit5/issues/761
+	// prevent duplicates, add 3rd-party licenses explicitly
+	exclude 'META-INF/LICENSE*.md'
+	from(project(':junit-platform-console').projectDir) {
+		include 'LICENSE-jopt-simple.md'
+		into 'META-INF'
+	}
+	from(project(':junit-jupiter-params').projectDir) {
+		include 'LICENSE-univocity-parsers.md'
+		into 'META-INF'
+	}
+
 	mergeServiceFiles()
 	manifest {
 		inheritFrom project.tasks.jar.manifest
