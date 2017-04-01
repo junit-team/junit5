@@ -13,5 +13,5 @@ The JUnit 5 team released [Milestone 4](docs/current/user-guide/#release-notes-5
 You're invited to follow our ongoing work, review it, and give feedback. This short list of links will get you started:
 
 - [User Guide]({{ site.baseurl }}/docs/current/user-guide)
-- [Javadoc](https://junit.ci.cloudbees.com/job/JUnit5/javadoc/)
+- [Javadoc]({{ site.baseurl }}/docs/current/api)
 - [GitHub Repository](https://github.com/junit-team/junit5/) with all the code and issues
