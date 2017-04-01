@@ -127,8 +127,12 @@ on GitHub.
 
 ===== New Features and Improvements
 
+* First-class support for _parameterized tests_ via the new `@ParameterizedTest` annotation.
+  See <<writing-tests-parameterized-tests>> for details.
 * First-class support for _repeated tests_ via the new `@RepeatedTest` annotation and
   `RepetitionInfo` API. See <<writing-tests-repeated-tests>> for details.
+* Introduce `@TestTemplate` annotation and accompanying extension point
+  `TestTemplateInvocationContextProvider`.
 * `Assertions.assertThrows()` now uses canonical names for exception types when
   generating assertion failure messages.
 * ``TestInstancePostProcessor``s registered on test methods are now invoked.
