@@ -552,7 +552,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-dependency-injection">3.9. Dependency Injection for Constructors and Methods</a></li>
 <li><a href="#writing-tests-test-interfaces-and-default-methods">3.10. Test Interfaces and Default Methods</a></li>
 <li><a href="#writing-tests-repeated-tests">3.11. Repeated Tests</a></li>
-<li><a href="#writing-tests-dynamic-tests">3.12. Dynamic Tests</a></li>
+<li><a href="#writing-tests-parameterized-tests">3.12. Parameterized Tests</a></li>
+<li><a href="#writing-tests-dynamic-tests">3.13. Dynamic Tests</a></li>
 </ul>
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
@@ -758,7 +759,7 @@ environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to
 </dd>
 <dt class="hdlist1"><code>junit-jupiter-params</code></dt>
 <dd>
-<p>Support for <em>parameterized tests</em> in JUnit Jupiter.</p>
+<p>Support for <a href="#writing-tests-parameterized-tests">parameterized tests</a> in JUnit Jupiter.</p>
 </dd>
 <dt class="hdlist1"><code>junit-jupiter-migration-support</code></dt>
 <dd>
@@ -2006,7 +2007,426 @@ to the console.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dynamic-tests">3.12. Dynamic Tests</h3>
+<h3 id="writing-tests-parameterized-tests">3.12. Parameterized Tests</h3>
+<div class="paragraph">
+<p>Parameterized tests make it possible to run a test multiple times with different arguments. They are
+declared just like regular <code>@Test</code> methods but use the <code>@ParameterizedTest</code> annotation instead. In
+addition, you must declare at least one <em>source</em> that will provide the arguments for each
+invocation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">World</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> testWithStringParameter(<span class="predefined-type">String</span> argument) {
+    assertNotNull(argument);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This parameterized test uses the <code>@ValueSource</code> annotation to specify a <code>String</code> array as the source
+of arguments. When executing this method, each invocation will be reported separately. For instance,
+the <code>ConsoleLauncher</code> will print output similar to the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>testWithStringParameter(String) ✔
+├─ [1] Hello ✔
+└─ [2] World ✔</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-parameterized-tests-setup">3.12.1. Required Setup</h4>
+<div class="paragraph">
+<p>In order to use parameterized tests you need to add a dependency on the <code>junit-jupiter-params</code>
+artifact. Please refer to <a href="#dependency-metadata">Dependency Metadata</a> for details.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-parameterized-tests-sources">3.12.2. Sources of Arguments</h4>
+<div class="paragraph">
+<p>Out of the box, JUnit Jupiter provides quite a few <em>source</em> annotations. Each of the
+following subsections provides a brief overview and an example for each of them. Please
+refer to the JavaDoc in the <code><a href="../api/org/junit/jupiter/params/provider/package-summary.html">org.junit.jupiter.params.provider</a></code> package for additional
+information.</p>
+</div>
+<div class="sect4">
+<h5 id="writing-tests-parameterized-tests-sources-ValueSource">@ValueSource</h5>
+<div class="paragraph">
+<p><code>@ValueSource</code> is one of the simplest possible sources. It lets you specify an array of literals of
+primitive types (either <code>String</code>, <code>int</code>, <code>long</code>, or <code>double</code>) and can only be used for providing a
+single parameter per invocation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@ValueSource</span>(ints = { <span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span> })
+<span class="type">void</span> testWithValueSource(<span class="type">int</span> argument) {
+    assertNotNull(argument);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="writing-tests-parameterized-tests-sources-EnumSource">@EnumSource</h5>
+<div class="paragraph">
+<p><code>@EnumSource</code> provides a convenient way to use <code>Enum</code> constants. The annotation provides an optional
+<code>names</code> parameter that lets you specify which constants shall be used. If omitted, all constants
+will be used like in the following example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@EnumSource</span>(<span class="predefined-type">TimeUnit</span>.class)
+<span class="type">void</span> testWithEnumSource(<span class="predefined-type">TimeUnit</span> timeUnit) {
+    assertNotNull(timeUnit.name());
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="writing-tests-parameterized-tests-sources-MethodSource">@MethodSource</h5>
+<div class="paragraph">
+<p><code>@MethodSource</code> allows to refer to one or multiple methods of the test class. Each method must
+return a <code>Stream</code>, an <code>Iterable</code>, an <code>Iterator</code>, or an array of arguments. In addition, each method
+must be <code>static</code> and must not accept any arguments.</p>
+</div>
+<div class="paragraph">
+<p>If you only need a single parameter, you can return instances of the parameter type directly as
+demonstrated by the following example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@MethodSource</span>(names = <span class="string"><span class="delimiter">&quot;</span><span class="content">stringProvider</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> testWithSimpleMethodSource(<span class="predefined-type">String</span> argument) {
+    assertNotNull(argument);
+}
+
+<span class="directive">static</span> Stream&lt;<span class="predefined-type">String</span>&gt; stringProvider() {
+    <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case you need multiple parameters, you need to return <code>Argument</code> instances as shown below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@MethodSource</span>(names = <span class="string"><span class="delimiter">&quot;</span><span class="content">stringAndIntProvider</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> testWithMultiArgMethodSource(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
+    assertNotNull(first);
+    assertNotEquals(<span class="integer">0</span>, second);
+}
+
+<span class="directive">static</span> Stream&lt;Arguments&gt; stringAndIntProvider() {
+    <span class="keyword">return</span> Stream.of(ObjectArrayArguments.create(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>), ObjectArrayArguments.create(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>));
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="writing-tests-parameterized-tests-sources-CsvSource">@CsvSource</h5>
+<div class="paragraph">
+<p><code>@CsvSource</code> allows you to express argument lists as comma-separated values (i.e.,
+<code>String</code> literals).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@CsvSource</span>({ <span class="string"><span class="delimiter">&quot;</span><span class="content">foo, 1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar, 2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">'baz, qux', 3</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> testWithCsvSource(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
+    assertNotNull(first);
+    assertNotEquals(<span class="integer">0</span>, second);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="writing-tests-parameterized-tests-sources-CsvFileSource">@CsvFileSource</h5>
+<div class="paragraph">
+<p><code>@CsvFileSource</code> lets you use CSV files from the classpath. Each line from a CSV file
+results in one invocation of the parameterized test.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@CsvFileSource</span>(resources = <span class="string"><span class="delimiter">&quot;</span><span class="content">/two-column.csv</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> testWithCsvFileSource(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
+    assertNotNull(first);
+    assertNotEquals(<span class="integer">0</span>, second);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">two-column.csv</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="csv">foo, 1
+bar, 2
+&quot;baz, qux&quot;, 3</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="writing-tests-parameterized-tests-sources-ArgumentsSource">@ArgumentsSource</h5>
+<div class="paragraph">
+<p><code>@ArgumentsSource</code> can be used to specify a custom, reusable <code>ArgumentsProvider</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@ArgumentsSource</span>(MyArgumentsProvider.class)
+<span class="type">void</span> testWithArgumentsSource(<span class="predefined-type">String</span> argument) {
+    assertNotNull(argument);
+}
+
+<span class="directive">static</span> <span class="type">class</span> <span class="class">MyArgumentsProvider</span> <span class="directive">implements</span> ArgumentsProvider {
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; arguments(ContainerExtensionContext context) {
+        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>).map(ObjectArrayArguments::create);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-parameterized-tests-argument-conversion">3.12.3. Argument Conversion</h4>
+<div class="sect4">
+<h5 id="writing-tests-parameterized-tests-argument-conversion-implicit">Implicit Conversion</h5>
+<div class="paragraph">
+<p>To support use cases like <code>@CsvSource</code>, JUnit Jupiter provides a number of built-in implicit
+type converters. The conversion process depends on the declared type of each method parameter.</p>
+</div>
+<div class="paragraph">
+<p>For example, if a <code>@ParameterizedTest</code> declares a parameter of type <code>TimeUnit</code> and the
+actual type supplied by the declared source is a <code>String</code>, the string will automatically
+be converted into the corresponding <code>TimeUnit</code> enum constant.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@ValueSource</span>(strings = <span class="string"><span class="delimiter">&quot;</span><span class="content">SECONDS</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> testWithImplicitArgumentConversion(<span class="predefined-type">TimeUnit</span> argument) {
+    assertNotNull(argument.name());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>String</code> instances are currently implicitly converted to the following target types.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Target Type</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code>/<code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"true"</code> → <code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte</code>/<code>Byte</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code> → <code>(byte) 1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>char</code>/<code>Character</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"o"</code> → <code>'o'</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>short</code>/<code>Short</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code> → <code>(short) 1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code>/<code>Integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code> → <code>1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code>/<code>Long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code> → <code>1L</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code>/<code>Float</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1.0"</code> → <code>1.0f</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code>/<code>Double</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1.0"</code> → <code>1.0d</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Enum</code> subclass</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"SECONDS"</code> → <code>TimeUnit.SECONDS</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Instant</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1970-01-01T00:00:00Z"</code> → <code>Instant.ofEpochMilli(0)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.LocalDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"2017-03-14"</code> → <code>LocalDate.of(2017, 3, 14)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.LocalDateTime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"2017-03-14T12:34:56.789"</code> → <code>LocalDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.LocalTime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"12:34:56.789"</code> → <code>LocalTime.of(12, 34, 56, 789_000_000)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.OffsetDateTime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"2017-03-14T12:34:56.789Z"</code> → <code>OffsetDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.OffsetTime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"12:34:56.789Z"</code> → <code>OffsetTime.of(12, 34, 56, 789_000_000, ZoneOffset.UTC)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Year</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"2017"</code> → <code>Year.of(2017)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.YearMonth</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"2017-03"</code> → <code>YearMonth.of(2017, 3)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.ZonedDateTime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"2017-03-14T12:34:56.789Z"</code> → <code>ZonedDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="writing-tests-parameterized-tests-argument-conversion-explicit">Explicit Conversion</h5>
+<div class="paragraph">
+<p>Instead of using implicit argument conversion you may explicitly specify an <code>ArgumentConverter</code> to
+use for a certain parameter using the <code>@ConvertWith</code> annotation like in the following example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@EnumSource</span>(<span class="predefined-type">TimeUnit</span>.class)
+<span class="type">void</span> testWithExplicitArgumentConversion(<span class="annotation">@ConvertWith</span>(ToStringArgumentConverter.class) <span class="predefined-type">String</span> argument) {
+    assertNotNull(<span class="predefined-type">TimeUnit</span>.valueOf(argument));
+}
+
+<span class="directive">static</span> <span class="type">class</span> <span class="class">ToStringArgumentConverter</span> <span class="directive">extends</span> SimpleArgumentConverter {
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="predefined-type">Object</span> convert(<span class="predefined-type">Object</span> source, <span class="predefined-type">Class</span>&lt;?&gt; targetType) {
+        assertEquals(<span class="predefined-type">String</span>.class, targetType, <span class="string"><span class="delimiter">&quot;</span><span class="content">Can only convert to String</span><span class="delimiter">&quot;</span></span>);
+        <span class="keyword">return</span> <span class="predefined-type">String</span>.valueOf(source);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Explicit argument converters are meant to be implemented by test authors. Thus,
+<code>junit-jupiter-params</code> only provides a single explicit argument converter that may also serve as a
+reference implementation: <code>JavaTimeArgumentConverter</code>. It is used via the composed annotation
+<code>JavaTimeConversionPattern</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content">01.01.2017</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">31.12.2017</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> testWithExplicitJavaTimeConverter(<span class="annotation">@JavaTimeConversionPattern</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">dd.MM.yyyy</span><span class="delimiter">&quot;</span></span>) LocalDate argument) {
+    assertEquals(<span class="integer">2017</span>, argument.getYear());
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-parameterized-tests-display-names">3.12.4. Customizing Display Names</h4>
+<div class="paragraph">
+<p>By default, the display name of a parameterized test invocation contains the invocation
+index and the <code>String</code> representation of all arguments for that specific invocation.
+However, you can customize invocation display names via the <code>name</code> attribute of the
+<code>@ParameterizedTest</code> annotation like in the following example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@DisplayName</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Display name of container</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@ParameterizedTest</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">{index} ==&gt; first=''{0}'', second={1}</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@CsvSource</span>({ <span class="string"><span class="delimiter">&quot;</span><span class="content">foo, 1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar, 2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">'baz, qux', 3</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> testWithCustomDisplayNames(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When executing the above method using the <code>ConsoleLauncher</code> you will see output similar to the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Display name of container ✔
+├─ 1 ==&gt; first='foo', second=1 ✔
+├─ 2 ==&gt; first='bar', second=2 ✔
+└─ 3 ==&gt; first='baz, qux', second=3 ✔</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following placeholders are supported within custom display names.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Placeholder</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{index}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the current invocation index (1-based)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{arguments}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the complete, comma-separated arguments list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{0}</code>, <code>{1}</code>, &#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">an individual argument</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-parameterized-tests-lifecycle-interop">3.12.5. Lifecycle and Interoperability</h4>
+<div class="paragraph">
+<p>Each invocation of a parameterized test has the same lifecycle as a regular <code>@Test</code>
+method. For example, <code>@BeforeEach</code> methods will be executed before each invocation.
+Similar to <a href="#writing-tests-dynamic-tests">Dynamic Tests</a>, invocations will appear one by one in the
+test tree of an IDE. You may at will mix regular <code>@Test</code> methods and <code>@ParameterizedTest</code>
+methods within the same test class.</p>
+</div>
+<div class="paragraph">
+<p>You may use <code>ParameterResolver</code> extensions with <code>@ParameterizedTest</code> methods. However, method
+parameters that are resolved by argument sources need to come first in the argument list.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@ValueSource</span>(strings = <span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> testWithRegularParameterResolver(<span class="predefined-type">String</span> argument, TestReporter testReporter) {
+    testReporter.publishEntry(<span class="string"><span class="delimiter">&quot;</span><span class="content">argument</span><span class="delimiter">&quot;</span></span>, argument);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="writing-tests-dynamic-tests">3.13. Dynamic Tests</h3>
 <div class="paragraph">
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in <a href="#writing-tests-annotations">Annotations</a>
 is very similar to the <code>@Test</code> annotation in JUnit 4.
@@ -2067,7 +2487,7 @@ methods; however, this might be complemented by a registration facility in a lat
 release.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-dynamic-tests-examples">3.12.1. Dynamic Test Examples</h4>
+<h4 id="writing-tests-dynamic-tests-examples">3.13.1. Dynamic Test Examples</h4>
 <div class="paragraph">
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories and dynamic tests.</p>
 </div>
@@ -5108,7 +5528,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-04-01 03:51:36 EDT
+Last updated 2017-04-01 05:21:21 EDT
 </div>
 </div>
 </body>
