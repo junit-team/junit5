@@ -116,7 +116,7 @@ class ParameterizedTestIntegrationTests {
 
 		@Override
 		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception {
-			return Stream.of(ObjectArrayArguments.create("foo"), ObjectArrayArguments.create("bar"));
+			return Stream.of(ObjectArrayArguments.arguments("foo"), ObjectArrayArguments.arguments("bar"));
 		}
 	}
 

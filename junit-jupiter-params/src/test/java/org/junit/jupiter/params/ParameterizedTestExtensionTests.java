@@ -169,7 +169,7 @@ class ParameterizedTestExtensionTests {
 
 		@Override
 		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
-			Stream<ObjectArrayArguments> argumentsStream = Stream.of("foo", "bar").map(ObjectArrayArguments::create);
+			Stream<ObjectArrayArguments> argumentsStream = Stream.of("foo", "bar").map(ObjectArrayArguments::arguments);
 
 			return argumentsStream.onClose(() -> streamWasClosed = true);
 		}

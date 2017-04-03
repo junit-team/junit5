@@ -605,6 +605,8 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=simple_MethodSource_e
 ----
 
 In case you need multiple parameters, you need to return `Argument` instances as shown below.
+Note that `arguments(Object...)` is a static factory method defined in
+`org.junit.jupiter.params.provider.ObjectArrayArguments`.
 
 [source,java,indent=0]
 [subs="verbatim"]

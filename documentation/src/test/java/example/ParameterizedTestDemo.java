@@ -13,6 +13,7 @@ package example;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.params.provider.ObjectArrayArguments.arguments;
 
 import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
@@ -82,7 +83,7 @@ class ParameterizedTestDemo {
 	}
 
 	static Stream<Arguments> stringAndIntProvider() {
-		return Stream.of(ObjectArrayArguments.create("foo", 1), ObjectArrayArguments.create("bar", 2));
+		return Stream.of(arguments("foo", 1), arguments("bar", 2));
 	}
 	// end::multi_arg_MethodSource_example[]
 
@@ -112,9 +113,10 @@ class ParameterizedTestDemo {
 	}
 
 	static class MyArgumentsProvider implements ArgumentsProvider {
+
 		@Override
 		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
-			return Stream.of("foo", "bar").map(ObjectArrayArguments::create);
+			return Stream.of("foo", "bar").map(ObjectArrayArguments::arguments);
 		}
 	}
 	// end::ArgumentsSource_example[]
@@ -143,6 +145,7 @@ class ParameterizedTestDemo {
 	}
 
 	static class ToStringArgumentConverter extends SimpleArgumentConverter {
+
 		@Override
 		protected Object convert(Object source, Class<?> targetType) {
 			assertEquals(String.class, targetType, "Can only convert to String");

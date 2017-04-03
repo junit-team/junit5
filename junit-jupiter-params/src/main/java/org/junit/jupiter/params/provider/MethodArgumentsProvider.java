@@ -50,9 +50,9 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 			return (Arguments) item;
 		}
 		if (item instanceof Object[]) {
-			return ObjectArrayArguments.create((Object[]) item);
+			return ObjectArrayArguments.arguments((Object[]) item);
 		}
-		return ObjectArrayArguments.create(item);
+		return ObjectArrayArguments.arguments(item);
 	}
 
 }

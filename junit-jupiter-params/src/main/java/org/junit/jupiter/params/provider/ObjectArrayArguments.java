@@ -15,10 +15,8 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Concrete implementation of the {@code Arguments} abstraction.
- *
- * <p>It provides access to an array of objects to be used for invoking a
- * {@code @ParameterizedTest} method.
+ * Concrete implementation of the {@code Arguments} API that provides access to
+ * an array of objects to be used for invoking a {@code @ParameterizedTest} method.
  *
  * <p>A {@link java.util.stream.Stream} of such {@code Arguments} will
  * typically be accessed via {@linkplain ArgumentsProvider providers}.
@@ -33,7 +31,11 @@ public class ObjectArrayArguments implements Arguments {
 
 	private final Object[] arguments;
 
-	public static ObjectArrayArguments create(Object... arguments) {
+	/**
+	 * Factory method for creating an {@code ObjectArrayArguments} based on the
+	 * supplied arguments
+	 */
+	public static ObjectArrayArguments arguments(Object... arguments) {
 		return new ObjectArrayArguments(arguments);
 	}
 
@@ -43,7 +45,7 @@ public class ObjectArrayArguments implements Arguments {
 
 	@Override
 	public Object[] get() {
-		return arguments;
+		return this.arguments;
 	}
 
 }

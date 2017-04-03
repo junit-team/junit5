@@ -35,7 +35,8 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* ❓
+* The `create()` factory method in `ObjectArrayArguments` in the `junit-jupiter-params`
+  module has been renamed to `arguments()`.
 
 ===== New Features and Improvements
 

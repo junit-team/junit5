@@ -104,7 +104,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 		@Override
 		public Arguments next() {
-			Arguments result = ObjectArrayArguments.create(nextArguments);
+			Arguments result = ObjectArrayArguments.arguments(nextArguments);
 			advance();
 			return result;
 		}

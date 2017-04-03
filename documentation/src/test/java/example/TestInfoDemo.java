@@ -22,6 +22,8 @@ import org.junit.jupiter.api.TestInfo;
 
 class TestInfoDemo {
 
+	// TODO Add example with constructor injection.
+
 	@BeforeEach
 	void init(TestInfo testInfo) {
 		String displayName = testInfo.getDisplayName();
