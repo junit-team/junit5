@@ -2192,7 +2192,7 @@ bar, 2
 <span class="directive">static</span> <span class="type">class</span> <span class="class">MyArgumentsProvider</span> <span class="directive">implements</span> ArgumentsProvider {
 
     <span class="annotation">@Override</span>
-    <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; arguments(ContainerExtensionContext context) {
+    <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; provideArguments(ContainerExtensionContext context) {
         <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>).map(ObjectArrayArguments::arguments);
     }
 }</code></pre>
@@ -5545,7 +5545,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-04-03 15:53:14 EDT
+Last updated 2017-04-03 16:41:46 EDT
 </div>
 </div>
 </body>
