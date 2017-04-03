@@ -493,7 +493,6 @@ Option                                        Description
 -h, --help                                    Display help information.
 --disable-ansi-colors                         Disable ANSI colors in output (not
                                                 supported by all terminals).
---hide-details                                @Deprecated. Use '--details none' instead.
 --details <[none,flat,tree,verbose]>          Select an output details mode for when
                                                 tests are executed. Use one of: [none,
                                                 flat, tree, verbose]. If 'none' is

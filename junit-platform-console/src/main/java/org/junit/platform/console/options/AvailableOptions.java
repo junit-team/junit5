@@ -72,11 +72,6 @@ class AvailableOptions {
 		disableAnsiColors = parser.accepts("disable-ansi-colors",
 			"Disable ANSI colors in output (not supported by all terminals).");
 
-		// TODO Remove "hide-details" before final release. Only here to make "legacy" Gradle plugin happy.
-		// If removed, an old Gradle:junitPlatformTest will report:
-		//   Exception in thread "main" joptsimple.UnrecognizedOptionException: hide-details is not a recognized option
-		parser.accepts("hide-details", "@Deprecated. Use '--details none' instead.");
-
 		details = parser.accepts("details",
 			"Select an output details mode for when tests are executed. Use one of: " + asList(Details.values())
 					+ ". If '" + Details.NONE + "' is selected, then only the summary and test failures are shown.") //
