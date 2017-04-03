@@ -47,7 +47,7 @@ class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Enu
 	}
 
 	@Override
-	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
+	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
 		return stream(enumClass.getEnumConstants()).filter(this::select).map(ObjectArrayArguments::arguments);
 	}
 

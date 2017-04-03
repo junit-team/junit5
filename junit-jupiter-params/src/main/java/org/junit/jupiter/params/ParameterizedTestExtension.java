@@ -79,7 +79,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	protected static Stream<? extends Arguments> arguments(ArgumentsProvider provider,
 			ContainerExtensionContext context) {
 		try {
-			return provider.arguments(context);
+			return provider.provideArguments(context);
 		}
 		catch (Exception e) {
 			throw ExceptionUtils.throwAsUncheckedException(e);

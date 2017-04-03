@@ -168,7 +168,7 @@ class ParameterizedTestExtensionTests {
 	static class ArgumentsProviderWithCloseHandler implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
 			Stream<ObjectArrayArguments> argumentsStream = Stream.of("foo", "bar").map(ObjectArrayArguments::arguments);
 
 			return argumentsStream.onClose(() -> streamWasClosed = true);

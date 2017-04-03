@@ -34,7 +34,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	}
 
 	@Override
-	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
+	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
 		settings.getFormat().setQuote('\'');

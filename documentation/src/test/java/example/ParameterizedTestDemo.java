@@ -115,7 +115,7 @@ class ParameterizedTestDemo {
 	static class MyArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
 			return Stream.of("foo", "bar").map(ObjectArrayArguments::arguments);
 		}
 	}

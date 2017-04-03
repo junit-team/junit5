@@ -80,7 +80,7 @@ class ValueArgumentsProviderTests {
 
 		ValueArgumentsProvider provider = new ValueArgumentsProvider();
 		provider.accept(annotation);
-		return provider.arguments(null).map(Arguments::get);
+		return provider.provideArguments(null).map(Arguments::get);
 	}
 
 }

@@ -140,6 +140,6 @@ class MethodArgumentsProviderTests {
 
 		MethodArgumentsProvider provider = new MethodArgumentsProvider();
 		provider.accept(annotation);
-		return provider.arguments(context).map(Arguments::get);
+		return provider.provideArguments(context).map(Arguments::get);
 	}
 }

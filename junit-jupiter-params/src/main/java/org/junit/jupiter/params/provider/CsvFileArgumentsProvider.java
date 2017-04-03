@@ -12,6 +12,7 @@ package org.junit.jupiter.params.provider;
 
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
+import static org.junit.jupiter.params.provider.ObjectArrayArguments.arguments;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -59,7 +60,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	}
 
 	@Override
-	public Stream<? extends Arguments> arguments(ContainerExtensionContext context) {
+	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
 		// @formatter:off
 		return Arrays.stream(resources)
 				.map(resource -> openInputStream(context, resource))
@@ -104,7 +105,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 		@Override
 		public Arguments next() {
-			Arguments result = ObjectArrayArguments.arguments(this.nextCsvRecord);
+			Arguments result = arguments(this.nextCsvRecord);
 			advance();
 			return result;
 		}

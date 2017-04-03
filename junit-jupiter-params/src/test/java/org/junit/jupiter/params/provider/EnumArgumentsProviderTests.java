@@ -76,7 +76,7 @@ class EnumArgumentsProviderTests {
 
 		EnumArgumentsProvider provider = new EnumArgumentsProvider();
 		provider.accept(annotation);
-		return provider.arguments(null).map(Arguments::get);
+		return provider.provideArguments(null).map(Arguments::get);
 	}
 
 }

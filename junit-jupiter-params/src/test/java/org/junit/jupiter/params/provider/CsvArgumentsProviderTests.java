@@ -65,7 +65,7 @@ class CsvArgumentsProviderTests {
 
 		CsvArgumentsProvider provider = new CsvArgumentsProvider();
 		provider.accept(annotation);
-		return provider.arguments(null).map(Arguments::get);
+		return provider.provideArguments(null).map(Arguments::get);
 	}
 
 }

@@ -18,12 +18,12 @@ import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Implementations of {@code ArgumentsProvider} are responsible for providing a
- * {@link Stream} of {@code Arguments}.
+ * An {@code ArgumentsProvider} is responsible for {@linkplain #provideArguments
+ * providing} a stream of arguments to be passed to a {@code @ParameterizedTest}
+ * method.
  *
- * <p>Such a stream will then be used for invoking a {@code @ParameterizedTest} method.
- *
- * <p>{@code ArgumentsProvider}s are registered via {@code @ArgumentsSource} annotations.
+ * <p>An {@code ArgumentsProvider} can be registered via the
+ * {@link ArgumentsSource @ArgumentsSource} annotation.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.ParameterizedTest
@@ -33,6 +33,13 @@ import org.junit.platform.commons.meta.API;
 @API(Experimental)
 public interface ArgumentsProvider {
 
-	Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception;
+	/**
+	 * Provide a {@link Stream} of {@link Arguments} to be passed to a
+	 * {@code @ParameterizedTest} method.
+	 *
+	 * @param context the current extension context; never {@code null}
+	 * @return a stream of arguments; never {@code null}
+	 */
+	Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) throws Exception;
 
 }

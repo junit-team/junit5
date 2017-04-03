@@ -12,6 +12,7 @@ package org.junit.jupiter.params;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.params.provider.ObjectArrayArguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -34,7 +35,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ObjectArrayArguments;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.test.event.ExecutionEvent;
@@ -115,8 +115,8 @@ class ParameterizedTestIntegrationTests {
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception {
-			return Stream.of(ObjectArrayArguments.arguments("foo"), ObjectArrayArguments.arguments("bar"));
+		public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) throws Exception {
+			return Stream.of(arguments("foo"), arguments("bar"));
 		}
 	}
 
@@ -127,4 +127,5 @@ class ParameterizedTestIntegrationTests {
 			return String.valueOf(input).length();
 		}
 	}
+
 }

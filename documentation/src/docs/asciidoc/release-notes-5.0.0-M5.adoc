@@ -39,6 +39,8 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
+* The `arguments()` method in the `ArgumentsProvider` API in the `junit-jupiter-params`
+  module has been renamed to `provideArguments()`.
 * The `create()` factory method in `ObjectArrayArguments` in the `junit-jupiter-params`
   module has been renamed to `arguments()`.
 

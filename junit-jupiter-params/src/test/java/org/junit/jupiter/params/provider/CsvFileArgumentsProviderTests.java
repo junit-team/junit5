@@ -120,7 +120,7 @@ class CsvFileArgumentsProviderTests {
 		provider.accept(annotation);
 		ContainerExtensionContext context = mock(ContainerExtensionContext.class);
 		when(context.getTestClass()).thenReturn(Optional.of(CsvFileArgumentsProviderTests.class));
-		return provider.arguments(context).map(Arguments::get);
+		return provider.provideArguments(context).map(Arguments::get);
 	}
 
 }
