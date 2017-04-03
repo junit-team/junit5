@@ -12,14 +12,13 @@ package org.junit.platform.gradle.plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.Dependency
-import org.gradle.api.internal.artifacts.configurations.ConfigurationInternal
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.platform.console.ConsoleLauncher
 import org.junit.platform.engine.discovery.ClassNameFilter
+import spock.lang.Issue
 import spock.lang.Specification
 
 /**
@@ -27,7 +26,7 @@ import spock.lang.Specification
  */
 class JUnitPlatformPluginSpec extends Specification {
 
-	Project project
+	private Project project
 
 	def setup() {
 		project = ProjectBuilder.builder().build()
@@ -53,7 +52,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "setting junitPlatform properties"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -84,7 +83,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "creating junitPlatformTest task"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -143,7 +142,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "uses standard class name pattern"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -155,7 +154,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "enableStandardTestTask set to true"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -169,6 +168,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "when buildDir is set to non-standard location, it will be honored"() {
+		given:
 		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
@@ -182,6 +182,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "users can set buildDir to be a GString, and it will be converted to file"() {
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -196,7 +197,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "selectors can be specified"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -236,7 +237,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "adds dependencies to configuration"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -259,7 +260,7 @@ class JUnitPlatformPluginSpec extends Specification {
 	}
 
 	def "adds dependencies with fixed version when not explicitly configured"() {
-
+		given:
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
@@ -276,4 +277,17 @@ class JUnitPlatformPluginSpec extends Specification {
 			.size() == 2
 	}
 
+	@Issue('https://github.com/junit-team/junit5/issues/708')
+	def "can configure the junitPlatformTest task during the configuration phase"() {
+		given:
+		String customDescription = 'My custom description'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		final junitPlatformTest = project.tasks.getByName('junitPlatformTest')
+		junitPlatformTest.description = customDescription
+
+		then:
+		junitPlatformTest.description == customDescription
+	}
 }
