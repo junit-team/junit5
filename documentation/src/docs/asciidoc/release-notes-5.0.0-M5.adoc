@@ -1,0 +1,50 @@
+[[release-notes-5.0.0-m5]]
+=== 5.0.0-M5
+
+*Date of Release:* ❓
+
+*Scope:* Fifth milestone release of JUnit 5 with a focus on ❓.
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/8?closed=1+[5.0 M5] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.0.0-m5-junit-platform]]
+==== JUnit Platform
+
+===== Bug Fixes
+
+* ❓
+
+===== Deprecations and Breaking Changes
+
+* ❓
+
+===== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.0.0-m5-junit-jupiter]]
+==== JUnit Jupiter
+
+===== Bug Fixes
+
+* ❓
+
+===== Deprecations and Breaking Changes
+
+* ❓
+
+===== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.0.0-m5-junit-vintage]]
+==== JUnit Vintage
+
+===== Bug Fixes
+
+* ❓
