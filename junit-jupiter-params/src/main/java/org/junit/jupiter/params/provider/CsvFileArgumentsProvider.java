@@ -90,7 +90,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 		private final CsvParser csvParser;
 
-		private Object[] nextArguments;
+		private Object[] nextCsvRecord;
 
 		CsvParserIterator(CsvParser csvParser) {
 			this.csvParser = csvParser;
@@ -99,18 +99,19 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 		@Override
 		public boolean hasNext() {
-			return nextArguments != null;
+			return this.nextCsvRecord != null;
 		}
 
 		@Override
 		public Arguments next() {
-			Arguments result = ObjectArrayArguments.arguments(nextArguments);
+			Arguments result = ObjectArrayArguments.arguments(this.nextCsvRecord);
 			advance();
 			return result;
 		}
 
 		private void advance() {
-			nextArguments = csvParser.parseNext();
+			this.nextCsvRecord = csvParser.parseNext();
 		}
 	}
+
 }
