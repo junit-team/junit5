@@ -1440,8 +1440,9 @@ information about the current test such as the test&#8217;s display name, the te
 test method, or associated tags. The display name is either a technical name, such as
 the name of the test class or test method, or a custom name configured via <code>@DisplayName</code>.</p>
 <div class="paragraph">
-<p><code><a href="../api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code>
-rule from JUnit 4. Here is an example of its usage.</p>
+<p><code><a href="../api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code> rule from JUnit 4. The
+following demonstrates how to have <code>TestInfo</code> injected into a test constructor,
+<code>@BeforeEach</code> method, and <code>@Test</code> method.</p>
 </div>
 </li>
 </ul>
@@ -1457,9 +1458,12 @@ rule from JUnit 4. Here is an example of its usage.</p>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestInfo</span>;
 
+<span class="annotation">@DisplayName</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">TestInfo Demo</span><span class="delimiter">&quot;</span></span>)
 <span class="type">class</span> <span class="class">TestInfoDemo</span> {
 
-    <span class="comment">// TODO Add example with constructor injection.</span>
+    TestInfoDemo(TestInfo testInfo) {
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">TestInfo Demo</span><span class="delimiter">&quot;</span></span>, testInfo.getDisplayName());
+    }
 
     <span class="annotation">@BeforeEach</span>
     <span class="type">void</span> init(TestInfo testInfo) {
@@ -5542,7 +5546,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-04-03 11:31:14 EDT
+Last updated 2017-04-03 11:42:31 EDT
 </div>
 </div>
 </body>
