@@ -23,8 +23,12 @@ import org.junit.platform.commons.meta.API;
 
 /**
  * {@code @ArgumentsSource} is a {@linkplain Repeatable repeatable} annotation
- * that is used to register {@linkplain ArgumentsProvider providers} for the
- * annotated test class or test method.
+ * that is used to register {@linkplain ArgumentsProvider argument providers}
+ * for the annotated test method.
+ *
+ * <p>{@code @ArgumentsSource} may also be used as a meta-annotation in order to
+ * create a custom <em>composed annotation</em> that inherits the semantics
+ * of {@code @ArgumentsSource}.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsProvider

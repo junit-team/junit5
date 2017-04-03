@@ -21,11 +21,11 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @EnumSource} is a special {@link ArgumentsSource} which provides
- * access to the possible constants of specified {@linkplain #value Enum}.
+ * {@code @EnumSource} is an {@link ArgumentsSource} for constants of a
+ * specified {@linkplain #value Enum}.
  *
- * <p>The enum constants are then provided as arguments to {@code @ParameterizedTest}
- * methods using an {@code @EnumArgumentsProvider}.
+ * <p>The enum constants will be provided as arguments to a {@code @ParameterizedTest}
+ * method using an {@code EnumArgumentsProvider}.
  *
  * <p>The set of enum constants can be restricted by listing the desired values
  * via the {@link #names} attribute.

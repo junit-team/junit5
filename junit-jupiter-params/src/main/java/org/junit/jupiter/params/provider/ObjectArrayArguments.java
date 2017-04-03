@@ -19,7 +19,7 @@ import org.junit.platform.commons.meta.API;
  * an array of objects to be used for invoking a {@code @ParameterizedTest} method.
  *
  * <p>A {@link java.util.stream.Stream} of such {@code Arguments} will
- * typically be accessed via {@linkplain ArgumentsProvider providers}.
+ * typically be provided by an {@link ArgumentsProvider}.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.ParameterizedTest
@@ -32,8 +32,8 @@ public class ObjectArrayArguments implements Arguments {
 	private final Object[] arguments;
 
 	/**
-	 * Factory method for creating an {@code ObjectArrayArguments} based on the
-	 * supplied arguments
+	 * Factory method for creating an instance of {@code ObjectArrayArguments}
+	 * based on the supplied {@code arguments}.
 	 */
 	public static ObjectArrayArguments arguments(Object... arguments) {
 		return new ObjectArrayArguments(arguments);

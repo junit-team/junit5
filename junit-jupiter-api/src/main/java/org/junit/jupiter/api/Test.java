@@ -25,15 +25,15 @@ import org.junit.platform.commons.meta.API;
  * {@code @Test} is used to signal that the annotated method is a
  * <em>test</em> method.
  *
- * <p>{@code @Test} may also be used as a meta-annotation in order to
- * create a custom <em>composed annotation</em> that inherits the semantics
- * of {@code @Test}.
- *
  * <p>{@code @Test} methods must not be {@code private} or {@code static}.
  *
  * <p>{@code @Test} methods may optionally declare parameters to be
  * resolved by {@link org.junit.jupiter.api.extension.ParameterResolver
  * ParameterResolvers}.
+ *
+ * <p>{@code @Test} may also be used as a meta-annotation in order to
+ * create a custom <em>composed annotation</em> that inherits the semantics
+ * of {@code @Test}.
  *
  * @since 5.0
  * @see TestInfo

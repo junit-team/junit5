@@ -45,6 +45,10 @@ import org.junit.platform.commons.meta.API;
  * resolved by {@link org.junit.jupiter.api.extension.ParameterResolver
  * ParameterResolvers}.
  *
+ * <p>{@code @TestTemplate} may also be used as a meta-annotation in order to
+ * create a custom <em>composed annotation</em> that inherits the semantics
+ * of {@code @TestTemplate}.
+ *
  * @since 5.0
  * @see Test
  * @see org.junit.jupiter.api.extension.TestTemplateInvocationContext
