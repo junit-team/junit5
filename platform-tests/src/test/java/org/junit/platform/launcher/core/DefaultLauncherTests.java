@@ -300,7 +300,7 @@ class DefaultLauncherTests {
 		TestEngineSpy engine = new TestEngineSpy();
 
 		DefaultLauncher launcher = createLauncher(engine);
-		launcher.execute(request().build(), new TestExecutionListener[0]);
+		launcher.execute(request().build());
 
 		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
 		assertThat(configurationParameters.get("key").isPresent()).isFalse();
@@ -312,7 +312,7 @@ class DefaultLauncherTests {
 		TestEngineSpy engine = new TestEngineSpy();
 
 		DefaultLauncher launcher = createLauncher(engine);
-		launcher.execute(request().configurationParameter("key", "value").build(), new TestExecutionListener[0]);
+		launcher.execute(request().configurationParameter("key", "value").build());
 
 		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
 		assertThat(configurationParameters.size()).isEqualTo(1);
@@ -328,7 +328,7 @@ class DefaultLauncherTests {
 			TestEngineSpy engine = new TestEngineSpy();
 
 			DefaultLauncher launcher = createLauncher(engine);
-			launcher.execute(request().build(), new TestExecutionListener[0]);
+			launcher.execute(request().build());
 
 			ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
 			assertThat(configurationParameters.size()).isEqualTo(0);

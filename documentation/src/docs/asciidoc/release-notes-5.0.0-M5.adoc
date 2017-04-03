@@ -19,7 +19,9 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* ❓
+* The deprecated `execute(LauncherDiscoveryRequest)` method was removed from the
+  `org.junit.platform.launcher.Launcher` interface. Use
+  `execute(LauncherDiscoveryRequest, TestExecutionListener...)` instead.
 
 ===== New Features and Improvements
 

@@ -81,24 +81,6 @@ public interface Launcher {
 	 * collecting their results, and notify {@linkplain #registerTestExecutionListeners
 	 * registered listeners} about the progress and results of the execution.
 	 *
-	 * <p>The <em>deprecated</em> default implementation delegates to
-	 * {@link #execute(LauncherDiscoveryRequest, TestExecutionListener...)} with no
-	 * additional listeners.
-	 *
-	 * <p>The method will be removed in milestone M5.
-	 * @deprecated Use {@link #execute(LauncherDiscoveryRequest, TestExecutionListener...)} instead.
-	 */
-	@Deprecated
-	default void execute(LauncherDiscoveryRequest launcherDiscoveryRequest) {
-		execute(launcherDiscoveryRequest, new TestExecutionListener[0]);
-	}
-
-	/**
-	 * Execute a {@link TestPlan} which is built according to the supplied
-	 * {@link LauncherDiscoveryRequest} by querying all registered engines and
-	 * collecting their results, and notify {@linkplain #registerTestExecutionListeners
-	 * registered listeners} about the progress and results of the execution.
-	 *
 	 * <p>Supplied test execution listeners are registered in addition to already
 	 * registered listeners but only for the supplied launcher discovery request.
 	 *

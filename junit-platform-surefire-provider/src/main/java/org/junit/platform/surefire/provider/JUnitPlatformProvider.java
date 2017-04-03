@@ -41,7 +41,6 @@ import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
-import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.core.LauncherFactory;
 
 /**
@@ -125,7 +124,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).filters(
 			includeAndExcludeFilters).build();
-		launcher.execute(discoveryRequest, new TestExecutionListener[0]);
+		launcher.execute(discoveryRequest);
 
 		runListener.testSetCompleted(classEntry);
 	}

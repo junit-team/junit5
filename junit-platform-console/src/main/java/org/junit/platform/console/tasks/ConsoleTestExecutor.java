@@ -62,7 +62,7 @@ public class ConsoleTestExecutor {
 		SummaryGeneratingListener summaryListener = registerListeners(out, launcher);
 
 		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
-		launcher.execute(discoveryRequest, new TestExecutionListener[0]);
+		launcher.execute(discoveryRequest);
 
 		TestExecutionSummary summary = summaryListener.getSummary();
 		printSummary(summary, out);
