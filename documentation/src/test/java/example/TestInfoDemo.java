@@ -20,9 +20,12 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
+@DisplayName("TestInfo Demo")
 class TestInfoDemo {
 
-	// TODO Add example with constructor injection.
+	TestInfoDemo(TestInfo testInfo) {
+		assertEquals("TestInfo Demo", testInfo.getDisplayName());
+	}
 
 	@BeforeEach
 	void init(TestInfo testInfo) {

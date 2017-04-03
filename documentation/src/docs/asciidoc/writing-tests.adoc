@@ -206,8 +206,9 @@ There are currently three built-in resolvers that are registered automatically.
   test method, or associated tags. The display name is either a technical name, such as
   the name of the test class or test method, or a custom name configured via `@DisplayName`.
 +
-`{TestInfo}` acts as a drop-in replacement for the `TestName`
-rule from JUnit 4. Here is an example of its usage.
+`{TestInfo}` acts as a drop-in replacement for the `TestName` rule from JUnit 4. The
+following demonstrates how to have `TestInfo` injected into a test constructor,
+`@BeforeEach` method, and `@Test` method.
 
 [source,java,indent=0]
 [subs="verbatim"]
