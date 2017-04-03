@@ -19,10 +19,10 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* The deprecated `execute(LauncherDiscoveryRequest)` method is removed from the
-  `org.junit.platform.launcher.Launcher` interface, use
+* The deprecated `execute(LauncherDiscoveryRequest)` method has been removed from the
+  `org.junit.platform.launcher.Launcher` API; use
   `execute(LauncherDiscoveryRequest, TestExecutionListener...)` instead.
-* The deprecated `--hide-details` option of the `ConsoleLauncher` is removed, use
+* The deprecated `--hide-details` option of the `ConsoleLauncher` has been removed; use
   `--details none` instead.
 
 ===== New Features and Improvements
