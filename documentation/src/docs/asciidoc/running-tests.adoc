@@ -450,16 +450,16 @@ Here's an example of its output:
 [subs="none"]
 ----
 ├─ JUnit Vintage
-│  ├─ example.JUnit4Tests
-│  │  ├─ standardJUnit4Test ✔
-├─ JUnit Jupiter
-│  ├─ StandardTests
-│  │  ├─ succeedingTest() ✔
-│  │  ├─ skippedTest() ↷ for demonstration purposes
-│  ├─ A special test case
-│  │  ├─ Custom test name containing spaces ✔
-│  │  ├─ ╯°□°）╯ ✔
-│  │  ├─ 😱 ✔
+│  └─ example.JUnit4Tests
+│     └─ standardJUnit4Test ✔
+└─ JUnit Jupiter
+   ├─ StandardTests
+   │  ├─ succeedingTest() ✔
+   │  └─ skippedTest() ↷ for demonstration purposes
+   └─ A special test case
+      ├─ Custom test name containing spaces ✔
+      ├─ ╯°□°）╯ ✔
+      └─ 😱 ✔
 
 Test run finished after 64 ms
 [         5 containers found      ]
