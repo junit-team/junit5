@@ -212,7 +212,7 @@ supplied via the `includeClassNamePattern` (which defaults to
 Executing the `junitPlatformTest` task in the `{junit5-gradle-consumer}` project results
 in output similar to the following:
 
-[subs="none"]
+[subs="specialcharacters"]
 ----
 :junitPlatformTest
 
@@ -235,7 +235,7 @@ BUILD SUCCESSFUL
 
 If a test fails, the build will fail with output similar to the following:
 
-[subs="none"]
+[subs="specialcharacters"]
 ----
 :junitPlatformTest
 
