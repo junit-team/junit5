@@ -1,12 +1,11 @@
-apply plugin: 'java-library'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
 	repositories {
-		jcenter()
+		maven { url='https://oss.jfrog.org/artifactory/plugins-snapshot/' }
 	}
 	dependencies {
-		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+		classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.0-SNAPSHOT'
 	}
 }
 
@@ -54,7 +53,7 @@ shadowJar {
 	configurations = [project.configurations.shadow]
 	exclude 'META-INF/**'
 	relocate 'joptsimple', 'org.junit.platform.joptsimple'
-	transform(org.junit.platform.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
+	transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
 		paths = [
 			'joptsimple/ExceptionMessages.properties',
 			'joptsimple/HelpFormatterMessages.properties'
