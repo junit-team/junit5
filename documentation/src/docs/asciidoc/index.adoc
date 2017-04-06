@@ -2,6 +2,8 @@
 = JUnit 5 User Guide
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Christian Stein
 
+ifdef::backend-pdf[:source-highlighter: rouge]
+
 :sectnums:
 
 :javadoc-root:                      link:../api
