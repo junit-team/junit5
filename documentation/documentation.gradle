@@ -56,7 +56,21 @@ asciidoctorj {
 	version = '1.5.4.1'
 }
 
+// "Catalog" of static images plus images generated via asciidoctor-diagram.
+ext.imagesCatalogDir = new File(buildDir, 'asciidoc/images')
+
+// Copy static images to the "Catalog" directory so that the catalog
+// directory can be used as both the "source" and "target" directory
+// while generating a PDF of the User Guide. If we do not do this,
+// the PDF will NOT contain any generated diagrams!
+task copyStaticImagesToCatalogDir(type: Copy) {
+	from 'src/docs/asciidoc/images'
+	into imagesCatalogDir
+}
+
 asciidoctor {
+
+	dependsOn copyStaticImagesToCatalogDir
 
 	// for asciidoctor-diagram support
 	dependsOn jrubyPrepare
@@ -79,7 +93,8 @@ asciidoctor {
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
 				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend
 				'tabsize': '4',
-				'imagesdir': 'images',
+				'imagesoutdir': imagesCatalogDir,
+				'imagesdir': imagesCatalogDir,
 				'toc': 'left',
 				'icons': 'font',
 				'setanchors': 'true',
