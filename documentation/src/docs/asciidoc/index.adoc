@@ -4,17 +4,19 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Chri
 :imagesdir: images
 ifdef::backend-pdf[:imagesdir: {imagesoutdir}]
 ifdef::backend-pdf[:source-highlighter: rouge]
-
+//
+// Blank lines are not permitted in the doc-header: http://asciidoctor.org/docs/user-manual/#doc-header
+//
 :sectnums:
-
+//
 :javadoc-root:                      link:../api
-
+//
 :snapshot-repo:                     https://oss.sonatype.org/content/repositories/snapshots
-
+//
 :junit-team:                        https://github.com/junit-team
 :junit5-repo:                       {junit-team}/junit5
 :current-branch:                    {junit5-repo}/tree/{release-branch}
-
+//
 :junit-platform-console:            {javadoc-root}/org/junit/platform/console/package-summary.html[junit-platform-console]
 :junit-platform-engine:             {javadoc-root}/org/junit/platform/engine/package-summary.html[junit-platform-engine]
 :junit-platform-launcher:           {javadoc-root}/org/junit/platform/launcher/package-summary.html[junit-platform-launcher]
@@ -28,7 +30,7 @@ ifdef::backend-pdf[:source-highlighter: rouge]
 :DiscoverySelectors_selectMethod:   {javadoc-root}/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod-java.lang.String-[selectMethod(String) in DiscoverySelectors]
 :TestExecutionListener:             {javadoc-root}/org/junit/platform/launcher/TestExecutionListener.html[TestExecutionListener]
 :standard-include-class-name-pattern: ^.*Tests?$
-
+//
 :api-package:                       {javadoc-root}/org/junit/jupiter/api/package-summary.html[org.junit.jupiter.api]
 :extension-api-package:             {javadoc-root}/org/junit/jupiter/api/extension/package-summary.html[org.junit.jupiter.api.extension]
 :params-provider-package:                       {javadoc-root}/org/junit/jupiter/params/provider/package-summary.html[org.junit.jupiter.params.provider]
@@ -52,20 +54,20 @@ ifdef::backend-pdf[:source-highlighter: rouge]
 :TestInfo:                          {javadoc-root}/org/junit/jupiter/api/TestInfo.html[TestInfo]
 :TestInstancePostProcessor:         {javadoc-root}/org/junit/jupiter/api/extension/TestInstancePostProcessor.html[TestInstancePostProcessor]
 :TestReporter:                      {javadoc-root}/org/junit/jupiter/api/TestReporter.html[TestReporter]
-
+//
 :DisabledCondition:                 {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
 :TestInfoParameterResolver:         {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java[TestInfoParameterResolver]
 :TestReporterParameterResolver:     {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java[TestReporterParameterResolver]
 :CustomAnnotationParameterResolver: {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java[CustomAnnotationParameterResolver]
 :CustomTypeParameterResolver:       {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java[CustomTypeParameterResolver]
-
+//
 :junit-vintage-engine:              {javadoc-root}/org/junit/vintage/engine/package-summary.html[junit-vintage-engine]
-
+//
 :junit5-samples-repo:               {junit-team}/junit5-samples
 :junit5-gradle-consumer:            {junit5-samples-repo}/tree/{release-branch}/junit5-gradle-consumer[junit5-gradle-consumer]
 :junit5-maven-consumer:             {junit5-samples-repo}/tree/{release-branch}/junit5-maven-consumer[junit5-maven-consumer]
 :MockitoExtension:                  {junit5-samples-repo}/tree/{release-branch}/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
-
+//
 :AssertJ:                           http://joel-costigliola.github.io/assertj/[AssertJ]
 :Hamcrest:                          http://hamcrest.org/JavaHamcrest/[Hamcrest]
 :Specsy:                            http://specsy.org/[Specsy]
