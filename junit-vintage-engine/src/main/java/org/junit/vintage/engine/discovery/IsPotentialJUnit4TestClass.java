@@ -12,6 +12,7 @@ package org.junit.vintage.engine.discovery;
 
 import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
 import static org.junit.platform.commons.util.ReflectionUtils.isPublic;
+import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 import java.util.function.Predicate;
 
@@ -27,7 +28,14 @@ class IsPotentialJUnit4TestClass implements Predicate<Class<?>> {
 			return false;
 		if (!isPublic(candidate))
 			return false;
-		return !candidate.isMemberClass();
+		if (isNonStaticMemberClass(candidate))
+			return false;
+
+		return true;
+	}
+
+	private boolean isNonStaticMemberClass(Class<?> candidate) {
+		return candidate.isMemberClass() && !isStatic(candidate);
 	}
 
 }
