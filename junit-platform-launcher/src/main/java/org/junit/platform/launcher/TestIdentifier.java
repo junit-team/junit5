@@ -24,6 +24,7 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestDescriptor.Type;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 
@@ -45,7 +46,7 @@ public final class TestIdentifier implements Serializable {
 	private final String legacyReportingName;
 	private final TestSource source;
 	private final Set<TestTag> tags;
-	private final TestDescriptor.Type type;
+	private final Type type;
 
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
@@ -57,14 +58,14 @@ public final class TestIdentifier implements Serializable {
 		String displayName = testDescriptor.getDisplayName();
 		TestSource source = testDescriptor.getSource().orElse(null);
 		Set<TestTag> tags = testDescriptor.getTags();
-		TestDescriptor.Type type = testDescriptor.getType();
+		Type type = testDescriptor.getType();
 		String parentId = testDescriptor.getParent().map(
 			parentDescriptor -> parentDescriptor.getUniqueId().toString()).orElse(null);
 		String legacyReportingName = testDescriptor.getLegacyReportingName();
 		return new TestIdentifier(uniqueId, displayName, source, tags, type, parentId, legacyReportingName);
 	}
 
-	TestIdentifier(String uniqueId, String displayName, TestSource source, Set<TestTag> tags, TestDescriptor.Type type,
+	TestIdentifier(String uniqueId, String displayName, TestSource source, Set<TestTag> tags, Type type,
 			String parentId, String legacyReportingName) {
 		Preconditions.notNull(type, "TestDescriptor.Type must not be null");
 		this.uniqueId = uniqueId;
@@ -139,7 +140,7 @@ public final class TestIdentifier implements Serializable {
 	 *
 	 * @return the underlying descriptor type; never {@code null}
 	 */
-	public TestDescriptor.Type getType() {
+	public Type getType() {
 		return type;
 	}
 
@@ -148,7 +149,7 @@ public final class TestIdentifier implements Serializable {
 	 *
 	 * @return {@code true} if the underlying descriptor type represents a test,
 	 * {@code false} otherwise
-	 * @see TestDescriptor.Type#isTest()
+	 * @see Type#isTest()
 	 */
 	public boolean isTest() {
 		return getType().isTest();
@@ -159,7 +160,7 @@ public final class TestIdentifier implements Serializable {
 	 *
 	 * @return {@code true} if the underlying descriptor type represents a container,
 	 * {@code false} otherwise
-	 * @see TestDescriptor.Type#isContainer()
+	 * @see Type#isContainer()
 	 */
 	public boolean isContainer() {
 		return getType().isContainer();
