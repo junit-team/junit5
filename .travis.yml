@@ -15,4 +15,6 @@ install:
   - ./gradlew -version
 
 script:
+  - java -version
+  - ./gradlew -version
   - ./gradlew check --scan
