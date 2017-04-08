@@ -1,36 +1,17 @@
 language: java
-
-sudo: required
-
-# required for oraclejdk9
+sudo: false
 dist: trusty
 
 jdk:
   - oraclejdk8
-  - oraclejdk9
 
 addons:
   apt:
     packages:
       - oracle-java8-installer
 
-matrix:
-  allow_failures:
-    - jdk: oraclejdk9
-
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
-# Display Gradle version instead of letting Travis execute './gradlew assemble' by default
-install: ./gradlew -version
+install:
+  - ./gradlew -version
 
 script:
-  - java -version
-  - ./gradlew -version
-  - ./gradlew --refresh-dependencies clean check --scan
+  - ./gradlew check --scan
