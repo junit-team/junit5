@@ -55,4 +55,5 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* Fixed a bug where static member classes were incorrectly being filtered out.
+  They are now considered valid JUnit Vintage test classes.
