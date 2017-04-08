@@ -10,11 +10,9 @@ addons:
     packages:
       - oracle-java8-installer
 
-# Display Gradle version instead of letting Travis execute './gradlew assemble' by default 
+# Display Gradle version instead of letting Travis execute './gradlew assemble' by default
 install:
   - ./gradlew -version
 
 script:
-  - java -version
-  - ./gradlew -version
   - ./gradlew check --scan
