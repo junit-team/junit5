@@ -70,7 +70,7 @@ asciidoctor {
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
-                'imagesoutdir': buildImagesDir,
+				'imagesoutdir': buildImagesDir,
 				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend
 				'tabsize': '4',
 				'toc': 'left',
