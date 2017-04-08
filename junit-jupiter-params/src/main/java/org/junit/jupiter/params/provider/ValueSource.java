@@ -28,7 +28,7 @@ import org.junit.platform.commons.meta.API;
  * {@link #longs}, and {@link #doubles}.
  *
  * <p>These values are then provided as arguments to {@code @ParameterizedTest}
- * methods using a {@code @ValueArgumentsProvider}.
+ * methods using a {@code ValueArgumentsProvider}.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource

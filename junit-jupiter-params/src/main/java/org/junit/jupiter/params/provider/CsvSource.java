@@ -25,7 +25,7 @@ import org.junit.platform.commons.meta.API;
  * comma-separated values (CSV) from its {@link value} attribute.
  *
  * <p>These values are then provided as arguments to {@code @ParameterizedTest}
- * methods using a {@code @CsvArgumentsProvider}.
+ * methods using a {@code CsvArgumentsProvider}.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource

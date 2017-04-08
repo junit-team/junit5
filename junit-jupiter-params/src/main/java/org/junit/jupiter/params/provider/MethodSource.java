@@ -26,7 +26,7 @@ import org.junit.platform.commons.meta.API;
  * annotation is used.
  *
  * <p>These values are then provided as arguments to {@code @ParameterizedTest}
- * methods using a {@code @MethodArgumentsProvider}.
+ * methods using a {@code MethodArgumentsProvider}.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource

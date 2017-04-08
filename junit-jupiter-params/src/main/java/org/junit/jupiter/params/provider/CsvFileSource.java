@@ -25,7 +25,7 @@ import org.junit.platform.commons.meta.API;
  * declare comma-separated values (CSV) files from one or more classpath resources.
  *
  * <p>The lines of these CSV files are then provided as arguments to
- * {@code @ParameterizedTest} methods using a {@code @CsvFileArgumentsProvider}.
+ * {@code @ParameterizedTest} methods using a {@code CsvFileArgumentsProvider}.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
