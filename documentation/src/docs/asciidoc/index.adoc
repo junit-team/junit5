@@ -2,7 +2,7 @@
 = JUnit 5 User Guide
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Christian Stein
 :imagesdir: images
-ifdef::backend-pdf[:imagesdir: {docdir}/{imagesdir}]
+ifdef::backend-pdf[:imagesdir: {imagesoutdir}]
 ifdef::backend-pdf[:source-highlighter: rouge]
 
 :sectnums:

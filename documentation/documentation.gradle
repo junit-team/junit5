@@ -54,6 +54,8 @@ asciidoctor {
 	// enable the Asciidoctor Diagram extension
 	requires 'asciidoctor-diagram'
 
+	def buildImagesDir = new File(buildDir, 'asciidoc/images')
+
 	separateOutputDirs false
 	sources { include 'index.adoc' }
 
@@ -68,6 +70,7 @@ asciidoctor {
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
+                'imagesoutdir': buildImagesDir,
 				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend
 				'tabsize': '4',
 				'toc': 'left',
