@@ -9,6 +9,7 @@ buildscript {
 	dependencies {
 		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.2.0'
 		classpath 'org.ajoberstar:gradle-git:1.7.0'
+		classpath 'org.ajoberstar:gradle-git-publish:0.2.1'
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
 	}
@@ -427,7 +428,7 @@ subprojects { subproj ->
 configure(rootProject) {
 	description = 'JUnit 5'
 
-	apply plugin: "org.ajoberstar.github-pages"
+	apply plugin: "org.ajoberstar.git-publish"
 
 	jar.enabled = false
 	uploadArchives.enabled = false
@@ -552,24 +553,20 @@ configure(rootProject) {
 
 	createCurrentDocsFolder.onlyIf { project.hasProperty('replaceCurrentDocs') }
 
-	githubPages {
+	gitPublish {
 		repoUri = 'https://github.com/junit-team/junit5.git'
+		branch = 'gh-pages'
 
-		credentials {
-			username = project.hasProperty('githubToken') ? project.githubToken : ''
-			password = ''
-		}
-
-		pages {
+		contents {
 			from docsDir
 			into "docs"
 		}
 
-		deleteExistingFiles = false
+		preserve { include '**/*' }
 	}
 
-	prepareGhPages.dependsOn(prepareDocsForUploadToGhPages)
-	prepareGhPages.dependsOn(createCurrentDocsFolder)
+	gitPublishCommit.dependsOn(prepareDocsForUploadToGhPages)
+	gitPublishCommit.dependsOn(createCurrentDocsFolder)
 
 	task wrapper(type: Wrapper) {
 		description = 'Generates gradlew and gradlew.bat scripts'
