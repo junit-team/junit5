@@ -611,7 +611,7 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="overview"><a class="anchor" href="#overview"></a>1. Overview</h2>
+<h2 id="overview">1. Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The goal of this document is to provide comprehensive reference documentation for
@@ -619,7 +619,7 @@ programmers writing tests, extension authors, and engine authors as well as buil
 and IDE vendors.</p>
 </div>
 <div class="sect2">
-<h3 id="overview-what-is-junit-5"><a class="anchor" href="#overview-what-is-junit-5"></a>1.1. What is JUnit 5?</h3>
+<h3 id="overview-what-is-junit-5">1.1. What is JUnit 5?</h3>
 <div class="paragraph">
 <p>Unlike previous versions of JUnit, JUnit 5 is composed of several different modules from
 three different sub-projects.</p>
@@ -648,7 +648,7 @@ the platform.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="overview-java-versions"><a class="anchor" href="#overview-java-versions"></a>1.2. Supported Java Versions</h3>
+<h3 id="overview-java-versions">1.2. Supported Java Versions</h3>
 <div class="paragraph">
 <p>JUnit 5 requires Java 8 at runtime. However, you can still test code that has been
 compiled with previous versions of the JDK.</p>
@@ -657,7 +657,7 @@ compiled with previous versions of the JDK.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="installation"><a class="anchor" href="#installation"></a>2. Installation</h2>
+<h2 id="installation">2. Installation</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Artifacts for final releases and milestones are deployed to Maven Central.</p>
@@ -667,9 +667,9 @@ compiled with previous versions of the JDK.</p>
 <a href="https://oss.sonatype.org/content/repositories/snapshots/org/junit/">/org/junit</a>.</p>
 </div>
 <div class="sect2">
-<h3 id="dependency-metadata"><a class="anchor" href="#dependency-metadata"></a>2.1. Dependency Metadata</h3>
+<h3 id="dependency-metadata">2.1. Dependency Metadata</h3>
 <div class="sect3">
-<h4 id="dependency-metadata-junit-platform"><a class="anchor" href="#dependency-metadata-junit-platform"></a>2.1.1. JUnit Platform</h4>
+<h4 id="dependency-metadata-junit-platform">2.1.1. JUnit Platform</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -736,7 +736,7 @@ environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to
 </div>
 </div>
 <div class="sect3">
-<h4 id="dependency-metadata-junit-jupiter"><a class="anchor" href="#dependency-metadata-junit-jupiter"></a>2.1.2. JUnit Jupiter</h4>
+<h4 id="dependency-metadata-junit-jupiter">2.1.2. JUnit Jupiter</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -773,7 +773,7 @@ only required for running selected JUnit 4 rules.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="dependency-metadata-junit-vintage"><a class="anchor" href="#dependency-metadata-junit-vintage"></a>2.1.3. JUnit Vintage</h4>
+<h4 id="dependency-metadata-junit-vintage">2.1.3. JUnit Vintage</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -799,15 +799,15 @@ written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="dependency-diagram"><a class="anchor" href="#dependency-diagram"></a>2.2. Dependency Diagram</h3>
+<h3 id="dependency-diagram">2.2. Dependency Diagram</h3>
 <div class="imageblock">
 <div class="content">
-<img src="images/component-diagram.svg" alt="component diagram" width="1490" height="503">
+<img src="/Users/marcp/Repositories/junit5/documentation/build/asciidoc/images/component-diagram.svg" alt="component diagram" width="1628" height="538">
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="dependency-metadata-junit-jupiter-samples"><a class="anchor" href="#dependency-metadata-junit-jupiter-samples"></a>2.3. JUnit Jupiter Sample Projects</h3>
+<h3 id="dependency-metadata-junit-jupiter-samples">2.3. JUnit Jupiter Sample Projects</h3>
 <div class="paragraph">
 <p>The <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository hosts a collection of sample
 projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respective
@@ -827,7 +827,7 @@ projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respect
 </div>
 </div>
 <div class="sect1">
-<h2 id="writing-tests"><a class="anchor" href="#writing-tests"></a>3. Writing Tests</h2>
+<h2 id="writing-tests">3. Writing Tests</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="title">A first test case</div>
@@ -847,7 +847,7 @@ projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respect
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-annotations"><a class="anchor" href="#writing-tests-annotations"></a>3.1. Annotations</h3>
+<h3 id="writing-tests-annotations">3.1. Annotations</h3>
 <div class="paragraph">
 <p>JUnit Jupiter supports the following annotations for configuring tests and extending the framework.</p>
 </div>
@@ -918,7 +918,7 @@ module.</p>
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="writing-tests-meta-annotations"><a class="anchor" href="#writing-tests-meta-annotations"></a>3.1.1. Meta-Annotations and Composed Annotations</h4>
+<h4 id="writing-tests-meta-annotations">3.1.1. Meta-Annotations and Composed Annotations</h4>
 <div class="paragraph">
 <p>JUnit Jupiter annotations can be used as <em>meta-annotations</em>. That means that you can define
 your own <em>composed annotation</em> that will automatically <em>inherit</em> the semantics of its
@@ -948,7 +948,7 @@ as follows. <code>@Fast</code> can then be used as a drop-in replacement for <co
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-standard"><a class="anchor" href="#writing-tests-standard"></a>3.2. Standard Test Class</h3>
+<h3 id="writing-tests-standard">3.2. Standard Test Class</h3>
 <div class="listingblock">
 <div class="title">A standard test case</div>
 <div class="content">
@@ -1011,7 +1011,7 @@ Neither test classes nor test methods need to be <code>public</code>.
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-display-names"><a class="anchor" href="#writing-tests-display-names"></a>3.3. Display Names</h3>
+<h3 id="writing-tests-display-names">3.3. Display Names</h3>
 <div class="paragraph">
 <p>Test classes and test methods can declare custom display names&#8201;&#8212;&#8201;with spaces, special
 characters, and even emojis&#8201;&#8212;&#8201;that will be displayed by test runners and test reporting.</p>
@@ -1044,7 +1044,7 @@ characters, and even emojis&#8201;&#8212;&#8201;that will be displayed by test r
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-assertions"><a class="anchor" href="#writing-tests-assertions"></a>3.4. Assertions</h3>
+<h3 id="writing-tests-assertions">3.4. Assertions</h3>
 <div class="paragraph">
 <p>JUnit Jupiter comes with many of the assertion methods that JUnit 4 has and adds a few
 that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assertions
@@ -1143,7 +1143,7 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-assertions-third-party"><a class="anchor" href="#writing-tests-assertions-third-party"></a>3.4.1. Third-party Assertion Libraries</h4>
+<h4 id="writing-tests-assertions-third-party">3.4.1. Third-party Assertion Libraries</h4>
 <div class="paragraph">
 <p>Even though the assertion facilities provided by JUnit Jupiter are sufficient for many
 testing scenarios, there are times when more power and additional functionality such as
@@ -1192,7 +1192,7 @@ then use them in tests like in the <code>assertWithHamcrestMatcher()</code> meth
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-assumptions"><a class="anchor" href="#writing-tests-assumptions"></a>3.5. Assumptions</h3>
+<h3 id="writing-tests-assumptions">3.5. Assumptions</h3>
 <div class="paragraph">
 <p>JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and adds a
 few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assumptions
@@ -1238,7 +1238,7 @@ are static methods in the <code><a href="../api/org/junit/jupiter/api/Assumption
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-disabling"><a class="anchor" href="#writing-tests-disabling"></a>3.6. Disabling Tests</h3>
+<h3 id="writing-tests-disabling">3.6. Disabling Tests</h3>
 <div class="paragraph">
 <p>Here&#8217;s a disabled test case.</p>
 </div>
@@ -1278,7 +1278,7 @@ are static methods in the <code><a href="../api/org/junit/jupiter/api/Assumption
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-tagging-and-filtering"><a class="anchor" href="#writing-tests-tagging-and-filtering"></a>3.7. Tagging and Filtering</h3>
+<h3 id="writing-tests-tagging-and-filtering">3.7. Tagging and Filtering</h3>
 <div class="paragraph">
 <p>Test classes and methods can be tagged. Those tags can later be used to filter
 <a href="#running-tests">test discovery and execution</a>.</p>
@@ -1302,7 +1302,7 @@ are static methods in the <code><a href="../api/org/junit/jupiter/api/Assumption
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-nested"><a class="anchor" href="#writing-tests-nested"></a>3.8. Nested Tests</h3>
+<h3 id="writing-tests-nested">3.8. Nested Tests</h3>
 <div class="paragraph">
 <p>Nested tests give the test writer more capabilities to express the relationship among
 several group of tests. Here&#8217;s an elaborate example.</p>
@@ -1413,7 +1413,7 @@ to be full members of the test class family with one exception: <code>@BeforeAll
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dependency-injection"><a class="anchor" href="#writing-tests-dependency-injection"></a>3.9. Dependency Injection for Constructors and Methods</h3>
+<h3 id="writing-tests-dependency-injection">3.9. Dependency Injection for Constructors and Methods</h3>
 <div class="paragraph">
 <p>In all prior JUnit versions, test constructors or methods were not allowed to have
 parameters (at least not with the standard <code>Runner</code> implementations). As one of the major
@@ -1587,7 +1587,7 @@ methods.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-interfaces-and-default-methods"><a class="anchor" href="#writing-tests-test-interfaces-and-default-methods"></a>3.10. Test Interfaces and Default Methods</h3>
+<h3 id="writing-tests-test-interfaces-and-default-methods">3.10. Test Interfaces and Default Methods</h3>
 <div class="paragraph">
 <p>JUnit Jupiter allows <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be
 declared on interface default methods. In addition, <code>@BeforeAll</code> and <code>@AfterAll</code> can be
@@ -1672,7 +1672,7 @@ implement it automatically inherit its tags and extensions. See
 <div class="paragraph">
 <p>Running the <code>TestInterfaceDemo</code> results in output similar to the following:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
 <pre>:junitPlatformTest
 18:28:13.967 [main] INFO  example.testinterface.TestLifecycleLogger - beforeAllTests
@@ -1804,7 +1804,7 @@ corresponding tests. Of course you&#8217;ll have to implement the abstract metho
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-repeated-tests"><a class="anchor" href="#writing-tests-repeated-tests"></a>3.11. Repeated Tests</h3>
+<h3 id="writing-tests-repeated-tests">3.11. Repeated Tests</h3>
 <div class="paragraph">
 <p>JUnit Jupiter provides the ability to repeat a test a specified number of times simply by
 annotating a method with <code>@RepeatedTest</code> and specifying the total number of repetitions
@@ -1859,7 +1859,7 @@ repetitions programmatically, a developer can choose to have an instance of
 <code>RepetitionInfo</code> injected into a <code>@RepeatedTest</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code> method.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-repeated-tests-examples"><a class="anchor" href="#writing-tests-repeated-tests-examples"></a>3.11.1. Repeated Test Examples</h4>
+<h4 id="writing-tests-repeated-tests-examples">3.11.1. Repeated Test Examples</h4>
 <div class="paragraph">
 <p>The <code>RepeatedTestsDemo</code> class at the end of this section demonstrates several examples of
 repeated tests.</p>
@@ -1892,7 +1892,7 @@ before each repetition of each repeated test. By having the <code>TestInfo</code
 information about the currently executing repeated test. Executing <code>RepeatedTestsDemo</code>
 with the <code>INFO</code> log level enabled results in the following output.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
 <pre>INFO: About to execute repetition 1 of 10 for repeatedTest
 INFO: About to execute repetition 2 of 10 for repeatedTest
@@ -1978,7 +1978,7 @@ INFO: About to execute repetition 5 of 5 for repeatedTestInGerman</pre>
 unicode theme enabled, execution of <code>RepeatedTestsDemo</code> results in the following output
 to the console.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
 <pre>├─ RepeatedTestsDemo ✔
 │  ├─ repeatedTest() ✔
@@ -2013,7 +2013,7 @@ to the console.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-parameterized-tests"><a class="anchor" href="#writing-tests-parameterized-tests"></a>3.12. Parameterized Tests</h3>
+<h3 id="writing-tests-parameterized-tests">3.12. Parameterized Tests</h3>
 <div class="paragraph">
 <p>Parameterized tests make it possible to run a test multiple times with different arguments. They are
 declared just like regular <code>@Test</code> methods but use the <code>@ParameterizedTest</code> annotation instead. In
@@ -2034,22 +2034,22 @@ invocation.</p>
 of arguments. When executing this method, each invocation will be reported separately. For instance,
 the <code>ConsoleLauncher</code> will print output similar to the following.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>testWithStringParameter(String) ✔
+<pre class="CodeRay highlight"><code>testWithStringParameter(String) ✔
 ├─ [1] Hello ✔
-└─ [2] World ✔</pre>
+└─ [2] World ✔</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>3.12.1. Required Setup</h4>
+<h4 id="writing-tests-parameterized-tests-setup">3.12.1. Required Setup</h4>
 <div class="paragraph">
 <p>In order to use parameterized tests you need to add a dependency on the <code>junit-jupiter-params</code>
 artifact. Please refer to <a href="#dependency-metadata">Dependency Metadata</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.12.2. Sources of Arguments</h4>
+<h4 id="writing-tests-parameterized-tests-sources">3.12.2. Sources of Arguments</h4>
 <div class="paragraph">
 <p>Out of the box, JUnit Jupiter provides quite a few <em>source</em> annotations. Each of the
 following subsections provides a brief overview and an example for each of them. Please
@@ -2057,7 +2057,7 @@ refer to the JavaDoc in the <code><a href="../api/org/junit/jupiter/params/provi
 information.</p>
 </div>
 <div class="sect4">
-<h5 id="writing-tests-parameterized-tests-sources-ValueSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-ValueSource"></a>@ValueSource</h5>
+<h5 id="writing-tests-parameterized-tests-sources-ValueSource">@ValueSource</h5>
 <div class="paragraph">
 <p><code>@ValueSource</code> is one of the simplest possible sources. It lets you specify an array of literals of
 primitive types (either <code>String</code>, <code>int</code>, <code>long</code>, or <code>double</code>) and can only be used for providing a
@@ -2074,7 +2074,7 @@ single parameter per invocation.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="writing-tests-parameterized-tests-sources-EnumSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-EnumSource"></a>@EnumSource</h5>
+<h5 id="writing-tests-parameterized-tests-sources-EnumSource">@EnumSource</h5>
 <div class="paragraph">
 <p><code>@EnumSource</code> provides a convenient way to use <code>Enum</code> constants. The annotation provides an optional
 <code>names</code> parameter that lets you specify which constants shall be used. If omitted, all constants
@@ -2091,7 +2091,7 @@ will be used like in the following example.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="writing-tests-parameterized-tests-sources-MethodSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-MethodSource"></a>@MethodSource</h5>
+<h5 id="writing-tests-parameterized-tests-sources-MethodSource">@MethodSource</h5>
 <div class="paragraph">
 <p><code>@MethodSource</code> allows to refer to one or multiple methods of the test class. Each method must
 return a <code>Stream</code>, an <code>Iterable</code>, an <code>Iterator</code>, or an array of arguments. In addition, each method
@@ -2135,7 +2135,7 @@ Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory metho
 </div>
 </div>
 <div class="sect4">
-<h5 id="writing-tests-parameterized-tests-sources-CsvSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-CsvSource"></a>@CsvSource</h5>
+<h5 id="writing-tests-parameterized-tests-sources-CsvSource">@CsvSource</h5>
 <div class="paragraph">
 <p><code>@CsvSource</code> allows you to express argument lists as comma-separated values (i.e.,
 <code>String</code> literals).</p>
@@ -2152,7 +2152,7 @@ Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory metho
 </div>
 </div>
 <div class="sect4">
-<h5 id="writing-tests-parameterized-tests-sources-CsvFileSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-CsvFileSource"></a>@CsvFileSource</h5>
+<h5 id="writing-tests-parameterized-tests-sources-CsvFileSource">@CsvFileSource</h5>
 <div class="paragraph">
 <p><code>@CsvFileSource</code> lets you use CSV files from the classpath. Each line from a CSV file
 results in one invocation of the parameterized test.</p>
@@ -2177,7 +2177,7 @@ bar, 2
 </div>
 </div>
 <div class="sect4">
-<h5 id="writing-tests-parameterized-tests-sources-ArgumentsSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-ArgumentsSource"></a>@ArgumentsSource</h5>
+<h5 id="writing-tests-parameterized-tests-sources-ArgumentsSource">@ArgumentsSource</h5>
 <div class="paragraph">
 <p><code>@ArgumentsSource</code> can be used to specify a custom, reusable <code>ArgumentsProvider</code>.</p>
 </div>
@@ -2201,9 +2201,9 @@ bar, 2
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.12.3. Argument Conversion</h4>
+<h4 id="writing-tests-parameterized-tests-argument-conversion">3.12.3. Argument Conversion</h4>
 <div class="sect4">
-<h5 id="writing-tests-parameterized-tests-argument-conversion-implicit"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-implicit"></a>Implicit Conversion</h5>
+<h5 id="writing-tests-parameterized-tests-argument-conversion-implicit">Implicit Conversion</h5>
 <div class="paragraph">
 <p>To support use cases like <code>@CsvSource</code>, JUnit Jupiter provides a number of built-in implicit
 type converters. The conversion process depends on the declared type of each method parameter.</p>
@@ -2313,7 +2313,7 @@ be converted into the corresponding <code>TimeUnit</code> enum constant.</p>
 </table>
 </div>
 <div class="sect4">
-<h5 id="writing-tests-parameterized-tests-argument-conversion-explicit"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-explicit"></a>Explicit Conversion</h5>
+<h5 id="writing-tests-parameterized-tests-argument-conversion-explicit">Explicit Conversion</h5>
 <div class="paragraph">
 <p>Instead of using implicit argument conversion you may explicitly specify an <code>ArgumentConverter</code> to
 use for a certain parameter using the <code>@ConvertWith</code> annotation like in the following example.</p>
@@ -2354,7 +2354,7 @@ reference implementation: <code>JavaTimeArgumentConverter</code>. It is used via
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.12.4. Customizing Display Names</h4>
+<h4 id="writing-tests-parameterized-tests-display-names">3.12.4. Customizing Display Names</h4>
 <div class="paragraph">
 <p>By default, the display name of a parameterized test invocation contains the invocation
 index and the <code>String</code> representation of all arguments for that specific invocation.
@@ -2373,12 +2373,12 @@ However, you can customize invocation display names via the <code>name</code> at
 <div class="paragraph">
 <p>When executing the above method using the <code>ConsoleLauncher</code> you will see output similar to the following.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>Display name of container ✔
+<pre class="CodeRay highlight"><code>Display name of container ✔
 ├─ 1 ==&gt; first='foo', second=1 ✔
 ├─ 2 ==&gt; first='bar', second=2 ✔
-└─ 3 ==&gt; first='baz, qux', second=3 ✔</pre>
+└─ 3 ==&gt; first='baz, qux', second=3 ✔</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2412,7 +2412,7 @@ However, you can customize invocation display names via the <code>name</code> at
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.12.5. Lifecycle and Interoperability</h4>
+<h4 id="writing-tests-parameterized-tests-lifecycle-interop">3.12.5. Lifecycle and Interoperability</h4>
 <div class="paragraph">
 <p>Each invocation of a parameterized test has the same lifecycle as a regular <code>@Test</code>
 method. For example, <code>@BeforeEach</code> methods will be executed before each invocation.
@@ -2436,7 +2436,7 @@ parameters that are resolved by argument sources need to come first in the argum
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.13. Dynamic Tests</h3>
+<h3 id="writing-tests-dynamic-tests">3.13. Dynamic Tests</h3>
 <div class="paragraph">
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in <a href="#writing-tests-annotations">Annotations</a>
 is very similar to the <code>@Test</code> annotation in JUnit 4.
@@ -2497,7 +2497,7 @@ methods; however, this might be complemented by a registration facility in a lat
 release.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.13.1. Dynamic Test Examples</h4>
+<h4 id="writing-tests-dynamic-tests-examples">3.13.1. Dynamic Test Examples</h4>
 <div class="paragraph">
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories and dynamic tests.</p>
 </div>
@@ -2626,19 +2626,19 @@ and power of dynamic tests.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="running-tests"><a class="anchor" href="#running-tests"></a>4. Running Tests</h2>
+<h2 id="running-tests">4. Running Tests</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="running-tests-ide"><a class="anchor" href="#running-tests-ide"></a>4.1. IDE Support</h3>
+<h3 id="running-tests-ide">4.1. IDE Support</h3>
 <div class="sect3">
-<h4 id="intellij-idea"><a class="anchor" href="#intellij-idea"></a>4.1.1. IntelliJ IDEA</h4>
+<h4 id="intellij-idea">4.1.1. IntelliJ IDEA</h4>
 <div class="paragraph">
 <p>IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2.
 For details please see the <a href="https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/">post on the IntelliJ IDEA blog</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="eclipse-beta-support"><a class="anchor" href="#eclipse-beta-support"></a>4.1.2. Eclipse Beta Support</h4>
+<h4 id="eclipse-beta-support">4.1.2. Eclipse Beta Support</h4>
 <div class="paragraph">
 <p>Eclipse 4.7 (<em>Oxygen</em>) has beta support for the JUnit Platform and JUnit Jupiter. For
 details on how to set it up, please consult the
@@ -2646,7 +2646,7 @@ details on how to set it up, please consult the
 </div>
 </div>
 <div class="sect3">
-<h4 id="other-ides"><a class="anchor" href="#other-ides"></a>4.1.3. Other IDEs</h4>
+<h4 id="other-ides">4.1.3. Other IDEs</h4>
 <div class="paragraph">
 <p>At the time of this writing, there is no direct support for running tests on the JUnit
 Platform within IDEs other than with IntelliJ IDEA or the beta support in Eclipse.
@@ -2658,9 +2658,9 @@ Runner</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-build"><a class="anchor" href="#running-tests-build"></a>4.2. Build Support</h3>
+<h3 id="running-tests-build">4.2. Build Support</h3>
 <div class="sect3">
-<h4 id="running-tests-build-gradle"><a class="anchor" href="#running-tests-build-gradle"></a>4.2.1. Gradle</h4>
+<h4 id="running-tests-build-gradle">4.2.1. Gradle</h4>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic Gradle plugin that allows you to run any kind
 of test that is supported by a <code>TestEngine</code> (e.g., JUnit 3, JUnit 4, JUnit Jupiter,
@@ -2668,7 +2668,7 @@ of test that is supported by a <code>TestEngine</code> (e.g., JUnit 3, JUnit 4, 
 example of the plugin in action.</p>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-gradle-junit-enable"><a class="anchor" href="#running-tests-build-gradle-junit-enable"></a>Enabling the JUnit Gradle Plugin</h5>
+<h5 id="running-tests-build-gradle-junit-enable">Enabling the JUnit Gradle Plugin</h5>
 <div class="paragraph">
 <p>To use the JUnit Gradle plugin, you first need to make sure that you are running Gradle
 2.5 or higher. Once you&#8217;ve done that, you can configure <code>build.gradle</code> as follows.</p>
@@ -2691,7 +2691,7 @@ apply plugin: <span class="string"><span class="delimiter">'</span><span class="
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-gradle-junit-configure"><a class="anchor" href="#running-tests-build-gradle-junit-configure"></a>Configuring the JUnit Gradle Plugin</h5>
+<h5 id="running-tests-build-gradle-junit-configure">Configuring the JUnit Gradle Plugin</h5>
 <div class="paragraph">
 <p>Once the JUnit Gradle plugin has been applied, you can configure it as follows.</p>
 </div>
@@ -2732,7 +2732,7 @@ can be overridden via the <code>enableStandardTestTask</code> flag.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-gradle-selectors"><a class="anchor" href="#running-tests-build-gradle-selectors"></a>Configuring Selectors</h5>
+<h5 id="running-tests-build-gradle-selectors">Configuring Selectors</h5>
 <div class="paragraph">
 <p>By default, the plugin will scan your project&#8217;s output directories for tests. However,
 you can specify which tests to execute explicitly using the <code>selectors</code> extension element.</p>
@@ -2795,7 +2795,7 @@ you can specify which tests to execute explicitly using the <code>selectors</cod
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-gradle-filters"><a class="anchor" href="#running-tests-build-gradle-filters"></a>Configuring Filters</h5>
+<h5 id="running-tests-build-gradle-filters">Configuring Filters</h5>
 <div class="paragraph">
 <p>You can configure filters for the test plan by using the <code>filters</code> extension. By default,
 all engines and tags are included in the test plan. Only the default
@@ -2837,7 +2837,7 @@ excluded using <code>packages {include &#8230;&#8203;}</code> or <code>packages 
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-gradle-engines-configure"><a class="anchor" href="#running-tests-build-gradle-engines-configure"></a>Configuring Test Engines</h5>
+<h5 id="running-tests-build-gradle-engines-configure">Configuring Test Engines</h5>
 <div class="paragraph">
 <p>In order to have the JUnit Gradle plugin run any tests at all, a <code>TestEngine</code>
 implementation must be on the classpath.</p>
@@ -2870,7 +2870,7 @@ similar to the following.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-gradle-junit-using"><a class="anchor" href="#running-tests-build-gradle-junit-using"></a>Using the JUnit Gradle Plugin</h5>
+<h5 id="running-tests-build-gradle-junit-using">Using the JUnit Gradle Plugin</h5>
 <div class="paragraph">
 <p>Once the JUnit Gradle plugin has been applied and configured, you have a new
 <code>junitPlatformTest</code> task at your disposal.</p>
@@ -2885,7 +2885,7 @@ supplied via the <code>includeClassNamePattern</code> (which defaults to
 <p>Executing the <code>junitPlatformTest</code> task in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project results
 in output similar to the following:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
 <pre>:junitPlatformTest
 
@@ -2909,7 +2909,7 @@ BUILD SUCCESSFUL</pre>
 <div class="paragraph">
 <p>If a test fails, the build will fail with output similar to the following:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
 <pre>:junitPlatformTest
 
@@ -2962,8 +2962,8 @@ The <em>exit value</em> is <code>1</code> if any containers or tests failed; oth
 <td class="content">
 <div class="title">Current Limitations of the JUnit Gradle Plugin</div>
 The results of any tests run via the JUnit Gradle plugin will not be included
-in the standard test report generated by Gradle; however, the test results can
-typically be aggregated on a CI server. See the <code>reportsDir</code> property of the plugin.
+         in the standard test report generated by Gradle; however, the test results can
+		 typically be aggregated on a CI server. See the <code>reportsDir</code> property of the plugin.
 </td>
 </tr>
 </table>
@@ -2971,7 +2971,7 @@ typically be aggregated on a CI server. See the <code>reportsDir</code> property
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-build-maven"><a class="anchor" href="#running-tests-build-maven"></a>4.2.2. Maven</h4>
+<h4 id="running-tests-build-maven">4.2.2. Maven</h4>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic provider for Maven Surefire that lets you run
 JUnit 4 and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
@@ -3001,7 +3001,7 @@ point.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-maven-engines-configure"><a class="anchor" href="#running-tests-build-maven-engines-configure"></a>Configuring Test Engines</h5>
+<h5 id="running-tests-build-maven-engines-configure">Configuring Test Engines</h5>
 <div class="paragraph">
 <p>In order to have Maven Surefire run any tests at all, a <code>TestEngine</code> implementation must be added
 to the runtime classpath.</p>
@@ -3093,7 +3093,7 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-maven-filter-tags"><a class="anchor" href="#running-tests-build-maven-filter-tags"></a>Filtering by tags</h5>
+<h5 id="running-tests-build-maven-filter-tags">Filtering by tags</h5>
 <div class="paragraph">
 <p>You can filter tests by tags using the following configuration properties.</p>
 </div>
@@ -3135,7 +3135,7 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-console-launcher"><a class="anchor" href="#running-tests-console-launcher"></a>4.3. Console Launcher</h3>
+<h3 id="running-tests-console-launcher">4.3. Console Launcher</h3>
 <div class="paragraph">
 <p>The <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> is a command-line Java application that lets you launch
 the JUnit Platform from the console. For example, it can be used to run JUnit
@@ -3154,7 +3154,7 @@ standalone <code>ConsoleLauncher</code> as shown below.</p>
 <div class="paragraph">
 <p>Here&#8217;s an example of its output:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
 <pre>├─ JUnit Vintage
 │  └─ example.JUnit4Tests
@@ -3198,7 +3198,7 @@ failed. Otherwise the exit code is <code>0</code>.
 </table>
 </div>
 <div class="sect3">
-<h4 id="running-tests-console-launcher-options"><a class="anchor" href="#running-tests-console-launcher-options"></a>4.3.1. Options</h4>
+<h4 id="running-tests-console-launcher-options">4.3.1. Options</h4>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -3289,7 +3289,7 @@ final release.
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-junit-platform-runner"><a class="anchor" href="#running-tests-junit-platform-runner"></a>4.4. Using JUnit 4 to Run the JUnit Platform</h3>
+<h3 id="running-tests-junit-platform-runner">4.4. Using JUnit 4 to Run the JUnit Platform</h3>
 <div class="paragraph">
 <p>The <code>JUnitPlatform</code> runner is a JUnit 4 based <code>Runner</code> which enables you to run any test
 whose programming model is supported on the JUnit Platform in a JUnit 4 environment&#8201;&#8212;&#8201;for example, a JUnit Jupiter test class.</p>
@@ -3314,14 +3314,14 @@ time being the <code>JUnitPlatform</code> runner is an easy way to get started.
 </table>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-setup"><a class="anchor" href="#running-tests-junit-platform-runner-setup"></a>4.4.1. Setup</h4>
+<h4 id="running-tests-junit-platform-runner-setup">4.4.1. Setup</h4>
 <div class="paragraph">
 <p>You need the following artifacts and their dependencies on the classpath. See
 <a href="#dependency-metadata">Dependency Metadata</a> for details regarding group IDs, artifact IDs, and
 versions.</p>
 </div>
 <div class="sect4">
-<h5 id="explicit-dependencies"><a class="anchor" href="#explicit-dependencies"></a>Explicit Dependencies</h5>
+<h5 id="explicit-dependencies">Explicit Dependencies</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3340,7 +3340,7 @@ versions.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="transitive-dependencies"><a class="anchor" href="#transitive-dependencies"></a>Transitive Dependencies</h5>
+<h5 id="transitive-dependencies">Transitive Dependencies</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3360,7 +3360,7 @@ versions.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-technical-names"><a class="anchor" href="#running-tests-junit-platform-runner-technical-names"></a>4.4.2. Display Names vs. Technical Names</h4>
+<h4 id="running-tests-junit-platform-runner-technical-names">4.4.2. Display Names vs. Technical Names</h4>
 <div class="paragraph">
 <p>By default, <em>display names</em> will be used for test artifacts; however, when the
 <code>JUnitPlatform</code> runner is used to execute tests with a build tool such as Gradle or
@@ -3372,7 +3372,7 @@ characters. To enable technical names for reporting purposes, simply declare the
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-single-test"><a class="anchor" href="#running-tests-junit-platform-runner-single-test"></a>4.4.3. Single Test Class</h4>
+<h4 id="running-tests-junit-platform-runner-single-test">4.4.3. Single Test Class</h4>
 <div class="paragraph">
 <p>One way to use the <code>JUnitPlatform</code> runner is to annotate a test class with
 <code>@RunWith(JUnitPlatform.class)</code> directly. Please note that the test methods in the
@@ -3406,7 +3406,7 @@ otherwise, IDEs won&#8217;t recognize it as a JUnit 4 test class.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-test-suite"><a class="anchor" href="#running-tests-junit-platform-runner-test-suite"></a>4.4.4. Test Suite</h4>
+<h4 id="running-tests-junit-platform-runner-test-suite">4.4.4. Test Suite</h4>
 <div class="paragraph">
 <p>If you have multiple test classes you can create a test suite as can be seen in the
 following example.</p>
@@ -3449,10 +3449,10 @@ details.
 </div>
 </div>
 <div class="sect1">
-<h2 id="extensions"><a class="anchor" href="#extensions"></a>5. Extension Model</h2>
+<h2 id="extensions">5. Extension Model</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="extensions-overview"><a class="anchor" href="#extensions-overview"></a>5.1. Overview</h3>
+<h3 id="extensions-overview">5.1. Overview</h3>
 <div class="paragraph">
 <p>In contrast to the competing <code>Runner</code>, <code>@Rule</code>, and <code>@ClassRule</code> extension points in
 JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concept: the
@@ -3460,14 +3460,14 @@ JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concep
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-registration"><a class="anchor" href="#extensions-registration"></a>5.2. Registering Extensions</h3>
+<h3 id="extensions-registration">5.2. Registering Extensions</h3>
 <div class="paragraph">
 <p>Extensions can be registered explicitly via
 <a href="#extensions-registration-declarative"><code><a href="../api/org/junit/jupiter/api/extension/ExtendWith.html">@ExtendWith</a></code></a> or automatically via Java&#8217;s
 <a href="#extensions-registration-automatic"><code>ServiceLoader</code> mechanism</a>.</p>
 </div>
 <div class="sect3">
-<h4 id="extensions-registration-declarative"><a class="anchor" href="#extensions-registration-declarative"></a>5.2.1. Declarative Extension Registration</h4>
+<h4 id="extensions-registration-declarative">5.2.1. Declarative Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register one or more extensions <em>declaratively</em> by annotating a test
 interface, test class, test method, or custom <em><a href="#writing-tests-meta-annotations">composed
@@ -3528,7 +3528,7 @@ subclasses, you would annotate the test class as follows.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-registration-automatic"><a class="anchor" href="#extensions-registration-automatic"></a>5.2.2. Automatic Extension Registration</h4>
+<h4 id="extensions-registration-automatic">5.2.2. Automatic Extension Registration</h4>
 <div class="paragraph">
 <p>In addition to <a href="#extensions-registration-declarative">declarative extension registration</a>
 support using annotations, JUnit Jupiter also supports <em>global extension registration</em>
@@ -3541,7 +3541,7 @@ name in a file named <code>org.junit.jupiter.api.extension.Extension</code> with
 <code>/META-INF/services</code> folder in its enclosing JAR file.</p>
 </div>
 <div class="sect4">
-<h5 id="extensions-registration-automatic-enabling"><a class="anchor" href="#extensions-registration-automatic-enabling"></a>Enabling Automatic Extension Detection</h5>
+<h5 id="extensions-registration-automatic-enabling">Enabling Automatic Extension Detection</h5>
 <div class="paragraph">
 <p>Auto-detection is an advanced feature and is therefore not enabled by default. To enable
 it, simply set the <code>junit.extensions.autodetection.enabled</code> configuration key to <code>true</code>.
@@ -3563,7 +3563,7 @@ support for <code>TestInfo</code>, <code>TestReporter</code>, etc.).</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-registration-inheritance"><a class="anchor" href="#extensions-registration-inheritance"></a>5.2.3. Extension Inheritance</h4>
+<h4 id="extensions-registration-inheritance">5.2.3. Extension Inheritance</h4>
 <div class="paragraph">
 <p>Registered extensions are inherited within test class hierarchies with top-down
 semantics. Similarly, extensions registered at the class-level are inherited at the
@@ -3574,7 +3574,7 @@ register a duplicate extension implementation will be ignored.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-conditions"><a class="anchor" href="#extensions-conditions"></a>5.3. Conditional Test Execution</h3>
+<h3 id="extensions-conditions">5.3. Conditional Test Execution</h3>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/ContainerExecutionCondition.html">ContainerExecutionCondition</a></code> and <code><a href="../api/org/junit/jupiter/api/extension/TestExecutionCondition.html">TestExecutionCondition</a></code> define the <code>Extension</code>
 APIs for programmatic, <em>conditional test execution</em>.</p>
@@ -3597,7 +3597,7 @@ the short-circuiting boolean OR operator.</p>
 <p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
 </div>
 <div class="sect3">
-<h4 id="extensions-conditions-deactivation"><a class="anchor" href="#extensions-conditions-deactivation"></a>5.3.1. Deactivating Conditions</h4>
+<h4 id="extensions-conditions-deactivation">5.3.1. Deactivating Conditions</h4>
 <div class="paragraph">
 <p>Sometimes it can be useful to run a test suite <em>without</em> certain conditions being active.
 For example, you may wish to run tests even if they are annotated with <code>@Disabled</code> in
@@ -3615,7 +3615,7 @@ the following system property.</p>
 <p><code>-Djunit.conditions.deactivate=org.junit.*DisabledCondition</code></p>
 </div>
 <div class="sect4">
-<h5 id="extensions-conditions-deactivation-patterns"><a class="anchor" href="#extensions-conditions-deactivation-patterns"></a>Pattern Matching Syntax</h5>
+<h5 id="extensions-conditions-deactivation-patterns">Pattern Matching Syntax</h5>
 <div class="paragraph">
 <p>If the <code>junit.conditions.deactivate</code> pattern consists solely of an asterisk (<code>*</code>), all
 conditions will be deactivated. Otherwise, the pattern will be used to match against the
@@ -3653,7 +3653,7 @@ of its subpackages.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-instance-post-processing"><a class="anchor" href="#extensions-test-instance-post-processing"></a>5.4. Test Instance Post-processing</h3>
+<h3 id="extensions-test-instance-post-processing">5.4. Test Instance Post-processing</h3>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/TestInstancePostProcessor.html">TestInstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
 process</em> test instances.</p>
@@ -3668,7 +3668,7 @@ initialization methods on the test instance, etc.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-parameter-resolution"><a class="anchor" href="#extensions-parameter-resolution"></a>5.5. Parameter Resolution</h3>
+<h3 id="extensions-parameter-resolution">5.5. Parameter Resolution</h3>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving parameters at
 runtime.</p>
@@ -3684,7 +3684,7 @@ combination thereof. For concrete examples, consult the source code for
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-lifecycle-callbacks"><a class="anchor" href="#extensions-lifecycle-callbacks"></a>5.6. Test Lifecycle Callbacks</h3>
+<h3 id="extensions-lifecycle-callbacks">5.6. Test Lifecycle Callbacks</h3>
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the following sections for examples and the Javadoc for
@@ -3736,7 +3736,7 @@ concrete example.
 </table>
 </div>
 <div class="sect3">
-<h4 id="extensions-lifecycle-callbacks-before-after-execution"><a class="anchor" href="#extensions-lifecycle-callbacks-before-after-execution"></a>5.6.1. Before and After Test Execution Callbacks</h4>
+<h4 id="extensions-lifecycle-callbacks-before-after-execution">5.6.1. Before and After Test Execution Callbacks</h4>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html">BeforeTestExecutionCallback</a></code> and <code><a href="../api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html">AfterTestExecutionCallback</a></code> define the APIs for
 <code>Extensions</code> that wish to add behavior that will be executed <em>immediately before</em> and
@@ -3813,7 +3813,7 @@ its tests will have this timing applied when they execute.</p>
 <div class="paragraph">
 <p>The following is an example of the logging produced when <code>TimingExtensionTests</code> is run.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
 <pre>INFO: Method [sleep20ms] took 24 ms.
 INFO: Method [sleep50ms] took 53 ms.</pre>
@@ -3822,7 +3822,7 @@ INFO: Method [sleep50ms] took 53 ms.</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-exception-handling"><a class="anchor" href="#extensions-exception-handling"></a>5.7. Exception Handling</h3>
+<h3 id="extensions-exception-handling">5.7. Exception Handling</h3>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.html">TestExecutionExceptionHandler</a></code> defines the API for <code>Extensions</code> that wish to handle
 exceptions thrown during test execution.</p>
@@ -3850,7 +3850,7 @@ but rethrow any other type of exception.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>5.8. Keeping State in Extensions</h3>
+<h3 id="extensions-keeping-state">5.8. Keeping State in Extensions</h3>
 <div class="paragraph">
 <p>Usually, an extension is instantiated only once. So the question becomes relevant: How do
 you keep the state from one invocation of an extension to the next? The
@@ -3865,7 +3865,7 @@ available for storing and retrieving values via the <code><a href="../api/org/ju
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.9. Supported Utilities in Extensions</h3>
+<h3 id="extensions-supported-utilities">5.9. Supported Utilities in Extensions</h3>
 <div class="paragraph">
 <p>The JUnit Platform Commons artifact exposes a package named
 <code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that contains <em>maintained</em> utility methods for working
@@ -3875,7 +3875,7 @@ of the JUnit Platform.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.10. Relative Execution Order of User Code and Extensions</h3>
+<h3 id="extensions-execution-order">5.10. Relative Execution Order of User Code and Extensions</h3>
 <div class="paragraph">
 <p>When executing a test class that contains one or more test methods, a number of extension
 callbacks are called in addition to the user-provided test and lifecycle methods. The
@@ -3883,7 +3883,7 @@ following diagram illustrates the relative order of user-provided code and exten
 </div>
 <div id="extensions-lifecycle" class="imageblock">
 <div class="content">
-<img src="images/extensions_lifecycle.png" alt="extensions lifecycle">
+<img src="/Users/marcp/Repositories/junit5/documentation/build/asciidoc/images/extensions_lifecycle.png" alt="extensions lifecycle">
 </div>
 <div class="title">Figure 2: User code and extension code</div>
 </div>
@@ -3981,7 +3981,7 @@ please consult the respective JavaDoc for each annotation and extension.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="migrating-from-junit4"><a class="anchor" href="#migrating-from-junit4"></a>6. Migrating from JUnit 4</h2>
+<h2 id="migrating-from-junit4">6. Migrating from JUnit 4</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Although the JUnit Jupiter programming model and extension model will not support JUnit 4
@@ -4000,7 +4000,7 @@ will continue to provide maintenance and bug fix releases for the JUnit 4.x base
 developers have plenty of time to migrate to JUnit Jupiter on their own schedule.</p>
 </div>
 <div class="sect2">
-<h3 id="migrating-from-junit4-running"><a class="anchor" href="#migrating-from-junit4-running"></a>6.1. Running JUnit 4 Tests on the JUnit Platform</h3>
+<h3 id="migrating-from-junit4-running">6.1. Running JUnit 4 Tests on the JUnit Platform</h3>
 <div class="paragraph">
 <p>Just make sure that the <code>junit-vintage-engine</code> artifact is in your test runtime path. In that
 case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform launcher.</p>
@@ -4011,7 +4011,7 @@ find out how this is done with Gradle and Maven.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="migrating-from-junit4-tips"><a class="anchor" href="#migrating-from-junit4-tips"></a>6.2. Migration Tips</h3>
+<h3 id="migrating-from-junit4-tips">6.2. Migration Tips</h3>
 <div class="paragraph">
 <p>The following are things you have to watch out for when migrating existing JUnit 4 tests
 to JUnit Jupiter.</p>
@@ -4050,7 +4050,7 @@ see the following section for partial rule support.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="migrating-from-junit4-rulesupport"><a class="anchor" href="#migrating-from-junit4-rulesupport"></a>6.3. Limited JUnit 4 Rule Support</h3>
+<h3 id="migrating-from-junit4-rulesupport">6.3. Limited JUnit 4 Rule Support</h3>
 <div class="paragraph">
 <p>As stated above, JUnit Jupiter does not and will not support JUnit 4 rules natively.
 The JUnit team realizes, however, that many organizations, especially large ones,
@@ -4097,10 +4097,10 @@ please use the new extension model of JUnit Jupiter instead of the rule-based mo
 </div>
 </div>
 <div class="sect1">
-<h2 id="advanced-topics"><a class="anchor" href="#advanced-topics"></a>7. Advanced Topics</h2>
+<h2 id="advanced-topics">7. Advanced Topics</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="launcher-api"><a class="anchor" href="#launcher-api"></a>7.1. JUnit Platform Launcher API</h3>
+<h3 id="launcher-api">7.1. JUnit Platform Launcher API</h3>
 <div class="paragraph">
 <p>One of the prominent goals of JUnit 5 is to make the interface between JUnit and its
 programmatic clients – build tools and IDEs – more powerful and stable. The purpose is to
@@ -4121,7 +4121,7 @@ execute tests. Moreover, third party test libraries – like Spock, Cucumber, an
 <code><a href="../api/org/junit/platform/console/package-summary.html">junit-platform-console</a></code> project.</p>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-discovery"><a class="anchor" href="#launcher-api-discovery"></a>7.1.1. Discovering Tests</h4>
+<h4 id="launcher-api-discovery">7.1.1. Discovering Tests</h4>
 <div class="paragraph">
 <p>Introducing <em>test discovery</em> as a dedicated feature of the platform itself will
 (hopefully) free IDEs and build tools from most of the difficulties they had to go
@@ -4173,7 +4173,7 @@ ID</em> that can be used to invoke a particular test or group of tests.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-execution"><a class="anchor" href="#launcher-api-execution"></a>7.1.2. Executing Tests</h4>
+<h4 id="launcher-api-execution">7.1.2. Executing Tests</h4>
 <div class="paragraph">
 <p>There are two ways to execute tests. Clients can either use the same test specification
 object as in the discovery phase, or – to speed things up a bit – pass in the prepared
@@ -4206,7 +4206,7 @@ final results in an object of your own. For an example see the
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-engines-custom"><a class="anchor" href="#launcher-api-engines-custom"></a>7.1.3. Plugging in Your Own Test Engine</h4>
+<h4 id="launcher-api-engines-custom">7.1.3. Plugging in Your Own Test Engine</h4>
 <div class="paragraph">
 <p>JUnit currently provides two <code><a href="../api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> implementations out of the box:</p>
 </div>
@@ -4231,7 +4231,7 @@ the <code>junit-jupiter-engine</code> JAR.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>7.1.4. Plugging in Your Own Test Execution Listeners</h4>
+<h4 id="launcher-api-listeners-custom">7.1.4. Plugging in Your Own Test Execution Listeners</h4>
 <div class="paragraph">
 <p>In addition to the public <code><a href="../api/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method for registering test execution
 listeners programmatically, custom <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations discovered
@@ -4246,7 +4246,7 @@ and registered automatically.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="api-evolution"><a class="anchor" href="#api-evolution"></a>8. API Evolution</h2>
+<h2 id="api-evolution">8. API Evolution</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>One of the major goals of JUnit 5 is to improve maintainers' capabilities to evolve JUnit
@@ -4259,7 +4259,7 @@ builders. That made changing JUnit 4 especially difficult and sometimes impossib
 classes, and methods.</p>
 </div>
 <div class="sect2">
-<h3 id="api-evolution-annotations"><a class="anchor" href="#api-evolution-annotations"></a>8.1. API Annotations</h3>
+<h3 id="api-evolution-annotations">8.1. API Annotations</h3>
 <div class="paragraph">
 <p>Every published artifact has a version number <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code> and all
 publicly available interfaces, classes, and methods are annotated with <a href="../api/org/junit/platform/commons/meta/API.html">@API</a>. The
@@ -4311,7 +4311,7 @@ value of lower stability.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="api-evolution-tooling"><a class="anchor" href="#api-evolution-tooling"></a>8.2. Tooling Support</h3>
+<h3 id="api-evolution-tooling">8.2. Tooling Support</h3>
 <div class="paragraph">
 <p>The JUnit team plans to provide native tooling support for all JUnit users, extenders,
 and tool builders. The tooling support will provide a means to check if the JUnit APIs
@@ -4321,7 +4321,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="contributors"><a class="anchor" href="#contributors"></a>9. Contributors</h2>
+<h2 id="contributors">9. Contributors</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Browse the <a href="https://github.com/junit-team/junit5/graphs/contributors">current list of contributors</a> directly on GitHub.</p>
@@ -4329,10 +4329,10 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="release-notes"><a class="anchor" href="#release-notes"></a>10. Release Notes</h2>
+<h2 id="release-notes">10. Release Notes</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="release-notes-5.0.0-alpha"><a class="anchor" href="#release-notes-5.0.0-alpha"></a>5.0.0-ALPHA</h3>
+<h3 id="release-notes-5.0.0-alpha">5.0.0-ALPHA</h3>
 <div class="paragraph">
 <p><strong>Date of Release:</strong> February 1, 2016</p>
 </div>
@@ -4341,7 +4341,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.0.0-m1"><a class="anchor" href="#release-notes-5.0.0-m1"></a>5.0.0-M1</h3>
+<h3 id="release-notes-5.0.0-m1">5.0.0-M1</h3>
 <div class="paragraph">
 <p><strong>Date of Release:</strong> July 7, 2016</p>
 </div>
@@ -4349,7 +4349,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <p><strong>Scope:</strong> First milestone release of JUnit 5</p>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m1-summary"><a class="anchor" href="#release-notes-5.0.0-m1-summary"></a>Summary of Changes</h4>
+<h4 id="release-notes-5.0.0-m1-summary">Summary of Changes</h4>
 <div class="paragraph">
 <p>The following is a list of global changes. For details regarding changes specific to the
 Platform, Jupiter, and Vintage, consult the dedicated subsections below. For a complete
@@ -4553,7 +4553,7 @@ on GitHub.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m1-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m1-junit-platform"></a>JUnit Platform</h4>
+<h4 id="release-notes-5.0.0-m1-junit-platform">JUnit Platform</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -4722,7 +4722,7 @@ dynamically during the <em>execution phase</em>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m1-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-m1-junit-jupiter"></a>JUnit Jupiter</h4>
+<h4 id="release-notes-5.0.0-m1-junit-jupiter">JUnit Jupiter</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -4850,7 +4850,7 @@ of retrieving a context specific name via the current test class or test method.
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m1-junit-vintage"><a class="anchor" href="#release-notes-5.0.0-m1-junit-vintage"></a>JUnit Vintage</h4>
+<h4 id="release-notes-5.0.0-m1-junit-vintage">JUnit Vintage</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -4864,7 +4864,7 @@ of retrieving a context specific name via the current test class or test method.
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.0.0-m2"><a class="anchor" href="#release-notes-5.0.0-m2"></a>5.0.0-M2</h3>
+<h3 id="release-notes-5.0.0-m2">5.0.0-M2</h3>
 <div class="paragraph">
 <p><strong>Date of Release:</strong> July 23, 2016</p>
 </div>
@@ -4872,7 +4872,7 @@ of retrieving a context specific name via the current test class or test method.
 <p><strong>Scope:</strong> Second milestone release of JUnit 5</p>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m2-summary"><a class="anchor" href="#release-notes-5.0.0-m2-summary"></a>Summary of Changes</h4>
+<h4 id="release-notes-5.0.0-m2-summary">Summary of Changes</h4>
 <div class="paragraph">
 <p>This release is primarily a bugfix release for bugs discovered since <code>5.0.0-M1</code>.</p>
 </div>
@@ -4895,9 +4895,9 @@ on GitHub.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m2-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m2-junit-platform"></a>JUnit Platform</h4>
+<h4 id="release-notes-5.0.0-m2-junit-platform">JUnit Platform</h4>
 <div class="sect4">
-<h5 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h5>
+<h5 id="bug-fixes">Bug Fixes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4927,7 +4927,7 @@ will be rethrown.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="deprecations"><a class="anchor" href="#deprecations"></a>Deprecations</h5>
+<h5 id="deprecations">Deprecations</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4939,7 +4939,7 @@ will be rethrown.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="new-features"><a class="anchor" href="#new-features"></a>New Features</h5>
+<h5 id="new-features">New Features</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4951,9 +4951,9 @@ a <em>fully qualified method name</em>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m2-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-m2-junit-jupiter"></a>JUnit Jupiter</h4>
+<h4 id="release-notes-5.0.0-m2-junit-jupiter">JUnit Jupiter</h4>
 <div class="sect4">
-<h5 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h5>
+<h5 id="bug-fixes-2">Bug Fixes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4965,14 +4965,14 @@ method-level will no longer be registered multiple times.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m2-junit-vintage"><a class="anchor" href="#release-notes-5.0.0-m2-junit-vintage"></a>JUnit Vintage</h4>
+<h4 id="release-notes-5.0.0-m2-junit-vintage">JUnit Vintage</h4>
 <div class="paragraph">
 <p><em>No changes since 5.0.0-M1</em></p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.0.0-m3"><a class="anchor" href="#release-notes-5.0.0-m3"></a>5.0.0-M3</h3>
+<h3 id="release-notes-5.0.0-m3">5.0.0-M3</h3>
 <div class="paragraph">
 <p><strong>Date of Release:</strong> November 30, 2016</p>
 </div>
@@ -4986,9 +4986,9 @@ additional discovery selectors, and documentation.</p>
 on GitHub.</p>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m3-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m3-junit-platform"></a>JUnit Platform</h4>
+<h4 id="release-notes-5.0.0-m3-junit-platform">JUnit Platform</h4>
 <div class="sect4">
-<h5 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h5>
+<h5 id="bug-fixes-3">Bug Fixes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5010,7 +5010,7 @@ Gradle plugin when no explicit packages have been selected.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h5>
+<h5 id="deprecations-and-breaking-changes">Deprecations and Breaking Changes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5085,7 +5085,7 @@ wrapped in a <code>filters</code> extension element (see <a href="#running-tests
 </div>
 </div>
 <div class="sect4">
-<h5 id="new-features-2"><a class="anchor" href="#new-features-2"></a>New Features</h5>
+<h5 id="new-features-2">New Features</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5189,9 +5189,9 @@ code that uses a different version of that library.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m3-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-m3-junit-jupiter"></a>JUnit Jupiter</h4>
+<h4 id="release-notes-5.0.0-m3-junit-jupiter">JUnit Jupiter</h4>
 <div class="sect4">
-<h5 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h5>
+<h5 id="bug-fixes-4">Bug Fixes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5218,7 +5218,7 @@ methods that accept arrays or primitive types as parameters.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h5>
+<h5 id="deprecations-and-breaking-changes-2">Deprecations and Breaking Changes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5232,7 +5232,7 @@ methods that accept arrays or primitive types as parameters.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h5>
+<h5 id="new-features-and-improvements">New Features and Improvements</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5264,14 +5264,14 @@ to facilitate migration of JUnit 4 codebases.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m3-junit-vintage"><a class="anchor" href="#release-notes-5.0.0-m3-junit-vintage"></a>JUnit Vintage</h4>
+<h4 id="release-notes-5.0.0-m3-junit-vintage">JUnit Vintage</h4>
 <div class="paragraph">
 <p><em>No changes since 5.0.0-M2</em></p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.0.0-m4"><a class="anchor" href="#release-notes-5.0.0-m4"></a>5.0.0-M4</h3>
+<h3 id="release-notes-5.0.0-m4">5.0.0-M4</h3>
 <div class="paragraph">
 <p><strong>Date of Release:</strong> April 1, 2017</p>
 </div>
@@ -5285,9 +5285,9 @@ tests, and parameterized tests.</p>
 on GitHub.</p>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m4-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m4-junit-platform"></a>JUnit Platform</h4>
+<h4 id="release-notes-5.0.0-m4-junit-platform">JUnit Platform</h4>
 <div class="sect4">
-<h5 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h5>
+<h5 id="bug-fixes-5">Bug Fixes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5321,7 +5321,7 @@ return inherited nested classes (regardless of whether they are static or not).<
 </div>
 </div>
 <div class="sect4">
-<h5 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h5>
+<h5 id="deprecations-and-breaking-changes-3">Deprecations and Breaking Changes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5363,7 +5363,7 @@ supplied <code>LauncherDiscoveryRequest</code>:
 </div>
 </div>
 <div class="sect4">
-<h5 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h5>
+<h5 id="new-features-and-improvements-2">New Features and Improvements</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5443,9 +5443,9 @@ to <code>TestDescriptor.Type</code> constants.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m4-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-m4-junit-jupiter"></a>JUnit Jupiter</h4>
+<h4 id="release-notes-5.0.0-m4-junit-jupiter">JUnit Jupiter</h4>
 <div class="sect4">
-<h5 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h5>
+<h5 id="bug-fixes-6">Bug Fixes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5469,7 +5469,7 @@ were registered, analogous to all other "<em>after</em>" extensions.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h5>
+<h5 id="deprecations-and-breaking-changes-4">Deprecations and Breaking Changes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5483,7 +5483,7 @@ equal to each other.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h5>
+<h5 id="new-features-and-improvements-3">New Features and Improvements</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5524,9 +5524,9 @@ See <a href="#extensions-registration-automatic">Automatic Extension Registratio
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.0.0-m4-junit-vintage"><a class="anchor" href="#release-notes-5.0.0-m4-junit-vintage"></a>JUnit Vintage</h4>
+<h4 id="release-notes-5.0.0-m4-junit-vintage">JUnit Vintage</h4>
 <div class="sect4">
-<h5 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h5>
+<h5 id="bug-fixes-7">Bug Fixes</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -5545,7 +5545,7 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-04-09 14:14:10 EDT
+Last updated 2017-04-09 20:35:35 CEST
 </div>
 </div>
 </body>
