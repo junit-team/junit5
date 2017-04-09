@@ -11,6 +11,7 @@
 package org.junit.platform.console.tasks;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.platform.engine.TestExecutionResult.aborted;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
@@ -27,6 +28,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.Theme;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.launcher.TestIdentifier;
@@ -69,6 +71,15 @@ class TreePrinterTests {
 				"├─ engine two ✘", //
 				"└─ engine three ■"), //
 			actual());
+	}
+
+	@Test
+	// https://github.com/junit-team/junit5/issues/786
+	void printNodeHandlesNullMessageThrowableGracefully() {
+		TestExecutionResult result = TestExecutionResult.failed(new NullPointerException());
+		TreeNode node = new TreeNode(createEngineId("NPE", "test()")).setResult(result);
+		new TreePrinter(out, Theme.ASCII, true).print(node);
+		assertLinesMatch(Arrays.asList(".", "+-- test() [X] java.lang.NullPointerException"), actual());
 	}
 
 	private TestIdentifier createEngineId(String uniqueId, String displayName) {
