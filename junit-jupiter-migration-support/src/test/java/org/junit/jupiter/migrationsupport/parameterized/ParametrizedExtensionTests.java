@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.migrationsupport;
+package org.junit.jupiter.migrationsupport.parameterized;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +31,6 @@ import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.jupiter.migrationsupport.rules.ParameterizedExtension;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -41,10 +40,10 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-public class ParametrizedExtensionTests {
+class ParametrizedExtensionTests {
 
 	@Test
-	public void parametrizedWithParameterFieldInjection() {
+	void parametrizedWithParameterFieldInjection() {
 		ExecutionEventRecorder executionEventRecorder = executeTestsForClass(FibonacciTest.class);
 		assertThat(executionEventRecorder.getTestSuccessfulCount()).isEqualTo(7);
 	}
@@ -83,7 +82,7 @@ public class ParametrizedExtensionTests {
 	}
 
 	@Test
-	public void paremeterizedWithConstructorInjection() {
+	void paremeterizedWithConstructorInjection() {
 		ExecutionEventRecorder executionEventRecorder = executeTestsForClass(ParameterizedTestWithConstructor.class);
 		assertThat(executionEventRecorder.getTestSuccessfulCount()).isEqualTo(7);
 	}
@@ -224,8 +223,6 @@ public class ParametrizedExtensionTests {
 	protected static class EmptyParameters {
 
 		public EmptyParameters() {
-			int a = 0;
-			int b = a + 3;
 		}
 
 		@Parameters

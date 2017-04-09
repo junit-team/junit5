@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.migrationsupport.rules;
+package org.junit.jupiter.migrationsupport.parameterized;
 
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
@@ -27,14 +27,13 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.meta.API;
@@ -215,7 +214,7 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 		};
 	}
 
-	private static class InjectionExtension implements BeforeTestExecutionCallback {
+	private static class InjectionExtension implements TestInstancePostProcessor {
 		private final Object[] parameters;
 
 		public InjectionExtension(Object[] parameters) {
@@ -223,7 +222,7 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 		}
 
 		@Override
-		public void beforeTestExecution(TestExtensionContext context) throws Exception {
+		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 			List<Field> parameters = parametersFields(context);
 
 			if (!parameters.isEmpty() && parameters.size() != this.parameters.length) {
@@ -233,7 +232,7 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 			for (Field param : parameters) {
 				Parameterized.Parameter annotation = param.getAnnotation(Parameterized.Parameter.class);
 				int paramIndex = annotation.value();
-				param.set(context.getTestInstance(), this.parameters[paramIndex]);
+				param.set(testInstance, this.parameters[paramIndex]);
 			}
 		}
 	}
