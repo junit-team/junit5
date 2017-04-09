@@ -604,6 +604,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.0.0-m2">5.0.0-M2</a></li>
 <li><a href="#release-notes-5.0.0-m3">5.0.0-M3</a></li>
 <li><a href="#release-notes-5.0.0-m4">5.0.0-M4</a></li>
+<li><a href="#release-notes-5.0.0-m5">5.0.0-M5</a></li>
 </ul>
 </li>
 </ul>
@@ -5533,6 +5534,111 @@ See <a href="#extensions-registration-automatic">Automatic Extension Registratio
 <p>Fixed bug that caused only the last failure of a test to be reported. For example, when using the
 <code>ErrorCollector</code> rule, only the last failed check was reported. Now, all failures are reported
 using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.0.0-m5"><a class="anchor" href="#release-notes-5.0.0-m5"></a>5.0.0-M5</h3>
+<div class="paragraph">
+<p><strong>Date of Release:</strong> ❓</p>
+</div>
+<div class="paragraph">
+<p><strong>Scope:</strong> Fifth milestone release of JUnit 5 with a focus on ❓.</p>
+</div>
+<div class="paragraph">
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
+<a href="https://github.com/junit-team/junit5/milestone/8?closed=1">5.0 M5</a> milestone page in the JUnit repository
+on GitHub.</p>
+</div>
+<div class="sect3">
+<h4 id="release-notes-5.0.0-m5-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m5-junit-platform"></a>JUnit Platform</h4>
+<div class="sect4">
+<h5 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>NullPointerException</code> thrown by <code>ConsoleLauncher</code> in <code>Details.TREE</code> mode was fixed
+by falling back to printing throwable&#8217;s <code>toString()</code> representation.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>The deprecated <code>execute(LauncherDiscoveryRequest)</code> method has been removed from the
+<code>org.junit.platform.launcher.Launcher</code> API; use
+<code>execute(LauncherDiscoveryRequest, TestExecutionListener&#8230;&#8203;)</code> instead.</p>
+</li>
+<li>
+<p>The deprecated <code>--hide-details</code> option of the <code>ConsoleLauncher</code> has been removed; use
+<code>--details none</code> instead.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="release-notes-5.0.0-m5-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-m5-junit-jupiter"></a>JUnit Jupiter</h4>
+<div class="sect4">
+<h5 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="deprecations-and-breaking-changes-6"><a class="anchor" href="#deprecations-and-breaking-changes-6"></a>Deprecations and Breaking Changes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>arguments()</code> method in the <code>ArgumentsProvider</code> API in the <code>junit-jupiter-params</code>
+module has been renamed to <code>provideArguments()</code>.</p>
+</li>
+<li>
+<p>The <code>create()</code> factory method in <code>ObjectArrayArguments</code> in the <code>junit-jupiter-params</code>
+module has been renamed to <code>arguments()</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="release-notes-5.0.0-m5-junit-vintage"><a class="anchor" href="#release-notes-5.0.0-m5-junit-vintage"></a>JUnit Vintage</h4>
+<div class="sect4">
+<h5 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
 </li>
 </ul>
 </div>
