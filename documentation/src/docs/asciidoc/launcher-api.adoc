@@ -26,13 +26,11 @@ through to identify test classes and test methods in the past.
 Usage Example:
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/UsingTheLauncherDemo.java[tags=imports]
 ----
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/UsingTheLauncherDemo.java[tags=discovery]
 ----
@@ -56,7 +54,6 @@ object as in the discovery phase, or – to speed things up a bit – pass in th
 be achieved through a `{TestExecutionListener}`:
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/UsingTheLauncherDemo.java[tags=execution]
 ----

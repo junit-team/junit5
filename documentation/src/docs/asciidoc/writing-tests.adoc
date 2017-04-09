@@ -2,7 +2,6 @@
 == Writing Tests
 
 [source,java,indent=0]
-[subs="verbatim"]
 .A first test case
 ----
 include::{testDir}/example/FirstJUnit5Tests.java[tags=user_guide]
@@ -46,7 +45,6 @@ For example, instead of copying and pasting `@Tag("fast")` throughout your code 
 as follows. `@Fast` can then be used as a drop-in replacement for `@Tag("fast")`.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/Fast.java[tags=user_guide]
 ----
@@ -55,7 +53,6 @@ include::{testDir}/example/Fast.java[tags=user_guide]
 === Standard Test Class
 
 [source,java,indent=0]
-[subs="verbatim"]
 .A standard test case
 ----
 include::{testDir}/example/StandardTests.java[tags=user_guide]
@@ -70,7 +67,6 @@ Test classes and test methods can declare custom display names -- with spaces, s
 characters, and even emojis -- that will be displayed by test runners and test reporting.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/DisplayNameDemo.java[tags=user_guide]
 ----
@@ -83,7 +79,6 @@ that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter a
 are `static` methods in the `{Assertions}` class.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 ----
@@ -112,7 +107,6 @@ you can statically import methods such as `assertThat()`, `is()`, and `equalTo()
 then use them in tests like in the `assertWithHamcrestMatcher()` method below.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/HamcrestAssertionDemo.java[tags=user_guide]
 ----
@@ -128,7 +122,6 @@ few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupit
 are static methods in the `{Assumptions}` class.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/AssumptionsDemo.java[tags=user_guide]
 ----
@@ -139,7 +132,6 @@ include::{testDir}/example/AssumptionsDemo.java[tags=user_guide]
 Here's a disabled test case.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/DisabledClassDemo.java[tags=user_guide]
 ----
@@ -147,7 +139,6 @@ include::{testDir}/example/DisabledClassDemo.java[tags=user_guide]
 And here's a test case with a disabled test method.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 ----
@@ -159,7 +150,6 @@ Test classes and methods can be tagged. Those tags can later be used to filter
 <<running-tests,test discovery and execution>>.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/TaggingDemo.java[tags=user_guide]
 ----
@@ -172,7 +162,6 @@ Nested tests give the test writer more capabilities to express the relationship 
 several group of tests. Here's an elaborate example.
 
 [source,java,indent=0]
-[subs="verbatim"]
 .Nested test suite for testing a stack
 ----
 include::{testDir}/example/TestingAStackDemo.java[tags=user_guide]
@@ -211,7 +200,6 @@ following demonstrates how to have `TestInfo` injected into a test constructor,
 `@BeforeEach` method, and `@Test` method.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
 ----
@@ -235,7 +223,6 @@ you used to print information to `stdout` or `stderr` in JUnit 4.
 Using `@RunWith(JUnitPlatform.class)` will even output all reported entries to `stdout`.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/TestReporterDemo.java[tags=user_guide]
 ----
@@ -250,7 +237,6 @@ expressiveness of both the extension model and the parameter resolution process.
 methods.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -287,13 +273,11 @@ declared on static methods in a test interface, while `@ExtendWith` and `@Tag` c
 declared on test interfaces to configure extensions and tags. Here are some examples.
 
 [source,java]
-[subs="verbatim"]
 ----
 include::{testDir}/example/testinterface/TestLifecycleLogger.java[tags=user_guide]
 ----
 
 [source,java]
-[subs="verbatim"]
 ----
 include::{testDir}/example/testinterface/TestInterfaceDynamicTestsDemo.java[tags=user_guide]
 ----
@@ -304,7 +288,6 @@ implement it automatically inherit its tags and extensions. See
 <<extensions-lifecycle-callbacks-timing-extension, TimingExtension>>.
 
 [source,java]
-[subs="verbatim"]
 ----
 include::{testDir}/example/testinterface/TimeExecutionLogger.java[tags=user_guide]
 ----
@@ -312,15 +295,13 @@ include::{testDir}/example/testinterface/TimeExecutionLogger.java[tags=user_guid
 In your test class you can then implement these test interfaces to have them applied.
 
 [source,java]
-[subs="verbatim"]
 ----
 include::{testDir}/example/testinterface/TestInterfaceDemo.java[tags=user_guide]
 ----
 
 Running the `TestInterfaceDemo` results in output similar to the following:
 
-[subs="none"]
-----
+....
 :junitPlatformTest
 18:28:13.967 [main] INFO  example.testinterface.TestLifecycleLogger - beforeAllTests
 18:28:13.982 [main] INFO  example.testinterface.TestLifecycleLogger - About to execute [dynamicTestsFromCollection()]
@@ -346,27 +327,23 @@ Test run finished after 190 ms
 [         0 tests failed          ]
 
 BUILD SUCCESSFUL
-
-----
+....
 
 Another possible application of this feature is to write tests for interface contracts.
 For example, you can write tests for how implementations of `Object.equals` or
 `Comparable.compareTo` should behave as follows.
 
 [source,java]
-[subs="verbatim"]
 ----
 include::{testDir}/example/defaultmethods/Testable.java[tags=user_guide]
 ----
 
 [source,java]
-[subs="verbatim"]
 ----
 include::{testDir}/example/defaultmethods/EqualsContract.java[tags=user_guide]
 ----
 
 [source,java]
-[subs="verbatim"]
 ----
 include::{testDir}/example/defaultmethods/ComparableContract.java[tags=user_guide]
 ----
@@ -375,7 +352,6 @@ In your test class you can then implement both contract interfaces thereby inher
 corresponding tests. Of course you'll have to implement the abstract methods.
 
 [source,java]
-[subs="verbatim"]
 ----
 include::{testDir}/example/defaultmethods/StringTests.java[tags=user_guide]
 ----
@@ -395,7 +371,6 @@ The following example demonstrates how to declare a test named `repeatedTest()` 
 will be automatically repeated 10 times.
 
 [source,java]
-[subs="verbatim"]
 ----
 @RepeatedTest(10)
 void repeatedTest() {
@@ -456,7 +431,7 @@ before each repetition of each repeated test. By having the `TestInfo` and
 information about the currently executing repeated test. Executing `RepeatedTestsDemo`
 with the `INFO` log level enabled results in the following output.
 
-----
+....
 INFO: About to execute repetition 1 of 10 for repeatedTest
 INFO: About to execute repetition 2 of 10 for repeatedTest
 INFO: About to execute repetition 3 of 10 for repeatedTest
@@ -479,10 +454,9 @@ INFO: About to execute repetition 2 of 5 for repeatedTestInGerman
 INFO: About to execute repetition 3 of 5 for repeatedTestInGerman
 INFO: About to execute repetition 4 of 5 for repeatedTestInGerman
 INFO: About to execute repetition 5 of 5 for repeatedTestInGerman
-----
+....
 
 [source,java]
-[subs="verbatim"]
 ----
 include::{testDir}/example/RepeatedTestsDemo.java[tags=user_guide]
 ----
@@ -491,7 +465,7 @@ When using the `ConsoleLauncher` or the `junitPlatformTest` Gradle plugin with t
 unicode theme enabled, execution of `RepeatedTestsDemo` results in the following output
 to the console.
 
-----
+....
 ├─ RepeatedTestsDemo ✔
 │  ├─ repeatedTest() ✔
 │  │  ├─ repetition 1 of 10 ✔
@@ -520,7 +494,7 @@ to the console.
 │     ├─ Wiederholung 3 von 5 ✔
 │     ├─ Wiederholung 4 von 5 ✔
 │     └─ Wiederholung 5 von 5 ✔
-----
+....
 
 
 [[writing-tests-parameterized-tests]]
@@ -532,7 +506,6 @@ addition, you must declare at least one _source_ that will provide the arguments
 invocation.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=first_example]
 ----
@@ -541,13 +514,11 @@ This parameterized test uses the `@ValueSource` annotation to specify a `String`
 of arguments. When executing this method, each invocation will be reported separately. For instance,
 the `ConsoleLauncher` will print output similar to the following.
 
-[source]
-[subs="verbatim"]
-----
+....
 testWithStringParameter(String) ✔
 ├─ [1] Hello ✔
 └─ [2] World ✔
-----
+....
 
 [[writing-tests-parameterized-tests-setup]]
 ==== Required Setup
@@ -571,7 +542,6 @@ primitive types (either `String`, `int`, `long`, or `double`) and can only be us
 single parameter per invocation.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ValueSource_example]
 ----
@@ -584,7 +554,6 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ValueSource_example]
 will be used like in the following example.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example]
 ----
@@ -600,7 +569,6 @@ If you only need a single parameter, you can return instances of the parameter t
 demonstrated by the following example.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=simple_MethodSource_example]
 ----
@@ -610,7 +578,6 @@ Note that `arguments(Object...)` is a static factory method defined in
 `org.junit.jupiter.params.provider.ObjectArrayArguments`.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=multi_arg_MethodSource_example]
 ----
@@ -622,7 +589,6 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=multi_arg_MethodSourc
 `String` literals).
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvSource_example]
 ----
@@ -634,13 +600,11 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvSource_example]
 results in one invocation of the parameterized test.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example]
 ----
 
 [source,csv,indent=0]
-[subs="verbatim"]
 .two-column.csv
 ----
 include::{testResourcesDir}/two-column.csv[]
@@ -652,7 +616,6 @@ include::{testResourcesDir}/two-column.csv[]
 `@ArgumentsSource` can be used to specify a custom, reusable `ArgumentsProvider`.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsSource_example]
 ----
@@ -672,7 +635,6 @@ actual type supplied by the declared source is a `String`, the string will autom
 be converted into the corresponding `TimeUnit` enum constant.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_example]
 ----
@@ -710,7 +672,6 @@ Instead of using implicit argument conversion you may explicitly specify an `Arg
 use for a certain parameter using the `@ConvertWith` annotation like in the following example.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_example]
 ----
@@ -721,7 +682,6 @@ reference implementation: `JavaTimeArgumentConverter`. It is used via the compos
 `JavaTimeConversionPattern`.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_java_time_converter]
 ----
@@ -736,21 +696,18 @@ However, you can customize invocation display names via the `name` attribute of 
 `@ParameterizedTest` annotation like in the following example.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=custom_display_names]
 ----
 
 When executing the above method using the `ConsoleLauncher` you will see output similar to the following.
 
-[source]
-[subs="verbatim"]
-----
+....
 Display name of container ✔
 ├─ 1 ==> first='foo', second=1 ✔
 ├─ 2 ==> first='bar', second=2 ✔
 └─ 3 ==> first='baz, qux', second=3 ✔
-----
+....
 
 The following placeholders are supported within custom display names.
 
@@ -777,7 +734,6 @@ You may use `ParameterResolver` extensions with `@ParameterizedTest` methods. Ho
 parameters that are resolved by argument sources need to come first in the argument list.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ParameterResolver_example]
 ----
@@ -851,7 +807,6 @@ test repeatability and should thus be used with care, it serves to demonstrate t
 and power of dynamic tests.
 
 [source,java]
-[subs="verbatim"]
 ----
 include::{testDir}/example/DynamicTestsDemo.java[tags=user_guide]
 ----
