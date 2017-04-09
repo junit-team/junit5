@@ -27,7 +27,6 @@ For example, to register a custom `MockitoExtension` for a particular test metho
 would annotate the test method as follows.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 @ExtendWith(MockitoExtension.class)
 @Test
@@ -40,7 +39,6 @@ To register a custom `MockitoExtension` for all tests in a particular class and 
 subclasses, you would annotate the test class as follows.
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 @ExtendWith(MockitoExtension.class)
 class MockTests {
@@ -51,7 +49,6 @@ class MockTests {
 Multiple extensions can be registered together like this:
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 @ExtendWith({ FooExtension.class, BarExtension.class })
 class MyTestsV1 {
@@ -62,7 +59,6 @@ class MyTestsV1 {
 As an alternative, multiple extensions can be registered separately like this:
 
 [source,java,indent=0]
-[subs="verbatim"]
 ----
 @ExtendWith(FooExtension.class)
 @ExtendWith(BarExtension.class)
@@ -230,7 +226,6 @@ and `AfterTestExecutionCallback` in order to time and log the test execution.
 
 [[extensions-lifecycle-callbacks-timing-extension]]
 [source,java,indent=0]
-[subs="verbatim"]
 .An extension that times and logs the execution of test methods
 ----
 include::{testDir}/example/timing/TimingExtension.java[tags=user_guide]
@@ -240,7 +235,6 @@ Since the `TimingExtensionTests` class registers the `TimingExtension` via `@Ext
 its tests will have this timing applied when they execute.
 
 [source,java,indent=0]
-[subs="verbatim"]
 .A test class that uses the example TimingExtension
 ----
 include::{testDir}/example/timing/TimingExtensionTests.java[tags=user_guide]
@@ -248,11 +242,10 @@ include::{testDir}/example/timing/TimingExtensionTests.java[tags=user_guide]
 
 The following is an example of the logging produced when `TimingExtensionTests` is run.
 
-[subs="none"]
-----
+....
 INFO: Method [sleep20ms] took 24 ms.
 INFO: Method [sleep50ms] took 53 ms.
-----
+....
 
 [[extensions-exception-handling]]
 === Exception Handling
@@ -264,7 +257,6 @@ The following example shows an extension which will swallow all instances of `IO
 but rethrow any other type of exception.
 
 [source,java,indent=0]
-[subs="verbatim"]
 .An exception handling extension
 ----
 include::{testDir}/example/exception/IgnoreIOExceptionExtension.java[tags=user_guide]
