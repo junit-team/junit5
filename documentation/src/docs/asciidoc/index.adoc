@@ -2,7 +2,7 @@
 = JUnit 5 User Guide
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Christian Stein
 :imagesdir: images
-ifdef::backend-pdf[:imagesdir: {imagesoutdir}]
+ifdef::backend-pdf[:imagesdir: {outdir}/{imagesdir}]
 ifdef::backend-pdf[:source-highlighter: rouge]
 //
 // Blank lines are not permitted in the doc-header: http://asciidoctor.org/docs/user-manual/#doc-header
