@@ -20,9 +20,6 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* The deprecated `execute(LauncherDiscoveryRequest)` method has been removed from the
-  `org.junit.platform.launcher.Launcher` API; use
-  `execute(LauncherDiscoveryRequest, TestExecutionListener...)` instead.
 * The deprecated `--hide-details` option of the `ConsoleLauncher` has been removed; use
   `--details none` instead.
 
@@ -47,7 +44,9 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* ❓
+* Added internal utility method to provide information about the location from which
+  the engine class was loaded. When the location URL is available, it is logged at
+  configuration-level by the service loading mechanism.
 
 
 [[release-notes-5.0.0-m5-junit-vintage]]

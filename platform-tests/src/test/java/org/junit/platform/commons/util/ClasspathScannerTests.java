@@ -51,7 +51,7 @@ class ClasspathScannerTests {
 		loadedClass.ifPresent(loadedClasses::add);
 		return loadedClass;
 	};
-	private final ClasspathScanner classpathScanner = new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
+	private final ClasspathScanner classpathScanner = new ClasspathScanner(ClassLoaderUtils::getDefaultClassLoader,
 		trackingClassLoader);
 
 	@Test

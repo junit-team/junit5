@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.platform.commons.util.ReflectionUtils.getDefaultClassLoader;
+import static org.junit.platform.commons.util.ClassLoaderUtils.getDefaultClassLoader;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 
 import java.io.PrintWriter;

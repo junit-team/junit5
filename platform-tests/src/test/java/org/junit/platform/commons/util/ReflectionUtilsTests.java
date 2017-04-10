@@ -58,7 +58,7 @@ public class ReflectionUtilsTests {
 		ClassLoader mock = mock(ClassLoader.class);
 		Thread.currentThread().setContextClassLoader(mock);
 		try {
-			assertSame(mock, ReflectionUtils.getDefaultClassLoader());
+			assertSame(mock, ClassLoaderUtils.getDefaultClassLoader());
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(original);
@@ -70,7 +70,7 @@ public class ReflectionUtilsTests {
 		ClassLoader original = Thread.currentThread().getContextClassLoader();
 		Thread.currentThread().setContextClassLoader(null);
 		try {
-			assertSame(ClassLoader.getSystemClassLoader(), ReflectionUtils.getDefaultClassLoader());
+			assertSame(ClassLoader.getSystemClassLoader(), ClassLoaderUtils.getDefaultClassLoader());
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(original);

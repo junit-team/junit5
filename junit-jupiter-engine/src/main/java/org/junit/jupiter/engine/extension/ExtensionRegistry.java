@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.engine.Constants;
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -88,7 +89,7 @@ public class ExtensionRegistry {
 	}
 
 	private static void registerAutoDetectedExtensions(ExtensionRegistry extensionRegistry) {
-		Iterable<Extension> extensions = ServiceLoader.load(Extension.class, ReflectionUtils.getDefaultClassLoader());
+		Iterable<Extension> extensions = ServiceLoader.load(Extension.class, ClassLoaderUtils.getDefaultClassLoader());
 
 		// @formatter:off
 		LOG.config(() -> "Registering auto-detected extensions: "
