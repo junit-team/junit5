@@ -13,6 +13,7 @@ package org.junit.jupiter.params;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.ObjectArrayArguments.arguments;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -21,10 +22,16 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.engine.JupiterTestEngine;
@@ -35,6 +42,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.test.event.ExecutionEvent;
@@ -81,6 +89,34 @@ class ParameterizedTestIntegrationTests {
 				.haveExactly(1, event(test(), displayName("[2] XXX"), finishedWithFailure(message("length: 3"))));
 	}
 
+	@Test
+	void executesLifecycleMethods() {
+		List<ExecutionEvent> executionEvents = execute(selectClass(LifecycleTestCase.class));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test("test1"), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test("test1"), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+
+		// @formatter:off
+		assertThat(LifecycleTestCase.lifecycleEvents).containsExactly(
+			"beforeAll:ParameterizedTestIntegrationTests$LifecycleTestCase", //
+				"providerMethod",
+					"beforeEach:[1] foo",
+						"test1:[1] foo",
+					"afterEach:[1] foo",
+					"beforeEach:[2] bar",
+						"test1:[2] bar",
+					"afterEach:[2] bar",
+				"providerMethod",
+					"beforeEach:[1] foo",
+						"test2:[1] foo",
+					"afterEach:[1] foo",
+					"beforeEach:[2] bar",
+						"test2:[2] bar",
+					"afterEach:[2] bar",
+			"afterAll:ParameterizedTestIntegrationTests$LifecycleTestCase");
+		// @formatter:on
+	}
+
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
 		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
 	}
@@ -109,6 +145,50 @@ class ParameterizedTestIntegrationTests {
 		@ValueSource(strings = { "O", "XXX" })
 		void testWithExplicitConverter(@ConvertWith(StringLengthConverter.class) int length) {
 			fail("length: " + length);
+		}
+	}
+
+	static class LifecycleTestCase {
+
+		private static List<String> lifecycleEvents = new ArrayList<>();
+
+		@BeforeAll
+		static void beforeAll(TestInfo testInfo) {
+			lifecycleEvents.add("beforeAll:" + testInfo.getDisplayName());
+		}
+
+		@AfterAll
+		static void afterAll(TestInfo testInfo) {
+			lifecycleEvents.add("afterAll:" + testInfo.getDisplayName());
+		}
+
+		@BeforeEach
+		void beforeEach(String argument, TestInfo testInfo) {
+			lifecycleEvents.add("beforeEach:" + testInfo.getDisplayName());
+		}
+
+		@AfterEach
+		void afterEach(String argument, TestInfo testInfo) {
+			lifecycleEvents.add("afterEach:" + testInfo.getDisplayName());
+		}
+
+		@ParameterizedTest
+		@MethodSource(names = "providerMethod")
+		void test1(String argument, TestInfo testInfo) {
+			lifecycleEvents.add("test1:" + testInfo.getDisplayName());
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@MethodSource(names = "providerMethod")
+		void test2(String argument, TestInfo testInfo) {
+			lifecycleEvents.add("test2:" + testInfo.getDisplayName());
+			fail(argument);
+		}
+
+		static Stream<String> providerMethod() {
+			lifecycleEvents.add("providerMethod");
+			return Stream.of("foo", "bar");
 		}
 	}
 

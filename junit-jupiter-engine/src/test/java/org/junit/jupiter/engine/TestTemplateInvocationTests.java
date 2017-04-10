@@ -43,7 +43,9 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -116,8 +118,10 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		executeTests(request);
 
-		assertThat(TestTemplateTestClassWithBeforeAndAfterEach.lifecycleEvents).containsExactly("before:[1]",
-			"after:[1]", "before:[2]", "after:[2]");
+		assertThat(TestTemplateTestClassWithBeforeAndAfterEach.lifecycleEvents).containsExactly(
+			"beforeAll:TestTemplateInvocationTests$TestTemplateTestClassWithBeforeAndAfterEach", "beforeEach:[1]",
+			"afterEach:[1]", "beforeEach:[2]", "afterEach:[2]",
+			"afterAll:TestTemplateInvocationTests$TestTemplateTestClassWithBeforeAndAfterEach");
 	}
 
 	@Test
@@ -453,14 +457,24 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		private static List<String> lifecycleEvents = new ArrayList<>();
 
+		@BeforeAll
+		static void beforeAll(TestInfo testInfo) {
+			lifecycleEvents.add("beforeAll:" + testInfo.getDisplayName());
+		}
+
+		@AfterAll
+		static void afterAll(TestInfo testInfo) {
+			lifecycleEvents.add("afterAll:" + testInfo.getDisplayName());
+		}
+
 		@BeforeEach
 		void beforeEach(TestInfo testInfo) {
-			lifecycleEvents.add("before:" + testInfo.getDisplayName());
+			lifecycleEvents.add("beforeEach:" + testInfo.getDisplayName());
 		}
 
 		@AfterEach
 		void afterEach(TestInfo testInfo) {
-			lifecycleEvents.add("after:" + testInfo.getDisplayName());
+			lifecycleEvents.add("afterEach:" + testInfo.getDisplayName());
 		}
 
 		@ExtendWith(TwoInvocationsContextProvider.class)
