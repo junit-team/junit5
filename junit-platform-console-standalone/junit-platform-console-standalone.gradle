@@ -104,8 +104,8 @@ task standaloneCheck(dependsOn: standaloneExec) {
 	doLast {
 		String text = standaloneExec.errorOutput.toString() + standaloneExec.standardOutput.toString()
 		// engines -- output depends on default logging configuration
-		assert text.contains("junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $rootProject.version)")
-		assert text.contains("junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion)")
+		assert text.contains("junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $rootProject.version")
+		assert text.contains("junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion")
 		// tree node names
 		assert text.contains("JUnit Jupiter")
 		assert text.contains("JupiterIntegration")

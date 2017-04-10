@@ -96,7 +96,7 @@ public final class ReflectionUtils {
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
 	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
-		ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass);
+		ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::loadClass);
 
 	private static final Map<String, Class<?>> primitiveNameToTypeMap;
 
@@ -137,19 +137,6 @@ public final class ReflectionUtils {
 		primitiveToWrapper.put(double.class, Double.class);
 
 		primitiveToWrapperMap = Collections.unmodifiableMap(primitiveToWrapper);
-	}
-
-	public static ClassLoader getDefaultClassLoader() {
-		try {
-			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-			if (contextClassLoader != null) {
-				return contextClassLoader;
-			}
-		}
-		catch (Throwable ex) {
-			/* ignore */
-		}
-		return ClassLoader.getSystemClassLoader();
 	}
 
 	public static boolean isPublic(Class<?> clazz) {
@@ -327,7 +314,7 @@ public final class ReflectionUtils {
 	 * @see #loadClass(String, ClassLoader)
 	 */
 	public static Optional<Class<?>> loadClass(String name) {
-		return loadClass(name, getDefaultClassLoader());
+		return loadClass(name, ClassLoaderUtils.getDefaultClassLoader());
 	}
 
 	/**

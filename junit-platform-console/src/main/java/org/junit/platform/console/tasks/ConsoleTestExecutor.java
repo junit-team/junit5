@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.Details;
 import org.junit.platform.console.options.Theme;
@@ -74,7 +74,7 @@ public class ConsoleTestExecutor {
 		List<Path> additionalClasspathEntries = options.getAdditionalClasspathEntries();
 		if (!additionalClasspathEntries.isEmpty()) {
 			URL[] urls = additionalClasspathEntries.stream().map(this::toURL).toArray(URL[]::new);
-			ClassLoader parentClassLoader = ReflectionUtils.getDefaultClassLoader();
+			ClassLoader parentClassLoader = ClassLoaderUtils.getDefaultClassLoader();
 			ClassLoader customClassLoader = URLClassLoader.newInstance(urls, parentClassLoader);
 			return Optional.of(customClassLoader);
 		}

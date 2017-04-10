@@ -16,7 +16,7 @@ import static java.util.stream.StreamSupport.stream;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.launcher.TestExecutionListener;
 
 /**
@@ -28,7 +28,7 @@ class ServiceLoaderTestExecutionListenerRegistry {
 
 	Iterable<TestExecutionListener> loadListeners() {
 		Iterable<TestExecutionListener> listeners = ServiceLoader.load(TestExecutionListener.class,
-			ReflectionUtils.getDefaultClassLoader());
+			ClassLoaderUtils.getDefaultClassLoader());
 		LOG.config(() -> "Loaded TestExecutionListener instances: "
 				+ stream(listeners.spliterator(), false).map(Object::toString).collect(toList()));
 		return listeners;

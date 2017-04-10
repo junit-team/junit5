@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.engine.TestEngine;
 
 /**
@@ -27,7 +27,7 @@ class ServiceLoaderTestEngineRegistry {
 
 	public Iterable<TestEngine> loadTestEngines() {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
-			ReflectionUtils.getDefaultClassLoader());
+			ClassLoaderUtils.getDefaultClassLoader());
 		LOG.config(() -> createDiscoveredTestEnginesMessage(testEngines));
 		return testEngines;
 	}
@@ -48,6 +48,7 @@ class ServiceLoaderTestEngineRegistry {
 		engine.getGroupId().ifPresent(groupId -> attributes.add("group ID: " + groupId));
 		engine.getArtifactId().ifPresent(artifactId -> attributes.add("artifact ID: " + artifactId));
 		engine.getVersion().ifPresent(version -> attributes.add("version: " + version));
+		ClassLoaderUtils.getLocation(engine).ifPresent(location -> attributes.add("location: " + location));
 		return attributes;
 	}
 
