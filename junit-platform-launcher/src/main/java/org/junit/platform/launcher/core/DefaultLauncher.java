@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -111,17 +112,32 @@ class DefaultLauncher implements Launcher {
 			LOG.fine(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
+			Optional<TestDescriptor> engineRoot = discoverRoot(testEngine, discoveryRequest);
+			engineRoot.ifPresent(rootDescriptor -> root.add(testEngine, rootDescriptor));
+		}
+		root.applyPostDiscoveryFilters(discoveryRequest);
+		root.prune();
+		return root;
+	}
+
+	private Optional<TestDescriptor> discoverRoot(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
+		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
+		try {
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
 			Preconditions.notNull(engineRoot,
 				() -> String.format(
 					"The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.",
 					testEngine.getId()));
-			root.add(testEngine, engineRoot);
+			return Optional.of(engineRoot);
 		}
-		root.applyPostDiscoveryFilters(discoveryRequest);
-		root.prune();
-		return root;
+		catch (Throwable throwable) {
+			// re-throw our own exceptions
+			if (throwable instanceof JUnitException) {
+				throw throwable;
+			}
+			LOG.warning(() -> String.format("Engine '%s' failed to discover tests: %s", testEngine.getId(), throwable));
+			return Optional.empty();
+		}
 	}
 
 	private void execute(Root root, ConfigurationParameters configurationParameters,

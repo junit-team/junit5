@@ -128,6 +128,36 @@ class DefaultLauncherTests {
 	}
 
 	@Test
+	void discoverTestPlanForEngineThatThrowsAnErrorInDiscoverPhase() {
+		TestEngine engine = new TestEngineStub() {
+
+			@Override
+			public TestDescriptor discover(org.junit.platform.engine.EngineDiscoveryRequest discoveryRequest,
+					UniqueId uniqueId) {
+				throw new Error("ignored");
+			}
+		};
+
+		TestPlan testPlan = createLauncher(engine).discover(request().build());
+		assertThat(testPlan.getRoots()).hasSize(0);
+	}
+
+	@Test
+	void discoverTestPlanForEngineThatThrowsRuntimeExceptionInDiscoverPhase() {
+		TestEngine engine = new TestEngineStub() {
+
+			@Override
+			public TestDescriptor discover(org.junit.platform.engine.EngineDiscoveryRequest discoveryRequest,
+					UniqueId uniqueId) {
+				throw new RuntimeException("ignored");
+			}
+		};
+
+		TestPlan testPlan = createLauncher(engine).discover(request().build());
+		assertThat(testPlan.getRoots()).hasSize(0);
+	}
+
+	@Test
 	void discoverTestPlanForSingleEngine() {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("myEngine");
 		engine.addTest("test1", noOp);
