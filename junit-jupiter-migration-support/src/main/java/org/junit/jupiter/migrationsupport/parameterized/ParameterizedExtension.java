@@ -37,12 +37,13 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.runners.Parameterized;
 
 @API(Experimental)
 public class ParameterizedExtension implements TestTemplateInvocationContextProvider {
-	private static ExtensionContext.Namespace parameters = ExtensionContext.Namespace.create(
+	private final static ExtensionContext.Namespace PARAMETERS = ExtensionContext.Namespace.create(
 		ParameterizedExtension.class);
 
 	/**
@@ -72,7 +73,7 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-		// grabbing the parent ensures the parameters are stored in the same store across multiple TestTemplates.
+		// grabbing the parent ensures the PARAMETERS are stored in the same store across multiple TestTemplates.
 		return context.getParent().flatMap(ParameterizedExtension::parameters).map(
 			o -> testTemplateContextsFromParameters(o, context)).orElse(Stream.empty());
 	}
@@ -113,7 +114,7 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 	}
 
 	private static Optional<Collection<Object[]>> parameters(ExtensionContext context) {
-		return context.getStore(parameters).getOrComputeIfAbsent("parameterMethod",
+		return context.getStore(PARAMETERS).getOrComputeIfAbsent("parameterMethod",
 			k -> new ParameterWrapper(callParameters(context)), ParameterWrapper.class).getValue();
 
 	}
@@ -243,18 +244,14 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 			"The amount of parametersFields in the constructor doesn't match those in the provided parametersFields");
 	}
 
-	private static ParameterResolutionException wrongParametersReturnType() {
-		return new ParameterResolutionException("The @Parameters returns the wrong type");
-	}
-
 	@SuppressWarnings("unchecked")
-	private static Collection<Object[]> convertParametersMethodReturnType(Object o) {
-		if (o instanceof Collection) {
-			return (Collection<Object[]>) o;
-		}
-		else {
-			throw wrongParametersReturnType();
-		}
+	private static Collection<Object[]> convertParametersMethodReturnType(Object obj) {
+		return CollectionUtils.toStream(obj).map(o -> {
+			if (o instanceof Object[]) {
+				return (Object[]) o;
+			}
+			return new Object[] { o };
+		}).collect(toList());
 	}
 
 	private static class ParameterWrapper {

@@ -49,7 +49,7 @@ class ParameterizedExtensionTests {
 	}
 
 	@ExtendWith(ParameterizedExtension.class)
-	protected static class FibonacciTest {
+	private static class FibonacciTest {
 		@Parameters
 		public static Collection<Object[]> data() {
 			return Arrays.asList(
@@ -88,7 +88,7 @@ class ParameterizedExtensionTests {
 	}
 
 	@ExtendWith(ParameterizedExtension.class)
-	protected static class ParameterizedTestWithConstructor {
+	private static class ParameterizedTestWithConstructor {
 		@Parameters
 		public static Collection<Object[]> data() {
 			return Arrays.asList(
@@ -116,7 +116,7 @@ class ParameterizedExtensionTests {
 	}
 
 	@ExtendWith(ParameterizedExtension.class)
-	protected static class UnMatchedConstructor {
+	private static class UnMatchedConstructor {
 		@Parameters
 		public static Collection<Object[]> data() {
 			return Arrays.asList(new Object[][] { { 0, 2 } });
@@ -140,7 +140,7 @@ class ParameterizedExtensionTests {
 	}
 
 	@ExtendWith(ParameterizedExtension.class)
-	protected static class WrongParameters {
+	private static class WrongParameters {
 		@Parameterized.Parameter
 		public int a;
 		@Parameterized.Parameter(1)
@@ -168,7 +168,7 @@ class ParameterizedExtensionTests {
 	}
 
 	@ExtendWith(ParameterizedExtension.class)
-	protected static class DoubleInjection {
+	private static class DoubleInjection {
 		@Parameterized.Parameter
 		public int a;
 
@@ -220,7 +220,7 @@ class ParameterizedExtensionTests {
 	}
 
 	@ExtendWith(ParameterizedExtension.class)
-	protected static class EmptyParameters {
+	private static class EmptyParameters {
 
 		public EmptyParameters() {
 		}
@@ -243,7 +243,7 @@ class ParameterizedExtensionTests {
 	}
 
 	@ExtendWith(ParameterizedExtension.class)
-	protected static class DuplicatedIndex {
+	private static class DuplicatedIndex {
 		@Parameterized.Parameter
 		public int a;
 
@@ -268,7 +268,7 @@ class ParameterizedExtensionTests {
 	}
 
 	@ExtendWith(ParameterizedExtension.class)
-	protected static class ParametersCalledOnce {
+	private static class ParametersCalledOnce {
 		private static int invocationCount = 0;
 
 		public ParametersCalledOnce(int a) {
@@ -294,7 +294,7 @@ class ParameterizedExtensionTests {
 	}
 
 	@ExtendWith(ParameterizedExtension.class)
-	static class MultipleTestTemplates {
+	private static class MultipleTestTemplates {
 		private static int invocationCount = 0;
 
 		public MultipleTestTemplates(int a) {
@@ -315,6 +315,30 @@ class ParameterizedExtensionTests {
 
 		@TestTemplate
 		void secondTemplate() {
+
+		}
+	}
+
+	@Test
+	void singleParameterIterable() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(IterableTest.class);
+		assertThat(eventRecorder.getTestSuccessfulCount()).isEqualTo(2);
+	}
+
+	@ExtendWith(ParameterizedExtension.class)
+	private static class IterableTest {
+
+		public IterableTest(Object o) {
+
+		}
+
+		@Parameters
+		public static Object[] data() {
+			return new Object[] { new Object(), new Object() };
+		}
+
+		@TestTemplate
+		void dummy() {
 
 		}
 	}
