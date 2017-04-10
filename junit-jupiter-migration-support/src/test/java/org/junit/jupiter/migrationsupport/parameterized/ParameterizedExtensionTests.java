@@ -40,7 +40,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-class ParametrizedExtensionTests {
+class ParameterizedExtensionTests {
 
 	@Test
 	void parametrizedWithParameterFieldInjection() {
@@ -63,7 +63,7 @@ class ParametrizedExtensionTests {
 		public int fExpected;
 
 		@TestTemplate
-		public void test() {
+		void test() {
 			assertEquals(fExpected, compute(fInput));
 		}
 
@@ -104,7 +104,7 @@ class ParametrizedExtensionTests {
 		}
 
 		@TestTemplate
-		public void test() {
+		void test() {
 			assertNotEquals(a, b);
 		}
 	}
@@ -127,7 +127,7 @@ class ParametrizedExtensionTests {
 		}
 
 		@TestTemplate
-		public void dummy() {
+		void dummy() {
 
 		}
 	}
@@ -152,7 +152,7 @@ class ParametrizedExtensionTests {
 		}
 
 		@TestTemplate
-		public void dummy() {
+		void dummy() {
 
 		}
 	}
@@ -182,7 +182,7 @@ class ParametrizedExtensionTests {
 		}
 
 		@TestTemplate
-		public void dummy() {
+		void dummy() {
 
 		}
 	}
@@ -208,7 +208,7 @@ class ParametrizedExtensionTests {
 		}
 
 		@TestTemplate
-		public void dummy() {
+		void dummy() {
 
 		}
 	}
@@ -231,7 +231,7 @@ class ParametrizedExtensionTests {
 		}
 
 		@TestTemplate
-		public void dummy() {
+		void dummy() {
 
 		}
 	}
@@ -256,7 +256,7 @@ class ParametrizedExtensionTests {
 		}
 
 		@TestTemplate
-		public void dummy() {
+		void dummy() {
 
 		}
 	}
@@ -284,6 +284,38 @@ class ParametrizedExtensionTests {
 		@TestTemplate
 		void dummy() {
 			assertEquals(invocationCount, 1);
+		}
+	}
+
+	@Test
+	void multipleTestTemplatesShouldBeRun() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(MultipleTestTemplates.class);
+		assertThat(eventRecorder.getTestSuccessfulCount()).isEqualTo(4);
+	}
+
+	@ExtendWith(ParameterizedExtension.class)
+	static class MultipleTestTemplates {
+		private static int invocationCount = 0;
+
+		public MultipleTestTemplates(int a) {
+
+		}
+
+		@Parameters
+		public static Collection<Object[]> data() {
+			invocationCount++;
+			assertEquals(1, invocationCount);
+			return Arrays.asList(new Object[][] { { 3 }, { 4 } });
+		}
+
+		@TestTemplate
+		void firstTemplate() {
+
+		}
+
+		@TestTemplate
+		void secondTemplate() {
+
 		}
 	}
 

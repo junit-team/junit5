@@ -17,9 +17,9 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +41,9 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.runners.Parameterized;
 
 @API(Experimental)
-public class ParameterizedExtension implements TestTemplateInvocationContextProvider, ParameterResolver {
+public class ParameterizedExtension implements TestTemplateInvocationContextProvider {
 	private static ExtensionContext.Namespace parameters = ExtensionContext.Namespace.create(
 		ParameterizedExtension.class);
-	private int parametersCollectionIndex = 0;
 
 	/**
 	 * Indicate whether we can provide parameterized support.
@@ -54,86 +53,33 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 	 */
 	@Override
 	public boolean supports(ContainerExtensionContext context) {
-		return hasParametersMethod(context) && hasCorrectParameterFields(context);
+		return hasParametersMethod(context) && validInjectionMix(context);
+	}
+
+	private static boolean validInjectionMix(ExtensionContext context) {
+		List<Field> fields = parametersFields(context);
+		boolean hasParameterFields = !fields.isEmpty();
+		boolean hasCorrectParameterFields = areParametersFormedCorrectly(fields);
+		boolean hasArgsConstructor = hasArgsConstructor(context);
+
+		if (hasArgsConstructor) {
+			return !hasParameterFields;
+		}
+		else {
+			return !hasParameterFields || hasCorrectParameterFields;
+		}
 	}
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-		// grabbing the parent ensures the paremeters are stored in the same store.
+		// grabbing the parent ensures the parameters are stored in the same store across multiple TestTemplates.
 		return context.getParent().flatMap(ParameterizedExtension::parameters).map(
-			ParameterizedExtension::testTemplateContextsFromParameters).orElse(Stream.empty());
-	}
-
-	/**
-	 * Since the parameterized runner in JUnit 4 could only resolve constructor parameters
-	 * this extension once again here only support them on the constructor and require an {@code @Parameters} method
-	 *
-	 * @param parameterContext the context for the parameter to be resolved; never
-	 * {@code null}
-	 * @param extensionContext the extension context for the {@code Executable}
-	 * about to be invoked; never {@code null}
-	 * @return true if the above is met otherwise false.
-	 */
-	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return hasParametersMethod(extensionContext)
-				&& parameterContext.getDeclaringExecutable() instanceof Constructor;
-	}
-
-	@Override
-	public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
-		int parameterCount = parameterContext.getDeclaringExecutable().getParameterCount();
-		Object[] parameters = resolveParametersForConstructor(extensionContext, parameterCount);
-
-		int parameterIndex = parameterContext.getIndex();
-		// move to the next set of parametersFields
-		if (lastParameterToBeResolved(parameterContext)) {
-			this.parametersCollectionIndex++;
-		}
-
-		return parameters[parameterIndex];
-	}
-
-	/**
-	 * Retrieves the Object[] of the current iteration we are working on.
-	 *
-	 * @param extensionContext the extensionContext
-	 * @param parameterCount the amount of parameters of the constructor.
-	 *
-	 * @return the Object[] for this parameter iteration.
-	 * @throws ParameterResolutionException If the amount of arguments of the constructor doesn't match the amount
-	 * of arguments of the currently resolved object[]
-	 */
-	private Object[] resolveParametersForConstructor(ExtensionContext extensionContext, int parameterCount)
-			throws ParameterResolutionException {
-		// @formatter:off
-		return parameters(extensionContext).map(ArrayList::new)
-				.map(l -> l.get(this.parametersCollectionIndex))
-				.filter(params -> params.length == parameterCount)
-				.orElseThrow(ParameterizedExtension::unMatchedAmountOfParametersException);
-		// @formatter:on
-	}
-
-	private static boolean hasCorrectParameterFields(ExtensionContext context) {
-		List<Field> fields = parametersFields(context);
-		boolean hasFieldInjection = !fields.isEmpty();
-
-		if (hasArgsConstructor(context) && hasFieldInjection) {
-			return false;
-		}
-		else if (hasFieldInjection) {
-			return areParametersFormedCorrectly(fields);
-		}
-
-		return true;
+			o -> testTemplateContextsFromParameters(o, context)).orElse(Stream.empty());
 	}
 
 	private static boolean areParametersFormedCorrectly(List<Field> fields) {
 		List<Integer> parameterValues = parameterIndexes(fields);
-
 		List<Integer> duplicateIndexes = duplicatedIndexes(parameterValues);
-
 		boolean hasAllIndexes = indexRangeComplete(parameterValues);
 
 		return hasAllIndexes && duplicateIndexes.isEmpty();
@@ -164,10 +110,6 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 				.map(i -> parameterValues.containsAll(IntStream.range(0, i).boxed().collect(toList())))
 				.orElse(false);
 		// @formatter:on
-	}
-
-	private static boolean lastParameterToBeResolved(ParameterContext parameterContext) {
-		return parameterContext.getIndex() == parameterContext.getDeclaringExecutable().getParameterCount() - 1;
 	}
 
 	private static Optional<Collection<Object[]>> parameters(ExtensionContext context) {
@@ -201,20 +143,48 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 			m -> m.isAnnotationPresent(Parameterized.Parameters.class)).stream().findFirst();
 	}
 
-	private static Stream<TestTemplateInvocationContext> testTemplateContextsFromParameters(Collection<Object[]> o) {
-		return o.stream().map(ParameterizedExtension::contextFactory);
+	private static Stream<TestTemplateInvocationContext> testTemplateContextsFromParameters(Collection<Object[]> o,
+			ExtensionContext context) {
+		List<Field> fields = parametersFields(context);
+		boolean hasParameterFields = !fields.isEmpty();
+		boolean hasCorrectParameterFields = areParametersFormedCorrectly(fields);
+
+		if (!hasParameterFields) {
+			return o.stream().map(ParameterizedExtension::parameterResolver);
+		}
+		else if (hasCorrectParameterFields) {
+			return o.stream().map(ParameterizedExtension::contextFactory);
+		}
+
+		return Stream.empty();
+	}
+
+	private static TestTemplateInvocationContext parameterResolver(Object[] objects) {
+		List<Extension> parameterResolvers = singletonList(new ParameterResolver() {
+			@Override
+			public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext)
+					throws ParameterResolutionException {
+				final Executable declaringExecutable = parameterContext.getDeclaringExecutable();
+				return declaringExecutable instanceof Constructor
+						&& declaringExecutable.getParameterCount() == objects.length;
+			}
+
+			@Override
+			public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
+					throws ParameterResolutionException {
+				return objects[parameterContext.getIndex()];
+			}
+		});
+
+		return templateWithExtensions(parameterResolvers);
 	}
 
 	private static TestTemplateInvocationContext contextFactory(Object[] parameters) {
-		return new TestTemplateInvocationContext() {
-			@Override
-			public List<Extension> getAdditionalExtensions() {
-				return singletonList(new InjectionExtension(parameters));
-			}
-		};
+		return templateWithExtensions(singletonList(new InjectionExtension(parameters)));
 	}
 
 	private static class InjectionExtension implements TestInstancePostProcessor {
+
 		private final Object[] parameters;
 
 		public InjectionExtension(Object[] parameters) {
@@ -235,6 +205,16 @@ public class ParameterizedExtension implements TestTemplateInvocationContextProv
 				param.set(testInstance, this.parameters[paramIndex]);
 			}
 		}
+
+	}
+
+	private static TestTemplateInvocationContext templateWithExtensions(List<Extension> extensions) {
+		return new TestTemplateInvocationContext() {
+			@Override
+			public List<Extension> getAdditionalExtensions() {
+				return extensions;
+			}
+		};
 	}
 
 	private static boolean hasArgsConstructor(ExtensionContext context) {
