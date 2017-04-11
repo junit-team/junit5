@@ -57,3 +57,5 @@ on GitHub.
 
 * Fixed a bug where static member classes were incorrectly being filtered out.
   They are now considered valid JUnit Vintage test classes.
+* Fixed a bug where JUnit Vintage would incorrectly try to run abstract classes.
+  They will now not be run, but will log a warning that they are being excluded.
