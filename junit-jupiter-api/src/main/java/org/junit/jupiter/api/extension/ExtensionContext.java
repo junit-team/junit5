@@ -87,8 +87,9 @@ public interface ExtensionContext {
 	 * context, if available.
 	 *
 	 * <p>For example, if the current extension context encapsulates a test
-	 * class or test method, the annotated element will be the corresponding
-	 * {@link Class} or {@link Method} reference.
+	 * class, test method, test factory method, or test template method, the
+	 * annotated element will be the corresponding {@link Class} or {@link Method}
+	 * reference.
 	 *
 	 * <p>Favor this method over more specific methods whenever the
 	 * {@code AnnotatedElement} API suits the task at hand &mdash; for example,
@@ -328,10 +329,12 @@ public interface ExtensionContext {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o)
+			if (this == o) {
 				return true;
-			if (o == null || getClass() != o.getClass())
+			}
+			if (o == null || getClass() != o.getClass()) {
 				return false;
+			}
 			Namespace that = (Namespace) o;
 			return this.parts.equals(that.parts);
 		}
