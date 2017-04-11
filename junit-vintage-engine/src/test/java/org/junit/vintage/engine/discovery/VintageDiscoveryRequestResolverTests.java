@@ -25,7 +25,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.vintage.engine.RecordCollectingLogger;
+import org.junit.vintage.engine.samples.junit4.AbstractJunit4TestCaseWithConstructorParameter;
 
 /**
  * @since 4.12
@@ -71,6 +73,24 @@ class VintageDiscoveryRequestResolverTests {
 		public void test() {
 		}
 
+	}
+
+	@Test
+	void doesNotResolveAbstractClasses() {
+		EngineDescriptor engineDescriptor = new EngineDescriptor(engineId(), "JUnit Vintage");
+		Class<?> testClass = AbstractJunit4TestCaseWithConstructorParameter.class;
+		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
+
+		RecordCollectingLogger logger = new RecordCollectingLogger();
+
+		JUnit4DiscoveryRequestResolver resolver = new JUnit4DiscoveryRequestResolver(engineDescriptor, logger);
+		resolver.resolve(request);
+
+		assertThat(engineDescriptor.getChildren()).isEmpty();
+
+		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
+		assertThat(logRecord.getLevel()).isEqualTo(Level.WARNING);
+		assertThat(logRecord.getMessage()).isEqualTo("Class " + testClass.getName() + " could not be resolved");
 	}
 
 }

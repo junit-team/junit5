@@ -410,13 +410,14 @@ class VintageTestEngineExecutionTests {
 
 	}
 
+	@RunWith(MisbehavingSuiteRunner.class)
+	public static class MisBehavingSuiteTestClass {
+
+	}
+
 	@Test
 	void ignoreEventsForUnknownDescriptionsByMisbehavingSuiteRunner() {
-		@RunWith(MisbehavingSuiteRunner.class)
-		class TestClass {
-
-		}
-		Class<?> testClass = TestClass.class;
+		Class<?> testClass = MisBehavingSuiteTestClass.class;
 
 		List<ExecutionEvent> executionEvents = execute(testClass);
 
@@ -447,13 +448,14 @@ class VintageTestEngineExecutionTests {
 
 	}
 
+	@RunWith(MisbehavingChildlessRunner.class)
+	public static class MisbehavingChildTestClass {
+
+	}
+
 	@Test
 	void ignoreEventsForUnknownDescriptionsByMisbehavingChildlessRunner() {
-		@RunWith(MisbehavingChildlessRunner.class)
-		class TestClass {
-
-		}
-		Class<?> testClass = TestClass.class;
+		Class<?> testClass = MisbehavingChildTestClass.class;
 
 		List<ExecutionEvent> executionEvents = execute(testClass);
 

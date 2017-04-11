@@ -35,6 +35,7 @@ import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 @API(Internal)
 public class JUnit4DiscoveryRequestResolver {
 
+	private static final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
 	private final EngineDescriptor engineDescriptor;
 	private final Logger logger;
 
@@ -81,7 +82,19 @@ public class JUnit4DiscoveryRequestResolver {
 		Filter<Class<?>> classFilter = new ExclusionReasonConsumingFilter<>(adaptedFilter,
 			(testClass, reason) -> logger.fine(() -> String.format("Class %s was excluded by a class filter: %s",
 				testClass.getName(), reason.orElse("<unknown reason>"))));
-		return collector.toRequests(classFilter.toPredicate());
+		return collector.toRequests(classFilter.toPredicate().and(loggingPotentialJUnit4TestClassPredicate()));
+	}
+
+	private Predicate<Class<?>> loggingPotentialJUnit4TestClassPredicate() {
+		return testClass -> {
+			boolean isPotentialTestClass = isPotentialJUnit4TestClass.test(testClass);
+
+			if (!isPotentialTestClass) {
+				logger.warning(() -> String.format("Class %s could not be resolved", testClass.getName()));
+			}
+
+			return isPotentialTestClass;
+		};
 	}
 
 	private void populateEngineDescriptor(Set<TestClassRequest> requests) {
