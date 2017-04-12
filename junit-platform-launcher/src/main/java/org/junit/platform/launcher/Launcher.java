@@ -88,4 +88,11 @@ public interface Launcher {
 	 * @param listeners additional test execution listeners; never {@code null}
 	 */
 	void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners);
+
+	// This method is temporarily available to restore binary compatibility.
+	// It is *not* tagged as "deprecated" to avoid compiler warnings.
+	// See https://github.com/junit-team/junit5/issues/740 for details.
+	default void execute(LauncherDiscoveryRequest launcherDiscoveryRequest) {
+		execute(launcherDiscoveryRequest, new TestExecutionListener[0]);
+	}
 }
