@@ -25,7 +25,9 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* ❓
+* Added internal utility method to provide information about the location from which
+  the engine class was loaded. When the location URL is available, it is logged at
+  configuration-level by the service loading mechanism.
 
 
 [[release-notes-5.0.0-m5-junit-jupiter]]
@@ -44,9 +46,7 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* Added internal utility method to provide information about the location from which
-  the engine class was loaded. When the location URL is available, it is logged at
-  configuration-level by the service loading mechanism.
+* ❓
 
 
 [[release-notes-5.0.0-m5-junit-vintage]]
