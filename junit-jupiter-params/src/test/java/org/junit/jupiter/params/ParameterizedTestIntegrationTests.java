@@ -91,6 +91,9 @@ class ParameterizedTestIntegrationTests {
 
 	@Test
 	void executesLifecycleMethods() {
+		// reset event collection
+		LifecycleTestCase.lifecycleEvents.clear();
+
 		List<ExecutionEvent> executionEvents = execute(selectClass(LifecycleTestCase.class));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test("test1"), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
