@@ -150,7 +150,7 @@ class DefaultLauncher implements Launcher {
 			testExecutionListener);
 		for (TestEngine testEngine : root.getTestEngines()) {
 			TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
-			testEngine.execute(new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
+			execute(testEngine, new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
 		}
 		testExecutionListener.testPlanExecutionFinished(testPlan);
 	}
@@ -162,6 +162,19 @@ class DefaultLauncher implements Launcher {
 		TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry(this.listenerRegistry);
 		registry.registerListeners(listeners);
 		return registry;
+	}
+
+	private void execute(TestEngine testEngine, ExecutionRequest executionRequest) {
+		try {
+			testEngine.execute(executionRequest);
+		}
+		catch (Throwable throwable) {
+			// re-throw our own exceptions
+			if (throwable instanceof JUnitException) {
+				throw throwable;
+			}
+			LOG.warning(() -> String.format("Engine '%s' failed to execute tests: %s", testEngine.getId(), throwable));
+		}
 	}
 
 }
