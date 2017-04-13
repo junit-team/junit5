@@ -23,7 +23,9 @@ import static org.junit.platform.engine.test.event.TestExecutionResultConditions
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
@@ -91,30 +93,33 @@ class ParameterizedTestIntegrationTests {
 
 	@Test
 	void executesLifecycleMethods() {
-		// reset event collection
+		// reset static collections
 		LifecycleTestCase.lifecycleEvents.clear();
+		LifecycleTestCase.testMethods.clear();
 
 		List<ExecutionEvent> executionEvents = execute(selectClass(LifecycleTestCase.class));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test("test1"), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test("test1"), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 
+		List<String> testMethods = new ArrayList<>(LifecycleTestCase.testMethods);
+
 		// @formatter:off
 		assertThat(LifecycleTestCase.lifecycleEvents).containsExactly(
 			"beforeAll:ParameterizedTestIntegrationTests$LifecycleTestCase", //
 				"providerMethod",
 					"beforeEach:[1] foo",
-						"test1:[1] foo",
+						testMethods.get(0) + ":[1] foo",
 					"afterEach:[1] foo",
 					"beforeEach:[2] bar",
-						"test1:[2] bar",
+						testMethods.get(0) + ":[2] bar",
 					"afterEach:[2] bar",
 				"providerMethod",
 					"beforeEach:[1] foo",
-						"test2:[1] foo",
+						testMethods.get(1) + ":[1] foo",
 					"afterEach:[1] foo",
 					"beforeEach:[2] bar",
-						"test2:[2] bar",
+						testMethods.get(1) + ":[2] bar",
 					"afterEach:[2] bar",
 			"afterAll:ParameterizedTestIntegrationTests$LifecycleTestCase");
 		// @formatter:on
@@ -153,7 +158,8 @@ class ParameterizedTestIntegrationTests {
 
 	static class LifecycleTestCase {
 
-		private static List<String> lifecycleEvents = new ArrayList<>();
+		private static final List<String> lifecycleEvents = new ArrayList<>();
+		private static final Set<String> testMethods = new LinkedHashSet<>();
 
 		@BeforeAll
 		static void beforeAll(TestInfo testInfo) {
@@ -178,14 +184,19 @@ class ParameterizedTestIntegrationTests {
 		@ParameterizedTest
 		@MethodSource(names = "providerMethod")
 		void test1(String argument, TestInfo testInfo) {
-			lifecycleEvents.add("test1:" + testInfo.getDisplayName());
-			fail(argument);
+			performTest(argument, testInfo);
 		}
 
 		@ParameterizedTest
 		@MethodSource(names = "providerMethod")
 		void test2(String argument, TestInfo testInfo) {
-			lifecycleEvents.add("test2:" + testInfo.getDisplayName());
+			performTest(argument, testInfo);
+		}
+
+		private void performTest(String argument, TestInfo testInfo) {
+			String testMethod = testInfo.getTestMethod().get().getName();
+			testMethods.add(testMethod);
+			lifecycleEvents.add(testMethod + ":" + testInfo.getDisplayName());
 			fail(argument);
 		}
 
@@ -193,6 +204,7 @@ class ParameterizedTestIntegrationTests {
 			lifecycleEvents.add("providerMethod");
 			return Stream.of("foo", "bar");
 		}
+
 	}
 
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
