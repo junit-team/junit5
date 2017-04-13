@@ -15,4 +15,4 @@ install:
   - ./gradlew -version
 
 script:
-  - ./gradlew check --parallel --scan
+  - ./gradlew check --scan
