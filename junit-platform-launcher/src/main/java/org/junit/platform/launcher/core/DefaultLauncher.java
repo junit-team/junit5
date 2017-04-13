@@ -13,9 +13,11 @@ package org.junit.platform.launcher.core;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.ExecutionRequest;
@@ -112,7 +114,7 @@ class DefaultLauncher implements Launcher {
 			LOG.fine(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			Optional<TestDescriptor> engineRoot = discoverRoot(testEngine, discoveryRequest);
+			Optional<TestDescriptor> engineRoot = discoverEngineRoot(testEngine, discoveryRequest);
 			engineRoot.ifPresent(rootDescriptor -> root.add(testEngine, rootDescriptor));
 		}
 		root.applyPostDiscoveryFilters(discoveryRequest);
@@ -120,7 +122,8 @@ class DefaultLauncher implements Launcher {
 		return root;
 	}
 
-	private Optional<TestDescriptor> discoverRoot(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
+	private Optional<TestDescriptor> discoverEngineRoot(TestEngine testEngine,
+			LauncherDiscoveryRequest discoveryRequest) {
 		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 		try {
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
@@ -131,11 +134,7 @@ class DefaultLauncher implements Launcher {
 			return Optional.of(engineRoot);
 		}
 		catch (Throwable throwable) {
-			// re-throw our own exceptions
-			if (throwable instanceof JUnitException) {
-				throw throwable;
-			}
-			LOG.warning(() -> String.format("Engine '%s' failed to discover tests: %s", testEngine.getId(), throwable));
+			handleThrowable(testEngine, "discover", throwable);
 			return Optional.empty();
 		}
 	}
@@ -169,12 +168,14 @@ class DefaultLauncher implements Launcher {
 			testEngine.execute(executionRequest);
 		}
 		catch (Throwable throwable) {
-			// re-throw our own exceptions
-			if (throwable instanceof JUnitException) {
-				throw throwable;
-			}
-			LOG.warning(() -> String.format("Engine '%s' failed to execute tests: %s", testEngine.getId(), throwable));
+			handleThrowable(testEngine, "execute", throwable);
 		}
+	}
+
+	private void handleThrowable(TestEngine testEngine, String phase, Throwable throwable) {
+		LOG.log(Level.WARNING, throwable,
+			() -> String.format("engine '%s' failed to %s tests", testEngine.getId(), phase));
+		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 	}
 
 }

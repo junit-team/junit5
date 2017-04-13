@@ -119,12 +119,8 @@ class DefaultLauncherTests {
 			}
 		};
 
-		Throwable exception = assertThrows(PreconditionViolationException.class,
-			() -> createLauncher(engine).discover(request().build()));
-
-		assertThat(exception).hasMessage(
-			"The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.",
-			engine.getId());
+		TestPlan testPlan = createLauncher(engine).discover(request().build());
+		assertThat(testPlan.getRoots()).hasSize(0);
 	}
 
 	@Test
