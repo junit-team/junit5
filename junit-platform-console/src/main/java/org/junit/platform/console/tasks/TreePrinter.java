@@ -117,7 +117,7 @@ class TreePrinter {
 		}
 		Throwable throwable = result.getThrowable().get();
 		String message = throwable.getMessage();
-		if (message == null) {
+		if (StringUtils.isBlank(message)) {
 			message = throwable.toString();
 		}
 		printMessage(FAILED, indent, message);
