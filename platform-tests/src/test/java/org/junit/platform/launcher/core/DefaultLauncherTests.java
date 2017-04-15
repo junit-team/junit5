@@ -379,4 +379,5 @@ class DefaultLauncherTests {
 		assertThat(listener.getSummary().getContainersFoundCount()).isEqualTo(1);
 		assertThat(listener.getSummary().getTestsFoundCount()).isEqualTo(1);
 	}
+
 }

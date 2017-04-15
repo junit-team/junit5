@@ -124,6 +124,7 @@ class DefaultLauncher implements Launcher {
 
 	private Optional<TestDescriptor> discoverEngineRoot(TestEngine testEngine,
 			LauncherDiscoveryRequest discoveryRequest) {
+
 		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 		try {
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
@@ -141,6 +142,7 @@ class DefaultLauncher implements Launcher {
 
 	private void execute(Root root, ConfigurationParameters configurationParameters,
 			TestExecutionListener... listeners) {
+
 		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
 		TestPlan testPlan = TestPlan.from(root.getEngineDescriptors());
 		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
@@ -174,7 +176,7 @@ class DefaultLauncher implements Launcher {
 
 	private void handleThrowable(TestEngine testEngine, String phase, Throwable throwable) {
 		LOG.log(Level.WARNING, throwable,
-			() -> String.format("engine '%s' failed to %s tests", testEngine.getId(), phase));
+			() -> String.format("TestEngine with ID '%s' failed to %s tests", testEngine.getId(), phase));
 		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 	}
 
