@@ -25,7 +25,8 @@ import org.junit.platform.commons.meta.API;
  * executed <em>after</em> <strong>all</strong> tests in the current test class.
  *
  * <p>In contrast to {@link AfterEach @AfterEach} methods, {@code @AfterAll}
- * methods are only executed once for a given test class.
+ * methods are only executed once for a given test class or test class
+ * hierarchy.
  *
  * <h3>Method Signatures</h3>
  *

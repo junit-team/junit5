@@ -25,7 +25,8 @@ import org.junit.platform.commons.meta.API;
  * executed <em>before</em> <strong>all</strong> tests in the current test class.
  *
  * <p>In contrast to {@link BeforeEach @BeforeEach} methods, {@code @BeforeAll}
- * methods are only executed once for a given test class.
+ * methods are only executed once for a given test class or test class
+ * hierarchy.
  *
  * <h3>Method Signatures</h3>
  *
