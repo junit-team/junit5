@@ -19,7 +19,7 @@ developers have plenty of time to migrate to JUnit Jupiter on their own schedule
 === Running JUnit 4 Tests on the JUnit Platform
 
 Just make sure that the `junit-vintage-engine` artifact is in your test runtime path. In that
-case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform launcher.
+case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform runner.
 
 See the example projects in the {junit5-samples-repo}[`junit5-samples`] repository to
 find out how this is done with Gradle and Maven.
