@@ -78,6 +78,8 @@ public class KitchenSinkExtension implements
 // @formatter:on
 {
 
+	// --- Lifecycle Callbacks -------------------------------------------------
+
 	@Override
 	public void beforeAll(ContainerExtensionContext context) throws Exception {
 	}
@@ -106,6 +108,8 @@ public class KitchenSinkExtension implements
 	public void afterAll(ContainerExtensionContext context) throws Exception {
 	}
 
+	// --- Dependency Injection ------------------------------------------------
+
 	@Override
 	public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 	}
@@ -122,6 +126,8 @@ public class KitchenSinkExtension implements
 		return null;
 	}
 
+	// --- Conditional Test Execution ------------------------------------------
+
 	@Override
 	public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
 		return null;
@@ -132,15 +138,7 @@ public class KitchenSinkExtension implements
 		return null;
 	}
 
-	@Override
-	public Object convert(Object input, ParameterContext context) throws ArgumentConversionException {
-		return null;
-	}
-
-	@Override
-	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) throws Exception {
-		return null;
-	}
+	// --- @TestTemplate -------------------------------------------------------
 
 	@Override
 	public boolean supports(ContainerExtensionContext context) {
@@ -149,6 +147,18 @@ public class KitchenSinkExtension implements
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		return null;
+	}
+
+	// --- @ParameterizedTest --------------------------------------------------
+
+	@Override
+	public Object convert(Object input, ParameterContext context) throws ArgumentConversionException {
+		return null;
+	}
+
+	@Override
+	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) throws Exception {
 		return null;
 	}
 
