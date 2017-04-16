@@ -19,6 +19,7 @@ dependencies {
 
 	// --- Things we are testing with ---------------------------------------------
 	testImplementation(project(':junit-jupiter-api'))
+	testImplementation(project(':junit-jupiter-params'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
