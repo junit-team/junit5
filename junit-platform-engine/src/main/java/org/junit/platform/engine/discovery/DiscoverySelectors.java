@@ -251,7 +251,7 @@ public final class DiscoverySelectors {
 	 */
 	public static PackageSelector selectPackage(String packageName) {
 		Preconditions.notNull(packageName, "Package name must not be null");
-		Preconditions.condition(packageName.equals("") || packageName.trim().length() != 0,
+		Preconditions.condition(packageName.isEmpty() || packageName.trim().length() != 0,
 			"Package name must not contain only whitespace");
 		return new PackageSelector(packageName.trim());
 	}
