@@ -22,7 +22,7 @@ import org.junit.platform.commons.meta.API;
 
 /**
  * {@code @ConvertWith} is an annotation that allows one to specify an explicit
- * {@link org.junit.jupiter.params.converter.ArgumentConverter}.
+ * {@link ArgumentConverter}.
 
  * <p>This annotation may be applied to method parameters of
  * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} methods
