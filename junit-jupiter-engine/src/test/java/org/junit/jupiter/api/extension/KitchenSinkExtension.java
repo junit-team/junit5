@@ -8,33 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.extensions;
+package org.junit.jupiter.api.extension;
 
 import java.util.stream.Stream;
-
-import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ContainerExecutionCondition;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.TestExecutionCondition;
-import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.junit.jupiter.api.extension.TestExtensionContext;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
-import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
-import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.jupiter.params.converter.ArgumentConversionException;
-import org.junit.jupiter.params.converter.ArgumentConverter;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
 
 /**
  * <em>Kitchen Sink</em> extension that implements every extension API
@@ -69,11 +45,7 @@ public class KitchenSinkExtension implements
 	TestExecutionCondition,
 
 	// @TestTemplate
-	TestTemplateInvocationContextProvider,
-
-	// @ParameterizedTest
-	ArgumentConverter,
-	ArgumentsProvider
+	TestTemplateInvocationContextProvider
 
 // @formatter:on
 {
@@ -147,18 +119,6 @@ public class KitchenSinkExtension implements
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
-		return null;
-	}
-
-	// --- @ParameterizedTest --------------------------------------------------
-
-	@Override
-	public Object convert(Object input, ParameterContext context) throws ArgumentConversionException {
-		return null;
-	}
-
-	@Override
-	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) throws Exception {
 		return null;
 	}
 
