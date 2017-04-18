@@ -87,7 +87,7 @@ public final class ReflectionUtils {
 		/**
 		 * Traverse the hierarchy using bottom-up semantics.
 		 */
-		BOTTOM_UP;
+		BOTTOM_UP
 	}
 
 	// Pattern: [fully qualified class name]#[methodName]((comma-separated list of parameter type names))
