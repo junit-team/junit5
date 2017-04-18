@@ -10,6 +10,7 @@
 
 package org.junit.platform.console;
 
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
 import java.io.BufferedWriter;
@@ -36,10 +37,15 @@ public class ConsoleLauncher {
 
 	@API(Maintained)
 	public static void main(String... args) {
-		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
-		ConsoleLauncher consoleLauncher = new ConsoleLauncher(parser, System.out, System.err);
-		int exitCode = consoleLauncher.execute(args).getExitCode();
+		int exitCode = execute(System.out, System.err, args).getExitCode();
 		System.exit(exitCode);
+	}
+
+	@API(Internal)
+	public static ConsoleLauncherExecutionResult execute(PrintStream out, PrintStream err, String... args) {
+		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
+		ConsoleLauncher consoleLauncher = new ConsoleLauncher(parser, out, err);
+		return consoleLauncher.execute(args);
 	}
 
 	private final CommandLineOptionsParser commandLineOptionsParser;
