@@ -39,12 +39,14 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	private static final Logger logger = Logger.getLogger(ParameterizedTestExtension.class.getName());
 
 	@Override
-	public boolean supports(ContainerExtensionContext context) {
+	public boolean supportsTestTemplate(ContainerExtensionContext context) {
 		return isAnnotated(context.getTestMethod(), ParameterizedTest.class);
 	}
 
 	@Override
-	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+			ContainerExtensionContext context) {
+
 		Method templateMethod = Preconditions.notNull(context.getTestMethod().orElse(null),
 			"test method must not be null");
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);

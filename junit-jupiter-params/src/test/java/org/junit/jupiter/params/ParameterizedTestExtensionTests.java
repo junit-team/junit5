@@ -44,21 +44,21 @@ class ParameterizedTestExtensionTests {
 	void supportsReturnsFalseForMissingTestMethod() {
 		ContainerExtensionContext extensionContextWithoutTestMethod = getExtensionContextReturningSingleMethod(
 			new TestCaseWithoutMethod());
-		assertFalse(this.parameterizedTestExtension.supports(extensionContextWithoutTestMethod));
+		assertFalse(this.parameterizedTestExtension.supportsTestTemplate(extensionContextWithoutTestMethod));
 	}
 
 	@Test
 	void supportsReturnsFalseForTestMethodWithoutParameterizedTestAnnotation() {
 		ContainerExtensionContext extensionContextWithUnAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
 			new TestCaseWithMethod());
-		assertFalse(this.parameterizedTestExtension.supports(extensionContextWithUnAnnotatedTestMethod));
+		assertFalse(this.parameterizedTestExtension.supportsTestTemplate(extensionContextWithUnAnnotatedTestMethod));
 	}
 
 	@Test
 	void supportsReturnsTrueForTestMethodWithParameterizedTestAnnotation() {
 		ContainerExtensionContext extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
 			new TestCaseWithAnnotatedMethod());
-		assertTrue(this.parameterizedTestExtension.supports(extensionContextWithAnnotatedTestMethod));
+		assertTrue(this.parameterizedTestExtension.supportsTestTemplate(extensionContextWithAnnotatedTestMethod));
 	}
 
 	@Test
@@ -66,7 +66,8 @@ class ParameterizedTestExtensionTests {
 		ContainerExtensionContext extensionContext = getExtensionContextReturningSingleMethod(
 			new TestCaseWithArgumentSourceAnnotatedMethod());
 
-		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provide(extensionContext);
+		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
+			extensionContext);
 
 		//cause the stream to be evaluated
 		stream.count();

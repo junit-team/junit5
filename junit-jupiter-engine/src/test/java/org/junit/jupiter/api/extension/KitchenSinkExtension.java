@@ -87,38 +87,42 @@ public class KitchenSinkExtension implements
 	}
 
 	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext)
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
+
 		return false;
 	}
 
 	@Override
-	public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
+
 		return null;
 	}
 
 	// --- Conditional Test Execution ------------------------------------------
 
 	@Override
-	public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
+	public ConditionEvaluationResult evaluateContainerExecutionCondition(ContainerExtensionContext context) {
 		return null;
 	}
 
 	@Override
-	public ConditionEvaluationResult evaluate(TestExtensionContext context) {
+	public ConditionEvaluationResult evaluateTestExecutionCondition(TestExtensionContext context) {
 		return null;
 	}
 
 	// --- @TestTemplate -------------------------------------------------------
 
 	@Override
-	public boolean supports(ContainerExtensionContext context) {
+	public boolean supportsTestTemplate(ContainerExtensionContext context) {
 		return false;
 	}
 
 	@Override
-	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+			ContainerExtensionContext context) {
+
 		return null;
 	}
 

@@ -36,12 +36,14 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 	private static final Logger logger = Logger.getLogger(RepeatedTestExtension.class.getName());
 
 	@Override
-	public boolean supports(ContainerExtensionContext context) {
+	public boolean supportsTestTemplate(ContainerExtensionContext context) {
 		return isAnnotated(context.getTestMethod(), RepeatedTest.class);
 	}
 
 	@Override
-	public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+			ContainerExtensionContext context) {
+
 		Method testMethod = Preconditions.notNull(context.getTestMethod().orElse(null), "test method must not be null");
 		String displayName = context.getDisplayName();
 		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();

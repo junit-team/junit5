@@ -21,12 +21,12 @@ import org.junit.platform.commons.util.ReflectionUtils;
 public class CustomAnnotationParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return parameterContext.getParameter().isAnnotationPresent(CustomAnnotation.class);
 	}
 
 	@Override
-	public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return ReflectionUtils.newInstance(parameterContext.getParameter().getType());
 	}
 

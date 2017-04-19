@@ -36,12 +36,12 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	}
 
 	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return parameterContext.getIndex() < arguments.length;
 	}
 
 	@Override
-	public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 		Object argument = arguments[parameterContext.getIndex()];
 		Parameter parameter = parameterContext.getParameter();

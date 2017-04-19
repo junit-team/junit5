@@ -29,12 +29,12 @@ import org.junit.platform.commons.util.ToStringBuilder;
 class TestInfoParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return (parameterContext.getParameter().getType() == TestInfo.class);
 	}
 
 	@Override
-	public TestInfo resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public TestInfo resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return new DefaultTestInfo(extensionContext);
 	}
 

@@ -23,12 +23,12 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 class TestReporterParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return (parameterContext.getParameter().getType() == TestReporter.class);
 	}
 
 	@Override
-	public TestReporter resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public TestReporter resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return extensionContext::publishReportEntry;
 	}
 

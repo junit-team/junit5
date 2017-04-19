@@ -181,7 +181,7 @@ public class ExecutableInvoker {
 		try {
 			// @formatter:off
 			List<ParameterResolver> matchingResolvers = extensionRegistry.stream(ParameterResolver.class)
-					.filter(resolver -> resolver.supports(parameterContext, extensionContext))
+					.filter(resolver -> resolver.supportsParameter(parameterContext, extensionContext))
 					.collect(toList());
 			// @formatter:on
 
@@ -203,7 +203,7 @@ public class ExecutableInvoker {
 			}
 
 			ParameterResolver resolver = matchingResolvers.get(0);
-			Object value = resolver.resolve(parameterContext, extensionContext);
+			Object value = resolver.resolveParameter(parameterContext, extensionContext);
 			validateResolvedType(parameterContext.getParameter(), value, executable, resolver);
 
 			LOG.finer(() -> String.format(

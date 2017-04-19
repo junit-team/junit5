@@ -41,7 +41,7 @@ class DisabledCondition implements ContainerExecutionCondition, TestExecutionCon
 	 * Containers are disabled if {@code @Disabled} is present on the test class.
 	 */
 	@Override
-	public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
+	public ConditionEvaluationResult evaluateContainerExecutionCondition(ContainerExtensionContext context) {
 		return evaluate(context.getElement());
 	}
 
@@ -49,7 +49,7 @@ class DisabledCondition implements ContainerExecutionCondition, TestExecutionCon
 	 * Tests are disabled if {@code @Disabled} is present on the test method.
 	 */
 	@Override
-	public ConditionEvaluationResult evaluate(TestExtensionContext context) {
+	public ConditionEvaluationResult evaluateTestExecutionCondition(TestExtensionContext context) {
 		return evaluate(context.getElement());
 	}
 

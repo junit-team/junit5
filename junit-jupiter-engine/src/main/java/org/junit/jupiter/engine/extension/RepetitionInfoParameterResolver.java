@@ -33,12 +33,12 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 	}
 
 	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return (parameterContext.getParameter().getType() == RepetitionInfo.class);
 	}
 
 	@Override
-	public RepetitionInfo resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public RepetitionInfo resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return new DefaultRepetitionInfo(this.currentRepetition, this.totalRepetitions);
 	}
 

@@ -21,14 +21,14 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 class NumberResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext)
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 
 		return Number.class.isAssignableFrom(parameterContext.getParameter().getType());
 	}
 
 	@Override
-	public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 
 		Class<?> type = parameterContext.getParameter().getType();

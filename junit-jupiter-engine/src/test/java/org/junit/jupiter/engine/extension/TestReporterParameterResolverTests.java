@@ -35,17 +35,17 @@ class TestReporterParameterResolverTests {
 	@Test
 	void supports() {
 		Parameter parameter1 = findParameterOfMethod("methodWithTestReporterParameter", TestReporter.class);
-		assertTrue(this.resolver.supports(parameterContext(parameter1), null));
+		assertTrue(this.resolver.supportsParameter(parameterContext(parameter1), null));
 
 		Parameter parameter2 = findParameterOfMethod("methodWithoutTestReporterParameter", String.class);
-		assertFalse(this.resolver.supports(parameterContext(parameter2), null));
+		assertFalse(this.resolver.supportsParameter(parameterContext(parameter2), null));
 	}
 
 	@Test
 	void resolve() {
 		Parameter parameter = findParameterOfMethod("methodWithTestReporterParameter", TestReporter.class);
 
-		TestReporter testReporter = this.resolver.resolve(parameterContext(parameter),
+		TestReporter testReporter = this.resolver.resolveParameter(parameterContext(parameter),
 			Mockito.mock(ExtensionContext.class));
 		assertNotNull(testReporter);
 	}

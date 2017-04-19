@@ -48,13 +48,13 @@ public class SystemPropertyCondition implements TestExecutionCondition, Containe
 	}
 
 	@Override
-	public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
-		return evaluate((ExtensionContext) context);
+	public ConditionEvaluationResult evaluateContainerExecutionCondition(ContainerExtensionContext context) {
+		return evaluate(context);
 	}
 
 	@Override
-	public ConditionEvaluationResult evaluate(TestExtensionContext context) {
-		return evaluate((ExtensionContext) context);
+	public ConditionEvaluationResult evaluateTestExecutionCondition(TestExtensionContext context) {
+		return evaluate(context);
 	}
 
 	private ConditionEvaluationResult evaluate(ExtensionContext context) {

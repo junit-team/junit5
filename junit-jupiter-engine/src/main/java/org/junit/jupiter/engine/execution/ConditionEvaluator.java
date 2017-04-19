@@ -112,7 +112,7 @@ public class ConditionEvaluator {
 			ContainerExtensionContext context) {
 
 		try {
-			ConditionEvaluationResult result = condition.evaluate(context);
+			ConditionEvaluationResult result = condition.evaluateContainerExecutionCondition(context);
 			logResult(condition.getClass(), result);
 			return result;
 		}
@@ -123,7 +123,7 @@ public class ConditionEvaluator {
 
 	private ConditionEvaluationResult evaluate(TestExecutionCondition condition, TestExtensionContext context) {
 		try {
-			ConditionEvaluationResult result = condition.evaluate(context);
+			ConditionEvaluationResult result = condition.evaluateTestExecutionCondition(context);
 			logResult(condition.getClass(), result);
 			return result;
 		}

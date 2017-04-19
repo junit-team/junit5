@@ -20,12 +20,12 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 public class CustomTypeParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return parameterContext.getParameter().getType().equals(CustomType.class);
 	}
 
 	@Override
-	public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return new CustomType();
 	}
 

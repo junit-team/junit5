@@ -88,7 +88,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		AtomicInteger invocationIndex = new AtomicInteger();
 		// @formatter:off
 		providers.stream()
-				.flatMap(provider -> provider.provide(containerExtensionContext))
+				.flatMap(provider -> provider.provideTestTemplateInvocationContexts(containerExtensionContext))
 				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
 				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
 		// @formatter:on
@@ -101,7 +101,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 
 		// @formatter:off
 		List<TestTemplateInvocationContextProvider> providers = extensionRegistry.stream(TestTemplateInvocationContextProvider.class)
-				.filter(provider -> provider.supports(containerExtensionContext))
+				.filter(provider -> provider.supportsTestTemplate(containerExtensionContext))
 				.collect(toList());
 		// @formatter:on
 

@@ -303,13 +303,13 @@ class ExecutableInvokerTests {
 		}
 
 		@Override
-		public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			supportsArguments = new Arguments(parameterContext, extensionContext);
 			return true;
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			resolveArguments = new Arguments(parameterContext, extensionContext);
 			return null;
 		}
@@ -345,12 +345,12 @@ class ExecutableInvokerTests {
 		}
 
 		@Override
-		public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return supports.test(parameterContext);
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return resolve.apply(parameterContext);
 		}
 	}
@@ -369,12 +369,12 @@ class ExecutableInvokerTests {
 	private static class StringParameterResolver implements ParameterResolver {
 
 		@Override
-		public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return parameterContext.getParameter().getType() == String.class;
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return ENIGMA;
 		}
 	}
@@ -382,12 +382,12 @@ class ExecutableInvokerTests {
 	private static class NumberParameterResolver implements ParameterResolver {
 
 		@Override
-		public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return parameterContext.getParameter().getType() == Number.class;
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return 42;
 		}
 	}

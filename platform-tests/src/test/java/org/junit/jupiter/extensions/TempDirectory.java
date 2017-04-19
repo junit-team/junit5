@@ -44,13 +44,13 @@ public class TempDirectory implements AfterEachCallback, ParameterResolver {
 	private static final String KEY = "tempDirectory";
 
 	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return parameterContext.getParameter().isAnnotationPresent(Root.class)
 				&& parameterContext.getParameter().getType() == Path.class;
 	}
 
 	@Override
-	public Object resolve(ParameterContext parameterContext, ExtensionContext context) {
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext context) {
 		return getLocalStore(context).getOrComputeIfAbsent(KEY, key -> createTempDirectory(context));
 	}
 

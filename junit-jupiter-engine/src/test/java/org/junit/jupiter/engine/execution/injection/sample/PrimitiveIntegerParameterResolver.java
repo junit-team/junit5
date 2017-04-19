@@ -22,12 +22,12 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 public class PrimitiveIntegerParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return int.class == parameterContext.getParameter().getType();
 	}
 
 	@Override
-	public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return 42;
 	}
 

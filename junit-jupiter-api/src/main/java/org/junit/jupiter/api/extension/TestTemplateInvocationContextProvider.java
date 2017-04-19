@@ -27,18 +27,19 @@ import org.junit.platform.commons.meta.API;
  * preparing the test class instance differently, or multiple times without
  * modifying the context.
  *
- * <p>This interface defines two methods: {@link #supports} and
- * {@link #provide}. The former is called by the framework to determine whether
- * this extension wants to act on a test template that is about to be executed.
- * If so, the latter is called and must return a {@link Stream} of
- * {@link TestTemplateInvocationContext} instances. Otherwise, this provider is
- * ignored for the execution of the current test template.
+ * <p>This interface defines two methods: {@link #supportsTestTemplate} and
+ * {@link #provideTestTemplateInvocationContexts}. The former is called by the
+ * framework to determine whether this extension wants to act on a test template
+ * that is about to be executed. If so, the latter is called and must return a
+ * {@link Stream} of {@link TestTemplateInvocationContext} instances. Otherwise,
+ * this provider is ignored for the execution of the current test template.
  *
- * <p>A provider that has returned {@code true} from its {@link #supports}
+ * <p>A provider that has returned {@code true} from its {@link #supportsTestTemplate}
  * method is called <em>active</em>. When multiple providers are active for a
- * test template method, the {@code Streams} returned by their {@link #provide}
- * methods will be chained, and the test template method will be invoked using
- * the contexts of all active providers.
+ * test template method, the {@code Streams} returned by their
+ * {@link #provideTestTemplateInvocationContexts} methods will be chained, and
+ * the test template method will be invoked using the contexts of all active
+ * providers.
  *
  * <p>Implementations must provide a no-args constructor.
  *
@@ -56,19 +57,18 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 * @param context the container extension context for the test template
 	 * method about to be invoked; never {@code null}
 	 * @return {@code true} if this provider can provide invocation contexts
-	 * @see #provide
+	 * @see #provideTestTemplateInvocationContexts
 	 * @see ContainerExtensionContext
 	 */
-	boolean supports(ContainerExtensionContext context);
+	boolean supportsTestTemplate(ContainerExtensionContext context);
 
 	/**
 	 * Provide {@linkplain TestTemplateInvocationContext invocation contexts}
 	 * for the test template method represented by the supplied {@code context}.
 	 *
-	 * <p>This method is only called by the framework if {@link #supports} has
-	 * previously returned {@code true} for the same
-	 * {@link ContainerExtensionContext}. Thus, it must not return an empty
-	 * {@code Stream}.
+	 * <p>This method is only called by the framework if {@link #supportsTestTemplate}
+	 * previously returned {@code true} for the same {@link ContainerExtensionContext}.
+	 * Thus, this method must not return an empty {@code Stream}.
 	 *
 	 * <p>The returned {@code Stream} will be properly closed by calling
 	 * {@link Stream#close()}, making it safe to use a resource such as
@@ -79,9 +79,9 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 * @return a {@code Stream} of {@code TestTemplateInvocationContext}
 	 * instances for the invocation of the test template method; never {@code null}
 	 * or empty
-	 * @see #supports
+	 * @see #supportsTestTemplate
 	 * @see ContainerExtensionContext
 	 */
-	Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context);
+	Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ContainerExtensionContext context);
 
 }

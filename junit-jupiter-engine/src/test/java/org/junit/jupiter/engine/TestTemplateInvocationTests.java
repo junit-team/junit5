@@ -499,12 +499,13 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	private static class SingleInvocationContextProvider implements TestTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supports(ContainerExtensionContext context) {
+		public boolean supportsTestTemplate(ContainerExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+				ContainerExtensionContext context) {
 			return Stream.of(emptyTestTemplateInvocationContext());
 		}
 	}
@@ -513,12 +514,13 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			implements TestTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supports(ContainerExtensionContext context) {
+		public boolean supportsTestTemplate(ContainerExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+				ContainerExtensionContext context) {
 			return Stream.of(emptyTestTemplateInvocationContext());
 		}
 	}
@@ -526,12 +528,13 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	private static class TwoInvocationsContextProvider implements TestTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supports(ContainerExtensionContext context) {
+		public boolean supportsTestTemplate(ContainerExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+				ContainerExtensionContext context) {
 			return Stream.of(emptyTestTemplateInvocationContext(), emptyTestTemplateInvocationContext());
 		}
 	}
@@ -539,7 +542,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	private static class AlwaysDisabledTestExecutionCondition implements TestExecutionCondition {
 
 		@Override
-		public ConditionEvaluationResult evaluate(TestExtensionContext context) {
+		public ConditionEvaluationResult evaluateTestExecutionCondition(TestExtensionContext context) {
 			return ConditionEvaluationResult.disabled("tests are always disabled");
 		}
 	}
@@ -547,7 +550,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	private static class AlwaysDisabledContainerExecutionCondition implements ContainerExecutionCondition {
 
 		@Override
-		public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
+		public ConditionEvaluationResult evaluateContainerExecutionCondition(ContainerExtensionContext context) {
 			return ConditionEvaluationResult.disabled("containers are always disabled");
 		}
 	}
@@ -556,12 +559,13 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			implements TestTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supports(ContainerExtensionContext context) {
+		public boolean supportsTestTemplate(ContainerExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+				ContainerExtensionContext context) {
 			return Stream.<TestTemplateInvocationContext> generate(() -> new TestTemplateInvocationContext() {
 
 				@Override
@@ -576,7 +580,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			implements TestTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supports(ContainerExtensionContext context) {
+		public boolean supportsTestTemplate(ContainerExtensionContext context) {
 			// @formatter:off
 			return context.getTestMethod()
 				.map(Method::getParameterTypes)
@@ -587,7 +591,8 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+				ContainerExtensionContext context) {
 			return Stream.of(createContext("foo"), createContext("bar"));
 		}
 
@@ -604,14 +609,14 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 					return singletonList(new ParameterResolver() {
 
 						@Override
-						public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext)
-								throws ParameterResolutionException {
+						public boolean supportsParameter(ParameterContext parameterContext,
+								ExtensionContext extensionContext) throws ParameterResolutionException {
 							return true;
 						}
 
 						@Override
-						public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
-								throws ParameterResolutionException {
+						public Object resolveParameter(ParameterContext parameterContext,
+								ExtensionContext extensionContext) throws ParameterResolutionException {
 							return argument;
 						}
 					});
@@ -624,12 +629,13 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			implements TestTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supports(ContainerExtensionContext context) {
+		public boolean supportsTestTemplate(ContainerExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+				ContainerExtensionContext context) {
 			return Stream.of(createContext("foo"), createContext("bar"));
 		}
 
@@ -657,12 +663,13 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			implements TestTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supports(ContainerExtensionContext context) {
+		public boolean supportsTestTemplate(ContainerExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+				ContainerExtensionContext context) {
 			return Stream.of(createContext("foo"), createContext("bar"));
 		}
 
@@ -717,12 +724,13 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			implements TestTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supports(ContainerExtensionContext context) {
+		public boolean supportsTestTemplate(ContainerExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+				ContainerExtensionContext context) {
 			return Stream.empty();
 		}
 	}
@@ -732,12 +740,13 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		private static AtomicBoolean streamClosed = new AtomicBoolean(false);
 
 		@Override
-		public boolean supports(ContainerExtensionContext context) {
+		public boolean supportsTestTemplate(ContainerExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provide(ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+				ContainerExtensionContext context) {
 			return Stream.of(emptyTestTemplateInvocationContext()).onClose(() -> streamClosed.set(true));
 		}
 	}

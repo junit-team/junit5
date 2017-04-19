@@ -41,10 +41,27 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
+* In order to ensure the _composability_ of all supported extension APIs in JUnit
+  Jupiter, several methods in existing APIs have been renamed.
+** See <<release-notes-5.0.0-m5-migration-extension-api>> for details.
 * The `arguments()` method in the `ArgumentsProvider` API in the `junit-jupiter-params`
   module has been renamed to `provideArguments()`.
 * The `create()` factory method in `ObjectArrayArguments` in the `junit-jupiter-params`
   module has been renamed to `arguments()`.
+
+[[release-notes-5.0.0-m5-migration-extension-api]]
+.Extension API Migration
+[cols="42,15,45"]
+|===
+| Extension API                           | Old Name     | New Name
+
+| `ParameterResolver`                     | `supports()` | `supportsParameter()`
+| `ParameterResolver`                     | `resolve()`  | `resolveParameter()`
+| `ContainerExecutionCondition`           | `evaluate()` | `evaluateContainerExecutionCondition()`
+| `TestExecutionCondition`                | `evaluate()` | `evaluateTestExecutionCondition()`
+| `TestTemplateInvocationContextProvider` | `supports()` | `supportsTestTemplate()`
+| `TestTemplateInvocationContextProvider` | `provide()`  | `provideTestTemplateInvocationContexts()`
+|===
 
 ===== New Features and Improvements
 

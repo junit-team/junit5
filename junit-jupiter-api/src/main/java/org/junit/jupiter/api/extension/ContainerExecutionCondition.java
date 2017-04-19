@@ -43,6 +43,6 @@ public interface ContainerExecutionCondition extends Extension {
 	 * @param context the current extension context; never {@code null}
 	 * @return the result of evaluating this condition; never {@code null}
 	 */
-	ConditionEvaluationResult evaluate(ContainerExtensionContext context);
+	ConditionEvaluationResult evaluateContainerExecutionCondition(ContainerExtensionContext context);
 
 }

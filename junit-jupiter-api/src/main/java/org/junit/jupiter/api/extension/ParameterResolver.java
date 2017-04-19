@@ -18,51 +18,53 @@ import org.junit.platform.commons.meta.API;
 
 /**
  * {@code ParameterResolver} defines the API for {@link Extension Extensions}
- * that wish to dynamically resolve {@linkplain Parameter parameters} at runtime.
+ * that wish to dynamically resolve arguments for {@linkplain Parameter parameters}
+ * at runtime.
  *
  * <p>If a constructor for a test class or a
  * {@link org.junit.jupiter.api.Test @Test},
  * {@link org.junit.jupiter.api.BeforeEach @BeforeEach},
  * {@link org.junit.jupiter.api.AfterEach @AfterEach},
  * {@link org.junit.jupiter.api.BeforeAll @BeforeAll}, or
- * {@link org.junit.jupiter.api.AfterAll @AfterAll} method accepts a parameter,
- * the parameter must be resolved at runtime by a {@code ParameterResolver}.
+ * {@link org.junit.jupiter.api.AfterAll @AfterAll} method declares a parameter,
+ * an argument for the parameter must be resolved at runtime by a
+ * {@code ParameterResolver}.
  *
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
- * @see #supports(ParameterContext, ExtensionContext)
- * @see #resolve(ParameterContext, ExtensionContext)
+ * @see #supportsParameter(ParameterContext, ExtensionContext)
+ * @see #resolveParameter(ParameterContext, ExtensionContext)
  * @see ParameterContext
  */
 @API(Experimental)
 public interface ParameterResolver extends Extension {
 
 	/**
-	 * Determine if this resolver supports resolution of the {@link Parameter}
-	 * in the supplied {@link ParameterContext} for the supplied
+	 * Determine if this resolver supports resolution of an argument for the
+	 * {@link Parameter} in the supplied {@link ParameterContext} for the supplied
 	 * {@link ExtensionContext}.
 	 *
 	 * <p>The {@link java.lang.reflect.Method} or {@link java.lang.reflect.Constructor}
 	 * in which the parameter is declared can be retrieved via
 	 * {@link ParameterContext#getDeclaringExecutable()}.
 	 *
-	 * @param parameterContext the context for the parameter to be resolved; never
-	 * {@code null}
+	 * @param parameterContext the context for the parameter for which an argument should
+	 * be resolved; never {@code null}
 	 * @param extensionContext the extension context for the {@code Executable}
 	 * about to be invoked; never {@code null}
-	 * @return {@code true} if this resolver can resolve the parameter
-	 * @see #resolve
+	 * @return {@code true} if this resolver can resolve an argument for the parameter
+	 * @see #resolveParameter
 	 * @see ParameterContext
 	 */
-	boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext)
+	boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException;
 
 	/**
-	 * Resolve the {@link Parameter} in the supplied {@link ParameterContext}
+	 * Resolve an argument for the {@link Parameter} in the supplied {@link ParameterContext}
 	 * for the supplied {@link ExtensionContext}.
 	 *
-	 * <p>This method is only called by the framework if {@link #supports} has
+	 * <p>This method is only called by the framework if {@link #supportsParameter}
 	 * previously returned {@code true} for the same {@link ParameterContext}
 	 * and {@link ExtensionContext}.
 	 *
@@ -70,16 +72,16 @@ public interface ParameterResolver extends Extension {
 	 * in which the parameter is declared can be retrieved via
 	 * {@link ParameterContext#getDeclaringExecutable()}.
 	 *
-	 * @param parameterContext the context for the parameter to be resolved; never
-	 * {@code null}
+	 * @param parameterContext the context for the parameter for which an argument should
+	 * be resolved; never {@code null}
 	 * @param extensionContext the extension context for the {@code Executable}
 	 * about to be invoked; never {@code null}
-	 * @return the resolved parameter object; may only be {@code null} if the
+	 * @return the resolved argument for the parameter; may only be {@code null} if the
 	 * parameter type is not a primitive
-	 * @see #supports
+	 * @see #supportsParameter
 	 * @see ParameterContext
 	 */
-	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
+	Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException;
 
 }
