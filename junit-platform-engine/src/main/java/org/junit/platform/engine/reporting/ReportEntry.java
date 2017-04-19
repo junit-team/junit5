@@ -58,6 +58,8 @@ public final class ReportEntry {
 	 * @param value the value to publish; never {@code null} or blank
 	 */
 	public static ReportEntry from(String key, String value) {
+		Preconditions.notBlank(key, "key must not be null or blank");
+		Preconditions.notBlank(value, "value must not be null or blank");
 		ReportEntry reportEntry = new ReportEntry();
 		reportEntry.add(key, value);
 		return reportEntry;
