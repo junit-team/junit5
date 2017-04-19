@@ -60,8 +60,9 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	@Override
 	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
+
 		return childExtensionRegistry -> {
-			// Extensions registered for nested classes and below are not to be used for instancing outer classes
+			// Extensions registered for nested classes and below are not to be used for instantiating outer classes
 			Optional<ExtensionRegistry> childExtensionRegistryForOuterInstance = Optional.empty();
 			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance(
 				childExtensionRegistryForOuterInstance);

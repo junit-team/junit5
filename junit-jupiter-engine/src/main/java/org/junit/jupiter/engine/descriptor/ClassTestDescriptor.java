@@ -21,9 +21,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
@@ -40,6 +43,7 @@ import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -172,13 +176,8 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
-		return childExtensionRegistry -> {
-			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-			Object instance = executableInvoker.invoke(constructor, extensionContext,
-				childExtensionRegistry.orElse(registry));
-			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(registry), extensionContext);
-			return instance;
-		};
+
+		return new LifecycleAwareTestInstanceProvider(this.testClass, registry, extensionContext);
 	}
 
 	protected void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
@@ -270,6 +269,55 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 				() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
 		executableInvoker.invoke(method, instance, context, registry);
+	}
+
+	private final class LifecycleAwareTestInstanceProvider implements TestInstanceProvider {
+
+		private final Class<?> testClass;
+		private final Lifecycle lifecycle;
+		private final ExtensionRegistry registry;
+		private final ExtensionContext extensionContext;
+		private Object testInstance;
+
+		LifecycleAwareTestInstanceProvider(Class<?> testClass, ExtensionRegistry registry,
+				ExtensionContext extensionContext) {
+
+			this.testClass = testClass;
+			this.lifecycle = getInstanceLifecycle(testClass);
+			this.registry = registry;
+			this.extensionContext = extensionContext;
+		}
+
+		@Override
+		public Object getTestInstance(Optional<ExtensionRegistry> childExtensionRegistry) throws Exception {
+			if (this.lifecycle == Lifecycle.PER_METHOD) {
+				return createTestInstance(childExtensionRegistry);
+			}
+
+			// else Lifecycle.PER_CLASS
+			if (this.testInstance == null) {
+				this.testInstance = createTestInstance(childExtensionRegistry);
+			}
+			return this.testInstance;
+		}
+
+		private Object createTestInstance(Optional<ExtensionRegistry> childExtensionRegistry) {
+			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
+			Object instance = executableInvoker.invoke(constructor, this.extensionContext,
+				childExtensionRegistry.orElse(this.registry));
+			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(this.registry),
+				this.extensionContext);
+			return instance;
+		}
+
+		private TestInstance.Lifecycle getInstanceLifecycle(Class<?> testClass) {
+			// @formatter:off
+			return AnnotationUtils.findAnnotation(testClass, TestInstance.class)
+					.map(TestInstance::value)
+					.orElse(Lifecycle.PER_METHOD);
+			// @formatter:on
+		}
+
 	}
 
 }
