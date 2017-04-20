@@ -27,9 +27,9 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* Added internal utility method to provide information about the location from which
-  the engine class was loaded. When the location URL is available, it is logged at
-  configuration-level by the service loading mechanism.
+* When a `TestEngine` is discovered via Java's `ServiceLoader` mechanism, an attempt
+  will now be made to determine the location from which the engine class was loaded,
+  and if the location URL is available, it will be logged at configuration-level.
 
 
 [[release-notes-5.0.0-m5-junit-jupiter]]
@@ -73,7 +73,7 @@ on GitHub.
 
 ===== Bug Fixes
 
-* Fixed a bug where static member classes were incorrectly being filtered out.
-  They are now considered valid JUnit Vintage test classes.
-* Fixed a bug where JUnit Vintage would incorrectly try to run abstract classes.
-  They will now not be run, but will log a warning that they are being excluded.
+* The `VintageTestEngine` no longer filters out test classes declared as static member
+  classes, since they are valid JUnit 4 test classes.
+* The `VintageTestEngine` no longer attempts to execute abstract classes as test classes.
+  Instead, a warning is now logged stating that such classes are excluded.
