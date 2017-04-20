@@ -5586,9 +5586,9 @@ discovery and execution phases. Other engines are processed normally.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Added internal utility method to provide information about the location from which
-the engine class was loaded. When the location URL is available, it is logged at
-configuration-level by the service loading mechanism.</p>
+<p>When a <code>TestEngine</code> is discovered via Java&#8217;s <code>ServiceLoader</code> mechanism, an attempt
+will now be made to determine the location from which the engine class was loaded,
+and if the location URL is available, it will be logged at configuration-level.</p>
 </li>
 </ul>
 </div>
@@ -5697,12 +5697,12 @@ module has been renamed to <code>arguments()</code>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fixed a bug where static member classes were incorrectly being filtered out.
-They are now considered valid JUnit Vintage test classes.</p>
+<p>The <code>VintageTestEngine</code> no longer filters out test classes declared as static member
+classes, since they are valid JUnit 4 test classes.</p>
 </li>
 <li>
-<p>Fixed a bug where JUnit Vintage would incorrectly try to run abstract classes.
-They will now not be run, but will log a warning that they are being excluded.</p>
+<p>The <code>VintageTestEngine</code> no longer attempts to execute abstract classes as test classes.
+Instead, a warning is now logged stating that such classes are excluded.</p>
 </li>
 </ul>
 </div>
@@ -5715,7 +5715,7 @@ They will now not be run, but will log a warning that they are being excluded.</
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-04-20 17:34:59 EDT
+Last updated 2017-04-20 17:49:39 EDT
 </div>
 </div>
 </body>
