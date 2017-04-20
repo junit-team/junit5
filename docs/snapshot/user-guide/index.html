@@ -5611,6 +5611,17 @@ configuration-level by the service loading mechanism.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>In order to ensure the <em>composability</em> of all supported extension APIs in JUnit
+Jupiter, several methods in existing APIs have been renamed.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#release-notes-5.0.0-m5-migration-extension-api">Extension API Migration</a> for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>The <code>arguments()</code> method in the <code>ArgumentsProvider</code> API in the <code>junit-jupiter-params</code>
 module has been renamed to <code>provideArguments()</code>.</p>
 </li>
@@ -5620,6 +5631,53 @@ module has been renamed to <code>arguments()</code>.</p>
 </li>
 </ul>
 </div>
+<table id="release-notes-5.0.0-m5-migration-extension-api" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. Extension API Migration</caption>
+<colgroup>
+<col style="width: 41.1764%;">
+<col style="width: 14.7058%;">
+<col style="width: 44.1178%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Extension API</th>
+<th class="tableblock halign-left valign-top">Old Name</th>
+<th class="tableblock halign-left valign-top">New Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ParameterResolver</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>supports()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>supportsParameter()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ParameterResolver</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resolve()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resolveParameter()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ContainerExecutionCondition</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluate()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluateContainerExecutionCondition()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestExecutionCondition</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluate()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluateTestExecutionCondition()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestTemplateInvocationContextProvider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>supports()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>supportsTestTemplate()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestTemplateInvocationContextProvider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>provide()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>provideTestTemplateInvocationContexts()</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect4">
 <h5 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h5>
@@ -5657,7 +5715,7 @@ They will now not be run, but will log a warning that they are being excluded.</
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-04-18 10:58:00 EDT
+Last updated 2017-04-20 17:34:59 EDT
 </div>
 </div>
 </body>
