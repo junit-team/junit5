@@ -27,6 +27,8 @@ on GitHub.
 
 ===== New Features and Improvements
 
+* The JUnit Platform Gradle plugin task `junitPlatformTest` can be accessed
+  directly during the configuration phase of build.
 * When a `TestEngine` is discovered via Java's `ServiceLoader` mechanism, an attempt
   will now be made to determine the location from which the engine class was loaded,
   and if the location URL is available, it will be logged at configuration-level.
