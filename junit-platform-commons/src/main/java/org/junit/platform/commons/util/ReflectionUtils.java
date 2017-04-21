@@ -343,7 +343,7 @@ public final class ReflectionUtils {
 
 			return Optional.of(classLoader.loadClass(name));
 		}
-		catch (ClassNotFoundException ex) {
+		catch (ClassNotFoundException | NoClassDefFoundError ex) {
 			return Optional.empty();
 		}
 	}
