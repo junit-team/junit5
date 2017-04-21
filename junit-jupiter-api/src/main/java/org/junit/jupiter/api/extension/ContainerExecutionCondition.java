@@ -18,7 +18,8 @@ import org.junit.platform.commons.meta.API;
  * {@code ContainerExecutionCondition} defines the {@link Extension} API for
  * programmatic, <em>conditional container execution</em>.
  *
- * <p>A {@code ContainerExecutionCondition} is {@linkplain #evaluate evaluated}
+ * <p>A {@code ContainerExecutionCondition} is
+ * {@linkplain #evaluateContainerExecutionCondition(ContainerExtensionContext) evaluated}
  * to determine if all tests in a given container should be executed based
  * on the supplied {@link ContainerExtensionContext}.
  *

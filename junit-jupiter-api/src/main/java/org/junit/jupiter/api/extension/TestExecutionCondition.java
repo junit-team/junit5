@@ -18,7 +18,8 @@ import org.junit.platform.commons.meta.API;
  * {@code TestExecutionCondition} defines the {@link Extension} API for
  * programmatic, <em>conditional test execution</em>.
  *
- * <p>A {@code TestExecutionCondition} is {@linkplain #evaluate evaluated}
+ * <p>A {@code TestExecutionCondition} is
+ * {@linkplain #evaluateTestExecutionCondition(TestExtensionContext) evaluated}
  * to determine if a given test should be executed based on the supplied
  * {@link TestExtensionContext}.
  *
