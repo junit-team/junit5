@@ -69,7 +69,7 @@ asciidoctor {
 				'testDir': project.sourceSets.test.java.srcDirs[0],
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
 				'outdir': outputDir.absolutePath,
-				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend
+				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend and on MS Windows
 				'tabsize': '4',
 				'toc': 'left',
 				'icons': 'font',
