@@ -5684,7 +5684,9 @@ module has been renamed to <code>arguments()</code>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>Assertions.assertAll()</code> now tracks exceptions of any type (as opposed to only tracking
+exceptions of type <code>AssertionError</code>), unless the exception is a <em>blacklisted</em> exception
+in which case it will be immediately rethrown.</p>
 </li>
 </ul>
 </div>
@@ -5715,7 +5717,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-04-22 12:38:04 EDT
+Last updated 2017-04-26 17:03:23 EDT
 </div>
 </div>
 </body>
