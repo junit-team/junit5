@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.ExceptionUtils;
 import org.opentest4j.MultipleFailuresError;
 
 /**
@@ -1003,8 +1002,8 @@ public final class Assertions {
 	// --- assertAll -----------------------------------------------------------
 
 	/**
-	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw an
-	 * {@link AssertionError}.
+	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw
+	 * exceptions.
 	 *
 	 * <p>See Javadoc for {@link #assertAll(String, Stream)} for an explanation of this
 	 * method's exception handling semantics.
@@ -1019,8 +1018,8 @@ public final class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw an
-	 * {@link AssertionError}.
+	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw
+	 * exceptions.
 	 *
 	 * <p>See Javadoc for {@link #assertAll(String, Stream)} for an explanation of this
 	 * method's exception handling semantics.
@@ -1035,8 +1034,8 @@ public final class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw an
-	 * {@link AssertionError}.
+	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw
+	 * exceptions.
 	 *
 	 * <p>See Javadoc for {@link #assertAll(String, Stream)} for an explanation of this
 	 * method's exception handling semantics.
@@ -1051,15 +1050,16 @@ public final class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw an
-	 * {@link AssertionError}.
+	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw
+	 * exceptions.
 	 *
-	 * <p>If any supplied {@link Executable} throws an {@code AssertionError}, all remaining
-	 * {@code executables} will still be executed, and all failures will be aggregated
-	 * and reported in a {@link MultipleFailuresError}. However, if an {@code executable}
-	 * throws an exception that is not an {@code AssertionError}, execution will halt
-	 * immediately, and the exception will be rethrown <em>as is</em> but
-	 * {@link ExceptionUtils#throwAsUncheckedException masked} as an unchecked exception.
+	 * <p>If any supplied {@link Executable} throws an exception (i.e., a {@link Throwable}
+	 * or any subclass thereof), all remaining {@code executables} will still be executed,
+	 * and all exceptions will be aggregated and reported in a {@link MultipleFailuresError}.
+	 * However, if an {@code executable} throws a <em>blacklisted</em> exception &mdash; for
+	 * example, an {@link OutOfMemoryError} &mdash; execution will halt immediately, and the
+	 * blacklisted exception will be rethrown <em>as is</em> but <em>masked</em> as an
+	 * unchecked exception.
 	 *
 	 * <p>The supplied {@code heading} will be included in the message string for the
 	 * {@link MultipleFailuresError}.

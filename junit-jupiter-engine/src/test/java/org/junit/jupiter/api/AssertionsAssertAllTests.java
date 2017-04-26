@@ -12,7 +12,9 @@ package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,7 +32,7 @@ import org.opentest4j.MultipleFailuresError;
  *
  * @since 5.0
  */
-public class AssertionsAssertAllTests {
+class AssertionsAssertAllTests {
 
 	@Test
 	void assertAllWithNullInExecutableArray() {
@@ -89,10 +91,7 @@ public class AssertionsAssertAllTests {
 		);
 		// @formatter:on
 
-		assertTrue(multipleFailuresError != null);
-		List<Throwable> failures = multipleFailuresError.getFailures();
-		assertTrue(failures.size() == 2);
-		assertTrue(failures.get(0).getClass().equals(AssertionFailedError.class));
+		assertExpectedExceptionTypes(multipleFailuresError, AssertionFailedError.class, AssertionFailedError.class);
 	}
 
 	@Test
@@ -103,36 +102,63 @@ public class AssertionsAssertAllTests {
 		);
 		// @formatter:on
 
-		assertTrue(multipleFailuresError != null);
-		List<Throwable> failures = multipleFailuresError.getFailures();
-		assertTrue(failures.size() == 2);
-		assertTrue(failures.get(0).getClass().equals(AssertionFailedError.class));
+		assertExpectedExceptionTypes(multipleFailuresError, AssertionFailedError.class, AssertionFailedError.class);
 	}
 
 	@Test
 	void assertAllWithExecutableThatThrowsThrowable() {
-		assertThrows(EnigmaThrowable.class, () -> assertAll(() -> {
+		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () -> assertAll(() -> {
 			throw new EnigmaThrowable();
 		}));
+
+		assertExpectedExceptionTypes(multipleFailuresError, EnigmaThrowable.class);
 	}
 
 	@Test
 	void assertAllWithExecutableThatThrowsCheckedException() {
-		assertThrows(IOException.class, () -> assertAll(() -> {
+		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () -> assertAll(() -> {
 			throw new IOException();
 		}));
+
+		assertExpectedExceptionTypes(multipleFailuresError, IOException.class);
 	}
 
 	@Test
 	void assertAllWithExecutableThatThrowsRuntimeException() {
-		assertThrows(IllegalStateException.class, () -> assertAll(() -> {
+		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () -> assertAll(() -> {
 			throw new IllegalStateException();
 		}));
+
+		assertExpectedExceptionTypes(multipleFailuresError, IllegalStateException.class);
 	}
 
 	@Test
 	void assertAllWithExecutableThatThrowsError() {
-		assertThrows(StackOverflowError.class, () -> assertAll(AssertionTestUtils::recurseIndefinitely));
+		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class,
+			() -> assertAll(AssertionTestUtils::recurseIndefinitely));
+
+		assertExpectedExceptionTypes(multipleFailuresError, StackOverflowError.class);
+	}
+
+	@Test
+	void assertAllWithExecutableThatThrowsBlacklistedException() {
+		OutOfMemoryError outOfMemoryError = assertThrows(OutOfMemoryError.class,
+			() -> assertAll(AssertionTestUtils::runOutOfMemory));
+
+		assertEquals("boom", outOfMemoryError.getMessage());
+	}
+
+	@SafeVarargs
+	private static void assertExpectedExceptionTypes(MultipleFailuresError multipleFailuresError,
+			Class<? extends Throwable>... exceptionTypes) {
+
+		assertNotNull(multipleFailuresError, "MultipleFailuresError");
+		List<Throwable> failures = multipleFailuresError.getFailures();
+		assertEquals(exceptionTypes.length, failures.size(), "number of failures");
+
+		for (int i = 0; i < exceptionTypes.length; i++) {
+			assertEquals(exceptionTypes[i], failures.get(i).getClass(), "exception type");
+		}
 	}
 
 	@SuppressWarnings("serial")

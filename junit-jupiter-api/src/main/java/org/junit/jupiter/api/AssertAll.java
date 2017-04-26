@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.function.Executable;
-import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.opentest4j.MultipleFailuresError;
 
@@ -50,18 +50,14 @@ class AssertAll {
 			try {
 				executable.execute();
 			}
-			catch (AssertionError assertionError) {
-				failures.add(assertionError);
-			}
 			catch (Throwable t) {
-				ExceptionUtils.throwAsUncheckedException(t);
+				BlacklistedExceptions.rethrowIfBlacklisted(t);
+				failures.add(t);
 			}
 		});
 
-		MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading, failures);
-
-		if (multipleFailuresError.hasFailures()) {
-			throw multipleFailuresError;
+		if (!failures.isEmpty()) {
+			throw new MultipleFailuresError(heading, failures);
 		}
 	}
 

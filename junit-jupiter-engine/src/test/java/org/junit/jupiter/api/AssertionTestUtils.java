@@ -81,4 +81,9 @@ class AssertionTestUtils {
 		throw new StackOverflowError();
 	}
 
+	static void runOutOfMemory() {
+		// simulate running out of memory
+		throw new OutOfMemoryError("boom");
+	}
+
 }

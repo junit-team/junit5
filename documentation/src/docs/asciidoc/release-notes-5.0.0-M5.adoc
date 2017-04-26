@@ -65,7 +65,9 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* ❓
+* `Assertions.assertAll()` now tracks exceptions of any type (as opposed to only tracking
+  exceptions of type `AssertionError`), unless the exception is a _blacklisted_ exception
+  in which case it will be immediately rethrown.
 
 
 [[release-notes-5.0.0-m5-junit-vintage]]
