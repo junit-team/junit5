@@ -27,6 +27,9 @@ on GitHub.
 * The following previously deprecated methods have been removed.
   - `junit-platform-engine`: `Node.execute(EngineExecutionContext)`
   - `junit-platform-commons`: `ReflectionUtils.findAllClassesInClasspathRoot(Path, Predicate, Predicate)`
+* The `junit-platform-surefire-provider` now requires `maven-surefire-plugin` version
+  2.20 or higher.
+
 
 ===== New Features and Improvements
 
