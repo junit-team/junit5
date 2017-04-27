@@ -23,7 +23,6 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * A {@code DynamicTest} is a test case generated at runtime.
@@ -46,7 +45,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @see Executable
  */
 @API(Experimental)
-public class DynamicTest {
+public class DynamicTest extends DynamicNode {
 
 	/**
 	 * Factory for creating a new {@code DynamicTest} for the supplied display
@@ -99,19 +98,11 @@ public class DynamicTest {
 		// @formatter:on
 	}
 
-	private final String displayName;
 	private final Executable executable;
 
 	private DynamicTest(String displayName, Executable executable) {
-		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
+		super(displayName);
 		this.executable = Preconditions.notNull(executable, "executable must not be null");
-	}
-
-	/**
-	 * Get the display name of this {@code DynamicTest}.
-	 */
-	public String getDisplayName() {
-		return this.displayName;
 	}
 
 	/**
@@ -120,10 +111,4 @@ public class DynamicTest {
 	public Executable getExecutable() {
 		return this.executable;
 	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("displayName", displayName).toString();
-	}
-
 }
