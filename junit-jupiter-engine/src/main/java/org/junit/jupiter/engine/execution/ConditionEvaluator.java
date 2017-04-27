@@ -116,7 +116,7 @@ public class ConditionEvaluator {
 			logResult(condition.getClass(), result);
 			return result;
 		}
-		catch (Exception ex) {
+		catch (RuntimeException ex) {
 			throw evaluationException(condition.getClass(), ex);
 		}
 	}
@@ -127,7 +127,7 @@ public class ConditionEvaluator {
 			logResult(condition.getClass(), result);
 			return result;
 		}
-		catch (Exception ex) {
+		catch (RuntimeException ex) {
 			throw evaluationException(condition.getClass(), ex);
 		}
 	}

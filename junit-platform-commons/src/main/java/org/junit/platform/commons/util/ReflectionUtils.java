@@ -398,7 +398,7 @@ public final class ReflectionUtils {
 			try {
 				return findMethod(classOptional.get(), methodName.trim(), parameterTypeNames);
 			}
-			catch (Exception ex) {
+			catch (RuntimeException ex) {
 				/* ignore */
 			}
 		}

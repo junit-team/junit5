@@ -55,7 +55,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			try {
 				value = System.getProperty(key);
 			}
-			catch (Exception ex) {
+			catch (RuntimeException ex) {
 				/* ignore */
 			}
 		}
