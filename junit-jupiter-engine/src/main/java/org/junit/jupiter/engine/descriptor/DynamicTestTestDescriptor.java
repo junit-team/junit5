@@ -25,7 +25,7 @@ class DynamicTestTestDescriptor extends JupiterTestDescriptor {
 
 	private final DynamicTest dynamicTest;
 
-	public DynamicTestTestDescriptor(UniqueId uniqueId, DynamicTest dynamicTest, TestSource source) {
+	DynamicTestTestDescriptor(UniqueId uniqueId, DynamicTest dynamicTest, TestSource source) {
 		super(uniqueId, dynamicTest.getDisplayName());
 		this.dynamicTest = dynamicTest;
 		setSource(source);

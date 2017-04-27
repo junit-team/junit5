@@ -13,8 +13,10 @@ package example;
 //tag::user_guide[]
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,9 +26,11 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 
 class DynamicTestsDemo {
@@ -38,6 +42,28 @@ class DynamicTestsDemo {
 	@TestFactory
 	List<String> dynamicTestsWithInvalidReturnType() {
 		return Arrays.asList("Hello");
+	}
+
+	@TestFactory
+	List<DynamicNode> dynamicTestsWithContainers() {
+		Executable alwaysTrue = () -> assertTrue(true);
+
+		List<DynamicNode> nestedOne = new ArrayList<>();
+		nestedOne.add(dynamicTest("nested-1", alwaysTrue));
+		nestedOne.add(dynamicTest("nested-2", alwaysTrue));
+		List<DynamicNode> nestedTwo = new ArrayList<>();
+		nestedTwo.add(dynamicTest("nested-3", alwaysTrue));
+		nestedTwo.add(dynamicContainer("2nd level", dynamicTestsFromIterable()));
+		nestedTwo.add(dynamicTest("nested-4", alwaysTrue));
+		nestedTwo.add(dynamicContainer("level II", dynamicTestsFromStream()));
+
+		List<DynamicNode> nodes = new ArrayList<>();
+		nodes.add(dynamicTest("begin", alwaysTrue));
+		nodes.add(dynamicContainer("container one", nestedOne));
+		nodes.add(dynamicTest("middle", alwaysTrue));
+		nodes.add(dynamicContainer("container two", nestedTwo));
+		nodes.add(dynamicTest("end", alwaysTrue));
+		return nodes;
 	}
 
 	@TestFactory
