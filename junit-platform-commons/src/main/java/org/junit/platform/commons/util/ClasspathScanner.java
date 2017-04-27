@@ -24,6 +24,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -34,7 +35,10 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import javax.lang.model.SourceVersion;
 
 import org.junit.platform.commons.meta.API;
 
@@ -56,6 +60,9 @@ class ClasspathScanner {
 	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
 	private static final char PACKAGE_SEPARATOR_CHAR = '.';
 	private static final String PACKAGE_SEPARATOR_STRING = String.valueOf(PACKAGE_SEPARATOR_CHAR);
+
+	/** Compiled {@code "\."} pattern used to split canonical package (and type) names. */
+	private static final Pattern DOT_PATTERN = Pattern.compile("\\.");
 
 	/** Malformed class name InternalError like reported in #401. */
 	private static final String MALFORMED_CLASS_NAME_ERROR_MESSAGE = "Malformed class name";
@@ -238,8 +245,12 @@ class ClasspathScanner {
 
 	private static void assertPackageNameIsPlausible(String packageName) {
 		Preconditions.notNull(packageName, "package name must not be null");
-		Preconditions.condition(DEFAULT_PACKAGE_NAME.equals(packageName) || StringUtils.isNotBlank(packageName),
-			"package name must not contain only whitespace");
+		if (packageName.equals(DEFAULT_PACKAGE_NAME)) {
+			return;
+		}
+		Preconditions.notBlank(packageName, "package name must not contain only whitespace");
+		boolean allValid = Arrays.stream(DOT_PATTERN.split(packageName, -1)).allMatch(SourceVersion::isName);
+		Preconditions.condition(allValid, "invalid part(s) in package name: " + packageName);
 	}
 
 	private static String packagePath(String packageName) {

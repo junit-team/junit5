@@ -361,8 +361,12 @@ public class ReflectionUtilsTests {
 	void isPackage() {
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage(null));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage("     "));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage(".a"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage("a."));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage("a..b"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage("byte.true"));
 
-		assertFalse(ReflectionUtils.isPackage("org.non.existing.package"));
+		assertFalse(ReflectionUtils.isPackage("non.existing.but.all.names.are.valid"));
 
 		assertTrue(ReflectionUtils.isPackage("org.junit.platform.commons.util"));
 		assertTrue(ReflectionUtils.isPackage("org.junit.platform.commons"));

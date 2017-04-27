@@ -12,6 +12,7 @@ package org.junit.platform.commons.support;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -24,6 +25,7 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -56,9 +58,10 @@ class ReflectionSupportTests {
 
 	@Test
 	void findAllClassesInPackageDelegates() {
-		assertEquals(0, ReflectionSupport.findAllClassesInPackage("illegal package name", allTypes, allNames).size());
-		assertEquals(ReflectionUtils.findAllClassesInPackage("illegal package name", allTypes, allNames),
-			ReflectionSupport.findAllClassesInPackage("illegal package name", allTypes, allNames));
+		assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.findAllClassesInPackage("void.return.null", allTypes, allNames));
+		assertThrows(PreconditionViolationException.class,
+			() -> ReflectionSupport.findAllClassesInPackage("void.return.null", allTypes, allNames));
 		assertNotEquals(0, ReflectionSupport.findAllClassesInPackage("org.junit", allTypes, allNames).size());
 		assertEquals(ReflectionUtils.findAllClassesInPackage("org.junit", allTypes, allNames),
 			ReflectionSupport.findAllClassesInPackage("org.junit", allTypes, allNames));
