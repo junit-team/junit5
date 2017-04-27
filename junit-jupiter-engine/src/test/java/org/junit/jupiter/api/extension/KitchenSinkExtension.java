@@ -17,12 +17,15 @@ import java.util.stream.Stream;
  * supported by JUnit Jupiter.
  *
  * <p>This extension should never actually be registered for any tests.
- * Rather, its sole purpose is to ensure that a concrete extension is
- * able to implement all extension APIs supported by JUnit Jupiter without
- * any naming conflicts or ambiguities with regard to method names or
- * method signatures.
+ * Rather, its sole purpose is to help ensure (via visual inspection)
+ * that a concrete extension is able to implement all extension APIs
+ * supported by JUnit Jupiter without any naming conflicts or
+ * ambiguities with regard to method names or method signatures.
+ * {@link ExtensionComposabilityTests}, on the other hand, serves
+ * the same purpose in a dynamic and automated fashion.
  *
  * @since 5.0
+ * @see ExtensionComposabilityTests
  */
 // @formatter:off
 public class KitchenSinkExtension implements
