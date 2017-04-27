@@ -24,6 +24,9 @@ on GitHub.
 
 * The deprecated `--hide-details` option of the `ConsoleLauncher` has been removed; use
   `--details none` instead.
+* The following previously deprecated methods have been removed.
+  - `junit-platform-engine`: `Node.execute(EngineExecutionContext)`
+  - `junit-platform-commons`: `ReflectionUtils.findAllClassesInClasspathRoot(Path, Predicate, Predicate)`
 
 ===== New Features and Improvements
 

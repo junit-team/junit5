@@ -483,15 +483,6 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * @deprecated Use {@link #findAllClassesInClasspathRoot(URI, Predicate, Predicate)} instead.
-	 */
-	@Deprecated
-	public static List<Class<?>> findAllClassesInClasspathRoot(Path root, Predicate<Class<?>> classTester,
-			Predicate<String> classNameFilter) {
-		return findAllClassesInClasspathRoot(root.toUri(), classTester, classNameFilter);
-	}
-
-	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInClasspathRoot(URI, Predicate, Predicate)
 	 */
 	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classTester,
