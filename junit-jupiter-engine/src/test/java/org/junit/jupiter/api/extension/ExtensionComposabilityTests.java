@@ -21,8 +21,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * Unit tests for extension composability in JUnit Jupiter.
@@ -30,8 +28,7 @@ import org.junit.runner.RunWith;
  * @since 5.0
  * @see KitchenSinkExtension
  */
-@RunWith(JUnitPlatform.class)
-public class ExtensionComposabilityTests {
+class ExtensionComposabilityTests {
 
 	@Test
 	void ensureJupiterExtensionApisAreComposable() {
