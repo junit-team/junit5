@@ -62,11 +62,13 @@ class ExtensionComposabilityTests {
 
 		List<String> actualMethodSignatures = actualMethods.stream()
 				.map(this::methodSignature)
+				.distinct()
 				.sorted()
 				.collect(toList());
 
 		List<String> actualMethodNames = actualMethods.stream()
 				.map(Method::getName)
+				.distinct()
 				.sorted()
 				.collect(toList());
 		// @formatter:on
@@ -79,8 +81,8 @@ class ExtensionComposabilityTests {
 		actualMethodNames.remove("hashCode");
 		actualMethodNames.remove("toString");
 
-		assertThat(actualMethodNames).isEqualTo(expectedMethodNames);
 		assertThat(actualMethodSignatures).isEqualTo(expectedMethodSignatures);
+		assertThat(actualMethodNames).isEqualTo(expectedMethodNames);
 	}
 
 	public boolean isExtensionApi(Class<?> candidate) {
