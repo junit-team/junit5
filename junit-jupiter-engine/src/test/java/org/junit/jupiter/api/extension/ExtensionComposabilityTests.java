@@ -47,7 +47,7 @@ class ExtensionComposabilityTests {
 
 		// @formatter:off
 		List<Method> expectedMethods = extensionApis.stream()
-				.map(api -> api.getDeclaredMethods())
+				.map(Class::getDeclaredMethods)
 				.flatMap(Arrays::stream)
 				.collect(toList());
 
@@ -103,7 +103,7 @@ class ExtensionComposabilityTests {
 		// @formatter:on
 	}
 
-	public boolean isExtensionApi(Class<?> candidate) {
+	private boolean isExtensionApi(Class<?> candidate) {
 		return candidate.isInterface() && (candidate != Extension.class) && Extension.class.isAssignableFrom(candidate);
 	}
 
