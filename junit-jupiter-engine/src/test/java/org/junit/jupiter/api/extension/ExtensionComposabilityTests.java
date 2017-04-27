@@ -12,6 +12,7 @@ package org.junit.jupiter.api.extension;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -25,6 +26,11 @@ import org.junit.platform.commons.util.StringUtils;
 /**
  * Unit tests for extension composability in JUnit Jupiter.
  *
+ * <p>The purpose of these tests is to ensure that a concrete extension
+ * (a.k.a., the kitchen sink extension) is able to implement all extension
+ * APIs supported by JUnit Jupiter without any naming conflicts or
+ * ambiguities with regard to method names or method signatures.
+ *
  * @since 5.0
  * @see KitchenSinkExtension
  */
@@ -33,13 +39,11 @@ class ExtensionComposabilityTests {
 	@Test
 	void ensureJupiterExtensionApisAreComposable() {
 
-		// 1) Find all Extension APIs
+		// 1) Find all existing top-level Extension APIs
 		List<Class<?>> extensionApis = ReflectionUtils.findAllClassesInPackage(Extension.class.getPackage().getName(),
 			this::isExtensionApi, name -> true);
 
-		// 2) Dynamically implement all Extension APIs
-		Object dynamicKitchenSinkExtension = Proxy.newProxyInstance(getClass().getClassLoader(),
-			extensionApis.toArray(new Class<?>[extensionApis.size()]), (proxy, method, args) -> null);
+		// 2) Determine which methods we expect the kitchen sink to implement...
 
 		// @formatter:off
 		List<Method> expectedMethods = extensionApis.stream()
@@ -56,7 +60,15 @@ class ExtensionComposabilityTests {
 				.map(Method::getName)
 				.sorted()
 				.collect(toList());
+		// @formatter:on
 
+		// 3) Dynamically implement all Extension APIs
+		Object dynamicKitchenSinkExtension = Proxy.newProxyInstance(getClass().getClassLoader(),
+			extensionApis.toArray(new Class<?>[extensionApis.size()]), (proxy, method, args) -> null);
+
+		// 4) Determine what ended up in the kitchen sink...
+
+		// @formatter:off
 		List<Method> actualMethods = Arrays.stream(dynamicKitchenSinkExtension.getClass().getDeclaredMethods())
 				.collect(toList());
 
@@ -73,16 +85,22 @@ class ExtensionComposabilityTests {
 				.collect(toList());
 		// @formatter:on
 
+		// 5) Remove methods from java.lang.Object
 		actualMethodSignatures.remove("equals(Object)");
 		actualMethodSignatures.remove("hashCode()");
 		actualMethodSignatures.remove("toString()");
-
 		actualMethodNames.remove("equals");
 		actualMethodNames.remove("hashCode");
 		actualMethodNames.remove("toString");
 
-		assertThat(actualMethodSignatures).isEqualTo(expectedMethodSignatures);
-		assertThat(actualMethodNames).isEqualTo(expectedMethodNames);
+		// 6) Verify our expectations
+
+		// @formatter:off
+		assertAll(
+				() -> assertThat(actualMethodSignatures).isEqualTo(expectedMethodSignatures),
+				() -> assertThat(actualMethodNames).isEqualTo(expectedMethodNames)
+		);
+		// @formatter:on
 	}
 
 	public boolean isExtensionApi(Class<?> candidate) {
