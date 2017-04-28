@@ -5709,6 +5709,11 @@ module has been renamed to <code>arguments()</code>.</p>
 exceptions of type <code>AssertionError</code>), unless the exception is a <em>blacklisted</em> exception
 in which case it will be immediately rethrown.</p>
 </li>
+<li>
+<p>If a <code>@ParameterizedTest</code> accepts an array as an argument, the string representation of
+the array will now be converted to a human readable format when generating the display
+name for invocations of the parameterized test.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -5738,7 +5743,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-04-28 09:30:42 EDT
+Last updated 2017-04-28 16:20:52 EDT
 </div>
 </div>
 </body>
