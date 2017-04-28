@@ -15,11 +15,15 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import java.io.File;
 import java.net.URL;
 import java.security.CodeSource;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.regex.Pattern;
+
+import javax.lang.model.SourceVersion;
 
 import org.junit.platform.commons.meta.API;
 
@@ -42,6 +46,37 @@ public final class PackageUtils {
 		/* no-op */
 	}
 	///CLOVER:ON
+
+	static final String DEFAULT_PACKAGE_NAME = "";
+
+	/**
+	 * Compiled {@code "\."} pattern used to split canonical package (and type) names.
+	 */
+	private static final Pattern DOT_PATTERN = Pattern.compile("\\.");
+
+	/**
+	 * Assert that the supplied package name is valid in terms of Java syntax.
+	 *
+	 * <p>Note: this method does not actually verify if the named package exists in the classpath.
+	 *
+	 * <p>The default package is represented by an empty string ({@code ""}).
+	 *
+	 * @param packageName the package name to validate
+	 * @throws PreconditionViolationException if the supplied package name is
+	 * {@code null}, contains only whitespace, or contains parts that are not
+	 * valid in terms of Java syntax (e.g., containing keywords such as
+	 * {@code void}, {@code import}, etc.)
+	 * @see SourceVersion#isName(CharSequence)
+	 */
+	public static void assertPackageNameIsValid(String packageName) {
+		Preconditions.notNull(packageName, "package name must not be null");
+		if (packageName.equals(DEFAULT_PACKAGE_NAME)) {
+			return;
+		}
+		Preconditions.notBlank(packageName, "package name must not contain only whitespace");
+		boolean allValid = Arrays.stream(DOT_PATTERN.split(packageName, -1)).allMatch(SourceVersion::isName);
+		Preconditions.condition(allValid, "invalid part(s) in package name: " + packageName);
+	}
 
 	/**
 	 * Get the package attribute for the supplied {@code type} using the

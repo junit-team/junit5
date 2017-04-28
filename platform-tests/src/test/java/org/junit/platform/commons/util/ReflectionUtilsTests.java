@@ -50,7 +50,7 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.InterfaceWithNestedC
  *
  * @since 1.0
  */
-public class ReflectionUtilsTests {
+class ReflectionUtilsTests {
 
 	@Test
 	void getDefaultClassLoaderWithExplicitContextClassLoader() {
@@ -355,23 +355,6 @@ public class ReflectionUtilsTests {
 		assertThat(ReflectionUtils.getOuterInstance(thirdClass, FirstClass.SecondClass.class)).contains(secondClass);
 		assertThat(ReflectionUtils.getOuterInstance(thirdClass, FirstClass.class)).contains(firstClass);
 		assertThat(ReflectionUtils.getOuterInstance(thirdClass, String.class)).isEmpty();
-	}
-
-	@Test
-	void isPackage() {
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage(null));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage("     "));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage(".a"));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage("a."));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage("a..b"));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isPackage("byte.true"));
-
-		assertFalse(ReflectionUtils.isPackage("non.existing.but.all.names.are.valid"));
-
-		assertTrue(ReflectionUtils.isPackage("org.junit.platform.commons.util"));
-		assertTrue(ReflectionUtils.isPackage("org.junit.platform.commons"));
-		assertTrue(ReflectionUtils.isPackage("org.junit.platform"));
-		assertTrue(ReflectionUtils.isPackage("")); // default package
 	}
 
 	@Test

@@ -458,19 +458,6 @@ public final class ReflectionUtils {
 		return Optional.empty();
 	}
 
-	/**
-	 * Determine if the supplied package name refers to a package that is present
-	 * in the classpath.
-	 *
-	 * <p>The default package is represented by an empty string ({@code ""}).
-	 *
-	 * @param packageName the package name to check; never {@code null} and never
-	 * containing whitespace only
-	 */
-	public static boolean isPackage(String packageName) {
-		return classpathScanner.isPackage(packageName);
-	}
-
 	public static Set<Path> getAllClasspathRootDirectories() {
 		// This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");

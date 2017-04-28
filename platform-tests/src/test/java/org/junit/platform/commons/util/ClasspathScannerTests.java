@@ -12,7 +12,6 @@ package org.junit.platform.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,11 +45,13 @@ import org.junit.jupiter.extensions.TempDirectory.Root;
 class ClasspathScannerTests {
 
 	private final List<Class<?>> loadedClasses = new ArrayList<>();
+
 	private final BiFunction<String, ClassLoader, Optional<Class<?>>> trackingClassLoader = (name, classLoader) -> {
 		Optional<Class<?>> loadedClass = ReflectionUtils.loadClass(name, classLoader);
 		loadedClass.ifPresent(loadedClasses::add);
 		return loadedClass;
 	};
+
 	private final ClasspathScanner classpathScanner = new ClasspathScanner(ClassLoaderUtils::getDefaultClassLoader,
 		trackingClassLoader);
 
@@ -226,30 +227,6 @@ class ClasspathScannerTests {
 		classpathScanner.scanForClassesInPackage("org.junit.platform.commons", clazz -> true, classNameFilter);
 
 		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
-	}
-
-	@Test
-	void isPackage() {
-		assertTrue(classpathScanner.isPackage("")); // default package
-		assertTrue(classpathScanner.isPackage("org.junit.platform.commons"));
-
-		assertFalse(classpathScanner.isPackage("org.doesnotexist"));
-	}
-
-	@Test
-	void isPackageForNullPackageName() {
-		assertThrows(PreconditionViolationException.class, () -> classpathScanner.isPackage(null));
-	}
-
-	@Test
-	void isPackageForWhitespacePackageName() {
-		assertThrows(PreconditionViolationException.class, () -> classpathScanner.isPackage("    "));
-	}
-
-	@Test
-	void isPackageWhenIOExceptionOccurs() {
-		ClasspathScanner scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::loadClass);
-		assertFalse(scanner.isPackage("org.junit.platform.commons"));
 	}
 
 	@Test

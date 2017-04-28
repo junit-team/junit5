@@ -34,6 +34,30 @@ import org.opentest4j.ValueWrapper;
 class PackageUtilsTests {
 
 	@Test
+	void assertPackageNameIsValidForValidPackageNames() {
+		PackageUtils.assertPackageNameIsValid(""); // default package
+		PackageUtils.assertPackageNameIsValid("non.existing.but.all.segments.are.syntactically.valid");
+	}
+
+	@Test
+	void assertPackageNameIsValidForNullPackageName() {
+		assertThrows(PreconditionViolationException.class, () -> PackageUtils.assertPackageNameIsValid(null));
+	}
+
+	@Test
+	void assertPackageNameIsValidForWhitespacePackageName() {
+		assertThrows(PreconditionViolationException.class, () -> PackageUtils.assertPackageNameIsValid("    "));
+	}
+
+	@Test
+	void assertPackageNameIsValidForInvalidPackageNames() {
+		assertThrows(PreconditionViolationException.class, () -> PackageUtils.assertPackageNameIsValid(".a"));
+		assertThrows(PreconditionViolationException.class, () -> PackageUtils.assertPackageNameIsValid("a."));
+		assertThrows(PreconditionViolationException.class, () -> PackageUtils.assertPackageNameIsValid("a..b"));
+		assertThrows(PreconditionViolationException.class, () -> PackageUtils.assertPackageNameIsValid("byte.true"));
+	}
+
+	@Test
 	void getAttributeWithNullType() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> PackageUtils.getAttribute(null, p -> "any"));
@@ -87,4 +111,5 @@ class PackageUtilsTests {
 			() -> PackageUtils.getAttribute(getClass(), ""));
 		assertEquals("name must not be blank", exception.getMessage());
 	}
+
 }
