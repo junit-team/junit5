@@ -32,12 +32,16 @@ class StringUtilsTests {
 
 	@Test
 	void nullSafeToString() {
-		assertEquals("", StringUtils.nullSafeToString((Class<?>[]) null));
-		assertEquals("", StringUtils.nullSafeToString());
-		assertEquals("java.lang.String", StringUtils.nullSafeToString(String.class));
-		assertEquals("java.lang.String, java.lang.Integer", StringUtils.nullSafeToString(String.class, Integer.class));
-		assertEquals("java.lang.String, null, java.lang.Integer",
-			StringUtils.nullSafeToString(String.class, null, Integer.class));
+		assertEquals("null", StringUtils.nullSafeToString(null));
+		assertEquals("", StringUtils.nullSafeToString(""));
+		assertEquals("\t", StringUtils.nullSafeToString("\t"));
+		assertEquals("foo", StringUtils.nullSafeToString("foo"));
+		assertEquals("3.14", StringUtils.nullSafeToString(Double.valueOf("3.14")));
+		assertEquals("[1, 2, 3]", StringUtils.nullSafeToString(new int[] { 1, 2, 3 }));
+		assertEquals("[a, b, c]", StringUtils.nullSafeToString(new char[] { 'a', 'b', 'c' }));
+		assertEquals("[foo, bar]", StringUtils.nullSafeToString(new String[] { "foo", "bar" }));
+		assertEquals("[34, 42]", StringUtils.nullSafeToString(new Integer[] { 34, 42 }));
+		assertEquals("[[2, 4], [3, 9]]", StringUtils.nullSafeToString(new Integer[][] { { 2, 4 }, { 3, 9 } }));
 	}
 
 }

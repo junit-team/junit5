@@ -38,6 +38,28 @@ class ParameterizedTestNameFormatterTests {
 	void formatsCompleteArgumentsList() {
 		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("{arguments}");
 
-		assertEquals("foo, 42", formatter.format(1, "foo", 42));
+		// @formatter:off
+		assertEquals("42, 99, enigma, null, [1, 2, 3], [foo, bar], [[2, 4], [3, 9]]",
+			formatter.format(1,
+				new Integer(42),
+				99,
+				"enigma",
+				null,
+				new int[] { 1, 2, 3 },
+				new String[] { "foo", "bar" },
+				new Integer[][] { { 2, 4 }, { 3, 9 } }
+			));
+		// @formatter:on
 	}
+
+	@Test
+	void formatsInvocationIndexAndCompleteArgumentsListUsingDefaultPattern() {
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("[{index}] {arguments}");
+
+		// Explicit test for https://github.com/junit-team/junit5/issues/814
+		assertEquals("[1] [foo, bar]", formatter.format(1, (Object) new String[] { "foo", "bar" }));
+
+		assertEquals("[1] [foo, bar], 42, true", formatter.format(1, new String[] { "foo", "bar" }, 42, true));
+	}
+
 }

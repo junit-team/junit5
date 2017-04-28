@@ -19,8 +19,8 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.rules.TestRule;
 
 /**
@@ -44,7 +44,7 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 	protected Object executeMethod(String methodName, Class<?>[] parameterTypes, Object... arguments) {
 		Method method = findMethod(this.target.getClass(), methodName, parameterTypes).orElseThrow(
 			() -> new JUnitException(String.format("Failed to find method %s(%s) in class %s", methodName,
-				StringUtils.nullSafeToString(parameterTypes), this.target.getClass().getName())));
+				ClassUtils.nullSafeToString(parameterTypes), this.target.getClass().getName())));
 
 		return invokeMethod(method, this.target, arguments);
 	}

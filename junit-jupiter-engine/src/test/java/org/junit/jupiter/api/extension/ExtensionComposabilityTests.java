@@ -20,8 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.commons.util.StringUtils;
 
 /**
  * Unit tests for extension composability in JUnit Jupiter.
@@ -109,7 +109,7 @@ class ExtensionComposabilityTests {
 
 	private String methodSignature(Method method) {
 		return String.format("%s(%s)", method.getName(),
-			StringUtils.nullSafeToString(Class::getSimpleName, method.getParameterTypes()));
+			ClassUtils.nullSafeToString(Class::getSimpleName, method.getParameterTypes()));
 	}
 
 }

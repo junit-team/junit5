@@ -13,8 +13,8 @@ package org.junit.jupiter.engine.descriptor;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -64,7 +64,7 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 
 	private static String generateDefaultDisplayName(Method testMethod) {
 		return String.format("%s(%s)", testMethod.getName(),
-			StringUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes()));
+			ClassUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes()));
 	}
 
 }

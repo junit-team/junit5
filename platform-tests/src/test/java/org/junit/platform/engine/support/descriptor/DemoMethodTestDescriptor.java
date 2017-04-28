@@ -18,6 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Tag;
+import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestTag;
@@ -33,7 +34,7 @@ public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 
 	public DemoMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, String.format("%s(%s)", Preconditions.notNull(testMethod, "Method must not be null").getName(),
-			StringUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes())));
+			ClassUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes())));
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = testMethod;

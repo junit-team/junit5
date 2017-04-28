@@ -76,6 +76,9 @@ on GitHub.
 * `Assertions.assertAll()` now tracks exceptions of any type (as opposed to only tracking
   exceptions of type `AssertionError`), unless the exception is a _blacklisted_ exception
   in which case it will be immediately rethrown.
+* If a `@ParameterizedTest` accepts an array as an argument, the string representation of
+  the array will now be converted to a human readable format when generating the display
+  name for invocations of the parameterized test.
 
 
 [[release-notes-5.0.0-m5-junit-vintage]]

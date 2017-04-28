@@ -13,9 +13,7 @@ package org.junit.platform.commons.util;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import org.junit.platform.commons.meta.API;
 
@@ -53,46 +51,10 @@ public class ToStringBuilder {
 	}
 
 	private String toString(Object obj) {
-		if (obj == null) {
-			return "null";
-		}
 		if (obj instanceof CharSequence) {
 			return "'" + obj + "'";
 		}
-		if (obj.getClass().isArray()) {
-			return arrayToString(obj);
-		}
-		return Objects.toString(obj);
-	}
-
-	private String arrayToString(Object obj) {
-		if (obj.getClass().getComponentType().isPrimitive()) {
-			if (obj instanceof boolean[]) {
-				return Arrays.toString((boolean[]) obj);
-			}
-			if (obj instanceof char[]) {
-				return Arrays.toString((char[]) obj);
-			}
-			if (obj instanceof short[]) {
-				return Arrays.toString((short[]) obj);
-			}
-			if (obj instanceof byte[]) {
-				return Arrays.toString((byte[]) obj);
-			}
-			if (obj instanceof int[]) {
-				return Arrays.toString((int[]) obj);
-			}
-			if (obj instanceof long[]) {
-				return Arrays.toString((long[]) obj);
-			}
-			if (obj instanceof float[]) {
-				return Arrays.toString((float[]) obj);
-			}
-			if (obj instanceof double[]) {
-				return Arrays.toString((double[]) obj);
-			}
-		}
-		return Arrays.deepToString((Object[]) obj);
+		return StringUtils.nullSafeToString(obj);
 	}
 
 	@Override

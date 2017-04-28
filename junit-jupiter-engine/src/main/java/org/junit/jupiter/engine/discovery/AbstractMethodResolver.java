@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -43,34 +43,41 @@ abstract class AbstractMethodResolver implements ElementResolver {
 
 	@Override
 	public Set<TestDescriptor> resolveElement(AnnotatedElement element, TestDescriptor parent) {
-		if (!(element instanceof Method))
+		if (!(element instanceof Method)) {
 			return Collections.emptySet();
+		}
 
-		if (!(parent instanceof ClassTestDescriptor))
+		if (!(parent instanceof ClassTestDescriptor)) {
 			return Collections.emptySet();
+		}
 
 		Method method = (Method) element;
-		if (!isRelevantMethod(method))
+		if (!isRelevantMethod(method)) {
 			return Collections.emptySet();
+		}
 
 		return Collections.singleton(createTestDescriptor(parent, method));
 	}
 
 	@Override
 	public Optional<TestDescriptor> resolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
-		if (!segment.getType().equals(this.segmentType))
+		if (!segment.getType().equals(this.segmentType)) {
 			return Optional.empty();
+		}
 
-		if (!(parent instanceof ClassTestDescriptor))
+		if (!(parent instanceof ClassTestDescriptor)) {
 			return Optional.empty();
+		}
 
 		Optional<Method> optionalMethod = findMethod(segment, (ClassTestDescriptor) parent);
-		if (!optionalMethod.isPresent())
+		if (!optionalMethod.isPresent()) {
 			return Optional.empty();
+		}
 
 		Method method = optionalMethod.get();
-		if (!isRelevantMethod(method))
+		if (!isRelevantMethod(method)) {
 			return Optional.empty();
+		}
 
 		return Optional.of(createTestDescriptor(parent, method));
 	}
@@ -81,7 +88,7 @@ abstract class AbstractMethodResolver implements ElementResolver {
 
 	private UniqueId createUniqueId(Method method, TestDescriptor parent) {
 		String methodId = String.format("%s(%s)", method.getName(),
-			StringUtils.nullSafeToString(method.getParameterTypes()));
+			ClassUtils.nullSafeToString(method.getParameterTypes()));
 		return parent.getUniqueId().append(this.segmentType, methodId);
 	}
 

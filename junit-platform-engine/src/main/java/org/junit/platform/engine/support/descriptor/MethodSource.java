@@ -11,7 +11,7 @@
 package org.junit.platform.engine.support.descriptor;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
-import static org.junit.platform.commons.util.StringUtils.nullSafeToString;
+import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
 import java.util.Objects;

@@ -420,7 +420,7 @@ public final class ReflectionUtils {
 		Preconditions.notNull(methodName, "methodName must not be null");
 		Preconditions.notNull(params, "params must not be null");
 
-		return String.format("%s#%s(%s)", clazz.getName(), methodName, StringUtils.nullSafeToString(params));
+		return String.format("%s#%s(%s)", clazz.getName(), methodName, ClassUtils.nullSafeToString(params));
 	}
 
 	private static Optional<Object> getOuterInstance(Object inner) {
