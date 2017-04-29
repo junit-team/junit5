@@ -65,7 +65,7 @@ public class MethodSelector implements DiscoverySelector {
 		this(javaClass, methodName, null);
 	}
 
-	public MethodSelector(Class<?> javaClass, String methodName, String methodParameterTypes) {
+	MethodSelector(Class<?> javaClass, String methodName, String methodParameterTypes) {
 		this.javaClass = javaClass;
 		this.className = javaClass.getName();
 		this.methodName = methodName;

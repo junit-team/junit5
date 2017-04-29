@@ -245,35 +245,31 @@ class ReflectionUtilsTests {
 	@Test
 	void loadClass() throws Exception {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(Integer.class.getName());
-		assertThat(optional).isPresent();
 		assertThat(optional).contains(Integer.class);
 	}
 
 	@Test
 	void loadClassTrimsClassName() throws Exception {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("  " + Integer.class.getName() + "\t");
-		assertThat(optional).isPresent();
 		assertThat(optional).contains(Integer.class);
 	}
 
 	@Test
 	void loadClassForPrimitive() throws Exception {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(int.class.getName());
-		assertThat(optional).isPresent();
 		assertThat(optional).contains(int.class);
 	}
 
 	@Test
 	void loadClassForPrimitiveArray() throws Exception {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(int[].class.getName());
-		assertThat(optional).isPresent();
+		assertThat(optional).contains(int[].class);
 		assertThat(optional).contains(int[].class);
 	}
 
 	@Test
 	void loadClassForObjectArray() throws Exception {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(String[].class.getName());
-		assertThat(optional).isPresent();
 		assertThat(optional).contains(String[].class);
 	}
 
