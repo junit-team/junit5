@@ -22,6 +22,11 @@ import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 
+/**
+ * Unit tests for {@link TestTemplateTestDescriptor}.
+ *
+ * @since 5.0
+ */
 class TestTemplateTestDescriptorTests {
 
 	@Test
@@ -56,6 +61,7 @@ class TestTemplateTestDescriptorTests {
 	}
 
 	static class MyTestCase {
+
 		@Tag("bar")
 		@Tag("baz")
 		@TestTemplate

@@ -28,6 +28,11 @@ import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.Node;
 
+/**
+ * Unit tests for {@link TestFactoryTestDescriptor}.
+ *
+ * @since 5.0
+ */
 class TestFactoryTestDescriptorTests {
 
 	private JupiterEngineExecutionContext context;
@@ -75,6 +80,7 @@ class TestFactoryTestDescriptorTests {
 	}
 
 	private static class CustomStreamTestCase {
+
 		private final Stream<?> mockStream;
 
 		CustomStreamTestCase(Stream<?> mockStream) {
@@ -86,4 +92,5 @@ class TestFactoryTestDescriptorTests {
 			return mockStream;
 		}
 	}
+
 }
