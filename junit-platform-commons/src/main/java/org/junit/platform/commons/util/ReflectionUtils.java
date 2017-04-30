@@ -98,72 +98,82 @@ public final class ReflectionUtils {
 	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
 		ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::loadClass);
 
-	private static final Map<String, Class<?>> primitiveNameToTypeMap;
+	/**
+	 * Internal cache of common class names mapped to their types.
+	 */
+	private static final Map<String, Class<?>> classNameToTypeMap;
 
+	/**
+	 * Internal cache of primitive types mapped to their wrapper types.
+	 */
 	private static final Map<Class<?>, Class<?>> primitiveToWrapperMap;
 
 	static {
-		Map<String, Class<?>> primitiveTypes = new HashMap<>(16);
+		Map<String, Class<?>> classNamesToTypes = new HashMap<>(64);
 
-		primitiveTypes.put(boolean.class.getName(), boolean.class);
-		primitiveTypes.put(byte.class.getName(), byte.class);
-		primitiveTypes.put(char.class.getName(), char.class);
-		primitiveTypes.put(short.class.getName(), short.class);
-		primitiveTypes.put(int.class.getName(), int.class);
-		primitiveTypes.put(long.class.getName(), long.class);
-		primitiveTypes.put(float.class.getName(), float.class);
-		primitiveTypes.put(double.class.getName(), double.class);
+		classNamesToTypes.put(boolean.class.getName(), boolean.class);
+		classNamesToTypes.put(byte.class.getName(), byte.class);
+		classNamesToTypes.put(char.class.getName(), char.class);
+		classNamesToTypes.put(short.class.getName(), short.class);
+		classNamesToTypes.put(int.class.getName(), int.class);
+		classNamesToTypes.put(long.class.getName(), long.class);
+		classNamesToTypes.put(float.class.getName(), float.class);
+		classNamesToTypes.put(double.class.getName(), double.class);
 
-		// 1-dimensional arrays
-		primitiveTypes.put(boolean[].class.getName(), boolean[].class);
-		primitiveTypes.put(byte[].class.getName(), byte[].class);
-		primitiveTypes.put(char[].class.getName(), char[].class);
-		primitiveTypes.put(short[].class.getName(), short[].class);
-		primitiveTypes.put(int[].class.getName(), int[].class);
-		primitiveTypes.put(long[].class.getName(), long[].class);
-		primitiveTypes.put(float[].class.getName(), float[].class);
-		primitiveTypes.put(double[].class.getName(), double[].class);
-		primitiveTypes.put("boolean[]", boolean[].class);
-		primitiveTypes.put("byte[]", byte[].class);
-		primitiveTypes.put("char[]", char[].class);
-		primitiveTypes.put("short[]", short[].class);
-		primitiveTypes.put("int[]", int[].class);
-		primitiveTypes.put("long[]", long[].class);
-		primitiveTypes.put("float[]", float[].class);
-		primitiveTypes.put("double[]", double[].class);
+		// 1-dimensional arrays :: JVM internal names
+		classNamesToTypes.put(boolean[].class.getName(), boolean[].class);
+		classNamesToTypes.put(byte[].class.getName(), byte[].class);
+		classNamesToTypes.put(char[].class.getName(), char[].class);
+		classNamesToTypes.put(short[].class.getName(), short[].class);
+		classNamesToTypes.put(int[].class.getName(), int[].class);
+		classNamesToTypes.put(long[].class.getName(), long[].class);
+		classNamesToTypes.put(float[].class.getName(), float[].class);
+		classNamesToTypes.put(double[].class.getName(), double[].class);
 
-		// 2-dimensional arrays
-		primitiveTypes.put(boolean[][].class.getName(), boolean[][].class);
-		primitiveTypes.put(byte[][].class.getName(), byte[][].class);
-		primitiveTypes.put(char[][].class.getName(), char[][].class);
-		primitiveTypes.put(short[][].class.getName(), short[][].class);
-		primitiveTypes.put(int[][].class.getName(), int[][].class);
-		primitiveTypes.put(long[][].class.getName(), long[][].class);
-		primitiveTypes.put(float[][].class.getName(), float[][].class);
-		primitiveTypes.put(double[][].class.getName(), double[][].class);
-		primitiveTypes.put("boolean[][]", boolean[][].class);
-		primitiveTypes.put("byte[][]", byte[][].class);
-		primitiveTypes.put("char[][]", char[][].class);
-		primitiveTypes.put("short[][]", short[][].class);
-		primitiveTypes.put("int[][]", int[][].class);
-		primitiveTypes.put("long[][]", long[][].class);
-		primitiveTypes.put("float[][]", float[][].class);
-		primitiveTypes.put("double[][]", double[][].class);
+		// 1-dimensional arrays :: source code syntax
+		classNamesToTypes.put("boolean[]", boolean[].class);
+		classNamesToTypes.put("byte[]", byte[].class);
+		classNamesToTypes.put("char[]", char[].class);
+		classNamesToTypes.put("short[]", short[].class);
+		classNamesToTypes.put("int[]", int[].class);
+		classNamesToTypes.put("long[]", long[].class);
+		classNamesToTypes.put("float[]", float[].class);
+		classNamesToTypes.put("double[]", double[].class);
 
-		primitiveNameToTypeMap = Collections.unmodifiableMap(primitiveTypes);
+		// 2-dimensional arrays :: JVM internal names
+		classNamesToTypes.put(boolean[][].class.getName(), boolean[][].class);
+		classNamesToTypes.put(byte[][].class.getName(), byte[][].class);
+		classNamesToTypes.put(char[][].class.getName(), char[][].class);
+		classNamesToTypes.put(short[][].class.getName(), short[][].class);
+		classNamesToTypes.put(int[][].class.getName(), int[][].class);
+		classNamesToTypes.put(long[][].class.getName(), long[][].class);
+		classNamesToTypes.put(float[][].class.getName(), float[][].class);
+		classNamesToTypes.put(double[][].class.getName(), double[][].class);
 
-		Map<Class<?>, Class<?>> primitiveToWrapper = new HashMap<>(8);
+		// 2-dimensional arrays :: source code syntax
+		classNamesToTypes.put("boolean[][]", boolean[][].class);
+		classNamesToTypes.put("byte[][]", byte[][].class);
+		classNamesToTypes.put("char[][]", char[][].class);
+		classNamesToTypes.put("short[][]", short[][].class);
+		classNamesToTypes.put("int[][]", int[][].class);
+		classNamesToTypes.put("long[][]", long[][].class);
+		classNamesToTypes.put("float[][]", float[][].class);
+		classNamesToTypes.put("double[][]", double[][].class);
 
-		primitiveToWrapper.put(boolean.class, Boolean.class);
-		primitiveToWrapper.put(byte.class, Byte.class);
-		primitiveToWrapper.put(char.class, Character.class);
-		primitiveToWrapper.put(short.class, Short.class);
-		primitiveToWrapper.put(int.class, Integer.class);
-		primitiveToWrapper.put(long.class, Long.class);
-		primitiveToWrapper.put(float.class, Float.class);
-		primitiveToWrapper.put(double.class, Double.class);
+		classNameToTypeMap = Collections.unmodifiableMap(classNamesToTypes);
 
-		primitiveToWrapperMap = Collections.unmodifiableMap(primitiveToWrapper);
+		Map<Class<?>, Class<?>> primitivesToWrappers = new HashMap<>(8);
+
+		primitivesToWrappers.put(boolean.class, Boolean.class);
+		primitivesToWrappers.put(byte.class, Byte.class);
+		primitivesToWrappers.put(char.class, Character.class);
+		primitivesToWrappers.put(short.class, Short.class);
+		primitivesToWrappers.put(int.class, Integer.class);
+		primitivesToWrappers.put(long.class, Long.class);
+		primitivesToWrappers.put(float.class, Float.class);
+		primitivesToWrappers.put(double.class, Double.class);
+
+		primitiveToWrapperMap = Collections.unmodifiableMap(primitivesToWrappers);
 	}
 
 	public static boolean isPublic(Class<?> clazz) {
@@ -357,8 +367,8 @@ public final class ReflectionUtils {
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 		name = name.trim();
 
-		if (primitiveNameToTypeMap.containsKey(name)) {
-			return Optional.of(primitiveNameToTypeMap.get(name));
+		if (classNameToTypeMap.containsKey(name)) {
+			return Optional.of(classNameToTypeMap.get(name));
 		}
 
 		try {
@@ -374,8 +384,8 @@ public final class ReflectionUtils {
 				String componentTypeName = name.substring(0, name.length() - 2);
 
 				Class<?> componentType;
-				if (primitiveNameToTypeMap.containsKey(componentTypeName)) {
-					componentType = primitiveNameToTypeMap.get(componentTypeName);
+				if (classNameToTypeMap.containsKey(componentTypeName)) {
+					componentType = classNameToTypeMap.get(componentTypeName);
 				}
 				else {
 					componentType = classLoader.loadClass(componentTypeName);
