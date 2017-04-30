@@ -299,6 +299,7 @@ class ReflectionUtilsTests {
 		assertThat(optional).contains(int[][].class);
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void loadClassForMultidimensionalPrimitiveArray() throws Exception {
@@ -306,6 +307,7 @@ class ReflectionUtilsTests {
 		assertThat(optional).contains(int[][][][][].class);
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void loadClassForMultidimensionalPrimitiveArrayUsingSourceCodeSyntax() throws Exception {
@@ -313,6 +315,7 @@ class ReflectionUtilsTests {
 		assertThat(optional).contains(int[][][][][].class);
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void loadClassForMultidimensionalObjectArray() throws Exception {
@@ -320,6 +323,7 @@ class ReflectionUtilsTests {
 		assertThat(optional).contains(String[][].class);
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void loadClassForMultidimensionalObjectArrayUsingSourceCodeSyntax() throws Exception {
@@ -409,36 +413,42 @@ class ReflectionUtilsTests {
 		assertFqmn(fqmnWithParamNames(getClass(), "methodWithTwoDimensionalPrimitiveArray", "int[][]"));
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void loadMethodWithMultidimensionalPrimitiveArrayParameter() {
 		assertFqmn(fqmn(getClass(), "methodWithMultidimensionalPrimitiveArray", int[][][][][].class));
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void loadMethodWithMultidimensionalPrimitiveArrayParameterUsingSourceCodeSyntax() {
 		assertFqmn(fqmnWithParamNames(getClass(), "methodWithMultidimensionalPrimitiveArray", "int[][][][][]"));
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void loadMethodWithTwoDimensionalObjectArrayParameter() {
 		assertFqmn(fqmn(getClass(), "methodWithTwoDimensionalObjectArray", String[][].class));
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void loadMethodWithTwoDimensionalObjectArrayParameterUsingSourceCodeSyntax() {
 		assertFqmn(fqmnWithParamNames(getClass(), "methodWithTwoDimensionalObjectArray", "String[][]"));
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void loadMethodWithMultidimensionalObjectArrayParameter() {
 		assertFqmn(fqmn(getClass(), "methodWithMultidimensionalObjectArray", String[][][][][].class));
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void loadMethodWithMultidimensionalObjectArrayParameterUsingSourceCodeSyntax() {
@@ -615,6 +625,7 @@ class ReflectionUtilsTests {
 		assertFindMethodByParameterNames("methodWithTwoDimensionalPrimitiveArray", int[][].class);
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void findMethodByParameterNamesWithMultidimensionalPrimitiveArrayParameter() throws Exception {
@@ -626,6 +637,7 @@ class ReflectionUtilsTests {
 		assertFindMethodByParameterNames("methodWithObjectArray", String[].class);
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void findMethodByParameterNamesWithMultidimensionalObjectArrayParameter() throws Exception {

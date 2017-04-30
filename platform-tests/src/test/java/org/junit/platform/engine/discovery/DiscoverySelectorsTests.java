@@ -232,6 +232,7 @@ public class DiscoverySelectorsTests {
 		assertSelectMethodByFullyQualifiedName(getClass(), method, "int[][]", "int[][]");
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithTwoDimensionalObjectArrayParameter() throws Exception {
@@ -239,6 +240,7 @@ public class DiscoverySelectorsTests {
 		assertSelectMethodByFullyQualifiedName(getClass(), method, String[][].class, String[][].class.getName());
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithTwoDimensionalObjectArrayParameterUsingSourceCodeSyntax()
@@ -247,6 +249,7 @@ public class DiscoverySelectorsTests {
 		assertSelectMethodByFullyQualifiedName(getClass(), method, "String[][]", "String[][]");
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithMultidimensionalPrimitiveArrayParameter() throws Exception {
@@ -254,6 +257,7 @@ public class DiscoverySelectorsTests {
 		assertSelectMethodByFullyQualifiedName(getClass(), method, int[][][][][].class, int[][][][][].class.getName());
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithMultidimensionalPrimitiveArrayParameterUsingSourceCodeSyntax()
@@ -262,6 +266,7 @@ public class DiscoverySelectorsTests {
 		assertSelectMethodByFullyQualifiedName(getClass(), method, "int[][][][][]", "int[][][][][]");
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithMultidimensionalObjectArrayParameter() throws Exception {
@@ -270,6 +275,7 @@ public class DiscoverySelectorsTests {
 			String[][][][][].class.getName());
 	}
 
+	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
 	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithMultidimensionalObjectArrayParameterUsingSourceCodeSyntax()
