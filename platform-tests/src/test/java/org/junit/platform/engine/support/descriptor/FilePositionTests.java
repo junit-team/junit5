@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Created by Dustin on 4/28/2017.
  */
-class TestFilePosition {
+class FilePositionTests {
 
 	@Test
 	void Test_FilePosition_Start_getLine() {
