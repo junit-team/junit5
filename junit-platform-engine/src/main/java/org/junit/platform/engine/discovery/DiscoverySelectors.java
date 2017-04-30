@@ -286,22 +286,32 @@ public final class DiscoverySelectors {
 	 * <p>The following formats are supported.
 	 *
 	 * <ul>
-	 * <li>{@code [fully qualified class name]#[method name]}</li>
-	 * <li>{@code [fully qualified class name]#[method name](parameter type list)}
-	 * <ul><li>The <em>parameter type list</em> is a comma-separated list of
-	 * fully qualified class names for the types of parameters accepted by
-	 * the method.</li></ul>
-	 * </li>
+	 * <li>{@code [fully qualified class name]#[methodName]}</li>
+	 * <li>{@code [fully qualified class name]#[methodName](parameter type list)}
 	 * </ul>
+	 *
+	 * <p>The <em>parameter type list</em> is a comma-separated list of primitive
+	 * names or fully qualified class names for the types of parameters accepted
+	 * by the method.
+	 *
+	 * <p>Array parameter types may be specified using either the JVM's internal
+	 * String representation (e.g., {@code [I} for {@code int[]},
+	 * {@code [Lava.lang.String;} for {@code java.lang.String[]}, etc.) or
+	 * <em>source code syntax</em> (e.g., {@code int[]}, {@code java.lang.String[]},
+	 * etc.).
 	 *
 	 * <h3>Examples</h3>
 	 *
 	 * <table border="1">
 	 * <tr><th>Method</th><th>Fully Qualified Method Name</th></tr>
-	 * <tr><td>{@link String#chars()}</td><td>{@code java.lang.String#chars}</td></tr>
-	 * <tr><td>{@link String#chars()}</td><td>{@code java.lang.String#chars()}</td></tr>
-	 * <tr><td>{@link String#equalsIgnoreCase(String)}</td><td>{@code java.lang.String#equalsIgnoreCase(java.lang.String)}</td></tr>
-	 * <tr><td>{@link String#substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
+	 * <tr><td>{@code java.lang.String#chars()}</td><td>{@code java.lang.String#chars}</td></tr>
+	 * <tr><td>{@code java.lang.String#chars()}</td><td>{@code java.lang.String#chars()}</td></tr>
+	 * <tr><td>{@code java.lang.String#equalsIgnoreCase(String)}</td><td>{@code java.lang.String#equalsIgnoreCase(java.lang.String)}</td></tr>
+	 * <tr><td>{@code java.lang.String#substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
+	 * <tr><td>{@code example.Calc#avg(int[])}</td><td>{@code example.Calc#avg([I)}</td></tr>
+	 * <tr><td>{@code example.Calc#avg(int[])}</td><td>{@code example.Calc#avg(int[])}</td></tr>
+	 * <tr><td>{@code example.Service#process(String[])}</td><td>{@code example.Service#process([Lava.lang.String;)}</td></tr>
+	 * <tr><td>{@code example.Service#process(String[])}</td><td>{@code example.Service#process(String[])}</td></tr>
 	 * </table>
 	 *
 	 * @param fullyQualifiedMethodName the fully qualified name of the method to select; never

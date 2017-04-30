@@ -10,7 +10,9 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.Arrays.stream;
 import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -31,11 +33,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
 import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for {@link DiscoverySelectors}.
@@ -43,14 +47,6 @@ import org.junit.platform.commons.util.PreconditionViolationException;
  * @since 1.0
  */
 public class DiscoverySelectorsTests {
-
-	private static final Method fullyQualifiedMethod = fullyQualifiedMethod();
-	private static final Method fullyQualifiedMethodWithParameters = fullyQualifiedMethodWithParameters();
-	private static final Method fullyQualifiedDefaultMethod = fullyQualifiedDefaultMethod();
-
-	private static final String fullyQualifiedMethodName = fullyQualifiedMethodName();
-	private static final String fullyQualifiedMethodNameWithParameters = fullyQualifiedMethodNameWithParameters();
-	private static final String fullyQualifiedDefaultMethodName = fullyQualifiedDefaultMethodName();
 
 	@Test
 	void selectUriByName() throws Exception {
@@ -162,38 +158,161 @@ public class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectMethodByFullyQualifiedName() {
-		MethodSelector selector = selectMethod(fullyQualifiedMethodName);
-		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
-		assertEquals(DiscoverySelectorsTests.class, selector.getJavaClass());
-		assertEquals(DiscoverySelectorsTests.class.getName(), selector.getClassName());
-		assertEquals("myTest", selector.getMethodName());
-		assertNull(selector.getMethodParameterTypes());
+	void selectMethodByFullyQualifiedName() throws Exception {
+		Class<?> clazz = getClass();
+		Method method = clazz.getDeclaredMethod("myTest");
+		assertSelectMethodByFullyQualifiedName(clazz, method);
 	}
 
 	@Test
-	void selectMethodByFullyQualifiedNameWithParameters() {
-		MethodSelector selector = selectMethod(fullyQualifiedMethodNameWithParameters);
-		assertEquals(fullyQualifiedMethodWithParameters, selector.getJavaMethod());
-		assertEquals(DiscoverySelectorsTests.class, selector.getJavaClass());
-		assertEquals(DiscoverySelectorsTests.class.getName(), selector.getClassName());
-		assertEquals("myTest", selector.getMethodName());
-		assertEquals("java.lang.String", selector.getMethodParameterTypes());
+	void selectMethodByFullyQualifiedNameForDefaultMethodInInterface() throws Exception {
+		Class<?> clazz = TestCaseWithDefaultMethod.class;
+		Method method = clazz.getMethod("myTest");
+		assertSelectMethodByFullyQualifiedName(clazz, method);
 	}
 
 	@Test
-	void selectMethodByFullyQualifiedNameForDefaultMethodInInterface() {
-		MethodSelector selector = selectMethod(fullyQualifiedDefaultMethodName);
-		assertEquals(fullyQualifiedDefaultMethod, selector.getJavaMethod());
-		assertEquals(TestCaseWithDefaultMethod.class, selector.getJavaClass());
-		assertEquals(TestCaseWithDefaultMethod.class.getName(), selector.getClassName());
-		assertEquals("myTest", selector.getMethodName());
+	void selectMethodByFullyQualifiedNameWithPrimitiveParameter() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", int.class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, int.class, "int");
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameWithPrimitiveParameterUsingSourceCodeSyntax() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", int.class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, "int", "int");
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameWithObjectParameter() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", String.class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, String.class, String.class.getName());
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameWithObjectParameterUsingSourceCodeSyntax() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", String.class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, "java.lang.String", String.class.getName());
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameWithPrimitiveArrayParameter() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", int[].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, int[].class, int[].class.getName());
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameWithPrimitiveArrayParameterUsingSourceCodeSyntax() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", int[].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, "int[]", "int[]");
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameWithObjectArrayParameter() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", String[].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, String[].class, String[].class.getName());
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameWithObjectArrayParameterUsingSourceCodeSyntax() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", String[].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, "java.lang.String[]", "java.lang.String[]");
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameWithTwoDimensionalPrimitiveArrayParameter() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", int[][].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, int[][].class, int[][].class.getName());
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameWithTwoDimensionalPrimitiveArrayParameterUsingSourceCodeSyntax()
+			throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", int[][].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, "int[][]", "int[][]");
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void selectMethodByFullyQualifiedNameWithTwoDimensionalObjectArrayParameter() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", String[][].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, String[][].class, String[][].class.getName());
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void selectMethodByFullyQualifiedNameWithTwoDimensionalObjectArrayParameterUsingSourceCodeSyntax()
+			throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", String[][].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, "String[][]", "String[][]");
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void selectMethodByFullyQualifiedNameWithMultidimensionalPrimitiveArrayParameter() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", int[][][][][].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, int[][][][][].class, int[][][][][].class.getName());
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void selectMethodByFullyQualifiedNameWithMultidimensionalPrimitiveArrayParameterUsingSourceCodeSyntax()
+			throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", int[][][][][].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, "int[][][][][]", "int[][][][][]");
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void selectMethodByFullyQualifiedNameWithMultidimensionalObjectArrayParameter() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", String[][][][][].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, String[][][][][].class,
+			String[][][][][].class.getName());
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void selectMethodByFullyQualifiedNameWithMultidimensionalObjectArrayParameterUsingSourceCodeSyntax()
+			throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", String[][][][][].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, "String[][][][][]", "String[][][][][]");
+	}
+
+	private void assertSelectMethodByFullyQualifiedName(Class<?> clazz, Method method) {
+		MethodSelector selector = selectMethod(fqmn(clazz, method.getName()));
+		assertEquals(method, selector.getJavaMethod());
+		assertEquals(clazz, selector.getJavaClass());
+		assertEquals(clazz.getName(), selector.getClassName());
+		assertEquals(method.getName(), selector.getMethodName());
 		assertNull(selector.getMethodParameterTypes());
+	}
+
+	private void assertSelectMethodByFullyQualifiedName(Class<?> clazz, Method method, Class<?> parameterType,
+			String expectedParameterTypes) {
+
+		MethodSelector selector = selectMethod(fqmn(parameterType));
+		assertEquals(method, selector.getJavaMethod());
+		assertEquals(clazz, selector.getJavaClass());
+		assertEquals(clazz.getName(), selector.getClassName());
+		assertEquals(method.getName(), selector.getMethodName());
+		assertEquals(expectedParameterTypes, selector.getMethodParameterTypes());
+	}
+
+	private void assertSelectMethodByFullyQualifiedName(Class<?> clazz, Method method, String parameterName,
+			String expectedParameterTypes) {
+
+		MethodSelector selector = selectMethod(fqmnWithParamNames(parameterName));
+		assertEquals(method, selector.getJavaMethod());
+		assertEquals(clazz, selector.getJavaClass());
+		assertEquals(clazz.getName(), selector.getClassName());
+		assertEquals(method.getName(), selector.getMethodName());
+		assertEquals(expectedParameterTypes, selector.getMethodParameterTypes());
 	}
 
 	@Test
 	void selectMethodByClassAndMethodName() throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest");
+
 		MethodSelector selector = selectMethod(getClass(), "myTest");
 		assertEquals(getClass(), selector.getJavaClass());
 		assertEquals(getClass().getName(), selector.getClassName());
@@ -205,6 +324,7 @@ public class DiscoverySelectorsTests {
 	@Test
 	void selectMethodByClassAndMethodNameWithParameterTypes() throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest", String.class);
+
 		MethodSelector selector = selectMethod(getClass(), "myTest", "java.lang.String");
 		assertEquals(getClass(), selector.getJavaClass());
 		assertEquals(getClass().getName(), selector.getClassName());
@@ -216,6 +336,7 @@ public class DiscoverySelectorsTests {
 	@Test
 	void selectMethodWithParametersByMethodReference() throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest", String.class);
+
 		MethodSelector selector = selectMethod(getClass(), method);
 		assertEquals(method, selector.getJavaMethod());
 		assertEquals(getClass(), selector.getJavaClass());
@@ -256,16 +377,15 @@ public class DiscoverySelectorsTests {
 
 	@Test
 	void selectMethodByFullyQualifiedNameForSpockSpecWithParameters() {
-		String spockClassName = "org.example.CalculatorSpec";
-		String spockMethodName = "#a plus #b equals #c";
-		String spockMethodParameters = "int, int, int";
-		String spockFullyQualifiedMethodName = spockClassName + "#" + spockMethodName + "(" + spockMethodParameters
-				+ ")";
+		String className = "org.example.CalculatorSpec";
+		String methodName = "#a plus #b equals #c";
+		String methodParameters = "int, int, int";
+		String spockFullyQualifiedMethodName = String.format("%s#%s(%s)", className, methodName, methodParameters);
 
 		MethodSelector selector = selectMethod(spockFullyQualifiedMethodName);
-		assertEquals(spockClassName, selector.getClassName());
-		assertEquals(spockMethodName, selector.getMethodName());
-		assertEquals(spockMethodParameters, selector.getMethodParameterTypes());
+		assertEquals(className, selector.getClassName());
+		assertEquals(methodName, selector.getMethodName());
+		assertEquals(methodParameters, selector.getMethodParameterTypes());
 	}
 
 	@Test
@@ -300,44 +420,19 @@ public class DiscoverySelectorsTests {
 		assertThat(selectors).extracting(ClasspathRootSelector::getClasspathRoot).containsExactly(jarUri);
 	}
 
-	private static String fullyQualifiedMethodName() {
-		return String.format("%s#%s()", DiscoverySelectorsTests.class.getName(), fullyQualifiedMethod().getName());
+	// -------------------------------------------------------------------------
+
+	private static String fqmn(Class<?>... params) {
+		return fqmn(DiscoverySelectorsTests.class, "myTest", params);
 	}
 
-	private static String fullyQualifiedMethodNameWithParameters() {
-		return String.format("%s#%s(%s)", DiscoverySelectorsTests.class.getName(), fullyQualifiedMethod().getName(),
-			String.class.getName());
+	private static String fqmn(Class<?> clazz, String methodName, Class<?>... params) {
+		return ReflectionUtils.getFullyQualifiedMethodName(clazz, methodName, params);
 	}
 
-	private static String fullyQualifiedDefaultMethodName() {
-		return String.format("%s#%s()", TestCaseWithDefaultMethod.class.getName(), fullyQualifiedMethod().getName());
-	}
-
-	private static Method fullyQualifiedMethod() {
-		try {
-			return DiscoverySelectorsTests.class.getDeclaredMethod("myTest");
-		}
-		catch (Exception ex) {
-			throw new IllegalStateException(ex);
-		}
-	}
-
-	private static Method fullyQualifiedMethodWithParameters() {
-		try {
-			return DiscoverySelectorsTests.class.getDeclaredMethod("myTest", String.class);
-		}
-		catch (Exception ex) {
-			throw new IllegalStateException(ex);
-		}
-	}
-
-	private static Method fullyQualifiedDefaultMethod() {
-		try {
-			return TestCaseWithDefaultMethod.class.getMethod("myTest");
-		}
-		catch (Exception ex) {
-			throw new IllegalStateException(ex);
-		}
+	private static String fqmnWithParamNames(String... params) {
+		return String.format("%s#%s(%s)", DiscoverySelectorsTests.class.getName(), "myTest",
+			stream(params).collect(joining(", ")));
 	}
 
 	interface TestInterface {
@@ -353,7 +448,28 @@ public class DiscoverySelectorsTests {
 	void myTest() {
 	}
 
+	void myTest(int num) {
+	}
+
+	void myTest(int[] nums) {
+	}
+
+	void myTest(int[][] grid) {
+	}
+
+	void myTest(int[][][][][] grid) {
+	}
+
 	void myTest(String info) {
+	}
+
+	void myTest(String[] info) {
+	}
+
+	void myTest(String[][] info) {
+	}
+
+	void myTest(String[][][][][] info) {
 	}
 
 }

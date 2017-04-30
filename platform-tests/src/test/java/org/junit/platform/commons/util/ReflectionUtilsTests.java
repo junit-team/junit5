@@ -10,6 +10,8 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -35,6 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
@@ -264,6 +267,11 @@ class ReflectionUtilsTests {
 	void loadClassForPrimitiveArray() throws Exception {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(int[].class.getName());
 		assertThat(optional).contains(int[].class);
+	}
+
+	@Test
+	void loadClassForPrimitiveArrayUsingSourceCodeSyntax() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass("int[]");
 		assertThat(optional).contains(int[].class);
 	}
 
@@ -271,6 +279,52 @@ class ReflectionUtilsTests {
 	void loadClassForObjectArray() throws Exception {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(String[].class.getName());
 		assertThat(optional).contains(String[].class);
+	}
+
+	@Test
+	void loadClassForObjectArrayUsingSourceCodeSyntax() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass("java.lang.String[]");
+		assertThat(optional).contains(String[].class);
+	}
+
+	@Test
+	void loadClassForTwoDimensionalPrimitiveArray() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(int[][].class.getName());
+		assertThat(optional).contains(int[][].class);
+	}
+
+	@Test
+	void loadClassForTwoDimensionaldimensionalPrimitiveArrayUsingSourceCodeSyntax() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass("int[][]");
+		assertThat(optional).contains(int[][].class);
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void loadClassForMultidimensionalPrimitiveArray() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(int[][][][][].class.getName());
+		assertThat(optional).contains(int[][][][][].class);
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void loadClassForMultidimensionalPrimitiveArrayUsingSourceCodeSyntax() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass("int[][][][][]");
+		assertThat(optional).contains(int[][][][][].class);
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void loadClassForMultidimensionalObjectArray() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass(String[][].class.getName());
+		assertThat(optional).contains(String[][].class);
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void loadClassForMultidimensionalObjectArrayUsingSourceCodeSyntax() throws Exception {
+		Optional<Class<?>> optional = ReflectionUtils.loadClass("java.lang.String[][]");
+		assertThat(optional).contains(String[][].class);
 	}
 
 	@Test
@@ -306,13 +360,89 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void loadMethodWithArgumentList() {
-		assertAll(//
-			() -> assertFqmn(fqmn(PublicClass.class, "method", String.class, Integer.class)), //
-			() -> assertFqmn(fqmn(PublicClass.class, "method", String[].class, Integer[].class)), //
-			() -> assertFqmn(fqmn(PublicClass.class, "method", boolean.class, char.class)), //
-			() -> assertFqmn(fqmn(PublicClass.class, "method", char[].class, int[].class))//
-		);
+	void loadMethodWithPrimitiveParameters() {
+		assertFqmn(fqmn(PublicClass.class, "method", boolean.class, char.class));
+	}
+
+	@Test
+	void loadMethodWithObjectParameters() {
+		assertFqmn(fqmn(PublicClass.class, "method", String.class, Integer.class));
+	}
+
+	@Test
+	void loadMethodWithPrimitiveParametersUsingSourceCodeSyntax() {
+		assertFqmn(fqmnWithParamNames(PublicClass.class, "method", "boolean", "char"));
+	}
+
+	@Test
+	void loadMethodWithObjectParametersUsingSourceCodeSyntax() {
+		assertFqmn(fqmnWithParamNames(PublicClass.class, "method", "java.lang.String", "java.lang.Integer"));
+	}
+
+	@Test
+	void loadMethodWithPrimitiveArrayParameters() {
+		assertFqmn(fqmn(PublicClass.class, "method", char[].class, int[].class));
+	}
+
+	@Test
+	void loadMethodWithObjectArrayParameters() {
+		assertFqmn(fqmn(PublicClass.class, "method", String[].class, Integer[].class));
+	}
+
+	@Test
+	void loadMethodWithPrimitiveArrayParametersUsingSourceCodeSyntax() {
+		assertFqmn(fqmnWithParamNames(PublicClass.class, "method", "char[]", "int[]"));
+	}
+
+	@Test
+	void loadMethodWithObjectArrayParametersUsingSourceCodeSyntax() {
+		assertFqmn(fqmnWithParamNames(PublicClass.class, "method", "java.lang.String[]", "java.lang.Integer[]"));
+	}
+
+	@Test
+	void loadMethodWithTwoDimensionalPrimitiveArrayParameter() {
+		assertFqmn(fqmn(getClass(), "methodWithTwoDimensionalPrimitiveArray", int[][].class));
+	}
+
+	@Test
+	void loadMethodWithTwoDimensionalPrimitiveArrayParameterUsingSourceCodeSyntax() {
+		assertFqmn(fqmnWithParamNames(getClass(), "methodWithTwoDimensionalPrimitiveArray", "int[][]"));
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void loadMethodWithMultidimensionalPrimitiveArrayParameter() {
+		assertFqmn(fqmn(getClass(), "methodWithMultidimensionalPrimitiveArray", int[][][][][].class));
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void loadMethodWithMultidimensionalPrimitiveArrayParameterUsingSourceCodeSyntax() {
+		assertFqmn(fqmnWithParamNames(getClass(), "methodWithMultidimensionalPrimitiveArray", "int[][][][][]"));
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void loadMethodWithTwoDimensionalObjectArrayParameter() {
+		assertFqmn(fqmn(getClass(), "methodWithTwoDimensionalObjectArray", String[][].class));
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void loadMethodWithTwoDimensionalObjectArrayParameterUsingSourceCodeSyntax() {
+		assertFqmn(fqmnWithParamNames(getClass(), "methodWithTwoDimensionalObjectArray", "String[][]"));
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void loadMethodWithMultidimensionalObjectArrayParameter() {
+		assertFqmn(fqmn(getClass(), "methodWithMultidimensionalObjectArray", String[][][][][].class));
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void loadMethodWithMultidimensionalObjectArrayParameterUsingSourceCodeSyntax() {
+		assertFqmn(fqmnWithParamNames(getClass(), "methodWithMultidimensionalObjectArray", "String[][][][][]"));
 	}
 
 	@Test
@@ -327,6 +457,14 @@ class ReflectionUtilsTests {
 
 	private static String fqmn(Class<?> clazz, String methodName, Class<?>... params) {
 		return ReflectionUtils.getFullyQualifiedMethodName(clazz, methodName, params);
+	}
+
+	private static String fqmnWithParamNames(Class<?> clazz, String methodName, String... params) {
+		Preconditions.notNull(clazz, "clazz must not be null");
+		Preconditions.notNull(methodName, "methodName must not be null");
+		Preconditions.notNull(params, "params must not be null");
+
+		return String.format("%s#%s(%s)", clazz.getName(), methodName, stream(params).collect(joining(", ")));
 	}
 
 	private static void assertFqmn(String fqmn) {
@@ -441,13 +579,21 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodPreconditions() throws Exception {
+	void findMethodByParameterTypesPreconditions() throws Exception {
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findMethod(null, null));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findMethod(null, "method"));
+
+		RuntimeException exception = assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.findMethod(String.class, null));
+		assertThat(exception).hasMessage("Method name must not be null or blank");
+
+		exception = assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.findMethod(String.class, "   "));
+		assertThat(exception).hasMessage("Method name must not be null or blank");
 	}
 
 	@Test
-	void findMethod() throws Exception {
+	void findMethodByParameterTypes() throws Exception {
 		assertThat(ReflectionUtils.findMethod(Object.class, "noSuchMethod")).isEmpty();
 		assertThat(ReflectionUtils.findMethod(String.class, "noSuchMethod")).isEmpty();
 
@@ -457,14 +603,41 @@ class ReflectionUtilsTests {
 
 		assertThat(ReflectionUtils.findMethod(MethodShadowingChild.class, "method1", String.class)).contains(
 			MethodShadowingChild.class.getMethod("method1", String.class));
+	}
 
-		RuntimeException exception = assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethod(String.class, null));
-		assertThat(exception).hasMessage("method name must not be null or empty");
+	@Test
+	void findMethodByParameterNamesWithPrimitiveArrayParameter() throws Exception {
+		assertFindMethodByParameterNames("methodWithPrimitiveArray", int[].class);
+	}
 
-		exception = assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethod(String.class, "   "));
-		assertThat(exception).hasMessage("method name must not be null or empty");
+	@Test
+	void findMethodByParameterNamesWithTwoDimensionalPrimitiveArrayParameter() throws Exception {
+		assertFindMethodByParameterNames("methodWithTwoDimensionalPrimitiveArray", int[][].class);
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void findMethodByParameterNamesWithMultidimensionalPrimitiveArrayParameter() throws Exception {
+		assertFindMethodByParameterNames("methodWithMultidimensionalPrimitiveArray", int[][][][][].class);
+	}
+
+	@Test
+	void findMethodByParameterNamesWithObjectArrayParameter() throws Exception {
+		assertFindMethodByParameterNames("methodWithObjectArray", String[].class);
+	}
+
+	@Disabled("Loading classes for multidimensional arrays is currently not supported")
+	@Test
+	void findMethodByParameterNamesWithMultidimensionalObjectArrayParameter() throws Exception {
+		assertFindMethodByParameterNames("methodWithMultidimensionalObjectArray", String[][].class);
+	}
+
+	private void assertFindMethodByParameterNames(String methodName, Class<?> parameterType)
+			throws NoSuchMethodException {
+
+		Method method = getClass().getDeclaredMethod(methodName, parameterType);
+		Optional<Method> optional = ReflectionUtils.findMethod(getClass(), methodName, parameterType.getName());
+		assertThat(optional).contains(method);
 	}
 
 	@Test
@@ -678,6 +851,26 @@ class ReflectionUtilsTests {
 		for (Path path : paths) {
 			Files.createDirectory(path);
 		}
+	}
+
+	// -------------------------------------------------------------------------
+
+	void methodWithPrimitiveArray(int[] nums) {
+	}
+
+	void methodWithTwoDimensionalPrimitiveArray(int[][] grid) {
+	}
+
+	void methodWithMultidimensionalPrimitiveArray(int[][][][][] grid) {
+	}
+
+	void methodWithObjectArray(String[] info) {
+	}
+
+	void methodWithTwoDimensionalObjectArray(String[][] info) {
+	}
+
+	void methodWithMultidimensionalObjectArray(String[][][][][] info) {
 	}
 
 	interface Generic<X, Y, Z extends X> {

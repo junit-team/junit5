@@ -30,9 +30,12 @@ on GitHub.
 * The `junit-platform-surefire-provider` now requires `maven-surefire-plugin` version
   2.20 or higher.
 
-
 ===== New Features and Improvements
 
+* When using `DiscoverySelectors` to select a method by its _fully qualified method name_
+  or by providing `methodParameterTypes` as a comma-separated string, it is now possible
+  to describe array parameter types using _source code syntax_ such as `int[]` for a
+  primitive array and `java.lang.String[]` for an object array.
 * The JUnit Platform Gradle plugin task `junitPlatformTest` can now be accessed
   directly during the configuration phase of a build.
 * When a `TestEngine` is discovered via Java's `ServiceLoader` mechanism, an attempt
