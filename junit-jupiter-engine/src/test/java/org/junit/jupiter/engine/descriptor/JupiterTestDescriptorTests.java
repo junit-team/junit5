@@ -37,12 +37,12 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 5.0
  */
-public class JupiterTestDescriptorTests {
+class JupiterTestDescriptorTests {
 
 	private static final UniqueId uniqueId = UniqueId.root("enigma", "foo");
 
 	@Test
-	public void constructFromMethod() throws Exception {
+	void constructFromMethod() throws Exception {
 		Class<?> testClass = ASampleTestCase.class;
 		Method testMethod = testClass.getDeclaredMethod("test");
 		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, testClass, testMethod);
@@ -53,7 +53,7 @@ public class JupiterTestDescriptorTests {
 	}
 
 	@Test
-	public void constructFromMethodWithAnnotations() throws Exception {
+	void constructFromMethodWithAnnotations() throws Exception {
 		JupiterTestDescriptor classDescriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("foo");
 		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
@@ -73,7 +73,7 @@ public class JupiterTestDescriptorTests {
 	}
 
 	@Test
-	public void constructClassDescriptorWithAnnotations() throws Exception {
+	void constructClassDescriptorWithAnnotations() throws Exception {
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
 
 		assertEquals(ASampleTestCase.class, descriptor.getTestClass());
@@ -81,7 +81,7 @@ public class JupiterTestDescriptorTests {
 	}
 
 	@Test
-	public void constructFromMethodWithCustomTestAnnotation() throws Exception {
+	void constructFromMethodWithCustomTestAnnotation() throws Exception {
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("customTestAnnotation");
 		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
 
@@ -91,12 +91,48 @@ public class JupiterTestDescriptorTests {
 	}
 
 	@Test
-	public void constructFromMethodWithParameters() throws Exception {
+	void constructFromMethodWithParameters() throws Exception {
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
 		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
-		assertEquals("test(String, BigDecimal)", descriptor.getDisplayName(), "display name:");
+		assertEquals("test(String, BigDecimal)", descriptor.getDisplayName(), "display name");
+	}
+
+	@Test
+	void constructFromMethodWithPrimitiveArrayParameter() throws Exception {
+		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", int[].class);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("test(int[])", descriptor.getDisplayName(), "display name");
+	}
+
+	@Test
+	void constructFromMethodWithObjectArrayParameter() throws Exception {
+		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String[].class);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("test(String[])", descriptor.getDisplayName(), "display name");
+	}
+
+	@Test
+	void constructFromMethodWithMultidimensionalPrimitiveArrayParameter() throws Exception {
+		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", int[][][][][].class);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("test(int[][][][][])", descriptor.getDisplayName(), "display name");
+	}
+
+	@Test
+	void constructFromMethodWithMultidimensionalObjectArrayParameter() throws Exception {
+		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String[][][][][].class);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("test(String[][][][][])", descriptor.getDisplayName(), "display name");
 	}
 
 	@Test
@@ -126,6 +162,18 @@ public class JupiterTestDescriptorTests {
 		}
 
 		void test(String txt, BigDecimal sum) {
+		}
+
+		void test(int[] nums) {
+		}
+
+		void test(int[][][][][] nums) {
+		}
+
+		void test(String[] info) {
+		}
+
+		void test(String[][][][][] info) {
 		}
 
 		@Test
