@@ -10,9 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static java.util.Arrays.stream;
 import static java.util.Collections.singleton;
-import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -46,7 +44,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 1.0
  */
-public class DiscoverySelectorsTests {
+class DiscoverySelectorsTests {
 
 	@Test
 	void selectUriByName() throws Exception {
@@ -437,8 +435,7 @@ public class DiscoverySelectorsTests {
 	}
 
 	private static String fqmnWithParamNames(String... params) {
-		return String.format("%s#%s(%s)", DiscoverySelectorsTests.class.getName(), "myTest",
-			stream(params).collect(joining(", ")));
+		return String.format("%s#%s(%s)", DiscoverySelectorsTests.class.getName(), "myTest", String.join(", ", params));
 	}
 
 	interface TestInterface {
