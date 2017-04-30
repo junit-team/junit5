@@ -5603,6 +5603,12 @@ discovery and execution phases. Other engines are processed normally.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>When using <code>DiscoverySelectors</code> to select a method by its <em>fully qualified method name</em>
+or by providing <code>methodParameterTypes</code> as a comma-separated string, it is now possible
+to describe array parameter types using <em>source code syntax</em> such as <code>int[]</code> for a
+primitive array and <code>java.lang.String[]</code> for an object array.</p>
+</li>
+<li>
 <p>The JUnit Platform Gradle plugin task <code>junitPlatformTest</code> can now be accessed
 directly during the configuration phase of a build.</p>
 </li>
@@ -5743,7 +5749,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-04-29 15:11:57 EDT
+Last updated 2017-04-30 11:31:31 EDT
 </div>
 </div>
 </body>
