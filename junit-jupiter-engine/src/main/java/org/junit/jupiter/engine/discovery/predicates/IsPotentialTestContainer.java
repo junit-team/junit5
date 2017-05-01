@@ -30,12 +30,15 @@ public class IsPotentialTestContainer implements Predicate<Class<?>> {
 	@Override
 	public boolean test(Class<?> candidate) {
 		//please do not collapse into single return
-		if (isAbstract(candidate))
+		if (isAbstract(candidate)) {
 			return false;
-		if (candidate.isLocalClass())
+		}
+		if (candidate.isLocalClass()) {
 			return false;
-		if (candidate.isAnonymousClass())
+		}
+		if (candidate.isAnonymousClass()) {
 			return false;
+		}
 		return (isStatic(candidate) || !candidate.isMemberClass());
 	}
 

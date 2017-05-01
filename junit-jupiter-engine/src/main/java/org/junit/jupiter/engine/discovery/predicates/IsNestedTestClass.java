@@ -31,8 +31,9 @@ public class IsNestedTestClass implements Predicate<Class<?>> {
 	@Override
 	public boolean test(Class<?> candidate) {
 		//please do not collapse into single return
-		if (!isInnerClass.test(candidate))
+		if (!isInnerClass.test(candidate)) {
 			return false;
+		}
 		return isAnnotated(candidate, Nested.class);
 	}
 

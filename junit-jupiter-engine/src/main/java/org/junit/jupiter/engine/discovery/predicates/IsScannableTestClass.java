@@ -11,11 +11,11 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Test if a class is a JUnit Jupiter test class which should be included in
@@ -31,8 +31,9 @@ public class IsScannableTestClass implements Predicate<Class<?>> {
 	@Override
 	public boolean test(Class<?> candidate) {
 		//please do not collapse into single return
-		if (ReflectionUtils.isPrivate(candidate))
+		if (isPrivate(candidate)) {
 			return false;
+		}
 		return isTestClassWithTests.test(candidate);
 	}
 

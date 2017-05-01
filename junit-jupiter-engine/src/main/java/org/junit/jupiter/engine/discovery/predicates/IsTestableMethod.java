@@ -37,13 +37,16 @@ class IsTestableMethod implements Predicate<Method> {
 	@Override
 	public boolean test(Method candidate) {
 		//please do not collapse into single return
-		if (isStatic(candidate))
+		if (isStatic(candidate)) {
 			return false;
-		if (isPrivate(candidate))
+		}
+		if (isPrivate(candidate)) {
 			return false;
-		if (isAbstract(candidate))
+		}
+		if (isAbstract(candidate)) {
 			return false;
-		return isAnnotated(candidate, annotationType);
+		}
+		return isAnnotated(candidate, this.annotationType);
 	}
 
 }
