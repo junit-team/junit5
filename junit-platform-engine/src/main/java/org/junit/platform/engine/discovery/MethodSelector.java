@@ -28,15 +28,16 @@ import org.junit.platform.engine.DiscoverySelector;
  * or containers based on methods.
  *
  * <p>If a Java {@link Method} is provided, the selector will return that
- * {@code Method} and its method and class names accordingly. If a {@link Class}
- * and method name, a class name and method name, or simply a fully qualified
- * method name is provided, the selector will only attempt to lazily load the
- * {@link Class} and {@link Method} if {@link #getJavaClass()} or
- * {@link #getJavaMethod()} is invoked.
+ * {@linkplain #getJavaMethod() method} and its method name and class names
+ * accordingly. If a {@link Class} and method name, a class name and method
+ * name, or simply a <em>fully qualified method name</em> is provided, this
+ * selector will only attempt to lazily load the {@link Class} and
+ * {@link Method} if {@link #getJavaClass()} or {@link #getJavaMethod()} is
+ * invoked.
  *
- * <p>In this context, Java {@link Method} means anything that can be referenced
- * as a {@link Method} on the JVM &mdash; for example, methods from other JVM
- * languages such Groovy, Scala, etc.
+ * <p>In this context, a Java {@code Method} means anything that can be referenced
+ * as a {@link Method} on the JVM &mdash; for example, methods from Java classes
+ * or methods from other JVM languages such Groovy, Scala, etc.
  *
  * @since 1.0
  * @see org.junit.platform.engine.support.descriptor.MethodSource
@@ -96,13 +97,16 @@ public class MethodSelector implements DiscoverySelector {
 
 	/**
 	 * Get the parameter types for the selected method as a {@link String},
-	 * typically a comma-separated list of atomic types, fully qualified class
-	 * names, or array types.
+	 * typically a comma-separated list of primitive types, fully qualified
+	 * class names, or array types.
 	 *
 	 * <p>Note: the parameter types are provided as a single string instead of
 	 * a collection in order to allow this selector to be used in a generic
 	 * fashion by various test engines. It is therefore the responsibility of
 	 * the caller of this method to determine how to parse the returned string.
+	 *
+	 * @return the parameter types supplied to this {@code MethodSelector} upon
+	 * construction or {@code null} if the parameter types are unknown
 	 */
 	public String getMethodParameterTypes() {
 		return this.methodParameterTypes;
