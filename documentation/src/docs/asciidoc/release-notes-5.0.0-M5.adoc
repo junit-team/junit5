@@ -35,7 +35,11 @@ on GitHub.
 * When using `DiscoverySelectors` to select a method by its _fully qualified method name_
   or by providing `methodParameterTypes` as a comma-separated string, it is now possible
   to describe array parameter types using _source code syntax_ such as `int[]` for a
-  primitive array and `java.lang.String[]` for an object array.
+  primitive array and `java.lang.String[]` for an object array. Furthermore, it is now
+  possible to describe multidimensional array types using either the JVM's internal String
+  representation (e.g., `[[[I` for `int[][][]`, `[[Ljava.lang.String;` for
+  `java.lang.String[][]`, etc.) or _source code syntax_ (e.g., `boolean[][][]`,
+  `java.lang.Double[][]`, etc.).
 * The JUnit Platform Gradle plugin task `junitPlatformTest` can now be accessed
   directly during the configuration phase of a build.
 * When a `TestEngine` is discovered via Java's `ServiceLoader` mechanism, an attempt

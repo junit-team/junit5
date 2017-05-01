@@ -31,7 +31,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
@@ -230,56 +229,47 @@ class DiscoverySelectorsTests {
 		assertSelectMethodByFullyQualifiedName(getClass(), method, "int[][]", "int[][]");
 	}
 
-	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
-	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithTwoDimensionalObjectArrayParameter() throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest", String[][].class);
 		assertSelectMethodByFullyQualifiedName(getClass(), method, String[][].class, String[][].class.getName());
 	}
 
-	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
-	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithTwoDimensionalObjectArrayParameterUsingSourceCodeSyntax()
 			throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest", String[][].class);
-		assertSelectMethodByFullyQualifiedName(getClass(), method, "String[][]", "String[][]");
+		assertSelectMethodByFullyQualifiedName(getClass(), method, "java.lang.String[][]", "java.lang.String[][]");
 	}
 
-	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
-	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithMultidimensionalPrimitiveArrayParameter() throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest", int[][][][][].class);
 		assertSelectMethodByFullyQualifiedName(getClass(), method, int[][][][][].class, int[][][][][].class.getName());
 	}
 
-	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
-	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithMultidimensionalPrimitiveArrayParameterUsingSourceCodeSyntax()
 			throws Exception {
+
 		Method method = getClass().getDeclaredMethod("myTest", int[][][][][].class);
 		assertSelectMethodByFullyQualifiedName(getClass(), method, "int[][][][][]", "int[][][][][]");
 	}
 
-	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
-	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithMultidimensionalObjectArrayParameter() throws Exception {
-		Method method = getClass().getDeclaredMethod("myTest", String[][][][][].class);
-		assertSelectMethodByFullyQualifiedName(getClass(), method, String[][][][][].class,
-			String[][][][][].class.getName());
+		Method method = getClass().getDeclaredMethod("myTest", Double[][][][][].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, Double[][][][][].class,
+			Double[][][][][].class.getName());
 	}
 
-	// TODO [#819] Enable test once we have class loading support for multidimensional arrays.
-	@Disabled("Loading classes for multidimensional arrays is currently not supported")
 	@Test
 	void selectMethodByFullyQualifiedNameWithMultidimensionalObjectArrayParameterUsingSourceCodeSyntax()
 			throws Exception {
-		Method method = getClass().getDeclaredMethod("myTest", String[][][][][].class);
-		assertSelectMethodByFullyQualifiedName(getClass(), method, "String[][][][][]", "String[][][][][]");
+
+		Method method = getClass().getDeclaredMethod("myTest", Double[][][][][].class);
+		assertSelectMethodByFullyQualifiedName(getClass(), method, "java.lang.Double[][][][][]",
+			"java.lang.Double[][][][][]");
 	}
 
 	private void assertSelectMethodByFullyQualifiedName(Class<?> clazz, Method method) {
@@ -472,7 +462,7 @@ class DiscoverySelectorsTests {
 	void myTest(String[][] info) {
 	}
 
-	void myTest(String[][][][][] info) {
+	void myTest(Double[][][][][] data) {
 	}
 
 }

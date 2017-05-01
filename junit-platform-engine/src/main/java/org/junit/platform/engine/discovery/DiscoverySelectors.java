@@ -295,23 +295,27 @@ public final class DiscoverySelectors {
 	 * by the method.
 	 *
 	 * <p>Array parameter types may be specified using either the JVM's internal
-	 * String representation (e.g., {@code [I} for {@code int[]},
-	 * {@code [Lava.lang.String;} for {@code java.lang.String[]}, etc.) or
-	 * <em>source code syntax</em> (e.g., {@code int[]}, {@code java.lang.String[]},
+	 * String representation (e.g., {@code [[I} for {@code int[][]},
+	 * {@code [Ljava.lang.String;} for {@code java.lang.String[]}, etc.) or
+	 * <em>source code syntax</em> (e.g., {@code int[][]}, {@code java.lang.String[]},
 	 * etc.).
 	 *
 	 * <h3>Examples</h3>
 	 *
 	 * <table border="1">
 	 * <tr><th>Method</th><th>Fully Qualified Method Name</th></tr>
-	 * <tr><td>{@code java.lang.String#chars()}</td><td>{@code java.lang.String#chars}</td></tr>
-	 * <tr><td>{@code java.lang.String#chars()}</td><td>{@code java.lang.String#chars()}</td></tr>
-	 * <tr><td>{@code java.lang.String#equalsIgnoreCase(String)}</td><td>{@code java.lang.String#equalsIgnoreCase(java.lang.String)}</td></tr>
-	 * <tr><td>{@code java.lang.String#substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
-	 * <tr><td>{@code example.Calc#avg(int[])}</td><td>{@code example.Calc#avg([I)}</td></tr>
-	 * <tr><td>{@code example.Calc#avg(int[])}</td><td>{@code example.Calc#avg(int[])}</td></tr>
-	 * <tr><td>{@code example.Service#process(String[])}</td><td>{@code example.Service#process([Lava.lang.String;)}</td></tr>
-	 * <tr><td>{@code example.Service#process(String[])}</td><td>{@code example.Service#process(String[])}</td></tr>
+	 * <tr><td>{@code java.lang.String.chars()}</td><td>{@code java.lang.String#chars}</td></tr>
+	 * <tr><td>{@code java.lang.String.chars()}</td><td>{@code java.lang.String#chars()}</td></tr>
+	 * <tr><td>{@code java.lang.String.equalsIgnoreCase(String)}</td><td>{@code java.lang.String#equalsIgnoreCase(java.lang.String)}</td></tr>
+	 * <tr><td>{@code java.lang.String.substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
+	 * <tr><td>{@code example.Calc.avg(int[])}</td><td>{@code example.Calc#avg([I)}</td></tr>
+	 * <tr><td>{@code example.Calc.avg(int[])}</td><td>{@code example.Calc#avg(int[])}</td></tr>
+	 * <tr><td>{@code example.Matrix.multiply(double[][])}</td><td>{@code example.Matrix#multiply([[D)}</td></tr>
+	 * <tr><td>{@code example.Matrix.multiply(double[][])}</td><td>{@code example.Matrix#multiply(double[][])}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[])}</td><td>{@code example.Service#process([Ljava.lang.String;)}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[])}</td><td>{@code example.Service#process(java.lang.String[])}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code example.Service#process([[Ljava.lang.String;)}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code example.Service#process(java.lang.String[][])}</td></tr>
 	 * </table>
 	 *
 	 * @param fullyQualifiedMethodName the fully qualified name of the method to select; never

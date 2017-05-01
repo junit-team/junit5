@@ -93,6 +93,25 @@ public final class ReflectionUtils {
 	// Pattern: [fully qualified class name]#[methodName]((comma-separated list of parameter type names))
 	private static final Pattern FULLY_QUALIFIED_METHOD_NAME_PATTERN = Pattern.compile("(.+)#([^()]+?)(\\((.*)\\))?");
 
+	// Pattern: "[Ljava.lang.String;", "[[[[Ljava.lang.String;", etc.
+	private static final Pattern VM_INTERNAL_OBJECT_ARRAY_PATTERN = Pattern.compile("^(\\[+)L(.+);$");
+
+	/**
+	 * Pattern: "[x", "[[[[x", etc., where x is Z, B, C, D, F, I, J, S, etc.
+	 *
+	 * <p>The pattern intentionally captures the last bracket with the
+	 * capital letter so that the combination can be looked up via
+	 * {@link #classNameToTypeMap}. For example, the last matched group
+	 * will contain {@code "[I"} instead of simply {@code "I"}.
+	 *
+	 * @see Class#getName()
+	 */
+	private static final Pattern VM_INTERNAL_PRIMITIVE_ARRAY_PATTERN = //
+		Pattern.compile("^(\\[+)(\\[[Z,B,C,D,F,I,J,S])$");
+
+	// Pattern: "java.lang.String[]", "int[]", "int[][][][]", etc.
+	private static final Pattern SOURCE_CODE_SYNTAX_ARRAY_PATTERN = Pattern.compile("^([^\\[\\]]+)((\\[\\])+)+$");
+
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
 	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
@@ -345,9 +364,13 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Load a class by its <em>fully qualified name</em>.
-	 * @param name the fully qualified name of the class to load; never
-	 * {@code null} or blank
+	 * Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
+	 * using the default {@link ClassLoader}.
+	 *
+	 * <p>See {@link #loadClass(String, ClassLoader)} for details on support for
+	 * class names for arrays.
+	 *
+	 * @param name the name of the class to load; never {@code null} or blank
 	 * @see #loadClass(String, ClassLoader)
 	 */
 	public static Optional<Class<?>> loadClass(String name) {
@@ -355,10 +378,16 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Load a class by its <em>fully qualified name</em>, using the supplied
-	 * {@link ClassLoader}.
-	 * @param name the fully qualified name of the class to load; never
-	 * {@code null} or blank
+	 * Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
+	 * using the supplied {@link ClassLoader}.
+	 *
+	 * <p>Class names for arrays may be specified using either the JVM's internal
+	 * String representation (e.g., {@code [[I} for {@code int[][]},
+	 * {@code [Lava.lang.String;} for {@code java.lang.String[]}, etc.) or
+	 * <em>source code syntax</em> (e.g., {@code int[][]}, {@code java.lang.String[]},
+	 * etc.).
+	 *
+	 * @param name the name of the class to load; never {@code null} or blank
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
 	 * @see #loadClass(String)
 	 */
@@ -372,33 +401,56 @@ public final class ReflectionUtils {
 		}
 
 		try {
-			// Object array such as "[Ljava.lang.String;"
-			if (name.startsWith("[L") && name.endsWith(";")) {
-				String componentTypeName = name.substring(2, name.length() - 1);
-				Class<?> componentType = classLoader.loadClass(componentTypeName);
-				return Optional.of(Array.newInstance(componentType, 0).getClass());
+			Matcher matcher;
+
+			// Primitive arrays such as "[I", "[[[[D", etc.
+			matcher = VM_INTERNAL_PRIMITIVE_ARRAY_PATTERN.matcher(name);
+			if (matcher.matches()) {
+				String brackets = matcher.group(1);
+				String componentTypeName = matcher.group(2);
+				// Calculate dimensions by counting brackets.
+				int dimensions = brackets.length();
+
+				return loadArrayType(classLoader, componentTypeName, dimensions);
 			}
 
-			// Array such as "java.lang.String[]" or "int[]"
-			if (name.endsWith("[]")) {
-				String componentTypeName = name.substring(0, name.length() - 2);
+			// Object arrays such as "[Ljava.lang.String;", "[[[[Ljava.lang.String;", etc.
+			matcher = VM_INTERNAL_OBJECT_ARRAY_PATTERN.matcher(name);
+			if (matcher.matches()) {
+				String brackets = matcher.group(1);
+				String componentTypeName = matcher.group(2);
+				// Calculate dimensions by counting brackets.
+				int dimensions = brackets.length();
 
-				Class<?> componentType;
-				if (classNameToTypeMap.containsKey(componentTypeName)) {
-					componentType = classNameToTypeMap.get(componentTypeName);
-				}
-				else {
-					componentType = classLoader.loadClass(componentTypeName);
-				}
-
-				return Optional.of(Array.newInstance(componentType, 0).getClass());
+				return loadArrayType(classLoader, componentTypeName, dimensions);
 			}
 
+			// Arrays such as "java.lang.String[]", "int[]", "int[][][][]", etc.
+			matcher = SOURCE_CODE_SYNTAX_ARRAY_PATTERN.matcher(name);
+			if (matcher.matches()) {
+				String componentTypeName = matcher.group(1);
+				String bracketPairs = matcher.group(2);
+				// Calculate dimensions by counting bracket pairs.
+				int dimensions = bracketPairs.length() / 2;
+
+				return loadArrayType(classLoader, componentTypeName, dimensions);
+			}
+
+			// Fallback to standard VM class loading
 			return Optional.of(classLoader.loadClass(name));
 		}
 		catch (ClassNotFoundException ex) {
 			return Optional.empty();
 		}
+	}
+
+	private static Optional<Class<?>> loadArrayType(ClassLoader classLoader, String componentTypeName, int dimensions)
+			throws ClassNotFoundException {
+
+		Class<?> componentType = classNameToTypeMap.containsKey(componentTypeName)
+				? classNameToTypeMap.get(componentTypeName) : classLoader.loadClass(componentTypeName);
+
+		return Optional.of(Array.newInstance(componentType, new int[dimensions]).getClass());
 	}
 
 	/**
@@ -415,24 +467,25 @@ public final class ReflectionUtils {
 	 * names or fully qualified class names for the types of parameters accepted
 	 * by the method.
 	 *
-	 * <p>Array parameter types may be specified using either the JVM's internal
-	 * String representation (e.g., {@code [I} for {@code int[]},
-	 * {@code [Lava.lang.String;} for {@code java.lang.String[]}, etc.) or
-	 * <em>source code syntax</em> (e.g., {@code int[]}, {@code java.lang.String[]},
-	 * etc.).
+	 * <p>See {@link #loadClass(String, ClassLoader)} for details on the supported
+	 * syntax for array parameter types.
 	 *
 	 * <h3>Examples</h3>
 	 *
 	 * <table border="1">
 	 * <tr><th>Method</th><th>Fully Qualified Method Name</th></tr>
-	 * <tr><td>{@code java.lang.String#chars()}</td><td>{@code java.lang.String#chars}</td></tr>
-	 * <tr><td>{@code java.lang.String#chars()}</td><td>{@code java.lang.String#chars()}</td></tr>
-	 * <tr><td>{@code java.lang.String#equalsIgnoreCase(String)}</td><td>{@code java.lang.String#equalsIgnoreCase(java.lang.String)}</td></tr>
-	 * <tr><td>{@code java.lang.String#substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
-	 * <tr><td>{@code example.Calc#avg(int[])}</td><td>{@code example.Calc#avg([I)}</td></tr>
-	 * <tr><td>{@code example.Calc#avg(int[])}</td><td>{@code example.Calc#avg(int[])}</td></tr>
-	 * <tr><td>{@code example.Service#process(String[])}</td><td>{@code example.Service#process([Lava.lang.String;)}</td></tr>
-	 * <tr><td>{@code example.Service#process(String[])}</td><td>{@code example.Service#process(String[])}</td></tr>
+	 * <tr><td>{@code java.lang.String.chars()}</td><td>{@code java.lang.String#chars}</td></tr>
+	 * <tr><td>{@code java.lang.String.chars()}</td><td>{@code java.lang.String#chars()}</td></tr>
+	 * <tr><td>{@code java.lang.String.equalsIgnoreCase(String)}</td><td>{@code java.lang.String#equalsIgnoreCase(java.lang.String)}</td></tr>
+	 * <tr><td>{@code java.lang.String.substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
+	 * <tr><td>{@code example.Calc.avg(int[])}</td><td>{@code example.Calc#avg([I)}</td></tr>
+	 * <tr><td>{@code example.Calc.avg(int[])}</td><td>{@code example.Calc#avg(int[])}</td></tr>
+	 * <tr><td>{@code example.Matrix.multiply(double[][])}</td><td>{@code example.Matrix#multiply([[D)}</td></tr>
+	 * <tr><td>{@code example.Matrix.multiply(double[][])}</td><td>{@code example.Matrix#multiply(double[][])}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[])}</td><td>{@code example.Service#process([Ljava.lang.String;)}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[])}</td><td>{@code example.Service#process(java.lang.String[])}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code example.Service#process([[Ljava.lang.String;)}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code example.Service#process(java.lang.String[][])}</td></tr>
 	 * </table>
 	 *
 	 * @param fullyQualifiedMethodName the fully qualified name of the method to load;
