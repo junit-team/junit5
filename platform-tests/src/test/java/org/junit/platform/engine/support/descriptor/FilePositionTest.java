@@ -9,30 +9,29 @@
  */
 
 package org.junit.platform.engine.support.descriptor;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by derekstoner on 4/29/17.
  */
-public class FilePositionTest extends AbstractTestSourceTests{
-	
+public class FilePositionTest extends AbstractTestSourceTests {
 
 	@Test
 	public void equalsTest() {
 		//test for a return of true when the equals method is passed itself
 		FilePosition file = new FilePosition(0, 0);
-		assertTrue( file.equals(file));
+		assertTrue(file.equals(file));
 	}
 
 	@Test
 	public void equalsNullTest() {
 		//test for a return of true when the equals method is passed null
 		FilePosition file = new FilePosition(0, 0);
-		assertFalse( file.equals(null));
+		assertFalse(file.equals(null));
 	}
 
 }
