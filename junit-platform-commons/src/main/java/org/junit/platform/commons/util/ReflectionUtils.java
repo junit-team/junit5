@@ -128,56 +128,73 @@ public final class ReflectionUtils {
 	private static final Map<Class<?>, Class<?>> primitiveToWrapperMap;
 
 	static {
+		// @formatter:off
+		List<Class<?>> commonTypes = Arrays.asList(
+			boolean.class,
+			byte.class,
+			char.class,
+			short.class,
+			int.class,
+			long.class,
+			float.class,
+			double.class,
+
+			boolean[].class,
+			byte[].class,
+			char[].class,
+			short[].class,
+			int[].class,
+			long[].class,
+			float[].class,
+			double[].class,
+
+			boolean[][].class,
+			byte[][].class,
+			char[][].class,
+			short[][].class,
+			int[][].class,
+			long[][].class,
+			float[][].class,
+			double[][].class,
+
+			Boolean.class,
+			Byte.class,
+			Character.class,
+			Short.class,
+			Integer.class,
+			Long.class,
+			Float.class,
+			Double.class,
+			String.class,
+
+			Boolean[].class,
+			Byte[].class,
+			Character[].class,
+			Short[].class,
+			Integer[].class,
+			Long[].class,
+			Float[].class,
+			Double[].class,
+			String[].class,
+
+			Boolean[][].class,
+			Byte[][].class,
+			Character[][].class,
+			Short[][].class,
+			Integer[][].class,
+			Long[][].class,
+			Float[][].class,
+			Double[][].class,
+			String[][].class
+		);
+		// @formatter:on
+
 		Map<String, Class<?>> classNamesToTypes = new HashMap<>(64);
 
-		classNamesToTypes.put(boolean.class.getName(), boolean.class);
-		classNamesToTypes.put(byte.class.getName(), byte.class);
-		classNamesToTypes.put(char.class.getName(), char.class);
-		classNamesToTypes.put(short.class.getName(), short.class);
-		classNamesToTypes.put(int.class.getName(), int.class);
-		classNamesToTypes.put(long.class.getName(), long.class);
-		classNamesToTypes.put(float.class.getName(), float.class);
-		classNamesToTypes.put(double.class.getName(), double.class);
-
-		// 1-dimensional arrays :: JVM internal names
-		classNamesToTypes.put(boolean[].class.getName(), boolean[].class);
-		classNamesToTypes.put(byte[].class.getName(), byte[].class);
-		classNamesToTypes.put(char[].class.getName(), char[].class);
-		classNamesToTypes.put(short[].class.getName(), short[].class);
-		classNamesToTypes.put(int[].class.getName(), int[].class);
-		classNamesToTypes.put(long[].class.getName(), long[].class);
-		classNamesToTypes.put(float[].class.getName(), float[].class);
-		classNamesToTypes.put(double[].class.getName(), double[].class);
-
-		// 1-dimensional arrays :: source code syntax
-		classNamesToTypes.put("boolean[]", boolean[].class);
-		classNamesToTypes.put("byte[]", byte[].class);
-		classNamesToTypes.put("char[]", char[].class);
-		classNamesToTypes.put("short[]", short[].class);
-		classNamesToTypes.put("int[]", int[].class);
-		classNamesToTypes.put("long[]", long[].class);
-		classNamesToTypes.put("float[]", float[].class);
-		classNamesToTypes.put("double[]", double[].class);
-
-		// 2-dimensional arrays :: JVM internal names
-		classNamesToTypes.put(boolean[][].class.getName(), boolean[][].class);
-		classNamesToTypes.put(byte[][].class.getName(), byte[][].class);
-		classNamesToTypes.put(char[][].class.getName(), char[][].class);
-		classNamesToTypes.put(short[][].class.getName(), short[][].class);
-		classNamesToTypes.put(int[][].class.getName(), int[][].class);
-		classNamesToTypes.put(long[][].class.getName(), long[][].class);
-		classNamesToTypes.put(float[][].class.getName(), float[][].class);
-		classNamesToTypes.put(double[][].class.getName(), double[][].class);
-
-		// 2-dimensional arrays :: source code syntax
-		classNamesToTypes.put("boolean[][]", boolean[][].class);
-		classNamesToTypes.put("byte[][]", byte[][].class);
-		classNamesToTypes.put("char[][]", char[][].class);
-		classNamesToTypes.put("short[][]", short[][].class);
-		classNamesToTypes.put("int[][]", int[][].class);
-		classNamesToTypes.put("long[][]", long[][].class);
-		classNamesToTypes.put("float[][]", float[][].class);
-		classNamesToTypes.put("double[][]", double[][].class);
+		commonTypes.forEach(type -> {
+			classNamesToTypes.put(type.getName(), type);
+			classNamesToTypes.put(type.getCanonicalName(), type);
+		});
 
 		classNameToTypeMap = Collections.unmodifiableMap(classNamesToTypes);
 
