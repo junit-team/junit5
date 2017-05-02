@@ -73,6 +73,8 @@ ifdef::backend-pdf[:imagesdir: {outdir}/{imagesdir}]
 :SpringExtension:                   https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
 :Truth:                             http://google.github.io/truth/[Truth]
 
+:DockerExtension:                   https://github.com/FaustXVI/junit5-docker/blob/master/src/main/java/com/github/junit5docker/DockerExtension.java[DockerExtension]
+
 
 include::overview.adoc[]
 
