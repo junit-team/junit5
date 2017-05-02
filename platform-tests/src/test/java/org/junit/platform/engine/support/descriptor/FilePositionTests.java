@@ -20,14 +20,14 @@ import org.junit.jupiter.api.Test;
  */
 class FilePositionTests{
 
-	@Test
+	
 	void equalsTest() {
 		//test for a return of true when the equals method is passed itself
 		FilePosition file = new FilePosition(0, 0);
 		assertEquals(file, file);
 	}
 
-	@Test
+	
 	void equalsNullTest() {
 		//test for a return of true when the equals method is passed null
 		FilePosition file = new FilePosition(0, 0);
