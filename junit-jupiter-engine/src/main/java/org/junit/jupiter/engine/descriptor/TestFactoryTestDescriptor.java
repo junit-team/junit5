@@ -20,6 +20,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.CollectionUtils;
@@ -64,6 +65,18 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@Override
+	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
+			DynamicTestExecutor dynamicTestExecutor) throws Exception {
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
+
+		invokeTestMethod(context, dynamicTestExecutor);
+
+		throwableCollector.assertEmpty();
+
+		return context;
+	}
+
+	@Override
 	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 
@@ -74,8 +87,8 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 
 			try (Stream<DynamicTest> dynamicTestStream = toDynamicTestStream(testFactoryMethodResult)) {
 				AtomicInteger index = new AtomicInteger();
-				dynamicTestStream.forEach(
-					dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), dynamicTestExecutor));
+				dynamicTestStream.forEach(dynamicTest -> executeTestBetweenBeforeAndAfterHooks(context,
+					c -> registerAndExecute(dynamicTest, index.incrementAndGet(), dynamicTestExecutor)));
 			}
 			catch (ClassCastException ex) {
 				throw invalidReturnTypeException(ex);
