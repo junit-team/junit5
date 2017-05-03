@@ -54,11 +54,6 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	public boolean isLeaf() {
-		return true;
-	}
-
-	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(getTestMethod(),
 			context.getExtensionRegistry());

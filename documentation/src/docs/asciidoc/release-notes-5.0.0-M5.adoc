@@ -29,6 +29,8 @@ on GitHub.
   - `junit-platform-commons`: `ReflectionUtils.findAllClassesInClasspathRoot(Path, Predicate, Predicate)`
 * The `junit-platform-surefire-provider` now requires `maven-surefire-plugin` version
   2.20 or higher.
+* The `isLeaf()` method of the `org.junit.platform.engine.support.hierarchical.Node`
+  interface has been removed.
 
 ===== New Features and Improvements
 

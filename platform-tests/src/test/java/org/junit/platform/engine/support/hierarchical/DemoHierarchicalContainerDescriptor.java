@@ -47,11 +47,6 @@ public class DemoHierarchicalContainerDescriptor extends AbstractTestDescriptor
 	}
 
 	@Override
-	public boolean isLeaf() {
-		return false;
-	}
-
-	@Override
 	public boolean hasTests() {
 		return true;
 	}

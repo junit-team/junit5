@@ -50,9 +50,4 @@ public class DemoHierarchicalEngineDescriptor extends EngineDescriptor implement
 		return context;
 	}
 
-	@Override
-	public boolean isLeaf() {
-		return false;
-	}
-
 }
