@@ -366,14 +366,15 @@ public final class DiscoverySelectors {
 	 * is declared, or a subclass thereof; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
 	 * @param methodParameterTypes the method parameter types as a single string; never
-	 * {@code null} or blank
+	 * {@code null} though potentially an empty string if the method does not accept
+	 * arguments
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(String className, String methodName, String methodParameterTypes) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		Preconditions.notBlank(methodParameterTypes, "Parameter types must not be null or blank");
-		return new MethodSelector(className, methodName, methodParameterTypes);
+		Preconditions.notNull(methodParameterTypes, "Parameter types must not be null");
+		return new MethodSelector(className, methodName, methodParameterTypes.trim());
 	}
 
 	/**
@@ -402,14 +403,15 @@ public final class DiscoverySelectors {
 	 * never {@code null}
 	 * @param methodName the name of the method to select; never {@code null} or blank
 	 * @param methodParameterTypes the method parameter types as a single string; never
-	 * {@code null} or blank
+	 * {@code null} though potentially an empty string if the method does not accept
+	 * arguments
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(Class<?> javaClass, String methodName, String methodParameterTypes) {
 		Preconditions.notNull(javaClass, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		Preconditions.notBlank(methodParameterTypes, "Parameter types name must not be null or blank");
-		return new MethodSelector(javaClass, methodName, methodParameterTypes);
+		Preconditions.notNull(methodParameterTypes, "Parameter types must not be null");
+		return new MethodSelector(javaClass, methodName, methodParameterTypes.trim());
 	}
 
 	/**

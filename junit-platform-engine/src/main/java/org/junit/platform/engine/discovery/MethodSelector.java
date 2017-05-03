@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.lang.reflect.Method;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -28,10 +29,10 @@ import org.junit.platform.engine.DiscoverySelector;
  * or containers based on methods.
  *
  * <p>If a Java {@link Method} is provided, the selector will return that
- * {@linkplain #getJavaMethod() method} and its method name and class names
- * accordingly. If a {@link Class} and method name, a class name and method
- * name, or simply a <em>fully qualified method name</em> is provided, this
- * selector will only attempt to lazily load the {@link Class} and
+ * {@linkplain #getJavaMethod() method} and its method name, class name, and
+ * parameter types accordingly. If a {@link Class} and method name, a class name
+ * and method name, or simply a <em>fully qualified method name</em> is provided,
+ * this selector will only attempt to lazily load the {@link Class} and
  * {@link Method} if {@link #getJavaClass()} or {@link #getJavaMethod()} is
  * invoked.
  *
@@ -53,7 +54,7 @@ public class MethodSelector implements DiscoverySelector {
 	private Method javaMethod;
 
 	MethodSelector(String className, String methodName) {
-		this(className, methodName, null);
+		this(className, methodName, "");
 	}
 
 	MethodSelector(String className, String methodName, String methodParameterTypes) {
@@ -63,7 +64,7 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	MethodSelector(Class<?> javaClass, String methodName) {
-		this(javaClass, methodName, null);
+		this(javaClass, methodName, "");
 	}
 
 	MethodSelector(Class<?> javaClass, String methodName, String methodParameterTypes) {
@@ -78,7 +79,7 @@ public class MethodSelector implements DiscoverySelector {
 		this.className = javaClass.getName();
 		this.javaMethod = method;
 		this.methodName = method.getName();
-		this.methodParameterTypes = null;
+		this.methodParameterTypes = ClassUtils.nullSafeToString(method.getParameterTypes());
 	}
 
 	/**
@@ -105,8 +106,9 @@ public class MethodSelector implements DiscoverySelector {
 	 * fashion by various test engines. It is therefore the responsibility of
 	 * the caller of this method to determine how to parse the returned string.
 	 *
-	 * @return the parameter types supplied to this {@code MethodSelector} upon
-	 * construction or {@code null} if the parameter types are unknown
+	 * @return the parameter types supplied to this {@code MethodSelector} via
+	 * a constructor or deduced from a {@code Method} supplied via a constructor;
+	 * never {@code null}
 	 */
 	public String getMethodParameterTypes() {
 		return this.methodParameterTypes;

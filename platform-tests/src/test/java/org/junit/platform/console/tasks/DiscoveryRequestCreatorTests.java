@@ -41,7 +41,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
 /**
  * @since 1.0
  */
-public class DiscoveryRequestCreatorTests {
+class DiscoveryRequestCreatorTests {
 
 	private final CommandLineOptions options = new CommandLineOptions();
 
@@ -240,7 +240,7 @@ public class DiscoveryRequestCreatorTests {
 		assertThat(methodSelectors).hasSize(2);
 		assertThat(methodSelectors.get(0).getClassName()).isEqualTo("com.acme.Foo");
 		assertThat(methodSelectors.get(0).getMethodName()).isEqualTo("m");
-		assertThat(methodSelectors.get(0).getMethodParameterTypes()).isNull();
+		assertThat(methodSelectors.get(0).getMethodParameterTypes()).isEqualTo("");
 		assertThat(methodSelectors.get(1).getClassName()).isEqualTo("com.example.Bar");
 		assertThat(methodSelectors.get(1).getMethodName()).isEqualTo("method");
 		assertThat(methodSelectors.get(1).getMethodParameterTypes()).isEqualTo("java.lang.Object");

@@ -13,7 +13,6 @@ package org.junit.platform.engine.discovery;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
@@ -155,6 +154,66 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
+	void selectMethodByFullyQualifiedNamePreconditions() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(null));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(""));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("   "));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("com.example"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("com.example.Foo"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("method"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("#nonexistentMethod"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("java.lang.String#"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("java.lang.String#chars("));
+	}
+
+	@Test
+	void selectMethodByClassNameAndMethodNamePreconditions() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", null));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", ""));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", "  "));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod((String) null, "method"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("", "method"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("   ", "method"));
+	}
+
+	@Test
+	void selectMethodByClassNameMethodNameAndMethodParameterTypesPreconditions() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", null, "int"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", "", "int"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", "  ", "int"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod((String) null, "method", "int"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("", "method", "int"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("   ", "method", "int"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", "method", null));
+	}
+
+	@Test
+	void selectMethodByClassAndMethodNamePreconditions() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), (String) null));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), ""));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), "  "));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod((Class<?>) null, "method"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("", "method"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod("   ", "method"));
+	}
+
+	@Test
+	void selectMethodByClassMethodNameAndMethodParameterTypesPreconditions() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> selectMethod((Class<?>) null, "method", "int"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), null, "int"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), "", "int"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), "  ", "int"));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), "method", null));
+	}
+
+	@Test
+	void selectMethodByClassAndMethodPreconditions() throws Exception {
+		Method method = getClass().getDeclaredMethods()[0];
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(null, method));
+		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), (Method) null));
+	}
+
+	@Test
 	void selectMethodByFullyQualifiedName() throws Exception {
 		Class<?> clazz = getClass();
 		Method method = clazz.getDeclaredMethod("myTest");
@@ -278,7 +337,7 @@ class DiscoverySelectorsTests {
 		assertEquals(clazz, selector.getJavaClass());
 		assertEquals(clazz.getName(), selector.getClassName());
 		assertEquals(method.getName(), selector.getMethodName());
-		assertNull(selector.getMethodParameterTypes());
+		assertEquals("", selector.getMethodParameterTypes());
 	}
 
 	private void assertSelectMethodByFullyQualifiedName(Class<?> clazz, Method method, Class<?> parameterType,
@@ -312,19 +371,19 @@ class DiscoverySelectorsTests {
 		assertEquals(getClass().getName(), selector.getClassName());
 		assertEquals(method, selector.getJavaMethod());
 		assertEquals("myTest", selector.getMethodName());
-		assertNull(selector.getMethodParameterTypes());
+		assertEquals("", selector.getMethodParameterTypes());
 	}
 
 	@Test
 	void selectMethodByClassAndMethodNameWithParameterTypes() throws Exception {
 		Method method = getClass().getDeclaredMethod("myTest", String.class);
 
-		MethodSelector selector = selectMethod(getClass(), "myTest", "java.lang.String");
+		MethodSelector selector = selectMethod(getClass(), "myTest", String.class.getName());
 		assertEquals(getClass(), selector.getJavaClass());
 		assertEquals(getClass().getName(), selector.getClassName());
 		assertEquals(method, selector.getJavaMethod());
 		assertEquals("myTest", selector.getMethodName());
-		assertEquals("java.lang.String", selector.getMethodParameterTypes());
+		assertEquals(String.class.getName(), selector.getMethodParameterTypes());
 	}
 
 	@Test
@@ -336,7 +395,7 @@ class DiscoverySelectorsTests {
 		assertEquals(getClass(), selector.getJavaClass());
 		assertEquals(getClass().getName(), selector.getClassName());
 		assertEquals("myTest", selector.getMethodName());
-		assertNull(selector.getMethodParameterTypes());
+		assertEquals(String.class.getName(), selector.getMethodParameterTypes());
 	}
 
 	@Test
@@ -354,7 +413,7 @@ class DiscoverySelectorsTests {
 		MethodSelector selector = selectMethod(spockClassName, spockMethodName);
 		assertEquals(spockClassName, selector.getClassName());
 		assertEquals(spockMethodName, selector.getMethodName());
-		assertNull(selector.getMethodParameterTypes());
+		assertEquals("", selector.getMethodParameterTypes());
 	}
 
 	@Test
@@ -366,7 +425,7 @@ class DiscoverySelectorsTests {
 		MethodSelector selector = selectMethod(spockFullyQualifiedMethodName);
 		assertEquals(spockClassName, selector.getClassName());
 		assertEquals(spockMethodName, selector.getMethodName());
-		assertNull(selector.getMethodParameterTypes());
+		assertEquals("", selector.getMethodParameterTypes());
 	}
 
 	@Test
