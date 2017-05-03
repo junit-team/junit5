@@ -86,8 +86,11 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 				});
 
 				C contextForStaticChildren = context;
-				testDescriptor.getChildren().stream().filter(child -> !tracker.wasAlreadyExecuted(child)).forEach(
-					child -> execute(child, contextForStaticChildren, tracker));
+				// @formatter:off
+				testDescriptor.getChildren().stream()
+						.filter(child -> !tracker.wasAlreadyExecuted(child))
+						.forEach(child -> execute(child, contextForStaticChildren, tracker));
+				// @formatter:on
 			}
 			finally {
 				node.after(context);
