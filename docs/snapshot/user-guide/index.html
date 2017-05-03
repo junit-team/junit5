@@ -5576,6 +5576,15 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><code>MethodSelector.getMethodParameterTypes()</code> no longer returns <code>null</code> for parameter
+types if the selector is created via <code>DiscoverySelectors</code> without explicit parameter
+types. Specifically, if parameter types are not supplied and cannot be deduced, an
+empty string will be returned. Similarly, if parameter types are not explicitly
+supplied but can be deduced (e.g, via a supplied <code>Method</code> reference),
+<code>getMethodParameterTypes()</code> now returns a string containing the deduced parameter
+types.</p>
+</li>
+<li>
 <p>A <code>NullPointerException</code> thrown by <code>ConsoleLauncher</code> in <code>Details.TREE</code> mode was fixed
 by falling back to printing throwable&#8217;s <code>toString()</code> representation.</p>
 </li>
@@ -5773,7 +5782,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-05-03 10:56:12 EDT
+Last updated 2017-05-03 12:59:09 EDT
 </div>
 </div>
 </body>
