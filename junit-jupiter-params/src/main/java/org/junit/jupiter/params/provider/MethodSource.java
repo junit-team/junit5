@@ -25,12 +25,11 @@ import org.junit.platform.commons.meta.API;
  * access to the values returned by static methods of the class in which the
  * annotation is used.
  *
- * <p>These values are then provided as arguments to {@code @ParameterizedTest}
- * methods using a {@code MethodArgumentsProvider}.
+ * <p>The values returned by such methods will be provided as arguments to the
+ * annotated {@code @ParameterizedTest} method.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
- * @see org.junit.jupiter.params.provider.MethodArgumentsProvider
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })

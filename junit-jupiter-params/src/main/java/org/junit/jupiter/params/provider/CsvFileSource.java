@@ -24,12 +24,11 @@ import org.junit.platform.commons.meta.API;
  * {@code @CsvFileSource} is a special {@link ArgumentsSource} which is used to
  * declare comma-separated values (CSV) files from one or more classpath resources.
  *
- * <p>The lines of these CSV files are then provided as arguments to
- * {@code @ParameterizedTest} methods using a {@code CsvFileArgumentsProvider}.
+ * <p>The lines of these CSV files will be provided as arguments to the
+ * annotated {@code @ParameterizedTest} method.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
- * @see org.junit.jupiter.params.provider.CsvFileArgumentsProvider
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })

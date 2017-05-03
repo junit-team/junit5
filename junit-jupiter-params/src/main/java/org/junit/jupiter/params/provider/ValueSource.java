@@ -27,12 +27,11 @@ import org.junit.platform.commons.meta.API;
  * <p>Supported primitive types include {@link #strings}, {@link #ints},
  * {@link #longs}, and {@link #doubles}.
  *
- * <p>These values are then provided as arguments to {@code @ParameterizedTest}
- * methods using a {@code ValueArgumentsProvider}.
+ * <p>The supplied literal values will be provided as arguments to the
+ * annotated {@code @ParameterizedTest} method.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
- * @see org.junit.jupiter.params.provider.ValueArgumentsProvider
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
