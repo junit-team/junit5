@@ -39,8 +39,10 @@ import org.junit.platform.commons.meta.API;
 @ArgumentsSource(CsvArgumentsProvider.class)
 public @interface CsvSource {
 
+	// TODO [#830] Document value().
 	String[] value();
 
+	// TODO [#830] Document delimiter().
 	char delimiter() default ',';
 
 }

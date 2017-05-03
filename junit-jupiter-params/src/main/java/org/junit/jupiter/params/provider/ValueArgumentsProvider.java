@@ -46,4 +46,5 @@ class ValueArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Va
 	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
 		return Arrays.stream(arguments).map(ObjectArrayArguments::arguments);
 	}
+
 }

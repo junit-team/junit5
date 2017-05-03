@@ -40,6 +40,7 @@ import org.junit.platform.commons.meta.API;
 @ArgumentsSource(MethodArgumentsProvider.class)
 public @interface MethodSource {
 
+	// TODO [#830] Document names().
 	String[] names();
 
 }

@@ -66,11 +66,10 @@ import org.junit.platform.commons.meta.API;
 public @interface ParameterizedTest {
 
 	/**
-	 * TODO Document name().
-	 *
 	 * @return a custom display name; never blank or consisting solely of
 	 * whitespace
 	 */
+	// TODO [#830] Document name().
 	String name() default "[{index}] {arguments}";
 
 }

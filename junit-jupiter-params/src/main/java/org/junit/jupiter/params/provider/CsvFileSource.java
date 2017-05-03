@@ -39,12 +39,16 @@ import org.junit.platform.commons.meta.API;
 @ArgumentsSource(CsvFileArgumentsProvider.class)
 public @interface CsvFileSource {
 
+	// TODO [#830] Document resources().
 	String[] resources();
 
+	// TODO [#830] Document encoding().
 	String encoding() default "UTF-8";
 
+	// TODO [#830] Document lineSeparator().
 	String lineSeparator() default "\n";
 
+	// TODO [#830] Document delimiter().
 	char delimiter() default ',';
 
 }

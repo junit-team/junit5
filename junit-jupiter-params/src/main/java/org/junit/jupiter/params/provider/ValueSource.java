@@ -42,12 +42,16 @@ import org.junit.platform.commons.meta.API;
 @ArgumentsSource(ValueArgumentsProvider.class)
 public @interface ValueSource {
 
+	// TODO [#830] Document strings().
 	String[] strings() default {};
 
+	// TODO [#830] Document ints().
 	int[] ints() default {};
 
+	// TODO [#830] Document longs().
 	long[] longs() default {};
 
+	// TODO [#830] Document doubles().
 	double[] doubles() default {};
 
 }
