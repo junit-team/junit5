@@ -2525,7 +2525,10 @@ and power of dynamic tests.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertFalse</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.DynamicContainer.dynamicContainer</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.DynamicTest.dynamicTest</span>;
 
 <span class="keyword">import</span> <span class="include">java.util.Arrays</span>;
@@ -2537,6 +2540,7 @@ and power of dynamic tests.</p>
 <span class="keyword">import</span> <span class="include">java.util.stream.IntStream</span>;
 <span class="keyword">import</span> <span class="include">java.util.stream.Stream</span>;
 
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.DynamicNode</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.DynamicTest</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Tag</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestFactory</span>;
@@ -2548,6 +2552,18 @@ and power of dynamic tests.</p>
     <span class="annotation">@TestFactory</span>
     <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; dynamicTestsWithInvalidReturnType() {
         <span class="keyword">return</span> <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@TestFactory</span>
+    Stream&lt;DynamicNode&gt; dynamicTestsWithContainers() {
+        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">A</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">B</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">C</span><span class="delimiter">&quot;</span></span>)
+            .map(input -&gt; dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">Container </span><span class="delimiter">&quot;</span></span> + input, Stream.of(
+                dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">not null</span><span class="delimiter">&quot;</span></span>, () -&gt; assertNotNull(input)),
+                dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">properties</span><span class="delimiter">&quot;</span></span>, Stream.of(
+                    dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">length &gt; 0</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(input.length() &gt; <span class="integer">0</span>)),
+                    dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">not empty</span><span class="delimiter">&quot;</span></span>, () -&gt; assertFalse(input.isEmpty()))
+                ))
+            )));
     }
 
     <span class="annotation">@TestFactory</span>
@@ -2576,15 +2592,15 @@ and power of dynamic tests.</p>
 
     <span class="annotation">@TestFactory</span>
     Stream&lt;DynamicTest&gt; dynamicTestsFromStream() {
-        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">A</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">B</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">C</span><span class="delimiter">&quot;</span></span>).map(
-            str -&gt; dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span> + str, () -&gt; { <span class="comment">/* ... */</span> }));
+        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">A</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">B</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">C</span><span class="delimiter">&quot;</span></span>)
+            .map(str -&gt; dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span> + str, () -&gt; { <span class="comment">/* ... */</span> }));
     }
 
     <span class="annotation">@TestFactory</span>
     Stream&lt;DynamicTest&gt; dynamicTestsFromIntStream() {
         <span class="comment">// Generates tests for the first 10 even integers.</span>
-        <span class="keyword">return</span> IntStream.iterate(<span class="integer">0</span>, n -&gt; n + <span class="integer">2</span>).limit(<span class="integer">10</span>).mapToObj(
-            n -&gt; dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span> + n, () -&gt; assertTrue(n % <span class="integer">2</span> == <span class="integer">0</span>)));
+        <span class="keyword">return</span> IntStream.iterate(<span class="integer">0</span>, n -&gt; n + <span class="integer">2</span>).limit(<span class="integer">10</span>)
+            .mapToObj(n -&gt; dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span> + n, () -&gt; assertTrue(n % <span class="integer">2</span> == <span class="integer">0</span>)));
     }
 
     <span class="annotation">@TestFactory</span>
@@ -5757,7 +5773,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-05-03 05:54:01 EDT
+Last updated 2017-05-03 07:39:58 EDT
 </div>
 </div>
 </body>
