@@ -10,8 +10,8 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -21,7 +21,7 @@ import org.junit.platform.engine.UniqueId;
  */
 class ExecutionTracker {
 
-	private final Set<UniqueId> executedUniqueIds = new HashSet<>();
+	private final Set<UniqueId> executedUniqueIds = ConcurrentHashMap.newKeySet();
 
 	void markExecuted(TestDescriptor testDescriptor) {
 		executedUniqueIds.add(testDescriptor.getUniqueId());
