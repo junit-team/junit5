@@ -19,21 +19,29 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
+/**
+ * Unit tests for {@link MethodSource}.
+ *
+ * @since 1.0
+ */
 class MethodSourceTests {
 
 	@Test
 	void instantiatingWithNullNamesShouldThrowPreconditionViolationException() {
-		assertThrows(PreconditionViolationException.class, () -> new MethodSource(null, null));
+		assertThrows(PreconditionViolationException.class, () -> new MethodSource("foo", null));
+		assertThrows(PreconditionViolationException.class, () -> new MethodSource(null, "foo"));
 	}
 
 	@Test
 	void instantiatingWithEmptyNamesShouldThrowPreconditionViolationException() {
-		assertThrows(PreconditionViolationException.class, () -> new MethodSource("", ""));
+		assertThrows(PreconditionViolationException.class, () -> new MethodSource("foo", ""));
+		assertThrows(PreconditionViolationException.class, () -> new MethodSource("", "foo"));
 	}
 
 	@Test
 	void instantiatingWithBlankNamesShouldThrowPreconditionViolationException() {
-		assertThrows(PreconditionViolationException.class, () -> new MethodSource("  ", "  "));
+		assertThrows(PreconditionViolationException.class, () -> new MethodSource("foo", "  "));
+		assertThrows(PreconditionViolationException.class, () -> new MethodSource("  ", "foo"));
 	}
 
 	@Test
@@ -57,7 +65,7 @@ class MethodSourceTests {
 	}
 
 	@Test
-	void twoEqualMethodSourceObjectsShouldHaveEqualHashCode() {
+	void twoEqualMethodSourceObjectsShouldHaveEqualHashCodes() {
 		assertEquals(new MethodSource("TestClass1", "testMethod1").hashCode(),
 			new MethodSource("TestClass1", "testMethod1").hashCode());
 	}
@@ -94,69 +102,55 @@ class MethodSourceTests {
 
 	@Test
 	void aReflectedMethodsClassNameShouldBeConsistent() throws Exception {
-		Class<?> c = String.class;
-		Method m = c.getDeclaredMethod("valueOf", int.class);
+		Method m = String.class.getDeclaredMethod("valueOf", int.class);
 
 		assertEquals("java.lang.String", new MethodSource(m).getClassName());
 	}
 
 	@Test
 	void aReflectedMethodsMethodNameShouldBeConsistent() throws Exception {
-		Class<?> c = String.class;
-		Method m = c.getDeclaredMethod("valueOf", int.class);
+		Method m = String.class.getDeclaredMethod("valueOf", int.class);
 
 		assertEquals("valueOf", new MethodSource(m).getMethodName());
 	}
 
 	@Test
 	void aReflectedMethodsParameterTypesShouldBeConsistent() throws Exception {
-		Class<?> c = String.class;
-		Method m = c.getDeclaredMethod("valueOf", float.class);
+		Method m = String.class.getDeclaredMethod("valueOf", float.class);
 
 		assertEquals("float", new MethodSource(m).getMethodParameterTypes());
 	}
 
 	@Test
 	void twoEqualReflectedMethodsShouldHaveEqualMethodSourceObjects() throws Exception {
-		Class<?> c1 = String.class;
-		Method m1 = c1.getDeclaredMethod("valueOf", int.class);
-
-		Class<?> c2 = String.class;
-		Method m2 = c2.getDeclaredMethod("valueOf", int.class);
+		Method m1 = String.class.getDeclaredMethod("valueOf", int.class);
+		Method m2 = String.class.getDeclaredMethod("valueOf", int.class);
 
 		assertEquals(new MethodSource(m1), new MethodSource(m2));
 	}
 
 	@Test
 	void twoEqualReflectedMethodsShouldHaveEqualMethodSourceHashCodes() throws Exception {
-		Class<?> c1 = String.class;
-		Method m1 = c1.getDeclaredMethod("valueOf", int.class);
-
-		Class<?> c2 = String.class;
-		Method m2 = c2.getDeclaredMethod("valueOf", int.class);
+		Method m1 = String.class.getDeclaredMethod("valueOf", int.class);
+		Method m2 = String.class.getDeclaredMethod("valueOf", int.class);
 
 		assertEquals(new MethodSource(m1).hashCode(), new MethodSource(m2).hashCode());
 	}
 
 	@Test
 	void twoUnequalReflectedMethodsShouldNotHaveEqualMethodSourceObjects() throws Exception {
-		Class<?> c1 = String.class;
-		Method m1 = c1.getDeclaredMethod("valueOf", int.class);
-
-		Class<?> c2 = Byte.class;
-		Method m2 = c2.getDeclaredMethod("byteValue");
+		Method m1 = String.class.getDeclaredMethod("valueOf", int.class);
+		Method m2 = Byte.class.getDeclaredMethod("byteValue");
 
 		assertNotEquals(new MethodSource(m1), new MethodSource(m2));
 	}
 
 	@Test
 	void twoUnequalReflectedMethodsShouldNotHaveEqualMethodSourceHashCodes() throws Exception {
-		Class<?> c1 = String.class;
-		Method m1 = c1.getDeclaredMethod("valueOf", int.class);
-
-		Class<?> c2 = Byte.class;
-		Method m2 = c2.getDeclaredMethod("byteValue");
+		Method m1 = String.class.getDeclaredMethod("valueOf", int.class);
+		Method m2 = Byte.class.getDeclaredMethod("byteValue");
 
 		assertNotEquals(new MethodSource(m1).hashCode(), new MethodSource(m2).hashCode());
 	}
+
 }
