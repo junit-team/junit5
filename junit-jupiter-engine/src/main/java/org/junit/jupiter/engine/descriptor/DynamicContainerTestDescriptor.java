@@ -42,11 +42,6 @@ class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public boolean isLeaf() {
-		return true;
-	}
-
-	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		int index = 1;
