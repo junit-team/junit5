@@ -44,11 +44,6 @@ public class DemoHierarchicalTestDescriptor extends AbstractTestDescriptor imple
 		return this.executeBlock != null ? Type.TEST : Type.CONTAINER;
 	}
 
-	@Override
-	public boolean isLeaf() {
-		return isTest();
-	}
-
 	public void markSkipped(String reason) {
 		this.skipped = true;
 		this.skippedReason = reason;

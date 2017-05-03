@@ -48,11 +48,12 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	}
 
 	void execute() {
-		execute(this.rootTestDescriptor, this.rootContext);
+		execute(this.rootTestDescriptor, this.rootContext, new ExecutionTracker());
 	}
 
-	private void execute(TestDescriptor testDescriptor, C parentContext) {
+	private void execute(TestDescriptor testDescriptor, C parentContext, ExecutionTracker tracker) {
 		Node<C> node = asNode(testDescriptor);
+		tracker.markExecuted(testDescriptor);
 
 		C preparedContext;
 		try {
@@ -77,20 +78,16 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			C context = preparedContext;
 			try {
 				context = node.before(context);
-				C dynamicTestContext = context;
+
+				C contextForDynamicChildren = context;
 				context = node.execute(context, dynamicTestDescriptor -> {
 					this.listener.dynamicTestRegistered(dynamicTestDescriptor);
-					execute(dynamicTestDescriptor, dynamicTestContext);
+					execute(dynamicTestDescriptor, contextForDynamicChildren, tracker);
 				});
 
-				// If a node is NOT a leaf, execute its children recursively.
-				// Note: executing children for a leaf could result in accidental
-				// execution of dynamically added children.
-				if (!node.isLeaf()) {
-					for (TestDescriptor child : testDescriptor.getChildren()) {
-						execute(child, context);
-					}
-				}
+				C contextForStaticChildren = context;
+				testDescriptor.getChildren().stream().filter(child -> !tracker.wasAlreadyExecuted(child)).forEach(
+					child -> execute(child, contextForStaticChildren, tracker));
 			}
 			finally {
 				node.after(context);

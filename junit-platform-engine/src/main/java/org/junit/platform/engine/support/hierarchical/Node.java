@@ -30,15 +30,6 @@ import org.junit.platform.engine.TestDescriptor;
 public interface Node<C extends EngineExecutionContext> {
 
 	/**
-	 * Determine if this {@code Node} is a leaf in the hierarchy.
-	 *
-	 * <p>The default implementation returns {@code false}.
-	 */
-	default boolean isLeaf() {
-		return false;
-	}
-
-	/**
 	 * Prepare the supplied {@code context} prior to execution.
 	 *
 	 * <p>The default implementation returns the supplied {@code context} unmodified.

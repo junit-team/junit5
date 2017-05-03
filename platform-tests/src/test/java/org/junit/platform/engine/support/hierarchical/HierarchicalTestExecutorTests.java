@@ -407,12 +407,6 @@ public class HierarchicalTestExecutorTests {
 		public Type getType() {
 			return Type.CONTAINER;
 		}
-
-		@Override
-		public boolean isLeaf() {
-			return isTest();
-		}
-
 	}
 
 	private static class MyLeaf extends AbstractTestDescriptor implements Node<MyEngineExecutionContext> {
@@ -430,11 +424,6 @@ public class HierarchicalTestExecutorTests {
 		@Override
 		public Type getType() {
 			return Type.TEST;
-		}
-
-		@Override
-		public boolean isLeaf() {
-			return isTest();
 		}
 	}
 

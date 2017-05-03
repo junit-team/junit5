@@ -59,11 +59,6 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	public boolean isLeaf() {
-		return true;
-	}
-
-	@Override
 	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 
