@@ -12,11 +12,12 @@ package example;
 
 //tag::user_guide[]
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -30,7 +31,6 @@ import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 
 class DynamicTestsDemo {
@@ -45,25 +45,21 @@ class DynamicTestsDemo {
 	}
 
 	@TestFactory
-	List<DynamicNode> dynamicTestsWithContainers() {
-		Executable alwaysTrue = () -> assertTrue(true);
-
-		List<DynamicNode> nestedOne = new ArrayList<>();
-		nestedOne.add(dynamicTest("nested-1", alwaysTrue));
-		nestedOne.add(dynamicTest("nested-2", alwaysTrue));
-		List<DynamicNode> nestedTwo = new ArrayList<>();
-		nestedTwo.add(dynamicTest("nested-3", alwaysTrue));
-		nestedTwo.add(dynamicContainer("2nd level", dynamicTestsFromIterable()));
-		nestedTwo.add(dynamicTest("nested-4", alwaysTrue));
-		nestedTwo.add(dynamicContainer("level II", dynamicTestsFromStream()));
-
-		List<DynamicNode> nodes = new ArrayList<>();
-		nodes.add(dynamicTest("begin", alwaysTrue));
-		nodes.add(dynamicContainer("container one", nestedOne));
-		nodes.add(dynamicTest("middle", alwaysTrue));
-		nodes.add(dynamicContainer("container two", nestedTwo));
-		nodes.add(dynamicTest("end", alwaysTrue));
-		return nodes;
+	Stream<DynamicNode> dynamicTestsWithContainers() {
+		// end::user_guide[]
+		// @formatter:off
+		// tag::user_guide[]
+		return Stream.of("A", "B", "C")
+			.map(input -> dynamicContainer("Container " + input, Stream.of(
+				dynamicTest("not null", () -> assertNotNull(input)),
+				dynamicContainer("properties", Stream.of(
+					dynamicTest("length > 0", () -> assertTrue(input.length() > 0)),
+					dynamicTest("not empty", () -> assertFalse(input.isEmpty()))
+				))
+			)));
+		// end::user_guide[]
+		// @formatter:on
+		// tag::user_guide[]
 	}
 
 	@TestFactory
@@ -113,8 +109,8 @@ class DynamicTestsDemo {
 		// end::user_guide[]
 		// @formatter:off
 		// tag::user_guide[]
-		return Stream.of("A", "B", "C").map(
-			str -> dynamicTest("test" + str, () -> { /* ... */ }));
+		return Stream.of("A", "B", "C")
+			.map(str -> dynamicTest("test" + str, () -> { /* ... */ }));
 		// end::user_guide[]
 		// @formatter:on
 		// tag::user_guide[]
@@ -126,8 +122,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		// Generates tests for the first 10 even integers.
-		return IntStream.iterate(0, n -> n + 2).limit(10).mapToObj(
-			n -> dynamicTest("test" + n, () -> assertTrue(n % 2 == 0)));
+		return IntStream.iterate(0, n -> n + 2).limit(10)
+			.mapToObj(n -> dynamicTest("test" + n, () -> assertTrue(n % 2 == 0)));
 		// end::user_guide[]
 		// @formatter:on
 		// tag::user_guide[]
