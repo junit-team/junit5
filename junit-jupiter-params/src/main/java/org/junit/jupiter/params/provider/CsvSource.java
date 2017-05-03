@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @CsvSource} is a special {@link ArgumentsSource} which reads
+ * {@code @CsvSource} is an {@link ArgumentsSource} which reads
  * comma-separated values (CSV) from its {@link #value} attribute.
  *
  * <p>The supplied values will be provided as arguments to the

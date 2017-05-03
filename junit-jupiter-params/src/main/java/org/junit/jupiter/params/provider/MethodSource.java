@@ -21,9 +21,9 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @MethodSource} is a special {@link ArgumentsSource} which provides
- * access to the values returned by static methods of the class in which the
- * annotation is used.
+ * {@code @MethodSource} is an {@link ArgumentsSource} which provides access
+ * to values returned by {@linkplain #names() static methods} of the class in
+ * which this annotation is declared.
  *
  * <p>The values returned by such methods will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method.

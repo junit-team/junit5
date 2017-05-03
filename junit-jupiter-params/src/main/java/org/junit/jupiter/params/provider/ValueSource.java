@@ -21,8 +21,8 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @ValueSource} is a special {@link ArgumentsSource} which provides
- * access to an array of literal values of certain primitive types.
+ * {@code @ValueSource} is an {@link ArgumentsSource} which provides
+ * access to an array of literal values of primitive types.
  *
  * <p>Supported primitive types include {@link #strings}, {@link #ints},
  * {@link #longs}, and {@link #doubles}.

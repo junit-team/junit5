@@ -21,8 +21,8 @@ import java.lang.annotation.Target;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @CsvFileSource} is a special {@link ArgumentsSource} which is used to
- * declare comma-separated values (CSV) files from one or more classpath resources.
+ * {@code @CsvFileSource} is an {@link ArgumentsSource} which is used to
+ * load comma-separated values (CSV) files from one or more classpath resources.
  *
  * <p>The lines of these CSV files will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method.
