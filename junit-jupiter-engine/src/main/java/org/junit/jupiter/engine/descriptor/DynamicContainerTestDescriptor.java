@@ -29,11 +29,14 @@ class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 
 	private final DynamicContainer dynamicContainer;
 	private final TestSource testSource;
+	private final boolean breakOnFailure;
 
-	DynamicContainerTestDescriptor(UniqueId uniqueId, DynamicContainer dynamicContainer, TestSource testSource) {
+	DynamicContainerTestDescriptor(UniqueId uniqueId, DynamicContainer dynamicContainer, TestSource testSource,
+			boolean breakOnFailure) {
 		super(uniqueId, dynamicContainer.getDisplayName());
 		this.dynamicContainer = dynamicContainer;
 		this.testSource = testSource;
+		this.breakOnFailure = breakOnFailure;
 		setSource(testSource);
 	}
 
@@ -47,9 +50,12 @@ class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		int index = 1;
 		for (DynamicNode childNode : dynamicContainer.getDynamicNodes()) {
-			JupiterTestDescriptor childDescriptor = createDynamicDescriptor(this, childNode, index++, testSource);
+			JupiterTestDescriptor childDescriptor = createDynamicDescriptor(this, childNode, index++, testSource,
+				breakOnFailure);
 			if (!isTestResultPresentAndSuccessful(dynamicTestExecutor.execute(childDescriptor))) {
-				break;
+				if (breakOnFailure) {
+					break;
+				}
 			}
 		}
 		return context;

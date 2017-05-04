@@ -20,11 +20,13 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Scenario;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.TestExecutionResult;
@@ -45,8 +47,11 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
+	private final boolean breakOnFailure;
+
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
+		this.breakOnFailure = AnnotationUtils.findAnnotation(testMethod, Scenario.class).isPresent();
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -77,9 +82,12 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 				Iterator<DynamicNode> iterator = dynamicNodeStream.iterator();
 				while (iterator.hasNext()) {
 					DynamicNode dynamicNode = iterator.next();
-					JupiterTestDescriptor descriptor = createDynamicDescriptor(this, dynamicNode, index++, source);
+					JupiterTestDescriptor descriptor = createDynamicDescriptor(this, dynamicNode, index++, source,
+						breakOnFailure);
 					if (!isTestResultPresentAndSuccessful(dynamicTestExecutor.execute(descriptor))) {
-						break;
+						if (breakOnFailure) {
+							break;
+						}
 					}
 				}
 			}
@@ -104,7 +112,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	static JupiterTestDescriptor createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node, int index,
-			TestSource source) {
+			TestSource source, boolean breakOnFailure) {
 		JupiterTestDescriptor descriptor;
 		if (node instanceof DynamicTest) {
 			DynamicTest test = (DynamicTest) node;
@@ -114,7 +122,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		else {
 			DynamicContainer container = (DynamicContainer) node;
 			UniqueId uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
-			descriptor = new DynamicContainerTestDescriptor(uniqueId, container, source);
+			descriptor = new DynamicContainerTestDescriptor(uniqueId, container, source, breakOnFailure);
 		}
 		parent.addChild(descriptor);
 		return descriptor;
