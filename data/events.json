@@ -309,7 +309,7 @@
     "event": "Heisenbug Conference",
     "date": "2017-06-04",
     "location": "St. Petersburg, Russia",
-    "link": "https://heisenbug-piter.ru/en/",
+    "link": "https://heisenbug-piter.ru/en/talks/junit-5-the-new-testing-framework-for-java-and-platform-for-the-jvm/",
     "speakers": [
       "marcphilipp"
     ]
