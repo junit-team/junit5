@@ -23,7 +23,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-public class AssertionsAssertNotSameTests {
+class AssertionsAssertNotSameTests {
 
 	@Test
 	void assertNotSameWithDifferentObjects() {

@@ -25,10 +25,10 @@ import org.opentest4j.TestAbortedException;
 /**
  * @since 1.0
  */
-public class SingleTestExecutorTests {
+class SingleTestExecutorTests {
 
 	@Test
-	public void executeSafelySuccessful() {
+	void executeSafelySuccessful() {
 		TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
 		});
 
@@ -37,7 +37,7 @@ public class SingleTestExecutorTests {
 	}
 
 	@Test
-	public void executeSafelyAborted() {
+	void executeSafelyAborted() {
 		TestAbortedException testAbortedException = new TestAbortedException("assumption violated");
 
 		TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
@@ -49,7 +49,7 @@ public class SingleTestExecutorTests {
 	}
 
 	@Test
-	public void executeSafelyFailed() {
+	void executeSafelyFailed() {
 		AssertionError assertionError = new AssertionError("assumption violated");
 
 		TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {

@@ -45,10 +45,10 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-public class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
+class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	public void failureInTestMethodIsRegistered() throws NoSuchMethodException {
+	void failureInTestMethodIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("failingTest");
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
 
@@ -63,7 +63,7 @@ public class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void uncheckedExceptionInTestMethodIsRegistered() throws NoSuchMethodException {
+	void uncheckedExceptionInTestMethodIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("testWithUncheckedException");
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
 
@@ -78,7 +78,7 @@ public class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void checkedExceptionInTestMethodIsRegistered() throws NoSuchMethodException {
+	void checkedExceptionInTestMethodIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("testWithCheckedException");
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
 
@@ -93,7 +93,7 @@ public class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void checkedExceptionInBeforeEachIsRegistered() throws NoSuchMethodException {
+	void checkedExceptionInBeforeEachIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
 
@@ -109,7 +109,7 @@ public class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void checkedExceptionInAfterEachIsRegistered() throws NoSuchMethodException {
+	void checkedExceptionInAfterEachIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
 
@@ -125,7 +125,7 @@ public class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void checkedExceptionInAfterEachIsSuppressedByExceptionInTest() throws NoSuchMethodException {
+	void checkedExceptionInAfterEachIsSuppressedByExceptionInTest() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("testWithUncheckedException");
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
 
@@ -147,7 +147,7 @@ public class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void checkedExceptionInBeforeAllIsRegistered() throws NoSuchMethodException {
+	void checkedExceptionInBeforeAllIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
 
@@ -164,7 +164,7 @@ public class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void checkedExceptionInAfterAllIsRegistered() throws NoSuchMethodException {
+	void checkedExceptionInAfterAllIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
 

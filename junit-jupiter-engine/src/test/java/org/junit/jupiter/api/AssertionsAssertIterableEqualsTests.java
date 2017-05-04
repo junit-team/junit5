@@ -28,7 +28,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-public class AssertionsAssertIterableEqualsTests {
+class AssertionsAssertIterableEqualsTests {
 
 	@Test
 	void assertIterableEqualsEqualToSelf() {

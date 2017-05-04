@@ -35,7 +35,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  *
  * @since 5.0
  */
-public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
+class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	private static final String FOO = "DisabledTests.foo";
 	private static final String BAR = "DisabledTests.bar";
@@ -52,7 +52,7 @@ public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void conditionWorksOnContainer() {
+	void conditionWorksOnContainer() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithContainerExecutionCondition.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -62,7 +62,7 @@ public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void conditionWorksOnTest() {
+	void conditionWorksOnTest() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithTestExecutionCondition.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -73,14 +73,14 @@ public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void overrideConditionsUsingFullyQualifiedClassName() {
+	void overrideConditionsUsingFullyQualifiedClassName() {
 		String deactivatePattern = SystemPropertyCondition.class.getName();
 		assertContainerExecutionConditionOverride(deactivatePattern, 1, 1);
 		assertTestExecutionConditionOverride(deactivatePattern, 4, 2, 2);
 	}
 
 	@Test
-	public void overrideConditionsUsingStar() {
+	void overrideConditionsUsingStar() {
 		// "*" should deactivate DisabledCondition and SystemPropertyCondition
 		String deactivatePattern = "*";
 		assertContainerExecutionConditionOverride(deactivatePattern, 2, 2);
@@ -88,7 +88,7 @@ public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void overrideConditionsUsingStarPlusSimpleClassName() {
+	void overrideConditionsUsingStarPlusSimpleClassName() {
 		// DisabledCondition should remain activated
 		String deactivatePattern = "*" + SystemPropertyCondition.class.getSimpleName();
 		assertContainerExecutionConditionOverride(deactivatePattern, 1, 1);
@@ -96,7 +96,7 @@ public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void overrideConditionsUsingPackageNamePlusDotStar() {
+	void overrideConditionsUsingPackageNamePlusDotStar() {
 		// DisabledCondition should remain activated
 		String deactivatePattern = SystemPropertyCondition.class.getPackage().getName() + ".*";
 		assertContainerExecutionConditionOverride(deactivatePattern, 1, 1);
@@ -104,7 +104,7 @@ public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void overrideConditionsUsingMultipleWildcards() {
+	void overrideConditionsUsingMultipleWildcards() {
 		// DisabledCondition should remain activated
 		String deactivatePattern = "org.junit.jupiter.*.System*Condition";
 		assertContainerExecutionConditionOverride(deactivatePattern, 1, 1);

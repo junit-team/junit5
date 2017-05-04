@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.platform.commons.util.ReflectionUtils;
 
-public class IsTestTemplateMethodTests {
+class IsTestTemplateMethodTests {
 
 	@Test
 	void publicTestMethodsEvaluatesToTrue() throws NoSuchMethodException {

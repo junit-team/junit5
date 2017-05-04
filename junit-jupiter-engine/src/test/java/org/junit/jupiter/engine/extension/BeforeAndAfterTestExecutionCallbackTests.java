@@ -43,7 +43,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * @since 5.0
  * @see BeforeAndAfterEachTests
  */
-public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngineTests {
+class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngineTests {
 
 	private static List<String> callSequence = new ArrayList<>();
 
@@ -56,7 +56,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 	}
 
 	@Test
-	public void beforeAndAfterTestExecutionCallbacks() {
+	void beforeAndAfterTestExecutionCallbacks() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -97,7 +97,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 	}
 
 	@Test
-	public void beforeAndAfterTestExecutionCallbacksDeclaredOnSuperclassAndSubclass() {
+	void beforeAndAfterTestExecutionCallbacksDeclaredOnSuperclassAndSubclass() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(ChildTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -120,7 +120,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 	}
 
 	@Test
-	public void beforeAndAfterTestExecutionCallbacksDeclaredOnInterfaceAndClass() {
+	void beforeAndAfterTestExecutionCallbacksDeclaredOnInterfaceAndClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(TestInterfaceTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -153,7 +153,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 	}
 
 	@Test
-	public void beforeEachMethodThrowsAnException() {
+	void beforeEachMethodThrowsAnException() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInBeforeEachMethodTestCase.class)).build();
 
@@ -180,7 +180,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 	}
 
 	@Test
-	public void beforeTestExecutionCallbackThrowsAnException() {
+	void beforeTestExecutionCallbackThrowsAnException() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInBeforeTestExecutionCallbackTestCase.class)).build();
 
@@ -211,7 +211,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 	}
 
 	@Test
-	public void afterTestExecutionCallbackThrowsAnException() {
+	void afterTestExecutionCallbackThrowsAnException() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInAfterTestExecutionCallbackTestCase.class)).build();
 
@@ -242,7 +242,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 	}
 
 	@Test
-	public void testMethodThrowsAnException() {
+	void testMethodThrowsAnException() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInTestMethodTestCase.class)).build();
 

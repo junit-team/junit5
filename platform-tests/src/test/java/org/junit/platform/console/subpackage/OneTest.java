@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 public class OneTest {
 
 	@Test
-	public void m1() {
+	void m1() {
 	}
 
 }

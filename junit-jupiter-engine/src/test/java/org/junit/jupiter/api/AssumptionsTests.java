@@ -28,7 +28,7 @@ import org.opentest4j.TestAbortedException;
  *
  * @since 5.0
  */
-public class AssumptionsTests {
+class AssumptionsTests {
 
 	// --- assumeTrue ----------------------------------------------------
 

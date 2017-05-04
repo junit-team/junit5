@@ -42,10 +42,10 @@ import org.mockito.Mockito;
  * @since 5.0
  * @see ExtensionValuesStoreTests
  */
-public class ExtensionContextTests {
+class ExtensionContextTests {
 
 	@Test
-	public void fromClassTestDescriptor() {
+	void fromClassTestDescriptor() {
 		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
 
@@ -63,7 +63,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
-	public void tagsCanBeRetrievedInExtensionContext() {
+	void tagsCanBeRetrievedInExtensionContext() {
 		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
 		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
@@ -92,7 +92,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
-	public void fromMethodTestDescriptor() {
+	void fromMethodTestDescriptor() {
 		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
 
@@ -109,7 +109,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
-	public void reportEntriesArePublishedToExecutionContext() {
+	void reportEntriesArePublishedToExecutionContext() {
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(null);
 		EngineExecutionListener engineExecutionListener = Mockito.spy(EngineExecutionListener.class);
 		ExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, engineExecutionListener,
@@ -133,7 +133,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
-	public void usingStore() {
+	void usingStore() {
 		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
 		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);

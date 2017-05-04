@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
  * @since 5.0
  */
 @RunWith(JUnitPlatform.class)
-public class ExtensionStoreConcurrencyTests {
+class ExtensionStoreConcurrencyTests {
 
 	private final AtomicInteger count = new AtomicInteger();
 

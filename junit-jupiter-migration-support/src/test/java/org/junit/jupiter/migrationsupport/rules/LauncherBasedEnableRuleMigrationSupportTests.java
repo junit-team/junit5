@@ -28,10 +28,10 @@ import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Verifier;
 
-public class LauncherBasedEnableRuleMigrationSupportTests {
+class LauncherBasedEnableRuleMigrationSupportTests {
 
 	@Test
-	public void enableRuleMigrationSupportAnnotationWorksForBothRuleTypes() {
+	void enableRuleMigrationSupportAnnotationWorksForBothRuleTypes() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(
 			EnableRuleMigrationSupportWithBothRuleTypesTestCase.class);
 
@@ -49,7 +49,7 @@ public class LauncherBasedEnableRuleMigrationSupportTests {
 	}
 
 	@Test
-	public void verifierSupportForErrorCollectorFieldFailsTheTest() {
+	void verifierSupportForErrorCollectorFieldFailsTheTest() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(VerifierSupportForErrorCollectorTestCase.class);
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");

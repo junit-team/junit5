@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @since 5.0
  */
-public class IsInnerClassTests {
+class IsInnerClassTests {
 
 	private final Predicate<Class<?>> isInnerClass = new IsInnerClass();
 

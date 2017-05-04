@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 public class TwoTest {
 
 	@Test
-	public void m2() {
+	void m2() {
 	}
 
 }

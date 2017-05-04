@@ -28,7 +28,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 1.0
  */
-public class AbstractTestDescriptorTests {
+class AbstractTestDescriptorTests {
 
 	EngineDescriptor engineDescriptor;
 
@@ -51,7 +51,7 @@ public class AbstractTestDescriptorTests {
 	}
 
 	@Test
-	public void visitAllNodes() {
+	void visitAllNodes() {
 		List<TestDescriptor> visited = new ArrayList<>();
 		engineDescriptor.accept(visited::add);
 
@@ -59,7 +59,7 @@ public class AbstractTestDescriptorTests {
 	}
 
 	@Test
-	public void pruneLeaf() {
+	void pruneLeaf() {
 		TestDescriptor.Visitor visitor = descriptor -> {
 			if (descriptor.getUniqueId().equals(UniqueId.root("leaf", "leaf1-1")))
 				descriptor.removeFromHierarchy();
@@ -75,7 +75,7 @@ public class AbstractTestDescriptorTests {
 	}
 
 	@Test
-	public void pruneGroup() {
+	void pruneGroup() {
 		final AtomicInteger countVisited = new AtomicInteger();
 		TestDescriptor.Visitor visitor = descriptor -> {
 			if (descriptor.getUniqueId().equals(UniqueId.root("group", "group1")))

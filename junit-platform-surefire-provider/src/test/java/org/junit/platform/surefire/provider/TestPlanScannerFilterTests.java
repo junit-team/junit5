@@ -34,7 +34,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
  *
  * @since 1.0
  */
-public class TestPlanScannerFilterTests {
+class TestPlanScannerFilterTests {
 
 	@Test
 	void emptyClassAccepted() {

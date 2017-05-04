@@ -29,7 +29,7 @@ import org.opentest4j.TestAbortedException;
  *
  * @since 5.0
  */
-public class StandardTestClassTests extends AbstractJupiterTestEngineTests {
+class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@BeforeEach
 	public void init() {
@@ -39,21 +39,21 @@ public class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void standardTestClassIsCorrectlyDiscovered() {
+	void standardTestClassIsCorrectlyDiscovered() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyStandardTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
-	public void moreThanOneTestClassIsCorrectlyDiscovered() {
+	void moreThanOneTestClassIsCorrectlyDiscovered() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(SecondOfTwoTestCases.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2 + 2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
-	public void moreThanOneTestClassIsExecuted() {
+	void moreThanOneTestClassIsExecuted() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(FirstOfTwoTestCases.class),
 			selectClass(SecondOfTwoTestCases.class)).build();
 
@@ -68,7 +68,7 @@ public class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void allTestsInClassAreRunWithBeforeEach() {
+	void allTestsInClassAreRunWithBeforeEach() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(MyStandardTestCase.class);
 
 		assertEquals(4, eventRecorder.getTestStartedCount(), "# tests started");
@@ -84,7 +84,7 @@ public class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void allTestsInClassAreRunWithAfterEach() {
+	void allTestsInClassAreRunWithAfterEach() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(MyStandardTestCase.class);
 
 		assertEquals(4, eventRecorder.getTestStartedCount(), "# tests started");
@@ -95,7 +95,7 @@ public class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void testsFailWhenBeforeEachFails() {
+	void testsFailWhenBeforeEachFails() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithFailingBefore.class);
 
 		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
@@ -109,7 +109,7 @@ public class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void testsFailWhenAfterEachFails() {
+	void testsFailWhenAfterEachFails() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithFailingAfter.class);
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");

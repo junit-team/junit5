@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @since 5.0
  */
-public class IsNestedTestClassTests {
+class IsNestedTestClassTests {
 
 	private final Predicate<Class<?>> isNestedTestClass = new IsNestedTestClass();
 

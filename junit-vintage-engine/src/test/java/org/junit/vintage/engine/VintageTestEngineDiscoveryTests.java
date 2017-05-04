@@ -227,7 +227,7 @@ class VintageTestEngineDiscoveryTests {
 	}
 
 	@Test
-	public void resolvesClasspathSelectorForJarFile() throws Exception {
+	void resolvesClasspathSelectorForJarFile() throws Exception {
 		URL jarUrl = getClass().getResource("/vintage-testjar.jar");
 		Path jarFile = Paths.get(jarUrl.toURI());
 

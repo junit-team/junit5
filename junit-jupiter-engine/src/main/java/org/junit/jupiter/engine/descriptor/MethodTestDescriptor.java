@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.logging.Logger;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -33,6 +34,7 @@ import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -57,6 +59,7 @@ import org.junit.platform.engine.UniqueId;
 @API(Internal)
 public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 
+	private static final Logger LOG = Logger.getLogger(MethodTestDescriptor.class.getName());
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
@@ -167,9 +170,12 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 
 		throwableCollector.execute(() -> {
 			try {
+				Method testMethod = getTestMethod();
+				if (ReflectionUtils.isPublic(testMethod) && !testMethod.isDefault()) {
+					LOG.config(() -> "Modifier `public` is not necessary at " + testMethod);
+				}
 				Object instance = testExtensionContext.getTestInstance();
-				executableInvoker.invoke(getTestMethod(), instance, testExtensionContext,
-					context.getExtensionRegistry());
+				executableInvoker.invoke(testMethod, instance, testExtensionContext, context.getExtensionRegistry());
 			}
 			catch (Throwable throwable) {
 				invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), testExtensionContext, throwable);

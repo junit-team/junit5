@@ -30,17 +30,17 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  *
  * @since 5.0
  */
-public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
+class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	public void nestedTestsAreCorrectlyDiscovered() {
+	void nestedTestsAreCorrectlyDiscovered() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
-	public void nestedTestsAreExecuted() {
+	void nestedTestsAreExecuted() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithNesting.class);
 
 		assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started");
@@ -52,14 +52,14 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void doublyNestedTestsAreCorrectlyDiscovered() {
+	void doublyNestedTestsAreCorrectlyDiscovered() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithDoubleNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(8, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
-	public void doublyNestedTestsAreExecuted() {
+	void doublyNestedTestsAreExecuted() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithDoubleNesting.class);
 
 		assertEquals(5, eventRecorder.getTestStartedCount(), "# tests started");
@@ -82,7 +82,7 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void inheritedNestedTestsAreExecuted() {
+	void inheritedNestedTestsAreExecuted() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithInheritedNested.class);
 
 		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
