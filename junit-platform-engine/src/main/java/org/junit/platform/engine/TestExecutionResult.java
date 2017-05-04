@@ -102,6 +102,14 @@ public class TestExecutionResult {
 	}
 
 	/**
+	 * Returns {@code true} if the status of this result is
+	 * {@linkplain Status#SUCCESSFUL Status.SUCCESSFUL}, else {@code false}.
+	 */
+	public boolean isSuccessful() {
+		return status == SUCCESSFUL;
+	}
+
+	/**
 	 * Get the throwable that caused this result, if available.
 	 */
 	public Optional<Throwable> getThrowable() {

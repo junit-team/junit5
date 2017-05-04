@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.createDynamicDescriptor;
+import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.isTestResultPresentAndSuccessful;
 
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
@@ -46,7 +47,10 @@ class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		int index = 1;
 		for (DynamicNode childNode : dynamicContainer.getDynamicNodes()) {
-			dynamicTestExecutor.execute(createDynamicDescriptor(this, childNode, index++, testSource));
+			JupiterTestDescriptor childDescriptor = createDynamicDescriptor(this, childNode, index++, testSource);
+			if (!isTestResultPresentAndSuccessful(dynamicTestExecutor.execute(childDescriptor))) {
+				break;
+			}
 		}
 		return context;
 	}

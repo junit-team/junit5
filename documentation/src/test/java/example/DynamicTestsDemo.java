@@ -45,6 +45,41 @@ class DynamicTestsDemo {
 	}
 
 	@TestFactory
+	Stream<DynamicNode> scenarioTests() {
+		// end::user_guide[]
+		// @formatter:off
+		// tag::user_guide[]
+		return Stream.of(
+				dynamicTest("Visit page requiring authorization while not logged in", () -> {
+					// attempt to visit page which requires that a user is logged in
+					// assert user is redirected to login page
+				}),
+				dynamicTest("Log-in", () -> {
+					// submit login form with valid credentials
+					// assert user is redirected back to previous page requiring authorization
+					// fail("you shall not pass");
+				}),
+				dynamicContainer("Can access several pages while logged in", Stream.of(
+						dynamicTest("Visit second page requiring authorization while logged in", () -> {
+							// visit another page which requires that a user is logged in
+							// assert user can access page
+						}),
+						dynamicTest("Visit third page requiring authorization while logged in", () -> {
+							// visit another page which requires that a user is logged in
+							// assert user can access page
+						})
+				)),
+				dynamicTest("Log-out", () -> {
+					// visit logout URL
+					// assert user has been logged out
+				})
+		);
+		// end::user_guide[]
+		// @formatter:on
+		// tag::user_guide[]
+	}
+
+	@TestFactory
 	Stream<DynamicNode> dynamicTestsWithContainers() {
 		// end::user_guide[]
 		// @formatter:off

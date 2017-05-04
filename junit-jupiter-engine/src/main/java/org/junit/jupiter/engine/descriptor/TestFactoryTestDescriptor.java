@@ -14,6 +14,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicContainer;
@@ -26,12 +27,13 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * {@link org.junit.platform.engine.TestDescriptor TestDescriptor} for {@link org.junit.jupiter.api.TestFactory @TestFactory}
- * methods.
+ * {@link org.junit.platform.engine.TestDescriptor TestDescriptor} for
+ * {@link org.junit.jupiter.api.TestFactory @TestFactory} methods.
  *
  * @since 5.0
  */
@@ -76,7 +78,9 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 				while (iterator.hasNext()) {
 					DynamicNode dynamicNode = iterator.next();
 					JupiterTestDescriptor descriptor = createDynamicDescriptor(this, dynamicNode, index++, source);
-					dynamicTestExecutor.execute(descriptor);
+					if (!isTestResultPresentAndSuccessful(dynamicTestExecutor.execute(descriptor))) {
+						break;
+					}
 				}
 			}
 			catch (ClassCastException ex) {
@@ -93,6 +97,10 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		catch (PreconditionViolationException ex) {
 			throw invalidReturnTypeException(ex);
 		}
+	}
+
+	static boolean isTestResultPresentAndSuccessful(Optional<TestExecutionResult> result) {
+		return result.map(TestExecutionResult::isSuccessful).orElse(false);
 	}
 
 	static JupiterTestDescriptor createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node, int index,
