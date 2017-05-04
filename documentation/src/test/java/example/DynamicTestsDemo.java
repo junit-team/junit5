@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
+import static org.junit.jupiter.api.DynamicTest.dynamicStep;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.util.Arrays;
@@ -29,7 +30,6 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Scenario;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.ThrowingConsumer;
@@ -45,7 +45,7 @@ class DynamicTestsDemo {
 		return Arrays.asList("Hello");
 	}
 
-	@Scenario
+	@TestFactory
 	Stream<DynamicNode> scenarioTests() {
 		// end::user_guide[]
 		// @formatter:off
@@ -55,7 +55,7 @@ class DynamicTestsDemo {
 					// attempt to visit page which requires that a user is logged in
 					// assert user is redirected to login page
 				}),
-				dynamicTest("Log-in", () -> {
+				dynamicStep("Log-in", () -> {
 					// submit login form with valid credentials
 					// assert user is redirected back to previous page requiring authorization
 					// fail("you shall not pass");

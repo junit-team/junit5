@@ -25,10 +25,12 @@ import org.junit.platform.commons.util.ToStringBuilder;
 @API(Experimental)
 public abstract class DynamicNode {
 
+	private final boolean blocking;
 	private final String displayName;
 
-	DynamicNode(String displayName) {
+	DynamicNode(String displayName, boolean blocking) {
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
+		this.blocking = blocking;
 	}
 
 	/**
@@ -38,9 +40,13 @@ public abstract class DynamicNode {
 		return this.displayName;
 	}
 
+	public boolean isBlocking() {
+		return blocking;
+	}
+
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("displayName", displayName).toString();
+		return new ToStringBuilder(this).append("displayName", displayName).append("blocking", blocking).toString();
 	}
 
 }
