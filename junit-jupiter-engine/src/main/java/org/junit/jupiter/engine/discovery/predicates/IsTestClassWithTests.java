@@ -25,7 +25,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @since 5.0
  */
 @API(Internal)
-public class IsTestClassWithTests implements Predicate<Class<?>> {
+class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
 

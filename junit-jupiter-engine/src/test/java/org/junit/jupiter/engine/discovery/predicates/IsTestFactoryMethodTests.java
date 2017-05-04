@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
 
-public class IsTestFactoryMethodTests {
+class IsTestFactoryMethodTests {
 
 	private final Predicate<Method> isTestMethod = new IsTestFactoryMethod();
 

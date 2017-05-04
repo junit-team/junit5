@@ -33,7 +33,7 @@ import org.junit.platform.launcher.TestIdentifier;
  *
  * @since 5.0
  */
-public class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
+class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestCaseWithOverloadedMethodsAndThenRerunOnlyOneOfTheMethodsSelectedByUniqueId() {

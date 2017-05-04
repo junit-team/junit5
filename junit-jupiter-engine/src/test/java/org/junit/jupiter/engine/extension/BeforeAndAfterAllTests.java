@@ -36,7 +36,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  *
  * @since 5.0
  */
-public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
+class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> callSequence = new ArrayList<>();
 

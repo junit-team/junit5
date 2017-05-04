@@ -34,7 +34,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  *
  * @since 5.0
  */
-public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
+class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> callSequence = new ArrayList<>();
 
@@ -48,7 +48,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	}
 
 	@Test
-	public void executeAllTestsInClass() {
+	void executeAllTestsInClass() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(LocalTestCase.class);
 
 		assertEquals(6, eventRecorder.getTestStartedCount(), "# tests started");
@@ -64,7 +64,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	}
 
 	@Test
-	public void executeSingleTest() {
+	void executeSingleTest() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(LocalTestCase.class, "alwaysPasses")).build();
 
@@ -78,7 +78,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	}
 
 	@Test
-	public void executeTestDeclaredInSuperClass() {
+	void executeTestDeclaredInSuperClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, "superTest")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -97,7 +97,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	}
 
 	@Test
-	public void executeTestWithExceptionThrownInAfterMethod() {
+	void executeTestWithExceptionThrownInAfterMethod() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(LocalTestCase.class, "throwExceptionInAfterMethod")).build();
 
@@ -111,7 +111,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 	}
 
 	@Test
-	public void beforeAndAfterMethodsInTestClassHierarchy() {
+	void beforeAndAfterMethodsInTestClassHierarchy() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCase3.class);
 
 		// @formatter:off

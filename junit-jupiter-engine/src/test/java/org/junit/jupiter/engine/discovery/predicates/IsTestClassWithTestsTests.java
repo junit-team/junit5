@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
 
-public class IsTestClassWithTestsTests {
+class IsTestClassWithTestsTests {
 
 	private final Predicate<Class<?>> isTestClassWithTests = new IsTestClassWithTests();
 

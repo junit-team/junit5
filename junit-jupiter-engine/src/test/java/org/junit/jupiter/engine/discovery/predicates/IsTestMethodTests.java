@@ -23,7 +23,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 /**
  * @since 5.0
  */
-public class IsTestMethodTests {
+class IsTestMethodTests {
 
 	private final Predicate<Method> isTestMethod = new IsTestMethod();
 
@@ -83,11 +83,11 @@ public class IsTestMethodTests {
 class ClassWithTestMethods {
 
 	@Test
-	public void publicTestMethod() {
+	void publicTestMethod() {
 	}
 
 	@Test
-	public void publicTestMethodWithArgument(TestInfo info) {
+	void publicTestMethodWithArgument(TestInfo info) {
 	}
 
 	@Test

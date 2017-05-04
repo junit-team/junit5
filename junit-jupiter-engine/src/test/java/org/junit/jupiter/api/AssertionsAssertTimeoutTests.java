@@ -31,7 +31,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-public class AssertionsAssertTimeoutTests {
+class AssertionsAssertTimeoutTests {
 
 	private static ThreadLocal<AtomicBoolean> changed = ThreadLocal.withInitial(() -> new AtomicBoolean(false));
 

@@ -19,17 +19,17 @@ import org.junit.platform.engine.test.TestDescriptorStub;
 /**
  * @since 1.0
  */
-public class TestDescriptorTests {
+class TestDescriptorTests {
 
 	@Test
-	public void isRootWithoutParent() {
+	void isRootWithoutParent() {
 		TestDescriptor root = new TestDescriptorStub(UniqueId.root("root", "id"), "id");
 
 		assertTrue(root.isRoot());
 	}
 
 	@Test
-	public void isRootWithParent() {
+	void isRootWithParent() {
 		TestDescriptor child = new TestDescriptorStub(UniqueId.root("child", "child"), "child");
 		child.setParent(new TestDescriptorStub(UniqueId.root("root", "root"), "root"));
 

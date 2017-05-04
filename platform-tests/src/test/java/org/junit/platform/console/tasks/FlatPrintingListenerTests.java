@@ -28,12 +28,12 @@ import org.junit.platform.launcher.TestIdentifier;
 /**
  * @since 1.0
  */
-public class FlatPrintingListenerTests {
+class FlatPrintingListenerTests {
 
 	private static final String EOL = System.lineSeparator();
 
 	@Test
-	public void executionSkipped() {
+	void executionSkipped() {
 		StringWriter stringWriter = new StringWriter();
 		listener(stringWriter).executionSkipped(newTestIdentifier(), "Test" + EOL + "disabled");
 		String[] lines = lines(stringWriter);
@@ -46,7 +46,7 @@ public class FlatPrintingListenerTests {
 	}
 
 	@Test
-	public void reportingEntryPublished() {
+	void reportingEntryPublished() {
 		StringWriter stringWriter = new StringWriter();
 		listener(stringWriter).reportingEntryPublished(newTestIdentifier(), ReportEntry.from("foo", "bar"));
 		String[] lines = lines(stringWriter);
@@ -59,7 +59,7 @@ public class FlatPrintingListenerTests {
 	}
 
 	@Test
-	public void executionFinishedWithFailure() {
+	void executionFinishedWithFailure() {
 		StringWriter stringWriter = new StringWriter();
 		listener(stringWriter).executionFinished(newTestIdentifier(), failed(new AssertionError("Boom!")));
 		String[] lines = lines(stringWriter);

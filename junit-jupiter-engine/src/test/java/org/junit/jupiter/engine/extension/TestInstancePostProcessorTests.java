@@ -33,7 +33,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  *
  * @since 5.0
  */
-public class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
+class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> callSequence = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTes
 	}
 
 	@Test
-	public void instancePostProcessorsInNestedClasses() {
+	void instancePostProcessorsInNestedClasses() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -72,7 +72,7 @@ public class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTes
 	}
 
 	@Test
-	public void testSpecificTestInstancePostProcessorIsCalled() {
+	void testSpecificTestInstancePostProcessorIsCalled() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithTestSpecificTestInstancePostProcessor.class)).build();
 

@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @since 1.0
  */
-public class CustomContextClassLoaderExecutorTests {
+class CustomContextClassLoaderExecutorTests {
 
 	@Test
-	public void invokeWithoutCustomClassLoaderDoesNotSetClassLoader() throws Exception {
+	void invokeWithoutCustomClassLoaderDoesNotSetClassLoader() throws Exception {
 		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
 		CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(Optional.empty());
 
@@ -39,7 +39,7 @@ public class CustomContextClassLoaderExecutorTests {
 	}
 
 	@Test
-	public void invokeWithCustomClassLoaderSetsCustomAndResetsToOriginal() throws Exception {
+	void invokeWithCustomClassLoaderSetsCustomAndResetsToOriginal() throws Exception {
 		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
 		ClassLoader customClassLoader = URLClassLoader.newInstance(new URL[0]);
 		CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(

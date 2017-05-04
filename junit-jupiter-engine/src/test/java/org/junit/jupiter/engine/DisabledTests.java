@@ -25,10 +25,10 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  *
  * @since 5.0
  */
-public class DisabledTests extends AbstractJupiterTestEngineTests {
+class DisabledTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	public void executeTestsWithDisabledTestClass() {
+	void executeTestsWithDisabledTestClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestClassTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -37,7 +37,7 @@ public class DisabledTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void executeTestsWithDisabledTestMethods() throws Exception {
+	void executeTestsWithDisabledTestMethods() throws Exception {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestMethodsTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

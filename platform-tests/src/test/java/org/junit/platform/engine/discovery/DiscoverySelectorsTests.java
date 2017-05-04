@@ -442,14 +442,14 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	public void selectClasspathRootsWithNonExistingDirectory() throws Exception {
+	void selectClasspathRootsWithNonExistingDirectory() throws Exception {
 		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(Paths.get("some", "local", "path")));
 
 		assertThat(selectors).isEmpty();
 	}
 
 	@Test
-	public void selectClasspathRootsWithNonExistingJarFile() throws Exception {
+	void selectClasspathRootsWithNonExistingJarFile() throws Exception {
 		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(Paths.get("some.jar")));
 
 		assertThat(selectors).isEmpty();
@@ -464,7 +464,7 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	public void selectClasspathRootsWithExistingJarFile() throws Exception {
+	void selectClasspathRootsWithExistingJarFile() throws Exception {
 		URI jarUri = getClass().getResource("/jartest.jar").toURI();
 		Path jarFile = Paths.get(jarUri);
 

@@ -23,7 +23,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-public class AssertionsAssertNotEqualsTests {
+class AssertionsAssertNotEqualsTests {
 
 	@Test
 	void assertNotEqualsWithNullVsObject() {

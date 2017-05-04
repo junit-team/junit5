@@ -26,7 +26,7 @@ class ChildWithoutBridgeMethods extends PackagePrivateParent {
 	}
 
 	@Test
-	public void test() {
+	void test() {
 		BridgeMethodTests.sequence.add("child.test()");
 	}
 

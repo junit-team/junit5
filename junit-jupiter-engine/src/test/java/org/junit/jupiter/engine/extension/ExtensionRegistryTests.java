@@ -40,7 +40,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  *
  * @since 5.0
  */
-public class ExtensionRegistryTests {
+class ExtensionRegistryTests {
 
 	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 

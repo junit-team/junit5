@@ -46,7 +46,7 @@ class DiscoveryRequestCreatorTests {
 	private final CommandLineOptions options = new CommandLineOptions();
 
 	@Test
-	public void convertsScanClasspathOptionWithoutExplicitRootDirectories() {
+	void convertsScanClasspathOptionWithoutExplicitRootDirectories() {
 		options.setScanClasspath(true);
 
 		LauncherDiscoveryRequest request = convert();
@@ -60,7 +60,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsScanClasspathOptionWithExplicitRootDirectories() {
+	void convertsScanClasspathOptionWithExplicitRootDirectories() {
 		options.setScanClasspath(true);
 		options.setSelectedClasspathEntries(asList(Paths.get("."), Paths.get("..")));
 
@@ -74,7 +74,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsScanClasspathOptionWithAdditionalClasspathEntries() {
+	void convertsScanClasspathOptionWithAdditionalClasspathEntries() {
 		options.setScanClasspath(true);
 		options.setAdditionalClasspathEntries(asList(Paths.get("."), Paths.get("..")));
 
@@ -88,7 +88,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void doesNotSupportScanClasspathAndExplicitSelectors() {
+	void doesNotSupportScanClasspathAndExplicitSelectors() {
 		options.setScanClasspath(true);
 		options.setSelectedClasses(singletonList("SomeTest"));
 
@@ -98,7 +98,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsDefaultIncludeClassNamePatternOption() {
+	void convertsDefaultIncludeClassNamePatternOption() {
 		options.setScanClasspath(true);
 
 		LauncherDiscoveryRequest request = convert();
@@ -109,7 +109,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsExplicitIncludeClassNamePatternOption() {
+	void convertsExplicitIncludeClassNamePatternOption() {
 		options.setScanClasspath(true);
 		options.setIncludedClassNamePatterns(asList("Foo.*Bar", "Bar.*Foo"));
 
@@ -122,7 +122,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsExcludeClassNamePatternOption() {
+	void convertsExcludeClassNamePatternOption() {
 		options.setScanClasspath(true);
 		options.setExcludedClassNamePatterns(asList("Foo.*Bar", "Bar.*Foo"));
 
@@ -135,7 +135,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsPackageOptions() {
+	void convertsPackageOptions() {
 		options.setScanClasspath(true);
 		options.setIncludedPackages(asList("org.junit.included1", "org.junit.included2", "org.junit.included3"));
 		options.setExcludedPackages(asList("org.junit.excluded1"));
@@ -151,7 +151,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsTagOptions() {
+	void convertsTagOptions() {
 		options.setScanClasspath(true);
 		options.setIncludedTags(asList("fast", "medium", "slow"));
 		options.setExcludedTags(asList("slow"));
@@ -165,7 +165,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsEngineOptions() {
+	void convertsEngineOptions() {
 		options.setScanClasspath(true);
 		options.setIncludedEngines(asList("engine1", "engine2", "engine3"));
 		options.setExcludedEngines(singletonList("engine2"));
@@ -179,7 +179,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsUriSelectors() {
+	void convertsUriSelectors() {
 		options.setSelectedUris(asList(URI.create("a"), URI.create("b")));
 
 		LauncherDiscoveryRequest request = convert();
@@ -189,7 +189,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsFileSelectors() {
+	void convertsFileSelectors() {
 		options.setSelectedFiles(asList("foo.txt", "bar.csv"));
 
 		LauncherDiscoveryRequest request = convert();
@@ -199,7 +199,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsDirectorySelectors() {
+	void convertsDirectorySelectors() {
 		options.setSelectedDirectories(asList("foo/bar", "bar/qux"));
 
 		LauncherDiscoveryRequest request = convert();
@@ -209,7 +209,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsPackageSelectors() {
+	void convertsPackageSelectors() {
 		options.setSelectedPackages(asList("com.acme.foo", "com.example.bar"));
 
 		LauncherDiscoveryRequest request = convert();
@@ -220,7 +220,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsClassSelectors() {
+	void convertsClassSelectors() {
 		options.setSelectedClasses(asList("com.acme.Foo", "com.example.Bar"));
 
 		LauncherDiscoveryRequest request = convert();
@@ -231,7 +231,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsMethodSelectors() {
+	void convertsMethodSelectors() {
 		options.setSelectedMethods(asList("com.acme.Foo#m()", "com.example.Bar#method(java.lang.Object)"));
 
 		LauncherDiscoveryRequest request = convert();
@@ -247,7 +247,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsClasspathResourceSelectors() {
+	void convertsClasspathResourceSelectors() {
 		options.setSelectedClasspathResources(asList("foo.csv", "com/example/bar.json"));
 
 		LauncherDiscoveryRequest request = convert();

@@ -28,7 +28,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  *
  * @since 5.0
  */
-public class DefaultMethodTests extends AbstractJupiterTestEngineTests {
+class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 
 	private static boolean beforeAllInvoked = false;
 	private static boolean afterAllInvoked = false;

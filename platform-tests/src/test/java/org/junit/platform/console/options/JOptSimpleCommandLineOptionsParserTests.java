@@ -41,7 +41,7 @@ import org.junit.platform.commons.JUnitException;
 class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
-	public void parseNoArguments() {
+	void parseNoArguments() {
 		String[] noArguments = {};
 		CommandLineOptions options = createParser().parse(noArguments);
 
@@ -68,7 +68,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseSwitches() {
+	void parseSwitches() {
 		// @formatter:off
 		assertAll(
 			() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
@@ -79,7 +79,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseValidDetails() {
+	void parseValidDetails() {
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(Details.VERBOSE, parseArgLine("--details verbose").getDetails()),
@@ -93,12 +93,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidDetails() throws Exception {
+	void parseInvalidDetails() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("--details");
 	}
 
 	@Test
-	public void parseValidDetailsTheme() {
+	void parseValidDetailsTheme() {
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(Theme.ASCII, parseArgLine("--details-theme ascii").getTheme()),
@@ -111,12 +111,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidDetailsTheme() throws Exception {
+	void parseInvalidDetailsTheme() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("--details-theme");
 	}
 
 	@Test
-	public void parseValidIncludeClassNamePatterns() {
+	void parseValidIncludeClassNamePatterns() {
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(singletonList(".*Test"), parseArgLine("-n .*Test").getIncludedClassNamePatterns()),
@@ -127,7 +127,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseValidExcludeClassNamePatterns() {
+	void parseValidExcludeClassNamePatterns() {
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(singletonList(".*Test"), parseArgLine("-N .*Test").getExcludedClassNamePatterns()),
@@ -138,22 +138,22 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void usesDefaultClassNamePatternWithoutExplicitArgument() {
+	void usesDefaultClassNamePatternWithoutExplicitArgument() {
 		assertEquals(singletonList(STANDARD_INCLUDE_PATTERN), parseArgLine("").getIncludedClassNamePatterns());
 	}
 
 	@Test
-	public void parseInvalidIncludeClassNamePatterns() throws Exception {
+	void parseInvalidIncludeClassNamePatterns() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("-n", "--include-classname");
 	}
 
 	@Test
-	public void parseInvalidExcludeClassNamePatterns() throws Exception {
+	void parseInvalidExcludeClassNamePatterns() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("-N", "--exclude-classname");
 	}
 
 	@Test
-	public void parseValidIncludedPackages() {
+	void parseValidIncludedPackages() {
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(asList("org.junit.included"),
@@ -167,7 +167,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseValidExcludedPackages() {
+	void parseValidExcludedPackages() {
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(asList("org.junit.excluded"),
@@ -181,7 +181,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseValidIncludedTags() {
+	void parseValidIncludedTags() {
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(asList("fast"), parseArgLine("-t fast").getIncludedTags()),
@@ -193,12 +193,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidIncludedTags() {
+	void parseInvalidIncludedTags() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-t", "--include-tag");
 	}
 
 	@Test
-	public void parseValidExcludedTags() {
+	void parseValidExcludedTags() {
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(asList("fast"), parseArgLine("-T fast").getExcludedTags()),
@@ -210,12 +210,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidExcludedTags() {
+	void parseInvalidExcludedTags() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-T", "--exclude-tag");
 	}
 
 	@Test
-	public void parseValidIncludedEngines() {
+	void parseValidIncludedEngines() {
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(asList("junit-jupiter"), parseArgLine("-e junit-jupiter").getIncludedEngines()),
@@ -226,12 +226,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidIncludedEngines() throws Exception {
+	void parseInvalidIncludedEngines() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("-e", "--include-engine");
 	}
 
 	@Test
-	public void parseValidExcludedEngines() {
+	void parseValidExcludedEngines() {
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(asList("junit-jupiter"), parseArgLine("-E junit-jupiter").getExcludedEngines()),
@@ -242,12 +242,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidExcludedEngines() throws Exception {
+	void parseInvalidExcludedEngines() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("-E", "--exclude-engine");
 	}
 
 	@Test
-	public void parseValidAdditionalClasspathEntries() {
+	void parseValidAdditionalClasspathEntries() {
 		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
@@ -266,12 +266,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidAdditionalClasspathEntries() {
+	void parseInvalidAdditionalClasspathEntries() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-cp", "--classpath", "--class-path");
 	}
 
 	@Test
-	public void parseValidXmlReportsDirs() {
+	void parseValidXmlReportsDirs() {
 		Path dir = Paths.get("build", "test-results");
 		// @formatter:off
 		assertAll(
@@ -282,12 +282,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidXmlReportsDirs() throws Exception {
+	void parseInvalidXmlReportsDirs() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("--reports-dir");
 	}
 
 	@Test
-	public void parseValidUriSelectors() {
+	void parseValidUriSelectors() {
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList(new URI("file:///foo.txt")), parseArgLine("-u file:///foo.txt").getSelectedUris()),
@@ -302,12 +302,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidUriSelectors() {
+	void parseInvalidUriSelectors() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-u", "--select-uri", "-u unknown-scheme:");
 	}
 
 	@Test
-	public void parseValidFileSelectors() {
+	void parseValidFileSelectors() {
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("foo.txt"), parseArgLine("-f foo.txt").getSelectedFiles()),
@@ -322,12 +322,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidFileSelectors() {
+	void parseInvalidFileSelectors() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-f", "--select-file");
 	}
 
 	@Test
-	public void parseValidDirectorySelectors() {
+	void parseValidDirectorySelectors() {
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("foo/bar"), parseArgLine("-d foo/bar").getSelectedDirectories()),
@@ -342,12 +342,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidDirectorySelectors() {
+	void parseInvalidDirectorySelectors() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-d", "--select-directory");
 	}
 
 	@Test
-	public void parseValidPackageSelectors() {
+	void parseValidPackageSelectors() {
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-p com.acme.foo").getSelectedPackages()),
@@ -362,12 +362,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidPackageSelectors() {
+	void parseInvalidPackageSelectors() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-p", "--select-package");
 	}
 
 	@Test
-	public void parseValidClassSelectors() {
+	void parseValidClassSelectors() {
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("com.acme.Foo"), parseArgLine("-c com.acme.Foo").getSelectedClasses()),
@@ -382,12 +382,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidClassSelectors() {
+	void parseInvalidClassSelectors() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-c", "--select-class");
 	}
 
 	@Test
-	public void parseValidMethodSelectors() {
+	void parseValidMethodSelectors() {
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("com.acme.Foo#m()"), parseArgLine("-m com.acme.Foo#m()").getSelectedMethods()),
@@ -403,12 +403,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidMethodSelectors() {
+	void parseInvalidMethodSelectors() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-m", "--select-method");
 	}
 
 	@Test
-	public void parseValidClasspathResourceSelectors() {
+	void parseValidClasspathResourceSelectors() {
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(singletonList("/foo.csv"), parseArgLine("-r /foo.csv").getSelectedClasspathResources()),
@@ -423,12 +423,12 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidClasspathResourceSelectors() {
+	void parseInvalidClasspathResourceSelectors() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-r", "--select-resource");
 	}
 
 	@Test
-	public void parseClasspathScanningEntries() {
+	void parseClasspathScanningEntries() {
 		Path dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
@@ -448,7 +448,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void printHelpOutputsHelpOption() {
+	void printHelpOutputsHelpOption() {
 		StringWriter writer = new StringWriter();
 
 		createParser().printHelp(writer);
@@ -457,7 +457,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void printHelpPreservesOriginalIOException() {
+	void printHelpPreservesOriginalIOException() {
 		Writer writer = new Writer() {
 
 			@Override

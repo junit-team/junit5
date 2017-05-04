@@ -36,24 +36,24 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  *
  * @since 5.0
  */
-public class DiscoveryTests extends AbstractJupiterTestEngineTests {
+class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	public void discoverTestClass() {
+	void discoverTestClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(LocalTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(7, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
-	public void doNotDiscoverAbstractTestClass() {
+	void doNotDiscoverAbstractTestClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(AbstractTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(0, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
-	public void discoverMethodByUniqueId() {
+	void discoverMethodByUniqueId() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
@@ -61,7 +61,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void discoverMethodByUniqueIdForOverloadedMethod() {
+	void discoverMethodByUniqueIdForOverloadedMethod() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test4()"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
@@ -69,7 +69,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void discoverMethodByUniqueIdForOverloadedMethodVariantThatAcceptsArguments() {
+	void discoverMethodByUniqueIdForOverloadedMethodVariantThatAcceptsArguments() {
 		LauncherDiscoveryRequest request = request().selectors(selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(
 			LocalTestCase.class, "test4(" + TestInfo.class.getName() + ")"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
@@ -77,7 +77,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void discoverMethodByMethodReference() throws NoSuchMethodException {
+	void discoverMethodByMethodReference() throws NoSuchMethodException {
 		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3", new Class<?>[0]);
 
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, testMethod)).build();
@@ -86,7 +86,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void discoverMultipleMethodsOfSameClass() throws NoSuchMethodException {
+	void discoverMultipleMethodsOfSameClass() throws NoSuchMethodException {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, "test1"),
 			selectMethod(LocalTestCase.class, "test2")).build();
 
@@ -98,7 +98,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void discoverCompositeSpec() {
+	void discoverCompositeSpec() {
 		LauncherDiscoveryRequest spec = request().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test2()")),
 			selectClass(LocalTestCase.class)).build();
@@ -108,7 +108,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void discoverTestTemplateMethodByUniqueId() {
+	void discoverTestTemplateMethodByUniqueId() {
 		LauncherDiscoveryRequest spec = request().selectors(
 			selectUniqueId(uniqueIdForTestTemplateMethod(TestTemplateClass.class, "testTemplate()"))).build();
 
@@ -117,7 +117,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	public void discoverTestTemplateMethodByMethodSelector() {
+	void discoverTestTemplateMethodByMethodSelector() {
 		LauncherDiscoveryRequest spec = request().selectors(
 			selectMethod(TestTemplateClass.class, "testTemplate")).build();
 

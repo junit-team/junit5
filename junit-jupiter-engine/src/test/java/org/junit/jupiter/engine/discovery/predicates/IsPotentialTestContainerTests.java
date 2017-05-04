@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @since 5.0
  */
-public class IsPotentialTestContainerTests {
+class IsPotentialTestContainerTests {
 
 	private final Predicate<Class<?>> isPotentialTestContainer = new IsPotentialTestContainer();
 

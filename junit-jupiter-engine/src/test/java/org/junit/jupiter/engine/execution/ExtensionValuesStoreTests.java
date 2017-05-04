@@ -29,7 +29,7 @@ import org.junit.jupiter.api.extension.ExtensionContextException;
  * @since 5.0
  * @see ExtensionContextTests
  */
-public class ExtensionValuesStoreTests {
+class ExtensionValuesStoreTests {
 
 	private final Object key = "key";
 	private final Object value = "value";

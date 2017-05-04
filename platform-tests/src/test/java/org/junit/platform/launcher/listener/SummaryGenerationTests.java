@@ -131,7 +131,7 @@ class SummaryGenerationTests {
 	}
 
 	@Test
-	public void canGetListOfFailures() {
+	void canGetListOfFailures() {
 		RuntimeException failedException = new RuntimeException("Pow!");
 		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "1"), "failingTest") {
 			@Override

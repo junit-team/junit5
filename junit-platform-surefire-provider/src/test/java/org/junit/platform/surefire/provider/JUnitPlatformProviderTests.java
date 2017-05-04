@@ -190,9 +190,8 @@ class JUnitPlatformProviderTests {
 		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
 		when(providerParameters.getProviderProperties()).thenReturn(properties);
 
-		Throwable throwable = assertThrows(PreconditionViolationException.class, () -> {
-			new JUnitPlatformProvider(providerParameters);
-		});
+		Throwable throwable = assertThrows(PreconditionViolationException.class,
+			() -> new JUnitPlatformProvider(providerParameters));
 
 		assertEquals(JUnitPlatformProvider.EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED, throwable.getMessage());
 	}
@@ -291,7 +290,7 @@ class JUnitPlatformProviderTests {
 	}
 
 	@Test
-	public void usesClassNamesForXmlReport() throws TestSetFailedException, InvocationTargetException {
+	void usesClassNamesForXmlReport() throws TestSetFailedException, InvocationTargetException {
 		String[] classNames = { "org.junit.platform.surefire.provider.JUnitPlatformProviderTests$Sub1Tests",
 				"org.junit.platform.surefire.provider.JUnitPlatformProviderTests$Sub2Tests" };
 		ProviderParameters providerParameters = providerParametersMock(Sub1Tests.class, Sub2Tests.class);
@@ -309,15 +308,15 @@ class JUnitPlatformProviderTests {
 		assertThat(allValues).extracting(ReportEntry::getSourceName).containsExactly(classNames);
 	}
 
-	public static class AbstractTestClass {
+	static class AbstractTestClass {
 		@Test
 		void test() {
 		}
 	}
 
-	public static class Sub1Tests extends AbstractTestClass {
+	static class Sub1Tests extends AbstractTestClass {
 	}
 
-	public static class Sub2Tests extends AbstractTestClass {
+	static class Sub2Tests extends AbstractTestClass {
 	}
 }

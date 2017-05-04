@@ -25,7 +25,7 @@ import org.junit.jupiter.api.TestFactory;
 /**
  * @since 5.0
  */
-public class IsScannableTestClassTests {
+class IsScannableTestClassTests {
 
 	private final Predicate<Class<?>> isScannableTestClass = new IsScannableTestClass();
 

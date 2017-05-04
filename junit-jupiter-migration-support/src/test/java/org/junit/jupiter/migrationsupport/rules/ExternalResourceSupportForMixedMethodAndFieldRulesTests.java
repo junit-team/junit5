@@ -50,7 +50,7 @@ public class ExternalResourceSupportForMixedMethodAndFieldRulesTests {
 	};
 
 	@Rule
-	public ExternalResource getResource2() {
+	ExternalResource getResource2() {
 		return new ExternalResource() {
 			@Override
 			protected void before() throws Throwable {

@@ -467,7 +467,7 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@Test
-	public void executesJUnit4TestCaseWithRunnerWithCustomUniqueIds() {
+	void executesJUnit4TestCaseWithRunnerWithCustomUniqueIds() {
 		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIds.class;
 
 		List<ExecutionEvent> executionEvents = execute(testClass);
