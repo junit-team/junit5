@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -121,35 +124,37 @@ class ConsoleDetailsTests {
 
 	@TestFactory
 	@DisplayName("Basic tests and annotations usage")
-	List<DynamicTest> basic() {
+	List<DynamicNode> basic() {
 		return scanContainerClassAndCreateDynamicTests(Basic.class);
 	}
 
 	@TestFactory
 	@DisplayName("Skipped and disabled tests")
-	List<DynamicTest> skipped() {
+	List<DynamicNode> skipped() {
 		return scanContainerClassAndCreateDynamicTests(Skip.class);
 	}
 
 	@TestFactory
 	@DisplayName("Failed tests")
-	List<DynamicTest> failed() {
+	List<DynamicNode> failed() {
 		return scanContainerClassAndCreateDynamicTests(Fail.class);
 	}
 
 	@TestFactory
 	@DisplayName("Tests publishing report entries")
-	List<DynamicTest> reports() {
+	List<DynamicNode> reports() {
 		return scanContainerClassAndCreateDynamicTests(Report.class);
 	}
 
-	private List<DynamicTest> scanContainerClassAndCreateDynamicTests(Class<?> containerClass) {
+	private List<DynamicNode> scanContainerClassAndCreateDynamicTests(Class<?> containerClass) {
 		String containerName = containerClass.getSimpleName();
-		List<DynamicTest> tests = new ArrayList<>();
+		List<DynamicNode> nodes = new ArrayList<>();
+		Map<Details, List<DynamicTest>> map = new EnumMap<>(Details.class);
 		for (Method method : findMethods(containerClass, m -> m.isAnnotationPresent(Test.class))) {
 			String methodName = method.getName();
 			Class<?>[] types = method.getParameterTypes();
 			for (Details details : Details.values()) {
+				List<DynamicTest> tests = map.computeIfAbsent(details, key -> new ArrayList<>());
 				for (Theme theme : Theme.values()) {
 					String caption = containerName + "-" + methodName + "-" + details + "-" + theme;
 					String[] args = { //
@@ -160,14 +165,15 @@ class ConsoleDetailsTests {
 							"--include-classname", containerClass.getCanonicalName(), //
 							"--select-method", getFullyQualifiedMethodName(containerClass, methodName, types) //
 					};
-					String displayName = methodName + "() details=" + details + " theme=" + theme;
+					String displayName = methodName + "() " + theme.name();
 					String dirName = "console/details/" + containerName.toLowerCase();
 					String outName = caption + ".out.txt";
 					tests.add(DynamicTest.dynamicTest(displayName, new Runner(dirName, outName, args)));
 				}
 			}
 		}
-		return tests;
+		map.forEach((details, tests) -> nodes.add(DynamicContainer.dynamicContainer(details.name(), tests)));
+		return nodes;
 	}
 
 	private static class Runner implements Executable {
