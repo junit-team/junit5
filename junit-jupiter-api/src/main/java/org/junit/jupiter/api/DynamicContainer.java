@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -27,6 +28,12 @@ import org.junit.platform.commons.util.Preconditions;
  */
 @API(Experimental)
 public class DynamicContainer extends DynamicNode {
+
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public static <D extends DynamicNode> DynamicContainer dynamicContainer(String displayName, D... dynamicNodes) {
+		return new DynamicContainer(displayName, Arrays.stream(dynamicNodes));
+	}
 
 	public static DynamicContainer dynamicContainer(String displayName, Iterable<? extends DynamicNode> dynamicNodes) {
 		return new DynamicContainer(displayName, StreamSupport.stream(dynamicNodes.spliterator(), false));
