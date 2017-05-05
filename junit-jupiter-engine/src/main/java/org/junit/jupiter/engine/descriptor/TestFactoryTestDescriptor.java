@@ -27,6 +27,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -77,6 +78,9 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 				Iterator<DynamicNode> iterator = dynamicNodeStream.iterator();
 				while (iterator.hasNext()) {
 					DynamicNode dynamicNode = iterator.next();
+					int currentIndex = index;
+					Preconditions.notNull(dynamicNode, () -> "dynamic node #" + currentIndex
+							+ " must not be null. [testMethod=" + getTestMethod() + "]");
 					JupiterTestDescriptor descriptor = createDynamicDescriptor(this, dynamicNode, index++, source);
 					if (!isTestResultPresentAndSuccessful(dynamicTestExecutor.execute(descriptor))) {
 						if (dynamicNode.isBlocking()) {
