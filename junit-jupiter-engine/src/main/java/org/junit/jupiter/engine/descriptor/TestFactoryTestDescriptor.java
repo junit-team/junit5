@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicContainer;
@@ -46,8 +47,11 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
+	private final AtomicBoolean broken;
+
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
+		this.broken = new AtomicBoolean(false);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -82,10 +86,9 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 					Preconditions.notNull(dynamicNode, () -> "dynamic node #" + currentIndex
 							+ " must not be null. [testMethod=" + getTestMethod() + "]");
 					JupiterTestDescriptor descriptor = createDynamicDescriptor(this, dynamicNode, index++, source);
-					if (!isTestResultPresentAndSuccessful(dynamicTestExecutor.execute(descriptor))) {
-						if (dynamicNode.isBlocking()) {
-							break;
-						}
+					Optional<TestExecutionResult> optionalResult = dynamicTestExecutor.execute(descriptor);
+					if (breaking(dynamicNode, optionalResult)) {
+						break;
 					}
 				}
 			}
@@ -105,11 +108,25 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		}
 	}
 
-	static boolean isTestResultPresentAndSuccessful(Optional<TestExecutionResult> result) {
-		return result.map(TestExecutionResult::isSuccessful).orElse(false);
+	boolean breaking(DynamicNode dynamicNode, Optional<TestExecutionResult> testExecutionResult) {
+		// already broken? stay broken.
+		if (broken.get()) {
+			return true;
+		}
+		// alive and successful? stay alive.
+		if (testExecutionResult.map(TestExecutionResult::isSuccessful).orElse(false)) {
+			return false;
+		}
+		// alive, not successful and required node? breaking bad.
+		if (dynamicNode.isRequired()) {
+			broken.set(true);
+			return true;
+		}
+		// alive, not successful and "normal" dynamic test? stay alive.
+		return false;
 	}
 
-	static JupiterTestDescriptor createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node, int index,
+	JupiterTestDescriptor createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node, int index,
 			TestSource source) {
 		JupiterTestDescriptor descriptor;
 		if (node instanceof DynamicTest) {
@@ -120,7 +137,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		else {
 			DynamicContainer container = (DynamicContainer) node;
 			UniqueId uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
-			descriptor = new DynamicContainerTestDescriptor(uniqueId, container, source);
+			descriptor = new DynamicContainerTestDescriptor(this, uniqueId, container, source);
 		}
 		parent.addChild(descriptor);
 		return descriptor;

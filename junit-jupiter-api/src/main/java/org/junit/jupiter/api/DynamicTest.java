@@ -61,7 +61,7 @@ public class DynamicTest extends DynamicNode {
 		return new DynamicTest(displayName, false, executable);
 	}
 
-	public static DynamicTest dynamicStep(String displayName, Executable executable) {
+	public static DynamicTest requiredTest(String displayName, Executable executable) {
 		return new DynamicTest(displayName, true, executable);
 	}
 
@@ -103,10 +103,12 @@ public class DynamicTest extends DynamicNode {
 	}
 
 	private final Executable executable;
+	private final boolean required;
 
-	private DynamicTest(String displayName, boolean blocking, Executable executable) {
-		super(displayName, blocking);
+	private DynamicTest(String displayName, boolean required, Executable executable) {
+		super(displayName);
 		this.executable = Preconditions.notNull(executable, "executable must not be null");
+		this.required = required;
 	}
 
 	/**
@@ -114,5 +116,10 @@ public class DynamicTest extends DynamicNode {
 	 */
 	public Executable getExecutable() {
 		return this.executable;
+	}
+
+	@Override
+	public boolean isRequired() {
+		return required;
 	}
 }
