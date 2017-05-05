@@ -32,12 +32,19 @@ public abstract class DynamicNode {
 	}
 
 	/**
-	 * Get the display name of this {@code DynamicTest}.
+	 * Get the display name of this {@code DynamicNode}.
 	 */
 	public String getDisplayName() {
 		return this.displayName;
 	}
 
+	/**
+	 * Get the required flag of this {@code DynamicNode}.
+	 *
+	 * If a node returns {@code true}, it requires the dynamic test executor to check the
+	 * test execution result. If the result of a required dynamic test is unsuccessful the
+	 * executor breaks the execution loop immediately.
+	 */
 	public abstract boolean isRequired();
 
 	@Override

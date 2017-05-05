@@ -51,16 +51,32 @@ public class DynamicTest extends DynamicNode {
 	 * Factory for creating a new {@code DynamicTest} for the supplied display
 	 * name and executable code block.
 	 *
+	 * <p>An unsuccessful execution result does not break the execution loop.
+	 *
 	 * @param displayName the display name for the dynamic test; never
 	 * {@code null} or blank
 	 * @param executable the executable code block for the dynamic test;
 	 * never {@code null}
+	* @see #requiredTest(String, Executable)
 	 * @see #stream(Iterator, Function, ThrowingConsumer)
 	 */
 	public static DynamicTest dynamicTest(String displayName, Executable executable) {
 		return new DynamicTest(displayName, false, executable);
 	}
 
+	/**
+	 * Factory for creating a new required {@code DynamicTest} for the supplied
+	 * display name and executable code block.
+	 *
+	 * <p>An unsuccessful execution result does break the execution loop.
+	 *
+	 * @param displayName the display name for the dynamic test; never
+	 * {@code null} or blank
+	 * @param executable the executable code block for the dynamic test;
+	 * never {@code null}
+	 * @see #dynamicTest(String, Executable)
+	 * @see #stream(Iterator, Function, ThrowingConsumer)
+	 */
 	public static DynamicTest requiredTest(String displayName, Executable executable) {
 		return new DynamicTest(displayName, true, executable);
 	}

@@ -29,9 +29,7 @@ import org.junit.platform.commons.util.Preconditions;
 @API(Experimental)
 public class DynamicContainer extends DynamicNode {
 
-	@SafeVarargs
-	@SuppressWarnings("varargs")
-	public static <D extends DynamicNode> DynamicContainer dynamicContainer(String displayName, D... dynamicNodes) {
+	public static DynamicContainer dynamicContainer(String displayName, DynamicNode... dynamicNodes) {
 		return new DynamicContainer(displayName, Arrays.stream(dynamicNodes));
 	}
 
@@ -50,12 +48,19 @@ public class DynamicContainer extends DynamicNode {
 		Preconditions.notNull(dynamicNodes, "dynamicNodes must not be null");
 		this.dynamicNodes = dynamicNodes.collect(CollectionUtils.toUnmodifiableList());
 		Preconditions.containsNoNullElements(this.dynamicNodes, "individual dynamic node must not be null");
+		Preconditions.notEmpty(this.dynamicNodes, "dynamic node collection passed to container must not be empty");
 	}
 
+	/**
+	 * Get the dynamic child nodes.
+	 */
 	public Iterable<DynamicNode> getDynamicNodes() {
 		return dynamicNodes;
 	}
 
+	/**
+	 * @return always {@code false}
+	 */
 	@Override
 	public boolean isRequired() {
 		return false;
