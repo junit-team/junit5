@@ -22,7 +22,7 @@ import org.junit.platform.commons.meta.API;
 
 /**
  * {@code @MethodSource} is an {@link ArgumentsSource} which provides access
- * to values returned by {@linkplain #names() static methods} of the class in
+ * to values returned by {@linkplain #value() static methods} of the class in
  * which this annotation is declared.
  *
  * <p>The values returned by such methods will be provided as arguments to the
@@ -39,7 +39,7 @@ import org.junit.platform.commons.meta.API;
 @ArgumentsSource(MethodArgumentsProvider.class)
 public @interface MethodSource {
 
-	// TODO [#830] Document names().
-	String[] names();
+	// TODO [#830] Document value().
+	String[] value();
 
 }

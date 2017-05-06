@@ -64,7 +64,7 @@ class ParameterizedTestDemo {
 
 	// tag::simple_MethodSource_example[]
 	@ParameterizedTest
-	@MethodSource(names = "stringProvider")
+	@MethodSource("stringProvider")
 	void testWithSimpleMethodSource(String argument) {
 		assertNotNull(argument);
 	}
@@ -76,7 +76,7 @@ class ParameterizedTestDemo {
 
 	// tag::multi_arg_MethodSource_example[]
 	@ParameterizedTest
-	@MethodSource(names = "stringAndIntProvider")
+	@MethodSource("stringAndIntProvider")
 	void testWithMultiArgMethodSource(String first, int second) {
 		assertNotNull(first);
 		assertNotEquals(0, second);

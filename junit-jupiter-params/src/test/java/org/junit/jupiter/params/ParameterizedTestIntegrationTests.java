@@ -182,13 +182,13 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@ParameterizedTest
-		@MethodSource(names = "providerMethod")
+		@MethodSource("providerMethod")
 		void test1(String argument, TestInfo testInfo) {
 			performTest(argument, testInfo);
 		}
 
 		@ParameterizedTest
-		@MethodSource(names = "providerMethod")
+		@MethodSource("providerMethod")
 		void test2(String argument, TestInfo testInfo) {
 			performTest(argument, testInfo);
 		}

@@ -72,6 +72,7 @@ on GitHub.
   module has been renamed to `provideArguments()`.
 * The `create()` factory method in `ObjectArrayArguments` in the `junit-jupiter-params`
   module has been renamed to `arguments()`.
+* The `names` property of `@MethodSource` has been renamed to `value`.
 
 [[release-notes-5.0.0-m5-migration-extension-api]]
 .Extension API Migration

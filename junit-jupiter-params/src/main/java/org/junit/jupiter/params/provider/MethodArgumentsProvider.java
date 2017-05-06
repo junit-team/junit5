@@ -30,7 +30,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 
 	@Override
 	public void accept(MethodSource annotation) {
-		methodNames = annotation.names();
+		methodNames = annotation.value();
 	}
 
 	@Override

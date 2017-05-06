@@ -133,7 +133,7 @@ class MethodArgumentsProviderTests {
 
 	private Stream<Object[]> provideArguments(Class<?> testClass, String... methodNames) {
 		MethodSource annotation = mock(MethodSource.class);
-		when(annotation.names()).thenReturn(methodNames);
+		when(annotation.value()).thenReturn(methodNames);
 
 		ContainerExtensionContext context = mock(ContainerExtensionContext.class);
 		when(context.getTestClass()).thenReturn(Optional.ofNullable(testClass));
