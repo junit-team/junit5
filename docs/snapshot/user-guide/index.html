@@ -2105,7 +2105,7 @@ demonstrated by the following example.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@MethodSource</span>(names = <span class="string"><span class="delimiter">&quot;</span><span class="content">stringProvider</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@MethodSource</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">stringProvider</span><span class="delimiter">&quot;</span></span>)
 <span class="type">void</span> testWithSimpleMethodSource(<span class="predefined-type">String</span> argument) {
     assertNotNull(argument);
 }
@@ -2123,7 +2123,7 @@ Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory metho
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@MethodSource</span>(names = <span class="string"><span class="delimiter">&quot;</span><span class="content">stringAndIntProvider</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@MethodSource</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">stringAndIntProvider</span><span class="delimiter">&quot;</span></span>)
 <span class="type">void</span> testWithMultiArgMethodSource(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
     assertNotNull(first);
     assertNotEquals(<span class="integer">0</span>, second);
@@ -5689,6 +5689,9 @@ module has been renamed to <code>provideArguments()</code>.</p>
 <p>The <code>create()</code> factory method in <code>ObjectArrayArguments</code> in the <code>junit-jupiter-params</code>
 module has been renamed to <code>arguments()</code>.</p>
 </li>
+<li>
+<p>The <code>names</code> property of <code>@MethodSource</code> has been renamed to <code>value</code>.</p>
+</li>
 </ul>
 </div>
 <table id="release-notes-5.0.0-m5-migration-extension-api" class="tableblock frame-all grid-all spread">
@@ -5782,7 +5785,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-05-05 17:37:33 EDT
+Last updated 2017-05-06 10:11:10 EDT
 </div>
 </div>
 </body>
