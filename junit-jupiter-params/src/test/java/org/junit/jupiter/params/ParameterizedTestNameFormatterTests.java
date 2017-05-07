@@ -41,7 +41,7 @@ class ParameterizedTestNameFormatterTests {
 		// @formatter:off
 		assertEquals("42, 99, enigma, null, [1, 2, 3], [foo, bar], [[2, 4], [3, 9]]",
 			formatter.format(1,
-				new Integer(42),
+				Integer.valueOf(42),
 				99,
 				"enigma",
 				null,

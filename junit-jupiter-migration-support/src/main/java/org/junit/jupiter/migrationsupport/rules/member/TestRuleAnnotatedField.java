@@ -24,6 +24,7 @@ class TestRuleAnnotatedField extends AbstractTestRuleAnnotatedMember {
 		super(retrieveTestRule(testInstance, field));
 	}
 
+	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
 	private static TestRule retrieveTestRule(Object testInstance, Field field) {
 		try {
 			if (!field.isAccessible()) {
