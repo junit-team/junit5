@@ -2,13 +2,14 @@ language: java
 sudo: false
 dist: trusty
 
-jdk:
-  - oraclejdk8
-
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+matrix:
+  include:
+    - jdk: oraclejdk8
+      addons: {apt: {packages: [oracle-java8-installer]}}
+    - jdk: oraclejdk9
+      addons: {apt: {packages: [oracle-java9-installer]}}
+# With jdk-9-b163(or higher) available on Travis, env: JDK_JAVA_OPTIONS='--permit-illegal-access'
+      env: JDK_JAVA_OPTIONS='--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED'
 
 # Display Gradle version instead of letting Travis execute './gradlew assemble' by default
 install:
