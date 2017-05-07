@@ -96,6 +96,8 @@ on GitHub.
 * If a `@ParameterizedTest` accepts an array as an argument, the string representation of
   the array will now be converted to a human readable format when generating the display
   name for invocations of the parameterized test.
+* Extensions may now share state across top-level test classes by using the `Store` of the
+  newly introduced engine-level `ExtensionContext`.
 
 
 [[release-notes-5.0.0-m5-junit-vintage]]
