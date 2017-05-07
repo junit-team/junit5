@@ -18,6 +18,7 @@ buildscript {
 plugins {
 	id 'com.gradle.build-scan' version '1.6'
 	id 'net.nemerosa.versioning' version '2.6.0'
+	id 'com.github.ben-manes.versions' version '0.14.0'
 }
 
 buildScan {
