@@ -935,6 +935,7 @@ public final class ReflectionUtils {
 		return type instanceof TypeVariable || type instanceof GenericArrayType;
 	}
 
+	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
 	private static <T extends AccessibleObject> T makeAccessible(T object) {
 		if (!object.isAccessible()) {
 			object.setAccessible(true);
