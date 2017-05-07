@@ -10,20 +10,21 @@
 
 package org.junit.jupiter.engine.execution;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.descriptor.ClassBasedContainerExtensionContext;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
+import org.junit.jupiter.engine.descriptor.JupiterEngineExtensionContext;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestExtensionContext;
 import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
@@ -36,13 +37,30 @@ import org.mockito.Mockito;
 
 /**
  * Microtests for implementors of {@linkplain ExtensionContext}:
- * {@linkplain ClassBasedContainerExtensionContext} and
- * {@linkplain MethodBasedTestExtensionContext}
+ * {@linkplain JupiterEngineExtensionContext},
+ * {@linkplain ClassBasedContainerExtensionContext}, and
+ * {@linkplain MethodBasedTestExtensionContext}.
  *
  * @since 5.0
  * @see ExtensionValuesStoreTests
  */
 class ExtensionContextTests {
+
+	@Test
+	void fromJupiterEngineDescriptor() {
+		JupiterEngineDescriptor engineTestDescriptor = new JupiterEngineDescriptor(
+			UniqueId.root("engine", "junit-jupiter"));
+
+		JupiterEngineExtensionContext engineContext = new JupiterEngineExtensionContext(null, engineTestDescriptor);
+
+		assertAll("engineContext", //
+			() -> assertThat(engineContext.getTestClass()).isEmpty(), //
+			() -> assertThat(engineContext.getTestMethod()).isEmpty(), //
+			() -> assertThat(engineContext.getElement()).isEmpty(), //
+			() -> assertThat(engineContext.getDisplayName()).isEqualTo(engineTestDescriptor.getDisplayName()), //
+			() -> assertThat(engineContext.getParent()).isEmpty() //
+		);
+	}
 
 	@Test
 	void fromClassTestDescriptor() {
@@ -51,15 +69,15 @@ class ExtensionContextTests {
 
 		ClassBasedContainerExtensionContext outerExtensionContext = new ClassBasedContainerExtensionContext(null, null,
 			outerClassDescriptor);
-		Assertions.assertAll("outerContext", //
-			() -> assertEquals(OuterClass.class, outerExtensionContext.getTestClass().get()), //
-			() -> assertEquals(outerClassDescriptor.getDisplayName(), outerExtensionContext.getDisplayName()), //
-			() -> assertEquals(Optional.empty(), outerExtensionContext.getParent()) //
+		assertAll("outerContext", //
+			() -> assertThat(outerExtensionContext.getTestClass()).contains(OuterClass.class), //
+			() -> assertThat(outerExtensionContext.getDisplayName()).isEqualTo(outerClassDescriptor.getDisplayName()), //
+			() -> assertThat(outerExtensionContext.getParent()).isEmpty() //
 		);
 
 		ClassBasedContainerExtensionContext nestedExtensionContext = new ClassBasedContainerExtensionContext(
 			outerExtensionContext, null, nestedClassDescriptor);
-		Assertions.assertSame(outerExtensionContext, nestedExtensionContext.getParent().get());
+		assertThat(nestedExtensionContext.getParent()).containsSame(outerExtensionContext);
 	}
 
 	@Test
@@ -72,23 +90,15 @@ class ExtensionContextTests {
 		ClassBasedContainerExtensionContext outerExtensionContext = new ClassBasedContainerExtensionContext(null, null,
 			outerClassDescriptor);
 
-		Assertions.assertAll("tags in outer class", //
-			() -> assertEquals(1, outerExtensionContext.getTags().size()), //
-			() -> assertTrue(outerExtensionContext.getTags().contains("outer-tag")));
+		assertThat(outerExtensionContext.getTags()).containsExactly("outer-tag");
 
 		ClassBasedContainerExtensionContext nestedExtensionContext = new ClassBasedContainerExtensionContext(
 			outerExtensionContext, null, nestedClassDescriptor);
-		Assertions.assertAll("tags in nested class", //
-			() -> assertEquals(2, nestedExtensionContext.getTags().size()), //
-			() -> assertTrue(nestedExtensionContext.getTags().contains("outer-tag"), "outer-tag missing"), //
-			() -> assertTrue(nestedExtensionContext.getTags().contains("nested-tag"), "nested-tag missing"));
+		assertThat(nestedExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "nested-tag");
 
 		MethodBasedTestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(
 			outerExtensionContext, null, methodTestDescriptor, new OuterClass(), new ThrowableCollector());
-		Assertions.assertAll("tags in method", //
-			() -> assertEquals(2, testExtensionContext.getTags().size()), //
-			() -> assertTrue(testExtensionContext.getTags().contains("outer-tag"), "outer-tag missing"), //
-			() -> assertTrue(testExtensionContext.getTags().contains("method-tag"), "method-tag missing"));
+		assertThat(testExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "method-tag");
 	}
 
 	@Test
@@ -100,11 +110,11 @@ class ExtensionContextTests {
 			classTestDescriptor);
 		MethodBasedTestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(
 			classExtensionContext, null, methodTestDescriptor, new OuterClass(), new ThrowableCollector());
-		Assertions.assertAll("methodContext", //
-			() -> assertEquals(OuterClass.class, testExtensionContext.getTestClass().get()), //
-			() -> assertEquals(methodTestDescriptor.getDisplayName(), testExtensionContext.getDisplayName()), //
-			() -> assertEquals(classExtensionContext, testExtensionContext.getParent().get()), //
-			() -> assertEquals(OuterClass.class, testExtensionContext.getTestInstance().getClass()) //
+		assertAll("methodContext", //
+			() -> assertThat(testExtensionContext.getTestClass()).contains(OuterClass.class), //
+			() -> assertThat(testExtensionContext.getDisplayName()).isEqualTo(methodTestDescriptor.getDisplayName()), //
+			() -> assertThat(testExtensionContext.getParent()).contains(classExtensionContext), //
+			() -> assertThat(testExtensionContext.getTestInstance()).isExactlyInstanceOf(OuterClass.class) //
 		);
 	}
 
