@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.jupiter.api.DynamicTest.requiredTest;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,20 +54,22 @@ class DynamicTestsDemo {
 					// attempt to visit page which requires that a user is logged in
 					// assert user is redirected to login page
 				}),
-				requiredTest("Log-in", () -> {
+				dynamicTest("Log-in", () -> {
 					// submit login form with valid credentials
 					// assert user is redirected back to previous page requiring authorization
-					// assertTrue(false, "you shall not pass");
-				}),
+					// fail("you shall not pass");
+				},
+						// if login failed return "true" to break the dynamic execution loop here
+						loginSucceeded -> !loginSucceeded
+				),
 				dynamicContainer("Can access several pages while logged in",
 						dynamicTest("Visit second page requiring authorization while logged in", () -> {
 							// visit another page which requires that a user is logged in
 							// assert user can access page
 						}),
-						requiredTest("Visit third page requiring authorization while logged in", () -> {
+						dynamicTest("Visit third page requiring authorization while logged in", () -> {
 							// visit another page which requires that a user is logged in
 							// assert user can access page
-							// assertTrue(false, "exit here - no fourth page, not log out");
 						}),
 						dynamicTest("Visit fourth page requiring authorization while logged in", () -> {
 							// visit another page which requires that a user is logged in

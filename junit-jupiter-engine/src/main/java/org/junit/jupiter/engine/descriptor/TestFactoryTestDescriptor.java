@@ -113,16 +113,13 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		if (broken.get()) {
 			return true;
 		}
-		// alive and successful? stay alive.
-		if (testExecutionResult.map(TestExecutionResult::isSuccessful).orElse(false)) {
-			return false;
-		}
-		// alive, not successful and required node? breaking bad.
-		if (dynamicNode.isRequired()) {
+		// alive, let node decide what to do...
+		boolean successful = testExecutionResult.map(TestExecutionResult::isSuccessful).orElse(false);
+		if (dynamicNode.breaking(successful)) {
 			broken.set(true);
 			return true;
 		}
-		// alive, not successful and "normal" dynamic test? stay alive.
+		// alive, and still here? stay alive.
 		return false;
 	}
 

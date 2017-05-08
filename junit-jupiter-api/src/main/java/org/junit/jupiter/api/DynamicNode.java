@@ -12,6 +12,8 @@ package org.junit.jupiter.api;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import java.util.function.Predicate;
+
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -26,9 +28,11 @@ import org.junit.platform.commons.util.ToStringBuilder;
 public abstract class DynamicNode {
 
 	private final String displayName;
+	private final Predicate<Boolean> breaking;
 
-	DynamicNode(String displayName) {
+	DynamicNode(String displayName, Predicate<Boolean> breaking) {
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
+		this.breaking = Preconditions.notNull(breaking, "breaking predicate must not be null");
 	}
 
 	/**
@@ -45,11 +49,13 @@ public abstract class DynamicNode {
 	 * test execution result. If the result of a required dynamic test is unsuccessful the
 	 * executor breaks the execution loop immediately.
 	 */
-	public abstract boolean isRequired();
+	public boolean breaking(boolean successful) {
+		return breaking.test(successful);
+	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("displayName", displayName).append("required", isRequired()).toString();
+		return new ToStringBuilder(this).append("displayName", displayName).append("breaking", breaking).toString();
 	}
 
 }

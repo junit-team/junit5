@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.jupiter.api.DynamicTest.requiredTest;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
@@ -204,10 +203,11 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 		private DynamicNode[] dynamicNodesWithRequiredTests(Optional<String> failLogin, Optional<String> failPage) {
 			return new DynamicNode[] { //
 					dynamicTest("Visit page requiring authorization while not logged in", empty),
-					requiredTest("Log-in", () -> failLogin.ifPresent(Assertions::fail)),
+					dynamicTest("Log-in", () -> failLogin.ifPresent(Assertions::fail), state -> failLogin.isPresent()),
 					dynamicContainer("Can access several pages while logged in",
 						dynamicTest("Visit second page", empty),
-						requiredTest("Visit third page", () -> failPage.ifPresent(Assertions::fail)),
+						dynamicTest("Visit third page", () -> failPage.ifPresent(Assertions::fail),
+							state -> failPage.isPresent()),
 						dynamicTest("Visit fourth page", empty)),
 					dynamicTest("Log-out", empty) //
 			};

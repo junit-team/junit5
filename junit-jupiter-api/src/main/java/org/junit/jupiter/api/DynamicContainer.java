@@ -44,7 +44,7 @@ public class DynamicContainer extends DynamicNode {
 	private final List<DynamicNode> dynamicNodes;
 
 	private DynamicContainer(String displayName, Stream<? extends DynamicNode> dynamicNodes) {
-		super(displayName);
+		super(displayName, __ -> false);
 		Preconditions.notNull(dynamicNodes, "dynamicNodes must not be null");
 		this.dynamicNodes = dynamicNodes.collect(CollectionUtils.toUnmodifiableList());
 		Preconditions.containsNoNullElements(this.dynamicNodes, "individual dynamic node must not be null");
@@ -58,11 +58,4 @@ public class DynamicContainer extends DynamicNode {
 		return dynamicNodes;
 	}
 
-	/**
-	 * @return always {@code false}
-	 */
-	@Override
-	public boolean isRequired() {
-		return false;
-	}
 }
