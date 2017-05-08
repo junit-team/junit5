@@ -78,7 +78,8 @@ public class DynamicTest extends DynamicNode {
 	 * @see #dynamicTest(String, Executable)
 	 * @see #stream(Iterator, Function, ThrowingConsumer)
 	 */
-	public static DynamicTest dynamicTest(String displayName, Executable executable, Predicate<Boolean> stayAlive) {
+	public static DynamicTest dynamicTest(String displayName, Executable executable,
+			Predicate<DynamicRuntime> stayAlive) {
 		return new DynamicTest(displayName, executable, stayAlive);
 	}
 
@@ -121,7 +122,7 @@ public class DynamicTest extends DynamicNode {
 
 	private final Executable executable;
 
-	private DynamicTest(String displayName, Executable executable, Predicate<Boolean> stayAlive) {
+	private DynamicTest(String displayName, Executable executable, Predicate<DynamicRuntime> stayAlive) {
 		super(displayName, stayAlive);
 		this.executable = Preconditions.notNull(executable, "executable must not be null");
 	}

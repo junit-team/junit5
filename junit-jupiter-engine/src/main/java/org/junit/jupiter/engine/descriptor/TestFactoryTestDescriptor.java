@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
+import org.junit.jupiter.api.DynamicRuntime;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
@@ -48,10 +50,12 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final AtomicBoolean broken;
+	private final Instant start;
 
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
 		this.broken = new AtomicBoolean(false);
+		this.start = Instant.now();
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -114,8 +118,18 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 			return true;
 		}
 		// alive, let node decide what to do...
-		boolean successful = testExecutionResult.map(TestExecutionResult::isSuccessful).orElse(false);
-		if (dynamicNode.breaking(successful)) {
+		class Info implements DynamicRuntime {
+			@Override
+			public Instant getInstantOfTestFactoryStart() {
+				return start;
+			}
+
+			@Override
+			public boolean wasLastExecutableSuccessful() {
+				return testExecutionResult.map(TestExecutionResult::isSuccessful).orElse(false);
+			}
+		}
+		if (dynamicNode.breaking(new Info())) {
 			broken.set(true);
 			return true;
 		}

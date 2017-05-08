@@ -28,9 +28,9 @@ import org.junit.platform.commons.util.ToStringBuilder;
 public abstract class DynamicNode {
 
 	private final String displayName;
-	private final Predicate<Boolean> stayAlive;
+	private final Predicate<DynamicRuntime> stayAlive;
 
-	DynamicNode(String displayName, Predicate<Boolean> stayAlive) {
+	DynamicNode(String displayName, Predicate<DynamicRuntime> stayAlive) {
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
 		this.stayAlive = Preconditions.notNull(stayAlive, "stayAlive predicate must not be null");
 	}
@@ -42,8 +42,8 @@ public abstract class DynamicNode {
 		return this.displayName;
 	}
 
-	public boolean breaking(boolean successful) {
-		return !stayAlive.test(successful);
+	public boolean breaking(DynamicRuntime runtimeInformation) {
+		return !stayAlive.test(runtimeInformation);
 	}
 
 	@Override

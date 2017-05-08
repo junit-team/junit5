@@ -28,6 +28,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicNode;
+import org.junit.jupiter.api.DynamicRuntime;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
@@ -60,7 +61,7 @@ class DynamicTestsDemo {
 					// fail("you shall not pass");
 				},
 						// if login failed return "false" to break the dynamic execution loop here
-						loginSucceeded -> loginSucceeded
+            DynamicRuntime::wasLastExecutableSuccessful
 				),
 				dynamicContainer("Can access several pages while logged in",
 						dynamicTest("Visit second page requiring authorization while logged in", () -> {
