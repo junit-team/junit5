@@ -203,11 +203,10 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 		private DynamicNode[] dynamicNodesWithRequiredTests(Optional<String> failLogin, Optional<String> failPage) {
 			return new DynamicNode[] { //
 					dynamicTest("Visit page requiring authorization while not logged in", empty),
-					dynamicTest("Log-in", () -> failLogin.ifPresent(Assertions::fail), state -> failLogin.isPresent()),
+					dynamicTest("Log-in", () -> failLogin.ifPresent(Assertions::fail), state -> state),
 					dynamicContainer("Can access several pages while logged in",
 						dynamicTest("Visit second page", empty),
-						dynamicTest("Visit third page", () -> failPage.ifPresent(Assertions::fail),
-							state -> failPage.isPresent()),
+						dynamicTest("Visit third page", () -> failPage.ifPresent(Assertions::fail), state -> state),
 						dynamicTest("Visit fourth page", empty)),
 					dynamicTest("Log-out", empty) //
 			};

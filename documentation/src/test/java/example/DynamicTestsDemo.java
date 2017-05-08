@@ -59,8 +59,8 @@ class DynamicTestsDemo {
 					// assert user is redirected back to previous page requiring authorization
 					// fail("you shall not pass");
 				},
-						// if login failed return "true" to break the dynamic execution loop here
-						loginSucceeded -> !loginSucceeded
+						// if login failed return "false" to break the dynamic execution loop here
+						loginSucceeded -> loginSucceeded
 				),
 				dynamicContainer("Can access several pages while logged in",
 						dynamicTest("Visit second page requiring authorization while logged in", () -> {

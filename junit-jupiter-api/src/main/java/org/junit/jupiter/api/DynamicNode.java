@@ -28,11 +28,11 @@ import org.junit.platform.commons.util.ToStringBuilder;
 public abstract class DynamicNode {
 
 	private final String displayName;
-	private final Predicate<Boolean> breaking;
+	private final Predicate<Boolean> stayAlive;
 
-	DynamicNode(String displayName, Predicate<Boolean> breaking) {
+	DynamicNode(String displayName, Predicate<Boolean> stayAlive) {
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
-		this.breaking = Preconditions.notNull(breaking, "breaking predicate must not be null");
+		this.stayAlive = Preconditions.notNull(stayAlive, "stayAlive predicate must not be null");
 	}
 
 	/**
@@ -42,20 +42,13 @@ public abstract class DynamicNode {
 		return this.displayName;
 	}
 
-	/**
-	 * Get the required flag of this {@code DynamicNode}.
-	 *
-	 * If a node returns {@code true}, it requires the dynamic test executor to check the
-	 * test execution result. If the result of a required dynamic test is unsuccessful the
-	 * executor breaks the execution loop immediately.
-	 */
 	public boolean breaking(boolean successful) {
-		return breaking.test(successful);
+		return !stayAlive.test(successful);
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("displayName", displayName).append("breaking", breaking).toString();
+		return new ToStringBuilder(this).append("displayName", displayName).append("stayAlive", stayAlive).toString();
 	}
 
 }
