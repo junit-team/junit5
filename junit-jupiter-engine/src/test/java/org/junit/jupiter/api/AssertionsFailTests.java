@@ -13,8 +13,10 @@ package org.junit.jupiter.api;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.Collections;
 import java.util.function.Supplier;
 
 import org.opentest4j.AssertionFailedError;
@@ -121,6 +123,19 @@ class AssertionsFailTests {
 			Throwable cause = ex.getCause();
 			assertMessageContains(cause, "cause");
 		}
+	}
+
+	@Test
+	void failUsableAsAnExpression() {
+		// @formatter:off
+		long count = Collections.emptySet().stream()
+				.peek(element -> fail("peek should never be called"))
+				.filter(element -> fail("filter should never be called", new Throwable("cause")))
+				.map(element -> fail(new Throwable("map should never be called")))
+				.sorted((e1, e2) -> fail(() -> "sorted should never be called"))
+				.count();
+		// @formatter:on
+		assertEquals(0L, count);
 	}
 
 }
