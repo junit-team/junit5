@@ -50,32 +50,56 @@ public final class Assertions {
 
 	/**
 	 * <em>Fails</em> a test with the given failure {@code message}.
+	 *
+	 * <p>The generic return type {@code V} allows this method to be used directly
+	 * as an expression value. As an {@link org.opentest4j.AssertionFailedError}
+	 * is created and thrown before the final return statement, this method never
+	 * returns a value to its caller.
 	 */
-	public static void fail(String message) {
+	public static <V> V fail(String message) {
 		AssertionUtils.fail(message);
+		return null; // appeasing the compiler: this line will never be executed.
 	}
 
 	/**
 	 * <em>Fails</em> a test with the given failure {@code message} as well
 	 * as the underlying {@code cause}.
+	 *
+	 * <p>The generic return type {@code V} allows this method to be used directly
+	 * as an expression value. As an {@link org.opentest4j.AssertionFailedError}
+	 * is created and thrown before the final return statement, this method never
+	 * returns a value to its caller.
 	 */
-	public static void fail(String message, Throwable cause) {
+	public static <V> V fail(String message, Throwable cause) {
 		AssertionUtils.fail(message, cause);
+		return null; // appeasing the compiler: this line will never be executed.
 	}
 
 	/**
 	 * <em>Fails</em> a test with the given underlying {@code cause}.
+	 *
+	 * <p>The generic return type {@code V} allows this method to be used directly
+	 * as an expression value. As an {@link org.opentest4j.AssertionFailedError}
+	 * is created and thrown before the final return statement, this method never
+	 * returns a value to its caller.
 	 */
-	public static void fail(Throwable cause) {
+	public static <V> V fail(Throwable cause) {
 		AssertionUtils.fail(cause);
+		return null; // appeasing the compiler: this line will never be executed.
 	}
 
 	/**
 	 * <em>Fails</em> a test with the failure message retrieved from the
 	 * given {@code messageSupplier}.
+	 *
+	 * <p>The generic return type {@code V} allows this method to be used directly
+	 * as an expression value. As an {@link org.opentest4j.AssertionFailedError}
+	 * is created and thrown before the final return statement, this method never
+	 * returns a value to its caller.
 	 */
-	public static void fail(Supplier<String> messageSupplier) {
+	public static <V> V fail(Supplier<String> messageSupplier) {
 		AssertionUtils.fail(messageSupplier);
+		return null; // appeasing the compiler: this line will never be executed.
 	}
 
 	// --- assertTrue ----------------------------------------------------------
