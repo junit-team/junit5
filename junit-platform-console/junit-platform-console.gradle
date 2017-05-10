@@ -2,10 +2,10 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
 	repositories {
-		maven { url='https://oss.jfrog.org/artifactory/plugins-snapshot/' }
+		jcenter()
 	}
 	dependencies {
-		classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.0-SNAPSHOT'
+		classpath "com.github.jengelman.gradle.plugins:shadow:${shadowVersion}"
 	}
 }
 
