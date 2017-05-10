@@ -2116,6 +2116,22 @@ demonstrated by the following example.</p>
 </div>
 </div>
 <div class="paragraph">
+<p>Streams for primitive types (<code>DoubleStream</code>, <code>IntStream</code>, and <code>LongStream</code>) are also supported.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@MethodSource</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">range</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> testWithRangeMethodSource(<span class="type">int</span> argument) {
+    assertNotEquals(<span class="integer">9</span>, argument);
+}
+
+<span class="directive">static</span> IntStream range() {
+    <span class="keyword">return</span> IntStream.range(<span class="integer">0</span>, <span class="integer">20</span>).skip(<span class="integer">10</span>);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>In case you need multiple parameters, you need to return <code>Argument</code> instances as shown below.
 Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory method defined in
 <code>org.junit.jupiter.params.provider.ObjectArrayArguments</code>.</p>
@@ -5760,6 +5776,10 @@ name for invocations of the parameterized test.</p>
 <p>Extensions may now share state across top-level test classes by using the <code>Store</code> of the
 newly introduced engine-level <code>ExtensionContext</code>.</p>
 </li>
+<li>
+<p>Argument providing methods referenced using <code>@MethodSource</code> may now return instances of
+<code>DoubleStream</code>, <code>IntStream</code>, and <code>LongStream</code> directly.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -5789,7 +5809,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-05-10 01:04:29 EDT
+Last updated 2017-05-10 10:35:41 EDT
 </div>
 </div>
 </body>
