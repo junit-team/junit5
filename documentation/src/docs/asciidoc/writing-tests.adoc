@@ -573,6 +573,13 @@ demonstrated by the following example.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=simple_MethodSource_example]
 ----
 
+Streams for primitive types (`DoubleStream`, `IntStream`, and `LongStream`) are also supported.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=primitive_MethodSource_example]
+----
+
 In case you need multiple parameters, you need to return `Argument` instances as shown below.
 Note that `arguments(Object...)` is a static factory method defined in
 `org.junit.jupiter.params.provider.ObjectArrayArguments`.

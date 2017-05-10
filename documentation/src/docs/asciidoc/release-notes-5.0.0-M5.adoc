@@ -98,6 +98,8 @@ on GitHub.
   name for invocations of the parameterized test.
 * Extensions may now share state across top-level test classes by using the `Store` of the
   newly introduced engine-level `ExtensionContext`.
+* Argument providing methods referenced using `@MethodSource` may now return instances of
+  `DoubleStream`, `IntStream`, and `LongStream` directly.
 
 
 [[release-notes-5.0.0-m5-junit-vintage]]

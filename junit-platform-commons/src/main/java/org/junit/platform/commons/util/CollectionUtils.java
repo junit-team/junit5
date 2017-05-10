@@ -23,6 +23,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collector;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
@@ -89,6 +92,9 @@ public final class CollectionUtils {
 	 *
 	 * <ul>
 	 * <li>{@link Stream}</li>
+	 * <li>{@link DoubleStream}</li>
+	 * <li>{@link IntStream}</li>
+	 * <li>{@link LongStream}</li>
 	 * <li>{@link Collection}</li>
 	 * <li>{@link Iterable}</li>
 	 * <li>{@link Iterator}</li>
@@ -104,6 +110,15 @@ public final class CollectionUtils {
 		Preconditions.notNull(object, "Object must not be null");
 		if (object instanceof Stream) {
 			return (Stream<?>) object;
+		}
+		if (object instanceof DoubleStream) {
+			return ((DoubleStream) object).boxed();
+		}
+		if (object instanceof IntStream) {
+			return ((IntStream) object).boxed();
+		}
+		if (object instanceof LongStream) {
+			return ((LongStream) object).boxed();
 		}
 		if (object instanceof Collection) {
 			return ((Collection<?>) object).stream();

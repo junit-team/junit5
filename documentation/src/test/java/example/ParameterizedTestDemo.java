@@ -17,6 +17,7 @@ import static org.junit.jupiter.params.provider.ObjectArrayArguments.arguments;
 
 import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -73,6 +74,18 @@ class ParameterizedTestDemo {
 		return Stream.of("foo", "bar");
 	}
 	// end::simple_MethodSource_example[]
+
+	// tag::primitive_MethodSource_example[]
+	@ParameterizedTest
+	@MethodSource("range")
+	void testWithRangeMethodSource(int argument) {
+		assertNotEquals(9, argument);
+	}
+
+	static IntStream range() {
+		return IntStream.range(0, 20).skip(10);
+	}
+	// end::primitive_MethodSource_example[]
 
 	// tag::multi_arg_MethodSource_example[]
 	@ParameterizedTest

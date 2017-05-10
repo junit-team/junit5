@@ -25,6 +25,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -95,6 +98,36 @@ class CollectionUtilsTests {
 		Stream<?> result = CollectionUtils.toStream(input);
 
 		assertThat(result).isSameAs(input);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	void toStreamWithDoubleStream() {
+		DoubleStream input = DoubleStream.of(42.23);
+
+		Stream<Double> result = (Stream<Double>) CollectionUtils.toStream(input);
+
+		assertThat(result).containsExactly(42.23);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	void toStreamWithIntStream() {
+		IntStream input = IntStream.of(23, 42);
+
+		Stream<Integer> result = (Stream<Integer>) CollectionUtils.toStream(input);
+
+		assertThat(result).containsExactly(23, 42);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	void toStreamWithLongStream() {
+		LongStream input = LongStream.of(23L, 42L);
+
+		Stream<Long> result = (Stream<Long>) CollectionUtils.toStream(input);
+
+		assertThat(result).containsExactly(23L, 42L);
 	}
 
 	@SuppressWarnings({ "unchecked", "serial" })
