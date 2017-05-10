@@ -14,7 +14,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
-import java.util.stream.BaseStream;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
@@ -70,7 +70,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, testExtensionContext,
 				context.getExtensionRegistry());
 			TestSource source = getSource().orElseThrow(() -> new JUnitException("Test source must be present"));
-			try (BaseStream<DynamicNode, ?> dynamicNodeStream = toDynamicNodeStream(testFactoryMethodResult)) {
+			try (Stream<DynamicNode> dynamicNodeStream = toDynamicNodeStream(testFactoryMethodResult)) {
 				int index = 1;
 				Iterator<DynamicNode> iterator = dynamicNodeStream.iterator();
 				while (iterator.hasNext()) {
@@ -86,9 +86,9 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@SuppressWarnings("unchecked")
-	private BaseStream<DynamicNode, ?> toDynamicNodeStream(Object testFactoryMethodResult) {
+	private Stream<DynamicNode> toDynamicNodeStream(Object testFactoryMethodResult) {
 		try {
-			return (BaseStream<DynamicNode, ?>) CollectionUtils.toStream(testFactoryMethodResult);
+			return (Stream<DynamicNode>) CollectionUtils.toStream(testFactoryMethodResult);
 		}
 		catch (PreconditionViolationException ex) {
 			throw invalidReturnTypeException(ex);
