@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.provider.EnumSource.Mode;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
@@ -59,22 +60,34 @@ class EnumArgumentsProviderTests {
 	@Test
 	void invalidConstantNameIsDetected() {
 		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(EnumWithTwoConstants.class, "F00", "B4R"));
-		assertThat(exception).hasMessageContaining("Invalid enum constant name(s) found");
+			() -> provideArguments(EnumWithTwoConstants.class, "FO0", "B4R"));
+		assertThat(exception).hasMessageContaining("Invalid enum constant name(s) in");
+	}
+
+	@Test
+	void invalidPatternIsDetected() {
+		Exception exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(EnumWithTwoConstants.class, Mode.MATCHES_ALL, "(", ")"));
+		assertThat(exception).hasMessageContaining("Pattern compilation failed");
 	}
 
 	enum EnumWithTwoConstants {
 		FOO, BAR
 	}
 
-	private Stream<Object[]> provideArguments(Class<? extends Enum<?>> enumClass, String... names) {
+	private <E extends Enum<E>> Stream<Object[]> provideArguments(Class<E> enumClass, String... names) {
+		return provideArguments(enumClass, Mode.INCLUDE_NAMES, names);
+	}
+
+	private <E extends Enum<E>> Stream<Object[]> provideArguments(Class<E> enumClass, Mode mode, String... names) {
 		EnumSource annotation = mock(EnumSource.class);
 		when(annotation.value()).thenAnswer(invocation -> enumClass);
+		when(annotation.mode()).thenAnswer(invocation -> mode);
 		when(annotation.names()).thenAnswer(invocation -> names);
-		when(annotation.toString()).thenReturn(String.format("@EnumSource(value=%s.class, names={%s})",
-			enumClass.getSimpleName(), Arrays.toString(names)));
+		when(annotation.toString()).thenReturn(String.format("@EnumSource(value=%s.class, mode=%s names={%s})",
+			enumClass.getSimpleName(), mode, Arrays.toString(names)));
 
-		EnumArgumentsProvider provider = new EnumArgumentsProvider();
+		EnumArgumentsProvider<E> provider = new EnumArgumentsProvider<>();
 		provider.accept(annotation);
 		return provider.provideArguments(null).map(Arguments::get);
 	}

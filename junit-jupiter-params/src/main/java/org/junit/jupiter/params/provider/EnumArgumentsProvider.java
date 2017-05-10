@@ -14,6 +14,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -24,35 +25,33 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * @since 5.0
  */
-class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<EnumSource> {
+class EnumArgumentsProvider<E extends Enum<E>> implements ArgumentsProvider, AnnotationConsumer<EnumSource> {
 
-	private Class<? extends Enum<?>> enumClass;
+	private Class<E> enumClass;
+	private EnumSource.Mode mode;
 	private Set<String> names = Collections.emptySet();
 
 	@Override
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	public void accept(EnumSource enumSource) {
-		enumClass = enumSource.value();
+		this.enumClass = (Class<E>) enumSource.value();
+		this.mode = enumSource.mode();
+		// only set "names" field if the user provided at least one name
 		if (enumSource.names().length > 0) {
-
-			names = stream(enumSource.names()).collect(toSet());
+			this.names = stream(enumSource.names()).collect(toSet());
 			Preconditions.condition(names.size() == enumSource.names().length,
-				() -> "Duplicate enum constant name(s) found in annotation: " + enumSource);
-
-			Set<String> allSet = stream(enumClass.getEnumConstants()).map(Enum::name).collect(toSet());
-			Preconditions.condition(allSet.containsAll(names),
-				() -> "Invalid enum constant name(s) found in annotation: " + enumSource + ". Valid names include: "
-						+ allSet);
+				() -> "Duplicate enum constant name(s) found in: " + enumSource);
+			mode.validate(enumSource, names);
 		}
 	}
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
-		return stream(enumClass.getEnumConstants()).filter(this::select).map(ObjectArrayArguments::arguments);
-	}
-
-	private boolean select(Enum<?> constant) {
-		return names == Collections.EMPTY_SET || names.contains(constant.name());
+		Stream<E> stream = EnumSet.allOf(enumClass).stream();
+		if (names != Collections.EMPTY_SET) {
+			stream = stream.filter(constant -> mode.select(constant, names));
+		}
+		return stream.map(ObjectArrayArguments::arguments);
 	}
 
 }

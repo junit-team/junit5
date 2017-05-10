@@ -558,6 +558,25 @@ will be used like in the following example.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example]
 ----
 
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_include_example]
+----
+
+The `@EnumSource` annotation also provides an optional `mode` parameter that lets fine-control
+which constants are passed to the test method. You can for example exclude names from the
+enum constant pool or specify regular expressions:
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_exclude_example]
+----
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_regex_example]
+----
+
 [[writing-tests-parameterized-tests-sources-MethodSource]]
 ===== @MethodSource
 
