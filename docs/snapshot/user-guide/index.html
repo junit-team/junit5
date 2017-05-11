@@ -2095,7 +2095,7 @@ will be used like in the following example.</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, names = { <span class="string"><span class="delimiter">&quot;</span><span class="content">DAYS</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">HOURS</span><span class="delimiter">&quot;</span></span> })
 <span class="type">void</span> testWithEnumSourceInclude(<span class="predefined-type">TimeUnit</span> timeUnit) {
-    assertNotNull(timeUnit.name());
+    assertTrue(<span class="predefined-type">EnumSet</span>.of(<span class="predefined-type">TimeUnit</span>.DAYS, <span class="predefined-type">TimeUnit</span>.HOURS).contains(timeUnit));
 }</code></pre>
 </div>
 </div>
@@ -2109,7 +2109,8 @@ enum constant pool or specify regular expressions:</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, mode = EXCLUDE_NAMES, names = { <span class="string"><span class="delimiter">&quot;</span><span class="content">DAYS</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">HOURS</span><span class="delimiter">&quot;</span></span> })
 <span class="type">void</span> testWithEnumSourceExclude(<span class="predefined-type">TimeUnit</span> timeUnit) {
-    assertNotNull(timeUnit.name());
+    assertFalse(<span class="predefined-type">EnumSet</span>.of(<span class="predefined-type">TimeUnit</span>.DAYS, <span class="predefined-type">TimeUnit</span>.HOURS).contains(timeUnit));
+    assertTrue(timeUnit.name().length() &gt; <span class="integer">5</span>);
 }</code></pre>
 </div>
 </div>
@@ -2118,7 +2119,8 @@ enum constant pool or specify regular expressions:</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, mode = MATCHES_ALL, names = <span class="string"><span class="delimiter">&quot;</span><span class="content">[M|N].+SECONDS</span><span class="delimiter">&quot;</span></span>)
 <span class="type">void</span> testWithEnumSourceRegex(<span class="predefined-type">TimeUnit</span> timeUnit) {
-    assertNotNull(timeUnit.name());
+    assertTrue(timeUnit.name().startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">M</span><span class="delimiter">&quot;</span></span>) || timeUnit.name().startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">N</span><span class="delimiter">&quot;</span></span>));
+    assertTrue(timeUnit.name().endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">SECONDS</span><span class="delimiter">&quot;</span></span>));
 }</code></pre>
 </div>
 </div>
@@ -5846,7 +5848,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-05-11 16:28:11 EDT
+Last updated 2017-05-11 16:54:03 EDT
 </div>
 </div>
 </body>
