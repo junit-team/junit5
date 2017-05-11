@@ -11,13 +11,16 @@
 package example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE_NAMES;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCHES_ALL;
 import static org.junit.jupiter.params.provider.ObjectArrayArguments.arguments;
 
 import java.time.LocalDate;
+import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -69,7 +72,7 @@ class ParameterizedTestDemo {
 	@ParameterizedTest
 	@EnumSource(value = TimeUnit.class, names = { "DAYS", "HOURS" })
 	void testWithEnumSourceInclude(TimeUnit timeUnit) {
-		assertNotNull(timeUnit.name());
+		assertTrue(EnumSet.of(TimeUnit.DAYS, TimeUnit.HOURS).contains(timeUnit));
 	}
 	// end::EnumSource_include_example[]
 
@@ -77,7 +80,8 @@ class ParameterizedTestDemo {
 	@ParameterizedTest
 	@EnumSource(value = TimeUnit.class, mode = EXCLUDE_NAMES, names = { "DAYS", "HOURS" })
 	void testWithEnumSourceExclude(TimeUnit timeUnit) {
-		assertNotNull(timeUnit.name());
+		assertFalse(EnumSet.of(TimeUnit.DAYS, TimeUnit.HOURS).contains(timeUnit));
+		assertTrue(timeUnit.name().length() > 5);
 	}
 	// end::EnumSource_exclude_example[]
 
@@ -85,7 +89,8 @@ class ParameterizedTestDemo {
 	@ParameterizedTest
 	@EnumSource(value = TimeUnit.class, mode = MATCHES_ALL, names = "[M|N].+SECONDS")
 	void testWithEnumSourceRegex(TimeUnit timeUnit) {
-		assertNotNull(timeUnit.name());
+		assertTrue(timeUnit.name().startsWith("M") || timeUnit.name().startsWith("N"));
+		assertTrue(timeUnit.name().endsWith("SECONDS"));
 	}
 	// end::EnumSource_regex_example[]
 
