@@ -13,7 +13,6 @@ package org.junit.jupiter.params.provider;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -25,33 +24,28 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * @since 5.0
  */
-class EnumArgumentsProvider<E extends Enum<E>> implements ArgumentsProvider, AnnotationConsumer<EnumSource> {
+class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<EnumSource> {
 
-	private Class<E> enumClass;
-	private EnumSource.Mode mode;
-	private Set<String> names = Collections.emptySet();
+	private EnumSet<?> constants;
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void accept(EnumSource enumSource) {
-		this.enumClass = (Class<E>) enumSource.value();
-		this.mode = enumSource.mode();
-		// only set "names" field if the user provided at least one name
+		Class enumClass = enumSource.value();
+		EnumSource.Mode mode = enumSource.mode();
+		this.constants = EnumSet.allOf(enumClass);
 		if (enumSource.names().length > 0) {
-			this.names = stream(enumSource.names()).collect(toSet());
+			Set<String> names = stream(enumSource.names()).collect(toSet());
 			Preconditions.condition(names.size() == enumSource.names().length,
 				() -> "Duplicate enum constant name(s) found in: " + enumSource);
 			mode.validate(enumSource, names);
+			this.constants.removeIf(constant -> !mode.select(constant, names));
 		}
 	}
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
-		Stream<E> stream = EnumSet.allOf(enumClass).stream();
-		if (names != Collections.EMPTY_SET) {
-			stream = stream.filter(constant -> mode.select(constant, names));
-		}
-		return stream.map(ObjectArrayArguments::arguments);
+		return constants.stream().map(ObjectArrayArguments::arguments);
 	}
 
 }

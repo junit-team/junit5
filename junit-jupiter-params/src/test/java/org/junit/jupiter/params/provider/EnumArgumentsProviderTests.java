@@ -87,7 +87,7 @@ class EnumArgumentsProviderTests {
 		when(annotation.toString()).thenReturn(String.format("@EnumSource(value=%s.class, mode=%s names={%s})",
 			enumClass.getSimpleName(), mode, Arrays.toString(names)));
 
-		EnumArgumentsProvider<E> provider = new EnumArgumentsProvider<>();
+		EnumArgumentsProvider provider = new EnumArgumentsProvider();
 		provider.accept(annotation);
 		return provider.provideArguments(null).map(Arguments::get);
 	}
