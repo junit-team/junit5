@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
+import static java.util.stream.Collectors.toSet;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,7 +28,6 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -35,22 +35,6 @@ import org.junit.jupiter.api.Test;
  * @since 5.0
  */
 class EnumSourceTests {
-
-	enum EnumWithThreeConstants {
-		FOO, BAR, BAZ;
-
-		Set<String> singleton() {
-			return Collections.singleton(name());
-		}
-	}
-
-	static Set<String> allOf(Function<EnumWithThreeConstants, String> mapper) {
-		return EnumSet.allOf(EnumWithThreeConstants.class).stream().map(mapper).collect(Collectors.toSet());
-	}
-
-	static Set<String> set(String... strings) {
-		return new HashSet<>(Arrays.asList(strings));
-	}
 
 	@Test
 	void includeNamesWithAll() {
@@ -100,6 +84,23 @@ class EnumSourceTests {
 		assertAll("matches any", //
 			() -> assertTrue(MATCHES_ANY.select(FOO, set("B..", "^F.*"))),
 			() -> assertTrue(MATCHES_ANY.select(BAR, set("B", "B.", "B.."))),
-			() -> assertTrue(MATCHES_ANY.select(BAZ, set(".*[z|Z]"))));
+			() -> assertTrue(MATCHES_ANY.select(BAZ, set("^.+[zZ]$"))));
 	}
+
+	enum EnumWithThreeConstants {
+		FOO, BAR, BAZ;
+
+		Set<String> singleton() {
+			return Collections.singleton(name());
+		}
+	}
+
+	static Set<String> allOf(Function<EnumWithThreeConstants, String> mapper) {
+		return EnumSet.allOf(EnumWithThreeConstants.class).stream().map(mapper).collect(toSet());
+	}
+
+	static Set<String> set(String... strings) {
+		return new HashSet<>(Arrays.asList(strings));
+	}
+
 }

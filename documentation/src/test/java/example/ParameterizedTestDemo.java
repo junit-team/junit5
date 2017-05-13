@@ -64,7 +64,7 @@ class ParameterizedTestDemo {
 	@ParameterizedTest
 	@EnumSource(TimeUnit.class)
 	void testWithEnumSource(TimeUnit timeUnit) {
-		assertNotNull(timeUnit.name());
+		assertNotNull(timeUnit);
 	}
 	// end::EnumSource_example[]
 
@@ -87,10 +87,11 @@ class ParameterizedTestDemo {
 
 	// tag::EnumSource_regex_example[]
 	@ParameterizedTest
-	@EnumSource(value = TimeUnit.class, mode = MATCHES_ALL, names = "[M|N].+SECONDS")
+	@EnumSource(value = TimeUnit.class, mode = MATCHES_ALL, names = "^(M|N).+SECONDS$")
 	void testWithEnumSourceRegex(TimeUnit timeUnit) {
-		assertTrue(timeUnit.name().startsWith("M") || timeUnit.name().startsWith("N"));
-		assertTrue(timeUnit.name().endsWith("SECONDS"));
+		String name = timeUnit.name();
+		assertTrue(name.startsWith("M") || name.startsWith("N"));
+		assertTrue(name.endsWith("SECONDS"));
 	}
 	// end::EnumSource_regex_example[]
 

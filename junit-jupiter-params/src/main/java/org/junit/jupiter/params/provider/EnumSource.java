@@ -52,17 +52,22 @@ public @interface EnumSource {
 
 	/**
 	 * The enum type that serves as the source of the enum constants.
+	 *
+	 * @see #names
+	 * @see #mode
 	 */
 	Class<? extends Enum<?>> value();
 
 	/**
-	 * The names of enum constants to provide or regular expressions.
+	 * The names of enum constants to provide, or regular expressions
+	 * to select the names of enum constants to provide.
 	 *
-	 * <p>If no names are specified, all declared enum constants will be provided.
-	*
-	* <p>The {@link Mode} determines how the names are interpreted.
+	 * <p>If no names or regular expressions are specified, all declared
+	 * enum constants will be provided.
 	 *
-	* @see #mode()
+	 * <p>The {@link #mode} determines how the names are interpreted.
+	 *
+	 * @see #mode
 	 */
 	String[] names() default {};
 
@@ -71,49 +76,53 @@ public @interface EnumSource {
 	 *
 	 * <p>Defaults to {@link Mode#INCLUDE_NAMES INCLUDE_NAMES}.
 	 *
-	 * @see #names()
+	 * @see #names
 	 */
 	Mode mode() default Mode.INCLUDE_NAMES;
 
 	/**
-	 * The enum constant selection mode type definition.
+	 * Enumeration of enum constant selection modes.
 	 */
 	enum Mode {
 
 		/**
-		 * Select only those enum constants which name is listed in the {@linkplain #names} attribute.
+		 * Select only those enum constants whose names are supplied via the
+		 * {@link EnumSource#names} attribute.
 		 */
 		INCLUDE_NAMES(Mode::validateNames, (name, names) -> names.contains(name)),
 
 		/**
-		 * Select all declared enum constants except for those listed in the {@linkplain #names} attribute.
+		 * Select all declared enum constants except those supplied via the
+		 * {@link EnumSource#names} attribute.
 		 */
 		EXCLUDE_NAMES(Mode::validateNames, (name, names) -> !names.contains(name)),
 
 		/**
-		 * Select only those enum constants which name matches all patterns listed by {@linkplain #names}.
+		 * Select only those enum constants whose names match all patterns supplied
+		 * via the {@link EnumSource#names} attribute.
 		*
 		* @see java.util.stream.Stream#allMatch(java.util.function.Predicate)
 		 */
 		MATCHES_ALL(Mode::validatePatterns, (name, patterns) -> patterns.stream().allMatch(name::matches)),
 
 		/**
-		 * Select only those enum constants which name matches any pattern listed by {@linkplain #names}.
+		 * Select only those enum constants whose names match any pattern supplied
+		 * via the {@link EnumSource#names} attribute.
 		 *
 		 * @see java.util.stream.Stream#anyMatch(java.util.function.Predicate)
 		 */
 		MATCHES_ANY(Mode::validatePatterns, (name, patterns) -> patterns.stream().anyMatch(name::matches));
 
-		final BiConsumer<EnumSource, Set<String>> validator;
-		final BiPredicate<String, Set<String>> selector;
+		private final BiConsumer<EnumSource, Set<String>> validator;
+		private final BiPredicate<String, Set<String>> selector;
 
-		Mode(BiConsumer<EnumSource, Set<String>> validator, BiPredicate<String, Set<String>> selector) {
+		private Mode(BiConsumer<EnumSource, Set<String>> validator, BiPredicate<String, Set<String>> selector) {
 			this.validator = validator;
 			this.selector = selector;
 		}
 
 		void validate(EnumSource enumSource, Set<String> names) {
-			Preconditions.notNull(enumSource, "enumSource must not be null");
+			Preconditions.notNull(enumSource, "EnumSource must not be null");
 			Preconditions.notNull(names, "names must not be null");
 
 			validator.accept(enumSource, names);
@@ -126,21 +135,22 @@ public @interface EnumSource {
 			return selector.test(constant.name(), names);
 		}
 
-		static void validateNames(EnumSource enumSource, Set<String> names) {
+		private static void validateNames(EnumSource enumSource, Set<String> names) {
 			Set<String> allNames = stream(enumSource.value().getEnumConstants()).map(e -> e.name()).collect(toSet());
 			Preconditions.condition(allNames.containsAll(names),
-				() -> "Invalid enum constant name(s) in: " + enumSource + ". Valid names are: " + allNames);
+				() -> "Invalid enum constant name(s) in " + enumSource + ". Valid names include: " + allNames);
 		}
 
-		static void validatePatterns(EnumSource enumSource, Set<String> names) {
+		private static void validatePatterns(EnumSource enumSource, Set<String> names) {
 			try {
 				names.forEach(Pattern::compile);
 			}
 			catch (PatternSyntaxException e) {
 				throw new PreconditionViolationException(
-					"Pattern compilation failed in: " + enumSource + " due to " + e, e);
+					"Pattern compilation failed for a regular expression supplied in " + enumSource, e);
 			}
 		}
+
 	}
 
 }
