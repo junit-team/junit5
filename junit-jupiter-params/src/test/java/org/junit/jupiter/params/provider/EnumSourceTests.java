@@ -14,10 +14,10 @@ import static java.util.stream.Collectors.toSet;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE_NAMES;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE_NAMES;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCHES_ALL;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCHES_ANY;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ANY;
 import static org.junit.jupiter.params.provider.EnumSourceTests.EnumWithThreeConstants.BAR;
 import static org.junit.jupiter.params.provider.EnumSourceTests.EnumWithThreeConstants.BAZ;
 import static org.junit.jupiter.params.provider.EnumSourceTests.EnumWithThreeConstants.FOO;
@@ -39,52 +39,52 @@ class EnumSourceTests {
 	@Test
 	void includeNamesWithAll() {
 		assertAll("include names with all", //
-			() -> assertTrue(INCLUDE_NAMES.select(FOO, allOf(EnumWithThreeConstants::name))),
-			() -> assertTrue(INCLUDE_NAMES.select(BAR, allOf(EnumWithThreeConstants::name))),
-			() -> assertTrue(INCLUDE_NAMES.select(BAZ, allOf(EnumWithThreeConstants::name))));
+			() -> assertTrue(INCLUDE.select(FOO, allOf(EnumWithThreeConstants::name))),
+			() -> assertTrue(INCLUDE.select(BAR, allOf(EnumWithThreeConstants::name))),
+			() -> assertTrue(INCLUDE.select(BAZ, allOf(EnumWithThreeConstants::name))));
 	}
 
 	@Test
 	void includeNamesWithSingleton() {
 		assertAll("include names with singleton", //
-			() -> assertTrue(INCLUDE_NAMES.select(FOO, FOO.singleton())),
-			() -> assertTrue(INCLUDE_NAMES.select(BAR, BAR.singleton())),
-			() -> assertTrue(INCLUDE_NAMES.select(BAZ, BAZ.singleton())));
+			() -> assertTrue(INCLUDE.select(FOO, FOO.singleton())),
+			() -> assertTrue(INCLUDE.select(BAR, BAR.singleton())),
+			() -> assertTrue(INCLUDE.select(BAZ, BAZ.singleton())));
 		assertAll("include names with singleton complement", //
-			() -> assertFalse(INCLUDE_NAMES.select(BAR, FOO.singleton())),
-			() -> assertFalse(INCLUDE_NAMES.select(BAZ, FOO.singleton())));
+			() -> assertFalse(INCLUDE.select(BAR, FOO.singleton())),
+			() -> assertFalse(INCLUDE.select(BAZ, FOO.singleton())));
 	}
 
 	@Test
 	void excludeNames() {
 		assertAll("exclude name with none excluded", //
-			() -> assertTrue(EXCLUDE_NAMES.select(FOO, Collections.emptySet())),
-			() -> assertTrue(EXCLUDE_NAMES.select(BAR, Collections.emptySet())),
-			() -> assertTrue(EXCLUDE_NAMES.select(BAZ, Collections.emptySet())));
+			() -> assertTrue(EXCLUDE.select(FOO, Collections.emptySet())),
+			() -> assertTrue(EXCLUDE.select(BAR, Collections.emptySet())),
+			() -> assertTrue(EXCLUDE.select(BAZ, Collections.emptySet())));
 		assertAll("exclude name with FOO excluded", //
-			() -> assertFalse(EXCLUDE_NAMES.select(FOO, FOO.singleton())),
-			() -> assertTrue(EXCLUDE_NAMES.select(BAR, FOO.singleton())),
-			() -> assertTrue(EXCLUDE_NAMES.select(BAZ, FOO.singleton())));
+			() -> assertFalse(EXCLUDE.select(FOO, FOO.singleton())),
+			() -> assertTrue(EXCLUDE.select(BAR, FOO.singleton())),
+			() -> assertTrue(EXCLUDE.select(BAZ, FOO.singleton())));
 	}
 
 	@Test
 	void matchesAll() {
 		assertAll("matches all", //
-			() -> assertTrue(MATCHES_ALL.select(FOO, Collections.singleton("F.."))),
-			() -> assertTrue(MATCHES_ALL.select(BAR, Collections.singleton("B.."))),
-			() -> assertTrue(MATCHES_ALL.select(BAZ, Collections.singleton("B.."))));
+			() -> assertTrue(MATCH_ALL.select(FOO, Collections.singleton("F.."))),
+			() -> assertTrue(MATCH_ALL.select(BAR, Collections.singleton("B.."))),
+			() -> assertTrue(MATCH_ALL.select(BAZ, Collections.singleton("B.."))));
 		assertAll("matches all fails if not all match", //
-			() -> assertFalse(MATCHES_ALL.select(FOO, set("F..", "."))),
-			() -> assertFalse(MATCHES_ALL.select(BAR, set("B..", "."))),
-			() -> assertFalse(MATCHES_ALL.select(BAZ, set("B..", "."))));
+			() -> assertFalse(MATCH_ALL.select(FOO, set("F..", "."))),
+			() -> assertFalse(MATCH_ALL.select(BAR, set("B..", "."))),
+			() -> assertFalse(MATCH_ALL.select(BAZ, set("B..", "."))));
 	}
 
 	@Test
 	void matchesAny() {
 		assertAll("matches any", //
-			() -> assertTrue(MATCHES_ANY.select(FOO, set("B..", "^F.*"))),
-			() -> assertTrue(MATCHES_ANY.select(BAR, set("B", "B.", "B.."))),
-			() -> assertTrue(MATCHES_ANY.select(BAZ, set("^.+[zZ]$"))));
+			() -> assertTrue(MATCH_ANY.select(FOO, set("B..", "^F.*"))),
+			() -> assertTrue(MATCH_ANY.select(BAR, set("B", "B.", "B.."))),
+			() -> assertTrue(MATCH_ANY.select(BAZ, set("^.+[zZ]$"))));
 	}
 
 	enum EnumWithThreeConstants {

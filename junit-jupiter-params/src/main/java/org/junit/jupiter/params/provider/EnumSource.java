@@ -59,14 +59,15 @@ public @interface EnumSource {
 	Class<? extends Enum<?>> value();
 
 	/**
-	 * The names of enum constants to provide, or regular expressions
-	 * to select the names of enum constants to provide.
+	 * The names of enum constants to provide, or regular expressions to
+	 * select the names of enum constants to provide.
 	 *
-	 * <p>If no names or regular expressions are specified, all declared
-	 * enum constants will be provided.
+	 * <p>If no names or regular expressions are specified, all enum constants
+	 * declared in the specified {@linkplain #value enum type} will be provided.
 	 *
 	 * <p>The {@link #mode} determines how the names are interpreted.
 	 *
+	 * @see #value
 	 * @see #mode
 	 */
 	String[] names() default {};
@@ -74,14 +75,14 @@ public @interface EnumSource {
 	/**
 	 * The enum constant selection mode.
 	 *
-	 * <p>Defaults to {@link Mode#INCLUDE_NAMES INCLUDE_NAMES}.
+	 * <p>Defaults to {@link Mode#INCLUDE INCLUDE}.
 	 *
 	 * @see #names
 	 */
-	Mode mode() default Mode.INCLUDE_NAMES;
+	Mode mode() default Mode.INCLUDE;
 
 	/**
-	 * Enumeration of enum constant selection modes.
+	 * Enumeration of modes for selecting enum constants by name.
 	 */
 	enum Mode {
 
@@ -89,21 +90,21 @@ public @interface EnumSource {
 		 * Select only those enum constants whose names are supplied via the
 		 * {@link EnumSource#names} attribute.
 		 */
-		INCLUDE_NAMES(Mode::validateNames, (name, names) -> names.contains(name)),
+		INCLUDE(Mode::validateNames, (name, names) -> names.contains(name)),
 
 		/**
 		 * Select all declared enum constants except those supplied via the
 		 * {@link EnumSource#names} attribute.
 		 */
-		EXCLUDE_NAMES(Mode::validateNames, (name, names) -> !names.contains(name)),
+		EXCLUDE(Mode::validateNames, (name, names) -> !names.contains(name)),
 
 		/**
 		 * Select only those enum constants whose names match all patterns supplied
 		 * via the {@link EnumSource#names} attribute.
-		*
-		* @see java.util.stream.Stream#allMatch(java.util.function.Predicate)
+		 *
+		 * @see java.util.stream.Stream#allMatch(java.util.function.Predicate)
 		 */
-		MATCHES_ALL(Mode::validatePatterns, (name, patterns) -> patterns.stream().allMatch(name::matches)),
+		MATCH_ALL(Mode::validatePatterns, (name, patterns) -> patterns.stream().allMatch(name::matches)),
 
 		/**
 		 * Select only those enum constants whose names match any pattern supplied
@@ -111,7 +112,7 @@ public @interface EnumSource {
 		 *
 		 * @see java.util.stream.Stream#anyMatch(java.util.function.Predicate)
 		 */
-		MATCHES_ANY(Mode::validatePatterns, (name, patterns) -> patterns.stream().anyMatch(name::matches));
+		MATCH_ANY(Mode::validatePatterns, (name, patterns) -> patterns.stream().anyMatch(name::matches));
 
 		private final BiConsumer<EnumSource, Set<String>> validator;
 		private final BiPredicate<String, Set<String>> selector;
@@ -129,7 +130,7 @@ public @interface EnumSource {
 		}
 
 		boolean select(Enum<?> constant, Set<String> names) {
-			Preconditions.notNull(constant, "constant must not be null");
+			Preconditions.notNull(constant, "Enum constant must not be null");
 			Preconditions.notNull(names, "names must not be null");
 
 			return selector.test(constant.name(), names);

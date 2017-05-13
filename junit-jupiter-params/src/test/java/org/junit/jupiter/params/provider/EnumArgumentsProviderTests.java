@@ -67,7 +67,7 @@ class EnumArgumentsProviderTests {
 	@Test
 	void invalidPatternIsDetected() {
 		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(EnumWithTwoConstants.class, Mode.MATCHES_ALL, "(", ")"));
+			() -> provideArguments(EnumWithTwoConstants.class, Mode.MATCH_ALL, "(", ")"));
 		assertThat(exception).hasMessageContaining("Pattern compilation failed");
 	}
 
@@ -76,7 +76,7 @@ class EnumArgumentsProviderTests {
 	}
 
 	private <E extends Enum<E>> Stream<Object[]> provideArguments(Class<E> enumClass, String... names) {
-		return provideArguments(enumClass, Mode.INCLUDE_NAMES, names);
+		return provideArguments(enumClass, Mode.INCLUDE, names);
 	}
 
 	private <E extends Enum<E>> Stream<Object[]> provideArguments(Class<E> enumClass, Mode mode, String... names) {

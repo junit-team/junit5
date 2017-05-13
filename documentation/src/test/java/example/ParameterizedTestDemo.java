@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE_NAMES;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCHES_ALL;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
 import static org.junit.jupiter.params.provider.ObjectArrayArguments.arguments;
 
 import java.time.LocalDate;
@@ -78,7 +78,7 @@ class ParameterizedTestDemo {
 
 	// tag::EnumSource_exclude_example[]
 	@ParameterizedTest
-	@EnumSource(value = TimeUnit.class, mode = EXCLUDE_NAMES, names = { "DAYS", "HOURS" })
+	@EnumSource(value = TimeUnit.class, mode = EXCLUDE, names = { "DAYS", "HOURS" })
 	void testWithEnumSourceExclude(TimeUnit timeUnit) {
 		assertFalse(EnumSet.of(TimeUnit.DAYS, TimeUnit.HOURS).contains(timeUnit));
 		assertTrue(timeUnit.name().length() > 5);
@@ -87,7 +87,7 @@ class ParameterizedTestDemo {
 
 	// tag::EnumSource_regex_example[]
 	@ParameterizedTest
-	@EnumSource(value = TimeUnit.class, mode = MATCHES_ALL, names = "^(M|N).+SECONDS$")
+	@EnumSource(value = TimeUnit.class, mode = MATCH_ALL, names = "^(M|N).+SECONDS$")
 	void testWithEnumSourceRegex(TimeUnit timeUnit) {
 		String name = timeUnit.name();
 		assertTrue(name.startsWith("M") || name.startsWith("N"));

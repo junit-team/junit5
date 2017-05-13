@@ -97,8 +97,8 @@ on GitHub.
   the array will now be converted to a human readable format when generating the display
   name for invocations of the parameterized test.
 * The `@EnumSource` now provides an enum constant selection mode that controls how the
-  supplied names are interpreted. Supported modes include `INCLUDE_NAMES` and `EXCLUDE_NAMES`
-  as well as regular expression pattern matching modes `MATCHES_ALL` and `MATCHES_ANY`.
+  supplied names are interpreted. Supported modes include `INCLUDE` and `EXCLUDE`
+  as well as regular expression pattern matching modes `MATCH_ALL` and `MATCH_ANY`.
 * Extensions may now share state across top-level test classes by using the `Store` of the
   newly introduced engine-level `ExtensionContext`.
 * Argument providing methods referenced using `@MethodSource` may now return instances of
