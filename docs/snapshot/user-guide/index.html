@@ -2086,7 +2086,7 @@ will be used like in the following example.</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@EnumSource</span>(<span class="predefined-type">TimeUnit</span>.class)
 <span class="type">void</span> testWithEnumSource(<span class="predefined-type">TimeUnit</span> timeUnit) {
-    assertNotNull(timeUnit.name());
+    assertNotNull(timeUnit);
 }</code></pre>
 </div>
 </div>
@@ -2100,9 +2100,10 @@ will be used like in the following example.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>@EnumSource</code> annotation also provides an optional <code>mode</code> parameter that lets fine-control
-which constants are passed to the test method. You can for example exclude names from the
-enum constant pool or specify regular expressions:</p>
+<p>The <code>@EnumSource</code> annotation also provides an optional <code>mode</code> parameter that enables
+fine-grained control over which constants are passed to the test method. For example, you
+can exclude names from the enum constant pool or specify regular expressions as in the
+following examples.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2117,10 +2118,11 @@ enum constant pool or specify regular expressions:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, mode = MATCHES_ALL, names = <span class="string"><span class="delimiter">&quot;</span><span class="content">[M|N].+SECONDS</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, mode = MATCHES_ALL, names = <span class="string"><span class="delimiter">&quot;</span><span class="content">^(M|N).+SECONDS$</span><span class="delimiter">&quot;</span></span>)
 <span class="type">void</span> testWithEnumSourceRegex(<span class="predefined-type">TimeUnit</span> timeUnit) {
-    assertTrue(timeUnit.name().startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">M</span><span class="delimiter">&quot;</span></span>) || timeUnit.name().startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">N</span><span class="delimiter">&quot;</span></span>));
-    assertTrue(timeUnit.name().endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">SECONDS</span><span class="delimiter">&quot;</span></span>));
+    <span class="predefined-type">String</span> name = timeUnit.name();
+    assertTrue(name.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">M</span><span class="delimiter">&quot;</span></span>) || name.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">N</span><span class="delimiter">&quot;</span></span>));
+    assertTrue(name.endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">SECONDS</span><span class="delimiter">&quot;</span></span>));
 }</code></pre>
 </div>
 </div>
@@ -2128,7 +2130,7 @@ enum constant pool or specify regular expressions:</p>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-MethodSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-MethodSource"></a>@MethodSource</h5>
 <div class="paragraph">
-<p><code>@MethodSource</code> allows to refer to one or multiple methods of the test class. Each method must
+<p><code>@MethodSource</code> allows you to refer to one or multiple methods of the test class. Each method must
 return a <code>Stream</code>, an <code>Iterable</code>, an <code>Iterator</code>, or an array of arguments. In addition, each method
 must be <code>static</code> and must not accept any arguments.</p>
 </div>
@@ -5807,9 +5809,9 @@ the array will now be converted to a human readable format when generating the d
 name for invocations of the parameterized test.</p>
 </li>
 <li>
-<p>The <code>@EnumSource</code> now provides an enum constant selection mode that controls how the names
-are interpreted. Supported modes are: <code>INCLUDE_NAMES</code>, <code>EXCLUDE_NAMES</code> as well as regular
-expression pattern matching modes <code>MATCHES_ALL</code> and <code>MATCHES_ANY</code>.</p>
+<p>The <code>@EnumSource</code> now provides an enum constant selection mode that controls how the
+supplied names are interpreted. Supported modes include <code>INCLUDE_NAMES</code> and <code>EXCLUDE_NAMES</code>
+as well as regular expression pattern matching modes <code>MATCHES_ALL</code> and <code>MATCHES_ANY</code>.</p>
 </li>
 <li>
 <p>Extensions may now share state across top-level test classes by using the <code>Store</code> of the
@@ -5848,7 +5850,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-05-11 16:54:03 EDT
+Last updated 2017-05-13 09:54:15 EDT
 </div>
 </div>
 </body>
