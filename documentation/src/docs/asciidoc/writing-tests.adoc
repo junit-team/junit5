@@ -563,9 +563,10 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example]
 include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_include_example]
 ----
 
-The `@EnumSource` annotation also provides an optional `mode` parameter that lets fine-control
-which constants are passed to the test method. You can for example exclude names from the
-enum constant pool or specify regular expressions:
+The `@EnumSource` annotation also provides an optional `mode` parameter that enables
+fine-grained control over which constants are passed to the test method. For example, you
+can exclude names from the enum constant pool or specify regular expressions as in the
+following examples.
 
 [source,java,indent=0]
 ----
@@ -580,7 +581,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_regex_exam
 [[writing-tests-parameterized-tests-sources-MethodSource]]
 ===== @MethodSource
 
-`@MethodSource` allows to refer to one or multiple methods of the test class. Each method must
+`@MethodSource` allows you to refer to one or multiple methods of the test class. Each method must
 return a `Stream`, an `Iterable`, an `Iterator`, or an array of arguments. In addition, each method
 must be `static` and must not accept any arguments.
 
