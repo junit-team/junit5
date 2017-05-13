@@ -32,14 +32,16 @@ class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Enu
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void accept(EnumSource enumSource) {
 		Class enumClass = enumSource.value();
-		EnumSource.Mode mode = enumSource.mode();
 		this.constants = EnumSet.allOf(enumClass);
-		if (enumSource.names().length > 0) {
-			Set<String> names = stream(enumSource.names()).collect(toSet());
-			Preconditions.condition(names.size() == enumSource.names().length,
-				() -> "Duplicate enum constant name(s) found in: " + enumSource);
-			mode.validate(enumSource, names);
-			this.constants.removeIf(constant -> !mode.select(constant, names));
+
+		EnumSource.Mode mode = enumSource.mode();
+		String[] declaredConstantNames = enumSource.names();
+		if (declaredConstantNames.length > 0) {
+			Set<String> uniqueNames = stream(declaredConstantNames).collect(toSet());
+			Preconditions.condition(uniqueNames.size() == declaredConstantNames.length,
+				() -> "Duplicate enum constant name(s) found in " + enumSource);
+			mode.validate(enumSource, uniqueNames);
+			this.constants.removeIf(constant -> !mode.select(constant, uniqueNames));
 		}
 	}
 
