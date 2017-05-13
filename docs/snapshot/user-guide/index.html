@@ -2108,7 +2108,7 @@ following examples.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, mode = EXCLUDE_NAMES, names = { <span class="string"><span class="delimiter">&quot;</span><span class="content">DAYS</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">HOURS</span><span class="delimiter">&quot;</span></span> })
+<span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, mode = EXCLUDE, names = { <span class="string"><span class="delimiter">&quot;</span><span class="content">DAYS</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">HOURS</span><span class="delimiter">&quot;</span></span> })
 <span class="type">void</span> testWithEnumSourceExclude(<span class="predefined-type">TimeUnit</span> timeUnit) {
     assertFalse(<span class="predefined-type">EnumSet</span>.of(<span class="predefined-type">TimeUnit</span>.DAYS, <span class="predefined-type">TimeUnit</span>.HOURS).contains(timeUnit));
     assertTrue(timeUnit.name().length() &gt; <span class="integer">5</span>);
@@ -2118,7 +2118,7 @@ following examples.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, mode = MATCHES_ALL, names = <span class="string"><span class="delimiter">&quot;</span><span class="content">^(M|N).+SECONDS$</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, mode = MATCH_ALL, names = <span class="string"><span class="delimiter">&quot;</span><span class="content">^(M|N).+SECONDS$</span><span class="delimiter">&quot;</span></span>)
 <span class="type">void</span> testWithEnumSourceRegex(<span class="predefined-type">TimeUnit</span> timeUnit) {
     <span class="predefined-type">String</span> name = timeUnit.name();
     assertTrue(name.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">M</span><span class="delimiter">&quot;</span></span>) || name.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">N</span><span class="delimiter">&quot;</span></span>));
@@ -5810,8 +5810,8 @@ name for invocations of the parameterized test.</p>
 </li>
 <li>
 <p>The <code>@EnumSource</code> now provides an enum constant selection mode that controls how the
-supplied names are interpreted. Supported modes include <code>INCLUDE_NAMES</code> and <code>EXCLUDE_NAMES</code>
-as well as regular expression pattern matching modes <code>MATCHES_ALL</code> and <code>MATCHES_ANY</code>.</p>
+supplied names are interpreted. Supported modes include <code>INCLUDE</code> and <code>EXCLUDE</code>
+as well as regular expression pattern matching modes <code>MATCH_ALL</code> and <code>MATCH_ANY</code>.</p>
 </li>
 <li>
 <p>Extensions may now share state across top-level test classes by using the <code>Store</code> of the
@@ -5850,7 +5850,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-05-13 09:54:15 EDT
+Last updated 2017-05-13 10:28:30 EDT
 </div>
 </div>
 </body>
