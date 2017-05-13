@@ -84,7 +84,7 @@ class EnumArgumentsProviderTests {
 		when(annotation.value()).thenAnswer(invocation -> enumClass);
 		when(annotation.mode()).thenAnswer(invocation -> mode);
 		when(annotation.names()).thenAnswer(invocation -> names);
-		when(annotation.toString()).thenReturn(String.format("@EnumSource(value=%s.class, mode=%s, names={%s})",
+		when(annotation.toString()).thenReturn(String.format("@EnumSource(value=%s.class, mode=%s, names=%s)",
 			enumClass.getSimpleName(), mode, Arrays.toString(names)));
 
 		EnumArgumentsProvider provider = new EnumArgumentsProvider();
