@@ -61,7 +61,9 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* `@ParameterizedTest` arguments are no longer resolved for lifecycle methods and test
+  class constructors to improve interoperability with regular and parameterized test
+  methods with different parameter lists.
 
 ===== Deprecations and Breaking Changes
 

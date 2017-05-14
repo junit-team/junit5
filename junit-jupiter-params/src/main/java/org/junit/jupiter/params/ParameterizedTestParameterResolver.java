@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.params;
 
+import java.lang.reflect.Executable;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
@@ -37,7 +39,9 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return parameterContext.getIndex() < arguments.length;
+		Executable declaringExecutable = parameterContext.getParameter().getDeclaringExecutable();
+		Method testMethod = extensionContext.getTestMethod().orElse(null);
+		return declaringExecutable.equals(testMethod) && parameterContext.getIndex() < arguments.length;
 	}
 
 	@Override

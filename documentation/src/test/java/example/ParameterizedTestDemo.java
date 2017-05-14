@@ -25,7 +25,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -167,10 +170,20 @@ class ParameterizedTestDemo {
 	// end::ArgumentsSource_example[]
 
 	// tag::ParameterResolver_example[]
+	@BeforeEach
+	void beforeEach(TestInfo testInfo) {
+		// ...
+	}
+
 	@ParameterizedTest
 	@ValueSource(strings = "foo")
 	void testWithRegularParameterResolver(String argument, TestReporter testReporter) {
 		testReporter.publishEntry("argument", argument);
+	}
+
+	@AfterEach
+	void afterEach(TestInfo testInfo) {
+		// ...
 	}
 	// end::ParameterResolver_example[]
 

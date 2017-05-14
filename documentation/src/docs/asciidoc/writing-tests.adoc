@@ -759,6 +759,9 @@ methods within the same test class.
 
 You may use `ParameterResolver` extensions with `@ParameterizedTest` methods. However, method
 parameters that are resolved by argument sources need to come first in the argument list.
+Since a test class may contain regular tests as well as parameterized tests with different
+parameter lists, values from argument sources are not resolved for lifecycle methods (e.g.
+`@BeforeEach`) and test class constructors.
 
 [source,java,indent=0]
 ----
