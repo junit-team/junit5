@@ -2475,14 +2475,27 @@ methods within the same test class.</p>
 </div>
 <div class="paragraph">
 <p>You may use <code>ParameterResolver</code> extensions with <code>@ParameterizedTest</code> methods. However, method
-parameters that are resolved by argument sources need to come first in the argument list.</p>
+parameters that are resolved by argument sources need to come first in the argument list.
+Since a test class may contain regular tests as well as parameterized tests with different
+parameter lists, values from argument sources are not resolved for lifecycle methods (e.g.
+<code>@BeforeEach</code>) and test class constructors.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@BeforeEach</span>
+<span class="type">void</span> beforeEach(TestInfo testInfo) {
+    <span class="comment">// ...</span>
+}
+
+<span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@ValueSource</span>(strings = <span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>)
 <span class="type">void</span> testWithRegularParameterResolver(<span class="predefined-type">String</span> argument, TestReporter testReporter) {
     testReporter.publishEntry(<span class="string"><span class="delimiter">&quot;</span><span class="content">argument</span><span class="delimiter">&quot;</span></span>, argument);
+}
+
+<span class="annotation">@AfterEach</span>
+<span class="type">void</span> afterEach(TestInfo testInfo) {
+    <span class="comment">// ...</span>
 }</code></pre>
 </div>
 </div>
@@ -5713,7 +5726,9 @@ and if the location URL is available, it will be logged at configuration-level.<
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>@ParameterizedTest</code> arguments are no longer resolved for lifecycle methods and test
+class constructors to improve interoperability with regular and parameterized test
+methods with different parameter lists.</p>
 </li>
 </ul>
 </div>
@@ -5850,7 +5865,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-05-13 10:28:30 EDT
+Last updated 2017-05-14 06:00:39 EDT
 </div>
 </div>
 </body>
