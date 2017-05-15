@@ -13,8 +13,6 @@ package org.junit.platform.launcher.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.util.ClassLoaderUtils;
@@ -31,19 +29,7 @@ class ServiceLoaderTestEngineRegistry {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
 			ClassLoaderUtils.getDefaultClassLoader());
 		LOG.config(() -> createDiscoveredTestEnginesMessage(testEngines));
-
-		// filter duplicates, jdk-9 bug: https://bugs.openjdk.java.net/browse/JDK-8177139
-		List<TestEngine> pruned = new ArrayList<>();
-		Set<String> set = new TreeSet<>();
-		for (TestEngine engine : testEngines) {
-			String className = engine.getClass().getName();
-			if (set.contains(className)) {
-				continue;
-			}
-			set.add(className);
-			pruned.add(engine);
-		}
-		return pruned;
+		return testEngines;
 	}
 
 	private String createDiscoveredTestEnginesMessage(Iterable<TestEngine> testEngines) {
