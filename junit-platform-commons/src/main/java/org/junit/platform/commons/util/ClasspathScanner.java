@@ -157,7 +157,7 @@ class ClasspathScanner {
 		// @formatter:off
 		return Stream.of(
 					basePackageName,
-					determineSubpackageName(baseDir, classFile),
+					determineSubpackageName(baseDir, basePackageName, classFile),
 					determineSimpleClassName(classFile)
 				)
 				.filter(value -> !value.isEmpty()) // Handle default package appropriately.
@@ -170,10 +170,16 @@ class ClasspathScanner {
 		return fileName.substring(0, fileName.length() - CLASS_FILE_SUFFIX.length());
 	}
 
-	private String determineSubpackageName(Path baseDir, Path classFile) {
+	private String determineSubpackageName(Path baseDir, String basePackageName, Path classFile) {
 		Path relativePath = baseDir.relativize(classFile.getParent());
 		String pathSeparator = baseDir.getFileSystem().getSeparator();
 		String subpackageName = relativePath.toString().replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
+
+		if (StringUtils.isNotBlank(basePackageName) && subpackageName.startsWith(basePackageName)) {
+			subpackageName = subpackageName.length() == basePackageName.length() ? ""
+					: subpackageName.substring(basePackageName.length() + 1);
+		}
+
 		if (subpackageName.endsWith(pathSeparator)) {
 			// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
 			subpackageName = subpackageName.substring(0, subpackageName.length() - pathSeparator.length());

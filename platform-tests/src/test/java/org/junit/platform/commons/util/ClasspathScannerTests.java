@@ -17,19 +17,28 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -230,6 +239,31 @@ class ClasspathScannerTests {
 	}
 
 	@Test
+	void scanForClassesInSpringBootPackageIsAbleToLoadClassesCorrectly() throws Exception {
+		File jarFile = createFakeSpringBootJar(ClasspathScannerTests.class);
+		Predicate<String> classNameFilter = name -> ClasspathScannerTests.class.getName().equals(name);
+		ClasspathScanner localClasspathScanner = new ClasspathScanner(() -> createClassLoaderReferencingJar(jarFile),
+			trackingClassLoader);
+
+		localClasspathScanner.scanForClassesInPackage("org.junit.platform.commons", clazz -> true, classNameFilter);
+
+		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
+	}
+
+	@Test
+	void scanForClassesInSpringBootPackageIsAbleToLoadClassesCorrectlyFromBasePackage() throws Exception {
+		File jarFile = createFakeSpringBootJar(ClasspathScannerTests.class);
+		Predicate<String> classNameFilter = name -> ClasspathScannerTests.class.getName().equals(name);
+		ClasspathScanner localClasspathScanner = new ClasspathScanner(() -> createClassLoaderReferencingJar(jarFile),
+			trackingClassLoader);
+
+		localClasspathScanner.scanForClassesInPackage("org.junit.platform.commons.util", clazz -> true,
+			classNameFilter);
+
+		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
+	}
+
+	@Test
 	void findAllClassesInClasspathRoot() throws Exception {
 		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTests.class;
 		URI root = getTestClasspathRoot();
@@ -341,4 +375,45 @@ class ClasspathScannerTests {
 		}
 	}
 
+	private static ClassLoader createClassLoaderReferencingJar(File jarFile) {
+		return new ClassLoader() {
+			@Override
+			public Enumeration<URL> getResources(final String name) throws IOException {
+				Path jarPath = FileSystems.getDefault().getPath(jarFile.getAbsolutePath());
+				URL url = new URL(
+					"jar:file:" + jarPath.toUri().getPath() + "!/BOOT-INF/classes!/org/junit/platform/commons");
+				return Collections.enumeration(Collections.singleton(url));
+			}
+		};
+	}
+
+	private static File createFakeSpringBootJar(final Class<?> clazz) throws IOException {
+		File fakeJarLocation = File.createTempFile("fakeSpringBoot", ".jar");
+		JarOutputStream target;
+		Manifest manifest = new Manifest();
+
+		manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+		target = new JarOutputStream(new FileOutputStream(fakeJarLocation), manifest);
+		fakeJarLocation.deleteOnExit();
+
+		add(clazz, target);
+		target.close();
+		return fakeJarLocation;
+	}
+
+	private static void add(Class<?> clazz, JarOutputStream target) throws IOException {
+		byte buffer[] = new byte[16384];
+		int bytesRead;
+		String entryName = clazz.getCanonicalName().replaceAll("\\.", "/") + ".class";
+
+		try (final InputStream classStream = ClasspathScannerTests.class.getResourceAsStream("/" + entryName)) {
+			JarEntry classEntry = new JarEntry("BOOT-INF/classes/" + entryName);
+			target.putNextEntry(classEntry);
+
+			while ((bytesRead = classStream.read(buffer)) != -1) {
+				target.write(buffer, 0, bytesRead);
+			}
+			target.closeEntry();
+		}
+	}
 }
