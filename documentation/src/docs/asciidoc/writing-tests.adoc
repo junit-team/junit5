@@ -803,7 +803,7 @@ or _method references_.
 
 .Dynamic Test Lifecycle
 WARNING: The execution lifecycle of a dynamic test is quite different than it is for a
-standard `@Test` case. Specifically, there are not any lifecycle callbacks for individual
+standard `@Test` case. Specifically, there are no lifecycle callbacks for individual
 dynamic tests. This means that `@BeforeEach` and `@AfterEach` methods and their corresponding
 extension callbacks are executed for the `@TestFactory` method, not for each dynamic test.
 In other words, if you access fields from the test instance within a lambda expression for
