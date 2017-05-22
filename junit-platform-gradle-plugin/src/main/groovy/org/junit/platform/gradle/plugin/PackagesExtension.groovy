@@ -39,5 +39,4 @@ class PackagesExtension {
 	void exclude(String... packages) {
 		this.exclude.addAll packages
 	}
-
 }
