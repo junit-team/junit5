@@ -9,8 +9,8 @@ matrix:
     - jdk: oraclejdk9
       install:
         - cd ..
-        - wget http://download.java.net/java/jdk9/archive/168/binaries/jdk-9-ea+168_linux-x64_bin.tar.gz
-        - tar -xzf jdk-9-ea+168_linux-x64_bin.tar.gz
+        - wget http://download.java.net/java/jdk9/archive/170/binaries/jdk-9-ea+170_linux-x64_bin.tar.gz
+        - tar -xzf jdk-9-ea+170_linux-x64_bin.tar.gz
         - export JAVA_HOME=$PWD/jdk-9
         - PATH=$JAVA_HOME/bin:$PATH
         - cd -
