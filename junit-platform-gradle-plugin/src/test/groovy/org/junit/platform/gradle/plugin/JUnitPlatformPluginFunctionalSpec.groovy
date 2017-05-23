@@ -12,6 +12,7 @@ package org.junit.platform.gradle.plugin
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
@@ -51,10 +52,10 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
 		BuildResult result = GradleRunner.create()
-			.withProjectDir(testProjectDir.root)
-			.withPluginClasspath(pluginClasspath)
-			.withArguments('build')
-			.build()
+				.withProjectDir(testProjectDir.root)
+				.withPluginClasspath(pluginClasspath)
+				.withArguments('build')
+				.build()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.SUCCESS
@@ -70,10 +71,10 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
 		BuildResult result = GradleRunner.create()
-			.withProjectDir(testProjectDir.root)
-			.withPluginClasspath(pluginClasspath)
-			.withArguments('build')
-			.build()
+				.withProjectDir(testProjectDir.root)
+				.withPluginClasspath(pluginClasspath)
+				.withArguments('build')
+				.build()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.SUCCESS
@@ -89,10 +90,10 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
 		BuildResult result = GradleRunner.create()
-			.withProjectDir(testProjectDir.root)
-			.withPluginClasspath(pluginClasspath)
-			.withArguments('build')
-			.buildAndFail()
+				.withProjectDir(testProjectDir.root)
+				.withPluginClasspath(pluginClasspath)
+				.withArguments('build')
+				.buildAndFail()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.FAILED
@@ -107,10 +108,10 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
 		BuildResult result = GradleRunner.create()
-			.withProjectDir(testProjectDir.root)
-			.withPluginClasspath(pluginClasspath)
-			.withArguments('build')
-			.buildAndFail()
+				.withProjectDir(testProjectDir.root)
+				.withPluginClasspath(pluginClasspath)
+				.withArguments('build')
+				.buildAndFail()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.FAILED
@@ -119,9 +120,9 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 	private static String splitClasspath(List<File> dependencies) {
 		return dependencies
-			.collect { it.absolutePath.replace('\\', '\\\\') } // escape backslashes in Windows paths
-			.collect { "'$it'" }
-			.join(', ')
+				.collect { it.absolutePath.replace('\\', '\\\\') } // escape backslashes in Windows paths
+				.collect { "'$it'" }
+				.join(', ')
 	}
 
 	private void javaPlugin() {
@@ -177,7 +178,7 @@ junitPlatform {
 		Files.createDirectories(javaFile.parent)
 		javaFile.withWriter {
 			it.write(
-				'''
+					'''
 package org.junit.gradletest;
 
 public class Adder {
@@ -208,7 +209,7 @@ class AdderTest {
 		}
 }
 '''
-			)
+					)
 		}
 	}
 
@@ -220,20 +221,20 @@ class AdderTest {
 
 		when:
 		BuildResult result = GradleRunner.create()
-			.withProjectDir(testProjectDir.root)
-			.withPluginClasspath(pluginClasspath)
-			.withArguments('test')
-			.build()
+				.withProjectDir(testProjectDir.root)
+				.withPluginClasspath(pluginClasspath)
+				.withArguments('test')
+				.build()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.SUCCESS
 
 		when:
 		result = GradleRunner.create()
-			.withProjectDir(testProjectDir.root)
-			.withPluginClasspath(pluginClasspath)
-			.withArguments('test')
-			.build()
+				.withProjectDir(testProjectDir.root)
+				.withPluginClasspath(pluginClasspath)
+				.withArguments('test')
+				.build()
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.UP_TO_DATE
@@ -242,8 +243,7 @@ class AdderTest {
 	private void succeedingTestFile() {
 		Path testPath = Paths.get(testProjectDir.root.toString(), 'src', 'test', 'java', 'org', 'junit', 'gradletest', 'AdderTest.java')
 		Files.createDirectories(testPath.parent)
-		testPath.withWriter {
-			it.write('''
+		testPath.withWriter { it.write('''
 package org.junit.gradletest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -257,8 +257,7 @@ class AdderTest {
 				assertEquals(10, adder.add(5, 5), "This should succeed!");
 		}
 }
-''')
-		}
+''') }
 	}
 
 	private List<File> loadClassPathManifestResource(String name) {

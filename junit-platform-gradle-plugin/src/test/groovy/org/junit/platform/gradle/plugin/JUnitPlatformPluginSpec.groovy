@@ -18,6 +18,7 @@ import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.platform.console.ConsoleLauncher
 import org.junit.platform.engine.discovery.ClassNameFilter
+
 import spock.lang.Issue
 import spock.lang.Specification
 
@@ -132,8 +133,8 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask.args.containsAll('-E', 'bar')
 		junitTask.args.containsAll('--reports-dir', new File('/any').getCanonicalFile().toString())
 		def classpathToBeScanned = ['build/classes/main', 'build/resources/main', 'build/classes/test', 'build/resources/test']
-				.collect { path -> project.file(path).absolutePath }
-				.join(File.pathSeparator)
+		.collect { path -> project.file(path).absolutePath }
+		.join(File.pathSeparator)
 		junitTask.args.containsAll('--scan-class-path', classpathToBeScanned)
 
 		Task testTask = project.tasks.findByName('test')
@@ -186,9 +187,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
-		project.junitPlatform {
-			reportsDir = "$project.buildDir/foo/bar/baz"
-		}
+		project.junitPlatform { reportsDir = "$project.buildDir/foo/bar/baz" }
 		project.evaluate()
 
 		then:
@@ -241,9 +240,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
-		project.junitPlatform {
-			platformVersion '1.0.0'
-		}
+		project.junitPlatform { platformVersion '1.0.0' }
 		project.evaluate()
 
 		then:
@@ -252,11 +249,11 @@ class JUnitPlatformPluginSpec extends Specification {
 
 		configuration.getAllDependencies().contains(
 				project.dependencies.create("org.junit.platform:junit-platform-launcher:1.0.0"),
-		)
+				)
 
 		configuration.getAllDependencies().contains(
 				project.dependencies.create("org.junit.platform:junit-platform-console:1.0.0")
-		)
+				)
 	}
 
 	def "adds dependencies with fixed version when not explicitly configured"() {
@@ -271,10 +268,10 @@ class JUnitPlatformPluginSpec extends Specification {
 		configuration.triggerWhenEmptyActionsIfNecessary()
 
 		configuration.getAllDependencies()
-			.findAll { dependency -> "org.junit.platform" == dependency.getGroup() }
-			.collect { dependency -> dependency.getVersion() }
-			.findAll { version -> version.startsWith("1.") && !version.contains("+")}
-			.size() == 2
+				.findAll { dependency -> "org.junit.platform" == dependency.getGroup() }
+				.collect { dependency -> dependency.getVersion() }
+				.findAll { version -> version.startsWith("1.") && !version.contains("+")}
+				.size() == 2
 	}
 
 	@Issue('https://github.com/junit-team/junit5/issues/708')
