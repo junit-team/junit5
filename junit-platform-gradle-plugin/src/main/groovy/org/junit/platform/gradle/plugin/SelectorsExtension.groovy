@@ -152,4 +152,5 @@ class SelectorsExtension {
 	protected boolean isEmpty() {
 		return uris.empty && files.empty && directories.empty && packages.empty && classes.empty && methods.empty && resources.empty
 	}
+
 }

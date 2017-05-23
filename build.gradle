@@ -7,7 +7,7 @@ buildscript {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
-		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.2.0'
+		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.4.0'
 		classpath 'org.ajoberstar:gradle-git:1.7.0'
 		classpath 'org.ajoberstar:gradle-git-publish:0.2.1'
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
@@ -95,6 +95,12 @@ allprojects { subproj ->
 		// mavenLocal()
 		mavenCentral()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+	}
+	buildscript {
+		repositories {
+			// mavenLocal()
+			mavenCentral()
+		}
 	}
 
 	tasks.withType(Test) { task ->
@@ -391,12 +397,15 @@ subprojects { subproj ->
 	}
 
 	spotless {
-		def headerFile = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
+		def headerText = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
+		def importOrderConfig = rootProject.file('src/eclipse/junit-eclipse.importorder')
+		def formatterJavaConfig = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+		def formatterGroovyConfig = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
 
 		java {
-			licenseHeaderFile headerFile, '(package|import) '
-			importOrderFile rootProject.file('src/eclipse/junit-eclipse.importorder')
-			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+			licenseHeaderFile headerText, '(package|import) '
+			importOrderFile importOrderConfig
+			eclipse().configFile formatterJavaConfig
 			if (org.gradle.api.JavaVersion.current() == org.gradle.api.JavaVersion.VERSION_1_8) {
 				removeUnusedImports()
 			}
@@ -405,15 +414,16 @@ subprojects { subproj ->
 			endWithNewline()
 		}
 
-		format 'groovy', {
+		groovy {
 			target 'src/**/*.groovy'
-			indentWithTabs()
+			licenseHeaderFile headerText, "package "
+			importOrderFile importOrderConfig
+			greclipse().configFile formatterJavaConfig, formatterGroovyConfig
+
 			trimTrailingWhitespace()
 			endWithNewline()
-			licenseHeaderFile headerFile, "package "
-
-			replaceRegex 'class-level Javadoc indentation fix', /^\*/, ' *'
-			replaceRegex 'nested Javadoc indentation fix', /\t\*/, '\t *'
+			replaceRegex 'Empty line between last method and class closure', /\n([\s]+)}\n}\n$/, '\n$1}\n\n}\n'
+			replaceRegex 'Remove line breaks between consecutive closing parentheses', /\)\n[\s]+\)\n/, '))\n'
 		}
 	}
 
