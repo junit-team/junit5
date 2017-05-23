@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
-import static org.junit.jupiter.params.provider.ObjectArrayArguments.arguments;
 
 import java.time.LocalDate;
 import java.util.EnumSet;
@@ -42,7 +42,6 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ObjectArrayArguments;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class ParameterizedTestDemo {
@@ -164,7 +163,7 @@ class ParameterizedTestDemo {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
-			return Stream.of("foo", "bar").map(ObjectArrayArguments::arguments);
+			return Stream.of("foo", "bar").map(Arguments::arguments);
 		}
 	}
 	// end::ArgumentsSource_example[]

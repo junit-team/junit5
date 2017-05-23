@@ -41,7 +41,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		settings.getFormat().setQuoteEscape('\'');
 		settings.setAutoConfigurationEnabled(false);
 		CsvParser csvParser = new CsvParser(settings);
-		return Arrays.stream(lines).map(csvParser::parseLine).map(ObjectArrayArguments::arguments);
+		return Arrays.stream(lines).map(csvParser::parseLine).map(Arguments::arguments);
 	}
 
 }

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
-import static org.junit.jupiter.params.provider.ObjectArrayArguments.arguments;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.Arrays;
 import java.util.stream.Stream;

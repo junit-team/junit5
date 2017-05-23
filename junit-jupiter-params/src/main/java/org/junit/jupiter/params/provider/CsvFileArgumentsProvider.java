@@ -12,7 +12,7 @@ package org.junit.jupiter.params.provider;
 
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
-import static org.junit.jupiter.params.provider.ObjectArrayArguments.arguments;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
