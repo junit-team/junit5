@@ -786,8 +786,11 @@ that is annotated with `@TestFactory`.
 In contrast to `@Test` methods, a `@TestFactory` method is not itself a test case but rather a factory for test cases.
 Thus, a dynamic test is the product of a factory.
 Technically speaking, a `@TestFactory` method must return a `Stream`,
-`Collection`, `Iterable`, or `Iterator` of `DynamicTest` instances.
-These `DynamicTest` instances will then be executed lazily,
+`Collection`, `Iterable`, or `Iterator` of `DynamicNode` instances.
+Instantiable subclasses of `DynamicNode` are `DynamicContainer` and `DynamicTest`.
+`DynamicContainer` instances are composed of a _display name_ and a list of dynamic child nodes,
+enabling the creation of arbitrarily nested hierarchies of dynamic nodes.
+`DynamicTest` instances will then be executed lazily,
 enabling dynamic and even non-deterministic generation of test cases.
 
 Any `Stream` returned by a `@TestFactory` will be properly closed by calling `stream.close()`,
@@ -829,12 +832,14 @@ but merely demonstrate the supported return types in principle.
 However, `dynamicTestsFromStream()` and `dynamicTestsFromIntStream()` demonstrate how
 easy it is to generate dynamic tests for a given set of strings or a range of input numbers.
 
-The last method is truly dynamic in nature.
+The next method is truly dynamic in nature.
 `generateRandomNumberOfTests()` implements an `Iterator` that generates random numbers, a
 display name generator, and a test executor and then provides all three to `DynamicTest.stream()`.
 Although the non-deterministic behavior of `generateRandomNumberOfTests()` is of course in conflict with
 test repeatability and should thus be used with care, it serves to demonstrate the expressiveness
 and power of dynamic tests.
+
+The last method generates a nested hierarchy of dynamic tests utilizing `DynamicContainer`.
 
 [source,java]
 ----

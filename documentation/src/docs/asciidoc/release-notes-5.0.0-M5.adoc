@@ -105,7 +105,8 @@ on GitHub.
   newly introduced engine-level `ExtensionContext`.
 * Argument providing methods referenced using `@MethodSource` may now return instances of
   `DoubleStream`, `IntStream`, and `LongStream` directly.
-
+* `@TestFactory` now supports arbitrarily nested dynamic containers. See `DynamicContainer`
+  and abstract base class `DynamicNode` for details.
 
 [[release-notes-5.0.0-m5-junit-vintage]]
 ==== JUnit Vintage

@@ -30,9 +30,10 @@ import org.junit.platform.commons.meta.API;
  *
  * <p>{@code @TestFactory} methods must not be {@code private} or {@code static}
  * and must return a {@code Stream}, {@code Collection}, {@code Iterable}, or
- * {@code Iterator} of {@link DynamicTest} instances. These {@code DynamicTests}
- * will then be executed lazily, enabling dynamic and even non-deterministic
- * generation of test cases.
+ * {@code Iterator} of {@link DynamicNode} instances. Valid, instantiable
+ * subclasses of {@code DynamicNode} are {@link DynamicContainer} and
+ * {@link DynamicTest}. These {@code DynamicTest}s  will then be executed lazily,
+ * enabling dynamic and even non-deterministic generation of test cases.
  *
  * <p>Any {@code Stream} returned by a {@code @TestFactory} will be properly
  * closed by calling {@code stream.close()}, making it safe to use a resource
@@ -44,7 +45,9 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  * @see Test
+ * @see DynamicNode
  * @see DynamicTest
+ * @see DynamicContainer
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
