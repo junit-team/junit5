@@ -12,7 +12,7 @@ package org.junit.jupiter.params.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.jupiter.params.provider.Arguments.of;
 
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +23,7 @@ class ArgumentsTests {
 
 	@Test
 	void supportsVarargs() {
-		Arguments arguments = arguments(1, "2", 3.0);
+		Arguments arguments = of(1, "2", 3.0);
 
 		assertArrayEquals(new Object[] { 1, "2", 3.0 }, arguments.get());
 	}
@@ -32,7 +32,7 @@ class ArgumentsTests {
 	void returnsSameArrayUsedForCreating() {
 		Object[] input = { 1, "2", 3.0 };
 
-		Arguments arguments = arguments(input);
+		Arguments arguments = of(input);
 
 		assertThat(arguments.get()).isSameAs(input);
 	}

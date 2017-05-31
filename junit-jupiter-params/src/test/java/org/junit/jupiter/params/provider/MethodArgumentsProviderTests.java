@@ -119,7 +119,7 @@ class MethodArgumentsProviderTests {
 		}
 
 		static Stream<Arguments> argumentsStreamProvider() {
-			return Stream.of("foo", "bar").map(Arguments::arguments);
+			return Stream.of("foo", "bar").map(Arguments::of);
 		}
 
 		static Iterable<Object[]> objectArrayProvider() {

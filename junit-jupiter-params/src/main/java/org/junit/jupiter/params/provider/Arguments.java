@@ -45,7 +45,7 @@ public interface Arguments {
 	 * @param arguments the arguments to be used for an invocation of the test method
 	 * @return an instance of {@code Arguments}
 	 */
-	static Arguments arguments(Object... arguments) {
+	static Arguments of(Object... arguments) {
 		Preconditions.notNull(arguments, "argument array must not be null");
 		return () -> arguments;
 	}

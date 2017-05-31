@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
-import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.jupiter.params.provider.Arguments.of;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -52,9 +52,9 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 			return (Arguments) item;
 		}
 		if (item instanceof Object[]) {
-			return arguments((Object[]) item);
+			return Arguments.of((Object[]) item);
 		}
-		return arguments(item);
+		return Arguments.of(item);
 	}
 
 }

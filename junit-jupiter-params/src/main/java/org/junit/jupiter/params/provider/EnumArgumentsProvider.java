@@ -47,7 +47,7 @@ class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Enu
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
-		return constants.stream().map(Arguments::arguments);
+		return constants.stream().map(Arguments::of);
 	}
 
 }
