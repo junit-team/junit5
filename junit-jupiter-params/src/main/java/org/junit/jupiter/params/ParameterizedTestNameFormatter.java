@@ -41,11 +41,12 @@ class ParameterizedTestNameFormatter {
 		}
 
 		// Convert arguments to human readable formats
+		Object[] humanReadableArguments = new Object[arguments.length];
 		for (int i = 0; i < arguments.length; i++) {
-			arguments[i] = StringUtils.nullSafeToString(arguments[i]);
+			humanReadableArguments[i] = StringUtils.nullSafeToString(arguments[i]);
 		}
 
-		return MessageFormat.format(result, arguments);
+		return MessageFormat.format(result, humanReadableArguments);
 	}
 
 }
