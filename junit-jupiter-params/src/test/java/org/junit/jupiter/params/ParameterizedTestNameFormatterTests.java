@@ -10,7 +10,10 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
@@ -60,6 +63,15 @@ class ParameterizedTestNameFormatterTests {
 		assertEquals("[1] [foo, bar]", formatter.format(1, (Object) new String[] { "foo", "bar" }));
 
 		assertEquals("[1] [foo, bar], 42, true", formatter.format(1, new String[] { "foo", "bar" }, 42, true));
+	}
+
+	@Test
+	void formatDoesNotAlterArgumentsArray() {
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("{arguments}");
+		Object[] actual = { 1, "two", Byte.valueOf("-128"), new Integer[][] { { 2, 4 }, { 3, 9 } } };
+		Object[] expected = Arrays.copyOf(actual, actual.length);
+		assertEquals("1, two, -128, [[2, 4], [3, 9]]", formatter.format(1, actual));
+		assertArrayEquals(expected, actual);
 	}
 
 }
