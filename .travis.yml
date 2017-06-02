@@ -23,4 +23,4 @@ install:
   - ./gradlew -version
 
 script:
-  - ./gradlew check --scan
+  - ./gradlew build --scan
