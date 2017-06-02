@@ -2,3 +2,11 @@ dependencies {
 	api("org.opentest4j:opentest4j:${ota4jVersion}")
 	api(project(':junit-platform-commons'))
 }
+
+jar {
+	manifest {
+		attributes(
+			'Automatic-Module-Name': 'org.junit.jupiter.api'
+		)
+	}
+}

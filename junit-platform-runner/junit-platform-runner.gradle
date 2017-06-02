@@ -3,3 +3,11 @@ dependencies {
 	api(project(':junit-platform-suite-api'))
 	api("junit:junit:${junit4Version}")
 }
+
+jar {
+	manifest {
+		attributes(
+			'Automatic-Module-Name': 'org.junit.platform.runner'
+		)
+	}
+}

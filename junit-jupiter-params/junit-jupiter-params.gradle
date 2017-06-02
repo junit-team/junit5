@@ -60,6 +60,14 @@ javadoc {
 
 jar.enabled = false
 
+jar {
+	manifest {
+		attributes(
+			'Automatic-Module-Name': 'org.junit.jupiter.params'
+		)
+	}
+}
+
 shadowJar {
 	// Generate shadow jar only if the underlying manifest was regenerated.
 	// See https://github.com/junit-team/junit5/issues/631

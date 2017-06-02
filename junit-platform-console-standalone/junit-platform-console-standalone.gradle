@@ -26,7 +26,8 @@ sourceSets.main.compileClasspath += configurations.shadow
 jar {
 	manifest {
 		attributes(
-			'Main-Class': 'org.junit.platform.console.ConsoleLauncher'
+			'Main-Class': 'org.junit.platform.console.ConsoleLauncher',
+			'Automatic-Module-Name': 'org.junit.platform.console.standalone'
 		)
 	}
 }

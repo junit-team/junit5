@@ -1,3 +1,11 @@
 dependencies {
 	api(project(':junit-platform-engine'))
 }
+
+jar {
+	manifest {
+		attributes(
+			'Automatic-Module-Name': 'org.junit.platform.launcher'
+		)
+	}
+}

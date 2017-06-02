@@ -36,3 +36,11 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }
+
+jar {
+	manifest {
+		attributes(
+			'Automatic-Module-Name': 'org.junit.vintage.engine'
+		)
+	}
+}

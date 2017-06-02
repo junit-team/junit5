@@ -17,3 +17,11 @@ dependencies {
 
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 }
+
+jar {
+	manifest {
+		attributes(
+			'Automatic-Module-Name': 'org.junit.platform.engine'
+		)
+	}
+}

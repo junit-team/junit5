@@ -17,6 +17,14 @@ test {
 }
 */
 
+jar {
+	manifest {
+		attributes(
+			'Automatic-Module-Name': 'org.junit.jupiter.engine'
+		)
+	}
+}
+
 dependencies {
 	api(project(':junit-platform-engine'))
 	api(project(':junit-jupiter-api'))

@@ -1,2 +1,7 @@
-// this file is required because settings.gradle will autodetect
-// the project build file based on the project name
+jar {
+	manifest {
+		attributes(
+			'Automatic-Module-Name': 'org.junit.platform.commons'
+		)
+	}
+}

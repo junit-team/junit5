@@ -51,3 +51,11 @@ processResources {
 		filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: version.toString()])
 	}
 }
+
+jar {
+	manifest {
+		attributes(
+			'Automatic-Module-Name': 'org.junit.platform.gradle.plugin'
+		)
+	}
+}
