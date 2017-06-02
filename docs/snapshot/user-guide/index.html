@@ -5627,13 +5627,94 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> Fifth milestone release of JUnit 5 with a focus on ❓.</p>
+<p><strong>Scope:</strong> Fifth milestone release of JUnit 5 with a focus on dynamic containers and minor
+API changes.</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
 <a href="https://github.com/junit-team/junit5/milestone/8?closed=1">5.0 M5</a> milestone page in the JUnit repository
 on GitHub.</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>All published JAR artifacts now contain an <code>Automatic-Module-Name</code> manifest attribute
+whose value is used as the name of the automatic module defined by that JAR file when it
+is placed on the Java 9 module path.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. Automatic module names</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">JAR file</th>
+<th class="tableblock halign-left valign-top">Automatic-Module-Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-jupiter-api-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-jupiter-engine-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.engine</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-jupiter-migration-support-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migration.support</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-jupiter-params-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-commons-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.commons</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-console-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.console</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-console-standalone-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.console.standalone</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-engine-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-gradle-plugin-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.gradle.plugin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-launcher-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-runner-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.runner</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-suite-api-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-surefire-provider-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.surefire.provider</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-vintage-engine-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.vintage.engine</code></p></td>
+</tr>
+</tbody>
+</table>
 <div class="sect3">
 <h4 id="release-notes-5.0.0-m5-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m5-junit-platform"></a>JUnit Platform</h4>
 <div class="sect4">
@@ -5762,7 +5843,7 @@ module has been renamed to <code>arguments()</code>.</p>
 </ul>
 </div>
 <table id="release-notes-5.0.0-m5-migration-extension-api" class="tableblock frame-all grid-all spread">
-<caption class="title">Table 3. Extension API Migration</caption>
+<caption class="title">Table 4. Extension API Migration</caption>
 <colgroup>
 <col style="width: 41.1764%;">
 <col style="width: 14.7058%;">
@@ -5865,7 +5946,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-06-01 18:03:40 EDT
+Last updated 2017-06-02 16:20:08 EDT
 </div>
 </div>
 </body>
