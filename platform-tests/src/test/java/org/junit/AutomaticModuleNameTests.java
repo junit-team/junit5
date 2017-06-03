@@ -18,11 +18,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -73,13 +77,29 @@ class AutomaticModuleNameTests {
 		String jarName = module + "-" + version(module) + ".jar";
 		Path jarPath = Paths.get("..", module).resolve("build/libs").resolve(jarName).normalize();
 		try (JarFile jarFile = new JarFile(jarPath.toFile())) {
+			// first, check automatic module name
 			Manifest manifest = jarFile.getManifest();
 			String automaticModuleName = manifest.getMainAttributes().getValue("Automatic-Module-Name");
 			assertNotNull(automaticModuleName, "`Automatic-Module-Name` not found in manifest of JAR: " + jarPath);
 			assertEquals(expected, automaticModuleName);
+			// second, check entries are located in matching packages
+			List<String> unexpectedNames = new ArrayList<>();
+			String expectedStartOfPackageName = expected.replace('.', '/');
+			// @formatter:off
+			jarFile.stream()
+					.map(ZipEntry::getName)
+					.filter(n -> n.endsWith(".class"))
+					.filter(n -> !n.startsWith(expectedStartOfPackageName)).
+					forEach(unexpectedNames::add);
+			// @formatter:on
+			if (unexpectedNames.isEmpty()) {
+				return;
+			}
+			Assumptions.assumeTrue(unexpectedNames.isEmpty(), unexpectedNames.size()
+					+ " entries are not located in (a sub-) package of " + expectedStartOfPackageName);
 		}
-		catch (Exception e) {
-			fail(e);
+		catch (IOException e) {
+			fail("test jar file failed: " + e, e);
 		}
 	}
 
