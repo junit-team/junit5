@@ -12,6 +12,7 @@ package org.junit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
@@ -26,7 +27,6 @@ import java.util.jar.Manifest;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -66,6 +66,7 @@ class AutomaticModuleNameTests {
 				.filter(Files::isDirectory)
 				.map(Path::getFileName)
 				.map(Object::toString)
+				.filter(name -> !name.equals("junit-platform-console-standalone"))
 				.filter(name -> name.startsWith("junit-"));
 		// @formatter:on
 	}
@@ -74,6 +75,9 @@ class AutomaticModuleNameTests {
 	@MethodSource("moduleDirectoryNames")
 	void automaticModuleName(String module) {
 		String expected = "org." + module.replace('-', '.');
+		if (module.equals("junit-jupiter-migration-support")) {
+			expected = "org.junit.jupiter.migrationsupport";
+		}
 		String jarName = module + "-" + version(module) + ".jar";
 		Path jarPath = Paths.get("..", module).resolve("build/libs").resolve(jarName).normalize();
 		try (JarFile jarFile = new JarFile(jarPath.toFile())) {
@@ -89,13 +93,10 @@ class AutomaticModuleNameTests {
 			jarFile.stream()
 					.map(ZipEntry::getName)
 					.filter(n -> n.endsWith(".class"))
-					.filter(n -> !n.startsWith(expectedStartOfPackageName)).
-					forEach(unexpectedNames::add);
+					.filter(n -> !n.startsWith(expectedStartOfPackageName))
+					.forEach(unexpectedNames::add);
 			// @formatter:on
-			if (unexpectedNames.isEmpty()) {
-				return;
-			}
-			Assumptions.assumeTrue(unexpectedNames.isEmpty(), unexpectedNames.size()
+			assertTrue(unexpectedNames.isEmpty(), unexpectedNames.size()
 					+ " entries are not located in (a sub-) package of " + expectedStartOfPackageName);
 		}
 		catch (IOException e) {

@@ -21,11 +21,10 @@ is placed on the Java 9 module path.
 
 | `junit-jupiter-api-<VERSION>.jar`                 | `org.junit.jupiter.api`
 | `junit-jupiter-engine-<VERSION>.jar`              | `org.junit.jupiter.engine`
-| `junit-jupiter-migration-support-<VERSION>.jar`   | `org.junit.jupiter.migration.support`
+| `junit-jupiter-migration-support-<VERSION>.jar`   | `org.junit.jupiter.migrationsupport`
 | `junit-jupiter-params-<VERSION>.jar`              | `org.junit.jupiter.params`
 | `junit-platform-commons-<VERSION>.jar`            | `org.junit.platform.commons`
 | `junit-platform-console-<VERSION>.jar`            | `org.junit.platform.console`
-| `junit-platform-console-standalone-<VERSION>.jar` | `org.junit.platform.console.standalone`
 | `junit-platform-engine-<VERSION>.jar`             | `org.junit.platform.engine`
 | `junit-platform-gradle-plugin-<VERSION>.jar`      | `org.junit.platform.gradle.plugin`
 | `junit-platform-launcher-<VERSION>.jar`           | `org.junit.platform.launcher`
