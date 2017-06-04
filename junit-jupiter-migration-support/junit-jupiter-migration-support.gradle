@@ -39,7 +39,7 @@ dependencies {
 jar {
 	manifest {
 		attributes(
-			'Automatic-Module-Name': 'org.junit.jupiter.migration.support'
+			'Automatic-Module-Name': 'org.junit.jupiter.migrationsupport'
 		)
 	}
 }

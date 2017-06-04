@@ -53,14 +53,14 @@ shadowJar {
 	classifier = null
 	configurations = [project.configurations.shadow]
 	exclude 'META-INF/**'
-	relocate 'joptsimple', 'org.junit.platform.joptsimple'
+	relocate 'joptsimple', 'org.junit.platform.console.shadow.joptsimple'
 	transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
 		paths = [
 			'joptsimple/ExceptionMessages.properties',
 			'joptsimple/HelpFormatterMessages.properties'
 		]
 		keyTransformer = { key ->
-			key.replaceAll('^(joptsimple\\..*)$', 'org.junit.platform.$1')
+			key.replaceAll('^(joptsimple\\..*)$', 'org.junit.platform.console.shadow.$1')
 		}
 	}
 	from(projectDir) {
