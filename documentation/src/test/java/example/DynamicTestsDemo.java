@@ -28,6 +28,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicNode;
+import org.junit.jupiter.api.DynamicRuntime;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
@@ -42,6 +43,48 @@ class DynamicTestsDemo {
 	@TestFactory
 	List<String> dynamicTestsWithInvalidReturnType() {
 		return Arrays.asList("Hello");
+	}
+
+	@TestFactory
+	DynamicNode[] dynamicNodesWithRequiredTests() {
+		// end::user_guide[]
+		// @formatter:off
+		// tag::user_guide[]
+		return new DynamicNode[] {
+				dynamicTest("Visit page requiring authorization while not logged in", () -> {
+					// attempt to visit page which requires that a user is logged in
+					// assert user is redirected to login page
+				}),
+				dynamicTest("Log-in", () -> {
+					// submit login form with valid credentials
+					// assert user is redirected back to previous page requiring authorization
+					// fail("you shall not pass");
+				},
+						// if login failed return "false" to break the dynamic execution loop here
+            DynamicRuntime::wasLastExecutableSuccessful
+				),
+				dynamicContainer("Can access several pages while logged in",
+						dynamicTest("Visit second page requiring authorization while logged in", () -> {
+							// visit another page which requires that a user is logged in
+							// assert user can access page
+						}),
+						dynamicTest("Visit third page requiring authorization while logged in", () -> {
+							// visit another page which requires that a user is logged in
+							// assert user can access page
+						}),
+						dynamicTest("Visit fourth page requiring authorization while logged in", () -> {
+							// visit another page which requires that a user is logged in
+							// assert user can access page
+						})
+				),
+				dynamicTest("Log-out", () -> {
+					// visit logout URL
+					// assert user has been logged out
+				})
+		};
+		// end::user_guide[]
+		// @formatter:on
+		// tag::user_guide[]
 	}
 
 	@TestFactory

@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
@@ -32,11 +33,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -53,7 +58,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+		assertEquals(6, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -87,19 +92,19 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void dynamicTestsAreExecutedFromArray() {
+		LauncherDiscoveryRequest request = request().selectors(
+			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicArray")).build();
+
+		assertAllMyDynamicTestAreExecuted(executeTests(request));
+	}
+
+	@Test
 	void dynamicTestsAreExecutedFromCollection() {
 		LauncherDiscoveryRequest request = request().selectors(
 			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicCollection")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
-
-		assertAll( //
-			() -> assertEquals(3, eventRecorder.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3, eventRecorder.getContainerFinishedCount(), "# container finished"));
+		assertAllMyDynamicTestAreExecuted(executeTests(request));
 	}
 
 	@Test
@@ -107,15 +112,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicIterator")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
-
-		assertAll( //
-			() -> assertEquals(3, eventRecorder.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3, eventRecorder.getContainerFinishedCount(), "# container finished"));
+		assertAllMyDynamicTestAreExecuted(executeTests(request));
 	}
 
 	@Test
@@ -123,16 +120,22 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicIterable")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		assertAllMyDynamicTestAreExecuted(executeTests(request));
+	}
 
+	private void assertAllMyDynamicTestAreExecuted(ExecutionEventRecorder eventRecorder) {
+		assertAllRecordedEventCounts(eventRecorder, 3, 2, 2, 1, 1, 3);
+	}
+
+	private void assertAllRecordedEventCounts(ExecutionEventRecorder eventRecorder, int... expected) {
 		// @TestFactory methods are counted as both container and test
 		assertAll( //
-			() -> assertEquals(3, eventRecorder.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3, eventRecorder.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(expected[0], eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(expected[1], eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
+			() -> assertEquals(expected[2], eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(expected[3], eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(expected[4], eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(expected[5], eventRecorder.getContainerFinishedCount(), "# container finished"));
 	}
 
 	private static class MyDynamicTestCase {
@@ -140,6 +143,11 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 		private static final List<DynamicTest> list = Arrays.asList(
 			dynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")),
 			dynamicTest("failingTest", () -> fail("failing")));
+
+		@TestFactory
+		DynamicTest[] dynamicArray() {
+			return list.toArray(new DynamicTest[0]);
+		}
 
 		@TestFactory
 		Collection<DynamicTest> dynamicCollection() {
@@ -159,6 +167,65 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 		@TestFactory
 		Iterable<DynamicTest> dynamicIterable() {
 			return this::dynamicIterator;
+		}
+
+	}
+
+	@Test
+	void dynamicNodesWithRequiredTestsAreSuccessful() {
+		LauncherDiscoveryRequest request = request().selectors(
+			DiscoverySelectors.selectMethod(RequiredDynamicTestCase.class, "successful")).build();
+
+		assertAllRecordedEventCounts(executeTests(request), 4, 6, 6, 6, 0, 4);
+	}
+
+	@Test
+	void dynamicNodesWithRequiredTestsFailingLogin() {
+		LauncherDiscoveryRequest request = request().selectors(
+			DiscoverySelectors.selectMethod(RequiredDynamicTestCase.class, "failLogin")).build();
+
+		assertAllRecordedEventCounts(executeTests(request), 3, 2, 2, 1, 1, 3);
+	}
+
+	@Test
+	void dynamicNodesWithRequiredTestsFailingPage() {
+		LauncherDiscoveryRequest request = request().selectors(
+			DiscoverySelectors.selectMethod(RequiredDynamicTestCase.class, "failPage")).build();
+
+		assertAllRecordedEventCounts(executeTests(request), 4, 4, 4, 3, 1, 4);
+	}
+
+	private static class RequiredDynamicTestCase {
+
+		private final Executable empty = () -> {
+		};
+
+		private DynamicNode[] dynamicNodesWithRequiredTests(Optional<String> failLogin, Optional<String> failPage) {
+			return new DynamicNode[] { //
+					dynamicTest("Visit page requiring authorization while not logged in", empty),
+					dynamicTest("Log-in", () -> failLogin.ifPresent(Assertions::fail), i -> !failLogin.isPresent()),
+					dynamicContainer("Can access several pages while logged in",
+						dynamicTest("Visit second page", empty),
+						dynamicTest("Visit third page", () -> failPage.ifPresent(Assertions::fail),
+							i -> !failPage.isPresent()),
+						dynamicTest("Visit fourth page", empty)),
+					dynamicTest("Log-out", empty) //
+			};
+		}
+
+		@TestFactory
+		DynamicNode[] successful() {
+			return dynamicNodesWithRequiredTests(Optional.empty(), Optional.empty());
+		}
+
+		@TestFactory
+		DynamicNode[] failLogin() {
+			return dynamicNodesWithRequiredTests(Optional.of("you shall not pass"), Optional.empty());
+		}
+
+		@TestFactory
+		DynamicNode[] failPage() {
+			return dynamicNodesWithRequiredTests(Optional.empty(), Optional.of("page not rendered as expected"));
 		}
 
 	}

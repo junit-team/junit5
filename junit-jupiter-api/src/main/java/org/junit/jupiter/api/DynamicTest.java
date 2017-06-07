@@ -16,6 +16,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.Iterator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -51,14 +52,35 @@ public class DynamicTest extends DynamicNode {
 	 * Factory for creating a new {@code DynamicTest} for the supplied display
 	 * name and executable code block.
 	 *
+	 * <p>An unsuccessful execution result does not break the execution loop.
+	 *
 	 * @param displayName the display name for the dynamic test; never
 	 * {@code null} or blank
 	 * @param executable the executable code block for the dynamic test;
 	 * never {@code null}
+	* @see #dynamicTest(String, Executable, Predicate)
 	 * @see #stream(Iterator, Function, ThrowingConsumer)
 	 */
 	public static DynamicTest dynamicTest(String displayName, Executable executable) {
-		return new DynamicTest(displayName, executable);
+		return new DynamicTest(displayName, executable, __ -> true);
+	}
+
+	/**
+	 * Factory for creating a new required {@code DynamicTest} for the supplied
+	 * display name and executable code block.
+	 *
+	 * <p>It is up to the user-supplied predicate whether the execution loop breaks.
+	 *
+	 * @param displayName the display name for the dynamic test; never
+	 * {@code null} or blank
+	 * @param executable the executable code block for the dynamic test;
+	 * never {@code null}
+	 * @see #dynamicTest(String, Executable)
+	 * @see #stream(Iterator, Function, ThrowingConsumer)
+	 */
+	public static DynamicTest dynamicTest(String displayName, Executable executable,
+			Predicate<DynamicRuntime> stayAlive) {
+		return new DynamicTest(displayName, executable, stayAlive);
 	}
 
 	/**
@@ -100,8 +122,8 @@ public class DynamicTest extends DynamicNode {
 
 	private final Executable executable;
 
-	private DynamicTest(String displayName, Executable executable) {
-		super(displayName);
+	private DynamicTest(String displayName, Executable executable, Predicate<DynamicRuntime> stayAlive) {
+		super(displayName, stayAlive);
 		this.executable = Preconditions.notNull(executable, "executable must not be null");
 	}
 
@@ -111,4 +133,5 @@ public class DynamicTest extends DynamicNode {
 	public Executable getExecutable() {
 		return this.executable;
 	}
+
 }

@@ -10,12 +10,13 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.createDynamicDescriptor;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 
@@ -26,11 +27,14 @@ import org.junit.platform.engine.UniqueId;
  */
 class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 
+	private final TestFactoryTestDescriptor root;
 	private final DynamicContainer dynamicContainer;
 	private final TestSource testSource;
 
-	DynamicContainerTestDescriptor(UniqueId uniqueId, DynamicContainer dynamicContainer, TestSource testSource) {
+	DynamicContainerTestDescriptor(TestFactoryTestDescriptor root, UniqueId uniqueId, DynamicContainer dynamicContainer,
+			TestSource testSource) {
 		super(uniqueId, dynamicContainer.getDisplayName());
+		this.root = root;
 		this.dynamicContainer = dynamicContainer;
 		this.testSource = testSource;
 		setSource(testSource);
@@ -46,7 +50,11 @@ class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		int index = 1;
 		for (DynamicNode childNode : dynamicContainer.getDynamicNodes()) {
-			dynamicTestExecutor.execute(createDynamicDescriptor(this, childNode, index++, testSource));
+			JupiterTestDescriptor childDescriptor = root.createDynamicDescriptor(this, childNode, index++, testSource);
+			Optional<TestExecutionResult> optionalResult = dynamicTestExecutor.execute(childDescriptor);
+			if (root.breaking(childNode, optionalResult)) {
+				break;
+			}
 		}
 		return context;
 	}

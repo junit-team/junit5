@@ -12,6 +12,8 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 
+import java.util.Optional;
+
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -51,7 +53,8 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		execute(this.rootTestDescriptor, this.rootContext, new ExecutionTracker());
 	}
 
-	private void execute(TestDescriptor testDescriptor, C parentContext, ExecutionTracker tracker) {
+	private Optional<TestExecutionResult> execute(TestDescriptor testDescriptor, C parentContext,
+			ExecutionTracker tracker) {
 		Node<C> node = asNode(testDescriptor);
 		tracker.markExecuted(testDescriptor);
 
@@ -61,7 +64,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			SkipResult skipResult = node.shouldBeSkipped(preparedContext);
 			if (skipResult.isSkipped()) {
 				this.listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
-				return;
+				return Optional.empty();
 			}
 		}
 		catch (Throwable throwable) {
@@ -69,7 +72,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			// We call executionStarted first to comply with the contract of EngineExecutionListener
 			this.listener.executionStarted(testDescriptor);
 			this.listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
-			return;
+			return Optional.empty();
 		}
 
 		this.listener.executionStarted(testDescriptor);
@@ -82,7 +85,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 				C contextForDynamicChildren = context;
 				context = node.execute(context, dynamicTestDescriptor -> {
 					this.listener.dynamicTestRegistered(dynamicTestDescriptor);
-					execute(dynamicTestDescriptor, contextForDynamicChildren, tracker);
+					return execute(dynamicTestDescriptor, contextForDynamicChildren, tracker);
 				});
 
 				C contextForStaticChildren = context;
@@ -98,6 +101,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		});
 
 		this.listener.executionFinished(testDescriptor, result);
+		return Optional.of(result);
 	}
 
 	@SuppressWarnings("unchecked")

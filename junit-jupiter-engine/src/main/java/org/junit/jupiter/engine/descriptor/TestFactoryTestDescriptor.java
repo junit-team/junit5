@@ -13,11 +13,15 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
+import java.time.Instant;
 import java.util.Iterator;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
+import org.junit.jupiter.api.DynamicRuntime;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
@@ -26,12 +30,14 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * {@link org.junit.platform.engine.TestDescriptor TestDescriptor} for {@link org.junit.jupiter.api.TestFactory @TestFactory}
- * methods.
+ * {@link org.junit.platform.engine.TestDescriptor TestDescriptor} for
+ * {@link org.junit.jupiter.api.TestFactory @TestFactory} methods.
  *
  * @since 5.0
  */
@@ -43,8 +49,13 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
+	private final AtomicBoolean broken;
+	private final Instant start;
+
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
+		this.broken = new AtomicBoolean(false);
+		this.start = Instant.now();
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -75,8 +86,14 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 				Iterator<DynamicNode> iterator = dynamicNodeStream.iterator();
 				while (iterator.hasNext()) {
 					DynamicNode dynamicNode = iterator.next();
+					int currentIndex = index;
+					Preconditions.notNull(dynamicNode, () -> "dynamic node #" + currentIndex
+							+ " must not be null. [testMethod=" + getTestMethod() + "]");
 					JupiterTestDescriptor descriptor = createDynamicDescriptor(this, dynamicNode, index++, source);
-					dynamicTestExecutor.execute(descriptor);
+					Optional<TestExecutionResult> optionalResult = dynamicTestExecutor.execute(descriptor);
+					if (breaking(dynamicNode, optionalResult)) {
+						break;
+					}
 				}
 			}
 			catch (ClassCastException ex) {
@@ -95,7 +112,32 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		}
 	}
 
-	static JupiterTestDescriptor createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node, int index,
+	boolean breaking(DynamicNode dynamicNode, Optional<TestExecutionResult> testExecutionResult) {
+		// already broken? stay broken.
+		if (broken.get()) {
+			return true;
+		}
+		// alive, let node decide what to do...
+		class Info implements DynamicRuntime {
+			@Override
+			public Instant getInstantOfTestFactoryStart() {
+				return start;
+			}
+
+			@Override
+			public boolean wasLastExecutableSuccessful() {
+				return testExecutionResult.map(TestExecutionResult::isSuccessful).orElse(false);
+			}
+		}
+		if (dynamicNode.breaking(new Info())) {
+			broken.set(true);
+			return true;
+		}
+		// alive, and still here? stay alive.
+		return false;
+	}
+
+	JupiterTestDescriptor createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node, int index,
 			TestSource source) {
 		JupiterTestDescriptor descriptor;
 		if (node instanceof DynamicTest) {
@@ -106,7 +148,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		else {
 			DynamicContainer container = (DynamicContainer) node;
 			UniqueId uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
-			descriptor = new DynamicContainerTestDescriptor(uniqueId, container, source);
+			descriptor = new DynamicContainerTestDescriptor(this, uniqueId, container, source);
 		}
 		parent.addChild(descriptor);
 		return descriptor;

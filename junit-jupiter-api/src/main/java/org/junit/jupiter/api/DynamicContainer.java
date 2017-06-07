@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -28,6 +29,10 @@ import org.junit.platform.commons.util.Preconditions;
 @API(Experimental)
 public class DynamicContainer extends DynamicNode {
 
+	public static DynamicContainer dynamicContainer(String displayName, DynamicNode... dynamicNodes) {
+		return new DynamicContainer(displayName, Arrays.stream(dynamicNodes));
+	}
+
 	public static DynamicContainer dynamicContainer(String displayName, Iterable<? extends DynamicNode> dynamicNodes) {
 		return new DynamicContainer(displayName, StreamSupport.stream(dynamicNodes.spliterator(), false));
 	}
@@ -39,13 +44,18 @@ public class DynamicContainer extends DynamicNode {
 	private final List<DynamicNode> dynamicNodes;
 
 	private DynamicContainer(String displayName, Stream<? extends DynamicNode> dynamicNodes) {
-		super(displayName);
+		super(displayName, stayAlive -> true);
 		Preconditions.notNull(dynamicNodes, "dynamicNodes must not be null");
 		this.dynamicNodes = dynamicNodes.collect(CollectionUtils.toUnmodifiableList());
 		Preconditions.containsNoNullElements(this.dynamicNodes, "individual dynamic node must not be null");
+		Preconditions.notEmpty(this.dynamicNodes, "dynamic node collection passed to container must not be empty");
 	}
 
+	/**
+	 * Get the dynamic child nodes.
+	 */
 	public Iterable<DynamicNode> getDynamicNodes() {
 		return dynamicNodes;
 	}
+
 }

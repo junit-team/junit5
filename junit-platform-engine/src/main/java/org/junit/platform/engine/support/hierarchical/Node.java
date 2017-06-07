@@ -17,6 +17,7 @@ import java.util.Optional;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 
 /**
  * A <em>node</em> within the execution hierarchy.
@@ -187,7 +188,7 @@ public interface Node<C extends EngineExecutionContext> {
 		 *
 		 * @param testDescriptor the test descriptor to be executed
 		 */
-		void execute(TestDescriptor testDescriptor);
+		Optional<TestExecutionResult> execute(TestDescriptor testDescriptor);
 
 	}
 
