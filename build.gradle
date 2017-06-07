@@ -54,7 +54,7 @@ ext {
 	jupiterProjects = [
 		'junit-jupiter-api',
 		'junit-jupiter-engine',
-		'junit-jupiter-migration-support',
+		'junit-jupiter-migrationsupport',
 		'junit-jupiter-params'
 	]
 
@@ -73,7 +73,7 @@ ext {
 
 	cloverTestProjects = [
 		'junit-jupiter-engine',
-		'junit-jupiter-migration-support',
+		'junit-jupiter-migrationsupport',
 		'junit-jupiter-params',
 		'junit-vintage-engine',
 		'junit-platform-surefire-provider',
