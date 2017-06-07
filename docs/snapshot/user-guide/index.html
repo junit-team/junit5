@@ -762,7 +762,7 @@ environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to
 <dd>
 <p>Support for <a href="#writing-tests-parameterized-tests">parameterized tests</a> in JUnit Jupiter.</p>
 </dd>
-<dt class="hdlist1"><code>junit-jupiter-migration-support</code></dt>
+<dt class="hdlist1"><code>junit-jupiter-migrationsupport</code></dt>
 <dd>
 <p>Migration support from JUnit 4 to JUnit Jupiter,
 only required for running selected JUnit 4 rules.</p>
@@ -803,7 +803,7 @@ written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.</p>
 <h3 id="dependency-diagram"><a class="anchor" href="#dependency-diagram"></a>2.2. Dependency Diagram</h3>
 <div class="imageblock">
 <div class="content">
-<img src="images/component-diagram.svg" alt="component diagram" width="1490" height="503">
+<img src="images/component-diagram.svg" alt="component diagram" width="1484" height="503">
 </div>
 </div>
 </div>
@@ -5666,8 +5666,8 @@ is placed on the Java 9 module path.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.engine</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-jupiter-migration-support-&lt;VERSION&gt;.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migration.support</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-jupiter-migrationsupport-&lt;VERSION&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migrationsupport</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-jupiter-params-&lt;VERSION&gt;.jar</code></p></td>
@@ -5680,10 +5680,6 @@ is placed on the Java 9 module path.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-console-&lt;VERSION&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.console</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-console-standalone-&lt;VERSION&gt;.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.console.standalone</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-engine-&lt;VERSION&gt;.jar</code></p></td>
@@ -5819,6 +5815,10 @@ methods with different parameter lists.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>The migration support module is now named <code>junit-jupiter-migrationsupport</code>, without
+the dash <code>-</code> between <code>migration</code> and <code>support</code>.</p>
+</li>
+<li>
 <p>In order to ensure the <em>composability</em> of all supported extension APIs in JUnit
 Jupiter, several methods in existing APIs have been renamed.</p>
 <div class="ulist">
@@ -5946,7 +5946,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-06-02 17:03:10 EDT
+Last updated 2017-06-07 09:01:39 EDT
 </div>
 </div>
 </body>
