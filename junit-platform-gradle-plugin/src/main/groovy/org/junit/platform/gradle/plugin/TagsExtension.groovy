@@ -39,5 +39,4 @@ class TagsExtension {
 	void exclude(String... tags) {
 		this.exclude.addAll tags
 	}
-
 }

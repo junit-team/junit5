@@ -150,10 +150,10 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			args.addAll(['-N', pattern])
 		}
 		filters.packages.include.each { includedPackage ->
-			args.addAll(['--include-package',includedPackage])
+			args.addAll(['--include-package', includedPackage])
 		}
 		filters.packages.exclude.each { excludedPackage ->
-			args.addAll(['--exclude-package',excludedPackage])
+			args.addAll(['--exclude-package', excludedPackage])
 		}
 		filters.tags.include.each { tag ->
 			args.addAll(['-t', tag])

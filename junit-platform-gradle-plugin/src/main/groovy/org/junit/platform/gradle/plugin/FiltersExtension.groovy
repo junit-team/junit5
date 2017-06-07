@@ -41,7 +41,7 @@ class FiltersExtension {
 	List<String> excludeClassNamePatterns
 
 	protected List<String> getIncludeClassNamePatterns() {
-		return includeClassNamePatterns ?: [ ClassNameFilter.STANDARD_INCLUDE_PATTERN ];
+		return includeClassNamePatterns ?: [ClassNameFilter.STANDARD_INCLUDE_PATTERN]
 	}
 
 	protected List<String> getExcludeClassNamePatterns() {
@@ -81,5 +81,4 @@ class FiltersExtension {
 		}
 		excludeClassNamePatterns.addAll(patterns)
 	}
-
 }
