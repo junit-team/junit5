@@ -21,7 +21,7 @@ is placed on the Java 9 module path.
 
 | `junit-jupiter-api-<VERSION>.jar`                 | `org.junit.jupiter.api`
 | `junit-jupiter-engine-<VERSION>.jar`              | `org.junit.jupiter.engine`
-| `junit-jupiter-migration-support-<VERSION>.jar`   | `org.junit.jupiter.migrationsupport`
+| `junit-jupiter-migrationsupport-<VERSION>.jar`    | `org.junit.jupiter.migrationsupport`
 | `junit-jupiter-params-<VERSION>.jar`              | `org.junit.jupiter.params`
 | `junit-platform-commons-<VERSION>.jar`            | `org.junit.platform.commons`
 | `junit-platform-console-<VERSION>.jar`            | `org.junit.platform.console`
@@ -91,6 +91,8 @@ is placed on the Java 9 module path.
 
 ===== Deprecations and Breaking Changes
 
+* The migration support module is now named `junit-jupiter-migrationsupport`, without
+  the dash `-` between `migration` and `support`.
 * In order to ensure the _composability_ of all supported extension APIs in JUnit
   Jupiter, several methods in existing APIs have been renamed.
 ** See <<release-notes-5.0.0-m5-migration-extension-api>> for details.

@@ -1,4 +1,4 @@
-# Module junit-jupiter-migration-support
+# Module junit-jupiter-migrationsupport
 
 This module provides support for JUnit 4 rules within JUnit Jupiter.
 Currently, this support is limited to subclasses of the ```org.junit.rules.Verifier```

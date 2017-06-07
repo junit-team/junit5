@@ -75,9 +75,6 @@ class AutomaticModuleNameTests {
 	@MethodSource("moduleDirectoryNames")
 	void automaticModuleName(String module) {
 		String expected = "org." + module.replace('-', '.');
-		if (module.equals("junit-jupiter-migration-support")) {
-			expected = "org.junit.jupiter.migrationsupport";
-		}
 		String jarName = module + "-" + version(module) + ".jar";
 		Path jarPath = Paths.get("..", module).resolve("build/libs").resolve(jarName).normalize();
 		try (JarFile jarFile = new JarFile(jarPath.toFile())) {
