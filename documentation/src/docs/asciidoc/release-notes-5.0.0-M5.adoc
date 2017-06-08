@@ -98,8 +98,9 @@ is placed on the Java 9 module path.
 ** See <<release-notes-5.0.0-m5-migration-extension-api>> for details.
 * The `arguments()` method in the `ArgumentsProvider` API in the `junit-jupiter-params`
   module has been renamed to `provideArguments()`.
-* The `create()` factory method in `ObjectArrayArguments` in the `junit-jupiter-params`
-  module has been renamed to `arguments()`.
+* The type `ObjectArrayArguments` in the `junit-jupiter-params` module has been removed;
+  its functionality to create an `Argument` instance with `create()` is fulfilled by the
+  static factory method `arguments()` on the interface `Arguments`.
 * The `names` property of `@MethodSource` has been renamed to `value`.
 
 [[release-notes-5.0.0-m5-migration-extension-api]]

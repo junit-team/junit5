@@ -32,7 +32,6 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.junit.jupiter.params.provider.ObjectArrayArguments;
 
 class ParameterizedTestExtensionTests {
 
@@ -170,8 +169,7 @@ class ParameterizedTestExtensionTests {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
-			Stream<ObjectArrayArguments> argumentsStream = Stream.of("foo", "bar").map(ObjectArrayArguments::arguments);
-
+			Stream<Arguments> argumentsStream = Stream.of("foo", "bar").map(Arguments::of);
 			return argumentsStream.onClose(() -> streamWasClosed = true);
 		}
 	}
