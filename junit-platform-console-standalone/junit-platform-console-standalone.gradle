@@ -96,7 +96,7 @@ task standaloneExec(type: JavaExec, dependsOn: [shadowJar, testClasses]) {
 		"$shadowJar.archiveName",
 		'--scan-classpath',
 		'--include-classname', 'standalone.*',
-		'--classpath', "$buildDir/classes/test",
+		'--classpath', "$buildDir/classes/java/test",
 		'--details', 'tree'
 	]
 	standardOutput = new ByteArrayOutputStream()

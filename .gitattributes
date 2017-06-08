@@ -1,3 +1,4 @@
 * text eol=lf
-*.png binary -eol
-*.key binary -eol
+*.png binary
+*.key binary
+*.jar binary
