@@ -2519,8 +2519,11 @@ that is annotated with <code>@TestFactory</code>.</p>
 <p>In contrast to <code>@Test</code> methods, a <code>@TestFactory</code> method is not itself a test case but rather a factory for test cases.
 Thus, a dynamic test is the product of a factory.
 Technically speaking, a <code>@TestFactory</code> method must return a <code>Stream</code>,
-<code>Collection</code>, <code>Iterable</code>, or <code>Iterator</code> of <code>DynamicTest</code> instances.
-These <code>DynamicTest</code> instances will then be executed lazily,
+<code>Collection</code>, <code>Iterable</code>, or <code>Iterator</code> of <code>DynamicNode</code> instances.
+Instantiable subclasses of <code>DynamicNode</code> are <code>DynamicContainer</code> and <code>DynamicTest</code>.
+<code>DynamicContainer</code> instances are composed of a <em>display name</em> and a list of dynamic child nodes,
+enabling the creation of arbitrarily nested hierarchies of dynamic nodes.
+<code>DynamicTest</code> instances will then be executed lazily,
 enabling dynamic and even non-deterministic generation of test cases.</p>
 </div>
 <div class="paragraph">
@@ -2579,12 +2582,15 @@ However, <code>dynamicTestsFromStream()</code> and <code>dynamicTestsFromIntStre
 easy it is to generate dynamic tests for a given set of strings or a range of input numbers.</p>
 </div>
 <div class="paragraph">
-<p>The last method is truly dynamic in nature.
+<p>The next method is truly dynamic in nature.
 <code>generateRandomNumberOfTests()</code> implements an <code>Iterator</code> that generates random numbers, a
 display name generator, and a test executor and then provides all three to <code>DynamicTest.stream()</code>.
 Although the non-deterministic behavior of <code>generateRandomNumberOfTests()</code> is of course in conflict with
 test repeatability and should thus be used with care, it serves to demonstrate the expressiveness
 and power of dynamic tests.</p>
+</div>
+<div class="paragraph">
+<p>The last method generates a nested hierarchy of dynamic tests utilizing <code>DynamicContainer</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2616,18 +2622,6 @@ and power of dynamic tests.</p>
     <span class="annotation">@TestFactory</span>
     <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; dynamicTestsWithInvalidReturnType() {
         <span class="keyword">return</span> <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello</span><span class="delimiter">&quot;</span></span>);
-    }
-
-    <span class="annotation">@TestFactory</span>
-    Stream&lt;DynamicNode&gt; dynamicTestsWithContainers() {
-        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">A</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">B</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">C</span><span class="delimiter">&quot;</span></span>)
-            .map(input -&gt; dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">Container </span><span class="delimiter">&quot;</span></span> + input, Stream.of(
-                dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">not null</span><span class="delimiter">&quot;</span></span>, () -&gt; assertNotNull(input)),
-                dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">properties</span><span class="delimiter">&quot;</span></span>, Stream.of(
-                    dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">length &gt; 0</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(input.length() &gt; <span class="integer">0</span>)),
-                    dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">not empty</span><span class="delimiter">&quot;</span></span>, () -&gt; assertFalse(input.isEmpty()))
-                ))
-            )));
     }
 
     <span class="annotation">@TestFactory</span>
@@ -2697,6 +2691,20 @@ and power of dynamic tests.</p>
 
         <span class="comment">// Returns a stream of dynamic tests.</span>
         <span class="keyword">return</span> DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);
+    }
+
+    <span class="annotation">@TestFactory</span>
+    Stream&lt;DynamicNode&gt; dynamicTestsWithContainers() {
+        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">A</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">B</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">C</span><span class="delimiter">&quot;</span></span>)
+            .map(input -&gt; dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">Container </span><span class="delimiter">&quot;</span></span> + input,
+                Stream.of(
+                dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">not null</span><span class="delimiter">&quot;</span></span>, () -&gt; assertNotNull(input)),
+                dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">properties</span><span class="delimiter">&quot;</span></span>,
+                    Stream.of(
+                    dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">length &gt; 0</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(input.length() &gt; <span class="integer">0</span>)),
+                    dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">not empty</span><span class="delimiter">&quot;</span></span>, () -&gt; assertFalse(input.isEmpty()))
+                ))
+            )));
     }
 
 }</code></pre>
@@ -5917,6 +5925,10 @@ newly introduced engine-level <code>ExtensionContext</code>.</p>
 <p>Argument providing methods referenced using <code>@MethodSource</code> may now return instances of
 <code>DoubleStream</code>, <code>IntStream</code>, and <code>LongStream</code> directly.</p>
 </li>
+<li>
+<p><code>@TestFactory</code> now supports arbitrarily nested dynamic containers. See <code>DynamicContainer</code>
+and abstract base class <code>DynamicNode</code> for details.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -5946,7 +5958,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-06-08 05:14:56 EDT
+Last updated 2017-06-08 14:12:19 EDT
 </div>
 </div>
 </body>
