@@ -2169,8 +2169,7 @@ demonstrated by the following example.</p>
 </div>
 <div class="paragraph">
 <p>In case you need multiple parameters, you need to return <code>Argument</code> instances as shown below.
-Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory method defined in
-<code>org.junit.jupiter.params.provider.ObjectArrayArguments</code>.</p>
+Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory method defined in the interface itself.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2182,7 +2181,7 @@ Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory metho
 }
 
 <span class="directive">static</span> Stream&lt;Arguments&gt; stringAndIntProvider() {
-    <span class="keyword">return</span> Stream.of(arguments(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>), arguments(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>));
+    <span class="keyword">return</span> Stream.of(Arguments.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>), Arguments.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>));
 }</code></pre>
 </div>
 </div>
@@ -2246,7 +2245,7 @@ bar, 2
 
     <span class="annotation">@Override</span>
     <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; provideArguments(ContainerExtensionContext context) {
-        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>).map(ObjectArrayArguments::arguments);
+        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>).map(Arguments::of);
     }
 }</code></pre>
 </div>
@@ -5834,8 +5833,9 @@ Jupiter, several methods in existing APIs have been renamed.</p>
 module has been renamed to <code>provideArguments()</code>.</p>
 </li>
 <li>
-<p>The <code>create()</code> factory method in <code>ObjectArrayArguments</code> in the <code>junit-jupiter-params</code>
-module has been renamed to <code>arguments()</code>.</p>
+<p>The type <code>ObjectArrayArguments</code> in the <code>junit-jupiter-params</code> module has been removed;
+its functionality to create an <code>Argument</code> instance with <code>create()</code> is fulfilled by the
+static factory method <code>arguments()</code> on the interface <code>Arguments</code>.</p>
 </li>
 <li>
 <p>The <code>names</code> property of <code>@MethodSource</code> has been renamed to <code>value</code>.</p>
@@ -5946,7 +5946,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-06-07 09:01:39 EDT
+Last updated 2017-06-08 04:08:19 EDT
 </div>
 </div>
 </body>
