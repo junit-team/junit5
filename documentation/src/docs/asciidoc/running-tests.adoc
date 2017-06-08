@@ -308,8 +308,8 @@ In order to have Maven Surefire run any tests at all, a `TestEngine` implementat
 to the runtime classpath.
 
 To configure support for JUnit Jupiter based tests, configure a `test` dependency on the JUnit
-Jupiter API, and add the JUnit Jupiter `TestEngine` implementation to the dependencies of the
-`maven-surefire-plugin` similar to the following.
+Jupiter API, and add the JUnit Jupiter `TestEngine` implementation to the project's dependencies
+similar to the following.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -326,11 +326,6 @@ Jupiter API, and add the JUnit Jupiter `TestEngine` implementation to the depend
 						<groupId>org.junit.platform</groupId>
 						<artifactId>junit-platform-surefire-provider</artifactId>
 						<version>{platform-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.junit.jupiter</groupId>
-						<artifactId>junit-jupiter-engine</artifactId>
-						<version>{jupiter-version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -345,13 +340,20 @@ Jupiter API, and add the JUnit Jupiter `TestEngine` implementation to the depend
 			<version>{jupiter-version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>{jupiter-version}</version>
+			<scope>test</scope>
+		</dependency>
+		...
 	</dependencies>
 	...
 ----
 
 The JUnit Platform Surefire Provider can run JUnit 4 based tests as long as you configure a
 `test` dependency on JUnit 4 and add the JUnit Vintage `TestEngine` implementation to the
-dependencies of the `maven-surefire-plugin` similar to the following.
+project's dependencies similar to the following.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -369,12 +371,6 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 						<artifactId>junit-platform-surefire-provider</artifactId>
 						<version>{platform-version}</version>
 					</dependency>
-					...
-					<dependency>
-						<groupId>org.junit.vintage</groupId>
-						<artifactId>junit-vintage-engine</artifactId>
-						<version>{vintage-version}</version>
-					</dependency>
 				</dependencies>
 			</plugin>
 		</plugins>
@@ -388,6 +384,13 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 			<version>{junit4-version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>{vintage-version}</version>
+			<scope>test</scope>
+		</dependency>
+		...
 	</dependencies>
 	...
 ----
