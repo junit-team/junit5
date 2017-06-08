@@ -2168,8 +2168,8 @@ demonstrated by the following example.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In case you need multiple parameters, you need to return <code>Argument</code> instances as shown below.
-Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory method defined in the interface itself.</p>
+<p>In case you need multiple parameters, you need to return an <code>Arguments</code> instances as shown below.
+Note that <code>Arguments.of(Object&#8230;&#8203;)</code> is a static factory method defined in the interface itself.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5834,8 +5834,8 @@ module has been renamed to <code>provideArguments()</code>.</p>
 </li>
 <li>
 <p>The type <code>ObjectArrayArguments</code> in the <code>junit-jupiter-params</code> module has been removed;
-its functionality to create an <code>Argument</code> instance with <code>create()</code> is fulfilled by the
-static factory method <code>arguments()</code> on the interface <code>Arguments</code>.</p>
+its functionality to create an <code>Arguments</code> instance is replaced by the static factory
+method <code>Arguments.of(&#8230;&#8203;)</code>.</p>
 </li>
 <li>
 <p>The <code>names</code> property of <code>@MethodSource</code> has been renamed to <code>value</code>.</p>
@@ -5946,7 +5946,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-06-08 04:08:19 EDT
+Last updated 2017-06-08 05:14:56 EDT
 </div>
 </div>
 </body>
