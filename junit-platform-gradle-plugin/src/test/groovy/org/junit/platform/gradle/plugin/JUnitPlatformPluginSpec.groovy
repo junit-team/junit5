@@ -131,7 +131,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask.args.containsAll('-e', 'foo')
 		junitTask.args.containsAll('-E', 'bar')
 		junitTask.args.containsAll('--reports-dir', new File('/any').getCanonicalFile().toString())
-		def classpathToBeScanned = ['build/classes/main', 'build/resources/main', 'build/classes/test', 'build/resources/test']
+		def classpathToBeScanned = ['build/classes/java/main', 'build/resources/main', 'build/classes/java/test', 'build/resources/test']
 				.collect { path -> project.file(path).absolutePath }
 				.join(File.pathSeparator)
 		junitTask.args.containsAll('--scan-class-path', classpathToBeScanned)
