@@ -1,0 +1,26 @@
+/*
+ * Copyright 2015-2017 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+
+package org.junit.vintage.engine.samples.junit3;
+
+import junit.framework.TestCase;
+
+import org.junit.Assert;
+
+/**
+ * @since 4.12
+ */
+public abstract class AbstractJUnit3TestCase extends TestCase {
+
+	public void test() {
+		Assert.fail("this test should not be run");
+	}
+
+}

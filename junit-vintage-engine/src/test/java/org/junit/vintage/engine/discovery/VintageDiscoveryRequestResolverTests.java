@@ -27,6 +27,7 @@ import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.vintage.engine.RecordCollectingLogger;
+import org.junit.vintage.engine.samples.junit3.AbstractJUnit3TestCase;
 import org.junit.vintage.engine.samples.junit4.AbstractJunit4TestCaseWithConstructorParameter;
 
 /**
@@ -76,9 +77,17 @@ class VintageDiscoveryRequestResolverTests {
 	}
 
 	@Test
-	void doesNotResolveAbstractClasses() {
+	void doesNotResolveAbstractJUnit3Classes() {
+		doesNotResolve(AbstractJUnit3TestCase.class);
+	}
+
+	@Test
+	void doesNotResolveAbstractJUnit4Classes() {
+		doesNotResolve(AbstractJunit4TestCaseWithConstructorParameter.class);
+	}
+
+	private void doesNotResolve(Class<?> testClass) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(engineId(), "JUnit Vintage");
-		Class<?> testClass = AbstractJunit4TestCaseWithConstructorParameter.class;
 		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 
 		RecordCollectingLogger logger = new RecordCollectingLogger();
