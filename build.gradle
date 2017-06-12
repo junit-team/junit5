@@ -464,23 +464,23 @@ configure(rootProject) {
 		doFirst {
 			classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
 		}
-        doLast {
-            copy {
-                from("$buildDir/docs") {
-                    filter { String line ->
-                        line.startsWith("<head>") ? line.replace("<head>", "<head><link rel=\"icon\" type=\"image/png\" href=http://junit.org/junit5/assets/img/junit5-logo.png>") :
-                                line
-                    }
-                }
-                into "$buildDir/temp"
-                include 'javadoc/**'
-            }
-            copy {
-                from "$buildDir/temp"
-                into "$buildDir/docs"
-            }
-            delete "$buildDir/temp"
-        }
+		doLast {
+			copy {
+				from("$buildDir/docs") {
+					filter { String line ->
+						line.startsWith("<head>") ? line.replace("<head>", "<head><link rel=\"icon\" type=\"image/png\" href=http://junit.org/junit5/assets/img/junit5-logo.png>") :
+								line
+					}
+				}
+				into "$buildDir/temp"
+				include 'javadoc/**'
+			}
+			copy {
+				from "$buildDir/temp"
+				into "$buildDir/docs"
+			}
+			delete "$buildDir/temp"
+		}
 	}
 
 	spotless {
@@ -541,7 +541,7 @@ configure(rootProject) {
 	def docsVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
 	def docsDir = new File(buildDir, 'ghpages-docs')
 
-    task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: org.gradle.api.tasks.Copy) {
+	task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: org.gradle.api.tasks.Copy) {
 		outputs.dir docsDir
 
 		from(project(':documentation').buildDir) {
@@ -560,7 +560,7 @@ configure(rootProject) {
 		includeEmptyDirs = false
 	}
 
-    task createCurrentDocsFolder(dependsOn: prepareDocsForUploadToGhPages, type: org.gradle.api.tasks.Copy) {
+	task createCurrentDocsFolder(dependsOn: prepareDocsForUploadToGhPages, type: org.gradle.api.tasks.Copy) {
 		outputs.dir "${docsDir}/current"
 
 		from "${docsDir}/${docsVersion}"
