@@ -2,6 +2,10 @@
 = JUnit 5 User Guide
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Christian Stein
 :imagesdir: images
+//
+:docinfodir: docinfos
+:docinfo: private-head
+//
 ifdef::backend-pdf[:imagesdir: {outdir}/{imagesdir}]
 //
 // Blank lines are not permitted in the doc-header: http://asciidoctor.org/docs/user-manual/#doc-header
@@ -32,7 +36,7 @@ ifdef::backend-pdf[:imagesdir: {outdir}/{imagesdir}]
 //
 :api-package:                       {javadoc-root}/org/junit/jupiter/api/package-summary.html[org.junit.jupiter.api]
 :extension-api-package:             {javadoc-root}/org/junit/jupiter/api/extension/package-summary.html[org.junit.jupiter.api.extension]
-:params-provider-package:                       {javadoc-root}/org/junit/jupiter/params/provider/package-summary.html[org.junit.jupiter.params.provider]
+:params-provider-package:           {javadoc-root}/org/junit/jupiter/params/provider/package-summary.html[org.junit.jupiter.params.provider]
 :junit-jupiter-engine:              {javadoc-root}/org/junit/jupiter/engine/package-summary.html[junit-jupiter-engine]
 :AfterAllCallback:                  {javadoc-root}/org/junit/jupiter/api/extension/AfterAllCallback.html[AfterAllCallback]
 :AfterEachCallback:                 {javadoc-root}/org/junit/jupiter/api/extension/AfterEachCallback.html[AfterEachCallback]
