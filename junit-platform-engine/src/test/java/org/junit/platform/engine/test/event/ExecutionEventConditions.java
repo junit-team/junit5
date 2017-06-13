@@ -29,6 +29,7 @@ import static org.junit.platform.engine.test.event.TestExecutionResultConditions
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.status;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
@@ -36,6 +37,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.test.event.ExecutionEvent.Type;
 
@@ -96,9 +98,13 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> uniqueIdSubstring(String uniqueIdSubstring) {
+		Predicate<UniqueId.Segment> predicate = segment -> {
+			String text = segment.getType() + ":" + segment.getValue();
+			return text.contains(uniqueIdSubstring);
+		};
 		return new Condition<>(
-			byTestDescriptor(where(testDescriptor -> testDescriptor.getUniqueId().toString(),
-				uniqueId -> uniqueId.contains(uniqueIdSubstring))),
+			byTestDescriptor(
+				where(TestDescriptor::getUniqueId, uniqueId -> uniqueId.getSegments().stream().anyMatch(predicate))),
 			"descriptor with uniqueId substring \"%s\"", uniqueIdSubstring);
 	}
 
