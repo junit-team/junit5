@@ -46,6 +46,7 @@ import org.junit.platform.console.options.Theme;
 /**
  * @since 1.0
  */
+@Disabled("#810 - unique id segment are encoded now")
 class ConsoleDetailsTests {
 
 	@DisplayName("Basic")
