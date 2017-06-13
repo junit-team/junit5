@@ -17,6 +17,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.UniqueId.Segment;
 
 /**
@@ -112,6 +114,29 @@ class UniqueIdTests {
 		void ensureDefaultUniqueIdFormatIsUsedForFormatting() {
 			UniqueId parsedDirectly = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
 			assertEquals("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]", parsedDirectly.toString());
+		}
+
+		@Test
+		void ensureDefaultUniqueIdFormatDecodingEncodedSegmentParts() {
+			UniqueId.Segment segment = UniqueId.parse("[%5B+%25+%5D):(%3A+%2B+%2F]").getSegments().get(0);
+			assertEquals("[ % ])", segment.getType());
+			assertEquals("(: + /", segment.getValue());
+		}
+
+		@Test
+		void ensureDefaultUniqueIdFormatCanHandleAllCharacters() {
+			for (char c = 0; c < Character.MAX_VALUE; c++) {
+				String value = "foo " + String.valueOf(c) + " bar";
+				UniqueId uniqueId = UniqueId.parse(UniqueId.root("type", value).toString());
+				Segment segment = uniqueId.getSegments().get(0);
+				assertEquals(value, segment.getValue());
+			}
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "[a:b]", "[a:b]/[a:b]", "[a$b:b()]", "[a:b(%5BI)]", "[%5B%5D:%3A%2F]" })
+		void ensureDefaultToStringAndParsingIsIdempotent(String expected) {
+			assertEquals(expected, UniqueId.parse(expected).toString());
 		}
 	}
 

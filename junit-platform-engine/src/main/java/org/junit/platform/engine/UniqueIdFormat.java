@@ -14,8 +14,13 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +49,7 @@ class UniqueIdFormat implements Serializable {
 	private final char segmentDelimiter;
 	private final char typeValueSeparator;
 	private final Pattern segmentPattern;
+	private final Map<Character, String> encodedCharacterMap = new TreeMap<>();
 
 	UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
 		this.openSegment = openSegment;
@@ -51,7 +57,15 @@ class UniqueIdFormat implements Serializable {
 		this.closeSegment = closeSegment;
 		this.segmentDelimiter = segmentDelimiter;
 		this.segmentPattern = Pattern.compile(
-			String.format("%s(.+)%s(.+)%s", quote(openSegment), quote(typeValueSeparator), quote(closeSegment)));
+			String.format("%s(.+)%s(.+)%s", quote(openSegment), quote(typeValueSeparator), quote(closeSegment)),
+			Pattern.DOTALL);
+		// compute "forbidden" character encoding map
+		encodedCharacterMap.computeIfAbsent('%', UniqueIdFormat::encode);
+		encodedCharacterMap.computeIfAbsent('+', UniqueIdFormat::encode);
+		encodedCharacterMap.computeIfAbsent(openSegment, UniqueIdFormat::encode);
+		encodedCharacterMap.computeIfAbsent(typeValueSeparator, UniqueIdFormat::encode);
+		encodedCharacterMap.computeIfAbsent(closeSegment, UniqueIdFormat::encode);
+		encodedCharacterMap.computeIfAbsent(segmentDelimiter, UniqueIdFormat::encode);
 	}
 
 	/**
@@ -71,8 +85,8 @@ class UniqueIdFormat implements Serializable {
 		if (!segmentMatcher.matches()) {
 			throw new JUnitException(String.format("'%s' is not a well-formed UniqueId segment", segmentString));
 		}
-		String type = checkAllowed(segmentMatcher.group(1));
-		String value = checkAllowed(segmentMatcher.group(2));
+		String type = decode(checkAllowed(segmentMatcher.group(1)));
+		String value = decode(checkAllowed(segmentMatcher.group(2)));
 		return new Segment(type, value);
 	}
 
@@ -101,12 +115,42 @@ class UniqueIdFormat implements Serializable {
 	}
 
 	private String describe(Segment segment) {
-		return String.format("%s%s%s%s%s", this.openSegment, segment.getType(), this.typeValueSeparator,
-			segment.getValue(), this.closeSegment);
+		String body = encode(segment.getType()) + typeValueSeparator + encode(segment.getValue());
+		return openSegment + body + closeSegment;
 	}
 
 	private static String quote(char c) {
 		return Pattern.quote(String.valueOf(c));
 	}
 
+	private static String encode(char c) {
+		try {
+			return URLEncoder.encode(String.valueOf(c), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e) {
+			throw new AssertionError("UTF-8 should be supported", e);
+		}
+	}
+
+	private String encode(String s) {
+		StringBuilder builder = new StringBuilder();
+		for (char c : s.toCharArray()) {
+			String value = encodedCharacterMap.get(c);
+			if (value == null) {
+				builder.append(c);
+				continue;
+			}
+			builder.append(value);
+		}
+		return builder.toString();
+	}
+
+	private String decode(String s) {
+		try {
+			return URLDecoder.decode(s, "UTF-8");
+		}
+		catch (UnsupportedEncodingException e) {
+			throw new JUnitException("UTF-8 should be supported", e);
+		}
+	}
 }
