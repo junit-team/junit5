@@ -202,4 +202,5 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			}
 		}
 	}
+
 }

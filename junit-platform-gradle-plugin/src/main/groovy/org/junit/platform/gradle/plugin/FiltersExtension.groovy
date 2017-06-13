@@ -81,4 +81,5 @@ class FiltersExtension {
 		}
 		excludeClassNamePatterns.addAll(patterns)
 	}
+
 }

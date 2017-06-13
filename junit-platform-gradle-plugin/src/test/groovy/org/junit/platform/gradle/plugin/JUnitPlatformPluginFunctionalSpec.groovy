@@ -194,7 +194,8 @@ public class Adder {
 		Path testPath = Paths.get(testProjectDir.root.toString(), 'src', 'test', 'java', 'org', 'junit', 'gradletest', 'AdderTest.java')
 		Files.createDirectories(testPath.parent)
 		testPath.withWriter {
-			it.write('''
+			it.write(
+					'''
 package org.junit.gradletest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -208,8 +209,7 @@ class AdderTest {
 				assertEquals(5, adder.add(3, 3), "This should fail!");
 		}
 }
-'''
-					)
+''')
 		}
 	}
 
@@ -267,4 +267,5 @@ class AdderTest {
 		}
 		return classpathResource.readLines().collect { new File(it) }
 	}
+
 }

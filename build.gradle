@@ -399,7 +399,7 @@ subprojects { subproj ->
 	spotless {
 		def headerText = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
 		def importOrderConfig = rootProject.file('src/eclipse/junit-eclipse.importorder')
-		def formatterJavaConfig= rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+		def formatterJavaConfig = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 		def formatterGroovyConfig = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
 
 		java {
@@ -422,6 +422,8 @@ subprojects { subproj ->
 
 			trimTrailingWhitespace()
 			endWithNewline()
+			replaceRegex 'Empty line between last method and class closure', /\n([\s]+)}\n}\n$/, '\n$1}\n\n}\n'
+			replaceRegex 'Remove line breaks between consecutive clothing parentheses', /\)\n[\s]+\)\n/, '))\n'
 		}
 	}
 

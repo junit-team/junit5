@@ -252,8 +252,7 @@ class JUnitPlatformPluginSpec extends Specification {
 				)
 
 		configuration.getAllDependencies().contains(
-				project.dependencies.create("org.junit.platform:junit-platform-console:1.0.0")
-				)
+				project.dependencies.create("org.junit.platform:junit-platform-console:1.0.0"))
 	}
 
 	def "adds dependencies with fixed version when not explicitly configured"() {
@@ -287,4 +286,5 @@ class JUnitPlatformPluginSpec extends Specification {
 		then:
 		junitPlatformTest.description == customDescription
 	}
+
 }
