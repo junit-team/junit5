@@ -14,6 +14,9 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -71,8 +74,8 @@ class UniqueIdFormat implements Serializable {
 		if (!segmentMatcher.matches()) {
 			throw new JUnitException(String.format("'%s' is not a well-formed UniqueId segment", segmentString));
 		}
-		String type = checkAllowed(segmentMatcher.group(1));
-		String value = checkAllowed(segmentMatcher.group(2));
+		String type = decode(checkAllowed(segmentMatcher.group(1)));
+		String value = decode(checkAllowed(segmentMatcher.group(2)));
 		return new Segment(type, value);
 	}
 
@@ -101,12 +104,29 @@ class UniqueIdFormat implements Serializable {
 	}
 
 	private String describe(Segment segment) {
-		return String.format("%s%s%s%s%s", this.openSegment, segment.getType(), this.typeValueSeparator,
-			segment.getValue(), this.closeSegment);
+		String body = encode(segment.getType()) + typeValueSeparator + encode(segment.getValue());
+		return openSegment + body + closeSegment;
 	}
 
 	private static String quote(char c) {
 		return Pattern.quote(String.valueOf(c));
 	}
 
+	private String encode(String s) {
+		try {
+			return URLEncoder.encode(s, "UTF-8");
+		}
+		catch (UnsupportedEncodingException e) {
+			throw new JUnitException("UTF-8 should be supported", e);
+		}
+	}
+
+	private String decode(String s) {
+		try {
+			return URLDecoder.decode(s, "UTF-8");
+		}
+		catch (UnsupportedEncodingException e) {
+			throw new JUnitException("UTF-8 should be supported", e);
+		}
+	}
 }

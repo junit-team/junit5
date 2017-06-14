@@ -4,8 +4,8 @@ Test plan execution started. Number of static tests: 1
 | +-- Basic
 | | +-- .oO fancy display name Oo.
 | | |      tags: []
-| | |  uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic]/[method:changeDisplayName()]
-| | |    parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic]
+| | |  uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Basic]/[method:changeDisplayName%28%29]
+| | |    parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Basic]
 | | |    source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Basic', methodName = 'changeDisplayName', methodParameterTypes = '']
 \| \| \|  duration: [\d]+ ms
 | | |    status: [OK] SUCCESSFUL

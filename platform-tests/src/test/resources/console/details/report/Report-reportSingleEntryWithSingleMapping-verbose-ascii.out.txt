@@ -4,8 +4,8 @@ Test plan execution started. Number of static tests: 1
 | +-- Report
 | | +-- reportSingleEntryWithSingleMapping(TestReporter)
 | | |      tags: []
-| | |  uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportSingleEntryWithSingleMapping(org.junit.jupiter.api.TestReporter)]
-| | |    parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]
+| | |  uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Report]/[method:reportSingleEntryWithSingleMapping%28org.junit.jupiter.api.TestReporter%29]
+| | |    parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Report]
 | | |    source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Report', methodName = 'reportSingleEntryWithSingleMapping', methodParameterTypes = 'org.junit.jupiter.api.TestReporter']
 \| \| \|   reports: ReportEntry \[timestamp = ....-..-..T..:...*, foo = 'bar'\]
 \| \| \|  duration: [\d]+ ms

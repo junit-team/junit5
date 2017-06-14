@@ -1,12 +1,12 @@
 Test execution started. Number of static tests: 1
 Started:     JUnit Jupiter ([engine:junit-jupiter])
-Started:     Skip ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Skip])
-Skipped:     skipWithMultiLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Skip]/[method:skipWithMultiLineMessage()])
+Started:     Skip ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Skip])
+Skipped:     skipWithMultiLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Skip]/[method:skipWithMultiLineMessage%28%29])
              => Reason: multi
              line
              fail
              message
-Finished:    Skip ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Skip])
+Finished:    Skip ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Skip])
 Finished:    JUnit Jupiter ([engine:junit-jupiter])
 Test execution finished.
 
