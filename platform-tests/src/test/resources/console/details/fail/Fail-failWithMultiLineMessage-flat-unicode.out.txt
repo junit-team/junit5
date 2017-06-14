@@ -1,14 +1,14 @@
 Test execution started. Number of static tests: 1
 Started:     JUnit Jupiter ([engine:junit-jupiter])
-Started:     Fail ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail])
-Started:     failWithMultiLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail]/[method:failWithMultiLineMessage()])
-Finished:    failWithMultiLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail]/[method:failWithMultiLineMessage()])
+Started:     Fail ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Fail])
+Started:     failWithMultiLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Fail]/[method:failWithMultiLineMessage%28%29])
+Finished:    failWithMultiLineMessage() ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Fail]/[method:failWithMultiLineMessage%28%29])
              => Exception: org.opentest4j.AssertionFailedError: multi
              line
              fail
              message
 >> S T A C K T R A C E >>
-Finished:    Fail ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail])
+Finished:    Fail ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Fail])
 Finished:    JUnit Jupiter ([engine:junit-jupiter])
 Test execution finished.
 

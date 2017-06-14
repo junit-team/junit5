@@ -1,9 +1,9 @@
 Test execution started. Number of static tests: 1
 Started:     JUnit Jupiter ([engine:junit-jupiter])
-Started:     Basic ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic])
-Started:     .oO fancy display name Oo. ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic]/[method:changeDisplayName()])
-Finished:    .oO fancy display name Oo. ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic]/[method:changeDisplayName()])
-Finished:    Basic ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Basic])
+Started:     Basic ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Basic])
+Started:     .oO fancy display name Oo. ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Basic]/[method:changeDisplayName%28%29])
+Finished:    .oO fancy display name Oo. ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Basic]/[method:changeDisplayName%28%29])
+Finished:    Basic ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Basic])
 Finished:    JUnit Jupiter ([engine:junit-jupiter])
 Test execution finished.
 

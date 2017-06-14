@@ -4,8 +4,8 @@ Test plan execution started. Number of static tests: 1
 | +-- Fail
 | | +-- failWithMultiLineMessage()
 | | |      tags: []
-| | |  uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail]/[method:failWithMultiLineMessage()]
-| | |    parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail]
+| | |  uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Fail]/[method:failWithMultiLineMessage%28%29]
+| | |    parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Fail]
 | | |    source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Fail', methodName = 'failWithMultiLineMessage', methodParameterTypes = '']
 | | |    caught: org.opentest4j.AssertionFailedError: multi
 | | |              line

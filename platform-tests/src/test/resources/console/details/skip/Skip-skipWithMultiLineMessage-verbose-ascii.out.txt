@@ -4,8 +4,8 @@ Test plan execution started. Number of static tests: 1
 | +-- Skip
 | | +-- skipWithMultiLineMessage()
 | | |      tags: []
-| | |  uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Skip]/[method:skipWithMultiLineMessage()]
-| | |    parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Skip]
+| | |  uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Skip]/[method:skipWithMultiLineMessage%28%29]
+| | |    parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests%24Skip]
 | | |    source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Skip', methodName = 'skipWithMultiLineMessage', methodParameterTypes = '']
 | | |    reason: multi
 | | |              line
