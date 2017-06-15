@@ -118,7 +118,6 @@ class DefaultLauncher implements Launcher {
 			engineRoot.ifPresent(rootDescriptor -> root.add(testEngine, rootDescriptor));
 		}
 		root.applyPostDiscoveryFilters(discoveryRequest);
-		root.prune();
 		return root;
 	}
 
