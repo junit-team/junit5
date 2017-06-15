@@ -936,7 +936,7 @@ public final class ReflectionUtils {
 	}
 
 	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
-	private static <T extends AccessibleObject> T makeAccessible(T object) {
+	public static <T extends AccessibleObject> T makeAccessible(T object) {
 		if (!object.isAccessible()) {
 			object.setAccessible(true);
 		}
