@@ -60,6 +60,8 @@ public final class TestPlan {
 
 	private final Map<String, TestIdentifier> allIdentifiers = new ConcurrentHashMap<>(32);
 
+	private final boolean containsTests;
+
 	/**
 	 * Construct a new {@code TestPlan} from the supplied collection of
 	 * {@link TestDescriptor TestDescriptors}.
@@ -74,14 +76,14 @@ public final class TestPlan {
 	@API(Internal)
 	public static TestPlan from(Collection<TestDescriptor> engineDescriptors) {
 		Preconditions.notNull(engineDescriptors, "Cannot create TestPlan from a null collection of TestDescriptors");
-		TestPlan testPlan = new TestPlan();
+		TestPlan testPlan = new TestPlan(engineDescriptors.stream().anyMatch(TestDescriptor::containsTests));
 		Visitor visitor = descriptor -> testPlan.add(TestIdentifier.from(descriptor));
 		engineDescriptors.forEach(engineDescriptor -> engineDescriptor.accept(visitor));
 		return testPlan;
 	}
 
-	private TestPlan() {
-		/* no-op */
+	private TestPlan(boolean containsTests) {
+		this.containsTests = containsTests;
 	}
 
 	/**
@@ -199,4 +201,7 @@ public final class TestPlan {
 		return unmodifiableSet(result);
 	}
 
+	public boolean containsTests() {
+		return containsTests;
+	}
 }
