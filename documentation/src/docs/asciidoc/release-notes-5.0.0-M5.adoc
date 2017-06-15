@@ -66,7 +66,8 @@ is placed on the Java 9 module path.
   2.20 or higher.
 * The `isLeaf()` method of the `org.junit.platform.engine.support.hierarchical.Node`
   interface has been removed.
-* The default methods `prune()` and `pruneTree()` have been removed from `TestDescriptor`.
+* The default methods `prune()`, `pruneTree()`, and `hasTests()` have been removed from
+  `TestDescriptor`.
 * The `DefaultLauncher` no longer prunes trees of `TestDescriptors` it receives from test
   engines. It's the responsibility of test engines to only return `TestDescriptors` they
   wish to execute.
@@ -86,6 +87,8 @@ is placed on the Java 9 module path.
 * When a `TestEngine` is discovered via Java's `ServiceLoader` mechanism, an attempt
   will now be made to determine the location from which the engine class was loaded,
   and if the location URL is available, it will be logged at configuration-level.
+* The `mayRegisterTests()` method may be used to signal that a `TestDescriptor` will
+  register dynamic tests during execution.
 
 
 [[release-notes-5.0.0-m5-junit-jupiter]]
