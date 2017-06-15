@@ -41,7 +41,9 @@ class ParameterizedTestNameFormatter {
 		}
 
 		// Convert arguments to human readable formats
-		String[] humanReadableArguments = new String[arguments.length];
+		// Note: humanReadableArguments must be an Object[] in order to
+		// avoid varargs issues with non-Eclipse compilers.
+		Object[] humanReadableArguments = new String[arguments.length];
 		for (int i = 0; i < arguments.length; i++) {
 			humanReadableArguments[i] = StringUtils.nullSafeToString(arguments[i]);
 		}
