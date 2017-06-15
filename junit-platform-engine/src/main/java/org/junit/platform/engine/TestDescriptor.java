@@ -196,37 +196,6 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Remove this descriptor from the hierarchy unless it is a root or has tests.
-	 *
-	 * <p>A concrete {@link TestEngine} may override this method in order to implement
-	 * a different algorithm or to skip pruning altogether.
-	 *
-	 * @see #isRoot()
-	 * @see #hasTests()
-	 * @see #removeFromHierarchy()
-	 */
-	default void prune() {
-		if (isRoot() || hasTests()) {
-			return;
-		}
-		removeFromHierarchy();
-	}
-
-	/**
-	 * Remove this descriptor and its descendants from the hierarchy.
-	 *
-	 * <p>The default implementation supplies the {@link #prune()} method as a
-	 * {@link Visitor} to this descriptor, thereby effectively removing this
-	 * descriptor and all of its descendants.
-	 *
-	 * @see #accept(Visitor)
-	 * @see #prune()
-	 */
-	default void pruneTree() {
-		accept(TestDescriptor::prune);
-	}
-
-	/**
 	 * Find the descriptor with the supplied unique ID.
 	 *
 	 * <p>The search algorithm begins with this descriptor and then searches

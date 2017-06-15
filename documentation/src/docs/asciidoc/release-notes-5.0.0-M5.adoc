@@ -66,6 +66,10 @@ is placed on the Java 9 module path.
   2.20 or higher.
 * The `isLeaf()` method of the `org.junit.platform.engine.support.hierarchical.Node`
   interface has been removed.
+* The default methods `prune()` and `pruneTree()` have been removed from `TestDescriptor`.
+* The `DefaultLauncher` no longer prunes trees of `TestDescriptors` it receives from test
+  engines. It's the responsibility of test engines to only return `TestDescriptors` they
+  wish to execute.
 
 ===== New Features and Improvements
 
