@@ -47,7 +47,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	@Override
-	public boolean hasTests() {
+	public boolean mayRegisterTests() {
 		return true;
 	}
 

@@ -55,7 +55,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@Override
-	public boolean hasTests() {
+	public boolean mayRegisterTests() {
 		return true;
 	}
 

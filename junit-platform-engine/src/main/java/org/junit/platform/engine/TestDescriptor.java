@@ -185,14 +185,22 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Determine if this descriptor or any of its descendants describes a test.
+	 * Determine if this descriptor may register dynamic tests during execution.
 	 *
-	 * <p>The default implementation returns {@code true} if {@link #isTest()}
-	 * returns {@code true} and otherwise recurses through this descriptor's
-	 * {@linkplain #getChildren() children} to determine if they have tests.
+	 * <p>The default implementation assumes tests are usually known during
+	 * discovery and thus returns {@code false}.
 	 */
-	default boolean hasTests() {
-		return isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests);
+	default boolean mayRegisterTests() {
+		return false;
+	}
+
+	/**
+	 * Determine if the supplied descriptor or any of its descendants contains
+	 * any tests.
+	 */
+	static boolean containsTests(TestDescriptor testDescriptor) {
+		return testDescriptor.isTest() || testDescriptor.mayRegisterTests()
+				|| testDescriptor.getChildren().stream().anyMatch(TestDescriptor::containsTests);
 	}
 
 	/**

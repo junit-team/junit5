@@ -47,7 +47,7 @@ public class DemoHierarchicalContainerDescriptor extends AbstractTestDescriptor
 	}
 
 	@Override
-	public boolean hasTests() {
+	public boolean mayRegisterTests() {
 		return true;
 	}
 
