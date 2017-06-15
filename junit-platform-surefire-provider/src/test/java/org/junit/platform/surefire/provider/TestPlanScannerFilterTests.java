@@ -17,6 +17,7 @@
 package org.junit.platform.surefire.provider;
 
 import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -37,14 +38,13 @@ import org.junit.platform.launcher.core.LauncherFactory;
 class TestPlanScannerFilterTests {
 
 	@Test
-	void emptyClassAccepted() {
-		assertTrue(newFilter().accept(EmptyClass.class), "accepts empty class because it is a container");
+	void emptyClassIsNotAccepted() {
+		assertFalse(newFilter().accept(EmptyClass.class), "does not accept empty class");
 	}
 
 	@Test
-	void classWithNoTestMethodsIsAccepted() {
-		assertTrue(newFilter().accept(ClassWithMethods.class),
-			"accepts class with no @Test methods because it is a container");
+	void classWithNoTestMethodsIsNotAccepted() {
+		assertFalse(newFilter().accept(ClassWithMethods.class), "does not accept class with no @Test methods");
 	}
 
 	@Test
