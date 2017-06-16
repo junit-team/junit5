@@ -53,7 +53,8 @@ class ParameterizedTestNameFormatter {
 			return MessageFormat.format(result, humanReadableArguments);
 		}
 		catch (IllegalArgumentException ex) {
-			String message = "The naming pattern defined for the parameterized tests is invalid: " + ex.getMessage();
+			String message = "The naming pattern defined for the parameterized tests is invalid. "
+					+ "The nested exception contains more details.";
 			throw new JUnitException(message, ex);
 		}
 	}
