@@ -1,5 +1,7 @@
 apply plugin: 'groovy'
 
+test.enabled = false
+
 configurations {
 	functionalTestRuntimeTestCompile {
 		description = 'Local dependencies used for compiling tests source code inside of Gradle functional tests'
