@@ -475,23 +475,6 @@ configure(rootProject) {
 		doFirst {
 			classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
 		}
-		doLast {
-			copy {
-				from("$buildDir/docs") {
-					filter { String line ->
-						line.startsWith("<head>") ? line.replace("<head>", "<head><link rel=\"icon\" type=\"image/png\" href=\"http://junit.org/junit5/assets/img/junit5-logo.png\">") :
-								line
-					}
-				}
-				into "$buildDir/temp"
-				include 'javadoc/**'
-			}
-			copy {
-				from "$buildDir/temp"
-				into "$buildDir/docs"
-			}
-			delete "$buildDir/temp"
-		}
 	}
 
 	spotless {
@@ -560,6 +543,10 @@ configure(rootProject) {
 		}
 		from("$buildDir/docs") {
 			include 'javadoc/**'
+			filter { line ->
+				line.startsWith("<head>") ? line.replace("<head>", "<head><link rel=\"icon\" type=\"image/png\" href=\"http://junit.org/junit5/assets/img/junit5-logo.png\">") :
+						line
+			}
 		}
 		into "${docsDir}/${docsVersion}"
 		filesMatching('asciidoc/**') { fileCopyDetails ->
