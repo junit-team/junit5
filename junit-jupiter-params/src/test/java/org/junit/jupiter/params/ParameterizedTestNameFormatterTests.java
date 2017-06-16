@@ -12,10 +12,13 @@ package org.junit.jupiter.params;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * @since 5.0
@@ -72,6 +75,15 @@ class ParameterizedTestNameFormatterTests {
 		Object[] expected = Arrays.copyOf(actual, actual.length);
 		assertEquals("1, two, -128, [[2, 4], [3, 9]]", formatter.format(1, actual));
 		assertArrayEquals(expected, actual);
+	}
+
+	@Test
+	void throwsReadableExceptionForInvalidPattern() {
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("{index");
+
+		JUnitException exception = assertThrows(JUnitException.class, () -> formatter.format(1));
+		assertNotNull(exception.getCause());
+		assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
 	}
 
 }

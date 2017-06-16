@@ -15,6 +15,7 @@ import static java.util.stream.Collectors.joining;
 import java.text.MessageFormat;
 import java.util.stream.IntStream;
 
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
@@ -48,7 +49,14 @@ class ParameterizedTestNameFormatter {
 			humanReadableArguments[i] = StringUtils.nullSafeToString(arguments[i]);
 		}
 
-		return MessageFormat.format(result, humanReadableArguments);
+		try {
+			return MessageFormat.format(result, humanReadableArguments);
+		}
+		catch (IllegalArgumentException ex) {
+			String message = "The naming pattern defined for the parameterized tests is invalid. "
+					+ "The nested exception contains more details.";
+			throw new JUnitException(message, ex);
+		}
 	}
 
 }
