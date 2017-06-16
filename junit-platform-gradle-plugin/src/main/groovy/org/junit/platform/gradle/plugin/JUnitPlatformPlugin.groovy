@@ -173,7 +173,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		if (selectors.empty) {
 			def rootDirs = []
 			project.sourceSets.each { sourceSet ->
-				rootDirs.add(sourceSet.output.classesDir)
+				rootDirs.addAll(sourceSet.output.classesDirs)
 				rootDirs.add(sourceSet.output.resourcesDir)
 				rootDirs.addAll(sourceSet.output.dirs.files)
 			}
