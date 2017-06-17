@@ -100,7 +100,7 @@ is placed on the Java 9 module path.
   the dash `-` between `migration` and `support`.
 * In order to ensure the _composability_ of all supported extension APIs in JUnit
   Jupiter, several methods in existing APIs have been renamed.
-** See <<release-notes-5.0.0-m5-migration-extension-api>> for details.
+  - See <<release-notes-5.0.0-m5-migration-extension-api>> for details.
 * The `arguments()` method in the `ArgumentsProvider` API in the `junit-jupiter-params`
   module has been renamed to `provideArguments()`.
 * The `ObjectArrayArguments` class in the `junit-jupiter-params` module has been removed;
