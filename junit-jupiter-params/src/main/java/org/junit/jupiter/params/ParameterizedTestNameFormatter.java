@@ -30,8 +30,13 @@ class ParameterizedTestNameFormatter {
 	}
 
 	String format(int invocationIndex, Object... arguments) {
-		String result = namePattern.replace("{index}", String.valueOf(invocationIndex));
+		String pattern = prepareMessageFormatPattern(invocationIndex, arguments);
+		Object[] humanReadableArguments = makeReadable(arguments);
+		return formatSafely(pattern, humanReadableArguments);
+	}
 
+	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
+		String result = namePattern.replace("{index}", String.valueOf(invocationIndex));
 		if (result.contains("{arguments}")) {
 			// @formatter:off
 			String replacement = IntStream.range(0, arguments.length)
@@ -40,17 +45,22 @@ class ParameterizedTestNameFormatter {
 			// @formatter:on
 			result = result.replace("{arguments}", replacement);
 		}
+		return result;
+	}
 
-		// Convert arguments to human readable formats
+	private Object[] makeReadable(Object[] arguments) {
 		// Note: humanReadableArguments must be an Object[] in order to
 		// avoid varargs issues with non-Eclipse compilers.
 		Object[] humanReadableArguments = new String[arguments.length];
 		for (int i = 0; i < arguments.length; i++) {
 			humanReadableArguments[i] = StringUtils.nullSafeToString(arguments[i]);
 		}
+		return humanReadableArguments;
+	}
 
+	private String formatSafely(String pattern, Object[] arguments) {
 		try {
-			return MessageFormat.format(result, humanReadableArguments);
+			return MessageFormat.format(pattern, arguments);
 		}
 		catch (IllegalArgumentException ex) {
 			String message = "The naming pattern defined for the parameterized tests is invalid. "
