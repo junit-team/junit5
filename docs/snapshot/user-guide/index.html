@@ -3068,6 +3068,19 @@ JUnit 4 and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</co
 <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project demonstrates how to use it and can serve as a starting
 point.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Due to a memory leak in Surefire 2.20, the <code>junit-platform-surefire-provider</code>
+currently only works with Surefire 2.19.1.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml">...
@@ -5772,10 +5785,6 @@ default parser has also been updated to decode such encoded segments.</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>The <code>junit-platform-surefire-provider</code> now requires <code>maven-surefire-plugin</code> version
-2.20 or higher.</p>
 </li>
 <li>
 <p>The <code>isLeaf()</code> method of the <code>org.junit.platform.engine.support.hierarchical.Node</code>
