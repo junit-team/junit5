@@ -30,6 +30,18 @@ public abstract class SimpleArgumentConverter implements ArgumentConverter {
 		return convert(source, context.getParameter().getType());
 	}
 
-	protected abstract Object convert(Object source, Class<?> targetType);
+	/**
+	 * Convert the supplied {@code source} object into to the supplied
+	 * {@code targetType}.
+	 *
+	 * @param source the source object to convert; may be {@code null}
+	 * @param targetType the target type the source object should be converted
+	 * into; never {@code null}
+	 * @return the converted object; may be {@code null} but only if the target
+	 * type is a reference type.
+	 * @throws ArgumentConversionException in case an error occurs during the
+	 * conversion.
+	 */
+	protected abstract Object convert(Object source, Class<?> targetType) throws ArgumentConversionException;
 
 }

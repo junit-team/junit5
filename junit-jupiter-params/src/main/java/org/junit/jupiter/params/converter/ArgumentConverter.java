@@ -24,13 +24,30 @@ import org.junit.platform.commons.meta.API;
  * method with the help of a
  * {@link org.junit.jupiter.params.converter.ConvertWith @ConvertWith} annotation.
  *
+ * <p>See {@link SimpleArgumentConverter} in case your implementation only needs
+ * to know about the target type instead of the complete
+ * {@link ParameterContext}.
+ *
  * @since 5.0
+ * @see SimpleArgumentConverter
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.converter.ConvertWith
  */
 @API(Experimental)
 public interface ArgumentConverter {
 
-	Object convert(Object input, ParameterContext context) throws ArgumentConversionException;
+	/**
+	 * Convert the supplied {@code source} object according to the supplied
+	 * {@code context}.
+	 *
+	 * @param source the source object to convert; may be {@code null}
+	 * @param context the parameter context where the converted object will be
+	 * used; never {@code null}
+	 * @return the converted object; may be {@code null} but only if the target
+	 * type is a reference type.
+	 * @throws ArgumentConversionException in case an error occurs during the
+	 * conversion.
+	 */
+	Object convert(Object source, ParameterContext context) throws ArgumentConversionException;
 
 }

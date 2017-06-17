@@ -38,6 +38,11 @@ import org.junit.platform.commons.meta.API;
 @API(Experimental)
 public @interface ConvertWith {
 
+	/**
+	 * Class of the explicit {@link ArgumentConverter}.
+	 *
+	 * <p>Implementations must provide a no-args constructor.
+	 */
 	Class<? extends ArgumentConverter> value();
 
 }

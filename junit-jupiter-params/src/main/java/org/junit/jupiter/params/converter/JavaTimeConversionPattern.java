@@ -38,6 +38,8 @@ import org.junit.platform.commons.meta.API;
 public @interface JavaTimeConversionPattern {
 
 	/**
+	 * The time conversion pattern.
+	 *
 	 * @see java.time.format.DateTimeFormatterBuilder#appendPattern(String)
 	 */
 	String value();
