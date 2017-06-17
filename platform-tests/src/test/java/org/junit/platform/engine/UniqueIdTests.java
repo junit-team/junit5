@@ -11,10 +11,11 @@
 package org.junit.platform.engine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,9 +23,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.UniqueId.Segment;
 
 /**
- * Microtests for class {@link UniqueId}
+ * Unit tests for {@link UniqueId}.
  *
  * @since 1.0
+ * @see org.junit.jupiter.engine.execution.UniqueIdParsingForArrayParameterTests
  */
 class UniqueIdTests {
 
@@ -117,7 +119,7 @@ class UniqueIdTests {
 		}
 
 		@Test
-		void ensureDefaultUniqueIdFormatDecodingEncodedSegmentParts() {
+		void ensureDefaultUniqueIdFormatDecodingEncodesSegmentParts() {
 			UniqueId.Segment segment = UniqueId.parse("[%5B+%25+%5D):(%3A+%2B+%2F]").getSegments().get(0);
 			assertEquals("[ % ])", segment.getType());
 			assertEquals("(: + /", segment.getValue());
@@ -148,8 +150,8 @@ class UniqueIdTests {
 			UniqueId id1 = UniqueId.root("engine", "junit-jupiter");
 			UniqueId id2 = UniqueId.root("engine", "junit-jupiter");
 
-			Assertions.assertTrue(id1.equals(id2));
-			Assertions.assertTrue(id2.equals(id1));
+			assertTrue(id1.equals(id2));
+			assertTrue(id2.equals(id1));
 			assertEquals(id1.hashCode(), id2.hashCode());
 		}
 
@@ -158,8 +160,8 @@ class UniqueIdTests {
 			UniqueId id1 = UniqueId.root("engine", "junit-vintage");
 			UniqueId id2 = UniqueId.root("engine", "junit-jupiter");
 
-			Assertions.assertFalse(id1.equals(id2));
-			Assertions.assertFalse(id2.equals(id1));
+			assertFalse(id1.equals(id2));
+			assertFalse(id2.equals(id1));
 		}
 
 		@Test
@@ -167,8 +169,8 @@ class UniqueIdTests {
 			UniqueId id1 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
 			UniqueId id2 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
 
-			Assertions.assertTrue(id1.equals(id2));
-			Assertions.assertTrue(id2.equals(id1));
+			assertTrue(id1.equals(id2));
+			assertTrue(id2.equals(id1));
 			assertEquals(id1.hashCode(), id2.hashCode());
 		}
 
@@ -177,8 +179,8 @@ class UniqueIdTests {
 			UniqueId id1 = UniqueId.root("engine", "junit-jupiter").append("t2", "v2").append("t1", "v1");
 			UniqueId id2 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
 
-			Assertions.assertFalse(id1.equals(id2));
-			Assertions.assertFalse(id2.equals(id1));
+			assertFalse(id1.equals(id2));
+			assertFalse(id2.equals(id1));
 		}
 
 		@Test
@@ -186,8 +188,8 @@ class UniqueIdTests {
 			UniqueId id1 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1");
 			UniqueId id2 = id1.append("t2", "v2");
 
-			Assertions.assertFalse(id1.equals(id2));
-			Assertions.assertFalse(id2.equals(id1));
+			assertFalse(id1.equals(id2));
+			assertFalse(id2.equals(id1));
 		}
 	}
 

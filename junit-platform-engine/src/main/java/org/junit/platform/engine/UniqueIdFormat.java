@@ -44,6 +44,19 @@ class UniqueIdFormat implements Serializable {
 		return defaultFormat;
 	}
 
+	private static String quote(char c) {
+		return Pattern.quote(String.valueOf(c));
+	}
+
+	private static String encode(char c) {
+		try {
+			return URLEncoder.encode(String.valueOf(c), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e) {
+			throw new AssertionError("UTF-8 should be supported", e);
+		}
+	}
+
 	private final char openSegment;
 	private final char closeSegment;
 	private final char segmentDelimiter;
@@ -59,7 +72,10 @@ class UniqueIdFormat implements Serializable {
 		this.segmentPattern = Pattern.compile(
 			String.format("%s(.+)%s(.+)%s", quote(openSegment), quote(typeValueSeparator), quote(closeSegment)),
 			Pattern.DOTALL);
-		// compute "forbidden" character encoding map
+
+		// Compute "forbidden" character encoding map.
+		// Note that the map is always empty at this point. Thus the use of
+		// computeIfAbsent() is purely syntactic sugar.
 		encodedCharacterMap.computeIfAbsent('%', UniqueIdFormat::encode);
 		encodedCharacterMap.computeIfAbsent('+', UniqueIdFormat::encode);
 		encodedCharacterMap.computeIfAbsent(openSegment, UniqueIdFormat::encode);
@@ -119,19 +135,6 @@ class UniqueIdFormat implements Serializable {
 		return openSegment + body + closeSegment;
 	}
 
-	private static String quote(char c) {
-		return Pattern.quote(String.valueOf(c));
-	}
-
-	private static String encode(char c) {
-		try {
-			return URLEncoder.encode(String.valueOf(c), "UTF-8");
-		}
-		catch (UnsupportedEncodingException e) {
-			throw new AssertionError("UTF-8 should be supported", e);
-		}
-	}
-
 	private String encode(String s) {
 		StringBuilder builder = new StringBuilder();
 		for (char c : s.toCharArray()) {
@@ -153,4 +156,5 @@ class UniqueIdFormat implements Serializable {
 			throw new JUnitException("UTF-8 should be supported", e);
 		}
 	}
+
 }

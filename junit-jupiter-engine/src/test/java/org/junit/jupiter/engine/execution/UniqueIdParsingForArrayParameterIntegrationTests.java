@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.execution;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,13 +24,15 @@ import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 /**
- * Unit tests for UniqueId.parse for methods with array type parameters.
+ * Integration tests for {@link UniqueId#parse(String)} for methods
+ * with array type parameters.
  *
  * @see <a href="https://github.com/junit-team/junit5/issues/810">#810</a>
+ * @see org.junit.platform.engine.UniqueIdTests
  *
  * @since 5.0
  */
-class ArrayTests extends AbstractJupiterTestEngineTests {
+class UniqueIdParsingForArrayParameterIntegrationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForPrimitiveArrayMethodInjectionCases() {
@@ -40,14 +43,16 @@ class ArrayTests extends AbstractJupiterTestEngineTests {
 		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		// @formatter:off
-		eventRecorder.getExecutionEvents().stream()
+		UniqueId uniqueId = eventRecorder.getExecutionEvents().stream()
 				.map(ExecutionEvent::getTestDescriptor)
 				.distinct()
 				.skip(2)
 				.map(TestDescriptor::getUniqueId)
-				.map(UniqueId::toString)
-				.forEach(UniqueId::parse);
+				.findFirst()
+				.orElseThrow(AssertionError::new);
 		// @formatter:on
+
+		assertThat(UniqueId.parse(uniqueId.toString())).isEqualTo(uniqueId);
 	}
 
 	@ExtendWith(PrimitiveArrayParameterResolver.class)
