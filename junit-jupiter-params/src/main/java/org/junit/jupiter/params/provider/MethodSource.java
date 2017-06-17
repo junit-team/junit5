@@ -39,7 +39,10 @@ import org.junit.platform.commons.meta.API;
 @ArgumentsSource(MethodArgumentsProvider.class)
 public @interface MethodSource {
 
-	// TODO [#830] Document value().
+	/**
+	 * The name of the test class methods to use as source of arguments; must
+	 * not be empty.
+	 */
 	String[] value();
 
 }

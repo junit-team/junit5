@@ -25,7 +25,8 @@ import org.junit.platform.commons.meta.API;
  * access to an array of literal values of primitive types.
  *
  * <p>Supported primitive types include {@link #strings}, {@link #ints},
- * {@link #longs}, and {@link #doubles}.
+ * {@link #longs}, and {@link #doubles}. You must not specify more than one
+ * annotation attribute.
  *
  * <p>The supplied literal values will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method.
@@ -41,16 +42,26 @@ import org.junit.platform.commons.meta.API;
 @ArgumentsSource(ValueArgumentsProvider.class)
 public @interface ValueSource {
 
-	// TODO [#830] Document strings().
+	/**
+	 * The {@link String} values to use as source of arguments; must not be
+	 * empty.
+	 */
 	String[] strings() default {};
 
-	// TODO [#830] Document ints().
+	/**
+	 * The {@code int} values to use as source of arguments; must not be empty.
+	 */
 	int[] ints() default {};
 
-	// TODO [#830] Document longs().
+	/**
+	 * The {@code long} values to use as source of arguments; must not be empty.
+	 */
 	long[] longs() default {};
 
-	// TODO [#830] Document doubles().
+	/**
+	 * The {@code double} values to use as source of arguments; must not be
+	 * empty.
+	 */
 	double[] doubles() default {};
 
 }

@@ -34,7 +34,7 @@ public interface Arguments {
 	 * Returns the arguments used for an invocation of the
 	 * {@code @ParameterizedTest} method.
 	 *
-	 * @return the arguments
+	 * @return the arguments; must not be {@code null}
 	 */
 	Object[] get();
 
@@ -42,8 +42,9 @@ public interface Arguments {
 	 * Factory method for creating an instance of {@code Arguments} based on
 	 * the supplied {@code arguments}.
 	 *
-	 * @param arguments the arguments to be used for an invocation of the test method
-	 * @return an instance of {@code Arguments}
+	 * @param arguments the arguments to be used for an invocation of the test
+	 * method; must not be {@code null}
+	 * @return an instance of {@code Arguments}; never {@code null}
 	 */
 	static Arguments of(Object... arguments) {
 		Preconditions.notNull(arguments, "argument array must not be null");

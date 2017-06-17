@@ -38,16 +38,28 @@ import org.junit.platform.commons.meta.API;
 @ArgumentsSource(CsvFileArgumentsProvider.class)
 public @interface CsvFileSource {
 
-	// TODO [#830] Document resources().
+	/**
+	 * The CSV classpath resources to use as source of arguments; must not be
+	 * empty.
+	 */
 	String[] resources();
 
-	// TODO [#830] Document encoding().
+	/**
+	 * The encoding to use when reading the CSV files; must be a valid charset.
+	 *
+	 * @see java.nio.charset.StandardCharsets
+	 */
 	String encoding() default "UTF-8";
 
-	// TODO [#830] Document lineSeparator().
+	/**
+	 * The line separator to use when reading the CSV files; must consist of 1
+	 * or 2 characters.
+	 */
 	String lineSeparator() default "\n";
 
-	// TODO [#830] Document delimiter().
+	/**
+	 * The column delimiter to use when reading the CSV files.
+	 */
 	char delimiter() default ',';
 
 }

@@ -38,10 +38,18 @@ import org.junit.platform.commons.meta.API;
 @ArgumentsSource(CsvArgumentsProvider.class)
 public @interface CsvSource {
 
-	// TODO [#830] Document value().
+	/**
+	 * The CSV lines to use as source of arguments; must not be empty.
+	 *
+	 * <p>Each value corresponds to a line in a CSV file and will be split using
+	 * the specified {@link #delimiter()}.
+	 */
 	String[] value();
 
-	// TODO [#830] Document delimiter().
+	/**
+	 * The column delimiter to use when reading the
+	 * {@linkplain #value() values}.
+	 */
 	char delimiter() default ',';
 
 }
