@@ -120,11 +120,7 @@ public final class TestPlan {
 	 */
 	public Optional<TestIdentifier> getParent(TestIdentifier child) {
 		Preconditions.notNull(child, "child must not be null");
-		Optional<String> optionalParentId = child.getParentId();
-		if (optionalParentId.isPresent()) {
-			return Optional.of(getTestIdentifier(optionalParentId.get()));
-		}
-		return Optional.empty();
+		return child.getParentId().map(this::getTestIdentifier);
 	}
 
 	/**
