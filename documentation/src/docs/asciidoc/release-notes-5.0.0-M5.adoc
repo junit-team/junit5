@@ -63,8 +63,6 @@ is placed on the Java 9 module path.
 * The following previously deprecated methods have been removed.
   - `junit-platform-engine`: `Node.execute(EngineExecutionContext)`
   - `junit-platform-commons`: `ReflectionUtils.findAllClassesInClasspathRoot(Path, Predicate, Predicate)`
-* The `junit-platform-surefire-provider` now requires `maven-surefire-plugin` version
-  2.20 or higher.
 * The `isLeaf()` method of the `org.junit.platform.engine.support.hierarchical.Node`
   interface has been removed.
 

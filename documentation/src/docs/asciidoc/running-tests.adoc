@@ -278,6 +278,9 @@ JUnit 4 and JUnit Jupiter tests via `mvn test`. The `pom.xml` file in the
 `{junit5-maven-consumer}` project demonstrates how to use it and can serve as a starting
 point.
 
+WARNING: Due to a memory leak in Surefire 2.20, the `junit-platform-surefire-provider`
+currently only works with Surefire 2.19.1.
+
 [source,xml,indent=0]
 [subs=attributes+]
 ----
