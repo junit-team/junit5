@@ -25,14 +25,17 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
+import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.engine.test.TestEngineSpy;
 import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -378,6 +381,36 @@ class DefaultLauncherTests {
 		assertThat(listener.getSummary()).isNotNull();
 		assertThat(listener.getSummary().getContainersFoundCount()).isEqualTo(1);
 		assertThat(listener.getSummary().getTestsFoundCount()).isEqualTo(1);
+	}
+
+	@Test
+	void prunesTestDescriptorsAfterApplyingPostDiscoveryFilters() {
+		TestEngineSpy engine = new TestEngineSpy() {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				super.discover(discoveryRequest, uniqueId);
+				TestDescriptorStub engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
+				TestDescriptorStub containerDescriptor = new TestDescriptorStub(uniqueId.append("container", "a"),
+					"container") {
+					@Override
+					public Type getType() {
+						return Type.CONTAINER;
+					}
+				};
+				containerDescriptor.addChild(
+					new TestDescriptorStub(containerDescriptor.getUniqueId().append("test", "b"), "test"));
+				engineDescriptor.addChild(containerDescriptor);
+				return engineDescriptor;
+			}
+		};
+
+		DefaultLauncher launcher = createLauncher(engine);
+		TestPlan testPlan = launcher.discover(request().filters(
+			(PostDiscoveryFilter) testDescriptor -> FilterResult.includedIf(testDescriptor.isContainer())).build());
+
+		assertThat(testPlan.getRoots()).hasSize(1);
+		TestIdentifier engineIdentifier = CollectionUtils.getOnlyElement(testPlan.getRoots());
+		assertThat(testPlan.getChildren(engineIdentifier)).isEmpty();
 	}
 
 }

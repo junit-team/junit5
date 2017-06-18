@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.discovery;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
-import static org.junit.platform.engine.TestDescriptor.containsTests;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
 
 import java.util.HashSet;
@@ -69,11 +68,7 @@ public class DiscoverySelectorResolver {
 	}
 
 	private void pruneTree(TestDescriptor rootDescriptor) {
-		rootDescriptor.accept(testDescriptor -> {
-			if (!testDescriptor.isRoot() && !containsTests(testDescriptor)) {
-				testDescriptor.removeFromHierarchy();
-			}
-		});
+		rootDescriptor.accept(TestDescriptor::prune);
 	}
 
 	private JavaElementsResolver createJavaElementsResolver(TestDescriptor engineDescriptor) {

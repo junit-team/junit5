@@ -60,6 +60,17 @@ class Root {
 		acceptInAllTestEngines(removeExcludedTestDescriptors);
 	}
 
+	/**
+	 * Prune all branches in the tree of {@link TestDescriptor TestDescriptors}
+	 * that do not have executable tests.
+	 *
+	 * <p>If a {@link TestEngine} ends up with no {@code TestDescriptors} after
+	 * pruning, it will <strong>not</strong> be removed.
+	 */
+	void prune() {
+		acceptInAllTestEngines(TestDescriptor::prune);
+	}
+
 	private boolean isExcluded(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
 		return descriptor.getChildren().isEmpty() && postDiscoveryFilter.apply(descriptor).excluded();
 	}
