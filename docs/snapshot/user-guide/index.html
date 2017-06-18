@@ -5790,6 +5790,15 @@ default parser has also been updated to decode such encoded segments.</p>
 <p>The <code>isLeaf()</code> method of the <code>org.junit.platform.engine.support.hierarchical.Node</code>
 interface has been removed.</p>
 </li>
+<li>
+<p>The default methods <code>prune()</code>, <code>pruneTree()</code>, and <code>hasTests()</code> have been removed from
+<code>TestDescriptor</code>.</p>
+</li>
+<li>
+<p>The <code>DefaultLauncher</code> no longer prunes trees of <code>TestDescriptors</code> it receives from test
+engines. It&#8217;s the responsibility of test engines to only return <code>TestDescriptors</code> they
+wish to execute.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -5815,6 +5824,14 @@ directly during the configuration phase of a build.</p>
 <p>When a <code>TestEngine</code> is discovered via Java&#8217;s <code>ServiceLoader</code> mechanism, an attempt
 will now be made to determine the location from which the engine class was loaded,
 and if the location URL is available, it will be logged at configuration-level.</p>
+</li>
+<li>
+<p>The <code>mayRegisterTests()</code> method may be used to signal that a <code>TestDescriptor</code> will
+register dynamic tests during execution.</p>
+</li>
+<li>
+<p>The <code>TestPlan</code> may now be queried for whether it <code>containsTests()</code>. This is used by the
+Surefire provider to decide if a class is a test class that should be executed.</p>
 </li>
 </ul>
 </div>
