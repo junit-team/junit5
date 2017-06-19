@@ -24,7 +24,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.junit.jupiter.params.support.AnnotationInitializer;
+import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -55,7 +55,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.stream()
 				.map(ArgumentsSource::value)
 				.map(ReflectionUtils::newInstance)
-				.map(provider -> AnnotationInitializer.initialize(templateMethod, provider))
+				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, context))
 				.map(Arguments::get)
 				.map(arguments -> new ParameterizedTestInvocationContext(formatter, arguments));

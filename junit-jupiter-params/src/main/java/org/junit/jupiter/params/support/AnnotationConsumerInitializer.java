@@ -24,13 +24,13 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.AnnotationUtils;
 
 /**
- * {@code @AnnotationInitializer} is an internal helper class for initializing
- * annotations.
+ * {@code AnnotationConsumerInitializer} is an internal helper class for
+ * initializing {@link AnnotationConsumer AnnotationConsumers}.
  *
  * @since 5.0
  */
 @API(Internal)
-public final class AnnotationInitializer {
+public final class AnnotationConsumerInitializer {
 
 	// @formatter:off
 	private static final Predicate<Method> isAnnotationConsumerAcceptMethod = method ->

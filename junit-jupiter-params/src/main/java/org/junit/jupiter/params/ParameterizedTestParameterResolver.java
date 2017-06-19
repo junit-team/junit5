@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
-import org.junit.jupiter.params.support.AnnotationInitializer;
+import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -53,7 +53,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		// @formatter:off
 		ArgumentConverter argumentConverter = annotation.map(ConvertWith::value)
 				.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
-				.map(converter -> AnnotationInitializer.initialize(parameter, converter))
+				.map(converter -> AnnotationConsumerInitializer.initialize(parameter, converter))
 				.orElse(DefaultArgumentConverter.INSTANCE);
 		// @formatter:on
 		try {
