@@ -31,7 +31,7 @@ import org.junit.platform.commons.util.Preconditions;
 public interface Arguments {
 
 	/**
-	 * Returns the arguments used for an invocation of the
+	 * Get the arguments used for an invocation of the
 	 * {@code @ParameterizedTest} method.
 	 *
 	 * @return the arguments; must not be {@code null}

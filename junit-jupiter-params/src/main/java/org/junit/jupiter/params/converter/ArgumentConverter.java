@@ -28,6 +28,8 @@ import org.junit.platform.commons.meta.API;
  * to know about the target type instead of the complete
  * {@link ParameterContext}.
  *
+ * <p>Implementations must provide a no-args constructor.
+ *
  * @since 5.0
  * @see SimpleArgumentConverter
  * @see org.junit.jupiter.params.ParameterizedTest
@@ -44,9 +46,9 @@ public interface ArgumentConverter {
 	 * @param context the parameter context where the converted object will be
 	 * used; never {@code null}
 	 * @return the converted object; may be {@code null} but only if the target
-	 * type is a reference type.
-	 * @throws ArgumentConversionException in case an error occurs during the
-	 * conversion.
+	 * type is a reference type
+	 * @throws ArgumentConversionException if an error occurs during the
+	 * conversion
 	 */
 	Object convert(Object source, ParameterContext context) throws ArgumentConversionException;
 

@@ -41,9 +41,7 @@ import org.junit.platform.commons.meta.API;
 public @interface ArgumentsSource {
 
 	/**
-	 * The class of the {@link ArgumentsProvider} to be used.
-	 *
-	 * <p>Implementations must provide a no-args constructor.
+	 * The type of {@link ArgumentsProvider} to be used.
 	 */
 	Class<? extends ArgumentsProvider> value();
 

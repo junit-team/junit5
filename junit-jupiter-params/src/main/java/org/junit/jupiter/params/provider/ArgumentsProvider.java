@@ -25,6 +25,8 @@ import org.junit.platform.commons.meta.API;
  * <p>An {@code ArgumentsProvider} can be registered via the
  * {@link ArgumentsSource @ArgumentsSource} annotation.
  *
+ * <p>Implementations must provide a no-args constructor.
+ *
  * @since 5.0
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.provider.ArgumentsSource

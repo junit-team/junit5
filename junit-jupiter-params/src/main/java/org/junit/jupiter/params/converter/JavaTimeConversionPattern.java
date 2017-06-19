@@ -22,9 +22,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.platform.commons.meta.API;
 
 /**
- * {@code @JavaTimeConversionPattern} is an annotation that allows a time
+ * {@code @JavaTimeConversionPattern} is an annotation that allows a date/time
  * conversion pattern to be specified on a method parameter of a
- * {@link ParameterizedTest} method.
+ * {@link ParameterizedTest @ParameterizedTest} method.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.ParameterizedTest
@@ -38,7 +38,7 @@ import org.junit.platform.commons.meta.API;
 public @interface JavaTimeConversionPattern {
 
 	/**
-	 * The time conversion pattern.
+	 * The date/time conversion pattern.
 	 *
 	 * @see java.time.format.DateTimeFormatterBuilder#appendPattern(String)
 	 */

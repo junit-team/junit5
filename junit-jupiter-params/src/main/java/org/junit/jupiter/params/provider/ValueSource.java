@@ -43,23 +43,23 @@ import org.junit.platform.commons.meta.API;
 public @interface ValueSource {
 
 	/**
-	 * The {@link String} values to use as source of arguments; must not be
+	 * The {@link String} values to use as sources of arguments; must not be
 	 * empty.
 	 */
 	String[] strings() default {};
 
 	/**
-	 * The {@code int} values to use as source of arguments; must not be empty.
+	 * The {@code int} values to use as sources of arguments; must not be empty.
 	 */
 	int[] ints() default {};
 
 	/**
-	 * The {@code long} values to use as source of arguments; must not be empty.
+	 * The {@code long} values to use as sources of arguments; must not be empty.
 	 */
 	long[] longs() default {};
 
 	/**
-	 * The {@code double} values to use as source of arguments; must not be
+	 * The {@code double} values to use as sources of arguments; must not be
 	 * empty.
 	 */
 	double[] doubles() default {};

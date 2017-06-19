@@ -39,13 +39,15 @@ import org.junit.platform.commons.meta.API;
 public @interface CsvFileSource {
 
 	/**
-	 * The CSV classpath resources to use as source of arguments; must not be
+	 * The CSV classpath resources to use as the sources of arguments; must not be
 	 * empty.
 	 */
 	String[] resources();
 
 	/**
 	 * The encoding to use when reading the CSV files; must be a valid charset.
+	 *
+	 * <p>Defaults to {@code "UTF-8"}.
 	 *
 	 * @see java.nio.charset.StandardCharsets
 	 */
@@ -54,11 +56,15 @@ public @interface CsvFileSource {
 	/**
 	 * The line separator to use when reading the CSV files; must consist of 1
 	 * or 2 characters.
+	 *
+	 * <p>Defaults to {@code "\n"}.
 	 */
 	String lineSeparator() default "\n";
 
 	/**
 	 * The column delimiter to use when reading the CSV files.
+	 *
+	 * <p>Defaults to {@code ","}.
 	 */
 	char delimiter() default ',';
 
