@@ -71,9 +71,9 @@ public @interface ParameterizedTest {
 	 *
 	 * <p>You may use the following placeholders:
 	 * <ul>
-	 * <li>{@code {index}}: the current invocation index (1-based)</li>
-	 * <li>{@code {arguments}}: the complete, comma-separated arguments list</li>
-	 * <li>{@code {0}}, {@code {1}}, etc.: an individual argument</li>
+	 * <li><code>{index}</code>: the current invocation index (1-based)</li>
+	 * <li><code>{arguments}</code>: the complete, comma-separated arguments list</li>
+	 * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument</li>
 	 * </ul>
 	 *
 	 * <p>For the latter, you may use {@link java.text.MessageFormat} patterns
