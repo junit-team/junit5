@@ -2721,10 +2721,91 @@ and power of dynamic tests.</p>
 <div class="sect2">
 <h3 id="running-tests-ide"><a class="anchor" href="#running-tests-ide"></a>4.1. IDE Support</h3>
 <div class="sect3">
-<h4 id="intellij-idea"><a class="anchor" href="#intellij-idea"></a>4.1.1. IntelliJ IDEA</h4>
+<h4 id="running-tests-ide-intellij-idea"><a class="anchor" href="#running-tests-ide-intellij-idea"></a>4.1.1. IntelliJ IDEA</h4>
 <div class="paragraph">
 <p>IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2.
 For details please see the <a href="https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/">post on the IntelliJ IDEA blog</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. JUnit 5 Versions Bundled in IntelliJ IDEA</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">IntelliJ IDEA Version</th>
+<th class="tableblock halign-left valign-top">Bundled JUnit 5 Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2016.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">M2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2016.3.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">M3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2017.1.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">M4</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+IntelliJ IDEA bundles a certain version of JUnit 5. That means, if you want to
+use the a newer milestone version of the Jupiter API, executing the tests might not work.
+This situation will improve once the first GA version of JUnit 5 has been released.
+In the meantime, please follow the instructions below to use an newer version of JUnit 5
+than the one with IntelliJ IDEA.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In order to use a different JUnit 5 version, you have to manually add the
+<code>junit-platform-launcher</code>, <code>junit-jupiter-engine</code>, and <code>junit-vintage-engine</code> JARs to the
+classpath.</p>
+</div>
+<div class="listingblock">
+<div class="title">Additional Gradle Dependencies</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="comment">// Only needed to run tests in an IntelliJ IDEA that bundles an older version</span>
+testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.platform:junit-platform-launcher:1.0.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
+testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-engine:5.0.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
+testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:4.12.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Additional Maven Dependencies</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="comment">&lt;!-- Only required to run tests in an IntelliJ IDEA that bundles an older version --&gt;</span>
+<span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>junit-platform-launcher<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span>
+<span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>junit-jupiter-engine<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>5.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span>
+<span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.junit.vintage<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>junit-vintage-engine<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>4.12.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -4505,7 +4586,7 @@ on GitHub.</p>
 </ul>
 </div>
 <table id="release-notes-5.0.0-m1-migration-artifacts" class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Artifact Migration</caption>
+<caption class="title">Table 2. Artifact Migration</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 19.7916%;">
@@ -4596,7 +4677,7 @@ on GitHub.</p>
 </tbody>
 </table>
 <table id="release-notes-5.0.0-m1-migration-packages" class="tableblock frame-all grid-all spread">
-<caption class="title">Table 2. Package Migration</caption>
+<caption class="title">Table 3. Package Migration</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 80%;">
@@ -5651,6 +5732,20 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <p><strong>Scope:</strong> Fifth milestone release of JUnit 5 with a focus on dynamic containers and minor
 API changes.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+This is a milestone release and contains breaking changes. Please refer to the
+<a href="#running-tests-ide-intellij-idea">instructions</a> above to use this version in a version of
+IntelliJ IDEA that bundles an older milestone release.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
 <a href="https://github.com/junit-team/junit5/milestone/8?closed=1">5.0 M5</a> milestone page in the JUnit repository
@@ -5666,7 +5761,7 @@ is placed on the Java 9 module path.</p>
 </ul>
 </div>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 3. Automatic module names</caption>
+<caption class="title">Table 4. Automatic module names</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -5884,7 +5979,7 @@ the functionality for creating an <code>Arguments</code> instance is now availab
 </ul>
 </div>
 <table id="release-notes-5.0.0-m5-migration-extension-api" class="tableblock frame-all grid-all spread">
-<caption class="title">Table 4. Extension API Migration</caption>
+<caption class="title">Table 5. Extension API Migration</caption>
 <colgroup>
 <col style="width: 41.1764%;">
 <col style="width: 14.7058%;">
