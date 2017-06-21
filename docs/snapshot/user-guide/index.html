@@ -5828,6 +5828,10 @@ register dynamic tests during execution.</p>
 <p>The <code>TestPlan</code> may now be queried for whether it <code>containsTests()</code>. This is used by the
 Surefire provider to decide if a class is a test class that should be executed.</p>
 </li>
+<li>
+<p>The <code>ENGINE</code> enum constant was removed from <code>TestDescriptor.Type</code>. The default type of
+the <code>EngineDescriptor</code> is now <code>TestDescriptor.Type.CONTAINER</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -5987,7 +5991,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-06-20 19:30:33 EDT
+Last updated 2017-06-21 04:00:15 EDT
 </div>
 </div>
 </body>
