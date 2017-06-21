@@ -90,7 +90,7 @@ public class JUnit4DiscoveryRequestResolver {
 			boolean isPotentialTestClass = isPotentialJUnit4TestClass.test(testClass);
 
 			if (!isPotentialTestClass) {
-				logger.warning(() -> String.format("Class %s could not be resolved", testClass.getName()));
+				logger.info(() -> String.format("Class %s could not be resolved", testClass.getName()));
 			}
 
 			return isPotentialTestClass;
