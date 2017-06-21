@@ -4,10 +4,65 @@
 [[running-tests-ide]]
 === IDE Support
 
+[[running-tests-ide-intellij-idea]]
 ==== IntelliJ IDEA
 
 IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2.
 For details please see the https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/[post on the IntelliJ IDEA blog].
+
+.JUnit 5 Versions Bundled in IntelliJ IDEA
+|===
+| IntelliJ IDEA Version | Bundled JUnit 5 Version
+
+| 2016.2   | M2
+| 2016.3.1 | M3
+| 2017.1.2 | M4
+|===
+
+WARNING: IntelliJ IDEA bundles a certain version of JUnit 5. That means, if you want to
+use the a newer milestone version of the Jupiter API, executing the tests might not work.
+This situation will improve once the first GA version of JUnit 5 has been released.
+In the meantime, please follow the instructions below to use an newer version of JUnit 5
+than the one with IntelliJ IDEA.
+
+In order to use a different JUnit 5 version, you have to manually add the
+`junit-platform-launcher`, `junit-jupiter-engine`, and `junit-vintage-engine` JARs to the
+classpath.
+
+.Additional Gradle Dependencies
+[source,groovy]
+[subs=attributes+]
+----
+// Only needed to run tests in an IntelliJ IDEA that bundles an older version
+testRuntime("org.junit.platform:junit-platform-launcher:{platform-version}")
+testRuntime("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
+testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
+----
+
+.Additional Maven Dependencies
+[source,xml]
+[subs=attributes+]
+----
+<!-- Only required to run tests in an IntelliJ IDEA that bundles an older version -->
+<dependency>
+	<groupId>org.junit.platform</groupId>
+	<artifactId>junit-platform-launcher</artifactId>
+	<version>{platform-version}</version>
+	<scope>test</scope>
+</dependency>
+<dependency>
+	<groupId>org.junit.jupiter</groupId>
+	<artifactId>junit-jupiter-engine</artifactId>
+	<version>{jupiter-version}</version>
+	<scope>test</scope>
+</dependency>
+<dependency>
+	<groupId>org.junit.vintage</groupId>
+	<artifactId>junit-vintage-engine</artifactId>
+	<version>{vintage-version}</version>
+	<scope>test</scope>
+</dependency>
+----
 
 ==== Eclipse Beta Support
 
