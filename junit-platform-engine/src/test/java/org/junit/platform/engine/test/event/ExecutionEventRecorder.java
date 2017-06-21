@@ -103,7 +103,7 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 	}
 
 	public long getDynamicTestRegisteredCount() {
-		return testEventsByType(DYNAMIC_TEST_REGISTERED).count();
+		return eventsByTypeAndTestDescriptor(DYNAMIC_TEST_REGISTERED, descriptor -> true).count();
 	}
 
 	public long getTestFinishedCount() {

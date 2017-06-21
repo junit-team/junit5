@@ -10,10 +10,13 @@
 
 package org.junit.jupiter.engine;
 
+import static java.util.Collections.singleton;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
@@ -34,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -43,17 +47,18 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
- * Integration tests for {@link TestFactory @TestFactory} and {@link DynamicTest}.
+ * Integration tests for {@link TestFactory @TestFactory}, {@link DynamicTest},
+ * and {@link org.junit.jupiter.api.DynamicContainer}.
  *
  * @since 5.0
  */
-class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
+class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+		assertThat(engineDescriptor.getDescendants()).as("# resolved test descriptors").hasSize(6);
 	}
 
 	@Test
@@ -61,7 +66,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+		assertThat(engineDescriptor.getDescendants()).as("# resolved test descriptors").hasSize(2);
 	}
 
 	@Test
@@ -135,6 +140,39 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 			() -> assertEquals(3, eventRecorder.getContainerFinishedCount(), "# container finished"));
 	}
 
+	@Test
+	void dynamicContainersAreExecutedFromIterable() {
+		LauncherDiscoveryRequest request = request().selectors(
+			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "dynamicContainerWithIterable")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(MyDynamicTestCase.class), started()), //
+			event(container("dynamicContainerWithIterable"), started()), //
+			event(dynamicTestRegistered("dynamic-container:#1")), //
+			event(container("dynamic-container:#1"), started()), //
+			event(dynamicTestRegistered("dynamic-test:#1")), //
+			event(test("dynamic-test:#1", "succeedingTest"), started()), //
+			event(test("dynamic-test:#1", "succeedingTest"), finishedSuccessfully()), //
+			event(dynamicTestRegistered("dynamic-test:#2")), //
+			event(test("dynamic-test:#2", "failingTest"), started()), //
+			event(test("dynamic-test:#2", "failingTest"), finishedWithFailure(message("failing"))), //
+			event(container("dynamic-container:#1"), finishedSuccessfully()), //
+			event(container("dynamicContainerWithIterable"), finishedSuccessfully()), //
+			event(container(MyDynamicTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+
+		assertAll( //
+			() -> assertEquals(4, eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(3, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic tests registered"),
+			() -> assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(4, eventRecorder.getContainerFinishedCount(), "# container finished"));
+	}
+
 	private static class MyDynamicTestCase {
 
 		private static final List<DynamicTest> list = Arrays.asList(
@@ -159,6 +197,11 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 		@TestFactory
 		Iterable<DynamicTest> dynamicIterable() {
 			return this::dynamicIterator;
+		}
+
+		@TestFactory
+		Iterable<DynamicNode> dynamicContainerWithIterable() {
+			return singleton(dynamicContainer("box", list));
 		}
 
 	}
