@@ -50,7 +50,7 @@ class HierarchicalTestExecutorTests {
 	HierarchicalTestExecutor<MyEngineExecutionContext> executor;
 
 	@BeforeEach
-	public void init() {
+	void init() {
 		root = spy(new MyContainer(UniqueId.root("container", "root")));
 		listener = mock(EngineExecutionListener.class);
 		rootContext = new MyEngineExecutionContext();
@@ -364,6 +364,56 @@ class HierarchicalTestExecutorTests {
 			TestExecutionResult.Status.SUCCESSFUL, TestExecutionResult.Status.SUCCESSFUL);
 	}
 
+	@Test
+	void executesDynamicTestDescriptorsUsingContainerAndTestType() throws Exception {
+
+		UniqueId leafUniqueId = UniqueId.root("leaf", "child leaf");
+		MyContainerAndTest child = spy(new MyContainerAndTest(leafUniqueId));
+		MyContainerAndTest dynamicTestDescriptor = spy(new MyContainerAndTest(leafUniqueId.append("dynamic", "child")));
+
+		UniqueId nestedId = leafUniqueId.append("dynamic", "child").append("nested", "nested leaf");
+		MyLeaf nestedLeaf = spy(new MyLeaf(nestedId));
+		MyLeaf dynamicLeaf = spy(new MyLeaf(nestedId.append("nested", "leaf")));
+
+		when(child.execute(any(), any())).thenAnswer(invocation -> {
+			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
+			dynamicTestExecutor.execute(dynamicTestDescriptor);
+			return invocation.getArgument(0);
+		});
+		root.addChild(child);
+
+		when(nestedLeaf.execute(any(), any())).thenAnswer(invocation -> {
+			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
+			dynamicTestExecutor.execute(dynamicLeaf);
+			return invocation.getArgument(0);
+		});
+		child.addChild(nestedLeaf);
+
+		InOrder inOrder = inOrder(listener, root, child, dynamicTestDescriptor, nestedLeaf, dynamicLeaf);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> aTestExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(listener).executionStarted(root);
+		inOrder.verify(child).prepare(rootContext);
+		inOrder.verify(child).shouldBeSkipped(rootContext);
+		inOrder.verify(listener).executionStarted(child);
+		inOrder.verify(child).execute(eq(rootContext), any());
+		inOrder.verify(listener).dynamicTestRegistered(dynamicTestDescriptor);
+		inOrder.verify(dynamicTestDescriptor).prepare(rootContext);
+		inOrder.verify(dynamicTestDescriptor).shouldBeSkipped(rootContext);
+		inOrder.verify(listener).executionStarted(dynamicTestDescriptor);
+		inOrder.verify(dynamicTestDescriptor).execute(eq(rootContext), any());
+		inOrder.verify(listener).executionFinished(eq(dynamicTestDescriptor), aTestExecutionResult.capture());
+		inOrder.verify(listener).executionFinished(eq(child), aTestExecutionResult.capture());
+		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
+		// TODO verify(nestedLeaf) ...
+		// TODO verify(dynamicLeaf) ...
+
+		assertThat(aTestExecutionResult.getAllValues()).extracting(TestExecutionResult::getStatus).containsExactly(
+			TestExecutionResult.Status.SUCCESSFUL, TestExecutionResult.Status.SUCCESSFUL);
+	}
+
 	/**
 	 * Verifies support for blacklisted exceptions.
 	 */
@@ -399,7 +449,7 @@ class HierarchicalTestExecutorTests {
 
 	private static class MyContainer extends AbstractTestDescriptor implements Node<MyEngineExecutionContext> {
 
-		protected MyContainer(UniqueId uniqueId) {
+		MyContainer(UniqueId uniqueId) {
 			super(uniqueId, uniqueId.toString());
 		}
 
@@ -411,7 +461,7 @@ class HierarchicalTestExecutorTests {
 
 	private static class MyLeaf extends AbstractTestDescriptor implements Node<MyEngineExecutionContext> {
 
-		protected MyLeaf(UniqueId uniqueId) {
+		MyLeaf(UniqueId uniqueId) {
 			super(uniqueId, uniqueId.toString());
 		}
 
@@ -424,6 +474,18 @@ class HierarchicalTestExecutorTests {
 		@Override
 		public Type getType() {
 			return Type.TEST;
+		}
+	}
+
+	private static class MyContainerAndTest extends AbstractTestDescriptor implements Node<MyEngineExecutionContext> {
+
+		MyContainerAndTest(UniqueId uniqueId) {
+			super(uniqueId, uniqueId.toString());
+		}
+
+		@Override
+		public Type getType() {
+			return Type.CONTAINER_AND_TEST;
 		}
 	}
 

@@ -530,6 +530,14 @@ class JUnitPlatformRunnerTests {
 			inOrder.verify(runListener).testStarted(testDescription("[engine:dynamic]/[container:1]/[test:2]"));
 			inOrder.verify(runListener).testFinished(testDescription("[engine:dynamic]/[container:1]/[test:2]"));
 
+			inOrder.verify(runListener).testStarted(testDescription("[engine:dynamic]/[container:1]/[test:3]"));
+			inOrder.verify(runListener).testFinished(testDescription("[engine:dynamic]/[container:1]/[test:3]"));
+
+			inOrder.verify(runListener).testStarted(
+				testDescription("[engine:dynamic]/[container:1]/[test:3]/[test:3a]"));
+			inOrder.verify(runListener).testFinished(
+				testDescription("[engine:dynamic]/[container:1]/[test:3]/[test:3a]"));
+
 			inOrder.verifyNoMoreInteractions();
 		}
 
@@ -640,6 +648,7 @@ class JUnitPlatformRunnerTests {
 			// @formatter:on
 		}
 
+		@SuppressWarnings("unused")
 		void failingTest() {
 			// not actually invoked
 		}
@@ -720,6 +729,20 @@ class JUnitPlatformRunnerTests {
 			engineExecutionListener.executionStarted(dynamicTest2);
 			engineExecutionListener.executionFinished(dynamicTest2, TestExecutionResult.successful());
 
+			TestDescriptor dynamicTest3 = new DemoContainerAndTestTestDescriptor(containerUid.append("test", "3"),
+				"dynamic test #3");
+			container.addChild(dynamicTest3);
+			engineExecutionListener.dynamicTestRegistered(dynamicTest3);
+			engineExecutionListener.executionStarted(dynamicTest3);
+			engineExecutionListener.executionFinished(dynamicTest3, TestExecutionResult.successful());
+
+			TestDescriptor dynamicTest3a = new DemoTestTestDescriptor(dynamicTest3.getUniqueId().append("test", "3a"),
+				"dynamic test #3a");
+			dynamicTest3.addChild(dynamicTest3a);
+			engineExecutionListener.dynamicTestRegistered(dynamicTest3a);
+			engineExecutionListener.executionStarted(dynamicTest3a);
+			engineExecutionListener.executionFinished(dynamicTest3a, TestExecutionResult.successful());
+
 			engineExecutionListener.executionFinished(container, TestExecutionResult.successful());
 		}
 
@@ -746,6 +769,18 @@ class JUnitPlatformRunnerTests {
 		@Override
 		public Type getType() {
 			return Type.TEST;
+		}
+	}
+
+	private static class DemoContainerAndTestTestDescriptor extends AbstractTestDescriptor {
+
+		DemoContainerAndTestTestDescriptor(UniqueId uniqueId, String displayName) {
+			super(uniqueId, displayName);
+		}
+
+		@Override
+		public Type getType() {
+			return Type.CONTAINER_AND_TEST;
 		}
 	}
 
