@@ -12,12 +12,10 @@ package org.junit.jupiter.api;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
-import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -64,19 +62,19 @@ public class DynamicContainer extends DynamicNode {
 		return new DynamicContainer(displayName, dynamicNodes);
 	}
 
-	private final List<DynamicNode> dynamicNodes;
+	private final Stream<? extends DynamicNode> children;
 
-	private DynamicContainer(String displayName, Stream<? extends DynamicNode> dynamicNodes) {
+	private DynamicContainer(String displayName, Stream<? extends DynamicNode> children) {
 		super(displayName);
-		Preconditions.notNull(dynamicNodes, "dynamicNodes must not be null");
-		this.dynamicNodes = dynamicNodes.collect(CollectionUtils.toUnmodifiableList());
-		Preconditions.containsNoNullElements(this.dynamicNodes, "individual dynamic node must not be null");
+		Preconditions.notNull(children, "children must not be null");
+		this.children = children;
 	}
 
 	/**
-	 * Get the collection of {@code DynamicNode}s associated with this {@code DynamicContainer}.
+	 * Get the {@link Stream} of {@link DynamicNode DynamicNodes} associated
+	 * with this container.
 	 */
-	public Iterable<DynamicNode> getDynamicNodes() {
-		return dynamicNodes;
+	public Stream<? extends DynamicNode> getChildren() {
+		return children;
 	}
 }

@@ -12,9 +12,13 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.createDynamicDescriptor;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -44,10 +48,18 @@ class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
-		int index = 1;
-		for (DynamicNode childNode : dynamicContainer.getDynamicNodes()) {
-			dynamicTestExecutor.execute(createDynamicDescriptor(this, childNode, index++, testSource));
+		AtomicInteger index = new AtomicInteger(1);
+		try (Stream<? extends DynamicNode> children = dynamicContainer.getChildren()) {
+			// @formatter:off
+			children.peek(child -> Preconditions.notNull(child, "individual dynamic node must not be null"))
+					.map(child -> toDynamicDescriptor(index.getAndIncrement(), child))
+					.forEachOrdered(dynamicTestExecutor::execute);
+			// @formatter:on
 		}
 		return context;
+	}
+
+	private JupiterTestDescriptor toDynamicDescriptor(int index, DynamicNode childNode) {
+		return createDynamicDescriptor(this, childNode, index, testSource);
 	}
 }
