@@ -263,11 +263,6 @@ public interface TestDescriptor {
 	enum Type {
 
 		/**
-		 * Denotes that the {@link TestDescriptor} is for a {@link TestEngine}.
-		 */
-		ENGINE,
-
-		/**
 		 * Denotes that the {@link TestDescriptor} is for a <em>container</em>.
 		 */
 		CONTAINER,
@@ -288,7 +283,7 @@ public interface TestDescriptor {
 		 * contain other descriptors
 		 */
 		public boolean isContainer() {
-			return this == ENGINE || this == CONTAINER || this == CONTAINER_AND_TEST;
+			return this == CONTAINER || this == CONTAINER_AND_TEST;
 		}
 
 		/**

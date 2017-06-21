@@ -87,7 +87,8 @@ is placed on the Java 9 module path.
   register dynamic tests during execution.
 * The `TestPlan` may now be queried for whether it `containsTests()`. This is used by the
   Surefire provider to decide if a class is a test class that should be executed.
-
+* The `ENGINE` enum constant was removed from `TestDescriptor.Type`. The default type of
+  the `EngineDescriptor` is now `TestDescriptor.Type.CONTAINER`.
 
 [[release-notes-5.0.0-m5-junit-jupiter]]
 ==== JUnit Jupiter

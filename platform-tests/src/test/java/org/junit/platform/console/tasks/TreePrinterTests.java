@@ -86,7 +86,7 @@ class TreePrinterTests {
 		return TestIdentifier.from(new AbstractTestDescriptor(UniqueId.forEngine(uniqueId), displayName) {
 			@Override
 			public Type getType() {
-				return Type.ENGINE;
+				return Type.CONTAINER;
 			}
 		});
 	}

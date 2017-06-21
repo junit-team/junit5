@@ -40,14 +40,14 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 	}
 
 	/**
-	 * Always returns {@link org.junit.platform.engine.TestDescriptor.Type#ENGINE}.
+	 * Returns {@link org.junit.platform.engine.TestDescriptor.Type#CONTAINER}.
 	 *
 	 * @see org.junit.platform.engine.TestDescriptor#isContainer()
 	 * @see org.junit.platform.engine.TestDescriptor#isTest()
 	 */
 	@Override
-	public final Type getType() {
-		return Type.ENGINE;
+	public Type getType() {
+		return Type.CONTAINER;
 	}
 
 }
