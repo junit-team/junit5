@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.dynamicTestRegistered;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -61,7 +62,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertThat(engineDescriptor.getDescendants()).as("# resolved test descriptors").hasSize(8);
+		assertThat(engineDescriptor.getDescendants()).as("# resolved test descriptors").hasSize(9);
 	}
 
 	@Test
@@ -177,6 +178,42 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void nestedDynamicContainersAreExecuted() {
+		LauncherDiscoveryRequest request = request().selectors(
+			DiscoverySelectors.selectMethod(MyDynamicTestCase.class, "nestedDynamicContainers")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(MyDynamicTestCase.class), started()), //
+			event(container("nestedDynamicContainers"), started()), //
+			event(dynamicTestRegistered(displayName("gift wrap"))), //
+			event(container(displayName("gift wrap")), started()), //
+			event(dynamicTestRegistered(displayName("box"))), //
+			event(container(displayName("box")), started()), //
+			event(dynamicTestRegistered("dynamic-test:#1")), //
+			event(test("dynamic-test:#1", "succeedingTest"), started()), //
+			event(test("dynamic-test:#1", "succeedingTest"), finishedSuccessfully()), //
+			event(dynamicTestRegistered("dynamic-test:#2")), //
+			event(test("dynamic-test:#2", "failingTest"), started()), //
+			event(test("dynamic-test:#2", "failingTest"), finishedWithFailure(message("failing"))), //
+			event(container(displayName("box")), finishedSuccessfully()), //
+			event(container(displayName("gift wrap")), finishedSuccessfully()), //
+			event(container("nestedDynamicContainers"), finishedSuccessfully()), //
+			event(container(MyDynamicTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+
+		assertAll( //
+			() -> assertEquals(5, eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(4, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic tests registered"),
+			() -> assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(5, eventRecorder.getContainerFinishedCount(), "# container finished"));
+	}
+
+	@Test
 	void dynamicContainersAreExecutedFromExceptionThrowingStream() {
 		LauncherDiscoveryRequest request = request().selectors(DiscoverySelectors.selectMethod(MyDynamicTestCase.class,
 			"dynamicContainerWithExceptionThrowingStream")).build();
@@ -231,7 +268,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
-	private static class MyDynamicTestCase {
+	static class MyDynamicTestCase {
 
 		private static final List<DynamicTest> list = Arrays.asList(
 			dynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")),
@@ -262,6 +299,11 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 		@TestFactory
 		Iterable<DynamicNode> dynamicContainerWithIterable() {
 			return singleton(dynamicContainer("box", list));
+		}
+
+		@TestFactory
+		Iterable<DynamicNode> nestedDynamicContainers() {
+			return singleton(dynamicContainer("gift wrap", singleton(dynamicContainer("box", list))));
 		}
 
 		@TestFactory

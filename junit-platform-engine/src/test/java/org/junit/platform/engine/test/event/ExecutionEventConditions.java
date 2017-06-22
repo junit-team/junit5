@@ -86,7 +86,11 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> container(String uniqueIdSubstring) {
-		return allOf(container(), uniqueIdSubstring(uniqueIdSubstring));
+		return container(uniqueIdSubstring(uniqueIdSubstring));
+	}
+
+	public static Condition<ExecutionEvent> container(Condition<ExecutionEvent> condition) {
+		return allOf(container(), condition);
 	}
 
 	public static Condition<ExecutionEvent> container() {
@@ -94,7 +98,11 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> dynamicTestRegistered(String uniqueIdSubstring) {
-		return allOf(type(DYNAMIC_TEST_REGISTERED), uniqueIdSubstring(uniqueIdSubstring));
+		return dynamicTestRegistered(uniqueIdSubstring(uniqueIdSubstring));
+	}
+
+	public static Condition<ExecutionEvent> dynamicTestRegistered(Condition<ExecutionEvent> condition) {
+		return allOf(type(DYNAMIC_TEST_REGISTERED), condition);
 	}
 
 	public static Condition<ExecutionEvent> uniqueIdSubstring(String uniqueIdSubstring) {
