@@ -2697,11 +2697,9 @@ and power of dynamic tests.</p>
     <span class="annotation">@TestFactory</span>
     Stream&lt;DynamicNode&gt; dynamicTestsWithContainers() {
         <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">A</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">B</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">C</span><span class="delimiter">&quot;</span></span>)
-            .map(input -&gt; dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">Container </span><span class="delimiter">&quot;</span></span> + input,
-                Stream.of(
+            .map(input -&gt; dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">Container </span><span class="delimiter">&quot;</span></span> + input, Stream.of(
                 dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">not null</span><span class="delimiter">&quot;</span></span>, () -&gt; assertNotNull(input)),
-                dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">properties</span><span class="delimiter">&quot;</span></span>,
-                    Stream.of(
+                dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">properties</span><span class="delimiter">&quot;</span></span>, Stream.of(
                     dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">length &gt; 0</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(input.length() &gt; <span class="integer">0</span>)),
                     dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">not empty</span><span class="delimiter">&quot;</span></span>, () -&gt; assertFalse(input.isEmpty()))
                 ))
@@ -6086,7 +6084,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-06-21 15:27:44 EDT
+Last updated 2017-06-22 00:47:33 EDT
 </div>
 </div>
 </body>
