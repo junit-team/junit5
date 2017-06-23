@@ -10,12 +10,16 @@
 
 package org.junit.jupiter.engine;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -33,38 +37,48 @@ public
 class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	private static int instanceCount;
-	private static int beforeCount;
-	private static int afterCount;
+	private static int beforeAllCount;
+	private static int afterAllCount;
+	private static int beforeEachCount;
+	private static int afterEachCount;
 
 	@BeforeEach
 	void init() {
 		instanceCount = 0;
-		beforeCount = 0;
-		afterCount = 0;
+		beforeAllCount = 0;
+		afterAllCount = 0;
+		beforeEachCount = 0;
+		afterEachCount = 0;
 	}
 
 	@Test
 	void instancePerMethod() {
-		performAssertions(InstancePerMethodTestCase.class, 2);
+		performAssertions(InstancePerMethodTestCase.class, 2, 1, 1);
 	}
 
 	@Test
 	void instancePerClass() {
-		performAssertions(InstancePerClassTestCase.class, 1);
+		performAssertions(InstancePerClassTestCase.class, 1, 2, 2);
 	}
 
-	private void performAssertions(Class<?> testClass, int expectedInstanceCount) {
+	private void performAssertions(Class<?> testClass, int expectedInstanceCount, int expectedBeforeAllCount,
+			int expectedAfterAllCount) {
+
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+
+		// eventRecorder.eventStream().forEach(System.out::println);
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(expectedInstanceCount, instanceCount, "instance count"),
 			() -> assertEquals(2, eventRecorder.getContainerStartedCount(), "# containers started"),
 			() -> assertEquals(2, eventRecorder.getContainerFinishedCount(), "# containers finished"),
 			() -> assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started"),
 			() -> assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(2, beforeCount, "# before calls"),
-			() -> assertEquals(2, afterCount, "# after calls")
+			() -> assertEquals(expectedInstanceCount, instanceCount, "instance count"),
+			() -> assertEquals(expectedBeforeAllCount, beforeAllCount, "@BeforeAll count"),
+			() -> assertEquals(expectedAfterAllCount, afterAllCount, "@AfterAll count"),
+			() -> assertEquals(2, beforeEachCount, "@BeforeEach count"),
+			() -> assertEquals(2, afterEachCount, "@AfterEach count")
 		);
 		// @formatter:on
 	}
@@ -77,14 +91,15 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			instanceCount++;
 		}
 
-		@BeforeEach
-		void before() {
-			beforeCount++;
+		@BeforeAll
+		static void beforeAllStatic(TestInfo testInfo) {
+			assertNotNull(testInfo);
+			beforeAllCount++;
 		}
 
-		@AfterEach
-		void after() {
-			afterCount++;
+		@BeforeEach
+		void beforeEach() {
+			beforeEachCount++;
 		}
 
 		@Test
@@ -95,10 +110,34 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		void test2() {
 		}
 
+		@AfterEach
+		void afterEach() {
+			afterEachCount++;
+		}
+
+		@AfterAll
+		static void afterAllStatic(TestInfo testInfo) {
+			assertNotNull(testInfo);
+			afterAllCount++;
+		}
+
 	}
 
 	@TestInstance(Lifecycle.PER_CLASS)
 	private static class InstancePerClassTestCase extends InstancePerMethodTestCase {
+
+		@BeforeAll
+		void beforeAll(TestInfo testInfo) {
+			assertNotNull(testInfo);
+			beforeAllCount++;
+		}
+
+		@AfterAll
+		void afterAll(TestInfo testInfo) {
+			assertNotNull(testInfo);
+			afterAllCount++;
+		}
+
 	}
 
 }

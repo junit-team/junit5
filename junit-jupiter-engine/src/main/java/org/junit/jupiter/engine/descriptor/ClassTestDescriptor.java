@@ -68,6 +68,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final Class<?> testClass;
+	private final Lifecycle lifecycle;
 
 	private final List<Method> beforeAllMethods;
 	private final List<Method> afterAllMethods;
@@ -85,9 +86,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			defaultDisplayNameGenerator));
 
 		this.testClass = testClass;
+		this.lifecycle = getTestInstanceLifecycle(testClass);
 
-		this.beforeAllMethods = findBeforeAllMethods(testClass);
-		this.afterAllMethods = findAfterAllMethods(testClass);
+		this.beforeAllMethods = findBeforeAllMethods(testClass, this.lifecycle == Lifecycle.PER_METHOD);
+		this.afterAllMethods = findAfterAllMethods(testClass, this.lifecycle == Lifecycle.PER_METHOD);
 		this.beforeEachMethods = findBeforeEachMethods(testClass);
 		this.afterEachMethods = findAfterEachMethods(testClass);
 
@@ -204,9 +206,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
+		Object testInstance = getTestInstanceForClassLevelCallbacks(context);
 
 		for (Method method : this.beforeAllMethods) {
-			throwableCollector.execute(() -> executableInvoker.invoke(method, extensionContext, registry));
+			throwableCollector.execute(
+				() -> executableInvoker.invoke(method, testInstance, extensionContext, registry));
 			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
@@ -217,9 +221,15 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
+		Object testInstance = getTestInstanceForClassLevelCallbacks(context);
 
-		this.afterAllMethods.forEach(
-			method -> throwableCollector.execute(() -> executableInvoker.invoke(method, extensionContext, registry)));
+		this.afterAllMethods.forEach(method -> throwableCollector.execute(
+			() -> executableInvoker.invoke(method, testInstance, extensionContext, registry)));
+	}
+
+	private Object getTestInstanceForClassLevelCallbacks(JupiterEngineExecutionContext context) {
+		return this.lifecycle == Lifecycle.PER_CLASS
+				? context.getTestInstanceProvider().getTestInstance(Optional.empty()) : null;
 	}
 
 	private void invokeAfterAllCallbacks(JupiterEngineExecutionContext context) {
@@ -274,7 +284,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private final class LifecycleAwareTestInstanceProvider implements TestInstanceProvider {
 
 		private final Class<?> testClass;
-		private final Lifecycle lifecycle;
 		private final ExtensionRegistry registry;
 		private final ExtensionContext extensionContext;
 		private Object testInstance;
@@ -283,14 +292,13 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 				ExtensionContext extensionContext) {
 
 			this.testClass = testClass;
-			this.lifecycle = getInstanceLifecycle(testClass);
 			this.registry = registry;
 			this.extensionContext = extensionContext;
 		}
 
 		@Override
-		public Object getTestInstance(Optional<ExtensionRegistry> childExtensionRegistry) throws Exception {
-			if (this.lifecycle == Lifecycle.PER_METHOD) {
+		public Object getTestInstance(Optional<ExtensionRegistry> childExtensionRegistry) {
+			if (ClassTestDescriptor.this.lifecycle == Lifecycle.PER_METHOD) {
 				return createTestInstance(childExtensionRegistry);
 			}
 
@@ -310,14 +318,14 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			return instance;
 		}
 
-		private TestInstance.Lifecycle getInstanceLifecycle(Class<?> testClass) {
-			// @formatter:off
-			return AnnotationUtils.findAnnotation(testClass, TestInstance.class)
-					.map(TestInstance::value)
-					.orElse(Lifecycle.PER_METHOD);
-			// @formatter:on
-		}
+	}
 
+	private static TestInstance.Lifecycle getTestInstanceLifecycle(Class<?> testClass) {
+		// @formatter:off
+		return AnnotationUtils.findAnnotation(testClass, TestInstance.class)
+				.map(TestInstance::value)
+				.orElse(Lifecycle.PER_METHOD);
+		// @formatter:on
 	}
 
 }
