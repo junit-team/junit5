@@ -1080,9 +1080,9 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
     <span class="type">void</span> groupedAssertions() {
         <span class="comment">// In a grouped assertion all assertions are executed, and any</span>
         <span class="comment">// failures will be reported together.</span>
-        assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">address</span><span class="delimiter">&quot;</span></span>,
-            () -&gt; assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span>, address.getFirstName()),
-            () -&gt; assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">User</span><span class="delimiter">&quot;</span></span>, address.getLastName())
+        assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">person</span><span class="delimiter">&quot;</span></span>,
+            () -&gt; assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span>, person.getFirstName()),
+            () -&gt; assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>, person.getLastName())
         );
     }
 
@@ -1092,7 +1092,7 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
         <span class="comment">// subsequent code in the same block will be skipped.</span>
         assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">properties</span><span class="delimiter">&quot;</span></span>,
             () -&gt; {
-                <span class="predefined-type">String</span> firstName = address.getFirstName();
+                <span class="predefined-type">String</span> firstName = person.getFirstName();
                 assertNotNull(firstName);
 
                 <span class="comment">// Executed only if the previous assertion is valid.</span>
@@ -1104,13 +1104,13 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
             () -&gt; {
                 <span class="comment">// Grouped assertion, so processed independently</span>
                 <span class="comment">// of results of first name assertions.</span>
-                <span class="predefined-type">String</span> lastName = address.getLastName();
+                <span class="predefined-type">String</span> lastName = person.getLastName();
                 assertNotNull(lastName);
 
                 <span class="comment">// Executed only if the previous assertion is valid.</span>
                 assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">last name</span><span class="delimiter">&quot;</span></span>,
-                    () -&gt; assertTrue(lastName.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">U</span><span class="delimiter">&quot;</span></span>)),
-                    () -&gt; assertTrue(lastName.endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">r</span><span class="delimiter">&quot;</span></span>))
+                    () -&gt; assertTrue(lastName.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">D</span><span class="delimiter">&quot;</span></span>)),
+                    () -&gt; assertTrue(lastName.endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">e</span><span class="delimiter">&quot;</span></span>))
                 );
             }
         );
