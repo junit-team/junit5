@@ -1058,6 +1058,7 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">java.time.Duration.ofMinutes</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertAll</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertThrows</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTimeout</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTimeoutPreemptively</span>;
@@ -1082,6 +1083,36 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
         assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">address</span><span class="delimiter">&quot;</span></span>,
             () -&gt; assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span>, address.getFirstName()),
             () -&gt; assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">User</span><span class="delimiter">&quot;</span></span>, address.getLastName())
+        );
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> dependentAssertions() {
+        <span class="comment">// In a code block first failed assertion throws exception,</span>
+        <span class="comment">// subsequent code in the same block is skipped.</span>
+        assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">properties</span><span class="delimiter">&quot;</span></span>,
+            () -&gt; {
+                <span class="predefined-type">String</span> firstName = address.getFirstName();
+                assertNotNull(firstName);
+
+                <span class="comment">// Executed only when previous test is valid.</span>
+                assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">first name</span><span class="delimiter">&quot;</span></span>,
+                    () -&gt; assertTrue(firstName.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">J</span><span class="delimiter">&quot;</span></span>)),
+                    () -&gt; assertTrue(firstName.endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">n</span><span class="delimiter">&quot;</span></span>))
+                );
+            },
+            () -&gt; {
+                <span class="comment">// Grouped assertion, so processed independently</span>
+                <span class="comment">// of results of first-name tests.</span>
+                <span class="predefined-type">String</span> lastName = address.getLastName();
+
+                assertNotNull(lastName);
+                <span class="comment">// Executed only when previous test is valid.</span>
+                assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">last name</span><span class="delimiter">&quot;</span></span>,
+                    () -&gt; assertTrue(lastName.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">U</span><span class="delimiter">&quot;</span></span>)),
+                    () -&gt; assertTrue(lastName.endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">r</span><span class="delimiter">&quot;</span></span>))
+                );
+            }
         );
     }
 
