@@ -50,14 +50,14 @@ class AssertionsDemo {
 
 	@Test
 	void dependentAssertions() {
-		// In a code block first failed assertion throws exception,
-		// subsequent code in the same block is skipped.
+		// Within a code block, if an assertion fails the
+		// subsequent code in the same block will be skipped.
 		assertAll("properties",
 			() -> {
 				String firstName = address.getFirstName();
 				assertNotNull(firstName);
 
-				// Executed only when previous test is valid.
+				// Executed only if the previous assertion is valid.
 				assertAll("first name",
 					() -> assertTrue(firstName.startsWith("J")),
 					() -> assertTrue(firstName.endsWith("n"))
@@ -65,11 +65,11 @@ class AssertionsDemo {
 			},
 			() -> {
 				// Grouped assertion, so processed independently
-				// of results of first-name tests.
+				// of results of first name assertions.
 				String lastName = address.getLastName();
-
 				assertNotNull(lastName);
-				// Executed only when previous test is valid.
+
+				// Executed only if the previous assertion is valid.
 				assertAll("last name",
 					() -> assertTrue(lastName.startsWith("U")),
 					() -> assertTrue(lastName.endsWith("r"))
