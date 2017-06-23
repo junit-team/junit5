@@ -56,8 +56,8 @@ class AssertionsDemo {
 			() -> {
 				String firstName = address.getFirstName();
 				assertNotNull(firstName);
-				
-				// Executed only when previous test is valid. 
+
+				// Executed only when previous test is valid.
 				assertAll("first name",
 					() -> assertTrue(firstName.startsWith("J")),
 					() -> assertTrue(firstName.endsWith("n"))
@@ -67,9 +67,9 @@ class AssertionsDemo {
 				// Grouped assertion, so processed independently
 				// of results of first-name tests.
 				String lastName = address.getLastName();
-				
+
 				assertNotNull(lastName);
-				// Executed only when previous test is valid. 
+				// Executed only when previous test is valid.
 				assertAll("last name",
 					() -> assertTrue(lastName.startsWith("U")),
 					() -> assertTrue(lastName.endsWith("r"))
