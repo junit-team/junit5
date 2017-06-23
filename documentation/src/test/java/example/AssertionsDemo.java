@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 class AssertionsDemo {
 
 	// end::user_guide[]
-	Address address = new Address("John", "User");
+	Person person = new Person("John", "Doe");
 
 	// tag::user_guide[]
 	@Test
@@ -42,9 +42,9 @@ class AssertionsDemo {
 	void groupedAssertions() {
 		// In a grouped assertion all assertions are executed, and any
 		// failures will be reported together.
-		assertAll("address",
-			() -> assertEquals("John", address.getFirstName()),
-			() -> assertEquals("User", address.getLastName())
+		assertAll("person",
+			() -> assertEquals("John", person.getFirstName()),
+			() -> assertEquals("Doe", person.getLastName())
 		);
 	}
 
@@ -54,7 +54,7 @@ class AssertionsDemo {
 		// subsequent code in the same block will be skipped.
 		assertAll("properties",
 			() -> {
-				String firstName = address.getFirstName();
+				String firstName = person.getFirstName();
 				assertNotNull(firstName);
 
 				// Executed only if the previous assertion is valid.
@@ -66,13 +66,13 @@ class AssertionsDemo {
 			() -> {
 				// Grouped assertion, so processed independently
 				// of results of first name assertions.
-				String lastName = address.getLastName();
+				String lastName = person.getLastName();
 				assertNotNull(lastName);
 
 				// Executed only if the previous assertion is valid.
 				assertAll("last name",
-					() -> assertTrue(lastName.startsWith("U")),
-					() -> assertTrue(lastName.endsWith("r"))
+					() -> assertTrue(lastName.startsWith("D")),
+					() -> assertTrue(lastName.endsWith("e"))
 				);
 			}
 		);
@@ -144,24 +144,22 @@ class AssertionsDemo {
 // end::user_guide[]
 // @formatter:on
 
-class Address {
+class Person {
 
 	private final String firstName;
-
-	public String getLastName() {
-		return lastName;
-	}
-
 	private final String lastName;
 
-	public String getFirstName() {
+	Person(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+
+	String getFirstName() {
 		return firstName;
 	}
 
-	public Address(String firstName, String lastName) {
-
-		this.firstName = firstName;
-		this.lastName = lastName;
+	String getLastName() {
+		return lastName;
 	}
 
 }
