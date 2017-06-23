@@ -1088,14 +1088,14 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> dependentAssertions() {
-        <span class="comment">// In a code block first failed assertion throws exception,</span>
-        <span class="comment">// subsequent code in the same block is skipped.</span>
+        <span class="comment">// Within a code block, if an assertion fails the</span>
+        <span class="comment">// subsequent code in the same block will be skipped.</span>
         assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">properties</span><span class="delimiter">&quot;</span></span>,
             () -&gt; {
                 <span class="predefined-type">String</span> firstName = address.getFirstName();
                 assertNotNull(firstName);
 
-                <span class="comment">// Executed only when previous test is valid.</span>
+                <span class="comment">// Executed only if the previous assertion is valid.</span>
                 assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">first name</span><span class="delimiter">&quot;</span></span>,
                     () -&gt; assertTrue(firstName.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">J</span><span class="delimiter">&quot;</span></span>)),
                     () -&gt; assertTrue(firstName.endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">n</span><span class="delimiter">&quot;</span></span>))
@@ -1103,11 +1103,11 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
             },
             () -&gt; {
                 <span class="comment">// Grouped assertion, so processed independently</span>
-                <span class="comment">// of results of first-name tests.</span>
+                <span class="comment">// of results of first name assertions.</span>
                 <span class="predefined-type">String</span> lastName = address.getLastName();
-
                 assertNotNull(lastName);
-                <span class="comment">// Executed only when previous test is valid.</span>
+
+                <span class="comment">// Executed only if the previous assertion is valid.</span>
                 assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">last name</span><span class="delimiter">&quot;</span></span>,
                     () -&gt; assertTrue(lastName.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">U</span><span class="delimiter">&quot;</span></span>)),
                     () -&gt; assertTrue(lastName.endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">r</span><span class="delimiter">&quot;</span></span>))
