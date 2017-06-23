@@ -16,6 +16,7 @@ import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
@@ -44,6 +45,36 @@ class AssertionsDemo {
 		assertAll("address",
 			() -> assertEquals("John", address.getFirstName()),
 			() -> assertEquals("User", address.getLastName())
+		);
+	}
+
+	@Test
+	void dependentAssertions() {
+		// In a code block first failed assertion throws exception,
+		// subsequent code in the same block is skipped.
+		assertAll("properties",
+			() -> {
+				String firstName = address.getFirstName();
+				assertNotNull(firstName);
+
+				// Executed only when previous test is valid.
+				assertAll("first name",
+					() -> assertTrue(firstName.startsWith("J")),
+					() -> assertTrue(firstName.endsWith("n"))
+				);
+			},
+			() -> {
+				// Grouped assertion, so processed independently
+				// of results of first-name tests.
+				String lastName = address.getLastName();
+
+				assertNotNull(lastName);
+				// Executed only when previous test is valid.
+				assertAll("last name",
+					() -> assertTrue(lastName.startsWith("U")),
+					() -> assertTrue(lastName.endsWith("r"))
+				);
+			}
 		);
 	}
 
