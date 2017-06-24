@@ -29,12 +29,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
+import org.mockito.stubbing.Answer;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -367,51 +369,58 @@ class HierarchicalTestExecutorTests {
 	@Test
 	void executesDynamicTestDescriptorsUsingContainerAndTestType() throws Exception {
 
-		UniqueId leafUniqueId = UniqueId.root("leaf", "child leaf");
-		MyContainerAndTest child = spy(new MyContainerAndTest(leafUniqueId));
-		MyContainerAndTest dynamicTestDescriptor = spy(new MyContainerAndTest(leafUniqueId.append("dynamic", "child")));
+		MyContainerAndTest child = spy(new MyContainerAndTest(root.getUniqueId().append("c&t", "child")));
+		MyContainerAndTest dynamicContainerAndTest = spy(
+			new MyContainerAndTest(child.getUniqueId().append("c&t", "dynamicContainerAndTest")));
+		MyLeaf dynamicLeaf = spy(new MyLeaf(dynamicContainerAndTest.getUniqueId().append("test", "dynamicLeaf")));
 
-		UniqueId nestedId = leafUniqueId.append("dynamic", "child").append("nested", "nested leaf");
-		MyLeaf nestedLeaf = spy(new MyLeaf(nestedId));
-		MyLeaf dynamicLeaf = spy(new MyLeaf(nestedId.append("nested", "leaf")));
-
-		when(child.execute(any(), any())).thenAnswer(invocation -> {
-			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
-			dynamicTestExecutor.execute(dynamicTestDescriptor);
-			return invocation.getArgument(0);
-		});
 		root.addChild(child);
-
-		when(nestedLeaf.execute(any(), any())).thenAnswer(invocation -> {
-			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
-			dynamicTestExecutor.execute(dynamicLeaf);
-			return invocation.getArgument(0);
+		when(child.execute(any(), any())).thenAnswer(registerAndExecute(dynamicContainerAndTest));
+		when(dynamicContainerAndTest.execute(any(), any())).thenAnswer(registerAndExecute(dynamicLeaf));
+		when(dynamicLeaf.execute(any(), any())).thenAnswer(invocation -> {
+			throw new AssertionError("test fails");
 		});
-		child.addChild(nestedLeaf);
 
-		InOrder inOrder = inOrder(listener, root, child, dynamicTestDescriptor, nestedLeaf, dynamicLeaf);
+		InOrder inOrder = inOrder(listener, root, child, dynamicContainerAndTest, dynamicLeaf);
 
 		executor.execute();
 
 		ArgumentCaptor<TestExecutionResult> aTestExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
 		inOrder.verify(listener).executionStarted(root);
+
 		inOrder.verify(child).prepare(rootContext);
 		inOrder.verify(child).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(child);
 		inOrder.verify(child).execute(eq(rootContext), any());
-		inOrder.verify(listener).dynamicTestRegistered(dynamicTestDescriptor);
-		inOrder.verify(dynamicTestDescriptor).prepare(rootContext);
-		inOrder.verify(dynamicTestDescriptor).shouldBeSkipped(rootContext);
-		inOrder.verify(listener).executionStarted(dynamicTestDescriptor);
-		inOrder.verify(dynamicTestDescriptor).execute(eq(rootContext), any());
-		inOrder.verify(listener).executionFinished(eq(dynamicTestDescriptor), aTestExecutionResult.capture());
+
+		inOrder.verify(listener).dynamicTestRegistered(dynamicContainerAndTest);
+		inOrder.verify(dynamicContainerAndTest).prepare(rootContext);
+		inOrder.verify(dynamicContainerAndTest).shouldBeSkipped(rootContext);
+		inOrder.verify(listener).executionStarted(dynamicContainerAndTest);
+		inOrder.verify(dynamicContainerAndTest).execute(eq(rootContext), any());
+
+		inOrder.verify(listener).dynamicTestRegistered(dynamicLeaf);
+		inOrder.verify(dynamicLeaf).prepare(rootContext);
+		inOrder.verify(dynamicLeaf).shouldBeSkipped(rootContext);
+		inOrder.verify(listener).executionStarted(dynamicLeaf);
+		inOrder.verify(dynamicLeaf).execute(eq(rootContext), any());
+
+		inOrder.verify(listener).executionFinished(eq(dynamicLeaf), aTestExecutionResult.capture());
+		inOrder.verify(listener).executionFinished(eq(dynamicContainerAndTest), aTestExecutionResult.capture());
 		inOrder.verify(listener).executionFinished(eq(child), aTestExecutionResult.capture());
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
-		// TODO verify(nestedLeaf) ...
-		// TODO verify(dynamicLeaf) ...
 
 		assertThat(aTestExecutionResult.getAllValues()).extracting(TestExecutionResult::getStatus).containsExactly(
-			TestExecutionResult.Status.SUCCESSFUL, TestExecutionResult.Status.SUCCESSFUL);
+			TestExecutionResult.Status.FAILED, TestExecutionResult.Status.SUCCESSFUL,
+			TestExecutionResult.Status.SUCCESSFUL);
+	}
+
+	private Answer<Object> registerAndExecute(TestDescriptor dynamicChild) {
+		return invocation -> {
+			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
+			dynamicTestExecutor.execute(dynamicChild);
+			return invocation.getArgument(0);
+		};
 	}
 
 	/**
