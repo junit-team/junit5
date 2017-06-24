@@ -68,7 +68,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final Class<?> testClass;
-	private final Lifecycle lifecycle;
+	protected final Lifecycle lifecycle;
 
 	private final List<Method> beforeAllMethods;
 	private final List<Method> afterAllMethods;
@@ -179,7 +179,15 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
 
-		return new LifecycleAwareTestInstanceProvider(this.testClass, registry, extensionContext);
+		TestInstanceProvider testInstanceProvider = childExtensionRegistry -> {
+			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
+			Object instance = executableInvoker.invoke(constructor, extensionContext,
+				childExtensionRegistry.orElse(registry));
+			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(registry), extensionContext);
+			return instance;
+		};
+
+		return new LifecycleAwareDelegatingTestInstanceProvider(testInstanceProvider, this.lifecycle);
 	}
 
 	protected void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
@@ -281,43 +289,29 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		executableInvoker.invoke(method, instance, context, registry);
 	}
 
-	private final class LifecycleAwareTestInstanceProvider implements TestInstanceProvider {
+	protected static final class LifecycleAwareDelegatingTestInstanceProvider implements TestInstanceProvider {
 
-		private final Class<?> testClass;
-		private final ExtensionRegistry registry;
-		private final ExtensionContext extensionContext;
+		private final TestInstanceProvider testInstanceProvider;
+		private final Lifecycle lifecycle;
 		private Object testInstance;
 
-		LifecycleAwareTestInstanceProvider(Class<?> testClass, ExtensionRegistry registry,
-				ExtensionContext extensionContext) {
-
-			this.testClass = testClass;
-			this.registry = registry;
-			this.extensionContext = extensionContext;
+		LifecycleAwareDelegatingTestInstanceProvider(TestInstanceProvider testInstanceProvider, Lifecycle lifecycle) {
+			this.testInstanceProvider = testInstanceProvider;
+			this.lifecycle = lifecycle;
 		}
 
 		@Override
 		public Object getTestInstance(Optional<ExtensionRegistry> childExtensionRegistry) {
-			if (ClassTestDescriptor.this.lifecycle == Lifecycle.PER_METHOD) {
-				return createTestInstance(childExtensionRegistry);
+			if (this.lifecycle == Lifecycle.PER_METHOD) {
+				return this.testInstanceProvider.getTestInstance(childExtensionRegistry);
 			}
 
 			// else Lifecycle.PER_CLASS
 			if (this.testInstance == null) {
-				this.testInstance = createTestInstance(childExtensionRegistry);
+				this.testInstance = this.testInstanceProvider.getTestInstance(childExtensionRegistry);
 			}
 			return this.testInstance;
 		}
-
-		private Object createTestInstance(Optional<ExtensionRegistry> childExtensionRegistry) {
-			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-			Object instance = executableInvoker.invoke(constructor, this.extensionContext,
-				childExtensionRegistry.orElse(this.registry));
-			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(this.registry),
-				this.extensionContext);
-			return instance;
-		}
-
 	}
 
 	private static TestInstance.Lifecycle getTestInstanceLifecycle(Class<?> testClass) {

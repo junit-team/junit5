@@ -18,25 +18,22 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * Tests for {@link TestInstance @TestInstance} lifecycle support.
  *
  * @since 5.0
  */
-@RunWith(JUnitPlatform.class)
-public
-
 class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	private static int instanceCount;
+	private static int nestedInstanceCount;
 	private static int beforeAllCount;
 	private static int afterAllCount;
 	private static int beforeEachCount;
@@ -45,6 +42,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	@BeforeEach
 	void init() {
 		instanceCount = 0;
+		nestedInstanceCount = 0;
 		beforeAllCount = 0;
 		afterAllCount = 0;
 		beforeEachCount = 0;
@@ -53,35 +51,46 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void instancePerMethod() {
-		performAssertions(InstancePerMethodTestCase.class, 2, 1, 1);
+		performAssertions(InstancePerMethodTestCase.class, 2, 2, 0, 1);
 	}
 
 	@Test
 	void instancePerClass() {
-		performAssertions(InstancePerClassTestCase.class, 1, 2, 2);
+		performAssertions(InstancePerClassTestCase.class, 2, 1, 0, 2);
 	}
 
-	private void performAssertions(Class<?> testClass, int expectedInstanceCount, int expectedBeforeAllCount,
-			int expectedAfterAllCount) {
+	@Test
+	void instancePerMethodWithNestedTestClass() {
+		performAssertions(InstancePerMethodOuterTestCase.class, 3, 2, 2, 0);
+	}
+
+	@Test
+	void instancePerClassWithNestedTestClass() {
+		performAssertions(InstancePerClassOuterTestCase.class, 3, 1, 1, 1);
+	}
+
+	private void performAssertions(Class<?> testClass, int containers, int instances, int nestedInstances,
+			int allMethods) {
 
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
 
-		// eventRecorder.eventStream().forEach(System.out::println);
-
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(2, eventRecorder.getContainerStartedCount(), "# containers started"),
-			() -> assertEquals(2, eventRecorder.getContainerFinishedCount(), "# containers finished"),
+			() -> assertEquals(containers, eventRecorder.getContainerStartedCount(), "# containers started"),
+			() -> assertEquals(containers, eventRecorder.getContainerFinishedCount(), "# containers finished"),
 			() -> assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started"),
 			() -> assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(expectedInstanceCount, instanceCount, "instance count"),
-			() -> assertEquals(expectedBeforeAllCount, beforeAllCount, "@BeforeAll count"),
-			() -> assertEquals(expectedAfterAllCount, afterAllCount, "@AfterAll count"),
+			() -> assertEquals(instances, instanceCount, "instance count"),
+			() -> assertEquals(nestedInstances, nestedInstanceCount, "nested instance count"),
+			() -> assertEquals(allMethods, beforeAllCount, "@BeforeAll count"),
+			() -> assertEquals(allMethods, afterAllCount, "@AfterAll count"),
 			() -> assertEquals(2, beforeEachCount, "@BeforeEach count"),
 			() -> assertEquals(2, afterEachCount, "@AfterEach count")
 		);
 		// @formatter:on
 	}
+
+	// -------------------------------------------------------------------------
 
 	// The following is commented out b/c it's the default.
 	// @TestInstance(Lifecycle.PER_METHOD)
@@ -138,6 +147,94 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			afterAllCount++;
 		}
 
+	}
+
+	// The following is commented out b/c it's the default.
+	// @TestInstance(Lifecycle.PER_METHOD)
+	private static class InstancePerMethodOuterTestCase {
+
+		@SuppressWarnings("unused")
+		InstancePerMethodOuterTestCase() {
+			instanceCount++;
+		}
+
+		@Nested
+		// The following is commented out b/c it's the default.
+		// @TestInstance(Lifecycle.PER_METHOD)
+		class NestedInstancePerMethodTestCase {
+
+			@SuppressWarnings("unused")
+			NestedInstancePerMethodTestCase() {
+				nestedInstanceCount++;
+			}
+
+			@BeforeEach
+			void beforeEach() {
+				beforeEachCount++;
+			}
+
+			@Test
+			void test1() {
+			}
+
+			@Test
+			void test2() {
+			}
+
+			@AfterEach
+			void afterEach() {
+				afterEachCount++;
+			}
+		}
+	}
+
+	@TestInstance(Lifecycle.PER_CLASS)
+	private static class InstancePerClassOuterTestCase {
+
+		@SuppressWarnings("unused")
+		InstancePerClassOuterTestCase() {
+			instanceCount++;
+		}
+
+		@Nested
+		@TestInstance(Lifecycle.PER_CLASS)
+		class NestedInstancePerClassTestCase {
+
+			@SuppressWarnings("unused")
+			NestedInstancePerClassTestCase() {
+				nestedInstanceCount++;
+			}
+
+			@BeforeAll
+			void beforeAll(TestInfo testInfo) {
+				assertNotNull(testInfo);
+				beforeAllCount++;
+			}
+
+			@BeforeEach
+			void beforeEach() {
+				beforeEachCount++;
+			}
+
+			@Test
+			void test1() {
+			}
+
+			@Test
+			void test2() {
+			}
+
+			@AfterEach
+			void afterEach() {
+				afterEachCount++;
+			}
+
+			@AfterAll
+			void afterAll(TestInfo testInfo) {
+				assertNotNull(testInfo);
+				afterAllCount++;
+			}
+		}
 	}
 
 }

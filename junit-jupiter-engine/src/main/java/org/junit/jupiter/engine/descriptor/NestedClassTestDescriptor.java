@@ -61,17 +61,24 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
 
-		return childExtensionRegistry -> {
+		TestInstanceProvider testInstanceProvider = childExtensionRegistry -> {
 			// Extensions registered for nested classes and below are not to be used for instantiating outer classes
 			Optional<ExtensionRegistry> childExtensionRegistryForOuterInstance = Optional.empty();
-			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance(
-				childExtensionRegistryForOuterInstance);
+
+			// @formatter:off
+			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance(childExtensionRegistryForOuterInstance);
+
+			ExtensionRegistry registryToUse = childExtensionRegistry.orElse(registry);
 			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getTestClass());
-			Object instance = executableInvoker.invoke(constructor, outerInstance, extensionContext,
-				childExtensionRegistry.orElse(registry));
-			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(registry), extensionContext);
+			Object instance = executableInvoker.invoke(constructor, outerInstance, extensionContext, registryToUse);
+
+			invokeTestInstancePostProcessors(instance, registryToUse, extensionContext);
+
 			return instance;
+			// @formatter:on
 		};
+
+		return new LifecycleAwareDelegatingTestInstanceProvider(testInstanceProvider, this.lifecycle);
 	}
 
 }
