@@ -21,7 +21,7 @@ import org.junit.platform.engine.UniqueId;
  */
 public class TestEngineSpy implements TestEngine {
 
-	private static final String ID = TestEngineSpy.class.getSimpleName();
+	public static final String ID = TestEngineSpy.class.getSimpleName();
 
 	public EngineDiscoveryRequest discoveryRequestForDiscovery;
 	public UniqueId uniqueIdForDiscovery;

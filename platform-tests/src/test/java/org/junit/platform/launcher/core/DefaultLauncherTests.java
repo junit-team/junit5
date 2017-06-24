@@ -11,24 +11,33 @@
 package org.junit.platform.launcher.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 
 import java.util.Optional;
 
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
@@ -44,6 +53,8 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 
 /**
  * @since 1.0
@@ -409,8 +420,83 @@ class DefaultLauncherTests {
 			(PostDiscoveryFilter) testDescriptor -> FilterResult.includedIf(testDescriptor.isContainer())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
-		TestIdentifier engineIdentifier = CollectionUtils.getOnlyElement(testPlan.getRoots());
+		TestIdentifier engineIdentifier = getOnlyElement(testPlan.getRoots());
 		assertThat(testPlan.getChildren(engineIdentifier)).isEmpty();
+	}
+
+	@Test
+	void reportsDynamicTestDescriptorsCorrectly() {
+		UniqueId engineId = UniqueId.forEngine(TestEngineSpy.ID);
+		UniqueId containerAndTestId = engineId.append("c&t", "c&t");
+		UniqueId dynamicTestId = containerAndTestId.append("test", "test");
+
+		TestEngineSpy engine = new TestEngineSpy() {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				super.discover(discoveryRequest, uniqueId);
+				TestDescriptorStub engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
+				engineDescriptor.addChild(new TestDescriptorStub(containerAndTestId, "c&t") {
+					@Override
+					public Type getType() {
+						return Type.CONTAINER_AND_TEST;
+					}
+				});
+				return engineDescriptor;
+			}
+
+			@Override
+			public void execute(ExecutionRequest request) {
+				super.execute(request);
+				EngineExecutionListener listener = request.getEngineExecutionListener();
+
+				listener.executionStarted(request.getRootTestDescriptor());
+				TestDescriptor containerAndTest = getOnlyElement(request.getRootTestDescriptor().getChildren());
+				listener.executionStarted(containerAndTest);
+
+				TestDescriptorStub dynamicTest = new TestDescriptorStub(dynamicTestId, "test");
+				dynamicTest.setParent(containerAndTest);
+				listener.dynamicTestRegistered(dynamicTest);
+				listener.executionStarted(dynamicTest);
+				listener.executionFinished(dynamicTest, successful());
+
+				listener.executionFinished(containerAndTest, successful());
+				listener.executionFinished(request.getRootTestDescriptor(), successful());
+			}
+		};
+
+		DefaultLauncher launcher = createLauncher(engine);
+		TestExecutionListener listener = mock(TestExecutionListener.class);
+		launcher.execute(request().build(), listener);
+
+		InOrder inOrder = inOrder(listener);
+		ArgumentCaptor<TestPlan> testPlanArgumentCaptor = ArgumentCaptor.forClass(TestPlan.class);
+		inOrder.verify(listener).testPlanExecutionStarted(testPlanArgumentCaptor.capture());
+
+		TestPlan testPlan = testPlanArgumentCaptor.getValue();
+		TestIdentifier engineTestIdentifier = testPlan.getTestIdentifier(engineId.toString());
+		TestIdentifier containerAndTestIdentifier = testPlan.getTestIdentifier(containerAndTestId.toString());
+		TestIdentifier dynamicTestIdentifier = testPlan.getTestIdentifier(dynamicTestId.toString());
+		assertThat(engineTestIdentifier.getParentId()).isEmpty();
+		assertThat(containerAndTestIdentifier.getParentId()).contains(engineId.toString());
+		assertThat(dynamicTestIdentifier.getParentId()).contains(containerAndTestId.toString());
+
+		inOrder.verify(listener).executionStarted(engineTestIdentifier);
+		inOrder.verify(listener).executionStarted(containerAndTestIdentifier);
+		inOrder.verify(listener).dynamicTestRegistered(dynamicTestIdentifier);
+		inOrder.verify(listener).executionStarted(dynamicTestIdentifier);
+		inOrder.verify(listener).executionFinished(dynamicTestIdentifier, successful());
+		inOrder.verify(listener).executionFinished(containerAndTestIdentifier, successful());
+		inOrder.verify(listener).executionFinished(engineTestIdentifier, successful());
+		inOrder.verify(listener).testPlanExecutionFinished(same(testPlan));
+	}
+
+	private Matcher<TestIdentifier> hasUniqueId(UniqueId uniqueId) {
+		return new FeatureMatcher<TestIdentifier, String>(equalTo(uniqueId.toString()), "unique ID", "unique ID") {
+			@Override
+			protected String featureValueOf(TestIdentifier actual) {
+				return actual.getUniqueId();
+			}
+		};
 	}
 
 }
