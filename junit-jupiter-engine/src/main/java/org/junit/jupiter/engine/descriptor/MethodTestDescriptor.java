@@ -31,6 +31,7 @@ import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -168,7 +169,8 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 		throwableCollector.execute(() -> {
 			try {
 				Method testMethod = getTestMethod();
-				Object instance = testExtensionContext.getTestInstance().get();
+				Object instance = testExtensionContext.getTestInstance().orElseThrow(() -> new JUnitException(
+					"Illegal state: test instance not present for method: " + testMethod.toGenericString()));
 				executableInvoker.invoke(testMethod, instance, testExtensionContext, context.getExtensionRegistry());
 			}
 			catch (Throwable throwable) {

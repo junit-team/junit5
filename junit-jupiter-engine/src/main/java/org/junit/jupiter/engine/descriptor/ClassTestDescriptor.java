@@ -282,11 +282,13 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private void invokeMethodInTestExtensionContext(Method method, TestExtensionContext context,
 			ExtensionRegistry registry) {
 
-		Object instance = ReflectionUtils.getOuterInstance(context.getTestInstance().get(),
-			method.getDeclaringClass()).orElseThrow(
-				() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
+		Object testInstance = context.getTestInstance().orElseThrow(() -> new JUnitException(
+			"Illegal state: test instance not present for method: " + method.toGenericString()));
 
-		executableInvoker.invoke(method, instance, context, registry);
+		testInstance = ReflectionUtils.getOuterInstance(testInstance, method.getDeclaringClass()).orElseThrow(
+			() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
+
+		executableInvoker.invoke(method, testInstance, context, registry);
 	}
 
 	protected static final class LifecycleAwareDelegatingTestInstanceProvider implements TestInstanceProvider {
