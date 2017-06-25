@@ -44,6 +44,12 @@ final class TestTemplateContainerExtensionContext extends AbstractExtensionConte
 	}
 
 	@Override
+	public Optional<Object> getTestInstance() {
+		// TODO Determine how to access the test instance
+		return null;
+	}
+
+	@Override
 	public Optional<Method> getTestMethod() {
 		return Optional.of(getTestDescriptor().getTestMethod());
 	}

@@ -26,13 +26,6 @@ import org.junit.platform.commons.meta.API;
 public interface TestExtensionContext extends ExtensionContext {
 
 	/**
-	 * Get the test instance associated with this {@code TestExtensionContext}.
-	 *
-	 * @return the test instance; never {@code null}
-	 */
-	Object getTestInstance();
-
-	/**
 	 * Get the exception that was thrown during execution of the test associated
 	 * with this {@code TestExtensionContext}, if available.
 	 *

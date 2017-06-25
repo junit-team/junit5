@@ -24,12 +24,17 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 /**
  * Tests for {@link TestInstance @TestInstance} lifecycle support.
  *
  * @since 5.0
  */
+@RunWith(JUnitPlatform.class)
+public
+
 class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	private static int instanceCount;

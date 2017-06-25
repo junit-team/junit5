@@ -72,11 +72,12 @@ abstract class AbstractTestRuleSupport<T extends Member>
 	private void invokeAppropriateMethodOnRuleAnnotatedMembers(TestExtensionContext context,
 			Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
 
-		List<T> members = findRuleAnnotatedMembers(context.getTestInstance());
+		Object testInstance = context.getTestInstance().get();
+		List<T> members = findRuleAnnotatedMembers(testInstance);
 
 		// @formatter:off
 		members.stream()
-				.map(member -> TestRuleAnnotatedMemberFactory.from(context.getTestInstance(), member))
+				.map(member -> TestRuleAnnotatedMemberFactory.from(testInstance, member))
 				.map(this.adapterGenerator)
 				.forEach(methodCaller::accept);
 		// @formatter:on

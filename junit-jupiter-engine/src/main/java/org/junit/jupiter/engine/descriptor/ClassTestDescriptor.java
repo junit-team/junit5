@@ -282,7 +282,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private void invokeMethodInTestExtensionContext(Method method, TestExtensionContext context,
 			ExtensionRegistry registry) {
 
-		Object instance = ReflectionUtils.getOuterInstance(context.getTestInstance(),
+		Object instance = ReflectionUtils.getOuterInstance(context.getTestInstance().get(),
 			method.getDeclaringClass()).orElseThrow(
 				() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 

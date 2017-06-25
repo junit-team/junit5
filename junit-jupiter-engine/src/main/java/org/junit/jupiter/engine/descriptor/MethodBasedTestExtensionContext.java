@@ -56,8 +56,8 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 	}
 
 	@Override
-	public Object getTestInstance() {
-		return this.testInstance;
+	public Optional<Object> getTestInstance() {
+		return Optional.of(this.testInstance);
 	}
 
 	@Override

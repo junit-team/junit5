@@ -112,6 +112,15 @@ public interface ExtensionContext {
 	Optional<Class<?>> getTestClass();
 
 	/**
+	 * Get the test instance associated with the current test or container,
+	 * if available.
+	 *
+	 * @return an {@code Optional} containing the test instance; never
+	 * {@code null} but potentially empty
+	 */
+	Optional<Object> getTestInstance();
+
+	/**
 	 * Get the {@link Method} associated with the current test, if available.
 	 *
 	 * @return an {@code Optional} containing the method; never {@code null} but

@@ -168,7 +168,7 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 		throwableCollector.execute(() -> {
 			try {
 				Method testMethod = getTestMethod();
-				Object instance = testExtensionContext.getTestInstance();
+				Object instance = testExtensionContext.getTestInstance().get();
 				executableInvoker.invoke(testMethod, instance, testExtensionContext, context.getExtensionRegistry());
 			}
 			catch (Throwable throwable) {

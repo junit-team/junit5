@@ -130,6 +130,11 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
+			public java.util.Optional<Object> getTestInstance() {
+				return Optional.empty();
+			}
+
+			@Override
 			public void publishReportEntry(Map<String, String> map) {
 			}
 

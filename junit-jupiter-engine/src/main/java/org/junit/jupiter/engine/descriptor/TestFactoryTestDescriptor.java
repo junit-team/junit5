@@ -66,7 +66,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 
 		context.getThrowableCollector().execute(() -> {
-			Object instance = testExtensionContext.getTestInstance();
+			Object instance = testExtensionContext.getTestInstance().get();
 			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, testExtensionContext,
 				context.getExtensionRegistry());
 			TestSource source = getSource().orElseThrow(() -> new JUnitException("Test source must be present"));
