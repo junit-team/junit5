@@ -133,12 +133,21 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
 
-		ContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
+		ClassBasedContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this);
+
+		// Reuse TestInstanceProvider for potential transparent instance caching.
+		TestInstanceProvider testInstanceProvider = testInstanceProvider(context, registry, containerExtensionContext);
+
+		// Eagerly load test instance for BeforeAllCallbacks, if necessary,
+		// and store the instance in the ContainerExtensionContext.
+		Object testInstance = (this.lifecycle == Lifecycle.PER_CLASS
+				? testInstanceProvider.getTestInstance(Optional.empty()) : null);
+		containerExtensionContext.setTestInstance(testInstance);
 
 		// @formatter:off
 		return context.extend()
-				.withTestInstanceProvider(testInstanceProvider(context, registry, containerExtensionContext))
+				.withTestInstanceProvider(testInstanceProvider)
 				.withExtensionRegistry(registry)
 				.withExtensionContext(containerExtensionContext)
 				.withThrowableCollector(new ThrowableCollector())
@@ -214,7 +223,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
-		Object testInstance = getTestInstanceForClassLevelCallbacks(context);
+		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
 		for (Method method : this.beforeAllMethods) {
 			throwableCollector.execute(
@@ -229,15 +238,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
-		Object testInstance = getTestInstanceForClassLevelCallbacks(context);
+		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
 		this.afterAllMethods.forEach(method -> throwableCollector.execute(
 			() -> executableInvoker.invoke(method, testInstance, extensionContext, registry)));
-	}
-
-	private Object getTestInstanceForClassLevelCallbacks(JupiterEngineExecutionContext context) {
-		return this.lifecycle == Lifecycle.PER_CLASS
-				? context.getTestInstanceProvider().getTestInstance(Optional.empty()) : null;
 	}
 
 	private void invokeAfterAllCallbacks(JupiterEngineExecutionContext context) {

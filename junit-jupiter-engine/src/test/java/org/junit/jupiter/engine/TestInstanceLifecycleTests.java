@@ -124,6 +124,8 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
 
+		// eventRecorder.eventStream().forEach(System.out::println);
+
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(containers, eventRecorder.getContainerStartedCount(), "# containers started"),
