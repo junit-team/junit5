@@ -30,8 +30,8 @@ import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * {@link org.junit.platform.engine.TestDescriptor TestDescriptor} for {@link org.junit.jupiter.api.TestFactory @TestFactory}
- * methods.
+ * {@link org.junit.platform.engine.TestDescriptor TestDescriptor} for
+ * {@link org.junit.jupiter.api.TestFactory @TestFactory} methods.
  *
  * @since 5.0
  */
@@ -70,7 +70,8 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 				"Illegal state: test instance not present for method: " + getTestMethod().toGenericString()));
 			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, testExtensionContext,
 				context.getExtensionRegistry());
-			TestSource source = getSource().orElseThrow(() -> new JUnitException("Test source must be present"));
+			TestSource source = getSource().orElseThrow(
+				() -> new JUnitException("Illegal state: TestSource must be present"));
 			try (Stream<DynamicNode> dynamicNodeStream = toDynamicNodeStream(testFactoryMethodResult)) {
 				int index = 1;
 				Iterator<DynamicNode> iterator = dynamicNodeStream.iterator();
