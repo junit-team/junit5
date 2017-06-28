@@ -15,7 +15,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -719,9 +718,9 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	// Intentionally not implementing BeforeTestExecutionCallback, AfterTestExecutionCallback.
+	// Intentionally not implementing BeforeTestExecutionCallback, AfterTestExecutionCallback,
 	// and TestExecutionExceptionHandler, since they are analogous to BeforeEachCallback and
-	// AfterEachCallback with regards to instance scope.
+	// AfterEachCallback with regard to instance scope.
 	private static class InstanceTrackingExtension implements ContainerExecutionCondition, TestInstancePostProcessor,
 			BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback {
 
@@ -736,7 +735,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
 			assertNotNull(testInstance);
-			assertFalse(context.getTestInstance().isPresent());
+			context.getTestInstance().ifPresent(instance -> assertSame(testInstance, instance));
 			instanceMap.put(postProcessTestInstanceKey(context.getTestClass().get()), testInstance);
 		}
 

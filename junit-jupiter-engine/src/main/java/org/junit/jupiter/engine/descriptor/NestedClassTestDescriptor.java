@@ -72,6 +72,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getTestClass());
 			Object instance = executableInvoker.invoke(constructor, outerInstance, extensionContext, registryToUse);
 
+			updateTestInstanceInContainerExtensionContext(extensionContext, instance);
 			invokeTestInstancePostProcessors(instance, registryToUse, extensionContext);
 
 			return instance;

@@ -192,11 +192,27 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
 			Object instance = executableInvoker.invoke(constructor, extensionContext,
 				childExtensionRegistry.orElse(registry));
+
+			updateTestInstanceInContainerExtensionContext(extensionContext, instance);
 			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(registry), extensionContext);
+
 			return instance;
 		};
 
 		return new LifecycleAwareDelegatingTestInstanceProvider(testInstanceProvider, this.lifecycle);
+	}
+
+	/**
+	 * Potentially update the test instance in the provided {@link ExtensionContext},
+	 * if it is an instance of {@link ClassBasedContainerExtensionContext} and if the
+	 * test instance lifecycle is {@link Lifecycle#PER_CLASS}.
+	 *
+	 * <p>Intended to be invoked prior to {@link #invokeTestInstancePostProcessors}.
+	 */
+	protected void updateTestInstanceInContainerExtensionContext(ExtensionContext extensionContext, Object instance) {
+		if (this.lifecycle == Lifecycle.PER_CLASS && extensionContext instanceof ClassBasedContainerExtensionContext) {
+			((ClassBasedContainerExtensionContext) extensionContext).setTestInstance(instance);
+		}
 	}
 
 	protected void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
