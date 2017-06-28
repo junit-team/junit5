@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -22,13 +23,15 @@ import java.lang.annotation.Target;
  * test class.
  *
  * <p>If {@code @TestInstance} is not declared on a test class, the lifecycle
- * mode will default to {@link Lifecycle#PER_METHOD PER_METHOD}.
+ * mode will default to {@link Lifecycle#PER_METHOD PER_METHOD}. Note, however,
+ * that the lifecycle mode is <em>inherited</em> within test class hierarchies.
  *
  * @author Sam Brannen
  * @since 5.0
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Inherited
 @Documented
 public @interface TestInstance {
 

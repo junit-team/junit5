@@ -57,17 +57,12 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * Integration tests for {@link TestInstance @TestInstance} lifecycle support.
  *
  * @since 5.0
  */
-@RunWith(JUnitPlatform.class)
-public
-
 class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	private static final Map<String, Object> instanceMap = new LinkedHashMap<>();
@@ -155,7 +150,15 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void instancePerClass() {
-		Class<?> testClass = InstancePerClassTestCase.class;
+		instancePerClass(InstancePerClassTestCase.class);
+	}
+
+	@Test
+	void instancePerClassWithInheritedLifecycleMode() {
+		instancePerClass(SubInstancePerClassTestCase.class);
+	}
+
+	private void instancePerClass(Class<?> testClass) {
 		int containers = 3;
 		int tests = 3;
 		int instances = 1;
@@ -475,8 +478,6 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
 
-		// eventRecorder.eventStream().forEach(System.out::println);
-
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(containers, eventRecorder.getContainerStartedCount(), "# containers started"),
@@ -584,7 +585,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@TestInstance(Lifecycle.PER_CLASS)
-	private static class InstancePerClassTestCase extends InstancePerMethodTestCase {
+	static class InstancePerClassTestCase extends InstancePerMethodTestCase {
 
 		@BeforeAll
 		void beforeAll(TestInfo testInfo) {
@@ -598,6 +599,9 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			afterAllCount++;
 		}
 
+	}
+
+	private static class SubInstancePerClassTestCase extends InstancePerClassTestCase {
 	}
 
 	@ExtendWith(InstanceTrackingExtension.class)
