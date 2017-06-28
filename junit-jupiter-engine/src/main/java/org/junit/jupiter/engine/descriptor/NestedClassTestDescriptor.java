@@ -19,7 +19,6 @@ import java.util.Set;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -58,28 +57,14 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
+	protected Object instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
-
-		TestInstanceProvider testInstanceProvider = childExtensionRegistry -> {
-			// Extensions registered for nested classes and below are not to be used for instantiating outer classes
-			Optional<ExtensionRegistry> childExtensionRegistryForOuterInstance = Optional.empty();
-
-			// @formatter:off
-			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance(childExtensionRegistryForOuterInstance);
-
-			ExtensionRegistry registryToUse = childExtensionRegistry.orElse(registry);
-			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getTestClass());
-			Object instance = executableInvoker.invoke(constructor, outerInstance, extensionContext, registryToUse);
-
-			updateTestInstanceInContainerExtensionContext(extensionContext, instance);
-			invokeTestInstancePostProcessors(instance, registryToUse, extensionContext);
-
-			return instance;
-			// @formatter:on
-		};
-
-		return new LifecycleAwareDelegatingTestInstanceProvider(testInstanceProvider, this.lifecycle);
+		// Extensions registered for nested classes and below are not to be used for instantiating outer classes
+		Optional<ExtensionRegistry> childExtensionRegistryForOuterInstance = Optional.empty();
+		Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance(
+			childExtensionRegistryForOuterInstance);
+		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getTestClass());
+		return executableInvoker.invoke(constructor, outerInstance, extensionContext, registry);
 	}
 
 }

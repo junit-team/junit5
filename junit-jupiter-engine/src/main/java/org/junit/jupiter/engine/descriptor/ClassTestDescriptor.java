@@ -21,8 +21,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.TestInstance;
@@ -136,14 +136,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ClassBasedContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this);
 
-		// Reuse TestInstanceProvider for potential transparent instance caching.
 		TestInstanceProvider testInstanceProvider = testInstanceProvider(context, registry, containerExtensionContext);
-
-		// Eagerly load test instance for BeforeAllCallbacks, if necessary,
-		// and store the instance in the ContainerExtensionContext.
-		Object testInstance = (this.lifecycle == Lifecycle.PER_CLASS
-				? testInstanceProvider.getTestInstance(Optional.empty()) : null);
-		containerExtensionContext.setTestInstance(testInstance);
 
 		// @formatter:off
 		return context.extend()
@@ -185,39 +178,37 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		context.getThrowableCollector().assertEmpty();
 	}
 
-	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ExtensionContext extensionContext) {
-
-		TestInstanceProvider testInstanceProvider = childExtensionRegistry -> {
-			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-			Object instance = executableInvoker.invoke(constructor, extensionContext,
-				childExtensionRegistry.orElse(registry));
-
-			updateTestInstanceInContainerExtensionContext(extensionContext, instance);
-			invokeTestInstancePostProcessors(instance, childExtensionRegistry.orElse(registry), extensionContext);
-
-			return instance;
-		};
-
-		return new LifecycleAwareDelegatingTestInstanceProvider(testInstanceProvider, this.lifecycle);
-	}
-
-	/**
-	 * Potentially update the test instance in the provided {@link ExtensionContext},
-	 * if it is an instance of {@link ClassBasedContainerExtensionContext} and if the
-	 * test instance lifecycle is {@link Lifecycle#PER_CLASS}.
-	 *
-	 * <p>Intended to be invoked prior to {@link #invokeTestInstancePostProcessors}.
-	 */
-	protected void updateTestInstanceInContainerExtensionContext(ExtensionContext extensionContext, Object instance) {
-		if (this.lifecycle == Lifecycle.PER_CLASS && extensionContext instanceof ClassBasedContainerExtensionContext) {
-			((ClassBasedContainerExtensionContext) extensionContext).setTestInstance(instance);
+	private TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
+			ExtensionRegistry registry, ClassBasedContainerExtensionContext extensionContext) {
+		if (this.lifecycle == Lifecycle.PER_CLASS) {
+			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
+			// and store the instance in the ContainerExtensionContext.
+			Object instance = instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry,
+				extensionContext::setTestInstance);
+			return childRegistry -> instance;
 		}
+		return childRegistry -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext,
+			childRegistry.orElse(registry), instance -> {
+				// no extension context update required
+			});
 	}
 
-	protected void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
-			ExtensionContext context) {
+	private Object instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext context,
+			ExtensionContext extensionContext, ExtensionRegistry registry, Consumer<Object> testInstanceConsumer) {
+		Object instance = instantiateTestClass(context, registry, extensionContext);
+		testInstanceConsumer.accept(instance);
+		invokeTestInstancePostProcessors(instance, registry, extensionContext);
+		return instance;
+	}
 
+	protected Object instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
+			ExtensionRegistry registry, ExtensionContext extensionContext) {
+		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
+		return executableInvoker.invoke(constructor, extensionContext, registry);
+	}
+
+	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
+			ExtensionContext context) {
 		registry.stream(TestInstancePostProcessor.class).forEach(
 			extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, context)));
 	}
@@ -309,31 +300,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
 		executableInvoker.invoke(method, testInstance, context, registry);
-	}
-
-	protected static final class LifecycleAwareDelegatingTestInstanceProvider implements TestInstanceProvider {
-
-		private final TestInstanceProvider testInstanceProvider;
-		private final Lifecycle lifecycle;
-		private Object testInstance;
-
-		LifecycleAwareDelegatingTestInstanceProvider(TestInstanceProvider testInstanceProvider, Lifecycle lifecycle) {
-			this.testInstanceProvider = testInstanceProvider;
-			this.lifecycle = lifecycle;
-		}
-
-		@Override
-		public Object getTestInstance(Optional<ExtensionRegistry> childExtensionRegistry) {
-			if (this.lifecycle == Lifecycle.PER_METHOD) {
-				return this.testInstanceProvider.getTestInstance(childExtensionRegistry);
-			}
-
-			// else Lifecycle.PER_CLASS
-			if (this.testInstance == null) {
-				this.testInstance = this.testInstanceProvider.getTestInstance(childExtensionRegistry);
-			}
-			return this.testInstance;
-		}
 	}
 
 	private static TestInstance.Lifecycle getTestInstanceLifecycle(Class<?> testClass) {
