@@ -59,7 +59,6 @@ class AutomaticModuleNameTests {
 		throw new AssertionError("module name is unknown: " + module);
 	}
 
-	@SuppressWarnings("unused")
 	static Stream<String> moduleDirectoryNames() throws IOException {
 		// @formatter:off
 		return Files.walk(Paths.get(".."), 1)

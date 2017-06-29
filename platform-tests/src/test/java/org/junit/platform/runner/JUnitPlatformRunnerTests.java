@@ -648,7 +648,6 @@ class JUnitPlatformRunnerTests {
 			// @formatter:on
 		}
 
-		@SuppressWarnings("unused")
 		void failingTest() {
 			// not actually invoked
 		}
