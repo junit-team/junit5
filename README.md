@@ -31,6 +31,9 @@ to file feature requests and bug reports using the project's
 <a href="https://github.com/junit-team/junit5/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs">`up-for-grabs`</a>
 label are specifically targeted for community contributions.
 
+## Getting Help
+Ask JUnit 5 related questions on [StackOverflow] or chat with us on [Gitter].
+
 ## Continuous Integration Builds
 
 | CI Server | OS      | Status | Description |
@@ -123,8 +126,10 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 [Atlassian]: https://www.atlassian.com/
 [Clover]: https://www.atlassian.com/software/clover/
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
+[Gitter]: https://gitter.im/junit-team/junit5
 [Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/lastSuccessfulBuild/clover-report/
 [JUnit 5 Javadoc]: http://junit.org/junit5/docs/current/api/
 [JUnit 5 User Guide]: http://junit.org/junit5/docs/current/user-guide/
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
+[StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [Twitter]: https://twitter.com/junitlambda

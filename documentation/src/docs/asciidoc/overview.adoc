@@ -32,8 +32,14 @@ the platform.
 [[overview-java-versions]]
 === Supported Java Versions
 
-JUnit 5 requires Java 8 at runtime. However, you can still test code that has been
-compiled with previous versions of the JDK.
+JUnit 5 requires Java 8 (or higher) at runtime. However, you can still test code that
+has been compiled with previous versions of the JDK.
+
+
+[[overview-getting-help]]
+=== Getting Help
+
+Ask JUnit 5 related questions on {StackOverflow} or chat with us on {Gitter}.
 
 [[installation]]
 == Installation
