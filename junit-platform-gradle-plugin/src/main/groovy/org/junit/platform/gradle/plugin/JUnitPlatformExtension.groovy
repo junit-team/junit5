@@ -9,6 +9,7 @@
  */
 package org.junit.platform.gradle.plugin
 
+import org.gradle.api.Action
 import org.gradle.api.Project
 import org.junit.platform.console.options.Details
 
@@ -78,5 +79,20 @@ class JUnitPlatformExtension {
 	 * <p>Defaults to {@link Details#NONE}.
 	 */
 	Details details = Details.NONE
+
+
+	/**
+	 * Configure the {@link SelectorsExtension} for this plugin.
+	 */
+	void selectors(Action<SelectorsExtension> closure) {
+		closure.execute(getProperty(JUnitPlatformPlugin.SELECTORS_EXTENSION_NAME) as SelectorsExtension)
+	}
+
+	/**
+	 * Configure the {@link FiltersExtension} for this plugin.
+	 */
+	void filters(Action<FiltersExtension> closure) {
+		closure.execute(getProperty(JUnitPlatformPlugin.FILTERS_EXTENSION_NAME) as FiltersExtension)
+	}
 
 }
