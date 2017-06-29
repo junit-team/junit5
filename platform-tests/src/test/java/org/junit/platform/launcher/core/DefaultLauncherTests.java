@@ -11,7 +11,6 @@
 package org.junit.platform.launcher.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,8 +28,6 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Optional;
 
-import org.hamcrest.FeatureMatcher;
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
@@ -397,12 +394,14 @@ class DefaultLauncherTests {
 	@Test
 	void prunesTestDescriptorsAfterApplyingPostDiscoveryFilters() {
 		TestEngineSpy engine = new TestEngineSpy() {
+
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				super.discover(discoveryRequest, uniqueId);
 				TestDescriptorStub engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
 				TestDescriptorStub containerDescriptor = new TestDescriptorStub(uniqueId.append("container", "a"),
 					"container") {
+
 					@Override
 					public Type getType() {
 						return Type.CONTAINER;
@@ -431,11 +430,13 @@ class DefaultLauncherTests {
 		UniqueId dynamicTestId = containerAndTestId.append("test", "test");
 
 		TestEngineSpy engine = new TestEngineSpy() {
+
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				super.discover(discoveryRequest, uniqueId);
 				TestDescriptorStub engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
 				engineDescriptor.addChild(new TestDescriptorStub(containerAndTestId, "c&t") {
+
 					@Override
 					public Type getType() {
 						return Type.CONTAINER_AND_TEST;
@@ -488,15 +489,6 @@ class DefaultLauncherTests {
 		inOrder.verify(listener).executionFinished(containerAndTestIdentifier, successful());
 		inOrder.verify(listener).executionFinished(engineTestIdentifier, successful());
 		inOrder.verify(listener).testPlanExecutionFinished(same(testPlan));
-	}
-
-	private Matcher<TestIdentifier> hasUniqueId(UniqueId uniqueId) {
-		return new FeatureMatcher<TestIdentifier, String>(equalTo(uniqueId.toString()), "unique ID", "unique ID") {
-			@Override
-			protected String featureValueOf(TestIdentifier actual) {
-				return actual.getUniqueId();
-			}
-		};
 	}
 
 }
