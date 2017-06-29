@@ -560,6 +560,34 @@ public final class ReflectionUtils {
 		return String.format("%s#%s(%s)", clazz.getName(), methodName, ClassUtils.nullSafeToString(params));
 	}
 
+	/**
+	 * Get the outermost instance of the required type, searching recursively
+	 * through enclosing instances.
+	 *
+	 * <p>If the supplied inner object is of the required type, it will simply
+	 * be returned.
+	 *
+	 * @param inner the inner object from which to begin the search; never {@code null}
+	 * @param requiredType the required type of the outermost instance; never {@code null}
+	 * @return an {@code Optional} containing the outermost instance; never {@code null}
+	 * but potentially empty
+	 */
+	public static Optional<Object> getOutermostInstance(Object inner, Class<?> requiredType) {
+		Preconditions.notNull(inner, "inner object must not be null");
+		Preconditions.notNull(requiredType, "requiredType must not be null");
+
+		if (requiredType.isInstance(inner)) {
+			return Optional.of(inner);
+		}
+
+		Optional<Object> candidate = getOuterInstance(inner);
+		if (candidate.isPresent()) {
+			return getOutermostInstance(candidate.get(), requiredType);
+		}
+
+		return Optional.empty();
+	}
+
 	private static Optional<Object> getOuterInstance(Object inner) {
 		// This is risky since it depends on the name of the field which is nowhere guaranteed
 		// but has been stable so far in all JDKs
@@ -577,22 +605,6 @@ public final class ReflectionUtils {
 					}
 				});
 		// @formatter:on
-	}
-
-	public static Optional<Object> getOuterInstance(Object inner, Class<?> targetType) {
-		Preconditions.notNull(inner, "inner object must not be null");
-		Preconditions.notNull(targetType, "targetType must not be null");
-
-		if (targetType.isInstance(inner)) {
-			return Optional.of(inner);
-		}
-
-		Optional<Object> candidate = getOuterInstance(inner);
-		if (candidate.isPresent()) {
-			return getOuterInstance(candidate.get(), targetType);
-		}
-
-		return Optional.empty();
 	}
 
 	public static Set<Path> getAllClasspathRootDirectories() {

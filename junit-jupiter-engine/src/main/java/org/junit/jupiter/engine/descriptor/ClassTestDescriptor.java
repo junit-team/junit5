@@ -68,7 +68,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final Class<?> testClass;
-	protected final Lifecycle lifecycle;
+	private final Lifecycle lifecycle;
 
 	private final List<Method> beforeAllMethods;
 	private final List<Method> afterAllMethods;
@@ -114,7 +114,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public String getLegacyReportingName() {
-		return testClass.getName();
+		return this.testClass.getName();
 	}
 
 	private static String generateDefaultDisplayName(Class<?> testClass) {
@@ -136,11 +136,9 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ClassBasedContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this);
 
-		TestInstanceProvider testInstanceProvider = testInstanceProvider(context, registry, containerExtensionContext);
-
 		// @formatter:off
 		return context.extend()
-				.withTestInstanceProvider(testInstanceProvider)
+				.withTestInstanceProvider(testInstanceProvider(context, registry, containerExtensionContext))
 				.withExtensionRegistry(registry)
 				.withExtensionContext(containerExtensionContext)
 				.withThrowableCollector(new ThrowableCollector())
@@ -180,6 +178,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ClassBasedContainerExtensionContext extensionContext) {
+
 		if (this.lifecycle == Lifecycle.PER_CLASS) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ContainerExtensionContext.
@@ -187,6 +186,8 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 				extensionContext::setTestInstance);
 			return childRegistry -> instance;
 		}
+
+		// else Lifecycle.PER_METHOD
 		return childRegistry -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext,
 			childRegistry.orElse(registry), instance -> {
 				// no extension context update required
@@ -195,6 +196,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private Object instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext context,
 			ExtensionContext extensionContext, ExtensionRegistry registry, Consumer<Object> testInstanceConsumer) {
+
 		Object instance = instantiateTestClass(context, registry, extensionContext);
 		testInstanceConsumer.accept(instance);
 		invokeTestInstancePostProcessors(instance, registry, extensionContext);
@@ -203,12 +205,14 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	protected Object instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
+
 		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
 		return executableInvoker.invoke(constructor, extensionContext, registry);
 	}
 
 	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
 			ExtensionContext context) {
+
 		registry.stream(TestInstancePostProcessor.class).forEach(
 			extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, context)));
 	}
@@ -296,7 +300,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		Object testInstance = context.getTestInstance().orElseThrow(() -> new JUnitException(
 			"Illegal state: test instance not present for method: " + method.toGenericString()));
 
-		testInstance = ReflectionUtils.getOuterInstance(testInstance, method.getDeclaringClass()).orElseThrow(
+		testInstance = ReflectionUtils.getOutermostInstance(testInstance, method.getDeclaringClass()).orElseThrow(
 			() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
 		executableInvoker.invoke(method, testInstance, context, registry);

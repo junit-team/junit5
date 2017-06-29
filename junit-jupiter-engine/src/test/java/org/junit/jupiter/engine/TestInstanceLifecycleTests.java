@@ -296,9 +296,9 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertNotSame(nestedInstance1, nestedInstance3);
 		assertSame(nestedInstance3, instanceMap.get(nestedAfterEachCallbackKey3));
 
-		Object outerInstance1 = ReflectionUtils.getOuterInstance(nestedInstance1, testClass).get();
-		Object outerInstance2 = ReflectionUtils.getOuterInstance(nestedInstance2, testClass).get();
-		Object outerInstance3 = ReflectionUtils.getOuterInstance(nestedInstance3, testClass).get();
+		Object outerInstance1 = ReflectionUtils.getOutermostInstance(nestedInstance1, testClass).get();
+		Object outerInstance2 = ReflectionUtils.getOutermostInstance(nestedInstance2, testClass).get();
+		Object outerInstance3 = ReflectionUtils.getOutermostInstance(nestedInstance3, testClass).get();
 		assertNotSame(outerInstance1, outerInstance2);
 		assertNotSame(outerInstance1, outerInstance3);
 
@@ -385,7 +385,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey3));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey3));
 
-		Object outerInstance = ReflectionUtils.getOuterInstance(nestedInstance, testClass).get();
+		Object outerInstance = ReflectionUtils.getOutermostInstance(nestedInstance, testClass).get();
 		assertSame(outerInstance, instanceMap.get(postProcessTestInstanceKey));
 	}
 
@@ -467,7 +467,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		// The last tracked instance stored under postProcessTestInstanceKey
 		// is only created in order to instantiate the nested test class.
-		Object outerInstance = ReflectionUtils.getOuterInstance(nestedInstance, testClass).get();
+		Object outerInstance = ReflectionUtils.getOutermostInstance(nestedInstance, testClass).get();
 		assertEquals(instance.getClass(), outerInstance.getClass());
 		assertNotSame(instance, outerInstance);
 		assertSame(outerInstance, instanceMap.get(postProcessTestInstanceKey));
