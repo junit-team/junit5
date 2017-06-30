@@ -248,12 +248,12 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	private static class FooClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext testExecutionContext) {
+		public void beforeAll(ContainerExtensionContext context) {
 			callSequence.add("fooBeforeAllCallback");
 		}
 
 		@Override
-		public void afterAll(ContainerExtensionContext testExecutionContext) {
+		public void afterAll(ContainerExtensionContext context) {
 			callSequence.add("fooAfterAllCallback");
 		}
 	}
@@ -261,12 +261,12 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	private static class BarClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext testExecutionContext) {
+		public void beforeAll(ContainerExtensionContext context) {
 			callSequence.add("barBeforeAllCallback");
 		}
 
 		@Override
-		public void afterAll(ContainerExtensionContext testExecutionContext) {
+		public void afterAll(ContainerExtensionContext context) {
 			callSequence.add("barAfterAllCallback");
 		}
 	}
@@ -274,12 +274,12 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	private static class BazClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext testExecutionContext) {
+		public void beforeAll(ContainerExtensionContext context) {
 			callSequence.add("bazBeforeAllCallback");
 		}
 
 		@Override
-		public void afterAll(ContainerExtensionContext testExecutionContext) {
+		public void afterAll(ContainerExtensionContext context) {
 			callSequence.add("bazAfterAllCallback");
 		}
 	}
@@ -287,12 +287,12 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	private static class QuuxClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext testExecutionContext) {
+		public void beforeAll(ContainerExtensionContext context) {
 			callSequence.add("quuxBeforeAllCallback");
 		}
 
 		@Override
-		public void afterAll(ContainerExtensionContext testExecutionContext) {
+		public void afterAll(ContainerExtensionContext context) {
 			callSequence.add("quuxAfterAllCallback");
 		}
 	}

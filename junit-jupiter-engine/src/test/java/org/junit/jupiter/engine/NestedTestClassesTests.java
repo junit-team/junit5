@@ -115,7 +115,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static private class TestCaseWithDoubleNesting {
+	private static class TestCaseWithDoubleNesting {
 
 		static int beforeTopCount = 0;
 		static int beforeNestedCount = 0;

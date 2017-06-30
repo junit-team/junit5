@@ -114,7 +114,7 @@ class ExtensionContextTests {
 			() -> assertThat(testExtensionContext.getTestClass()).contains(OuterClass.class), //
 			() -> assertThat(testExtensionContext.getDisplayName()).isEqualTo(methodTestDescriptor.getDisplayName()), //
 			() -> assertThat(testExtensionContext.getParent()).contains(classExtensionContext), //
-			() -> assertThat(testExtensionContext.getTestInstance()).isExactlyInstanceOf(OuterClass.class) //
+			() -> assertThat(testExtensionContext.getTestInstance().get()).isExactlyInstanceOf(OuterClass.class) //
 		);
 	}
 
@@ -187,8 +187,9 @@ class ExtensionContextTests {
 	private ClassTestDescriptor outerClassDescriptor(TestDescriptor child) {
 		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(UniqueId.root("class", "OuterClass"),
 			OuterClass.class);
-		if (child != null)
+		if (child != null) {
 			classTestDescriptor.addChild(child);
+		}
 		return classTestDescriptor;
 	}
 

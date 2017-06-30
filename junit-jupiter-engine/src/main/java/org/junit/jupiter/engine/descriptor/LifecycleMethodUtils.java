@@ -37,15 +37,19 @@ final class LifecycleMethodUtils {
 	}
 	///CLOVER:ON
 
-	static List<Method> findBeforeAllMethods(Class<?> testClass) {
+	static List<Method> findBeforeAllMethods(Class<?> testClass, boolean requireStatic) {
 		List<Method> methods = findAnnotatedMethods(testClass, BeforeAll.class, HierarchyTraversalMode.TOP_DOWN);
-		methods.forEach(method -> assertStatic(BeforeAll.class, method));
+		if (requireStatic) {
+			methods.forEach(method -> assertStatic(BeforeAll.class, method));
+		}
 		return methods;
 	}
 
-	static List<Method> findAfterAllMethods(Class<?> testClass) {
+	static List<Method> findAfterAllMethods(Class<?> testClass, boolean requireStatic) {
 		List<Method> methods = findAnnotatedMethods(testClass, AfterAll.class, HierarchyTraversalMode.BOTTOM_UP);
-		methods.forEach(method -> assertStatic(AfterAll.class, method));
+		if (requireStatic) {
+			methods.forEach(method -> assertStatic(AfterAll.class, method));
+		}
 		return methods;
 	}
 
@@ -63,8 +67,9 @@ final class LifecycleMethodUtils {
 
 	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
 		if (!ReflectionUtils.isStatic(method)) {
-			throw new JUnitException(String.format("@%s method '%s' must be static.", annotationType.getSimpleName(),
-				method.toGenericString()));
+			throw new JUnitException(String.format(
+				"@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
+				annotationType.getSimpleName(), method.toGenericString()));
 		}
 	}
 

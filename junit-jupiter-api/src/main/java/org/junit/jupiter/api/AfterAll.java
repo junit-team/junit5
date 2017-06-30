@@ -30,9 +30,11 @@ import org.junit.platform.commons.meta.API;
  * <h3>Method Signatures</h3>
  *
  * <p>{@code @AfterAll} methods must not be {@code private} and must be
- * {@code static}. Consequently, {@code @AfterAll} methods are not supported
- * in {@link Nested @Nested} test classes or as <em>interface default methods</em>.
- * {@code @AfterAll} methods may optionally declare parameters to be resolved by
+ * {@code static} by default. Consequently, {@code @AfterAll} methods are not
+ * supported in {@link Nested @Nested} test classes or as <em>interface default
+ * methods</em> unless the test class is annotated with
+ * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}. {@code @AfterAll}
+ * methods may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *
  * <h3>Inheritance</h3>
@@ -52,6 +54,8 @@ import org.junit.platform.commons.meta.API;
  * @see BeforeEach
  * @see AfterEach
  * @see Test
+ * @see TestFactory
+ * @see TestInstance
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

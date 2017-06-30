@@ -465,23 +465,26 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void getOuterInstancePreconditions() {
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOuterInstance(null, null));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOuterInstance(null, Object.class));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOuterInstance(new Object(), null));
+	void getOutermostInstancePreconditions() {
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(null, null));
+		assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.getOutermostInstance(null, Object.class));
+		assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.getOutermostInstance(new Object(), null));
 	}
 
 	@Test
-	void getOuterInstance() {
+	void getOutermostInstance() {
 		FirstClass firstClass = new FirstClass();
 		FirstClass.SecondClass secondClass = firstClass.new SecondClass();
 		FirstClass.SecondClass.ThirdClass thirdClass = secondClass.new ThirdClass();
 
-		assertThat(ReflectionUtils.getOuterInstance(thirdClass, FirstClass.SecondClass.ThirdClass.class)).contains(
+		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.ThirdClass.class)).contains(
 			thirdClass);
-		assertThat(ReflectionUtils.getOuterInstance(thirdClass, FirstClass.SecondClass.class)).contains(secondClass);
-		assertThat(ReflectionUtils.getOuterInstance(thirdClass, FirstClass.class)).contains(firstClass);
-		assertThat(ReflectionUtils.getOuterInstance(thirdClass, String.class)).isEmpty();
+		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.class)).contains(
+			secondClass);
+		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.class)).contains(firstClass);
+		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, String.class)).isEmpty();
 	}
 
 	@Test

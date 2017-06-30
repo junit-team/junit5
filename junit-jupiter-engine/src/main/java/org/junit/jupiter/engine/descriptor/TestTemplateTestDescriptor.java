@@ -57,13 +57,17 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(getTestMethod(),
 			context.getExtensionRegistry());
-		ContainerExtensionContext testExtensionContext = new TestTemplateContainerExtensionContext(
-			context.getExtensionContext(), context.getExecutionListener(), this);
+
+		// The test instance should be properly maintained by the enclosing class's ExtensionContext.
+		Object testInstance = context.getExtensionContext().getTestInstance().orElse(null);
+
+		ContainerExtensionContext containerExtensionContext = new TestTemplateContainerExtensionContext(
+			context.getExtensionContext(), context.getExecutionListener(), this, testInstance);
 
 		// @formatter:off
 		return context.extend()
 				.withExtensionRegistry(registry)
-				.withExtensionContext(testExtensionContext)
+				.withExtensionContext(containerExtensionContext)
 				.build();
 		// @formatter:on
 	}

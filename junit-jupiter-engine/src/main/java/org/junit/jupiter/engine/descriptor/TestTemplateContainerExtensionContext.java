@@ -28,9 +28,13 @@ import org.junit.platform.engine.EngineExecutionListener;
 final class TestTemplateContainerExtensionContext extends AbstractExtensionContext<TestTemplateTestDescriptor>
 		implements ContainerExtensionContext {
 
+	private final Object testInstance;
+
 	TestTemplateContainerExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			TestTemplateTestDescriptor testDescriptor) {
+			TestTemplateTestDescriptor testDescriptor, Object testInstance) {
+
 		super(parent, engineExecutionListener, testDescriptor);
+		this.testInstance = testInstance;
 	}
 
 	@Override
@@ -41,6 +45,11 @@ final class TestTemplateContainerExtensionContext extends AbstractExtensionConte
 	@Override
 	public Optional<Class<?>> getTestClass() {
 		return Optional.of(getTestDescriptor().getTestClass());
+	}
+
+	@Override
+	public Optional<Object> getTestInstance() {
+		return Optional.ofNullable(this.testInstance);
 	}
 
 	@Override

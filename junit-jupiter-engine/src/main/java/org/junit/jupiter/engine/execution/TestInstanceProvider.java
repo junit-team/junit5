@@ -24,6 +24,6 @@ import org.junit.platform.commons.meta.API;
 @API(Internal)
 public interface TestInstanceProvider {
 
-	Object getTestInstance(Optional<ExtensionRegistry> childExtensionRegistry) throws Exception;
+	Object getTestInstance(Optional<ExtensionRegistry> childExtensionRegistry);
 
 }

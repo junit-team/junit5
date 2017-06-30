@@ -43,7 +43,13 @@ public final class JupiterEngineExtensionContext extends AbstractExtensionContex
 	}
 
 	@Override
+	public Optional<Object> getTestInstance() {
+		return Optional.empty();
+	}
+
+	@Override
 	public Optional<Method> getTestMethod() {
 		return Optional.empty();
 	}
+
 }

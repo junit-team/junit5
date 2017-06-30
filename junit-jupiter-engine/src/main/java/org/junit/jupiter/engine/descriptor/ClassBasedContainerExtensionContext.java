@@ -28,8 +28,11 @@ import org.junit.platform.engine.EngineExecutionListener;
 public final class ClassBasedContainerExtensionContext extends AbstractExtensionContext<ClassTestDescriptor>
 		implements ContainerExtensionContext {
 
+	private Object testInstance;
+
 	public ClassBasedContainerExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassTestDescriptor testDescriptor) {
+
 		super(parent, engineExecutionListener, testDescriptor);
 	}
 
@@ -41,6 +44,15 @@ public final class ClassBasedContainerExtensionContext extends AbstractExtension
 	@Override
 	public Optional<Class<?>> getTestClass() {
 		return Optional.of(getTestDescriptor().getTestClass());
+	}
+
+	void setTestInstance(Object testInstance) {
+		this.testInstance = testInstance;
+	}
+
+	@Override
+	public Optional<Object> getTestInstance() {
+		return Optional.ofNullable(this.testInstance);
 	}
 
 	@Override
