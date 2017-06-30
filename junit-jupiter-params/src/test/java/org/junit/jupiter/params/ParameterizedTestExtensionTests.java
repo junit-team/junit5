@@ -135,6 +135,11 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
+			public Optional<Throwable> getTestException() {
+				return Optional.empty();
+			}
+
+			@Override
 			public void publishReportEntry(Map<String, String> map) {
 			}
 
