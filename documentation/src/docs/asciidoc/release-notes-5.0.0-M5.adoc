@@ -125,17 +125,20 @@ is placed on the Java 9 module path.
   `ExtensionContext` API.
 * The `TestExtensionContext` and `ContainerExtensionContext` interfaces have been removed,
   and all `Extension` interfaces have been changed to use `ExtensionContext` instead.
+* `TestExecutionCondition` and `ContainerExecutionCondition` have been replaced by a
+  single, general purpose extension API for conditional test execution:
+  `ExecutionCondition`.
 
 [[release-notes-5.0.0-m5-migration-extension-api]]
 .Extension API Migration
 [cols="42,15,45"]
 |===
-| Extension API                           | Old Name     | New Name
+| Extension API                           | Old Name     | New Name/Location
 
 | `ParameterResolver`                     | `supports()` | `supportsParameter()`
 | `ParameterResolver`                     | `resolve()`  | `resolveParameter()`
-| `ContainerExecutionCondition`           | `evaluate()` | `evaluateContainerExecutionCondition()`
-| `TestExecutionCondition`                | `evaluate()` | `evaluateTestExecutionCondition()`
+| `ContainerExecutionCondition`           | `evaluate()` | `evaluateExecutionCondition()` in `ExecutionCondition`
+| `TestExecutionCondition`                | `evaluate()` | `evaluateExecutionCondition()` in `ExecutionCondition`
 | `TestTemplateInvocationContextProvider` | `supports()` | `supportsTestTemplate()`
 | `TestTemplateInvocationContextProvider` | `provide()`  | `provideTestTemplateInvocationContexts()`
 |===

@@ -29,8 +29,7 @@ import org.junit.platform.commons.meta.API;
  *
  * <h3>Supported Extension APIs</h3>
  * <ul>
- * <li>{@link ContainerExecutionCondition}</li>
- * <li>{@link TestExecutionCondition}</li>
+ * <li>{@link ExecutionCondition}</li>
  * <li>{@link BeforeAllCallback}</li>
  * <li>{@link AfterAllCallback}</li>
  * <li>{@link BeforeEachCallback}</li>

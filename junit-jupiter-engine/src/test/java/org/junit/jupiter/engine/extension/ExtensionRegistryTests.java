@@ -27,10 +27,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ContainerExecutionCondition;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.TestExecutionCondition;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.Constants;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -162,8 +161,7 @@ class ExtensionRegistryTests {
 		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
 
 		assertEquals(2, countExtensions(registry, ParameterResolver.class));
-		assertEquals(1, countExtensions(registry, ContainerExecutionCondition.class));
-		assertEquals(1, countExtensions(registry, TestExecutionCondition.class));
+		assertEquals(1, countExtensions(registry, ExecutionCondition.class));
 		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
 	}
 

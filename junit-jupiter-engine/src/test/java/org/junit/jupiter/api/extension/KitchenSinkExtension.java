@@ -44,8 +44,7 @@ public class KitchenSinkExtension implements
 	ParameterResolver,
 
 	// Conditional Test Execution
-	ContainerExecutionCondition,
-	TestExecutionCondition,
+	ExecutionCondition,
 
 	// @TestTemplate
 	TestTemplateInvocationContextProvider
@@ -106,12 +105,7 @@ public class KitchenSinkExtension implements
 	// --- Conditional Test Execution ------------------------------------------
 
 	@Override
-	public ConditionEvaluationResult evaluateContainerExecutionCondition(ExtensionContext context) {
-		return null;
-	}
-
-	@Override
-	public ConditionEvaluationResult evaluateTestExecutionCondition(ExtensionContext context) {
+	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
 		return null;
 	}
 

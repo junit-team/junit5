@@ -46,6 +46,11 @@ class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
+		return SkipResult.doNotSkip();
+	}
+
+	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		AtomicInteger index = new AtomicInteger(1);

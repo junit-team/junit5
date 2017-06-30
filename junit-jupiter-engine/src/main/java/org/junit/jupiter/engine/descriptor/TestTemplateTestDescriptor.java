@@ -73,11 +73,6 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
-		return shouldContainerBeSkipped(context);
-	}
-
-	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 

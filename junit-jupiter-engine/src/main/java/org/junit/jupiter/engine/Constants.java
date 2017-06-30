@@ -45,8 +45,7 @@ public final class Constants {
 	 * </ul>
 	 *
 	 * @see #DEACTIVATE_ALL_CONDITIONS_PATTERN
-	 * @see org.junit.jupiter.api.extension.ContainerExecutionCondition
-	 * @see org.junit.jupiter.api.extension.TestExecutionCondition
+	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 */
 	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.conditions.deactivate";
 
@@ -54,8 +53,7 @@ public final class Constants {
 	 * Wildcard pattern which signals that all conditions should be deactivated: {@value}
 	 *
 	 * @see #DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME
-	 * @see org.junit.jupiter.api.extension.ContainerExecutionCondition
-	 * @see org.junit.jupiter.api.extension.TestExecutionCondition
+	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 */
 	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = "*";
 

@@ -20,10 +20,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ContainerExecutionCondition;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestExecutionCondition;
 
 /**
  * Intentionally in a subpackage in order to properly test deactivation
@@ -33,7 +32,7 @@ import org.junit.jupiter.api.extension.TestExecutionCondition;
  *
  * @since 5.0
  */
-public class SystemPropertyCondition implements TestExecutionCondition, ContainerExecutionCondition {
+public class SystemPropertyCondition implements ExecutionCondition {
 
 	@Target({ ElementType.METHOD, ElementType.TYPE })
 	@Retention(RetentionPolicy.RUNTIME)
@@ -46,16 +45,7 @@ public class SystemPropertyCondition implements TestExecutionCondition, Containe
 	}
 
 	@Override
-	public ConditionEvaluationResult evaluateContainerExecutionCondition(ExtensionContext context) {
-		return evaluate(context);
-	}
-
-	@Override
-	public ConditionEvaluationResult evaluateTestExecutionCondition(ExtensionContext context) {
-		return evaluate(context);
-	}
-
-	private ConditionEvaluationResult evaluate(ExtensionContext context) {
+	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
 		Optional<SystemProperty> optional = findAnnotation(context.getElement(), SystemProperty.class);
 
 		if (optional.isPresent()) {

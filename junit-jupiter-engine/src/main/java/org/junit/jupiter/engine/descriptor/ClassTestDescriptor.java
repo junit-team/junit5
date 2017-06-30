@@ -145,11 +145,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
-		return shouldContainerBeSkipped(context);
-	}
-
-	@Override
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) throws Exception {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 

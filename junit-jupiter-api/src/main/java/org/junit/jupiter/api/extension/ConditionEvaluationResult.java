@@ -18,8 +18,7 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
- * The result of evaluating a {@link ContainerExecutionCondition} or
- * {@linkplain TestExecutionCondition}.
+ * The result of evaluating an {@linkplain ExecutionCondition}.
  *
  * @since 5.0
  */

@@ -47,7 +47,7 @@ import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ContainerExecutionCondition;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
@@ -97,30 +97,34 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		performAssertions(testClass, containers, tests, instances, nestedInstances, allMethods, eachMethods);
 
-		String containerExecutionConditionKey = containerExecutionConditionKey(testClass, null);
-		String testTemplateContainerExecutionConditionKey = containerExecutionConditionKey(testClass, "singletonTest");
+		String containerExecutionConditionKey = executionConditionKey(testClass, null);
 		String postProcessTestInstanceKey = postProcessTestInstanceKey(testClass);
 		String beforeAllCallbackKey = beforeAllCallbackKey(testClass);
 		String afterAllCallbackKey = afterAllCallbackKey(testClass);
 		String testTemplateKey = testTemplateKey(testClass, "singletonTest");
+		String testExecutionConditionKey1 = executionConditionKey(testClass, testsInvoked.get(0));
 		String beforeEachCallbackKey1 = beforeEachCallbackKey(testClass, testsInvoked.get(0));
 		String afterEachCallbackKey1 = afterEachCallbackKey(testClass, testsInvoked.get(0));
+		String testExecutionConditionKey2 = executionConditionKey(testClass, testsInvoked.get(1));
 		String beforeEachCallbackKey2 = beforeEachCallbackKey(testClass, testsInvoked.get(1));
 		String afterEachCallbackKey2 = afterEachCallbackKey(testClass, testsInvoked.get(1));
+		String testExecutionConditionKey3 = executionConditionKey(testClass, testsInvoked.get(2));
 		String beforeEachCallbackKey3 = beforeEachCallbackKey(testClass, testsInvoked.get(2));
 		String afterEachCallbackKey3 = afterEachCallbackKey(testClass, testsInvoked.get(2));
 
 		// @formatter:off
 		assertThat(instanceMap.keySet()).containsExactlyInAnyOrder(
 				containerExecutionConditionKey,
-				testTemplateContainerExecutionConditionKey,
 				beforeAllCallbackKey,
 				postProcessTestInstanceKey,
 				testTemplateKey,
+				testExecutionConditionKey1,
 				beforeEachCallbackKey1,
 				afterEachCallbackKey1,
+				testExecutionConditionKey2,
 				beforeEachCallbackKey2,
 				afterEachCallbackKey2,
+				testExecutionConditionKey3,
 				beforeEachCallbackKey3,
 				afterEachCallbackKey3,
 				afterAllCallbackKey
@@ -128,21 +132,23 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 
 		assertNull(instanceMap.get(containerExecutionConditionKey));
-		assertNull(instanceMap.get(testTemplateContainerExecutionConditionKey));
 		assertNull(instanceMap.get(beforeAllCallbackKey));
 		assertNull(instanceMap.get(afterAllCallbackKey));
 
 		Object instance = instanceMap.get(beforeEachCallbackKey1);
 		assertNotNull(instance);
 		assertSame(instance, instanceMap.get(afterEachCallbackKey1));
+		assertSame(instance, instanceMap.get(testExecutionConditionKey1));
 
 		instance = instanceMap.get(beforeEachCallbackKey2);
 		assertNotNull(instance);
 		assertSame(instance, instanceMap.get(afterEachCallbackKey2));
+		assertSame(instance, instanceMap.get(testExecutionConditionKey2));
 
 		instance = instanceMap.get(beforeEachCallbackKey3);
 		assertNotNull(instance);
 		assertSame(instance, instanceMap.get(afterEachCallbackKey3));
+		assertSame(instance, instanceMap.get(testExecutionConditionKey3));
 		assertSame(instance, instanceMap.get(postProcessTestInstanceKey));
 	}
 
@@ -166,16 +172,18 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		performAssertions(testClass, containers, tests, instances, nestedInstances, allMethods, eachMethods);
 
-		String containerExecutionConditionKey = containerExecutionConditionKey(testClass, null);
-		String testTemplateContainerExecutionConditionKey = containerExecutionConditionKey(testClass, "singletonTest");
+		String containerExecutionConditionKey = executionConditionKey(testClass, null);
 		String testTemplateKey = testTemplateKey(testClass, "singletonTest");
 		String postProcessTestInstanceKey = postProcessTestInstanceKey(testClass);
 		String beforeAllCallbackKey = beforeAllCallbackKey(testClass);
 		String afterAllCallbackKey = afterAllCallbackKey(testClass);
+		String testExecutionConditionKey1 = executionConditionKey(testClass, testsInvoked.get(0));
 		String beforeEachCallbackKey1 = beforeEachCallbackKey(testClass, testsInvoked.get(0));
 		String afterEachCallbackKey1 = afterEachCallbackKey(testClass, testsInvoked.get(0));
+		String testExecutionConditionKey2 = executionConditionKey(testClass, testsInvoked.get(1));
 		String beforeEachCallbackKey2 = beforeEachCallbackKey(testClass, testsInvoked.get(1));
 		String afterEachCallbackKey2 = afterEachCallbackKey(testClass, testsInvoked.get(1));
+		String testExecutionConditionKey3 = executionConditionKey(testClass, testsInvoked.get(2));
 		String beforeEachCallbackKey3 = beforeEachCallbackKey(testClass, testsInvoked.get(2));
 		String afterEachCallbackKey3 = afterEachCallbackKey(testClass, testsInvoked.get(2));
 
@@ -183,13 +191,15 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertThat(instanceMap.keySet()).containsExactlyInAnyOrder(
 				postProcessTestInstanceKey,
 				containerExecutionConditionKey,
-				testTemplateContainerExecutionConditionKey,
 				beforeAllCallbackKey,
 				testTemplateKey,
+				testExecutionConditionKey1,
 				beforeEachCallbackKey1,
 				afterEachCallbackKey1,
+				testExecutionConditionKey2,
 				beforeEachCallbackKey2,
 				afterEachCallbackKey2,
+				testExecutionConditionKey3,
 				beforeEachCallbackKey3,
 				afterEachCallbackKey3,
 				afterAllCallbackKey
@@ -199,15 +209,17 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		Object instance = instanceMap.get(beforeAllCallbackKey);
 		assertNotNull(instance);
 		assertSame(instance, instanceMap.get(afterAllCallbackKey));
+		assertSame(instance, instanceMap.get(testExecutionConditionKey1));
 		assertSame(instance, instanceMap.get(beforeEachCallbackKey1));
 		assertSame(instance, instanceMap.get(afterEachCallbackKey1));
+		assertSame(instance, instanceMap.get(testExecutionConditionKey2));
 		assertSame(instance, instanceMap.get(beforeEachCallbackKey2));
 		assertSame(instance, instanceMap.get(afterEachCallbackKey2));
+		assertSame(instance, instanceMap.get(testExecutionConditionKey3));
 		assertSame(instance, instanceMap.get(beforeEachCallbackKey3));
 		assertSame(instance, instanceMap.get(afterEachCallbackKey3));
 		assertSame(instance, instanceMap.get(postProcessTestInstanceKey));
 		assertSame(instance, instanceMap.get(containerExecutionConditionKey));
-		assertSame(instance, instanceMap.get(testTemplateContainerExecutionConditionKey));
 	}
 
 	@Test
@@ -223,44 +235,49 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		performAssertions(testClass, containers, tests, instances, nestedInstances, allMethods, eachMethods);
 
-		String containerExecutionConditionKey = containerExecutionConditionKey(testClass, null);
-		String nestedContainerExecutionConditionKey = containerExecutionConditionKey(nestedTestClass, null);
-		String nestedTestTemplateContainerExecutionConditionKey = containerExecutionConditionKey(nestedTestClass,
-			"singletonTest");
+		String containerExecutionConditionKey = executionConditionKey(testClass, null);
+		String nestedContainerExecutionConditionKey = executionConditionKey(nestedTestClass, null);
 		String nestedTestTemplateKey = testTemplateKey(nestedTestClass, "singletonTest");
 		String postProcessTestInstanceKey = postProcessTestInstanceKey(testClass);
 		String nestedPostProcessTestInstanceKey = postProcessTestInstanceKey(nestedTestClass);
 		String beforeAllCallbackKey = beforeAllCallbackKey(testClass);
 		String afterAllCallbackKey = afterAllCallbackKey(testClass);
+		String outerTestExecutionConditionKey = executionConditionKey(testClass, "outerTest");
 		String beforeEachCallbackKey = beforeEachCallbackKey(testClass, "outerTest");
 		String afterEachCallbackKey = afterEachCallbackKey(testClass, "outerTest");
 		String nestedBeforeAllCallbackKey = beforeAllCallbackKey(nestedTestClass);
 		String nestedAfterAllCallbackKey = afterAllCallbackKey(nestedTestClass);
+		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.get(0));
 		String nestedBeforeEachCallbackKey1 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedAfterEachCallbackKey1 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(0));
+		String nestedExecutionConditionKey2 = executionConditionKey(nestedTestClass, testsInvoked.get(1));
 		String nestedBeforeEachCallbackKey2 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(1));
 		String nestedAfterEachCallbackKey2 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(1));
+		String nestedExecutionConditionKey3 = executionConditionKey(nestedTestClass, testsInvoked.get(2));
 		String nestedBeforeEachCallbackKey3 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(2));
 		String nestedAfterEachCallbackKey3 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(2));
 
 		// @formatter:off
 		assertThat(instanceMap.keySet()).containsExactlyInAnyOrder(
 				containerExecutionConditionKey,
-				nestedTestTemplateContainerExecutionConditionKey,
 				nestedTestTemplateKey,
 				nestedContainerExecutionConditionKey,
 				postProcessTestInstanceKey,
 				nestedPostProcessTestInstanceKey,
 				beforeAllCallbackKey,
 				afterAllCallbackKey,
+				outerTestExecutionConditionKey,
 				beforeEachCallbackKey,
 				afterEachCallbackKey,
 				nestedBeforeAllCallbackKey,
 				nestedAfterAllCallbackKey,
+				nestedExecutionConditionKey1,
 				nestedBeforeEachCallbackKey1,
 				nestedAfterEachCallbackKey1,
+				nestedExecutionConditionKey2,
 				nestedBeforeEachCallbackKey2,
 				nestedAfterEachCallbackKey2,
+				nestedExecutionConditionKey3,
 				nestedBeforeEachCallbackKey3,
 				nestedAfterEachCallbackKey3
 		);
@@ -276,23 +293,27 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		Object instance = instanceMap.get(beforeEachCallbackKey);
 		assertNotNull(instance);
 		assertSame(instance, instanceMap.get(afterEachCallbackKey));
+		assertSame(instance, instanceMap.get(outerTestExecutionConditionKey));
 
 		Object nestedInstance1 = instanceMap.get(nestedBeforeEachCallbackKey1);
 		assertNotNull(nestedInstance1);
 		assertNotSame(instance, nestedInstance1);
 		assertSame(nestedInstance1, instanceMap.get(nestedAfterEachCallbackKey1));
+		assertSame(nestedInstance1, instanceMap.get(nestedExecutionConditionKey1));
 
 		Object nestedInstance2 = instanceMap.get(nestedBeforeEachCallbackKey2);
 		assertNotNull(nestedInstance2);
 		assertNotSame(instance, nestedInstance2);
 		assertNotSame(nestedInstance1, nestedInstance2);
 		assertSame(nestedInstance2, instanceMap.get(nestedAfterEachCallbackKey2));
+		assertSame(nestedInstance2, instanceMap.get(nestedExecutionConditionKey2));
 
 		Object nestedInstance3 = instanceMap.get(nestedPostProcessTestInstanceKey);
 		assertNotNull(nestedInstance3);
 		assertNotSame(instance, nestedInstance3);
 		assertNotSame(nestedInstance1, nestedInstance3);
 		assertSame(nestedInstance3, instanceMap.get(nestedAfterEachCallbackKey3));
+		assertSame(nestedInstance3, instanceMap.get(nestedExecutionConditionKey3));
 
 		Object outerInstance1 = ReflectionUtils.getOutermostInstance(nestedInstance1, testClass).get();
 		Object outerInstance2 = ReflectionUtils.getOutermostInstance(nestedInstance2, testClass).get();
@@ -319,44 +340,49 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		performAssertions(testClass, containers, tests, instances, nestedInstances, allMethods, eachMethods);
 
-		String containerExecutionConditionKey = containerExecutionConditionKey(testClass, null);
-		String nestedContainerExecutionConditionKey = containerExecutionConditionKey(nestedTestClass, null);
-		String nestedTestTemplateContainerExecutionConditionKey = containerExecutionConditionKey(nestedTestClass,
-			"singletonTest");
+		String containerExecutionConditionKey = executionConditionKey(testClass, null);
+		String nestedContainerExecutionConditionKey = executionConditionKey(nestedTestClass, null);
 		String nestedTestTemplateKey = testTemplateKey(nestedTestClass, "singletonTest");
 		String postProcessTestInstanceKey = postProcessTestInstanceKey(testClass);
 		String nestedPostProcessTestInstanceKey = postProcessTestInstanceKey(nestedTestClass);
 		String beforeAllCallbackKey = beforeAllCallbackKey(testClass);
 		String afterAllCallbackKey = afterAllCallbackKey(testClass);
+		String outerTestExecutionConditionKey = executionConditionKey(testClass, "outerTest");
 		String beforeEachCallbackKey = beforeEachCallbackKey(testClass, "outerTest");
 		String afterEachCallbackKey = afterEachCallbackKey(testClass, "outerTest");
 		String nestedBeforeAllCallbackKey = beforeAllCallbackKey(nestedTestClass);
 		String nestedAfterAllCallbackKey = afterAllCallbackKey(nestedTestClass);
+		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.get(0));
 		String nestedBeforeEachCallbackKey1 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedAfterEachCallbackKey1 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(0));
+		String nestedExecutionConditionKey2 = executionConditionKey(nestedTestClass, testsInvoked.get(1));
 		String nestedBeforeEachCallbackKey2 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(1));
 		String nestedAfterEachCallbackKey2 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(1));
+		String nestedExecutionConditionKey3 = executionConditionKey(nestedTestClass, testsInvoked.get(2));
 		String nestedBeforeEachCallbackKey3 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(2));
 		String nestedAfterEachCallbackKey3 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(2));
 
 		// @formatter:off
 		assertThat(instanceMap.keySet()).containsExactlyInAnyOrder(
 				containerExecutionConditionKey,
-				nestedTestTemplateContainerExecutionConditionKey,
 				nestedTestTemplateKey,
 				nestedContainerExecutionConditionKey,
 				postProcessTestInstanceKey,
 				nestedPostProcessTestInstanceKey,
 				beforeAllCallbackKey,
 				afterAllCallbackKey,
+				outerTestExecutionConditionKey,
 				beforeEachCallbackKey,
 				afterEachCallbackKey,
 				nestedBeforeAllCallbackKey,
 				nestedAfterAllCallbackKey,
+				nestedExecutionConditionKey1,
 				nestedBeforeEachCallbackKey1,
 				nestedAfterEachCallbackKey1,
+				nestedExecutionConditionKey2,
 				nestedBeforeEachCallbackKey2,
 				nestedAfterEachCallbackKey2,
+				nestedExecutionConditionKey3,
 				nestedBeforeEachCallbackKey3,
 				nestedAfterEachCallbackKey3
 		);
@@ -367,6 +393,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(instance, instanceMap.get(containerExecutionConditionKey));
 		assertSame(instance, instanceMap.get(beforeAllCallbackKey));
 		assertSame(instance, instanceMap.get(afterAllCallbackKey));
+		assertSame(instance, instanceMap.get(outerTestExecutionConditionKey));
 		assertSame(instance, instanceMap.get(beforeEachCallbackKey));
 		assertSame(instance, instanceMap.get(afterEachCallbackKey));
 
@@ -376,10 +403,13 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(nestedInstance, instanceMap.get(nestedContainerExecutionConditionKey));
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeAllCallbackKey));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterAllCallbackKey));
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey1));
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey1));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey1));
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey2));
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey2));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey2));
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey3));
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey3));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey3));
 
@@ -400,44 +430,49 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		performAssertions(testClass, containers, tests, instances, nestedInstances, allMethods, eachMethods);
 
-		String containerExecutionConditionKey = containerExecutionConditionKey(testClass, null);
-		String nestedContainerExecutionConditionKey = containerExecutionConditionKey(nestedTestClass, null);
-		String nestedTestTemplateContainerExecutionConditionKey = containerExecutionConditionKey(nestedTestClass,
-			"singletonTest");
+		String containerExecutionConditionKey = executionConditionKey(testClass, null);
+		String nestedContainerExecutionConditionKey = executionConditionKey(nestedTestClass, null);
 		String nestedTestTemplateKey = testTemplateKey(nestedTestClass, "singletonTest");
 		String postProcessTestInstanceKey = postProcessTestInstanceKey(testClass);
 		String nestedPostProcessTestInstanceKey = postProcessTestInstanceKey(nestedTestClass);
 		String beforeAllCallbackKey = beforeAllCallbackKey(testClass);
 		String afterAllCallbackKey = afterAllCallbackKey(testClass);
+		String outerTestExecutionConditionKey = executionConditionKey(testClass, "outerTest");
 		String beforeEachCallbackKey = beforeEachCallbackKey(testClass, "outerTest");
 		String afterEachCallbackKey = afterEachCallbackKey(testClass, "outerTest");
 		String nestedBeforeAllCallbackKey = beforeAllCallbackKey(nestedTestClass);
 		String nestedAfterAllCallbackKey = afterAllCallbackKey(nestedTestClass);
+		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.get(0));
 		String nestedBeforeEachCallbackKey1 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedAfterEachCallbackKey1 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(0));
+		String nestedExecutionConditionKey2 = executionConditionKey(nestedTestClass, testsInvoked.get(1));
 		String nestedBeforeEachCallbackKey2 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(1));
 		String nestedAfterEachCallbackKey2 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(1));
+		String nestedExecutionConditionKey3 = executionConditionKey(nestedTestClass, testsInvoked.get(2));
 		String nestedBeforeEachCallbackKey3 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(2));
 		String nestedAfterEachCallbackKey3 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(2));
 
 		// @formatter:off
 		assertThat(instanceMap.keySet()).containsExactlyInAnyOrder(
 				containerExecutionConditionKey,
-				nestedTestTemplateContainerExecutionConditionKey,
 				nestedTestTemplateKey,
 				nestedContainerExecutionConditionKey,
 				postProcessTestInstanceKey,
 				nestedPostProcessTestInstanceKey,
 				beforeAllCallbackKey,
 				afterAllCallbackKey,
+				outerTestExecutionConditionKey,
 				beforeEachCallbackKey,
 				afterEachCallbackKey,
 				nestedBeforeAllCallbackKey,
 				nestedAfterAllCallbackKey,
+				nestedExecutionConditionKey1,
 				nestedBeforeEachCallbackKey1,
 				nestedAfterEachCallbackKey1,
+				nestedExecutionConditionKey2,
 				nestedBeforeEachCallbackKey2,
 				nestedAfterEachCallbackKey2,
+				nestedExecutionConditionKey3,
 				nestedBeforeEachCallbackKey3,
 				nestedAfterEachCallbackKey3
 		);
@@ -449,6 +484,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		Object instance = instanceMap.get(beforeEachCallbackKey);
 		assertSame(instance, instanceMap.get(afterEachCallbackKey));
+		assertSame(instance, instanceMap.get(outerTestExecutionConditionKey));
 
 		Object nestedInstance = instanceMap.get(nestedPostProcessTestInstanceKey);
 		assertNotNull(nestedInstance);
@@ -456,10 +492,13 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(nestedInstance, instanceMap.get(nestedContainerExecutionConditionKey));
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeAllCallbackKey));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterAllCallbackKey));
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey1));
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey1));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey1));
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey2));
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey2));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey2));
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey3));
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey3));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey3));
 
@@ -492,8 +531,8 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 	}
 
-	private static String containerExecutionConditionKey(Class<?> testClass, String testMethod) {
-		return concat(ContainerExecutionCondition.class, testClass, testMethod);
+	private static String executionConditionKey(Class<?> testClass, String testMethod) {
+		return concat(ExecutionCondition.class, testClass, testMethod);
 	}
 
 	private static String postProcessTestInstanceKey(Class<?> testClass) {
@@ -826,12 +865,12 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	// and TestExecutionExceptionHandler, since they are analogous to BeforeEachCallback and
 	// AfterEachCallback with regard to instance scope.
 	private static class InstanceTrackingExtension
-			implements ContainerExecutionCondition, TestInstancePostProcessor, BeforeAllCallback, AfterAllCallback,
+			implements ExecutionCondition, TestInstancePostProcessor, BeforeAllCallback, AfterAllCallback,
 			BeforeEachCallback, AfterEachCallback, TestTemplateInvocationContextProvider {
 
 		@Override
-		public ConditionEvaluationResult evaluateContainerExecutionCondition(ExtensionContext context) {
-			instanceMap.put(containerExecutionConditionKey(context.getTestClass().get(),
+		public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+			instanceMap.put(executionConditionKey(context.getTestClass().get(),
 				context.getTestMethod().map(Method::getName).orElse(null)), context.getTestInstance().orElse(null));
 
 			return ConditionEvaluationResult.enabled("enigma");

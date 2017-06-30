@@ -111,17 +111,17 @@ register a duplicate extension implementation will be ignored.
 [[extensions-conditions]]
 === Conditional Test Execution
 
-`{ContainerExecutionCondition}` and `{TestExecutionCondition}` define the `Extension`
-APIs for programmatic, _conditional test execution_.
+`{ExecutionCondition}` defines the `Extension` API for programmatic, _conditional test
+execution_.
 
-A `ContainerExecutionCondition` is _evaluated_ to determine if all tests in a given
-container (e.g., a test class) should be executed based on the supplied
-`ExtensionContext`. Similarly, a `TestExecutionCondition` is _evaluated_ to
+An `ExecutionCondition` is _evaluated_ for each container (e.g., a test class) to
+determine if all the tests it contains should be executed based on the supplied
+`ExtensionContext`. Similarly, an `ExecutionCondition` is _evaluated_ for each test to
 determine if a given test method should be executed based on the supplied
 `ExtensionContext`.
 
-When multiple `ContainerExecutionCondition` or `TestExecutionCondition` extensions are registered,
-a container or test, respectively, is disabled as soon as one of the conditions returns _disabled_.
+When multiple `ExecutionCondition` extensions are registered,
+a container or test is disabled as soon as one of the conditions returns _disabled_.
 Thus, there is no guarantee that a condition is evaluated because another extension might
 have already caused a container or test to be disabled. In other words, the evaluation works like
 the short-circuiting boolean OR operator.

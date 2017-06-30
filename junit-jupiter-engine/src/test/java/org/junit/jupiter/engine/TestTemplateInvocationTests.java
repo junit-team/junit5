@@ -55,14 +55,13 @@ import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ContainerExecutionCondition;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.TestExecutionCondition;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -175,7 +174,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithDisabledInvocations"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#1")), //
-				event(test("test-template-invocation:#1"), skippedWithReason("tests are always disabled")), //
+				event(test("test-template-invocation:#1"), skippedWithReason("always disabled")), //
 				event(container("templateWithDisabledInvocations"), finishedSuccessfully())));
 	}
 
@@ -188,7 +187,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
-				event(container("disabledTemplate"), skippedWithReason("containers are always disabled"))));
+				event(container("disabledTemplate"), skippedWithReason("always disabled"))));
 	}
 
 	@Test
@@ -386,13 +385,13 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			fail("invocation is expected to fail");
 		}
 
-		@ExtendWith({ SingleInvocationContextProvider.class, AlwaysDisabledTestExecutionCondition.class })
+		@ExtendWith({ SingleInvocationContextProviderWithDisabledInvocations.class })
 		@TestTemplate
 		void templateWithDisabledInvocations() {
 			fail("this is never called");
 		}
 
-		@ExtendWith(AlwaysDisabledContainerExecutionCondition.class)
+		@ExtendWith(AlwaysDisabledExecutionCondition.class)
 		@TestTemplate
 		void disabledTemplate() {
 			fail("this is never called");
@@ -507,6 +506,19 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	private static class SingleInvocationContextProviderWithDisabledInvocations
+			extends SingleInvocationContextProvider {
+		@Override
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
+			return Stream.of(new TestTemplateInvocationContext() {
+				@Override
+				public List<Extension> getAdditionalExtensions() {
+					return singletonList(new AlwaysDisabledExecutionCondition());
+				}
+			});
+		}
+	}
+
 	private static class AnotherInvocationContextProviderWithASingleInvocation
 			implements TestTemplateInvocationContextProvider {
 
@@ -534,19 +546,11 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class AlwaysDisabledTestExecutionCondition implements TestExecutionCondition {
+	private static class AlwaysDisabledExecutionCondition implements ExecutionCondition {
 
 		@Override
-		public ConditionEvaluationResult evaluateTestExecutionCondition(ExtensionContext context) {
-			return ConditionEvaluationResult.disabled("tests are always disabled");
-		}
-	}
-
-	private static class AlwaysDisabledContainerExecutionCondition implements ContainerExecutionCondition {
-
-		@Override
-		public ConditionEvaluationResult evaluateContainerExecutionCondition(ExtensionContext context) {
-			return ConditionEvaluationResult.disabled("containers are always disabled");
+		public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+			return ConditionEvaluationResult.disabled("always disabled");
 		}
 	}
 

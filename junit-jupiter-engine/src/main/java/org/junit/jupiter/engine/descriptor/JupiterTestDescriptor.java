@@ -92,14 +92,9 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	// --- Node ----------------------------------------------------------------
 
-	protected SkipResult shouldContainerBeSkipped(JupiterEngineExecutionContext context) {
-		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForContainer(
-			context.getExtensionRegistry(), context.getConfigurationParameters(), context.getExtensionContext());
-		return toSkipResult(evaluationResult);
-	}
-
-	protected SkipResult shouldTestBeSkipped(JupiterEngineExecutionContext context) {
-		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForTest(context.getExtensionRegistry(),
+	@Override
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
+		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluate(context.getExtensionRegistry(),
 			context.getConfigurationParameters(), context.getExtensionContext());
 		return toSkipResult(evaluationResult);
 	}

@@ -10,13 +10,12 @@
 
 package org.junit.jupiter.engine.execution;
 
-import org.junit.jupiter.api.extension.ContainerExecutionCondition;
-import org.junit.jupiter.api.extension.TestExecutionCondition;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.platform.commons.JUnitException;
 
 /**
- * Thrown if an error is encountered while evaluating a {@link ContainerExecutionCondition}
- * or {@link TestExecutionCondition}.
+ * Thrown if an error is encountered while evaluating an
+ * {@link ExecutionCondition}.
  *
  * @since 5.0
  * @see ConditionEvaluator

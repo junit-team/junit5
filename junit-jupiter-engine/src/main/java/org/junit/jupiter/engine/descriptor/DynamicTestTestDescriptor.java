@@ -37,6 +37,11 @@ class DynamicTestTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
+		return SkipResult.doNotSkip();
+	}
+
+	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		executeAndMaskThrowable(dynamicTest.getExecutable());
