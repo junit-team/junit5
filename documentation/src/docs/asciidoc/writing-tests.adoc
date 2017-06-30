@@ -303,14 +303,14 @@ Running the `TestInterfaceDemo` results in output similar to the following:
 
 ....
 :junitPlatformTest
-18:28:13.967 [main] INFO  example.testinterface.TestLifecycleLogger - beforeAllTests
-18:28:13.982 [main] INFO  example.testinterface.TestLifecycleLogger - About to execute [dynamicTestsFromCollection()]
-18:28:14.000 [main] INFO  example.testinterface.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
-18:28:14.004 [main] INFO  example.testinterface.TestLifecycleLogger - Finished executing [dynamicTestsFromCollection()]
-18:28:14.007 [main] INFO  example.testinterface.TestLifecycleLogger - About to execute [isEqualValue()]
-18:28:14.008 [main] INFO  example.testinterface.TimingExtension - Method [isEqualValue] took 1 ms.
-18:28:14.009 [main] INFO  example.testinterface.TestLifecycleLogger - Finished executing [isEqualValue()]
-18:28:14.011 [main] INFO  example.testinterface.TestLifecycleLogger - afterAllTests
+INFO  example.TestLifecycleLogger - Before all tests
+INFO  example.TestLifecycleLogger - About to execute [dynamicTestsFromCollection()]
+INFO  example.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
+INFO  example.TestLifecycleLogger - Finished executing [dynamicTestsFromCollection()]
+INFO  example.TestLifecycleLogger - About to execute [isEqualValue()]
+INFO  example.TimingExtension - Method [isEqualValue] took 1 ms.
+INFO  example.TestLifecycleLogger - Finished executing [isEqualValue()]
+INFO  example.TestLifecycleLogger - After all tests
 
 Test run finished after 190 ms
 [         3 containers found      ]

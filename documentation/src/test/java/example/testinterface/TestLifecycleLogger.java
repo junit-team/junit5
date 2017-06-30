@@ -19,18 +19,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
 // tag::user_guide[]
-public interface TestLifecycleLogger {
+interface TestLifecycleLogger {
 
 	static final Logger LOG = Logger.getLogger(TestLifecycleLogger.class.getName());
 
 	@BeforeAll
 	static void beforeAllTests() {
-		LOG.info("beforeAllTests");
+		LOG.info("Before all tests");
 	}
 
 	@AfterAll
 	static void afterAllTests() {
-		LOG.info("afterAllTests");
+		LOG.info("After all tests");
 	}
 
 	@BeforeEach
