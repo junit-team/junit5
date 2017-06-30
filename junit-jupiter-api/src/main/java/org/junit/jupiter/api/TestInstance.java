@@ -23,8 +23,25 @@ import java.lang.annotation.Target;
  * test class.
  *
  * <p>If {@code @TestInstance} is not declared on a test class, the lifecycle
- * mode will default to {@link Lifecycle#PER_METHOD PER_METHOD}. Note, however,
- * that the lifecycle mode is <em>inherited</em> within test class hierarchies.
+ * mode will implicitly default to {@link Lifecycle#PER_METHOD PER_METHOD}.
+ * Note, however, that an explicit lifecycle mode is <em>inherited</em> within
+ * a test class hierarchy.
+ *
+ * <h3>Use Cases</h3>
+ * <p>Setting the test instance lifecycle mode to {@link Lifecycle.PER_CLASS
+ * PER_CLASS} enables the following features.
+ * <ul>
+ * <li>Shared test instance state between test methods in a given test class
+ * as well as between non-static {@link BeforeAll @BeforeAll} and
+ * {@link AfterAll @AfterAll} methods in the test class.</li>
+ * <li>Declaration of {@link BeforeAll @BeforeAll} and {@link AfterAll @AfterAll}
+ * methods in {@link Nested @Nested} test classes.</li>
+ * <li>Declaration of {@link BeforeAll @BeforeAll} and {@link AfterAll @AfterAll}
+ * on interface {@code default} methods.</li>
+ * <li>Simplified declaration of {@link BeforeAll @BeforeAll} and
+ * {@link AfterAll @AfterAll} methods in test classes implemented with the Kotlin
+ * programming language.</li>
+ * </ul>
  *
  * @author Sam Brannen
  * @since 5.0
