@@ -550,12 +550,13 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-assumptions">3.5. Assumptions</a></li>
 <li><a href="#writing-tests-disabling">3.6. Disabling Tests</a></li>
 <li><a href="#writing-tests-tagging-and-filtering">3.7. Tagging and Filtering</a></li>
-<li><a href="#writing-tests-nested">3.8. Nested Tests</a></li>
-<li><a href="#writing-tests-dependency-injection">3.9. Dependency Injection for Constructors and Methods</a></li>
-<li><a href="#writing-tests-test-interfaces-and-default-methods">3.10. Test Interfaces and Default Methods</a></li>
-<li><a href="#writing-tests-repeated-tests">3.11. Repeated Tests</a></li>
-<li><a href="#writing-tests-parameterized-tests">3.12. Parameterized Tests</a></li>
-<li><a href="#writing-tests-dynamic-tests">3.13. Dynamic Tests</a></li>
+<li><a href="#writing-tests-test-instance-lifecycle">3.8. Test Instance Lifecycle</a></li>
+<li><a href="#writing-tests-nested">3.9. Nested Tests</a></li>
+<li><a href="#writing-tests-dependency-injection">3.10. Dependency Injection for Constructors and Methods</a></li>
+<li><a href="#writing-tests-test-interfaces-and-default-methods">3.11. Test Interfaces and Default Methods</a></li>
+<li><a href="#writing-tests-repeated-tests">3.12. Repeated Tests</a></li>
+<li><a href="#writing-tests-parameterized-tests">3.13. Parameterized Tests</a></li>
+<li><a href="#writing-tests-dynamic-tests">3.14. Dynamic Tests</a></li>
 </ul>
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
@@ -889,28 +890,32 @@ module.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test factory for <a href="#writing-tests-dynamic-tests">dynamic tests</a></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestInstance</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to configure the <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> for the annotated test class</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@DisplayName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Declares a custom display name for the test class or test method</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeEach</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>each</strong> <code>@Test</code> method in the current class; analogous to JUnit 4&#8217;s <code>@Before</code>. Such methods are <em>inherited</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>each</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, or <code>@TestFactory</code> method in the current class; analogous to JUnit 4&#8217;s <code>@Before</code>. Such methods are <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterEach</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>each</strong> <code>@Test</code> method in the current class; analogous to JUnit 4&#8217;s <code>@After</code>. Such methods are <em>inherited</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>each</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, or <code>@TestFactory</code> method in the current class; analogous to JUnit 4&#8217;s <code>@After</code>. Such methods are <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods must be <code>static</code> and are <em>inherited</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods are <em>inherited</em> and must be <code>static</code> unless the test class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods must be <code>static</code> and are <em>inherited</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods are <em>inherited</em> and must be <code>static</code> unless the test class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Nested</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested, non-static test class. Due to restrictions of the Java language, <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used in a <code>@Nested</code> test class.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested, non-static test class. <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used in a <code>@Nested</code> test class unless it is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Tag</code></p></td>
@@ -1342,7 +1347,49 @@ are static methods in the <code><a href="../api/org/junit/jupiter/api/Assumption
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-nested"><a class="anchor" href="#writing-tests-nested"></a>3.8. Nested Tests</h3>
+<h3 id="writing-tests-test-instance-lifecycle"><a class="anchor" href="#writing-tests-test-instance-lifecycle"></a>3.8. Test Instance Lifecycle</h3>
+<div class="paragraph">
+<p>In order to allow individual test methods to be executed in isolation and to avoid
+unexpected side effects due to mutable test instance state, JUnit creates a new instance
+of each test class before executing each <em>test</em> method (see note below for what qualifies
+as a <em>test</em> method). This "per-method" test instance lifecycle is the default behavior in
+JUnit Jupiter and is analogous to all previous versions of JUnit.</p>
+</div>
+<div class="paragraph">
+<p>If you would prefer that JUnit Jupiter execute all test methods on the same test
+instance, simply annotate your test class with <code>@TestInstance(Lifecycle.PER_CLASS)</code>. When
+using this mode, a new test instance will be created once per test class. Thus, if your
+test methods rely on state stored in instance variables, you may need to reset that state
+in <code>@BeforeEach</code> or <code>@AfterEach</code> methods.</p>
+</div>
+<div class="paragraph">
+<p>The "per-class" mode has some additional benefits over the default "per-method" mode.
+Specifically, with the "per-class" mode it becomes possible to declare <code>@BeforeAll</code> and
+<code>@AfterAll</code> on non-static methods as well as on interface <code>default</code> methods. The
+"per-class" mode therefore also makes it possible to use <code>@BeforeAll</code> and <code>@AfterAll</code>
+methods in <code>@Nested</code> test classes.</p>
+</div>
+<div class="paragraph">
+<p>If you are authoring tests using the Kotlin programming language, you may also find it
+easier to implement <code>@BeforeAll</code> and <code>@AfterAll</code> methods by switching to the "per-class"
+test instance lifecycle mode.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In the context of test instance lifecycle a <em>test</em> method is any method annotated
+with <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>, or <code>@TestTemplate</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="writing-tests-nested"><a class="anchor" href="#writing-tests-nested"></a>3.9. Nested Tests</h3>
 <div class="paragraph">
 <p>Nested tests give the test writer more capabilities to express the relationship among
 several group of tests. Here&#8217;s an elaborate example.</p>
@@ -1443,17 +1490,20 @@ several group of tests. Here&#8217;s an elaborate example.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<em>Only non-static nested classes</em> (i.e. <em>inner classes</em>) can serve as
-<code>@Nested</code> tests. Nesting can be arbitrarily deep, and those inner classes are considered
-to be full members of the test class family with one exception: <code>@BeforeAll</code> and
-<code>@AfterAll</code> do not work, because Java does not allow <code>static</code> members in inner classes.
+<em>Only non-static nested classes</em> (i.e. <em>inner classes</em>) can serve as <code>@Nested</code> test
+classes. Nesting can be arbitrarily deep, and those inner classes are considered to be
+full members of the test class family with one exception: <code>@BeforeAll</code> and <code>@AfterAll</code>
+methods do not work <em>by default</em>. The reason is that Java does not allow <code>static</code> members
+in inner classes. However, this restriction can be circumvented by annotating a <code>@Nested</code>
+test class with <code>@TestInstance(Lifecycle.PER_CLASS)</code> (see
+<a href="#writing-tests-test-instance-lifecycle">Test Instance Lifecycle</a>).
 </td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dependency-injection"><a class="anchor" href="#writing-tests-dependency-injection"></a>3.9. Dependency Injection for Constructors and Methods</h3>
+<h3 id="writing-tests-dependency-injection"><a class="anchor" href="#writing-tests-dependency-injection"></a>3.10. Dependency Injection for Constructors and Methods</h3>
 <div class="paragraph">
 <p>In all prior JUnit versions, test constructors or methods were not allowed to have
 parameters (at least not with the standard <code>Runner</code> implementations). As one of the major
@@ -1627,27 +1677,29 @@ methods.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-interfaces-and-default-methods"><a class="anchor" href="#writing-tests-test-interfaces-and-default-methods"></a>3.10. Test Interfaces and Default Methods</h3>
+<h3 id="writing-tests-test-interfaces-and-default-methods"><a class="anchor" href="#writing-tests-test-interfaces-and-default-methods"></a>3.11. Test Interfaces and Default Methods</h3>
 <div class="paragraph">
-<p>JUnit Jupiter allows <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be
-declared on interface default methods. In addition, <code>@BeforeAll</code> and <code>@AfterAll</code> can be
-declared on static methods in a test interface, while <code>@ExtendWith</code> and <code>@Tag</code> can be
-declared on test interfaces to configure extensions and tags. Here are some examples.</p>
+<p>JUnit Jupiter allows <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>,
+<code>@TestTemplate</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be declared on interface <code>default</code>
+methods. <code>@BeforeAll</code> and <code>@AfterAll</code> can either be declared on <code>static</code> methods in a
+test interface or on interface <code>default</code> methods <em>if</em> the concrete test class is
+annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code> (see
+<a href="#writing-tests-test-instance-lifecycle">Test Instance Lifecycle</a>). Here are some examples.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">interface</span> <span class="class">TestLifecycleLogger</span> {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">interface</span> <span class="class">TestLifecycleLogger</span> {
 
     <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">Logger</span> LOG = <span class="predefined-type">Logger</span>.getLogger(TestLifecycleLogger.class.getName());
 
     <span class="annotation">@BeforeAll</span>
     <span class="directive">static</span> <span class="type">void</span> beforeAllTests() {
-        LOG.info(<span class="string"><span class="delimiter">&quot;</span><span class="content">beforeAllTests</span><span class="delimiter">&quot;</span></span>);
+        LOG.info(<span class="string"><span class="delimiter">&quot;</span><span class="content">Before all tests</span><span class="delimiter">&quot;</span></span>);
     }
 
     <span class="annotation">@AfterAll</span>
     <span class="directive">static</span> <span class="type">void</span> afterAllTests() {
-        LOG.info(<span class="string"><span class="delimiter">&quot;</span><span class="content">afterAllTests</span><span class="delimiter">&quot;</span></span>);
+        LOG.info(<span class="string"><span class="delimiter">&quot;</span><span class="content">After all tests</span><span class="delimiter">&quot;</span></span>);
     }
 
     <span class="annotation">@BeforeEach</span>
@@ -1682,7 +1734,7 @@ declared on test interfaces to configure extensions and tags. Here are some exam
 </div>
 <div class="paragraph">
 <p><code>@ExtendWith</code> and <code>@Tag</code> can be declared on a test interface so that classes that
-implement it automatically inherit its tags and extensions. See
+implement the interface automatically inherit its tags and extensions. See
 <a href="#extensions-lifecycle-callbacks-before-after-execution">Before and After Test Execution Callbacks</a> for the source code of the
 <a href="#extensions-lifecycle-callbacks-timing-extension">TimingExtension</a>.</p>
 </div>
@@ -1690,7 +1742,7 @@ implement it automatically inherit its tags and extensions. See
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Tag</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">timed</span><span class="delimiter">&quot;</span></span>)
 <span class="annotation">@ExtendWith</span>(TimingExtension.class)
-<span class="directive">public</span> <span class="type">interface</span> <span class="class">TimeExecutionLogger</span> {
+<span class="type">interface</span> <span class="class">TimeExecutionLogger</span> {
 }</code></pre>
 </div>
 </div>
@@ -1699,7 +1751,8 @@ implement it automatically inherit its tags and extensions. See
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">TestInterfaceDemo</span> <span class="directive">implements</span> TestLifecycleLogger, TimeExecutionLogger, TestInterfaceDynamicTestsDemo {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">TestInterfaceDemo</span> <span class="directive">implements</span> TestLifecycleLogger,
+        TimeExecutionLogger, TestInterfaceDynamicTestsDemo {
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> isEqualValue() {
@@ -1715,14 +1768,14 @@ implement it automatically inherit its tags and extensions. See
 <div class="literalblock">
 <div class="content">
 <pre>:junitPlatformTest
-18:28:13.967 [main] INFO  example.testinterface.TestLifecycleLogger - beforeAllTests
-18:28:13.982 [main] INFO  example.testinterface.TestLifecycleLogger - About to execute [dynamicTestsFromCollection()]
-18:28:14.000 [main] INFO  example.testinterface.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
-18:28:14.004 [main] INFO  example.testinterface.TestLifecycleLogger - Finished executing [dynamicTestsFromCollection()]
-18:28:14.007 [main] INFO  example.testinterface.TestLifecycleLogger - About to execute [isEqualValue()]
-18:28:14.008 [main] INFO  example.testinterface.TimingExtension - Method [isEqualValue] took 1 ms.
-18:28:14.009 [main] INFO  example.testinterface.TestLifecycleLogger - Finished executing [isEqualValue()]
-18:28:14.011 [main] INFO  example.testinterface.TestLifecycleLogger - afterAllTests
+INFO  example.TestLifecycleLogger - Before all tests
+INFO  example.TestLifecycleLogger - About to execute [dynamicTestsFromCollection()]
+INFO  example.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
+INFO  example.TestLifecycleLogger - Finished executing [dynamicTestsFromCollection()]
+INFO  example.TestLifecycleLogger - About to execute [isEqualValue()]
+INFO  example.TimingExtension - Method [isEqualValue] took 1 ms.
+INFO  example.TestLifecycleLogger - Finished executing [isEqualValue()]
+INFO  example.TestLifecycleLogger - After all tests
 
 Test run finished after 190 ms
 [         3 containers found      ]
@@ -1839,12 +1892,21 @@ corresponding tests. Of course you&#8217;ll have to implement the abstract metho
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The above tests are merely meant as examples and therefore not complete.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The above tests are merely meant as examples and therefore not complete.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-repeated-tests"><a class="anchor" href="#writing-tests-repeated-tests"></a>3.11. Repeated Tests</h3>
+<h3 id="writing-tests-repeated-tests"><a class="anchor" href="#writing-tests-repeated-tests"></a>3.12. Repeated Tests</h3>
 <div class="paragraph">
 <p>JUnit Jupiter provides the ability to repeat a test a specified number of times simply by
 annotating a method with <code>@RepeatedTest</code> and specifying the total number of repetitions
@@ -1899,7 +1961,7 @@ repetitions programmatically, a developer can choose to have an instance of
 <code>RepetitionInfo</code> injected into a <code>@RepeatedTest</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code> method.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-repeated-tests-examples"><a class="anchor" href="#writing-tests-repeated-tests-examples"></a>3.11.1. Repeated Test Examples</h4>
+<h4 id="writing-tests-repeated-tests-examples"><a class="anchor" href="#writing-tests-repeated-tests-examples"></a>3.12.1. Repeated Test Examples</h4>
 <div class="paragraph">
 <p>The <code>RepeatedTestsDemo</code> class at the end of this section demonstrates several examples of
 repeated tests.</p>
@@ -2053,7 +2115,7 @@ to the console.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-parameterized-tests"><a class="anchor" href="#writing-tests-parameterized-tests"></a>3.12. Parameterized Tests</h3>
+<h3 id="writing-tests-parameterized-tests"><a class="anchor" href="#writing-tests-parameterized-tests"></a>3.13. Parameterized Tests</h3>
 <div class="paragraph">
 <p>Parameterized tests make it possible to run a test multiple times with different arguments. They are
 declared just like regular <code>@Test</code> methods but use the <code>@ParameterizedTest</code> annotation instead. In
@@ -2082,14 +2144,14 @@ the <code>ConsoleLauncher</code> will print output similar to the following.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>3.12.1. Required Setup</h4>
+<h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>3.13.1. Required Setup</h4>
 <div class="paragraph">
 <p>In order to use parameterized tests you need to add a dependency on the <code>junit-jupiter-params</code>
 artifact. Please refer to <a href="#dependency-metadata">Dependency Metadata</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.12.2. Sources of Arguments</h4>
+<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.13.2. Sources of Arguments</h4>
 <div class="paragraph">
 <p>Out of the box, JUnit Jupiter provides quite a few <em>source</em> annotations. Each of the
 following subsections provides a brief overview and an example for each of them. Please
@@ -2292,7 +2354,7 @@ bar, 2
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.12.3. Argument Conversion</h4>
+<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.13.3. Argument Conversion</h4>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-argument-conversion-implicit"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-implicit"></a>Implicit Conversion</h5>
 <div class="paragraph">
@@ -2445,7 +2507,7 @@ reference implementation: <code>JavaTimeArgumentConverter</code>. It is used via
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.12.4. Customizing Display Names</h4>
+<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.13.4. Customizing Display Names</h4>
 <div class="paragraph">
 <p>By default, the display name of a parameterized test invocation contains the invocation
 index and the <code>String</code> representation of all arguments for that specific invocation.
@@ -2503,7 +2565,7 @@ However, you can customize invocation display names via the <code>name</code> at
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.12.5. Lifecycle and Interoperability</h4>
+<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.13.5. Lifecycle and Interoperability</h4>
 <div class="paragraph">
 <p>Each invocation of a parameterized test has the same lifecycle as a regular <code>@Test</code>
 method. For example, <code>@BeforeEach</code> methods will be executed before each invocation.
@@ -2540,7 +2602,7 @@ parameter lists, values from argument sources are not resolved for lifecycle met
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.13. Dynamic Tests</h3>
+<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.14. Dynamic Tests</h3>
 <div class="paragraph">
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in <a href="#writing-tests-annotations">Annotations</a>
 is very similar to the <code>@Test</code> annotation in JUnit 4.
@@ -2590,7 +2652,7 @@ or <em>method references</em>.</p>
 The execution lifecycle of a dynamic test is quite different than it is for a
 standard <code>@Test</code> case. Specifically, there are no lifecycle callbacks for individual
 dynamic tests. This means that <code>@BeforeEach</code> and <code>@AfterEach</code> methods and their corresponding
-extension callbacks are executed for the <code>@TestFactory</code> method, not for each dynamic test.
+extension callbacks are executed for the <code>@TestFactory</code> method but not for each <em>dynamic test</em>.
 In other words, if you access fields from the test instance within a lambda expression for
 a dynamic test, those fields will not be reset by callback methods or extensions between
 the execution of individual dynamic tests generated by the same <code>@TestFactory</code> method.
@@ -2604,7 +2666,7 @@ methods; however, this might be complemented by a registration facility in a lat
 release.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.13.1. Dynamic Test Examples</h4>
+<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.14.1. Dynamic Test Examples</h4>
 <div class="paragraph">
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories and dynamic tests.</p>
 </div>
@@ -5765,8 +5827,8 @@ using an <code>org.opentest4j.MultipleFailuresError</code>.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> Fifth milestone release of JUnit 5 with a focus on dynamic containers and minor
-API changes.</p>
+<p><strong>Scope:</strong> Fifth milestone release of JUnit 5 with a focus on dynamic containers, test
+instance lifecycle management, and minor API changes.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -5922,7 +5984,7 @@ default parser has also been updated to decode such encoded segments.</p>
 interface has been removed.</p>
 </li>
 <li>
-<p>The default methods <code>pruneTree()</code>, and <code>hasTests()</code> have been removed from
+<p>The default methods <code>pruneTree()</code> and <code>hasTests()</code> have been removed from
 <code>TestDescriptor</code>.</p>
 </li>
 </ul>
@@ -6012,6 +6074,11 @@ the functionality for creating an <code>Arguments</code> instance is now availab
 <li>
 <p>The <code>names</code> property of <code>@MethodSource</code> has been renamed to <code>value</code>.</p>
 </li>
+<li>
+<p>The <code>getTestInstance()</code> method in the <code>TestExtensionContext</code> API has been moved to the
+<code>ExtensionContext</code> API. Furthermore, the signature has changed from
+<code>Object getTestInstance()</code> to <code>Optional&lt;Object&gt; getTestInstance()</code>.</p>
+</li>
 </ul>
 </div>
 <table id="release-notes-5.0.0-m5-migration-extension-api" class="tableblock frame-all grid-all spread">
@@ -6066,6 +6133,38 @@ the functionality for creating an <code>Arguments</code> instance is now availab
 <h5 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h5>
 <div class="ulist">
 <ul>
+<li>
+<p>The test instance lifecycle can now be switched from the default per-method mode to a
+new per-class mode via the new class-level <code>@TestInstance</code> annotation. This enables
+shared test instance state between test methods in a given test class as well as
+between non-static <code>@BeforeAll</code> and <code>@AfterAll</code> methods in the test class.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#writing-tests-test-instance-lifecycle">Test Instance Lifecycle</a> for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>@BeforeAll</code> and <code>@AfterAll</code> methods are no longer required to be <code>static</code> if the test
+class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>. This enables the
+following new features.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Declaration of <code>@BeforeAll</code> and <code>@AfterAll</code> methods in <code>@Nested</code> test classes.</p>
+</li>
+<li>
+<p>Declaration of <code>@BeforeAll</code> and <code>@AfterAll</code> on interface <code>default</code> methods.</p>
+</li>
+<li>
+<p>Simplified declaration of <code>@BeforeAll</code> and <code>@AfterAll</code> methods in test classes
+implemented with the Kotlin programming language.</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p><code>Assertions.assertAll()</code> now tracks exceptions of any type (as opposed to only tracking
 exceptions of type <code>AssertionError</code>), unless the exception is a <em>blacklisted</em> exception
@@ -6122,7 +6221,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-06-29 11:50:47 EDT
+Last updated 2017-06-30 12:19:33 EDT
 </div>
 </div>
 </body>
