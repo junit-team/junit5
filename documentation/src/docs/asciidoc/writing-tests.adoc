@@ -22,12 +22,13 @@ module.
 | `@Test`            | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations.
 | `@RepeatedTest`    | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>
 | `@TestFactory`     | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>
+| `@TestInstance`    | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class
 | `@DisplayName`     | Declares a custom display name for the test class or test method
-| `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_.
-| `@AfterEach`       | Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_.
-| `@BeforeAll`       | Denotes that the annotated method should be executed _before_ *all* `@Test` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static` and are _inherited_.
-| `@AfterAll`        | Denotes that the annotated method should be executed _after_ *all* `@Test` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods must be `static` and are _inherited_.
-| `@Nested`          | Denotes that the annotated class is a nested, non-static test class. Due to restrictions of the Java language, `@BeforeAll` and `@AfterAll` methods cannot be used in a `@Nested` test class.
+| `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_.
+| `@AfterEach`       | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_.
+| `@BeforeAll`       | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are _inherited_ and must be `static` unless the test class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
+| `@AfterAll`        | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are _inherited_ and must be `static` unless the test class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
+| `@Nested`          | Denotes that the annotated class is a nested, non-static test class. `@BeforeAll` and `@AfterAll` methods cannot be used in a `@Nested` test class unless it is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
 | `@Tag`             | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
 | `@Disabled`        | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
 | `@ExtendWith`      | Used to register custom <<extensions,extensions>>
@@ -154,6 +155,33 @@ Test classes and methods can be tagged. Those tags can later be used to filter
 include::{testDir}/example/TaggingDemo.java[tags=user_guide]
 ----
 
+[[writing-tests-test-instance-lifecycle]]
+=== Test Instance Lifecycle
+
+In order to allow individual test methods to be executed in isolation and to avoid
+unexpected side effects due to mutable test instance state, JUnit creates a new instance
+of each test class before executing each _test_ method (see note below for what qualifies
+as a _test_ method). This "per-method" test instance lifecycle is the default behavior in
+JUnit Jupiter and is analogous to all previous versions of JUnit.
+
+If you would prefer that JUnit Jupiter execute all test methods on the same test
+instance, simply annotate your test class with `@TestInstance(Lifecycle.PER_CLASS)`. When
+using this mode, a new test instance will be created once per test class. Thus, if your
+test methods rely on state stored in instance variables, you may need to reset that state
+in `@BeforeEach` or `@AfterEach` methods.
+
+The "per-class" mode has some additional benefits over the default "per-method" mode.
+Specifically, with the "per-class" mode it becomes possible to declare `@BeforeAll` and
+`@AfterAll` on non-static methods as well as on interface `default` methods. The
+"per-class" mode therefore also makes it possible to use `@BeforeAll` and `@AfterAll`
+methods in `@Nested` test classes.
+
+If you are authoring tests using the Kotlin programming language, you may also find it
+easier to implement `@BeforeAll` and `@AfterAll` methods by switching to the "per-class"
+test instance lifecycle mode.
+
+NOTE: In the context of test instance lifecycle a _test_ method is any method annotated
+with `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`.
 
 [[writing-tests-nested]]
 === Nested Tests
@@ -167,10 +195,13 @@ several group of tests. Here's an elaborate example.
 include::{testDir}/example/TestingAStackDemo.java[tags=user_guide]
 ----
 
-NOTE: _Only non-static nested classes_ (i.e. _inner classes_) can serve as
-`@Nested` tests. Nesting can be arbitrarily deep, and those inner classes are considered
-to be full members of the test class family with one exception: `@BeforeAll` and
-`@AfterAll` do not work, because Java does not allow `static` members in inner classes.
+NOTE: _Only non-static nested classes_ (i.e. _inner classes_) can serve as `@Nested` test
+classes. Nesting can be arbitrarily deep, and those inner classes are considered to be
+full members of the test class family with one exception: `@BeforeAll` and `@AfterAll`
+methods do not work _by default_. The reason is that Java does not allow `static` members
+in inner classes. However, this restriction can be circumvented by annotating a `@Nested`
+test class with `@TestInstance(Lifecycle.PER_CLASS)` (see
+<<writing-tests-test-instance-lifecycle>>).
 
 [[writing-tests-dependency-injection]]
 === Dependency Injection for Constructors and Methods
@@ -267,10 +298,12 @@ class MyMockitoTest {
 [[writing-tests-test-interfaces-and-default-methods]]
 === Test Interfaces and Default Methods
 
-JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach`, and `@AfterEach` to be
-declared on interface default methods. In addition, `@BeforeAll` and `@AfterAll` can be
-declared on static methods in a test interface, while `@ExtendWith` and `@Tag` can be
-declared on test interfaces to configure extensions and tags. Here are some examples.
+JUnit Jupiter allows `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`,
+`@TestTemplate`, `@BeforeEach`, and `@AfterEach` to be declared on interface `default`
+methods. `@BeforeAll` and `@AfterAll` can either be declared on `static` methods in a
+test interface or on interface `default` methods _if_ the concrete test class is
+annotated with `@TestInstance(Lifecycle.PER_CLASS)` (see
+<<writing-tests-test-instance-lifecycle>>). Here are some examples.
 
 [source,java]
 ----
@@ -283,7 +316,7 @@ include::{testDir}/example/testinterface/TestInterfaceDynamicTestsDemo.java[tags
 ----
 
 `@ExtendWith` and `@Tag` can be declared on a test interface so that classes that
-implement it automatically inherit its tags and extensions. See
+implement the interface automatically inherit its tags and extensions. See
 <<extensions-lifecycle-callbacks-before-after-execution>> for the source code of the
 <<extensions-lifecycle-callbacks-timing-extension, TimingExtension>>.
 
@@ -356,7 +389,7 @@ corresponding tests. Of course you'll have to implement the abstract methods.
 include::{testDir}/example/defaultmethods/StringTests.java[tags=user_guide]
 ----
 
-The above tests are merely meant as examples and therefore not complete.
+NOTE: The above tests are merely meant as examples and therefore not complete.
 
 
 [[writing-tests-repeated-tests]]
@@ -807,7 +840,7 @@ or _method references_.
 WARNING: The execution lifecycle of a dynamic test is quite different than it is for a
 standard `@Test` case. Specifically, there are no lifecycle callbacks for individual
 dynamic tests. This means that `@BeforeEach` and `@AfterEach` methods and their corresponding
-extension callbacks are executed for the `@TestFactory` method, not for each dynamic test.
+extension callbacks are executed for the `@TestFactory` method but not for each _dynamic test_.
 In other words, if you access fields from the test instance within a lambda expression for
 a dynamic test, those fields will not be reset by callback methods or extensions between
 the execution of individual dynamic tests generated by the same `@TestFactory` method.
