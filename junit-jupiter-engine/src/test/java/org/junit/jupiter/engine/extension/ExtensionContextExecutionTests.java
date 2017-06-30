@@ -14,18 +14,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
@@ -33,14 +32,17 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	@ExtendWith(ExtensionContextParameterResolver.class)
-	void extensionContextHierarchy(ExtensionContext testExtensionContext) {
-		assertThat(testExtensionContext).isInstanceOf(TestExtensionContext.class);
+	void extensionContextHierarchy(ExtensionContext methodExtensionContext) {
+		assertThat(methodExtensionContext).isNotNull();
+		assertThat(methodExtensionContext.getElement()).containsInstanceOf(Method.class);
 
-		Optional<ExtensionContext> classExtensionContext = testExtensionContext.getParent();
-		assertThat(classExtensionContext).containsInstanceOf(ContainerExtensionContext.class);
+		Optional<ExtensionContext> classExtensionContext = methodExtensionContext.getParent();
+		assertThat(classExtensionContext).isNotEmpty();
+		assertThat(classExtensionContext.orElse(null).getElement()).contains(ExtensionContextExecutionTests.class);
 
 		Optional<ExtensionContext> engineExtensionContext = classExtensionContext.orElse(null).getParent();
-		assertThat(engineExtensionContext).containsInstanceOf(ContainerExtensionContext.class);
+		assertThat(engineExtensionContext).isNotEmpty();
+		assertThat(engineExtensionContext.orElse(null).getElement()).isEmpty();
 
 		assertThat(engineExtensionContext.orElse(null).getParent()).isEmpty();
 	}
@@ -87,7 +89,7 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 
 	static class OnlyIncrementCounterOnce implements BeforeAllCallback {
 		@Override
-		public void beforeAll(ContainerExtensionContext context) throws Exception {
+		public void beforeAll(ExtensionContext context) throws Exception {
 			getRoot(context).getStore().getOrComputeIfAbsent("counter", key -> Parent.counter.incrementAndGet());
 		}
 

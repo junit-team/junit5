@@ -43,6 +43,6 @@ public interface BeforeEachCallback extends Extension {
 	 *
 	 * @param context the current extension context; never {@code null}
 	 */
-	void beforeEach(TestExtensionContext context) throws Exception;
+	void beforeEach(ExtensionContext context) throws Exception;
 
 }

@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
@@ -118,7 +118,7 @@ class CsvFileArgumentsProviderTests {
 
 	private Stream<Object[]> provide(CsvFileArgumentsProvider provider, CsvFileSource annotation) {
 		provider.accept(annotation);
-		ContainerExtensionContext context = mock(ContainerExtensionContext.class);
+		ExtensionContext context = mock(ExtensionContext.class);
 		when(context.getTestClass()).thenReturn(Optional.of(CsvFileArgumentsProviderTests.class));
 		return provider.provideArguments(context).map(Arguments::get);
 	}

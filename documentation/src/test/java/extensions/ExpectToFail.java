@@ -19,10 +19,10 @@ import java.lang.annotation.Target;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -32,16 +32,16 @@ public @interface ExpectToFail {
 	static class Extension implements TestExecutionExceptionHandler, AfterEachCallback {
 
 		@Override
-		public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 			getExceptionStore(context).put("exception", throwable);
 		}
 
 		@Override
-		public void afterEach(TestExtensionContext context) throws Exception {
+		public void afterEach(ExtensionContext context) throws Exception {
 			assertNotNull(getExceptionStore(context).get("exception"), "Test should have failed");
 		}
 
-		private Store getExceptionStore(TestExtensionContext context) {
+		private Store getExceptionStore(ExtensionContext context) {
 			return context.getStore(Namespace.create(context));
 		}
 	}

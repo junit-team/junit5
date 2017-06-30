@@ -28,7 +28,6 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 
 /**
  * @since 1.0
@@ -55,7 +54,7 @@ public class TempDirectory implements AfterEachCallback, ParameterResolver {
 	}
 
 	@Override
-	public void afterEach(TestExtensionContext context) throws Exception {
+	public void afterEach(ExtensionContext context) throws Exception {
 		Path tempDirectory = (Path) getLocalStore(context).get(KEY);
 		if (tempDirectory != null) {
 			delete(tempDirectory);

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -495,12 +495,12 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	private static class FooMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
-		public void beforeEach(TestExtensionContext context) {
+		public void beforeEach(ExtensionContext context) {
 			callSequence.add("fooBeforeEachCallback");
 		}
 
 		@Override
-		public void afterEach(TestExtensionContext context) {
+		public void afterEach(ExtensionContext context) {
 			callSequence.add("fooAfterEachCallback");
 			actualExceptionInAfterEachCallback = context.getTestException();
 		}
@@ -509,12 +509,12 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	private static class BarMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
-		public void beforeEach(TestExtensionContext context) {
+		public void beforeEach(ExtensionContext context) {
 			callSequence.add("barBeforeEachCallback");
 		}
 
 		@Override
-		public void afterEach(TestExtensionContext context) {
+		public void afterEach(ExtensionContext context) {
 			callSequence.add("barAfterEachCallback");
 		}
 	}
@@ -522,12 +522,12 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	private static class FizzMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
-		public void beforeEach(TestExtensionContext context) {
+		public void beforeEach(ExtensionContext context) {
 			callSequence.add("fizzBeforeEachCallback");
 		}
 
 		@Override
-		public void afterEach(TestExtensionContext context) {
+		public void afterEach(ExtensionContext context) {
 			callSequence.add("fizzAfterEachCallback");
 		}
 	}
@@ -535,7 +535,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	private static class ExceptionThrowingBeforeEachCallback implements BeforeEachCallback {
 
 		@Override
-		public void beforeEach(TestExtensionContext context) {
+		public void beforeEach(ExtensionContext context) {
 			callSequence.add("exceptionThrowingBeforeEachCallback");
 			throw new EnigmaException("BeforeEachCallback");
 		}
@@ -544,7 +544,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	private static class ExceptionThrowingAfterEachCallback implements AfterEachCallback {
 
 		@Override
-		public void afterEach(TestExtensionContext context) {
+		public void afterEach(ExtensionContext context) {
 			callSequence.add("exceptionThrowingAfterEachCallback");
 			throw new EnigmaException("AfterEachCallback");
 		}

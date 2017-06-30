@@ -123,6 +123,8 @@ is placed on the Java 9 module path.
   `Object getTestInstance()` to `Optional<Object> getTestInstance()`.
 * The `getTestException()` method in the `TestExtensionContext` API has been moved to the
   `ExtensionContext` API.
+* The `TestExtensionContext` and `ContainerExtensionContext` interfaces have been removed,
+  and all `Extension` interfaces have been changed to use `ExtensionContext` instead.
 
 [[release-notes-5.0.0-m5-migration-extension-api]]
 .Extension API Migration

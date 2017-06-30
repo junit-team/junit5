@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.params.provider.Arguments;
@@ -39,13 +39,12 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	private static final Logger logger = Logger.getLogger(ParameterizedTestExtension.class.getName());
 
 	@Override
-	public boolean supportsTestTemplate(ContainerExtensionContext context) {
+	public boolean supportsTestTemplate(ExtensionContext context) {
 		return isAnnotated(context.getTestMethod(), ParameterizedTest.class);
 	}
 
 	@Override
-	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
-			ContainerExtensionContext context) {
+	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 
 		Method templateMethod = Preconditions.notNull(context.getTestMethod().orElse(null),
 			"test method must not be null");
@@ -78,8 +77,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		return new ParameterizedTestNameFormatter(name);
 	}
 
-	protected static Stream<? extends Arguments> arguments(ArgumentsProvider provider,
-			ContainerExtensionContext context) {
+	protected static Stream<? extends Arguments> arguments(ArgumentsProvider provider, ExtensionContext context) {
 		try {
 			return provider.provideArguments(context);
 		}

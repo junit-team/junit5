@@ -130,7 +130,7 @@ public interface ExtensionContext {
 
 	/**
 	 * Get the exception that was thrown during execution of the test associated
-	 * with this {@code TestExtensionContext}, if available.
+	 * with this {@code ExtensionContext}, if available.
 	 *
 	 * <p>This method is typically used for logging and tracing purposes. If you
 	 * wish to actually <em>handle</em> an exception thrown during test execution,

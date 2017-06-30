@@ -17,7 +17,7 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -46,7 +46,7 @@ class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Enu
 	}
 
 	@Override
-	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
+	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 		return constants.stream().map(Arguments::of);
 	}
 

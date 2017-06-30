@@ -19,9 +19,9 @@ import org.junit.platform.commons.meta.API;
  * programmatic, <em>conditional container execution</em>.
  *
  * <p>A {@code ContainerExecutionCondition} is
- * {@linkplain #evaluateContainerExecutionCondition(ContainerExtensionContext) evaluated}
+ * {@linkplain #evaluateContainerExecutionCondition(ExtensionContext) evaluated}
  * to determine if all tests in a given container should be executed based
- * on the supplied {@link ContainerExtensionContext}.
+ * on the supplied {@link ExtensionContext}.
  *
  * <p>Implementations must provide a no-args constructor.
  *
@@ -34,7 +34,7 @@ import org.junit.platform.commons.meta.API;
 public interface ContainerExecutionCondition extends Extension {
 
 	/**
-	 * Evaluate this condition for the supplied {@link ContainerExtensionContext}.
+	 * Evaluate this condition for the supplied {@link ExtensionContext}.
 	 *
 	 * <p>An {@linkplain ConditionEvaluationResult#enabled enabled} result
 	 * indicates that the container should be executed; whereas, a
@@ -44,6 +44,6 @@ public interface ContainerExecutionCondition extends Extension {
 	 * @param context the current extension context; never {@code null}
 	 * @return the result of evaluating this condition; never {@code null}
 	 */
-	ConditionEvaluationResult evaluateContainerExecutionCondition(ContainerExtensionContext context);
+	ConditionEvaluationResult evaluateContainerExecutionCondition(ExtensionContext context);
 
 }

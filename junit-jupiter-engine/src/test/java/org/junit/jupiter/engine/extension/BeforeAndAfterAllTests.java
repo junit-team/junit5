@@ -23,8 +23,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -248,12 +248,12 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	private static class FooClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext context) {
+		public void beforeAll(ExtensionContext context) {
 			callSequence.add("fooBeforeAllCallback");
 		}
 
 		@Override
-		public void afterAll(ContainerExtensionContext context) {
+		public void afterAll(ExtensionContext context) {
 			callSequence.add("fooAfterAllCallback");
 		}
 	}
@@ -261,12 +261,12 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	private static class BarClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext context) {
+		public void beforeAll(ExtensionContext context) {
 			callSequence.add("barBeforeAllCallback");
 		}
 
 		@Override
-		public void afterAll(ContainerExtensionContext context) {
+		public void afterAll(ExtensionContext context) {
 			callSequence.add("barAfterAllCallback");
 		}
 	}
@@ -274,12 +274,12 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	private static class BazClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext context) {
+		public void beforeAll(ExtensionContext context) {
 			callSequence.add("bazBeforeAllCallback");
 		}
 
 		@Override
-		public void afterAll(ContainerExtensionContext context) {
+		public void afterAll(ExtensionContext context) {
 			callSequence.add("bazAfterAllCallback");
 		}
 	}
@@ -287,12 +287,12 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	private static class QuuxClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext context) {
+		public void beforeAll(ExtensionContext context) {
 			callSequence.add("quuxBeforeAllCallback");
 		}
 
 		@Override
-		public void afterAll(ContainerExtensionContext context) {
+		public void afterAll(ExtensionContext context) {
 			callSequence.add("quuxAfterAllCallback");
 		}
 	}
@@ -300,7 +300,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	private static class ExceptionThrowingBeforeAllCallback implements BeforeAllCallback {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext context) {
+		public void beforeAll(ExtensionContext context) {
 			callSequence.add("exceptionThrowingBeforeAllCallback");
 			throw new RuntimeException("BeforeAllCallback");
 		}

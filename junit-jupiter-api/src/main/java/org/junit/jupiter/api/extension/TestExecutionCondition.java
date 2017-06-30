@@ -19,9 +19,9 @@ import org.junit.platform.commons.meta.API;
  * programmatic, <em>conditional test execution</em>.
  *
  * <p>A {@code TestExecutionCondition} is
- * {@linkplain #evaluateTestExecutionCondition(TestExtensionContext) evaluated}
+ * {@linkplain #evaluateTestExecutionCondition(ExtensionContext) evaluated}
  * to determine if a given test should be executed based on the supplied
- * {@link TestExtensionContext}.
+ * {@link ExtensionContext}.
  *
  * <p>Implementations must provide a no-args constructor.
  *
@@ -34,7 +34,7 @@ import org.junit.platform.commons.meta.API;
 public interface TestExecutionCondition extends Extension {
 
 	/**
-	 * Evaluate this condition for the supplied {@link TestExtensionContext}.
+	 * Evaluate this condition for the supplied {@link ExtensionContext}.
 	 *
 	 * <p>An {@linkplain ConditionEvaluationResult#enabled enabled} result
 	 * indicates that the test should be executed; whereas, a
@@ -44,6 +44,6 @@ public interface TestExecutionCondition extends Extension {
 	 * @param context the current extension context; never {@code null}
 	 * @return the result of evaluating this condition; never {@code null}
 	 */
-	ConditionEvaluationResult evaluateTestExecutionCondition(TestExtensionContext context);
+	ConditionEvaluationResult evaluateTestExecutionCondition(ExtensionContext context);
 
 }

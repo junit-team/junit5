@@ -35,8 +35,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -169,7 +169,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		static boolean handleExceptionCalled = false;
 
 		@Override
-		public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof IOException);
 			handleExceptionCalled = true;
 			handlerCalls.add("rethrow");
@@ -183,7 +183,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		static boolean handleExceptionCalled = false;
 
 		@Override
-		public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof IOException);
 			handleExceptionCalled = true;
 			handlerCalls.add("swallow");
@@ -196,7 +196,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		static boolean handleExceptionCalled = false;
 
 		@Override
-		public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof RuntimeException);
 			handleExceptionCalled = true;
 			handlerCalls.add("convert");
@@ -209,7 +209,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		static boolean handleExceptionCalled = false;
 
 		@Override
-		public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 			handleExceptionCalled = true;
 		}
 	}

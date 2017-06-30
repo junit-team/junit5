@@ -17,8 +17,8 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.GenericBeforeAndAfterAdvice;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
@@ -49,12 +49,12 @@ abstract class AbstractTestRuleSupport<T extends Member>
 	}
 
 	@Override
-	public void beforeEach(TestExtensionContext context) throws Exception {
+	public void beforeEach(ExtensionContext context) throws Exception {
 		invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::before);
 	}
 
 	@Override
-	public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
+	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 		invokeAppropriateMethodOnRuleAnnotatedMembers(context, advice -> {
 			try {
 				advice.handleTestExecutionException(throwable);
@@ -66,11 +66,11 @@ abstract class AbstractTestRuleSupport<T extends Member>
 	}
 
 	@Override
-	public void afterEach(TestExtensionContext context) throws Exception {
+	public void afterEach(ExtensionContext context) throws Exception {
 		invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::after);
 	}
 
-	private void invokeAppropriateMethodOnRuleAnnotatedMembers(TestExtensionContext context,
+	private void invokeAppropriateMethodOnRuleAnnotatedMembers(ExtensionContext context,
 			Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
 
 		Object testInstance = context.getTestInstance().orElseThrow(

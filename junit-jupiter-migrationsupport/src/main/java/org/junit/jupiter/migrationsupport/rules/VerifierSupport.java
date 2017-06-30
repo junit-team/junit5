@@ -15,7 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.VerifierAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
@@ -51,7 +51,7 @@ public class VerifierSupport implements AfterEachCallback {
 		Verifier.class);
 
 	@Override
-	public void afterEach(TestExtensionContext context) throws Exception {
+	public void afterEach(ExtensionContext context) throws Exception {
 		this.fieldSupport.afterEach(context);
 		this.methodSupport.afterEach(context);
 	}

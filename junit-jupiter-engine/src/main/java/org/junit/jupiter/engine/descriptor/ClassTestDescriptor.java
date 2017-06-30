@@ -29,10 +29,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
@@ -133,14 +131,14 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
 
-		ClassBasedContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
-			context.getExtensionContext(), context.getExecutionListener(), this);
+		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
+			context.getExecutionListener(), this);
 
 		// @formatter:off
 		return context.extend()
-				.withTestInstanceProvider(testInstanceProvider(context, registry, containerExtensionContext))
+				.withTestInstanceProvider(testInstanceProvider(context, registry, extensionContext))
 				.withExtensionRegistry(registry)
-				.withExtensionContext(containerExtensionContext)
+				.withExtensionContext(extensionContext)
 				.withThrowableCollector(new ThrowableCollector())
 				.build();
 		// @formatter:on
@@ -177,11 +175,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ClassBasedContainerExtensionContext extensionContext) {
+			ExtensionRegistry registry, ClassExtensionContext extensionContext) {
 
 		if (this.lifecycle == Lifecycle.PER_CLASS) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
-			// and store the instance in the ContainerExtensionContext.
+			// and store the instance in the ExtensionContext.
 			Object instance = instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry,
 				extensionContext::setTestInstance);
 			return childRegistry -> instance;
@@ -219,7 +217,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeBeforeAllCallbacks(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
+		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		for (BeforeAllCallback callback : registry.getExtensions(BeforeAllCallback.class)) {
@@ -232,7 +230,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeBeforeAllMethods(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
+		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
@@ -247,7 +245,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeAfterAllMethods(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
+		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
@@ -257,7 +255,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeAfterAllCallbacks(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
+		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		registry.getReversedExtensions(AfterAllCallback.class)//
@@ -287,15 +285,14 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private BeforeEachMethodAdapter synthesizeBeforeEachMethodAdapter(Method method) {
-		return (extensionContext, registry) -> invokeMethodInTestExtensionContext(method, extensionContext, registry);
+		return (extensionContext, registry) -> invokeMethodInExtensionContext(method, extensionContext, registry);
 	}
 
 	private AfterEachMethodAdapter synthesizeAfterEachMethodAdapter(Method method) {
-		return (extensionContext, registry) -> invokeMethodInTestExtensionContext(method, extensionContext, registry);
+		return (extensionContext, registry) -> invokeMethodInExtensionContext(method, extensionContext, registry);
 	}
 
-	private void invokeMethodInTestExtensionContext(Method method, TestExtensionContext context,
-			ExtensionRegistry registry) {
+	private void invokeMethodInExtensionContext(Method method, ExtensionContext context, ExtensionRegistry registry) {
 
 		Object testInstance = context.getTestInstance().orElseThrow(() -> new JUnitException(
 			"Illegal state: test instance not present for method: " + method.toGenericString()));

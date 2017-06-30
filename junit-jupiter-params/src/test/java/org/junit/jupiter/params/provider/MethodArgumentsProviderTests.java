@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
@@ -135,7 +135,7 @@ class MethodArgumentsProviderTests {
 		MethodSource annotation = mock(MethodSource.class);
 		when(annotation.value()).thenReturn(methodNames);
 
-		ContainerExtensionContext context = mock(ContainerExtensionContext.class);
+		ExtensionContext context = mock(ExtensionContext.class);
 		when(context.getTestClass()).thenReturn(Optional.ofNullable(testClass));
 
 		MethodArgumentsProvider provider = new MethodArgumentsProvider();

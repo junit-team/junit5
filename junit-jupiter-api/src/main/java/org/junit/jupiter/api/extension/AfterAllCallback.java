@@ -41,6 +41,6 @@ public interface AfterAllCallback extends Extension {
 	 *
 	 * @param context the current extension context; never {@code null}
 	 */
-	void afterAll(ContainerExtensionContext context) throws Exception;
+	void afterAll(ExtensionContext context) throws Exception;
 
 }

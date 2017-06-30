@@ -16,7 +16,7 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.ExternalResourceAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
@@ -53,13 +53,13 @@ public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCal
 		ExternalResource.class);
 
 	@Override
-	public void beforeEach(TestExtensionContext context) throws Exception {
+	public void beforeEach(ExtensionContext context) throws Exception {
 		this.fieldSupport.beforeEach(context);
 		this.methodSupport.beforeEach(context);
 	}
 
 	@Override
-	public void afterEach(TestExtensionContext context) throws Exception {
+	public void afterEach(ExtensionContext context) throws Exception {
 		this.methodSupport.afterEach(context);
 		this.fieldSupport.afterEach(context);
 	}

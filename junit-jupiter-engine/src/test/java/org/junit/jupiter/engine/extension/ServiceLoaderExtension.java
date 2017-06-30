@@ -11,7 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
  * Demo extension for auto-detection of extensions loaded via Java's
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ContainerExtensionContext;
 public class ServiceLoaderExtension implements BeforeAllCallback {
 
 	@Override
-	public void beforeAll(ContainerExtensionContext context) throws Exception {
+	public void beforeAll(ExtensionContext context) throws Exception {
 	}
 
 }

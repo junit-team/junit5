@@ -41,6 +41,6 @@ public interface BeforeAllCallback extends Extension {
 	 *
 	 * @param context the current extension context; never {@code null}
 	 */
-	void beforeAll(ContainerExtensionContext context) throws Exception;
+	void beforeAll(ExtensionContext context) throws Exception;
 
 }

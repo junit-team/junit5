@@ -87,8 +87,4 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		return testDescriptor.getTags().stream().map(TestTag::getName).collect(toCollection(LinkedHashSet::new));
 	}
 
-	@Override
-	public Optional<Throwable> getTestException() {
-		return Optional.empty();
-	}
 }

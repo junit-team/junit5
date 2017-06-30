@@ -21,11 +21,9 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionCondition;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 
 /**
  * Intentionally in a subpackage in order to properly test deactivation
@@ -48,12 +46,12 @@ public class SystemPropertyCondition implements TestExecutionCondition, Containe
 	}
 
 	@Override
-	public ConditionEvaluationResult evaluateContainerExecutionCondition(ContainerExtensionContext context) {
+	public ConditionEvaluationResult evaluateContainerExecutionCondition(ExtensionContext context) {
 		return evaluate(context);
 	}
 
 	@Override
-	public ConditionEvaluationResult evaluateTestExecutionCondition(TestExtensionContext context) {
+	public ConditionEvaluationResult evaluateTestExecutionCondition(ExtensionContext context) {
 		return evaluate(context);
 	}
 

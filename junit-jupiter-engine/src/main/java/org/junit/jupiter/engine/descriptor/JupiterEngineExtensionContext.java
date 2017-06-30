@@ -16,7 +16,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineExecutionListener;
 
@@ -24,8 +23,7 @@ import org.junit.platform.engine.EngineExecutionListener;
  * @since 5.0
  */
 @API(Internal)
-public final class JupiterEngineExtensionContext extends AbstractExtensionContext<JupiterEngineDescriptor>
-		implements ContainerExtensionContext {
+public final class JupiterEngineExtensionContext extends AbstractExtensionContext<JupiterEngineDescriptor> {
 
 	public JupiterEngineExtensionContext(EngineExecutionListener engineExecutionListener,
 			JupiterEngineDescriptor testDescriptor) {
@@ -49,6 +47,11 @@ public final class JupiterEngineExtensionContext extends AbstractExtensionContex
 
 	@Override
 	public Optional<Method> getTestMethod() {
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<Throwable> getTestException() {
 		return Optional.empty();
 	}
 

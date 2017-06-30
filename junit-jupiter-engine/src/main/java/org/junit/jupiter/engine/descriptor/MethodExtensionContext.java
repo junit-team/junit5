@@ -16,8 +16,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineExecutionListener;
 
@@ -25,16 +25,19 @@ import org.junit.platform.engine.EngineExecutionListener;
  * @since 5.0
  */
 @API(Internal)
-final class TestTemplateContainerExtensionContext extends AbstractExtensionContext<TestTemplateTestDescriptor>
-		implements ContainerExtensionContext {
+public final class MethodExtensionContext extends AbstractExtensionContext<MethodTestDescriptor> {
 
 	private final Object testInstance;
 
-	TestTemplateContainerExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			TestTemplateTestDescriptor testDescriptor, Object testInstance) {
+	private final ThrowableCollector throwableCollector;
+
+	public MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+			MethodTestDescriptor testDescriptor, Object testInstance, ThrowableCollector throwableCollector) {
 
 		super(parent, engineExecutionListener, testDescriptor);
+
 		this.testInstance = testInstance;
+		this.throwableCollector = throwableCollector;
 	}
 
 	@Override
@@ -48,13 +51,18 @@ final class TestTemplateContainerExtensionContext extends AbstractExtensionConte
 	}
 
 	@Override
-	public Optional<Object> getTestInstance() {
-		return Optional.ofNullable(this.testInstance);
+	public Optional<Method> getTestMethod() {
+		return Optional.of(getTestDescriptor().getTestMethod());
 	}
 
 	@Override
-	public Optional<Method> getTestMethod() {
-		return Optional.of(getTestDescriptor().getTestMethod());
+	public Optional<Object> getTestInstance() {
+		return Optional.of(this.testInstance);
+	}
+
+	@Override
+	public Optional<Throwable> getTestException() {
+		return Optional.ofNullable(this.throwableCollector.getThrowable());
 	}
 
 }

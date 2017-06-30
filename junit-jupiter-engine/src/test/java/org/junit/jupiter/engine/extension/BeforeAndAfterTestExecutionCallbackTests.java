@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -426,12 +426,12 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	private static class FooTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
 		@Override
-		public void beforeTestExecution(TestExtensionContext context) {
+		public void beforeTestExecution(ExtensionContext context) {
 			callSequence.add("fooBeforeTestExecutionCallback");
 		}
 
 		@Override
-		public void afterTestExecution(TestExtensionContext context) {
+		public void afterTestExecution(ExtensionContext context) {
 			callSequence.add("fooAfterTestExecutionCallback");
 			actualExceptionInAfterTestExecution = context.getTestException();
 		}
@@ -440,12 +440,12 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	private static class BarTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
 		@Override
-		public void beforeTestExecution(TestExtensionContext context) {
+		public void beforeTestExecution(ExtensionContext context) {
 			callSequence.add("barBeforeTestExecutionCallback");
 		}
 
 		@Override
-		public void afterTestExecution(TestExtensionContext context) {
+		public void afterTestExecution(ExtensionContext context) {
 			callSequence.add("barAfterTestExecutionCallback");
 		}
 	}
@@ -453,12 +453,12 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	private static class FizzTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
 		@Override
-		public void beforeTestExecution(TestExtensionContext context) {
+		public void beforeTestExecution(ExtensionContext context) {
 			callSequence.add("fizzBeforeTestExecutionCallback");
 		}
 
 		@Override
-		public void afterTestExecution(TestExtensionContext context) {
+		public void afterTestExecution(ExtensionContext context) {
 			callSequence.add("fizzAfterTestExecutionCallback");
 		}
 	}
@@ -466,7 +466,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	private static class ExceptionThrowingBeforeTestExecutionCallback implements BeforeTestExecutionCallback {
 
 		@Override
-		public void beforeTestExecution(TestExtensionContext context) {
+		public void beforeTestExecution(ExtensionContext context) {
 			callSequence.add("exceptionThrowingBeforeTestExecutionCallback");
 			throw new EnigmaException("BeforeTestExecutionCallback");
 		}
@@ -475,7 +475,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	private static class ExceptionThrowingAfterTestExecutionCallback implements AfterTestExecutionCallback {
 
 		@Override
-		public void afterTestExecution(TestExtensionContext context) {
+		public void afterTestExecution(ExtensionContext context) {
 			callSequence.add("exceptionThrowingAfterTestExecutionCallback");
 			throw new EnigmaException("AfterTestExecutionCallback");
 		}

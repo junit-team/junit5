@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.util.AnnotationUtils;
@@ -36,13 +36,12 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 	private static final Logger logger = Logger.getLogger(RepeatedTestExtension.class.getName());
 
 	@Override
-	public boolean supportsTestTemplate(ContainerExtensionContext context) {
+	public boolean supportsTestTemplate(ExtensionContext context) {
 		return isAnnotated(context.getTestMethod(), RepeatedTest.class);
 	}
 
 	@Override
-	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
-			ContainerExtensionContext context) {
+	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 
 		Method testMethod = Preconditions.notNull(context.getTestMethod().orElse(null), "test method must not be null");
 		String displayName = context.getDisplayName();

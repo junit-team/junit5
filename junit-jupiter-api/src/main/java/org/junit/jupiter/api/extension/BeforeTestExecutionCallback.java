@@ -44,6 +44,6 @@ public interface BeforeTestExecutionCallback extends Extension {
 	 *
 	 * @param context the current extension context; never {@code null}
 	 */
-	void beforeTestExecution(TestExtensionContext context) throws Exception;
+	void beforeTestExecution(ExtensionContext context) throws Exception;
 
 }

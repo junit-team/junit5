@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -61,13 +61,13 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		// The test instance should be properly maintained by the enclosing class's ExtensionContext.
 		Object testInstance = context.getExtensionContext().getTestInstance().orElse(null);
 
-		ContainerExtensionContext containerExtensionContext = new TestTemplateContainerExtensionContext(
-			context.getExtensionContext(), context.getExecutionListener(), this, testInstance);
+		ExtensionContext extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
+			context.getExecutionListener(), this, testInstance);
 
 		// @formatter:off
 		return context.extend()
 				.withExtensionRegistry(registry)
-				.withExtensionContext(containerExtensionContext)
+				.withExtensionContext(extensionContext)
 				.build();
 		// @formatter:on
 	}
@@ -81,13 +81,13 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 
-		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
-		List<TestTemplateInvocationContextProvider> providers = validateProviders(containerExtensionContext,
+		ExtensionContext extensionContext = context.getExtensionContext();
+		List<TestTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
 		// @formatter:off
 		providers.stream()
-				.flatMap(provider -> provider.provideTestTemplateInvocationContexts(containerExtensionContext))
+				.flatMap(provider -> provider.provideTestTemplateInvocationContexts(extensionContext))
 				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
 				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
 		// @formatter:on
@@ -95,12 +95,12 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		return context;
 	}
 
-	private List<TestTemplateInvocationContextProvider> validateProviders(
-			ContainerExtensionContext containerExtensionContext, ExtensionRegistry extensionRegistry) {
+	private List<TestTemplateInvocationContextProvider> validateProviders(ExtensionContext extensionContext,
+			ExtensionRegistry extensionRegistry) {
 
 		// @formatter:off
 		List<TestTemplateInvocationContextProvider> providers = extensionRegistry.stream(TestTemplateInvocationContextProvider.class)
-				.filter(provider -> provider.supportsTestTemplate(containerExtensionContext))
+				.filter(provider -> provider.supportsTestTemplate(extensionContext))
 				.collect(toList());
 		// @formatter:on
 

@@ -28,10 +28,8 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -96,14 +94,13 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	protected SkipResult shouldContainerBeSkipped(JupiterEngineExecutionContext context) {
 		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForContainer(
-			context.getExtensionRegistry(), context.getConfigurationParameters(),
-			(ContainerExtensionContext) context.getExtensionContext());
+			context.getExtensionRegistry(), context.getConfigurationParameters(), context.getExtensionContext());
 		return toSkipResult(evaluationResult);
 	}
 
 	protected SkipResult shouldTestBeSkipped(JupiterEngineExecutionContext context) {
 		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForTest(context.getExtensionRegistry(),
-			context.getConfigurationParameters(), (TestExtensionContext) context.getExtensionContext());
+			context.getConfigurationParameters(), context.getExtensionContext());
 		return toSkipResult(evaluationResult);
 	}
 

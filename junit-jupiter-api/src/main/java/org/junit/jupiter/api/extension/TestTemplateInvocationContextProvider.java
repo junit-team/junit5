@@ -54,34 +54,34 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 * Determine if this provider supports providing invocation contexts for the
 	 * test template method represented by the supplied {@code context}.
 	 *
-	 * @param context the container extension context for the test template
-	 * method about to be invoked; never {@code null}
+	 * @param context the extension context for the test template method about
+	 * to be invoked; never {@code null}
 	 * @return {@code true} if this provider can provide invocation contexts
 	 * @see #provideTestTemplateInvocationContexts
-	 * @see ContainerExtensionContext
+	 * @see ExtensionContext
 	 */
-	boolean supportsTestTemplate(ContainerExtensionContext context);
+	boolean supportsTestTemplate(ExtensionContext context);
 
 	/**
 	 * Provide {@linkplain TestTemplateInvocationContext invocation contexts}
 	 * for the test template method represented by the supplied {@code context}.
 	 *
 	 * <p>This method is only called by the framework if {@link #supportsTestTemplate}
-	 * previously returned {@code true} for the same {@link ContainerExtensionContext}.
+	 * previously returned {@code true} for the same {@link ExtensionContext}.
 	 * Thus, this method must not return an empty {@code Stream}.
 	 *
 	 * <p>The returned {@code Stream} will be properly closed by calling
 	 * {@link Stream#close()}, making it safe to use a resource such as
 	 * {@link java.nio.file.Files#lines(java.nio.file.Path) Files.lines()}.
 	 *
-	 * @param context the container extension context for the test template
-	 * method about to be invoked; never {@code null}
+	 * @param context the extension context for the test template method about
+	 * to be invoked; never {@code null}
 	 * @return a {@code Stream} of {@code TestTemplateInvocationContext}
 	 * instances for the invocation of the test template method; never {@code null}
 	 * or empty
 	 * @see #supportsTestTemplate
-	 * @see ContainerExtensionContext
+	 * @see ExtensionContext
 	 */
-	Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ContainerExtensionContext context);
+	Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context);
 
 }

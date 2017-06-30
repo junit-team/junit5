@@ -18,9 +18,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionCondition;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
@@ -29,8 +28,8 @@ import org.junit.platform.commons.util.StringUtils;
  *
  * @since 5.0
  * @see Disabled
- * @see #evaluate(ContainerExtensionContext)
- * @see #evaluate(TestExtensionContext)
+ * @see #evaluateContainerExecutionCondition(ExtensionContext)
+ * @see #evaluateTestExecutionCondition(ExtensionContext)
  */
 class DisabledCondition implements ContainerExecutionCondition, TestExecutionCondition {
 
@@ -41,7 +40,7 @@ class DisabledCondition implements ContainerExecutionCondition, TestExecutionCon
 	 * Containers are disabled if {@code @Disabled} is present on the test class.
 	 */
 	@Override
-	public ConditionEvaluationResult evaluateContainerExecutionCondition(ContainerExtensionContext context) {
+	public ConditionEvaluationResult evaluateContainerExecutionCondition(ExtensionContext context) {
 		return evaluate(context.getElement());
 	}
 
@@ -49,7 +48,7 @@ class DisabledCondition implements ContainerExecutionCondition, TestExecutionCon
 	 * Tests are disabled if {@code @Disabled} is present on the test method.
 	 */
 	@Override
-	public ConditionEvaluationResult evaluateTestExecutionCondition(TestExtensionContext context) {
+	public ConditionEvaluationResult evaluateTestExecutionCondition(ExtensionContext context) {
 		return evaluate(context.getElement());
 	}
 

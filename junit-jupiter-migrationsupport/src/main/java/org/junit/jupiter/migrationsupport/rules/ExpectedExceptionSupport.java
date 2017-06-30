@@ -17,10 +17,10 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.ExpectedExceptionAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
@@ -56,14 +56,14 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 		ExpectedException.class);
 
 	@Override
-	public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
+	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 		getStore(context).put(EXCEPTION_WAS_HANDLED, TRUE);
 		this.methodSupport.handleTestExecutionException(context, throwable);
 		this.fieldSupport.handleTestExecutionException(context, throwable);
 	}
 
 	@Override
-	public void afterEach(TestExtensionContext context) throws Exception {
+	public void afterEach(ExtensionContext context) throws Exception {
 		boolean exceptionWasHandled = getStore(context).getOrComputeIfAbsent(EXCEPTION_WAS_HANDLED, key -> FALSE,
 			Boolean.class);
 		if (!exceptionWasHandled) {
@@ -72,7 +72,7 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 		}
 	}
 
-	private Store getStore(TestExtensionContext context) {
+	private Store getStore(ExtensionContext context) {
 		return context.getStore(Namespace.create(ExpectedExceptionSupport.class, context.getUniqueId()));
 	}
 

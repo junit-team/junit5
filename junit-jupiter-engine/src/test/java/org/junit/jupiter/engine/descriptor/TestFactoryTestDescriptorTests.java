@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.engine.UniqueId;
@@ -36,22 +36,22 @@ import org.junit.platform.engine.support.hierarchical.Node;
 class TestFactoryTestDescriptorTests {
 
 	private JupiterEngineExecutionContext context;
-	private TestExtensionContext testExtensionContext;
+	private ExtensionContext extensionContext;
 	private TestFactoryTestDescriptor descriptor;
 	private boolean isClosed;
 
 	@BeforeEach
 	void before() throws Exception {
-		testExtensionContext = mock(TestExtensionContext.class);
+		extensionContext = mock(ExtensionContext.class);
 		isClosed = false;
 
 		context = new JupiterEngineExecutionContext(null, null).extend().withThrowableCollector(
-			new ThrowableCollector()).withExtensionContext(testExtensionContext).build();
+			new ThrowableCollector()).withExtensionContext(extensionContext).build();
 
 		Method testMethod = CustomStreamTestCase.class.getDeclaredMethod("customStream");
 		descriptor = new TestFactoryTestDescriptor(UniqueId.forEngine("engine"), CustomStreamTestCase.class,
 			testMethod);
-		when(testExtensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
+		when(extensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 	}
 
 	@Test
@@ -76,7 +76,7 @@ class TestFactoryTestDescriptorTests {
 
 	private void prepareMockForTestInstanceWithCustomStream(Stream<?> stream) {
 		Stream<?> mockStream = stream.onClose(() -> isClosed = true);
-		when(testExtensionContext.getTestInstance()).thenReturn(Optional.of(new CustomStreamTestCase(mockStream)));
+		when(extensionContext.getTestInstance()).thenReturn(Optional.of(new CustomStreamTestCase(mockStream)));
 	}
 
 	private static class CustomStreamTestCase {

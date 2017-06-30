@@ -14,7 +14,7 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.meta.API;
 
 /**
@@ -42,6 +42,6 @@ public interface ArgumentsProvider {
 	 * @param context the current extension context; never {@code null}
 	 * @return a stream of arguments; never {@code null}
 	 */
-	Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) throws Exception;
+	Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception;
 
 }

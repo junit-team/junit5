@@ -12,15 +12,15 @@ package example.exception;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 
 // @formatter:off
 // tag::user_guide[]
 public class IgnoreIOExceptionExtension implements TestExecutionExceptionHandler {
 
 	@Override
-	public void handleTestExecutionException(TestExtensionContext context, Throwable throwable)
+	public void handleTestExecutionException(ExtensionContext context, Throwable throwable)
 			throws Throwable {
 
 		if (throwable instanceof IOException) {

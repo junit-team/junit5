@@ -116,9 +116,9 @@ APIs for programmatic, _conditional test execution_.
 
 A `ContainerExecutionCondition` is _evaluated_ to determine if all tests in a given
 container (e.g., a test class) should be executed based on the supplied
-`ContainerExtensionContext`. Similarly, a `TestExecutionCondition` is _evaluated_ to
+`ExtensionContext`. Similarly, a `TestExecutionCondition` is _evaluated_ to
 determine if a given test method should be executed based on the supplied
-`TestExtensionContext`.
+`ExtensionContext`.
 
 When multiple `ContainerExecutionCondition` or `TestExecutionCondition` extensions are registered,
 a container or test, respectively, is disabled as soon as one of the conditions returns _disabled_.
@@ -270,9 +270,9 @@ you keep the state from one invocation of an extension to the next? The
 `ExtensionContext` API provides a `Store` exactly for this purpose.  Extensions may
 put values into a store for later retrieval.  See the
 `<<extensions-lifecycle-callbacks-timing-extension, TimingExtension>>` for an example of using the
-`Store` with a method-level scope. It is important to remember that values stored in a
-`TestExtensionContext` during test execution will not be available in the surrounding
-`ContainerExtensionContext`. Since `ContainerExtensionContexts` may be nested, the scope of inner
+`Store` with a method-level scope. It is important to remember that values stored in an
+`ExtensionContext` during test execution will not be available in the surrounding
+`ExtensionContext`. Since `ExtensionContexts` may be nested, the scope of inner
 contexts may also be limited. Consult the corresponding Javadoc for details on the methods
 available for storing and retrieving values via the `{ExtensionContext_Store}`.
 

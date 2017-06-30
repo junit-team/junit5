@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
@@ -52,7 +52,7 @@ public @interface FullLogging {
 		private final Map<String, Level> previouslyActiveLogLevels = new HashMap<>();
 
 		@Override
-		public void beforeAll(ContainerExtensionContext context) throws Exception {
+		public void beforeAll(ExtensionContext context) throws Exception {
 			Class<?> testClass = context.getTestClass().get();
 
 			// @formatter:off
@@ -72,7 +72,7 @@ public @interface FullLogging {
 		}
 
 		@Override
-		public void afterAll(ContainerExtensionContext context) throws Exception {
+		public void afterAll(ExtensionContext context) throws Exception {
 			previouslyActiveLogLevels.forEach(
 				(loggerName, previousLogLevel) -> Logger.getLogger(loggerName).setLevel(previousLogLevel));
 		}

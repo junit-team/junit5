@@ -56,31 +56,31 @@ public class KitchenSinkExtension implements
 	// --- Lifecycle Callbacks -------------------------------------------------
 
 	@Override
-	public void beforeAll(ContainerExtensionContext context) throws Exception {
+	public void beforeAll(ExtensionContext context) throws Exception {
 	}
 
 	@Override
-	public void beforeEach(TestExtensionContext context) throws Exception {
+	public void beforeEach(ExtensionContext context) throws Exception {
 	}
 
 	@Override
-	public void beforeTestExecution(TestExtensionContext context) throws Exception {
+	public void beforeTestExecution(ExtensionContext context) throws Exception {
 	}
 
 	@Override
-	public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
+	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 	}
 
 	@Override
-	public void afterTestExecution(TestExtensionContext context) throws Exception {
+	public void afterTestExecution(ExtensionContext context) throws Exception {
 	}
 
 	@Override
-	public void afterEach(TestExtensionContext context) throws Exception {
+	public void afterEach(ExtensionContext context) throws Exception {
 	}
 
 	@Override
-	public void afterAll(ContainerExtensionContext context) throws Exception {
+	public void afterAll(ExtensionContext context) throws Exception {
 	}
 
 	// --- Dependency Injection ------------------------------------------------
@@ -106,25 +106,24 @@ public class KitchenSinkExtension implements
 	// --- Conditional Test Execution ------------------------------------------
 
 	@Override
-	public ConditionEvaluationResult evaluateContainerExecutionCondition(ContainerExtensionContext context) {
+	public ConditionEvaluationResult evaluateContainerExecutionCondition(ExtensionContext context) {
 		return null;
 	}
 
 	@Override
-	public ConditionEvaluationResult evaluateTestExecutionCondition(TestExtensionContext context) {
+	public ConditionEvaluationResult evaluateTestExecutionCondition(ExtensionContext context) {
 		return null;
 	}
 
 	// --- @TestTemplate -------------------------------------------------------
 
 	@Override
-	public boolean supportsTestTemplate(ContainerExtensionContext context) {
+	public boolean supportsTestTemplate(ExtensionContext context) {
 		return false;
 	}
 
 	@Override
-	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
-			ContainerExtensionContext context) {
+	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 
 		return null;
 	}

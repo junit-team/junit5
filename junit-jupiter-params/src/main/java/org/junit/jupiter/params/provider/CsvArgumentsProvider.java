@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 
 /**
@@ -34,7 +34,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	}
 
 	@Override
-	public Stream<? extends Arguments> provideArguments(ContainerExtensionContext context) {
+	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
 		settings.getFormat().setQuote('\'');

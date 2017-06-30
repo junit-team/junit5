@@ -48,10 +48,8 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
@@ -832,7 +830,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			BeforeEachCallback, AfterEachCallback, TestTemplateInvocationContextProvider {
 
 		@Override
-		public ConditionEvaluationResult evaluateContainerExecutionCondition(ContainerExtensionContext context) {
+		public ConditionEvaluationResult evaluateContainerExecutionCondition(ExtensionContext context) {
 			instanceMap.put(containerExecutionConditionKey(context.getTestClass().get(),
 				context.getTestMethod().map(Method::getName).orElse(null)), context.getTestInstance().orElse(null));
 
@@ -847,36 +845,35 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public void beforeAll(ContainerExtensionContext context) {
+		public void beforeAll(ExtensionContext context) {
 			instanceMap.put(beforeAllCallbackKey(context.getTestClass().get()), context.getTestInstance().orElse(null));
 		}
 
 		@Override
-		public void afterAll(ContainerExtensionContext context) {
+		public void afterAll(ExtensionContext context) {
 			instanceMap.put(afterAllCallbackKey(context.getTestClass().get()), context.getTestInstance().orElse(null));
 		}
 
 		@Override
-		public void beforeEach(TestExtensionContext context) {
+		public void beforeEach(ExtensionContext context) {
 			instanceMap.put(
 				beforeEachCallbackKey(context.getTestClass().get(), context.getTestMethod().get().getName()),
 				context.getTestInstance().orElse(null));
 		}
 
 		@Override
-		public void afterEach(TestExtensionContext context) {
+		public void afterEach(ExtensionContext context) {
 			instanceMap.put(afterEachCallbackKey(context.getTestClass().get(), context.getTestMethod().get().getName()),
 				context.getTestInstance().orElse(null));
 		}
 
 		@Override
-		public boolean supportsTestTemplate(ContainerExtensionContext context) {
+		public boolean supportsTestTemplate(ExtensionContext context) {
 			return isAnnotated(context.getTestMethod(), SingletonTest.class);
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
-				ContainerExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 
 			instanceMap.put(testTemplateKey(context.getTestClass().get(), context.getTestMethod().get().getName()),
 				context.getTestInstance().orElse(null));

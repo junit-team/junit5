@@ -45,6 +45,6 @@ public interface AfterEachCallback extends Extension {
 	 *
 	 * @param context the current extension context; never {@code null}
 	 */
-	void afterEach(TestExtensionContext context) throws Exception;
+	void afterEach(ExtensionContext context) throws Exception;
 
 }

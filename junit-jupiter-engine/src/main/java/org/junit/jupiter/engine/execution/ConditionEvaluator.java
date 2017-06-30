@@ -23,11 +23,9 @@ import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionCondition;
-import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
@@ -56,18 +54,18 @@ public class ConditionEvaluator {
 
 	/**
 	 * Evaluate all {@link ContainerExecutionCondition}
-	 * extensions registered for the supplied {@link ContainerExtensionContext}.
+	 * extensions registered for the supplied {@link ExtensionContext}.
 	 *
-	 * @param context the current {@code ContainerExtensionContext}
+	 * @param context the current {@code ExtensionContext}
 	 * @return the first <em>disabled</em> {@code ConditionEvaluationResult},
 	 * or a default <em>enabled</em> {@code ConditionEvaluationResult} if no
 	 * disabled conditions are encountered
 	 */
 	public ConditionEvaluationResult evaluateForContainer(ExtensionRegistry extensionRegistry,
-			ConfigurationParameters configurationParameters, ContainerExtensionContext context) {
+			ConfigurationParameters configurationParameters, ExtensionContext context) {
 
 		BiFunction<Object, Object, ConditionEvaluationResult> evaluateAdaptor = (condition,
-				ctx) -> evaluate((ContainerExecutionCondition) condition, (ContainerExtensionContext) ctx);
+				ctx) -> evaluate((ContainerExecutionCondition) condition, (ExtensionContext) ctx);
 
 		return evaluate(ContainerExecutionCondition.class, evaluateAdaptor, extensionRegistry, configurationParameters,
 			context);
@@ -75,18 +73,18 @@ public class ConditionEvaluator {
 
 	/**
 	 * Evaluate all {@link TestExecutionCondition}
-	 * extensions registered for the supplied {@link TestExtensionContext}.
+	 * extensions registered for the supplied {@link ExtensionContext}.
 	 *
-	 * @param context the current {@code TestExtensionContext}
+	 * @param context the current {@code ExtensionContext}
 	 * @return the first <em>disabled</em> {@code ConditionEvaluationResult},
 	 * or a default <em>enabled</em> {@code ConditionEvaluationResult} if no
 	 * disabled conditions are encountered
 	 */
 	public ConditionEvaluationResult evaluateForTest(ExtensionRegistry extensionRegistry,
-			ConfigurationParameters configurationParameters, TestExtensionContext context) {
+			ConfigurationParameters configurationParameters, ExtensionContext context) {
 
 		BiFunction<Object, Object, ConditionEvaluationResult> evaluateAdaptor = (condition,
-				ctx) -> evaluate((TestExecutionCondition) condition, (TestExtensionContext) ctx);
+				ctx) -> evaluate((TestExecutionCondition) condition, (ExtensionContext) ctx);
 
 		return evaluate(TestExecutionCondition.class, evaluateAdaptor, extensionRegistry, configurationParameters,
 			context);
@@ -108,8 +106,7 @@ public class ConditionEvaluator {
 		// @formatter:on
 	}
 
-	private ConditionEvaluationResult evaluate(ContainerExecutionCondition condition,
-			ContainerExtensionContext context) {
+	private ConditionEvaluationResult evaluate(ContainerExecutionCondition condition, ExtensionContext context) {
 
 		try {
 			ConditionEvaluationResult result = condition.evaluateContainerExecutionCondition(context);
@@ -121,7 +118,7 @@ public class ConditionEvaluator {
 		}
 	}
 
-	private ConditionEvaluationResult evaluate(TestExecutionCondition condition, TestExtensionContext context) {
+	private ConditionEvaluationResult evaluate(TestExecutionCondition condition, ExtensionContext context) {
 		try {
 			ConditionEvaluationResult result = condition.evaluateTestExecutionCondition(context);
 			logResult(condition.getClass(), result);

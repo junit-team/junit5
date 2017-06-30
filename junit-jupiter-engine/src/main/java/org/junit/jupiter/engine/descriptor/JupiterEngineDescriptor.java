@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
@@ -36,7 +36,7 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry extensionRegistry = createRegistryWithDefaultExtensions(context.getConfigurationParameters());
 		EngineExecutionListener executionListener = context.getExecutionListener();
-		ContainerExtensionContext extensionContext = new JupiterEngineExtensionContext(executionListener, this);
+		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionListener, this);
 
 		// @formatter:off
 		return context.extend()

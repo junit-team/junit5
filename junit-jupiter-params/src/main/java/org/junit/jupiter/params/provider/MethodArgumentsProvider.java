@@ -13,7 +13,7 @@ package org.junit.jupiter.params.provider;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
@@ -32,7 +32,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 	}
 
 	@Override
-	public Stream<Arguments> provideArguments(ContainerExtensionContext context) {
+	public Stream<Arguments> provideArguments(ExtensionContext context) {
 		Class<?> testClass = context.getTestClass() //
 				.orElseThrow(() -> new JUnitException("Cannot invoke method without test class"));
 		// @formatter:off
