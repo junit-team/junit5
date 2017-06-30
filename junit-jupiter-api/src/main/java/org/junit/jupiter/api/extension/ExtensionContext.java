@@ -129,8 +129,8 @@ public interface ExtensionContext {
 	Optional<Method> getTestMethod();
 
 	/**
-	 * Get the exception that was thrown during execution of the test associated
-	 * with this {@code ExtensionContext}, if available.
+	 * Get the exception that was thrown during execution of the test or container
+	 * associated with this {@code ExtensionContext}, if available.
 	 *
 	 * <p>This method is typically used for logging and tracing purposes. If you
 	 * wish to actually <em>handle</em> an exception thrown during test execution,
@@ -140,11 +140,16 @@ public interface ExtensionContext {
 	 * a <em>test exception</em> returned by this method can be any exception
 	 * thrown during the invocation of a {@code @Test} method, its surrounding
 	 * {@code @BeforeEach} and {@code @AfterEach} methods, or a test-level
-	 * {@link Extension}. Note, however, that this method will never return an
-	 * exception swallowed by a {@code TestExecutionExceptionHandler}.
-	 * Furthermore, if multiple exceptions have been thrown during test execution,
-	 * the exception returned by this method will be the first such exception with
-	 * all additional exceptions {@linkplain Throwable#addSuppressed(Throwable)
+	 * {@link Extension}. Similarly, if this {@code ExtensionContext} represents
+	 * a test class, the <em>test exception</em> returned by this method can be
+	 * any exception thrown in an {@code @BeforeAll} or {@code AfterAll} method
+	 * or a class-level {@link Extension}.
+	 *
+	 * <p>Note, however, that this method will never return an exception
+	 * swallowed by a {@code TestExecutionExceptionHandler}. Furthermore, if
+	 * multiple exceptions have been thrown during test execution, the exception
+	 * returned by this method will be the first such exception with all
+	 * additional exceptions {@linkplain Throwable#addSuppressed(Throwable)
 	 * suppressed} in the first one.
 	 *
 	 * @return an {@code Optional} containing the exception thrown; never

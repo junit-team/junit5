@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineExecutionListener;
 
@@ -26,12 +27,14 @@ import org.junit.platform.engine.EngineExecutionListener;
 @API(Internal)
 public final class ClassExtensionContext extends AbstractExtensionContext<ClassTestDescriptor> {
 
+	private final ThrowableCollector throwableCollector;
 	private Object testInstance;
 
 	public ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			ClassTestDescriptor testDescriptor) {
+			ClassTestDescriptor testDescriptor, ThrowableCollector throwableCollector) {
 
 		super(parent, engineExecutionListener, testDescriptor);
+		this.throwableCollector = throwableCollector;
 	}
 
 	@Override
@@ -60,7 +63,7 @@ public final class ClassExtensionContext extends AbstractExtensionContext<ClassT
 
 	@Override
 	public Optional<Throwable> getTestException() {
-		return Optional.empty();
+		return Optional.ofNullable(this.throwableCollector.getThrowable());
 	}
 
 }

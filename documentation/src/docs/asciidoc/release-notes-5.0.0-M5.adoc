@@ -172,6 +172,8 @@ is placed on the Java 9 module path.
   `DoubleStream`, `IntStream`, and `LongStream` directly.
 * `@TestFactory` now supports arbitrarily nested dynamic containers. See `DynamicContainer`
   and abstract base class `DynamicNode` for details.
+* `ExtensionContext.getTestException()` now provides exceptions thrown in `@BeforeAll`
+  methods or `BeforeAllCallbacks` to `AfterAllCallbacks`.
 
 
 [[release-notes-5.0.0-m5-junit-vintage]]

@@ -131,15 +131,16 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
 
+		ThrowableCollector throwableCollector = new ThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this);
+			context.getExecutionListener(), this, throwableCollector);
 
 		// @formatter:off
 		return context.extend()
 				.withTestInstanceProvider(testInstanceProvider(context, registry, extensionContext))
 				.withExtensionRegistry(registry)
 				.withExtensionContext(extensionContext)
-				.withThrowableCollector(new ThrowableCollector())
+				.withThrowableCollector(throwableCollector)
 				.build();
 		// @formatter:on
 	}

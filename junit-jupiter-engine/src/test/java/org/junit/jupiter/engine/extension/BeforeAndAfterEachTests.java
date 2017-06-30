@@ -11,8 +11,8 @@
 package org.junit.jupiter.engine.extension;
 
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -177,8 +177,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		), callSequence, "wrong call sequence");
 		// @formatter:on
 
-		assertTrue(actualExceptionInAfterEachCallback.isPresent(), "test exception should be present");
-		assertEquals(EnigmaException.class, actualExceptionInAfterEachCallback.get().getClass());
+		assertThat(actualExceptionInAfterEachCallback).containsInstanceOf(EnigmaException.class);
 	}
 
 	@Test
@@ -207,8 +206,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		), callSequence, "wrong call sequence");
 		// @formatter:on
 
-		assertTrue(actualExceptionInAfterEachCallback.isPresent(), "test exception should be present");
-		assertEquals(EnigmaException.class, actualExceptionInAfterEachCallback.get().getClass());
+		assertThat(actualExceptionInAfterEachCallback).containsInstanceOf(EnigmaException.class);
 	}
 
 	@Test
@@ -253,8 +251,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 		assertEquals(expected, callSequence, "wrong call sequence");
 
-		assertTrue(actualExceptionInAfterEachCallback.isPresent(), "test exception should be present");
-		assertEquals(EnigmaException.class, actualExceptionInAfterEachCallback.get().getClass());
+		assertThat(actualExceptionInAfterEachCallback).containsInstanceOf(EnigmaException.class);
 	}
 
 	@Test
@@ -280,8 +277,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		), callSequence, "wrong call sequence");
 		// @formatter:on
 
-		assertTrue(actualExceptionInAfterEachCallback.isPresent(), "test exception should be present");
-		assertEquals(EnigmaException.class, actualExceptionInAfterEachCallback.get().getClass());
+		assertThat(actualExceptionInAfterEachCallback).containsInstanceOf(EnigmaException.class);
 	}
 
 	@Test
@@ -307,8 +303,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		), callSequence, "wrong call sequence");
 		// @formatter:on
 
-		assertTrue(actualExceptionInAfterEachCallback.isPresent(), "test exception should be present");
-		assertEquals(EnigmaException.class, actualExceptionInAfterEachCallback.get().getClass());
+		assertThat(actualExceptionInAfterEachCallback).containsInstanceOf(EnigmaException.class);
 	}
 
 	// -------------------------------------------------------------------------
@@ -547,14 +542,6 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		public void afterEach(ExtensionContext context) {
 			callSequence.add("exceptionThrowingAfterEachCallback");
 			throw new EnigmaException("AfterEachCallback");
-		}
-	}
-
-	@SuppressWarnings("serial")
-	private static class EnigmaException extends RuntimeException {
-
-		EnigmaException(String message) {
-			super(message);
 		}
 	}
 

@@ -11,12 +11,14 @@
 package org.junit.jupiter.engine.extension;
 
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,6 +42,8 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> callSequence = new ArrayList<>();
 
+	private static Optional<Throwable> actualExceptionInAfterAllCallback;
+
 	@Test
 	void beforeAllAndAfterAllCallbacks() {
 		// @formatter:off
@@ -53,6 +57,8 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 			"fooAfterAllCallback"
 		);
 		// @formatter:on
+
+		assertThat(actualExceptionInAfterAllCallback).isEmpty();
 	}
 
 	@Test
@@ -72,6 +78,8 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 			"fooAfterAllCallback"
 		);
 		// @formatter:on
+
+		assertThat(actualExceptionInAfterAllCallback).isEmpty();
 	}
 
 	@Test
@@ -95,6 +103,8 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 			"fooAfterAllCallback"
 		);
 		// @formatter:on
+
+		assertThat(actualExceptionInAfterAllCallback).isEmpty();
 	}
 
 	@Test
@@ -108,6 +118,8 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 			"fooAfterAllCallback"
 		);
 		// @formatter:on
+
+		assertThat(actualExceptionInAfterAllCallback).containsInstanceOf(EnigmaException.class);
 	}
 
 	@Test
@@ -122,6 +134,8 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 			"fooAfterAllCallback"
 		);
 		// @formatter:on
+
+		assertThat(actualExceptionInAfterAllCallback).containsInstanceOf(EnigmaException.class);
 	}
 
 	private void assertBeforeAllAndAfterAllCallbacks(Class<?> testClass, String... expectedCalls) {
@@ -210,7 +224,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		@BeforeAll
 		static void beforeAll() {
 			callSequence.add("beforeAllMethod");
-			throw new RuntimeException("@BeforeAll");
+			throw new EnigmaException("@BeforeAll");
 		}
 
 		@Test
@@ -255,6 +269,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public void afterAll(ExtensionContext context) {
 			callSequence.add("fooAfterAllCallback");
+			actualExceptionInAfterAllCallback = context.getTestException();
 		}
 	}
 
@@ -302,7 +317,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public void beforeAll(ExtensionContext context) {
 			callSequence.add("exceptionThrowingBeforeAllCallback");
-			throw new RuntimeException("BeforeAllCallback");
+			throw new EnigmaException("BeforeAllCallback");
 		}
 	}
 

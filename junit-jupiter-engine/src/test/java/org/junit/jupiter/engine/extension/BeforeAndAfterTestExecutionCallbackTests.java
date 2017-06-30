@@ -481,12 +481,4 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	@SuppressWarnings("serial")
-	private static class EnigmaException extends RuntimeException {
-
-		EnigmaException(String message) {
-			super(message);
-		}
-	}
-
 }
