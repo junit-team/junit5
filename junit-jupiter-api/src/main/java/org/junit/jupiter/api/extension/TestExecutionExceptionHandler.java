@@ -48,7 +48,7 @@ public interface TestExecutionExceptionHandler extends Extension {
 	 * the next registered {@code TestExecutionExceptionHandler} (if there is
 	 * one) will be invoked with any {@link Throwable} thrown by this handler.
 	 *
-	 * <p>Note that the {@link ExtensionContext#getTestException() test
+	 * <p>Note that the {@link ExtensionContext#getExecutionException() execution
 	 * exception} in the supplied {@code ExtensionContext} will <em>not</em>
 	 * contain the {@code Throwable} thrown during invocation of the corresponding
 	 * {@code @Test} method.

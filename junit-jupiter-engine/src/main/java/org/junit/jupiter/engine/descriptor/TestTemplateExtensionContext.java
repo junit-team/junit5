@@ -56,7 +56,7 @@ final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTe
 	}
 
 	@Override
-	public Optional<Throwable> getTestException() {
+	public Optional<Throwable> getExecutionException() {
 		return Optional.empty();
 	}
 

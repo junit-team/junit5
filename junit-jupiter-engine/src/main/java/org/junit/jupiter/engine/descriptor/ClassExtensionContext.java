@@ -62,7 +62,7 @@ public final class ClassExtensionContext extends AbstractExtensionContext<ClassT
 	}
 
 	@Override
-	public Optional<Throwable> getTestException() {
+	public Optional<Throwable> getExecutionException() {
 		return Optional.ofNullable(this.throwableCollector.getThrowable());
 	}
 

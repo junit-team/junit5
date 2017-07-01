@@ -433,7 +433,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		@Override
 		public void afterTestExecution(ExtensionContext context) {
 			callSequence.add("fooAfterTestExecutionCallback");
-			actualExceptionInAfterTestExecution = context.getTestException();
+			actualExceptionInAfterTestExecution = context.getExecutionException();
 		}
 	}
 

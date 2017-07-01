@@ -269,7 +269,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public void afterAll(ExtensionContext context) {
 			callSequence.add("fooAfterAllCallback");
-			actualExceptionInAfterAllCallback = context.getTestException();
+			actualExceptionInAfterAllCallback = context.getExecutionException();
 		}
 	}
 

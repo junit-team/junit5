@@ -137,13 +137,13 @@ public interface ExtensionContext {
 	 * implement the {@link TestExecutionExceptionHandler} API.
 	 *
 	 * <p>Unlike the exception passed to a {@code TestExecutionExceptionHandler},
-	 * a <em>test exception</em> returned by this method can be any exception
-	 * thrown during the invocation of a {@code @Test} method, its surrounding
-	 * {@code @BeforeEach} and {@code @AfterEach} methods, or a test-level
-	 * {@link Extension}. Similarly, if this {@code ExtensionContext} represents
-	 * a test class, the <em>test exception</em> returned by this method can be
-	 * any exception thrown in an {@code @BeforeAll} or {@code AfterAll} method
-	 * or a class-level {@link Extension}.
+	 * an <em>execution exception</em> returned by this method can be any
+	 * exception thrown during the invocation of a {@code @Test} method, its
+	 * surrounding {@code @BeforeEach} and {@code @AfterEach} methods, or a
+	 * test-level {@link Extension}. Similarly, if this {@code ExtensionContext}
+	 * represents a test class, the <em>execution exception</em> returned by
+	 * this method can be any exception thrown in a {@code @BeforeAll} or
+	 * {@code AfterAll} method or a class-level {@link Extension}.
 	 *
 	 * <p>Note, however, that this method will never return an exception
 	 * swallowed by a {@code TestExecutionExceptionHandler}. Furthermore, if
@@ -156,7 +156,7 @@ public interface ExtensionContext {
 	 * {@code null} but potentially empty if test execution has not (yet)
 	 * resulted in an exception
 	 */
-	Optional<Throwable> getTestException();
+	Optional<Throwable> getExecutionException();
 
 	/**
 	 * Publish a map of key-value pairs to be consumed by an
