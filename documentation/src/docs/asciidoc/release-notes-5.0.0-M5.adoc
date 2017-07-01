@@ -140,6 +140,7 @@ is placed on the Java 9 module path.
 | `ContainerExecutionCondition`           | `evaluate()`         | `evaluateExecutionCondition()` in `ExecutionCondition`
 | `TestExecutionCondition`                | `evaluate()`         | `evaluateExecutionCondition()` in `ExecutionCondition`
 | `TestExtensionContext`                  | `getTestException()` | `getExecutionException()` in `ExtensionContext`
+| `TestExtensionContext`                  | `getTestInstance()`  | `getTestInstance()` in `ExtensionContext`
 | `TestTemplateInvocationContextProvider` | `supports()`         | `supportsTestTemplate()`
 | `TestTemplateInvocationContextProvider` | `provide()`          | `provideTestTemplateInvocationContexts()`
 |===
