@@ -464,6 +464,7 @@ configure(rootProject) {
 		options.encoding = 'UTF-8'
 		options.jFlags '-Xmx1g'
 		options.links 'https://docs.oracle.com/javase/8/docs/api/', "http://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/"
+		options.stylesheetFile rootProject.file("src/javadoc/stylesheet.css")
 
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
