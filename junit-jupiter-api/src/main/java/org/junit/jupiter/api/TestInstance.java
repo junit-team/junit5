@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * a test class hierarchy.
  *
  * <h3>Use Cases</h3>
- * <p>Setting the test instance lifecycle mode to {@link Lifecycle.PER_CLASS
+ * <p>Setting the test instance lifecycle mode to {@link Lifecycle#PER_CLASS
  * PER_CLASS} enables the following features.
  * <ul>
  * <li>Shared test instance state between test methods in a given test class
