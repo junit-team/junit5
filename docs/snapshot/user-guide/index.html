@@ -2345,7 +2345,7 @@ bar, 2
 <span class="directive">static</span> <span class="type">class</span> <span class="class">MyArgumentsProvider</span> <span class="directive">implements</span> ArgumentsProvider {
 
     <span class="annotation">@Override</span>
-    <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; provideArguments(ContainerExtensionContext context) {
+    <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; provideArguments(ExtensionContext context) {
         <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>).map(Arguments::of);
     }
 }</code></pre>
@@ -3858,19 +3858,19 @@ register a duplicate extension implementation will be ignored.</p>
 <div class="sect2">
 <h3 id="extensions-conditions"><a class="anchor" href="#extensions-conditions"></a>5.3. Conditional Test Execution</h3>
 <div class="paragraph">
-<p><code><a href="../api/org/junit/jupiter/api/extension/ContainerExecutionCondition.html">ContainerExecutionCondition</a></code> and <code><a href="../api/org/junit/jupiter/api/extension/TestExecutionCondition.html">TestExecutionCondition</a></code> define the <code>Extension</code>
-APIs for programmatic, <em>conditional test execution</em>.</p>
+<p><code><a href="../api/org/junit/jupiter/api/extension/ExecutionCondition.html">ExecutionCondition</a></code> defines the <code>Extension</code> API for programmatic, <em>conditional test
+execution</em>.</p>
 </div>
 <div class="paragraph">
-<p>A <code>ContainerExecutionCondition</code> is <em>evaluated</em> to determine if all tests in a given
-container (e.g., a test class) should be executed based on the supplied
-<code>ContainerExtensionContext</code>. Similarly, a <code>TestExecutionCondition</code> is <em>evaluated</em> to
+<p>An <code>ExecutionCondition</code> is <em>evaluated</em> for each container (e.g., a test class) to
+determine if all the tests it contains should be executed based on the supplied
+<code>ExtensionContext</code>. Similarly, an <code>ExecutionCondition</code> is <em>evaluated</em> for each test to
 determine if a given test method should be executed based on the supplied
-<code>TestExtensionContext</code>.</p>
+<code>ExtensionContext</code>.</p>
 </div>
 <div class="paragraph">
-<p>When multiple <code>ContainerExecutionCondition</code> or <code>TestExecutionCondition</code> extensions are registered,
-a container or test, respectively, is disabled as soon as one of the conditions returns <em>disabled</em>.
+<p>When multiple <code>ExecutionCondition</code> extensions are registered,
+a container or test is disabled as soon as one of the conditions returns <em>disabled</em>.
 Thus, there is no guarantee that a condition is evaluated because another extension might
 have already caused a container or test to be disabled. In other words, the evaluation works like
 the short-circuiting boolean OR operator.</p>
@@ -4040,21 +4040,21 @@ and <code>AfterTestExecutionCallback</code> in order to time and log the test ex
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.AfterTestExecutionCallback</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.BeforeTestExecutionCallback</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.ExtensionContext</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.ExtensionContext.Namespace</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.ExtensionContext.Store</span>;
-<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.TestExtensionContext</span>;
 
 <span class="directive">public</span> <span class="type">class</span> <span class="class">TimingExtension</span> <span class="directive">implements</span> BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
     <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">Logger</span> LOG = <span class="predefined-type">Logger</span>.getLogger(TimingExtension.class.getName());
 
     <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="type">void</span> beforeTestExecution(TestExtensionContext context) <span class="directive">throws</span> <span class="exception">Exception</span> {
+    <span class="directive">public</span> <span class="type">void</span> beforeTestExecution(ExtensionContext context) <span class="directive">throws</span> <span class="exception">Exception</span> {
         getStore(context).put(context.getTestMethod().get(), <span class="predefined-type">System</span>.currentTimeMillis());
     }
 
     <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="type">void</span> afterTestExecution(TestExtensionContext context) <span class="directive">throws</span> <span class="exception">Exception</span> {
+    <span class="directive">public</span> <span class="type">void</span> afterTestExecution(ExtensionContext context) <span class="directive">throws</span> <span class="exception">Exception</span> {
         <span class="predefined-type">Method</span> testMethod = context.getTestMethod().get();
         <span class="type">long</span> start = getStore(context).remove(testMethod, <span class="type">long</span>.class);
         <span class="type">long</span> duration = <span class="predefined-type">System</span>.currentTimeMillis() - start;
@@ -4062,7 +4062,7 @@ and <code>AfterTestExecutionCallback</code> in order to time and log the test ex
         LOG.info(() -&gt; <span class="predefined-type">String</span>.format(<span class="string"><span class="delimiter">&quot;</span><span class="content">Method [%s] took %s ms.</span><span class="delimiter">&quot;</span></span>, testMethod.getName(), duration));
     }
 
-    <span class="directive">private</span> Store getStore(TestExtensionContext context) {
+    <span class="directive">private</span> Store getStore(ExtensionContext context) {
         <span class="keyword">return</span> context.getStore(Namespace.create(getClass(), context));
     }
 
@@ -4119,7 +4119,7 @@ but rethrow any other type of exception.</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">IgnoreIOExceptionExtension</span> <span class="directive">implements</span> TestExecutionExceptionHandler {
 
     <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="type">void</span> handleTestExecutionException(TestExtensionContext context, <span class="predefined-type">Throwable</span> throwable)
+    <span class="directive">public</span> <span class="type">void</span> handleTestExecutionException(ExtensionContext context, <span class="predefined-type">Throwable</span> throwable)
             <span class="directive">throws</span> <span class="predefined-type">Throwable</span> {
 
         <span class="keyword">if</span> (throwable <span class="keyword">instanceof</span> <span class="exception">IOException</span>) {
@@ -4139,9 +4139,9 @@ you keep the state from one invocation of an extension to the next? The
 <code>ExtensionContext</code> API provides a <code>Store</code> exactly for this purpose.  Extensions may
 put values into a store for later retrieval.  See the
 <code><a href="#extensions-lifecycle-callbacks-timing-extension">TimingExtension</a></code> for an example of using the
-<code>Store</code> with a method-level scope. It is important to remember that values stored in a
-<code>TestExtensionContext</code> during test execution will not be available in the surrounding
-<code>ContainerExtensionContext</code>. Since <code>ContainerExtensionContexts</code> may be nested, the scope of inner
+<code>Store</code> with a method-level scope. It is important to remember that values stored in an
+<code>ExtensionContext</code> during test execution will not be available in the surrounding
+<code>ExtensionContext</code>. Since <code>ExtensionContexts</code> may be nested, the scope of inner
 contexts may also be limited. Consult the corresponding Javadoc for details on the methods
 available for storing and retrieving values via the <code><a href="../api/org/junit/jupiter/api/extension/ExtensionContext.Store.html">Store</a></code>.</p>
 </div>
@@ -6079,6 +6079,19 @@ the functionality for creating an <code>Arguments</code> instance is now availab
 <code>ExtensionContext</code> API. Furthermore, the signature has changed from
 <code>Object getTestInstance()</code> to <code>Optional&lt;Object&gt; getTestInstance()</code>.</p>
 </li>
+<li>
+<p>The <code>getTestException()</code> method in the <code>TestExtensionContext</code> API has been moved to the
+<code>ExtensionContext</code> API and renamed to <code>getExecutionException()</code>.</p>
+</li>
+<li>
+<p>The <code>TestExtensionContext</code> and <code>ContainerExtensionContext</code> interfaces have been removed,
+and all <code>Extension</code> interfaces have been changed to use <code>ExtensionContext</code> instead.</p>
+</li>
+<li>
+<p><code>TestExecutionCondition</code> and <code>ContainerExecutionCondition</code> have been replaced by a
+single, general purpose extension API for conditional test execution:
+<code>ExecutionCondition</code>.</p>
+</li>
 </ul>
 </div>
 <table id="release-notes-5.0.0-m5-migration-extension-api" class="tableblock frame-all grid-all spread">
@@ -6092,7 +6105,7 @@ the functionality for creating an <code>Arguments</code> instance is now availab
 <tr>
 <th class="tableblock halign-left valign-top">Extension API</th>
 <th class="tableblock halign-left valign-top">Old Name</th>
-<th class="tableblock halign-left valign-top">New Name</th>
+<th class="tableblock halign-left valign-top">New Name/Location</th>
 </tr>
 </thead>
 <tbody>
@@ -6109,12 +6122,17 @@ the functionality for creating an <code>Arguments</code> instance is now availab
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ContainerExecutionCondition</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluate()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluateContainerExecutionCondition()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluateExecutionCondition()</code> in <code>ExecutionCondition</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestExecutionCondition</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluate()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluateTestExecutionCondition()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluateExecutionCondition()</code> in <code>ExecutionCondition</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestExtensionContext</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getTestException()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getExecutionException()</code> in <code>ExtensionContext</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestTemplateInvocationContextProvider</code></p></td>
@@ -6192,6 +6210,10 @@ newly introduced engine-level <code>ExtensionContext</code>.</p>
 <p><code>@TestFactory</code> now supports arbitrarily nested dynamic containers. See <code>DynamicContainer</code>
 and abstract base class <code>DynamicNode</code> for details.</p>
 </li>
+<li>
+<p><code>ExtensionContext.getExecutionException()</code> now provides exceptions thrown in <code>@BeforeAll</code>
+methods or <code>BeforeAllCallbacks</code> to <code>AfterAllCallbacks</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -6221,7 +6243,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-06-30 12:19:33 EDT
+Last updated 2017-07-01 12:11:04 EDT
 </div>
 </div>
 </body>
