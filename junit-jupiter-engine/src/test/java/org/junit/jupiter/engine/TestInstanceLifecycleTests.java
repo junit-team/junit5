@@ -878,7 +878,11 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void postProcessTestInstance(ExtensionContext context) {
-			Object testInstance = context.getTestInstance().orElse(null);
+			Object testInstance = context.getTestInstance().orElseThrow(() -> {
+				IllegalStateException exception = new IllegalStateException("test instance must not be null");
+				exception.printStackTrace(System.err);
+				return exception;
+			});
 			instanceMap.put(postProcessTestInstanceKey(context.getTestClass().get()), testInstance);
 		}
 
@@ -894,15 +898,25 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
+			Object testInstance = context.getTestInstance().orElseThrow(() -> {
+				IllegalStateException exception = new IllegalStateException("test instance must not be null");
+				exception.printStackTrace(System.err);
+				return exception;
+			});
 			instanceMap.put(
 				beforeEachCallbackKey(context.getTestClass().get(), context.getTestMethod().get().getName()),
-				context.getTestInstance().orElse(null));
+				testInstance);
 		}
 
 		@Override
 		public void afterEach(ExtensionContext context) {
+			Object testInstance = context.getTestInstance().orElseThrow(() -> {
+				IllegalStateException exception = new IllegalStateException("test instance must not be null");
+				exception.printStackTrace(System.err);
+				return exception;
+			});
 			instanceMap.put(afterEachCallbackKey(context.getTestClass().get(), context.getTestMethod().get().getName()),
-				context.getTestInstance().orElse(null));
+				testInstance);
 		}
 
 		@Override
@@ -912,9 +926,13 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
-
+			Object testInstance = context.getTestInstance().orElseThrow(() -> {
+				IllegalStateException exception = new IllegalStateException("test instance must not be null");
+				exception.printStackTrace(System.err);
+				return exception;
+			});
 			instanceMap.put(testTemplateKey(context.getTestClass().get(), context.getTestMethod().get().getName()),
-				context.getTestInstance().orElse(null));
+				testInstance);
 
 			return Stream.of(new TestTemplateInvocationContext() {
 			});
