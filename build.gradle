@@ -372,8 +372,8 @@ subprojects { subproj ->
 		}
 	}
 
+	// Enable JAR manifest generation
 	compileJava.doLast {
-		// Enable JAR manifest generation
 		generateManifest = true
 	}
 
@@ -524,11 +524,12 @@ configure(rootProject) {
 		task cloverHtmlReport(dependsOn: cloverAggregateDatabases) {
 			outputs.dir "$buildDir/reports/clover/html"
 			doLast {
-				ant."clover-report"(initString: cloverAggregationFile) {
-					current(outfile: "$buildDir/reports/clover/html", title: rootProject.description, homepage: 'overview') {
-						format(type: 'html')
+				ant."clover-report"(
+					initString: cloverAggregationFile) {
+					current(
+						outfile: "$buildDir/reports/clover/html", 
+						title: rootProject.description, homepage: 'overview') { format(type: 'html') }
 					}
-				}
 			}
 		}
 
@@ -536,9 +537,7 @@ configure(rootProject) {
 			outputs.file "$buildDir/reports/clover/clover.xml"
 			doLast {
 				ant."clover-report"(initString: cloverAggregationFile) {
-					current(outfile: "$buildDir/reports/clover/clover.xml") {
-						format(type: 'xml')
-					}
+					current(outfile: "$buildDir/reports/clover/clover.xml") { format(type: 'xml') }
 				}
 			}
 		}

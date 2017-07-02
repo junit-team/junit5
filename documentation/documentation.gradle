@@ -59,7 +59,8 @@ asciidoctor {
 
 	backends 'html5', 'pdf' // , 'epub3'
 
-	attributes	'jupiter-version': project.property('version'),
+	attributes(	
+				'jupiter-version': project.property('version'),
 				'platform-version': project.property('platformVersion'),
 				'vintage-version': project.property('vintageVersion'),
 				'junit4-version': project.property('junit4Version'),
@@ -75,5 +76,5 @@ asciidoctor {
 				'icons': 'font',
 				'sectanchors': true,
 				'idprefix': '',
-				'idseparator': '-'
+				'idseparator': '-')
 }
