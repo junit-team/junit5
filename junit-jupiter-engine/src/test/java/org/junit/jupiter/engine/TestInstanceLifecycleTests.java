@@ -877,9 +877,8 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-			assertNotNull(testInstance);
-			context.getTestInstance().ifPresent(instance -> assertSame(testInstance, instance));
+		public void postProcessTestInstance(ExtensionContext context) {
+			Object testInstance = context.getTestInstance().orElse(null);
 			instanceMap.put(postProcessTestInstanceKey(context.getTestClass().get()), testInstance);
 		}
 

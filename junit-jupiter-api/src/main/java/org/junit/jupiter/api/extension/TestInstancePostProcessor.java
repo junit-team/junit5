@@ -25,16 +25,18 @@ import org.junit.platform.commons.meta.API;
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
+ * @see #postProcessTestInstance(ExtensionContext)
  */
 @API(Experimental)
 public interface TestInstancePostProcessor extends Extension {
 
 	/**
-	 * Callback for post-processing the supplied test instance.
+	 * Callback for post-processing the test instance in the supplied
+	 * {@link ExtensionContext}.
 	 *
-	 * @param testInstance the instance to post-process; never {@code null}
 	 * @param context the current extension context; never {@code null}
+	 * @see ExtensionContext#getTestInstance()
 	 */
-	void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception;
+	void postProcessTestInstance(ExtensionContext context) throws Exception;
 
 }

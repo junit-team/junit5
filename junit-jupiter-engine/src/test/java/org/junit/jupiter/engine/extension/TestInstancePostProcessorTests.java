@@ -159,7 +159,8 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 	private static class FooInstancePostProcessor implements TestInstancePostProcessor {
 
 		@Override
-		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
+		public void postProcessTestInstance(ExtensionContext context) throws Exception {
+			Object testInstance = context.getTestInstance().orElse(null);
 			if (testInstance instanceof Named) {
 				((Named) testInstance).setName("foo");
 			}
@@ -170,7 +171,8 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 	private static class BarInstancePostProcessor implements TestInstancePostProcessor {
 
 		@Override
-		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
+		public void postProcessTestInstance(ExtensionContext context) throws Exception {
+			Object testInstance = context.getTestInstance().orElse(null);
 			if (testInstance instanceof Named) {
 				((Named) testInstance).setName("bar");
 			}

@@ -193,7 +193,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		Object instance = instantiateTestClass(context, registry, extensionContext);
 		testInstanceConsumer.accept(instance);
-		invokeTestInstancePostProcessors(instance, registry, extensionContext);
+		invokeTestInstancePostProcessors(registry, extensionContext);
 		return instance;
 	}
 
@@ -204,11 +204,9 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		return executableInvoker.invoke(constructor, extensionContext, registry);
 	}
 
-	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
-			ExtensionContext context) {
-
+	private void invokeTestInstancePostProcessors(ExtensionRegistry registry, ExtensionContext context) {
 		registry.stream(TestInstancePostProcessor.class).forEach(
-			extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, context)));
+			extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(context)));
 	}
 
 	private void invokeBeforeAllCallbacks(JupiterEngineExecutionContext context) {
