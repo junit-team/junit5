@@ -556,7 +556,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-test-interfaces-and-default-methods">3.11. Test Interfaces and Default Methods</a></li>
 <li><a href="#writing-tests-repeated-tests">3.12. Repeated Tests</a></li>
 <li><a href="#writing-tests-parameterized-tests">3.13. Parameterized Tests</a></li>
-<li><a href="#writing-tests-dynamic-tests">3.14. Dynamic Tests</a></li>
+<li><a href="#writing-tests-test-templates">3.14. Test Templates</a></li>
+<li><a href="#writing-tests-dynamic-tests">3.15. Dynamic Tests</a></li>
 </ul>
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
@@ -576,9 +577,10 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#extensions-parameter-resolution">5.5. Parameter Resolution</a></li>
 <li><a href="#extensions-lifecycle-callbacks">5.6. Test Lifecycle Callbacks</a></li>
 <li><a href="#extensions-exception-handling">5.7. Exception Handling</a></li>
-<li><a href="#extensions-keeping-state">5.8. Keeping State in Extensions</a></li>
-<li><a href="#extensions-supported-utilities">5.9. Supported Utilities in Extensions</a></li>
-<li><a href="#extensions-execution-order">5.10. Relative Execution Order of User Code and Extensions</a></li>
+<li><a href="#extensions-test-templates">5.8. Providing Invocation Contexts for Test Templates</a></li>
+<li><a href="#extensions-keeping-state">5.9. Keeping State in Extensions</a></li>
+<li><a href="#extensions-supported-utilities">5.10. Supported Utilities in Extensions</a></li>
+<li><a href="#extensions-execution-order">5.11. Relative Execution Order of User Code and Extensions</a></li>
 </ul>
 </li>
 <li><a href="#migrating-from-junit4">6. Migrating from JUnit 4</a>
@@ -892,6 +894,10 @@ module.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestInstance</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used to configure the <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> for the annotated test class</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestTemplate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a <a href="#writing-tests-test-templates">template for test cases</a> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <a href="#extensions-test-templates">providers</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@DisplayName</code></p></td>
@@ -2602,7 +2608,19 @@ parameter lists, values from argument sources are not resolved for lifecycle met
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.14. Dynamic Tests</h3>
+<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.14. Test Templates</h3>
+<div class="paragraph">
+<p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method is not a regular test case but rather a template for test cases.
+As such, it is designed to be invoked multiple times depending on the number of invocation
+contexts returned by the registered providers. Thus, it must be used in conjunction with
+a registered <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> extension. Each invocation of a
+test template method behaves like the execution of a regular <code>@Test</code> method with full
+support for the same lifecycle callbacks and extensions. Please refer to
+<a href="#extensions-test-templates">Providing Invocation Contexts for Test Templates</a> for usage examples.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.15. Dynamic Tests</h3>
 <div class="paragraph">
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in <a href="#writing-tests-annotations">Annotations</a>
 is very similar to the <code>@Test</code> annotation in JUnit 4.
@@ -2666,7 +2684,7 @@ methods; however, this might be complemented by a registration facility in a lat
 release.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.14.1. Dynamic Test Examples</h4>
+<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.15.1. Dynamic Test Examples</h4>
 <div class="paragraph">
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories and dynamic tests.</p>
 </div>
@@ -4132,7 +4150,91 @@ but rethrow any other type of exception.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>5.8. Keeping State in Extensions</h3>
+<h3 id="extensions-test-templates"><a class="anchor" href="#extensions-test-templates"></a>5.8. Providing Invocation Contexts for Test Templates</h3>
+<div class="paragraph">
+<p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method can only be executed when at least one
+<code><a href="../api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> is registered. Each such provider is responsible
+for providing a <code>Stream</code> of <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateInvocationContext.html">TestTemplateInvocationContext</a></code> instances. Each context may
+specify a custom display name and a list of additional extensions that will only be used
+for the next invocation of the <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how to write a test template as well as how to register and
+implement a <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">A test template with accompanying extension</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@TestTemplate</span>
+<span class="annotation">@ExtendWith</span>(MyTestTemplateInvocationContextProvider.class)
+<span class="type">void</span> testTemplate(<span class="predefined-type">String</span> parameter) {
+    assertEquals(<span class="integer">3</span>, parameter.length());
+}
+
+<span class="directive">static</span> <span class="type">class</span> <span class="class">MyTestTemplateInvocationContextProvider</span> <span class="directive">implements</span> TestTemplateInvocationContextProvider {
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">boolean</span> supportsTestTemplate(ExtensionContext context) {
+        <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> Stream&lt;TestTemplateInvocationContext&gt; provideTestTemplateInvocationContexts(ExtensionContext context) {
+        <span class="keyword">return</span> Stream.of(invocationContext(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>), invocationContext(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>));
+    }
+
+    <span class="directive">private</span> TestTemplateInvocationContext invocationContext(<span class="predefined-type">String</span> parameter) {
+        <span class="keyword">return</span> <span class="keyword">new</span> TestTemplateInvocationContext() {
+            <span class="annotation">@Override</span>
+            <span class="directive">public</span> <span class="predefined-type">String</span> getDisplayName(<span class="type">int</span> invocationIndex) {
+                <span class="keyword">return</span> parameter;
+            }
+
+            <span class="annotation">@Override</span>
+            <span class="directive">public</span> <span class="predefined-type">List</span>&lt;Extension&gt; getAdditionalExtensions() {
+                <span class="keyword">return</span> <span class="predefined-type">Collections</span>.singletonList(<span class="keyword">new</span> ParameterResolver() {
+                    <span class="annotation">@Override</span>
+                    <span class="directive">public</span> <span class="type">boolean</span> supportsParameter(ParameterContext parameterContext,
+                            ExtensionContext extensionContext) {
+                        <span class="keyword">return</span> parameterContext.getParameter().getType().equals(<span class="predefined-type">String</span>.class);
+                    }
+
+                    <span class="annotation">@Override</span>
+                    <span class="directive">public</span> <span class="predefined-type">Object</span> resolveParameter(ParameterContext parameterContext,
+                            ExtensionContext extensionContext) {
+                        <span class="keyword">return</span> parameter;
+                    }
+                });
+            }
+        };
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example, the test template will be invoked twice. The display names of the
+invocations will be &#8220;foo&#8221; and &#8220;bar&#8221; as specified by the invocation context. Each
+invocation registers a custom <code><a href="../api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> which is used to resolve the method
+parameter. The output when using the <code>ConsoleLauncher</code> is as follows.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>└─ testTemplate(String) ✔
+   ├─ foo ✔
+   └─ bar ✔</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> extension API is primarily intended for
+implementing different kinds of tests that rely on repetitive invocation of a test-like
+method albeit in different contexts — for example, with different parameters, by preparing
+the test class instance differently, or multiple times without modifying the context.
+Please refer to the implementations of <a href="#writing-tests-repeated-tests">Repeated Tests</a> or
+<a href="#writing-tests-parameterized-tests">Parameterized Tests</a> which use this extension point to provide their
+functionality.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>5.9. Keeping State in Extensions</h3>
 <div class="paragraph">
 <p>Usually, an extension is instantiated only once. So the question becomes relevant: How do
 you keep the state from one invocation of an extension to the next? The
@@ -4147,7 +4249,7 @@ available for storing and retrieving values via the <code><a href="../api/org/ju
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.9. Supported Utilities in Extensions</h3>
+<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.10. Supported Utilities in Extensions</h3>
 <div class="paragraph">
 <p>The JUnit Platform Commons artifact exposes a package named
 <code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that contains <em>maintained</em> utility methods for working
@@ -4157,7 +4259,7 @@ of the JUnit Platform.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.10. Relative Execution Order of User Code and Extensions</h3>
+<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.11. Relative Execution Order of User Code and Extensions</h3>
 <div class="paragraph">
 <p>When executing a test class that contains one or more test methods, a number of extension
 callbacks are called in addition to the user-provided test and lifecycle methods. The
@@ -6249,7 +6351,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-02 08:41:03 EDT
+Last updated 2017-07-02 11:53:00 EDT
 </div>
 </div>
 </body>
