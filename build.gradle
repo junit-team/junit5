@@ -64,12 +64,14 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
-	licenseHeaderFileProvider = { project -> (
-		project.name == 'junit-platform-surefire-provider'
-			? 'apache-license-2.0.java'
-			: 'eclipse-public-license-1.0.java'
-		)
+	headerTextProvider = { project ->
+		def filename = (project.name == 'junit-platform-surefire-provider') ?
+				'apache-license-2.0.java' : 'eclipse-public-license-1.0.java'
+		return rootProject.file('src/spotless/' + filename)
 	}
+	importOrderConfig = rootProject.file('src/eclipse/junit-eclipse.importorder')
+	formatterJavaConfig = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+	formatterGroovyConfig = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
 
 	cloverTestProjects = [
 		'junit-jupiter-engine',
@@ -397,15 +399,11 @@ subprojects { subproj ->
 	}
 
 	spotless {
-		def headerText = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
-		def importOrderConfig = rootProject.file('src/eclipse/junit-eclipse.importorder')
-		def formatterJavaConfig = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
-		def formatterGroovyConfig = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
-
+		def headerText = project.headerTextProvider.call(subproj)
 		java {
 			licenseHeaderFile headerText, '(package|import) '
-			importOrderFile importOrderConfig
-			eclipse().configFile formatterJavaConfig
+			importOrderFile subproj.importOrderConfig
+			eclipse().configFile subproj.formatterJavaConfig
 			if (org.gradle.api.JavaVersion.current() == org.gradle.api.JavaVersion.VERSION_1_8) {
 				removeUnusedImports()
 			}
@@ -413,12 +411,11 @@ subprojects { subproj ->
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
-
 		groovy {
 			target 'src/**/*.groovy'
 			licenseHeaderFile headerText, "package "
-			importOrderFile importOrderConfig
-			greclipse().configFile formatterJavaConfig, formatterGroovyConfig
+			importOrderFile subproj.importOrderConfig
+			greclipse().configFile subproj.formatterJavaConfig, subproj.formatterGroovyConfig
 
 			trimTrailingWhitespace()
 			endWithNewline()
@@ -483,8 +480,18 @@ configure(rootProject) {
 	}
 
 	spotless {
+		groovy {
+			target '**/*.gradle'
+			greclipse().configFile project.formatterJavaConfig, project.formatterGroovyConfig
+			trimTrailingWhitespace()
+			endWithNewline()
+			replaceRegex 'Remove line breaks between consecutive closing parentheses', /\)\n[\s]+\)\n/, '))\n'
+			replaceRegex 'Remove indentation at beginning of commented out code', /\/\*\n\s+([\w\s]+\{)\n/, '/*\n$1\n'
+			replaceRegex 'Remove indentation at end of commented out code', /\n\s\}\n\s\*\/\n/, '\n}\n*/\n'
+
+		}
 		format 'misc', {
-			target '**/*.gradle', '**/*.gitignore'
+			target '**/*.gitignore'
 			indentWithTabs()
 			trimTrailingWhitespace()
 			endWithNewline()
