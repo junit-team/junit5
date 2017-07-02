@@ -1,3 +1,0 @@
-dependencies {
-	compile files("${System.properties['java.home']}/../lib/tools.jar")
-}
