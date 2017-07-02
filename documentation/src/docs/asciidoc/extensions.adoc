@@ -292,14 +292,17 @@ When executing a test class that contains one or more test methods, a number of 
 callbacks are called in addition to the user-provided test and lifecycle methods. The
 following diagram illustrates the relative order of user-provided code and extension code.
 
-[[extensions-lifecycle]]
-image::extensions_lifecycle.png[caption="Figure 2: ", title="User code and extension code"]
+:figure-caption: User code and extension code
+
+[#extensions-execution-order-diagram,reftext='{figure-caption}']
+image::extensions_lifecycle.png[caption='',title='{figure-caption}']
 
 User-provided test and lifecycle methods are shown in orange, with callback code provided
 by extensions shown in blue. The grey box denotes the execution of a single test method
 and will be repeated for every test method in the test class.
 
-The following table further explains the twelve steps in Figure 2.
+The following table further explains the twelve steps in the
+<<extensions-execution-order-diagram>> diagram.
 
 [cols="5,15,80"]
 |===
