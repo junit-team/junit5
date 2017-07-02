@@ -26,6 +26,8 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 
 /**
+ * The JUnit Jupiter {@link org.junit.platform.engine.TestEngine}.
+ *
  * @since 5.0
  */
 @API(Experimental)

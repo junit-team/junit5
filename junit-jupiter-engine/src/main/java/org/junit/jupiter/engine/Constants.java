@@ -10,11 +10,16 @@
 
 package org.junit.jupiter.engine;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+
+import org.junit.platform.commons.meta.API;
+
 /**
  * Collection of constants related to the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
+@API(Experimental)
 public final class Constants {
 
 	/**

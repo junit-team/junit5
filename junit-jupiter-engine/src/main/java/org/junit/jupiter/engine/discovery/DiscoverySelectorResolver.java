@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
@@ -38,7 +38,7 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
  * @see JavaElementsResolver
  *
  */
-@API(Experimental)
+@API(Internal)
 public class DiscoverySelectorResolver {
 
 	private static final IsScannableTestClass isScannableTestClass = new IsScannableTestClass();

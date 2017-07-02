@@ -30,6 +30,8 @@ import org.junit.vintage.engine.discovery.JUnit4DiscoveryRequestResolver;
 import org.junit.vintage.engine.execution.RunnerExecutor;
 
 /**
+ * The JUnit Vintage {@link TestEngine}.
+ *
  * @since 4.12
  */
 @API(Experimental)
