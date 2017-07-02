@@ -262,6 +262,44 @@ but rethrow any other type of exception.
 include::{testDir}/example/exception/IgnoreIOExceptionExtension.java[tags=user_guide]
 ----
 
+[[extensions-test-templates]]
+=== Providing Invocation Contexts for Test Templates
+
+A `{TestTemplate}` method can only be executed when at least one
+`{TestTemplateInvocationContextProvider}` is registered. Its responsibility is to provide
+a `Stream` of `{TestTemplateInvocationContext}` instances. Each context may provide a
+custom display name and a list of additional extensions that will only be used for the
+next invocation of the `{TestTemplate}` method.
+
+
+The following example shows how to write a test template, and how to register and
+implement a `{TestTemplateInvocationContextProvider}`.
+
+[source,java,indent=0]
+.A test template with accompanying extension
+----
+include::{testDir}/example/TestTemplateDemo.java[tags=user_guide]
+----
+
+In this example, the test template will be invoked twice. The display names of the
+invocations will be "`foo`" and "`bar`" as specified by the invocation context. Each
+invocation registers a custom `{ParameterResolver}` which is used to resolve the method
+parameter. The output when using the `ConsoleLauncher` is as follows.
+
+....
+└─ testTemplate(String) ✔
+   ├─ foo ✔
+   └─ bar ✔
+....
+
+This extension is primarily intended to implement different kinds of tests that rely on
+repetitive invocation of a test-like method albeit in different contexts —
+for example, with different parameters, by preparing the test class instance differently,
+or multiple times without modifying the context. Please refer to the implementations of
+<<writing-tests-repeated-tests>> or <<writing-tests-parameterized-tests>> which use this
+extension point to provide their functionality.
+
+
 [[extensions-keeping-state]]
 === Keeping State in Extensions
 
