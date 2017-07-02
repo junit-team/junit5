@@ -4163,11 +4163,11 @@ of the JUnit Platform.</p>
 callbacks are called in addition to the user-provided test and lifecycle methods. The
 following diagram illustrates the relative order of user-provided code and extension code.</p>
 </div>
-<div id="extensions-lifecycle" class="imageblock">
+<div id="extensions-execution-order-diagram" class="imageblock">
 <div class="content">
 <img src="images/extensions_lifecycle.png" alt="extensions lifecycle">
 </div>
-<div class="title">Figure 2: User code and extension code</div>
+<div class="title">User code and extension code</div>
 </div>
 <div class="paragraph">
 <p>User-provided test and lifecycle methods are shown in orange, with callback code provided
@@ -4175,7 +4175,8 @@ by extensions shown in blue. The grey box denotes the execution of a single test
 and will be repeated for every test method in the test class.</p>
 </div>
 <div class="paragraph">
-<p>The following table further explains the twelve steps in Figure 2.</p>
+<p>The following table further explains the twelve steps in the
+<a href="#extensions-execution-order-diagram">User code and extension code</a> diagram.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
