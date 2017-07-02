@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
@@ -59,7 +60,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 			context.getExtensionRegistry());
 
 		// The test instance should be properly maintained by the enclosing class's ExtensionContext.
-		Object testInstance = context.getExtensionContext().getTestInstance().orElse(null);
+		Object testInstance = context.getExtensionContext().getTestInstance().orElseThrow(() -> new JUnitException(
+			"Illegal state: test instance not present for method: " + getTestMethod().toGenericString()));
 
 		ExtensionContext extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, testInstance);
