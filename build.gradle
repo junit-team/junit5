@@ -51,16 +51,9 @@ ext {
 		'junit-platform-surefire-provider'
 	]
 
-	jupiterProjects = [
-		'junit-jupiter-api',
-		'junit-jupiter-engine',
-		'junit-jupiter-migrationsupport',
-		'junit-jupiter-params'
-	]
+	jupiterProjects = ['junit-jupiter-api', 'junit-jupiter-engine', 'junit-jupiter-migrationsupport', 'junit-jupiter-params']
 
-	vintageProjects = [
-		'junit-vintage-engine'
-	]
+	vintageProjects = ['junit-vintage-engine']
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
@@ -99,10 +92,8 @@ allprojects { subproj ->
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	buildscript {
-		repositories {
-			// mavenLocal()
-			mavenCentral()
-		}
+		repositories { // mavenLocal()
+			mavenCentral() }
 	}
 
 	tasks.withType(Test) { task ->
@@ -165,9 +156,7 @@ allprojects { subproj ->
 		options.compilerArgs += '-parameters'
 	}
 
-	checkstyle {
-		toolVersion = '7.6'
-	}
+	checkstyle { toolVersion = '7.6' }
 	checkstyleMain {
 		configFile = rootProject.file('src/checkstyle/checkstyleMain.xml')
 	}
@@ -177,13 +166,9 @@ allprojects { subproj ->
 
 	if (project.hasProperty('enableClover') && subproj.name != "documentation") {
 
-		configurations {
-			clover
-		}
+		configurations { clover }
 
-		dependencies {
-			clover 'com.atlassian.clover:clover:4.1.1'
-		}
+		dependencies { clover 'com.atlassian.clover:clover:4.1.1' }
 
 		ext.cloverDir = file("$buildDir/clover")
 		ext.cloverInitstring = "$cloverDir/clover.db"
@@ -202,12 +187,12 @@ allprojects { subproj ->
 			onlyIf { sourceSets.main.allJava.any { it.exists() } }
 			doLast {
 				ant.'clover-instr'(
-					initstring: cloverInitstring,
-					recordTestResults: false,
-					destdir: instrumentedJavaSourcesDir,
-					source: compileJava.sourceCompatibility) {
-					sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
-				}
+						initstring: cloverInitstring,
+						recordTestResults: false,
+						destdir: instrumentedJavaSourcesDir,
+						source: compileJava.sourceCompatibility) {
+							sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
+						}
 			}
 		}
 
@@ -275,9 +260,7 @@ subprojects { subproj ->
 
 		afterEvaluate {
 			if (signArtifacts && uploadArchives.enabled) {
-				signing {
-					sign configurations.archives
-				}
+				signing { sign configurations.archives }
 			}
 		}
 
@@ -373,28 +356,24 @@ subprojects { subproj ->
 	}
 
 	// Enable JAR manifest generation
-	compileJava.doLast {
-		generateManifest = true
-	}
+	compileJava.doLast { generateManifest = true }
 
 	jar {
-		onlyIf {
-			project.generateManifest
-		}
+		onlyIf { project.generateManifest }
 		manifest {
 			attributes(
-				'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
-				'Built-By': builtByValue,
-				'Build-Date': buildDate,
-				'Build-Time': buildTime,
-				'Build-Revision': buildRevision,
-				'Specification-Title': project.name,
-				'Specification-Version': normalizeVersion(project.version),
-				'Specification-Vendor': 'junit.org',
-				'Implementation-Title': project.name,
-				'Implementation-Version': project.version,
-				'Implementation-Vendor': 'junit.org'
-			)
+					'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
+					'Built-By': builtByValue,
+					'Build-Date': buildDate,
+					'Build-Time': buildTime,
+					'Build-Revision': buildRevision,
+					'Specification-Title': project.name,
+					'Specification-Version': normalizeVersion(project.version),
+					'Specification-Vendor': 'junit.org',
+					'Implementation-Title': project.name,
+					'Implementation-Version': project.version,
+					'Implementation-Vendor': 'junit.org'
+					)
 		}
 	}
 
@@ -463,9 +442,9 @@ configure(rootProject) {
 		options.links 'https://docs.oracle.com/javase/8/docs/api/', "http://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/"
 		options.stylesheetFile rootProject.file("src/javadoc/stylesheet.css")
 		options
-			.group("Jupiter", ["org.junit.jupiter.*"])
-			.group("Vintage", ["org.junit.vintage.*"])
-			.group("Platform", ["org.junit.platform.*"])
+				.group("Jupiter", ["org.junit.jupiter.*"])
+				.group("Vintage", ["org.junit.vintage.*"])
+				.group("Platform", ["org.junit.platform.*"])
 
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
@@ -525,11 +504,11 @@ configure(rootProject) {
 			outputs.dir "$buildDir/reports/clover/html"
 			doLast {
 				ant."clover-report"(
-					initString: cloverAggregationFile) {
-					current(
-						outfile: "$buildDir/reports/clover/html", 
-						title: rootProject.description, homepage: 'overview') { format(type: 'html') }
-					}
+						initString: cloverAggregationFile) {
+							current(
+									outfile: "$buildDir/reports/clover/html",
+									title: rootProject.description, homepage: 'overview') { format(type: 'html') }
+						}
 			}
 		}
 
@@ -549,9 +528,7 @@ configure(rootProject) {
 	task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: Copy) {
 		outputs.dir docsDir
 
-		from(project(':documentation').buildDir) {
-			include 'asciidoc/**'
-		}
+		from(project(':documentation').buildDir) { include 'asciidoc/**' }
 		from("$buildDir/docs") {
 			include 'javadoc/**'
 			filter { line ->

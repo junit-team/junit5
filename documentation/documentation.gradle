@@ -6,9 +6,7 @@ buildscript {
 	}
 }
 
-plugins {
-	id 'org.asciidoctor.convert' version '1.5.3'
-}
+plugins { id 'org.asciidoctor.convert' version '1.5.3' }
 
 apply plugin: 'org.junit.platform.gradle.plugin'
 
@@ -16,17 +14,15 @@ junitPlatform {
 	details 'tree'
 	filters {
 		includeClassNamePattern '.+(Tests|Demo)$'
-		tags {
-			exclude 'exclude'
-		}
+		tags { exclude 'exclude' }
 	}
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
 
 /*
 test {
-	scanForTestClasses = false
-	include(['example/DocumentationTestSuite.class'])
+ scanForTestClasses = false
+ include(['example/DocumentationTestSuite.class'])
 }
 */
 
@@ -46,9 +42,7 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }
 
-asciidoctorj {
-	version = '1.5.5'
-}
+asciidoctorj { version = '1.5.5' }
 
 asciidoctor {
 	// enable the Asciidoctor Diagram extension
@@ -59,22 +53,22 @@ asciidoctor {
 
 	backends 'html5', 'pdf' // , 'epub3'
 
-	attributes(	
-				'jupiter-version': project.property('version'),
-				'platform-version': project.property('platformVersion'),
-				'vintage-version': project.property('vintageVersion'),
-				'junit4-version': project.property('junit4Version'),
-				'release-branch': project.property('releaseBranch'),
-				'revnumber' : project.version,
-				'mainDir': project.sourceSets.main.java.srcDirs[0],
-				'testDir': project.sourceSets.test.java.srcDirs[0],
-				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
-				'outdir': outputDir.absolutePath,
-				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend and on MS Windows
-				'tabsize': '4',
-				'toc': 'left',
-				'icons': 'font',
-				'sectanchors': true,
-				'idprefix': '',
-				'idseparator': '-')
+	attributes(
+			'jupiter-version': project.property('version'),
+			'platform-version': project.property('platformVersion'),
+			'vintage-version': project.property('vintageVersion'),
+			'junit4-version': project.property('junit4Version'),
+			'release-branch': project.property('releaseBranch'),
+			'revnumber' : project.version,
+			'mainDir': project.sourceSets.main.java.srcDirs[0],
+			'testDir': project.sourceSets.test.java.srcDirs[0],
+			'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
+			'outdir': outputDir.absolutePath,
+			'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend and on MS Windows
+			'tabsize': '4',
+			'toc': 'left',
+			'icons': 'font',
+			'sectanchors': true,
+			'idprefix': '',
+			'idseparator': '-')
 }

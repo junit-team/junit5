@@ -6,7 +6,7 @@ dependencies {
 jar {
 	manifest {
 		attributes(
-			'Automatic-Module-Name': 'org.junit.jupiter.api'
-		)
+				'Automatic-Module-Name': 'org.junit.jupiter.api'
+				)
 	}
 }
