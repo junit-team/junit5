@@ -467,6 +467,10 @@ configure(rootProject) {
 		options.stylesheetFile rootProject.file("src/javadoc/stylesheet.css")
 		options.doclet = "ExcludeDoclet"
 		options.docletpath = [ rootProject.file("buildSrc/build/classes/java/main") ]
+		options
+			.group("Jupiter", ["org.junit.jupiter.*"])
+			.group("Vintage", ["org.junit.vintage.*"])
+			.group("Platform", ["org.junit.platform.*"])
 
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
