@@ -23,6 +23,7 @@ module.
 | `@RepeatedTest`    | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>
 | `@TestFactory`     | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>
 | `@TestInstance`    | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class
+| `@TestTemplate`    | Denotes that a method is a <<writing-tests-test-templates, template for test cases>> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <<extensions-test-templates, providers>>.
 | `@DisplayName`     | Declares a custom display name for the test class or test method
 | `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_.
 | `@AfterEach`       | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_.
@@ -799,6 +800,18 @@ parameter lists, values from argument sources are not resolved for lifecycle met
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ParameterResolver_example]
 ----
+
+
+[[writing-tests-test-templates]]
+=== Test Templates
+
+A `{TestTemplate}` method is not a regular test case but rather a template for test cases.
+As such, it is designed to be invoked multiple times depending on the number of invocation
+contexts returned by the registered providers. Thus, it must be used in conjunction with
+a registered `{TestTemplateInvocationContextProvider}` extension. Each invocation of a
+test template method behaves like the execution of a regular `@Test` method with full
+support for the same lifecycle callbacks and extensions. Please refer to
+<<extensions-test-templates>> for usage examples.
 
 
 [[writing-tests-dynamic-tests]]
