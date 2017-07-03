@@ -1558,7 +1558,8 @@ following demonstrates how to have <code>TestInfo</code> injected into a test co
 <span class="type">class</span> <span class="class">TestInfoDemo</span> {
 
     TestInfoDemo(TestInfo testInfo) {
-        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">TestInfo Demo</span><span class="delimiter">&quot;</span></span>, testInfo.getDisplayName());
+        <span class="predefined-type">String</span> displayName = testInfo.getDisplayName();
+        assertTrue(displayName.equals(<span class="string"><span class="delimiter">&quot;</span><span class="content">TEST 1</span><span class="delimiter">&quot;</span></span>) || displayName.equals(<span class="string"><span class="delimiter">&quot;</span><span class="content">test2()</span><span class="delimiter">&quot;</span></span>));
     }
 
     <span class="annotation">@BeforeEach</span>
@@ -6195,6 +6196,12 @@ and all <code>Extension</code> interfaces have been changed to use <code>Extensi
 single, general purpose extension API for conditional test execution:
 <code>ExecutionCondition</code>.</p>
 </li>
+<li>
+<p>The <code>postProcessTestInstance()</code> method in the <code>TestInstancePostProcessor</code> API is no
+longer supplied a direct reference to the test instance. However, the test instance
+can now be retrieved from the supplied <code>ExtensionContext</code> via its
+<code>Optional&lt;Object&gt; getTestInstance()</code> method.</p>
+</li>
 </ul>
 </div>
 <table id="release-notes-5.0.0-m5-migration-extension-api" class="tableblock frame-all grid-all spread">
@@ -6351,7 +6358,7 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-02 11:53:00 EDT
+Last updated 2017-07-03 08:50:20 EDT
 </div>
 </div>
 </body>
