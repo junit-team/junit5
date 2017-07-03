@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.engine.execution.AbstractExtensionContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
@@ -58,11 +59,13 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(getTestMethod(),
 			context.getExtensionRegistry());
 
-		// The test instance should be properly maintained by the enclosing class's ExtensionContext.
-		Object testInstance = context.getExtensionContext().getTestInstance().orElse(null);
+		AbstractExtensionContext<?> extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
+			context.getExecutionListener(), this);
 
-		ExtensionContext extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, testInstance);
+		// We don't require a test instance here, but we are responsible for providing it
+		// to extensions if the enclosing class's ExtensionContext already contains one.
+		// See ClassTestDescriptor#testInstanceProvider(...) for details.
+		extensionContext.setTestInstance(context.getExtensionContext().getTestInstance().orElse(null));
 
 		// @formatter:off
 		return context.extend()

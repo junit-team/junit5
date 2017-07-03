@@ -16,6 +16,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+import org.junit.jupiter.engine.execution.AbstractExtensionContext;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineExecutionListener;
 
@@ -37,11 +38,6 @@ public final class JupiterEngineExtensionContext extends AbstractExtensionContex
 
 	@Override
 	public Optional<Class<?>> getTestClass() {
-		return Optional.empty();
-	}
-
-	@Override
-	public Optional<Object> getTestInstance() {
 		return Optional.empty();
 	}
 

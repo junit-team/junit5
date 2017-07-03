@@ -128,6 +128,10 @@ is placed on the Java 9 module path.
 * `TestExecutionCondition` and `ContainerExecutionCondition` have been replaced by a
   single, general purpose extension API for conditional test execution:
   `ExecutionCondition`.
+* The `postProcessTestInstance()` method in the `TestInstancePostProcessor` API is no
+  longer supplied a direct reference to the test instance. However, the test instance
+  can now be retrieved from the supplied `ExtensionContext` via its
+  `Optional<Object> getTestInstance()` method.
 
 [[release-notes-5.0.0-m5-migration-extension-api]]
 .Extension API Migration
