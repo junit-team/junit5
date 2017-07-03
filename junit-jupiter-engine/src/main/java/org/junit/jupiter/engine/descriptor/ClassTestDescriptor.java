@@ -176,7 +176,12 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		if (this.lifecycle == Lifecycle.PER_CLASS) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ExtensionContext.
+			// Note: as a side effect, instantiateAndPostProcessTestInstance() also stores
+			// the instance it creates in the "current" extension context.
 			Object instance = instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry);
+
+			// Return a TestInstanceProvider that additionally sets the test instance
+			// in the supplied child extension context (e.g., a MethodExtensionContext).
 			return (childContext, childRegistry) -> {
 				childContext.setTestInstance(instance);
 				return instance;
@@ -188,6 +193,14 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			childContext, childRegistry.orElse(registry));
 	}
 
+	/**
+	 * Instantiate the test instance; set the test instance in the supplied
+	 * extension context; and post process the test instance.
+	 *
+	 * @see #instantiateTestClass
+	 * @see AbstractExtensionContext#setTestInstance
+	 * @see #invokeTestInstancePostProcessors
+	 */
 	private Object instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext context,
 			AbstractExtensionContext<?> extensionContext, ExtensionRegistry registry) {
 

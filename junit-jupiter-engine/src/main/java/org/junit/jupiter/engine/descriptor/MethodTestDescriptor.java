@@ -82,6 +82,11 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 		AbstractExtensionContext<?> extensionContext = new MethodExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, throwableCollector);
+
+		// Even though we (intentionally) ignore the return value, the following line
+		// is required since the configured TestInstanceProvider is responsible for
+		// setting the test instance in the supplied extension context.
+		// See ClassTestDescriptor#testInstanceProvider(...) for details.
 		context.getTestInstanceProvider().getTestInstance(extensionContext, Optional.of(registry));
 
 		// @formatter:off
@@ -100,6 +105,7 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
+
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		// @formatter:off

@@ -912,7 +912,6 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			});
 			String key = postProcessTestInstanceKey(testInstance.getClass(), context.getTestClass().get(),
 				context.getTestMethod().map(Method::getName).orElse(null));
-			System.out.println(testInstance.getClass() + " : " + key);
 			instanceMap.put(key, testInstance);
 		}
 

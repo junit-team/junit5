@@ -61,8 +61,10 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 
 		AbstractExtensionContext<?> extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this);
-		// We don't require a test instance here but provide it to extensions should the enclosing class's
-		// ExtensionContext already contain one.
+
+		// We don't require a test instance here, but we are responsible for providing it
+		// to extensions if the enclosing class's ExtensionContext already contains one.
+		// See ClassTestDescriptor#testInstanceProvider(...) for details.
 		extensionContext.setTestInstance(context.getExtensionContext().getTestInstance().orElse(null));
 
 		// @formatter:off
