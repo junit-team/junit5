@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.engine.execution.AbstractExtensionContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.engine.UniqueId;
@@ -36,13 +36,13 @@ import org.junit.platform.engine.support.hierarchical.Node;
 class TestFactoryTestDescriptorTests {
 
 	private JupiterEngineExecutionContext context;
-	private ExtensionContext extensionContext;
+	private AbstractExtensionContext<?> extensionContext;
 	private TestFactoryTestDescriptor descriptor;
 	private boolean isClosed;
 
 	@BeforeEach
 	void before() throws Exception {
-		extensionContext = mock(ExtensionContext.class);
+		extensionContext = mock(AbstractExtensionContext.class);
 		isClosed = false;
 
 		context = new JupiterEngineExecutionContext(null, null).extend().withThrowableCollector(

@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.engine.execution.AbstractExtensionContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
@@ -59,12 +59,11 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(getTestMethod(),
 			context.getExtensionRegistry());
 
-		// The test instance should be properly maintained by the enclosing class's ExtensionContext.
-		Object testInstance = context.getExtensionContext().getTestInstance().orElseThrow(() -> new JUnitException(
-			"Illegal state: test instance not present for method: " + getTestMethod().toGenericString()));
-
-		ExtensionContext extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, testInstance);
+		AbstractExtensionContext<?> extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
+			context.getExecutionListener(), this);
+		// We don't require a test instance here but provide it to extensions should the enclosing class's
+		// ExtensionContext already contain one.
+		extensionContext.setTestInstance(context.getExtensionContext().getTestInstance().orElse(null));
 
 		// @formatter:off
 		return context.extend()

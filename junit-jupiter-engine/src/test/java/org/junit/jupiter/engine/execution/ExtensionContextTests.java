@@ -95,7 +95,7 @@ class ExtensionContextTests {
 		assertThat(nestedExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "nested-tag");
 
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(outerExtensionContext, null,
-			methodTestDescriptor, new OuterClass(), new ThrowableCollector());
+			methodTestDescriptor, new ThrowableCollector());
 		assertThat(methodExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "method-tag");
 	}
 
@@ -106,7 +106,8 @@ class ExtensionContextTests {
 
 		ClassExtensionContext classExtensionContext = new ClassExtensionContext(null, null, classTestDescriptor, null);
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(classExtensionContext, null,
-			methodTestDescriptor, new OuterClass(), new ThrowableCollector());
+			methodTestDescriptor, new ThrowableCollector());
+		methodExtensionContext.setTestInstance(new OuterClass());
 		assertAll("methodContext", //
 			() -> assertThat(methodExtensionContext.getTestClass()).contains(OuterClass.class), //
 			() -> assertThat(methodExtensionContext.getDisplayName()).isEqualTo(methodTestDescriptor.getDisplayName()), //
@@ -143,9 +144,9 @@ class ExtensionContextTests {
 	void usingStore() {
 		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
-		ExtensionContext parentContext = new ClassExtensionContext(null, null, classTestDescriptor, null);
+		AbstractExtensionContext<?> parentContext = new ClassExtensionContext(null, null, classTestDescriptor, null);
 		MethodExtensionContext childContext = new MethodExtensionContext(parentContext, null, methodTestDescriptor,
-			new OuterClass(), new ThrowableCollector());
+			new ThrowableCollector());
 
 		ExtensionContext.Store childStore = childContext.getStore();
 		ExtensionContext.Store parentStore = parentContext.getStore();
