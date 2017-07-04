@@ -74,6 +74,10 @@ public abstract class AbstractExtensionContext<T extends TestDescriptor> impleme
 		return Optional.ofNullable(this.testInstance);
 	}
 
+	public Object getRequiredTestInstance() {
+		return Preconditions.notNull(this.testInstance, "Illegal state: required test instance is not present");
+	}
+
 	@Override
 	public void publishReportEntry(Map<String, String> values) {
 		engineExecutionListener.reportingEntryPublished(this.testDescriptor, ReportEntry.from(values));

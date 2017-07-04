@@ -74,7 +74,7 @@ abstract class AbstractTestRuleSupport<T extends Member>
 			Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
 
 		Object testInstance = context.getTestInstance().orElseThrow(
-			() -> new JUnitException("Illegal state: test instance not present for rule: " + getRuleType().getName()));
+			() -> new JUnitException("Illegal state: required test instance is not present"));
 		List<T> members = findRuleAnnotatedMembers(testInstance);
 
 		// @formatter:off

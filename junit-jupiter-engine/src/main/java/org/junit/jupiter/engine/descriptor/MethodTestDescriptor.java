@@ -32,7 +32,6 @@ import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -148,11 +147,11 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	private <T extends Extension> void invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(
-			JupiterEngineExecutionContext context, BiFunction<ExtensionContext, T, Executable> generator,
+			JupiterEngineExecutionContext context, BiFunction<AbstractExtensionContext<?>, T, Executable> generator,
 			Class<T> type) {
 
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		ExtensionContext extensionContext = context.getExtensionContext();
+		AbstractExtensionContext<?> extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		for (T callback : registry.getExtensions(type)) {
@@ -165,14 +164,13 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
-		ExtensionContext extensionContext = context.getExtensionContext();
+		AbstractExtensionContext<?> extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		throwableCollector.execute(() -> {
 			try {
 				Method testMethod = getTestMethod();
-				Object instance = extensionContext.getTestInstance().orElseThrow(() -> new JUnitException(
-					"Illegal state: test instance not present for method: " + testMethod.toGenericString()));
+				Object instance = extensionContext.getRequiredTestInstance();
 				executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry());
 			}
 			catch (Throwable throwable) {
@@ -224,10 +222,10 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	private <T extends Extension> void invokeAllAfterMethodsOrCallbacks(JupiterEngineExecutionContext context,
-			BiFunction<ExtensionContext, T, Executable> generator, Class<T> type) {
+			BiFunction<AbstractExtensionContext<?>, T, Executable> generator, Class<T> type) {
 
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		ExtensionContext extensionContext = context.getExtensionContext();
+		AbstractExtensionContext<?> extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		registry.getReversedExtensions(type).forEach(callback -> {
