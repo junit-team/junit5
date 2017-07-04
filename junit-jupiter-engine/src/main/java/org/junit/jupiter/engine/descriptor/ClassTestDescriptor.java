@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.TestInstance;
@@ -176,23 +175,20 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		if (this.lifecycle == Lifecycle.PER_CLASS) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ExtensionContext.
-			Object instance = instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry,
-				extensionContext::setTestInstance);
+			Object instance = instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry);
+			extensionContext.setTestInstance(instance);
 			return childRegistry -> instance;
 		}
 
 		// else Lifecycle.PER_METHOD
 		return childRegistry -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext,
-			childRegistry.orElse(registry), instance -> {
-				// no extension context update required
-			});
+			childRegistry.orElse(registry));
 	}
 
 	private Object instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext context,
-			ExtensionContext extensionContext, ExtensionRegistry registry, Consumer<Object> testInstanceConsumer) {
+			ExtensionContext extensionContext, ExtensionRegistry registry) {
 
 		Object instance = instantiateTestClass(context, registry, extensionContext);
-		testInstanceConsumer.accept(instance);
 		invokeTestInstancePostProcessors(instance, registry, extensionContext);
 		return instance;
 	}
