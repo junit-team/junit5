@@ -43,7 +43,6 @@ import java.lang.annotation.Target;
  * programming language.</li>
  * </ul>
  *
- * @author Sam Brannen
  * @since 5.0
  */
 @Target(ElementType.TYPE)
