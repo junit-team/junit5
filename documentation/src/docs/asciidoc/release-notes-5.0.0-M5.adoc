@@ -1,7 +1,7 @@
 [[release-notes-5.0.0-m5]]
 === 5.0.0-M5
 
-*Date of Release:* ❓
+*Date of Release:* July 4, 2017
 
 *Scope:* Fifth milestone release of JUnit 5 with a focus on dynamic containers, test
 instance lifecycle management, and minor API changes.
