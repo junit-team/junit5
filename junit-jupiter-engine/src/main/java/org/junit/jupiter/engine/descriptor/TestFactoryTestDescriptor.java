@@ -66,8 +66,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		ExtensionContext extensionContext = context.getExtensionContext();
 
 		context.getThrowableCollector().execute(() -> {
-			Object instance = extensionContext.getTestInstance().orElseThrow(() -> new JUnitException(
-				"Illegal state: test instance not present for method: " + getTestMethod().toGenericString()));
+			Object instance = getRequiredTestInstance(extensionContext);
 			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, extensionContext,
 				context.getExtensionRegistry());
 			TestSource source = getSource().orElseThrow(

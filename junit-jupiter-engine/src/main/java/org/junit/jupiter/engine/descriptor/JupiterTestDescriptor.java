@@ -30,12 +30,14 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -132,6 +134,11 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		catch (Throwable throwable) {
 			ExceptionUtils.throwAsUncheckedException(throwable);
 		}
+	}
+
+	protected Object getRequiredTestInstance(ExtensionContext extensionContext) {
+		return Preconditions.notNull(extensionContext.getTestInstance().orElse(null),
+			"Illegal state: required test instance is not present");
 	}
 
 }

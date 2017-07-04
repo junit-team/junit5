@@ -290,9 +290,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeMethodInExtensionContext(Method method, ExtensionContext context, ExtensionRegistry registry) {
 
-		Object testInstance = context.getTestInstance().orElseThrow(() -> new JUnitException(
-			"Illegal state: test instance not present for method: " + method.toGenericString()));
-
+		Object testInstance = getRequiredTestInstance(context);
 		testInstance = ReflectionUtils.getOutermostInstance(testInstance, method.getDeclaringClass()).orElseThrow(
 			() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
