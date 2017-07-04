@@ -25,14 +25,25 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	private static final String EXTENSION_NAME = 'junitPlatform'
 	private static final String TASK_NAME      = 'junitPlatformTest'
 
+	protected static final String SELECTORS_EXTENSION_NAME = 'selectors'
+	protected static final String FILTERS_EXTENSION_NAME = 'filters'
+	protected static final String FILTERS_PACKAGES_EXTENSION_NAME = 'packages'
+	protected static final String FILTERS_TAGS_EXTENSION_NAME = 'tags'
+	protected static final String FILTERS_ENGINES_EXTENSION_NAME = 'engines'
+
 	void apply(Project project) {
 		project.pluginManager.apply('java')
 		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitPlatformExtension, project)
-		junitExtension.extensions.create('selectors', SelectorsExtension)
-		junitExtension.extensions.create('filters', FiltersExtension)
-		junitExtension.filters.extensions.create('packages', PackagesExtension)
-		junitExtension.filters.extensions.create('tags', TagsExtension)
-		junitExtension.filters.extensions.create('engines', EnginesExtension)
+		junitExtension.extensions.create(SELECTORS_EXTENSION_NAME, SelectorsExtension)
+		junitExtension.extensions.create(FILTERS_EXTENSION_NAME, FiltersExtension)
+		junitExtension.filters.extensions.create(FILTERS_PACKAGES_EXTENSION_NAME, PackagesExtension)
+		junitExtension.filters.extensions.create(FILTERS_TAGS_EXTENSION_NAME, TagsExtension)
+		junitExtension.filters.extensions.create(FILTERS_ENGINES_EXTENSION_NAME, EnginesExtension)
+		/* NOTE TO FUTURE DEVELOPERS!
+		 * If you are adding another extension make sure you also provide a statically typed configuration method
+		 * on the extension class you are dynamically adding to here.
+		 * https://github.com/junit-team/junit5/issues/902
+		 */
 
 		// configuration.defaultDependencies used below was introduced in Gradle 2.5
 		if (GradleVersion.current().compareTo(GradleVersion.version('2.5')) < 0) {

@@ -9,10 +9,13 @@
  */
 package org.junit.platform.gradle.plugin
 
+import groovy.transform.CompileStatic
+
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.ObjectConfigurationAction
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
@@ -78,6 +81,59 @@ class JUnitPlatformPluginSpec extends Specification {
 			reportsDir new File("any")
 
 			details 'NONE'
+		}
+		then:
+		noExceptionThrown()
+	}
+
+	@CompileStatic
+	def "setting junitPlatform properties statically"() {
+		/*
+		 * This test ensures that the extensions can be accessed as expected in statically typed languages like Kotlin.
+		 * The `Action` syntax is much nice in kotlin and doesn't require `it` everywhere.
+		 * https://github.com/junit-team/junit5/issues/902
+		 */
+		given:
+		// Goofy syntax required because of closure overload
+		project.apply ({ObjectConfigurationAction it ->
+			it.plugin('org.junit.platform.gradle.plugin')
+		})
+		when:
+		JUnitPlatformExtension junitPlatform = project.extensions.getByType(JUnitPlatformExtension)
+		junitPlatform.platformVersion = '5.0.0-M1'
+		junitPlatform.enableStandardTestTask = true
+		junitPlatform.logManager = 'org.apache.logging.log4j.jul.LogManager'
+		junitPlatform.selectors {
+			it.uris'u:foo', 'u:bar'
+			it.uri 'u:qux'
+			it.files 'foo.txt', 'bar.csv'
+			it.file 'qux.json'
+			it.directories 'foo/bar', 'bar/qux'
+			it.directory 'qux/bar'
+			it.packages 'com.acme.foo', 'com.acme.bar'
+			it.aPackage 'com.example.app'
+			it.classes 'com.acme.Foo', 'com.acme.Bar'
+			it.aClass 'com.example.app.Application'
+			it.methods 'com.acme.Foo#a', 'com.acme.Foo#b'
+			it.method 'com.example.app.Application#run(java.lang.String[])'
+			it.resources '/bar.csv', '/foo/input.json'
+			it.resource '/com/acme/my.properties'
+		}
+		junitPlatform.filters {
+			it.includeClassNamePattern '.*Tests?'
+			it.excludeClassNamePattern '.*TestCase'
+			it.packages {
+				it.include 'testpackage.included.p1', 'testpackage.included.p2'
+				it.exclude 'testpackage.excluded.p1', 'testpackage.excluded.p2'
+			}
+			it.engines {
+				it.include 'foo'
+				it.exclude 'bar'
+			}
+			it.tags {
+				it.include 'fast'
+				it.exclude 'slow'
+			}
 		}
 		then:
 		noExceptionThrown()

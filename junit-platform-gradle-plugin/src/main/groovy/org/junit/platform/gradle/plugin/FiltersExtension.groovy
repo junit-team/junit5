@@ -9,6 +9,7 @@
  */
 package org.junit.platform.gradle.plugin
 
+import org.gradle.api.Action
 import org.junit.platform.engine.discovery.ClassNameFilter
 
 /**
@@ -80,6 +81,27 @@ class FiltersExtension {
 			excludeClassNamePatterns = []
 		}
 		excludeClassNamePatterns.addAll(patterns)
+	}
+
+	/**
+	 * Configure the {@link PackagesExtension} for this plugin.
+	 */
+	void packages(Action<PackagesExtension> closure) {
+		closure.execute(getProperty(JUnitPlatformPlugin.FILTERS_PACKAGES_EXTENSION_NAME) as PackagesExtension)
+	}
+
+	/**
+	 * Configure the {@link TagsExtension} for this plugin.
+	 */
+	void tags(Action<TagsExtension> closure) {
+		closure.execute(getProperty(JUnitPlatformPlugin.FILTERS_TAGS_EXTENSION_NAME) as TagsExtension)
+	}
+
+	/**
+	 * Configure the {@link EnginesExtension} for this plugin.
+	 */
+	void engines(Action<EnginesExtension> closure) {
+		closure.execute(getProperty(JUnitPlatformPlugin.FILTERS_ENGINES_EXTENSION_NAME) as EnginesExtension)
 	}
 
 }
