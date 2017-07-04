@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.engine.execution.AbstractExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
@@ -63,10 +63,11 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 
 	@Override
 	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
-		AbstractExtensionContext<?> extensionContext = context.getExtensionContext();
+		ExtensionContext extensionContext = context.getExtensionContext();
 
 		context.getThrowableCollector().execute(() -> {
-			Object instance = extensionContext.getRequiredTestInstance();
+			Object instance = extensionContext.getTestInstance().orElseThrow(() -> new JUnitException(
+				"Illegal state: test instance not present for method: " + getTestMethod().toGenericString()));
 			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, extensionContext,
 				context.getExtensionRegistry());
 			TestSource source = getSource().orElseThrow(
