@@ -25,7 +25,6 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.engine.execution.AbstractExtensionContext;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
@@ -79,15 +78,10 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = populateNewExtensionRegistry(context);
+		Object testInstance = context.getTestInstanceProvider().getTestInstance(Optional.of(registry));
 		ThrowableCollector throwableCollector = new ThrowableCollector();
-		AbstractExtensionContext<?> extensionContext = new MethodExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, throwableCollector);
-
-		// Even though we (intentionally) ignore the return value, the following line
-		// is required since the configured TestInstanceProvider is responsible for
-		// setting the test instance in the supplied extension context.
-		// See ClassTestDescriptor#testInstanceProvider(...) for details.
-		context.getTestInstanceProvider().getTestInstance(extensionContext, Optional.of(registry));
+		ExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
+			context.getExecutionListener(), this, testInstance, throwableCollector);
 
 		// @formatter:off
 		return context.extend()
@@ -105,7 +99,6 @@ public class MethodTestDescriptor extends MethodBasedTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
-
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		// @formatter:off

@@ -24,8 +24,7 @@ import org.junit.jupiter.api.TestInfo;
 class TestInfoDemo {
 
 	TestInfoDemo(TestInfo testInfo) {
-		String displayName = testInfo.getDisplayName();
-		assertTrue(displayName.equals("TEST 1") || displayName.equals("test2()"));
+		assertEquals("TestInfo Demo", testInfo.getDisplayName());
 	}
 
 	@BeforeEach

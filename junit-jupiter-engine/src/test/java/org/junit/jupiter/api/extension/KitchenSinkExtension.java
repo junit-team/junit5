@@ -85,7 +85,7 @@ public class KitchenSinkExtension implements
 	// --- Dependency Injection ------------------------------------------------
 
 	@Override
-	public void postProcessTestInstance(ExtensionContext context) throws Exception {
+	public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 	}
 
 	@Override
@@ -118,6 +118,7 @@ public class KitchenSinkExtension implements
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
+
 		return null;
 	}
 

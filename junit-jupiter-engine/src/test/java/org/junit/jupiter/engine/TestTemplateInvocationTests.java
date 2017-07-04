@@ -508,11 +508,9 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	private static class SingleInvocationContextProviderWithDisabledInvocations
 			extends SingleInvocationContextProvider {
-
 		@Override
 		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 			return Stream.of(new TestTemplateInvocationContext() {
-
 				@Override
 				public List<Extension> getAdditionalExtensions() {
 					return singletonList(new AlwaysDisabledExecutionCondition());
@@ -647,13 +645,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 				@Override
 				public List<Extension> getAdditionalExtensions() {
-					return singletonList((TestInstancePostProcessor) (context) -> {
-						Object testInstance = context.getTestInstance().orElseThrow(() -> {
-							IllegalStateException exception = new IllegalStateException(
-								"test instance must not be null");
-							exception.printStackTrace(System.err);
-							return exception;
-						});
+					return singletonList((TestInstancePostProcessor) (testInstance, context) -> {
 						Field field = testInstance.getClass().getDeclaredField("parameterInstanceVariable");
 						field.setAccessible(true);
 						field.set(testInstance, argument);

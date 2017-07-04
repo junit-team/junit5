@@ -16,7 +16,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.junit.jupiter.engine.execution.AbstractExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -27,13 +27,16 @@ import org.junit.platform.engine.EngineExecutionListener;
 @API(Internal)
 public final class MethodExtensionContext extends AbstractExtensionContext<MethodTestDescriptor> {
 
+	private final Object testInstance;
+
 	private final ThrowableCollector throwableCollector;
 
-	public MethodExtensionContext(AbstractExtensionContext<?> parent, EngineExecutionListener engineExecutionListener,
-			MethodTestDescriptor testDescriptor, ThrowableCollector throwableCollector) {
+	public MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+			MethodTestDescriptor testDescriptor, Object testInstance, ThrowableCollector throwableCollector) {
 
 		super(parent, engineExecutionListener, testDescriptor);
 
+		this.testInstance = testInstance;
 		this.throwableCollector = throwableCollector;
 	}
 
@@ -50,6 +53,11 @@ public final class MethodExtensionContext extends AbstractExtensionContext<Metho
 	@Override
 	public Optional<Method> getTestMethod() {
 		return Optional.of(getTestDescriptor().getTestMethod());
+	}
+
+	@Override
+	public Optional<Object> getTestInstance() {
+		return Optional.of(this.testInstance);
 	}
 
 	@Override

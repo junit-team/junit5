@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.TestInstance;
@@ -31,7 +32,6 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
-import org.junit.jupiter.engine.execution.AbstractExtensionContext;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
@@ -176,50 +176,39 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		if (this.lifecycle == Lifecycle.PER_CLASS) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ExtensionContext.
-			// Note: as a side effect, instantiateAndPostProcessTestInstance() also stores
-			// the instance it creates in the "current" extension context.
-			Object instance = instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry);
-
-			// Return a TestInstanceProvider that additionally sets the test instance
-			// in the supplied child extension context (e.g., a MethodExtensionContext).
-			return (childContext, childRegistry) -> {
-				childContext.setTestInstance(instance);
-				return instance;
-			};
+			Object instance = instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry,
+				extensionContext::setTestInstance);
+			return childRegistry -> instance;
 		}
 
 		// else Lifecycle.PER_METHOD
-		return (childContext, childRegistry) -> instantiateAndPostProcessTestInstance(parentExecutionContext,
-			childContext, childRegistry.orElse(registry));
+		return childRegistry -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext,
+			childRegistry.orElse(registry), instance -> {
+				// no extension context update required
+			});
 	}
 
-	/**
-	 * Instantiate the test instance; set the test instance in the supplied
-	 * extension context; and post process the test instance.
-	 *
-	 * @see #instantiateTestClass
-	 * @see AbstractExtensionContext#setTestInstance
-	 * @see #invokeTestInstancePostProcessors
-	 */
 	private Object instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext context,
-			AbstractExtensionContext<?> extensionContext, ExtensionRegistry registry) {
+			ExtensionContext extensionContext, ExtensionRegistry registry, Consumer<Object> testInstanceConsumer) {
 
 		Object instance = instantiateTestClass(context, registry, extensionContext);
-		extensionContext.setTestInstance(instance);
-		invokeTestInstancePostProcessors(registry, extensionContext);
+		testInstanceConsumer.accept(instance);
+		invokeTestInstancePostProcessors(instance, registry, extensionContext);
 		return instance;
 	}
 
 	protected Object instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, AbstractExtensionContext<?> extensionContext) {
+			ExtensionRegistry registry, ExtensionContext extensionContext) {
 
 		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
 		return executableInvoker.invoke(constructor, extensionContext, registry);
 	}
 
-	private void invokeTestInstancePostProcessors(ExtensionRegistry registry, ExtensionContext context) {
+	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
+			ExtensionContext context) {
+
 		registry.stream(TestInstancePostProcessor.class).forEach(
-			extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(context)));
+			extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, context)));
 	}
 
 	private void invokeBeforeAllCallbacks(JupiterEngineExecutionContext context) {
@@ -300,6 +289,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeMethodInExtensionContext(Method method, ExtensionContext context, ExtensionRegistry registry) {
+
 		Object testInstance = context.getTestInstance().orElseThrow(() -> new JUnitException(
 			"Illegal state: test instance not present for method: " + method.toGenericString()));
 

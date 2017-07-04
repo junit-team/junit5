@@ -159,12 +159,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 	private static class FooInstancePostProcessor implements TestInstancePostProcessor {
 
 		@Override
-		public void postProcessTestInstance(ExtensionContext context) throws Exception {
-			Object testInstance = context.getTestInstance().orElseThrow(() -> {
-				IllegalStateException exception = new IllegalStateException("test instance must not be null");
-				exception.printStackTrace(System.err);
-				return exception;
-			});
+		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 			if (testInstance instanceof Named) {
 				((Named) testInstance).setName("foo");
 			}
@@ -175,12 +170,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 	private static class BarInstancePostProcessor implements TestInstancePostProcessor {
 
 		@Override
-		public void postProcessTestInstance(ExtensionContext context) throws Exception {
-			Object testInstance = context.getTestInstance().orElseThrow(() -> {
-				IllegalStateException exception = new IllegalStateException("test instance must not be null");
-				exception.printStackTrace(System.err);
-				return exception;
-			});
+		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 			if (testInstance instanceof Named) {
 				((Named) testInstance).setName("bar");
 			}

@@ -8,10 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.jupiter.engine.execution;
+package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.toCollection;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -19,7 +18,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.commons.meta.API;
+import org.junit.jupiter.engine.execution.ExtensionValuesStore;
+import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
@@ -29,28 +29,25 @@ import org.junit.platform.engine.reporting.ReportEntry;
 /**
  * @since 5.0
  */
-@API(Internal)
-public abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext {
+abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext {
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
 	private final T testDescriptor;
 	private final ExtensionValuesStore valuesStore;
 
-	private Object testInstance;
-
-	protected AbstractExtensionContext(AbstractExtensionContext<?> parent,
-			EngineExecutionListener engineExecutionListener, T testDescriptor) {
+	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+			T testDescriptor) {
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
 		this.valuesStore = createStore(parent);
 	}
 
-	private ExtensionValuesStore createStore(AbstractExtensionContext<?> parent) {
+	private ExtensionValuesStore createStore(ExtensionContext parent) {
 		ExtensionValuesStore parentStore = null;
 		if (parent != null) {
-			parentStore = parent.valuesStore;
+			parentStore = ((AbstractExtensionContext<?>) parent).valuesStore;
 		}
 		return new ExtensionValuesStore(parentStore);
 	}
@@ -63,15 +60,6 @@ public abstract class AbstractExtensionContext<T extends TestDescriptor> impleme
 	@Override
 	public String getDisplayName() {
 		return getTestDescriptor().getDisplayName();
-	}
-
-	public void setTestInstance(Object testInstance) {
-		this.testInstance = testInstance;
-	}
-
-	@Override
-	public Optional<Object> getTestInstance() {
-		return Optional.ofNullable(this.testInstance);
 	}
 
 	@Override

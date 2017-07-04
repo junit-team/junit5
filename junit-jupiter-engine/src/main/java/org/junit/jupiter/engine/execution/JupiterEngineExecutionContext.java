@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.execution;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
@@ -55,7 +56,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 		return this.state.extensionRegistry;
 	}
 
-	public AbstractExtensionContext<?> getExtensionContext() {
+	public ExtensionContext getExtensionContext() {
 		return this.state.extensionContext;
 	}
 
@@ -81,7 +82,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 		final ConfigurationParameters configurationParameters;
 		TestInstanceProvider testInstanceProvider;
 		ExtensionRegistry extensionRegistry;
-		AbstractExtensionContext<?> extensionContext;
+		ExtensionContext extensionContext;
 		ThrowableCollector throwableCollector;
 
 		State(EngineExecutionListener executionListener, ConfigurationParameters configurationParameters) {
@@ -120,7 +121,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 			return this;
 		}
 
-		public Builder withExtensionContext(AbstractExtensionContext<?> extensionContext) {
+		public Builder withExtensionContext(ExtensionContext extensionContext) {
 			newState().extensionContext = extensionContext;
 			return this;
 		}
