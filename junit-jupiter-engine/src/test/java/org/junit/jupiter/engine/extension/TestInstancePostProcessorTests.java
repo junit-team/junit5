@@ -104,7 +104,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void testOuter() {
-			assertEquals("foo", outerName);
+			assertEquals("foo:" + OuterTestCase.class.getSimpleName(), outerName);
 			callSequence.add("testOuter");
 		}
 
@@ -126,8 +126,8 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 			@Test
 			void testInner() {
-				assertEquals("foo", outerName);
-				assertEquals("bar", innerName);
+				assertEquals("foo:" + OuterTestCase.class.getSimpleName(), outerName);
+				assertEquals("bar:" + InnerTestCase.class.getSimpleName(), innerName);
 				callSequence.add("testInner");
 			}
 		}
@@ -152,7 +152,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test() {
 			callSequence.add("test");
-			assertEquals("foo", name);
+			assertEquals("foo:" + getClass().getSimpleName(), name);
 		}
 	}
 
@@ -161,7 +161,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 			if (testInstance instanceof Named) {
-				((Named) testInstance).setName("foo");
+				((Named) testInstance).setName("foo:" + context.getTestClass().get().getSimpleName());
 			}
 			callSequence.add("fooPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
 		}
@@ -172,7 +172,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 			if (testInstance instanceof Named) {
-				((Named) testInstance).setName("bar");
+				((Named) testInstance).setName("bar:" + context.getTestClass().get().getSimpleName());
 			}
 			callSequence.add("barPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
 		}
