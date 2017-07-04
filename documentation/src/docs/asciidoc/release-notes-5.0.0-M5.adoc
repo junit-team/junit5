@@ -85,6 +85,7 @@ is placed on the Java 9 module path.
   `java.lang.Double[][]`, etc.).
 * The JUnit Platform Gradle plugin task `junitPlatformTest` can now be accessed
   directly during the configuration phase of a build.
+* The JUnit Platform Gradle plugin now plays nice with the Gradle Kotlin DSL.
 * When a `TestEngine` is discovered via Java's `ServiceLoader` mechanism, an attempt
   will now be made to determine the location from which the engine class was loaded,
   and if the location URL is available, it will be logged at configuration-level.
