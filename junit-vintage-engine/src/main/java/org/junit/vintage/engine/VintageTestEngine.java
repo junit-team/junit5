@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -62,6 +63,7 @@ public class VintageTestEngine implements TestEngine {
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+		Preconditions.notNull(discoveryRequest, "discovery request must not be null");
 		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit Vintage");
 		new JUnit4DiscoveryRequestResolver(engineDescriptor, LOG).resolve(discoveryRequest);
 		return engineDescriptor;
