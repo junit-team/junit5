@@ -24,7 +24,8 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* ❓
+* The method `getDiscoveryFiltersByType` of `EngineDiscoveryRequest` has been renamed to
+  `getFiltersByType`.
 
 ===== New Features and Improvements
 

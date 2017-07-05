@@ -39,8 +39,8 @@ public class ClasspathScanningSupport {
 	 */
 	public static Predicate<String> buildClassNamePredicate(EngineDiscoveryRequest request) {
 		List<DiscoveryFilter<String>> filters = new ArrayList<>();
-		filters.addAll(request.getDiscoveryFiltersByType(ClassNameFilter.class));
-		filters.addAll(request.getDiscoveryFiltersByType(PackageNameFilter.class));
+		filters.addAll(request.getFiltersByType(ClassNameFilter.class));
+		filters.addAll(request.getFiltersByType(PackageNameFilter.class));
 		return composeFilters(filters).toPredicate();
 	}
 

@@ -103,7 +103,7 @@ class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+		List<ClassNameFilter> filter = request.getFiltersByType(ClassNameFilter.class);
 		assertThat(filter).hasSize(1);
 		assertThat(filter.get(0).toString()).contains(STANDARD_INCLUDE_PATTERN);
 	}
@@ -115,7 +115,7 @@ class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+		List<ClassNameFilter> filter = request.getFiltersByType(ClassNameFilter.class);
 		assertThat(filter).hasSize(1);
 		assertThat(filter.get(0).toString()).contains("Foo.*Bar");
 		assertThat(filter.get(0).toString()).contains("Bar.*Foo");
@@ -128,7 +128,7 @@ class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClassNameFilter> filter = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+		List<ClassNameFilter> filter = request.getFiltersByType(ClassNameFilter.class);
 		assertThat(filter).hasSize(2);
 		assertThat(filter.get(1).toString()).contains("Foo.*Bar");
 		assertThat(filter.get(1).toString()).contains("Bar.*Foo");
@@ -141,7 +141,7 @@ class DiscoveryRequestCreatorTests {
 		options.setExcludedPackages(asList("org.junit.excluded1"));
 
 		LauncherDiscoveryRequest request = convert();
-		List<PackageNameFilter> packageNameFilters = request.getDiscoveryFiltersByType(PackageNameFilter.class);
+		List<PackageNameFilter> packageNameFilters = request.getFiltersByType(PackageNameFilter.class);
 
 		assertThat(packageNameFilters).hasSize(2);
 		assertThat(packageNameFilters.get(0).toString()).contains("org.junit.included1");

@@ -193,7 +193,7 @@ class LauncherDiscoveryRequestBuilderTests {
 					).build();
 			// @formatter:on
 
-			List<String> filterStrings = discoveryRequest.getDiscoveryFiltersByType(DiscoveryFilter.class).stream().map(
+			List<String> filterStrings = discoveryRequest.getFiltersByType(DiscoveryFilter.class).stream().map(
 				DiscoveryFilter::toString).collect(toList());
 			assertThat(filterStrings).hasSize(2);
 			assertThat(filterStrings).contains("filter1", "filter2");

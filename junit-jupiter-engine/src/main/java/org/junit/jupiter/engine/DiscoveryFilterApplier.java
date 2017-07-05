@@ -32,8 +32,8 @@ class DiscoveryFilterApplier {
 	 * Apply all filters. Currently only {@link ClassNameFilter} is considered.
 	 */
 	void applyAllFilters(EngineDiscoveryRequest discoveryRequest, TestDescriptor engineDescriptor) {
-		applyClassNameFilters(discoveryRequest.getDiscoveryFiltersByType(ClassNameFilter.class), engineDescriptor);
-		applyPackageNameFilters(discoveryRequest.getDiscoveryFiltersByType(PackageNameFilter.class), engineDescriptor);
+		applyClassNameFilters(discoveryRequest.getFiltersByType(ClassNameFilter.class), engineDescriptor);
+		applyPackageNameFilters(discoveryRequest.getFiltersByType(PackageNameFilter.class), engineDescriptor);
 	}
 
 	private void applyPackageNameFilters(List<PackageNameFilter> packageNameFilters, TestDescriptor engineDescriptor) {
