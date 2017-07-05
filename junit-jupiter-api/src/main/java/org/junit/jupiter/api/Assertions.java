@@ -51,10 +51,8 @@ public final class Assertions {
 	/**
 	 * <em>Fails</em> a test with the given failure {@code message}.
 	 *
-	 * <p>The generic return type {@code V} allows this method to be used directly
-	 * as an expression value. As an {@link org.opentest4j.AssertionFailedError}
-	 * is created and thrown before the final return statement, this method never
-	 * returns a value to its caller.
+	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
+	 * this method's generic return type {@code V}.
 	 */
 	public static <V> V fail(String message) {
 		AssertionUtils.fail(message);
@@ -65,10 +63,16 @@ public final class Assertions {
 	 * <em>Fails</em> a test with the given failure {@code message} as well
 	 * as the underlying {@code cause}.
 	 *
-	 * <p>The generic return type {@code V} allows this method to be used directly
-	 * as an expression value. As an {@link org.opentest4j.AssertionFailedError}
-	 * is created and thrown before the final return statement, this method never
-	 * returns a value to its caller.
+	 * <p>The generic return type {@code V} allows this method to be used
+	 * directly as a single-statement lambda expression, thereby avoiding the
+	 * need to implement a code block with an explicit return value. Since this
+	 * method throws an {@link org.opentest4j.AssertionFailedError} before its
+	 * return statement, this method never actually returns a value to its caller.
+	 * The following example demonstrates how this may be used in practice.
+	 *
+	 * <pre class="code">
+	 * Stream.of().map(entry -> fail("should not be called"));
+	 * </pre>
 	 */
 	public static <V> V fail(String message, Throwable cause) {
 		AssertionUtils.fail(message, cause);
@@ -78,10 +82,8 @@ public final class Assertions {
 	/**
 	 * <em>Fails</em> a test with the given underlying {@code cause}.
 	 *
-	 * <p>The generic return type {@code V} allows this method to be used directly
-	 * as an expression value. As an {@link org.opentest4j.AssertionFailedError}
-	 * is created and thrown before the final return statement, this method never
-	 * returns a value to its caller.
+	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
+	 * this method's generic return type {@code V}.
 	 */
 	public static <V> V fail(Throwable cause) {
 		AssertionUtils.fail(cause);
@@ -92,10 +94,8 @@ public final class Assertions {
 	 * <em>Fails</em> a test with the failure message retrieved from the
 	 * given {@code messageSupplier}.
 	 *
-	 * <p>The generic return type {@code V} allows this method to be used directly
-	 * as an expression value. As an {@link org.opentest4j.AssertionFailedError}
-	 * is created and thrown before the final return statement, this method never
-	 * returns a value to its caller.
+	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
+	 * this method's generic return type {@code V}.
 	 */
 	public static <V> V fail(Supplier<String> messageSupplier) {
 		AssertionUtils.fail(messageSupplier);

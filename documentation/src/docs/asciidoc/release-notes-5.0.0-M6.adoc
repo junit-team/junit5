@@ -3,7 +3,8 @@
 
 *Date of Release:* ❓
 
-*Scope:* Sixth milestone release of JUnit 5 with a focus on Java 9 compatibility, scenario tests, and additional extension APIs for JUnit Jupiter.
+*Scope:* Sixth milestone release of JUnit 5 with a focus on Java 9 compatibility,
+scenario tests, and additional extension APIs for JUnit Jupiter.
 
 WARNING: This is a milestone release and contains breaking changes. Please refer to the
 <<running-tests-ide-intellij-idea,instructions>> above to use this version in a version of
@@ -43,7 +44,9 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* All `fail` methods in `Assertions` can now be used as an expression.
+* All `fail(...)` methods in `Assertions` can now be used to implement single-statement
+  lambda expressions, thereby avoiding the need to implement a code block with an explicit
+  return value.
 
 
 [[release-notes-5.0.0-m6-junit-vintage]]
