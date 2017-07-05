@@ -70,9 +70,9 @@ public final class Assertions {
 	 * return statement, this method never actually returns a value to its caller.
 	 * The following example demonstrates how this may be used in practice.
 	 *
-	 * <pre class="code">
+	 * <pre>{@code
 	 * Stream.of().map(entry -> fail("should not be called"));
-	 * </pre>
+	 * }</pre>
 	 */
 	public static <V> V fail(String message, Throwable cause) {
 		AssertionUtils.fail(message, cause);
