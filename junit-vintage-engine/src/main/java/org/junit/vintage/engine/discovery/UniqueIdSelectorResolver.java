@@ -11,7 +11,6 @@
 package org.junit.vintage.engine.discovery;
 
 import static java.lang.String.format;
-import static java.util.function.Predicate.isEqual;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
 
@@ -38,25 +37,42 @@ class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelecto
 	@Override
 	void resolve(UniqueIdSelector selector, TestClassCollector collector) {
 		UniqueId uniqueId = selector.getUniqueId();
-		if (UniqueId.forEngine(ENGINE_ID).equals(uniqueId)) {
-			logger.warning(
-				() -> format("Unresolvable Unique ID (%s): Cannot resolve the engine's unique ID", uniqueId));
-		}
-		else {
-			uniqueId.getEngineId().filter(isEqual(ENGINE_ID)).ifPresent(
-				engineId -> determineTestClassName(uniqueId).ifPresent(
-					testClassName -> resolveIntoFilteredTestClass(testClassName, uniqueId, collector)));
+		if (isNotEngineId(uniqueId) && isForVintageEngine(uniqueId)) {
+			resolveIntoFilteredTestClass(uniqueId, collector);
 		}
 	}
 
-	private void resolveIntoFilteredTestClass(String testClassName, UniqueId uniqueId, TestClassCollector collector) {
-		Optional<Class<?>> testClass = ReflectionUtils.loadClass(testClassName);
-		if (testClass.isPresent()) {
-			collector.addFiltered(testClass.get(), new UniqueIdFilter(uniqueId));
+	private boolean isNotEngineId(UniqueId uniqueId) {
+		boolean isEngineId = UniqueId.forEngine(ENGINE_ID).equals(uniqueId);
+		if (isEngineId) {
+			logger.warning(
+				() -> format("Unresolvable Unique ID (%s): Cannot resolve the engine's unique ID", uniqueId));
 		}
-		else {
-			logger.warning(() -> format("Unresolvable Unique ID (%s): Unknown class %s", uniqueId, testClassName));
+		return !isEngineId;
+	}
+
+	private boolean isForVintageEngine(UniqueId uniqueId) {
+		// @formatter:off
+		return uniqueId.getEngineId()
+			.map(engineId -> engineId.equals(ENGINE_ID))
+			.orElse(false);
+		// @formatter:on
+	}
+
+	private void resolveIntoFilteredTestClass(UniqueId uniqueId, TestClassCollector collector) {
+		// @formatter:off
+		determineTestClassName(uniqueId)
+			.flatMap(testClassName -> loadTestClass(testClassName, uniqueId))
+			.ifPresent(testClass -> collector.addFiltered(testClass, new UniqueIdFilter(uniqueId)));
+		// @formatter:on
+	}
+
+	private Optional<Class<?>> loadTestClass(String className, UniqueId uniqueId) {
+		Optional<Class<?>> testClass = ReflectionUtils.loadClass(className);
+		if (!testClass.isPresent()) {
+			logger.warning(() -> format("Unresolvable Unique ID (%s): Unknown class %s", uniqueId, className));
 		}
+		return testClass;
 	}
 
 	private Optional<String> determineTestClassName(UniqueId uniqueId) {
