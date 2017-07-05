@@ -58,7 +58,7 @@ public interface EngineDiscoveryRequest {
 	 * @param filterType the type of {@link DiscoveryFilter} to filter by
 	 * @return all filters of this request that are instances of {@code filterType}
 	 */
-	<T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType);
+	<T extends DiscoveryFilter<?>> List<T> getFiltersByType(Class<T> filterType);
 
 	/**
 	 * Get the {@link ConfigurationParameters} for this request.

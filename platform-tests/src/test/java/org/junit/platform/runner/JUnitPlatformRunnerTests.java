@@ -151,7 +151,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<PackageNameFilter> filters = request.getDiscoveryFiltersByType(PackageNameFilter.class);
+			List<PackageNameFilter> filters = request.getFiltersByType(PackageNameFilter.class);
 			assertThat(filters).hasSize(1);
 
 			PackageNameFilter filter = filters.get(0);
@@ -169,7 +169,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<PackageNameFilter> filters = request.getDiscoveryFiltersByType(PackageNameFilter.class);
+			List<PackageNameFilter> filters = request.getFiltersByType(PackageNameFilter.class);
 			assertThat(filters).hasSize(1);
 
 			PackageNameFilter filter = filters.get(0);
@@ -255,7 +255,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(getOnlyElement(filters).toString()).contains(STANDARD_INCLUDE_PATTERN);
 		}
 
@@ -268,7 +268,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(filters).isEmpty();
 		}
 
@@ -282,7 +282,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(getOnlyElement(filters).toString()).contains(".*Foo");
 		}
 
@@ -295,7 +295,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(getOnlyElement(filters).toString()).contains(".*Foo");
 		}
 
@@ -309,7 +309,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(getOnlyElement(filters).toString()).contains(".*Foo", "Bar.*");
 		}
 
@@ -322,7 +322,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(getOnlyElement(filters).toString()).contains(".*Foo", "Bar.*");
 		}
 
@@ -336,7 +336,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(getOnlyElement(filters).toString()).contains(STANDARD_INCLUDE_PATTERN);
 		}
 
@@ -350,7 +350,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(filters).isEmpty();
 		}
 
@@ -364,7 +364,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(filters).isEmpty();
 		}
 
@@ -377,7 +377,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(getOnlyElement(filters).toString()).contains("'foo'", "'bar'");
 		}
 
@@ -390,7 +390,7 @@ class JUnitPlatformRunnerTests {
 
 			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<ClassNameFilter> filters = request.getDiscoveryFiltersByType(ClassNameFilter.class);
+			List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(getOnlyElement(filters).toString()).contains("'foo'", "'bar'");
 		}
 
