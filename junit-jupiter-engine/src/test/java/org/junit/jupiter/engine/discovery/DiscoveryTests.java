@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
@@ -123,6 +125,13 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 		TestDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
+	void failWithHelpfulMessageWhenDiscoverTestsForNullRequest() {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> discoverTests(null));
+		assertEquals("discovery request must not be null", exception.getMessage());
 	}
 
 	// -------------------------------------------------------------------
