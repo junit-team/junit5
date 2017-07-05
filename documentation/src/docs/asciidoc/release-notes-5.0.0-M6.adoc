@@ -43,7 +43,7 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* ❓
+* All `fail` methods in `Assertions` can now be used as an expression.
 
 
 [[release-notes-5.0.0-m6-junit-vintage]]
