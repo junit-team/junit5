@@ -324,6 +324,15 @@
       "mmerdes",
       "marcphilipp"
     ]
-  } 
-  
+  },
+  {
+    "title": "JUnit 5 Extensions: From Conditional Test Execution to Test Templates",
+    "event": "Joker Conf",
+    "date": "2017-11-03",
+    "location": "St. Petersburg, Russia",
+    "link": "https://jokerconf.com/2017/talks/39iefrna4waukwu6ewiuso/",
+    "speakers": [
+      "marcphilipp"
+    ]
+  }
 ]
