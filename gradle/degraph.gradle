@@ -6,12 +6,8 @@ import static org.hamcrest.Matchers.is
 import de.schauderhaft.degraph.configuration.NamedPattern
 
 buildscript {
-	repositories {
-		mavenCentral()
-		}
-		dependencies {
-			classpath "de.schauderhaft.degraph:degraph-check:${degraphVersion}"
-		}
+	repositories { mavenCentral() }
+	dependencies { classpath "de.schauderhaft.degraph:degraph-check:${degraphVersion}" }
 }
 
 task degraph(type: DegraphCheck) {
@@ -32,18 +28,18 @@ class DegraphCheck extends DefaultTask {
 	@TaskAction
 	void runDegraph() {
 		def graph = customClasspath(classpath.asPath)
-			.printTo(reportFile.getPath())
-			.noJars()
-			.including("org.junit.platform.**")
-			.including("org.junit.vintage.**")
-			.including("org.junit.jupiter.**")
-			.withSlicing("module",
+				.printTo(reportFile.getPath())
+				.noJars()
+				.including("org.junit.platform.**")
+				.including("org.junit.vintage.**")
+				.including("org.junit.jupiter.**")
+				.withSlicing(
+				"module",
 				new NamedPattern("org.junit.vintage.engine.**", "junit-vintage-engine"),
 				new NamedPattern("org.junit.jupiter.api.**", "junit-jupiter-api"),
 				new NamedPattern("org.junit.jupiter.engine.**", "junit-jupiter-engine"),
 				"org.junit.platform.(*).**"
-			)
+				)
 		assertThat(graph, is(violationFree()))
 	}
-
 }

@@ -7,7 +7,7 @@ dependencies {
 jar {
 	manifest {
 		attributes(
-			'Automatic-Module-Name': 'org.junit.platform.runner'
-		)
+				'Automatic-Module-Name': 'org.junit.platform.runner'
+				)
 	}
 }

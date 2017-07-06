@@ -1,12 +1,8 @@
 apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
-	repositories {
-		jcenter()
-	}
-	dependencies {
-		classpath "com.github.jengelman.gradle.plugins:shadow:${shadowVersion}"
-	}
+	repositories { jcenter() }
+	dependencies { classpath "com.github.jengelman.gradle.plugins:shadow:${shadowVersion}" }
 }
 
 dependencies {
@@ -19,22 +15,22 @@ sourceSets.main.compileClasspath += configurations.shadow
 
 eclipse {
 	classpath {
-		plusConfigurations += [ configurations.shadow ]
+		plusConfigurations += [configurations.shadow]
 	}
 }
 
 idea {
 	module {
-		scopes.PROVIDED.plus += [ configurations.shadow ]
+		scopes.PROVIDED.plus += [configurations.shadow]
 	}
 }
 
 jar {
 	manifest {
 		attributes(
-			'Main-Class': 'org.junit.platform.console.ConsoleLauncher',
-			'Automatic-Module-Name': 'org.junit.platform.console'
-		)
+				'Main-Class': 'org.junit.platform.console.ConsoleLauncher',
+				'Automatic-Module-Name': 'org.junit.platform.console'
+				)
 	}
 }
 
@@ -55,10 +51,7 @@ shadowJar {
 	exclude 'META-INF/**'
 	relocate 'joptsimple', 'org.junit.platform.console.shadow.joptsimple'
 	transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
-		paths = [
-			'joptsimple/ExceptionMessages.properties',
-			'joptsimple/HelpFormatterMessages.properties'
-		]
+		paths = ['joptsimple/ExceptionMessages.properties', 'joptsimple/HelpFormatterMessages.properties']
 		keyTransformer = { key ->
 			key.replaceAll('^(joptsimple\\..*)$', 'org.junit.platform.console.shadow.$1')
 		}
@@ -69,6 +62,4 @@ shadowJar {
 	}
 }
 
-artifacts {
-	archives shadowJar
-}
+artifacts { archives shadowJar }

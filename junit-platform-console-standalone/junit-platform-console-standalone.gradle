@@ -2,12 +2,8 @@ apply plugin: 'java-library'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
-	repositories {
-		jcenter()
-	}
-	dependencies {
-		classpath "com.github.jengelman.gradle.plugins:shadow:${shadowVersion}"
-	}
+	repositories { jcenter() }
+	dependencies { classpath "com.github.jengelman.gradle.plugins:shadow:${shadowVersion}" }
 }
 
 dependencies {
@@ -29,8 +25,8 @@ jar {
 		// meant to be used on the Java 9 module path.
 		// See https://github.com/junit-team/junit5/issues/866#issuecomment-306017162
 		attributes(
-			'Main-Class': 'org.junit.platform.console.ConsoleLauncher'
-		)
+				'Main-Class': 'org.junit.platform.console.ConsoleLauncher'
+				)
 	}
 }
 
@@ -49,9 +45,9 @@ shadowJar {
 	}
 
 	dependsOn(
-		project(':junit-platform-console').shadowJar,
-		project(':junit-jupiter-params').shadowJar
-	)
+			project(':junit-platform-console').shadowJar,
+			project(':junit-jupiter-params').shadowJar
+			)
 
 	classifier = null
 	configurations = [project.configurations.shadow]
@@ -72,20 +68,18 @@ shadowJar {
 	manifest {
 		inheritFrom project.tasks.jar.manifest
 		attributes(
-			'Specification-Title': "$project.name",
-			'Implementation-Title': "$project.name",
-			// generate test engine version information in single shared manifest file
-			// pattern of key and value: `'Engine-Version-{YourTestEngine#getId()}': '47.11'`
-			'Engine-Version-junit-jupiter': "$rootProject.version",
-			'Engine-Version-junit-vintage': "$vintageVersion"
-		)
+				'Specification-Title': "$project.name",
+				'Implementation-Title': "$project.name",
+				// generate test engine version information in single shared manifest file
+				// pattern of key and value: `'Engine-Version-{YourTestEngine#getId()}': '47.11'`
+				'Engine-Version-junit-jupiter': "$rootProject.version",
+				'Engine-Version-junit-vintage': "$vintageVersion"
+				)
 	}
 }
 
 
-artifacts {
-	archives shadowJar
-}
+artifacts { archives shadowJar }
 
 task standaloneExec(type: JavaExec, dependsOn: [shadowJar, testClasses]) {
 	ignoreExitValue = true
@@ -95,9 +89,12 @@ task standaloneExec(type: JavaExec, dependsOn: [shadowJar, testClasses]) {
 	args = [
 		"$shadowJar.archiveName",
 		'--scan-classpath',
-		'--include-classname', 'standalone.*',
-		'--classpath', "$buildDir/classes/java/test",
-		'--details', 'tree'
+		'--include-classname',
+		'standalone.*',
+		'--classpath',
+		"$buildDir/classes/java/test",
+		'--details',
+		'tree'
 	]
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()

@@ -1,12 +1,8 @@
 apply plugin: 'groovy'
 
 configurations {
-	functionalTestRuntimeTestCompile {
-		description = 'Local dependencies used for compiling tests source code inside of Gradle functional tests'
-	}
-	functionalTestRuntimeTestRuntime {
-		description = 'Local dependencies used for tests runtime inside of Gradle functional tests'
-	}
+	functionalTestRuntimeTestCompile { description = 'Local dependencies used for compiling tests source code inside of Gradle functional tests' }
+	functionalTestRuntimeTestRuntime { description = 'Local dependencies used for tests runtime inside of Gradle functional tests' }
 }
 
 // Write the plugin's classpath to a file to share with the tests.
@@ -34,9 +30,7 @@ dependencies {
 	api(project(path: ':junit-platform-console', configuration: 'shadow'))
 	api(project(':junit-platform-launcher'))
 	testRuntimeOnly("junit:junit:${junit4Version}")
-	testImplementation('org.spockframework:spock-core:1.0-groovy-2.4') {
-		exclude module: 'groovy-all'
-	}
+	testImplementation('org.spockframework:spock-core:1.0-groovy-2.4') { exclude module: 'groovy-all' }
 	testImplementation(gradleTestKit())
 	functionalTestRuntimeTestCompile(project(':junit-jupiter-api'))
 	functionalTestRuntimeTestRuntime(project(':junit-platform-console'))
@@ -55,7 +49,7 @@ processResources {
 jar {
 	manifest {
 		attributes(
-			'Automatic-Module-Name': 'org.junit.platform.gradle.plugin'
-		)
+				'Automatic-Module-Name': 'org.junit.platform.gradle.plugin'
+				)
 	}
 }

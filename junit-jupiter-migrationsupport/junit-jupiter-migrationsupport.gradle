@@ -2,9 +2,7 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 junitPlatform {
 	filters {
-		engines {
-			include 'junit-jupiter'
-		}
+		engines { include 'junit-jupiter' }
 		includeClassNamePattern '.*Tests?'
 	}
 	logManager 'org.apache.logging.log4j.jul.LogManager'
@@ -12,8 +10,8 @@ junitPlatform {
 
 /*
 test {
-	scanForTestClasses = false
-	include(['org/junit/jupiter/JupiterTestSuite.class'])
+ scanForTestClasses = false
+ include(['org/junit/jupiter/JupiterTestSuite.class'])
 }
 */
 
@@ -39,7 +37,7 @@ dependencies {
 jar {
 	manifest {
 		attributes(
-			'Automatic-Module-Name': 'org.junit.jupiter.migrationsupport'
-		)
+				'Automatic-Module-Name': 'org.junit.jupiter.migrationsupport'
+				)
 	}
 }

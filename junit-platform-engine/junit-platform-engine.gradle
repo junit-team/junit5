@@ -1,15 +1,11 @@
-configurations {
-	testArtifacts.extendsFrom testRuntime
-}
+configurations { testArtifacts.extendsFrom testRuntime }
 
 task testJar(type: Jar) {
 	classifier 'test'
 	from sourceSets.test.output
 }
 
-artifacts {
-	testArtifacts testJar
-}
+artifacts { testArtifacts testJar }
 
 dependencies {
 	api(project(':junit-platform-commons'))
@@ -21,7 +17,7 @@ dependencies {
 jar {
 	manifest {
 		attributes(
-			'Automatic-Module-Name': 'org.junit.platform.engine'
-		)
+				'Automatic-Module-Name': 'org.junit.platform.engine'
+				)
 	}
 }
