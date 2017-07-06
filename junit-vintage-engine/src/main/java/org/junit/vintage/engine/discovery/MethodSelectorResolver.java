@@ -15,20 +15,21 @@ import static org.junit.vintage.engine.discovery.RunnerTestDescriptorAwareFilter
 
 import java.lang.reflect.Method;
 
+import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.runner.Description;
 
 /**
  * @since 4.12
  */
-class MethodSelectorResolver extends DiscoverySelectorResolver<MethodSelector> {
-
-	MethodSelectorResolver() {
-		super(MethodSelector.class);
-	}
+class MethodSelectorResolver implements DiscoverySelectorResolver {
 
 	@Override
-	void resolve(MethodSelector selector, TestClassCollector collector) {
+	public void resolve(EngineDiscoveryRequest request, TestClassCollector collector) {
+		request.getSelectorsByType(MethodSelector.class).forEach(selector -> resolve(selector, collector));
+	}
+
+	private void resolve(MethodSelector selector, TestClassCollector collector) {
 		Class<?> testClass = selector.getJavaClass();
 		Method testMethod = selector.getJavaMethod();
 		Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());

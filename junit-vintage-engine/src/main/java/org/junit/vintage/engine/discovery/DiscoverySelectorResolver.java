@@ -10,25 +10,14 @@
 
 package org.junit.vintage.engine.discovery;
 
-import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.EngineDiscoveryRequest;
 
 /**
  * @since 4.12
  */
-abstract class DiscoverySelectorResolver<T extends DiscoverySelector> {
+interface DiscoverySelectorResolver {
 
-	protected static final IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
+	IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
 
-	private final Class<T> selectorClass;
-
-	DiscoverySelectorResolver(Class<T> selectorClass) {
-		this.selectorClass = selectorClass;
-	}
-
-	Class<T> getSelectorClass() {
-		return selectorClass;
-	}
-
-	abstract void resolve(T selector, TestClassCollector collector);
-
+	void resolve(EngineDiscoveryRequest request, TestClassCollector collector);
 }
