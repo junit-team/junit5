@@ -18,7 +18,6 @@ import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -58,7 +57,6 @@ public class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecu
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		Preconditions.notNull(discoveryRequest, "discovery request must not be null");
 		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(uniqueId);
 		resolveDiscoveryRequest(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
