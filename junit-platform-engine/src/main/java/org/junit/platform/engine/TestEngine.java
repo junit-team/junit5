@@ -64,9 +64,9 @@ public interface TestEngine {
 	 * must be used to create unique IDs for children of the root's descriptor
 	 * by calling {@link UniqueId#append}.
 	 *
-	 * @param discoveryRequest the discovery request
+	 * @param discoveryRequest the discovery request; never {@code null}
 	 * @param uniqueId the unique ID to be used for this test engine's
-	 * {@code TestDescriptor}
+	 * {@code TestDescriptor}; never {@code null}
 	 * @return the root {@code TestDescriptor} of this engine, typically an
 	 * instance of {@code EngineDescriptor}
 	 * @see org.junit.platform.engine.support.descriptor.EngineDescriptor
@@ -81,7 +81,7 @@ public interface TestEngine {
 	 * the {@link EngineExecutionListener} to be notified of test execution
 	 * events, and {@link ConfigurationParameters} that may influence test execution.
 	 *
-	 * @param request the request to execute tests for
+	 * @param request the request to execute tests for; never {@code null}
 	 */
 	void execute(ExecutionRequest request);
 
