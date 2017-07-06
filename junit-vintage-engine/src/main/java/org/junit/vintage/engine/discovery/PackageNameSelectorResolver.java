@@ -12,26 +12,33 @@ package org.junit.vintage.engine.discovery;
 
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 
+import java.util.Collection;
 import java.util.function.Predicate;
 
+import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.discovery.PackageSelector;
 
 /**
  * @since 4.12
  */
-class PackageNameSelectorResolver extends DiscoverySelectorResolver<PackageSelector> {
+class PackageNameSelectorResolver implements DiscoverySelectorResolver {
 
 	private final Predicate<String> classNamePredicate;
 
 	PackageNameSelectorResolver(Predicate<String> classNamePredicate) {
-		super(PackageSelector.class);
 		this.classNamePredicate = classNamePredicate;
 	}
 
 	@Override
-	void resolve(PackageSelector selector, TestClassCollector collector) {
-		findAllClassesInPackage(selector.getPackageName(), classTester, classNamePredicate).forEach(
-			collector::addCompletely);
+	public void resolve(EngineDiscoveryRequest request, TestClassCollector collector) {
+		// @formatter:off
+		request.getSelectorsByType(PackageSelector.class)
+			.stream()
+			.map(PackageSelector::getPackageName)
+			.map(packageName -> findAllClassesInPackage(packageName, classTester, classNamePredicate))
+			.flatMap(Collection::stream)
+			.forEach(collector::addCompletely);
+		// @formatter:on
 	}
 
 }

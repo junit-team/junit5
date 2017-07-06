@@ -22,7 +22,6 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.discovery.ClassNameFilter;
@@ -52,13 +51,13 @@ public class JUnit4DiscoveryRequestResolver {
 
 	private TestClassCollector collectTestClasses(EngineDiscoveryRequest discoveryRequest) {
 		TestClassCollector collector = new TestClassCollector();
-		for (DiscoverySelectorResolver<?> selectorResolver : getAllDiscoverySelectorResolvers(discoveryRequest)) {
-			resolveSelectorsOfSingleType(discoveryRequest, selectorResolver, collector);
+		for (DiscoverySelectorResolver selectorResolver : getAllDiscoverySelectorResolvers(discoveryRequest)) {
+			selectorResolver.resolve(discoveryRequest, collector);
 		}
 		return collector;
 	}
 
-	private List<DiscoverySelectorResolver<?>> getAllDiscoverySelectorResolvers(EngineDiscoveryRequest request) {
+	private List<DiscoverySelectorResolver> getAllDiscoverySelectorResolvers(EngineDiscoveryRequest request) {
 		Predicate<String> classNamePredicate = buildClassNamePredicate(request);
 		return asList( //
 			new ClasspathRootSelectorResolver(classNamePredicate), //
@@ -67,12 +66,6 @@ public class JUnit4DiscoveryRequestResolver {
 			new MethodSelectorResolver(), //
 			new UniqueIdSelectorResolver(logger)//
 		);
-	}
-
-	private <T extends DiscoverySelector> void resolveSelectorsOfSingleType(EngineDiscoveryRequest discoveryRequest,
-			DiscoverySelectorResolver<T> selectorResolver, TestClassCollector collector) {
-		discoveryRequest.getSelectorsByType(selectorResolver.getSelectorClass()).forEach(
-			selector -> selectorResolver.resolve(selector, collector));
 	}
 
 	private Set<TestClassRequest> filterAndConvertToTestClassRequests(EngineDiscoveryRequest discoveryRequest,

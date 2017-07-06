@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.UniqueId.Segment;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -25,21 +26,24 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
 /**
  * @since 4.12
  */
-class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelector> {
+class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 
 	private final Logger logger;
 
 	UniqueIdSelectorResolver(Logger logger) {
-		super(UniqueIdSelector.class);
 		this.logger = logger;
 	}
 
 	@Override
-	void resolve(UniqueIdSelector selector, TestClassCollector collector) {
-		UniqueId uniqueId = selector.getUniqueId();
-		if (isNotEngineId(uniqueId) && isForVintageEngine(uniqueId)) {
-			resolveIntoFilteredTestClass(uniqueId, collector);
-		}
+	public void resolve(EngineDiscoveryRequest request, TestClassCollector collector) {
+		// @formatter:off
+		request.getSelectorsByType(UniqueIdSelector.class)
+			.stream()
+			.map(UniqueIdSelector::getUniqueId)
+			.filter(this::isNotEngineId)
+			.filter(this::isForVintageEngine)
+			.forEach(uniqueId -> resolveIntoFilteredTestClass(uniqueId, collector));
+		// @formatter:on
 	}
 
 	private boolean isNotEngineId(UniqueId uniqueId) {
