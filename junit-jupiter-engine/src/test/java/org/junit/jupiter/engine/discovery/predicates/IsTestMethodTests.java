@@ -83,11 +83,11 @@ class IsTestMethodTests {
 class ClassWithTestMethods {
 
 	@Test
-	void publicTestMethod() {
+	public void publicTestMethod() {
 	}
 
 	@Test
-	void publicTestMethodWithArgument(TestInfo info) {
+	public void publicTestMethodWithArgument(TestInfo info) {
 	}
 
 	@Test
