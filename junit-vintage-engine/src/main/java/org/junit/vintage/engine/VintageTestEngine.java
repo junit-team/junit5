@@ -63,7 +63,7 @@ public class VintageTestEngine implements TestEngine {
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit Vintage");
-		new JUnit4DiscoveryRequestResolver(engineDescriptor, LOG).resolve(discoveryRequest);
+		new JUnit4DiscoveryRequestResolver(LOG).resolveSelectors(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
 	}
 
