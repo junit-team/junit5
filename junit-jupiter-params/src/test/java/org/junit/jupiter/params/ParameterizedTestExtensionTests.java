@@ -104,6 +104,11 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
+			public ExtensionContext getRoot() {
+				return this;
+			}
+
+			@Override
 			public String getUniqueId() {
 				return null;
 			}

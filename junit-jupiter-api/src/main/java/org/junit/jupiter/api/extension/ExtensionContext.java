@@ -45,8 +45,17 @@ public interface ExtensionContext {
 	 *
 	 * @return an {@code Optional} containing the parent; never {@code null} but
 	 * potentially empty
+	* @see #getRoot()
 	 */
 	Optional<ExtensionContext> getParent();
+
+	/**
+	 * Get the extension context root.
+	 *
+	 * @return root extension context; never {@code null} but potentially {@code this}
+	 * @see #getParent()
+	 */
+	ExtensionContext getRoot();
 
 	/**
 	 * Get the unique ID of the current test or container.

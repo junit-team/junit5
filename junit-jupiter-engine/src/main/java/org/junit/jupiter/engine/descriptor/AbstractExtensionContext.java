@@ -72,6 +72,15 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		return Optional.ofNullable(parent);
 	}
 
+	@Override
+	public ExtensionContext getRoot() {
+		ExtensionContext root = this;
+		while (parent != null && parent != root) {
+			root = parent;
+		}
+		return root;
+	}
+
 	protected T getTestDescriptor() {
 		return testDescriptor;
 	}
