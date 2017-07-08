@@ -58,7 +58,8 @@ class ExtensionContextTests {
 			() -> assertThat(engineContext.getTestMethod()).isEmpty(), //
 			() -> assertThat(engineContext.getElement()).isEmpty(), //
 			() -> assertThat(engineContext.getDisplayName()).isEqualTo(engineTestDescriptor.getDisplayName()), //
-			() -> assertThat(engineContext.getParent()).isEmpty() //
+			() -> assertThat(engineContext.getParent()).isEmpty(), //
+			() -> assertThat(engineContext.getRoot()).isSameAs(engineContext) //
 		);
 	}
 
@@ -89,14 +90,17 @@ class ExtensionContextTests {
 		ClassExtensionContext outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, null);
 
 		assertThat(outerExtensionContext.getTags()).containsExactly("outer-tag");
+		assertThat(outerExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		ClassExtensionContext nestedExtensionContext = new ClassExtensionContext(outerExtensionContext, null,
 			nestedClassDescriptor, null);
 		assertThat(nestedExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "nested-tag");
+		assertThat(nestedExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(outerExtensionContext, null,
 			methodTestDescriptor, new OuterClass(), new ThrowableCollector());
 		assertThat(methodExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "method-tag");
+		assertThat(methodExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 	}
 
 	@Test
@@ -111,6 +115,7 @@ class ExtensionContextTests {
 			() -> assertThat(methodExtensionContext.getTestClass()).contains(OuterClass.class), //
 			() -> assertThat(methodExtensionContext.getDisplayName()).isEqualTo(methodTestDescriptor.getDisplayName()), //
 			() -> assertThat(methodExtensionContext.getParent()).contains(classExtensionContext), //
+			() -> assertThat(methodExtensionContext.getRoot()).isSameAs(classExtensionContext), //
 			() -> assertThat(methodExtensionContext.getTestInstance().get()).isExactlyInstanceOf(OuterClass.class) //
 		);
 	}
