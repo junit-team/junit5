@@ -48,8 +48,9 @@ on GitHub.
 * All `fail(...)` methods in `Assertions` can now be used to implement single-statement
   lambda expressions, thereby avoiding the need to implement a code block with an explicit
   return value.
-* New method `getRoot()` in `ExtensionContext` lets extension authors easily access the
-  top-most extension context.
+* New `getRoot()` method in `ExtensionContext` lets extension authors easily access the
+  top-most, _root_ extension context.
+
 
 [[release-notes-5.0.0-m6-junit-vintage]]
 ==== JUnit Vintage

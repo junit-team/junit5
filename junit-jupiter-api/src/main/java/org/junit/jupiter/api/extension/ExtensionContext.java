@@ -50,9 +50,10 @@ public interface ExtensionContext {
 	Optional<ExtensionContext> getParent();
 
 	/**
-	 * Get the extension context root.
+	 * Get the <em>root</em> {@code ExtensionContext}.
 	 *
-	 * @return root extension context; never {@code null} but potentially {@code this}
+	 * @return the root extension context; never {@code null} but potentially <em>this</em>
+	 * {@code ExtensionContext}
 	 * @see #getParent()
 	 */
 	ExtensionContext getRoot();
