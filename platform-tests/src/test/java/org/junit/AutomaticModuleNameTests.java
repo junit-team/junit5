@@ -27,6 +27,7 @@ import java.util.jar.Manifest;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -72,6 +73,7 @@ class AutomaticModuleNameTests {
 
 	@ParameterizedTest
 	@MethodSource("moduleDirectoryNames")
+	@Disabled("Not important for an RFC")
 	void automaticModuleName(String module) {
 		String expected = "org." + module.replace('-', '.');
 		String jarName = module + "-" + version(module) + ".jar";
