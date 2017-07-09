@@ -29,6 +29,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -46,17 +47,12 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 
 	private final Description description;
 
-	public VintageTestDescriptor(TestDescriptor parent, String segmentType, String segmentValue,
-			Description description) {
-		this(parent, segmentType, segmentValue, description, generateDisplayName(description),
-			toTestSource(description));
+	public VintageTestDescriptor(UniqueId uniqueId, Description description) {
+		this(uniqueId, description, generateDisplayName(description), toTestSource(description));
 	}
 
-	VintageTestDescriptor(TestDescriptor parent, String segmentType, String segmentValue, Description description,
-			String displayName, TestSource source) {
-
-		super(parent.getUniqueId().append(segmentType, segmentValue), displayName, source);
-
+	VintageTestDescriptor(UniqueId uniqueId, Description description, String displayName, TestSource source) {
+		super(uniqueId, displayName, source);
 		this.description = description;
 	}
 

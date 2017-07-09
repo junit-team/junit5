@@ -22,7 +22,6 @@ import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.runner.Description;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.vintage.engine.RecordCollectingLogger;
@@ -38,8 +37,7 @@ class RunListenerAdapterTests {
 	void logsUnknownDescriptions() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 		RecordCollectingLogger logger = new RecordCollectingLogger();
-		EngineDescriptor engineDescriptor = new EngineDescriptor(engineId(), "JUnit 4");
-		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(engineDescriptor, testClass,
+		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(engineId(), testClass,
 			new BlockJUnit4ClassRunner(testClass));
 
 		TestRun testRun = new TestRun(runnerTestDescriptor, logger);

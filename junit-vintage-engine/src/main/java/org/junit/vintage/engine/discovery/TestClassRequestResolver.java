@@ -12,6 +12,7 @@ package org.junit.vintage.engine.discovery;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toCollection;
+import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,6 +24,7 @@ import java.util.function.IntFunction;
 import java.util.logging.Logger;
 
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -61,18 +63,18 @@ class TestClassRequestResolver {
 
 	private void addRunnerTestDescriptor(TestClassRequest request, Class<?> testClass, Runner runner) {
 		RunnerTestDescriptor runnerTestDescriptor = determineRunnerTestDescriptor(testClass, runner,
-			request.getFilters());
+			request.getFilters(), engineDescriptor.getUniqueId());
 		engineDescriptor.addChild(runnerTestDescriptor);
 	}
 
 	private RunnerTestDescriptor determineRunnerTestDescriptor(Class<?> testClass, Runner runner,
-			List<RunnerTestDescriptorAwareFilter> filters) {
-		RunnerTestDescriptor runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, runner);
+			List<RunnerTestDescriptorAwareFilter> filters, UniqueId engineId) {
+		RunnerTestDescriptor runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, runner, engineId);
 		if (!filters.isEmpty()) {
 			if (runner instanceof Filterable) {
 				Filter filter = createOrFilter(filters, runnerTestDescriptor);
 				Runner filteredRunner = runnerTestDescriptor.toRequest().filterWith(filter).getRunner();
-				runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, filteredRunner);
+				runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, filteredRunner, engineId);
 			}
 			else {
 				logger.warning(() -> "Runner " + runner.getClass().getName() //
@@ -89,8 +91,10 @@ class TestClassRequestResolver {
 		return new OrFilter(filters);
 	}
 
-	private RunnerTestDescriptor createCompleteRunnerTestDescriptor(Class<?> testClass, Runner runner) {
-		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(engineDescriptor, testClass, runner);
+	private RunnerTestDescriptor createCompleteRunnerTestDescriptor(Class<?> testClass, Runner runner,
+			UniqueId engineId) {
+		UniqueId id = engineId.append(SEGMENT_TYPE_RUNNER, testClass.getName());
+		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(id, testClass, runner);
 		addChildrenRecursively(runnerTestDescriptor);
 		return runnerTestDescriptor;
 	}
@@ -107,8 +111,8 @@ class TestClassRequestResolver {
 			for (int index = 0; index < childrenWithSameUniqueId.size(); index++) {
 				String reallyUniqueId = uniqueIdGenerator.apply(index);
 				Description description = childrenWithSameUniqueId.get(index);
-				VintageTestDescriptor child = new VintageTestDescriptor(parent, VintageTestDescriptor.SEGMENT_TYPE_TEST,
-					reallyUniqueId, description);
+				UniqueId id = parent.getUniqueId().append(VintageTestDescriptor.SEGMENT_TYPE_TEST, reallyUniqueId);
+				VintageTestDescriptor child = new VintageTestDescriptor(id, description);
 				parent.addChild(child);
 				addChildrenRecursively(child);
 			}
