@@ -10,7 +10,7 @@
 
 package org.junit.platform.suite.api;
 
-import org.junit.platform.commons.meta.API;
+import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -19,7 +19,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import org.junit.platform.commons.meta.API;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

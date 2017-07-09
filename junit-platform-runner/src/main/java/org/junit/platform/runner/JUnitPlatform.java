@@ -227,8 +227,8 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private void addTagExpressionFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
 		String tagExpression = getTagExpression();
 		if (!tagExpression.isEmpty()) {
-            requestBuilder.filters(TagExpressionFilter.parse(tagExpression));
-        }
+			requestBuilder.filters(TagExpressionFilter.parse(tagExpression));
+		}
 	}
 
 	private void addIncludedEnginesFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
@@ -269,7 +269,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return getValueFromAnnotation(ExcludeTags.class, ExcludeTags::value, EMPTY_STRING_ARRAY);
 	}
 
-	private String getTagExpression(){
+	private String getTagExpression() {
 		return getValueFromAnnotation(TagExpression.class, TagExpression::value, EMPTY_STRING);
 	}
 

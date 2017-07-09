@@ -86,7 +86,7 @@ public final class TagFilter {
 	public static PostDiscoveryFilter excludeTags(List<String> tags) {
 		Preconditions.notEmpty(tags, "tags list must not be null or empty");
 		Preconditions.containsNoNullElements(tags, "individual tags must not be null");
-		return TagExpressionFilter.parse("not (" + orExpression(tags) +  ")");
+		return TagExpressionFilter.parse("not (" + orExpression(tags) + ")");
 		//return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).noneMatch(tags::contains));
 	}
 

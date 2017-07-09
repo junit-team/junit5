@@ -219,25 +219,24 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsTagExpressionFilterToRequestWhenAnnotationIsPresent() throws Exception{
+		void addsTagExpressionFilterToRequestWhenAnnotationIsPresent() throws Exception {
 
 			@TagExpression("foo and not bar")
-            class TestCase {
+			class TestCase {
 			}
 
-            LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-            List<PostDiscoveryFilter> filters = request.getPostDiscoveryFilters();
-            assertThat(filters).hasSize(1);
+			List<PostDiscoveryFilter> filters = request.getPostDiscoveryFilters();
+			assertThat(filters).hasSize(1);
 
-            PostDiscoveryFilter filter = filters.get(0);
-            assertTrue(filter.apply(testDescriptorWithTag("foo")).included());
+			PostDiscoveryFilter filter = filters.get(0);
+			assertTrue(filter.apply(testDescriptorWithTag("foo")).included());
 			assertTrue(filter.apply(testDescriptorWithTag("foo", "any other tag")).included());
 			assertTrue(filter.apply(testDescriptorWithTag("foo", "bar")).excluded());
 			assertTrue(filter.apply(testDescriptorWithTag("bar")).excluded());
 			assertTrue(filter.apply(testDescriptorWithTag("bar", "any other tag")).excluded());
-        }
-
+		}
 
 		@Test
 		void addsEngineFiltersToRequestWhenIncludeEnginesOrExcludeEnginesAnnotationsArePresent() throws Exception {
@@ -689,10 +688,10 @@ class JUnitPlatformRunnerTests {
 		return createTestDescription(uniqueId, uniqueId, uniqueId);
 	}
 
-	private TestDescriptor testDescriptorWithTag(String ... tag) {
+	private TestDescriptor testDescriptorWithTag(String... tag) {
 		TestDescriptor testDescriptor = mock(TestDescriptor.class);
-        Set<TestTag> tags = Arrays.stream(tag).map(TestTag::create).collect(toSet());
-        when(testDescriptor.getTags()).thenReturn(tags);
+		Set<TestTag> tags = Arrays.stream(tag).map(TestTag::create).collect(toSet());
+		when(testDescriptor.getTags()).thenReturn(tags);
 		return testDescriptor;
 	}
 
