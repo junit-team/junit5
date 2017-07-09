@@ -58,6 +58,8 @@ class TokenizerTest {
     @Test
     void discoverBrackets() {
         assertThat(tokensExtractedFrom("()")).containsExactly("(", ")");
+        assertThat(tokensExtractedFrom("(tag)")).containsExactly("(", "tag", ")");
+        assertThat(tokensExtractedFrom("( tag )")).containsExactly("(", "tag", ")");
         assertThat(tokensExtractedFrom("( a and b) or ( c and d )")).containsExactly("(", "a", "and", "b", ")", "or", "(", "c", "and", "d", ")");
     }
 
