@@ -63,12 +63,6 @@ class TokenizerTest {
         assertThat(tokensExtractedFrom("( a and b) or ( c and d )")).containsExactly("(", "a", "and", "b", ")", "or", "(", "c", "and", "d", ")");
     }
 
-    @Test
-    @Disabled("the new tokenizer can handle any input")
-    void reportOnNotParsableExpressions() {
-        Assertions.assertThatThrownBy(() -> tokensExtractedFrom(illegalCharacter)).isInstanceOf(Tokenizer.IllegalTagExpression.class);
-    }
-
     @ParameterizedTest
     @MethodSource("data")
     void acceptanceTests(String tagExpression, List<String> tokens) {

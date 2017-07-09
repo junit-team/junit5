@@ -14,19 +14,23 @@ public class TagExpressionParser {
         RIGHT
     }
 
-    private static Map<String, Assoc> ASSOC = new HashMap<String, Assoc>() {{
-        put("or", Assoc.LEFT);
-        put("and", Assoc.LEFT);
-        put("not", Assoc.RIGHT);
-    }};
+    private static Map<String, Assoc> ASSOC = new HashMap<>();
 
-    private static Map<String, Integer> PREC = new HashMap<String, Integer>() {{
-        put("(", -2);
-        put(")", -1);
-        put("or", 0);
-        put("and", 1);
-        put("not", 2);
-    }};
+    static {
+        ASSOC.put("or", Assoc.LEFT);
+        ASSOC.put("and", Assoc.LEFT);
+        ASSOC.put("not", Assoc.RIGHT);
+    }
+
+    private static Map<String, Integer> PREC = new HashMap<>();
+
+    static {
+        PREC.put("(", -2);
+        PREC.put(")", -1);
+        PREC.put("or", 0);
+        PREC.put("and", 1);
+        PREC.put("not", 2);
+    }
 
     private final Tokenizer tokenizer = new Tokenizer();
 
