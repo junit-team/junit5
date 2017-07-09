@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Tokenizer {
+public class Tokenizer {
 
     static class IllegalTagExpression extends RuntimeException {
     }
@@ -14,7 +14,7 @@ class Tokenizer {
     private final List<Pattern> patterns = new LinkedList<>();
     private final List<String> operators = new ArrayList<>();
 
-    Tokenizer() {
+    public Tokenizer() {
         patterns.add(Pattern.compile("^(\\()"));
         patterns.add(Pattern.compile("(\\))"));
         patterns.add(Pattern.compile("^(not)\\s"));
@@ -29,7 +29,7 @@ class Tokenizer {
 
     }
 
-    List<String> tokenizeWithPostProcessing(String infixTagExpression) {
+    public List<String> tokenizeWithPostProcessing(String infixTagExpression) {
 
         List<String> tokens = new LinkedList<>();
 

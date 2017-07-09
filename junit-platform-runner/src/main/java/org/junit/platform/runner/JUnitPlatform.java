@@ -37,6 +37,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TagExpressionFilter;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -51,6 +52,7 @@ import org.junit.platform.suite.api.IncludePackages;
 import org.junit.platform.suite.api.IncludeTags;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.TagExpression;
 import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -100,6 +102,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
+	private static final String EMPTY_STRING = "";
 
 	private final Class<?> testClass;
 	private final Launcher launcher;
@@ -160,6 +163,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 		addIncludedTagsFilter(requestBuilder);
 		addExcludedTagsFilter(requestBuilder);
+		addTagExpressionFilter(requestBuilder);
 
 		addIncludedEnginesFilter(requestBuilder);
 		addExcludedEnginesFilter(requestBuilder);
@@ -220,6 +224,13 @@ public class JUnitPlatform extends Runner implements Filterable {
 		}
 	}
 
+	private void addTagExpressionFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
+		String tagExpression = getTagExpression();
+		if (!tagExpression.isEmpty()) {
+            requestBuilder.filters(TagExpressionFilter.parse(tagExpression));
+        }
+	}
+
 	private void addIncludedEnginesFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
 		String[] engineIds = getIncludedEngineIds();
 		if (engineIds.length > 0) {
@@ -256,6 +267,10 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 	private String[] getExcludedTags() {
 		return getValueFromAnnotation(ExcludeTags.class, ExcludeTags::value, EMPTY_STRING_ARRAY);
+	}
+
+	private String getTagExpression(){
+		return getValueFromAnnotation(TagExpression.class, TagExpression::value, EMPTY_STRING);
 	}
 
 	private String[] getIncludedEngineIds() {
