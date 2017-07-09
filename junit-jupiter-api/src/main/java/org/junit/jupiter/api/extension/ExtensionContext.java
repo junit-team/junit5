@@ -45,7 +45,7 @@ public interface ExtensionContext {
 	 *
 	 * @return an {@code Optional} containing the parent; never {@code null} but
 	 * potentially empty
-	* @see #getRoot()
+	 * @see #getRoot()
 	 */
 	Optional<ExtensionContext> getParent();
 
