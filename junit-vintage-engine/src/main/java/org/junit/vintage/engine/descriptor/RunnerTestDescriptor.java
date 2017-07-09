@@ -12,8 +12,6 @@ package org.junit.vintage.engine.descriptor;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import java.util.Optional;
-
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
@@ -31,7 +29,7 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 
 	public RunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, Runner runner) {
 		super(parent, SEGMENT_TYPE_RUNNER, testClass.getName(), runner.getDescription(), testClass.getName(),
-			Optional.of(new ClassSource(testClass)));
+			new ClassSource(testClass));
 		this.testClass = testClass;
 		this.runner = runner;
 	}
