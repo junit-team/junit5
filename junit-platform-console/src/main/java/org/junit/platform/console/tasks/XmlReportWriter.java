@@ -220,8 +220,7 @@ class XmlReportWriter {
 		StringBuilder builder = new StringBuilder(format("Report Entry #{0} (timestamp: {1})\n", entryNumber,
 			ISO_LOCAL_DATE_TIME.format(reportEntry.getTimestamp())));
 
-		reportEntry.getKeyValuePairs().entrySet().forEach(
-			entry -> builder.append(format("\t- {0}: {1}\n", entry.getKey(), entry.getValue())));
+		reportEntry.getKeyValuePairs().forEach((key, value) -> builder.append(format("\t- {0}: {1}\n", key, value)));
 
 		return builder.toString();
 	}
