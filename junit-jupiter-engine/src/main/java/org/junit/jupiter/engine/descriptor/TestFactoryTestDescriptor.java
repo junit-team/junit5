@@ -66,7 +66,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		ExtensionContext extensionContext = context.getExtensionContext();
 
 		context.getThrowableCollector().execute(() -> {
-			Object instance = getRequiredTestInstance(extensionContext);
+			Object instance = extensionContext.getRequiredTestInstance();
 			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, extensionContext,
 				context.getExtensionRegistry());
 			TestSource source = getSource().orElseThrow(

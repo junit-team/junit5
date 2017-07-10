@@ -51,6 +51,10 @@ on GitHub.
   explicit return value.
 * New `getRoot()` method in `ExtensionContext` lets extension authors easily access the
   top-most, _root_ extension context.
+* New `getRequiredTestClass()`, `getRequiredTestInstance()`, and
+  `getRequiredTestMethod()` convenience methods in the `ExtensionContext` API that
+  provide extension authors shortcuts for retrieving the test class, test instance, and
+  test method in use cases for which such elements are _required_ to be present.
 * Type-level annotations such as `@TestInstance` and `@Disabled` may now be declared on
   test interfaces (a.k.a., _testing traits_).
 

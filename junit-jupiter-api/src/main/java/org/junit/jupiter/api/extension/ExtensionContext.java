@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -52,8 +53,8 @@ public interface ExtensionContext {
 	/**
 	 * Get the <em>root</em> {@code ExtensionContext}.
 	 *
-	 * @return the root extension context; never {@code null} but potentially <em>this</em>
-	 * {@code ExtensionContext}
+	 * @return the root extension context; never {@code null} but potentially
+	 * <em>this</em> {@code ExtensionContext}
 	 * @see #getParent()
 	 */
 	ExtensionContext getRoot();
@@ -118,8 +119,25 @@ public interface ExtensionContext {
 	 *
 	 * @return an {@code Optional} containing the class; never {@code null} but
 	 * potentially empty
+	 * @see #getRequiredTestClass()
 	 */
 	Optional<Class<?>> getTestClass();
+
+	/**
+	 * Get the <em>required</em> {@link Class} associated with the current test
+	 * or container.
+	 *
+	 * <p>Use this method as an alternative to {@link #getTestClass()} for use
+	 * cases in which the test class is required to be present.
+	 *
+	 * @return the test class; never {@code null}
+	 * @throws PreconditionViolationException if the test class is not present
+	 * in this {@code ExtensionContext}
+	 */
+	default Object getRequiredTestClass() {
+		return Preconditions.notNull(getTestClass().orElse(null),
+			"Illegal state: required test class is not present in the current ExtensionContext");
+	}
 
 	/**
 	 * Get the test instance associated with the current test or container,
@@ -127,16 +145,50 @@ public interface ExtensionContext {
 	 *
 	 * @return an {@code Optional} containing the test instance; never
 	 * {@code null} but potentially empty
+	 * @see #getRequiredTestInstance()
 	 */
 	Optional<Object> getTestInstance();
+
+	/**
+	 * Get the <em>required</em> test instance associated with the current test
+	 * or container.
+	 *
+	 * <p>Use this method as an alternative to {@link #getTestInstance()} for use
+	 * cases in which the test instance is required to be present.
+	 *
+	 * @return the test instance; never {@code null}
+	 * @throws PreconditionViolationException if the test instance is not present
+	 * in this {@code ExtensionContext}
+	 */
+	default Object getRequiredTestInstance() {
+		return Preconditions.notNull(getTestInstance().orElse(null),
+			"Illegal state: required test instance is not present in the current ExtensionContext");
+	}
 
 	/**
 	 * Get the {@link Method} associated with the current test, if available.
 	 *
 	 * @return an {@code Optional} containing the method; never {@code null} but
 	 * potentially empty
+	 * @see #getRequiredTestMethod()
 	 */
 	Optional<Method> getTestMethod();
+
+	/**
+	 * Get the <em>required</em> {@link Method} associated with the current test
+	 * or container.
+	 *
+	 * <p>Use this method as an alternative to {@link #getTestMethod()} for use
+	 * cases in which the test method is required to be present.
+	 *
+	 * @return the test method; never {@code null}
+	 * @throws PreconditionViolationException if the test method is not present
+	 * in this {@code ExtensionContext}
+	 */
+	default Object getRequiredTestMethod() {
+		return Preconditions.notNull(getTestMethod().orElse(null),
+			"Illegal state: required test method is not present in the current ExtensionContext");
+	}
 
 	/**
 	 * Get the exception that was thrown during execution of the test or container

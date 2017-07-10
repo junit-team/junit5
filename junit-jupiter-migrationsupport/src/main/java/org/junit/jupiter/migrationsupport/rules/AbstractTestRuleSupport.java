@@ -23,7 +23,6 @@ import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.GenericBeforeAndAfterAdvice;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMemberFactory;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.rules.TestRule;
 
@@ -73,8 +72,7 @@ abstract class AbstractTestRuleSupport<T extends Member>
 	private void invokeAppropriateMethodOnRuleAnnotatedMembers(ExtensionContext context,
 			Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
 
-		Object testInstance = context.getTestInstance().orElseThrow(
-			() -> new JUnitException("Illegal state: test instance not present for rule: " + getRuleType().getName()));
+		Object testInstance = context.getRequiredTestInstance();
 		List<T> members = findRuleAnnotatedMembers(testInstance);
 
 		// @formatter:off
