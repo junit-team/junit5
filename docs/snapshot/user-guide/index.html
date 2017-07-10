@@ -6449,6 +6449,12 @@ explicit return value.</p>
 top-most, <em>root</em> extension context.</p>
 </li>
 <li>
+<p>New <code>getRequiredTestClass()</code>, <code>getRequiredTestInstance()</code>, and
+<code>getRequiredTestMethod()</code> convenience methods in the <code>ExtensionContext</code> API that
+provide extension authors shortcuts for retrieving the test class, test instance, and
+test method in use cases for which such elements are <em>required</em> to be present.</p>
+</li>
+<li>
 <p>Type-level annotations such as <code>@TestInstance</code> and <code>@Disabled</code> may now be declared on
 test interfaces (a.k.a., <em>testing traits</em>).</p>
 </li>
@@ -6496,7 +6502,7 @@ test interfaces (a.k.a., <em>testing traits</em>).</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-10 11:54:38 EDT
+Last updated 2017-07-10 12:36:17 EDT
 </div>
 </div>
 </body>
