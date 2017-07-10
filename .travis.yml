@@ -2,11 +2,13 @@ language: java
 sudo: false
 dist: trusty
 
+env:
+  - _JAVA_OPTIONS='-Xmx500m'
+
 matrix:
   include:
-    - jdk: oraclejdk8
-      addons: {apt: {packages: [oracle-java8-installer]}}
-    - jdk: oraclejdk9
+    - jdk: oraclejdk8 # JDK 1.8.0_131-b11
+    - jdk: oraclejdk9 # JDK 9-ea+174 provided by Travis will be replaced by 9+177 in "before_install"
       before_install:
         - cd ~
         - wget http://download.java.net/java/jdk9/archive/177/binaries/jdk-9+177_linux-x64_bin.tar.gz
