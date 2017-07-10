@@ -6356,8 +6356,8 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> Sixth milestone release of JUnit 5 with a focus on Java 9 compatibility,
-scenario tests, and additional extension APIs for JUnit Jupiter.</p>
+<p><strong>Scope:</strong> Sixth milestone release of JUnit 5 with a focus on Java 9 compatibility and
+additional extension APIs for JUnit Jupiter.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -6406,7 +6406,8 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>findAnnotation()</code> method in <code>AnnotationSupport</code> now searches on interfaces
+implemented by a class if the supplied element is a class.</p>
 </li>
 </ul>
 </div>
@@ -6440,12 +6441,16 @@ on GitHub.</p>
 <ul>
 <li>
 <p>All <code>fail(&#8230;&#8203;)</code> methods in <code>Assertions</code> can now be used to implement single-statement
-lambda expressions, thereby avoiding the need to implement a code block with an explicit
-return value.</p>
+lambda expressions, thereby avoiding the need to implement a code block with an
+explicit return value.</p>
 </li>
 <li>
 <p>New <code>getRoot()</code> method in <code>ExtensionContext</code> lets extension authors easily access the
 top-most, <em>root</em> extension context.</p>
+</li>
+<li>
+<p>Type-level annotations such as <code>@TestInstance</code> and <code>@Disabled</code> may now be declared on
+test interfaces (a.k.a., <em>testing traits</em>).</p>
 </li>
 </ul>
 </div>
@@ -6491,7 +6496,7 @@ top-most, <em>root</em> extension context.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-10 11:21:41 EDT
+Last updated 2017-07-10 11:54:38 EDT
 </div>
 </div>
 </body>
