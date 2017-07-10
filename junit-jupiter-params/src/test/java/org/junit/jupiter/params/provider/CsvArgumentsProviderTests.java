@@ -63,7 +63,7 @@ class CsvArgumentsProviderTests {
 	@Test
 	void throwsExceptionOnInvalidCsv() {
 		JUnitException exception = assertThrows(JUnitException.class,
-			() -> provideArguments(',', "foo", "bar", "").count());
+			() -> provideArguments(',', "foo", "bar", "").toArray());
 
 		assertThat(exception).hasMessage("Line at index 2 contains invalid CSV: \"\"");
 	}
