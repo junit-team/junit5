@@ -155,6 +155,16 @@ class AnnotationUtilsTests {
 	}
 
 	@Test
+	void findAnnotationDirectlyPresentOnImplementedInterface() {
+		assertThat(findAnnotation(TestingTraitClass.class, Annotation1.class)).isPresent();
+	}
+
+	@Test
+	void findAnnotationMetaPresentOnImplementedInterface() {
+		assertThat(findAnnotation(ComposedTestingTraitClass.class, Annotation1.class)).isPresent();
+	}
+
+	@Test
 	void findAnnotationDirectlyPresentOnMethod() throws Exception {
 		Optional<Annotation1> optionalAnnotation = findAnnotation(Annotation2Class.class.getDeclaredMethod("method"),
 			Annotation1.class);
@@ -584,6 +594,20 @@ class AnnotationUtilsTests {
 	}
 
 	static class InheritedComposedAnnotationSubClass extends InheritedComposedAnnotationClass {
+	}
+
+	@Annotation1
+	interface TestingTrait {
+	}
+
+	static class TestingTraitClass implements TestingTrait {
+	}
+
+	@ComposedAnnotation
+	interface ComposedTestingTrait {
+	}
+
+	static class ComposedTestingTraitClass implements ComposedTestingTrait {
 	}
 
 	@Tag("a")

@@ -27,9 +27,9 @@ module.
 | `@DisplayName`     | Declares a custom display name for the test class or test method
 | `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_.
 | `@AfterEach`       | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_.
-| `@BeforeAll`       | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are _inherited_ and must be `static` unless the test class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
-| `@AfterAll`        | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are _inherited_ and must be `static` unless the test class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
-| `@Nested`          | Denotes that the annotated class is a nested, non-static test class. `@BeforeAll` and `@AfterAll` methods cannot be used in a `@Nested` test class unless it is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
+| `@BeforeAll`       | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are _inherited_ and must be `static` unless the test class or test interface is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
+| `@AfterAll`        | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are _inherited_ and must be `static` unless the test class or test interface is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
+| `@Nested`          | Denotes that the annotated class is a nested, non-static test class. `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless it is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
 | `@Tag`             | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
 | `@Disabled`        | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
 | `@ExtendWith`      | Used to register custom <<extensions,extensions>>
@@ -302,7 +302,7 @@ class MyMockitoTest {
 JUnit Jupiter allows `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`,
 `@TestTemplate`, `@BeforeEach`, and `@AfterEach` to be declared on interface `default`
 methods. `@BeforeAll` and `@AfterAll` can either be declared on `static` methods in a
-test interface or on interface `default` methods _if_ the concrete test class is
+test interface or on interface `default` methods _if_ the test interface or test class is
 annotated with `@TestInstance(Lifecycle.PER_CLASS)` (see
 <<writing-tests-test-instance-lifecycle>>). Here are some examples.
 

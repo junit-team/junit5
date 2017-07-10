@@ -50,8 +50,13 @@ public final class AnnotationSupport {
 
 	/**
 	 * Find the first annotation of {@code annotationType} that is either
-	 * <em>present</em> or <em>meta-present</em> on the supplied
-	 * {@code element}.
+	 * <em>directly present</em>, <em>meta-present</em>, or <em>indirectly
+	 * present</em> on the supplied {@code element}.
+	 *
+	 * <p>If the element is a class and the annotation is neither <em>directly
+	 * present</em> nor <em>meta-present</em> on the class, this method will
+	 * additionally search on interfaces implemented by the class before
+	 * finding an annotation that is <em>indirectly present</em> on the class.
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
 		return AnnotationUtils.findAnnotation(element, annotationType);

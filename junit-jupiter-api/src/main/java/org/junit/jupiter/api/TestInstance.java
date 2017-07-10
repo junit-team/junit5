@@ -18,14 +18,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@code @TestInstance} is a class-level annotation that is used to configure
+ * {@code @TestInstance} is a type-level annotation that is used to configure
  * the {@linkplain Lifecycle lifecycle} of test instances for the annotated
- * test class.
+ * test class or test interface.
  *
- * <p>If {@code @TestInstance} is not declared on a test class, the lifecycle
- * mode will implicitly default to {@link Lifecycle#PER_METHOD PER_METHOD}.
- * Note, however, that an explicit lifecycle mode is <em>inherited</em> within
- * a test class hierarchy.
+ * <p>If {@code @TestInstance} is not declared on a test class or implemented
+ * test interface, the lifecycle mode will implicitly default to
+ * {@link Lifecycle#PER_METHOD PER_METHOD}. Note, however, that an explicit
+ * lifecycle mode is <em>inherited</em> within a test class hierarchy.
  *
  * <h3>Use Cases</h3>
  * <p>Setting the test instance lifecycle mode to {@link Lifecycle#PER_CLASS
@@ -42,6 +42,10 @@ import java.lang.annotation.Target;
  * {@link AfterAll @AfterAll} methods in test classes implemented with the Kotlin
  * programming language.</li>
  * </ul>
+ *
+ * <p>{@code @TestInstance} may also be used as a meta-annotation in order to
+ * create a custom <em>composed annotation</em> that inherits the semantics
+ * of {@code @TestInstance}.
  *
  * @since 5.0
  */

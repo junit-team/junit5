@@ -17,19 +17,22 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 // tag::user_guide[]
+@TestInstance(Lifecycle.PER_CLASS)
 interface TestLifecycleLogger {
 
 	static final Logger LOG = Logger.getLogger(TestLifecycleLogger.class.getName());
 
 	@BeforeAll
-	static void beforeAllTests() {
+	default void beforeAllTests() {
 		LOG.info("Before all tests");
 	}
 
 	@AfterAll
-	static void afterAllTests() {
+	default void afterAllTests() {
 		LOG.info("After all tests");
 	}
 

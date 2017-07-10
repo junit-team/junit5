@@ -130,8 +130,9 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * Find the first annotation of {@code annotationType} that is either <em>present</em> or <em>meta-present</em> on
-	 * the supplied optional {@code element}.
+	 * Find the first annotation of {@code annotationType} that is either
+	 * <em>present</em> or <em>meta-present</em> on the supplied optional
+	 * {@code element}.
 	 *
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 */
@@ -181,6 +182,19 @@ public final class AnnotationUtils {
 			visited);
 		if (directMetaAnnotation.isPresent()) {
 			return directMetaAnnotation;
+		}
+
+		// Search on interfaces
+		if (element instanceof Class) {
+			Class<?> clazz = (Class<?>) element;
+			for (Class<?> ifc : clazz.getInterfaces()) {
+				if (ifc != Annotation.class) {
+					Optional<A> annotationOnInterface = findAnnotation(ifc, annotationType, visited);
+					if (annotationOnInterface.isPresent()) {
+						return annotationOnInterface;
+					}
+				}
+			}
 		}
 
 		// Indirectly present?
