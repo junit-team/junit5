@@ -134,7 +134,7 @@ public interface ExtensionContext {
 	 * @throws PreconditionViolationException if the test class is not present
 	 * in this {@code ExtensionContext}
 	 */
-	default Object getRequiredTestClass() {
+	default Class<?> getRequiredTestClass() {
 		return Preconditions.notNull(getTestClass().orElse(null),
 			"Illegal state: required test class is not present in the current ExtensionContext");
 	}
@@ -185,7 +185,7 @@ public interface ExtensionContext {
 	 * @throws PreconditionViolationException if the test method is not present
 	 * in this {@code ExtensionContext}
 	 */
-	default Object getRequiredTestMethod() {
+	default Method getRequiredTestMethod() {
 		return Preconditions.notNull(getTestMethod().orElse(null),
 			"Illegal state: required test method is not present in the current ExtensionContext");
 	}
