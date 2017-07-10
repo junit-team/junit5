@@ -57,21 +57,21 @@ enum Color {
 		return testIdentifier.isContainer() ? CONTAINER : TEST;
 	}
 
-	static Color SUCCESSFUL = GREEN;
+	static final Color SUCCESSFUL = GREEN;
 
-	static Color ABORTED = YELLOW;
+	static final Color ABORTED = YELLOW;
 
-	static Color FAILED = RED;
+	static final Color FAILED = RED;
 
-	static Color SKIPPED = PURPLE;
+	static final Color SKIPPED = PURPLE;
 
-	static Color CONTAINER = CYAN;
+	static final Color CONTAINER = CYAN;
 
-	static Color TEST = BLUE;
+	static final Color TEST = BLUE;
 
-	static Color DYNAMIC = PURPLE;
+	static final Color DYNAMIC = PURPLE;
 
-	static Color REPORTED = WHITE;
+	static final Color REPORTED = WHITE;
 
 	private final String ansiString;
 
