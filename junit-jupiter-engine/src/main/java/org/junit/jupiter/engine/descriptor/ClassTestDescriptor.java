@@ -80,7 +80,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			Class<?> testClass) {
 
 		super(uniqueId, determineDisplayName(Preconditions.notNull(testClass, "Class must not be null"),
-			defaultDisplayNameGenerator));
+			defaultDisplayNameGenerator), new ClassSource(testClass));
 
 		this.testClass = testClass;
 		this.lifecycle = getTestInstanceLifecycle(testClass);
@@ -89,8 +89,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		this.afterAllMethods = findAfterAllMethods(testClass, this.lifecycle == Lifecycle.PER_METHOD);
 		this.beforeEachMethods = findBeforeEachMethods(testClass);
 		this.afterEachMethods = findAfterEachMethods(testClass);
-
-		setSource(new ClassSource(testClass));
 	}
 
 	// --- TestDescriptor ------------------------------------------------------

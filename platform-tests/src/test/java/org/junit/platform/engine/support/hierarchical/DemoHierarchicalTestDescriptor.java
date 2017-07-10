@@ -32,10 +32,7 @@ public class DemoHierarchicalTestDescriptor extends AbstractTestDescriptor imple
 
 	public DemoHierarchicalTestDescriptor(UniqueId uniqueId, String displayName, TestSource source,
 			Runnable executeBlock) {
-		super(uniqueId, displayName);
-		if (source != null) {
-			setSource(source);
-		}
+		super(uniqueId, displayName, source);
 		this.executeBlock = executeBlock;
 	}
 

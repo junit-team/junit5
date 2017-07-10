@@ -30,7 +30,7 @@ import org.junit.platform.engine.UniqueId;
  * Abstract base implementation of {@link TestDescriptor} that may be used by
  * custom {@link org.junit.platform.engine.TestEngine TestEngines}.
  *
- * <p>Subclasses should call {@link #setSource} in their constructor, if
+ * <p>Subclasses should provide a {@code source} in their constructor, if
  * possible, and override {@link #getTags}, if appropriate.
  *
  * @since 1.0
@@ -44,7 +44,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private TestDescriptor parent;
 
-	private TestSource source;
+	private final TestSource source;
 
 	private final Set<TestDescriptor> children = Collections.synchronizedSet(new LinkedHashSet<>(16));
 
@@ -56,10 +56,28 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	 * {@code null}
 	 * @param displayName the display name for this {@code TestDescriptor};
 	 * never {@code null} or blank
+	 * @see #AbstractTestDescriptor(UniqueId, String, TestSource)
 	 */
 	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName) {
+		this(uniqueId, displayName, null);
+	}
+
+	/**
+	 * Create a new {@code AbstractTestDescriptor} with the supplied
+	 * {@link UniqueId}, display name and source.
+	 *
+	 * @param uniqueId the unique ID of this {@code TestDescriptor}; never
+	 * {@code null}
+	 * @param displayName the display name for this {@code TestDescriptor};
+	 * never {@code null} or blank
+	 * @param source the source of the test or container described by this
+	 * {@code TestDescriptor}; can be {@code null}
+	 * @see #AbstractTestDescriptor(UniqueId, String)
+	 */
+	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
 		this.uniqueId = Preconditions.notNull(uniqueId, "UniqueId must not be null");
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
+		this.source = source;
 	}
 
 	@Override
@@ -123,10 +141,6 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public final Set<? extends TestDescriptor> getChildren() {
 		return Collections.unmodifiableSet(this.children);
-	}
-
-	protected final void setSource(TestSource source) {
-		this.source = Preconditions.notNull(source, "TestSource must not be null");
 	}
 
 	@Override

@@ -34,10 +34,9 @@ class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 	private final TestSource testSource;
 
 	DynamicContainerTestDescriptor(UniqueId uniqueId, DynamicContainer dynamicContainer, TestSource testSource) {
-		super(uniqueId, dynamicContainer.getDisplayName());
+		super(uniqueId, dynamicContainer.getDisplayName(), testSource);
 		this.dynamicContainer = dynamicContainer;
 		this.testSource = testSource;
-		setSource(testSource);
 	}
 
 	@Override

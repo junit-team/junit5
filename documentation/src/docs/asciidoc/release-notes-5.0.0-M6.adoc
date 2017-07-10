@@ -31,6 +31,8 @@ on GitHub.
 * The method `getDiscoveryFiltersByType` of `EngineDiscoveryRequest` has been renamed to
   `getFiltersByType`.
 * The method `getSegments()` of `UniqueId` now returns an immutable list.
+* The method `setSource` of `AbstractTestDescriptor` has been removed. There is an additional
+  constructor with a `source` argument that can be used instead.
 
 ===== New Features and Improvements
 
