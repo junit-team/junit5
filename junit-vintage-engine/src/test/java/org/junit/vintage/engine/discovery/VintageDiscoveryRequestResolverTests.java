@@ -96,10 +96,7 @@ class VintageDiscoveryRequestResolverTests {
 		resolver.resolve(request);
 
 		assertThat(engineDescriptor.getChildren()).isEmpty();
-
-		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
-		assertThat(logRecord.getLevel()).isEqualTo(Level.INFO);
-		assertThat(logRecord.getMessage()).isEqualTo("Class " + testClass.getName() + " could not be resolved");
+		assertThat(logger.getLogRecords()).isEmpty();
 	}
 
 }
