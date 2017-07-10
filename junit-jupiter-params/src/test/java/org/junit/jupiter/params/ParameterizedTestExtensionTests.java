@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.platform.commons.JUnitException;
 
 class ParameterizedTestExtensionTests {
 
@@ -81,6 +83,21 @@ class ParameterizedTestExtensionTests {
 		FileNotFoundException exception = assertThrows(FileNotFoundException.class,
 			() -> arguments(failingProvider, null));
 		assertEquals("a message", exception.getMessage());
+	}
+
+	@Test
+	void throwsExceptionWhenParameterizedTestIsNotInvokedAtLeastOnce() {
+		ExtensionContext extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
+			new TestCaseWithAnnotatedMethod());
+
+		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
+			extensionContextWithAnnotatedTestMethod);
+		//cause the stream to be evaluated
+		stream.toArray();
+		JUnitException exception = assertThrows(JUnitException.class, stream::close);
+
+		assertThat(exception).hasMessage(
+			"Configuration error: You must provide at least one argument for this @ParameterizedTest");
 	}
 
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase) {

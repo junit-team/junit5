@@ -15,6 +15,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -49,6 +50,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		Method templateMethod = Preconditions.notNull(context.getTestMethod().orElse(null),
 			"test method must not be null");
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
+		AtomicLong invocationCount = new AtomicLong(0);
 		// @formatter:off
 		return findRepeatableAnnotations(templateMethod, ArgumentsSource.class)
 				.stream()
@@ -57,8 +59,17 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, context))
 				.map(Arguments::get)
-				.map(arguments -> new ParameterizedTestInvocationContext(formatter, arguments));
+				.map(arguments -> createInvocationContext(formatter, arguments))
+				.peek(invocationContext -> invocationCount.incrementAndGet())
+				.onClose(() ->
+						Preconditions.condition(invocationCount.get() > 0,
+								() -> "Configuration error: You must provide at least one argument for this @" + ParameterizedTest.class.getSimpleName()));
 		// @formatter:on
+	}
+
+	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
+			Object[] arguments) {
+		return new ParameterizedTestInvocationContext(formatter, arguments);
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod) {
