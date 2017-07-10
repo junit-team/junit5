@@ -34,12 +34,10 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	MethodBasedTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
-		super(uniqueId, displayName);
+		super(uniqueId, displayName, new MethodSource(Preconditions.notNull(testMethod, "Method must not be null")));
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
-
-		setSource(new MethodSource(testMethod));
+		this.testMethod = testMethod;
 	}
 
 	@Override

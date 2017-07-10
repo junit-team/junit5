@@ -37,6 +37,7 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
@@ -53,8 +54,8 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
-	JupiterTestDescriptor(UniqueId uniqueId, String displayName) {
-		super(uniqueId, displayName);
+	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
+		super(uniqueId, displayName, source);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
