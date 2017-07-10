@@ -29,7 +29,13 @@ import org.junit.platform.engine.discovery.PackageNameFilter;
  * @since 1.0
  */
 @API(Experimental)
-public class ClasspathScanningSupport {
+public final class ClasspathScanningSupport {
+
+	///CLOVER:OFF
+	private ClasspathScanningSupport() {
+		/* no-op */
+	}
+	///CLOVER:ON
 
 	/**
 	 * Build a {@link Predicate} for fully qualified class names to be used for
