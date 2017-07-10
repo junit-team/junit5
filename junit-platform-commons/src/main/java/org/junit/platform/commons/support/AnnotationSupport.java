@@ -77,6 +77,10 @@ public final class AnnotationSupport {
 	 * container, or as a meta-annotation (e.g., multiple declarations of
 	 * {@code @ExtendWith} within a test class hierarchy).
 	 *
+	 * <p>If the element is a class and the repeatable annotation is not
+	 * discovered within the class hierarchy, this method will additionally
+	 * search on interfaces implemented by each class in the hierarchy.
+	 *
 	 * <p>If the supplied {@code element} is {@code null}, this method simply
 	 * returns an empty list.
 	 *
