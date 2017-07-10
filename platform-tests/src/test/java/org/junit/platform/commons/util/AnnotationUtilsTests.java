@@ -108,39 +108,28 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findAnnotationOnClassWithoutAnnotation() {
-		Optional<Annotation2> optionalAnnotation = findAnnotation(Annotation1Class.class, Annotation2.class);
-		assertNotNull(optionalAnnotation);
-		assertFalse(optionalAnnotation.isPresent());
+		assertThat(findAnnotation(Annotation1Class.class, Annotation2.class)).isNotPresent();
 	}
 
 	@Test
 	void findAnnotationIndirectlyPresentOnOptionalClass() {
-		Optional<InheritedAnnotation> optionalAnnotation = findAnnotation(
-			Optional.of(SubInheritedAnnotationClass.class), InheritedAnnotation.class);
-		assertNotNull(optionalAnnotation);
-		assertTrue(optionalAnnotation.isPresent());
+		Optional<Class<?>> optional = Optional.of(SubInheritedAnnotationClass.class);
+		assertThat(findAnnotation(optional, InheritedAnnotation.class)).isPresent();
 	}
 
 	@Test
 	void findAnnotationIndirectlyPresentOnClass() {
-		Optional<InheritedAnnotation> optionalAnnotation = findAnnotation(SubInheritedAnnotationClass.class,
-			InheritedAnnotation.class);
-		assertNotNull(optionalAnnotation);
-		assertTrue(optionalAnnotation.isPresent());
+		assertThat(findAnnotation(SubInheritedAnnotationClass.class, InheritedAnnotation.class)).isPresent();
 	}
 
 	@Test
 	void findAnnotationDirectlyPresentOnClass() {
-		Optional<Annotation1> optionalAnnotation = findAnnotation(Annotation1Class.class, Annotation1.class);
-		assertNotNull(optionalAnnotation);
-		assertTrue(optionalAnnotation.isPresent());
+		assertThat(findAnnotation(Annotation1Class.class, Annotation1.class)).isPresent();
 	}
 
 	@Test
 	void findAnnotationMetaPresentOnClass() {
-		Optional<Annotation1> optionalAnnotation = findAnnotation(ComposedAnnotationClass.class, Annotation1.class);
-		assertNotNull(optionalAnnotation);
-		assertTrue(optionalAnnotation.isPresent());
+		assertThat(findAnnotation(ComposedAnnotationClass.class, Annotation1.class)).isPresent();
 	}
 
 	/**
@@ -166,26 +155,20 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findAnnotationDirectlyPresentOnMethod() throws Exception {
-		Optional<Annotation1> optionalAnnotation = findAnnotation(Annotation2Class.class.getDeclaredMethod("method"),
-			Annotation1.class);
-		assertNotNull(optionalAnnotation);
-		assertTrue(optionalAnnotation.isPresent());
+		Method method = Annotation2Class.class.getDeclaredMethod("method");
+		assertThat(findAnnotation(method, Annotation1.class)).isPresent();
 	}
 
 	@Test
 	void findAnnotationMetaPresentOnMethod() throws Exception {
-		Optional<Annotation1> optionalAnnotation = findAnnotation(
-			ComposedAnnotationClass.class.getDeclaredMethod("method"), Annotation1.class);
-		assertNotNull(optionalAnnotation);
-		assertTrue(optionalAnnotation.isPresent());
+		Method method = ComposedAnnotationClass.class.getDeclaredMethod("method");
+		assertThat(findAnnotation(method, Annotation1.class)).isPresent();
 	}
 
 	@Test
 	void findAnnotationMetaPresentOnOptionalMethod() throws Exception {
-		Optional<Annotation1> optionalAnnotation = findAnnotation(
-			Optional.of(ComposedAnnotationClass.class.getDeclaredMethod("method")), Annotation1.class);
-		assertNotNull(optionalAnnotation);
-		assertTrue(optionalAnnotation.isPresent());
+		Method method = ComposedAnnotationClass.class.getDeclaredMethod("method");
+		assertThat(findAnnotation(Optional.of(method), Annotation1.class)).isPresent();
 	}
 
 	@Test
