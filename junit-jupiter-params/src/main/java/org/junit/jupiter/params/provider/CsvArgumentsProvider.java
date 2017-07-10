@@ -11,6 +11,7 @@
 package org.junit.jupiter.params.provider;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
@@ -18,6 +19,7 @@ import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * @since 5.0
@@ -41,7 +43,15 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		settings.getFormat().setQuoteEscape('\'');
 		settings.setAutoConfigurationEnabled(false);
 		CsvParser csvParser = new CsvParser(settings);
-		return Arrays.stream(lines).map(csvParser::parseLine).map(Arguments::of);
+		AtomicLong index = new AtomicLong(0);
+		// @formatter:off
+		return Arrays.stream(lines)
+				.map(line ->
+						Preconditions.notNull(csvParser.parseLine(line),
+								() -> "Line at index " + index.get() + " contains invalid CSV: \"" + line + "\""))
+				.peek(values -> index.incrementAndGet())
+				.map(Arguments::of);
+		// @formatter:on
 	}
 
 }

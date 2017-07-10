@@ -11,12 +11,14 @@
 package org.junit.jupiter.params.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * @since 5.0
@@ -56,6 +58,14 @@ class CsvArgumentsProviderTests {
 		Stream<Object[]> arguments = provideArguments(',', "'foo or ''bar''', baz");
 
 		assertThat(arguments).containsExactly(new String[] { "foo or 'bar'", "baz" });
+	}
+
+	@Test
+	void throwsExceptionOnInvalidCsv() {
+		JUnitException exception = assertThrows(JUnitException.class,
+			() -> provideArguments(',', "foo", "bar", "").count());
+
+		assertThat(exception).hasMessage("Line at index 2 contains invalid CSV: \"\"");
 	}
 
 	private Stream<Object[]> provideArguments(char delimiter, String... value) {
