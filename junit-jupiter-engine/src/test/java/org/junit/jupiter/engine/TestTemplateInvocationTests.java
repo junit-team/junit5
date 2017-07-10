@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
@@ -303,7 +302,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void templateWithSupportingProviderButNoInvocationsReportsAbortedTest() {
+	void templateWithSupportingProviderButNoInvocationsReportsFailure() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithSupportingProviderButNoInvocations")).build();
 
@@ -312,7 +311,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithSupportingProviderButNoInvocations"), started()), //
-				event(container("templateWithSupportingProviderButNoInvocations"), abortedWithReason(
+				event(container("templateWithSupportingProviderButNoInvocations"), finishedWithFailure(
 					message("No supporting TestTemplateInvocationContextProvider provided an invocation context")))));
 	}
 

@@ -26,7 +26,6 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.opentest4j.TestAbortedException;
 
 /**
  * {@link TestDescriptor} for {@link org.junit.jupiter.api.TestTemplate @TestTemplate}
@@ -99,11 +98,9 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 				.collect(toList());
 		// @formatter:on
 
-		Preconditions.notEmpty(providers,
+		return Preconditions.notEmpty(providers,
 			() -> String.format("You must register at least one %s that supports @TestTemplate method [%s]",
 				TestTemplateInvocationContextProvider.class.getSimpleName(), getTestMethod()));
-
-		return providers;
 	}
 
 	private TestDescriptor createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext, int index) {
@@ -118,10 +115,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	private void validateWasAtLeastInvokedOnce(int invocationIndex) {
-		if (invocationIndex == 0) {
-			throw new TestAbortedException("No supporting "
-					+ TestTemplateInvocationContextProvider.class.getSimpleName() + " provided an invocation context");
-		}
+		Preconditions.condition(invocationIndex > 0, () -> "No supporting "
+				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " provided an invocation context");
 	}
 
 }
