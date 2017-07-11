@@ -4070,12 +4070,12 @@ and <code>AfterTestExecutionCallback</code> in order to time and log the test ex
 
     <span class="annotation">@Override</span>
     <span class="directive">public</span> <span class="type">void</span> beforeTestExecution(ExtensionContext context) <span class="directive">throws</span> <span class="exception">Exception</span> {
-        getStore(context).put(context.getTestMethod().get(), <span class="predefined-type">System</span>.currentTimeMillis());
+        getStore(context).put(context.getRequiredTestMethod(), <span class="predefined-type">System</span>.currentTimeMillis());
     }
 
     <span class="annotation">@Override</span>
     <span class="directive">public</span> <span class="type">void</span> afterTestExecution(ExtensionContext context) <span class="directive">throws</span> <span class="exception">Exception</span> {
-        <span class="predefined-type">Method</span> testMethod = context.getTestMethod().get();
+        <span class="predefined-type">Method</span> testMethod = context.getRequiredTestMethod();
         <span class="type">long</span> start = getStore(context).remove(testMethod, <span class="type">long</span>.class);
         <span class="type">long</span> duration = <span class="predefined-type">System</span>.currentTimeMillis() - start;
 
@@ -6502,7 +6502,7 @@ test interfaces (a.k.a., <em>testing traits</em>).</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-10 14:13:47 EDT
+Last updated 2017-07-11 08:49:57 EDT
 </div>
 </div>
 </body>
