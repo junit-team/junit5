@@ -24,7 +24,7 @@ import org.junit.platform.commons.meta.API;
 public class IsTestTemplateMethod extends IsTestableMethod {
 
 	public IsTestTemplateMethod() {
-		super(TestTemplate.class);
+		super(TestTemplate.class, true);
 	}
 
 }

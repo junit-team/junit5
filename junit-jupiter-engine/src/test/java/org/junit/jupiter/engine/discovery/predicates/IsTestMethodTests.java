@@ -28,25 +28,25 @@ class IsTestMethodTests {
 	private final Predicate<Method> isTestMethod = new IsTestMethod();
 
 	@Test
-	void publicTestMethodsEvaluatesToTrue() throws NoSuchMethodException {
+	void publicTestMethodEvaluatesToTrue() throws NoSuchMethodException {
 		Method publicTestMethod = this.findMethod("publicTestMethod");
 		assertTrue(isTestMethod.test(publicTestMethod));
 	}
 
 	@Test
-	void publicTestMethodsWithArgumentEvaluatesToTrue() throws NoSuchMethodException {
+	void publicTestMethodWithArgumentEvaluatesToTrue() throws NoSuchMethodException {
 		Method publicTestMethodWithArgument = findMethod("publicTestMethodWithArgument", TestInfo.class);
 		assertTrue(isTestMethod.test(publicTestMethodWithArgument));
 	}
 
 	@Test
-	void protectedTestMethodsEvaluatesToTrue() throws NoSuchMethodException {
+	void protectedTestMethodEvaluatesToTrue() throws NoSuchMethodException {
 		Method protectedTestMethod = this.findMethod("protectedTestMethod");
 		assertTrue(isTestMethod.test(protectedTestMethod));
 	}
 
 	@Test
-	void packageVisibleTestMethodTestMethodsEvaluatesToTrue() throws NoSuchMethodException {
+	void packageVisibleTestMethodEvaluatesToTrue() throws NoSuchMethodException {
 		Method packageVisibleTestMethod = this.findMethod("packageVisibleTestMethod");
 		assertTrue(isTestMethod.test(packageVisibleTestMethod));
 	}
@@ -69,6 +69,18 @@ class IsTestMethodTests {
 		assertFalse(isTestMethod.test(abstractTestMethod));
 	}
 
+	@Test
+	void testMethodReturningObjectEvaluatesToFalse() {
+		Method nonVoidMethod = this.findMethod("supposedTestMethodReturningObject");
+		assertFalse(isTestMethod.test(nonVoidMethod));
+	}
+
+	@Test
+	void testMethodReturningPrimitiveTypeEvaluatesToFalse() throws NoSuchMethodException {
+		Method nonVoidMethod = this.findMethod("supposedTestMethodReturningPrimitiveType");
+		assertFalse(isTestMethod.test(nonVoidMethod));
+	}
+
 	private Method findMethod(String name, Class<?>... aClass) {
 		return ReflectionUtils.findMethod(ClassWithTestMethods.class, name, aClass).get();
 	}
@@ -81,6 +93,16 @@ class IsTestMethodTests {
 
 //class name must not end with 'Tests', otherwise it would be picked up by the suite
 class ClassWithTestMethods {
+
+	@Test
+	String supposedTestMethodReturningObject() {
+		return "";
+	}
+
+	@Test
+	int supposedTestMethodReturningPrimitiveType() {
+		return 0;
+	}
 
 	@Test
 	public void publicTestMethod() {

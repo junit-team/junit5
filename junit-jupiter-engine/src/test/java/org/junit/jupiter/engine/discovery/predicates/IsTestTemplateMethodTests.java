@@ -21,14 +21,29 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class IsTestTemplateMethodTests {
 
 	@Test
-	void publicTestMethodsEvaluatesToTrue() throws NoSuchMethodException {
-		Method templateMethod = ReflectionUtils.findMethod(AClassWithTestTemplate.class, "template").get();
+	void testTemplateMethodReturningVoidEvaluatesToTrue() throws NoSuchMethodException {
+		Method templateMethod = ReflectionUtils.findMethod(AClassWithTestTemplate.class, "templateReturningVoid").get();
 		assertThat(templateMethod).matches(new IsTestTemplateMethod());
 	}
 
+	@Test
+	void testTemplateMethodReturningObjectEvaluatesToFalse() throws NoSuchMethodException {
+		Method templateMethod = ReflectionUtils.findMethod(AClassWithTestTemplate.class,
+			"templateReturningObject").get();
+		assertThat(templateMethod).matches(new IsTestTemplateMethod().negate(),
+			"negated test template method predicate");
+	}
+
 	private static class AClassWithTestTemplate {
+
 		@TestTemplate
-		void template() {
+		void templateReturningVoid() {
 		}
+
+		@TestTemplate
+		String templateReturningObject() {
+			return "";
+		}
+
 	}
 }

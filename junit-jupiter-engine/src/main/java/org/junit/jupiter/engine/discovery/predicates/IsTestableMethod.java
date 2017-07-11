@@ -26,12 +26,14 @@ import org.junit.platform.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-class IsTestableMethod implements Predicate<Method> {
+abstract class IsTestableMethod implements Predicate<Method> {
 
 	private final Class<? extends Annotation> annotationType;
+	private final boolean mustReturnVoid;
 
-	IsTestableMethod(Class<? extends Annotation> annotationType) {
+	IsTestableMethod(Class<? extends Annotation> annotationType, boolean mustReturnVoid) {
 		this.annotationType = annotationType;
+		this.mustReturnVoid = mustReturnVoid;
 	}
 
 	@Override
@@ -46,7 +48,16 @@ class IsTestableMethod implements Predicate<Method> {
 		if (isAbstract(candidate)) {
 			return false;
 		}
+		if ((this.returnsVoid(candidate) != mustReturnVoid)) {
+			return false;
+		}
+
 		return isAnnotated(candidate, this.annotationType);
+	}
+
+	private boolean returnsVoid(Method method) {
+		//checking the class itself yields problems with bridge methods
+		return method.getReturnType().toString().equals("void");
 	}
 
 }
