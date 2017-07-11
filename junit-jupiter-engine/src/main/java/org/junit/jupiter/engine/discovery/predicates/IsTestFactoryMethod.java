@@ -24,7 +24,7 @@ import org.junit.platform.commons.meta.API;
 public class IsTestFactoryMethod extends IsTestableMethod {
 
 	public IsTestFactoryMethod() {
-		super(TestFactory.class);
+		super(TestFactory.class, false);
 	}
 
 }

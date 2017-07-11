@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
@@ -27,9 +28,15 @@ class IsTestFactoryMethodTests {
 	private final Predicate<Method> isTestMethod = new IsTestFactoryMethod();
 
 	@Test
-	void publicTestMethodsEvaluatesToTrue() throws NoSuchMethodException {
+	void factoryMethodReturningCollectionEvaluatesToTrue() throws NoSuchMethodException {
 		Method publicTestMethod = this.findMethod("factory");
 		assertTrue(isTestMethod.test(publicTestMethod));
+	}
+
+	@Test
+	void factoryMethodReturningVoidEvaluatesToFalse() throws NoSuchMethodException {
+		Method publicTestMethod = this.findMethod("badFactory");
+		assertFalse(isTestMethod.test(publicTestMethod));
 	}
 
 	private Method findMethod(String name) {
@@ -44,6 +51,10 @@ class AnotherClassWithTestFactory {
 	@TestFactory
 	Collection<DynamicTest> factory() {
 		return new ArrayList<>();
+	}
+
+	@TestFactory
+	void badFactory() {
 	}
 
 }
