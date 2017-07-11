@@ -14,7 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
 
@@ -28,6 +30,7 @@ import org.junit.jupiter.engine.descriptor.JupiterEngineExtensionContext;
 import org.junit.jupiter.engine.descriptor.MethodExtensionContext;
 import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -36,10 +39,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 /**
- * Microtests for implementors of {@linkplain ExtensionContext}:
- * {@linkplain JupiterEngineExtensionContext},
- * {@linkplain ClassExtensionContext}, and
- * {@linkplain MethodExtensionContext}.
+ * Unit tests for concrete implementations of {@link ExtensionContext}:
+ * {@link JupiterEngineExtensionContext}, {@link ClassExtensionContext}, and
+ * {@link MethodExtensionContext}.
  *
  * @since 5.0
  * @see ExtensionValuesStoreTests
@@ -53,14 +55,20 @@ class ExtensionContextTests {
 
 		JupiterEngineExtensionContext engineContext = new JupiterEngineExtensionContext(null, engineTestDescriptor);
 
-		assertAll("engineContext", //
-			() -> assertThat(engineContext.getTestClass()).isEmpty(), //
-			() -> assertThat(engineContext.getTestMethod()).isEmpty(), //
-			() -> assertThat(engineContext.getElement()).isEmpty(), //
-			() -> assertThat(engineContext.getDisplayName()).isEqualTo(engineTestDescriptor.getDisplayName()), //
-			() -> assertThat(engineContext.getParent()).isEmpty(), //
-			() -> assertThat(engineContext.getRoot()).isSameAs(engineContext) //
+		// @formatter:off
+		assertAll("engineContext",
+			() -> assertThat(engineContext.getElement()).isEmpty(),
+			() -> assertThat(engineContext.getTestClass()).isEmpty(),
+			() -> assertThat(engineContext.getTestInstance()).isEmpty(),
+			() -> assertThat(engineContext.getTestMethod()).isEmpty(),
+			() -> assertThrows(PreconditionViolationException.class, () -> engineContext.getRequiredTestClass()),
+			() -> assertThrows(PreconditionViolationException.class, () -> engineContext.getRequiredTestInstance()),
+			() -> assertThrows(PreconditionViolationException.class, () -> engineContext.getRequiredTestMethod()),
+			() -> assertThat(engineContext.getDisplayName()).isEqualTo(engineTestDescriptor.getDisplayName()),
+			() -> assertThat(engineContext.getParent()).isEmpty(),
+			() -> assertThat(engineContext.getRoot()).isSameAs(engineContext)
 		);
+		// @formatter:on
 	}
 
 	@Test
@@ -69,11 +77,20 @@ class ExtensionContextTests {
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
 
 		ClassExtensionContext outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, null);
-		assertAll("outerContext", //
-			() -> assertThat(outerExtensionContext.getTestClass()).contains(OuterClass.class), //
-			() -> assertThat(outerExtensionContext.getDisplayName()).isEqualTo(outerClassDescriptor.getDisplayName()), //
-			() -> assertThat(outerExtensionContext.getParent()).isEmpty() //
+
+		// @formatter:off
+		assertAll("outerContext",
+			() -> assertThat(outerExtensionContext.getElement()).contains(OuterClass.class),
+			() -> assertThat(outerExtensionContext.getTestClass()).contains(OuterClass.class),
+			() -> assertThat(outerExtensionContext.getTestInstance()).isEmpty(),
+			() -> assertThat(outerExtensionContext.getTestMethod()).isEmpty(),
+			() -> assertThat(outerExtensionContext.getRequiredTestClass()).isEqualTo(OuterClass.class),
+			() -> assertThrows(PreconditionViolationException.class, () -> outerExtensionContext.getRequiredTestInstance()),
+			() -> assertThrows(PreconditionViolationException.class, () -> outerExtensionContext.getRequiredTestMethod()),
+			() -> assertThat(outerExtensionContext.getDisplayName()).isEqualTo(outerClassDescriptor.getDisplayName()),
+			() -> assertThat(outerExtensionContext.getParent()).isEmpty()
 		);
+		// @formatter:on
 
 		ClassExtensionContext nestedExtensionContext = new ClassExtensionContext(outerExtensionContext, null,
 			nestedClassDescriptor, null);
@@ -108,16 +125,27 @@ class ExtensionContextTests {
 		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
 
+		Object testInstance = new OuterClass();
+		Method testMethod = methodTestDescriptor.getTestMethod();
+
 		ClassExtensionContext classExtensionContext = new ClassExtensionContext(null, null, classTestDescriptor, null);
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(classExtensionContext, null,
-			methodTestDescriptor, new OuterClass(), new ThrowableCollector());
-		assertAll("methodContext", //
-			() -> assertThat(methodExtensionContext.getTestClass()).contains(OuterClass.class), //
-			() -> assertThat(methodExtensionContext.getDisplayName()).isEqualTo(methodTestDescriptor.getDisplayName()), //
-			() -> assertThat(methodExtensionContext.getParent()).contains(classExtensionContext), //
-			() -> assertThat(methodExtensionContext.getRoot()).isSameAs(classExtensionContext), //
-			() -> assertThat(methodExtensionContext.getTestInstance().get()).isExactlyInstanceOf(OuterClass.class) //
+			methodTestDescriptor, testInstance, new ThrowableCollector());
+
+		// @formatter:off
+		assertAll("methodContext",
+			() -> assertThat(methodExtensionContext.getElement()).contains(testMethod),
+			() -> assertThat(methodExtensionContext.getTestClass()).contains(OuterClass.class),
+			() -> assertThat(methodExtensionContext.getTestInstance()).contains(testInstance),
+			() -> assertThat(methodExtensionContext.getTestMethod()).contains(testMethod),
+			() -> assertThat(methodExtensionContext.getRequiredTestClass()).isEqualTo(OuterClass.class),
+			() -> assertThat(methodExtensionContext.getRequiredTestInstance()).isEqualTo(testInstance),
+			() -> assertThat(methodExtensionContext.getRequiredTestMethod()).isEqualTo(testMethod),
+			() -> assertThat(methodExtensionContext.getDisplayName()).isEqualTo(methodTestDescriptor.getDisplayName()),
+			() -> assertThat(methodExtensionContext.getParent()).contains(classExtensionContext),
+			() -> assertThat(methodExtensionContext.getRoot()).isSameAs(classExtensionContext)
 		);
+		// @formatter:on
 	}
 
 	@Test

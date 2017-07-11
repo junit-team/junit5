@@ -33,8 +33,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 
 	@Override
 	public Stream<Arguments> provideArguments(ExtensionContext context) {
-		Class<?> testClass = context.getTestClass() //
-				.orElseThrow(() -> new JUnitException("Cannot invoke method without test class"));
+		Class<?> testClass = context.getRequiredTestClass();
 		// @formatter:off
 		return Arrays.stream(methodNames)
 				.map(methodName -> ReflectionUtils.findMethod(testClass, methodName)

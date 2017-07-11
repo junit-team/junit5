@@ -53,7 +53,7 @@ public @interface FullLogging {
 
 		@Override
 		public void beforeAll(ExtensionContext context) throws Exception {
-			Class<?> testClass = context.getTestClass().get();
+			Class<?> testClass = context.getRequiredTestClass();
 
 			// @formatter:off
 			Class<?>[] loggerClasses = findAnnotation(testClass, FullLogging.class)

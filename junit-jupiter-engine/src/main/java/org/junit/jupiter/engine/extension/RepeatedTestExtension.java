@@ -22,7 +22,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.util.AnnotationUtils;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
@@ -42,8 +41,7 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
-
-		Method testMethod = Preconditions.notNull(context.getTestMethod().orElse(null), "test method must not be null");
+		Method testMethod = context.getRequiredTestMethod();
 		String displayName = context.getDisplayName();
 		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
 		int totalRepetitions = totalRepetitions(repeatedTest, testMethod);

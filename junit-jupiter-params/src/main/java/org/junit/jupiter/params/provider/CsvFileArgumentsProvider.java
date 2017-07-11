@@ -27,7 +27,6 @@ import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -70,8 +69,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	}
 
 	private InputStream openInputStream(ExtensionContext context, String resource) {
-		Class<?> testClass = context.getTestClass().orElseThrow(
-			() -> new JUnitException("Cannot load classpath resource without test class"));
+		Class<?> testClass = context.getRequiredTestClass();
 		return Preconditions.notNull(inputStreamProvider.apply(testClass, resource),
 			() -> "Classpath resource does not exist: " + resource);
 	}

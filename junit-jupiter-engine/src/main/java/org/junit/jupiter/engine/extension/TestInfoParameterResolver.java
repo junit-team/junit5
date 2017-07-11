@@ -59,7 +59,7 @@ class TestInfoParameterResolver implements ParameterResolver {
 
 		@Override
 		public Set<String> getTags() {
-			return tags;
+			return this.tags;
 		}
 
 		@Override

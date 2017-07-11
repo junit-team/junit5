@@ -13,6 +13,7 @@ package org.junit.jupiter.params.provider;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -120,6 +121,7 @@ class CsvFileArgumentsProviderTests {
 		provider.accept(annotation);
 		ExtensionContext context = mock(ExtensionContext.class);
 		when(context.getTestClass()).thenReturn(Optional.of(CsvFileArgumentsProviderTests.class));
+		doCallRealMethod().when(context).getRequiredTestClass();
 		return provider.provideArguments(context).map(Arguments::get);
 	}
 

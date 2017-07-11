@@ -46,9 +46,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
-
-		Method templateMethod = Preconditions.notNull(context.getTestMethod().orElse(null),
-			"test method must not be null");
+		Method templateMethod = context.getRequiredTestMethod();
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
 		AtomicLong invocationCount = new AtomicLong(0);
 		// @formatter:off

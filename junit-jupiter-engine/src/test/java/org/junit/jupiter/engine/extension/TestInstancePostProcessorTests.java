@@ -161,7 +161,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 			if (testInstance instanceof Named) {
-				((Named) testInstance).setName("foo:" + context.getTestClass().get().getSimpleName());
+				((Named) testInstance).setName("foo:" + context.getRequiredTestClass().getSimpleName());
 			}
 			callSequence.add("fooPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
 		}
@@ -172,7 +172,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 			if (testInstance instanceof Named) {
-				((Named) testInstance).setName("bar:" + context.getTestClass().get().getSimpleName());
+				((Named) testInstance).setName("bar:" + context.getRequiredTestClass().getSimpleName());
 			}
 			callSequence.add("barPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
 		}

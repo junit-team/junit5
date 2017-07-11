@@ -870,7 +870,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-			instanceMap.put(executionConditionKey(context.getTestClass().get(),
+			instanceMap.put(executionConditionKey(context.getRequiredTestClass(),
 				context.getTestMethod().map(Method::getName).orElse(null)), context.getTestInstance().orElse(null));
 
 			return ConditionEvaluationResult.enabled("enigma");
@@ -878,32 +878,35 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+			assertThat(context.getTestInstance()).isNotPresent();
 			assertNotNull(testInstance);
-			context.getTestInstance().ifPresent(instance -> assertSame(testInstance, instance));
-			instanceMap.put(postProcessTestInstanceKey(context.getTestClass().get()), testInstance);
+			instanceMap.put(postProcessTestInstanceKey(context.getRequiredTestClass()), testInstance);
 		}
 
 		@Override
 		public void beforeAll(ExtensionContext context) {
-			instanceMap.put(beforeAllCallbackKey(context.getTestClass().get()), context.getTestInstance().orElse(null));
+			instanceMap.put(beforeAllCallbackKey(context.getRequiredTestClass()),
+				context.getTestInstance().orElse(null));
 		}
 
 		@Override
 		public void afterAll(ExtensionContext context) {
-			instanceMap.put(afterAllCallbackKey(context.getTestClass().get()), context.getTestInstance().orElse(null));
+			instanceMap.put(afterAllCallbackKey(context.getRequiredTestClass()),
+				context.getTestInstance().orElse(null));
 		}
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
 			instanceMap.put(
-				beforeEachCallbackKey(context.getTestClass().get(), context.getTestMethod().get().getName()),
-				context.getTestInstance().orElse(null));
+				beforeEachCallbackKey(context.getRequiredTestClass(), context.getRequiredTestMethod().getName()),
+				context.getRequiredTestInstance());
 		}
 
 		@Override
 		public void afterEach(ExtensionContext context) {
-			instanceMap.put(afterEachCallbackKey(context.getTestClass().get(), context.getTestMethod().get().getName()),
-				context.getTestInstance().orElse(null));
+			instanceMap.put(
+				afterEachCallbackKey(context.getRequiredTestClass(), context.getRequiredTestMethod().getName()),
+				context.getRequiredTestInstance());
 		}
 
 		@Override
@@ -913,8 +916,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
-
-			instanceMap.put(testTemplateKey(context.getTestClass().get(), context.getTestMethod().get().getName()),
+			instanceMap.put(testTemplateKey(context.getRequiredTestClass(), context.getRequiredTestMethod().getName()),
 				context.getTestInstance().orElse(null));
 
 			return Stream.of(new TestTemplateInvocationContext() {
