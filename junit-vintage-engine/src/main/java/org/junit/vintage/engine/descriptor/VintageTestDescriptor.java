@@ -83,25 +83,29 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 
 	@Override
 	public Set<TestTag> getTags() {
-		Set<TestTag> result = new LinkedHashSet<>();
-		getParent().ifPresent(parent -> result.addAll(parent.getTags()));
-		// @formatter:off
-		getDeclaredCategories().ifPresent(categoryClasses ->
-			stream(categoryClasses)
-				.map(ReflectionUtils::getAllAssignmentCompatibleClasses)
-				.flatMap(Collection::stream)
-				.distinct()
-				.map(Class::getName)
-				.map(TestTag::create)
-				.forEachOrdered(result::add)
-		);
-		// @formatter:on
-		return result;
+		Set<TestTag> tags = new LinkedHashSet<>();
+		addTagsFromParent(tags);
+		addCategoriesAsTags(tags);
+		return tags;
 	}
 
-	private Optional<Class<?>[]> getDeclaredCategories() {
+	private void addTagsFromParent(Set<TestTag> tags) {
+		getParent().map(TestDescriptor::getTags).ifPresent(tags::addAll);
+	}
+
+	private void addCategoriesAsTags(Set<TestTag> tags) {
 		Category annotation = description.getAnnotation(Category.class);
-		return Optional.ofNullable(annotation).map(Category::value);
+		if (annotation != null) {
+			// @formatter:off
+			stream(annotation.value())
+					.map(ReflectionUtils::getAllAssignmentCompatibleClasses)
+					.flatMap(Collection::stream)
+					.distinct()
+					.map(Class::getName)
+					.map(TestTag::create)
+					.forEachOrdered(tags::add);
+			// @formatter:on
+		}
 	}
 
 	private static Optional<TestSource> toTestSource(Description description) {
