@@ -10,6 +10,8 @@
 
 package org.junit.platform.engine;
 
+import static java.util.Collections.singletonList;
+import static java.util.Collections.unmodifiableList;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.io.Serializable;
@@ -81,16 +83,16 @@ public class UniqueId implements Cloneable, Serializable {
 	}
 
 	private final UniqueIdFormat uniqueIdFormat;
-	private final List<Segment> segments = new ArrayList<>();
+	private final List<Segment> segments;
 
 	private UniqueId(UniqueIdFormat uniqueIdFormat, Segment segment) {
 		this.uniqueIdFormat = uniqueIdFormat;
-		this.segments.add(segment);
+		this.segments = singletonList(segment);
 	}
 
 	UniqueId(UniqueIdFormat uniqueIdFormat, List<Segment> segments) {
 		this.uniqueIdFormat = uniqueIdFormat;
-		this.segments.addAll(segments);
+		this.segments = unmodifiableList(new ArrayList<>(segments));
 	}
 
 	final Optional<Segment> getRoot() {
@@ -133,22 +135,9 @@ public class UniqueId implements Cloneable, Serializable {
 	public final UniqueId append(String segmentType, String value) {
 		Preconditions.notBlank(segmentType, "segmentType must not be null or blank");
 		Preconditions.notBlank(value, "value must not be null or blank");
-		Segment segment = new Segment(segmentType, value);
-		return append(segment);
-	}
-
-	/**
-	 * Construct a new {@code UniqueId} by appending the supplied {@link Segment}
-	 * to the end of this {@code UniqueId}.
-	 *
-	 * <p>This {@code UniqueId} will not be modified.
-	 *
-	 * @see #append(String, String)
-	 */
-	private UniqueId append(Segment segment) {
-		UniqueId clone = new UniqueId(this.uniqueIdFormat, this.segments);
-		clone.segments.add(segment);
-		return clone;
+		List<Segment> baseSegments = new ArrayList<>(this.segments);
+		baseSegments.add(new Segment(segmentType, value));
+		return new UniqueId(this.uniqueIdFormat, baseSegments);
 	}
 
 	@Override
