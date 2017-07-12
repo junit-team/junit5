@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedMethods;
+import static org.junit.platform.commons.util.ReflectionUtils.returnsVoid;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -96,10 +97,6 @@ final class LifecycleMethodUtils {
 		List<Method> methods = findAnnotatedMethods(testClass, annotationType, traversalMode);
 		methods.forEach(method -> assertVoid(annotationType, method));
 		return methods;
-	}
-
-	private static boolean returnsVoid(Method method) {
-		return method.getReturnType().toString().equals("void");
 	}
 
 }
