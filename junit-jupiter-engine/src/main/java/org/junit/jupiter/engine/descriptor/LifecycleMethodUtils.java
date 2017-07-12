@@ -38,31 +38,19 @@ final class LifecycleMethodUtils {
 	///CLOVER:ON
 
 	static List<Method> findBeforeAllMethods(Class<?> testClass, boolean requireStatic) {
-		List<Method> methods = findAnnotatedMethods(testClass, BeforeAll.class, HierarchyTraversalMode.TOP_DOWN);
-		if (requireStatic) {
-			methods.forEach(method -> assertStatic(BeforeAll.class, method));
-		}
-		return methods;
+		return findMethodsAndAssertStatic(testClass, requireStatic, BeforeAll.class, HierarchyTraversalMode.TOP_DOWN);
 	}
 
 	static List<Method> findAfterAllMethods(Class<?> testClass, boolean requireStatic) {
-		List<Method> methods = findAnnotatedMethods(testClass, AfterAll.class, HierarchyTraversalMode.BOTTOM_UP);
-		if (requireStatic) {
-			methods.forEach(method -> assertStatic(AfterAll.class, method));
-		}
-		return methods;
+		return findMethodsAndAssertStatic(testClass, requireStatic, AfterAll.class, HierarchyTraversalMode.BOTTOM_UP);
 	}
 
 	static List<Method> findBeforeEachMethods(Class<?> testClass) {
-		List<Method> methods = findAnnotatedMethods(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN);
-		methods.forEach(method -> assertNonStatic(BeforeEach.class, method));
-		return methods;
+		return findMethodsAndAssertNonStatic(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN);
 	}
 
 	static List<Method> findAfterEachMethods(Class<?> testClass) {
-		List<Method> methods = findAnnotatedMethods(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP);
-		methods.forEach(method -> assertNonStatic(AfterEach.class, method));
-		return methods;
+		return findMethodsAndAssertNonStatic(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP);
 	}
 
 	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
@@ -78,6 +66,40 @@ final class LifecycleMethodUtils {
 			throw new JUnitException(String.format("@%s method '%s' must not be static.",
 				annotationType.getSimpleName(), method.toGenericString()));
 		}
+	}
+
+	private static void assertVoid(Class<? extends Annotation> annotationType, Method method) {
+		if (!returnsVoid(method)) {
+			throw new JUnitException(String.format("@%s method '%s' must not return a value.",
+				annotationType.getSimpleName(), method.toGenericString()));
+		}
+	}
+
+	private static List<Method> findMethodsAndAssertStatic(Class<?> testClass, boolean requireStatic,
+			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
+		List<Method> methods = findMethodsAndCheckVoidReturntype(testClass, annotationType, traversalMode);
+		if (requireStatic) {
+			methods.forEach(method -> assertStatic(annotationType, method));
+		}
+		return methods;
+	}
+
+	private static List<Method> findMethodsAndAssertNonStatic(Class<?> testClass,
+			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
+		List<Method> methods = findMethodsAndCheckVoidReturntype(testClass, annotationType, traversalMode);
+		methods.forEach(method -> assertNonStatic(annotationType, method));
+		return methods;
+	}
+
+	private static List<Method> findMethodsAndCheckVoidReturntype(Class<?> testClass,
+			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
+		List<Method> methods = findAnnotatedMethods(testClass, annotationType, traversalMode);
+		methods.forEach(method -> assertVoid(annotationType, method));
+		return methods;
+	}
+
+	private static boolean returnsVoid(Method method) {
+		return method.getReturnType().toString().equals("void");
 	}
 
 }
