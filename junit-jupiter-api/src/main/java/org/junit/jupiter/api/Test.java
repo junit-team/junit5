@@ -25,7 +25,8 @@ import org.junit.platform.commons.meta.API;
  * {@code @Test} is used to signal that the annotated method is a
  * <em>test</em> method.
  *
- * <p>{@code @Test} methods must not be {@code private} or {@code static}.
+ * <p>{@code @Test} methods must not be {@code private} or {@code static}
+ * and must not return a value.
  *
  * <p>{@code @Test} methods may optionally declare parameters to be
  * resolved by {@link org.junit.jupiter.api.extension.ParameterResolver
