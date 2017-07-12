@@ -845,9 +845,6 @@ public final class ReflectionUtils {
 	 * Method comparator based upon JUnit4 org.junit.internal.MethodSorter implementation.
 	 */
 	private static int defaultMethodSorter(Method method1, Method method2) {
-		if (method1 == method2) {
-			return 0;
-		}
 		String name1 = method1.getName();
 		String name2 = method2.getName();
 		int comparison = Integer.compare(name1.hashCode(), name2.hashCode());
