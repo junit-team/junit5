@@ -160,8 +160,8 @@ class DiscoveryRequestCreatorTests {
 		List<PostDiscoveryFilter> postDiscoveryFilters = request.getPostDiscoveryFilters();
 
 		assertThat(postDiscoveryFilters).hasSize(2);
-		assertThat(postDiscoveryFilters.get(0).toString()).contains("TagFilter");
-		assertThat(postDiscoveryFilters.get(1).toString()).contains("TagFilter");
+		assertThat(postDiscoveryFilters.get(0).toString()).contains("TagExpressionFilter");
+		assertThat(postDiscoveryFilters.get(1).toString()).contains("TagExpressionFilter");
 	}
 
 	@Test

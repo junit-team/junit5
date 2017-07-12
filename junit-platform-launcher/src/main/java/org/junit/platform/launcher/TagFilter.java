@@ -14,13 +14,10 @@ import static java.util.Arrays.asList;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.FilterResult;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestTag;
 
 /**
  * Factory methods for creating {@link PostDiscoveryFilter PostDiscoveryFilters}
@@ -61,7 +58,8 @@ public final class TagFilter {
 	public static PostDiscoveryFilter includeTags(List<String> tags) {
 		Preconditions.notEmpty(tags, "tags list must not be null or empty");
 		Preconditions.containsNoNullElements(tags, "individual tags must not be null");
-		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).anyMatch(tags::contains));
+		return TagExpressionFilter.parse(orExpression(tags));
+		//return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).anyMatch(tags::contains));
 	}
 
 	/**
@@ -88,15 +86,11 @@ public final class TagFilter {
 	public static PostDiscoveryFilter excludeTags(List<String> tags) {
 		Preconditions.notEmpty(tags, "tags list must not be null or empty");
 		Preconditions.containsNoNullElements(tags, "individual tags must not be null");
-		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).noneMatch(tags::contains));
+		return TagExpressionFilter.parse("not (" + orExpression(tags) + ")");
+		//return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).noneMatch(tags::contains));
 	}
 
-	private static Stream<String> trimmedTagsOf(TestDescriptor descriptor) {
-		// @formatter:off
-		return descriptor.getTags().stream()
-				.map(TestTag::getName)
-				.map(String::trim);
-		// @formatter:on
+	private static String orExpression(List<String> tags) {
+		return tags.stream().collect(Collectors.joining(" or "));
 	}
-
 }
