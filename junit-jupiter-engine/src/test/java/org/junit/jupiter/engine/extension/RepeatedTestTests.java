@@ -12,6 +12,15 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+
+import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -20,6 +29,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.test.event.ExecutionEvent;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 /**
  * Integration tests for {@link RepeatedTest @RepeatedTest} and supporting
@@ -49,16 +62,6 @@ class RepeatedTestTests {
 		assertEquals(42, fortyTwo);
 	}
 
-	@RepeatedTest(-99)
-	void negativeRepeatCount(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
-	}
-
-	@RepeatedTest(0)
-	void zeroRepeatCount(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
-	}
-
 	@RepeatedTest(1)
 	void repeatedOnce(TestInfo testInfo) {
 		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
@@ -68,16 +71,6 @@ class RepeatedTestTests {
 	void repeatedFortyTwoTimes(TestInfo testInfo) {
 		assertThat(testInfo.getDisplayName()).matches("repetition \\d+ of 42");
 		fortyTwo++;
-	}
-
-	@RepeatedTest(value = 1, name = "")
-	void defaultDisplayNameWithEmptyPattern(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
-	}
-
-	@RepeatedTest(value = 1, name = " \t  ")
-	void defaultDisplayNameWithBlankPattern(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
 	}
 
 	@RepeatedTest(1)
@@ -135,4 +128,58 @@ class RepeatedTestTests {
 		assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(5);
 	}
 
+	@RepeatedTest(1)
+	void failsContainerOnEmptyPattern() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(TestCase.class, "testWithEmptyPattern"));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(container(), displayName("testWithEmptyPattern()"), //
+					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
+	}
+
+	@RepeatedTest(1)
+	void failsContainerOnBlankPattern() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(TestCase.class, "testWithBlankPattern"));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(container(), displayName("testWithBlankPattern()"), //
+					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
+	}
+
+	@RepeatedTest(1)
+	void failsContainerOnNegativeRepeatCount() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(TestCase.class, "negativeRepeatCount"));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(container(), displayName("negativeRepeatCount()"), //
+					finishedWithFailure(message(value -> value.contains("must be declared with a positive 'value'")))));
+	}
+
+	@RepeatedTest(1)
+	void failsContainerOnZeroRepeatCount() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(TestCase.class, "zeroRepeatCount"));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(container(), displayName("zeroRepeatCount()"), //
+					finishedWithFailure(message(value -> value.contains("must be declared with a positive 'value'")))));
+	}
+
+	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
+		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
+	}
+
+	static class TestCase {
+
+		@RepeatedTest(value = 1, name = "")
+		void testWithEmptyPattern() {
+		}
+
+		@RepeatedTest(value = 1, name = " \t  ")
+		void testWithBlankPattern() {
+		}
+
+		@RepeatedTest(-99)
+		void negativeRepeatCount() {
+		}
+
+		@RepeatedTest(0)
+		void zeroRepeatCount() {
+		}
+	}
 }

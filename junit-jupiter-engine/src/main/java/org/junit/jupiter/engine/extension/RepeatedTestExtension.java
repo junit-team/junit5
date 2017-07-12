@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.util.AnnotationUtils;
-import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code TestTemplateInvocationContextProvider} that supports the
@@ -56,31 +56,15 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 
 	private int totalRepetitions(RepeatedTest repeatedTest, Method method) {
 		int repetitions = repeatedTest.value();
-
-		// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-		// handling validation exceptions during the TestEngine discovery phase.
-		if (repetitions < 1) {
-			String message = "Configuration error: @RepeatedTest on method [%s] must be declared with a positive 'value'. Defaulting to 1 repetition.";
-			logger.warning(String.format(message, method));
-			repetitions = 1;
-		}
-
+		Preconditions.condition(repetitions > 0, () -> String.format(
+			"Configuration error: @RepeatedTest on method [%s] must be declared with a positive 'value'.", method));
 		return repetitions;
 	}
 
 	private RepeatedTestDisplayNameFormatter displayNameFormatter(RepeatedTest repeatedTest, Method method,
 			String displayName) {
-
-		String pattern = repeatedTest.name().trim();
-
-		// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-		// handling validation exceptions during the TestEngine discovery phase.
-		if (StringUtils.isBlank(pattern)) {
-			logger.warning(String.format(
-				"Configuration error: @RepeatedTest on method [%s] must be declared with a non-empty name.", method));
-			pattern = AnnotationUtils.getDefaultValue(repeatedTest, "name", String.class).get();
-		}
-
+		String pattern = Preconditions.notBlank(repeatedTest.name().trim(), () -> String.format(
+			"Configuration error: @RepeatedTest on method [%s] must be declared with a non-empty name.", method));
 		return new RepeatedTestDisplayNameFormatter(pattern, displayName);
 	}
 
