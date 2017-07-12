@@ -26,11 +26,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
-import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.commons.util.StringUtils;
 
 /**
  * @since 5.0
@@ -72,17 +70,10 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod) {
 		ParameterizedTest parameterizedTest = findAnnotation(templateMethod, ParameterizedTest.class).get();
-		String name = parameterizedTest.name().trim();
-
-		// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-		// handling validation exceptions during the TestEngine discovery phase.
-		if (StringUtils.isBlank(name)) {
-			logger.warning(String.format(
+		String name = Preconditions.notBlank(parameterizedTest.name().trim(),
+			() -> String.format(
 				"Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.",
 				templateMethod));
-			name = AnnotationUtils.getDefaultValue(parameterizedTest, "name", String.class).get();
-		}
-
 		return new ParameterizedTestNameFormatter(name);
 	}
 

@@ -37,7 +37,7 @@ public class TestExecutionResultConditions {
 	}
 
 	public static Condition<Throwable> message(Predicate<String> predicate) {
-		return new Condition<>(where(Throwable::getMessage, predicate), "message is \"%s\"");
+		return new Condition<>(where(Throwable::getMessage, predicate), "message is \"%s\"", predicate);
 	}
 
 	public static Condition<Throwable> isA(Class<? extends Throwable> expectedClass) {

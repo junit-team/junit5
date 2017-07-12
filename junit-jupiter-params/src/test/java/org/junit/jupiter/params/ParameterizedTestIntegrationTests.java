@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
@@ -128,13 +129,22 @@ class ParameterizedTestIntegrationTests {
 		// @formatter:on
 	}
 
+	@Test
+	void failsContainerOnEmptyName() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(TestCase.class, "testWithEmptyName", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(container(), displayName("testWithEmptyName(String)"), //
+					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
+	}
+
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
 		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
 	}
 
 	static class TestCase {
 
-		@ParameterizedTest(name = "  \t   ")
+		@ParameterizedTest
 		@ArgumentsSource(TwoSingleStringArgumentsProvider.class)
 		void testWithTwoSingleStringArgumentsProvider(String argument) {
 			fail(argument);
@@ -156,6 +166,12 @@ class ParameterizedTestIntegrationTests {
 		@ValueSource(strings = { "O", "XXX" })
 		void testWithExplicitConverter(@ConvertWith(StringLengthConverter.class) int length) {
 			fail("length: " + length);
+		}
+
+		@ParameterizedTest(name = "  \t   ")
+		@CsvSource({ "not important" })
+		void testWithEmptyName(String argument) {
+			fail(argument);
 		}
 	}
 
