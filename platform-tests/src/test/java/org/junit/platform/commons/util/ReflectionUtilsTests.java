@@ -107,6 +107,16 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	void returnsVoid() throws Exception {
+		assertTrue(ReflectionUtils.returnsVoid(ClassWithVoidAndNonVoidMethods.class.getDeclaredMethod("voidMethod")));
+
+		assertFalse(ReflectionUtils.returnsVoid(
+			ClassWithVoidAndNonVoidMethods.class.getDeclaredMethod("methodReturningObject")));
+		assertFalse(ReflectionUtils.returnsVoid(
+			ClassWithVoidAndNonVoidMethods.class.getDeclaredMethod("methodReturningPrimitive")));
+	}
+
+	@Test
 	void getAllAssignmentCompatibleClassesWithNullClass() {
 		assertThrows(PreconditionViolationException.class,
 			() -> ReflectionUtils.getAllAssignmentCompatibleClasses(null));
@@ -990,6 +1000,21 @@ class ReflectionUtilsTests {
 
 		static void staticMethod() {
 		}
+	}
+
+	static class ClassWithVoidAndNonVoidMethods {
+
+		void voidMethod() {
+		}
+
+		String methodReturningObject() {
+			return "";
+		}
+
+		int methodReturningPrimitive() {
+			return 0;
+		}
+
 	}
 
 	static class InvocationTracker {

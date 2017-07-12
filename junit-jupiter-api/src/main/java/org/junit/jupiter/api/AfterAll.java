@@ -36,6 +36,7 @@ import org.junit.platform.commons.meta.API;
  * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}. {@code @AfterAll}
  * methods may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
+ * {@code @AfterAll} methods must not return a value.
  *
  * <h3>Inheritance</h3>
  *

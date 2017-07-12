@@ -30,6 +30,7 @@ import org.junit.platform.commons.meta.API;
  * <p>{@code @BeforeEach} methods must not be {@code private}, must not be
  * {@code static}, and may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
+ * {@code @BeforeEach} methods must not return a value.
  *
  * <h3>Inheritance</h3>
  *
