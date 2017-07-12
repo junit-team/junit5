@@ -90,9 +90,8 @@ class LifecycleMethodUtilsTest {
 	void findBeforeAllMethodsWithStandardLifecycleAndWithoutRequiringStatic() {
 		List<Method> methods = findBeforeAllMethods(TestCaseWithStandardLifecycle.class, false);
 
-		assertEquals(2, methods.size());
+		assertEquals(1, methods.size());
 		assertTrue(contains(methods, "one"));
-		assertTrue(contains(methods, "two"));
 	}
 
 	@Test
@@ -150,10 +149,6 @@ class TestCaseWithStandardLifecycle {
 
 	@BeforeAll
 	void one() {
-	}
-
-	@BeforeAll
-	void two() {
 	}
 
 	@BeforeEach
