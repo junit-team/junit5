@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -31,8 +30,6 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.0
  */
 class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
-
-	private static final Logger logger = Logger.getLogger(RepeatedTestExtension.class.getName());
 
 	@Override
 	public boolean supportsTestTemplate(ExtensionContext context) {

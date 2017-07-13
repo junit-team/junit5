@@ -16,7 +16,6 @@ import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -34,8 +33,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @since 5.0
  */
 class ParameterizedTestExtension implements TestTemplateInvocationContextProvider {
-
-	private static final Logger logger = Logger.getLogger(ParameterizedTestExtension.class.getName());
 
 	@Override
 	public boolean supportsTestTemplate(ExtensionContext context) {
