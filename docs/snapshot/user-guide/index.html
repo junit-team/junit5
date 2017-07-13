@@ -6385,7 +6385,11 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>All tags are now trimmed in order to remove leading and trailing whitespace. This
+applies to any tag supplied <em>directly</em> to the <code>Launcher</code> via <code>TagFilter.includeTags()</code>
+and <code>TagFilter.excludeTags()</code> or <em>indirectly</em> via <code>@IncludeTags</code>, <code>@ExcludeTags</code>, the
+JUnit Platform Console Launcher, the JUnit Platform Gradle plugin, and the JUnit
+Platform Maven Surefire provider. Furthermore, blank tags are now ignored.</p>
 </li>
 </ul>
 </div>
@@ -6420,7 +6424,8 @@ implemented by a class if the supplied element is a class.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>All tags declared via <code>@Tag</code> are now trimmed in order to remove leading and trailing
+whitespace. Furthermore, blank tags are now ignored.</p>
 </li>
 </ul>
 </div>
@@ -6502,7 +6507,7 @@ test interfaces (a.k.a., <em>testing traits</em>).</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-12 16:16:26 EDT
+Last updated 2017-07-13 10:43:06 EDT
 </div>
 </div>
 </body>
