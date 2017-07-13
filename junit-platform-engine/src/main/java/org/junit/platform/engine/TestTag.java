@@ -34,7 +34,9 @@ public final class TestTag implements Serializable {
 	/**
 	 * Create a {@code TestTag} from the supplied {@code name}.
 	 *
-	 * @param name the name of the tag; must not be null or blank
+	 * <p>Note: the supplied {@code name} will be {@linkplain String#trim() trimmed}.
+	 *
+	 * @param name the name of the tag; must not be {@code null} or blank
 	 */
 	public static TestTag create(String name) {
 		return new TestTag(name);
@@ -42,14 +44,14 @@ public final class TestTag implements Serializable {
 
 	private TestTag(String name) {
 		Preconditions.notBlank(name, "name must not be null or blank");
-		this.name = name;
+		this.name = name.trim();
 	}
 
 	/**
 	 * Get the name of this tag.
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
@@ -63,12 +65,12 @@ public final class TestTag implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return name.hashCode();
+		return this.name.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return name;
+		return this.name;
 	}
 
 }

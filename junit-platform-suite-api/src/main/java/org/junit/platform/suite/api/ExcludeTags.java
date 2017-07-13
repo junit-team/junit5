@@ -43,6 +43,8 @@ public @interface ExcludeTags {
 
 	/**
 	 * One or more tags to exclude.
+	 *
+	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}.
 	 */
 	String[] value();
 

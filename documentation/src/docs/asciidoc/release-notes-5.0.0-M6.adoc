@@ -20,7 +20,11 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* All tags are now trimmed in order to remove leading and trailing whitespace. This
+  applies to any tag supplied _directly_ to the `Launcher` via `TagFilter.includeTags()`
+  and `TagFilter.excludeTags()` or _indirectly_ via `@IncludeTags`, `@ExcludeTags`, the
+  JUnit Platform Console Launcher, the JUnit Platform Gradle plugin, and the JUnit
+  Platform Maven Surefire provider. Furthermore, blank tags are now ignored.
 
 ===== Deprecations and Breaking Changes
 
@@ -38,7 +42,8 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* All tags declared via `@Tag` are now trimmed in order to remove leading and trailing
+  whitespace. Furthermore, blank tags are now ignored.
 
 ===== Deprecations and Breaking Changes
 

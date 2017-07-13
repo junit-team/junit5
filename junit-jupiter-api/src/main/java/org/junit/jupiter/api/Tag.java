@@ -44,6 +44,9 @@ public @interface Tag {
 
 	/**
 	 * The <em>tag</em>.
+	 *
+	 * <p>Note: the tag will be {@linkplain String#trim() trimmed},
+	 * and a blank value will be ignored.
 	 */
 	String value();
 
