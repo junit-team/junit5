@@ -90,9 +90,16 @@ public class UniqueId implements Cloneable, Serializable {
 		this.segments = singletonList(segment);
 	}
 
+	/**
+	 * Initialize a {@code UniqueId} instance.
+	 *
+	 * @implNote A defensive copy of the segment list is <b>not</b> created by
+	 * this implementation. All callers should immediately drop the reference
+	 * to the list instance that they pass into this constructor.
+	 */
 	UniqueId(UniqueIdFormat uniqueIdFormat, List<Segment> segments) {
 		this.uniqueIdFormat = uniqueIdFormat;
-		this.segments = unmodifiableList(new ArrayList<>(segments));
+		this.segments = unmodifiableList(segments);
 	}
 
 	final Optional<Segment> getRoot() {
@@ -109,13 +116,11 @@ public class UniqueId implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Get a copy of the list of {@linkplain Segment segments} that make up this
+	 * Get the immutable list of {@linkplain Segment segments} that make up this
 	 * {@code UniqueId}.
-	 *
-	 * <p>Clients are free to modify the returned list.
 	 */
 	public final List<Segment> getSegments() {
-		return new ArrayList<>(this.segments);
+		return this.segments;
 	}
 
 	/**

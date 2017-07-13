@@ -18,6 +18,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.findNestedClasses;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -81,7 +82,7 @@ class JavaElementsResolver {
 	}
 
 	void resolveUniqueId(UniqueId uniqueId) {
-		List<UniqueId.Segment> segments = uniqueId.getSegments();
+		List<UniqueId.Segment> segments = new ArrayList<>(uniqueId.getSegments());
 		segments.remove(0); // Ignore engine unique ID
 
 		if (!resolveUniqueId(this.engineDescriptor, segments)) {

@@ -30,6 +30,7 @@ on GitHub.
 
 * The method `getDiscoveryFiltersByType` of `EngineDiscoveryRequest` has been renamed to
   `getFiltersByType`.
+* The method `getSegments()` of `UniqueId` now returns an immutable list.
 
 ===== New Features and Improvements
 
