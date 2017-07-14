@@ -27,10 +27,10 @@ import org.junit.platform.commons.meta.API;
  *
  * <h3>Method Signatures</h3>
  *
- * <p>{@code @AfterEach} methods must not be {@code private}, must not be
- * {@code static}, and may optionally declare parameters to be resolved by
+ * {@code @AfterEach} methods must have a {@code void} return type,
+ * must not be {@code private}, and must not be {@code static}.
+ * They may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
- * {@code @AfterEach} methods must not return a value.
  *
  * <h3>Inheritance</h3>
  *
