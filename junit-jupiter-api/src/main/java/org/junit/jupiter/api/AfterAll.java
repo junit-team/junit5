@@ -29,14 +29,14 @@ import org.junit.platform.commons.meta.API;
  *
  * <h3>Method Signatures</h3>
  *
- * <p>{@code @AfterAll} methods must not be {@code private} and must be
- * {@code static} by default. Consequently, {@code @AfterAll} methods are not
+ * {@code @AfterAll} methods must have a {@code void} return type,
+ * must not be {@code private}, and must be {@code static} by default.
+ * Consequently, {@code @AfterAll} methods are not
  * supported in {@link Nested @Nested} test classes or as <em>interface default
  * methods</em> unless the test class is annotated with
  * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}. {@code @AfterAll}
  * methods may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
- * {@code @AfterAll} methods must not return a value.
  *
  * <h3>Inheritance</h3>
  *

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -21,24 +21,21 @@ class NonVoidTestableMethodIntegrationTests {
 	void valid() {
 	}
 
-	//this method must never be called
 	@Test
 	int invalidMethodReturningPrimitive() {
-		assertTrue(false);
+		fail("This method should never have been called.");
 		return 1;
 	}
 
-	//this method must never be called
 	@Test
 	String invalidMethodReturningObject() {
-		assertTrue(false);
+		fail("This method should never have been called.");
 		return "";
 	}
 
-	//this method must never be called
 	@RepeatedTest(3)
 	int invalidMethodVerifyingTestTemplateMethod() {
-		assertTrue(false);
+		fail("This method should never have been called.");
 		return 1;
 	}
 
