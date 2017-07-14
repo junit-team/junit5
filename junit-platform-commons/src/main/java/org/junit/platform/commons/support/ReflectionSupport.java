@@ -15,6 +15,7 @@ import static org.junit.platform.commons.meta.API.Usage.Maintained;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.meta.API;
@@ -81,6 +82,30 @@ public final class ReflectionSupport {
 
 		return ReflectionUtils.findMethods(clazz, predicate,
 			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
+	}
+
+	public static Optional<Class<?>> loadClass(String name) {
+		return ReflectionUtils.loadClass(name);
+	}
+
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
+		return ReflectionUtils.findMethod(clazz, methodName, parameterTypeNames);
+	}
+
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes);
+	}
+
+	public static <T> T newInstance(Class<T> clazz, Object... args) {
+		return ReflectionUtils.newInstance(clazz, args);
+	}
+
+	public static Object invokeMethod(Method method, Object target, Object... args) {
+		return ReflectionUtils.invokeMethod(method, target, args);
+	}
+
+	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
+		return ReflectionUtils.findNestedClasses(clazz, predicate);
 	}
 
 }
