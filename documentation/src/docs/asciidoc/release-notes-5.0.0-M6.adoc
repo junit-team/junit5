@@ -39,6 +39,9 @@ on GitHub.
 * The `findAnnotation()` method in `AnnotationSupport` now searches on interfaces
   implemented by a class if the supplied element is a class.
 
+* More methods of `org.junit.platform.commons.util.ReflectionUtils` are now exposed
+  via `org.junit.platform.commons.support.ReflectionSupport`.
+
 
 [[release-notes-5.0.0-m6-junit-jupiter]]
 ==== JUnit Jupiter

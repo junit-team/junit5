@@ -642,6 +642,9 @@ public final class ReflectionUtils {
 			classpathScanner.scanForClassesInPackage(basePackageName, classTester, classNameFilter));
 	}
 
+	/**
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findNestedClasses(Class, Predicate)
+	 */
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
