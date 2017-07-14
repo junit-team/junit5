@@ -938,6 +938,10 @@ module.</p>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>Methods annotated with <code>@Test</code>, <code>@TestTemplate</code>, <code>@RepeatedTest</code>, <code>@BeforeAll</code>, <code>@AfterAll</code>,
+<code>@BeforeEach</code>, or <code>@AfterEach</code> annotations must not return a value.</p>
+</div>
 <div class="sect3">
 <h4 id="writing-tests-meta-annotations"><a class="anchor" href="#writing-tests-meta-annotations"></a>3.1.1. Meta-Annotations and Composed Annotations</h4>
 <div class="paragraph">
@@ -6438,7 +6442,7 @@ whitespace. Furthermore, blank tags are now ignored.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>A <code>void</code> return type is now enforced for <code>@Test</code> and lifecycle methods.</p>
 </li>
 </ul>
 </div>
@@ -6510,7 +6514,7 @@ test interfaces (a.k.a., <em>testing traits</em>).</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-14 06:34:19 EDT
+Last updated 2017-07-14 09:07:33 EDT
 </div>
 </div>
 </body>
