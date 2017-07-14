@@ -137,10 +137,10 @@ class LifecycleMethodUtilsTest {
 
 	private boolean contains(List<Method> methods, String methodName) {
 		// @formatter:off
-        return methods.stream()
-                .map(Method::getName)
-                .anyMatch(name -> name.equals(methodName));
-        // @formatter:on
+		return methods.stream()
+				.map(Method::getName)
+				.anyMatch(methodName::equals);
+		// @formatter:on
 	}
 
 }

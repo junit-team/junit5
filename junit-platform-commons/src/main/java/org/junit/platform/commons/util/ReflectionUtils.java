@@ -245,8 +245,7 @@ public final class ReflectionUtils {
 	}
 
 	public static boolean returnsVoid(Method method) {
-		//checking the class itself yields problems with bridge methods
-		return method.getReturnType().toString().equals("void");
+		return method.getReturnType().equals(Void.TYPE);
 	}
 
 	/**
