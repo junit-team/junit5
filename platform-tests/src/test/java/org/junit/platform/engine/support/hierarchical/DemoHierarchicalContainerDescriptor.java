@@ -34,10 +34,7 @@ public class DemoHierarchicalContainerDescriptor extends AbstractTestDescriptor
 	public DemoHierarchicalContainerDescriptor(UniqueId uniqueId, String displayName, TestSource source,
 			Runnable beforeBlock) {
 		super(uniqueId, displayName);
-
-		if (source != null) {
-			setSource(source);
-		}
+		setSource(source);
 		this.beforeBlock = beforeBlock;
 	}
 

@@ -126,7 +126,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	protected final void setSource(TestSource source) {
-		this.source = Preconditions.notNull(source, "TestSource must not be null");
+		this.source = source;
 	}
 
 	@Override
