@@ -35,6 +35,9 @@ module.
 | `@ExtendWith`      | Used to register custom <<extensions,extensions>>
 |===
 
+Methods annotated with `@Test`, `@TestTemplate`, `@RepeatedTest`, `@BeforeAll`, `@AfterAll`,
+`@BeforeEach`, or `@AfterEach` annotations must not return a value.
+
 [[writing-tests-meta-annotations]]
 ==== Meta-Annotations and Composed Annotations
 

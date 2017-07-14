@@ -48,7 +48,7 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* ❓
+* A `void` return type is now enforced for `@Test` and lifecycle methods.
 
 ===== New Features and Improvements
 
