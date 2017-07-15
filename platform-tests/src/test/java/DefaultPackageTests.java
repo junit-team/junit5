@@ -19,7 +19,7 @@ import org.junit.platform.commons.util.PackageUtils;
  *
  * @since 1.0
  */
-public class DefaultPackageTestCase {
+class DefaultPackageTests {
 
 	@Test
 	void test() {
@@ -28,7 +28,7 @@ public class DefaultPackageTestCase {
 
 	@Test
 	void getAttributeFromDefaultPackageMemberIsEmpty() {
-		assertFalse(PackageUtils.getAttribute(DefaultPackageTestCase.class, Object::toString).isPresent());
+		assertFalse(PackageUtils.getAttribute(DefaultPackageTests.class, Package::getSpecificationTitle).isPresent());
 	}
 
 }
