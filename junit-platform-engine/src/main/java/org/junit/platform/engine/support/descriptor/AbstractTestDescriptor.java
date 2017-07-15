@@ -64,7 +64,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	/**
 	 * Create a new {@code AbstractTestDescriptor} with the supplied
-	 * {@link UniqueId}, display name and source.
+	 * {@link UniqueId}, display name, and source.
 	 *
 	 * @param uniqueId the unique ID of this {@code TestDescriptor}; never
 	 * {@code null}

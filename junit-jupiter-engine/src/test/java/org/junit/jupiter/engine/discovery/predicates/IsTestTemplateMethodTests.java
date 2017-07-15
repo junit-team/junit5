@@ -18,32 +18,40 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.platform.commons.util.ReflectionUtils;
 
+/**
+ * Unit tests for {@link IsTestTemplateMethod}.
+ *
+ * @since 5.0
+ */
 class IsTestTemplateMethodTests {
 
+	private static final IsTestTemplateMethod isTestTemplateMethod = new IsTestTemplateMethod();
+
 	@Test
-	void testTemplateMethodReturningVoidEvaluatesToTrue() throws NoSuchMethodException {
-		Method templateMethod = ReflectionUtils.findMethod(AClassWithTestTemplate.class, "templateReturningVoid").get();
-		assertThat(templateMethod).matches(new IsTestTemplateMethod());
+	void testTemplateMethodReturningVoid() {
+		assertThat(isTestTemplateMethod).accepts(method("templateReturningVoid"));
 	}
 
 	@Test
-	void testTemplateMethodReturningObjectEvaluatesToFalse() throws NoSuchMethodException {
-		Method templateMethod = ReflectionUtils.findMethod(AClassWithTestTemplate.class,
-			"templateReturningObject").get();
-		assertThat(templateMethod).matches(new IsTestTemplateMethod().negate(),
-			"negated test template method predicate");
+	void bogusTestTemplateMethodReturningObject() {
+		assertThat(isTestTemplateMethod).rejects(method("bogusTemplateReturningObject"));
 	}
 
-	private static class AClassWithTestTemplate {
+	private static Method method(String name) {
+		return ReflectionUtils.findMethod(ClassWithTestTemplateMethods.class, name).get();
+	}
+
+	private static class ClassWithTestTemplateMethods {
 
 		@TestTemplate
 		void templateReturningVoid() {
 		}
 
 		@TestTemplate
-		String templateReturningObject() {
+		String bogusTemplateReturningObject() {
 			return "";
 		}
 
 	}
+
 }

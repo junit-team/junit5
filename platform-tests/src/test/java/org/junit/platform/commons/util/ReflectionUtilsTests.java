@@ -108,12 +108,12 @@ class ReflectionUtilsTests {
 
 	@Test
 	void returnsVoid() throws Exception {
-		assertTrue(ReflectionUtils.returnsVoid(ClassWithVoidAndNonVoidMethods.class.getDeclaredMethod("voidMethod")));
+		Class<?> clazz = ClassWithVoidAndNonVoidMethods.class;
+		assertTrue(ReflectionUtils.returnsVoid(clazz.getDeclaredMethod("voidMethod")));
 
-		assertFalse(ReflectionUtils.returnsVoid(
-			ClassWithVoidAndNonVoidMethods.class.getDeclaredMethod("methodReturningObject")));
-		assertFalse(ReflectionUtils.returnsVoid(
-			ClassWithVoidAndNonVoidMethods.class.getDeclaredMethod("methodReturningPrimitive")));
+		assertFalse(ReflectionUtils.returnsVoid(clazz.getDeclaredMethod("methodReturningVoidReference")));
+		assertFalse(ReflectionUtils.returnsVoid(clazz.getDeclaredMethod("methodReturningObject")));
+		assertFalse(ReflectionUtils.returnsVoid(clazz.getDeclaredMethod("methodReturningPrimitive")));
 	}
 
 	@Test
@@ -1005,6 +1005,10 @@ class ReflectionUtilsTests {
 	static class ClassWithVoidAndNonVoidMethods {
 
 		void voidMethod() {
+		}
+
+		Void methodReturningVoidReference() {
+			return null;
 		}
 
 		String methodReturningObject() {

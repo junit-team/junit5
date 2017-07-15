@@ -16,7 +16,7 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a method is a JUnit Jupiter test template method.
+ * Test if a method is a JUnit Jupiter {@link TestTemplate @TestTemplate} method.
  *
  * @since 5.0
  */

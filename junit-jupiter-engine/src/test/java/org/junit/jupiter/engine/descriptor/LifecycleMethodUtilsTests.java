@@ -10,9 +10,10 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterEachMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
@@ -30,6 +31,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.commons.JUnitException;
 
+/**
+ * Unit tests for {@link LifecycleMethodUtils}.
+ *
+ * @since 5.0
+ */
 class LifecycleMethodUtilsTests {
 
 	@Test
@@ -72,26 +78,21 @@ class LifecycleMethodUtilsTests {
 	void findBeforeEachMethodsWithStandardLifecycle() {
 		List<Method> methods = findBeforeEachMethods(TestCaseWithStandardLifecycle.class);
 
-		assertEquals(2, methods.size());
-		assertTrue(contains(methods, "nine"));
-		assertTrue(contains(methods, "ten"));
+		assertThat(namesOf(methods)).containsExactlyInAnyOrder("nine", "ten");
 	}
 
 	@Test
 	void findAfterEachMethodsWithStandardLifecycle() {
 		List<Method> methods = findAfterEachMethods(TestCaseWithStandardLifecycle.class);
 
-		assertEquals(2, methods.size());
-		assertTrue(contains(methods, "eleven"));
-		assertTrue(contains(methods, "twelve"));
+		assertThat(namesOf(methods)).containsExactlyInAnyOrder("eleven", "twelve");
 	}
 
 	@Test
 	void findBeforeAllMethodsWithStandardLifecycleAndWithoutRequiringStatic() {
 		List<Method> methods = findBeforeAllMethods(TestCaseWithStandardLifecycle.class, false);
 
-		assertEquals(1, methods.size());
-		assertTrue(contains(methods, "one"));
+		assertThat(namesOf(methods)).containsExactly("one");
 	}
 
 	@Test
@@ -107,18 +108,14 @@ class LifecycleMethodUtilsTests {
 	void findBeforeAllMethodsWithLifeCyclePerClassAndRequiringStatic() {
 		List<Method> methods = findBeforeAllMethods(TestCaseWithLifecyclePerClass.class, false);
 
-		assertEquals(2, methods.size());
-		assertTrue(contains(methods, "three"));
-		assertTrue(contains(methods, "four"));
+		assertThat(namesOf(methods)).containsExactlyInAnyOrder("three", "four");
 	}
 
 	@Test
 	void findAfterAllMethodsWithStandardLifecycleAndWithoutRequiringStatic() {
 		List<Method> methods = findAfterAllMethods(TestCaseWithStandardLifecycle.class, false);
 
-		assertEquals(2, methods.size());
-		assertTrue(contains(methods, "five"));
-		assertTrue(contains(methods, "six"));
+		assertThat(namesOf(methods)).containsExactlyInAnyOrder("five", "six");
 	}
 
 	@Test
@@ -130,17 +127,11 @@ class LifecycleMethodUtilsTests {
 	void findAfterAllMethodsWithLifeCyclePerClassAndRequiringStatic() {
 		List<Method> methods = findAfterAllMethods(TestCaseWithLifecyclePerClass.class, false);
 
-		assertEquals(2, methods.size());
-		assertTrue(contains(methods, "seven"));
-		assertTrue(contains(methods, "eight"));
+		assertThat(namesOf(methods)).containsExactlyInAnyOrder("seven", "eight");
 	}
 
-	private boolean contains(List<Method> methods, String methodName) {
-		// @formatter:off
-		return methods.stream()
-				.map(Method::getName)
-				.anyMatch(methodName::equals);
-		// @formatter:on
+	private static List<String> namesOf(List<Method> methods) {
+		return methods.stream().map(Method::getName).collect(toList());
 	}
 
 }

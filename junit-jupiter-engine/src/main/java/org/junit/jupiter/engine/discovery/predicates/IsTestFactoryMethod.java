@@ -16,7 +16,10 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a method is a JUnit Jupiter test factory method.
+ * Test if a method is a JUnit Jupiter {@link TestFactory @TestFactory} method.
+ *
+ * <p>NOTE: this predicate does <strong>not</strong> check if a candidate method
+ * has an appropriate return type for a {@code @TestFactory} method.
  *
  * @since 5.0
  */

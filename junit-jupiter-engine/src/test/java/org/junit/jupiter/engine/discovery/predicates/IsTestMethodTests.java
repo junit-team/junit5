@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
@@ -21,118 +21,126 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
+ * Unit tests for {@link IsTestMethod}.
+ *
  * @since 5.0
  */
 class IsTestMethodTests {
 
-	private final Predicate<Method> isTestMethod = new IsTestMethod();
+	private static final Predicate<Method> isTestMethod = new IsTestMethod();
 
 	@Test
-	void publicTestMethodEvaluatesToTrue() throws NoSuchMethodException {
-		Method publicTestMethod = this.findMethod("publicTestMethod");
-		assertTrue(isTestMethod.test(publicTestMethod));
-	}
-
-	@Test
-	void publicTestMethodWithArgumentEvaluatesToTrue() throws NoSuchMethodException {
-		Method publicTestMethodWithArgument = findMethod("publicTestMethodWithArgument", TestInfo.class);
-		assertTrue(isTestMethod.test(publicTestMethodWithArgument));
+	void publicTestMethod() {
+		Method method = method("publicTestMethod");
+		// Ensure that somebody doesn't accidentally delete the public modifier again.
+		assertTrue(ReflectionUtils.isPublic(method));
+		assertThat(isTestMethod).accepts(method);
 	}
 
 	@Test
-	void protectedTestMethodEvaluatesToTrue() throws NoSuchMethodException {
-		Method protectedTestMethod = this.findMethod("protectedTestMethod");
-		assertTrue(isTestMethod.test(protectedTestMethod));
+	void publicTestMethodWithArgument() {
+		Method method = method("publicTestMethodWithArgument", TestInfo.class);
+		// Ensure that somebody doesn't accidentally delete the public modifier again.
+		assertTrue(ReflectionUtils.isPublic(method));
+		assertThat(isTestMethod).accepts(method);
 	}
 
 	@Test
-	void packageVisibleTestMethodEvaluatesToTrue() throws NoSuchMethodException {
-		Method packageVisibleTestMethod = this.findMethod("packageVisibleTestMethod");
-		assertTrue(isTestMethod.test(packageVisibleTestMethod));
-	}
-
-	@Test
-	void privateTestMethodEvaluatesToFalse() throws NoSuchMethodException {
-		Method privateTestMethod = this.findMethod("privateTestMethod");
-		assertFalse(isTestMethod.test(privateTestMethod));
-	}
-
-	@Test
-	void staticTestMethodEvaluatesToFalse() throws NoSuchMethodException {
-		Method staticTestMethod = this.findMethod("staticTestMethod");
-		assertFalse(isTestMethod.test(staticTestMethod));
-	}
-
-	@Test
-	void abstractTestMethodEvaluatesToFalse() throws NoSuchMethodException {
-		Method abstractTestMethod = this.findMethodOfAbstractClass("abstractTestMethod");
-		assertFalse(isTestMethod.test(abstractTestMethod));
-	}
-
-	@Test
-	void testMethodReturningObjectEvaluatesToFalse() {
-		Method nonVoidMethod = this.findMethod("supposedTestMethodReturningObject");
-		assertFalse(isTestMethod.test(nonVoidMethod));
-	}
-
-	@Test
-	void testMethodReturningPrimitiveTypeEvaluatesToFalse() throws NoSuchMethodException {
-		Method nonVoidMethod = this.findMethod("supposedTestMethodReturningPrimitiveType");
-		assertFalse(isTestMethod.test(nonVoidMethod));
-	}
-
-	private Method findMethod(String name, Class<?>... aClass) {
-		return ReflectionUtils.findMethod(ClassWithTestMethods.class, name, aClass).get();
-	}
-
-	private Method findMethodOfAbstractClass(String name) {
-		return ReflectionUtils.findMethod(AbstractClassWithTestMethod.class, name).get();
-	}
-
-}
-
-//class name must not end with 'Tests', otherwise it would be picked up by the suite
-class ClassWithTestMethods {
-
-	@Test
-	String supposedTestMethodReturningObject() {
-		return "";
-	}
-
-	@Test
-	int supposedTestMethodReturningPrimitiveType() {
-		return 0;
-	}
-
-	@Test
-	public void publicTestMethod() {
-	}
-
-	@Test
-	public void publicTestMethodWithArgument(TestInfo info) {
-	}
-
-	@Test
-	protected void protectedTestMethod() {
+	void protectedTestMethod() {
+		assertThat(isTestMethod).accepts(method("protectedTestMethod"));
 	}
 
 	@Test
 	void packageVisibleTestMethod() {
+		assertThat(isTestMethod).accepts(method("packageVisibleTestMethod"));
 	}
 
 	@Test
-	private void privateTestMethod() {
+	void bogusAbstractTestMethod() {
+		assertThat(isTestMethod).rejects(abstractMethod("bogusAbstractTestMethod"));
 	}
 
 	@Test
-	static void staticTestMethod() {
+	void bogusStaticTestMethod() {
+		assertThat(isTestMethod).rejects(method("bogusStaticTestMethod"));
 	}
 
-}
-
-abstract class AbstractClassWithTestMethod {
+	@Test
+	void bogusPrivateTestMethod() {
+		assertThat(isTestMethod).rejects(method("bogusPrivateTestMethod"));
+	}
 
 	@Test
-	abstract void abstractTestMethod();
+	void bogusTestMethodReturningObject() {
+		assertThat(isTestMethod).rejects(method("bogusTestMethodReturningObject"));
+	}
+
+	@Test
+	void bogusTestMethodReturningVoidReference() {
+		assertThat(isTestMethod).rejects(method("bogusTestMethodReturningVoidReference"));
+	}
+
+	@Test
+	void bogusTestMethodReturningPrimitive() {
+		assertThat(isTestMethod).rejects(method("bogusTestMethodReturningPrimitive"));
+	}
+
+	private static Method method(String name, Class<?>... parameterTypes) {
+		return ReflectionUtils.findMethod(ClassWithTestMethods.class, name, parameterTypes).get();
+	}
+
+	private Method abstractMethod(String name) {
+		return ReflectionUtils.findMethod(AbstractClassWithAbstractTestMethod.class, name).get();
+	}
+
+	private static abstract class AbstractClassWithAbstractTestMethod {
+
+		@Test
+		abstract void bogusAbstractTestMethod();
+
+	}
+
+	private static class ClassWithTestMethods {
+
+		@Test
+		static void bogusStaticTestMethod() {
+		}
+
+		@Test
+		private void bogusPrivateTestMethod() {
+		}
+
+		@Test
+		String bogusTestMethodReturningObject() {
+			return "";
+		}
+
+		@Test
+		Void bogusTestMethodReturningVoidReference() {
+			return null;
+		}
+
+		@Test
+		int bogusTestMethodReturningPrimitive() {
+			return 0;
+		}
+
+		@Test
+		public void publicTestMethod() {
+		}
+
+		@Test
+		public void publicTestMethodWithArgument(TestInfo info) {
+		}
+
+		@Test
+		protected void protectedTestMethod() {
+		}
+
+		@Test
+		void packageVisibleTestMethod() {
+		}
+
+	}
 
 }

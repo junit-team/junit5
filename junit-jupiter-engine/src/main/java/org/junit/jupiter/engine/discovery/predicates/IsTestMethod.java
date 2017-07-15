@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a method is a JUnit Jupiter test method.
+ * Test if a method is a JUnit Jupiter {@link Test @Test} method.
  *
  * @since 5.0
  */

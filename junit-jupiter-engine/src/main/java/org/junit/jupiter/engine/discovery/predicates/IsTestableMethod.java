@@ -39,7 +39,7 @@ abstract class IsTestableMethod implements Predicate<Method> {
 
 	@Override
 	public boolean test(Method candidate) {
-		//please do not collapse into single return
+		// Please do not collapse the following into a single statement.
 		if (isStatic(candidate)) {
 			return false;
 		}
@@ -49,7 +49,7 @@ abstract class IsTestableMethod implements Predicate<Method> {
 		if (isAbstract(candidate)) {
 			return false;
 		}
-		if (returnsVoid(candidate) != mustReturnVoid) {
+		if (returnsVoid(candidate) != this.mustReturnVoid) {
 			return false;
 		}
 
