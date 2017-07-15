@@ -36,9 +36,9 @@ public class RunnerExecutor {
 	}
 
 	public void execute(RunnerTestDescriptor runnerTestDescriptor) {
-		TestRun testRun = new TestRun(runnerTestDescriptor, logger);
+		TestRun testRun = new TestRun(runnerTestDescriptor);
 		JUnitCore core = new JUnitCore();
-		core.addListener(new RunListenerAdapter(testRun, engineExecutionListener));
+		core.addListener(new RunListenerAdapter(testRun, logger, engineExecutionListener));
 		try {
 			core.run(runnerTestDescriptor.toRequest());
 		}

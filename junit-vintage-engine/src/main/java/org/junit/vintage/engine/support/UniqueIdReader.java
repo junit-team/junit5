@@ -8,9 +8,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.vintage.engine.discovery;
+package org.junit.vintage.engine.support;
 
 import static java.lang.String.format;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 
 import java.io.Serializable;
@@ -18,17 +19,19 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
+import org.junit.platform.commons.meta.API;
 import org.junit.runner.Description;
 
 /**
  * @since 4.12
  */
-class UniqueIdReader implements Function<Description, Serializable> {
+@API(Internal)
+public class UniqueIdReader implements Function<Description, Serializable> {
 
 	private final Logger logger;
 	private final String fieldName;
 
-	UniqueIdReader(Logger logger) {
+	public UniqueIdReader(Logger logger) {
 		this(logger, "fUniqueId");
 	}
 

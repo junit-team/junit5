@@ -32,6 +32,8 @@ import org.junit.runner.manipulation.Filterable;
 import org.junit.runners.model.RunnerBuilder;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
+import org.junit.vintage.engine.support.UniqueIdReader;
+import org.junit.vintage.engine.support.UniqueIdStringifier;
 
 /**
  * @since 4.12
