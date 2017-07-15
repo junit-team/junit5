@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -48,9 +47,9 @@ public class JUnit4DiscoveryRequestResolver {
 	}
 
 	public void resolve(EngineDiscoveryRequest discoveryRequest) {
-		TestClassCollector collector = collectTestClasses(discoveryRequest);
 		// @formatter:off
-		filterAndConvertToTestClassRequests(discoveryRequest, collector)
+		collectTestClasses(discoveryRequest)
+				.toRequests(createTestClassPredicate(discoveryRequest))
 				.map(this::createRunnerTestDescriptor)
 				.filter(Objects::nonNull)
 				.forEach(engineDescriptor::addChild);
@@ -76,14 +75,13 @@ public class JUnit4DiscoveryRequestResolver {
 		);
 	}
 
-	private Stream<TestClassRequest> filterAndConvertToTestClassRequests(EngineDiscoveryRequest discoveryRequest,
-			TestClassCollector collector) {
+	private Predicate<Class<?>> createTestClassPredicate(EngineDiscoveryRequest discoveryRequest) {
 		List<ClassNameFilter> allClassNameFilters = discoveryRequest.getFiltersByType(ClassNameFilter.class);
 		Filter<Class<?>> adaptedFilter = adaptFilter(composeFilters(allClassNameFilters), Class::getName);
 		Filter<Class<?>> classFilter = new ExclusionReasonConsumingFilter<>(adaptedFilter,
 			(testClass, reason) -> logger.fine(() -> String.format("Class %s was excluded by a class filter: %s",
 				testClass.getName(), reason.orElse("<unknown reason>"))));
-		return collector.toRequests(classFilter.toPredicate().and(isPotentialJUnit4TestClass));
+		return classFilter.toPredicate().and(isPotentialJUnit4TestClass);
 	}
 
 	private RunnerTestDescriptor createRunnerTestDescriptor(TestClassRequest testClassRequest) {
