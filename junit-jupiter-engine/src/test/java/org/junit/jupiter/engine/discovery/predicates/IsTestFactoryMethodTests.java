@@ -42,12 +42,14 @@ class IsTestFactoryMethodTests {
 		assertThat(isTestFactoryMethod).rejects(method("bogusVoidFactory"));
 	}
 
+	// TODO [#949] Enable test once IsTestFactoryMethod properly checks return type.
 	@Disabled("Disabled until IsTestFactoryMethod properly checks return type")
 	@Test
 	void bogusFactoryMethodReturningObject() {
 		assertThat(isTestFactoryMethod).rejects(method("bogusObjectFactory"));
 	}
 
+	// TODO [#949] Enable test once IsTestFactoryMethod properly checks return type.
 	@Disabled("Disabled until IsTestFactoryMethod properly checks return type")
 	@Test
 	void bogusFactoryMethodReturningCollectionOfStrings() {
