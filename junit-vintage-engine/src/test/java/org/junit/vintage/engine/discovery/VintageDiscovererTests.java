@@ -23,8 +23,8 @@ import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassNameFilter;
-import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.vintage.engine.RecordCollectingLogger;
 import org.junit.vintage.engine.samples.junit3.AbstractJUnit3TestCase;
@@ -33,11 +33,10 @@ import org.junit.vintage.engine.samples.junit4.AbstractJunit4TestCaseWithConstru
 /**
  * @since 4.12
  */
-class VintageDiscoveryRequestResolverTests {
+class VintageDiscovererTests {
 
 	@Test
 	void logsWarningWhenFilterExcludesClass() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(engineId(), "JUnit Vintage");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 
 		ClassNameFilter filter = className -> includedIf(Foo.class.getName().equals(className), () -> "match",
@@ -49,10 +48,10 @@ class VintageDiscoveryRequestResolverTests {
 				.build();
 		// @formatter:on
 
-		JUnit4DiscoveryRequestResolver resolver = new JUnit4DiscoveryRequestResolver(engineDescriptor, logger);
-		resolver.resolve(request);
+		VintageDiscoverer discoverer = new VintageDiscoverer(logger);
+		TestDescriptor testDescriptor = discoverer.discover(request, engineId());
 
-		assertThat(engineDescriptor.getChildren()).hasSize(1);
+		assertThat(testDescriptor.getChildren()).hasSize(1);
 
 		assertThat(logger.getLogRecords()).hasSize(1);
 		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
@@ -87,15 +86,14 @@ class VintageDiscoveryRequestResolverTests {
 	}
 
 	private void doesNotResolve(Class<?> testClass) {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(engineId(), "JUnit Vintage");
 		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 
-		JUnit4DiscoveryRequestResolver resolver = new JUnit4DiscoveryRequestResolver(engineDescriptor, logger);
-		resolver.resolve(request);
+		VintageDiscoverer discoverer = new VintageDiscoverer(logger);
+		TestDescriptor testDescriptor = discoverer.discover(request, engineId());
 
-		assertThat(engineDescriptor.getChildren()).isEmpty();
+		assertThat(testDescriptor.getChildren()).isEmpty();
 		assertThat(logger.getLogRecords()).isEmpty();
 	}
 
