@@ -19,11 +19,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.IntFunction;
 import java.util.logging.Logger;
 
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -40,33 +38,26 @@ import org.junit.vintage.engine.support.UniqueIdStringifier;
  */
 class TestClassRequestResolver {
 
-	private final TestDescriptor engineDescriptor;
+	private static final RunnerBuilder RUNNER_BUILDER = new DefensiveAllDefaultPossibilitiesBuilder();
 	private final Logger logger;
 
 	private final UniqueIdReader uniqueIdReader;
 	private final UniqueIdStringifier uniqueIdStringifier = new UniqueIdStringifier();
 
-	TestClassRequestResolver(TestDescriptor engineDescriptor, Logger logger) {
-		this.engineDescriptor = engineDescriptor;
+	TestClassRequestResolver(Logger logger) {
 		this.logger = logger;
 		this.uniqueIdReader = new UniqueIdReader(logger);
 	}
 
-	void populateEngineDescriptorFrom(Set<TestClassRequest> requests) {
-		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
-		for (TestClassRequest request : requests) {
-			Class<?> testClass = request.getTestClass();
-			Runner runner = runnerBuilder.safeRunnerForClass(testClass);
-			if (runner != null) {
-				addRunnerTestDescriptor(request, testClass, runner);
-			}
+	RunnerTestDescriptor createRunnerTestDescriptor(TestClassRequest request, UniqueId engineId) {
+		Class<?> testClass = request.getTestClass();
+		Runner runner = RUNNER_BUILDER.safeRunnerForClass(testClass);
+		if (runner == null) {
+			return null;
 		}
-	}
-
-	private void addRunnerTestDescriptor(TestClassRequest request, Class<?> testClass, Runner runner) {
-		RunnerTestDescriptor runnerTestDescriptor = determineRunnerTestDescriptor(testClass, runner,
-			request.getFilters(), engineDescriptor.getUniqueId());
-		engineDescriptor.addChild(runnerTestDescriptor);
+		else {
+			return determineRunnerTestDescriptor(testClass, runner, request.getFilters(), engineId);
+		}
 	}
 
 	private RunnerTestDescriptor determineRunnerTestDescriptor(Class<?> testClass, Runner runner,

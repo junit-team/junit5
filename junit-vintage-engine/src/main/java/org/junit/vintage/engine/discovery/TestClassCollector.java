@@ -10,7 +10,6 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Stream.concat;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
@@ -40,11 +39,8 @@ class TestClassCollector {
 		filteredTestClasses.computeIfAbsent(testClass, key -> new LinkedList<>()).add(filter);
 	}
 
-	Set<TestClassRequest> toRequests(Predicate<? super Class<?>> predicate) {
-		// @formatter:off
-		return concat(completeRequests(predicate), filteredRequests(predicate))
-				.collect(toCollection(LinkedHashSet::new));
-		// @formatter:on
+	Stream<TestClassRequest> toRequests(Predicate<? super Class<?>> predicate) {
+		return concat(completeRequests(predicate), filteredRequests(predicate)).distinct();
 	}
 
 	private Stream<TestClassRequest> completeRequests(Predicate<? super Class<?>> predicate) {

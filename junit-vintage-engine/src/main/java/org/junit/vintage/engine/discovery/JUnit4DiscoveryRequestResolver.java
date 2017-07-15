@@ -17,9 +17,10 @@ import static org.junit.platform.engine.Filter.composeFilters;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -27,6 +28,7 @@ import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
+import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 
 /**
  * @since 4.12
@@ -37,16 +39,22 @@ public class JUnit4DiscoveryRequestResolver {
 	private static final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
 	private final EngineDescriptor engineDescriptor;
 	private final Logger logger;
+	private final TestClassRequestResolver resolver;
 
 	public JUnit4DiscoveryRequestResolver(EngineDescriptor engineDescriptor, Logger logger) {
 		this.engineDescriptor = engineDescriptor;
 		this.logger = logger;
+		this.resolver = new TestClassRequestResolver(logger);
 	}
 
 	public void resolve(EngineDiscoveryRequest discoveryRequest) {
 		TestClassCollector collector = collectTestClasses(discoveryRequest);
-		Set<TestClassRequest> requests = filterAndConvertToTestClassRequests(discoveryRequest, collector);
-		populateEngineDescriptor(requests);
+		// @formatter:off
+		filterAndConvertToTestClassRequests(discoveryRequest, collector)
+				.map(this::createRunnerTestDescriptor)
+				.filter(Objects::nonNull)
+				.forEach(engineDescriptor::addChild);
+		// @formatter:on
 	}
 
 	private TestClassCollector collectTestClasses(EngineDiscoveryRequest discoveryRequest) {
@@ -68,7 +76,7 @@ public class JUnit4DiscoveryRequestResolver {
 		);
 	}
 
-	private Set<TestClassRequest> filterAndConvertToTestClassRequests(EngineDiscoveryRequest discoveryRequest,
+	private Stream<TestClassRequest> filterAndConvertToTestClassRequests(EngineDiscoveryRequest discoveryRequest,
 			TestClassCollector collector) {
 		List<ClassNameFilter> allClassNameFilters = discoveryRequest.getFiltersByType(ClassNameFilter.class);
 		Filter<Class<?>> adaptedFilter = adaptFilter(composeFilters(allClassNameFilters), Class::getName);
@@ -78,7 +86,7 @@ public class JUnit4DiscoveryRequestResolver {
 		return collector.toRequests(classFilter.toPredicate().and(isPotentialJUnit4TestClass));
 	}
 
-	private void populateEngineDescriptor(Set<TestClassRequest> requests) {
-		new TestClassRequestResolver(engineDescriptor, logger).populateEngineDescriptorFrom(requests);
+	private RunnerTestDescriptor createRunnerTestDescriptor(TestClassRequest testClassRequest) {
+		return resolver.createRunnerTestDescriptor(testClassRequest, engineDescriptor.getUniqueId());
 	}
 }
