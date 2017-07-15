@@ -20,9 +20,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -92,7 +92,7 @@ class UniqueIdSelectorResolverTests {
 	}
 
 	private void assertNoRequests() {
-		Set<TestClassRequest> requests = collector.toRequests(c -> true);
+		Stream<TestClassRequest> requests = collector.toRequests(c -> true);
 		assertThat(requests).isEmpty();
 	}
 

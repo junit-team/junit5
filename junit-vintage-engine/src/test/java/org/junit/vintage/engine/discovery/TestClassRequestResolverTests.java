@@ -12,7 +12,6 @@ package org.junit.vintage.engine.discovery;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.runner.Description.createTestDescription;
@@ -25,8 +24,6 @@ import java.util.logging.LogRecord;
 
 import org.junit.internal.builders.IgnoredClassRunner;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.vintage.engine.RecordCollectingLogger;
 import org.junit.vintage.engine.VintageUniqueIdBuilder;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
@@ -77,11 +74,10 @@ class TestClassRequestResolverTests {
 	}
 
 	private List<LogRecord> resolve(TestClassRequest request) {
-		TestDescriptor engineDescriptor = new EngineDescriptor(VintageUniqueIdBuilder.engineId(), "JUnit 4");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 
-		TestClassRequestResolver resolver = new TestClassRequestResolver(engineDescriptor, logger);
-		resolver.populateEngineDescriptorFrom(singleton(request));
+		TestClassRequestResolver resolver = new TestClassRequestResolver(logger);
+		resolver.createRunnerTestDescriptor(request, VintageUniqueIdBuilder.engineId());
 
 		return logger.getLogRecords();
 	}
