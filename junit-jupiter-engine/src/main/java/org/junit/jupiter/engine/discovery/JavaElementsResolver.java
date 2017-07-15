@@ -102,8 +102,9 @@ class JavaElementsResolver {
 		UniqueId.Segment head = remainingSegments.remove(0);
 		for (ElementResolver resolver : resolvers) {
 			Optional<TestDescriptor> resolvedDescriptor = resolver.resolveUniqueId(head, parent);
-			if (!resolvedDescriptor.isPresent())
+			if (!resolvedDescriptor.isPresent()) {
 				continue;
+			}
 
 			Optional<TestDescriptor> foundTestDescriptor = findTestDescriptorByUniqueId(
 				resolvedDescriptor.get().getUniqueId());

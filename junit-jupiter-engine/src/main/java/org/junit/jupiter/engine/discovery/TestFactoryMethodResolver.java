@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.discovery;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
@@ -22,11 +23,10 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * {@code TestFactoryMethodResolver} is an {@link ElementResolver}
- * that is able to resolve test factory methods annotated with
- * {@link TestFactory @TestFactory}.
+ * {@code TestFactoryMethodResolver} is an {@link ElementResolver} that is
+ * able to resolve methods annotated with {@link TestFactory @TestFactory}.
  *
- * <p>It will create {@link TestFactoryTestDescriptor} instances.
+ * <p>It creates {@link TestFactoryTestDescriptor} instances.
  *
  * @since 5.0
  * @see ElementResolver
@@ -36,10 +36,12 @@ import org.junit.platform.engine.UniqueId;
 @API(Experimental)
 class TestFactoryMethodResolver extends AbstractMethodResolver {
 
+	private static final Predicate<Method> isTestFactoryMethod = new IsTestFactoryMethod();
+
 	static final String SEGMENT_TYPE = "test-factory";
 
 	TestFactoryMethodResolver() {
-		super(SEGMENT_TYPE, new IsTestFactoryMethod());
+		super(SEGMENT_TYPE, isTestFactoryMethod);
 	}
 
 	@Override

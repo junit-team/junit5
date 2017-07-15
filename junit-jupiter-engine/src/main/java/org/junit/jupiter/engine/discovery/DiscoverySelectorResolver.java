@@ -30,13 +30,13 @@ import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
- * A {@code DiscoverySelectorResolver} resolves selectors with the help of the {@code JavaElementResolver} instances.
- * This class is the only public entry point to the discovery package.
+ * {@code DiscoverySelectorResolver} resolves selectors with the help of a
+ * {@code JavaElementsResolver}.
+ *
+ * <p>This class is the only public entry point into the discovery package.
  *
  * @since 5.0
- *
  * @see JavaElementsResolver
- *
  */
 @API(Internal)
 public class DiscoverySelectorResolver {
