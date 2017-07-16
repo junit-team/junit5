@@ -23,6 +23,12 @@ import org.junit.platform.commons.meta.API;
  * supply an instance of {@code RepetitionInfo} corresponding to the current
  * repeated test as the value for the parameter.
  *
+ * <p><strong>WARNING</strong>: {@code RepetitionInfo} cannot be injected into
+ * a {@code @BeforeEach} or {@code @AfterEach} method if the corresponding test
+ * method is not a {@code @RepeatedTest}. Any attempt to do so will result in a
+ * {@link org.junit.jupiter.api.extension.ParameterResolutionException
+ * ParameterResolutionException}.
+ *
  * @since 5.0
  * @see RepeatedTest
  * @see TestInfo
