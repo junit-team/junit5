@@ -65,6 +65,11 @@ on GitHub.
   test method in use cases for which such elements are _required_ to be present.
 * Type-level annotations such as `@TestInstance` and `@Disabled` may now be declared on
   test interfaces (a.k.a., _testing traits_).
+* A _warning_ is now logged if more than one `TestDescriptor` is resolved for a single
+  method. This helps to debug errors resulting from a method being simultaneously
+  annotated with multiple competing annotations such as `@Test`, `@RepeatedTest`,
+  `@ParameterizedTest`, `@TestFactory`, etc.
+
 
 
 [[release-notes-5.0.0-m6-junit-vintage]]

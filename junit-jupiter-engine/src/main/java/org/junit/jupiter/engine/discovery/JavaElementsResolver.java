@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
@@ -69,6 +70,8 @@ class JavaElementsResolver {
 		if (resolvedDescriptors.isEmpty()) {
 			LOG.warning(() -> format("Method '%s' could not be resolved", testMethod.toGenericString()));
 		}
+
+		logMultipleTestDescriptorsForSingleElement(testMethod, resolvedDescriptors);
 	}
 
 	private Set<TestDescriptor> resolveContainerWithParents(Class<?> testClass) {
@@ -152,11 +155,15 @@ class JavaElementsResolver {
 	}
 
 	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
-		return this.resolvers.stream() //
+		Set<TestDescriptor> descriptors = this.resolvers.stream() //
 				.map(resolver -> tryToResolveWithResolver(element, parent, resolver)) //
 				.filter(testDescriptors -> !testDescriptors.isEmpty()) //
 				.flatMap(Collection::stream) //
 				.collect(toSet());
+
+		logMultipleTestDescriptorsForSingleElement(element, descriptors);
+
+		return descriptors;
 	}
 
 	private Set<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,
@@ -183,6 +190,17 @@ class JavaElementsResolver {
 	@SuppressWarnings("unchecked")
 	private Optional<TestDescriptor> findTestDescriptorByUniqueId(UniqueId uniqueId) {
 		return (Optional<TestDescriptor>) this.engineDescriptor.findByUniqueId(uniqueId);
+	}
+
+	private void logMultipleTestDescriptorsForSingleElement(AnnotatedElement element, Set<TestDescriptor> descriptors) {
+		if (descriptors.size() > 1 && element instanceof Method) {
+			Method method = (Method) element;
+			LOG.warning(String.format(
+				"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. "
+						+ "This is typically the result of annotating a method with multiple competing annotations "
+						+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
+				method.toGenericString(), descriptors.stream().map(d -> d.getClass().getName()).collect(toList())));
+		}
 	}
 
 }
