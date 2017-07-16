@@ -36,7 +36,7 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.0
  */
 @API(Internal)
-public class TestFactoryTestDescriptor extends MethodTestDescriptor {
+public class TestFactoryTestDescriptor extends TestMethodTestDescriptor {
 
 	public static final String DYNAMIC_CONTAINER_SEGMENT_TYPE = "dynamic-container";
 	public static final String DYNAMIC_TEST_SEGMENT_TYPE = "dynamic-test";

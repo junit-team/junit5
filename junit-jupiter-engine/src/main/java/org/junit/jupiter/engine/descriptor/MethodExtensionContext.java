@@ -25,14 +25,14 @@ import org.junit.platform.engine.EngineExecutionListener;
  * @since 5.0
  */
 @API(Internal)
-public final class MethodExtensionContext extends AbstractExtensionContext<MethodTestDescriptor> {
+public final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTestDescriptor> {
 
 	private final Object testInstance;
 
 	private final ThrowableCollector throwableCollector;
 
 	public MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			MethodTestDescriptor testDescriptor, Object testInstance, ThrowableCollector throwableCollector) {
+			TestMethodTestDescriptor testDescriptor, Object testInstance, ThrowableCollector throwableCollector) {
 
 		super(parent, engineExecutionListener, testDescriptor);
 

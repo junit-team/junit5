@@ -35,7 +35,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
-import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
+import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -185,7 +185,7 @@ class RunListenerAdapterTests {
 
 	@Test
 	void displayNamesIgnoredInReport() throws NoSuchMethodException {
-		MethodTestDescriptor descriptor = new MethodTestDescriptor(newId(), MyTestClass.class,
+		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(newId(), MyTestClass.class,
 			MyTestClass.class.getDeclaredMethod("myNamedTestMethod"));
 
 		TestIdentifier factoryIdentifier = TestIdentifier.from(descriptor);
@@ -204,7 +204,7 @@ class RunListenerAdapterTests {
 	}
 
 	private static TestDescriptor newMethodDescriptor() throws Exception {
-		return new MethodTestDescriptor(UniqueId.forEngine("method"), MyTestClass.class,
+		return new TestMethodTestDescriptor(UniqueId.forEngine("method"), MyTestClass.class,
 			MyTestClass.class.getDeclaredMethod(MY_TEST_METHOD_NAME));
 	}
 

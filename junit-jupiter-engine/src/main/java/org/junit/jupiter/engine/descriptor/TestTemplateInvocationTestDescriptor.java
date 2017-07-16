@@ -28,7 +28,7 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.0
  */
 @API(Internal)
-public class TestTemplateInvocationTestDescriptor extends MethodTestDescriptor {
+public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescriptor {
 
 	public static final String SEGMENT_TYPE = "test-template-invocation";
 

@@ -55,15 +55,15 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.0
  */
 @API(Internal)
-public class MethodTestDescriptor extends MethodBasedTestDescriptor {
+public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
-	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
+	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
 	}
 
-	MethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
+	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
 		super(uniqueId, displayName, testClass, testMethod);
 	}
 

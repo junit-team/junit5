@@ -28,8 +28,8 @@ import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineExtensionContext;
 import org.junit.jupiter.engine.descriptor.MethodExtensionContext;
-import org.junit.jupiter.engine.descriptor.MethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
@@ -101,7 +101,7 @@ class ExtensionContextTests {
 	void tagsCanBeRetrievedInExtensionContext() {
 		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
-		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
+		TestMethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		outerClassDescriptor.addChild(methodTestDescriptor);
 
 		ClassExtensionContext outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, null);
@@ -122,7 +122,7 @@ class ExtensionContextTests {
 
 	@Test
 	void fromMethodTestDescriptor() {
-		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
+		TestMethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
 
 		Object testInstance = new OuterClass();
@@ -174,7 +174,7 @@ class ExtensionContextTests {
 
 	@Test
 	void usingStore() {
-		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
+		TestMethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
 		ExtensionContext parentContext = new ClassExtensionContext(null, null, classTestDescriptor, null);
 		MethodExtensionContext childContext = new MethodExtensionContext(parentContext, null, methodTestDescriptor,
@@ -223,9 +223,9 @@ class ExtensionContextTests {
 		return classTestDescriptor;
 	}
 
-	private MethodTestDescriptor methodDescriptor() {
+	private TestMethodTestDescriptor methodDescriptor() {
 		try {
-			return new MethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClass.class,
+			return new TestMethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClass.class,
 				OuterClass.class.getDeclaredMethod("aMethod"));
 		}
 		catch (NoSuchMethodException e) {
