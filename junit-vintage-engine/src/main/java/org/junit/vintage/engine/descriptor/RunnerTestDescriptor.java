@@ -25,20 +25,10 @@ import org.junit.runner.Runner;
 public class RunnerTestDescriptor extends VintageTestDescriptor {
 
 	private final Runner runner;
-	private final Class<?> testClass;
 
 	public RunnerTestDescriptor(UniqueId uniqueId, Class<?> testClass, Runner runner) {
 		super(uniqueId, runner.getDescription(), testClass.getName(), new ClassSource(testClass));
-		this.testClass = testClass;
 		this.runner = runner;
-	}
-
-	public Runner getRunner() {
-		return this.runner;
-	}
-
-	public Class<?> getTestClass() {
-		return this.testClass;
 	}
 
 	public Request toRequest() {
