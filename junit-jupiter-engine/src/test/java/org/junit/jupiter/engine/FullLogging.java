@@ -10,14 +10,17 @@
 
 package org.junit.jupiter.engine;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +37,7 @@ import org.junit.platform.commons.util.PreconditionViolationException;
  *
  * <h3>Example Usage</h3>
  * <pre class="code">
- * {@literal @}FullLogging(ExecutableInvoker.class)
+ * {@literal @}FullLogging(classes = ExecutableInvoker.class)
  * class MyTestClass { ... }
  * </pre>
  *
@@ -45,7 +48,9 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 @ExtendWith(FullLogging.Extension.class)
 public @interface FullLogging {
 
-	Class<?>[] value();
+	Class<?>[] classes() default FullLogging.class;
+
+	String[] classNames() default "";
 
 	class Extension implements BeforeAllCallback, AfterAllCallback {
 
@@ -56,24 +61,37 @@ public @interface FullLogging {
 			Class<?> testClass = context.getRequiredTestClass();
 
 			// @formatter:off
-			Class<?>[] loggerClasses = findAnnotation(testClass, FullLogging.class)
+			FullLogging fullLogging = findAnnotation(testClass, FullLogging.class)
 					.orElseThrow(() -> new PreconditionViolationException("@FullLogging must be declared on class " +
-							testClass.getName()))
-					.value();
+							testClass.getName()));
+			// @formatter:on
 
-			Arrays.stream(loggerClasses)
-					.map(Class::getName)
+			Class<?>[] classes = fullLogging.classes();
+			String[] classNames = fullLogging.classNames();
+			List<String> loggerNames = new ArrayList<>();
+
+			if (classes.length > 0 && classes[0] != FullLogging.class) {
+				loggerNames.addAll(Arrays.stream(classes).map(Class::getName).collect(toList()));
+			}
+
+			if (classNames.length > 0 && !classNames[0].equals("")) {
+				loggerNames.addAll(Arrays.asList(classNames));
+			}
+
+			// @formatter:off
+			Arrays.stream(classNames)
 					.forEach(loggerName -> {
 						Logger logger = Logger.getLogger(loggerName);
-						previouslyActiveLogLevels.put(loggerName, logger.getLevel());
+						this.previouslyActiveLogLevels.put(loggerName, logger.getLevel());
 						logger.setLevel(Level.ALL);
-					});
+					}
+			);
 			// @formatter:on
 		}
 
 		@Override
 		public void afterAll(ExtensionContext context) throws Exception {
-			previouslyActiveLogLevels.forEach(
+			this.previouslyActiveLogLevels.forEach(
 				(loggerName, previousLogLevel) -> Logger.getLogger(loggerName).setLevel(previousLogLevel));
 		}
 
