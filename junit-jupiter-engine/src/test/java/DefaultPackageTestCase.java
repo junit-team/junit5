@@ -8,6 +8,7 @@
  *
  * http://www.eclipse.org/legal/epl-v10.html
  */
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -16,7 +17,8 @@ import org.junit.jupiter.api.Test;
  *
  * @since 5.0
  */
-public class DefaultPackageTestCase {
+@Disabled("Only used reflectively by other tests")
+class DefaultPackageTestCase {
 
 	@Test
 	void test() {

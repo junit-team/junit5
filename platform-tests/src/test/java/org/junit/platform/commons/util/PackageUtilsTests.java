@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.util.Arrays;
@@ -74,6 +75,13 @@ class PackageUtilsTests {
 	@Test
 	void getAttributeWithFunctionReturningNullIsEmpty() {
 		assertFalse(PackageUtils.getAttribute(ValueWrapper.class, p -> null).isPresent());
+	}
+
+	@Test
+	void getAttributeFromDefaultPackageMemberIsEmpty() {
+		Class<?> classInDefaultPackage = ReflectionUtils.loadClass("DefaultPackageTestCase").orElseGet(
+			() -> fail("Could not load class from default package"));
+		assertFalse(PackageUtils.getAttribute(classInDefaultPackage, Package::getSpecificationTitle).isPresent());
 	}
 
 	@TestFactory

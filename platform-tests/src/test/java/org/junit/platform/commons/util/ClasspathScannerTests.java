@@ -183,7 +183,7 @@ class ClasspathScannerTests {
 
 		assertThat(classes.size()).as("number of classes found in default package").isGreaterThanOrEqualTo(1);
 		assertTrue(classes.stream().allMatch(this::inDefaultPackage));
-		assertTrue(classes.stream().anyMatch(clazz -> "DefaultPackageTests".equals(clazz.getName())));
+		assertTrue(classes.stream().anyMatch(clazz -> "DefaultPackageTestCase".equals(clazz.getName())));
 	}
 
 	@Test
@@ -245,7 +245,7 @@ class ClasspathScannerTests {
 		assertEquals(1, classes.size(), "number of classes found in default package");
 		Class<?> testClass = classes.get(0);
 		assertTrue(inDefaultPackage(testClass));
-		assertEquals("DefaultPackageTests", testClass.getName());
+		assertEquals("DefaultPackageTestCase", testClass.getName());
 	}
 
 	@Test
