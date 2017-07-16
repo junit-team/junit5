@@ -38,3 +38,4 @@ org.junit.vintage.engine
 org.junit.vintage.engine.descriptor
 org.junit.vintage.engine.discovery
 org.junit.vintage.engine.execution
+org.junit.vintage.engine.support
