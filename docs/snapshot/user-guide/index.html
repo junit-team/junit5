@@ -6474,6 +6474,12 @@ test method in use cases for which such elements are <em>required</em> to be pre
 <p>Type-level annotations such as <code>@TestInstance</code> and <code>@Disabled</code> may now be declared on
 test interfaces (a.k.a., <em>testing traits</em>).</p>
 </li>
+<li>
+<p>A <em>warning</em> is now logged if more than one <code>TestDescriptor</code> is resolved for a single
+method. This helps to debug errors resulting from a method being simultaneously
+annotated with multiple competing annotations such as <code>@Test</code>, <code>@RepeatedTest</code>,
+<code>@ParameterizedTest</code>, <code>@TestFactory</code>, etc.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -6520,7 +6526,7 @@ reported at all; now they are reported as dynamic tests.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-16 10:14:34 EDT
+Last updated 2017-07-15 17:08:57 EDT
 </div>
 </div>
 </body>
