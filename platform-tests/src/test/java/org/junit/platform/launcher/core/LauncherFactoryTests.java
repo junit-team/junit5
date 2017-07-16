@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -49,7 +48,7 @@ class LauncherFactoryTests {
 
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 		Set<TestIdentifier> roots = testPlan.getRoots();
-		assertThat(roots).hasSize(junitVintageEngineIsPresent() ? 2 : 1);
+		assertThat(roots).hasSize(2);
 
 		// @formatter:off
 		List<String> ids = roots.stream()
@@ -57,12 +56,7 @@ class LauncherFactoryTests {
 				.collect(toList());
 		// @formatter:on
 
-		if (junitVintageEngineIsPresent()) {
-			assertThat(ids).containsOnly("[engine:junit-vintage]", "[engine:junit-jupiter]");
-		}
-		else {
-			assertThat(ids).containsOnly("[engine:junit-jupiter]");
-		}
+		assertThat(ids).containsOnly("[engine:junit-vintage]", "[engine:junit-jupiter]");
 	}
 
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
@@ -88,10 +82,6 @@ class LauncherFactoryTests {
 		void testJ5() {
 		}
 
-	}
-
-	private static boolean junitVintageEngineIsPresent() {
-		return ReflectionUtils.loadClass("org.junit.vintage.engine.VintageTestEngine").isPresent();
 	}
 
 }
