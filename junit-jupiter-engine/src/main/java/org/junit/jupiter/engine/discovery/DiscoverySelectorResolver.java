@@ -15,7 +15,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInCl
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -72,7 +72,7 @@ public class DiscoverySelectorResolver {
 	}
 
 	private JavaElementsResolver createJavaElementsResolver(TestDescriptor engineDescriptor) {
-		Set<ElementResolver> resolvers = new HashSet<>();
+		Set<ElementResolver> resolvers = new LinkedHashSet<>();
 		resolvers.add(new TestContainerResolver());
 		resolvers.add(new NestedTestsResolver());
 		resolvers.add(new TestMethodResolver());
