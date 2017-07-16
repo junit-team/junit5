@@ -2,6 +2,11 @@ language: java
 sudo: false
 dist: trusty
 
+# Specify which branches/tags that we do not want to be built: r5.0.0-M5
+branches:
+  except:
+    - /^r\d.*$/
+
 env:
   - _JAVA_OPTIONS='-Xmx500m'
 
