@@ -16,10 +16,10 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -34,19 +34,17 @@ class LauncherFactoryTests {
 	@Test
 	void noopTestExecutionListenerIsLoadedViaServiceApi() {
 		DefaultLauncher launcher = (DefaultLauncher) LauncherFactory.create();
-		TestExecutionListenerRegistry registry = launcher.getTestExecutionListenerRegistry();
-		List<TestExecutionListener> listeners = registry.getTestExecutionListeners();
-		List<TestExecutionListener> one = listeners.stream().filter(
-			listener -> listener instanceof NoopTestExecutionListener).collect(toList());
-		assertThat(one).hasSize(1);
+		List<TestExecutionListener> listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
+		Optional<TestExecutionListener> listener = listeners.stream().filter(
+			NoopTestExecutionListener.class::isInstance).findFirst();
+		assertThat(listener).isPresent();
 	}
 
 	@Test
 	void create() {
-		Launcher launcher = LauncherFactory.create();
-		LauncherDiscoveryRequest discoveryRequest = this.createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+		LauncherDiscoveryRequest discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
 
-		TestPlan testPlan = launcher.discover(discoveryRequest);
+		TestPlan testPlan = LauncherFactory.create().discover(discoveryRequest);
 		Set<TestIdentifier> roots = testPlan.getRoots();
 		assertThat(roots).hasSize(2);
 
