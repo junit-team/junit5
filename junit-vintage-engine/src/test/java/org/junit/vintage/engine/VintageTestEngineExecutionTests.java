@@ -15,6 +15,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.dynamicTestRegistered;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
@@ -388,43 +389,47 @@ class VintageTestEngineExecutionTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
-	public static class MisbehavingSuiteRunner extends Runner {
+	public static class DynamicSuiteRunner extends Runner {
 
 		private final Class<?> testClass;
 
-		public MisbehavingSuiteRunner(Class<?> testClass) {
+		public DynamicSuiteRunner(Class<?> testClass) {
 			this.testClass = testClass;
 		}
 
 		@Override
 		public Description getDescription() {
 			Description suiteDescription = createSuiteDescription(testClass);
-			suiteDescription.addChild(createTestDescription(testClass, "someTest"));
 			return suiteDescription;
 		}
 
 		@Override
 		public void run(RunNotifier notifier) {
-			notifier.fireTestStarted(createTestDescription(testClass, "doesNotExist"));
+			Description dynamicDescription = createTestDescription(testClass, "dynamicTest");
+			notifier.fireTestStarted(dynamicDescription);
+			notifier.fireTestFinished(dynamicDescription);
 		}
 
 	}
 
-	@RunWith(MisbehavingSuiteRunner.class)
-	public static class MisBehavingSuiteTestClass {
+	@RunWith(DynamicSuiteRunner.class)
+	public static class DynamicTestClass {
 
 	}
 
 	@Test
-	void ignoreEventsForUnknownDescriptionsByMisbehavingSuiteRunner() {
-		Class<?> testClass = MisBehavingSuiteTestClass.class;
+	void reportsDynamicTestsForUnknownDescriptions() {
+		Class<?> testClass = DynamicTestClass.class;
 
 		List<ExecutionEvent> executionEvents = execute(testClass);
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(testClass), started()), //
-			event(container(testClass), finishedSuccessfully()), //
+			event(test(testClass.getName()), started()), //
+			event(dynamicTestRegistered("dynamicTest")), //
+			event(test("dynamicTest"), started()), //
+			event(test("dynamicTest"), finishedSuccessfully()), //
+			event(test(testClass.getName()), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -461,8 +466,10 @@ class VintageTestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(uniqueIdSubstring(testClass.getName()), started()), //
-			event(uniqueIdSubstring(testClass.getName()), finishedSuccessfully()), //
+			event(test(testClass.getName()), started()), //
+			event(dynamicTestRegistered("doesNotExist")), //
+			event(test("doesNotExist"), started()), //
+			event(test(testClass.getName()), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 

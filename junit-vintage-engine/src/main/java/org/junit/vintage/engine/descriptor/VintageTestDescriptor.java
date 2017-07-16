@@ -44,6 +44,7 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 	public static final String ENGINE_ID = "junit-vintage";
 	public static final String SEGMENT_TYPE_RUNNER = "runner";
 	public static final String SEGMENT_TYPE_TEST = "test";
+	public static final String SEGMENT_TYPE_DYNAMIC = "dynamic";
 
 	private final Description description;
 

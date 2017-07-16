@@ -10,8 +10,8 @@
 
 package org.junit.vintage.engine.execution;
 
-import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
@@ -19,13 +19,14 @@ import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 import org.junit.platform.engine.TestDescriptor;
@@ -41,23 +42,27 @@ import org.opentest4j.MultipleFailuresError;
 class TestRun {
 
 	private final RunnerTestDescriptor runnerTestDescriptor;
-	private final Logger logger;
-	private final Set<? extends TestDescriptor> runnerDescendants;
+	private final Set<TestDescriptor> runnerDescendants;
 	private final Map<Description, List<VintageTestDescriptor>> descriptionToDescriptors;
 	private final Map<TestDescriptor, List<TestExecutionResult>> executionResults = new LinkedHashMap<>();
 	private final Set<TestDescriptor> skippedDescriptors = new LinkedHashSet<>();
 	private final Set<TestDescriptor> startedDescriptors = new LinkedHashSet<>();
 	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
 
-	TestRun(RunnerTestDescriptor runnerTestDescriptor, Logger logger) {
+	TestRun(RunnerTestDescriptor runnerTestDescriptor) {
 		this.runnerTestDescriptor = runnerTestDescriptor;
-		this.logger = logger;
-		runnerDescendants = runnerTestDescriptor.getDescendants();
+		runnerDescendants = new LinkedHashSet<>(runnerTestDescriptor.getDescendants());
 		// @formatter:off
 		descriptionToDescriptors = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
 			.map(VintageTestDescriptor.class::cast)
-			.collect(groupingBy(VintageTestDescriptor::getDescription));
+			.collect(groupingBy(VintageTestDescriptor::getDescription, HashMap::new, toCollection(ArrayList::new)));
 		// @formatter:on
+	}
+
+	void registerDynamicTest(VintageTestDescriptor testDescriptor) {
+		descriptionToDescriptors.computeIfAbsent(testDescriptor.getDescription(),
+			key -> new CopyOnWriteArrayList<>()).add(testDescriptor);
+		runnerDescendants.add(testDescriptor);
 	}
 
 	RunnerTestDescriptor getRunnerTestDescriptor() {
@@ -80,19 +85,7 @@ class TestRun {
 	 *
 	 * @param description the {@code Description} to look up
 	 */
-	Optional<? extends TestDescriptor> lookupTestDescriptor(Description description) {
-		Optional<? extends TestDescriptor> testDescriptor = lookupInternal(description);
-		if (!testDescriptor.isPresent()) {
-			logger.warning(
-				() -> format("Runner %s on class %s reported event for unknown Description: %s. It will be ignored.",
-					runnerTestDescriptor.getRunner().getClass().getName(), //
-					runnerTestDescriptor.getTestClass().getName(), //
-					description));
-		}
-		return testDescriptor;
-	}
-
-	private Optional<? extends TestDescriptor> lookupInternal(Description description) {
+	Optional<VintageTestDescriptor> lookupTestDescriptor(Description description) {
 		List<VintageTestDescriptor> descriptors = descriptionToDescriptors.get(description);
 		if (descriptors == null) {
 			return Optional.empty();

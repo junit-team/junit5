@@ -10,18 +10,25 @@
 
 package org.junit.vintage.engine.execution;
 
+import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_DYNAMIC;
+
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 import org.junit.Ignore;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
+import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
+import org.junit.vintage.engine.support.UniqueIdReader;
+import org.junit.vintage.engine.support.UniqueIdStringifier;
 
 /**
  * @since 4.12
@@ -30,10 +37,12 @@ class RunListenerAdapter extends RunListener {
 
 	private final TestRun testRun;
 	private final EngineExecutionListener listener;
+	private final Function<Description, String> uniqueIdExtractor;
 
-	RunListenerAdapter(TestRun testRun, EngineExecutionListener listener) {
+	RunListenerAdapter(TestRun testRun, Logger logger, EngineExecutionListener listener) {
 		this.testRun = testRun;
 		this.listener = listener;
+		this.uniqueIdExtractor = new UniqueIdReader(logger).andThen(new UniqueIdStringifier());
 	}
 
 	@Override
@@ -46,13 +55,12 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testIgnored(Description description) {
-		testRun.lookupTestDescriptor(description).ifPresent(
-			testDescriptor -> testIgnored(testDescriptor, determineReasonForIgnoredTest(description)));
+		testIgnored(lookupOrRegisterTestDescriptor(description), determineReasonForIgnoredTest(description));
 	}
 
 	@Override
 	public void testStarted(Description description) {
-		testRun.lookupTestDescriptor(description).ifPresent(this::testStarted);
+		testStarted(lookupOrRegisterTestDescriptor(description));
 	}
 
 	@Override
@@ -67,7 +75,7 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testFinished(Description description) {
-		testRun.lookupTestDescriptor(description).ifPresent(this::testFinished);
+		testFinished(lookupOrRegisterTestDescriptor(description));
 	}
 
 	@Override
@@ -77,13 +85,38 @@ class RunListenerAdapter extends RunListener {
 			if (testRun.isNotStarted(runnerTestDescriptor)) {
 				fireExecutionStarted(runnerTestDescriptor);
 			}
-			fireExecutionFinished(runnerTestDescriptor);
+			if (testRun.isNotFinished(runnerTestDescriptor)) {
+				fireExecutionFinished(runnerTestDescriptor);
+			}
 		}
 	}
 
+	private TestDescriptor lookupOrRegisterTestDescriptor(Description description) {
+		return testRun.lookupTestDescriptor(description).orElseGet(() -> registerDynamicTestDescriptor(description));
+	}
+
+	private VintageTestDescriptor registerDynamicTestDescriptor(Description description) {
+		// workaround for dynamic children as used by Spock's Runner
+		TestDescriptor parent = findParent(description);
+		UniqueId uniqueId = parent.getUniqueId().append(SEGMENT_TYPE_DYNAMIC, uniqueIdExtractor.apply(description));
+		VintageTestDescriptor dynamicDescriptor = new VintageTestDescriptor(uniqueId, description);
+		parent.addChild(dynamicDescriptor);
+		testRun.registerDynamicTest(dynamicDescriptor);
+		dynamicTestRegistered(dynamicDescriptor);
+		return dynamicDescriptor;
+	}
+
+	private TestDescriptor findParent(Description description) {
+		// @formatter:off
+		return Optional.ofNullable(description.getTestClass())
+				.map(Description::createSuiteDescription)
+				.flatMap(testRun::lookupTestDescriptor)
+				.orElseGet(testRun::getRunnerTestDescriptor);
+		// @formatter:on
+	}
+
 	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator) {
-		testRun.lookupTestDescriptor(failure.getDescription()).ifPresent(
-			testDescriptor -> handleFailure(failure, resultCreator, testDescriptor));
+		handleFailure(failure, resultCreator, lookupOrRegisterTestDescriptor(failure.getDescription()));
 	}
 
 	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator,
@@ -115,6 +148,11 @@ class RunListenerAdapter extends RunListener {
 		return Optional.ofNullable(ignoreAnnotation).map(Ignore::value).orElse("<unknown>");
 	}
 
+	private void dynamicTestRegistered(TestDescriptor testDescriptor) {
+		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
+		listener.dynamicTestRegistered(testDescriptor);
+	}
+
 	private void testStarted(TestDescriptor testDescriptor) {
 		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
 		fireExecutionStarted(testDescriptor);
@@ -141,7 +179,8 @@ class RunListenerAdapter extends RunListener {
 
 	private boolean canStart(TestDescriptor testDescriptor) {
 		return testRun.isNotStarted(testDescriptor) //
-				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor);
+				&& (testDescriptor.equals(testRun.getRunnerTestDescriptor())
+						|| testRun.isDescendantOfRunnerTestDescriptor(testDescriptor));
 	}
 
 	private boolean canFinish(TestDescriptor testDescriptor) {
