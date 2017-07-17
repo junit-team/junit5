@@ -17,6 +17,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -131,6 +132,18 @@ public final class CollectionUtils {
 		}
 		if (object instanceof Object[]) {
 			return Arrays.stream((Object[]) object);
+		}
+		if (object instanceof double[]) {
+			return DoubleStream.of((double[]) object).boxed();
+		}
+		if (object instanceof int[]) {
+			return IntStream.of((int[]) object).boxed();
+		}
+		if (object instanceof long[]) {
+			return LongStream.of((long[]) object).boxed();
+		}
+		if (object.getClass().isArray() && object.getClass().getComponentType().isPrimitive()) {
+			return IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i));
 		}
 		throw new PreconditionViolationException(
 			"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object);

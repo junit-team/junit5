@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
@@ -98,12 +99,105 @@ class MethodArgumentsProviderTests {
 		assertThat(exception).hasMessageContaining("required test class is not present");
 	}
 
+	@Nested
+	class PrimitiveArrays {
+
+		@Test
+		void providesArgumentsUsingBooleanArray() {
+			Stream<Object[]> arguments = provideArguments("booleanArrayProvider");
+
+			assertThat(arguments).containsExactly(array(Boolean.TRUE), array(Boolean.FALSE));
+		}
+
+		@Test
+		void providesArgumentsUsingByteArray() {
+			Stream<Object[]> arguments = provideArguments("byteArrayProvider");
+
+			assertThat(arguments).containsExactly(array((byte) 1), array(Byte.MIN_VALUE));
+		}
+
+		@Test
+		void providesArgumentsUsingCharArray() {
+			Stream<Object[]> arguments = provideArguments("charArrayProvider");
+
+			assertThat(arguments).containsExactly(array((char) 1), array(Character.MIN_VALUE));
+		}
+
+		@Test
+		void providesArgumentsUsingDoubleArray() {
+			Stream<Object[]> arguments = provideArguments("doubleArrayProvider");
+
+			assertThat(arguments).containsExactly(array(1d), array(Double.MIN_VALUE));
+		}
+
+		@Test
+		void providesArgumentsUsingFloatArray() {
+			Stream<Object[]> arguments = provideArguments("floatArrayProvider");
+
+			assertThat(arguments).containsExactly(array(1f), array(Float.MIN_VALUE));
+		}
+
+		@Test
+		void providesArgumentsUsingIntArray() {
+			Stream<Object[]> arguments = provideArguments("intArrayProvider");
+
+			assertThat(arguments).containsExactly(array(47), array(Integer.MIN_VALUE));
+		}
+
+		@Test
+		void providesArgumentsUsingLongArray() {
+			Stream<Object[]> arguments = provideArguments("longArrayProvider");
+
+			assertThat(arguments).containsExactly(array(47L), array(Long.MIN_VALUE));
+		}
+
+		@Test
+		void providesArgumentsUsingShortArray() {
+			Stream<Object[]> arguments = provideArguments("shortArrayProvider");
+
+			assertThat(arguments).containsExactly(array((short) 47), array(Short.MIN_VALUE));
+		}
+	}
+
+	@SuppressWarnings("unused")
 	static class TestCase {
 
 		static AtomicBoolean collectionStreamClosed = new AtomicBoolean(false);
 
 		static Stream<String> stringStreamProvider() {
 			return Stream.of("foo", "bar");
+		}
+
+		static boolean[] booleanArrayProvider() {
+			return new boolean[] { true, false };
+		}
+
+		static byte[] byteArrayProvider() {
+			return new byte[] { (byte) 1, Byte.MIN_VALUE };
+		}
+
+		static char[] charArrayProvider() {
+			return new char[] { (char) 1, Character.MIN_VALUE };
+		}
+
+		static double[] doubleArrayProvider() {
+			return new double[] { 1d, Double.MIN_VALUE };
+		}
+
+		static float[] floatArrayProvider() {
+			return new float[] { 1f, Float.MIN_VALUE };
+		}
+
+		static int[] intArrayProvider() {
+			return new int[] { 47, Integer.MIN_VALUE };
+		}
+
+		static long[] longArrayProvider() {
+			return new long[] { 47L, Long.MIN_VALUE };
+		}
+
+		static short[] shortArrayProvider() {
+			return new short[] { (short) 47, Short.MIN_VALUE };
 		}
 
 		static Iterable<String> stringIterableProvider() {
