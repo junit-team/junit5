@@ -10,6 +10,9 @@
 
 package org.junit.platform.launcher;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
@@ -19,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.DemoClassTestDescriptor;
@@ -26,13 +30,17 @@ import org.junit.platform.engine.support.descriptor.DemoClassTestDescriptor;
 /**
  * Unit tests for {@link TagFilter}.
  *
+ * <p>NOTE: part of the behavior of these tests regarding tags is
+ * influenced by the implementation of {@link DemoClassTestDescriptor#getTags()}
+ * rather than any concrete test engine.
+ *
  * @since 1.0
  */
 class TagFilterTests {
 
 	private static final TestDescriptor classWithTag1 = classTestDescriptor("class1", ClassWithTag1.class);
-	private static final TestDescriptor classWithTag1AndWhitespace = classTestDescriptor("class1-whitespace",
-		ClassWithTag1AndWhitespace.class);
+	private static final TestDescriptor classWithTag1AndSurroundingWhitespace = classTestDescriptor(
+		"class1-surrounding-whitespace", ClassWithTag1AndSurroundingWhitespace.class);
 	private static final TestDescriptor classWithTag2 = classTestDescriptor("class2", ClassWithTag2.class);
 	private static final TestDescriptor classWithBothTags = classTestDescriptor("class12", ClassWithBothTags.class);
 	private static final TestDescriptor classWithDifferentTags = classTestDescriptor("classX",
@@ -40,22 +48,58 @@ class TagFilterTests {
 	private static final TestDescriptor classWithNoTags = classTestDescriptor("class", ClassWithNoTags.class);
 
 	@Test
-	void includeSingleTag() throws Exception {
-		includeSingleTag(includeTags("tag1", "   "));
+	void includeTagsWithInvalidSyntax() {
+		// @formatter:off
+		assertAll(
+			() -> assertSyntaxViolationForIncludes(null),
+			() -> assertSyntaxViolationForIncludes(""),
+			() -> assertSyntaxViolationForIncludes("   "),
+			() -> assertSyntaxViolationForIncludes("foo bar")
+		);
+		// @formatter:on
+	}
+
+	private void assertSyntaxViolationForIncludes(String tag) {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> includeTags(tag));
+		assertThat(exception).hasMessageContaining("Tag name [" + tag + "] must be syntactically valid");
 	}
 
 	@Test
-	void includeSingleTagAndWhitespace() throws Exception {
-		includeSingleTag(includeTags("   ", "\t \n tag1  "));
+	void excludeTagsWithInvalidSyntax() {
+		// @formatter:off
+		assertAll(
+			() -> assertSyntaxViolationForExcludes(null),
+			() -> assertSyntaxViolationForExcludes(""),
+			() -> assertSyntaxViolationForExcludes("   "),
+			() -> assertSyntaxViolationForExcludes("foo bar")
+		);
+		// @formatter:on
+	}
+
+	private void assertSyntaxViolationForExcludes(String tag) {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> excludeTags(tag));
+		assertThat(exception).hasMessageContaining("Tag name [" + tag + "] must be syntactically valid");
 	}
 
 	@Test
-	void includeMultipleTags() throws Exception {
-		PostDiscoveryFilter filter = includeTags("tag1", "  tag2  ", "     ");
+	void includeSingleTag() {
+		includeSingleTag(includeTags("tag1"));
+	}
+
+	@Test
+	void includeSingleTagAndWhitespace() {
+		includeSingleTag(includeTags("\t \n tag1  "));
+	}
+
+	@Test
+	void includeMultipleTags() {
+		PostDiscoveryFilter filter = includeTags("tag1", "  tag2  ");
 
 		assertTrue(filter.apply(classWithBothTags).included());
 		assertTrue(filter.apply(classWithTag1).included());
-		assertTrue(filter.apply(classWithTag1AndWhitespace).included());
+		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).included());
 		assertTrue(filter.apply(classWithTag2).included());
 
 		assertTrue(filter.apply(classWithDifferentTags).excluded());
@@ -63,21 +107,21 @@ class TagFilterTests {
 	}
 
 	@Test
-	void excludeSingleTag() throws Exception {
-		excludeSingleTag(excludeTags("tag1", "    "));
+	void excludeSingleTag() {
+		excludeSingleTag(excludeTags("tag1"));
 	}
 
 	@Test
-	void excludeSingleTagAndWhitespace() throws Exception {
-		excludeSingleTag(excludeTags("\t \n tag1  ", "      "));
+	void excludeSingleTagAndWhitespace() {
+		excludeSingleTag(excludeTags("\t \n tag1  "));
 	}
 
 	@Test
-	void excludeMultipleTags() throws Exception {
-		PostDiscoveryFilter filter = excludeTags("tag1", "  tag2  ", "     ");
+	void excludeMultipleTags() {
+		PostDiscoveryFilter filter = excludeTags("tag1", "  tag2  ");
 
 		assertTrue(filter.apply(classWithTag1).excluded());
-		assertTrue(filter.apply(classWithTag1AndWhitespace).excluded());
+		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).excluded());
 		assertTrue(filter.apply(classWithBothTags).excluded());
 		assertTrue(filter.apply(classWithTag2).excluded());
 
@@ -87,7 +131,7 @@ class TagFilterTests {
 
 	private void includeSingleTag(PostDiscoveryFilter filter) {
 		assertTrue(filter.apply(classWithTag1).included());
-		assertTrue(filter.apply(classWithTag1AndWhitespace).included());
+		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).included());
 		assertTrue(filter.apply(classWithBothTags).included());
 
 		assertTrue(filter.apply(classWithTag2).excluded());
@@ -97,7 +141,7 @@ class TagFilterTests {
 
 	private void excludeSingleTag(PostDiscoveryFilter filter) {
 		assertTrue(filter.apply(classWithTag1).excluded());
-		assertTrue(filter.apply(classWithTag1AndWhitespace).excluded());
+		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).excluded());
 		assertTrue(filter.apply(classWithBothTags).excluded());
 
 		assertTrue(filter.apply(classWithTag2).included());
@@ -122,7 +166,7 @@ class TagFilterTests {
 	}
 
 	@Tag("   tag1  \t    ")
-	private static class ClassWithTag1AndWhitespace {
+	private static class ClassWithTag1AndSurroundingWhitespace {
 	}
 
 	@Tag2

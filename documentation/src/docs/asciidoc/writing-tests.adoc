@@ -154,6 +154,15 @@ include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 Test classes and methods can be tagged. Those tags can later be used to filter
 <<running-tests,test discovery and execution>>.
 
+==== Syntax Rules for Tags
+
+* A tag must not be `null` or _blank_.
+* A _trimmed_ tag must not contain whitespace.
+* A _trimmed_ tag must not contain ISO control characters.
+
+NOTE: In the above context, "trimmed" means that leading and trailing whitespace
+characters have been removed.
+
 [source,java,indent=0]
 ----
 include::{testDir}/example/TaggingDemo.java[tags=user_guide]

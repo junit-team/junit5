@@ -20,14 +20,21 @@ on GitHub.
 
 ===== Bug Fixes
 
-* All tags are now trimmed in order to remove leading and trailing whitespace. This
+* All tags are now _trimmed_ in order to remove leading and trailing whitespace. This
   applies to any tag supplied _directly_ to the `Launcher` via `TagFilter.includeTags()`
   and `TagFilter.excludeTags()` or _indirectly_ via `@IncludeTags`, `@ExcludeTags`, the
   JUnit Platform Console Launcher, the JUnit Platform Gradle plugin, and the JUnit
-  Platform Maven Surefire provider. Furthermore, blank tags are now ignored.
+  Platform Maven Surefire provider.
 
 ===== Deprecations and Breaking Changes
 
+* All tags must now conform to the following syntax rules:
+** A tag must not be `null` or _blank_.
+** A _trimmed_ tag must not contain whitespace.
+** A _trimmed_ tag must not contain ISO control characters.
+* The `TagFilter.includeTags()`, `TagFilter.excludeTags()`, and `TestTag.create()`
+  factory methods now throw a `PreconditionViolationException` if a supplied tag is not
+  syntactically valid.
 * The method `getDiscoveryFiltersByType` of `EngineDiscoveryRequest` has been renamed to
   `getFiltersByType`.
 * The method `getSegments()` of `UniqueId` now returns an immutable list.
@@ -36,9 +43,9 @@ on GitHub.
 
 ===== New Features and Improvements
 
+* New `TestTag.isValid(String)` method for checking if a tag is syntactically valid.
 * The `findAnnotation()` method in `AnnotationSupport` now searches on interfaces
   implemented by a class if the supplied element is a class.
-
 * The following methods of `org.junit.platform.commons.util.ReflectionUtils` are now
   exposed via `org.junit.platform.commons.support.ReflectionSupport`:
 ** `public static Optional<Class<?>> loadClass(String name)`
@@ -48,13 +55,14 @@ on GitHub.
 ** `public static Object invokeMethod(Method method, Object target, Object... args)`
 ** `public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate)`
 
+
 [[release-notes-5.0.0-m6-junit-jupiter]]
 ==== JUnit Jupiter
 
 ===== Bug Fixes
 
 * All tags declared via `@Tag` are now trimmed in order to remove leading and trailing
-  whitespace. Furthermore, blank tags are now ignored.
+  whitespace.
 * All primitive array types (from `boolean[]` to `short[]`) are now supported as a
   return type of static argument providing methods for parameterized tests.
 
@@ -79,7 +87,8 @@ on GitHub.
   method. This helps to debug errors resulting from a method being simultaneously
   annotated with multiple competing annotations such as `@Test`, `@RepeatedTest`,
   `@ParameterizedTest`, `@TestFactory`, etc.
-
+* `@Tag` declarations containing invalid tag syntax will now be logged as a warning but
+  effectively ignored.
 
 
 [[release-notes-5.0.0-m6-junit-vintage]]

@@ -25,6 +25,13 @@ import org.junit.platform.commons.meta.API;
  * {@code @ExcludeTags} specifies the {@linkplain #value tags} to be excluded
  * when running a test suite on the JUnit Platform.
  *
+ * <h3>Syntax Rules for Tags</h3>
+ * <ul>
+ * <li>A tag must not be blank.</li>
+ * <li>A trimmed tag must not contain whitespace.</li>
+ * <li>A trimmed tag must not contain ISO control characters.</li>
+ * </ul>
+ *
  * <h4>JUnit 4 Suite Support</h4>
  * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
  * {@code @RunWith(JUnitPlatform.class)}.

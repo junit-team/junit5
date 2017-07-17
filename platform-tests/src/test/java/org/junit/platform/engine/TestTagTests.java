@@ -10,18 +10,66 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
+ * Unit tests for {@link TestTag}.
+ *
  * @since 1.0
  */
 class TestTagTests {
 
 	@Test
-	void tagEqualsOtherTagsWithSameName() {
+	void validSyntax() {
+		// @formatter:off
+		assertAll("Valid Tag Syntax",
+			() -> yep("fast"),
+			() -> yep("super-fast!"),
+			() -> yep("unit-test"),
+			() -> yep("org.example.CustomTagClass"),
+			() -> yep("  surrounded-by-whitespace\t\n"),
+			() -> nope(null),
+			() -> nope(""),
+			() -> nope("     "),
+			() -> nope("\t"),
+			() -> nope("\f"),
+			() -> nope("\r"),
+			() -> nope("\n"),
+			() -> nope("custom tag")
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void factory() {
+		assertEquals("foo", TestTag.create("foo").getName());
+		assertEquals("foo.tag", TestTag.create("foo.tag").getName());
+		assertEquals("foo-tag", TestTag.create("foo-tag").getName());
+		assertEquals("foo-tag", TestTag.create("    foo-tag    ").getName());
+		assertEquals("foo-tag", TestTag.create("\t  foo-tag  \n").getName());
+	}
+
+	@Test
+	void factoryPreconditions() {
+		assertSyntaxViolation(null);
+		assertSyntaxViolation("");
+		assertSyntaxViolation("   ");
+		assertSyntaxViolation("X\tX");
+		assertSyntaxViolation("X\nX");
+		assertSyntaxViolation("XXX\u005CtXXX");
+	}
+
+	@Test
+	void tagEqualsOtherTagWithSameName() {
 		assertEquals(TestTag.create("fast"), TestTag.create("fast"));
 		assertEquals(TestTag.create("fast").hashCode(), TestTag.create("fast").hashCode());
 		assertNotEquals(null, TestTag.create("fast"));
@@ -31,6 +79,21 @@ class TestTagTests {
 	@Test
 	void toStringPrintsName() {
 		assertEquals("fast", TestTag.create("fast").toString());
+	}
+
+	private static void yep(String tag) {
+		assertTrue(TestTag.isValid(tag), () -> String.format("'%s' should be a valid tag", tag));
+	}
+
+	private static void nope(String tag) {
+		assertFalse(TestTag.isValid(tag), () -> String.format("'%s' should not be a valid tag", tag));
+	}
+
+	private void assertSyntaxViolation(String tag) {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> TestTag.create(tag));
+		assertThat(exception).hasMessageStartingWith("Tag name");
+		assertThat(exception).hasMessageEndingWith("must be syntactically valid");
 	}
 
 }

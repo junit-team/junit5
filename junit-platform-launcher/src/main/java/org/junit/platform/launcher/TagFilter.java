@@ -15,13 +15,11 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.FilterResult;
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 
 /**
@@ -44,16 +42,19 @@ public final class TagFilter {
 	/**
 	 * Create an <em>include</em> filter based on the supplied {@code tags}.
 	 *
-	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}, and any
-	 * blank tag will be ignored.
+	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}.
 	 *
 	 * <p>Containers and tests will only be executed if they are tagged with
 	 * at least one of the supplied <em>included</em> tags.
 	 *
 	 * @param tags the included tags; never {@code null} or empty
+	 * @throws PreconditionViolationException if the supplied tags array is
+	 * {@code null} or empty, or if any individual tag is not syntactically
+	 * valid
 	 * @see #includeTags(List)
+	 * @see TestTag#isValid(String)
 	 */
-	public static PostDiscoveryFilter includeTags(String... tags) {
+	public static PostDiscoveryFilter includeTags(String... tags) throws PreconditionViolationException {
 		Preconditions.notNull(tags, "tags array must not be null");
 		return includeTags(asList(tags));
 	}
@@ -61,35 +62,40 @@ public final class TagFilter {
 	/**
 	 * Create an <em>include</em> filter based on the supplied {@code tags}.
 	 *
-	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}, and any
-	 * blank tag will be ignored.
+	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}.
 	 *
 	 * <p>Containers and tests will only be executed if they are tagged with
 	 * at least one of the supplied <em>included</em> tags.
 	 *
 	 * @param tags the included tags; never {@code null} or empty
+	 * @throws PreconditionViolationException if the supplied tags list is
+	 * {@code null} or empty, or if any individual tag is not syntactically
+	 * valid
 	 * @see #includeTags(String...)
+	 * @see TestTag#isValid(String)
 	 */
-	public static PostDiscoveryFilter includeTags(List<String> tags) {
+	public static PostDiscoveryFilter includeTags(List<String> tags) throws PreconditionViolationException {
 		Preconditions.notEmpty(tags, "tags list must not be null or empty");
-		Preconditions.containsNoNullElements(tags, "individual tags must not be null");
-		List<String> trimmedTags = trimmedCopyOf(tags);
-		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).anyMatch(trimmedTags::contains));
+		List<TestTag> activeTags = toTestTags(tags);
+		return descriptor -> FilterResult.includedIf(descriptor.getTags().stream().anyMatch(activeTags::contains));
 	}
 
 	/**
 	 * Create an <em>exclude</em> filter based on the supplied {@code tags}.
 	 *
-	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}, and any
-	 * blank tag will be ignored.
+	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}.
 	 *
 	 * <p>Containers and tests will only be executed if they are <em>not</em>
 	 * tagged with any of the supplied <em>excluded</em> tags.
 	 *
 	 * @param tags the excluded tags; never {@code null} or empty
+	 * @throws PreconditionViolationException if the supplied tags array is
+	 * {@code null} or empty, or if any individual tag is not syntactically
+	 * valid
 	 * @see #excludeTags(List)
+	 * @see TestTag#isValid(String)
 	 */
-	public static PostDiscoveryFilter excludeTags(String... tags) {
+	public static PostDiscoveryFilter excludeTags(String... tags) throws PreconditionViolationException {
 		Preconditions.notNull(tags, "tags array must not be null");
 		return excludeTags(asList(tags));
 	}
@@ -97,38 +103,26 @@ public final class TagFilter {
 	/**
 	 * Create an <em>exclude</em> filter based on the supplied {@code tags}.
 	 *
-	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}, and any
-	 * blank tag will be ignored.
+	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}.
 	 *
 	 * <p>Containers and tests will only be executed if they are <em>not</em>
 	 * tagged with any of the supplied <em>excluded</em> tags.
 	 *
 	 * @param tags the excluded tags; never {@code null} or empty
+	 * @throws PreconditionViolationException if the supplied tags list is
+	 * {@code null} or empty, or if any individual tag is not syntactically
+	 * valid
 	 * @see #excludeTags(String...)
+	 * @see TestTag#isValid(String)
 	 */
-	public static PostDiscoveryFilter excludeTags(List<String> tags) {
+	public static PostDiscoveryFilter excludeTags(List<String> tags) throws PreconditionViolationException {
 		Preconditions.notEmpty(tags, "tags list must not be null or empty");
-		Preconditions.containsNoNullElements(tags, "individual tags must not be null");
-		List<String> trimmedTags = trimmedCopyOf(tags);
-		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).noneMatch(trimmedTags::contains));
+		List<TestTag> activeTags = toTestTags(tags);
+		return descriptor -> FilterResult.includedIf(descriptor.getTags().stream().noneMatch(activeTags::contains));
 	}
 
-	private static List<String> trimmedCopyOf(List<String> tags) {
-		// @formatter:off
-		return tags.stream()
-				.filter(StringUtils::isNotBlank)
-				.map(String::trim)
-				.collect(toList());
-		// @formatter:on
-	}
-
-	private static Stream<String> trimmedTagsOf(TestDescriptor descriptor) {
-		// @formatter:off
-		return descriptor.getTags().stream()
-				.map(TestTag::getName)
-				.filter(StringUtils::isNotBlank)
-				.map(String::trim);
-		// @formatter:on
+	private static List<TestTag> toTestTags(List<String> tags) {
+		return tags.stream().map(TestTag::create).collect(toList());
 	}
 
 }
