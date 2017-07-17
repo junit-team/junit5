@@ -12,6 +12,9 @@ package org.junit.platform.commons.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.commons.util.StringUtils.isBlank;
+import static org.junit.platform.commons.util.StringUtils.isNotBlank;
+import static org.junit.platform.commons.util.StringUtils.nullSafeToString;
 
 import org.junit.jupiter.api.Test;
 
@@ -24,24 +27,24 @@ class StringUtilsTests {
 
 	@Test
 	void blankness() {
-		assertTrue(StringUtils.isBlank(null));
-		assertTrue(StringUtils.isBlank(""));
-		assertTrue(StringUtils.isBlank(" \t\n\r"));
-		assertTrue(StringUtils.isNotBlank("."));
+		assertTrue(isBlank(null));
+		assertTrue(isBlank(""));
+		assertTrue(isBlank(" \t\n\r"));
+		assertTrue(isNotBlank("."));
 	}
 
 	@Test
-	void nullSafeToString() {
-		assertEquals("null", StringUtils.nullSafeToString(null));
-		assertEquals("", StringUtils.nullSafeToString(""));
-		assertEquals("\t", StringUtils.nullSafeToString("\t"));
-		assertEquals("foo", StringUtils.nullSafeToString("foo"));
-		assertEquals("3.14", StringUtils.nullSafeToString(Double.valueOf("3.14")));
-		assertEquals("[1, 2, 3]", StringUtils.nullSafeToString(new int[] { 1, 2, 3 }));
-		assertEquals("[a, b, c]", StringUtils.nullSafeToString(new char[] { 'a', 'b', 'c' }));
-		assertEquals("[foo, bar]", StringUtils.nullSafeToString(new String[] { "foo", "bar" }));
-		assertEquals("[34, 42]", StringUtils.nullSafeToString(new Integer[] { 34, 42 }));
-		assertEquals("[[2, 4], [3, 9]]", StringUtils.nullSafeToString(new Integer[][] { { 2, 4 }, { 3, 9 } }));
+	void nullSafeToStringChecks() {
+		assertEquals("null", nullSafeToString(null));
+		assertEquals("", nullSafeToString(""));
+		assertEquals("\t", nullSafeToString("\t"));
+		assertEquals("foo", nullSafeToString("foo"));
+		assertEquals("3.14", nullSafeToString(Double.valueOf("3.14")));
+		assertEquals("[1, 2, 3]", nullSafeToString(new int[] { 1, 2, 3 }));
+		assertEquals("[a, b, c]", nullSafeToString(new char[] { 'a', 'b', 'c' }));
+		assertEquals("[foo, bar]", nullSafeToString(new String[] { "foo", "bar" }));
+		assertEquals("[34, 42]", nullSafeToString(new Integer[] { 34, 42 }));
+		assertEquals("[[2, 4], [3, 9]]", nullSafeToString(new Integer[][] { { 2, 4 }, { 3, 9 } }));
 	}
 
 }
