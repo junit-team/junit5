@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.Filter;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassNameFilter;
-import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 
 /**
@@ -35,18 +35,16 @@ import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 public class JUnit4DiscoveryRequestResolver {
 
 	private static final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
-	private final EngineDescriptor engineDescriptor;
 	private final Logger logger;
 
-	public JUnit4DiscoveryRequestResolver(EngineDescriptor engineDescriptor, Logger logger) {
-		this.engineDescriptor = engineDescriptor;
+	public JUnit4DiscoveryRequestResolver(Logger logger) {
 		this.logger = logger;
 	}
 
-	public void resolve(EngineDiscoveryRequest discoveryRequest) {
+	public void resolveSelectors(EngineDiscoveryRequest discoveryRequest, TestDescriptor engineDescriptor) {
 		TestClassCollector collector = collectTestClasses(discoveryRequest);
 		Set<TestClassRequest> requests = filterAndConvertToTestClassRequests(discoveryRequest, collector);
-		populateEngineDescriptor(requests);
+		populateEngineDescriptor(requests, engineDescriptor);
 	}
 
 	private TestClassCollector collectTestClasses(EngineDiscoveryRequest discoveryRequest) {
@@ -78,7 +76,7 @@ public class JUnit4DiscoveryRequestResolver {
 		return collector.toRequests(classFilter.toPredicate().and(isPotentialJUnit4TestClass));
 	}
 
-	private void populateEngineDescriptor(Set<TestClassRequest> requests) {
+	private void populateEngineDescriptor(Set<TestClassRequest> requests, TestDescriptor engineDescriptor) {
 		new TestClassRequestResolver(engineDescriptor, logger).populateEngineDescriptorFrom(requests);
 	}
 }

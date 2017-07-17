@@ -49,8 +49,8 @@ class VintageDiscoveryRequestResolverTests {
 				.build();
 		// @formatter:on
 
-		JUnit4DiscoveryRequestResolver resolver = new JUnit4DiscoveryRequestResolver(engineDescriptor, logger);
-		resolver.resolve(request);
+		JUnit4DiscoveryRequestResolver resolver = new JUnit4DiscoveryRequestResolver(logger);
+		resolver.resolveSelectors(request, engineDescriptor);
 
 		assertThat(engineDescriptor.getChildren()).hasSize(1);
 
@@ -92,8 +92,8 @@ class VintageDiscoveryRequestResolverTests {
 
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 
-		JUnit4DiscoveryRequestResolver resolver = new JUnit4DiscoveryRequestResolver(engineDescriptor, logger);
-		resolver.resolve(request);
+		JUnit4DiscoveryRequestResolver resolver = new JUnit4DiscoveryRequestResolver(logger);
+		resolver.resolveSelectors(request, engineDescriptor);
 
 		assertThat(engineDescriptor.getChildren()).isEmpty();
 		assertThat(logger.getLogRecords()).isEmpty();
