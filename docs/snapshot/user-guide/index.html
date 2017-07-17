@@ -6424,6 +6424,32 @@ constructor with a <code>source</code> argument that can be used instead.</p>
 <p>The <code>findAnnotation()</code> method in <code>AnnotationSupport</code> now searches on interfaces
 implemented by a class if the supplied element is a class.</p>
 </li>
+<li>
+<p>The following methods of <code>org.junit.platform.commons.util.ReflectionUtils</code> are now
+exposed via <code>org.junit.platform.commons.support.ReflectionSupport</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>public static Optional&lt;Class&lt;?&gt;&gt; loadClass(String name)</code></p>
+</li>
+<li>
+<p><code>public static Optional&lt;Method&gt; findMethod(Class&lt;?&gt; clazz, String methodName, String parameterTypeNames)</code></p>
+</li>
+<li>
+<p><code>public static Optional&lt;Method&gt; findMethod(Class&lt;?&gt; clazz, String methodName, Class&lt;?&gt;&#8230;&#8203; parameterTypes)</code></p>
+</li>
+<li>
+<p><code>public static &lt;T&gt; T newInstance(Class&lt;T&gt; clazz, Object&#8230;&#8203; args)</code></p>
+</li>
+<li>
+<p><code>public static Object invokeMethod(Method method, Object target, Object&#8230;&#8203; args)</code></p>
+</li>
+<li>
+<p><code>public static List&lt;Class&lt;?&gt;&gt; findNestedClasses(Class&lt;?&gt; clazz, Predicate&lt;Class&lt;?&gt;&gt; predicate)</code></p>
+</li>
+</ul>
+</div>
+</li>
 </ul>
 </div>
 </div>
@@ -6530,7 +6556,7 @@ reported at all; now they are reported as dynamic tests.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-17 09:58:11 EDT
+Last updated 2017-07-17 10:57:20 EDT
 </div>
 </div>
 </body>
