@@ -47,6 +47,8 @@ on GitHub.
 
 * All tags declared via `@Tag` are now trimmed in order to remove leading and trailing
   whitespace. Furthermore, blank tags are now ignored.
+* All primitive array types (from `boolean[]` to `short[]`) are now supported as a
+  return type of static argument providing methods for parameterized tests.
 
 ===== Deprecations and Breaking Changes
 
