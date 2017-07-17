@@ -89,7 +89,11 @@ public final class ReflectionSupport {
 	 * Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
 	 * using the default {@link ClassLoader}.
 	 *
+	 * <p>See {@link ReflectionUtils#loadClass(String, ClassLoader)} for details on
+	 * support for class names for arrays.
+	 *
 	 * @param name the name of the class to load; never {@code null} or blank
+	 * @see ReflectionUtils#loadClass(String, ClassLoader)
 	 */
 	public static Optional<Class<?>> loadClass(String name) {
 		return ReflectionUtils.loadClass(name);
@@ -151,6 +155,7 @@ public final class ReflectionSupport {
 	 * @param clazz the class to instantiate; never {@code null}
 	 * @param args the arguments to pass to the constructor none of which may be {@code null}
 	 * @return the new instance
+	 * @see ReflectionUtils#newInstance(java.lang.reflect.Constructor, Object...)
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {

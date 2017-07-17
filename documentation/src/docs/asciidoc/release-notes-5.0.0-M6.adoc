@@ -39,9 +39,14 @@ on GitHub.
 * The `findAnnotation()` method in `AnnotationSupport` now searches on interfaces
   implemented by a class if the supplied element is a class.
 
-* More methods of `org.junit.platform.commons.util.ReflectionUtils` are now exposed
-  via `org.junit.platform.commons.support.ReflectionSupport`.
-
+* The following methods of `org.junit.platform.commons.util.ReflectionUtils` are now
+  exposed via `org.junit.platform.commons.support.ReflectionSupport`:
+** `public static Optional<Class<?>> loadClass(String name)`
+** `public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames)`
+** `public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes)`
+** `public static <T> T newInstance(Class<T> clazz, Object... args)`
+** `public static Object invokeMethod(Method method, Object target, Object... args)`
+** `public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate)`
 
 [[release-notes-5.0.0-m6-junit-jupiter]]
 ==== JUnit Jupiter
