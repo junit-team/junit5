@@ -19,12 +19,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotates public types within JUnit to indicate their level of stability
- * and how they are intended to be used.
+ * {@code @API} is used to annotate public types, methods, constructors, and
+ * fields within JUnit in order to indicate their level of stability and how
+ * they are intended to be used.
  *
- * <p>If the annotation is present on a type, it is considered to hold for
- * all public members of the type as well. A member is allowed to declare a
- * different {@link Usage} of lower stability.
+ * <p>If {@code @API} is present on a type, it is considered to hold for
+ * all public members of the type as well. However, a member of such an
+ * annotated type is allowed to declare a different {@link Usage} of lower
+ * stability.
  *
  * @since 1.0
  */
@@ -48,15 +50,16 @@ public @interface API {
 		Internal,
 
 		/**
-		 * Should no longer be used, might disappear in the next minor release.
+		 * Should no longer be used. Might disappear in the next minor release.
 		 */
 		Deprecated,
 
 		/**
-		 * Intended for new, experimental features where we are looking for feedback.
+		 * Intended for new, experimental features where the JUnit team is
+		 * looking for feedback.
 		 *
-		 * <p>Use with caution, might be promoted to {@code Maintained} or
-		 * {@code Stable} in the future, but might also be removed without
+		 * <p>Use with caution. Might be promoted to {@link Maintained} or
+		 * {@link Stable} in the future, but might also be removed without
 		 * prior notice.
 		 */
 		Experimental,
@@ -64,8 +67,8 @@ public @interface API {
 		/**
 		 * Intended for features that will not be changed in a backwards-
 		 * incompatible way for at least the next minor release of the current
-		 * major version. If scheduled for removal, it will be demoted to
-		 * {@code Deprecated} first.
+		 * major version. If scheduled for removal, such a feature will be
+		 * demoted to {@link Deprecated} first.
 		 */
 		Maintained,
 
@@ -73,7 +76,7 @@ public @interface API {
 		 * Intended for features that will not be changed in a backwards-
 		 * incompatible way in the current major version.
 		 */
-		Stable
+		Stable;
 
 	}
 
