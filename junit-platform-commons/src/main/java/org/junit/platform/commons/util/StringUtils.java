@@ -41,7 +41,7 @@ public final class StringUtils {
 	 * Determine if the supplied {@link String} is <em>blank</em> (i.e.,
 	 * {@code null} or consisting only of whitespace characters).
 	 *
-	 * @param str the string to check
+	 * @param str the string to check; may be {@code null}
 	 * @return {@code true} if the string is blank
 	 * @see #isNotBlank(String)
 	 */
@@ -53,12 +53,56 @@ public final class StringUtils {
 	 * Determine if the supplied {@link String} is not {@linkplain #isBlank
 	 * blank}.
 	 *
-	 * @param str the string to check
+	 * @param str the string to check; may be {@code null}
 	 * @return {@code true} if the string is not blank
 	 * @see #isBlank(String)
 	 */
 	public static boolean isNotBlank(String str) {
 		return !isBlank(str);
+	}
+
+	/**
+	 * Determine if the supplied {@link String} contains any whitespace characters.
+	 *
+	 * @param str the string to check; may be {@code null}
+	 * @return {@code true} if the string contains whitespace
+	 * @see #containsIsoControlCharacter(String)
+	 * @see Character#isWhitespace(int)
+	 */
+	public static boolean containsWhitespace(String str) {
+		if (str == null) {
+			return false;
+		}
+
+		for (int i = 0; i < str.length(); i++) {
+			if (Character.isWhitespace(str.codePointAt(i))) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Determine if the supplied {@link String} contains any ISO control characters.
+	 *
+	 * @param str the string to check; may be {@code null}
+	 * @return {@code true} if the string contains an ISO control character
+	 * @see #containsWhitespace(String)
+	 * @see Character#isISOControl(int)
+	 */
+	public static boolean containsIsoControlCharacter(String str) {
+		if (str == null) {
+			return false;
+		}
+
+		for (int i = 0; i < str.length(); i++) {
+			if (Character.isISOControl(str.codePointAt(i))) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -75,7 +119,7 @@ public final class StringUtils {
 	 * will be returned.</li>
 	 * </ul>
 	 *
-	 * @param obj the object to convert to a String
+	 * @param obj the object to convert to a String; may be {@code null}
 	 * @return a String representation of the supplied object
 	 * @see Arrays#deepToString(Object[])
 	 * @see ClassUtils#nullSafeToString(Class...)
