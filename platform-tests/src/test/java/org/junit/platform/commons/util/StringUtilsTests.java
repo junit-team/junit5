@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.StringUtils.containsIsoControlCharacter;
 import static org.junit.platform.commons.util.StringUtils.containsWhitespace;
+import static org.junit.platform.commons.util.StringUtils.doesNotContainIsoControlCharacter;
+import static org.junit.platform.commons.util.StringUtils.doesNotContainWhitespace;
 import static org.junit.platform.commons.util.StringUtils.isBlank;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 import static org.junit.platform.commons.util.StringUtils.nullSafeToString;
@@ -103,18 +105,24 @@ class StringUtilsTests {
 
 	private void shouldContainWhitespace(String str) {
 		assertTrue(containsWhitespace(str), () -> String.format("'%s' should contain whitespace", str));
+		assertFalse(doesNotContainWhitespace(str), () -> String.format("'%s' should contain whitespace", str));
 	}
 
 	private void shouldNotContainWhitespace(String str) {
+		assertTrue(doesNotContainWhitespace(str), () -> String.format("'%s' should not contain whitespace", str));
 		assertFalse(containsWhitespace(str), () -> String.format("'%s' should not contain whitespace", str));
 	}
 
 	private void shouldContainIsoControlCharacter(String str) {
 		assertTrue(containsIsoControlCharacter(str),
 			() -> String.format("'%s' should contain ISO control character", str));
+		assertFalse(doesNotContainIsoControlCharacter(str),
+			() -> String.format("'%s' should contain ISO control character", str));
 	}
 
 	private void shouldNotContainIsoControlCharacter(String str) {
+		assertTrue(doesNotContainIsoControlCharacter(str),
+			() -> String.format("'%s' should not contain ISO control character", str));
 		assertFalse(containsIsoControlCharacter(str),
 			() -> String.format("'%s' should not contain ISO control character", str));
 	}

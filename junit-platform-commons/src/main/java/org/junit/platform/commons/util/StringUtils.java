@@ -84,6 +84,20 @@ public final class StringUtils {
 	}
 
 	/**
+	 * Determine if the supplied {@link String} does not contain any whitespace
+	 * characters.
+	 *
+	 * @param str the string to check; may be {@code null}
+	 * @return {@code true} if the string does not contain whitespace
+	 * @see #containsWhitespace(String)
+	 * @see #containsIsoControlCharacter(String)
+	 * @see Character#isWhitespace(int)
+	 */
+	public static boolean doesNotContainWhitespace(String str) {
+		return !containsWhitespace(str);
+	}
+
+	/**
 	 * Determine if the supplied {@link String} contains any ISO control characters.
 	 *
 	 * @param str the string to check; may be {@code null}
@@ -103,6 +117,20 @@ public final class StringUtils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Determine if the supplied {@link String} does not contain any ISO control
+	 * characters.
+	 *
+	 * @param str the string to check; may be {@code null}
+	 * @return {@code true} if the string does not contain an ISO control character
+	 * @see #containsIsoControlCharacter(String)
+	 * @see #containsWhitespace(String)
+	 * @see Character#isISOControl(int)
+	 */
+	public static boolean doesNotContainIsoControlCharacter(String str) {
+		return !containsIsoControlCharacter(str);
 	}
 
 	/**
