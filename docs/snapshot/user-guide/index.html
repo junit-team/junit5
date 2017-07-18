@@ -6389,8 +6389,8 @@ Instead, a warning is now logged stating that such classes are excluded.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> Sixth milestone release of JUnit 5 with a focus on Java 9 compatibility and
-additional extension APIs for JUnit Jupiter.</p>
+<p><strong>Scope:</strong> Sixth milestone release of JUnit 5 with a focus on Java 9 compatibility,
+validation (e.g. tag syntax rules), and bug fixes.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -6412,13 +6412,13 @@ IntelliJ IDEA that bundles an older milestone release.
 on GitHub.</p>
 </div>
 <div class="sect3">
-<h4 id="java-9-compatibility"><a class="anchor" href="#java-9-compatibility"></a>Java 9 compatibility</h4>
+<h4 id="release-notes-5.0.0-m6-java-9-compatibility"><a class="anchor" href="#release-notes-5.0.0-m6-java-9-compatibility"></a>Java 9 Compatibility</h4>
 <div class="paragraph">
-<p>The main target of JUnit is Java 8. Therefore, it won&#8217;t ship with compiled module
-descriptors. However, since <a href="#release-notes-5.0.0-m5">milestone M5</a> each artifact
-published by JUnit 5 ships with a stable automatic module name declared in the
-JAR manifest. That allows test module authors to require well-known JUnit module
-names, like:</p>
+<p>The main runtime target of JUnit 5 is Java 8. Consequently, JUnit 5 artifacts do not ship
+with compiled module descriptors for Java 9. However, since
+<a href="#release-notes-5.0.0-m5">milestone M5</a> each artifact published by JUnit 5 ships with a
+stable <code>Automatic-Module-Name</code> declared in its JAR manifest. This allows test module
+authors to require well-known JUnit module names as in the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6428,26 +6428,26 @@ names, like:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Usually it&#8217;s sufficient to run tests on the class-path. There&#8217;s no change between
-Java 8 and 9. All command line based tools and IDEs continue to work with JUnit 5
-<em>out-of-the-box</em>&#8201;&#8212;&#8201;if they support the JUnit Platform. If your tool of choice
-does not support JUnit 5 yet, you may always resort to the <code>ConsoleLauncher</code> or
-even to the executable <code>junit-platform-console-standalone</code> all-in-one jar.</p>
+<p>It is typically sufficient to run tests on the class path: in this regard there are no
+changes between Java 8 and 9. All command-line tools and IDEs continue to work with JUnit
+5 <em>out of the box</em> as long as they support the JUnit Platform. If your tool of choice
+does not yet support the JUnit Platform, you may always resort to the <code>ConsoleLauncher</code>
+or even to the executable <code>junit-platform-console-standalone</code> all-in-one jar.</p>
 </div>
 <div class="paragraph">
-<p>Running JUnit Jupiter tests on the module path is implemented by <strong>pro</strong>, a Java 9
-compatible build tool. It&#8217;s available at <a href="https://github.com/forax/pro" class="bare">https://github.com/forax/pro</a></p>
+<p>Running JUnit Jupiter tests on the module path is implemented by
+<a href="https://github.com/forax/pro">pro</a>, a Java 9 compatible build tool.</p>
 </div>
 <div class="paragraph">
-<p><strong>pro</strong> supports black-box and white-box testing. The former is used by module
-surface tests that only access the exported bits of the application modules.
-The latter is using a module descriptor merge-technique allowing access to
-<code>protected</code> and package-private types as well as not exported packages.</p>
+<p><strong>pro</strong> supports both black-box and white-box testing. The former is used by module surface
+tests that only access the exported bits of the application modules. The latter uses a
+merged module descriptor technique that allows access to <code>protected</code> and package-private
+types as well as non-exported packages.</p>
 </div>
 <div class="paragraph">
-<p>See <a href="https://github.com/forax/pro/tree/master/src/test/java" class="bare">https://github.com/forax/pro/tree/master/src/test/java</a> for test module
-examples: <code>integration.pro</code> is a black-box module, <code>com.github.forax.pro.api</code>
-and <code>com.github.forax.pro.helper</code> are white-box test modules.</p>
+<p>Consult the <a href="https://github.com/forax/pro/tree/master/src/test/java">pro GitHub repository</a>
+for test module examples: <code>integration.pro</code> is a black-box test module; whereas,
+<code>com.github.forax.pro.api</code> and <code>com.github.forax.pro.helper</code> are white-box test modules.</p>
 </div>
 </div>
 <div class="sect3">
@@ -6652,7 +6652,7 @@ reported at all; now they are reported as dynamic tests.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-18 14:45:36 EDT
+Last updated 2017-07-18 15:13:15 EDT
 </div>
 </div>
 </body>
