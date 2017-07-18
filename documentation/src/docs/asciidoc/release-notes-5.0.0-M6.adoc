@@ -1,7 +1,7 @@
 [[release-notes-5.0.0-m6]]
 === 5.0.0-M6
 
-*Date of Release:* ❓
+*Date of Release:* July 18, 2017
 
 *Scope:* Sixth milestone release of JUnit 5 with a focus on Java 9 compatibility,
 validation (e.g. tag syntax rules), and bug fixes.
@@ -133,11 +133,3 @@ for test module examples: `integration.pro` is a black-box test module; whereas,
 * Added support for `Runners` that report events for tests not part of the `Description`
   tree such as Spock's `Sputnik` when used with `@Unroll`. Previously, such tests were not
   reported at all; now they are reported as dynamic tests.
-
-===== Deprecations and Breaking Changes
-
-* ❓
-
-===== New Features and Improvements
-
-* ❓
