@@ -3,8 +3,8 @@
 
 *Date of Release:* ❓
 
-*Scope:* Sixth milestone release of JUnit 5 with a focus on Java 9 compatibility and
-additional extension APIs for JUnit Jupiter.
+*Scope:* Sixth milestone release of JUnit 5 with a focus on Java 9 compatibility,
+validation (e.g. tag syntax rules), and bug fixes.
 
 WARNING: This is a milestone release and contains breaking changes. Please refer to the
 <<running-tests-ide-intellij-idea,instructions>> above to use this version in a version of
@@ -14,13 +14,15 @@ For a complete list of all _closed_ issues and pull requests for this release, c
 link:{junit5-repo}+/milestone/11?closed=1+[5.0 M6] milestone page in the JUnit repository
 on GitHub.
 
-==== Java 9 compatibility
 
-The main target of JUnit is Java 8. Therefore, it won't ship with compiled module
-descriptors. However, since <<release-notes-5.0.0-m5,milestone M5>> each artifact
-published by JUnit 5 ships with a stable automatic module name declared in the
-JAR manifest. That allows test module authors to require well-known JUnit module
-names, like:
+[[release-notes-5.0.0-m6-java-9-compatibility]]
+==== Java 9 Compatibility
+
+The main runtime target of JUnit 5 is Java 8. Consequently, JUnit 5 artifacts do not ship
+with compiled module descriptors for Java 9. However, since
+<<release-notes-5.0.0-m5,milestone M5>> each artifact published by JUnit 5 ships with a
+stable `Automatic-Module-Name` declared in its JAR manifest. This allows test module
+authors to require well-known JUnit module names as in the following example.
 
 ```
 module foo.bar {
@@ -28,23 +30,24 @@ module foo.bar {
 }
 ```
 
-Usually it's sufficient to run tests on the class-path. There's no change between
-Java 8 and 9. All command line based tools and IDEs continue to work with JUnit 5
-_out-of-the-box_ -- if they support the JUnit Platform. If your tool of choice
-does not support JUnit 5 yet, you may always resort to the `ConsoleLauncher` or
-even to the executable `junit-platform-console-standalone` all-in-one jar.
+It is typically sufficient to run tests on the class path: in this regard there are no
+changes between Java 8 and 9. All command-line tools and IDEs continue to work with JUnit
+5 _out of the box_ as long as they support the JUnit Platform. If your tool of choice
+does not yet support the JUnit Platform, you may always resort to the `ConsoleLauncher`
+or even to the executable `junit-platform-console-standalone` all-in-one jar.
 
-Running JUnit Jupiter tests on the module path is implemented by *pro*, a Java 9
-compatible build tool. It's available at https://github.com/forax/pro
+Running JUnit Jupiter tests on the module path is implemented by
+https://github.com/forax/pro[pro], a Java 9 compatible build tool.
 
-*pro* supports black-box and white-box testing. The former is used by module
-surface tests that only access the exported bits of the application modules.
-The latter is using a module descriptor merge-technique allowing access to
-`protected` and package-private types as well as not exported packages.
+*pro* supports both black-box and white-box testing. The former is used by module surface
+tests that only access the exported bits of the application modules. The latter uses a
+merged module descriptor technique that allows access to `protected` and package-private
+types as well as non-exported packages.
 
-See https://github.com/forax/pro/tree/master/src/test/java for test module
-examples: `integration.pro` is a black-box module, `com.github.forax.pro.api`
-and `com.github.forax.pro.helper` are white-box test modules.
+Consult the https://github.com/forax/pro/tree/master/src/test/java[pro GitHub repository]
+for test module examples: `integration.pro` is a black-box test module; whereas,
+`com.github.forax.pro.api` and `com.github.forax.pro.helper` are white-box test modules.
+
 
 [[release-notes-5.0.0-m6-junit-platform]]
 ==== JUnit Platform
