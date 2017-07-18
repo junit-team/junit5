@@ -2,7 +2,7 @@
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-The project is currently in _Phase 5_, working toward additional [_milestone_](https://github.com/junit-team/junit5/milestones) releases.
+The project is currently in _Phase 6_, working toward a [_release candidate_](https://github.com/junit-team/junit5/milestone/9).
 
 [JUnit 5.0.0-M6](https://github.com/junit-team/junit5/releases/tag/r5.0.0-M6)
 was released on July 18, 2017.
