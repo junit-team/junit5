@@ -16,7 +16,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.gradle.build-scan' version '1.7.4'
+	id 'com.gradle.build-scan' version '1.8'
 	id 'net.nemerosa.versioning' version '2.6.0'
 }
 
@@ -583,7 +583,7 @@ configure(rootProject) {
 
 	task wrapper(type: Wrapper) {
 		description = 'Generates gradlew and gradlew.bat scripts'
-		gradleVersion = '4.0'
+		gradleVersion = '4.0.1'
 	}
 
 }
