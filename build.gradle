@@ -1,4 +1,5 @@
-import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 buildscript {
 	repositories {
@@ -26,7 +27,7 @@ buildScan {
 }
 
 
-Date buildTimeAndDate = new Date()
+def buildTimeAndDate = OffsetDateTime.now()
 ext {
 	// Generate JAR manifest only if code was compiled or recompiled;
 	// otherwise the junitPlatformTest task will always be executed even if
@@ -34,8 +35,8 @@ ext {
 	// the buildDate and buildTime causes JAR manifests to be modified
 	// which triggers unnecessary rebuilding of the dependent JARs.
 	generateManifest = false
-	buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
-	buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+	buildDate = DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate)
+	buildTime = DateTimeFormatter.ofPattern('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 	buildRevision = versioning.info.commit
 	builtByValue = project.hasProperty('builtBy') ? project.builtBy : project.defaultBuiltBy
 
