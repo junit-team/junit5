@@ -58,8 +58,8 @@ public @interface API {
 		 * Intended for new, experimental features where the JUnit team is
 		 * looking for feedback.
 		 *
-		 * <p>Use with caution. Might be promoted to {@link Maintained} or
-		 * {@link Stable} in the future, but might also be removed without
+		 * <p>Use with caution. Might be promoted to {@link #Maintained} or
+		 * {@link #Stable} in the future, but might also be removed without
 		 * prior notice.
 		 */
 		Experimental,
@@ -68,7 +68,7 @@ public @interface API {
 		 * Intended for features that will not be changed in a backwards-
 		 * incompatible way for at least the next minor release of the current
 		 * major version. If scheduled for removal, such a feature will be
-		 * demoted to {@link Deprecated} first.
+		 * demoted to {@link #Deprecated} first.
 		 */
 		Maintained,
 
