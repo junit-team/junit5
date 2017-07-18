@@ -20,7 +20,7 @@ on GitHub.
 
 The main runtime target of JUnit 5 is Java 8. Consequently, JUnit 5 artifacts do not ship
 with compiled module descriptors for Java 9. However, since
-<<release-notes-5.0.0-m5,milestone M5>> each artifact published by JUnit 5 ships with a
+<<release-notes-5.0.0-m5,milestone 5>> each artifact published by JUnit 5 ships with a
 stable `Automatic-Module-Name` declared in its JAR manifest. This allows test module
 authors to require well-known JUnit module names as in the following example.
 
