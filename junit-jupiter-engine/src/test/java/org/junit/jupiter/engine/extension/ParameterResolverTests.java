@@ -23,6 +23,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 
+import java.util.Map;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.AfterAll;
@@ -42,6 +43,7 @@ import org.junit.jupiter.engine.execution.injection.sample.CustomAnnotation;
 import org.junit.jupiter.engine.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.CustomType;
 import org.junit.jupiter.engine.execution.injection.sample.CustomTypeParameterResolver;
+import org.junit.jupiter.engine.execution.injection.sample.MapOfStringsParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.NullIntegerParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.NumberParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
@@ -166,6 +168,17 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeTestsForMethodWithExtendWithAnnotation() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(ExtendWithOnMethodTestCase.class);
+
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+	}
+
+	@Test
+	void executeTestsForParameterizedTypes() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(ParameterizedTypeTestCase.class);
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -375,4 +388,13 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	private static class ParameterizedTypeTestCase {
+
+		@Test
+		@ExtendWith(MapOfStringsParameterResolver.class)
+		void testMapOfStrings(Map<String, String> map) {
+			assertNotNull(map);
+			assertEquals("value", map.get("key"));
+		}
+	}
 }
