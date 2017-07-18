@@ -99,7 +99,7 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 				if (testIdentifier.isTest()) {
 					this.summary.testsSucceeded.incrementAndGet();
 				}
-				break;
+				return;
 			}
 
 			case ABORTED: {
@@ -109,7 +109,7 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 				if (testIdentifier.isTest()) {
 					this.summary.testsAborted.incrementAndGet();
 				}
-				break;
+				return;
 			}
 
 			case FAILED: {
@@ -121,13 +121,11 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 				}
 				testExecutionResult.getThrowable().ifPresent(
 					throwable -> this.summary.addFailure(testIdentifier, throwable));
-				break;
+				return;
 			}
-
-			default:
-				throw new PreconditionViolationException(
-					"Unsupported execution status:" + testExecutionResult.getStatus());
 		}
+
+		throw new PreconditionViolationException("Unsupported execution status:" + testExecutionResult.getStatus());
 	}
 
 }

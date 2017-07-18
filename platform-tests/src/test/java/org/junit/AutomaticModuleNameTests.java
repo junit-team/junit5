@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 
@@ -64,13 +63,13 @@ class AutomaticModuleNameTests {
 	private static List<String> moduleDirectoryNames() throws IOException {
 		// @formatter:off
 		String startOfModuleLine = "include '";
-		try (Stream<String> stream = Files.lines(Paths.get("../settings.gradle"))
-				.filter(line -> line.startsWith(startOfModuleLine))
-				.map(line -> line.substring(startOfModuleLine.length(), line.length() - 1))
-				.filter(name -> !name.equals("junit-platform-console-standalone"))
-				.filter(name -> !name.endsWith("-java-9"))
-				.filter(name -> name.startsWith("junit-"))) {
-			return stream.collect(Collectors.toList());
+		try (Stream<String> lines = Files.lines(Paths.get("../settings.gradle"))) {
+			return lines.filter(line -> line.startsWith(startOfModuleLine))
+					.map(line -> line.substring(startOfModuleLine.length(), line.length() - 1))
+					.filter(name -> !name.equals("junit-platform-console-standalone"))
+                    .filter(name -> !name.endsWith("-java-9"))
+                    .filter(name -> name.startsWith("junit-"))
+					.collect(toList());
 		}
 		// @formatter:on
 	}

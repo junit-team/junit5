@@ -69,7 +69,7 @@ class ParameterizedTestExtensionTests {
 		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContext);
 
-		//cause the stream to be evaluated
+		// cause the stream to be evaluated
 		stream.count();
 		assertTrue(streamWasClosed);
 	}
@@ -92,7 +92,7 @@ class ParameterizedTestExtensionTests {
 
 		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContextWithAnnotatedTestMethod);
-		//cause the stream to be evaluated
+		// cause the stream to be evaluated
 		stream.toArray();
 		JUnitException exception = assertThrows(JUnitException.class, stream::close);
 

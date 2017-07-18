@@ -44,9 +44,8 @@ enum Color {
 				return Color.ABORTED;
 			case FAILED:
 				return Color.FAILED;
-			default:
-				return Color.NONE;
 		}
+		return Color.NONE;
 	}
 
 	static Color valueOf(TestIdentifier testIdentifier) {

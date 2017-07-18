@@ -1043,6 +1043,8 @@ class ReflectionUtilsTests {
 
 		<T> int foo(T t);
 
+		// a T with no relation to the int parameter is returned for testing purposes
+		@SuppressWarnings("TypeParameterUnusedInFormals")
 		<T> T foo(int i);
 	}
 

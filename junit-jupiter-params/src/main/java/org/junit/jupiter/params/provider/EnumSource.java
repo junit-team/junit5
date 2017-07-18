@@ -114,7 +114,9 @@ public @interface EnumSource {
 		 */
 		MATCH_ANY(Mode::validatePatterns, (name, patterns) -> patterns.stream().anyMatch(name::matches));
 
+		@SuppressWarnings("ImmutableEnumChecker") // validators are stateless
 		private final BiConsumer<EnumSource, Set<String>> validator;
+		@SuppressWarnings("ImmutableEnumChecker") // selectors are stateless
 		private final BiPredicate<String, Set<String>> selector;
 
 		private Mode(BiConsumer<EnumSource, Set<String>> validator, BiPredicate<String, Set<String>> selector) {

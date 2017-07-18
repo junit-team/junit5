@@ -12,7 +12,10 @@ buildscript {
 		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.6.0')
 		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
 		classpath('io.spring.gradle:propdeps-plugin:0.0.10.RELEASE')
-		classpath('org.ajoberstar:gradle-git-publish:0.3.2')
+        if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+            classpath('net.ltgt.gradle:gradle-errorprone-plugin:0.0.11')
+        }
+        classpath('org.ajoberstar:gradle-git-publish:0.3.2')
 		classpath('org.ajoberstar:gradle-git:1.7.2')
 		classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.1')
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
@@ -518,6 +521,79 @@ subprojects { subproj ->
 			}
 		}
 
+	}
+
+	if (JavaVersion.current() == JavaVersion.VERSION_1_8 && subproj.name != 'documentation') {
+		apply plugin: "net.ltgt.errorprone"
+
+		dependencies {
+			errorprone('com.google.errorprone:error_prone_core:2.1.0')
+			// TODO: JDK 9 fails to find any of the annotations from the package
+			// com.google.errorprone.annotations, even if they're applied to the JUnit 5 code base.
+			// Apply a select subset of them once they work properly with JDK 9.
+			optional('com.google.errorprone:error_prone_annotations:2.1.0')
+		}
+
+		def baseFlags = [
+			// enable experimental checks
+			'-XepAllDisabledChecksAsWarnings',
+
+			// generates too many false positives on constructors that call other constructors.
+			// TODO: once #939 is resolved, see if constructors can be refactored more easily
+			// to not call each other.
+			'-Xep:ConstructorLeaksThis:OFF',
+
+			// This check is very experimental and prone to fail
+			'-Xep:FieldMissingNullable:OFF',
+
+			// adds a lot of churn for not a lot of gain
+			'-Xep:InconsistentOverloads:OFF',
+
+			// TODO: turning this check on and applying @com.google.errorprone.annotations.Immutable
+			// to immutable classes causes JDK 9 to fail to compile; investigate and consider
+			// turning it on when it no longer fails
+			'-Xep:Immutable:OFF',
+
+			// adds a lot of churn for not a lot of gain
+			'-Xep:MethodCanBeStatic:OFF',
+
+			// we declare redundant `throws <general-exception>, <more-specific-exception>` for
+			// maintainability
+			'-Xep:RedundantThrows:OFF',
+
+			// we don't use @Nullable
+			'-Xep:ReturnMissingNullable:OFF',
+
+			// we target Java 8, not Android
+			'-Xep:StaticOrDefaultInterfaceMethod:OFF',
+
+			// we declare `throws <unchecked-exception>` for maintainability
+			'-Xep:ThrowsUncheckedException:OFF',
+
+			// we do not follow the Google Java Style Guide
+			'-Xep:UngroupedOverloads:OFF',
+
+			// TODO: turning this check on and applying @com.google.errorprone.annotations.Var to
+			// non-final variables causes JDK 9 to fail to compile; investigate and consider turning
+			// it on when it no longer fails
+			'-Xep:Var:OFF'
+		]
+		def testFlags = baseFlags + [
+			'-Xep:ClassCanBeStatic:OFF',
+			'-Xep:ConstantField:OFF',
+			'-Xep:ConstructorInvokesOverridable:OFF',
+			'-Xep:EqualsHashCode:OFF',
+			'-Xep:MultipleTopLevelClasses:OFF',
+			'-Xep:PrivateConstructorForUtilityClass:OFF',
+			'-Xep:ReturnValueIgnored:OFF'
+		]
+
+		compileJava {
+			options.compilerArgs += baseFlags
+		}
+		compileTestJava {
+			options.compilerArgs += testFlags
+		}
 	}
 
 	spotless {

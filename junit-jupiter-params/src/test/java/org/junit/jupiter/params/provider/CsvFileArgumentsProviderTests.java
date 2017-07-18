@@ -50,7 +50,7 @@ class CsvFileArgumentsProviderTests {
 	@Test
 	void closesInputStream() {
 		AtomicBoolean closed = new AtomicBoolean(false);
-		InputStream inputStream = new ByteArrayInputStream("foo".getBytes()) {
+		InputStream inputStream = new ByteArrayInputStream("foo".getBytes(UTF_8)) {
 
 			@Override
 			public void close() throws IOException {
