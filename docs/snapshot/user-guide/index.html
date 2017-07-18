@@ -1339,6 +1339,34 @@ are static methods in the <code><a href="../api/org/junit/jupiter/api/Assumption
 <p>Test classes and methods can be tagged. Those tags can later be used to filter
 <a href="#running-tests">test discovery and execution</a>.</p>
 </div>
+<div class="sect3">
+<h4 id="syntax-rules-for-tags"><a class="anchor" href="#syntax-rules-for-tags"></a>3.7.1. Syntax Rules for Tags</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>A tag must not be <code>null</code> or <em>blank</em>.</p>
+</li>
+<li>
+<p>A <em>trimmed</em> tag must not contain whitespace.</p>
+</li>
+<li>
+<p>A <em>trimmed</em> tag must not contain ISO control characters.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In the above context, "trimmed" means that leading and trailing whitespace
+characters have been removed.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Tag</span>;
@@ -1354,6 +1382,7 @@ are static methods in the <code><a href="../api/org/junit/jupiter/api/Assumption
     }
 
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1574,10 +1603,10 @@ following demonstrates how to have <code>TestInfo</code> injected into a test co
 
     <span class="annotation">@Test</span>
     <span class="annotation">@DisplayName</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">TEST 1</span><span class="delimiter">&quot;</span></span>)
-    <span class="annotation">@Tag</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">my tag</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@Tag</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">my-tag</span><span class="delimiter">&quot;</span></span>)
     <span class="type">void</span> test1(TestInfo testInfo) {
         assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">TEST 1</span><span class="delimiter">&quot;</span></span>, testInfo.getDisplayName());
-        assertTrue(testInfo.getTags().contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">my tag</span><span class="delimiter">&quot;</span></span>));
+        assertTrue(testInfo.getTags().contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">my-tag</span><span class="delimiter">&quot;</span></span>));
     }
 
     <span class="annotation">@Test</span>
@@ -6389,11 +6418,11 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>All tags are now trimmed in order to remove leading and trailing whitespace. This
+<p>All tags are now <em>trimmed</em> in order to remove leading and trailing whitespace. This
 applies to any tag supplied <em>directly</em> to the <code>Launcher</code> via <code>TagFilter.includeTags()</code>
 and <code>TagFilter.excludeTags()</code> or <em>indirectly</em> via <code>@IncludeTags</code>, <code>@ExcludeTags</code>, the
 JUnit Platform Console Launcher, the JUnit Platform Gradle plugin, and the JUnit
-Platform Maven Surefire provider. Furthermore, blank tags are now ignored.</p>
+Platform Maven Surefire provider.</p>
 </li>
 </ul>
 </div>
@@ -6402,6 +6431,27 @@ Platform Maven Surefire provider. Furthermore, blank tags are now ignored.</p>
 <h5 id="deprecations-and-breaking-changes-7"><a class="anchor" href="#deprecations-and-breaking-changes-7"></a>Deprecations and Breaking Changes</h5>
 <div class="ulist">
 <ul>
+<li>
+<p>All tags must now conform to the following syntax rules:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>A tag must not be <code>null</code> or <em>blank</em>.</p>
+</li>
+<li>
+<p>A <em>trimmed</em> tag must not contain whitespace.</p>
+</li>
+<li>
+<p>A <em>trimmed</em> tag must not contain ISO control characters.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>The <code>TagFilter.includeTags()</code>, <code>TagFilter.excludeTags()</code>, and <code>TestTag.create()</code>
+factory methods now throw a <code>PreconditionViolationException</code> if a supplied tag is not
+syntactically valid.</p>
+</li>
 <li>
 <p>The method <code>getDiscoveryFiltersByType</code> of <code>EngineDiscoveryRequest</code> has been renamed to
 <code>getFiltersByType</code>.</p>
@@ -6420,6 +6470,9 @@ constructor with a <code>source</code> argument that can be used instead.</p>
 <h5 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h5>
 <div class="ulist">
 <ul>
+<li>
+<p>New <code>TestTag.isValid(String)</code> method for checking if a tag is syntactically valid.</p>
+</li>
 <li>
 <p>The <code>findAnnotation()</code> method in <code>AnnotationSupport</code> now searches on interfaces
 implemented by a class if the supplied element is a class.</p>
@@ -6462,7 +6515,7 @@ exposed via <code>org.junit.platform.commons.support.ReflectionSupport</code>:</
 <ul>
 <li>
 <p>All tags declared via <code>@Tag</code> are now trimmed in order to remove leading and trailing
-whitespace. Furthermore, blank tags are now ignored.</p>
+whitespace.</p>
 </li>
 <li>
 <p>All primitive array types (from <code>boolean[]</code> to <code>short[]</code>) are now supported as a
@@ -6510,6 +6563,10 @@ method. This helps to debug errors resulting from a method being simultaneously
 annotated with multiple competing annotations such as <code>@Test</code>, <code>@RepeatedTest</code>,
 <code>@ParameterizedTest</code>, <code>@TestFactory</code>, etc.</p>
 </li>
+<li>
+<p><code>@Tag</code> declarations containing invalid tag syntax will now be logged as a warning but
+effectively ignored.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -6556,7 +6613,7 @@ reported at all; now they are reported as dynamic tests.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-18 02:14:35 EDT
+Last updated 2017-07-17 15:22:11 EDT
 </div>
 </div>
 </body>
