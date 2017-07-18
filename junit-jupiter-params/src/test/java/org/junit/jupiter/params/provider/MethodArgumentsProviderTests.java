@@ -159,7 +159,6 @@ class MethodArgumentsProviderTests {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	static class TestCase {
 
 		static AtomicBoolean collectionStreamClosed = new AtomicBoolean(false);
