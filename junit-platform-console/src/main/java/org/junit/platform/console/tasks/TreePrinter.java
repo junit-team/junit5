@@ -10,7 +10,6 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.console.tasks.Color.CONTAINER;
 import static org.junit.platform.console.tasks.Color.FAILED;
@@ -24,7 +23,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
@@ -34,7 +32,6 @@ import org.junit.platform.engine.reporting.ReportEntry;
 /**
  * @since 1.0
  */
-@API(Internal)
 class TreePrinter {
 
 	private final PrintWriter out;

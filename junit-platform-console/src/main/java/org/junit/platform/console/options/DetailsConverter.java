@@ -10,16 +10,11 @@
 
 package org.junit.platform.console.options;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-
 import joptsimple.util.EnumConverter;
-
-import org.junit.platform.commons.meta.API;
 
 /**
  * @since 1.0
  */
-@API(Internal)
 class DetailsConverter extends EnumConverter<Details> {
 
 	DetailsConverter() {

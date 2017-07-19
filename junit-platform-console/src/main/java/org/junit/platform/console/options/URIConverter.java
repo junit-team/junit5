@@ -17,6 +17,9 @@ import java.text.MessageFormat;
 import joptsimple.ValueConversionException;
 import joptsimple.ValueConverter;
 
+/**
+ * @since 1.0
+ */
 class URIConverter implements ValueConverter<URI> {
 
 	@Override

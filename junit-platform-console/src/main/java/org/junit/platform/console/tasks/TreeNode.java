@@ -10,14 +10,11 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
@@ -25,8 +22,8 @@ import org.junit.platform.launcher.TestIdentifier;
 /**
  * @since 1.0
  */
-@API(Internal)
 class TreeNode {
+
 	private final String caption;
 	private final long creation;
 	long duration;
