@@ -21,6 +21,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+/**
+ * @since 1.0
+ */
 class ClassFileVisitor extends SimpleFileVisitor<Path> {
 
 	private static final Logger LOG = Logger.getLogger(ClassFileVisitor.class.getName());

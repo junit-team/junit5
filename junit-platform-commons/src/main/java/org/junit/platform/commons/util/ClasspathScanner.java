@@ -14,7 +14,6 @@ import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.commons.util.ClassFileVisitor.CLASS_FILE_SUFFIX;
 
@@ -36,8 +35,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import org.junit.platform.commons.meta.API;
-
 /**
  * <h3>DISCLAIMER</h3>
  *
@@ -47,7 +44,6 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(Internal)
 class ClasspathScanner {
 
 	private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
