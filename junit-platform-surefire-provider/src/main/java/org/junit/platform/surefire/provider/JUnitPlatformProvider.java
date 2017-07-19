@@ -16,6 +16,7 @@
 
 package org.junit.platform.surefire.provider;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -36,6 +37,7 @@ import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
+import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
@@ -46,6 +48,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
 /**
  * @since 1.0
  */
+@API(Experimental)
 public class JUnitPlatformProvider extends AbstractProvider {
 
 	// Parameter names processed to determine which @Tags should be executed.
