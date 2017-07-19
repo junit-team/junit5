@@ -523,16 +523,15 @@ public final class ReflectionUtils {
 	 *
 	 * @param clazz the class that declares the method; never {@code null}
 	 * @param methodName the name of the method; never {@code null} or blank
-	 * @param params the parameter types of the method; may be {@code null} or empty
+	 * @param parameterTypes the parameter types of the method; may be {@code null} or empty
 	 * @return fully qualified method name; never {@code null}
 	 * @see #loadMethod(String)
 	 */
-	public static String getFullyQualifiedMethodName(Class<?> clazz, String methodName, Class<?>... params) {
+	public static String getFullyQualifiedMethodName(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		Preconditions.notNull(params, "params must not be null");
 
-		return String.format("%s#%s(%s)", clazz.getName(), methodName, ClassUtils.nullSafeToString(params));
+		return String.format("%s#%s(%s)", clazz.getName(), methodName, ClassUtils.nullSafeToString(parameterTypes));
 	}
 
 	/**
