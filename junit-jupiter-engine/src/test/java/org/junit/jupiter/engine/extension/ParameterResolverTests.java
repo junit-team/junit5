@@ -16,13 +16,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -30,6 +33,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,6 +52,7 @@ import org.junit.jupiter.engine.execution.injection.sample.NullIntegerParameterR
 import org.junit.jupiter.engine.execution.injection.sample.NumberParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveIntegerParameterResolver;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 /**
@@ -177,9 +182,30 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void executeTestsForParameterizedTypes() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(ParameterizedTypeTestCase.class);
+	void executeTestsForParameterizedTypesSelectingByClass() {
+		assertEventsForParameterizedTypes(executeTestsForClass(ParameterizedTypeTestCase.class));
+	}
 
+	@Test
+	void executeTestsForParameterizedTypesSelectingByFullyQualifiedMethodName() {
+		String fqmn = ReflectionUtils.getFullyQualifiedMethodName(ParameterizedTypeTestCase.class, "testMapOfStrings",
+			Map.class);
+
+		assertEventsForParameterizedTypes(executeTests(request().selectors(selectMethod(fqmn)).build()));
+	}
+
+	@Disabled("Disabled until a decision has been made regarding #956")
+	@Test
+	void executeTestsForParameterizedTypesSelectingByFullyQualifiedMethodNameContainingGenericInfo() throws Exception {
+		Method method = ParameterizedTypeTestCase.class.getDeclaredMethod("testMapOfStrings", Map.class);
+		String genericParameterTypeName = method.getGenericParameterTypes()[0].getTypeName();
+		String fqmn = String.format("%s#%s(%s)", ParameterizedTypeTestCase.class.getName(), "testMapOfStrings",
+			genericParameterTypeName);
+
+		assertEventsForParameterizedTypes(executeTests(request().selectors(selectMethod(fqmn)).build()));
+	}
+
+	private void assertEventsForParameterizedTypes(ExecutionEventRecorder eventRecorder) {
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
@@ -397,4 +423,5 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 			assertEquals("value", map.get("key"));
 		}
 	}
+
 }
