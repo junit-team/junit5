@@ -10,20 +10,16 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineExecutionListener;
 
 /**
  * @since 5.0
  */
-@API(Internal)
 final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTemplateTestDescriptor> {
 
 	private final Object testInstance;

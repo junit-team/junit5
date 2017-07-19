@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
-
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -20,7 +18,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -28,7 +25,6 @@ import org.junit.platform.engine.UniqueId;
 /**
  * @since 5.0
  */
-@API(Experimental)
 abstract class AbstractMethodResolver implements ElementResolver {
 
 	private static final MethodFinder methodFinder = new MethodFinder();

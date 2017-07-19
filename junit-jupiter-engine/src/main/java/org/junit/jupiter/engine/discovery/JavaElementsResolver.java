@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.discovery;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.findNestedClasses;
 
@@ -31,7 +30,6 @@ import java.util.logging.Logger;
 
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -39,7 +37,6 @@ import org.junit.platform.engine.UniqueId;
 /**
  * @since 5.0
  */
-@API(Experimental)
 class JavaElementsResolver {
 
 	private static final Logger LOG = Logger.getLogger(JavaElementsResolver.class.getName());

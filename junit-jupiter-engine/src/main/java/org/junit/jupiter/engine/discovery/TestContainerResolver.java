@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
-
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collections;
 import java.util.Optional;
@@ -19,7 +17,6 @@ import java.util.Set;
 
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsPotentialTestContainer;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -27,7 +24,6 @@ import org.junit.platform.engine.UniqueId;
 /**
  * @since 5.0
  */
-@API(Experimental)
 class TestContainerResolver implements ElementResolver {
 
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
@@ -36,12 +32,14 @@ class TestContainerResolver implements ElementResolver {
 
 	@Override
 	public Set<TestDescriptor> resolveElement(AnnotatedElement element, TestDescriptor parent) {
-		if (!(element instanceof Class))
+		if (!(element instanceof Class)) {
 			return Collections.emptySet();
+		}
 
 		Class<?> clazz = (Class<?>) element;
-		if (!isPotentialCandidate(clazz))
+		if (!isPotentialCandidate(clazz)) {
 			return Collections.emptySet();
+		}
 
 		UniqueId uniqueId = createUniqueId(clazz, parent);
 		return Collections.singleton(resolveClass(clazz, uniqueId));
@@ -50,21 +48,25 @@ class TestContainerResolver implements ElementResolver {
 	@Override
 	public Optional<TestDescriptor> resolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
 
-		if (!segment.getType().equals(getSegmentType()))
+		if (!segment.getType().equals(getSegmentType())) {
 			return Optional.empty();
+		}
 
-		if (!requiredParentType().isInstance(parent))
+		if (!requiredParentType().isInstance(parent)) {
 			return Optional.empty();
+		}
 
 		String className = getClassName(parent, segment.getValue());
 
 		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(className);
-		if (!optionalContainerClass.isPresent())
+		if (!optionalContainerClass.isPresent()) {
 			return Optional.empty();
+		}
 
 		Class<?> containerClass = optionalContainerClass.get();
-		if (!isPotentialCandidate(containerClass))
+		if (!isPotentialCandidate(containerClass)) {
 			return Optional.empty();
+		}
 
 		UniqueId uniqueId = createUniqueId(containerClass, parent);
 		return Optional.of(resolveClass(containerClass, uniqueId));

@@ -10,12 +10,9 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -24,7 +21,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 5.0
  */
-@API(Internal)
 class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestMethod isTestMethod = new IsTestMethod();

@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
@@ -21,12 +20,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import org.junit.platform.commons.meta.API;
-
 /**
  * @since 5.0
  */
-@API(Internal)
 abstract class IsTestableMethod implements Predicate<Method> {
 
 	private final Class<? extends Annotation> annotationType;

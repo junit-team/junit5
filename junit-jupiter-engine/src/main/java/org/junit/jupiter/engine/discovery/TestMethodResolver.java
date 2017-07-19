@@ -10,14 +10,11 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
-
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -32,7 +29,6 @@ import org.junit.platform.engine.UniqueId;
  * @see Test
  * @see TestMethodTestDescriptor
  */
-@API(Experimental)
 class TestMethodResolver extends AbstractMethodResolver {
 
 	private static final Predicate<Method> isTestMethod = new IsTestMethod();
