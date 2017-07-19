@@ -61,10 +61,10 @@ class AutomaticModuleNameTests {
 
 	static Stream<String> moduleDirectoryNames() throws IOException {
 		// @formatter:off
-		return Files.walk(Paths.get(".."), 1)
-				.filter(Files::isDirectory)
-				.map(Path::getFileName)
-				.map(Object::toString)
+		String startOfModuleLine = "include '";
+		return Files.lines(Paths.get("../settings.gradle"))
+				.filter(line -> line.startsWith(startOfModuleLine))
+				.map(line -> line.substring(startOfModuleLine.length(), line.length() - 1))
 				.filter(name -> !name.equals("junit-platform-console-standalone"))
 				.filter(name -> name.startsWith("junit-"));
 		// @formatter:on
