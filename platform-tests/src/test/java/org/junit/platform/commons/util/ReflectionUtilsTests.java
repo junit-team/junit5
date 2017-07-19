@@ -34,6 +34,7 @@ import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,6 +42,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
 import org.junit.jupiter.extensions.TempDirectory.Root;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
@@ -636,6 +638,22 @@ class ReflectionUtilsTests {
 		assertFindMethodByParameterNames("methodWithMultidimensionalObjectArray", Double[][][][][].class);
 	}
 
+	@Test
+	void findMethodByParameterNamesWithParameterizedMapParameter() throws Exception {
+		String methodName = "methodWithParameterizedMap";
+
+		// standard, supported use case
+		assertFindMethodByParameterNames(methodName, Map.class);
+
+		// generic type info in parameter list
+		Method method = getClass().getDeclaredMethod(methodName, Map.class);
+		String genericParameterTypeName = method.getGenericParameterTypes()[0].getTypeName();
+		JUnitException exception = assertThrows(JUnitException.class,
+			() -> ReflectionUtils.findMethod(getClass(), methodName, genericParameterTypeName));
+
+		assertThat(exception).hasMessageStartingWith("Failed to load parameter type [java.util.Map<java.lang.String");
+	}
+
 	private void assertFindMethodByParameterNames(String methodName, Class<?> parameterType)
 			throws NoSuchMethodException {
 
@@ -875,6 +893,9 @@ class ReflectionUtilsTests {
 	}
 
 	void methodWithMultidimensionalObjectArray(Double[][][][][] data) {
+	}
+
+	void methodWithParameterizedMap(Map<String, String> map) {
 	}
 
 	interface Generic<X, Y, Z extends X> {
