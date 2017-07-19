@@ -36,7 +36,7 @@ in case the DoD is met.
 
 Please add the following lines to your pull request description:
 
-```markdown
+```
 ---
 
 I hereby agree to the terms of the JUnit Contributor License Agreement.
