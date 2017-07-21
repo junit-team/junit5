@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
@@ -614,6 +615,23 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	void findMethodByParameterTypesInGenericInterface() {
+		Optional<Method> method = ReflectionUtils.findMethod(InterfaceWithGenericDefaultMethod.class, "foo",
+			Number.class);
+		assertThat(method).isNotEmpty();
+		assertThat(method.get().getName()).isEqualTo("foo");
+	}
+
+	@Disabled("Disabled until #969 is resolved")
+	@Test
+	void findMethodByParameterTypesInGenericInterfaceViaParameterizedSubclass() {
+		Optional<Method> method = ReflectionUtils.findMethod(InterfaceWithGenericDefaultMethodImpl.class, "foo",
+			Long.class);
+		assertThat(method).isNotEmpty();
+		assertThat(method.get().getName()).isEqualTo("foo");
+	}
+
+	@Test
 	void findMethodByParameterNamesWithPrimitiveArrayParameter() throws Exception {
 		assertFindMethodByParameterNames("methodWithPrimitiveArray", int[].class);
 	}
@@ -930,6 +948,15 @@ class ReflectionUtilsTests {
 	}
 
 	static class InterfaceWithDefaultMethodImpl implements InterfaceWithDefaultMethod {
+	}
+
+	interface InterfaceWithGenericDefaultMethod<N extends Number> {
+
+		default void foo(N number) {
+		}
+	}
+
+	static class InterfaceWithGenericDefaultMethodImpl implements InterfaceWithGenericDefaultMethod<Long> {
 	}
 
 	interface InterfaceWithStaticMethod {

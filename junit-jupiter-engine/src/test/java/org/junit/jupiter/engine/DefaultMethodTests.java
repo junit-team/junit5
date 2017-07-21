@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,7 +19,11 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
@@ -33,6 +38,12 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	private static boolean beforeAllInvoked = false;
 	private static boolean afterAllInvoked = false;
 
+	@BeforeEach
+	void resetFlags() {
+		beforeAllInvoked = false;
+		afterAllInvoked = false;
+	}
+
 	@Test
 	void executeTestCaseWithDefaultMethodFromInterfaceSelectedByFullyQualifedMethodName() {
 		String fqmn = TestCaseWithDefaultMethod.class.getName() + "#test";
@@ -41,11 +52,34 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 
 		// @formatter:off
 		assertAll(
+				() -> assertTrue(beforeAllInvoked, "@BeforeAll static method invoked from interface"),
+				() -> assertTrue(afterAllInvoked, "@AfterAll static method invoked from interface"),
 				() -> assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started"),
 				() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed"),
-				() -> assertTrue(beforeAllInvoked, "@BeforeAll invoked from interface"),
-				() -> assertTrue(afterAllInvoked, "@AfterAll invoked from interface")
+				() -> assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed")
+		);
+		// @formatter:on
+	}
+
+	@Disabled("Disabled until #969 is resolved")
+	//
+	// Note: we currently get an exception like the following:
+	// org.junit.platform.commons.util.PreconditionViolationException:
+	// Could not find method with name [test] and parameter types [java.lang.Long]
+	// in class [org.junit.jupiter.engine.DefaultMethodTests$GenericTestCaseWithDefaultMethod].
+	@Test
+	void executeTestCaseWithDefaultMethodFromGenericInterfaceSelectedByFullyQualifedMethodName() throws Exception {
+		String fqmn = GenericTestCaseWithDefaultMethod.class.getName() + "#test(" + Long.class.getName() + ")";
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		// @formatter:off
+		assertAll(
+				() -> assertTrue(beforeAllInvoked, "@BeforeAll default method invoked from interface"),
+				() -> assertTrue(afterAllInvoked, "@AfterAll default method invoked from interface"),
+				() -> assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started"),
+				() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed")
 		);
 		// @formatter:on
 	}
@@ -69,6 +103,29 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	}
 
 	static class TestCaseWithDefaultMethod implements TestInterface {
+	}
+
+	@TestInstance(Lifecycle.PER_CLASS)
+	interface GenericTestInterface<N extends Number> {
+
+		@BeforeAll
+		default void beforeAll() {
+			beforeAllInvoked = true;
+		}
+
+		@Test
+		default void test(N number) {
+			assertThat(number.intValue()).isGreaterThan(99);
+		}
+
+		@AfterAll
+		default void afterAll() {
+			afterAllInvoked = true;
+		}
+
+	}
+
+	static class GenericTestCaseWithDefaultMethod implements GenericTestInterface<Long> {
 	}
 
 }
