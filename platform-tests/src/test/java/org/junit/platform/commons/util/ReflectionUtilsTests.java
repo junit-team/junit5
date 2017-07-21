@@ -622,6 +622,7 @@ class ReflectionUtilsTests {
 		assertThat(method.get().getName()).isEqualTo("foo");
 	}
 
+	// TODO [#969] Enable and complete @Disabled test.
 	@Disabled("Disabled until #969 is resolved")
 	@Test
 	void findMethodByParameterTypesInGenericInterfaceViaParameterizedSubclass() {

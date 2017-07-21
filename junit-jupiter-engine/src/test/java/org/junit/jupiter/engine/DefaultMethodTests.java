@@ -61,12 +61,13 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 	}
 
-	@Disabled("Disabled until #969 is resolved")
+	// TODO [#969] Enable and complete @Disabled test.
 	//
 	// Note: we currently get an exception like the following:
 	// org.junit.platform.commons.util.PreconditionViolationException:
 	// Could not find method with name [test] and parameter types [java.lang.Long]
 	// in class [org.junit.jupiter.engine.DefaultMethodTests$GenericTestCaseWithDefaultMethod].
+	@Disabled("Disabled until #969 is resolved")
 	@Test
 	void executeTestCaseWithDefaultMethodFromGenericInterfaceSelectedByFullyQualifedMethodName() throws Exception {
 		String fqmn = GenericTestCaseWithDefaultMethod.class.getName() + "#test(" + Long.class.getName() + ")";
