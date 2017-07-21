@@ -78,7 +78,7 @@ final class LifecycleMethodUtils {
 
 	private static List<Method> findMethodsAndAssertStatic(Class<?> testClass, boolean requireStatic,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
-		List<Method> methods = findMethodsAndCheckVoidReturntype(testClass, annotationType, traversalMode);
+		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
 		if (requireStatic) {
 			methods.forEach(method -> assertStatic(annotationType, method));
 		}
@@ -87,12 +87,12 @@ final class LifecycleMethodUtils {
 
 	private static List<Method> findMethodsAndAssertNonStatic(Class<?> testClass,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
-		List<Method> methods = findMethodsAndCheckVoidReturntype(testClass, annotationType, traversalMode);
+		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
 		methods.forEach(method -> assertNonStatic(annotationType, method));
 		return methods;
 	}
 
-	private static List<Method> findMethodsAndCheckVoidReturntype(Class<?> testClass,
+	private static List<Method> findMethodsAndCheckVoidReturnType(Class<?> testClass,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
 		List<Method> methods = findAnnotatedMethods(testClass, annotationType, traversalMode);
 		methods.forEach(method -> assertVoid(annotationType, method));

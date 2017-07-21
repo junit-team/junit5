@@ -23,6 +23,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -36,14 +40,60 @@ import org.junit.platform.engine.UniqueId;
  * and {@link TestMethodTestDescriptor}.
  *
  * @since 5.0
+ * @see org.junit.jupiter.engine.descriptor.LifecycleMethodUtilsTests
+ * @see org.junit.jupiter.engine.InvalidLifecycleMethodConfigurationTests
  */
 class JupiterTestDescriptorTests {
 
 	private static final UniqueId uniqueId = UniqueId.root("enigma", "foo");
 
 	@Test
+	void constructFromClass() throws Exception {
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, TestCase.class);
+
+		assertEquals(TestCase.class, descriptor.getTestClass());
+		assertThat(descriptor.getTags()).containsExactly(TestTag.create("classTag1"), TestTag.create("classTag2"));
+	}
+
+	@Test
+	void constructFromClassWithInvalidBeforeAllDeclaration() throws Exception {
+		// Note: if we can instantiate the descriptor, then the invalid configuration
+		// will not be reported during the test engine discovery phase.
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, TestCaseWithInvalidBeforeAllMethod.class);
+
+		assertEquals(TestCaseWithInvalidBeforeAllMethod.class, descriptor.getTestClass());
+	}
+
+	@Test
+	void constructFromClassWithInvalidAfterAllDeclaration() throws Exception {
+		// Note: if we can instantiate the descriptor, then the invalid configuration
+		// will not be reported during the test engine discovery phase.
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, TestCaseWithInvalidAfterAllMethod.class);
+
+		assertEquals(TestCaseWithInvalidAfterAllMethod.class, descriptor.getTestClass());
+	}
+
+	@Test
+	void constructFromClassWithInvalidBeforeEachDeclaration() throws Exception {
+		// Note: if we can instantiate the descriptor, then the invalid configuration
+		// will not be reported during the test engine discovery phase.
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, TestCaseWithInvalidBeforeEachMethod.class);
+
+		assertEquals(TestCaseWithInvalidBeforeEachMethod.class, descriptor.getTestClass());
+	}
+
+	@Test
+	void constructFromClassWithInvalidAfterEachDeclaration() throws Exception {
+		// Note: if we can instantiate the descriptor, then the invalid configuration
+		// will not be reported during the test engine discovery phase.
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, TestCaseWithInvalidAfterEachMethod.class);
+
+		assertEquals(TestCaseWithInvalidAfterEachMethod.class, descriptor.getTestClass());
+	}
+
+	@Test
 	void constructFromMethod() throws Exception {
-		Class<?> testClass = ASampleTestCase.class;
+		Class<?> testClass = TestCase.class;
 		Method testMethod = testClass.getDeclaredMethod("test");
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, testClass, testMethod);
 
@@ -54,10 +104,9 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithAnnotations() throws Exception {
-		JupiterTestDescriptor classDescriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
-		Method testMethod = ASampleTestCase.class.getDeclaredMethod("foo");
-		TestMethodTestDescriptor methodDescriptor = new TestMethodTestDescriptor(uniqueId, ASampleTestCase.class,
-			testMethod);
+		JupiterTestDescriptor classDescriptor = new ClassTestDescriptor(uniqueId, TestCase.class);
+		Method testMethod = TestCase.class.getDeclaredMethod("foo");
+		TestMethodTestDescriptor methodDescriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod);
 		classDescriptor.addChild(methodDescriptor);
 
 		assertEquals(testMethod, methodDescriptor.getTestMethod());
@@ -74,17 +123,9 @@ class JupiterTestDescriptorTests {
 	}
 
 	@Test
-	void constructClassDescriptorWithAnnotations() throws Exception {
-		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
-
-		assertEquals(ASampleTestCase.class, descriptor.getTestClass());
-		assertThat(descriptor.getTags()).containsExactly(TestTag.create("classTag1"), TestTag.create("classTag2"));
-	}
-
-	@Test
 	void constructFromMethodWithCustomTestAnnotation() throws Exception {
-		Method testMethod = ASampleTestCase.class.getDeclaredMethod("customTestAnnotation");
-		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+		Method testMethod = TestCase.class.getDeclaredMethod("customTestAnnotation");
+		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
@@ -93,8 +134,8 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithParameters() throws Exception {
-		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
-		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+		Method testMethod = TestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
+		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(String, BigDecimal)", descriptor.getDisplayName(), "display name");
@@ -102,8 +143,8 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithPrimitiveArrayParameter() throws Exception {
-		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", int[].class);
-		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+		Method testMethod = TestCase.class.getDeclaredMethod("test", int[].class);
+		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(int[])", descriptor.getDisplayName(), "display name");
@@ -111,8 +152,8 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithObjectArrayParameter() throws Exception {
-		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String[].class);
-		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+		Method testMethod = TestCase.class.getDeclaredMethod("test", String[].class);
+		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(String[])", descriptor.getDisplayName(), "display name");
@@ -120,8 +161,8 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithMultidimensionalPrimitiveArrayParameter() throws Exception {
-		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", int[][][][][].class);
-		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+		Method testMethod = TestCase.class.getDeclaredMethod("test", int[][][][][].class);
+		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(int[][][][][])", descriptor.getDisplayName(), "display name");
@@ -129,8 +170,8 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithMultidimensionalObjectArrayParameter() throws Exception {
-		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String[][][][][].class);
-		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
+		Method testMethod = TestCase.class.getDeclaredMethod("test", String[][][][][].class);
+		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(String[][][][][])", descriptor.getDisplayName(), "display name");
@@ -153,11 +194,21 @@ class JupiterTestDescriptorTests {
 		assertEquals(staticDisplayName, descriptor.getDisplayName());
 	}
 
+	// -------------------------------------------------------------------------
+
+	@Test
+	@DisplayName("custom name")
+	@Tag("  custom-tag  ")
+	@Target(ElementType.METHOD)
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface CustomTestAnnotation {
+	}
+
 	@Tag("classTag1")
 	@Tag("classTag2")
 	@DisplayName("custom class name")
 	@SuppressWarnings("unused")
-	private static class ASampleTestCase {
+	private static class TestCase {
 
 		void test() {
 		}
@@ -191,12 +242,56 @@ class JupiterTestDescriptorTests {
 
 	}
 
-	@Test
-	@DisplayName("custom name")
-	@Tag("  custom-tag  ")
-	@Target(ElementType.METHOD)
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface CustomTestAnnotation {
+	private static class TestCaseWithInvalidBeforeAllMethod {
+
+		// must be static
+		@BeforeAll
+		void beforeAll() {
+		}
+
+		@Test
+		void test() {
+		}
+
+	}
+
+	private static class TestCaseWithInvalidAfterAllMethod {
+
+		// must be static
+		@AfterAll
+		void afterAll() {
+		}
+
+		@Test
+		void test() {
+		}
+
+	}
+
+	private static class TestCaseWithInvalidBeforeEachMethod {
+
+		// must NOT be static
+		@BeforeEach
+		static void beforeEach() {
+		}
+
+		@Test
+		void test() {
+		}
+
+	}
+
+	private static class TestCaseWithInvalidAfterEachMethod {
+
+		// must NOT be static
+		@AfterEach
+		static void afterEach() {
+		}
+
+		@Test
+		void test() {
+		}
+
 	}
 
 	@Nested

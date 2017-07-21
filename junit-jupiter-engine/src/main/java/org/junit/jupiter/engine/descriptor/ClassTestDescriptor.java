@@ -67,10 +67,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private final Class<?> testClass;
 	private final Lifecycle lifecycle;
 
-	private final List<Method> beforeAllMethods;
-	private final List<Method> afterAllMethods;
-	private final List<Method> beforeEachMethods;
-	private final List<Method> afterEachMethods;
+	private List<Method> beforeAllMethods;
+	private List<Method> afterAllMethods;
+	private List<Method> beforeEachMethods;
+	private List<Method> afterEachMethods;
 
 	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
 		this(uniqueId, ClassTestDescriptor::generateDefaultDisplayName, testClass);
@@ -84,11 +84,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		this.testClass = testClass;
 		this.lifecycle = getTestInstanceLifecycle(testClass);
-
-		this.beforeAllMethods = findBeforeAllMethods(testClass, this.lifecycle == Lifecycle.PER_METHOD);
-		this.afterAllMethods = findAfterAllMethods(testClass, this.lifecycle == Lifecycle.PER_METHOD);
-		this.beforeEachMethods = findBeforeEachMethods(testClass);
-		this.afterEachMethods = findAfterEachMethods(testClass);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -122,6 +117,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
+		this.beforeAllMethods = findBeforeAllMethods(testClass, this.lifecycle == Lifecycle.PER_METHOD);
+		this.afterAllMethods = findAfterAllMethods(testClass, this.lifecycle == Lifecycle.PER_METHOD);
+		this.beforeEachMethods = findBeforeEachMethods(testClass);
+		this.afterEachMethods = findAfterEachMethods(testClass);
+
 		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.testClass,
 			context.getExtensionRegistry());
 

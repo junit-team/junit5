@@ -33,7 +33,10 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* Configuration errors regarding lifecycle methods annotated with `@BeforeAll`,
+  `@AfterAll`, `BeforeEach`, or `@AfterEach` no longer halt the execution of the entire
+  test plan during the discovery phase. Rather, such errors are now reported during the
+  execution of the affected test class.
 
 ===== Deprecations and Breaking Changes
 

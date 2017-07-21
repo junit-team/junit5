@@ -90,20 +90,20 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 		return getExecutionEvents().stream();
 	}
 
-	public long getTestSkippedCount() {
-		return testEventsByType(SKIPPED).count();
-	}
-
-	public long getTestStartedCount() {
-		return testEventsByType(STARTED).count();
-	}
-
 	public long getReportingEntryPublishedCount() {
 		return testEventsByType(REPORTING_ENTRY_PUBLISHED).count();
 	}
 
 	public long getDynamicTestRegisteredCount() {
 		return eventsByTypeAndTestDescriptor(DYNAMIC_TEST_REGISTERED, descriptor -> true).count();
+	}
+
+	public long getTestSkippedCount() {
+		return testEventsByType(SKIPPED).count();
+	}
+
+	public long getTestStartedCount() {
+		return testEventsByType(STARTED).count();
 	}
 
 	public long getTestFinishedCount() {
@@ -134,6 +134,10 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 		return containerEventsByType(FINISHED).count();
 	}
 
+	public long getContainerFailedCount() {
+		return getContainerFinishedCount(Status.FAILED);
+	}
+
 	public List<ExecutionEvent> getSkippedTestEvents() {
 		return testEventsByType(Type.SKIPPED).collect(toList());
 	}
@@ -146,12 +150,25 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 		return testFinishedEvents(Status.FAILED).collect(toList());
 	}
 
+	public List<ExecutionEvent> getFailedContainerFinishedEvents() {
+		return containerFinishedEvents(Status.FAILED).collect(toList());
+	}
+
 	private long getTestFinishedCount(Status status) {
 		return testFinishedEvents(status).count();
 	}
 
+	private long getContainerFinishedCount(Status status) {
+		return containerFinishedEvents(status).count();
+	}
+
 	private Stream<ExecutionEvent> testFinishedEvents(Status status) {
 		return testEventsByType(FINISHED).filter(
+			byPayload(TestExecutionResult.class, where(TestExecutionResult::getStatus, isEqual(status))));
+	}
+
+	private Stream<ExecutionEvent> containerFinishedEvents(Status status) {
+		return containerEventsByType(FINISHED).filter(
 			byPayload(TestExecutionResult.class, where(TestExecutionResult::getStatus, isEqual(status))));
 	}
 
