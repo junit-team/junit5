@@ -10,11 +10,11 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
 
+import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,7 +34,7 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 	private Deque<Description> path;
 	private Set<Description> descendants;
 
-	public UniqueIdFilter(UniqueId uniqueId) {
+	UniqueIdFilter(UniqueId uniqueId) {
 		this.uniqueId = uniqueId;
 	}
 
@@ -47,7 +47,7 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 
 	private Deque<Description> determinePath(RunnerTestDescriptor runnerTestDescriptor,
 			Optional<? extends TestDescriptor> identifiedTestDescriptor) {
-		Deque<Description> path = new LinkedList<>();
+		Deque<Description> path = new ArrayDeque<>();
 		Optional<? extends TestDescriptor> current = identifiedTestDescriptor;
 		while (current.isPresent() && !current.get().equals(runnerTestDescriptor)) {
 			path.addFirst(((VintageTestDescriptor) current.get()).getDescription());
@@ -57,17 +57,16 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 	}
 
 	private Set<Description> determineDescendants(Optional<? extends TestDescriptor> identifiedTestDescriptor) {
-		if (identifiedTestDescriptor.isPresent()) {
-			// @formatter:off
-			return identifiedTestDescriptor.get()
-					.getDescendants()
-					.stream()
-					.map(VintageTestDescriptor.class::cast)
-					.map(VintageTestDescriptor::getDescription)
-					.collect(toSet());
-			// @formatter:on
-		}
-		return emptySet();
+		// @formatter:off
+		return identifiedTestDescriptor.map(
+				testDescriptor -> testDescriptor
+						.getDescendants()
+						.stream()
+						.map(VintageTestDescriptor.class::cast)
+						.map(VintageTestDescriptor::getDescription)
+						.collect(toSet()))
+				.orElseGet(Collections::emptySet);
+		// @formatter:on
 	}
 
 	@Override
