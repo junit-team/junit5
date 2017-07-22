@@ -392,15 +392,15 @@ subprojects { subproj ->
 	}
 
 	spotless {
-		def headerText = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
-		def importOrderConfig = rootProject.file('src/eclipse/junit-eclipse.importorder')
-		def formatterJavaConfig = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
-		def formatterGroovyConfig = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
+		def headerFile = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
+		def importOrderConfigFile = rootProject.file('src/eclipse/junit-eclipse.importorder')
+		def javaFormatterConfigFile = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+		def groovyFormatterConfigFile = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
 
 		java {
-			licenseHeaderFile headerText, '(package|import) '
-			importOrderFile importOrderConfig
-			eclipse().configFile formatterJavaConfig
+			licenseHeaderFile headerFile, '(package|import) '
+			importOrderFile importOrderConfigFile
+			eclipse().configFile javaFormatterConfigFile
 			if (org.gradle.api.JavaVersion.current() == org.gradle.api.JavaVersion.VERSION_1_8) {
 				removeUnusedImports()
 			}
@@ -411,9 +411,9 @@ subprojects { subproj ->
 
 		groovy {
 			target 'src/**/*.groovy'
-			licenseHeaderFile headerText, "package "
-			importOrderFile importOrderConfig
-			greclipse().configFile formatterJavaConfig, formatterGroovyConfig
+			licenseHeaderFile headerFile, "package "
+			importOrderFile importOrderConfigFile
+			greclipse().configFile javaFormatterConfigFile, groovyFormatterConfigFile
 
 			trimTrailingWhitespace()
 			endWithNewline()
