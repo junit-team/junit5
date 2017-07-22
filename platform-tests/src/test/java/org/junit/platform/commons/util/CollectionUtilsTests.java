@@ -78,7 +78,7 @@ class CollectionUtilsTests {
 	@Test
 	void toUnmodifiableListThrowsOnMutation() {
 		List<Integer> numbers = Stream.of(1).collect(toUnmodifiableList());
-		assertThrows(UnsupportedOperationException.class, () -> numbers.clear());
+		assertThrows(UnsupportedOperationException.class, numbers::clear);
 	}
 
 	@Test

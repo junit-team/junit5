@@ -10,6 +10,7 @@
 
 package org.junit;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarFile;
@@ -83,14 +83,13 @@ class AutomaticModuleNameTests {
 			assertNotNull(automaticModuleName, "`Automatic-Module-Name` not found in manifest of JAR: " + jarPath);
 			assertEquals(expected, automaticModuleName);
 			// second, check entries are located in matching packages
-			List<String> unexpectedNames = new ArrayList<>();
 			String expectedStartOfPackageName = expected.replace('.', '/');
 			// @formatter:off
-			jarFile.stream()
+			List<String> unexpectedNames = jarFile.stream()
 					.map(ZipEntry::getName)
 					.filter(n -> n.endsWith(".class"))
 					.filter(n -> !n.startsWith(expectedStartOfPackageName))
-					.forEach(unexpectedNames::add);
+					.collect(toList());
 			// @formatter:on
 			assertTrue(unexpectedNames.isEmpty(), unexpectedNames.size()
 					+ " entries are not located in (a sub-) package of " + expectedStartOfPackageName);

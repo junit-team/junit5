@@ -10,8 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -467,7 +465,7 @@ class ReflectionUtilsTests {
 		Preconditions.notNull(methodName, "methodName must not be null");
 		Preconditions.notNull(params, "params must not be null");
 
-		return String.format("%s#%s(%s)", clazz.getName(), methodName, stream(params).collect(joining(", ")));
+		return String.format("%s#%s(%s)", clazz.getName(), methodName, String.join(", ", params));
 	}
 
 	private static void assertFqmn(String fqmn) {
