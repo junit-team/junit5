@@ -208,8 +208,8 @@ class ConsoleDetailsTests {
 
 			URL url = optionalUrl.orElseThrow(AssertionError::new);
 			Path path = Paths.get(url.toURI());
-			assumeTrue(path.toFile().exists(), "path does not exist: " + path);
-			assumeTrue(path.toFile().canRead(), "can not read: " + path);
+			assumeTrue(Files.exists(path), "path does not exist: " + path);
+			assumeTrue(Files.isReadable(path), "can not read: " + path);
 
 			List<String> expectedLines = Files.readAllLines(path, UTF_8);
 			List<String> actualLines = asList(result.out.split("\\R"));
