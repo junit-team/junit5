@@ -616,20 +616,42 @@ class ReflectionUtilsTests {
 
 	@Test
 	void findMethodByParameterTypesInGenericInterface() {
-		Optional<Method> method = ReflectionUtils.findMethod(InterfaceWithGenericDefaultMethod.class, "foo",
-			Number.class);
+		Class<?> ifc = InterfaceWithGenericDefaultMethod.class;
+		Optional<Method> method = ReflectionUtils.findMethod(ifc, "foo", Number.class);
 		assertThat(method).isNotEmpty();
 		assertThat(method.get().getName()).isEqualTo("foo");
 	}
 
+	/**
+	 * @see #findMethodByParameterTypesWithOverloadedMethodNextToGenericDefaultMethod()
+	 */
 	// TODO [#969] Enable and complete @Disabled test.
 	@Disabled("Disabled until #969 is resolved")
 	@Test
 	void findMethodByParameterTypesInGenericInterfaceViaParameterizedSubclass() {
-		Optional<Method> method = ReflectionUtils.findMethod(InterfaceWithGenericDefaultMethodImpl.class, "foo",
-			Long.class);
+		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
+		Class<?> parameterType = Long.class;
+		Optional<Method> method = ReflectionUtils.findMethod(clazz, "foo", parameterType);
 		assertThat(method).isNotEmpty();
 		assertThat(method.get().getName()).isEqualTo("foo");
+		assertThat(method.get().getParameterTypes()[0]).isEqualTo(parameterType);
+	}
+
+	/**
+	 * This test is identical to
+	 * {@link #findMethodByParameterTypesInGenericInterfaceViaParameterizedSubclass()},
+	 * except that this test attempts to find the overloaded
+	 * {@link InterfaceWithGenericDefaultMethodImpl#foo(Double)} method instead of
+	 * the {@link InterfaceWithGenericDefaultMethod#foo(Number)} default method.
+	 */
+	@Test
+	void findMethodByParameterTypesWithOverloadedMethodNextToGenericDefaultMethod() {
+		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
+		Class<?> parameterType = Double.class;
+		Optional<Method> method = ReflectionUtils.findMethod(clazz, "foo", parameterType);
+		assertThat(method).isNotEmpty();
+		assertThat(method.get().getName()).isEqualTo("foo");
+		assertThat(method.get().getParameterTypes()[0]).isEqualTo(parameterType);
 	}
 
 	@Test
@@ -865,6 +887,28 @@ class ReflectionUtilsTests {
 			MethodShadowingChild.class.getMethod("method5", Long.class));
 	}
 
+	// TODO [#976] Enable failing @Disabled test.
+	@Disabled("Disabled until #976 is resolved")
+	@Test
+	void findMethodsReturnsAllOverloadedMethodsThatAreNotShadowed() throws Exception {
+		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
+
+		// Search for all foo(*) methods.
+		List<Method> methods = ReflectionUtils.findMethods(clazz, m -> m.getName().equals("foo"));
+
+		// @formatter:off
+		List<String> signatures = methods.stream()
+			.map(m -> String.format("%s(%s)", m.getName(), ClassUtils.nullSafeToString(m.getParameterTypes())))
+			.collect(toList());
+		// @formatter:on
+
+		// One might expect or desire that the signature for the generic foo(N)
+		// default method would be "foo(java.lang.Long)" when looked up via the
+		// concrete parameterized class, but it apparently is only _visible_ as
+		// "foo(java.lang.Number)" via reflection.
+		assertThat(signatures).containsExactlyInAnyOrder("foo(java.lang.Number)", "foo(java.lang.Double)");
+	}
+
 	@Test
 	void findMethodsIgnoresBridgeMethods() throws Exception {
 		assertFalse(Modifier.isPublic(PublicChildClass.class.getSuperclass().getModifiers()));
@@ -958,6 +1002,9 @@ class ReflectionUtilsTests {
 	}
 
 	static class InterfaceWithGenericDefaultMethodImpl implements InterfaceWithGenericDefaultMethod<Long> {
+
+		void foo(Double number) {
+		}
 	}
 
 	interface InterfaceWithStaticMethod {
