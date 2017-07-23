@@ -707,33 +707,21 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 
-		// Search for an exact match first.
-		Optional<Method> optional = findMethod(ReflectionUtils::hasIdenticalSignature, clazz, methodName,
-			parameterTypes);
-		if (optional.isPresent()) {
-			return optional;
-		}
-
-		// Fall back to searching for "compatible" methods due to parameterized types, etc.
-		return findMethod(ReflectionUtils::hasCompatibleSignature, clazz, methodName, parameterTypes);
-	}
-
-	private static Optional<Method> findMethod(MethodMatcher methodMatcher, Class<?> clazz, String methodName,
-			Class<?>... parameterTypes) {
-
 		Class<?> currentClass = clazz;
 		while (currentClass != null && currentClass != Object.class) {
 
-			// Search for match in current class
-			for (Method method : currentClass.getDeclaredMethods()) {
-				if (methodMatcher.matches(method, methodName, parameterTypes)) {
+			// Search for match in current type
+			Method[] methods = currentClass.isInterface() ? currentClass.getMethods()
+					: currentClass.getDeclaredMethods();
+			for (Method method : methods) {
+				if (hasCompatibleSignature(method, methodName, parameterTypes)) {
 					return Optional.of(method);
 				}
 			}
 
-			// Search for match in interfaces implemented by current class
+			// Search for match in interfaces implemented by current type
 			for (Class<?> ifc : currentClass.getInterfaces()) {
-				Optional<Method> optional = findMethod(methodMatcher, ifc, methodName, parameterTypes);
+				Optional<Method> optional = findMethod(ifc, methodName, parameterTypes);
 				if (optional.isPresent()) {
 					return optional;
 				}
@@ -903,15 +891,6 @@ public final class ReflectionUtils {
 
 	private static boolean isMethodShadowedBy(Method upper, Method lower) {
 		return hasCompatibleSignature(upper, lower.getName(), lower.getParameterTypes());
-	}
-
-	/**
-	 * Determine if the supplied candidate method has the exact same signature
-	 * as a method with the supplied values.
-	 */
-	private static boolean hasIdenticalSignature(Method candidate, String methodName, Class<?>[] parameterTypes) {
-		return methodName.equals(candidate.getName()) && //
-				Arrays.equals(parameterTypes, candidate.getParameterTypes());
 	}
 
 	/**
