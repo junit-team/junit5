@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
@@ -306,11 +307,12 @@ public final class ReflectionUtils {
 
 	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#newInstance(Class, Object...)
+	 * @see #newInstance(Constructor, Object...)
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
-		Preconditions.notNull(clazz, "class must not be null");
-		Preconditions.notNull(args, "argument array must not be null");
-		Preconditions.containsNoNullElements(args, "individual arguments must not be null");
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(args, "Argument array must not be null");
+		Preconditions.containsNoNullElements(args, "Individual arguments must not be null");
 
 		try {
 			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
@@ -336,7 +338,7 @@ public final class ReflectionUtils {
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public static <T> T newInstance(Constructor<T> constructor, Object... args) {
-		Preconditions.notNull(constructor, "constructor must not be null");
+		Preconditions.notNull(constructor, "Constructor must not be null");
 
 		try {
 			return makeAccessible(constructor).newInstance(args);
@@ -347,10 +349,35 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Read the value of a potentially inaccessible field.
+	 *
+	 * <p>If the field does not exist, an exception occurs while reading it, or
+	 * the value of the field is {@code null}, an empty {@link Optional} is
+	 * returned.
+	 *
+	 * @param clazz the class where the field is declared; never {@code null}
+	 * @param fieldName the name of the field; never {@code null} or empty
+	 * @param instance the instance from where the value is to be read; may
+	 * be {@code null} for a static field
+	 */
+	public static <T> Optional<Object> readFieldValue(Class<T> clazz, String fieldName, T instance) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notBlank(fieldName, "Field name must not be null or blank");
+
+		try {
+			Field field = makeAccessible(clazz.getDeclaredField(fieldName));
+			return Optional.ofNullable(field.get(instance));
+		}
+		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			return Optional.empty();
+		}
+	}
+
+	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#invokeMethod(Method, Object, Object...)
 	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
-		Preconditions.notNull(method, "method must not be null");
+		Preconditions.notNull(method, "Method must not be null");
 		Preconditions.condition((target != null || isStatic(method)),
 			() -> String.format("Cannot invoke non-static method [%s] on a null target.", method.toGenericString()));
 
@@ -373,11 +400,8 @@ public final class ReflectionUtils {
 	 * Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
 	 * using the supplied {@link ClassLoader}.
 	 *
-	 * <p>Class names for arrays may be specified using either the JVM's internal
-	 * String representation (e.g., {@code [[I} for {@code int[][]},
-	 * {@code [Lava.lang.String;} for {@code java.lang.String[]}, etc.) or
-	 * <em>source code syntax</em> (e.g., {@code int[][]}, {@code java.lang.String[]},
-	 * etc.).
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#loadClass(String)}
+	 * for details on support for class names for arrays.
 	 *
 	 * @param name the name of the class to load; never {@code null} or blank
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
@@ -621,7 +645,7 @@ public final class ReflectionUtils {
 
 		Set<Class<?>> candidates = new LinkedHashSet<>();
 		findNestedClasses(clazz, candidates);
-		return candidates.stream().filter(predicate).collect(toList());
+		return candidates.stream().filter(predicate).collect(toUnmodifiableList());
 	}
 
 	private static void findNestedClasses(Class<?> clazz, Set<Class<?>> candidates) {
@@ -629,13 +653,15 @@ public final class ReflectionUtils {
 			return;
 		}
 
-		// Search class hierarchy
+		// Candidates in current class
 		candidates.addAll(Arrays.asList(clazz.getDeclaredClasses()));
+
+		// Search class hierarchy
 		findNestedClasses(clazz.getSuperclass(), candidates);
 
 		// Search interface hierarchy
-		for (Class<?> interfaceType : clazz.getInterfaces()) {
-			findNestedClasses(interfaceType, candidates);
+		for (Class<?> ifc : clazz.getInterfaces()) {
+			findNestedClasses(ifc, candidates);
 		}
 	}
 
@@ -664,7 +690,7 @@ public final class ReflectionUtils {
 		}
 	}
 
-	public static Optional<Method> getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+	static Optional<Method> getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 
@@ -676,28 +702,29 @@ public final class ReflectionUtils {
 		}
 	}
 
-	private static Class<?>[] resolveParameterTypes(String parameterTypeNames) {
+	/**
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethod(Class, String, String)
+	 */
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
+		return findMethod(clazz, methodName, resolveParameterTypes(clazz, methodName, parameterTypeNames));
+	}
+
+	private static Class<?>[] resolveParameterTypes(Class<?> clazz, String methodName, String parameterTypeNames) {
 		if (StringUtils.isBlank(parameterTypeNames)) {
 			return EMPTY_CLASS_ARRAY;
 		}
 
 		// @formatter:off
 		return Arrays.stream(parameterTypeNames.split(","))
-				.map(ReflectionUtils::loadRequiredParameterType)
+				.map(typeName -> loadRequiredParameterType(clazz, methodName, typeName))
 				.toArray(Class[]::new);
 		// @formatter:on
 	}
 
-	private static Class<?> loadRequiredParameterType(String typeName) {
+	private static Class<?> loadRequiredParameterType(Class<?> clazz, String methodName, String typeName) {
 		return loadClass(typeName).orElseThrow(
-			() -> new JUnitException(String.format("Failed to load parameter type [%s]", typeName)));
-	}
-
-	/**
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethod(Class, String, String)
-	 */
-	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
-		return findMethod(clazz, methodName, resolveParameterTypes(parameterTypeNames));
+			() -> new JUnitException(String.format("Failed to load parameter type [%s] for method [%s] in class [%s].",
+				typeName, methodName, clazz.getName())));
 	}
 
 	/**
@@ -707,12 +734,9 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 
-		Class<?> currentClass = clazz;
-		while (currentClass != null && currentClass != Object.class) {
-
+		for (Class<?> current = clazz; current != null && current != Object.class; current = current.getSuperclass()) {
 			// Search for match in current type
-			Method[] methods = currentClass.isInterface() ? currentClass.getMethods()
-					: currentClass.getDeclaredMethods();
+			List<Method> methods = current.isInterface() ? getMethods(current) : getDeclaredMethods(current, BOTTOM_UP);
 			for (Method method : methods) {
 				if (hasCompatibleSignature(method, methodName, parameterTypes)) {
 					return Optional.of(method);
@@ -720,15 +744,12 @@ public final class ReflectionUtils {
 			}
 
 			// Search for match in interfaces implemented by current type
-			for (Class<?> ifc : currentClass.getInterfaces()) {
+			for (Class<?> ifc : current.getInterfaces()) {
 				Optional<Method> optional = findMethod(ifc, methodName, parameterTypes);
 				if (optional.isPresent()) {
 					return optional;
 				}
 			}
-
-			// Search in class hierarchy
-			currentClass = currentClass.getSuperclass();
 		}
 
 		return Optional.empty();
@@ -750,13 +771,6 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Find all {@linkplain Method methods} of the supplied class or interface
-	 * that match the specified {@code predicate}.
-	 *
-	 * @param clazz the class or interface in which to find the methods; never {@code null}
-	 * @param predicate the method filter; never {@code null}
-	 * @param traversalMode the hierarchy traversal mode; never {@code null}
-	 * @return an immutable list of all such methods found; never {@code null}
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
@@ -775,14 +789,15 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Return all methods in superclass hierarchy except from Object.
+	 * Find all non-synthetic methods in the superclass and interface hierarchy,
+	 * excluding Object.
 	 */
 	private static List<Method> findAllMethodsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
-		List<Method> localMethods = Arrays.stream(clazz.getDeclaredMethods())
+		List<Method> localMethods = getDeclaredMethods(clazz, traversalMode).stream()
 				.filter(method -> !method.isSynthetic())
 				.collect(toList());
 		List<Method> superclassMethods = getSuperclassMethods(clazz, traversalMode).stream()
@@ -792,8 +807,6 @@ public final class ReflectionUtils {
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
 		// @formatter:on
-
-		localMethods.sort(ReflectionUtils::defaultMethodSorter);
 
 		List<Method> methods = new ArrayList<>();
 		if (traversalMode == TOP_DOWN) {
@@ -809,7 +822,66 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Method comparator based upon JUnit4 org.junit.internal.MethodSorter implementation.
+	 * Custom alternative to {@link Class#getMethods()} that sorts the methods
+	 * and converts them to a mutable list.
+	 */
+	private static List<Method> getMethods(Class<?> clazz) {
+		return toSortedMutableList(clazz.getMethods());
+	}
+
+	/**
+	 * Custom alternative to {@link Class#getDeclaredMethods()} that sorts the
+	 * methods and converts them to a mutable list.
+	 *
+	 * <p>In addition, the list returned by this method includes interface
+	 * default methods which are either prepended or appended to the list of
+	 * declared methods depending on the supplied traversal mode.
+	 */
+	private static List<Method> getDeclaredMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
+		// Note: getDefaultMethods() already sorts the methods,
+		List<Method> defaultMethods = getDefaultMethods(clazz);
+		List<Method> declaredMethods = toSortedMutableList(clazz.getDeclaredMethods());
+
+		// Take the traversal mode into account in order to retain the inherited
+		// nature of interface default methods.
+		if (traversalMode == BOTTOM_UP) {
+			declaredMethods.addAll(defaultMethods);
+			return declaredMethods;
+		}
+		else {
+			defaultMethods.addAll(declaredMethods);
+			return defaultMethods;
+		}
+	}
+
+	/**
+	 * Get a sorted, mutable list of all default methods present in interfaces
+	 * implemented by the supplied class.
+	 */
+	private static List<Method> getDefaultMethods(Class<?> clazz) {
+		List<Method> defaultMethods = new ArrayList<>();
+		for (Class<?> ifc : clazz.getInterfaces()) {
+			for (Method method : getMethods(ifc)) {
+				if (method.isDefault()) {
+					defaultMethods.add(method);
+				}
+			}
+		}
+		return defaultMethods;
+	}
+
+	private static List<Method> toSortedMutableList(Method[] methods) {
+		// @formatter:off
+		return Arrays.stream(methods)
+				.sorted(ReflectionUtils::defaultMethodSorter)
+				// Use toCollection() instead of toList() to ensure list is mutable.
+				.collect(toCollection(ArrayList::new));
+		// @formatter:on
+	}
+
+	/**
+	 * Method comparator based upon JUnit 4's {@code org.junit.internal.MethodSorter}
+	 * implementation.
 	 */
 	private static int defaultMethodSorter(Method method1, Method method2) {
 		String name1 = method1.getName();
@@ -824,54 +896,26 @@ public final class ReflectionUtils {
 		return comparison;
 	}
 
-	/**
-	 * Read the value of a potentially inaccessible field.
-	 *
-	 * <p>If the field does not exist, an exception occurs while reading it, or
-	 * the value of the field is {@code null}, an empty {@link Optional} is
-	 * returned.
-	 *
-	 * @param clazz the class where the field is declared; never {@code null}
-	 * @param fieldName the name of the field; never {@code null} or empty
-	 * @param instance the instance from where the value is to be read; may
-	 * be {@code null} for a static field
-	 */
-	public static <T> Optional<Object> readFieldValue(Class<T> clazz, String fieldName, T instance) {
-		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notBlank(fieldName, "Field name must not be null or blank");
-
-		try {
-			Field field = makeAccessible(clazz.getDeclaredField(fieldName));
-			return Optional.ofNullable(field.get(instance));
-		}
-		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			return Optional.empty();
-		}
-	}
-
 	private static List<Method> getInterfaceMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
-		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
-
 		List<Method> allInterfaceMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
 			// @formatter:off
-			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods())
+			List<Method> localInterfaceMethods = getMethods(ifc).stream()
 					.filter(m -> !isAbstract(m))
 					.collect(toList());
 
-			List<Method> subInterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
-					.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
+			List<Method> extendedInterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
+					.filter(method -> !isMethodShadowedByLocalMethods(method, localInterfaceMethods))
 					.collect(toList());
 			// @formatter:on
 
 			if (traversalMode == TOP_DOWN) {
-				allInterfaceMethods.addAll(subInterfaceMethods);
+				allInterfaceMethods.addAll(extendedInterfaceMethods);
 			}
-			allInterfaceMethods.addAll(localMethods);
+			allInterfaceMethods.addAll(localInterfaceMethods);
 			if (traversalMode == BOTTOM_UP) {
-				allInterfaceMethods.addAll(subInterfaceMethods);
+				allInterfaceMethods.addAll(extendedInterfaceMethods);
 			}
 		}
 		return allInterfaceMethods;
@@ -895,8 +939,9 @@ public final class ReflectionUtils {
 
 	/**
 	 * Determine if the supplied candidate method (typically a method higher in
-	 * the type hierarchy) has a signature that is compatible with a method with
-	 * the supplied values, taking method sub-signatures and generics into account.
+	 * the type hierarchy) has a signature that is compatible with a method that
+	 * has the supplied name and parameter types, taking method sub-signatures
+	 * and generics into account.
 	 */
 	private static boolean hasCompatibleSignature(Method candidate, String methodName, Class<?>[] parameterTypes) {
 		if (!methodName.equals(candidate.getName())) {
@@ -950,31 +995,14 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Get the underlying cause of the supplied {@link Throwable}.
-	 *
-	 * <p>If the supplied {@code Throwable} is an instance of
-	 * {@link InvocationTargetException}, this method will be invoked
-	 * recursively with the underlying
-	 * {@linkplain InvocationTargetException#getTargetException() target
-	 * exception}; otherwise, this method simply returns the supplied
-	 * {@code Throwable}.
-	 */
-	private static Throwable getUnderlyingCause(Throwable t) {
-		if (t instanceof InvocationTargetException) {
-			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
-		}
-		return t;
-	}
-
-	/**
 	 * Return all classes and interfaces that can be used as assignment types
 	 * for instances of the specified {@link Class}, including itself.
 	 *
-	 * @param clazz the {@code Class} to lookup
+	 * @param clazz the {@code Class} to look up
 	 * @see Class#isAssignableFrom
 	 */
 	public static Set<Class<?>> getAllAssignmentCompatibleClasses(Class<?> clazz) {
-		Preconditions.notNull(clazz, "class must not be null");
+		Preconditions.notNull(clazz, "Class must not be null");
 
 		Set<Class<?>> result = new LinkedHashSet<>();
 		getAllAssignmentCompatibleClasses(clazz, result);
@@ -992,10 +1020,21 @@ public final class ReflectionUtils {
 		}
 	}
 
-	@FunctionalInterface
-	private interface MethodMatcher {
-
-		boolean matches(Method candidate, String methodName, Class<?>[] parameterTypes);
+	/**
+	 * Get the underlying cause of the supplied {@link Throwable}.
+	 *
+	 * <p>If the supplied {@code Throwable} is an instance of
+	 * {@link InvocationTargetException}, this method will be invoked
+	 * recursively with the underlying
+	 * {@linkplain InvocationTargetException#getTargetException() target
+	 * exception}; otherwise, this method simply returns the supplied
+	 * {@code Throwable}.
+	 */
+	private static Throwable getUnderlyingCause(Throwable t) {
+		if (t instanceof InvocationTargetException) {
+			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
+		}
+		return t;
 	}
 
 }

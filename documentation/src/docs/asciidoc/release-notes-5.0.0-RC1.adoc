@@ -22,7 +22,10 @@ on GitHub.
 * Generic, interface `default` methods that are not overridden by an implementing class
   can now be _selected_ by class, method name, and parameter types or by _fully qualified
   method name_. This applies to method selectors in `DiscoverySelectors` as well as to
-  both `findMethod(*)` variants in `ReflectionSupport`.
+  both `findMethod()` variants in `ReflectionSupport`.
+* A non-overridden interface default method whose method signature is overloaded by a
+  locally declared method is now properly discovered when searching for methods within a
+  class hierarchy using `findMethods()` in `ReflectionSupport`.
 
 ===== Deprecations and Breaking Changes
 
@@ -40,6 +43,9 @@ on GitHub.
   `@AfterAll`, `BeforeEach`, or `@AfterEach` no longer halt the execution of the entire
   test plan during the discovery phase. Rather, such errors are now reported during the
   execution of the affected test class.
+* A non-overridden interface default method whose method signature is overloaded by a
+  locally declared method is now properly included in the test plan. This applies to
+  default methods annotated with Jupiter annotations such as `@Test, `@BeforeEach`, etc.
 
 ===== Deprecations and Breaking Changes
 

@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
@@ -890,8 +889,6 @@ class ReflectionUtilsTests {
 			MethodShadowingChild.class.getMethod("method5", Long.class));
 	}
 
-	// TODO [#976] Enable failing @Disabled test.
-	@Disabled("Disabled until #976 is resolved")
 	@Test
 	void findMethodsReturnsAllOverloadedMethodsThatAreNotShadowed() throws Exception {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
@@ -909,7 +906,7 @@ class ReflectionUtilsTests {
 		// default method would be "foo(java.lang.Long)" when looked up via the
 		// concrete parameterized class, but it apparently is only _visible_ as
 		// "foo(java.lang.Number)" via reflection.
-		assertThat(signatures).containsExactlyInAnyOrder("foo(java.lang.Number)", "foo(java.lang.Double)");
+		assertThat(signatures).containsExactly("foo(java.lang.Number)", "foo(java.lang.Double)");
 	}
 
 	@Test
