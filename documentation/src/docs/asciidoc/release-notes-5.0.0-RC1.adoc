@@ -19,7 +19,10 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* Generic, interface `default` methods that are not overridden by an implementing class
+  can now be _selected_ by class, method name, and parameter types or by _fully qualified
+  method name_. This applies to method selectors in `DiscoverySelectors` as well as to
+  both `findMethod(*)` variants in `ReflectionSupport`.
 
 ===== Deprecations and Breaking Changes
 

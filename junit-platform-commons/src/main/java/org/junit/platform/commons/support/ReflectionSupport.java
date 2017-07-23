@@ -105,9 +105,6 @@ public final class ReflectionSupport {
 	 * interface and traversing up the type hierarchy until such a method is
 	 * found or the type hierarchy is exhausted.
 	 *
-	 * <p>Note, however, that the current algorithm traverses the entire
-	 * type hierarchy even after having found a match.
-	 *
 	 * @param clazz the class or interface in which to find the method; never {@code null}
 	 * @param methodName the name of the method to find; never {@code null} or empty
 	 * @param parameterTypeNames the fully qualified names of the types of parameters
@@ -115,7 +112,6 @@ public final class ReflectionSupport {
 	 * @return an {@code Optional} containing the method found; never {@code null}
 	 * but potentially empty if no such method could be found
 	 * @see #findMethod(Class, String, Class...)
-	 * @see ReflectionUtils.HierarchyTraversalMode#BOTTOM_UP
 	 */
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
 		return ReflectionUtils.findMethod(clazz, methodName, parameterTypeNames);
@@ -127,9 +123,6 @@ public final class ReflectionSupport {
 	 * interface and traversing up the type hierarchy until such a method is
 	 * found or the type hierarchy is exhausted.
 	 *
-	 * <p>Note, however, that the current algorithm traverses the entire
-	 * type hierarchy even after having found a match.
-	 *
 	 * @param clazz the class or interface in which to find the method; never {@code null}
 	 * @param methodName the name of the method to find; never {@code null} or empty
 	 * @param parameterTypes the types of parameters accepted by the method, if any;
@@ -137,7 +130,6 @@ public final class ReflectionSupport {
 	 * @return an {@code Optional} containing the method found; never {@code null}
 	 * but potentially empty if no such method could be found
 	 * @see #findMethod(Class, String, String)
-	 * @see ReflectionUtils.HierarchyTraversalMode#BOTTOM_UP
 	 */
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes);

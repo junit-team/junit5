@@ -625,16 +625,19 @@ class ReflectionUtilsTests {
 	/**
 	 * @see #findMethodByParameterTypesWithOverloadedMethodNextToGenericDefaultMethod()
 	 */
-	// TODO [#969] Enable and complete @Disabled test.
-	@Disabled("Disabled until #969 is resolved")
 	@Test
 	void findMethodByParameterTypesInGenericInterfaceViaParameterizedSubclass() {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
-		Class<?> parameterType = Long.class;
-		Optional<Method> method = ReflectionUtils.findMethod(clazz, "foo", parameterType);
+		Optional<Method> method = ReflectionUtils.findMethod(clazz, "foo", Long.class);
 		assertThat(method).isNotEmpty();
 		assertThat(method.get().getName()).isEqualTo("foo");
-		assertThat(method.get().getParameterTypes()[0]).isEqualTo(parameterType);
+
+		// One might expect or desire that the signature for the generic foo(N)
+		// default method would be "foo(java.lang.Long)" when looked up via the
+		// concrete parameterized class, but it apparently is only _visible_ as
+		// "foo(java.lang.Number)" via reflection. Hence the following assertion
+		// checks for java.lang.Number instead of java.lang.Long.
+		assertThat(method.get().getParameterTypes()[0]).isEqualTo(Number.class);
 	}
 
 	/**

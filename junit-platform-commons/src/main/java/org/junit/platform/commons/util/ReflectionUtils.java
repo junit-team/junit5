@@ -707,11 +707,43 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 
-		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
-				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
+		// Search for an exact match first.
+		Optional<Method> optional = findMethod(ReflectionUtils::hasIdenticalSignature, clazz, methodName,
+			parameterTypes);
+		if (optional.isPresent()) {
+			return optional;
+		}
 
-		List<Method> candidates = findMethods(clazz, nameAndParameterTypesMatch, BOTTOM_UP);
-		return (!candidates.isEmpty() ? Optional.of(candidates.get(0)) : Optional.empty());
+		// Fall back to searching for "compatible" methods due to parameterized types, etc.
+		return findMethod(ReflectionUtils::hasCompatibleSignature, clazz, methodName, parameterTypes);
+	}
+
+	private static Optional<Method> findMethod(MethodMatcher methodMatcher, Class<?> clazz, String methodName,
+			Class<?>... parameterTypes) {
+
+		Class<?> currentClass = clazz;
+		while (currentClass != null && currentClass != Object.class) {
+
+			// Search for match in current class
+			for (Method method : currentClass.getDeclaredMethods()) {
+				if (methodMatcher.matches(method, methodName, parameterTypes)) {
+					return Optional.of(method);
+				}
+			}
+
+			// Search for match in interfaces implemented by current class
+			for (Class<?> ifc : currentClass.getInterfaces()) {
+				Optional<Method> optional = findMethod(methodMatcher, ifc, methodName, parameterTypes);
+				if (optional.isPresent()) {
+					return optional;
+				}
+			}
+
+			// Search in class hierarchy
+			currentClass = currentClass.getSuperclass();
+		}
+
+		return Optional.empty();
 	}
 
 	/**
@@ -870,27 +902,45 @@ public final class ReflectionUtils {
 	}
 
 	private static boolean isMethodShadowedBy(Method upper, Method lower) {
-		if (!lower.getName().equals(upper.getName())) {
+		return hasCompatibleSignature(upper, lower.getName(), lower.getParameterTypes());
+	}
+
+	/**
+	 * Determine if the supplied candidate method has the exact same signature
+	 * as a method with the supplied values.
+	 */
+	private static boolean hasIdenticalSignature(Method candidate, String methodName, Class<?>[] parameterTypes) {
+		return methodName.equals(candidate.getName()) && //
+				Arrays.equals(parameterTypes, candidate.getParameterTypes());
+	}
+
+	/**
+	 * Determine if the supplied candidate method (typically a method higher in
+	 * the type hierarchy) has a signature that is compatible with a method with
+	 * the supplied values, taking method sub-signatures and generics into account.
+	 */
+	private static boolean hasCompatibleSignature(Method candidate, String methodName, Class<?>[] parameterTypes) {
+		if (!methodName.equals(candidate.getName())) {
 			return false;
 		}
-		if (lower.getParameterCount() != upper.getParameterCount()) {
+		if (parameterTypes.length != candidate.getParameterCount()) {
 			return false;
 		}
 		// trivial case: parameter types exactly match
-		if (Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes())) {
+		if (Arrays.equals(parameterTypes, candidate.getParameterTypes())) {
 			return true;
 		}
 		// param count is equal, but types do not match exactly: check for method sub-signatures
 		// https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2
-		for (int i = 0; i < lower.getParameterCount(); i++) {
-			Class<?> lowerType = lower.getParameterTypes()[i];
-			Class<?> upperType = upper.getParameterTypes()[i];
+		for (int i = 0; i < parameterTypes.length; i++) {
+			Class<?> lowerType = parameterTypes[i];
+			Class<?> upperType = candidate.getParameterTypes()[i];
 			if (!upperType.isAssignableFrom(lowerType)) {
 				return false;
 			}
 		}
 		// lower is sub-signature of upper: check for generics in upper method
-		if (isGeneric(upper)) {
+		if (isGeneric(candidate)) {
 			return true;
 		}
 		return false;
@@ -961,6 +1011,12 @@ public final class ReflectionUtils {
 				}
 			}
 		}
+	}
+
+	@FunctionalInterface
+	private interface MethodMatcher {
+
+		boolean matches(Method candidate, String methodName, Class<?>[] parameterTypes);
 	}
 
 }
