@@ -859,10 +859,21 @@ public final class ReflectionUtils {
 	 * implemented by the supplied class.
 	 */
 	private static List<Method> getDefaultMethods(Class<?> clazz) {
+		List<Method> surfaceDefaultMethods = new ArrayList<>();
+		Method[] surfaceMethods = clazz.getMethods();
+		for (int i = 0; i < surfaceMethods.length; i++) {
+			Method candidate = surfaceMethods[i];
+			if (candidate.isDefault()) {
+				surfaceDefaultMethods.add(candidate);
+			}
+		}
+		if (surfaceDefaultMethods.isEmpty()) {
+			return surfaceDefaultMethods;
+		}
 		List<Method> defaultMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
 			for (Method method : getMethods(ifc)) {
-				if (method.isDefault()) {
+				if (surfaceDefaultMethods.contains(method)) {
 					defaultMethods.add(method);
 				}
 			}
