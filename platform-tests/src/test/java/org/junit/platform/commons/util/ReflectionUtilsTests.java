@@ -798,9 +798,11 @@ class ReflectionUtilsTests {
 
 	@Test
 	void findMethodsIgnoresSyntheticMethods() {
+		assertTrue(stream(ClassWithSyntheticMethod.class.getDeclaredMethods()).anyMatch(Method::isSynthetic),
+			"ClassWithSyntheticMethod must actually contain at least one synthetic method.");
+
 		List<Method> methods = ReflectionUtils.findMethods(ClassWithSyntheticMethod.class, method -> true);
-		assertNotNull(methods);
-		assertEquals(0, methods.size());
+		assertThat(methods).isEmpty();
 	}
 
 	@Test
@@ -1005,8 +1007,8 @@ class ReflectionUtilsTests {
 
 	class ClassWithSyntheticMethod {
 
-		Runnable foo = InterfaceWithStaticMethod::foo;
-		Runnable bar = StaticClass::staticMethod;
+		// The following lambda expression results in a synthetic method in the
+		// compiled byte code.
 		Comparable<Number> synthetic = number -> 0;
 	}
 
