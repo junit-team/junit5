@@ -6664,7 +6664,12 @@ on GitHub.</p>
 <p>Generic, interface <code>default</code> methods that are not overridden by an implementing class
 can now be <em>selected</em> by class, method name, and parameter types or by <em>fully qualified
 method name</em>. This applies to method selectors in <code>DiscoverySelectors</code> as well as to
-both <code>findMethod(*)</code> variants in <code>ReflectionSupport</code>.</p>
+both <code>findMethod()</code> variants in <code>ReflectionSupport</code>.</p>
+</li>
+<li>
+<p>A non-overridden interface default method whose method signature is overloaded by a
+locally declared method is now properly discovered when searching for methods within a
+class hierarchy using <code>findMethods()</code> in <code>ReflectionSupport</code>.</p>
 </li>
 </ul>
 </div>
@@ -6693,6 +6698,11 @@ The removed method was replaced in milestone 4 by method
 <code>@AfterAll</code>, <code>BeforeEach</code>, or <code>@AfterEach</code> no longer halt the execution of the entire
 test plan during the discovery phase. Rather, such errors are now reported during the
 execution of the affected test class.</p>
+</li>
+<li>
+<p>A non-overridden interface default method whose method signature is overloaded by a
+locally declared method is now properly included in the test plan. This applies to
+default methods annotated with Jupiter annotations such as <code>@Test, `@BeforeEach</code>, etc.</p>
 </li>
 </ul>
 </div>
@@ -6738,7 +6748,7 @@ execution of the affected test class.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-23 11:16:19 EDT
+Last updated 2017-07-24 08:10:41 EDT
 </div>
 </div>
 </body>
