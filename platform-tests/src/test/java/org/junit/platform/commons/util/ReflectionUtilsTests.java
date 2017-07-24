@@ -599,6 +599,18 @@ class ReflectionUtilsTests {
 		exception = assertThrows(PreconditionViolationException.class,
 			() -> ReflectionUtils.findMethod(String.class, "   "));
 		assertThat(exception).hasMessage("Method name must not be null or blank");
+
+		exception = assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.findMethod(Files.class, "copy", (Class<?>[]) null));
+		assertThat(exception).hasMessage("Parameter types array must not be null");
+
+		exception = assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.findMethod(Files.class, "copy", (Class<?>) null));
+		assertThat(exception).hasMessage("Individual parameter types must not be null");
+
+		exception = assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.findMethod(Files.class, "copy", new Class<?>[] { Path.class, null }));
+		assertThat(exception).hasMessage("Individual parameter types must not be null");
 	}
 
 	@Test

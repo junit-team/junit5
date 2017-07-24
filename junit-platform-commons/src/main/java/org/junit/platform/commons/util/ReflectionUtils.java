@@ -733,6 +733,8 @@ public final class ReflectionUtils {
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		Preconditions.notNull(parameterTypes, "Parameter types array must not be null");
+		Preconditions.containsNoNullElements(parameterTypes, "Individual parameter types must not be null");
 
 		for (Class<?> current = clazz; current != null && current != Object.class; current = current.getSuperclass()) {
 			// Search for match in current type
