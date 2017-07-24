@@ -6671,6 +6671,10 @@ both <code>findMethod()</code> variants in <code>ReflectionSupport</code>.</p>
 locally declared method is now properly discovered when searching for methods within a
 class hierarchy using <code>findMethods()</code> in <code>ReflectionSupport</code>.</p>
 </li>
+<li>
+<p>Overridden interface default methods are no longer discovered when searching for
+methods within a class hierarchy using <code>findMethods()</code> in <code>ReflectionSupport</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -6703,6 +6707,11 @@ execution of the affected test class.</p>
 <p>A non-overridden interface default method whose method signature is overloaded by a
 locally declared method is now properly included in the test plan. This applies to
 default methods annotated with Jupiter annotations such as <code>@Test, `@BeforeEach</code>, etc.</p>
+</li>
+<li>
+<p>Overridden interface default methods are no longer included in the test plan. This
+applies to default methods annotated with Jupiter annotations such as <code>@Test,
+`@BeforeEach</code>, etc.</p>
 </li>
 </ul>
 </div>
@@ -6748,7 +6757,7 @@ default methods annotated with Jupiter annotations such as <code>@Test, `@Before
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-24 12:04:24 EDT
+Last updated 2017-07-24 15:36:04 EDT
 </div>
 </div>
 </body>
