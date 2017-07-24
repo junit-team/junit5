@@ -22,6 +22,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -42,6 +43,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	private static boolean beforeAllInvoked;
 	private static boolean afterAllInvoked;
 	private static boolean defaultMethodInvoked;
+	private static boolean overriddenDefaultMethodInvoked;
 	private static boolean localMethodInvoked;
 
 	@BeforeEach
@@ -49,6 +51,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 		beforeAllInvoked = false;
 		afterAllInvoked = false;
 		defaultMethodInvoked = false;
+		overriddenDefaultMethodInvoked = false;
 		localMethodInvoked = false;
 	}
 
@@ -129,6 +132,34 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 	}
 
+	// TODO [#978] Enable failing @Disabled test.
+	@Disabled("Disabled until #978 is resolved")
+	@Test
+	void executeTestCaseWithOverriddenGenericDefaultMethodSelectedByClass() throws Exception {
+		Class<?> clazz = GenericTestCaseWithOverriddenDefaultMethod.class;
+		LauncherDiscoveryRequest request = request().selectors(selectClass(clazz)).build();
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		// @formatter:off
+		assertAll(
+				() -> assertTrue(beforeAllInvoked, "@BeforeAll default method invoked from interface"),
+				() -> assertTrue(afterAllInvoked, "@AfterAll default method invoked from interface"),
+				() -> assertFalse(defaultMethodInvoked, "default @Test method should not have been invoked from interface"),
+				() -> assertTrue(overriddenDefaultMethodInvoked, "overridden default @Test method invoked from interface"),
+				() -> assertTrue(localMethodInvoked, "local @Test method invoked from class"),
+				// If defaultMethodInvoked is false and the following ends up being
+				// 3 instead of 2, that means that the overriding method gets invoked
+				// twice: once as itself and a second time "as" the default method which
+				// should not have been "discovered" since it is overridden.
+				() -> assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started"),
+				() -> assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed")
+		);
+		// @formatter:on
+	}
+
+	// -------------------------------------------------------------------------
+
 	interface TestInterface {
 
 		@BeforeAll
@@ -174,6 +205,23 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	}
 
 	static class GenericTestCaseWithDefaultMethod implements GenericTestInterface<Long> {
+
+		@Test
+		void test(Double number) {
+			localMethodInvoked = true;
+			assertThat(number).isEqualTo(42.0);
+		}
+
+	}
+
+	static class GenericTestCaseWithOverriddenDefaultMethod implements GenericTestInterface<Long> {
+
+		@Test
+		@Override
+		public void test(Long number) {
+			overriddenDefaultMethodInvoked = true;
+			assertThat(number.intValue()).isEqualTo(42);
+		}
 
 		@Test
 		void test(Double number) {

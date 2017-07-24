@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
@@ -896,17 +897,36 @@ class ReflectionUtilsTests {
 		// Search for all foo(*) methods.
 		List<Method> methods = ReflectionUtils.findMethods(clazz, m -> m.getName().equals("foo"));
 
-		// @formatter:off
-		List<String> signatures = methods.stream()
-			.map(m -> String.format("%s(%s)", m.getName(), ClassUtils.nullSafeToString(m.getParameterTypes())))
-			.collect(toList());
-		// @formatter:on
-
 		// One might expect or desire that the signature for the generic foo(N)
 		// default method would be "foo(java.lang.Long)" when looked up via the
 		// concrete parameterized class, but it apparently is only _visible_ as
 		// "foo(java.lang.Number)" via reflection.
-		assertThat(signatures).containsExactly("foo(java.lang.Number)", "foo(java.lang.Double)");
+		assertThat(toMethodSignatures(methods)).containsExactly("foo(java.lang.Number)", "foo(java.lang.Double)");
+	}
+
+	// TODO [#978] Enable failing @Disabled test.
+	@Disabled("Disabled until #978 is resolved")
+	@Test
+	void findMethodsDoesNotReturnOverriddenDefaultMethods() throws Exception {
+		Class<?> clazz = InterfaceWithOverriddenGenericDefaultMethodImpl.class;
+
+		// Search for all foo(*) methods.
+		List<Method> methods = ReflectionUtils.findMethods(clazz, m -> m.getName().equals("foo"));
+		List<String> signatures = toMethodSignatures(methods);
+
+		// Although the subsequent assertion covers this case as well, this
+		// assertion is in place to provide a more informative failure message.
+		assertThat(signatures).as("overridden default method should not be in results").doesNotContain(
+			"foo(java.lang.Number)");
+		assertThat(signatures).containsExactly("foo(java.lang.Long)", "foo(java.lang.Double)");
+	}
+
+	private static List<String> toMethodSignatures(List<Method> methods) {
+		// @formatter:off
+		return methods.stream()
+			.map(m -> String.format("%s(%s)", m.getName(), ClassUtils.nullSafeToString(m.getParameterTypes())))
+			.collect(toList());
+		// @formatter:on
 	}
 
 	@Test
@@ -1002,6 +1022,16 @@ class ReflectionUtilsTests {
 	}
 
 	static class InterfaceWithGenericDefaultMethodImpl implements InterfaceWithGenericDefaultMethod<Long> {
+
+		void foo(Double number) {
+		}
+	}
+
+	static class InterfaceWithOverriddenGenericDefaultMethodImpl implements InterfaceWithGenericDefaultMethod<Long> {
+
+		@Override
+		public void foo(Long number) {
+		}
 
 		void foo(Double number) {
 		}
