@@ -858,24 +858,28 @@ public final class ReflectionUtils {
 
 	/**
 	 * Get a sorted, mutable list of all default methods present in interfaces
-	 * implemented by the supplied class.
+	 * implemented by the supplied class which are also <em>visible</em> within
+	 * the supplied class.
+	 *
+	 * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-6.html#d5e9652">Method Visibility</a>
+	 * in the Java Language Specification
 	 */
 	private static List<Method> getDefaultMethods(Class<?> clazz) {
-		List<Method> surfaceDefaultMethods = new ArrayList<>();
-		Method[] surfaceMethods = clazz.getMethods();
-		for (int i = 0; i < surfaceMethods.length; i++) {
-			Method candidate = surfaceMethods[i];
+		// Visible default methods are interface default methods that have not
+		// been overridden.
+		List<Method> visibleDefaultMethods = new ArrayList<>();
+		for (Method candidate : clazz.getMethods()) {
 			if (candidate.isDefault()) {
-				surfaceDefaultMethods.add(candidate);
+				visibleDefaultMethods.add(candidate);
 			}
 		}
-		if (surfaceDefaultMethods.isEmpty()) {
-			return surfaceDefaultMethods;
+		if (visibleDefaultMethods.isEmpty()) {
+			return visibleDefaultMethods;
 		}
 		List<Method> defaultMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
 			for (Method method : getMethods(ifc)) {
-				if (surfaceDefaultMethods.contains(method)) {
+				if (visibleDefaultMethods.contains(method)) {
 					defaultMethods.add(method);
 				}
 			}
@@ -918,17 +922,17 @@ public final class ReflectionUtils {
 					.filter(m -> !isAbstract(m))
 					.collect(toList());
 
-			List<Method> extendedInterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
+			List<Method> superinterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
 					.filter(method -> !isMethodShadowedByLocalMethods(method, localInterfaceMethods))
 					.collect(toList());
 			// @formatter:on
 
 			if (traversalMode == TOP_DOWN) {
-				allInterfaceMethods.addAll(extendedInterfaceMethods);
+				allInterfaceMethods.addAll(superinterfaceMethods);
 			}
 			allInterfaceMethods.addAll(localInterfaceMethods);
 			if (traversalMode == BOTTOM_UP) {
-				allInterfaceMethods.addAll(extendedInterfaceMethods);
+				allInterfaceMethods.addAll(superinterfaceMethods);
 			}
 		}
 		return allInterfaceMethods;
