@@ -22,7 +22,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -132,8 +131,6 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 	}
 
-	// TODO [#978] Enable failing @Disabled test.
-	@Disabled("Disabled until #978 is resolved")
 	@Test
 	void executeTestCaseWithOverriddenGenericDefaultMethodSelectedByClass() throws Exception {
 		Class<?> clazz = GenericTestCaseWithOverriddenDefaultMethod.class;

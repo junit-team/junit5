@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
@@ -916,8 +915,6 @@ class ReflectionUtilsTests {
 		assertThat(toMethodSignatures(methods)).containsExactly("foo(java.lang.Number)", "foo(java.lang.Double)");
 	}
 
-	// TODO [#978] Enable failing @Disabled test.
-	@Disabled("Disabled until #978 is resolved")
 	@Test
 	void findMethodsDoesNotReturnOverriddenDefaultMethods() throws Exception {
 		Class<?> clazz = InterfaceWithOverriddenGenericDefaultMethodImpl.class;
