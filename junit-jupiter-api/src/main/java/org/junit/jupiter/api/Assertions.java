@@ -1113,6 +1113,36 @@ public final class Assertions {
 		return AssertThrows.assertThrows(expectedType, executable);
 	}
 
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
+	 * an exception of the {@code expectedType} and returns the exception.
+	 *
+	 * <p>If no exception is thrown, or if an exception of a different type is thrown,
+	 * this method will fail with the supplied {@code message}.
+	 *
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * simply ignore the return value.
+	 */
+	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
+		return AssertThrows.assertThrows(expectedType, executable, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
+	 * an exception of the {@code expectedType} and returns the exception.
+	 *
+	 * <p>If no exception is thrown, or if an exception of a different type is thrown,
+	 * this method will fail.
+	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 *
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * simply ignore the return value.
+	 */
+	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
+			Supplier<String> messageSupplier) {
+		return AssertThrows.assertThrows(expectedType, executable, messageSupplier);
+	}
+
 	// --- assertTimeout -------------------------------------------------------
 
 	// --- executable ---
