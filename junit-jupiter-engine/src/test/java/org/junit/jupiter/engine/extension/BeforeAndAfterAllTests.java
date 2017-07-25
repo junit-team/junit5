@@ -108,6 +108,33 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void beforeAllAndAfterAllCallbacksInSubSubclassWithStaticMethodHiding() {
+		// @formatter:off
+		assertBeforeAllAndAfterAllCallbacks(ThirdLevelStaticHidingTestCase.class,
+			"fooBeforeAllCallback",
+			"barBeforeAllCallback",
+				"bazBeforeAllCallback",
+					"quuxBeforeAllCallback",
+						"beforeAllMethod-1-hidden",
+						"beforeAllMethod-2-hidden",
+						"beforeAllMethod-3",
+							"test-3",
+						// The @AfterAll methods are executed as 1/2/3 due to
+						// the "stable" method sort order on the Platform.
+						"afterAllMethod-1-hidden",
+						"afterAllMethod-2-hidden",
+						"afterAllMethod-3",
+					"quuxAfterAllCallback",
+				"bazAfterAllCallback",
+			"barAfterAllCallback",
+			"fooAfterAllCallback"
+		);
+		// @formatter:on
+
+		assertThat(actualExceptionInAfterAllCallback).isEmpty();
+	}
+
+	@Test
 	void beforeAllMethodThrowsAnException() {
 		// @formatter:off
 		assertBeforeAllAndAfterAllCallbacks(ExceptionInBeforeAllMethodTestCase.class, 0, 0,
@@ -204,6 +231,46 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		@BeforeAll
 		static void beforeAll3() {
 			callSequence.add("beforeAllMethod-3");
+		}
+
+		@AfterAll
+		static void afterAll3() {
+			callSequence.add("afterAllMethod-3");
+		}
+
+		@Test
+		@Override
+		void test() {
+			callSequence.add("test-3");
+		}
+	}
+
+	@ExtendWith(QuuxClassLevelCallbacks.class)
+	private static class ThirdLevelStaticHidingTestCase extends SecondLevelTestCase {
+
+		@BeforeAll
+		static void beforeAll1() {
+			callSequence.add("beforeAllMethod-1-hidden");
+		}
+
+		@BeforeAll
+		static void beforeAll2() {
+			callSequence.add("beforeAllMethod-2-hidden");
+		}
+
+		@BeforeAll
+		static void beforeAll3() {
+			callSequence.add("beforeAllMethod-3");
+		}
+
+		@AfterAll
+		static void afterAll1() {
+			callSequence.add("afterAllMethod-1-hidden");
+		}
+
+		@AfterAll
+		static void afterAll2() {
+			callSequence.add("afterAllMethod-2-hidden");
 		}
 
 		@AfterAll

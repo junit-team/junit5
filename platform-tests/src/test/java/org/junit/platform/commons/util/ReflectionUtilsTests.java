@@ -62,6 +62,12 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.InterfaceWithNestedC
  */
 class ReflectionUtilsTests {
 
+	private static final Predicate<Method> methodContainsFoo = method -> method.getName().contains("foo");
+	private static final Predicate<Method> methodContains1 = method -> method.getName().contains("1");
+	private static final Predicate<Method> methodContains2 = method -> method.getName().contains("2");
+	private static final Predicate<Method> methodContains4 = method -> method.getName().contains("4");
+	private static final Predicate<Method> methodContains5 = method -> method.getName().contains("5");
+
 	@Test
 	void getDefaultClassLoaderWithExplicitContextClassLoader() {
 		ClassLoader original = Thread.currentThread().getContextClassLoader();
@@ -757,7 +763,7 @@ class ReflectionUtilsTests {
 	}
 
 	private static void assertOneFooMethodIn(Class<?> clazz) {
-		assertThat(findMethods(clazz, method -> method.getName().contains("foo"))).hasSize(1);
+		assertThat(findMethods(clazz, methodContainsFoo)).hasSize(1);
 	}
 
 	@Test
@@ -836,17 +842,17 @@ class ReflectionUtilsTests {
 
 	@Test
 	void findMethodsWithShadowingUsingHierarchyUpMode() throws Exception {
-		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("1"), BOTTOM_UP))//
+		assertThat(findMethods(MethodShadowingChild.class, methodContains1, BOTTOM_UP))//
 				.containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
 
-		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("2"), BOTTOM_UP))//
+		assertThat(findMethods(MethodShadowingChild.class, methodContains2, BOTTOM_UP))//
 				.containsExactly(MethodShadowingParent.class.getMethod("method2", int.class, int.class, int.class),
 					MethodShadowingInterface.class.getMethod("method2", int.class, int.class));
 
-		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("4"), BOTTOM_UP))//
+		assertThat(findMethods(MethodShadowingChild.class, methodContains4, BOTTOM_UP))//
 				.containsExactly(MethodShadowingChild.class.getMethod("method4", boolean.class));
 
-		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("5"), BOTTOM_UP))//
+		assertThat(findMethods(MethodShadowingChild.class, methodContains5, BOTTOM_UP))//
 				.containsExactly(MethodShadowingChild.class.getMethod("method5", Long.class),
 					MethodShadowingParent.class.getMethod("method5", String.class));
 
@@ -863,17 +869,17 @@ class ReflectionUtilsTests {
 
 	@Test
 	void findMethodsWithShadowingUsingHierarchyDownMode() throws Exception {
-		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("1"), TOP_DOWN))//
+		assertThat(findMethods(MethodShadowingChild.class, methodContains1, TOP_DOWN))//
 				.containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
 
-		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("2"), TOP_DOWN))//
+		assertThat(findMethods(MethodShadowingChild.class, methodContains2, TOP_DOWN))//
 				.containsExactly(MethodShadowingInterface.class.getMethod("method2", int.class, int.class),
 					MethodShadowingParent.class.getMethod("method2", int.class, int.class, int.class));
 
-		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("4"), TOP_DOWN))//
+		assertThat(findMethods(MethodShadowingChild.class, methodContains4, TOP_DOWN))//
 				.containsExactly(MethodShadowingChild.class.getMethod("method4", boolean.class));
 
-		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("5"), TOP_DOWN))//
+		assertThat(findMethods(MethodShadowingChild.class, methodContains5, TOP_DOWN))//
 				.containsExactly(MethodShadowingParent.class.getMethod("method5", String.class),
 					MethodShadowingChild.class.getMethod("method5", Long.class));
 
@@ -886,6 +892,56 @@ class ReflectionUtilsTests {
 		assertThat(methods.subList(3, 6)).containsOnly(MethodShadowingChild.class.getMethod("method4", boolean.class),
 			MethodShadowingChild.class.getMethod("method1", String.class),
 			MethodShadowingChild.class.getMethod("method5", Long.class));
+	}
+
+	@Test
+	void findMethodsWithStaticHidingUsingHierarchyUpMode() throws Exception {
+		Class<?> ifc = StaticMethodHidingInterface.class;
+		Class<?> parent = StaticMethodHidingParent.class;
+		Class<?> child = StaticMethodHidingChild.class;
+
+		Method ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
+		Method childMethod1 = child.getDeclaredMethod("method1", String.class);
+		Method childMethod4 = child.getDeclaredMethod("method4", boolean.class);
+		Method childMethod5 = child.getDeclaredMethod("method5", Long.class);
+		Method parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
+		Method parentMethod5 = parent.getDeclaredMethod("method5", String.class);
+
+		assertThat(findMethods(child, methodContains1, BOTTOM_UP)).containsExactly(childMethod1);
+		assertThat(findMethods(child, methodContains2, BOTTOM_UP)).containsExactly(parentMethod2, ifcMethod2);
+		assertThat(findMethods(child, methodContains4, BOTTOM_UP)).containsExactly(childMethod4);
+		assertThat(findMethods(child, methodContains5, BOTTOM_UP)).containsExactly(childMethod5, parentMethod5);
+
+		List<Method> methods = findMethods(child, method -> true, BOTTOM_UP);
+		assertEquals(6, methods.size());
+		assertThat(methods.subList(0, 3)).containsOnly(childMethod1, childMethod4, childMethod5);
+		assertThat(methods.subList(3, 5)).containsOnly(parentMethod2, parentMethod5);
+		assertEquals(ifcMethod2, methods.get(5));
+	}
+
+	@Test
+	void findMethodsWithStaticHidingUsingHierarchyDownMode() throws Exception {
+		Class<?> ifc = StaticMethodHidingInterface.class;
+		Class<?> parent = StaticMethodHidingParent.class;
+		Class<?> child = StaticMethodHidingChild.class;
+
+		Method ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
+		Method childMethod1 = child.getDeclaredMethod("method1", String.class);
+		Method childMethod4 = child.getDeclaredMethod("method4", boolean.class);
+		Method childMethod5 = child.getDeclaredMethod("method5", Long.class);
+		Method parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
+		Method parentMethod5 = parent.getDeclaredMethod("method5", String.class);
+
+		assertThat(findMethods(child, methodContains1, TOP_DOWN)).containsExactly(childMethod1);
+		assertThat(findMethods(child, methodContains2, TOP_DOWN)).containsExactly(ifcMethod2, parentMethod2);
+		assertThat(findMethods(child, methodContains4, TOP_DOWN)).containsExactly(childMethod4);
+		assertThat(findMethods(child, methodContains5, TOP_DOWN)).containsExactly(parentMethod5, childMethod5);
+
+		List<Method> methods = findMethods(child, method -> true, TOP_DOWN);
+		assertEquals(6, methods.size());
+		assertEquals(ifcMethod2, methods.get(0));
+		assertThat(methods.subList(1, 3)).containsOnly(parentMethod2, parentMethod5);
+		assertThat(methods.subList(3, 6)).containsOnly(childMethod1, childMethod4, childMethod5);
 	}
 
 	@Test
@@ -1275,6 +1331,42 @@ class ReflectionUtilsTests {
 		}
 
 		public void method5(Long i) {
+		}
+	}
+
+	interface StaticMethodHidingInterface {
+
+		static void method1(String string) {
+		}
+
+		static void method2(int i, int j) {
+		}
+	}
+
+	static class StaticMethodHidingParent implements StaticMethodHidingInterface {
+
+		static void method1(String string) {
+		}
+
+		static void method2(int i, int j, int k) {
+		}
+
+		static void method4(boolean flag) {
+		}
+
+		static void method5(String string) {
+		}
+	}
+
+	static class StaticMethodHidingChild extends StaticMethodHidingParent {
+
+		static void method1(String string) {
+		}
+
+		static void method4(boolean flag) {
+		}
+
+		static void method5(Long i) {
 		}
 	}
 
