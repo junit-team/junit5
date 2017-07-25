@@ -62,7 +62,7 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.InterfaceWithNestedC
  */
 class ReflectionUtilsTests {
 
-	private static final Predicate<Method> methodContainsFoo = method -> method.getName().contains("foo");
+	private static final Predicate<Method> isFooMethod = method -> method.getName().equals("foo");
 	private static final Predicate<Method> methodContains1 = method -> method.getName().contains("1");
 	private static final Predicate<Method> methodContains2 = method -> method.getName().contains("2");
 	private static final Predicate<Method> methodContains4 = method -> method.getName().contains("4");
@@ -763,7 +763,7 @@ class ReflectionUtilsTests {
 	}
 
 	private static void assertOneFooMethodIn(Class<?> clazz) {
-		assertThat(findMethods(clazz, methodContainsFoo)).hasSize(1);
+		assertThat(findMethods(clazz, isFooMethod)).hasSize(1);
 	}
 
 	@Test
@@ -949,7 +949,7 @@ class ReflectionUtilsTests {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
 
 		// Search for all foo(*) methods.
-		List<Method> methods = findMethods(clazz, m -> m.getName().equals("foo"));
+		List<Method> methods = findMethods(clazz, isFooMethod);
 
 		// One might expect or desire that the signature for the generic foo(N)
 		// default method would be "foo(java.lang.Long)" when looked up via the
@@ -963,7 +963,7 @@ class ReflectionUtilsTests {
 		Class<?> clazz = InterfaceWithOverriddenGenericDefaultMethodImpl.class;
 
 		// Search for all foo(*) methods.
-		List<Method> methods = findMethods(clazz, m -> m.getName().equals("foo"));
+		List<Method> methods = findMethods(clazz, isFooMethod);
 		List<String> signatures = signaturesOf(methods);
 
 		// Although the subsequent assertion covers this case as well, this
