@@ -82,7 +82,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 	 */
 	private static class DefensiveJUnit4Builder extends JUnit4Builder {
 
-		private static final Predicate<Method> hasTestAnnotation = new IsPotentialJUnit4TestMethod();
+		private static final Predicate<Method> isPotentialJUnit4TestMethod = new IsPotentialJUnit4TestMethod();
 
 		@Override
 		public Runner runnerForClass(Class<?> testClass) throws Throwable {
@@ -93,7 +93,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		}
 
 		private boolean containsTestMethods(Class<?> testClass) {
-			return !ReflectionUtils.findMethods(testClass, hasTestAnnotation).isEmpty();
+			return ReflectionUtils.isMethodPresent(testClass, isPotentialJUnit4TestMethod);
 		}
 	}
 

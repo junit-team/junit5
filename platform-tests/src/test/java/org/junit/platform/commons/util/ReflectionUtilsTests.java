@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -586,6 +587,22 @@ class ReflectionUtilsTests {
 
 		assertThat(ReflectionUtils.getMethod(String.class, "noSuchMethod")).isEmpty();
 		assertThat(ReflectionUtils.getMethod(Object.class, "clone", int.class)).isEmpty();
+	}
+
+	@Test
+	void isMethodPresentPreconditions() {
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isMethodPresent(null, m -> true));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isMethodPresent(getClass(), null));
+	}
+
+	@Test
+	void isMethodPresent() {
+		Predicate<Method> isMethod1 = method -> (method.getName().equals("method1")
+				&& method.getParameterTypes().length == 1 && method.getParameterTypes()[0] == String.class);
+
+		assertThat(ReflectionUtils.isMethodPresent(MethodShadowingChild.class, isMethod1)).isTrue();
+
+		assertThat(ReflectionUtils.isMethodPresent(getClass(), isMethod1)).isFalse();
 	}
 
 	@Test

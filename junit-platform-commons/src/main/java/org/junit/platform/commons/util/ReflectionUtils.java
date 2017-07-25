@@ -691,6 +691,27 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Determine if a {@link Method} matching the supplied {@link Predicate}
+	 * is present within the type hierarchy of the specified class, beginning
+	 * with the specified class or interface and traversing up the type
+	 * hierarchy until such a method is found or the type hierarchy is exhausted.
+	 *
+	 * @param clazz the class or interface in which to find the method; never
+	 * {@code null}
+	 * @param predicate the predicate to use to test for a match; never
+	 * {@code null}
+	 * @return {@code true} if such a method is present
+	 * @see #findMethod(Class, String, String)
+	 * @see #findMethod(Class, String, Class...)
+	 */
+	public static boolean isMethodPresent(Class<?> clazz, Predicate<Method> predicate) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+
+		return findMethod(clazz, predicate).isPresent();
+	}
+
+	/**
 	 * Get the {@link Method} in the specified class with the specified name
 	 * and parameter types.
 	 *
@@ -750,18 +771,25 @@ public final class ReflectionUtils {
 		Preconditions.notNull(parameterTypes, "Parameter types array must not be null");
 		Preconditions.containsNoNullElements(parameterTypes, "Individual parameter types must not be null");
 
+		return findMethod(clazz, method -> hasCompatibleSignature(method, methodName, parameterTypes));
+	}
+
+	private static Optional<Method> findMethod(Class<?> clazz, Predicate<Method> predicate) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+
 		for (Class<?> current = clazz; current != null && current != Object.class; current = current.getSuperclass()) {
 			// Search for match in current type
 			List<Method> methods = current.isInterface() ? getMethods(current) : getDeclaredMethods(current, BOTTOM_UP);
 			for (Method method : methods) {
-				if (hasCompatibleSignature(method, methodName, parameterTypes)) {
+				if (predicate.test(method)) {
 					return Optional.of(method);
 				}
 			}
 
 			// Search for match in interfaces implemented by current type
 			for (Class<?> ifc : current.getInterfaces()) {
-				Optional<Method> optional = findMethod(ifc, methodName, parameterTypes);
+				Optional<Method> optional = findMethod(ifc, predicate);
 				if (optional.isPresent()) {
 					return optional;
 				}

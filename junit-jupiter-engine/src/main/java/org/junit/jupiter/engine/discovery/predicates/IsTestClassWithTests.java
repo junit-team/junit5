@@ -46,7 +46,7 @@ class IsTestClassWithTests implements Predicate<Class<?>> {
 	}
 
 	private boolean hasTestOrTestFactoryOrTestTemplateMethods(Class<?> candidate) {
-		return !ReflectionUtils.findMethods(candidate, isTestOrTestFactoryOrTestTemplateMethod).isEmpty();
+		return ReflectionUtils.isMethodPresent(candidate, isTestOrTestFactoryOrTestTemplateMethod);
 	}
 
 	private boolean hasNestedTests(Class<?> candidate) {
