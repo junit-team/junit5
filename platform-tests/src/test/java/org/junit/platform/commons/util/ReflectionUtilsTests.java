@@ -23,6 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
+import static org.junit.platform.commons.util.ReflectionUtils.getFullyQualifiedMethodName;
+import static org.junit.platform.commons.util.ReflectionUtils.invokeMethod;
+import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
@@ -134,6 +139,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void newInstance() {
+		// @formatter:off
 		assertThat(ReflectionUtils.newInstance(C.class, "one", "two")).isNotNull();
 		assertThat(ReflectionUtils.newInstance(C.class)).isNotNull();
 		assertThat(ReflectionUtils.newInstance(C.class, new Object[0])).isNotNull();
@@ -141,25 +147,21 @@ class ReflectionUtilsTests {
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, "one", null));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, null, "two"));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, null, null));
-		assertThrows(PreconditionViolationException.class, () -> {
-			ReflectionUtils.newInstance(C.class, ((Object[]) null));
-		});
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, ((Object[]) null)));
 
-		RuntimeException exception = assertThrows(RuntimeException.class,
-			() -> ReflectionUtils.newInstance(Exploder.class));
+		RuntimeException exception = assertThrows(RuntimeException.class, () -> ReflectionUtils.newInstance(Exploder.class));
 		assertThat(exception).hasMessage("boom");
+		// @formatter:on
 	}
 
 	@Test
 	void readFieldValueOfExistingField() {
-		Optional<Object> value = ReflectionUtils.readFieldValue(MyClass.class, "value", new MyClass(42));
-		assertThat(value).contains(42);
+		assertThat(readFieldValue(MyClass.class, "value", new MyClass(42))).contains(42);
 	}
 
 	@Test
 	void readFieldValueOfMissingField() {
-		Optional<Object> value = ReflectionUtils.readFieldValue(MyClass.class, "doesNotExist", new MyClass(42));
-		assertThat(value).isEmpty();
+		assertThat(readFieldValue(MyClass.class, "doesNotExist", new MyClass(42))).isEmpty();
 	}
 
 	@Test
@@ -209,35 +211,35 @@ class ReflectionUtilsTests {
 
 	@Test
 	void invokeMethodPreconditions() {
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.invokeMethod(null, new Object()));
-
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.invokeMethod(Object.class.getMethod("hashCode"), null));
+		// @formatter:off
+		assertThrows(PreconditionViolationException.class, () -> invokeMethod(null, new Object()));
+		assertThrows(PreconditionViolationException.class, () -> invokeMethod(Object.class.getMethod("hashCode"), null));
+		// @formatter:on
 	}
 
 	@Test
 	void invokePublicMethod() throws Exception {
 		InvocationTracker tracker = new InvocationTracker();
-		ReflectionUtils.invokeMethod(InvocationTracker.class.getDeclaredMethod("publicMethod"), tracker);
+		invokeMethod(InvocationTracker.class.getDeclaredMethod("publicMethod"), tracker);
 		assertTrue(tracker.publicMethodInvoked);
 	}
 
 	@Test
 	void invokePrivateMethod() throws Exception {
 		InvocationTracker tracker = new InvocationTracker();
-		ReflectionUtils.invokeMethod(InvocationTracker.class.getDeclaredMethod("privateMethod"), tracker);
+		invokeMethod(InvocationTracker.class.getDeclaredMethod("privateMethod"), tracker);
 		assertTrue(tracker.privateMethodInvoked);
 	}
 
 	@Test
 	void invokePublicStaticMethod() throws Exception {
-		ReflectionUtils.invokeMethod(InvocationTracker.class.getDeclaredMethod("publicStaticMethod"), null);
+		invokeMethod(InvocationTracker.class.getDeclaredMethod("publicStaticMethod"), null);
 		assertTrue(InvocationTracker.publicStaticMethodInvoked);
 	}
 
 	@Test
 	void invokePrivateStaticMethod() throws Exception {
-		ReflectionUtils.invokeMethod(InvocationTracker.class.getDeclaredMethod("privateStaticMethod"), null);
+		invokeMethod(InvocationTracker.class.getDeclaredMethod("privateStaticMethod"), null);
 		assertTrue(InvocationTracker.privateStaticMethodInvoked);
 	}
 
@@ -461,7 +463,7 @@ class ReflectionUtilsTests {
 	}
 
 	private static String fqmn(Class<?> clazz, String methodName, Class<?>... params) {
-		return ReflectionUtils.getFullyQualifiedMethodName(clazz, methodName, params);
+		return getFullyQualifiedMethodName(clazz, methodName, params);
 	}
 
 	private static String fqmnWithParamNames(Class<?> clazz, String methodName, String... params) {
@@ -478,11 +480,11 @@ class ReflectionUtilsTests {
 
 	@Test
 	void getOutermostInstancePreconditions() {
+		// @formatter:off
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(null, null));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.getOutermostInstance(null, Object.class));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.getOutermostInstance(new Object(), null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(null, Object.class));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(new Object(), null));
+		// @formatter:on
 	}
 
 	@Test
@@ -491,10 +493,10 @@ class ReflectionUtilsTests {
 		FirstClass.SecondClass secondClass = firstClass.new SecondClass();
 		FirstClass.SecondClass.ThirdClass thirdClass = secondClass.new ThirdClass();
 
-		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.ThirdClass.class)).contains(
-			thirdClass);
-		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.class)).contains(
-			secondClass);
+		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.ThirdClass.class))//
+				.contains(thirdClass);
+		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.class))//
+				.contains(secondClass);
 		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.class)).contains(firstClass);
 		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, String.class)).isEmpty();
 	}
@@ -519,18 +521,17 @@ class ReflectionUtilsTests {
 
 	@Test
 	void findNestedClassesPreconditions() {
+		// @formatter:off
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findNestedClasses(null, null));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findNestedClasses(null, clazz -> true));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findNestedClasses(FirstClass.class, null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findNestedClasses(null, clazz -> true));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findNestedClasses(FirstClass.class, null));
+		// @formatter:on
 	}
 
 	@Test
 	void findNestedClasses() {
 		// @formatter:off
-		assertThat(ReflectionUtils.findNestedClasses(Object.class, clazz -> true))
-			.isEmpty();
+		assertThat(ReflectionUtils.findNestedClasses(Object.class, clazz -> true)).isEmpty();
 
 		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, clazz -> true))
 			.containsOnly(Nested1.class, Nested2.class, Nested3.class);
@@ -548,9 +549,10 @@ class ReflectionUtilsTests {
 
 	@Test
 	void getDeclaredConstructorPreconditions() {
+		// @formatter:off
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getDeclaredConstructor(null));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.getDeclaredConstructor(ClassWithTwoConstructors.class));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getDeclaredConstructor(ClassWithTwoConstructors.class));
+		// @formatter:on
 	}
 
 	@Test
@@ -575,11 +577,11 @@ class ReflectionUtilsTests {
 	@Test
 	void getMethod() throws Exception {
 		assertThat(ReflectionUtils.getMethod(Object.class, "hashCode")).contains(Object.class.getMethod("hashCode"));
-		assertThat(ReflectionUtils.getMethod(String.class, "charAt", int.class)).contains(
-			String.class.getMethod("charAt", int.class));
+		assertThat(ReflectionUtils.getMethod(String.class, "charAt", int.class))//
+				.contains(String.class.getMethod("charAt", int.class));
 
-		assertThat(ReflectionUtils.getMethod(Path.class, "subpath", int.class, int.class)).contains(
-			Path.class.getMethod("subpath", int.class, int.class));
+		assertThat(ReflectionUtils.getMethod(Path.class, "subpath", int.class, int.class))//
+				.contains(Path.class.getMethod("subpath", int.class, int.class));
 		assertThat(ReflectionUtils.getMethod(String.class, "chars")).contains(String.class.getMethod("chars"));
 
 		assertThrows(NoSuchMethodException.class, () -> ReflectionUtils.getMethod(String.class, "noSuchMethod"));
@@ -588,47 +590,44 @@ class ReflectionUtilsTests {
 
 	@Test
 	void findMethodByParameterTypesPreconditions() throws Exception {
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findMethod(null, null));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findMethod(null, "method"));
+		// @formatter:off
+		assertThrows(PreconditionViolationException.class, () -> findMethod(null, null));
+		assertThrows(PreconditionViolationException.class, () -> findMethod(null, "method"));
 
-		RuntimeException exception = assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethod(String.class, null));
+		RuntimeException exception = assertThrows(PreconditionViolationException.class, () -> findMethod(String.class, null));
 		assertThat(exception).hasMessage("Method name must not be null or blank");
 
-		exception = assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethod(String.class, "   "));
+		exception = assertThrows(PreconditionViolationException.class, () -> findMethod(String.class, "   "));
 		assertThat(exception).hasMessage("Method name must not be null or blank");
 
-		exception = assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethod(Files.class, "copy", (Class<?>[]) null));
+		exception = assertThrows(PreconditionViolationException.class, () -> findMethod(Files.class, "copy", (Class<?>[]) null));
 		assertThat(exception).hasMessage("Parameter types array must not be null");
 
-		exception = assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethod(Files.class, "copy", (Class<?>) null));
+		exception = assertThrows(PreconditionViolationException.class, () -> findMethod(Files.class, "copy", (Class<?>) null));
 		assertThat(exception).hasMessage("Individual parameter types must not be null");
 
-		exception = assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethod(Files.class, "copy", new Class<?>[] { Path.class, null }));
+		exception = assertThrows(PreconditionViolationException.class, () -> findMethod(Files.class, "copy", new Class<?>[] { Path.class, null }));
 		assertThat(exception).hasMessage("Individual parameter types must not be null");
+		// @formatter:on
 	}
 
 	@Test
 	void findMethodByParameterTypes() throws Exception {
-		assertThat(ReflectionUtils.findMethod(Object.class, "noSuchMethod")).isEmpty();
-		assertThat(ReflectionUtils.findMethod(String.class, "noSuchMethod")).isEmpty();
+		assertThat(findMethod(Object.class, "noSuchMethod")).isEmpty();
+		assertThat(findMethod(String.class, "noSuchMethod")).isEmpty();
 
-		assertThat(ReflectionUtils.findMethod(String.class, "chars")).contains(String.class.getMethod("chars"));
-		assertThat(ReflectionUtils.findMethod(Files.class, "copy", Path.class, OutputStream.class)).contains(
-			Files.class.getMethod("copy", Path.class, OutputStream.class));
+		assertThat(findMethod(String.class, "chars")).contains(String.class.getMethod("chars"));
+		assertThat(findMethod(Files.class, "copy", Path.class, OutputStream.class))//
+				.contains(Files.class.getMethod("copy", Path.class, OutputStream.class));
 
-		assertThat(ReflectionUtils.findMethod(MethodShadowingChild.class, "method1", String.class)).contains(
-			MethodShadowingChild.class.getMethod("method1", String.class));
+		assertThat(findMethod(MethodShadowingChild.class, "method1", String.class))//
+				.contains(MethodShadowingChild.class.getMethod("method1", String.class));
 	}
 
 	@Test
 	void findMethodByParameterTypesInGenericInterface() {
 		Class<?> ifc = InterfaceWithGenericDefaultMethod.class;
-		Optional<Method> method = ReflectionUtils.findMethod(ifc, "foo", Number.class);
+		Optional<Method> method = findMethod(ifc, "foo", Number.class);
 		assertThat(method).isNotEmpty();
 		assertThat(method.get().getName()).isEqualTo("foo");
 	}
@@ -639,7 +638,7 @@ class ReflectionUtilsTests {
 	@Test
 	void findMethodByParameterTypesInGenericInterfaceViaParameterizedSubclass() {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
-		Optional<Method> method = ReflectionUtils.findMethod(clazz, "foo", Long.class);
+		Optional<Method> method = findMethod(clazz, "foo", Long.class);
 		assertThat(method).isNotEmpty();
 		assertThat(method.get().getName()).isEqualTo("foo");
 
@@ -662,7 +661,7 @@ class ReflectionUtilsTests {
 	void findMethodByParameterTypesWithOverloadedMethodNextToGenericDefaultMethod() {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
 		Class<?> parameterType = Double.class;
-		Optional<Method> method = ReflectionUtils.findMethod(clazz, "foo", parameterType);
+		Optional<Method> method = findMethod(clazz, "foo", parameterType);
 		assertThat(method).isNotEmpty();
 		assertThat(method.get().getName()).isEqualTo("foo");
 		assertThat(method.get().getParameterTypes()[0]).isEqualTo(parameterType);
@@ -704,7 +703,7 @@ class ReflectionUtilsTests {
 		Method method = getClass().getDeclaredMethod(methodName, Map.class);
 		String genericParameterTypeName = method.getGenericParameterTypes()[0].getTypeName();
 		JUnitException exception = assertThrows(JUnitException.class,
-			() -> ReflectionUtils.findMethod(getClass(), methodName, genericParameterTypeName));
+			() -> findMethod(getClass(), methodName, genericParameterTypeName));
 
 		assertThat(exception).hasMessageStartingWith("Failed to load parameter type [java.util.Map<java.lang.String");
 	}
@@ -713,87 +712,59 @@ class ReflectionUtilsTests {
 			throws NoSuchMethodException {
 
 		Method method = getClass().getDeclaredMethod(methodName, parameterType);
-		Optional<Method> optional = ReflectionUtils.findMethod(getClass(), methodName, parameterType.getName());
+		Optional<Method> optional = findMethod(getClass(), methodName, parameterType.getName());
 		assertThat(optional).contains(method);
 	}
 
 	@Test
 	void findMethodsPreconditions() {
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findMethods(null, null));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findMethods(null, clazz -> true));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findMethods(String.class, null));
+		// @formatter:off
+		assertThrows(PreconditionViolationException.class, () -> findMethods(null, null));
+		assertThrows(PreconditionViolationException.class, () -> findMethods(null, clazz -> true));
+		assertThrows(PreconditionViolationException.class, () -> findMethods(String.class, null));
 
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.findMethods(null, null, null));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethods(null, clazz -> true, BOTTOM_UP));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethods(String.class, null, BOTTOM_UP));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethods(String.class, clazz -> true, null));
+		assertThrows(PreconditionViolationException.class, () -> findMethods(null, null, null));
+		assertThrows(PreconditionViolationException.class, () -> findMethods(null, clazz -> true, BOTTOM_UP));
+		assertThrows(PreconditionViolationException.class, () -> findMethods(String.class, null, BOTTOM_UP));
+		assertThrows(PreconditionViolationException.class, () -> findMethods(String.class, clazz -> true, null));
+		// @formatter:on
 	}
 
 	@Test
 	void findMethodsInInterface() {
-		List<Method> methods = ReflectionUtils.findMethods(InterfaceWithOneDeclaredMethod.class,
-			method -> method.getName().contains("foo"));
-		assertNotNull(methods);
-		assertEquals(1, methods.size());
+		assertOneFooMethodIn(InterfaceWithOneDeclaredMethod.class);
+		assertOneFooMethodIn(InterfaceWithDefaultMethod.class);
+		assertOneFooMethodIn(InterfaceWithDefaultMethodImpl.class);
+		assertOneFooMethodIn(InterfaceWithStaticMethod.class);
+		assertOneFooMethodIn(InterfaceWithStaticMethodImpl.class);
+	}
 
-		methods = ReflectionUtils.findMethods(InterfaceWithDefaultMethod.class,
-			method -> method.getName().contains("foo"));
-		assertNotNull(methods);
-		assertEquals(1, methods.size());
-
-		methods = ReflectionUtils.findMethods(InterfaceWithDefaultMethodImpl.class,
-			method -> method.getName().contains("foo"));
-		assertNotNull(methods);
-		assertEquals(1, methods.size());
-
-		methods = ReflectionUtils.findMethods(InterfaceWithStaticMethod.class,
-			method -> method.getName().contains("foo"));
-		assertNotNull(methods);
-		assertEquals(1, methods.size());
-
-		methods = ReflectionUtils.findMethods(InterfaceWithStaticMethodImpl.class,
-			method -> method.getName().contains("foo"));
-		assertNotNull(methods);
-		assertEquals(1, methods.size());
+	private static void assertOneFooMethodIn(Class<?> clazz) {
+		assertThat(findMethods(clazz, method -> method.getName().contains("foo"))).hasSize(1);
 	}
 
 	@Test
 	void findMethodsInObject() {
-		List<Method> methods = ReflectionUtils.findMethods(Object.class, method -> true);
+		List<Method> methods = findMethods(Object.class, method -> true);
 		assertNotNull(methods);
 		assertTrue(methods.size() > 10);
 	}
 
 	@Test
 	void findMethodsInVoid() {
-		List<Method> methods = ReflectionUtils.findMethods(void.class, method -> true);
-		assertNotNull(methods);
-		assertEquals(0, methods.size());
-
-		methods = ReflectionUtils.findMethods(Void.class, method -> true);
-		assertNotNull(methods);
-		assertEquals(0, methods.size());
+		assertThat(findMethods(void.class, method -> true)).isEmpty();
+		assertThat(findMethods(Void.class, method -> true)).isEmpty();
 	}
 
 	@Test
 	void findMethodsInPrimitive() {
-		List<Method> methods = ReflectionUtils.findMethods(int.class, method -> true);
-		assertNotNull(methods);
-		assertEquals(0, methods.size());
+		assertThat(findMethods(int.class, method -> true)).isEmpty();
 	}
 
 	@Test
 	void findMethodsInArrays() {
-		List<Method> methods = ReflectionUtils.findMethods(int[].class, method -> true);
-		assertNotNull(methods);
-		assertEquals(0, methods.size());
-
-		methods = ReflectionUtils.findMethods(Integer[].class, method -> true);
-		assertNotNull(methods);
-		assertEquals(0, methods.size());
+		assertThat(findMethods(int[].class, method -> true)).isEmpty();
+		assertThat(findMethods(Integer[].class, method -> true)).isEmpty();
 	}
 
 	@Test
@@ -801,71 +772,68 @@ class ReflectionUtilsTests {
 		assertTrue(stream(ClassWithSyntheticMethod.class.getDeclaredMethods()).anyMatch(Method::isSynthetic),
 			"ClassWithSyntheticMethod must actually contain at least one synthetic method.");
 
-		List<Method> methods = ReflectionUtils.findMethods(ClassWithSyntheticMethod.class, method -> true);
+		List<Method> methods = findMethods(ClassWithSyntheticMethod.class, method -> true);
 		assertThat(methods).isEmpty();
 	}
 
 	@Test
 	void findMethodsUsingHierarchyUpMode() throws Exception {
-		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("method"),
-			BOTTOM_UP)).containsExactly(ChildClass.class.getMethod("method4"), ParentClass.class.getMethod("method3"),
-				GrandparentInterface.class.getMethod("method2"), GrandparentClass.class.getMethod("method1"));
+		assertThat(findMethods(ChildClass.class, method -> method.getName().contains("method"), BOTTOM_UP))//
+				.containsExactly(ChildClass.class.getMethod("method4"), ParentClass.class.getMethod("method3"),
+					GrandparentInterface.class.getMethod("method2"), GrandparentClass.class.getMethod("method1"));
 
-		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("other"),
-			BOTTOM_UP)).containsExactly(ChildClass.class.getMethod("otherMethod3"),
-				ParentClass.class.getMethod("otherMethod2"), GrandparentClass.class.getMethod("otherMethod1"));
+		assertThat(findMethods(ChildClass.class, method -> method.getName().contains("other"), BOTTOM_UP))//
+				.containsExactly(ChildClass.class.getMethod("otherMethod3"),
+					ParentClass.class.getMethod("otherMethod2"), GrandparentClass.class.getMethod("otherMethod1"));
 
-		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().equals("method2"),
-			BOTTOM_UP)).containsExactly(ParentClass.class.getMethod("method2"));
+		assertThat(findMethods(ChildClass.class, method -> method.getName().equals("method2"), BOTTOM_UP))//
+				.containsExactly(ParentClass.class.getMethod("method2"));
 
-		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().equals("wrongName"),
-			BOTTOM_UP)).isEmpty();
+		assertThat(findMethods(ChildClass.class, method -> method.getName().equals("wrongName"), BOTTOM_UP)).isEmpty();
 
-		assertThat(ReflectionUtils.findMethods(ParentClass.class, method -> method.getName().contains("method"),
-			BOTTOM_UP)).containsExactly(ParentClass.class.getMethod("method3"),
-				GrandparentInterface.class.getMethod("method2"), GrandparentClass.class.getMethod("method1"));
+		assertThat(findMethods(ParentClass.class, method -> method.getName().contains("method"), BOTTOM_UP))//
+				.containsExactly(ParentClass.class.getMethod("method3"),
+					GrandparentInterface.class.getMethod("method2"), GrandparentClass.class.getMethod("method1"));
 	}
 
 	@Test
 	void findMethodsUsingHierarchyDownMode() throws Exception {
-		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("method"),
-			TOP_DOWN)).containsExactly(GrandparentClass.class.getMethod("method1"),
-				GrandparentInterface.class.getMethod("method2"), ParentClass.class.getMethod("method3"),
-				ChildClass.class.getMethod("method4"));
+		assertThat(findMethods(ChildClass.class, method -> method.getName().contains("method"), TOP_DOWN))//
+				.containsExactly(GrandparentClass.class.getMethod("method1"),
+					GrandparentInterface.class.getMethod("method2"), ParentClass.class.getMethod("method3"),
+					ChildClass.class.getMethod("method4"));
 
-		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("other"),
-			TOP_DOWN)).containsExactly(GrandparentClass.class.getMethod("otherMethod1"),
-				ParentClass.class.getMethod("otherMethod2"), ChildClass.class.getMethod("otherMethod3"));
+		assertThat(findMethods(ChildClass.class, method -> method.getName().contains("other"), TOP_DOWN))//
+				.containsExactly(GrandparentClass.class.getMethod("otherMethod1"),
+					ParentClass.class.getMethod("otherMethod2"), ChildClass.class.getMethod("otherMethod3"));
 
-		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().equals("method2"),
-			TOP_DOWN)).containsExactly(ParentClass.class.getMethod("method2"));
+		assertThat(findMethods(ChildClass.class, method -> method.getName().equals("method2"), TOP_DOWN))//
+				.containsExactly(ParentClass.class.getMethod("method2"));
 
-		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().equals("wrongName"),
-			TOP_DOWN)).isEmpty();
+		assertThat(findMethods(ChildClass.class, method -> method.getName().equals("wrongName"), TOP_DOWN)).isEmpty();
 
-		assertThat(ReflectionUtils.findMethods(ParentClass.class, method -> method.getName().contains("method"),
-			TOP_DOWN)).containsExactly(GrandparentClass.class.getMethod("method1"),
-				GrandparentInterface.class.getMethod("method2"), ParentClass.class.getMethod("method3"));
+		assertThat(findMethods(ParentClass.class, method -> method.getName().contains("method"), TOP_DOWN))//
+				.containsExactly(GrandparentClass.class.getMethod("method1"),
+					GrandparentInterface.class.getMethod("method2"), ParentClass.class.getMethod("method3"));
 	}
 
 	@Test
 	void findMethodsWithShadowingUsingHierarchyUpMode() throws Exception {
-		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("1"),
-			BOTTOM_UP)).containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
+		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("1"), BOTTOM_UP))//
+				.containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
 
-		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("2"),
-			BOTTOM_UP)).containsExactly(
-				MethodShadowingParent.class.getMethod("method2", int.class, int.class, int.class),
-				MethodShadowingInterface.class.getMethod("method2", int.class, int.class));
+		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("2"), BOTTOM_UP))//
+				.containsExactly(MethodShadowingParent.class.getMethod("method2", int.class, int.class, int.class),
+					MethodShadowingInterface.class.getMethod("method2", int.class, int.class));
 
-		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("4"),
-			BOTTOM_UP)).containsExactly(MethodShadowingChild.class.getMethod("method4", boolean.class));
+		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("4"), BOTTOM_UP))//
+				.containsExactly(MethodShadowingChild.class.getMethod("method4", boolean.class));
 
-		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("5"),
-			BOTTOM_UP)).containsExactly(MethodShadowingChild.class.getMethod("method5", Long.class),
-				MethodShadowingParent.class.getMethod("method5", String.class));
+		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("5"), BOTTOM_UP))//
+				.containsExactly(MethodShadowingChild.class.getMethod("method5", Long.class),
+					MethodShadowingParent.class.getMethod("method5", String.class));
 
-		List<Method> methods = ReflectionUtils.findMethods(MethodShadowingChild.class, method -> true, BOTTOM_UP);
+		List<Method> methods = findMethods(MethodShadowingChild.class, method -> true, BOTTOM_UP);
 		assertEquals(6, methods.size());
 		assertThat(methods.subList(0, 3)).containsOnly(MethodShadowingChild.class.getMethod("method4", boolean.class),
 			MethodShadowingChild.class.getMethod("method1", String.class),
@@ -878,21 +846,21 @@ class ReflectionUtilsTests {
 
 	@Test
 	void findMethodsWithShadowingUsingHierarchyDownMode() throws Exception {
-		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("1"),
-			TOP_DOWN)).containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
+		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("1"), TOP_DOWN))//
+				.containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
 
-		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("2"),
-			TOP_DOWN)).containsExactly(MethodShadowingInterface.class.getMethod("method2", int.class, int.class),
-				MethodShadowingParent.class.getMethod("method2", int.class, int.class, int.class));
+		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("2"), TOP_DOWN))//
+				.containsExactly(MethodShadowingInterface.class.getMethod("method2", int.class, int.class),
+					MethodShadowingParent.class.getMethod("method2", int.class, int.class, int.class));
 
-		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("4"),
-			TOP_DOWN)).containsExactly(MethodShadowingChild.class.getMethod("method4", boolean.class));
+		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("4"), TOP_DOWN))//
+				.containsExactly(MethodShadowingChild.class.getMethod("method4", boolean.class));
 
-		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("5"),
-			TOP_DOWN)).containsExactly(MethodShadowingParent.class.getMethod("method5", String.class),
-				MethodShadowingChild.class.getMethod("method5", Long.class));
+		assertThat(findMethods(MethodShadowingChild.class, method -> method.getName().contains("5"), TOP_DOWN))//
+				.containsExactly(MethodShadowingParent.class.getMethod("method5", String.class),
+					MethodShadowingChild.class.getMethod("method5", Long.class));
 
-		List<Method> methods = ReflectionUtils.findMethods(MethodShadowingChild.class, method -> true, TOP_DOWN);
+		List<Method> methods = findMethods(MethodShadowingChild.class, method -> true, TOP_DOWN);
 		assertEquals(6, methods.size());
 		assertEquals(MethodShadowingInterface.class.getMethod("method2", int.class, int.class), methods.get(0));
 		assertThat(methods.subList(1, 3)).containsOnly(
@@ -908,13 +876,13 @@ class ReflectionUtilsTests {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
 
 		// Search for all foo(*) methods.
-		List<Method> methods = ReflectionUtils.findMethods(clazz, m -> m.getName().equals("foo"));
+		List<Method> methods = findMethods(clazz, m -> m.getName().equals("foo"));
 
 		// One might expect or desire that the signature for the generic foo(N)
 		// default method would be "foo(java.lang.Long)" when looked up via the
 		// concrete parameterized class, but it apparently is only _visible_ as
 		// "foo(java.lang.Number)" via reflection.
-		assertThat(toMethodSignatures(methods)).containsExactly("foo(java.lang.Number)", "foo(java.lang.Double)");
+		assertThat(signaturesOf(methods)).containsExactly("foo(java.lang.Number)", "foo(java.lang.Double)");
 	}
 
 	@Test
@@ -922,8 +890,8 @@ class ReflectionUtilsTests {
 		Class<?> clazz = InterfaceWithOverriddenGenericDefaultMethodImpl.class;
 
 		// Search for all foo(*) methods.
-		List<Method> methods = ReflectionUtils.findMethods(clazz, m -> m.getName().equals("foo"));
-		List<String> signatures = toMethodSignatures(methods);
+		List<Method> methods = findMethods(clazz, m -> m.getName().equals("foo"));
+		List<String> signatures = signaturesOf(methods);
 
 		// Although the subsequent assertion covers this case as well, this
 		// assertion is in place to provide a more informative failure message.
@@ -932,7 +900,7 @@ class ReflectionUtilsTests {
 		assertThat(signatures).containsExactly("foo(java.lang.Long)", "foo(java.lang.Double)");
 	}
 
-	private static List<String> toMethodSignatures(List<Method> methods) {
+	private static List<String> signaturesOf(List<Method> methods) {
 		// @formatter:off
 		return methods.stream()
 			.map(m -> String.format("%s(%s)", m.getName(), ClassUtils.nullSafeToString(m.getParameterTypes())))
@@ -947,10 +915,10 @@ class ReflectionUtilsTests {
 		assertTrue(PublicChildClass.class.getDeclaredMethod("method1").isBridge());
 		assertTrue(PublicChildClass.class.getDeclaredMethod("method3").isBridge());
 
-		List<Method> methods = ReflectionUtils.findMethods(PublicChildClass.class, method -> true);
-		List<String> names = methods.stream().map(Method::getName).collect(toList());
-		assertThat(names).containsOnly("method1", "method2", "method3", "otherMethod1", "otherMethod2");
-		assertTrue(methods.stream().filter(Method::isBridge).count() == 0);
+		List<Method> methods = findMethods(PublicChildClass.class, method -> true);
+		List<String> signatures = signaturesOf(methods);
+		assertThat(signatures).containsOnly("method1()", "method2()", "method3()", "otherMethod1()", "otherMethod2()");
+		assertEquals(0, methods.stream().filter(Method::isBridge).count());
 	}
 
 	@Test
@@ -1293,7 +1261,7 @@ class ReflectionUtilsTests {
 		}
 	}
 
-	// "public" modifier is necessary here, the compiler creates a bridge method
+	// "public" modifier is necessary here, so that the compiler creates a bridge method.
 	public static class PublicChildClass extends ParentClass {
 
 		@Override
