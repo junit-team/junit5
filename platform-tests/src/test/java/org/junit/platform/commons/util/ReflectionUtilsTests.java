@@ -584,8 +584,8 @@ class ReflectionUtilsTests {
 				.contains(Path.class.getMethod("subpath", int.class, int.class));
 		assertThat(ReflectionUtils.getMethod(String.class, "chars")).contains(String.class.getMethod("chars"));
 
-		assertThrows(NoSuchMethodException.class, () -> ReflectionUtils.getMethod(String.class, "noSuchMethod"));
-		assertThrows(NoSuchMethodException.class, () -> ReflectionUtils.getMethod(Object.class, "clone", int.class));
+		assertThat(ReflectionUtils.getMethod(String.class, "noSuchMethod")).isEmpty();
+		assertThat(ReflectionUtils.getMethod(Object.class, "clone", int.class)).isEmpty();
 	}
 
 	@Test

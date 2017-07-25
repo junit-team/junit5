@@ -690,6 +690,20 @@ public final class ReflectionUtils {
 		}
 	}
 
+	/**
+	 * Get the {@link Method} in the specified class with the specified name
+	 * and parameter types.
+	 *
+	 * <p>This method delegates to {@link Class#getMethod(String, Class...)} but
+	 * swallows any exception thrown.
+	 *
+	 * @param clazz the class in which to search for the method; never {@code null}
+	 * @param methodName the name of the method to get; never {@code null} or blank
+	 * @param parameterTypes the parameter types of the method; may be {@code null}
+	 * or empty
+	 * @return an {@code Optional} containing the method; never {@code null} but
+	 * empty if the invocation of {@code Class#getMethod()} throws an exception
+	 */
 	static Optional<Method> getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
@@ -698,7 +712,7 @@ public final class ReflectionUtils {
 			return Optional.ofNullable(clazz.getMethod(methodName, parameterTypes));
 		}
 		catch (Throwable t) {
-			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
+			return Optional.empty();
 		}
 	}
 
