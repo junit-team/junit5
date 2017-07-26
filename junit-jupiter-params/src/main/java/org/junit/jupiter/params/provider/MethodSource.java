@@ -22,8 +22,12 @@ import org.junit.platform.commons.meta.API;
 
 /**
  * {@code @MethodSource} is an {@link ArgumentsSource} which provides access
- * to values returned by {@linkplain #value() static methods} of the class in
+ * to values returned by {@linkplain #value() methods} of the class in
  * which this annotation is declared.
+ *
+ * <p>By default such methods must be {@code static} unless the test class is
+ * annotated with
+ * {@link org.junit.jupiter.api.TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
  *
  * <p>The values returned by such methods will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method.

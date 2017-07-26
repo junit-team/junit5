@@ -56,6 +56,11 @@ on GitHub.
 
 * ❓
 
+===== New Features and Improvements
+
+* Methods referenced by `@MethodSource` are no longer required to be `static` if the test
+  class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
+
 
 [[release-notes-5.0.0-rc1-junit-vintage]]
 ==== JUnit Vintage

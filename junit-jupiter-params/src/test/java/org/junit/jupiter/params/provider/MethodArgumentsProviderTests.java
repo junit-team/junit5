@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
@@ -84,7 +85,22 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void throwsExceptionWhenMethodDoesNotExists() {
+	void throwsExceptionWhenNonStaticMethodIsReferencedAndStaticIsRequired() {
+		JUnitException exception = assertThrows(JUnitException.class,
+			() -> provideArguments(NonStaticTestCase.class, false, "nonStaticStringStreamProvider").toArray());
+
+		assertThat(exception).hasMessageContaining("Cannot invoke non-static method");
+	}
+
+	@Test
+	void providesArgumentsFromNonStaticMethodWhenStaticIsNotRequired() {
+		Stream<Object[]> arguments = provideArguments(NonStaticTestCase.class, true, "nonStaticStringStreamProvider");
+
+		assertThat(arguments).containsExactly(array("foo"), array("bar"));
+	}
+
+	@Test
+	void throwsExceptionWhenMethodDoesNotExist() {
 		JUnitException exception = assertThrows(JUnitException.class,
 			() -> provideArguments("unknownMethod").toArray());
 
@@ -94,7 +110,7 @@ class MethodArgumentsProviderTests {
 	@Test
 	void throwsExceptionWhenNoTestClassIsAvailable() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments((Class<?>) null, "someMethod"));
+			() -> provideArguments((Class<?>) null, false, "someMethod"));
 
 		assertThat(exception).hasMessageContaining("required test class is not present");
 	}
@@ -159,6 +175,32 @@ class MethodArgumentsProviderTests {
 		}
 	}
 
+	private static Object[] array(Object... objects) {
+		return objects;
+	}
+
+	private Stream<Object[]> provideArguments(String... methodNames) {
+		return provideArguments(TestCase.class, false, methodNames);
+	}
+
+	private Stream<Object[]> provideArguments(Class<?> testClass, boolean allowNonStaticMethod, String... methodNames) {
+		MethodSource annotation = mock(MethodSource.class);
+		when(annotation.value()).thenReturn(methodNames);
+
+		ExtensionContext context = mock(ExtensionContext.class);
+		when(context.getTestClass()).thenReturn(Optional.ofNullable(testClass));
+		doCallRealMethod().when(context).getRequiredTestClass();
+
+		Object testInstance = allowNonStaticMethod ? ReflectionUtils.newInstance(testClass) : null;
+		when(context.getTestInstance()).thenReturn(Optional.ofNullable(testInstance));
+
+		MethodArgumentsProvider provider = new MethodArgumentsProvider();
+		provider.accept(annotation);
+		return provider.provideArguments(context).map(Arguments::get);
+	}
+
+	// -------------------------------------------------------------------------
+
 	static class TestCase {
 
 		static AtomicBoolean collectionStreamClosed = new AtomicBoolean(false);
@@ -220,25 +262,12 @@ class MethodArgumentsProviderTests {
 		}
 	}
 
-	private static Object[] array(Object... objects) {
-		return objects;
-	}
+	// This test case mimics @TestInstance(Lifecycle.PER_CLASS)
+	static class NonStaticTestCase {
 
-	private Stream<Object[]> provideArguments(String... methodNames) {
-		return provideArguments(TestCase.class, methodNames);
-	}
-
-	private Stream<Object[]> provideArguments(Class<?> testClass, String... methodNames) {
-		MethodSource annotation = mock(MethodSource.class);
-		when(annotation.value()).thenReturn(methodNames);
-
-		ExtensionContext context = mock(ExtensionContext.class);
-		when(context.getTestClass()).thenReturn(Optional.ofNullable(testClass));
-		doCallRealMethod().when(context).getRequiredTestClass();
-
-		MethodArgumentsProvider provider = new MethodArgumentsProvider();
-		provider.accept(annotation);
-		return provider.provideArguments(context).map(Arguments::get);
+		Stream<String> nonStaticStringStreamProvider() {
+			return Stream.of("foo", "bar");
+		}
 	}
 
 }
