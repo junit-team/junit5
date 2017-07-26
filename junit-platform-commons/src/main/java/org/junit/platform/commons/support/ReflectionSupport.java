@@ -161,6 +161,9 @@ public final class ReflectionSupport {
 	 * Find all {@linkplain Method methods} of the supplied class or interface
 	 * that match the specified {@code predicate}.
 	 *
+	 * <p>The results will not contain instance methods that are <em>overridden</em>
+	 * or {@code static} methods that are <em>hidden</em>.
+	 *
 	 * <p>If you're are looking for methods annotated with a certain annotation
 	 * type, consider using {@linkplain AnnotationSupport#findAnnotatedMethods(Class, Class, HierarchyTraversalMode)}.
 	 *

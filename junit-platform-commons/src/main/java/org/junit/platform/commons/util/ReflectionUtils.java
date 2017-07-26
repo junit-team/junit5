@@ -805,6 +805,9 @@ public final class ReflectionUtils {
 	 * that match the specified {@code predicate}, using top-down search semantics
 	 * within the type hierarchy.
 	 *
+	 * <p>The results will not contain instance methods that are <em>overridden</em>
+	 * or {@code static} methods that are <em>hidden</em>.
+	 *
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param predicate the method filter; never {@code null}
 	 * @return an immutable list of all such methods found; never {@code null}

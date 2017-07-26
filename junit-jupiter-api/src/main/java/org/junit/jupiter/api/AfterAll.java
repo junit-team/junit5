@@ -41,8 +41,9 @@ import org.junit.platform.commons.meta.API;
  * <h3>Inheritance</h3>
  *
  * <p>{@code @AfterAll} methods are inherited from superclasses as long as
- * they are not shadowed. Furthermore, {@code @AfterAll} methods from
- * superclasses will be executed after {@code @AfterAll} methods in subclasses.
+ * they are not <em>hidden</em> or <em>overridden</em>. Furthermore,
+ * {@code @AfterAll} methods from superclasses will be executed before
+ * {@code @AfterAll} methods in subclasses.
  *
  * <h3>Composition</h3>
  *
