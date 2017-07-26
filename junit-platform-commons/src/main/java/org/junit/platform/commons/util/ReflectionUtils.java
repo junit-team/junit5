@@ -723,7 +723,8 @@ public final class ReflectionUtils {
 	 * @param parameterTypes the parameter types of the method; may be {@code null}
 	 * or empty
 	 * @return an {@code Optional} containing the method; never {@code null} but
-	 * empty if the invocation of {@code Class#getMethod()} throws an exception
+	 * empty if the invocation of {@code Class#getMethod()} throws a
+	 * {@link NoSuchMethodException} or {@link SecurityException}
 	 */
 	static Optional<Method> getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
@@ -732,7 +733,7 @@ public final class ReflectionUtils {
 		try {
 			return Optional.ofNullable(clazz.getMethod(methodName, parameterTypes));
 		}
-		catch (Throwable t) {
+		catch (NoSuchMethodException | SecurityException ex) {
 			return Optional.empty();
 		}
 	}
