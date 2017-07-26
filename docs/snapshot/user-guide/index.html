@@ -2273,13 +2273,14 @@ following examples.</p>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-MethodSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-MethodSource"></a>@MethodSource</h5>
 <div class="paragraph">
-<p><code>@MethodSource</code> allows you to refer to one or multiple methods of the test class. Each method must
-return a <code>Stream</code>, an <code>Iterable</code>, an <code>Iterator</code>, or an array of arguments. In addition, each method
-must be <code>static</code> and must not accept any arguments.</p>
+<p><code>@MethodSource</code> allows you to refer to one or more methods of the test class. Each method
+must return a <code>Stream</code>, <code>Iterable</code>, <code>Iterator</code>, or array of arguments. In addition, each
+method must not accept any arguments. By default such methods must be <code>static</code> unless the
+test class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
 </div>
 <div class="paragraph">
-<p>If you only need a single parameter, you can return instances of the parameter type directly as
-demonstrated by the following example.</p>
+<p>If you only need a single parameter, you can return instances of the parameter type
+directly as demonstrated by the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6726,6 +6727,17 @@ applies to default methods annotated with Jupiter annotations such as <code>@Tes
 </ul>
 </div>
 </div>
+<div class="sect4">
+<h5 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods referenced by <code>@MethodSource</code> are no longer required to be <code>static</code> if the test
+class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="release-notes-5.0.0-rc1-junit-vintage"><a class="anchor" href="#release-notes-5.0.0-rc1-junit-vintage"></a>JUnit Vintage</h4>
@@ -6757,7 +6769,7 @@ applies to default methods annotated with Jupiter annotations such as <code>@Tes
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-26 10:16:41 EDT
+Last updated 2017-07-26 11:52:01 EDT
 </div>
 </div>
 </body>
