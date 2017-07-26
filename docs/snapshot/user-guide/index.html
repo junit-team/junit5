@@ -883,59 +883,59 @@ module.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Test</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test method. Unlike JUnit 4&#8217;s <code>@Test</code> annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test method. Unlike JUnit 4&#8217;s <code>@Test</code> annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@RepeatedTest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test template for a <a href="#writing-tests-repeated-tests">repeated test</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test template for a <a href="#writing-tests-repeated-tests">repeated test</a>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestFactory</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test factory for <a href="#writing-tests-dynamic-tests">dynamic tests</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test factory for <a href="#writing-tests-dynamic-tests">dynamic tests</a>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestInstance</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to configure the <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> for the annotated test class</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to configure the <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> for the annotated test class. Such annotations are <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestTemplate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a <a href="#writing-tests-test-templates">template for test cases</a> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <a href="#extensions-test-templates">providers</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a <a href="#writing-tests-test-templates">template for test cases</a> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <a href="#extensions-test-templates">providers</a>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@DisplayName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Declares a custom display name for the test class or test method</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Declares a custom display name for the test class or test method. Such annotations are not <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeEach</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>each</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, or <code>@TestFactory</code> method in the current class; analogous to JUnit 4&#8217;s <code>@Before</code>. Such methods are <em>inherited</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>each</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, or <code>@TestFactory</code> method in the current class; analogous to JUnit 4&#8217;s <code>@Before</code>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterEach</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>each</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, or <code>@TestFactory</code> method in the current class; analogous to JUnit 4&#8217;s <code>@After</code>. Such methods are <em>inherited</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>each</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, or <code>@TestFactory</code> method in the current class; analogous to JUnit 4&#8217;s <code>@After</code>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods are <em>inherited</em> and must be <code>static</code> unless the test class or test interface is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods are <em>inherited</em> (unless they are <em>hidden</em> or <em>overridden</em>) and must be <code>static</code> (unless the test class or test interface is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods are <em>inherited</em> and must be <code>static</code> unless the test class or test interface is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods are <em>inherited</em> (unless they are <em>hidden</em> or <em>overridden</em>) and must be <code>static</code> (unless the test class or test interface is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Nested</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested, non-static test class. <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used directly in a <code>@Nested</code> test class unless it is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested, non-static test class. <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used directly in a <code>@Nested</code> test class unless it is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>. Such annotations are not <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Tag</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to declare <em>tags</em> for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to declare <em>tags</em> for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are <em>inherited</em> at the class level but not at the method level.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Disabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to <em>disable</em> a test class or test method; analogous to JUnit 4&#8217;s <code>@Ignore</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to <em>disable</em> a test class or test method; analogous to JUnit 4&#8217;s <code>@Ignore</code>. Such annotations are not <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ExtendWith</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to register custom <a href="#extensions">extensions</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to register custom <a href="#extensions">extensions</a>. Such annotations are <em>inherited</em>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -6757,7 +6757,7 @@ applies to default methods annotated with Jupiter annotations such as <code>@Tes
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-26 09:33:30 EDT
+Last updated 2017-07-26 10:16:41 EDT
 </div>
 </div>
 </body>
