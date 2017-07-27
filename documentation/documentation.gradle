@@ -1,7 +1,7 @@
 buildscript {
 	dependencies {
 		// classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
-		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.14'
+		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.15'
 		classpath 'org.asciidoctor:asciidoctorj-diagram:1.5.4'
 	}
 }
