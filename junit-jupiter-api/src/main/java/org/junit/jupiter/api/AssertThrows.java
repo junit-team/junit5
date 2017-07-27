@@ -28,21 +28,8 @@ import org.opentest4j.AssertionFailedError;
  */
 class AssertThrows {
 
-	@SuppressWarnings("unchecked")
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable) {
-		try {
-			executable.execute();
-		}
-		catch (Throwable actualException) {
-			if (expectedType.isInstance(actualException)) {
-				return (T) actualException;
-			}
-			else {
-				String message = format(expectedType, actualException.getClass(), "Unexpected exception type thrown");
-				throw new AssertionFailedError(message, actualException);
-			}
-		}
-		throw new AssertionFailedError(getFailureMessage(expectedType));
+		return assertThrows(expectedType, executable, () -> null);
 	}
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
@@ -52,6 +39,7 @@ class AssertThrows {
 	@SuppressWarnings("unchecked")
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
 			Supplier<String> messageSupplier) {
+
 		try {
 			executable.execute();
 		}
@@ -60,19 +48,15 @@ class AssertThrows {
 				return (T) actualException;
 			}
 			else {
-				throw new AssertionFailedError(getFailureWithSuppliedMessage(expectedType, messageSupplier),
-					actualException);
+				String message = buildPrefix(nullSafeGet(messageSupplier))
+						+ format(expectedType, actualException.getClass(), "Unexpected exception type thrown");
+				throw new AssertionFailedError(message, actualException);
 			}
 		}
-		throw new AssertionFailedError(getFailureWithSuppliedMessage(expectedType, messageSupplier));
+
+		String message = buildPrefix(nullSafeGet(messageSupplier))
+				+ String.format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType));
+		throw new AssertionFailedError(message);
 	}
 
-	private static <T extends Throwable> String getFailureWithSuppliedMessage(Class<T> expectedType,
-			Supplier<String> messageSupplier) {
-		return buildPrefix(nullSafeGet(messageSupplier)) + getFailureMessage(expectedType);
-	}
-
-	private static <T extends Throwable> String getFailureMessage(Class<T> expectedType) {
-		return String.format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType));
-	}
 }

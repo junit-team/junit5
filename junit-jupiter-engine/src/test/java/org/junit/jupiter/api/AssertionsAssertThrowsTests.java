@@ -11,6 +11,8 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -19,6 +21,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import java.io.IOException;
 import java.net.URLClassLoader;
 
+import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -28,31 +31,8 @@ import org.opentest4j.AssertionFailedError;
  */
 class AssertionsAssertThrowsTests {
 
-	@Test
-	void assertThrowsExceptionWithMessageString() {
-		try {
-			assertThrows(IOException.class, () -> {
-			}, "IOException not thrown");
-			expectAssertionFailedError();
-		}
-		catch (AssertionError ex) {
-			assertMessageContains(ex, "IOException not thrown");
-			assertMessageContains(ex, "Expected java.io.IOException to be thrown, but nothing was thrown.");
-		}
-	}
-
-	@Test
-	void assertThrowsExceptionWithMessageSupplier() {
-		try {
-			assertThrows(IOException.class, () -> {
-			}, () -> "IOException not thrown");
-			expectAssertionFailedError();
-		}
-		catch (AssertionError ex) {
-			assertMessageContains(ex, "IOException not thrown");
-			assertMessageContains(ex, "Expected java.io.IOException to be thrown, but nothing was thrown.");
-		}
-	}
+	private static final Executable nix = () -> {
+	};
 
 	@Test
 	void assertThrowsThrowable() {
@@ -88,12 +68,35 @@ class AssertionsAssertThrowsTests {
 	@Test
 	void assertThrowsWithExecutableThatDoesNotThrowAnException() {
 		try {
-			assertThrows(IllegalStateException.class, () -> {
-			});
+			assertThrows(IllegalStateException.class, nix);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageContains(ex, "Expected java.lang.IllegalStateException to be thrown");
+			assertMessageEquals(ex, "Expected java.lang.IllegalStateException to be thrown, but nothing was thrown.");
+		}
+	}
+
+	@Test
+	void assertThrowsWithExecutableThatDoesNotThrowAnExceptionWithMessageString() {
+		try {
+			assertThrows(IOException.class, nix, "Custom message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionError ex) {
+			assertMessageEquals(ex,
+				"Custom message ==> Expected java.io.IOException to be thrown, but nothing was thrown.");
+		}
+	}
+
+	@Test
+	void assertThrowsWithExecutableThatDoesNotThrowAnExceptionWithMessageSupplier() {
+		try {
+			assertThrows(IOException.class, nix, () -> "Custom message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionError ex) {
+			assertMessageEquals(ex,
+				"Custom message ==> Expected java.io.IOException to be thrown, but nothing was thrown.");
 		}
 	}
 
@@ -106,7 +109,43 @@ class AssertionsAssertThrowsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageContains(ex, "Unexpected exception type thrown");
+			assertMessageStartsWith(ex, "Unexpected exception type thrown ==> ");
+			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
+			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
+		}
+	}
+
+	@Test
+	void assertThrowsWithExecutableThatThrowsAnUnexpectedExceptionWithMessageString() {
+		try {
+			assertThrows(IllegalStateException.class, () -> {
+				throw new NumberFormatException();
+			}, "Custom message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			// Should look something like this:
+			// Custom message ==> Unexpected exception type thrown ==> expected: <java.lang.IllegalStateException> but was: <java.lang.NumberFormatException>
+			assertMessageStartsWith(ex, "Custom message ==> ");
+			assertMessageContains(ex, "Unexpected exception type thrown ==> ");
+			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
+			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
+		}
+	}
+
+	@Test
+	void assertThrowsWithExecutableThatThrowsAnUnexpectedExceptionWithMessageSupplier() {
+		try {
+			assertThrows(IllegalStateException.class, () -> {
+				throw new NumberFormatException();
+			}, () -> "Custom message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			// Should look something like this:
+			// Custom message ==> Unexpected exception type thrown ==> expected: <java.lang.IllegalStateException> but was: <java.lang.NumberFormatException>
+			assertMessageStartsWith(ex, "Custom message ==> ");
+			assertMessageContains(ex, "Unexpected exception type thrown ==> ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
 		}
@@ -123,7 +162,7 @@ class AssertionsAssertThrowsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageContains(ex, "Unexpected exception type thrown");
+			assertMessageStartsWith(ex, "Unexpected exception type thrown ==> ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			// As of the time of this writing, the class name of the above anonymous inner
 			// class is org.junit.jupiter.api.AssertionsAssertThrowsTests$2; however, hard
@@ -142,7 +181,7 @@ class AssertionsAssertThrowsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageContains(ex, "Unexpected exception type thrown");
+			assertMessageStartsWith(ex, "Unexpected exception type thrown ==> ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			// The following verifies that the canonical name is used (i.e., "." instead of "$").
 			assertMessageContains(ex, "but was: <" + LocalException.class.getName().replace("$", ".") + ">");
@@ -171,7 +210,7 @@ class AssertionsAssertThrowsTests {
 				// expected: <org.junit.jupiter.api.EnigmaThrowable@5d3411d>
 				// but was: <org.junit.jupiter.api.EnigmaThrowable@2471cca7>
 
-				assertMessageContains(ex, "Unexpected exception type thrown");
+				assertMessageStartsWith(ex, "Unexpected exception type thrown ==> ");
 				// The presence of the "@" sign is sufficient to indicate that the hash was
 				// generated to disambiguate between the two identical class names.
 				assertMessageContains(ex, "expected: <org.junit.jupiter.api.EnigmaThrowable@");

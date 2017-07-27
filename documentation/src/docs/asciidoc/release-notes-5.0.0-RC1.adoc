@@ -58,6 +58,8 @@ on GitHub.
 
 ===== New Features and Improvements
 
+* New variants of `Assertions.assertThrows()` that accept a custom failure message as a
+  `String` or `Supplier<String>`.
 * Methods referenced by `@MethodSource` are no longer required to be `static` if the test
   class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
 
