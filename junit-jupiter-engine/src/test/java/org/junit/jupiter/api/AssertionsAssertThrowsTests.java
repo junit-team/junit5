@@ -29,6 +29,32 @@ import org.opentest4j.AssertionFailedError;
 class AssertionsAssertThrowsTests {
 
 	@Test
+	void assertThrowsExceptionWithMessageString() {
+		try {
+			assertThrows(IOException.class, () -> {
+			}, "IOException not thrown");
+			expectAssertionFailedError();
+		}
+		catch (AssertionError ex) {
+			assertMessageContains(ex, "IOException not thrown");
+			assertMessageContains(ex, "Expected java.io.IOException to be thrown, but nothing was thrown.");
+		}
+	}
+
+	@Test
+	void assertThrowsExceptionWithMessageSupplier() {
+		try {
+			assertThrows(IOException.class, () -> {
+			}, () -> "IOException not thrown");
+			expectAssertionFailedError();
+		}
+		catch (AssertionError ex) {
+			assertMessageContains(ex, "IOException not thrown");
+			assertMessageContains(ex, "Expected java.io.IOException to be thrown, but nothing was thrown.");
+		}
+	}
+
+	@Test
 	void assertThrowsThrowable() {
 		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, () -> {
 			throw new EnigmaThrowable();
