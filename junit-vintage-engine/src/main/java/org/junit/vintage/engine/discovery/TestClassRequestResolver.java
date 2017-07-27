@@ -55,9 +55,7 @@ class TestClassRequestResolver {
 		if (runner == null) {
 			return null;
 		}
-		else {
-			return determineRunnerTestDescriptor(testClass, runner, request.getFilters(), engineId);
-		}
+		return determineRunnerTestDescriptor(testClass, runner, request.getFilters(), engineId);
 	}
 
 	private RunnerTestDescriptor determineRunnerTestDescriptor(Class<?> testClass, Runner runner,
