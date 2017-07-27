@@ -368,7 +368,8 @@ public final class ReflectionUtils {
 			Field field = makeAccessible(clazz.getDeclaredField(fieldName));
 			return Optional.ofNullable(field.get(instance));
 		}
-		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+		catch (Throwable t) {
+			BlacklistedExceptions.rethrowIfBlacklisted(t);
 			return Optional.empty();
 		}
 	}
@@ -598,8 +599,8 @@ public final class ReflectionUtils {
 					try {
 						return makeAccessible(field).get(inner);
 					}
-					catch (SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-						return Optional.empty();
+					catch (Throwable t) {
+						throw ExceptionUtils.throwAsUncheckedException(t);
 					}
 				});
 		// @formatter:on
@@ -724,7 +725,7 @@ public final class ReflectionUtils {
 	 * or empty
 	 * @return an {@code Optional} containing the method; never {@code null} but
 	 * empty if the invocation of {@code Class#getMethod()} throws a
-	 * {@link NoSuchMethodException} or {@link SecurityException}
+	 * {@link NoSuchMethodException}
 	 */
 	static Optional<Method> getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
@@ -733,8 +734,11 @@ public final class ReflectionUtils {
 		try {
 			return Optional.ofNullable(clazz.getMethod(methodName, parameterTypes));
 		}
-		catch (NoSuchMethodException | SecurityException ex) {
+		catch (NoSuchMethodException ex) {
 			return Optional.empty();
+		}
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsUncheckedException(t);
 		}
 	}
 
