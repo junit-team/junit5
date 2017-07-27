@@ -23,7 +23,7 @@ junitPlatform {
 dependencies {
 	api(project(':junit-jupiter-api'))
 
-	shadow('com.univocity:univocity-parsers:2.4.1')
+	shadow('com.univocity:univocity-parsers:2.5.0')
 
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
