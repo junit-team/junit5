@@ -24,9 +24,8 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
-import org.junit.vintage.engine.discovery.JUnit4DiscoveryRequestResolver;
+import org.junit.vintage.engine.discovery.VintageDiscoverer;
 import org.junit.vintage.engine.execution.RunnerExecutor;
 
 /**
@@ -62,9 +61,7 @@ public class VintageTestEngine implements TestEngine {
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit Vintage");
-		new JUnit4DiscoveryRequestResolver(engineDescriptor, LOG).resolve(discoveryRequest);
-		return engineDescriptor;
+		return new VintageDiscoverer(LOG).discover(discoveryRequest, uniqueId);
 	}
 
 	@Override
