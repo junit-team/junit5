@@ -136,13 +136,12 @@ class ClasspathScanner {
 		try {
 			String fullyQualifiedClassName = determineFullyQualifiedClassName(baseDir, basePackageName, classFile);
 			if (classNameFilter.test(fullyQualifiedClassName)) {
-				Optional<Class<?>> clazz = Optional.empty();
 				try {
-					clazz = this.loadClass.apply(fullyQualifiedClassName, getClassLoader());
-					clazz.filter(classFilter).ifPresent(classConsumer);
+					loadClass.apply(fullyQualifiedClassName, getClassLoader()).filter(classFilter).ifPresent(
+						classConsumer);
 				}
 				catch (InternalError internalError) {
-					handleInternalError(classFile, clazz, internalError);
+					handleInternalError(classFile, fullyQualifiedClassName, internalError);
 				}
 			}
 		}
@@ -179,9 +178,9 @@ class ClasspathScanner {
 		return subpackageName;
 	}
 
-	private void handleInternalError(Path classFile, Optional<Class<?>> clazz, InternalError ex) {
+	private void handleInternalError(Path classFile, String fullyQualifiedClassName, InternalError ex) {
 		if (MALFORMED_CLASS_NAME_ERROR_MESSAGE.equals(ex.getMessage())) {
-			logMalformedClassName(classFile, clazz, ex);
+			logMalformedClassName(classFile, fullyQualifiedClassName, ex);
 		}
 		else {
 			logGenericFileProcessingException(classFile, ex);
@@ -193,19 +192,10 @@ class ClasspathScanner {
 		logGenericFileProcessingException(classFile, throwable);
 	}
 
-	private void logMalformedClassName(Path classFile, Optional<Class<?>> clazz, InternalError ex) {
+	private void logMalformedClassName(Path classFile, String fullyQualifiedClassName, InternalError ex) {
 		try {
-			if (clazz.isPresent()) {
-				// Do not use getSimpleName() or getCanonicalName() here because they will likely
-				// throw another exception due to the underlying error.
-				logWarning(ex,
-					() -> format("The java.lang.Class loaded from path [%s] has a malformed class name [%s].",
-						classFile.toAbsolutePath(), clazz.get().getName()));
-			}
-			else {
-				logWarning(ex, () -> format("The java.lang.Class loaded from path [%s] has a malformed class name.",
-					classFile.toAbsolutePath()));
-			}
+			logWarning(ex, () -> format("The java.lang.Class loaded from path [%s] has a malformed class name [%s].",
+				classFile.toAbsolutePath(), fullyQualifiedClassName));
 		}
 		catch (Throwable t) {
 			ex.addSuppressed(t);
