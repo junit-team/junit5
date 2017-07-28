@@ -133,16 +133,18 @@ class ClasspathScanner {
 
 	private void processClassFileSafely(Path baseDir, String basePackageName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter, Path classFile, Consumer<Class<?>> classConsumer) {
-		Optional<Class<?>> clazz = Optional.empty();
 		try {
 			String fullyQualifiedClassName = determineFullyQualifiedClassName(baseDir, basePackageName, classFile);
 			if (classNameFilter.test(fullyQualifiedClassName)) {
-				clazz = this.loadClass.apply(fullyQualifiedClassName, getClassLoader());
-				clazz.filter(classFilter).ifPresent(classConsumer);
+				Optional<Class<?>> clazz = Optional.empty();
+				try {
+					clazz = this.loadClass.apply(fullyQualifiedClassName, getClassLoader());
+					clazz.filter(classFilter).ifPresent(classConsumer);
+				}
+				catch (InternalError internalError) {
+					handleInternalError(classFile, clazz, internalError);
+				}
 			}
-		}
-		catch (InternalError internalError) {
-			handleInternalError(classFile, clazz, internalError);
 		}
 		catch (Throwable throwable) {
 			handleThrowable(classFile, throwable);
