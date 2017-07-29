@@ -18,11 +18,9 @@ buildscript {
 			// temporary workaround for incompatibility of commons-lang:2.4 with
 			// versioning scheme of Java 9
 			// see: https://youtrack.jetbrains.com/issue/KT-18832
-			exclude module: 'commons-io'
 			exclude module: 'commons-lang'
 		}
-		classpath 'commons-io:commons-io:2.5'
-		classpath 'commons-lang:commons-lang:2.5'
+		classpath 'commons-lang:commons-lang:2.6'
 	}
 }
 
