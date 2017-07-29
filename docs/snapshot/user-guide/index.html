@@ -915,15 +915,15 @@ module.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods are <em>inherited</em> (unless they are <em>hidden</em> or <em>overridden</em>) and must be <code>static</code> (unless the test class or test interface is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods are <em>inherited</em> (unless they are <em>hidden</em> or <em>overridden</em>) and must be <code>static</code> (unless the "per-class" <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> is used).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods are <em>inherited</em> (unless they are <em>hidden</em> or <em>overridden</em>) and must be <code>static</code> (unless the test class or test interface is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods are <em>inherited</em> (unless they are <em>hidden</em> or <em>overridden</em>) and must be <code>static</code> (unless the "per-class" <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> is used).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Nested</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested, non-static test class. <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used directly in a <code>@Nested</code> test class unless it is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>. Such annotations are not <em>inherited</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested, non-static test class. <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used directly in a <code>@Nested</code> test class unless the "per-class" <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> is used. Such annotations are not <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Tag</code></p></td>
@@ -1394,7 +1394,9 @@ characters have been removed.
 unexpected side effects due to mutable test instance state, JUnit creates a new instance
 of each test class before executing each <em>test</em> method (see note below for what qualifies
 as a <em>test</em> method). This "per-method" test instance lifecycle is the default behavior in
-JUnit Jupiter and is analogous to all previous versions of JUnit.</p>
+JUnit Jupiter and is analogous to all previous versions of JUnit. Note, however, that the
+default test instance lifecycle mode for test classes written in the Kotlin programming
+language is "per-class".</p>
 </div>
 <div class="paragraph">
 <p>If you would prefer that JUnit Jupiter execute all test methods on the same test
@@ -1412,8 +1414,9 @@ methods in <code>@Nested</code> test classes.</p>
 </div>
 <div class="paragraph">
 <p>If you are authoring tests using the Kotlin programming language, you may also find it
-easier to implement <code>@BeforeAll</code> and <code>@AfterAll</code> methods by switching to the "per-class"
-test instance lifecycle mode.</p>
+easier to write non-static <code>@BeforeAll</code> and <code>@AfterAll</code> methods. Thus, "per-class" mode
+is used by default for test classes written in Kotlin. You may switch to "per-method"
+semantics by annotating your test class with <code>@TestInstance(Lifecycle.PER_METHOD)</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -6739,6 +6742,10 @@ applies to default methods annotated with Jupiter annotations such as <code>@Tes
 <p>Methods referenced by <code>@MethodSource</code> are no longer required to be <code>static</code> if the test
 class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
 </li>
+<li>
+<p>Test classes written in the Kotlin programming language are now executed with
+<code>@TestInstance(Lifecycle.PER_CLASS)</code> semantics by default.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -6773,7 +6780,7 @@ class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-29 07:38:03 EDT
+Last updated 2017-07-29 06:20:05 EDT
 </div>
 </div>
 </body>
