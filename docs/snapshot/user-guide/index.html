@@ -886,6 +886,10 @@ module.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test method. Unlike JUnit 4&#8217;s <code>@Test</code> annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ParameterizedTest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a <a href="#writing-tests-parameterized-tests">parameterized test</a>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@RepeatedTest</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test template for a <a href="#writing-tests-repeated-tests">repeated test</a>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
 </tr>
@@ -6780,7 +6784,7 @@ class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-07-29 06:20:05 EDT
+Last updated 2017-07-29 08:33:55 EDT
 </div>
 </div>
 </body>
