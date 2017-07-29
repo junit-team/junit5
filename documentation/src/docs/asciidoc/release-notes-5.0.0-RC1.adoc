@@ -62,6 +62,8 @@ on GitHub.
   `String` or `Supplier<String>`.
 * Methods referenced by `@MethodSource` are no longer required to be `static` if the test
   class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
+* Test classes written in the Kotlin programming language are now executed with
+  `@TestInstance(Lifecycle.PER_CLASS)` semantics by default.
 
 
 [[release-notes-5.0.0-rc1-junit-vintage]]
