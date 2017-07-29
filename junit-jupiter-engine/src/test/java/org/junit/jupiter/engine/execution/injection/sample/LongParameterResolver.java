@@ -56,8 +56,8 @@ public class LongParameterResolver implements ParameterResolver {
 	}
 
 	@Override
-	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return Long.valueOf(42);
+	public Long resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return 42L;
 	}
 
 }

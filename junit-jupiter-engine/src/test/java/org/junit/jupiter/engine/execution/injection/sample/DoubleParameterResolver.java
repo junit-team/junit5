@@ -28,8 +28,8 @@ public class DoubleParameterResolver implements ParameterResolver {
 	}
 
 	@Override
-	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return new Double(42.0);
+	public Double resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return 42.0;
 	}
 
 }
