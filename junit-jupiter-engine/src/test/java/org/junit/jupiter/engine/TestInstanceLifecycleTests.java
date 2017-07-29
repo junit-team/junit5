@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -53,6 +54,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.engine.kotlin.SimpleKotlinTestCase;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
@@ -508,6 +510,23 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertEquals(instance.getClass(), outerInstance.getClass());
 		assertNotSame(instance, outerInstance);
 		assertSame(outerInstance, instanceMap.get(postProcessTestInstanceKey));
+	}
+
+	@Test
+	void instancePerClassIsDefaultLifecycleForKotlinTestClasses() {
+		Class<?> testClass = SimpleKotlinTestCase.class;
+		SimpleKotlinTestCase.TEST_INSTANCES.clear();
+
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+
+		assertThat(eventRecorder.getTestFinishedCount()).isEqualTo(2);
+		assertThat(SimpleKotlinTestCase.TEST_INSTANCES.keySet()).hasSize(1);
+		assertThat(getOnlyElement(SimpleKotlinTestCase.TEST_INSTANCES.values())) //
+				.containsEntry("beforeAll", 1) //
+				.containsEntry("beforeEach", 2) //
+				.containsEntry("test", 2) //
+				.containsEntry("afterEach", 2) //
+				.containsEntry("afterAll", 1);
 	}
 
 	private void performAssertions(Class<?> testClass, int containers, int tests, int instances, int nestedInstances,
