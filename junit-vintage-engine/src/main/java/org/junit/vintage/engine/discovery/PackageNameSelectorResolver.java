@@ -30,12 +30,12 @@ class PackageNameSelectorResolver implements DiscoverySelectorResolver {
 	}
 
 	@Override
-	public void resolve(EngineDiscoveryRequest request, TestClassCollector collector) {
+	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter, TestClassCollector collector) {
 		// @formatter:off
 		request.getSelectorsByType(PackageSelector.class)
 			.stream()
 			.map(PackageSelector::getPackageName)
-			.map(packageName -> findAllClassesInPackage(packageName, classTester, classNamePredicate))
+			.map(packageName -> findAllClassesInPackage(packageName, classFilter, classNamePredicate))
 			.flatMap(Collection::stream)
 			.forEach(collector::addCompletely);
 		// @formatter:on

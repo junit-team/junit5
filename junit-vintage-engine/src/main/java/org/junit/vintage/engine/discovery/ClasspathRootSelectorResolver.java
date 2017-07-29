@@ -30,12 +30,12 @@ class ClasspathRootSelectorResolver implements DiscoverySelectorResolver {
 	}
 
 	@Override
-	public void resolve(EngineDiscoveryRequest request, TestClassCollector collector) {
+	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter, TestClassCollector collector) {
 		// @formatter:off
 		request.getSelectorsByType(ClasspathRootSelector.class)
 			.stream()
 			.map(ClasspathRootSelector::getClasspathRoot)
-			.map(root -> findAllClassesInClasspathRoot(root, classTester, classNamePredicate))
+			.map(root -> findAllClassesInClasspathRoot(root, classFilter, classNamePredicate))
 			.flatMap(Collection::stream)
 			.forEach(collector::addCompletely);
 		// @formatter:on

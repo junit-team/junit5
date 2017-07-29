@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -39,20 +38,19 @@ class TestClassCollector {
 		filteredTestClasses.computeIfAbsent(testClass, key -> new LinkedList<>()).add(filter);
 	}
 
-	Stream<TestClassRequest> toRequests(Predicate<? super Class<?>> predicate) {
-		return concat(completeRequests(predicate), filteredRequests(predicate)).distinct();
+	Stream<TestClassRequest> toRequests() {
+		return concat(completeRequests(), filteredRequests()).distinct();
 	}
 
-	private Stream<TestClassRequest> completeRequests(Predicate<? super Class<?>> predicate) {
-		return completeTestClasses.stream().filter(predicate).map(TestClassRequest::new);
+	private Stream<TestClassRequest> completeRequests() {
+		return completeTestClasses.stream().map(TestClassRequest::new);
 	}
 
-	private Stream<TestClassRequest> filteredRequests(Predicate<? super Class<?>> predicate) {
+	private Stream<TestClassRequest> filteredRequests() {
 		// @formatter:off
 		return filteredTestClasses.entrySet()
 				.stream()
 				.filter(where(Entry::getKey, testClass -> !completeTestClasses.contains(testClass)))
-				.filter(where(Entry::getKey, predicate))
 				.map(entry -> new TestClassRequest(entry.getKey(), entry.getValue()));
 		// @formatter:on
 	}

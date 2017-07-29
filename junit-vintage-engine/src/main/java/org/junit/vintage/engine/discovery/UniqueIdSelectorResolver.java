@@ -15,6 +15,7 @@ import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_I
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -35,14 +36,14 @@ class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 	}
 
 	@Override
-	public void resolve(EngineDiscoveryRequest request, TestClassCollector collector) {
+	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter, TestClassCollector collector) {
 		// @formatter:off
 		request.getSelectorsByType(UniqueIdSelector.class)
 			.stream()
 			.map(UniqueIdSelector::getUniqueId)
 			.filter(this::isNotEngineId)
 			.filter(this::isForVintageEngine)
-			.forEach(uniqueId -> resolveIntoFilteredTestClass(uniqueId, collector));
+			.forEach(uniqueId -> resolveIntoFilteredTestClass(uniqueId, classFilter, collector));
 		// @formatter:on
 	}
 
@@ -63,10 +64,12 @@ class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 		// @formatter:on
 	}
 
-	private void resolveIntoFilteredTestClass(UniqueId uniqueId, TestClassCollector collector) {
+	private void resolveIntoFilteredTestClass(UniqueId uniqueId, Predicate<Class<?>> classFilter,
+			TestClassCollector collector) {
 		// @formatter:off
 		determineTestClassName(uniqueId)
 			.flatMap(testClassName -> loadTestClass(testClassName, uniqueId))
+			.filter(classFilter)
 			.ifPresent(testClass -> collector.addFiltered(testClass, new UniqueIdFilter(uniqueId)));
 		// @formatter:on
 	}

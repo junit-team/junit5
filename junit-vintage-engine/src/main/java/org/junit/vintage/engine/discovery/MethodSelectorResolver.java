@@ -14,6 +14,7 @@ import static org.junit.runner.manipulation.Filter.matchMethodDescription;
 import static org.junit.vintage.engine.discovery.RunnerTestDescriptorAwareFilter.adapter;
 
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.discovery.MethodSelector;
@@ -25,15 +26,17 @@ import org.junit.runner.Description;
 class MethodSelectorResolver implements DiscoverySelectorResolver {
 
 	@Override
-	public void resolve(EngineDiscoveryRequest request, TestClassCollector collector) {
-		request.getSelectorsByType(MethodSelector.class).forEach(selector -> resolve(selector, collector));
+	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter, TestClassCollector collector) {
+		request.getSelectorsByType(MethodSelector.class).forEach(selector -> resolve(selector, classFilter, collector));
 	}
 
-	private void resolve(MethodSelector selector, TestClassCollector collector) {
+	private void resolve(MethodSelector selector, Predicate<Class<?>> classFilter, TestClassCollector collector) {
 		Class<?> testClass = selector.getJavaClass();
-		Method testMethod = selector.getJavaMethod();
-		Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());
-		collector.addFiltered(testClass, adapter(matchMethodDescription(methodDescription)));
+		if (classFilter.test(testClass)) {
+			Method testMethod = selector.getJavaMethod();
+			Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());
+			collector.addFiltered(testClass, adapter(matchMethodDescription(methodDescription)));
+		}
 	}
 
 }
