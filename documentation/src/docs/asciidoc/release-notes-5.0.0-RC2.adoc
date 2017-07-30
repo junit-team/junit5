@@ -1,0 +1,34 @@
+[[release-notes-5.0.0-rc2]]
+=== 5.0.0-RC2
+
+*Date of Release:* July 30, 2017
+
+*Scope:* Fix Gradle consumption of `junit-jupiter-engine`
+
+WARNING: This is a pre-release and contains a few breaking changes. Please refer to the
+<<running-tests-ide-intellij-idea,instructions>> above to use this version in a version of
+IntelliJ IDEA that bundles an older milestone release.
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/12?closed=1+[5.0 RC2] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.0.0-rc2-junit-platform]]
+==== JUnit Platform
+
+No changes.
+
+
+[[release-notes-5.0.0-rc2-junit-jupiter]]
+==== JUnit Jupiter
+
+===== Bug Fixes
+
+* Fix invalid POM of `junit-jupiter-engine` by excluding `test` scope dependencies.
+
+
+[[release-notes-5.0.0-rc2-junit-vintage]]
+==== JUnit Vintage
+
+No changes.
