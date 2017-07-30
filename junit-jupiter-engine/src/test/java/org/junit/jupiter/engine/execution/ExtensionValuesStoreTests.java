@@ -38,10 +38,12 @@ class ExtensionValuesStoreTests {
 
 	private ExtensionValuesStore store;
 	private ExtensionValuesStore parentStore;
+	private ExtensionValuesStore grandParentStore;
 
 	@BeforeEach
 	void initializeStore() {
-		parentStore = new ExtensionValuesStore();
+		grandParentStore = new ExtensionValuesStore();
+		parentStore = new ExtensionValuesStore(grandParentStore);
 		store = new ExtensionValuesStore(parentStore);
 	}
 
@@ -87,6 +89,14 @@ class ExtensionValuesStoreTests {
 		@Test
 		void valueIsNotComputedIfPresentInParent() {
 			parentStore.put(namespace, key, value);
+
+			assertEquals(value, store.getOrComputeIfAbsent(namespace, key, k -> "a different value"));
+			assertEquals(value, store.get(namespace, key));
+		}
+
+		@Test
+		void valueIsNotComputedIfPresentInGrandParent() {
+			grandParentStore.put(namespace, key, value);
 
 			assertEquals(value, store.getOrComputeIfAbsent(namespace, key, k -> "a different value"));
 			assertEquals(value, store.get(namespace, key));

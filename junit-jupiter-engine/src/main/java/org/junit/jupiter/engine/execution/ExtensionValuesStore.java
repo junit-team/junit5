@@ -49,15 +49,7 @@ public class ExtensionValuesStore {
 	Object get(Namespace namespace, Object key) {
 		synchronized (this.monitor) {
 			StoredValue storedValue = getStoredValue(namespace, key);
-			if (storedValue != null) {
-				return storedValue.value;
-			}
-			else if (this.parentStore != null) {
-				return this.parentStore.get(namespace, key);
-			}
-			else {
-				return null;
-			}
+			return storedValue == null ? null : storedValue.value;
 		}
 	}
 
@@ -70,13 +62,8 @@ public class ExtensionValuesStore {
 		synchronized (this.monitor) {
 			StoredValue storedValue = getStoredValue(namespace, key);
 			if (storedValue == null) {
-				if (this.parentStore != null) {
-					storedValue = this.parentStore.getStoredValue(namespace, key);
-				}
-				if (storedValue == null) {
-					storedValue = new StoredValue(defaultCreator.apply(key));
-					putStoredValue(namespace, key, storedValue);
-				}
+				storedValue = new StoredValue(defaultCreator.apply(key));
+				putStoredValue(namespace, key, storedValue);
 			}
 			return storedValue.value;
 		}
@@ -109,8 +96,16 @@ public class ExtensionValuesStore {
 	}
 
 	private StoredValue getStoredValue(Namespace namespace, Object key) {
-		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		return this.storedValues.get(compositeKey);
+		StoredValue storedValue = this.storedValues.get(new CompositeKey(namespace, key));
+		if (storedValue != null) {
+			return storedValue;
+		}
+		else if (this.parentStore != null) {
+			return this.parentStore.getStoredValue(namespace, key);
+		}
+		else {
+			return null;
+		}
 	}
 
 	private void putStoredValue(Namespace namespace, Object key, StoredValue storedValue) {
