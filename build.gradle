@@ -357,6 +357,10 @@ subprojects { subproj ->
 							}
 						}
 					}
+
+					pom.whenConfigured { p ->
+						p.dependencies = p.dependencies.findAll { dep -> dep.scope != 'test' }
+					}
 				}
 			}
 		}
