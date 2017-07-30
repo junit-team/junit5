@@ -1,10 +1,13 @@
 
 package org.junit.jupiter.api.extension;
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+
 import java.util.Objects;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.platform.commons.meta.API;
 
 /**
  * Provides isolated, type-safe access to values in a {@link Store}.
@@ -31,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
  * @param <K> the key type
  * @param <V> the value type
  */
+@API(Experimental)
 public final class StoredValues<K, V> {
 
 	/**
