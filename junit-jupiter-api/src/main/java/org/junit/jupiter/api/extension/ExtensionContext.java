@@ -267,6 +267,21 @@ public interface ExtensionContext {
 	interface Store {
 
 		/**
+		 * Get the value that is stored under the supplied {@link Key}.
+		 *
+		 * <p>If no value is stored in the current {@link ExtensionContext}
+		 * for the supplied {@code key}, ancestors of the context will be queried
+		 * for a value with the same {@code key} in the {@code Namespace} used
+		 * to create this store.
+		 *
+		 * @param key the key; never {@code null}
+		 * @return the value; potentially {@code null}
+		 */
+		default <V> V get(Key<V> key) {
+			return (V) get(key, key.requiredType);
+		}
+
+		/**
 		 * Get the value that is stored under the supplied {@code key}.
 		 *
 		 * <p>If no value is stored in the current {@link ExtensionContext}
@@ -274,13 +289,13 @@ public interface ExtensionContext {
 		 * for a value with the same {@code key} in the {@code Namespace} used
 		 * to create this store.
 		 *
-		 * <p>For greater type safety, consider using {@link #get(Object, Class)}
-		 * instead.
+		 * <p>For greater type safety, consider using {@link #get(Key)} instead.
 		 *
 		 * @param key the key; never {@code null}
 		 * @return the value; potentially {@code null}
-		 * @see #get(Object, Class)
+		 * @deprecated use {@link #get(Key)}
 		 */
+		@Deprecated
 		Object get(Object key);
 
 		/**
@@ -296,8 +311,9 @@ public interface ExtensionContext {
 		 * @param requiredType the required type of the value; never {@code null}
 		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
-		 * @see #get(Object)
+		 * @deprecated use {@link #get(Key)}
 		 */
+		@Deprecated
 		<V> V get(Object key, Class<V> requiredType);
 
 		/**
@@ -310,8 +326,29 @@ public interface ExtensionContext {
 		 * a new value will be computed by the {@code defaultCreator} (given
 		 * the {@code key} as input), stored, and returned.
 		 *
+		 * @param key the key; never {@code null}
+		 * @param defaultCreator the function called with the supplied {@code key}
+		 * to create a new value; never {@code null}
+		 * @param <K> the key type
+		 * @param <V> the value type
+		 * @return the value; potentially {@code null}
+		 */
+		default <V> V computeIfAbsent(Key<V> key, Function<Key<V>, V> defaultCreator) {
+			return getOrComputeIfAbsent(key, defaultCreator, key.requiredType);
+		}
+
+		/**
+		 * Get the value that is stored under the supplied {@code key}.
+		 *
+		 * <p>If no value is stored in the current {@link ExtensionContext}
+		 * for the supplied {@code key}, ancestors of the context will be queried
+		 * for a value with the same {@code key} in the {@code Namespace} used
+		 * to create this store. If no value is found for the supplied {@code key},
+		 * a new value will be computed by the {@code defaultCreator} (given
+		 * the {@code key} as input), stored, and returned.
+		 *
 		 * <p>For greater type safety, consider using
-		 * {@link #getOrComputeIfAbsent(Object, Function, Class)} instead.
+		 * {@link #computeIfAbsent(Key, Function)} instead.
 		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
@@ -319,8 +356,9 @@ public interface ExtensionContext {
 		 * @param <K> the key type
 		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
-		 * @see #getOrComputeIfAbsent(Object, Function, Class)
+		 * @deprecated use {@link #computeIfAbsent(Key, Function)}
 		 */
+		@Deprecated
 		<K, V> Object getOrComputeIfAbsent(K key, Function<K, V> defaultCreator);
 
 		/**
@@ -341,8 +379,9 @@ public interface ExtensionContext {
 		 * @param <K> the key type
 		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
-		 * @see #getOrComputeIfAbsent(Object, Function)
+		 * @deprecated use {@link #computeIfAbsent(Key, Function)}
 		 */
+		@Deprecated
 		<K, V> V getOrComputeIfAbsent(K key, Function<K, V> defaultCreator, Class<V> requiredType);
 
 		/**
@@ -356,6 +395,23 @@ public interface ExtensionContext {
 		 * {@code null}
 		 * @param value the value to store; may be {@code null}
 		 */
+		default <V> void put(Key<V> key, V value) {
+			put((Object) key, value);
+		}
+
+		/**
+		 * Store a {@code value} for later retrieval under the supplied {@code key}.
+		 *
+		 * <p>A stored {@code value} is visible in child {@link ExtensionContext
+		 * ExtensionContexts} for the store's {@code Namespace} unless they
+		 * overwrite it.
+		 *
+		 * @param key the key under which the value should be stored; never
+		 * {@code null}
+		 * @param value the value to store; may be {@code null}
+		 * @deprecated use {@link #put(Key, Object)}
+		 */
+		@Deprecated
 		void put(Object key, Object value);
 
 		/**
@@ -364,14 +420,30 @@ public interface ExtensionContext {
 		 * <p>The value will only be removed in the current {@link ExtensionContext},
 		 * not in ancestors.
 		 *
-		 * <p>For greater type safety, consider using {@link #remove(Object, Class)}
-		 * instead.
-		 *
 		 * @param key the key; never {@code null}
 		 * @return the previous value or {@code null} if no value was present
 		 * for the specified key
 		 * @see #remove(Object, Class)
 		 */
+		default <V> V remove(Key<V> key) {
+			return remove(key, key.requiredType);
+		}
+
+		/**
+		 * Remove the value that was previously stored under the supplied {@code key}.
+		 *
+		 * <p>The value will only be removed in the current {@link ExtensionContext},
+		 * not in ancestors.
+		 *
+		 * <p>For greater type safety, consider using {@link #remove(Key)}
+		 * instead.
+		 *
+		 * @param key the key; never {@code null}
+		 * @return the previous value or {@code null} if no value was present
+		 * for the specified key
+		 * @deprecated use {@link #remove(Key)}
+		 */
+		@Deprecated
 		Object remove(Object key);
 
 		/**
@@ -386,10 +458,30 @@ public interface ExtensionContext {
 		 * @param <V> the value type
 		 * @return the previous value or {@code null} if no value was present
 		 * for the specified key
-		 * @see #remove(Object)
+		 * @deprecated use {@link #remove(Key)}
 		 */
+		@Deprecated
 		<V> V remove(Object key, Class<V> requiredType);
 
+		/**
+		 * A key for type-safe access to values in a store. Uses object
+		 * identity as a key, so create a single instance for each data type
+		 * that you need to access from a store.
+		 *
+		 * @param <V> type for values stored with this key
+		 */
+	    final class Key<V> {
+			private final Class<V> requiredType;
+
+			/** Creates a key that can be used to store values of the given type. */
+			public static <V> Key<V> storing(Class<V> requiredType) {
+				return new Key<>(requiredType);
+			}
+
+			private Key(Class<V> requiredType) {
+				this.requiredType = requiredType;
+			}
+		}
 	}
 
 	/**

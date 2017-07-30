@@ -64,7 +64,8 @@ on GitHub.
   class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
 * Test classes written in the Kotlin programming language are now executed with
   `@TestInstance(Lifecycle.PER_CLASS)` semantics by default.
-
+* `ExtensionContext.Store` now supports variants with a type-safe key (see
+  `ExtensionContext.Store.Key`).
 
 [[release-notes-5.0.0-rc1-junit-vintage]]
 ==== JUnit Vintage
