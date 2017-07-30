@@ -14,10 +14,13 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -35,16 +38,15 @@ import org.junit.platform.commons.util.Preconditions;
 public class ExtensionValuesStore {
 
 	private final ExtensionValuesStore parentStore;
-	private final Map<Object, StoredValue> storedValues = new ConcurrentHashMap<>(4);
-	private final Object monitor = new Object();
+	private final ConcurrentMap<CompositeKey, Supplier<Object>> storedValues = new ConcurrentHashMap<>(4);
 
 	public ExtensionValuesStore(ExtensionValuesStore parentStore) {
 		this.parentStore = parentStore;
 	}
 
 	Object get(Namespace namespace, Object key) {
-		StoredValue storedValue = getStoredValue(namespace, key);
-		return storedValue == null ? null : storedValue.value;
+		Supplier<Object> storedValue = getStoredValue(new CompositeKey(namespace, key));
+		return storedValue == null ? null : storedValue.get();
 	}
 
 	<T> T get(Namespace namespace, Object key, Class<T> requiredType) {
@@ -53,14 +55,17 @@ public class ExtensionValuesStore {
 	}
 
 	<K, V> Object getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator) {
-		synchronized (this.monitor) {
-			StoredValue storedValue = getStoredValue(namespace, key);
-			if (storedValue == null) {
-				storedValue = new StoredValue(defaultCreator.apply(key));
-				putStoredValue(namespace, key, storedValue);
+		CompositeKey compositeKey = new CompositeKey(namespace, key);
+		Supplier<Object> storedValue = getStoredValue(compositeKey);
+		if (storedValue == null) {
+			storedValue = new MemoizingSupplier(() -> defaultCreator.apply(key));
+			Supplier<Object> previousValue = storedValues.putIfAbsent(compositeKey, storedValue);
+			if (previousValue != null) {
+				// There was a race condition, and we lost.
+				storedValue = previousValue;
 			}
-			return storedValue.value;
 		}
+		return storedValue.get();
 	}
 
 	<K, V> V getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
@@ -72,16 +77,13 @@ public class ExtensionValuesStore {
 		Preconditions.notNull(namespace, "Namespace must not be null");
 		Preconditions.notNull(key, "key must not be null");
 
-		synchronized (this.monitor) {
-			putStoredValue(namespace, key, new StoredValue(value));
-		}
+		CompositeKey compositeKey = new CompositeKey(namespace, key);
+		storedValues.put(compositeKey, () -> value);
 	}
 
 	Object remove(Namespace namespace, Object key) {
-		synchronized (this.monitor) {
-			StoredValue previous = this.storedValues.remove(new CompositeKey(namespace, key));
-			return (previous != null ? previous.value : null);
-		}
+		Supplier<Object> previous = storedValues.remove(new CompositeKey(namespace, key));
+		return (previous != null ? previous.get() : null);
 	}
 
 	<T> T remove(Namespace namespace, Object key, Class<T> requiredType) {
@@ -89,26 +91,17 @@ public class ExtensionValuesStore {
 		return castToRequiredType(key, value, requiredType);
 	}
 
-	private StoredValue getStoredValue(Namespace namespace, Object key) {
-		// NOTE: this method can be called from another ExtensionValuesStore
-		// instance, so we must synchronize on the monitor.
-		synchronized (this.monitor) {
-			StoredValue storedValue = this.storedValues.get(new CompositeKey(namespace, key));
-			if (storedValue != null) {
-				return storedValue;
-			}
-			else if (this.parentStore != null) {
-				return this.parentStore.getStoredValue(namespace, key);
-			}
-			else {
-				return null;
-			}
+	private Supplier<Object> getStoredValue(CompositeKey compositeKey) {
+		Supplier<Object> storedValue = storedValues.get(compositeKey);
+		if (storedValue != null) {
+			return storedValue;
 		}
-	}
-
-	private void putStoredValue(Namespace namespace, Object key, StoredValue storedValue) {
-		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		this.storedValues.put(compositeKey, storedValue);
+		else if (parentStore != null) {
+			return parentStore.getStoredValue(compositeKey);
+		}
+		else {
+			return null;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -151,17 +144,35 @@ public class ExtensionValuesStore {
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(this.namespace, this.key);
+			return Objects.hash(namespace, key);
 		}
 	}
 
-	private static class StoredValue {
+	private static class MemoizingSupplier implements Supplier<Object> {
 
-		private final Object value;
+		private static final Object NO_VALUE_SET = new Object();
+		private final Lock lock = new ReentrantLock();
+		private final Supplier<Object> delegate;
+		private volatile Object value = NO_VALUE_SET;
 
-		private StoredValue(Object value) {
-			this.value = value;
+		private MemoizingSupplier(Supplier<Object> delegate) {
+			this.delegate = delegate;
+		}
+
+		@Override
+		public Object get() {
+			if (value == NO_VALUE_SET) {
+				lock.lock();
+				try {
+					if (value == NO_VALUE_SET) {
+						value = delegate.get();
+					}
+				}
+				finally {
+					lock.unlock();
+				}
+			}
+			return value;
 		}
 	}
-
 }
