@@ -79,8 +79,7 @@ public final class StoredValues<K, V> {
 	@SuppressWarnings("unchecked")
 	public V getOrComputeIfAbsent(Store store, K key, Function<K, V> defaultCreator) {
 		return (V) store.getOrComputeIfAbsent(
-			wrap(key),
-			k -> defaultCreator.apply(k.key));
+			wrap(key), defaultCreator.compose(keyWrapper -> keyWrapper.key));
 	}
 
 	/**
