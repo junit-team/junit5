@@ -275,7 +275,7 @@ public interface ExtensionContext {
 		 * to create this store.
 		 *
 		 * <p>For greater type safety, consider using {@link #get(Object, Class)}
-		 * instead.
+		 * or {@link StoredValues#get(Store, Object) instead.
 		 *
 		 * @param key the key; never {@code null}
 		 * @return the value; potentially {@code null}
@@ -291,6 +291,9 @@ public interface ExtensionContext {
 		 * for the supplied {@code key}, ancestors of the context will be queried
 		 * for a value with the same {@code key} in the {@code Namespace} used
 		 * to create this store.
+		 *
+		 * <p>For greater type safety, consider using
+		 * {@link StoredValues#get(Store, Object) instead.
 		 *
 		 * @param key the key; never {@code null}
 		 * @param requiredType the required type of the value; never {@code null}
@@ -311,7 +314,9 @@ public interface ExtensionContext {
 		 * the {@code key} as input), stored, and returned.
 		 *
 		 * <p>For greater type safety, consider using
-		 * {@link #getOrComputeIfAbsent(Object, Function, Class)} instead.
+		 * {@link #getOrComputeIfAbsent(Object, Function, Class)} or
+		 * {@link StoredValues#getOrComputeIfAbsent(Store, Object, Function)}
+		 * instead.
 		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
@@ -334,6 +339,10 @@ public interface ExtensionContext {
 		 * a new value will be computed by the {@code defaultCreator} (given
 		 * the {@code key} as input), stored, and returned.
 		 *
+		 * <p>For greater type safety, consider using
+		 * {@link StoredValues#getOrComputeIfAbsent(Store, Object, Function)}
+		 * instead.
+		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
 		 * to create a new value; never {@code null}
@@ -352,6 +361,9 @@ public interface ExtensionContext {
 		 * ExtensionContexts} for the store's {@code Namespace} unless they
 		 * overwrite it.
 		 *
+		 * <p>For greater type safety, consider using
+		 * {@link StoredValues#put(Store, Object, Object) instead.
+		 *
 		 * @param key the key under which the value should be stored; never
 		 * {@code null}
 		 * @param value the value to store; may be {@code null}
@@ -365,7 +377,7 @@ public interface ExtensionContext {
 		 * not in ancestors.
 		 *
 		 * <p>For greater type safety, consider using {@link #remove(Object, Class)}
-		 * instead.
+		 * or {@link StoredValues#remove(Store, Object)} instead.
 		 *
 		 * @param key the key; never {@code null}
 		 * @return the previous value or {@code null} if no value was present
@@ -381,7 +393,10 @@ public interface ExtensionContext {
 		 * <p>The value will only be removed in the current {@link ExtensionContext},
 		 * not in ancestors.
 		 *
-		 * @param key the key; never {@code null}
+		 * <p>For greater type safety, consider using
+		 * {@link StoredValues#remove(Store, Object)} instead.
+		 *
+		 * @@param key the key; never {@code null}
 		 * @param requiredType the required type of the value; never {@code null}
 		 * @param <V> the value type
 		 * @return the previous value or {@code null} if no value was present
