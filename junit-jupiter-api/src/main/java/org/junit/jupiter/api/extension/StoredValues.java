@@ -7,7 +7,7 @@ import java.util.function.Function;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 
 /**
- * Provides type-safe access to values in an {@link ExetensionContext.Store}.
+ * Provides isolated, type-safe access to values in a {@link Store}.
  *
  * <p>Example use:
  *
@@ -34,7 +34,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
 public final class StoredValues<K, V> {
 
 	/**
-	 * Get the value that is stored under the supplied {@code key} from the
+	 * Returns the value that is stored under the supplied {@code key} from the
 	 * given {@code store}.
 	 *
 	 * <p>If no value is stored in the store's current {@link ExtensionContext}
@@ -53,8 +53,8 @@ public final class StoredValues<K, V> {
 	}
 
 	/**
-	 * Get the value that is stored under the supplied {@code key} from the
-	 * given {@code store}.
+	 * Returns the value that is stored under the supplied {@code key} from the
+	 * given {@code store}, computing a value if there is no stored value.
 	 *
 	 * <p>If no value is stored in the store's current {@link ExtensionContext}
 	 * for the supplied {@code key}, ancestors of the context will be queried
@@ -80,7 +80,7 @@ public final class StoredValues<K, V> {
 	}
 
 	/**
-	 * Store a {@code value} for later retrieval under the supplied {@code key}
+	 * Stores a {@code value} for later retrieval under the supplied {@code key}
 	 * in the given {@code store}.
 	 *
 	 * <p>A stored {@code value} is visible in child {@link ExtensionContext
@@ -96,7 +96,7 @@ public final class StoredValues<K, V> {
 	}
 
 	/**
-	 * Remove the value that was previously stored under the supplied
+	 * Removes the value that was previously stored under the supplied
 	 * {@code key} in the given {@code store}.
 	 *
 	 * <p>The value will only be removed in the current
@@ -116,6 +116,7 @@ public final class StoredValues<K, V> {
 		return new KeyWrapper<>(key);
 	}
 
+	/** Wraps a key, to provide isolation from other keys of the same type. */
 	private static class KeyWrapper<K> {
 		private final K key;
 
@@ -138,7 +139,6 @@ public final class StoredValues<K, V> {
 			}
 			return key.equals(that.key);
 		}
-		
 		
 		@Override
 		public int hashCode() {

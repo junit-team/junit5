@@ -262,12 +262,17 @@ public interface ExtensionContext {
 	Store getStore(Namespace namespace);
 
 	/**
-	 * {@code Store} provides methods for extensions to save and retrieve data.
+	 * Provides methods for extensions to save and retrieve data.
+	 *
+	 * <p>For better isolation and type-safety, consider accessing the
+	 * {@code Store} via a {@link StoredValues} instance.
+	 *
+	 * @see StoredValues
 	 */
 	interface Store {
 
 		/**
-		 * Get the value that is stored under the supplied {@code key}.
+		 * Returns the value that is stored under the supplied {@code key}.
 		 *
 		 * <p>If no value is stored in the current {@link ExtensionContext}
 		 * for the supplied {@code key}, ancestors of the context will be queried
@@ -284,7 +289,7 @@ public interface ExtensionContext {
 		Object get(Object key);
 
 		/**
-		 * Get the value of the specified required type that is stored under
+		 * Returns the value of the specified required type that is stored under
 		 * the supplied {@code key}.
 		 *
 		 * <p>If no value is stored in the current {@link ExtensionContext}
@@ -304,7 +309,8 @@ public interface ExtensionContext {
 		<V> V get(Object key, Class<V> requiredType);
 
 		/**
-		 * Get the value that is stored under the supplied {@code key}.
+		 * Returns the value that is stored under the supplied {@code key},
+		 * computing a value if there is no stored value.
 		 *
 		 * <p>If no value is stored in the current {@link ExtensionContext}
 		 * for the supplied {@code key}, ancestors of the context will be queried
@@ -329,8 +335,8 @@ public interface ExtensionContext {
 		<K, V> Object getOrComputeIfAbsent(K key, Function<K, V> defaultCreator);
 
 		/**
-		 * Get the value of the specified required type that is stored under the
-		 * supplied {@code key}.
+		 * Returns the value of the provided type that is stored under the
+		 * supplied {@code key}, computing a value if there is no stored value.
 		 *
 		 * <p>If no value is stored in the current {@link ExtensionContext}
 		 * for the supplied {@code key}, ancestors of the context will be queried
@@ -355,7 +361,7 @@ public interface ExtensionContext {
 		<K, V> V getOrComputeIfAbsent(K key, Function<K, V> defaultCreator, Class<V> requiredType);
 
 		/**
-		 * Store a {@code value} for later retrieval under the supplied {@code key}.
+		 * Stores a {@code value} for later retrieval under the supplied {@code key}.
 		 *
 		 * <p>A stored {@code value} is visible in child {@link ExtensionContext
 		 * ExtensionContexts} for the store's {@code Namespace} unless they
@@ -371,7 +377,7 @@ public interface ExtensionContext {
 		void put(Object key, Object value);
 
 		/**
-		 * Remove the value that was previously stored under the supplied {@code key}.
+		 * Removes the value that was previously stored under the supplied {@code key}.
 		 *
 		 * <p>The value will only be removed in the current {@link ExtensionContext},
 		 * not in ancestors.
@@ -387,7 +393,7 @@ public interface ExtensionContext {
 		Object remove(Object key);
 
 		/**
-		 * Remove the value of the specified required type that was previously stored
+		 * Removes the value of the specified required type that was previously stored
 		 * under the supplied {@code key}.
 		 *
 		 * <p>The value will only be removed in the current {@link ExtensionContext},
