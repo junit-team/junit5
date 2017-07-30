@@ -1,6 +1,7 @@
 
 package org.junit.jupiter.api.extension;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
@@ -13,7 +14,8 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
  * <pre>{@code
  * public class TimingExtension
  *     implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
- *   private static final StoredValues<Method, Instant> START_TIMES;
+ *   private static final StoredValues<Method, Instant> START_TIMES
+ *       = new StoredValues<>();
  * 
  *   @Override
  *   public void beforeTestExecution(ExtensionContext context) {
@@ -23,16 +25,13 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
  * }
  * }</pre>
  *
+ * <p>Values stored using an instance of this class cannot be accessed by other
+ * classes using the {@code Store} directly.
+ *
  * @param <K> the key type
  * @param <V> the value type
  */
 public final class StoredValues<K, V> {
-	private final Class<V> valueType;
-
-	/** Creates an instance that stores values of the given type. */
-	public static <K, V> StoredValues<K, V> storing(Class<V> valueType) {
-		return new StoredValues<K, V>(valueType);
-	}
 
 	/**
 	 * Get the value that is stored under the supplied {@code key} from the
@@ -48,8 +47,9 @@ public final class StoredValues<K, V> {
 	 * @return the value; potentially {@code null}
 	 * @see #get(Object, Class)
 	 */
+	@SuppressWarnings("unchecked")
 	public V get(Store store, K key) {
-		return store.get(key, valueType);
+		return (V) store.get(wrap(key));
 	}
 
 	/**
@@ -72,8 +72,11 @@ public final class StoredValues<K, V> {
 	 * @return the value; potentially {@code null}
 	 * @see #getOrComputeIfAbsent(Object, Function, Class)
 	 */
+	@SuppressWarnings("unchecked")
 	public V getOrComputeIfAbsent(Store store, K key, Function<K, V> defaultCreator) {
-		return store.getOrComputeIfAbsent(key, defaultCreator, valueType);
+		return (V) store.getOrComputeIfAbsent(
+			wrap(key),
+			k -> defaultCreator.apply(k.key));
 	}
 
 	/**
@@ -89,7 +92,7 @@ public final class StoredValues<K, V> {
 	 * @param value the value to store; may be {@code null}
 	 */
 	public void put(Store store, K key, V value) {
-		store.put(key, value);
+		store.put(wrap(key), value);
 	}
 
 	/**
@@ -104,12 +107,43 @@ public final class StoredValues<K, V> {
 	 *         the specified key
 	 * @see #remove(Object, Class)
 	 */
+	@SuppressWarnings("unchecked")
 	public V remove(Store store, K key) {
-		return store.remove(key, valueType);
+		return (V) store.remove(wrap(key));
 	}
 
-	private StoredValues(Class<V> valueType) {
-		this.valueType = valueType;
+	private KeyWrapper<K> wrap(K key) {
+		return new KeyWrapper<>(key);
 	}
-	
+
+	private static class KeyWrapper<K> {
+		private final K key;
+
+		KeyWrapper(K key) {
+			this.key = key;
+		}
+
+		@SuppressWarnings("rawtypes")
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!(obj instanceof KeyWrapper)) {
+				return false;
+			}
+			KeyWrapper that = (KeyWrapper) obj;
+			if (key == null) {
+				return that.key == null;
+			}
+			return key.equals(that.key);
+		}
+		
+		
+		@Override
+		public int hashCode() {
+			return Objects.hash(key);
+		}
+
+	}
 }
