@@ -280,7 +280,7 @@ public interface ExtensionContext {
 		 * to create this store.
 		 *
 		 * <p>For greater type safety, consider using {@link #get(Object, Class)}
-		 * or {@link StoredValues#get(Store, Object) instead.
+		 * or {@link StoredValues#get(Store, Object)} instead.
 		 *
 		 * @param key the key; never {@code null}
 		 * @return the value; potentially {@code null}
@@ -298,7 +298,7 @@ public interface ExtensionContext {
 		 * to create this store.
 		 *
 		 * <p>For greater type safety, consider using
-		 * {@link StoredValues#get(Store, Object) instead.
+		 * {@link StoredValues#get(Store, Object)} instead.
 		 *
 		 * @param key the key; never {@code null}
 		 * @param requiredType the required type of the value; never {@code null}
@@ -368,7 +368,7 @@ public interface ExtensionContext {
 		 * overwrite it.
 		 *
 		 * <p>For greater type safety, consider using
-		 * {@link StoredValues#put(Store, Object, Object) instead.
+		 * {@link StoredValues#put(Store, Object, Object)} instead.
 		 *
 		 * @param key the key under which the value should be stored; never
 		 * {@code null}
@@ -402,7 +402,7 @@ public interface ExtensionContext {
 		 * <p>For greater type safety, consider using
 		 * {@link StoredValues#remove(Store, Object)} instead.
 		 *
-		 * @@param key the key; never {@code null}
+		 * @param key the key; never {@code null}
 		 * @param requiredType the required type of the value; never {@code null}
 		 * @param <V> the value type
 		 * @return the previous value or {@code null} if no value was present

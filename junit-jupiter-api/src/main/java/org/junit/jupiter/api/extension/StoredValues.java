@@ -1,3 +1,12 @@
+/*
+ * Copyright 2015-2017 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 
 package org.junit.jupiter.api.extension;
 
@@ -14,19 +23,18 @@ import org.junit.platform.commons.meta.API;
  *
  * <p>Example use:
  *
- * <pre>{@code
+ * <pre>
  * public class TimingExtension
  *     implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
- *   private static final StoredValues<Method, Instant> START_TIMES
- *       = new StoredValues<>();
- * 
- *   @Override
+ *   private static final StoredValues&lt;Method, Instant&gt; START_TIMES
+ *       = new StoredValues&lt;&gt;();
+ *
  *   public void beforeTestExecution(ExtensionContext context) {
  *     START_TIMES.put(
  *         getStore(context), context.getRequiredTestMethod(), Instant.now());
  *   }
  * }
- * }</pre>
+ * </pre>
  *
  * <p>Values stored using an instance of this class cannot be accessed by other
  * classes using the {@code Store} directly.
@@ -49,7 +57,6 @@ public final class StoredValues<K, V> {
 	 * @param store the store to use to get the data
 	 * @param key the key; never {@code null}
 	 * @return the value; potentially {@code null}
-	 * @see #get(Object, Class)
 	 */
 	@SuppressWarnings("unchecked")
 	public V get(Store store, K key) {
@@ -71,15 +78,11 @@ public final class StoredValues<K, V> {
 	 * @param key the key; never {@code null}
 	 * @param defaultCreator the function called with the supplied {@code key}
 	 *        to create a new value; never {@code null}
-	 * @param <K> the key type
-	 * @param <V> the value type
 	 * @return the value; potentially {@code null}
-	 * @see #getOrComputeIfAbsent(Object, Function, Class)
 	 */
 	@SuppressWarnings("unchecked")
 	public V getOrComputeIfAbsent(Store store, K key, Function<K, V> defaultCreator) {
-		return (V) store.getOrComputeIfAbsent(
-			wrap(key), defaultCreator.compose(keyWrapper -> keyWrapper.key));
+		return (V) store.getOrComputeIfAbsent(wrap(key), defaultCreator.compose(keyWrapper -> keyWrapper.key));
 	}
 
 	/**
@@ -108,7 +111,6 @@ public final class StoredValues<K, V> {
 	 * @param key the key; never {@code null}
 	 * @return the previous value or {@code null} if no value was present for
 	 *         the specified key
-	 * @see #remove(Object, Class)
 	 */
 	@SuppressWarnings("unchecked")
 	public V remove(Store store, K key) {
@@ -142,7 +144,7 @@ public final class StoredValues<K, V> {
 			}
 			return key.equals(that.key);
 		}
-		
+
 		@Override
 		public int hashCode() {
 			return Objects.hash(key);
