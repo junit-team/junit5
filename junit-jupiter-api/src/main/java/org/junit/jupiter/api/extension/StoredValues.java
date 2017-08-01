@@ -117,38 +117,40 @@ public final class StoredValues<K, V> {
 		return (V) store.remove(wrap(key));
 	}
 
-	private KeyWrapper<K> wrap(K key) {
-		return new KeyWrapper<>(key);
+	private KeyWrapper wrap(K key) {
+		return new KeyWrapper(key);
 	}
 
 	/** Wraps a key, to provide isolation from other keys of the same type. */
-	private static class KeyWrapper<K> {
+	private class KeyWrapper {
+		private final StoredValues<K, ?> parent;
 		private final K key;
 
 		KeyWrapper(K key) {
+			this.parent = StoredValues.this;
 			this.key = key;
 		}
 
-		@SuppressWarnings("rawtypes")
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj) {
 				return true;
 			}
-			if (!(obj instanceof KeyWrapper)) {
+			if (!(obj instanceof StoredValues.KeyWrapper)) {
 				return false;
 			}
+			@SuppressWarnings("unchecked")
 			KeyWrapper that = (KeyWrapper) obj;
-			if (key == null) {
-				return that.key == null;
+
+			if (this.parent != that.parent) {
+				return false;
 			}
-			return key.equals(that.key);
+			return Objects.equals(this.key, that.key);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(key);
+			return Objects.hash(parent, key);
 		}
-
 	}
 }
