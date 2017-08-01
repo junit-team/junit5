@@ -17,6 +17,7 @@ For details please see the https://blog.jetbrains.com/idea/2016/08/using-junit-5
 | 2016.2   | M2
 | 2016.3.1 | M3
 | 2017.1.2 | M4
+| 2017.2.1 | M5
 |===
 
 WARNING: IntelliJ IDEA bundles a certain version of JUnit 5. That means, if you want to
