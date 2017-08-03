@@ -250,6 +250,7 @@ subprojects { subproj ->
 		task sourcesJar(type: Jar, dependsOn: classes) {
 			classifier = 'sources'
 			from sourceSets.main.allSource
+			duplicatesStrategy = 'exclude'
 		}
 
 		task javadocJar(type: Jar) {
