@@ -53,6 +53,7 @@ on GitHub.
   `@BeforeEach`, etc.
 * Fixed `ExecutionContext.Store.getOrComputeIfAbsent()` to look for values in the
   (great) grandparent context before computing a value.
+* Fixed thread-safety issue in `ExecutionContext.Store.getOrComputeIfAbsent()`.
 
 ===== New Features and Improvements
 

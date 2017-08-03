@@ -47,10 +47,8 @@ public class ExtensionValuesStore {
 	}
 
 	Object get(Namespace namespace, Object key) {
-		synchronized (this.monitor) {
-			StoredValue storedValue = getStoredValue(namespace, key);
-			return storedValue == null ? null : storedValue.value;
-		}
+		StoredValue storedValue = getStoredValue(namespace, key);
+		return storedValue == null ? null : storedValue.value;
 	}
 
 	<T> T get(Namespace namespace, Object key, Class<T> requiredType) {
@@ -96,15 +94,23 @@ public class ExtensionValuesStore {
 	}
 
 	private StoredValue getStoredValue(Namespace namespace, Object key) {
-		StoredValue storedValue = this.storedValues.get(new CompositeKey(namespace, key));
-		if (storedValue != null) {
-			return storedValue;
-		}
-		else if (this.parentStore != null) {
-			return this.parentStore.getStoredValue(namespace, key);
-		}
-		else {
-			return null;
+		/*
+		 * This method can be called from another ExtensionValuesStore instance,
+		 * so we must synchronized on the monitor.
+		 *
+		 * TODO: Consider rewriting with ConcurrentHashMap.
+		 */
+		synchronized (this.monitor) {
+			StoredValue storedValue = this.storedValues.get(new CompositeKey(namespace, key));
+			if (storedValue != null) {
+				return storedValue;
+			}
+			else if (this.parentStore != null) {
+				return this.parentStore.getStoredValue(namespace, key);
+			}
+			else {
+				return null;
+			}
 		}
 	}
 
