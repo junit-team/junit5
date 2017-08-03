@@ -68,13 +68,15 @@ import org.junit.runners.model.InitializationError;
  * to be run with IDEs and build systems that support JUnit 4 but do not yet
  * support the JUnit Platform directly.
  *
- * <p>Consult the various annotations in this package for configuration options.
+ * <p>Consult the various annotations in the {@code org.junit.platform.suite.api}
+ * package for configuration options.
  *
- * <p>If you do not use any configuration annotations from this package, you
- * can simply use this runner on a test class whose programming model is
- * supported on the JUnit Platform &mdash; for example, a JUnit Jupiter test class.
- * Note, however, that any test class run with this runner must be {@code public}
- * in order to be picked up by IDEs and build tools.
+ * <p>If you do not use any configuration annotations from the
+ * {@code org.junit.platform.suite.api} package, you can simply use this runner
+ * on a test class whose programming model is supported on the JUnit Platform
+ * &mdash; for example, a JUnit Jupiter test class. Note, however, that any test
+ * class run with this runner must be {@code public} in order to be picked up by
+ * IDEs and build tools.
  *
  * <p>When used on a class that serves as a test suite and the
  * {@link IncludeClassNamePatterns @IncludeClassNamePatterns} annotation is not
