@@ -6724,13 +6724,6 @@ default methods annotated with Jupiter annotations such as <code>@Test</code>, <
 applies to default methods annotated with Jupiter annotations such as <code>@Test</code>,
 <code>@BeforeEach</code>, etc.</p>
 </li>
-<li>
-<p>Fixed <code>ExecutionContext.Store.getOrComputeIfAbsent()</code> to look for values in the
-(great) grandparent context before computing a value.</p>
-</li>
-<li>
-<p>Fixed thread-safety issue in <code>ExecutionContext.Store.getOrComputeIfAbsent()</code>.</p>
-</li>
 </ul>
 </div>
 </div>
@@ -6862,6 +6855,13 @@ on GitHub.</p>
 <ul>
 <li>
 <p>Source JARs no longer contain every source file twice.</p>
+</li>
+<li>
+<p><code>ExecutionContext.Store.getOrComputeIfAbsent()</code> now looks for values in a grandparent
+context (and recursively in its parents) before computing a value.</p>
+</li>
+<li>
+<p><code>ExecutionContext.Store.getOrComputeIfAbsent()</code> is now thread safe.</p>
 </li>
 </ul>
 </div>
