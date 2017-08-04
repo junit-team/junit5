@@ -18,15 +18,12 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * Concurrency tests for {@link NamespaceAwareStore} and {@link ExtensionValuesStore}.
  *
  * @since 5.0
  */
-@RunWith(JUnitPlatform.class)
 class ExtensionStoreConcurrencyTests {
 
 	private final AtomicInteger count = new AtomicInteger();
@@ -49,7 +46,7 @@ class ExtensionStoreConcurrencyTests {
 
 	private Store reset() {
 		count.set(0);
-		return new NamespaceAwareStore(new ExtensionValuesStore(), Namespace.DEFAULT);
+		return new NamespaceAwareStore(new ExtensionValuesStore(null), Namespace.DEFAULT);
 	}
 
 }

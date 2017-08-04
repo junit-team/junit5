@@ -17,14 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.function.Function;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContextException;
 
 /**
- * Microtests for {@link ExtensionValuesStore}.
+ * Unit tests for {@link ExtensionValuesStore}.
  *
  * @since 5.0
  * @see ExtensionContextTests
@@ -36,16 +35,9 @@ class ExtensionValuesStoreTests {
 
 	private final Namespace namespace = Namespace.create("ns");
 
-	private ExtensionValuesStore store;
-	private ExtensionValuesStore parentStore;
-	private ExtensionValuesStore grandParentStore;
-
-	@BeforeEach
-	void initializeStore() {
-		grandParentStore = new ExtensionValuesStore();
-		parentStore = new ExtensionValuesStore(grandParentStore);
-		store = new ExtensionValuesStore(parentStore);
-	}
+	private final ExtensionValuesStore grandParentStore = new ExtensionValuesStore(null);
+	private final ExtensionValuesStore parentStore = new ExtensionValuesStore(grandParentStore);
+	private final ExtensionValuesStore store = new ExtensionValuesStore(parentStore);
 
 	@Nested
 	class StoringValuesTests {

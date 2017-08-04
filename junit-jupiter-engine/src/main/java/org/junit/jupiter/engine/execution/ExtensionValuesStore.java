@@ -35,12 +35,9 @@ import org.junit.platform.commons.util.Preconditions;
 public class ExtensionValuesStore {
 
 	private final ExtensionValuesStore parentStore;
+	// TODO Consider using a ConcurrentHashMap for the internal store.
 	private final Map<Object, StoredValue> storedValues = new HashMap<>(4);
 	private final Object monitor = new Object();
-
-	ExtensionValuesStore() {
-		this(null);
-	}
 
 	public ExtensionValuesStore(ExtensionValuesStore parentStore) {
 		this.parentStore = parentStore;
@@ -94,12 +91,8 @@ public class ExtensionValuesStore {
 	}
 
 	private StoredValue getStoredValue(Namespace namespace, Object key) {
-		/*
-		 * This method can be called from another ExtensionValuesStore instance,
-		 * so we must synchronized on the monitor.
-		 *
-		 * TODO: Consider rewriting with ConcurrentHashMap.
-		 */
+		// NOTE: this method can be called from another ExtensionValuesStore
+		// instance, so we must synchronize on the monitor.
 		synchronized (this.monitor) {
 			StoredValue storedValue = this.storedValues.get(new CompositeKey(namespace, key));
 			if (storedValue != null) {
@@ -147,10 +140,12 @@ public class ExtensionValuesStore {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o)
+			if (this == o) {
 				return true;
-			if (o == null || getClass() != o.getClass())
+			}
+			if (o == null || getClass() != o.getClass()) {
 				return false;
+			}
 			CompositeKey that = (CompositeKey) o;
 			return this.namespace.equals(that.namespace) && this.key.equals(that.key);
 		}
