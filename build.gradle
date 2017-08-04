@@ -27,6 +27,7 @@ buildscript {
 plugins {
 	id 'com.gradle.build-scan' version '1.9'
 	id 'net.nemerosa.versioning' version '2.6.1'
+	id "org.jetbrains.kotlin.jvm" version "1.1.3-2" apply false
 }
 
 buildScan {
@@ -223,6 +224,10 @@ allprojects { subproj ->
 		sourceSets.test.runtimeClasspath += configurations.clover
 		compileJava.dependsOn cloverInstrumentJava
 	}
+}
+
+configure([project(":junit-jupiter-api"), project(":junit-jupiter-engine")]) {
+	apply plugin: "org.jetbrains.kotlin.jvm"
 }
 
 subprojects { subproj ->
@@ -433,6 +438,13 @@ subprojects { subproj ->
 			endWithNewline()
 			replaceRegex 'Empty line between last method and class closure', /\n([\s]+)}\n}\n$/, '\n$1}\n\n}\n'
 			replaceRegex 'Remove line breaks between consecutive closing parentheses', /\)\n[\s]+\)\n/, '))\n'
+		}
+
+		kotlin {
+			ktlint("0.9.0")
+			licenseHeaderFile headerText
+			trimTrailingWhitespace()
+			endWithNewline()
 		}
 	}
 

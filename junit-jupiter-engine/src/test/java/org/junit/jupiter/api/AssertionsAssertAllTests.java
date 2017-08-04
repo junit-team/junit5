@@ -149,7 +149,7 @@ class AssertionsAssertAllTests {
 	}
 
 	@SafeVarargs
-	private static void assertExpectedExceptionTypes(MultipleFailuresError multipleFailuresError,
+	static void assertExpectedExceptionTypes(MultipleFailuresError multipleFailuresError,
 			Class<? extends Throwable>... exceptionTypes) {
 
 		assertNotNull(multipleFailuresError, "MultipleFailuresError");
