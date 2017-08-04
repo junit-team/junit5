@@ -3891,16 +3891,16 @@ name in a file named <code>org.junit.jupiter.api.extension.Extension</code> with
 <h5 id="extensions-registration-automatic-enabling"><a class="anchor" href="#extensions-registration-automatic-enabling"></a>Enabling Automatic Extension Detection</h5>
 <div class="paragraph">
 <p>Auto-detection is an advanced feature and is therefore not enabled by default. To enable
-it, simply set the <code>junit.extensions.autodetection.enabled</code> configuration key to <code>true</code>.
-This can be supplied as a JVM system property or as a <em>configuration parameter</em> in the
-<code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>.</p>
+it, simply set the <code>junit.jupiter.extensions.autodetection.enabled</code> configuration
+parameter to <code>true</code>. This can be supplied as a JVM system property or as a <em>configuration
+parameter</em> in the <code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>.</p>
 </div>
 <div class="paragraph">
 <p>For example, to enable auto-detection of extensions, you can start your JVM with the
 following system property.</p>
 </div>
 <div class="paragraph">
-<p><code>-Djunit.extensions.autodetection.enabled=true</code></p>
+<p><code>-Djunit.jupiter.extensions.autodetection.enabled=true</code></p>
 </div>
 <div class="paragraph">
 <p>When auto-detection is enabled, extensions discovered via the <code>ServiceLoader</code> mechanism
@@ -3949,27 +3949,27 @@ the short-circuiting boolean OR operator.</p>
 <p>Sometimes it can be useful to run a test suite <em>without</em> certain conditions being active.
 For example, you may wish to run tests even if they are annotated with <code>@Disabled</code> in
 order to see if they are still <em>broken</em>. To do this, simply provide a pattern for the
-<code>junit.conditions.deactivate</code> configuration key to specify which conditions should be
-deactivated (i.e., not evaluated) for the current test run. The pattern can be supplied
-as a JVM system property or as a <em>configuration parameter</em> in the <code>LauncherDiscoveryRequest</code>
-that is passed to the <code>Launcher</code>.</p>
+<code>junit.jupiter.conditions.deactivate</code> configuration parameter to specify which conditions
+should be deactivated (i.e., not evaluated) for the current test run. The pattern can be
+supplied as a JVM system property or as a <em>configuration parameter</em> in the
+<code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>.</p>
 </div>
 <div class="paragraph">
-<p>For example, to deactivate JUnit&#8217;s <code>@Disabled</code> condition, you can start your JVM with
-the following system property.</p>
+<p>For example, to deactivate JUnit&#8217;s <code>@Disabled</code> condition, you can start your JVM with the
+following system property.</p>
 </div>
 <div class="paragraph">
-<p><code>-Djunit.conditions.deactivate=org.junit.*DisabledCondition</code></p>
+<p><code>-Djunit.jupiter.conditions.deactivate=org.junit.*DisabledCondition</code></p>
 </div>
 <div class="sect4">
 <h5 id="extensions-conditions-deactivation-patterns"><a class="anchor" href="#extensions-conditions-deactivation-patterns"></a>Pattern Matching Syntax</h5>
 <div class="paragraph">
-<p>If the <code>junit.conditions.deactivate</code> pattern consists solely of an asterisk (<code>*</code>), all
-conditions will be deactivated. Otherwise, the pattern will be used to match against the
-fully qualified class name (<em>FQCN</em>) of each registered condition. Any dot (<code>.</code>) in the
-pattern will match against a dot (<code>.</code>) or a dollar sign (<code>$</code>) in the FQCN. Any asterisk
-(<code>*</code>) will match against one or more characters in the FQCN. All other characters in the
-pattern will be matched one-to-one against the FQCN.</p>
+<p>If the <code>junit.jupiter.conditions.deactivate</code> pattern consists solely of an asterisk
+(<code>*</code>), all conditions will be deactivated. Otherwise, the pattern will be used to match
+against the fully qualified class name (<em>FQCN</em>) of each registered condition. Any dot
+(<code>.</code>) in the pattern will match against a dot (<code>.</code>) or a dollar sign (<code>$</code>) in the FQCN.
+Any asterisk (<code>*</code>) will match against one or more characters in the FQCN. All other
+characters in the pattern will be matched one-to-one against the FQCN.</p>
 </div>
 <div class="paragraph">
 <p>Examples:</p>
@@ -6846,18 +6846,6 @@ on GitHub.</p>
 </ul>
 </div>
 </div>
-<div class="sect4">
-<h5 id="deprecations-and-breaking-changes-10"><a class="anchor" href="#deprecations-and-breaking-changes-10"></a>Deprecations and Breaking Changes</h5>
-<div class="ulist">
-<ul>
-<li>
-<p>Revert change introduced in RC1: Test classes written in the Kotlin programming language
-are now executed with the same default test instance lifecycle mode as Java classes
-again ("per-method").</p>
-</li>
-</ul>
-</div>
-</div>
 </div>
 <div class="sect3">
 <h4 id="release-notes-5.0.0-rc3-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-rc3-junit-jupiter"></a>JUnit Jupiter</h4>
@@ -6867,6 +6855,36 @@ again ("per-method").</p>
 <ul>
 <li>
 <p>Source JARs no longer contain every source file twice.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="deprecations-and-breaking-changes-10"><a class="anchor" href="#deprecations-and-breaking-changes-10"></a>Deprecations and Breaking Changes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Revert change introduced in RC1: test classes written in the Kotlin programming
+language are now executed with the same default test instance lifecycle mode as Java
+classes again (i.e., "per-method").</p>
+</li>
+<li>
+<p>The <code>junit.conditions.deactivate</code> configuration parameter has been renamed to
+<code>junit.jupiter.conditions.deactivate</code>.</p>
+</li>
+<li>
+<p>The <code>junit.extensions.autodetection.enabled</code> configuration parameter has been renamed
+to <code>junit.jupiter.extensions.autodetection.enabled</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
 </li>
 </ul>
 </div>
@@ -6892,7 +6910,7 @@ again ("per-method").</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-04 15:57:53 EDT
+Last updated 2017-08-04 16:11:22 EDT
 </div>
 </div>
 </body>
