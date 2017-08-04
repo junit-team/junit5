@@ -14,9 +14,9 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code ExtensionValuesStore} is used inside implementations of
- * {@link ExtensionContext} to store and retrieve attributes.
+ * {@link ExtensionContext} to store and retrieve values.
  *
  * @since 5.0
  */
@@ -35,8 +35,7 @@ import org.junit.platform.commons.util.Preconditions;
 public class ExtensionValuesStore {
 
 	private final ExtensionValuesStore parentStore;
-	// TODO Consider using a ConcurrentHashMap for the internal store.
-	private final Map<Object, StoredValue> storedValues = new HashMap<>(4);
+	private final Map<Object, StoredValue> storedValues = new ConcurrentHashMap<>(4);
 	private final Object monitor = new Object();
 
 	public ExtensionValuesStore(ExtensionValuesStore parentStore) {
