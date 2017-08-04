@@ -1400,9 +1400,7 @@ characters have been removed.
 unexpected side effects due to mutable test instance state, JUnit creates a new instance
 of each test class before executing each <em>test</em> method (see note below for what qualifies
 as a <em>test</em> method). This "per-method" test instance lifecycle is the default behavior in
-JUnit Jupiter and is analogous to all previous versions of JUnit. Note, however, that the
-default test instance lifecycle mode for test classes written in the Kotlin programming
-language is "per-class".</p>
+JUnit Jupiter and is analogous to all previous versions of JUnit.</p>
 </div>
 <div class="paragraph">
 <p>If you would prefer that JUnit Jupiter execute all test methods on the same test
@@ -1420,9 +1418,8 @@ methods in <code>@Nested</code> test classes.</p>
 </div>
 <div class="paragraph">
 <p>If you are authoring tests using the Kotlin programming language, you may also find it
-easier to write non-static <code>@BeforeAll</code> and <code>@AfterAll</code> methods. Thus, "per-class" mode
-is used by default for test classes written in Kotlin. You may switch to "per-method"
-semantics by annotating your test class with <code>@TestInstance(Lifecycle.PER_METHOD)</code>.</p>
+easier to implement <code>@BeforeAll</code> and <code>@AfterAll</code> methods by switching to the "per-class"
+test instance lifecycle mode.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -6849,6 +6846,18 @@ on GitHub.</p>
 </ul>
 </div>
 </div>
+<div class="sect4">
+<h5 id="deprecations-and-breaking-changes-10"><a class="anchor" href="#deprecations-and-breaking-changes-10"></a>Deprecations and Breaking Changes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Revert change introduced in RC1: Test classes written in the Kotlin programming language
+are now executed with the same default test instance lifecycle mode as Java classes
+again ("per-method").</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="release-notes-5.0.0-rc3-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-rc3-junit-jupiter"></a>JUnit Jupiter</h4>
@@ -6883,7 +6892,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-04 13:08:01 EDT
+Last updated 2017-08-04 15:57:53 EDT
 </div>
 </div>
 </body>
