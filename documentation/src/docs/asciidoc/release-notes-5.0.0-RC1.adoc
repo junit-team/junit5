@@ -51,6 +51,9 @@ on GitHub.
 * Overridden interface default methods are no longer included in the test plan. This
   applies to default methods annotated with Jupiter annotations such as `@Test`,
   `@BeforeEach`, etc.
+* Fixed `ExecutionContext.Store.getOrComputeIfAbsent()` to look for values in the
+  (great) grandparent context before computing a value.
+* Fixed thread-safety issue in `ExecutionContext.Store.getOrComputeIfAbsent()`.
 
 ===== New Features and Improvements
 

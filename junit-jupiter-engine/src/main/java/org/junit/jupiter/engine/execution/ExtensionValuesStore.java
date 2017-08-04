@@ -47,18 +47,8 @@ public class ExtensionValuesStore {
 	}
 
 	Object get(Namespace namespace, Object key) {
-		synchronized (this.monitor) {
-			StoredValue storedValue = getStoredValue(namespace, key);
-			if (storedValue != null) {
-				return storedValue.value;
-			}
-			else if (this.parentStore != null) {
-				return this.parentStore.get(namespace, key);
-			}
-			else {
-				return null;
-			}
-		}
+		StoredValue storedValue = getStoredValue(namespace, key);
+		return storedValue == null ? null : storedValue.value;
 	}
 
 	<T> T get(Namespace namespace, Object key, Class<T> requiredType) {
@@ -70,13 +60,8 @@ public class ExtensionValuesStore {
 		synchronized (this.monitor) {
 			StoredValue storedValue = getStoredValue(namespace, key);
 			if (storedValue == null) {
-				if (this.parentStore != null) {
-					storedValue = this.parentStore.getStoredValue(namespace, key);
-				}
-				if (storedValue == null) {
-					storedValue = new StoredValue(defaultCreator.apply(key));
-					putStoredValue(namespace, key, storedValue);
-				}
+				storedValue = new StoredValue(defaultCreator.apply(key));
+				putStoredValue(namespace, key, storedValue);
 			}
 			return storedValue.value;
 		}
@@ -109,8 +94,24 @@ public class ExtensionValuesStore {
 	}
 
 	private StoredValue getStoredValue(Namespace namespace, Object key) {
-		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		return this.storedValues.get(compositeKey);
+		/*
+		 * This method can be called from another ExtensionValuesStore instance,
+		 * so we must synchronized on the monitor.
+		 *
+		 * TODO: Consider rewriting with ConcurrentHashMap.
+		 */
+		synchronized (this.monitor) {
+			StoredValue storedValue = this.storedValues.get(new CompositeKey(namespace, key));
+			if (storedValue != null) {
+				return storedValue;
+			}
+			else if (this.parentStore != null) {
+				return this.parentStore.getStoredValue(namespace, key);
+			}
+			else {
+				return null;
+			}
+		}
 	}
 
 	private void putStoredValue(Namespace namespace, Object key, StoredValue storedValue) {
