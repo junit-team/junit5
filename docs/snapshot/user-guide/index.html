@@ -6724,6 +6724,13 @@ default methods annotated with Jupiter annotations such as <code>@Test</code>, <
 applies to default methods annotated with Jupiter annotations such as <code>@Test</code>,
 <code>@BeforeEach</code>, etc.</p>
 </li>
+<li>
+<p>Fixed <code>ExecutionContext.Store.getOrComputeIfAbsent()</code> to look for values in the
+(great) grandparent context before computing a value.</p>
+</li>
+<li>
+<p>Fixed thread-safety issue in <code>ExecutionContext.Store.getOrComputeIfAbsent()</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -6910,7 +6917,7 @@ to <code>junit.jupiter.extensions.autodetection.enabled</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-04 16:11:22 EDT
+Last updated 2017-08-04 17:04:23 EDT
 </div>
 </div>
 </body>
