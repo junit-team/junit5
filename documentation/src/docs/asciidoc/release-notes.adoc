@@ -21,6 +21,6 @@ include::release-notes-5.0.0-RC1.adoc[]
 
 include::release-notes-5.0.0-RC2.adoc[]
 
-include::release-notes-5.0.0-GA.adoc[]
+include::release-notes-5.0.0-RC3.adoc[]
 
 :numbered:
