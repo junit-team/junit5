@@ -52,7 +52,7 @@ public final class Constants {
 	 * @see #DEACTIVATE_ALL_CONDITIONS_PATTERN
 	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 */
-	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.conditions.deactivate";
+	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate";
 
 	/**
 	 * Wildcard pattern which signals that all conditions should be deactivated: {@value}
@@ -68,7 +68,7 @@ public final class Constants {
 	 *
 	 * <p>The default behavior is not to perform auto-detection.
 	 */
-	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.extensions.autodetection.enabled";
+	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
 
 	private Constants() {
 		/* no-op */

@@ -35,6 +35,17 @@ on GitHub.
 
 * Source JARs no longer contain every source file twice.
 
+===== Deprecations and Breaking Changes
+
+* The `junit.conditions.deactivate` configuration parameter has been renamed to
+  `junit.jupiter.conditions.deactivate`.
+* The `junit.extensions.autodetection.enabled` configuration parameter has been renamed
+  to `junit.jupiter.extensions.autodetection.enabled`.
+
+===== New Features and Improvements
+
+* ❓
+
 
 [[release-notes-5.0.0-rc3-junit-vintage]]
 ==== JUnit Vintage

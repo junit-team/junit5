@@ -86,14 +86,14 @@ name in a file named `org.junit.jupiter.api.extension.Extension` within the
 ===== Enabling Automatic Extension Detection
 
 Auto-detection is an advanced feature and is therefore not enabled by default. To enable
-it, simply set the `junit.extensions.autodetection.enabled` configuration key to `true`.
-This can be supplied as a JVM system property or as a _configuration parameter_ in the
-`LauncherDiscoveryRequest` that is passed to the `Launcher`.
+it, simply set the `junit.jupiter.extensions.autodetection.enabled` configuration
+parameter to `true`. This can be supplied as a JVM system property or as a _configuration
+parameter_ in the `LauncherDiscoveryRequest` that is passed to the `Launcher`.
 
 For example, to enable auto-detection of extensions, you can start your JVM with the
 following system property.
 
-`-Djunit.extensions.autodetection.enabled=true`
+`-Djunit.jupiter.extensions.autodetection.enabled=true`
 
 When auto-detection is enabled, extensions discovered via the `ServiceLoader` mechanism
 will be added to the extension registry after JUnit Jupiter's global extensions (e.g.,
@@ -134,25 +134,25 @@ See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examp
 Sometimes it can be useful to run a test suite _without_ certain conditions being active.
 For example, you may wish to run tests even if they are annotated with `@Disabled` in
 order to see if they are still _broken_. To do this, simply provide a pattern for the
-`junit.conditions.deactivate` configuration key to specify which conditions should be
-deactivated (i.e., not evaluated) for the current test run. The pattern can be supplied
-as a JVM system property or as a _configuration parameter_ in the `LauncherDiscoveryRequest`
-that is passed to the `Launcher`.
+`junit.jupiter.conditions.deactivate` configuration parameter to specify which conditions
+should be deactivated (i.e., not evaluated) for the current test run. The pattern can be
+supplied as a JVM system property or as a _configuration parameter_ in the
+`LauncherDiscoveryRequest` that is passed to the `Launcher`.
 
-For example, to deactivate JUnit's `@Disabled` condition, you can start your JVM with
-the following system property.
+For example, to deactivate JUnit's `@Disabled` condition, you can start your JVM with the
+following system property.
 
-`-Djunit.conditions.deactivate=org.junit.*DisabledCondition`
+`-Djunit.jupiter.conditions.deactivate=org.junit.*DisabledCondition`
 
 [[extensions-conditions-deactivation-patterns]]
 ===== Pattern Matching Syntax
 
-If the `junit.conditions.deactivate` pattern consists solely of an asterisk (`+*+`), all
-conditions will be deactivated. Otherwise, the pattern will be used to match against the
-fully qualified class name (_FQCN_) of each registered condition. Any dot (`.`) in the
-pattern will match against a dot (`.`) or a dollar sign (`$`) in the FQCN. Any asterisk
-(`+*+`) will match against one or more characters in the FQCN. All other characters in the
-pattern will be matched one-to-one against the FQCN.
+If the `junit.jupiter.conditions.deactivate` pattern consists solely of an asterisk
+(`+*+`), all conditions will be deactivated. Otherwise, the pattern will be used to match
+against the fully qualified class name (_FQCN_) of each registered condition. Any dot
+(`.`) in the pattern will match against a dot (`.`) or a dollar sign (`$`) in the FQCN.
+Any asterisk (`+*+`) will match against one or more characters in the FQCN. All other
+characters in the pattern will be matched one-to-one against the FQCN.
 
 Examples:
 
