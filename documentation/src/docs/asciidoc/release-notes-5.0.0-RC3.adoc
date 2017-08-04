@@ -21,12 +21,6 @@ on GitHub.
 
 * Source JARs no longer contain every source file twice.
 
-===== Deprecations and Breaking Changes
-
-* Revert change introduced in RC1: Test classes written in the Kotlin programming language
-  are now executed with the same default test instance lifecycle mode as Java classes
-  again ("per-method").
-
 
 [[release-notes-5.0.0-rc3-junit-jupiter]]
 ==== JUnit Jupiter
@@ -37,6 +31,9 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
+* Revert change introduced in RC1: test classes written in the Kotlin programming
+  language are now executed with the same default test instance lifecycle mode as Java
+  classes again (i.e., "per-method").
 * The `junit.conditions.deactivate` configuration parameter has been renamed to
   `junit.jupiter.conditions.deactivate`.
 * The `junit.extensions.autodetection.enabled` configuration parameter has been renamed
