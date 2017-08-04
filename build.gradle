@@ -442,7 +442,7 @@ subprojects { subproj ->
 
 		kotlin {
 			ktlint("0.9.0")
-			licenseHeaderFile headerText
+			licenseHeaderFile headerFile
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
