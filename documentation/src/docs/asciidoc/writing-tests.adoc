@@ -176,9 +176,7 @@ In order to allow individual test methods to be executed in isolation and to avo
 unexpected side effects due to mutable test instance state, JUnit creates a new instance
 of each test class before executing each _test_ method (see note below for what qualifies
 as a _test_ method). This "per-method" test instance lifecycle is the default behavior in
-JUnit Jupiter and is analogous to all previous versions of JUnit. Note, however, that the
-default test instance lifecycle mode for test classes written in the Kotlin programming
-language is "per-class".
+JUnit Jupiter and is analogous to all previous versions of JUnit.
 
 If you would prefer that JUnit Jupiter execute all test methods on the same test
 instance, simply annotate your test class with `@TestInstance(Lifecycle.PER_CLASS)`. When
@@ -193,9 +191,8 @@ Specifically, with the "per-class" mode it becomes possible to declare `@BeforeA
 methods in `@Nested` test classes.
 
 If you are authoring tests using the Kotlin programming language, you may also find it
-easier to write non-static `@BeforeAll` and `@AfterAll` methods. Thus, "per-class" mode
-is used by default for test classes written in Kotlin. You may switch to "per-method"
-semantics by annotating your test class with `@TestInstance(Lifecycle.PER_METHOD)`.
+easier to implement `@BeforeAll` and `@AfterAll` methods by switching to the "per-class"
+test instance lifecycle mode.
 
 NOTE: In the context of test instance lifecycle a _test_ method is any method annotated
 with `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`.

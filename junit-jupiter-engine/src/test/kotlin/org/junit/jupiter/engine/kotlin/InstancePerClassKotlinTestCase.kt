@@ -1,8 +1,10 @@
 package org.junit.jupiter.engine.kotlin
 
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 
-class SimpleKotlinTestCase {
+@TestInstance(PER_CLASS)
+class InstancePerClassKotlinTestCase {
 
     companion object {
         @JvmField

@@ -11,11 +11,9 @@
 package org.junit.platform.commons.util;
 
 import static java.util.Arrays.stream;
-import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import java.lang.annotation.Annotation;
 import java.util.function.Function;
 
 import org.junit.platform.commons.meta.API;
@@ -75,20 +73,6 @@ public final class ClassUtils {
 			return "";
 		}
 		return stream(classes).map(v -> v == null ? "null" : mapper.apply(v)).collect(joining(", "));
-	}
-
-	/**
-	 * Determine if the supplied class was written in Kotlin.
-	 *
-	 * @param clazz the class to check; never {@code null}
-	 */
-	public static boolean isKotlinClass(Class<?> clazz) {
-		// @formatter:off
-		return stream(clazz.getDeclaredAnnotations())
-				.map(Annotation::annotationType)
-				.map(Class::getName)
-				.anyMatch(isEqual("kotlin.Metadata"));
-		// @formatter:on
 	}
 
 }

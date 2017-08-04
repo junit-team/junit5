@@ -31,7 +31,6 @@ dependencies {
 	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-	testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jre8")
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(':junit-jupiter-engine'))

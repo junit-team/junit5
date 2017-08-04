@@ -41,7 +41,6 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.AnnotationUtils;
-import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -296,7 +295,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		// @formatter:off
 		return AnnotationUtils.findAnnotation(testClass, TestInstance.class)
 				.map(TestInstance::value)
-				.orElseGet(() -> ClassUtils.isKotlinClass(testClass) ? Lifecycle.PER_CLASS : Lifecycle.PER_METHOD);
+				.orElse(Lifecycle.PER_METHOD);
 		// @formatter:on
 	}
 

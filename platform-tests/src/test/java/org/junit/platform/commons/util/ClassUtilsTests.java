@@ -10,11 +10,9 @@
 
 package org.junit.platform.commons.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -41,13 +39,6 @@ class ClassUtilsTests {
 		assertEquals("String, Integer", nullSafeToString(Class::getSimpleName, String.class, Integer.class));
 		assertEquals("String, null, Integer",
 			nullSafeToString(Class::getSimpleName, String.class, null, Integer.class));
-	}
-
-	@Test
-	void onlyClassesWrittenInKotlinAreKotlinClasses() {
-		Condition<Class<?>> aKotlinClass = new Condition<>(ClassUtils::isKotlinClass, "a Kotlin class");
-		assertThat(KotlinClass.class).is(aKotlinClass);
-		assertThat(ClassUtilsTests.class).isNot(aKotlinClass);
 	}
 
 }

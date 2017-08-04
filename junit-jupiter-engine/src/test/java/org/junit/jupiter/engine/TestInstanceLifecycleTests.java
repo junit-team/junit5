@@ -54,7 +54,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.jupiter.engine.kotlin.SimpleKotlinTestCase;
+import org.junit.jupiter.engine.kotlin.InstancePerClassKotlinTestCase;
+import org.junit.jupiter.engine.kotlin.InstancePerMethodKotlinTestCase;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
@@ -513,20 +514,48 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void instancePerClassIsDefaultLifecycleForKotlinTestClasses() {
-		Class<?> testClass = SimpleKotlinTestCase.class;
-		SimpleKotlinTestCase.TEST_INSTANCES.clear();
+	void instancePerClassCanBeUsedForKotlinTestClasses() {
+		Class<?> testClass = InstancePerClassKotlinTestCase.class;
+		InstancePerClassKotlinTestCase.TEST_INSTANCES.clear();
 
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
 
 		assertThat(eventRecorder.getTestFinishedCount()).isEqualTo(2);
-		assertThat(SimpleKotlinTestCase.TEST_INSTANCES.keySet()).hasSize(1);
-		assertThat(getOnlyElement(SimpleKotlinTestCase.TEST_INSTANCES.values())) //
+		assertThat(InstancePerClassKotlinTestCase.TEST_INSTANCES.keySet()).hasSize(1);
+		assertThat(getOnlyElement(InstancePerClassKotlinTestCase.TEST_INSTANCES.values())) //
 				.containsEntry("beforeAll", 1) //
 				.containsEntry("beforeEach", 2) //
 				.containsEntry("test", 2) //
 				.containsEntry("afterEach", 2) //
 				.containsEntry("afterAll", 1);
+	}
+
+	@Test
+	void instancePerMethodIsDefaultForKotlinTestClasses() {
+		Class<?> testClass = InstancePerMethodKotlinTestCase.class;
+		InstancePerMethodKotlinTestCase.TEST_INSTANCES.clear();
+
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+
+		assertThat(eventRecorder.getTestFinishedCount()).isEqualTo(2);
+		List<Object> instances = new ArrayList<>(InstancePerMethodKotlinTestCase.TEST_INSTANCES.keySet());
+		assertThat(instances) //
+				.hasSize(3) //
+				.extracting(o -> (Object) o.getClass()) //
+				.containsExactly(InstancePerMethodKotlinTestCase.Companion.getClass(), //
+					InstancePerMethodKotlinTestCase.class, //
+					InstancePerMethodKotlinTestCase.class);
+		assertThat(InstancePerMethodKotlinTestCase.TEST_INSTANCES.get(instances.get(0))) //
+				.containsEntry("beforeAll", 1) //
+				.containsEntry("afterAll", 1);
+		assertThat(InstancePerMethodKotlinTestCase.TEST_INSTANCES.get(instances.get(1))) //
+				.containsEntry("beforeEach", 1) //
+				.containsEntry("test", 1) //
+				.containsEntry("afterEach", 1);
+		assertThat(InstancePerMethodKotlinTestCase.TEST_INSTANCES.get(instances.get(2))) //
+				.containsEntry("beforeEach", 1) //
+				.containsEntry("test", 1) //
+				.containsEntry("afterEach", 1);
 	}
 
 	private void performAssertions(Class<?> testClass, int containers, int tests, int instances, int nestedInstances,

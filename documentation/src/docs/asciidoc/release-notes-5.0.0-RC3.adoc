@@ -21,6 +21,12 @@ on GitHub.
 
 * Source JARs no longer contain every source file twice.
 
+===== Deprecations and Breaking Changes
+
+* Revert change introduced in RC1: Test classes written in the Kotlin programming language
+  are now executed with the same default test instance lifecycle mode as Java classes
+  again ("per-method").
+
 
 [[release-notes-5.0.0-rc3-junit-jupiter]]
 ==== JUnit Jupiter
