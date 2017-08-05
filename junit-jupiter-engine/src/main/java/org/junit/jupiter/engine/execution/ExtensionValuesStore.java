@@ -26,7 +26,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code ExtensionValuesStore} is used inside implementations of
@@ -46,7 +45,7 @@ public class ExtensionValuesStore {
 
 	Object get(Namespace namespace, Object key) {
 		Supplier<Object> storedValue = getStoredValue(new CompositeKey(namespace, key));
-		return storedValue == null ? null : storedValue.get();
+		return (storedValue != null ? storedValue.get() : null);
 	}
 
 	<T> T get(Namespace namespace, Object key, Class<T> requiredType) {
@@ -74,11 +73,7 @@ public class ExtensionValuesStore {
 	}
 
 	void put(Namespace namespace, Object key, Object value) {
-		Preconditions.notNull(namespace, "Namespace must not be null");
-		Preconditions.notNull(key, "key must not be null");
-
-		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		storedValues.put(compositeKey, () -> value);
+		storedValues.put(new CompositeKey(namespace, key), () -> value);
 	}
 
 	Object remove(Namespace namespace, Object key) {
@@ -146,11 +141,13 @@ public class ExtensionValuesStore {
 		public int hashCode() {
 			return Objects.hash(namespace, key);
 		}
+
 	}
 
 	private static class MemoizingSupplier implements Supplier<Object> {
 
 		private static final Object NO_VALUE_SET = new Object();
+
 		private final Lock lock = new ReentrantLock();
 		private final Supplier<Object> delegate;
 		private volatile Object value = NO_VALUE_SET;
@@ -174,5 +171,7 @@ public class ExtensionValuesStore {
 			}
 			return value;
 		}
+
 	}
+
 }
