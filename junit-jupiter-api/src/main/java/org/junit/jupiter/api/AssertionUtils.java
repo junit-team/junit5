@@ -113,6 +113,10 @@ class AssertionUtils {
 		return " at index " + indexesString;
 	}
 
+	static String formatLengths(int expected, int actual) {
+		return "expected: <" + expected + "> but was: <" + actual + ">";
+	}
+
 	static boolean floatsAreEqual(float value1, float value2, float delta) {
 		assertValidDelta(delta);
 		return floatsAreEqual(value1, value2) || Math.abs(value1 - value2) <= delta;

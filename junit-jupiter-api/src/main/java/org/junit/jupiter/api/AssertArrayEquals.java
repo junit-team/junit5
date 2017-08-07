@@ -13,6 +13,7 @@ package org.junit.jupiter.api;
 import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
 import static org.junit.jupiter.api.AssertionUtils.fail;
 import static org.junit.jupiter.api.AssertionUtils.formatIndexes;
+import static org.junit.jupiter.api.AssertionUtils.formatLengths;
 import static org.junit.jupiter.api.AssertionUtils.formatValues;
 import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import static org.junit.platform.commons.util.ReflectionUtils.isArray;
@@ -414,8 +415,7 @@ class AssertArrayEquals {
 
 		if (expected != actual) {
 			String prefix = buildPrefix(nullSafeGet(messageSupplier));
-			String message = "array lengths differ" + formatIndexes(indexes) + ", expected: <" + expected
-					+ "> but was: <" + actual + ">";
+			String message = "array lengths differ" + formatIndexes(indexes) + ", " + formatLengths(expected, actual);
 			fail(prefix + message);
 		}
 	}
