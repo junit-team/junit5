@@ -70,6 +70,21 @@ public final class Constants {
 	 */
 	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
 
+	/**
+	 * Property name used to set the default test instance lifecycle mode: {@value}
+	 *
+	 * <h3>Supported Values</h3>
+	 *
+	 * <p>Supported values include names of enum constants defined in
+	 * {@link org.junit.jupiter.api.TestInstance.Lifecycle}, ignoring case.
+	 *
+	 * <p>If not specified, the default is "per_method" which corresponds to
+	 * {@code @TestInstance(Lifecycle.PER_METHOD)}.
+	 *
+	 * @see org.junit.jupiter.api.TestInstance
+	 */
+	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
+
 	private Constants() {
 		/* no-op */
 	}

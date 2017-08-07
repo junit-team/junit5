@@ -25,7 +25,11 @@ import java.lang.annotation.Target;
  * <p>If {@code @TestInstance} is not declared on a test class or implemented
  * test interface, the lifecycle mode will implicitly default to
  * {@link Lifecycle#PER_METHOD PER_METHOD}. Note, however, that an explicit
- * lifecycle mode is <em>inherited</em> within a test class hierarchy.
+ * lifecycle mode is <em>inherited</em> within a test class hierarchy. In
+ * addition, the <em>default</em> lifecycle mode may be set via the
+ * {@code junit.jupiter.testinstance.lifecycle.default} <em>configuration
+ * parameter</em> which can be supplied via the {@code Launcher} API or via a
+ * JVM system property. Consult the User Guide for further information.
  *
  * <h3>Use Cases</h3>
  * <p>Setting the test instance lifecycle mode to {@link Lifecycle#PER_CLASS
@@ -57,6 +61,9 @@ public @interface TestInstance {
 
 	/**
 	 * Enumeration of test instance lifecycle <em>modes</em>.
+	 *
+	 * @see #PER_METHOD
+	 * @see #PER_CLASS
 	 */
 	enum Lifecycle {
 

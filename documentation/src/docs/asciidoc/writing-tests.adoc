@@ -197,6 +197,23 @@ test instance lifecycle mode.
 NOTE: In the context of test instance lifecycle a _test_ method is any method annotated
 with `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`.
 
+[[writing-tests-test-instance-lifecycle-changing-default]]
+==== Changing the Default Test Instance Lifecycle
+
+If a test class or test interface is not annotated with `@TestInstance`, JUnit Jupiter
+will use a _default_ lifecycle mode. The standard _default_ mode is `PER_METHOD`;
+however, it is possible to change the _default_ for the execution of an entire test plan.
+To change the default test instance lifecycle mode, simply set the
+`junit.jupiter.testinstance.lifecycle.default` configuration parameter to the name of an
+enum constant defined in `TestInstance.Lifecycle`, ignoring case. This can be supplied as
+a JVM system property or as a _configuration parameter_ in the `LauncherDiscoveryRequest`
+that is passed to the `Launcher`.
+
+For example, to set the default test instance lifecycle mode to `Lifecycle.PER_CLASS`,
+you can start your JVM with the following system property.
+
+`-Djunit.jupiter.testinstance.lifecycle.default=per_class`
+
 [[writing-tests-nested]]
 === Nested Tests
 

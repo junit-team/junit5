@@ -48,7 +48,9 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* ❓
+* The _default_ test instance lifecycle mode can now be set via a _configuration
+  parameter_ or JVM system property named `junit.jupiter.testinstance.lifecycle.default`.
+  See <<writing-tests-test-instance-lifecycle-changing-default>> for details.
 
 
 [[release-notes-5.0.0-rc3-junit-vintage]]

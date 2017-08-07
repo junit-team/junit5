@@ -63,6 +63,7 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
  * Integration tests for {@link TestInstance @TestInstance} lifecycle support.
  *
  * @since 5.0
+ * @see TestInstanceLifecycleConfigurationTests
  */
 class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 

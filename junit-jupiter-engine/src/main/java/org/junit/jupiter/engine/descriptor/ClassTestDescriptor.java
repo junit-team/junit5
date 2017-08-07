@@ -14,6 +14,7 @@ import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfter
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterEachMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
+import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.getTestInstanceLifecycle;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Constructor;
@@ -24,7 +25,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -40,7 +40,6 @@ import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -65,7 +64,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final Class<?> testClass;
-	private final Lifecycle lifecycle;
 
 	private List<Method> beforeAllMethods;
 	private List<Method> afterAllMethods;
@@ -83,7 +81,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			defaultDisplayNameGenerator), new ClassSource(testClass));
 
 		this.testClass = testClass;
-		this.lifecycle = getTestInstanceLifecycle(testClass);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -117,8 +114,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
-		this.beforeAllMethods = findBeforeAllMethods(testClass, this.lifecycle == Lifecycle.PER_METHOD);
-		this.afterAllMethods = findAfterAllMethods(testClass, this.lifecycle == Lifecycle.PER_METHOD);
+		Lifecycle lifecycle = getTestInstanceLifecycle(testClass, context.getConfigurationParameters());
+
+		this.beforeAllMethods = findBeforeAllMethods(testClass, lifecycle == Lifecycle.PER_METHOD);
+		this.afterAllMethods = findAfterAllMethods(testClass, lifecycle == Lifecycle.PER_METHOD);
 		this.beforeEachMethods = findBeforeEachMethods(testClass);
 		this.afterEachMethods = findAfterEachMethods(testClass);
 
@@ -134,7 +133,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		// @formatter:off
 		return context.extend()
-				.withTestInstanceProvider(testInstanceProvider(context, registry, extensionContext))
+				.withTestInstanceProvider(testInstanceProvider(context, registry, extensionContext, lifecycle))
 				.withExtensionRegistry(registry)
 				.withExtensionContext(extensionContext)
 				.withThrowableCollector(throwableCollector)
@@ -168,9 +167,9 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ClassExtensionContext extensionContext) {
+			ExtensionRegistry registry, ClassExtensionContext extensionContext, Lifecycle lifecycle) {
 
-		if (this.lifecycle == Lifecycle.PER_CLASS) {
+		if (lifecycle == Lifecycle.PER_CLASS) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ExtensionContext.
 			Object instance = instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry);
@@ -283,20 +282,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeMethodInExtensionContext(Method method, ExtensionContext context, ExtensionRegistry registry) {
-
 		Object testInstance = context.getRequiredTestInstance();
 		testInstance = ReflectionUtils.getOutermostInstance(testInstance, method.getDeclaringClass()).orElseThrow(
 			() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
 		executableInvoker.invoke(method, testInstance, context, registry);
-	}
-
-	private static TestInstance.Lifecycle getTestInstanceLifecycle(Class<?> testClass) {
-		// @formatter:off
-		return AnnotationUtils.findAnnotation(testClass, TestInstance.class)
-				.map(TestInstance::value)
-				.orElse(Lifecycle.PER_METHOD);
-		// @formatter:on
 	}
 
 }
