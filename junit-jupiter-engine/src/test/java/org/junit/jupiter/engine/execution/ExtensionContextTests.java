@@ -23,6 +23,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.engine.descriptor.ClassExtensionContext;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
@@ -160,16 +161,19 @@ class ExtensionContextTests {
 
 		extensionContext.publishReportEntry(map1);
 		extensionContext.publishReportEntry(map2);
+		extensionContext.publishReportEntry("3rd key", "third value");
 
 		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
-		Mockito.verify(engineExecutionListener, Mockito.times(2)).reportingEntryPublished(
+		Mockito.verify(engineExecutionListener, Mockito.times(3)).reportingEntryPublished(
 			Mockito.eq(classTestDescriptor), entryCaptor.capture());
 
 		ReportEntry reportEntry1 = entryCaptor.getAllValues().get(0);
 		ReportEntry reportEntry2 = entryCaptor.getAllValues().get(1);
+		ReportEntry reportEntry3 = entryCaptor.getAllValues().get(2);
 
 		assertEquals(map1, reportEntry1.getKeyValuePairs());
 		assertEquals(map2, reportEntry2.getKeyValuePairs());
+		assertEquals("third value", reportEntry3.getKeyValuePairs().get("3rd key"));
 	}
 
 	@Test
@@ -180,8 +184,8 @@ class ExtensionContextTests {
 		MethodExtensionContext childContext = new MethodExtensionContext(parentContext, null, methodTestDescriptor,
 			new OuterClass(), new ThrowableCollector());
 
-		ExtensionContext.Store childStore = childContext.getStore();
-		ExtensionContext.Store parentStore = parentContext.getStore();
+		ExtensionContext.Store childStore = childContext.getStore(Namespace.GLOBAL);
+		ExtensionContext.Store parentStore = parentContext.getStore(Namespace.GLOBAL);
 
 		final Object key1 = "key 1";
 		final String value1 = "a value";
