@@ -6883,6 +6883,14 @@ classes again (i.e., "per-method").</p>
 <p>The <code>junit.extensions.autodetection.enabled</code> configuration parameter has been renamed
 to <code>junit.jupiter.extensions.autodetection.enabled</code>.</p>
 </li>
+<li>
+<p>The default, global extension namespace constant in <code>ExtensionContext</code> is now named
+<code>Namespace.GLOBAL</code> instead of <code>Namespace.DEFAULT</code>.</p>
+</li>
+<li>
+<p>The default <code>getStore()</code> method was removed from the <code>ExtensionContext</code> interface.
+Use the explicit call <code>getStore(Namespace.GLOBAL)</code> instead.</p>
+</li>
 </ul>
 </div>
 </div>
