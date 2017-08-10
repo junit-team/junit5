@@ -95,35 +95,58 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 
 - **Group ID**: `org.junit.platform`
 - **Version**: `1.0.0-RC2` or `1.0.0-SNAPSHOT`
-- **Artifact IDs**:
-  - `junit-platform-commons`
-  - `junit-platform-console`
-  - `junit-platform-console-standalone`
-  - `junit-platform-engine`
-  - `junit-platform-gradle-plugin`
-  - `junit-platform-launcher`
-  - `junit-platform-runner`
-  - `junit-platform-suite-api`
-  - `junit-platform-surefire-provider`
+- **Artifact IDs** and **Automatic-Module-Name**:
+  - `junit-platform-commons` (`org.junit.platform.commons`)
+  - `junit-platform-console` (`org.junit.platform.console`)
+  - `junit-platform-console-standalone` (*N/A*)
+  - `junit-platform-engine` (`org.junit.platform.engine`)
+  - `junit-platform-gradle-plugin` (`org.junit.platform.gradle.plugin`)
+  - `junit-platform-launcher` (`org.junit.platform.launcher`)
+  - `junit-platform-runner` (`org.junit.platform.runner`)
+  - `junit-platform-suite-api` (`org.junit.platform.suite.api`)
+  - `junit-platform-surefire-provider` (`org.junit.platform.surefire.provider`)
 
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
 - **Version**: `5.0.0-RC2` or `5.0.0-SNAPSHOT`
-- **Artifact IDs**:
-  - `junit-jupiter-api`
-  - `junit-jupiter-engine`
-  - `junit-jupiter-migrationsupport`
-  - `junit-jupiter-params`
+- **Artifact IDs** and **Automatic-Module-Name**:
+  - `junit-jupiter-api` (`org.junit.jupiter.api`)
+  - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
+  - `junit-jupiter-migrationsupport` (`org.junit.jupiter.migrationsupport`)
+  - `junit-jupiter-params` (`org.junit.jupiter.params`)
 
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
 - **Version**: `4.12.0-RC2` or `4.12.0-SNAPSHOT`
-- **Artifact ID**: `junit-vintage-engine`
+- **Artifact ID** and **Automatic-Module-Name**:
+  - `junit-vintage-engine` (`org.junit.vintage.engine`)
+
+## Java 9 Module Names
+
+All published JAR artifacts contain an [Automatic-Module-Name] manifest attribute
+whose value is used as the name of the automatic module defined by that JAR file
+when it is placed on the **Java 9** module path. The names are listed above in the
+Dependency Metadata section.
+
+This allows test module authors to require well-known JUnit module names as
+can be seen in the following example:
+
+```
+open module foo.bar {
+  requires org.junit.jupiter.api;
+  requires org.junit.platform.commons;
+  requires org.opentest4j;
+}
+```
+
+The `junit-platform-console-standalone` JAR does not provide an automatic module name
+as it is not intended to be used as a module.
 
 
 [Atlassian]: https://www.atlassian.com/
+[Automatic-Module-Name]: http://mail.openjdk.java.net/pipermail/jpms-spec-experts/2017-April/000667.html
 [Clover]: https://www.atlassian.com/software/clover/
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
