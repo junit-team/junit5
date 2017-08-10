@@ -6884,12 +6884,12 @@ classes again (i.e., "per-method").</p>
 to <code>junit.jupiter.extensions.autodetection.enabled</code>.</p>
 </li>
 <li>
-<p>The default, global extension namespace constant in <code>ExtensionContext</code> is now named
-<code>Namespace.GLOBAL</code> instead of <code>Namespace.DEFAULT</code>.</p>
+<p>The default, global extension namespace constant in <code>ExtensionContext</code> has been renamed
+from <code>Namespace.DEFAULT</code> to <code>Namespace.GLOBAL</code>.</p>
 </li>
 <li>
-<p>The default <code>getStore()</code> method was removed from the <code>ExtensionContext</code> interface.
-Use the explicit call <code>getStore(Namespace.GLOBAL)</code> instead.</p>
+<p>The default <code>getStore()</code> method has been removed from the <code>ExtensionContext</code> interface.
+To access the global store, use an explicit call to <code>getStore(Namespace.GLOBAL)</code> instead.</p>
 </li>
 </ul>
 </div>
@@ -6925,7 +6925,7 @@ Use the explicit call <code>getStore(Namespace.GLOBAL)</code> instead.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-10 09:10:42 EDT
+Last updated 2017-08-10 09:42:51 EDT
 </div>
 </div>
 </body>
