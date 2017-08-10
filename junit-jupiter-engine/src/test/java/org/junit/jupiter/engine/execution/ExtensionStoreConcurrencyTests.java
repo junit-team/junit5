@@ -46,7 +46,7 @@ class ExtensionStoreConcurrencyTests {
 
 	private Store reset() {
 		count.set(0);
-		return new NamespaceAwareStore(new ExtensionValuesStore(null), Namespace.DEFAULT);
+		return new NamespaceAwareStore(new ExtensionValuesStore(null), Namespace.GLOBAL);
 	}
 
 }

@@ -242,22 +242,14 @@ public interface ExtensionContext {
 	}
 
 	/**
-	 * Get the {@link Store} for the default, global {@link Namespace}.
-	 *
-	 * @return the default, global {@code Store}; never {@code null}
-	 * @see #getStore(Namespace)
-	 * @see Namespace#DEFAULT
-	 */
-	default Store getStore() {
-		return getStore(Namespace.DEFAULT);
-	}
-
-	/**
 	 * Get the {@link Store} for the supplied {@link Namespace}.
+	 *
+	 * <p>Use {@code getStore(Namespace.GLOBAL)} to get the default, global {@link Namespace}.
 	 *
 	 * @param namespace the {@code Namespace} to get the store for; never {@code null}
 	 * @return the store in which to put and get objects for other invocations
 	 * working in the same namespace; never {@code null}
+	 * @see Namespace#GLOBAL
 	 */
 	Store getStore(Namespace namespace);
 
@@ -406,7 +398,7 @@ public interface ExtensionContext {
 		 * The default, global namespace which allows access to stored data from
 		 * all extensions.
 		 */
-		public static final Namespace DEFAULT = Namespace.create(new Object());
+		public static final Namespace GLOBAL = Namespace.create(new Object());
 
 		/**
 		 * Create a namespace which restricts access to data to all extensions

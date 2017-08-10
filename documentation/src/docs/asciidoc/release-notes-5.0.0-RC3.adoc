@@ -41,6 +41,10 @@ on GitHub.
   `junit.jupiter.conditions.deactivate`.
 * The `junit.extensions.autodetection.enabled` configuration parameter has been renamed
   to `junit.jupiter.extensions.autodetection.enabled`.
+* The default, global extension namespace constant in `ExtensionContext` is now named
+  `Namespace.GLOBAL` instead of `Namespace.DEFAULT`.
+* The default `getStore()` method was removed from the `ExtensionContext` interface.
+  Use the explicit call `getStore(Namespace.GLOBAL)` instead.
 
 ===== New Features and Improvements
 
