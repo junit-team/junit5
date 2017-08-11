@@ -41,6 +41,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		settings.getFormat().setDelimiter(delimiter);
 		settings.getFormat().setQuote('\'');
 		settings.getFormat().setQuoteEscape('\'');
+		settings.setEmptyValue(null); // see https://github.com/junit-team/junit5/issues/1014
 		settings.setAutoConfigurationEnabled(false);
 		CsvParser csvParser = new CsvParser(settings);
 		AtomicLong index = new AtomicLong(0);

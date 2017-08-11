@@ -68,6 +68,13 @@ class CsvArgumentsProviderTests {
 		assertThat(exception).hasMessage("Line at index 2 contains invalid CSV: \"\"");
 	}
 
+	@Test
+	void emptyValueIsNull() {
+		Stream<Object[]> arguments = provideArguments(',', "null , , empty , ''");
+
+		assertThat(arguments).containsExactly(new String[] { "null", null, "empty", null });
+	}
+
 	private Stream<Object[]> provideArguments(char delimiter, String... value) {
 		CsvSource annotation = mock(CsvSource.class);
 		when(annotation.value()).thenReturn(value);
