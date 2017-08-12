@@ -32,29 +32,59 @@ import org.junit.platform.commons.meta.API;
 public interface ConfigurationParameters {
 
 	/**
-	 * Get the configuration property stored under the specified {@code key}.
+	 * Name of the JUnit Platform configuration file: {@value}.
+	 *
+	 * <p>If a properties file with this name is present in the root of the
+	 * classpath, it will be used as a source for <em>configuration
+	 * parameters</em>. If multiple files are present, only the first one
+	 * detected in the classpath will be used.
+	 *
+	 * @see java.util.Properties
+	 */
+	String CONFIG_FILE_NAME = "junit-platform.properties";
+
+	/**
+	 * Get the configuration parameter stored under the specified {@code key}.
 	 *
 	 * <p>If no such key is present in this {@code ConfigurationParameters},
-	 * an attempt will be made to look up the value as a Java system property.
+	 * an attempt will be made to look up the value as a JVM system property.
+	 * If no such system property exists, an attempt will be made to look up
+	 * the value in the {@linkplain #CONFIG_FILE_NAME JUnit Platform properties
+	 * file}.
 	 *
 	 * @param key the key to look up; never {@code null} or blank
-	 * @return an {@code Optional} containing the potential value
+	 * @return an {@code Optional} containing the value; never {@code null}
+	 * but potentially empty
+	 *
+	 * @see #getBoolean(String)
+	 * @see System#getProperty(String)
+	 * @see #CONFIG_FILE_NAME
 	 */
 	Optional<String> get(String key);
 
 	/**
-	 * Get the boolean configuration property stored under the specified {@code key}.
+	 * Get the boolean configuration parameter stored under the specified
+	 * {@code key}.
 	 *
 	 * <p>If no such key is present in this {@code ConfigurationParameters},
-	 * an attempt will be made to look up the value as a Java system property.
+	 * an attempt will be made to look up the value as a JVM system property.
+	 * If no such system property exists, an attempt will be made to look up
+	 * the value in the {@linkplain #CONFIG_FILE_NAME JUnit Platform properties
+	 * file}.
 	 *
 	 * @param key the key to look up; never {@code null} or blank
-	 * @return an {@code Optional} containing the potential value
+	 * @return an {@code Optional} containing the value; never {@code null}
+	 * but potentially empty
+	 *
+	 * @see #get(String)
+	 * @see Boolean#parseBoolean(String)
+	 * @see System#getProperty(String)
+	 * @see #CONFIG_FILE_NAME
 	 */
 	Optional<Boolean> getBoolean(String key);
 
 	/**
-	 * Get the number of configuration properties stored directly in this
+	 * Get the number of configuration parameters stored directly in this
 	 * {@code ConfigurationParameters}.
 	 */
 	int size();

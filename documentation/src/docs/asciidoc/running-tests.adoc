@@ -694,3 +694,32 @@ NOTE: There are more configuration options for discovering and filtering tests t
 `@SelectPackages`. Please consult the
 {javadoc-root}/org/junit/platform/suite/api/package-summary.html[Javadoc] for further
 details.
+
+[[running-tests-config-params]]
+=== Configuration Parameters
+
+In addition to instructing the platform which test classes and test engines to include,
+which packages to scan, etc., it is sometimes necessary to provide additional custom
+configuration parameters that are specific to a particular test engine. For example, the
+JUnit Jupiter `TestEngine` supports _configuration parameters_ for the following use
+cases.
+
+- <<writing-tests-test-instance-lifecycle-changing-default>>
+- <<extensions-registration-automatic-enabling>>
+- <<extensions-conditions-deactivation>>
+
+_Configuration Parameters_ are text-based key-value pairs that can be supplied to test
+engines running on the JUnit Platform via one of the following mechanisms.
+
+1. The `configurationParameter()` and `configurationParameters()` methods in the
+  `LauncherDiscoveryRequestBuilder` which is used to build a request supplied to the
+  <<launcher-api, `Launcher` API>>.
+2. JVM system properties.
+3. The JUnit Platform configuration file: a file named `junit-platform.properties` in the
+  root of the class path that follows the syntax rules for a Java `Properties` file.
+
+NOTE: Configuration parameters are looked up in the exact order defined above.
+Consequently, configuration parameters supplied directly to the `Launcher` take
+precedence over those supplied via system properties and the configuration file.
+Similarly, configuration parameters supplied via system properties take precedence over
+those supplied via the configuration file.

@@ -10,9 +10,17 @@
 
 package org.junit.platform.launcher.core;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -22,11 +30,52 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 class LauncherConfigurationParameters implements ConfigurationParameters {
 
-	private final Map<String, String> configurationParameters;
+	private static final Logger LOG = Logger.getLogger(LauncherConfigurationParameters.class.getName());
 
-	LauncherConfigurationParameters(Map<String, String> configurationParameters) {
-		Preconditions.notNull(configurationParameters, "configuration parameters must not be null");
-		this.configurationParameters = configurationParameters;
+	private final Map<String, String> explicitConfigParams;
+	private final Properties configParamsFromFile;
+
+	LauncherConfigurationParameters(Map<String, String> configParams) {
+		this(configParams, ConfigurationParameters.CONFIG_FILE_NAME);
+	}
+
+	LauncherConfigurationParameters(Map<String, String> configParams, String configFileName) {
+		Preconditions.notNull(configParams, "configuration parameters must not be null");
+		Preconditions.notBlank(configFileName, "configFileName must not be null or blank");
+		this.explicitConfigParams = configParams;
+		this.configParamsFromFile = fromClasspathResource(configFileName.trim());
+	}
+
+	private static Properties fromClasspathResource(String configFileName) {
+		Properties props = new Properties();
+
+		try {
+			ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
+			List<URL> resources = Collections.list(classLoader.getResources(configFileName));
+
+			if (!resources.isEmpty()) {
+				if (resources.size() > 1) {
+					LOG.warning(() -> String.format(
+						"Discovered %d '%s' configuration files in the classpath; only the first will be used.",
+						resources.size(), configFileName));
+				}
+
+				URL configFileUrl = resources.get(0);
+				LOG.info(() -> String.format(
+					"Loading JUnit Platform configuration parameters from classpath resource [%s].", configFileUrl));
+				try (InputStream inputStream = configFileUrl.openStream()) {
+					props.load(inputStream);
+				}
+			}
+		}
+		catch (Exception ex) {
+			LOG.log(Level.WARNING, ex,
+				() -> String.format(
+					"Failed to load JUnit Platform configuration parameters from classpath resource [%s].",
+					configFileName));
+		}
+
+		return props;
 	}
 
 	@Override
@@ -45,12 +94,16 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	@Override
 	public int size() {
-		return this.configurationParameters.size();
+		return this.explicitConfigParams.size();
 	}
 
 	private String getProperty(String key) {
 		Preconditions.notBlank(key, "key must not be null or blank");
-		String value = this.configurationParameters.get(key);
+
+		// 1) Check explicit config param.
+		String value = this.explicitConfigParams.get(key);
+
+		// 2) Check system property.
 		if (value == null) {
 			try {
 				value = System.getProperty(key);
@@ -58,14 +111,28 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			catch (Exception ex) {
 				/* ignore */
 			}
+
+			// 3) Check config file.
+			if (value == null) {
+				value = this.configParamsFromFile.getProperty(key);
+			}
 		}
+
 		return value;
 	}
 
 	@Override
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);
-		this.configurationParameters.forEach(builder::append);
+
+		this.explicitConfigParams.forEach(builder::append);
+
+		// @formatter:off
+		this.configParamsFromFile.stringPropertyNames().stream()
+				.filter(key -> !this.explicitConfigParams.containsKey(key))
+				.forEach(key -> builder.append(key, this.configParamsFromFile.getProperty(key)));
+		// @formatter:on
+
 		return builder.toString();
 	}
 

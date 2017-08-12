@@ -21,6 +21,12 @@ on GitHub.
 
 * Source JARs no longer contain every source file twice.
 
+===== New Features and Improvements
+
+* _Configuration parameters_ can now be supplied via a file named
+  `junit-platform.properties` in the root of the class path. See
+  <<running-tests-config-params>> for details.
+
 
 [[release-notes-5.0.0-rc3-junit-jupiter]]
 ==== JUnit Jupiter
@@ -44,7 +50,8 @@ on GitHub.
 * The default, global extension namespace constant in `ExtensionContext` has been renamed
   from `Namespace.DEFAULT` to `Namespace.GLOBAL`.
 * The default `getStore()` method has been removed from the `ExtensionContext` interface.
-  To access the global store, use an explicit call to `getStore(Namespace.GLOBAL)` instead.
+  To access the global store, use an explicit call to `getStore(Namespace.GLOBAL)`
+  instead.
 
 ===== New Features and Improvements
 
@@ -54,6 +61,7 @@ on GitHub.
 * When using `@CsvSource` or `@CsvFileSource` in a parameterized test, if the CSV parser
   does not read any character from the input, and the input is within quotes, an empty
   string `""` is returned instead of `null`.
+
 
 [[release-notes-5.0.0-rc3-junit-vintage]]
 ==== JUnit Vintage

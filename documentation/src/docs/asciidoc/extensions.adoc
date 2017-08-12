@@ -86,9 +86,10 @@ name in a file named `org.junit.jupiter.api.extension.Extension` within the
 ===== Enabling Automatic Extension Detection
 
 Auto-detection is an advanced feature and is therefore not enabled by default. To enable
-it, simply set the `junit.jupiter.extensions.autodetection.enabled` configuration
-parameter to `true`. This can be supplied as a JVM system property or as a _configuration
-parameter_ in the `LauncherDiscoveryRequest` that is passed to the `Launcher`.
+it, simply set the `junit.jupiter.extensions.autodetection.enabled` _configuration
+parameter_ to `true`. This can be supplied as a JVM system property, as a _configuration
+parameter_ in the `LauncherDiscoveryRequest` that is passed to the `Launcher`, or via the
+JUnit Platform configuration file (see <<running-tests-config-params>> for details).
 
 For example, to enable auto-detection of extensions, you can start your JVM with the
 following system property.
@@ -134,10 +135,10 @@ See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examp
 Sometimes it can be useful to run a test suite _without_ certain conditions being active.
 For example, you may wish to run tests even if they are annotated with `@Disabled` in
 order to see if they are still _broken_. To do this, simply provide a pattern for the
-`junit.jupiter.conditions.deactivate` configuration parameter to specify which conditions
-should be deactivated (i.e., not evaluated) for the current test run. The pattern can be
-supplied as a JVM system property or as a _configuration parameter_ in the
-`LauncherDiscoveryRequest` that is passed to the `Launcher`.
+`junit.jupiter.conditions.deactivate` _configuration parameter_ to specify which
+conditions should be deactivated (i.e., not evaluated) for the current test run. The
+pattern can be supplied as a JVM system property, as a _configuration parameter_ in the
+`LauncherDiscoveryRequest` that is passed to the `Launcher`, or via the JUnit Platform configuration file (see <<running-tests-config-params>> for details).
 
 For example, to deactivate JUnit's `@Disabled` condition, you can start your JVM with the
 following system property.
