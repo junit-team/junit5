@@ -1453,6 +1453,22 @@ you can start your JVM with the following system property.</p>
 <div class="paragraph">
 <p><code>-Djunit.jupiter.testinstance.lifecycle.default=per_class</code></p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Changing the <em>default</em> test instance lifecycle mode can lead to unpredictable
+results and fragile builds if not applied consistently. For example, if the build
+configures "per-class" semantics as the default but tests in the IDE are executed using
+"per-method" semantics, that can make it difficult to debug errors that occur on the
+build server.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -6947,7 +6963,7 @@ See <a href="#writing-tests-test-instance-lifecycle-changing-default">Changing t
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-12 16:57:41 EDT
+Last updated 2017-08-12 17:09:03 EDT
 </div>
 </div>
 </body>
