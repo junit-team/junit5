@@ -214,6 +214,12 @@ you can start your JVM with the following system property.
 
 `-Djunit.jupiter.testinstance.lifecycle.default=per_class`
 
+WARNING: Changing the _default_ test instance lifecycle mode can lead to unpredictable
+results and fragile builds if not applied consistently. For example, if the build
+configures "per-class" semantics as the default but tests in the IDE are executed using
+"per-method" semantics, that can make it difficult to debug errors that occur on the
+build server.
+
 [[writing-tests-nested]]
 === Nested Tests
 
