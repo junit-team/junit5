@@ -1434,6 +1434,26 @@ with <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</c
 </tr>
 </table>
 </div>
+<div class="sect3">
+<h4 id="writing-tests-test-instance-lifecycle-changing-default"><a class="anchor" href="#writing-tests-test-instance-lifecycle-changing-default"></a>3.8.1. Changing the Default Test Instance Lifecycle</h4>
+<div class="paragraph">
+<p>If a test class or test interface is not annotated with <code>@TestInstance</code>, JUnit Jupiter
+will use a <em>default</em> lifecycle mode. The standard <em>default</em> mode is <code>PER_METHOD</code>;
+however, it is possible to change the <em>default</em> for the execution of an entire test plan.
+To change the default test instance lifecycle mode, simply set the
+<code>junit.jupiter.testinstance.lifecycle.default</code> configuration parameter to the name of an
+enum constant defined in <code>TestInstance.Lifecycle</code>, ignoring case. This can be supplied as
+a JVM system property or as a <em>configuration parameter</em> in the <code>LauncherDiscoveryRequest</code>
+that is passed to the <code>Launcher</code>.</p>
+</div>
+<div class="paragraph">
+<p>For example, to set the default test instance lifecycle mode to <code>Lifecycle.PER_CLASS</code>,
+you can start your JVM with the following system property.</p>
+</div>
+<div class="paragraph">
+<p><code>-Djunit.jupiter.testinstance.lifecycle.default=per_class</code></p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="writing-tests-nested"><a class="anchor" href="#writing-tests-nested"></a>3.9. Nested Tests</h3>
@@ -6899,7 +6919,9 @@ To access the global store, use an explicit call to <code>getStore(Namespace.GLO
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <em>default</em> test instance lifecycle mode can now be set via a <em>configuration
+parameter</em> or JVM system property named <code>junit.jupiter.testinstance.lifecycle.default</code>.
+See <a href="#writing-tests-test-instance-lifecycle-changing-default">Changing the Default Test Instance Lifecycle</a> for details.</p>
 </li>
 </ul>
 </div>
@@ -6925,7 +6947,7 @@ To access the global store, use an explicit call to <code>getStore(Namespace.GLO
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-11 04:37:12 EDT
+Last updated 2017-08-12 16:57:41 EDT
 </div>
 </div>
 </body>
