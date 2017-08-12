@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,6 +26,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -53,7 +55,7 @@ class LauncherDiscoveryRequestBuilderTests {
 	class DiscoverySelectionTests {
 
 		@Test
-		public void packagesAreStoredInDiscoveryRequest() throws Exception {
+		void packagesAreStoredInDiscoveryRequest() {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
@@ -67,7 +69,7 @@ class LauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		public void classesAreStoredInDiscoveryRequest() throws Exception {
+		void classesAreStoredInDiscoveryRequest() {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
@@ -83,7 +85,7 @@ class LauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		public void methodsByFullyQualifiedNameAreStoredInDiscoveryRequest() throws Exception {
+		void methodsByFullyQualifiedNameAreStoredInDiscoveryRequest() {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(selectMethod(fullyQualifiedMethodName()))
@@ -99,9 +101,9 @@ class LauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		public void methodsByNameAreStoredInDiscoveryRequest() throws Exception {
+		void methodsByNameAreStoredInDiscoveryRequest() throws Exception {
 			Class<?> testClass = SampleTestClass.class;
-			Method testMethod = testClass.getMethod("test");
+			Method testMethod = testClass.getDeclaredMethod("test");
 
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
@@ -118,14 +120,14 @@ class LauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		public void methodsByClassAreStoredInDiscoveryRequest() throws Exception {
+		void methodsByClassAreStoredInDiscoveryRequest() throws Exception {
 			Class<?> testClass = SampleTestClass.class;
-			Method testMethod = testClass.getMethod("test");
+			Method testMethod = testClass.getDeclaredMethod("test");
 
 			// @formatter:off
 			DefaultDiscoveryRequest discoveryRequest = (DefaultDiscoveryRequest) request()
 					.selectors(
-							selectMethod(SampleTestClass.class, "test")
+							selectMethod(testClass, "test")
 					).build();
 			// @formatter:on
 
@@ -138,7 +140,7 @@ class LauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		public void uniqueIdsAreStoredInDiscoveryRequest() throws Exception {
+		void uniqueIdsAreStoredInDiscoveryRequest() {
 			UniqueId id1 = UniqueId.forEngine("engine").append("foo", "id1");
 			UniqueId id2 = UniqueId.forEngine("engine").append("foo", "id2");
 
@@ -161,8 +163,7 @@ class LauncherDiscoveryRequestBuilderTests {
 	class DiscoveryFilterTests {
 
 		@Test
-		public void engineFiltersAreStoredInDiscoveryRequest() throws Exception {
-
+		void engineFiltersAreStoredInDiscoveryRequest() {
 			TestEngine engine1 = new TestEngineStub("engine1");
 			TestEngine engine2 = new TestEngineStub("engine2");
 			TestEngine engine3 = new TestEngineStub("engine3");
@@ -183,8 +184,7 @@ class LauncherDiscoveryRequestBuilderTests {
 
 		@Test
 		@SuppressWarnings("rawtypes")
-		public void discoveryFiltersAreStoredInDiscoveryRequest() throws Exception {
-
+		void discoveryFiltersAreStoredInDiscoveryRequest() {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.filters(
@@ -200,8 +200,7 @@ class LauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		public void postDiscoveryFiltersAreStoredInDiscoveryRequest() throws Exception {
-
+		void postDiscoveryFiltersAreStoredInDiscoveryRequest() {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.filters(
@@ -217,7 +216,7 @@ class LauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		public void exceptionForIllegalFilterClass() throws Exception {
+		void exceptionForIllegalFilterClass() {
 			Exception exception = assertThrows(PreconditionViolationException.class,
 				() -> request().filters(o -> excluded("reason")));
 
@@ -231,28 +230,27 @@ class LauncherDiscoveryRequestBuilderTests {
 	class DiscoveryConfigurationParameterTests {
 
 		@Test
-		void withoutConfigurationParametersSet_NoConfigurationParametersAreStoredInDiscoveryRequest() throws Exception {
+		void withoutConfigurationParametersSet_NoConfigurationParametersAreStoredInDiscoveryRequest() {
 			LauncherDiscoveryRequest discoveryRequest = request().build();
 
-			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
-			assertThat(configurationParameters.get("key").isPresent()).isFalse();
+			ConfigurationParameters configParams = discoveryRequest.getConfigurationParameters();
+			assertThat(configParams.get("key")).isNotPresent();
 		}
 
 		@Test
-		void configurationParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
+		void configurationParameterAddedDirectly_isStoredInDiscoveryRequest() {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.configurationParameter("key", "value")
 					.build();
 			// @formatter:on
 
-			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
-			assertThat(configurationParameters.get("key").isPresent()).isTrue();
-			assertThat(configurationParameters.get("key").get()).isEqualTo("value");
+			ConfigurationParameters configParams = discoveryRequest.getConfigurationParameters();
+			assertThat(configParams.get("key")).contains("value");
 		}
 
 		@Test
-		void configurationParameterAddedDirectlyTwice_overridesPreviousValueInDiscoveryRequest() throws Exception {
+		void configurationParameterAddedDirectlyTwice_overridesPreviousValueInDiscoveryRequest() {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.configurationParameter("key", "value")
@@ -260,13 +258,12 @@ class LauncherDiscoveryRequestBuilderTests {
 					.build();
 			// @formatter:on
 
-			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
-			assertThat(configurationParameters.get("key").isPresent()).isTrue();
-			assertThat(configurationParameters.get("key").get()).isEqualTo("value-new");
+			ConfigurationParameters configParams = discoveryRequest.getConfigurationParameters();
+			assertThat(configParams.get("key")).contains("value-new");
 		}
 
 		@Test
-		void multipleConfigurationParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
+		void multipleConfigurationParametersAddedDirectly_areStoredInDiscoveryRequest() {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
 					.configurationParameter("key1", "value1")
@@ -274,32 +271,26 @@ class LauncherDiscoveryRequestBuilderTests {
 					.build();
 			// @formatter:on
 
-			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
-			assertThat(configurationParameters.get("key1").isPresent()).isTrue();
-			assertThat(configurationParameters.get("key1").get()).isEqualTo("value1");
-			assertThat(configurationParameters.get("key2").isPresent()).isTrue();
-			assertThat(configurationParameters.get("key2").get()).isEqualTo("value2");
+			ConfigurationParameters configParams = discoveryRequest.getConfigurationParameters();
+			assertThat(configParams.get("key1")).contains("value1");
+			assertThat(configParams.get("key2")).contains("value2");
 		}
 
 		@Test
-		void configurationParameterAddedByMap_isStoredInDiscoveryRequest() throws Exception {
-			HashMap<String, String> configurationParams = new HashMap<>();
-			configurationParams.put("key", "value");
-
+		void configurationParameterAddedByMap_isStoredInDiscoveryRequest() {
 			// @formatter:off
 			LauncherDiscoveryRequest discoveryRequest = request()
-					.configurationParameters(configurationParams)
+					.configurationParameters(singletonMap("key", "value"))
 					.build();
 			// @formatter:on
 
-			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
-			assertThat(configurationParameters.get("key").isPresent()).isTrue();
-			assertThat(configurationParameters.get("key").get()).isEqualTo("value");
+			ConfigurationParameters configParams = discoveryRequest.getConfigurationParameters();
+			assertThat(configParams.get("key")).contains("value");
 		}
 
 		@Test
 		void multipleConfigurationParametersAddedByMap_areStoredInDiscoveryRequest() throws Exception {
-			HashMap<String, String> configurationParams = new HashMap<>();
+			Map<String, String> configurationParams = new HashMap<>();
 			configurationParams.put("key1", "value1");
 			configurationParams.put("key2", "value2");
 
@@ -309,18 +300,16 @@ class LauncherDiscoveryRequestBuilderTests {
 					.build();
 			// @formatter:on
 
-			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
-			assertThat(configurationParameters.get("key1").isPresent()).isTrue();
-			assertThat(configurationParameters.get("key1").get()).isEqualTo("value1");
-			assertThat(configurationParameters.get("key2").isPresent()).isTrue();
-			assertThat(configurationParameters.get("key2").get()).isEqualTo("value2");
+			ConfigurationParameters configParams = discoveryRequest.getConfigurationParameters();
+			assertThat(configParams.get("key1")).contains("value1");
+			assertThat(configParams.get("key2")).contains("value2");
 		}
 	}
 
 	private static class SampleTestClass {
 
 		@Test
-		public void test() {
+		void test() {
 		}
 	}
 
