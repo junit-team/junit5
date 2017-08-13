@@ -71,7 +71,7 @@ class CsvFileArgumentsProviderTests {
 		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
 
 		assertThat(arguments).containsExactly(new Object[] { "foo" }, new Object[] { "bar" }, new Object[] { "baz" },
-			new Object[] { "qux" });
+			new Object[] { "qux" }, new Object[] { "" });
 	}
 
 	@Test
@@ -80,7 +80,7 @@ class CsvFileArgumentsProviderTests {
 
 		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
 
-		assertThat(arguments).hasSize(8);
+		assertThat(arguments).hasSize(10);
 	}
 
 	@Test

@@ -69,10 +69,10 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
-	void emptyValueIsNull() {
+	void emptyValueIsAnEmptyString() {
 		Stream<Object[]> arguments = provideArguments(',', "null , , empty , ''");
 
-		assertThat(arguments).containsExactly(new String[] { "null", null, "empty", null });
+		assertThat(arguments).containsExactly(new String[] { "null", null, "empty", "" });
 	}
 
 	private Stream<Object[]> provideArguments(char delimiter, String... value) {

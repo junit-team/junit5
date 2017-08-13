@@ -51,7 +51,9 @@ on GitHub.
 * The _default_ test instance lifecycle mode can now be set via a _configuration
   parameter_ or JVM system property named `junit.jupiter.testinstance.lifecycle.default`.
   See <<writing-tests-test-instance-lifecycle-changing-default>> for details.
-
+* When using `@CsvSource` or `@CsvFileSource` in a parameterized test, if the CSV parser
+  does not read any character from the input, and the input is within quotes, an empty
+  string `""` is returned instead of `null`.
 
 [[release-notes-5.0.0-rc3-junit-vintage]]
 ==== JUnit Vintage
