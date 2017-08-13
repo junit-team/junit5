@@ -20,6 +20,7 @@ import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
 
 import java.time.LocalDate;
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -135,9 +136,9 @@ class ParameterizedTestDemo {
 
 	// tag::CsvSource_example[]
 	@ParameterizedTest
-	@CsvSource({ "foo, 1", "bar, 2", "'baz, qux', 3" })
+	@CsvSource({ "foo, 1", "bar, 2", "'baz, qux', 3", "'', 4", ",5" })
 	void testWithCsvSource(String first, int second) {
-		assertNotNull(first);
+		assertNotNull(Objects.toString(first, "<null>"));
 		assertNotEquals(0, second);
 	}
 	// end::CsvSource_example[]
@@ -146,7 +147,7 @@ class ParameterizedTestDemo {
 	@ParameterizedTest
 	@CsvFileSource(resources = "/two-column.csv")
 	void testWithCsvFileSource(String first, int second) {
-		assertNotNull(first);
+		assertNotNull(Objects.toString(first, "<null>"));
 		assertNotEquals(0, second);
 	}
 	// end::CsvFileSource_example[]
