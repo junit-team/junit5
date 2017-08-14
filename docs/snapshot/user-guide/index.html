@@ -566,6 +566,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#running-tests-build">4.2. Build Support</a></li>
 <li><a href="#running-tests-console-launcher">4.3. Console Launcher</a></li>
 <li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to Run the JUnit Platform</a></li>
+<li><a href="#running-tests-config-params">4.5. Configuration Parameters</a></li>
 </ul>
 </li>
 <li><a href="#extensions">5. Extension Model</a>
@@ -1441,10 +1442,11 @@ with <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</c
 will use a <em>default</em> lifecycle mode. The standard <em>default</em> mode is <code>PER_METHOD</code>;
 however, it is possible to change the <em>default</em> for the execution of an entire test plan.
 To change the default test instance lifecycle mode, simply set the
-<code>junit.jupiter.testinstance.lifecycle.default</code> configuration parameter to the name of an
-enum constant defined in <code>TestInstance.Lifecycle</code>, ignoring case. This can be supplied as
-a JVM system property or as a <em>configuration parameter</em> in the <code>LauncherDiscoveryRequest</code>
-that is passed to the <code>Launcher</code>.</p>
+<code>junit.jupiter.testinstance.lifecycle.default</code> <em>configuration parameter</em> to the name of
+an enum constant defined in <code>TestInstance.Lifecycle</code>, ignoring case. This can be supplied
+as a JVM system property, as a <em>configuration parameter</em> in the
+<code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>, or via the JUnit Platform
+configuration file (see <a href="#running-tests-config-params">Configuration Parameters</a> for details).</p>
 </div>
 <div class="paragraph">
 <p>For example, to set the default test instance lifecycle mode to <code>Lifecycle.PER_CLASS</code>,
@@ -1452,6 +1454,20 @@ you can start your JVM with the following system property.</p>
 </div>
 <div class="paragraph">
 <p><code>-Djunit.jupiter.testinstance.lifecycle.default=per_class</code></p>
+</div>
+<div class="paragraph">
+<p>Note, however, that setting the default test instance lifecycle mode via the JUnit
+Platform configuration file is a more robust solution since the configuration file can be
+checked into a version control system along with your project and can therefore be used
+within IDEs and your build software.</p>
+</div>
+<div class="paragraph">
+<p>To set the default test instance lifecycle mode to <code>Lifecycle.PER_CLASS</code> via the JUnit
+Platform configuration file, create a file named <code>junit-platform.properties</code> in the root
+of the class path (e.g., <code>src/test/resources</code>) with the following content.</p>
+</div>
+<div class="paragraph">
+<p><code>junit.jupiter.testinstance.lifecycle.default = per_class</code></p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -1464,7 +1480,8 @@ Changing the <em>default</em> test instance lifecycle mode can lead to unpredict
 results and fragile builds if not applied consistently. For example, if the build
 configures "per-class" semantics as the default but tests in the IDE are executed using
 "per-method" semantics, that can make it difficult to debug errors that occur on the
-build server.
+build server. It is therefore recommended to change the default in the JUnit Platform
+configuration file instead of via a JVM system property.
 </td>
 </tr>
 </table>
@@ -3882,6 +3899,65 @@ details.
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="running-tests-config-params"><a class="anchor" href="#running-tests-config-params"></a>4.5. Configuration Parameters</h3>
+<div class="paragraph">
+<p>In addition to instructing the platform which test classes and test engines to include,
+which packages to scan, etc., it is sometimes necessary to provide additional custom
+configuration parameters that are specific to a particular test engine. For example, the
+JUnit Jupiter <code>TestEngine</code> supports <em>configuration parameters</em> for the following use
+cases.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#writing-tests-test-instance-lifecycle-changing-default">Changing the Default Test Instance Lifecycle</a></p>
+</li>
+<li>
+<p><a href="#extensions-registration-automatic-enabling">Enabling Automatic Extension Detection</a></p>
+</li>
+<li>
+<p><a href="#extensions-conditions-deactivation">Deactivating Conditions</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em>Configuration Parameters</em> are text-based key-value pairs that can be supplied to test
+engines running on the JUnit Platform via one of the following mechanisms.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>configurationParameter()</code> and <code>configurationParameters()</code> methods in the
+<code>LauncherDiscoveryRequestBuilder</code> which is used to build a request supplied to the
+<a href="#launcher-api"><code>Launcher</code> API</a>.</p>
+</li>
+<li>
+<p>JVM system properties.</p>
+</li>
+<li>
+<p>The JUnit Platform configuration file: a file named <code>junit-platform.properties</code> in the
+root of the class path that follows the syntax rules for a Java <code>Properties</code> file.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Configuration parameters are looked up in the exact order defined above.
+Consequently, configuration parameters supplied directly to the <code>Launcher</code> take
+precedence over those supplied via system properties and the configuration file.
+Similarly, configuration parameters supplied via system properties take precedence over
+those supplied via the configuration file.
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -3980,9 +4056,10 @@ name in a file named <code>org.junit.jupiter.api.extension.Extension</code> with
 <h5 id="extensions-registration-automatic-enabling"><a class="anchor" href="#extensions-registration-automatic-enabling"></a>Enabling Automatic Extension Detection</h5>
 <div class="paragraph">
 <p>Auto-detection is an advanced feature and is therefore not enabled by default. To enable
-it, simply set the <code>junit.jupiter.extensions.autodetection.enabled</code> configuration
-parameter to <code>true</code>. This can be supplied as a JVM system property or as a <em>configuration
-parameter</em> in the <code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>.</p>
+it, simply set the <code>junit.jupiter.extensions.autodetection.enabled</code> <em>configuration
+parameter</em> to <code>true</code>. This can be supplied as a JVM system property, as a <em>configuration
+parameter</em> in the <code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>, or via the
+JUnit Platform configuration file (see <a href="#running-tests-config-params">Configuration Parameters</a> for details).</p>
 </div>
 <div class="paragraph">
 <p>For example, to enable auto-detection of extensions, you can start your JVM with the
@@ -4038,10 +4115,10 @@ the short-circuiting boolean OR operator.</p>
 <p>Sometimes it can be useful to run a test suite <em>without</em> certain conditions being active.
 For example, you may wish to run tests even if they are annotated with <code>@Disabled</code> in
 order to see if they are still <em>broken</em>. To do this, simply provide a pattern for the
-<code>junit.jupiter.conditions.deactivate</code> configuration parameter to specify which conditions
-should be deactivated (i.e., not evaluated) for the current test run. The pattern can be
-supplied as a JVM system property or as a <em>configuration parameter</em> in the
-<code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>.</p>
+<code>junit.jupiter.conditions.deactivate</code> <em>configuration parameter</em> to specify which
+conditions should be deactivated (i.e., not evaluated) for the current test run. The
+pattern can be supplied as a JVM system property, as a <em>configuration parameter</em> in the
+<code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>, or via the JUnit Platform configuration file (see <a href="#running-tests-config-params">Configuration Parameters</a> for details).</p>
 </div>
 <div class="paragraph">
 <p>For example, to deactivate JUnit&#8217;s <code>@Disabled</code> condition, you can start your JVM with the
@@ -6935,6 +7012,18 @@ on GitHub.</p>
 </ul>
 </div>
 </div>
+<div class="sect4">
+<h5 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Configuration parameters</em> can now be supplied via a file named
+<code>junit-platform.properties</code> in the root of the class path. See
+<a href="#running-tests-config-params">Configuration Parameters</a> for details.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="release-notes-5.0.0-rc3-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-rc3-junit-jupiter"></a>JUnit Jupiter</h4>
@@ -6978,13 +7067,14 @@ from <code>Namespace.DEFAULT</code> to <code>Namespace.GLOBAL</code>.</p>
 </li>
 <li>
 <p>The default <code>getStore()</code> method has been removed from the <code>ExtensionContext</code> interface.
-To access the global store, use an explicit call to <code>getStore(Namespace.GLOBAL)</code> instead.</p>
+To access the global store, use an explicit call to <code>getStore(Namespace.GLOBAL)</code>
+instead.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect4">
-<h5 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h5>
+<h5 id="new-features-and-improvements-10"><a class="anchor" href="#new-features-and-improvements-10"></a>New Features and Improvements</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -7021,7 +7111,7 @@ string <code>""</code> is returned instead of <code>null</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-14 14:33:12 EDT
+Last updated 2017-08-14 16:08:30 EDT
 </div>
 </div>
 </body>
