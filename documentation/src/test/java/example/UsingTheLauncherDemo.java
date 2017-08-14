@@ -15,7 +15,6 @@ import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNa
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
-import org.junit.jupiter.api.Test;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -30,7 +29,7 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
  */
 class UsingTheLauncherDemo {
 
-	@Test
+	@org.junit.jupiter.api.Test
 	@SuppressWarnings("unused")
 	void discovery() {
 		// @formatter:off
@@ -40,15 +39,19 @@ class UsingTheLauncherDemo {
 				selectPackage("com.example.mytests"),
 				selectClass(MyTestClass.class)
 			)
-			.filters(includeClassNamePatterns(".*Test"))
+			.filters(
+				includeClassNamePatterns(".*Tests")
+			)
 			.build();
 
-		TestPlan plan = LauncherFactory.create().discover(request);
+		Launcher launcher = LauncherFactory.create();
+
+		TestPlan testPlan = launcher.discover(request);
 		// end::discovery[]
 		// @formatter:on
 	}
 
-	@Test
+	@org.junit.jupiter.api.Test
 	void execution() {
 		// @formatter:off
 		// tag::execution[]
@@ -57,7 +60,9 @@ class UsingTheLauncherDemo {
 				selectPackage("com.example.mytests"),
 				selectClass(MyTestClass.class)
 			)
-			.filters(includeClassNamePatterns(".*Test"))
+			.filters(
+				includeClassNamePatterns(".*Tests")
+			)
 			.build();
 
 		Launcher launcher = LauncherFactory.create();
@@ -73,5 +78,4 @@ class UsingTheLauncherDemo {
 }
 
 class MyTestClass {
-
 }
