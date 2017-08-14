@@ -4734,7 +4734,6 @@ through to identify test classes and test methods in the past.</p>
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.engine.discovery.DiscoverySelectors.selectClass</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage</span>;
 
-<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.Launcher</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.LauncherDiscoveryRequest</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.TestExecutionListener</span>;
@@ -4751,32 +4750,36 @@ through to identify test classes and test methods in the past.</p>
         selectPackage(<span class="string"><span class="delimiter">&quot;</span><span class="content">com.example.mytests</span><span class="delimiter">&quot;</span></span>),
         selectClass(MyTestClass.class)
     )
-    .filters(includeClassNamePatterns(<span class="string"><span class="delimiter">&quot;</span><span class="content">.*Test</span><span class="delimiter">&quot;</span></span>))
+    .filters(
+        includeClassNamePatterns(<span class="string"><span class="delimiter">&quot;</span><span class="content">.*Tests</span><span class="delimiter">&quot;</span></span>)
+    )
     .build();
 
-TestPlan plan = LauncherFactory.create().discover(request);</code></pre>
+Launcher launcher = LauncherFactory.create();
+
+TestPlan testPlan = launcher.discover(request);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>There&#8217;s currently the possibility to search for classes, methods, all classes in a
-package, or even all tests in the classpath. Discovery takes place across all
+<p>There&#8217;s currently the possibility to select classes, methods, and all classes in a
+package or even search for all tests in the classpath. Discovery takes place across all
 participating test engines.</p>
 </div>
 <div class="paragraph">
-<p>The resulting test plan is basically a hierarchical (and read-only) description of all
-engines, classes, and test methods that fit the <code>specification</code> object. The client can
+<p>The resulting <code>TestPlan</code> is a hierarchical (and read-only) description of all engines,
+classes, and test methods that fit the <code>LauncherDiscoveryRequest</code>. The client can
 traverse the tree, retrieve details about a node, and get a link to the original source
-(like class, method, or file position). Every node in the test plan tree has a <em>unique
-ID</em> that can be used to invoke a particular test or group of tests.</p>
+(like class, method, or file position). Every node in the test plan has a <em>unique ID</em>
+that can be used to invoke a particular test or group of tests.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="launcher-api-execution"><a class="anchor" href="#launcher-api-execution"></a>7.1.2. Executing Tests</h4>
 <div class="paragraph">
-<p>There are two ways to execute tests. Clients can either use the same test specification
-object as in the discovery phase, or – to speed things up a bit – pass in the prepared
-<code>TestPlan</code> object from a previous discovery step. Test progress and result reporting can
-be achieved through a <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>:</p>
+<p>To execute tests, clients can use the same <code>LauncherDiscoveryRequest</code> as in the discovery
+phase or create a new request. Test progress and reporting can be achieved by registering
+one or more <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations with the <code>Launcher</code> as in the
+following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4785,7 +4788,9 @@ be achieved through a <code><a href="../api/org/junit/platform/launcher/TestExec
         selectPackage(<span class="string"><span class="delimiter">&quot;</span><span class="content">com.example.mytests</span><span class="delimiter">&quot;</span></span>),
         selectClass(MyTestClass.class)
     )
-    .filters(includeClassNamePatterns(<span class="string"><span class="delimiter">&quot;</span><span class="content">.*Test</span><span class="delimiter">&quot;</span></span>))
+    .filters(
+        includeClassNamePatterns(<span class="string"><span class="delimiter">&quot;</span><span class="content">.*Tests</span><span class="delimiter">&quot;</span></span>)
+    )
     .build();
 
 Launcher launcher = LauncherFactory.create();
@@ -4798,8 +4803,8 @@ launcher.execute(request);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>There&#8217;s currently no result object, but you can easily use a listener to aggregate the
-final results in an object of your own. For an example see the
+<p>There is no return value for the <code>execute()</code> method, but you can easily use a listener to
+aggregate the final results in an object of your own. For an example see the
 <code><a href="../api/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code>.</p>
 </div>
 </div>
@@ -7111,7 +7116,7 @@ string <code>""</code> is returned instead of <code>null</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-14 16:08:30 EDT
+Last updated 2017-08-14 17:16:52 EDT
 </div>
 </div>
 </body>
