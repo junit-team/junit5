@@ -38,7 +38,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 @API(Internal)
 public class ConditionEvaluator {
 
-	private static final Logger LOG = Logger.getLogger(ConditionEvaluator.class.getName());
+	private static final Logger logger = Logger.getLogger(ConditionEvaluator.class.getName());
 
 	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(
 		"No 'disabled' conditions encountered");
@@ -81,7 +81,7 @@ public class ConditionEvaluator {
 	}
 
 	private void logResult(Class<?> conditionType, ConditionEvaluationResult result) {
-		LOG.finer(() -> format("Evaluation of condition [%s] resulted in: %s", conditionType.getName(), result));
+		logger.finer(() -> format("Evaluation of condition [%s] resulted in: %s", conditionType.getName(), result));
 	}
 
 	private ConditionEvaluationException evaluationException(Class<?> conditionType, Exception ex) {

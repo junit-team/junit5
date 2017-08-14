@@ -34,7 +34,7 @@ import org.junit.runners.model.RunnerBuilder;
  */
 class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBuilder {
 
-	private static final Logger LOG = Logger.getLogger(DefensiveAllDefaultPossibilitiesBuilder.class.getName());
+	private static final Logger logger = Logger.getLogger(DefensiveAllDefaultPossibilitiesBuilder.class.getName());
 
 	private final AnnotatedBuilder annotatedBuilder;
 	private final DefensiveJUnit4Builder defensiveJUnit4Builder;
@@ -69,7 +69,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		public Runner buildRunner(Class<? extends Runner> runnerClass, Class<?> testClass) throws Exception {
 			// Referenced by name because it might not be available at runtime.
 			if ("org.junit.platform.runner.JUnitPlatform".equals(runnerClass.getName())) {
-				LOG.log(WARNING, () -> "Ignoring test class using JUnitPlatform runner: " + testClass.getName());
+				logger.log(WARNING, () -> "Ignoring test class using JUnitPlatform runner: " + testClass.getName());
 				return null;
 			}
 			return super.buildRunner(runnerClass, testClass);

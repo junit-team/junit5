@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 class ClassFileVisitor extends SimpleFileVisitor<Path> {
 
-	private static final Logger LOG = Logger.getLogger(ClassFileVisitor.class.getName());
+	private static final Logger logger = Logger.getLogger(ClassFileVisitor.class.getName());
 
 	static final String CLASS_FILE_SUFFIX = ".class";
 	private static final String PACKAGE_INFO_FILE_NAME = "package-info" + CLASS_FILE_SUFFIX;
@@ -48,14 +48,14 @@ class ClassFileVisitor extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult visitFileFailed(Path file, IOException exc) {
-		LOG.log(WARNING, exc, () -> "I/O error visiting file: " + file);
+		logger.log(WARNING, exc, () -> "I/O error visiting file: " + file);
 		return CONTINUE;
 	}
 
 	@Override
 	public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
 		if (exc != null) {
-			LOG.log(WARNING, exc, () -> "I/O error visiting directory: " + dir);
+			logger.log(WARNING, exc, () -> "I/O error visiting directory: " + dir);
 		}
 		return CONTINUE;
 	}

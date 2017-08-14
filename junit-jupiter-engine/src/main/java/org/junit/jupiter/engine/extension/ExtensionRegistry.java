@@ -49,7 +49,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 @API(Internal)
 public class ExtensionRegistry {
 
-	private static final Logger LOG = Logger.getLogger(ExtensionRegistry.class.getName());
+	private static final Logger logger = Logger.getLogger(ExtensionRegistry.class.getName());
 
 	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
 		new DisabledCondition(), //
@@ -74,7 +74,7 @@ public class ExtensionRegistry {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
 
 		// @formatter:off
-		LOG.finest(() -> "Registering default extensions: " + DEFAULT_EXTENSIONS.stream()
+		logger.finest(() -> "Registering default extensions: " + DEFAULT_EXTENSIONS.stream()
 						.map(extension -> extension.getClass().getName())
 						.collect(toList()));
 		// @formatter:on
@@ -92,7 +92,7 @@ public class ExtensionRegistry {
 		Iterable<Extension> extensions = ServiceLoader.load(Extension.class, ClassLoaderUtils.getDefaultClassLoader());
 
 		// @formatter:off
-		LOG.config(() -> "Registering auto-detected extensions: "
+		logger.config(() -> "Registering auto-detected extensions: "
 				+ StreamSupport.stream(extensions.spliterator(), false)
 						.map(extension -> extension.getClass().getName())
 						.collect(toList()));
@@ -240,7 +240,7 @@ public class ExtensionRegistry {
 	 * @param source the source of the extension
 	 */
 	public void registerExtension(Extension extension, Object source) {
-		LOG.finer(() -> String.format("Registering extension [%s] from source [%s].", extension, source));
+		logger.finer(() -> String.format("Registering extension [%s] from source [%s].", extension, source));
 		this.registeredExtensions.add(extension);
 	}
 

@@ -36,7 +36,7 @@ import org.junit.vintage.engine.execution.RunnerExecutor;
 @API(Experimental)
 public class VintageTestEngine implements TestEngine {
 
-	private static final Logger LOG = Logger.getLogger(VintageTestEngine.class.getName());
+	private static final Logger logger = Logger.getLogger(VintageTestEngine.class.getName());
 
 	@Override
 	public String getId() {
@@ -61,7 +61,7 @@ public class VintageTestEngine implements TestEngine {
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		return new VintageDiscoverer(LOG).discover(discoveryRequest, uniqueId);
+		return new VintageDiscoverer(logger).discover(discoveryRequest, uniqueId);
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class VintageTestEngine implements TestEngine {
 		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
 		TestDescriptor engineTestDescriptor = request.getRootTestDescriptor();
 		engineExecutionListener.executionStarted(engineTestDescriptor);
-		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener, LOG);
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener, logger);
 		executeAllChildren(runnerExecutor, engineTestDescriptor);
 		engineExecutionListener.executionFinished(engineTestDescriptor, successful());
 	}

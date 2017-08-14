@@ -31,7 +31,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 final class TestInstanceLifecycleUtils {
 
-	private static final Logger LOG = Logger.getLogger(TestInstanceLifecycleUtils.class.getName());
+	private static final Logger logger = Logger.getLogger(TestInstanceLifecycleUtils.class.getName());
 
 	///CLOVER:OFF
 	private TestInstanceLifecycleUtils() {
@@ -61,7 +61,7 @@ final class TestInstanceLifecycleUtils {
 			try {
 				constantName = optional.get().trim().toUpperCase();
 				Lifecycle lifecycle = TestInstance.Lifecycle.valueOf(constantName);
-				LOG.info(() -> String.format(
+				logger.info(() -> String.format(
 					"Using default test instance lifecycle mode '%s' set via the '%s' configuration parameter.",
 					lifecycle, propertyName));
 				return lifecycle;
@@ -69,7 +69,7 @@ final class TestInstanceLifecycleUtils {
 			catch (Exception ex) {
 				// local copy necessary for use in lambda expression
 				String constant = constantName;
-				LOG.log(WARNING, ex,
+				logger.log(WARNING, ex,
 					() -> String.format(
 						"Invalid test instance lifecycle mode '%s' set via the '%s' configuration parameter. "
 								+ "Falling back to %s lifecycle semantics.",

@@ -39,7 +39,7 @@ import org.junit.platform.engine.UniqueId;
  */
 class JavaElementsResolver {
 
-	private static final Logger LOG = Logger.getLogger(JavaElementsResolver.class.getName());
+	private static final Logger logger = Logger.getLogger(JavaElementsResolver.class.getName());
 
 	private static final IsInnerClass isInnerClass = new IsInnerClass();
 
@@ -56,7 +56,7 @@ class JavaElementsResolver {
 		resolvedDescriptors.forEach(this::resolveChildren);
 
 		if (resolvedDescriptors.isEmpty()) {
-			LOG.warning(() -> format("Class '%s' could not be resolved", testClass.getName()));
+			logger.warning(() -> format("Class '%s' could not be resolved", testClass.getName()));
 		}
 	}
 
@@ -65,7 +65,7 @@ class JavaElementsResolver {
 		Set<TestDescriptor> resolvedDescriptors = resolveForAllParents(testMethod, potentialParents);
 
 		if (resolvedDescriptors.isEmpty()) {
-			LOG.warning(() -> format("Method '%s' could not be resolved", testMethod.toGenericString()));
+			logger.warning(() -> format("Method '%s' could not be resolved", testMethod.toGenericString()));
 		}
 
 		logMultipleTestDescriptorsForSingleElement(testMethod, resolvedDescriptors);
@@ -86,7 +86,7 @@ class JavaElementsResolver {
 		segments.remove(0); // Ignore engine unique ID
 
 		if (!resolveUniqueId(this.engineDescriptor, segments)) {
-			LOG.warning(() -> format("Unique ID '%s' could not be resolved", uniqueId));
+			logger.warning(() -> format("Unique ID '%s' could not be resolved", uniqueId));
 		}
 	}
 
@@ -192,7 +192,7 @@ class JavaElementsResolver {
 	private void logMultipleTestDescriptorsForSingleElement(AnnotatedElement element, Set<TestDescriptor> descriptors) {
 		if (descriptors.size() > 1 && element instanceof Method) {
 			Method method = (Method) element;
-			LOG.warning(String.format(
+			logger.warning(String.format(
 				"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. "
 						+ "This is typically the result of annotating a method with multiple competing annotations "
 						+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",

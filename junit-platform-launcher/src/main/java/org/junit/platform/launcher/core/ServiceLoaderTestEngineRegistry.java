@@ -23,12 +23,12 @@ import org.junit.platform.engine.TestEngine;
  */
 class ServiceLoaderTestEngineRegistry {
 
-	private static final Logger LOG = Logger.getLogger(ServiceLoaderTestEngineRegistry.class.getName());
+	private static final Logger logger = Logger.getLogger(ServiceLoaderTestEngineRegistry.class.getName());
 
 	public Iterable<TestEngine> loadTestEngines() {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
 			ClassLoaderUtils.getDefaultClassLoader());
-		LOG.config(() -> createDiscoveredTestEnginesMessage(testEngines));
+		logger.config(() -> createDiscoveredTestEnginesMessage(testEngines));
 		return testEngines;
 	}
 

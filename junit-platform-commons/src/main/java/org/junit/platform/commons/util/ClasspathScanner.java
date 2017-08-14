@@ -46,7 +46,7 @@ import java.util.stream.Stream;
  */
 class ClasspathScanner {
 
-	private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
+	private static final Logger logger = Logger.getLogger(ClasspathScanner.class.getName());
 
 	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
 	private static final char PACKAGE_SEPARATOR_CHAR = '.';
@@ -233,7 +233,7 @@ class ClasspathScanner {
 	}
 
 	private static void logWarning(Throwable throwable, Supplier<String> msgSupplier) {
-		LOG.log(Level.WARNING, throwable, msgSupplier);
+		logger.log(Level.WARNING, throwable, msgSupplier);
 	}
 
 }

@@ -43,7 +43,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(Internal)
 public class ExecutableInvoker {
 
-	private static final Logger LOG = Logger.getLogger(ExecutableInvoker.class.getName());
+	private static final Logger logger = Logger.getLogger(ExecutableInvoker.class.getName());
 
 	/**
 	 * Invoke the supplied constructor with dynamic parameter resolution.
@@ -206,7 +206,7 @@ public class ExecutableInvoker {
 			Object value = resolver.resolveParameter(parameterContext, extensionContext);
 			validateResolvedType(parameterContext.getParameter(), value, executable, resolver);
 
-			LOG.finer(() -> String.format(
+			logger.finer(() -> String.format(
 				"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in executable [%s].",
 				resolver.getClass().getName(), (value != null ? value.getClass().getName() : null),
 				parameterContext.getParameter(), executable.toGenericString()));

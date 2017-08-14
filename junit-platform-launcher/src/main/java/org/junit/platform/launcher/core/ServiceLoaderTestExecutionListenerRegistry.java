@@ -24,12 +24,12 @@ import org.junit.platform.launcher.TestExecutionListener;
  */
 class ServiceLoaderTestExecutionListenerRegistry {
 
-	private static final Logger LOG = Logger.getLogger(ServiceLoaderTestExecutionListenerRegistry.class.getName());
+	private static final Logger logger = Logger.getLogger(ServiceLoaderTestExecutionListenerRegistry.class.getName());
 
 	Iterable<TestExecutionListener> loadListeners() {
 		Iterable<TestExecutionListener> listeners = ServiceLoader.load(TestExecutionListener.class,
 			ClassLoaderUtils.getDefaultClassLoader());
-		LOG.config(() -> "Loaded TestExecutionListener instances: "
+		logger.config(() -> "Loaded TestExecutionListener instances: "
 				+ stream(listeners.spliterator(), false).map(Object::toString).collect(toList()));
 		return listeners;
 	}
