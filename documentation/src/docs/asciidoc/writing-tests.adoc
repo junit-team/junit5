@@ -703,20 +703,20 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=multi_arg_MethodSourc
 include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvSource_example]
 ----
 
-`@CsvSource` uses the single quote `'` as its quote character. See `'baz, qux'` value in
-the example and the table below. An empty and quoted value `''` results in an empty
-`String` instance, whereas an entirely empty value is interpreted as a `null` reference.
-An `ArgumentConversionException` is raised if the target type of a `null` reference is
-a primitive type.
+`@CsvSource` uses a single quote `'` as its quote character. See the `'baz, qux'` value
+in the example above and in the table below. An empty, quoted value `''` results in an
+empty `String`; whereas, an entirely _empty_ value is interpreted as a `null` reference.
+An `ArgumentConversionException` is raised if the target type of a `null` reference is a
+primitive type.
 
 [cols="50,50"]
 |===
-| `@CsvSource` example                 | Argument list
+| Example Input                        | Resulting Argument List
 
-| `@CsvSource({ "foo, bar"` })         | `"foo"`, `"bar"`
-| `@CsvSource({ "foo, 'baz, qux'"` })  | `"foo"`, `"baz, qux"`
-| `@CsvSource({ "foo, ''"` })          | `"foo"`, `""`
-| `@CsvSource({ "foo,"` })             | `"foo"`, _null_
+| `@CsvSource({ "foo, bar" })`         | `"foo"`, `"bar"`
+| `@CsvSource({ "foo, 'baz, qux'" })`  | `"foo"`, `"baz, qux"`
+| `@CsvSource({ "foo, ''" })`          | `"foo"`, `""`
+| `@CsvSource({ "foo, " })`            | `"foo"`, `null`
 |===
 
 [[writing-tests-parameterized-tests-sources-CsvFileSource]]
@@ -736,11 +736,11 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example
 include::{testResourcesDir}/two-column.csv[]
 ----
 
-NOTE: `@CsvFileSource` uses double quotes `"` as the quote character. See `"baz, qux"` value
-in the example above. An empty and quoted value `""` results in an empty `String` instance,
-whereas an entirely empty value is interpreted as a `null` reference.
-An `ArgumentConversionException` is raised if the target type of a `null` reference is
-a primitive type.
+NOTE: In contrast to the syntax used in `@CsvSource`, `@CsvFileSource` uses a double
+quote `"` as the quote character. See the `"baz, qux"` value in the example above. An
+empty, quoted value `""` results in an empty `String`; whereas, an entirely _empty_ value
+is interpreted as a `null` reference. An `ArgumentConversionException` is raised if the
+target type of a `null` reference is a primitive type.
 
 [[writing-tests-parameterized-tests-sources-ArgumentsSource]]
 ===== @ArgumentsSource
