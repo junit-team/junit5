@@ -315,6 +315,17 @@
     ]
   },
   {
+    "title": "JUnit 5",
+    "event": "solutions.hamburg",
+    "date": "2017-09-06",
+    "location": "Hamburg, Germany",
+    "link": "https://solutions.hamburg/programm",
+    "speakers": [
+      "marcphilipp",
+      "sormuras"
+    ]
+  },
+  {
     "title": "Neues von JUnit: Architektur, API und Erweiterbarkeit in der Version 5",
     "event": "XP Days Germany",
     "date": "2017-10-05",
