@@ -8,33 +8,29 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.vintage.engine;
+package org.junit.vintage.engine.samples.junit4;
 
 import static org.junit.jupiter.api.Assertions.fail;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
+/**
+ * Test case used in {@link JUnit4ParameterizedTests}.
+ *
+ * @since 4.12
+ */
 @RunWith(Parameterized.class)
 public class JUnit4ParameterizedTestCase {
 
-	private final boolean b;
-	private final long l;
-	private final int i;
-
-	@Parameterized.Parameters(name = "{0} ---> : Test")
-	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { 1L, false, 21 }, { 2L, true, 11 }, { 3L, false, 21 }, });
+	@Parameters
+	public static Object[] data() {
+		return new Object[] { 1, 2, 3 };
 	}
 
-	public JUnit4ParameterizedTestCase(long l, boolean b, int i) {
-		this.b = b;
-		this.l = l;
-		this.i = i;
+	public JUnit4ParameterizedTestCase(int i) {
 	}
 
 	@Test
@@ -54,6 +50,7 @@ public class JUnit4ParameterizedTestCase {
 
 	@Test
 	public void test2() {
-		/* always succeed */
+		/* always succeeds */
 	}
+
 }

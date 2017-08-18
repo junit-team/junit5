@@ -37,15 +37,17 @@ class MethodSelectorResolver implements DiscoverySelectorResolver {
 	}
 
 	/**
-	 * The method {@link Filter#matchMethodDescription(Description)} returns a filter that does not account for
-	 * the case when the description is for a Parametrized runner.
+	 * The method {@link Filter#matchMethodDescription(Description)} returns a
+	 * filter that does not account for the case when the description is for a
+	 * {@link org.junit.runners.Parameterized} runner.
 	 */
 	private static Filter matchMethodDescription(final Description desiredDescription) {
 		return new Filter() {
+
 			@Override
 			public boolean shouldRun(Description description) {
 				if (description.isTest()) {
-					return desiredDescription.equals(description) || isMethodWithParameters(description);
+					return desiredDescription.equals(description) || isParameterizedMethod(description);
 				}
 
 				// explicitly check if any children want to run
@@ -57,7 +59,7 @@ class MethodSelectorResolver implements DiscoverySelectorResolver {
 				return false;
 			}
 
-			private boolean isMethodWithParameters(Description description) {
+			private boolean isParameterizedMethod(Description description) {
 				return description.getMethodName().startsWith(desiredDescription.getMethodName() + "[");
 			}
 
@@ -67,4 +69,5 @@ class MethodSelectorResolver implements DiscoverySelectorResolver {
 			}
 		};
 	}
+
 }

@@ -10,65 +10,74 @@
 
 package org.junit.vintage.engine;
 
+import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
+import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.launcher.EngineFilter.includeEngines;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
+import org.junit.vintage.engine.samples.junit4.JUnit4ParameterizedTestCase;
 
+/**
+ * @since 4.12
+ */
 class JUnit4ParameterizedTests {
-	private final Launcher launcher = LauncherFactory.create();
-	private final Map<TestExecutionResult.Status, Integer> callCounts = new HashMap<>();
-	private final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
 
-	@BeforeEach
-	void setUpLauncher() {
-		launcher.registerTestExecutionListeners(new TestListenerMock());
-	}
+	private final Map<TestExecutionResult.Status, Integer> callCounts = new HashMap<>();
 
 	@Test
 	void selectingWholeParameterizedClassRunsTestsWithAllValues() {
-		requestBuilder.selectors(selectClass(JUnit4ParameterizedTestCase.class));
-		LauncherDiscoveryRequest discoveryRequest = requestBuilder.build();
+		executeTests(selectClass(JUnit4ParameterizedTestCase.class));
 
-		launcher.execute(discoveryRequest);
+		Map<TestExecutionResult.Status, Integer> expectedCallCounts = new HashMap<>();
+		expectedCallCounts.put(SUCCESSFUL, 3);
+		expectedCallCounts.put(FAILED, 9);
 
-		HashMap<TestExecutionResult.Status, Integer> expectedCallCounts = new HashMap<>();
-		expectedCallCounts.put(TestExecutionResult.Status.SUCCESSFUL, 3);
-		expectedCallCounts.put(TestExecutionResult.Status.FAILED, 9);
 		assertEquals(expectedCallCounts, callCounts);
 	}
 
 	@Test
 	void selectingOneTestFromParameterizedClassRunsWithAllValues() {
-		requestBuilder.selectors(selectMethod(JUnit4ParameterizedTestCase.class, "test1"));
-		LauncherDiscoveryRequest discoveryRequest = requestBuilder.build();
+		executeTests(selectMethod(JUnit4ParameterizedTestCase.class, "test1"));
 
-		launcher.execute(discoveryRequest);
-
-		HashMap<TestExecutionResult.Status, Integer> expectedCallCounts = new HashMap<>();
-		expectedCallCounts.put(TestExecutionResult.Status.FAILED, 3);
-		assertEquals(expectedCallCounts, callCounts);
+		assertEquals(singletonMap(FAILED, 3), callCounts);
 	}
 
-	private class TestListenerMock implements TestExecutionListener {
+	private void executeTests(DiscoverySelector selector) {
+		Launcher launcher = LauncherFactory.create();
+		launcher.registerTestExecutionListeners(new StatusTrackingListener());
+
+		// @formatter:off
+		launcher.execute(
+			request()
+				.selectors(selector)
+				.filters(includeEngines("junit-vintage"))
+				.build()
+		);
+		// @formatter:on
+	}
+
+	private class StatusTrackingListener implements TestExecutionListener {
+
 		@Override
 		public void executionFinished(TestIdentifier identifier, TestExecutionResult result) {
 			if (identifier.isTest()) {
-				final TestExecutionResult.Status status = result.getStatus();
-				callCounts.merge(status, 1, Integer::sum);
+				callCounts.merge(result.getStatus(), 1, Integer::sum);
 			}
 		}
 	}
+
 }
