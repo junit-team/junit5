@@ -69,3 +69,5 @@ on GitHub.
 ===== Bug Fixes
 
 * Source JARs no longer contain every source file twice.
+* It is now possible to select a single method in a JUnit 4 parameterized test class via
+  the `selectMethod()` variants in `DiscoverySelectors`.
