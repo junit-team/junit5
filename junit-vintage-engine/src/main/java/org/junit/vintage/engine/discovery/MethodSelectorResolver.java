@@ -10,7 +10,6 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static org.junit.runner.manipulation.Filter.matchMethodDescription;
 import static org.junit.vintage.engine.discovery.RunnerTestDescriptorAwareFilter.adapter;
 
 import java.lang.reflect.Method;
@@ -18,6 +17,7 @@ import java.lang.reflect.Method;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.runner.Description;
+import org.junit.runner.manipulation.Filter;
 
 /**
  * @since 4.12
@@ -36,4 +36,35 @@ class MethodSelectorResolver implements DiscoverySelectorResolver {
 		collector.addFiltered(testClass, adapter(matchMethodDescription(methodDescription)));
 	}
 
+	/**
+	 * The method {@link Filter#matchMethodDescription(Description)} returns a filter that does not account for
+	 * the case when the description is for a Parametrized runner.
+	 */
+	private static Filter matchMethodDescription(final Description desiredDescription) {
+		return new Filter() {
+			@Override
+			public boolean shouldRun(Description description) {
+				if (description.isTest()) {
+					return desiredDescription.equals(description) || isMethodWithParameters(description);
+				}
+
+				// explicitly check if any children want to run
+				for (Description each : description.getChildren()) {
+					if (shouldRun(each)) {
+						return true;
+					}
+				}
+				return false;
+			}
+
+			private boolean isMethodWithParameters(Description description) {
+				return description.getMethodName().startsWith(desiredDescription.getMethodName() + "[");
+			}
+
+			@Override
+			public String describe() {
+				return String.format("Method %s", desiredDescription.getDisplayName());
+			}
+		};
+	}
 }
