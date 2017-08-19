@@ -49,7 +49,7 @@ public class VintageDiscoverer {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit Vintage");
 		// @formatter:off
 		collectTestClasses(discoveryRequest)
-				.toRequests(createTestClassPredicate(discoveryRequest))
+				.toRequests()
 				.map(request -> resolver.createRunnerTestDescriptor(request, uniqueId))
 				.filter(Objects::nonNull)
 				.forEach(engineDescriptor::addChild);
@@ -58,9 +58,10 @@ public class VintageDiscoverer {
 	}
 
 	private TestClassCollector collectTestClasses(EngineDiscoveryRequest discoveryRequest) {
+		Predicate<Class<?>> classFilter = createTestClassPredicate(discoveryRequest);
 		TestClassCollector collector = new TestClassCollector();
 		for (DiscoverySelectorResolver selectorResolver : getAllDiscoverySelectorResolvers(discoveryRequest)) {
-			selectorResolver.resolve(discoveryRequest, collector);
+			selectorResolver.resolve(discoveryRequest, classFilter, collector);
 		}
 		return collector;
 	}

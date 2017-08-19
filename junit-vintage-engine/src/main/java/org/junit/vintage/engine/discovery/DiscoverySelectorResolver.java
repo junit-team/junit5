@@ -10,6 +10,8 @@
 
 package org.junit.vintage.engine.discovery;
 
+import java.util.function.Predicate;
+
 import org.junit.platform.engine.EngineDiscoveryRequest;
 
 /**
@@ -17,7 +19,5 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
  */
 interface DiscoverySelectorResolver {
 
-	IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
-
-	void resolve(EngineDiscoveryRequest request, TestClassCollector collector);
+	void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter, TestClassCollector collector);
 }
