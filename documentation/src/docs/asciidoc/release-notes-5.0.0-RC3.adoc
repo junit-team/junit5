@@ -37,6 +37,9 @@ on GitHub.
 * `ExecutionContext.Store.getOrComputeIfAbsent()` now looks for values in a grandparent
   context (and recursively in its parents) before computing a value.
 * `ExecutionContext.Store.getOrComputeIfAbsent()` is now thread safe.
+* The `JupiterTestEngine` no longer attempts to resolve a Unique ID selected via one of
+  the `DiscoverySelectors.selectUniqueId()` methods if the Unique ID belongs to a
+  different test engine.
 
 ===== Deprecations and Breaking Changes
 

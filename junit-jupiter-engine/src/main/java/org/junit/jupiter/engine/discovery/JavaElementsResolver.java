@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -82,12 +83,20 @@ class JavaElementsResolver {
 	}
 
 	void resolveUniqueId(UniqueId uniqueId) {
-		List<UniqueId.Segment> segments = new ArrayList<>(uniqueId.getSegments());
-		segments.remove(0); // Ignore engine unique ID
+		uniqueId.getEngineId().ifPresent(engineId -> {
 
-		if (!resolveUniqueId(this.engineDescriptor, segments)) {
-			logger.warning(() -> format("Unique ID '%s' could not be resolved", uniqueId));
-		}
+			// Ignore Unique IDs from other test engines.
+			if (JupiterTestEngine.ENGINE_ID.equals(engineId)) {
+				List<UniqueId.Segment> segments = new ArrayList<>(uniqueId.getSegments());
+
+				// Ignore engine ID
+				segments.remove(0);
+
+				if (!resolveUniqueId(this.engineDescriptor, segments)) {
+					logger.warning(() -> format("Unique ID '%s' could not be resolved", uniqueId));
+				}
+			}
+		});
 	}
 
 	/**
