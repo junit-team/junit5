@@ -42,8 +42,9 @@ class DiscoveryFilterApplier {
 		}
 		TestDescriptor.Visitor filteringVisitor = descriptor -> {
 			if (descriptor instanceof ClassTestDescriptor) {
-				if (!includePackage((ClassTestDescriptor) descriptor, packageNameFilters))
+				if (!includePackage((ClassTestDescriptor) descriptor, packageNameFilters)) {
 					descriptor.removeFromHierarchy();
+				}
 			}
 		};
 		engineDescriptor.accept(filteringVisitor);
@@ -53,8 +54,9 @@ class DiscoveryFilterApplier {
 			List<PackageNameFilter> packageNameFilters) {
 
 		// Nested Tests are never filtered out
-		if (classTestDescriptor instanceof NestedClassTestDescriptor)
+		if (classTestDescriptor instanceof NestedClassTestDescriptor) {
 			return true;
+		}
 
 		Class<?> testClass = classTestDescriptor.getTestClass();
 
@@ -81,16 +83,17 @@ class DiscoveryFilterApplier {
 	private boolean includeClass(ClassTestDescriptor classTestDescriptor, List<ClassNameFilter> classNameFilters) {
 
 		// Nested Tests are never filtered out
-		if (classTestDescriptor instanceof NestedClassTestDescriptor)
+		if (classTestDescriptor instanceof NestedClassTestDescriptor) {
 			return true;
+		}
 
 		Class<?> testClass = classTestDescriptor.getTestClass();
 
 		// @formatter:off
-        return classNameFilters.stream()
-                .map(filter -> filter.apply(testClass.getName()))
-                .noneMatch(FilterResult::excluded);
-        // @formatter:on
+		return classNameFilters.stream()
+				.map(filter -> filter.apply(testClass.getName()))
+				.noneMatch(FilterResult::excluded);
+		// @formatter:on
 	}
 
 }
