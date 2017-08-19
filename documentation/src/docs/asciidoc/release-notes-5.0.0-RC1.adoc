@@ -60,6 +60,7 @@ on GitHub.
   class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
 * Test classes written in the Kotlin programming language are now executed with
   `@TestInstance(Lifecycle.PER_CLASS)` semantics by default.
+* Introduce `StoredValues` for isolated, type-safe access to values in a `Store`.
 
 
 [[release-notes-5.0.0-rc1-junit-vintage]]
