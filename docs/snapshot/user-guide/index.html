@@ -7046,6 +7046,11 @@ context (and recursively in its parents) before computing a value.</p>
 <li>
 <p><code>ExecutionContext.Store.getOrComputeIfAbsent()</code> is now thread safe.</p>
 </li>
+<li>
+<p>The <code>JupiterTestEngine</code> no longer attempts to resolve a Unique ID selected via one of
+the <code>DiscoverySelectors.selectUniqueId()</code> methods if the Unique ID belongs to a
+different test engine.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -7120,7 +7125,7 @@ the <code>selectMethod()</code> variants in <code>DiscoverySelectors</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-19 10:03:00 EDT
+Last updated 2017-08-19 10:33:11 EDT
 </div>
 </div>
 </body>
