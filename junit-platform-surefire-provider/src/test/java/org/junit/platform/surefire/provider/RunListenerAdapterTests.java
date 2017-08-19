@@ -133,9 +133,15 @@ class RunListenerAdapterTests {
 	}
 
 	@Test
-	void notifiedWhenMethodExecutionFailed() throws Exception {
-		adapter.executionFinished(newMethodIdentifier(), TestExecutionResult.failed(new RuntimeException()));
+	void notifiedWhenMethodExecutionFailedWithAnAssertionError() throws Exception {
+		adapter.executionFinished(newMethodIdentifier(), TestExecutionResult.failed(new AssertionError()));
 		verify(listener).testFailed(any());
+	}
+
+	@Test
+	void notifiedWhenMethodExecutionFailedWithANonAssertionError() throws Exception {
+		adapter.executionFinished(newMethodIdentifier(), TestExecutionResult.failed(new RuntimeException()));
+		verify(listener).testError(any());
 	}
 
 	@Test
@@ -145,7 +151,7 @@ class RunListenerAdapterTests {
 		adapter.testPlanExecutionStarted(testPlan);
 
 		adapter.executionFinished(identifiersAsParentOnTestPlan(testPlan, newEngineDescriptor(), newClassDescriptor()),
-			TestExecutionResult.failed(new RuntimeException()));
+			TestExecutionResult.failed(new AssertionError()));
 		verify(listener).testFailed(entryCaptor.capture());
 
 		ReportEntry entry = entryCaptor.getValue();

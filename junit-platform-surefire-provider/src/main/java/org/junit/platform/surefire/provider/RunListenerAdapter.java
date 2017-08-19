@@ -75,10 +75,20 @@ final class RunListenerAdapter implements TestExecutionListener {
 			runListener.testAssumptionFailure(createReportEntry(testIdentifier, testExecutionResult.getThrowable()));
 		}
 		else if (testExecutionResult.getStatus() == FAILED) {
-			runListener.testFailed(createReportEntry(testIdentifier, testExecutionResult.getThrowable()));
+			reportFailedTest(testIdentifier, testExecutionResult.getThrowable());
 		}
 		else if (testIdentifier.isTest()) {
 			runListener.testSucceeded(createReportEntry(testIdentifier, Optional.empty()));
+		}
+	}
+
+	private void reportFailedTest(TestIdentifier testIdentifier, Optional<Throwable> throwable) {
+		SimpleReportEntry reportEntry = createReportEntry(testIdentifier, throwable);
+		if (throwable.filter(AssertionError.class::isInstance).isPresent()) {
+			runListener.testFailed(reportEntry);
+		}
+		else {
+			runListener.testError(reportEntry);
 		}
 	}
 
