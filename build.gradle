@@ -9,10 +9,10 @@ buildscript {
 	}
 	dependencies {
 		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.4.1'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
 		classpath 'org.ajoberstar:gradle-git:1.7.2'
 		classpath 'org.ajoberstar:gradle-git-publish:0.2.1'
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
 
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}") {
 			// temporary workaround for incompatibility of commons-lang:2.4 with
