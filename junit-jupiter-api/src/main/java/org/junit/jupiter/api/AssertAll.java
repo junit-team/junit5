@@ -28,6 +28,12 @@ import org.opentest4j.MultipleFailuresError;
  */
 class AssertAll {
 
+	///CLOVER:OFF
+	private AssertAll() {
+		/* no-op */
+	}
+	///CLOVER:ON
+
 	static void assertAll(Executable... executables) {
 		assertAll(null, executables);
 	}
