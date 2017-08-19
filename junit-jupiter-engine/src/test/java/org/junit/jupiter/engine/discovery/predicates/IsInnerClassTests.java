@@ -10,10 +10,8 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Arrays;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
@@ -27,39 +25,30 @@ class IsInnerClassTests {
 
 	@Test
 	void innerClassEvaluatesToTrue() {
-		assertTrue(isInnerClass.test(ClassWithInnerClasses.InnerClass.class));
+		assertThat(isInnerClass).accepts(InnerClassesTestCase.InnerClass.class);
 	}
 
 	@Test
-	void staticInnerClassEvaluatesToFalse() {
-		assertFalse(isInnerClass.test(ClassWithInnerClasses.StaticInnerClass.class));
+	void staticNestedClassEvaluatesToFalse() {
+		assertThat(isInnerClass).rejects(InnerClassesTestCase.StaticNestedClass.class);
 	}
 
 	@Test
 	void privateInnerClassEvaluatesToFalse() {
-		// @formatter:off
-        Class<?> privateInnerClass = Arrays.stream(ClassWithInnerClasses.class.getDeclaredClasses())
-                .filter(aClass -> aClass.getSimpleName().equals("PrivateInnerClass"))
-                .findFirst()
-                .get();
-		// @formatter:on
-
-		assertFalse(isInnerClass.test(privateInnerClass));
+		assertThat(isInnerClass).rejects(InnerClassesTestCase.PrivateInnerClass.class);
 	}
 
-}
+	private static class InnerClassesTestCase {
 
-//class name must not end with 'Tests', otherwise it would be picked up by the suite
-class ClassWithInnerClasses {
+		class InnerClass {
+		}
 
-	class InnerClass {
-	}
+		static class StaticNestedClass {
+		}
 
-	static class StaticInnerClass {
-	}
+		private class PrivateInnerClass {
+		}
 
-	@SuppressWarnings("unused")
-	private class PrivateInnerClass {
 	}
 
 }

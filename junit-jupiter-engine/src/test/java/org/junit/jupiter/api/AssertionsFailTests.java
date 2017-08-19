@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedErro
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.Collections;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.opentest4j.AssertionFailedError;
 
@@ -128,7 +128,7 @@ class AssertionsFailTests {
 	@Test
 	void failUsableAsAnExpression() {
 		// @formatter:off
-		long count = Collections.emptySet().stream()
+		long count = Stream.empty()
 				.peek(element -> fail("peek should never be called"))
 				.filter(element -> fail("filter should never be called", new Throwable("cause")))
 				.map(element -> fail(new Throwable("map should never be called")))

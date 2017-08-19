@@ -10,10 +10,8 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Arrays;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Nested;
@@ -27,42 +25,34 @@ class IsNestedTestClassTests {
 	private final Predicate<Class<?>> isNestedTestClass = new IsNestedTestClass();
 
 	@Test
-	void nestedClassEvaluatesToTrue() {
-		assertTrue(isNestedTestClass.test(ClassWithNestedInnerClasses.InnerClass.class));
+	void innerClassEvaluatesToTrue() {
+		assertThat(isNestedTestClass).accepts(NestedClassesTestCase.InnerClass.class);
 	}
 
 	@Test
 	void staticNestedClassEvaluatesToFalse() {
-		assertFalse(isNestedTestClass.test(ClassWithNestedInnerClasses.StaticInnerClass.class));
+		assertThat(isNestedTestClass).rejects(NestedClassesTestCase.StaticNestedClass.class);
 	}
 
 	@Test
 	void privateNestedClassEvaluatesToFalse() {
-		// @formatter:off
-        Class<?> privateInnerClass = Arrays.stream(ClassWithInnerClasses.class.getDeclaredClasses())
-                .filter(aClass -> aClass.getSimpleName().equals("PrivateInnerClass"))
-                .findFirst()
-                .get();
-		// @formatter:on
-
-		assertFalse(isNestedTestClass.test(privateInnerClass));
+		assertThat(isNestedTestClass).rejects(NestedClassesTestCase.PrivateInnerClass.class);
 	}
 
-}
+	private static class NestedClassesTestCase {
 
-//class name must not end with 'Tests', otherwise it would be picked up by the suite
-class ClassWithNestedInnerClasses {
+		@Nested
+		class InnerClass {
+		}
 
-	@Nested
-	class InnerClass {
-	}
+		@Nested
+		static class StaticNestedClass {
+		}
 
-	@Nested
-	private class PrivateInnerClass {
-	}
+		@Nested
+		private class PrivateInnerClass {
+		}
 
-	@Nested
-	static class StaticInnerClass {
 	}
 
 }
