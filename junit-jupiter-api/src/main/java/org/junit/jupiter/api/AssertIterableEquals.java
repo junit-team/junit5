@@ -31,6 +31,12 @@ import java.util.function.Supplier;
  */
 class AssertIterableEquals {
 
+	///CLOVER:OFF
+	private AssertIterableEquals() {
+		/* no-op */
+	}
+	///CLOVER:ON
+
 	static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual) {
 		assertIterableEquals(expected, actual, () -> null);
 	}

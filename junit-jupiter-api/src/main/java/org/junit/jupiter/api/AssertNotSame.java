@@ -24,6 +24,12 @@ import java.util.function.Supplier;
  */
 class AssertNotSame {
 
+	///CLOVER:OFF
+	private AssertNotSame() {
+		/* no-op */
+	}
+	///CLOVER:ON
+
 	static void assertNotSame(Object unexpected, Object actual) {
 		assertNotSame(unexpected, actual, () -> null);
 	}
