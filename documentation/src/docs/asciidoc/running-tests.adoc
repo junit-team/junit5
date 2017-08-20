@@ -604,6 +604,9 @@ Option                                        Description
 -E, --exclude-engine <String>                 Provide the ID of an engine to be excluded
                                                 from the test run. This option can be
                                                 repeated.
+--config <key=value>                          Set a configuration parameter for test
+                                                discovery and execution. This option can
+                                                be repeated.
 ----
 
 
@@ -707,7 +710,10 @@ engines running on the JUnit Platform via one of the following mechanisms.
 
 1. The `configurationParameter()` and `configurationParameters()` methods in the
   `LauncherDiscoveryRequestBuilder` which is used to build a request supplied to the
-  <<launcher-api, `Launcher` API>>.
+  <<launcher-api, `Launcher` API>>. When running tests via one of the tools provided
+  by the JUnit Platform you can specify configuration parameters as follows:
+  * <<running-tests-console-launcher,Console Launcher>>: use the `--config`
+    command-line option.
 2. JVM system properties.
 3. The JUnit Platform configuration file: a file named `junit-platform.properties` in the
   root of the class path that follows the syntax rules for a Java `Properties` file.

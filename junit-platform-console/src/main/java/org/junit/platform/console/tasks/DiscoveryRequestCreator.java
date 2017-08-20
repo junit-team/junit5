@@ -45,6 +45,7 @@ class DiscoveryRequestCreator {
 		LauncherDiscoveryRequestBuilder requestBuilder = request();
 		requestBuilder.selectors(createDiscoverySelectors(options));
 		addFilters(requestBuilder, options);
+		requestBuilder.configurationParameters(options.getConfigurationParameters());
 		return requestBuilder.build();
 	}
 

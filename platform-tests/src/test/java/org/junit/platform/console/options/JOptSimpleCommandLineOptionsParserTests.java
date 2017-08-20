@@ -13,8 +13,10 @@ package org.junit.platform.console.options;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -62,7 +64,8 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertEquals(emptyList(), options.getSelectedUris()),
 			() -> assertEquals(emptyList(), options.getSelectedFiles()),
 			() -> assertEquals(emptyList(), options.getSelectedDirectories()),
-			() -> assertEquals(emptyList(), options.getSelectedClasspathEntries())
+			() -> assertEquals(emptyList(), options.getSelectedClasspathEntries()),
+			() -> assertEquals(emptyMap(), options.getConfigurationParameters())
 		);
 		// @formatter:on
 	}
@@ -445,6 +448,29 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertEquals(asList(dir, Paths.get("src/test/java")), parseArgLine("--scan-class-path ." + File.pathSeparator + "src/test/java").getSelectedClasspathEntries())
 		);
 		// @formatter:on
+	}
+
+	@Test
+	void parseValidConfigurationParameters() {
+		// @formatter:off
+		assertAll(
+				() -> assertThat(parseArgLine("-config foo=bar").getConfigurationParameters())
+						.containsOnly(entry("foo", "bar")),
+				() -> assertThat(parseArgLine("-config=foo=bar").getConfigurationParameters())
+						.containsOnly(entry("foo", "bar")),
+				() -> assertThat(parseArgLine("--config foo=bar").getConfigurationParameters())
+						.containsOnly(entry("foo", "bar")),
+				() -> assertThat(parseArgLine("--config=foo=bar").getConfigurationParameters())
+						.containsOnly(entry("foo", "bar")),
+				() -> assertThat(parseArgLine("--config foo=bar --config baz=qux").getConfigurationParameters())
+						.containsExactly(entry("foo", "bar"), entry("baz", "qux"))
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void parseInvalidConfigurationParameters() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-config", "--config");
 	}
 
 	@Test

@@ -11,14 +11,17 @@
 package org.junit.platform.console.options;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toMap;
 
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
+import java.util.Map;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import joptsimple.util.KeyValuePair;
 import joptsimple.util.PathConverter;
 
 import org.junit.platform.engine.discovery.ClassNameFilter;
@@ -61,6 +64,9 @@ class AvailableOptions {
 	private final OptionSpec<String> excludeTag;
 	private final OptionSpec<String> includeEngine;
 	private final OptionSpec<String> excludeEngine;
+
+	// Configuration Parameters
+	private final OptionSpec<KeyValuePair> configurationParameters;
 
 	AvailableOptions() {
 
@@ -178,6 +184,13 @@ class AvailableOptions {
 		excludeEngine = parser.acceptsAll(asList("E", "exclude-engine"),
 			"Provide the ID of an engine to be excluded from the test run. This option can be repeated.") //
 				.withRequiredArg();
+
+		// --- Configuration Parameters ----------------------------------------
+
+		configurationParameters = parser.accepts("config",
+			"Set a configuration parameter for test discovery and execution. This option can be repeated.") //
+				.withRequiredArg() //
+				.withValuesConvertedBy(new KeyValuePairConverter());
 	}
 
 	OptionParser getParser() {
@@ -218,6 +231,11 @@ class AvailableOptions {
 		result.setExcludedTags(detectedOptions.valuesOf(this.excludeTag));
 		result.setIncludedEngines(detectedOptions.valuesOf(this.includeEngine));
 		result.setExcludedEngines(detectedOptions.valuesOf(this.excludeEngine));
+
+		// Configuration Parameters
+		Map<String, String> configurationParametersMap = detectedOptions.valuesOf(
+			this.configurationParameters).stream().collect(toMap(pair -> pair.key, pair -> pair.value));
+		result.setConfigurationParameters(configurationParametersMap);
 
 		return result;
 	}
