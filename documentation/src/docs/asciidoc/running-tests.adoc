@@ -119,9 +119,6 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 
 Once the JUnit Gradle plugin has been applied, you can configure it as follows.
 
-WARNING: These options are very likely to change as we continue to work towards the
-final release.
-
 [source,java,indent=0]
 ----
 junitPlatform {
@@ -535,9 +532,6 @@ failed. Otherwise the exit code is `0`.
 
 [[running-tests-console-launcher-options]]
 ==== Options
-
-WARNING: These options are very likely to change as we continue to work towards the
-final release.
 
 ----
 Option                                        Description
