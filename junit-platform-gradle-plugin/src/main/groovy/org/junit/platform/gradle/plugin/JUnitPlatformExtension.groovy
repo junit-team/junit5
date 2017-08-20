@@ -11,6 +11,8 @@ package org.junit.platform.gradle.plugin
 
 import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.tasks.Input
+import org.junit.platform.commons.util.Preconditions
 import org.junit.platform.console.options.Details
 
 /**
@@ -20,7 +22,7 @@ import org.junit.platform.console.options.Details
  */
 class JUnitPlatformExtension {
 
-	private Project project
+	private final Project project
 
 	JUnitPlatformExtension(Project project) {
 		this.project = project
@@ -48,6 +50,13 @@ class JUnitPlatformExtension {
 	 * <p>Defaults to {@code file("$buildDir/test-results/junit-platform")}.
 	 */
 	File reportsDir
+
+	/**
+	 * The configuration parameters to be used.
+	 *
+	 * <p>Empty by default.
+	 */
+	final Map<String, String> configurationParameters = [:]
 
 	/**
 	 * Accepts a path to the reportsDir. If the object is a {@link java.io.File) it
@@ -93,6 +102,35 @@ class JUnitPlatformExtension {
 	 */
 	void filters(Action<FiltersExtension> closure) {
 		closure.execute(getProperty(JUnitPlatformPlugin.FILTERS_EXTENSION_NAME) as FiltersExtension)
+	}
+
+	/**
+	 * Add a configuration parameter.
+	 *
+	 * @param key the parameter key; never {@code null}, must not contain {@code '='}
+	 * @param value the parameter value; never {@code null}
+	 */
+	void configurationParameter(String key, String value) {
+		Preconditions.notBlank(key, 'key must not be blank')
+		Preconditions.condition(!key.contains('='), { 'key must not contain \'=\': "' + key + '"' })
+		Preconditions.notNull(value, { 'value must not be null for key: "' + key + '"' })
+		configurationParameters.put(key, value)
+	}
+
+	/**
+	 * Add a map of configuration parameters.
+	 *
+	 * @param parameters the parameters to add; never {@code null}.
+	 * @see #configurationParameter(String, String)
+	 */
+	void configurationParameters(Map<String, String> parameters) {
+		Preconditions.notNull(parameters, 'parameters must not be null')
+		parameters.each { key, value -> configurationParameter(key, value) }
+	}
+
+	@Input
+	Map<String, String> getConfigurationParameters() {
+		return configurationParameters.asImmutable()
 	}
 
 }

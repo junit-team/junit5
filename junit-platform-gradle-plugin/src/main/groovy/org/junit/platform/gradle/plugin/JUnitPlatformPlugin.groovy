@@ -88,6 +88,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			group = JavaBasePlugin.VERIFICATION_GROUP
 			description = 'Runs tests on the JUnit Platform.'
 			inputs.property('enableStandardTestTask', junitExtension.enableStandardTestTask)
+			inputs.property('configurationParameters', junitExtension.configurationParameters)
 			inputs.property('selectors.uris', junitExtension.selectors.uris)
 			inputs.property('selectors.files', junitExtension.selectors.files)
 			inputs.property('selectors.directories', junitExtension.selectors.directories)
@@ -146,6 +147,10 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 		addSelectors(project, junitExtension.selectors, args)
 		addFilters(junitExtension.filters, args)
+
+		junitExtension.configurationParameters.each { key, value ->
+			args.addAll('--config', "${key}=${value}")
+		}
 
 		args.add('--reports-dir')
 		args.add(reportsDir.getAbsolutePath())

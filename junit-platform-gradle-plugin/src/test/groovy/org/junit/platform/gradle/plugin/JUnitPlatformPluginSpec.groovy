@@ -9,6 +9,8 @@
  */
 package org.junit.platform.gradle.plugin
 
+import static java.util.Collections.singletonMap
+
 import groovy.transform.CompileStatic
 
 import org.gradle.api.Project
@@ -19,11 +21,13 @@ import org.gradle.api.plugins.ObjectConfigurationAction
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
+import org.junit.platform.commons.util.PreconditionViolationException
 import org.junit.platform.console.ConsoleLauncher
 import org.junit.platform.engine.discovery.ClassNameFilter
 
 import spock.lang.Issue
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * @since 1.0
@@ -319,6 +323,46 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask.args.containsAll('-c', 'com.acme.Foo', '-c', 'com.acme.Bar', '-c', 'com.example.app.Application')
 		junitTask.args.containsAll('-m', 'com.acme.Foo#a', '-m', 'com.acme.Foo#b', '-m', 'com.example.app.Application#run(java.lang.String[])')
 		junitTask.args.containsAll('-r', '/bar.csv', '-r', '/foo/input.json', '-r', '/com/acme/my.properties')
+	}
+
+	def "configuration parameters can be specified"() {
+		given:
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		project.junitPlatform {
+			configurationParameter 'foo', '1'
+			configurationParameters(['bar': '2'])
+		}
+		project.evaluate()
+
+		then:
+		Task junitTask = project.tasks.findByName('junitPlatformTest')
+
+		junitTask.args.containsAll('--config', 'foo=1')
+		junitTask.args.containsAll('--config', 'bar=2')
+	}
+
+	@Unroll
+	def "configuration parameters are checked: #parameters"() {
+		given:
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		project.junitPlatform { configurationParameters(parameters) }
+		project.evaluate()
+
+		then:
+		def exception = thrown(PreconditionViolationException)
+		exception.message == expectedMessage
+
+		where:
+		parameters                | expectedMessage
+		singletonMap(null, 'foo') | 'key must not be blank'
+		[' ': 'bar']              | 'key must not be blank'
+		[foo: null]               | 'value must not be null for key: "foo"'
+		['f=o': 'bar']            | 'key must not contain \'=\': "f=o"'
+		null                      | 'parameters must not be null'
 	}
 
 	def "adds dependencies to configuration"() {

@@ -32,6 +32,8 @@ on GitHub.
    <<running-tests-config-params>> for details.
 ** via the `--config` command-line option when using the
    <<running-tests-console-launcher,Console Launcher>>.
+** via the `configurationParameter` or `configurationParameters` DSL when using the
+   <<running-tests-build-gradle-config-params,Gradle plugin>>.
 
 
 [[release-notes-5.0.0-rc3-junit-jupiter]]
