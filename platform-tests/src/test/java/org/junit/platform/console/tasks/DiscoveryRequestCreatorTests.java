@@ -12,7 +12,9 @@ package org.junit.platform.console.tasks;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
@@ -20,10 +22,14 @@ import java.io.File;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.console.options.CommandLineOptions;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
@@ -258,9 +264,28 @@ class DiscoveryRequestCreatorTests {
 			ClasspathResourceSelector::getClasspathResourceName).containsExactly("foo.csv", "com/example/bar.json");
 	}
 
+	@Test
+	void convertsConfigurationParameters() {
+		options.setScanClasspath(true);
+		options.setConfigurationParameters(mapOf(entry("foo", "bar"), entry("baz", "true")));
+
+		LauncherDiscoveryRequest request = convert();
+		ConfigurationParameters configurationParameters = request.getConfigurationParameters();
+
+		assertThat(configurationParameters.size()).isEqualTo(2);
+		assertThat(configurationParameters.get("foo")).contains("bar");
+		assertThat(configurationParameters.getBoolean("baz")).contains(true);
+	}
+
 	private LauncherDiscoveryRequest convert() {
 		DiscoveryRequestCreator creator = new DiscoveryRequestCreator();
 		return creator.toDiscoveryRequest(options);
+	}
+
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	private static <K, V> Map<K, V> mapOf(Entry<K, V>... entries) {
+		return Stream.of(entries).collect(toMap(Entry::getKey, Entry::getValue));
 	}
 
 }

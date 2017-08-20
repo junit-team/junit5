@@ -26,9 +26,12 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* _Configuration parameters_ can now be supplied via a file named
-  `junit-platform.properties` in the root of the class path. See
-  <<running-tests-config-params>> for details.
+* _Configuration parameters_ can now be supplied in a number of new ways:
+** via a file named
+   `junit-platform.properties` in the root of the class path. See
+   <<running-tests-config-params>> for details.
+** via the `--config` command-line option when using the
+   <<running-tests-console-launcher,Console Launcher>>.
 
 
 [[release-notes-5.0.0-rc3-junit-jupiter]]

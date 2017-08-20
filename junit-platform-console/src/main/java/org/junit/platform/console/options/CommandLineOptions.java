@@ -11,6 +11,7 @@
 package org.junit.platform.console.options;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
@@ -21,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -63,6 +65,8 @@ public class CommandLineOptions {
 	private List<Path> additionalClasspathEntries = emptyList();
 
 	private Path reportsDir;
+
+	private Map<String, String> configurationParameters = emptyMap();
 
 	public boolean isDisplayHelp() {
 		return this.displayHelp;
@@ -255,4 +259,11 @@ public class CommandLineOptions {
 		this.selectedClasspathEntries = selectedClasspathEntries;
 	}
 
+	public Map<String, String> getConfigurationParameters() {
+		return configurationParameters;
+	}
+
+	public void setConfigurationParameters(Map<String, String> configurationParameters) {
+		this.configurationParameters = configurationParameters;
+	}
 }
