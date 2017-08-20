@@ -20,8 +20,9 @@ on GitHub.
 ===== Bug Fixes
 
 * Source JARs no longer contain every source file twice.
-* The Surefire provider now reports failed tests with a cause that is not instance of
-  `AssertionError` as errors instead of failures for compatibility reasons.
+* The Maven Surefire provider now reports a failed test with a cause that is not an
+  instance of `AssertionError` as an _error_ instead of a _failure_ for compatibility
+  reasons.
 
 ===== New Features and Improvements
 
