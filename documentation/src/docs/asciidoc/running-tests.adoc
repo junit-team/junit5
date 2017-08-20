@@ -216,6 +216,27 @@ plugin will only run tests that are _tagged_ accordingly (e.g., via the `@Tag` a
 for JUnit Jupiter based tests). The same applies to package names that can be included or
 excluded using `packages {include ...}` or `packages {exclude ...}`.
 
+[[running-tests-build-gradle-config-params]]
+===== Configuration Parameters
+
+You can set configuration parameters to influence test discovery and execution by using
+the `configurationParameter` or `configurationParameters` DSL. The former can be used to
+set a single configuration parameter, while the latter takes a map of configuration
+parameters to set multiple key-value pairs at once. All keys and values must be `Strings`.
+
+[source,java,indent=0]
+----
+junitPlatform {
+	// ...
+	configurationParameter 'junit.jupiter.conditions.deactivate', '*'
+	configurationParameters([
+		'junit.jupiter.extensions.autodetection.enabled': 'true',
+		'junit.jupiter.testinstance.lifecycle.default': 'per_class'
+	])
+	// ...
+}
+----
+
 [[running-tests-build-gradle-engines-configure]]
 ===== Configuring Test Engines
 
@@ -714,6 +735,8 @@ engines running on the JUnit Platform via one of the following mechanisms.
   by the JUnit Platform you can specify configuration parameters as follows:
   * <<running-tests-console-launcher,Console Launcher>>: use the `--config`
     command-line option.
+  * <<running-tests-build-gradle-config-params,Gradle plugin>>: use the
+    `configurationParameter` or `configurationParameters` DSL.
 2. JVM system properties.
 3. The JUnit Platform configuration file: a file named `junit-platform.properties` in the
   root of the class path that follows the syntax rules for a Java `Properties` file.
