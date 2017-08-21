@@ -16,9 +16,12 @@
 
 package org.junit.platform.surefire.provider;
 
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -184,6 +187,31 @@ class JUnitPlatformProviderTests {
 		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
 
 		assertEquals(0, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
+	void defaultConfigurationParametersAreEmpty() {
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(emptyMap());
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+
+		assertTrue(provider.configurationParameters.isEmpty());
+	}
+
+	@Test
+	void parsesConfigurationParameters() {
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn( //
+			singletonMap(JUnitPlatformProvider.CONFIGURATION_PARAMETERS, "foo = true\nbar 42\rbaz: *\r\nqux: EOF"));
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+
+		assertEquals(4, provider.configurationParameters.size());
+		assertEquals("true", provider.configurationParameters.get("foo"));
+		assertEquals("42", provider.configurationParameters.get("bar"));
+		assertEquals("*", provider.configurationParameters.get("baz"));
+		assertEquals("EOF", provider.configurationParameters.get("qux"));
 	}
 
 	private void verifyPreconditionViolationException(Map<String, String> properties) {

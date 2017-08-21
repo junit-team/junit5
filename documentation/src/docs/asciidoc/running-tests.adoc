@@ -470,7 +470,7 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 ----
 
 [[running-tests-build-maven-filter-tags]]
-===== Filtering by tags
+===== Filtering by Tags
 
 You can filter tests by tags using the following configuration properties.
 
@@ -501,6 +501,39 @@ You can filter tests by tags using the following configuration properties.
 	...
 ----
 
+[[running-tests-build-maven-config-params]]
+===== Configuration Parameters
+
+You can set configuration parameters to influence test discovery and execution by using
+the `configurationParameters` property and providing key-value pairs in the Java
+`Properties` file syntax.
+
+[source,xml,indent=0]
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<configuration>
+					<properties>
+						<configurationParameters>
+							junit.jupiter.conditions.deactivate = *
+							junit.jupiter.extensions.autodetection.enabled = true
+							junit.jupiter.testinstance.lifecycle.default = per_class
+						</configurationParameters>
+					</properties>
+				</configuration>
+				<dependencies>
+					...
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+----
 
 [[running-tests-console-launcher]]
 === Console Launcher
@@ -737,6 +770,8 @@ engines running on the JUnit Platform via one of the following mechanisms.
     command-line option.
   * <<running-tests-build-gradle-config-params,Gradle plugin>>: use the
     `configurationParameter` or `configurationParameters` DSL.
+  * <<running-tests-build-maven-config-params,Maven Surefire provider>>: use the
+    `configurationParameters` property.
 2. JVM system properties.
 3. The JUnit Platform configuration file: a file named `junit-platform.properties` in the
   root of the class path that follows the syntax rules for a Java `Properties` file.
