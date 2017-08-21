@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static java.lang.String.format;
+import static java.lang.String.join;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.commons.util.Preconditions.condition;
 import static org.junit.platform.commons.util.Preconditions.notNull;
@@ -19,6 +20,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.IntStream;
 
 /**
  * {@code AssertLinesMatch} is a collection of utility methods that support asserting
@@ -55,15 +57,7 @@ class AssertLinesMatch {
 
 		// simple case: both list are equally sized, compare them line-by-line
 		if (expectedSize == actualSize) {
-			boolean allOk = true;
-			for (int i = 0; i < expectedSize; i++) {
-				if (matches(expectedLines.get(i), actualLines.get(i))) {
-					continue;
-				}
-				allOk = false;
-				break;
-			}
-			if (allOk) {
+			if (IntStream.range(0, expectedSize).allMatch(i -> matches(expectedLines.get(i), actualLines.get(i)))) {
 				return;
 			}
 		}
@@ -148,8 +142,8 @@ class AssertLinesMatch {
 			actualLines.subList(0, MAX_SNIPPET_LENGTH);
 		}
 		// use standard assertEquals(Object, Object, message) to let IDEs present the textual difference
-		String expected = String.join(System.lineSeparator(), expectedLines);
-		String actual = String.join(System.lineSeparator(), actualLines);
+		String expected = join(System.lineSeparator(), expectedLines);
+		String actual = join(System.lineSeparator(), actualLines);
 		assertEquals(expected, actual, format(format, args));
 	}
 

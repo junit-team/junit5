@@ -335,9 +335,7 @@ public final class DiscoverySelectors {
 		if (StringUtils.isNotBlank(methodParameters)) {
 			return selectMethod(className, methodName, methodParameters);
 		}
-		else {
-			return selectMethod(className, methodName);
-		}
+		return selectMethod(className, methodName);
 	}
 
 	/**

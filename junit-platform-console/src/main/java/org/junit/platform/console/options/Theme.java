@@ -79,43 +79,43 @@ public enum Theme {
 		this.blank = new String(new char[vertical().length()]).replace('\0', ' ');
 	}
 
-	public String root() {
+	public final String root() {
 		return tiles[0];
 	}
 
-	public String vertical() {
+	public final String vertical() {
 		return tiles[1];
 	}
 
-	public String blank() {
+	public final String blank() {
 		return blank;
 	}
 
-	public String entry() {
+	public final String entry() {
 		return tiles[2];
 	}
 
-	public String end() {
+	public final String end() {
 		return tiles[3];
 	}
 
-	public String successful() {
+	public final String successful() {
 		return tiles[4];
 	}
 
-	public String aborted() {
+	public final String aborted() {
 		return tiles[5];
 	}
 
-	public String failed() {
+	public final String failed() {
 		return tiles[6];
 	}
 
-	public String skipped() {
+	public final String skipped() {
 		return tiles[7];
 	}
 
-	public String status(TestExecutionResult result) {
+	public final String status(TestExecutionResult result) {
 		switch (result.getStatus()) {
 			case SUCCESSFUL:
 				return successful();
@@ -133,7 +133,7 @@ public enum Theme {
 	 * available options.
 	 */
 	@Override
-	public String toString() {
+	public final String toString() {
 		return name().toLowerCase();
 	}
 

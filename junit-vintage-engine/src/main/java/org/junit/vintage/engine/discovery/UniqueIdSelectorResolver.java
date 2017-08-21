@@ -68,9 +68,9 @@ class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 			TestClassCollector collector) {
 		// @formatter:off
 		determineTestClassName(uniqueId)
-			.flatMap(testClassName -> loadTestClass(testClassName, uniqueId))
-			.filter(classFilter)
-			.ifPresent(testClass -> collector.addFiltered(testClass, new UniqueIdFilter(uniqueId)));
+				.flatMap(testClassName -> loadTestClass(testClassName, uniqueId))
+				.filter(classFilter)
+				.ifPresent(testClass -> collector.addFiltered(testClass, new UniqueIdFilter(uniqueId)));
 		// @formatter:on
 	}
 

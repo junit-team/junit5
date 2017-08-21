@@ -205,12 +205,7 @@ public final class AnnotationUtils {
 		}
 
 		// Meta-present on indirectly present annotations?
-		Optional<A> indirectMetaAnnotation = findMetaAnnotation(annotationType, element.getAnnotations(), key, visited);
-		if (indirectMetaAnnotation.isPresent()) {
-			return indirectMetaAnnotation;
-		}
-
-		return Optional.empty();
+		return findMetaAnnotation(annotationType, element.getAnnotations(), key, visited);
 	}
 
 	private static <A extends Annotation> Optional<A> findMetaAnnotation(Class<A> annotationType,

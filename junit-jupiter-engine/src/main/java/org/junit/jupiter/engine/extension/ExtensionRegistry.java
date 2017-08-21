@@ -142,9 +142,7 @@ public class ExtensionRegistry {
 		if (this.parent == null) {
 			return streamLocal(extensionType);
 		}
-		else {
-			return concat(this.parent.stream(extensionType), streamLocal(extensionType));
-		}
+		return concat(this.parent.stream(extensionType), streamLocal(extensionType));
 	}
 
 	/**

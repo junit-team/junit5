@@ -117,10 +117,7 @@ public class ConsoleTestExecutor {
 	}
 
 	private Optional<TestExecutionListener> createXmlWritingListener(PrintWriter out) {
-		if (options.getReportsDir().isPresent()) {
-			return Optional.of(new XmlReportsWritingListener(options.getReportsDir().get(), out));
-		}
-		return Optional.empty();
+		return options.getReportsDir().map(reportsDir -> new XmlReportsWritingListener(reportsDir, out));
 	}
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {

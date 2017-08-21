@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine;
 
-import static java.util.stream.Collectors.joining;
+import static java.lang.String.join;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +27,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -617,7 +616,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private static String concat(String... args) {
-		return Arrays.stream(args).collect(joining("."));
+		return join(".", args);
 	}
 
 	// -------------------------------------------------------------------------
