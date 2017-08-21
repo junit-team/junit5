@@ -16,15 +16,22 @@
 
 package org.junit.platform.surefire.provider;
 
+import static java.util.Collections.emptyMap;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,6 +64,8 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	static final String INCLUDE_GROUPS = "groups";
 	static final String INCLUDE_TAGS = "includeTags";
 
+	static final String CONFIGURATION_PARAMETERS = "configurationParameters";
+
 	static final String EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED = "The " + INCLUDE_GROUPS + " and " + INCLUDE_TAGS
 			+ " parameters (or the " + EXCLUDE_GROUPS + " and " + EXCLUDE_TAGS + " parameters) are synonyms - "
 			+ "only one of each is allowed (though neither is required).";
@@ -64,6 +73,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	private final ProviderParameters parameters;
 	private final Launcher launcher;
 	final Filter<?>[] includeAndExcludeFilters;
+	final Map<String, String> configurationParameters;
 
 	public JUnitPlatformProvider(ProviderParameters parameters) {
 		this(parameters, LauncherFactory.create());
@@ -73,6 +83,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		this.parameters = parameters;
 		this.launcher = launcher;
 		this.includeAndExcludeFilters = getIncludeAndExcludeFilters();
+		this.configurationParameters = getConfigurationParameters();
 		Logger.getLogger("org.junit").setLevel(Level.WARNING);
 	}
 
@@ -125,8 +136,11 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		SimpleReportEntry classEntry = new SimpleReportEntry(getClass().getName(), testClass.getName());
 		runListener.testSetStarting(classEntry);
 
-		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).filters(
-			includeAndExcludeFilters).build();
+		LauncherDiscoveryRequest discoveryRequest = request() //
+				.selectors(selectClass(testClass)) //
+				.filters(includeAndExcludeFilters) //
+				.configurationParameters(configurationParameters) //
+				.build();
 		launcher.execute(discoveryRequest);
 
 		runListener.testSetCompleted(classEntry);
@@ -144,6 +158,23 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		excludes.map(TagFilter::excludeTags).ifPresent(filters::add);
 
 		return filters.toArray(new Filter<?>[filters.size()]);
+	}
+
+	private Map<String, String> getConfigurationParameters() {
+		String content = parameters.getProviderProperties().get(CONFIGURATION_PARAMETERS);
+		if (content == null) {
+			return emptyMap();
+		}
+		try (StringReader reader = new StringReader(content)) {
+			Map<String, String> result = new HashMap<>();
+			Properties props = new Properties();
+			props.load(reader);
+			props.stringPropertyNames().forEach(key -> result.put(key, props.getProperty(key)));
+			return result;
+		}
+		catch (IOException ex) {
+			throw new UncheckedIOException("Error reading " + CONFIGURATION_PARAMETERS, ex);
+		}
 	}
 
 	private Optional<List<String>> getPropertiesList(String key) {

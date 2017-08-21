@@ -34,6 +34,8 @@ on GitHub.
    <<running-tests-console-launcher,Console Launcher>>.
 ** via the `configurationParameter` or `configurationParameters` DSL when using the
    <<running-tests-build-gradle-config-params,Gradle plugin>>.
+** via the `configurationParameters` property when using the
+   <<running-tests-build-maven-config-params,Maven Surefire provider>>.
 
 
 [[release-notes-5.0.0-rc3-junit-jupiter]]
