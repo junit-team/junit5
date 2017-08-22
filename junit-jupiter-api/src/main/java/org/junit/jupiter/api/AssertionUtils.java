@@ -100,7 +100,7 @@ class AssertionUtils {
 		if (obj instanceof Object[]) {
 			return Arrays.toString((Object[]) obj);
 		}
-		return String.valueOf(obj);
+		return StringUtils.nullSafeToString(obj);
 	}
 
 	private static String toHash(Object obj) {
