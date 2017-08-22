@@ -3,7 +3,7 @@
 
 *Date of Release:* August 24, 2017
 
-*Scope:* Last release candidate before the first GA release.
+*Scope:* Last release candidate before the 5.0 GA release.
 
 WARNING: This is a pre-release and contains a few breaking changes. Please refer to the
 <<running-tests-ide-intellij-idea,instructions>> above to use this version in a version of
@@ -27,8 +27,7 @@ on GitHub.
 ===== New Features and Improvements
 
 * _Configuration parameters_ can now be supplied in a number of new ways:
-** via a file named
-   `junit-platform.properties` in the root of the class path. See
+** via a file named `junit-platform.properties` in the root of the class path. See
    <<running-tests-config-params>> for details.
 ** via the `--config` command-line option when using the
    <<running-tests-console-launcher,Console Launcher>>.
