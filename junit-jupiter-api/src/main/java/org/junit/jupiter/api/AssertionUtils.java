@@ -97,12 +97,10 @@ class AssertionUtils {
 		if (obj instanceof Class) {
 			return getCanonicalName((Class<?>) obj);
 		}
-		else if (obj instanceof Object[]) {
+		if (obj instanceof Object[]) {
 			return Arrays.toString((Object[]) obj);
 		}
-		else {
-			return String.valueOf(obj);
-		}
+		return String.valueOf(obj);
 	}
 
 	private static String toHash(Object obj) {
