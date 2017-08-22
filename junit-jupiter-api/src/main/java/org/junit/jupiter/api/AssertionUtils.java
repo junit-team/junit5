@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static java.util.stream.Collectors.joining;
 
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.function.Supplier;
 
@@ -91,7 +92,13 @@ class AssertionUtils {
 	}
 
 	private static String toString(Object obj) {
-		return (obj instanceof Class ? getCanonicalName((Class<?>) obj) : String.valueOf(obj));
+		if (obj instanceof Class) {
+			return getCanonicalName((Class<?>) obj);
+		}
+		if (obj instanceof Object[]) {
+			return Arrays.toString((Object[]) obj);
+		}
+		return StringUtils.nullSafeToString(obj);
 	}
 
 	private static String toHash(Object obj) {

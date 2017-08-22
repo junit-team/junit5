@@ -1867,15 +1867,13 @@ class AssertionsAssertArrayEqualsTests {
 			assertMessageEquals(ex, "array contents differ at index [2][1][1][0], expected: <false> but was: <true>");
 		}
 
-		Object[] differentElement = new Object[] {};
 		try {
 			assertArrayEquals(new Object[] { 1, 2, 3, new Object[] { new Object[] { 4, new Object[] { 5 } } } },
-				new Object[] { 1, 2, 3, new Object[] { new Object[] { 4, new Object[] { differentElement } } } });
+				new Object[] { 1, 2, 3, new Object[] { new Object[] { 4, new Object[] { new Object[] {} } } } });
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex,
-				"array contents differ at index [3][0][1][0], expected: <5> but was: <" + differentElement + ">");
+			assertMessageEquals(ex, "array contents differ at index [3][0][1][0], expected: <5> but was: <[]>");
 		}
 	}
 
