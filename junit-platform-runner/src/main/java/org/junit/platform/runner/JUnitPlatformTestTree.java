@@ -106,9 +106,7 @@ class JUnitPlatformTestTree {
 				if (StringUtils.isBlank(methodParameterTypes)) {
 					return methodSource.getMethodName();
 				}
-				else {
-					return String.format("%s(%s)", methodSource.getMethodName(), methodParameterTypes);
-				}
+				return String.format("%s(%s)", methodSource.getMethodName(), methodParameterTypes);
 			}
 		}
 

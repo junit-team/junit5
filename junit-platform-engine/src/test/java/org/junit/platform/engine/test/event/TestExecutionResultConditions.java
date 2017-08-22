@@ -51,7 +51,7 @@ public class TestExecutionResultConditions {
 	}
 
 	public static Condition<TestExecutionResult> cause(Condition<? super Throwable> condition) {
-		return new Condition<TestExecutionResult>(where(TestExecutionResult::getThrowable, throwable -> {
+		return new Condition<>(where(TestExecutionResult::getThrowable, throwable -> {
 			return throwable.isPresent() && condition.matches(throwable.get());
 		}), "cause where %s", condition);
 	}

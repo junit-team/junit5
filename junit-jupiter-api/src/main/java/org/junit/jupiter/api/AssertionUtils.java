@@ -81,9 +81,7 @@ class AssertionUtils {
 			return String.format("expected: %s but was: %s", formatClassAndValue(expected, expectedString),
 				formatClassAndValue(actual, actualString));
 		}
-		else {
-			return String.format("expected: <%s> but was: <%s>", expectedString, actualString);
-		}
+		return String.format("expected: <%s> but was: <%s>", expectedString, actualString);
 	}
 
 	private static String formatClassAndValue(Object value, String valueString) {
@@ -147,9 +145,7 @@ class AssertionUtils {
 		if (obj1 == null) {
 			return (obj2 == null);
 		}
-		else {
-			return obj1.equals(obj2);
-		}
+		return obj1.equals(obj2);
 	}
 
 	private static void failIllegalDelta(String delta) {

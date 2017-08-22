@@ -77,9 +77,9 @@ public class VintageTestEngine implements TestEngine {
 	private void executeAllChildren(RunnerExecutor runnerExecutor, TestDescriptor engineTestDescriptor) {
 		// @formatter:off
 		engineTestDescriptor.getChildren()
-			.stream()
-			.map(RunnerTestDescriptor.class::cast)
-			.forEach(runnerExecutor::execute);
+				.stream()
+				.map(RunnerTestDescriptor.class::cast)
+				.forEach(runnerExecutor::execute);
 		// @formatter:on
 	}
 }

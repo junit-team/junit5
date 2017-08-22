@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.lang.String.join;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -484,7 +485,7 @@ class DiscoverySelectorsTests {
 	}
 
 	private static String fqmnWithParamNames(String... params) {
-		return String.format("%s#%s(%s)", DiscoverySelectorsTests.class.getName(), "myTest", String.join(", ", params));
+		return String.format("%s#%s(%s)", DiscoverySelectorsTests.class.getName(), "myTest", join(", ", params));
 	}
 
 	interface TestInterface {

@@ -13,6 +13,7 @@ package org.junit.jupiter.params;
 import static java.util.stream.Collectors.joining;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import org.junit.platform.commons.JUnitException;
@@ -51,10 +52,8 @@ class ParameterizedTestNameFormatter {
 	private Object[] makeReadable(Object[] arguments) {
 		// Note: humanReadableArguments must be an Object[] in order to
 		// avoid varargs issues with non-Eclipse compilers.
-		Object[] humanReadableArguments = new String[arguments.length];
-		for (int i = 0; i < arguments.length; i++) {
-			humanReadableArguments[i] = StringUtils.nullSafeToString(arguments[i]);
-		}
+		Object[] humanReadableArguments = //
+			Arrays.stream(arguments).map(StringUtils::nullSafeToString).toArray(String[]::new);
 		return humanReadableArguments;
 	}
 

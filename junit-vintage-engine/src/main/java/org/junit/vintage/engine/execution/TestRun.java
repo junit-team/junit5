@@ -54,8 +54,9 @@ class TestRun {
 		runnerDescendants = new LinkedHashSet<>(runnerTestDescriptor.getDescendants());
 		// @formatter:off
 		descriptionToDescriptors = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
-			.map(VintageTestDescriptor.class::cast)
-			.collect(groupingBy(VintageTestDescriptor::getDescription, HashMap::new, toCollection(ArrayList::new)));
+				.map(VintageTestDescriptor.class::cast)
+				.collect(groupingBy(
+						VintageTestDescriptor::getDescription, HashMap::new, toCollection(ArrayList::new)));
 		// @formatter:on
 	}
 

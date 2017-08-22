@@ -10,12 +10,17 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.lang.String.join;
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.util.ClassLoaderUtils;
+import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.engine.TestEngine;
 
 /**
@@ -32,19 +37,20 @@ class ServiceLoaderTestEngineRegistry {
 		return testEngines;
 	}
 
+	@SuppressWarnings("unchecked")
 	private String createDiscoveredTestEnginesMessage(Iterable<TestEngine> testEngines) {
-		List<String> details = new ArrayList<>();
-		for (TestEngine engine : testEngines) {
-			details.add(String.format("%s (%s)", engine.getId(), String.join(", ", computeAttributes(engine))));
-		}
-		if (details.isEmpty()) {
-			return "No TestEngine implementation discovered.";
-		}
-		return "Discovered TestEngines with IDs: [" + String.join(", ", details) + "]";
+		// @formatter:off
+		List<String> details = ((Stream<TestEngine>) CollectionUtils.toStream(testEngines))
+				.map(engine -> String.format("%s (%s)", engine.getId(), join(", ", computeAttributes(engine))))
+				.collect(toList());
+		return details.isEmpty()
+				? "No TestEngine implementation discovered."
+				: "Discovered TestEngines with IDs: [" + join(", ", details) + "]";
+		// @formatter:on
 	}
 
 	private List<String> computeAttributes(TestEngine engine) {
-		List<String> attributes = new ArrayList<>();
+		List<String> attributes = new ArrayList<>(4);
 		engine.getGroupId().ifPresent(groupId -> attributes.add("group ID: " + groupId));
 		engine.getArtifactId().ifPresent(artifactId -> attributes.add("artifact ID: " + artifactId));
 		engine.getVersion().ifPresent(version -> attributes.add("version: " + version));

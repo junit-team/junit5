@@ -10,6 +10,8 @@
 
 package org.junit.platform.launcher.listeners;
 
+import static java.lang.String.join;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -198,7 +200,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	private String describeTest(TestIdentifier testIdentifier) {
 		List<String> descriptionParts = new ArrayList<>();
 		collectTestDescription(Optional.of(testIdentifier), descriptionParts);
-		return String.join(":", descriptionParts);
+		return join(":", descriptionParts);
 	}
 
 	private void collectTestDescription(Optional<TestIdentifier> optionalIdentifier, List<String> descriptionParts) {

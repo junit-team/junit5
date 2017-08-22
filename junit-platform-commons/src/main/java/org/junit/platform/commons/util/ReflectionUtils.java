@@ -107,8 +107,7 @@ public final class ReflectionUtils {
 	 *
 	 * @see Class#getName()
 	 */
-	private static final Pattern VM_INTERNAL_PRIMITIVE_ARRAY_PATTERN = //
-		Pattern.compile("^(\\[+)(\\[[Z,B,C,D,F,I,J,S])$");
+	private static final Pattern VM_INTERNAL_PRIMITIVE_ARRAY_PATTERN = Pattern.compile("^(\\[+)(\\[[ZBCDFIJS])$");
 
 	// Pattern: "java.lang.String[]", "int[]", "int[][][][]", etc.
 	private static final Pattern SOURCE_CODE_SYNTAX_ARRAY_PATTERN = Pattern.compile("^([^\\[\\]]+)((\\[\\])+)+$");
@@ -915,26 +914,21 @@ public final class ReflectionUtils {
 	 * in the Java Language Specification
 	 */
 	private static List<Method> getDefaultMethods(Class<?> clazz) {
+		// @formatter:off
 		// Visible default methods are interface default methods that have not
 		// been overridden.
-		List<Method> visibleDefaultMethods = new ArrayList<>();
-		for (Method candidate : clazz.getMethods()) {
-			if (candidate.isDefault()) {
-				visibleDefaultMethods.add(candidate);
-			}
-		}
+		List<Method> visibleDefaultMethods = Arrays.stream(clazz.getMethods())
+				.filter(Method::isDefault)
+				.collect(toCollection(ArrayList::new));
 		if (visibleDefaultMethods.isEmpty()) {
 			return visibleDefaultMethods;
 		}
-		List<Method> defaultMethods = new ArrayList<>();
-		for (Class<?> ifc : clazz.getInterfaces()) {
-			for (Method method : getMethods(ifc)) {
-				if (visibleDefaultMethods.contains(method)) {
-					defaultMethods.add(method);
-				}
-			}
-		}
-		return defaultMethods;
+		return Arrays.stream(clazz.getInterfaces())
+				.map(ReflectionUtils::getMethods)
+				.flatMap(List::stream)
+				.filter(visibleDefaultMethods::contains)
+				.collect(toCollection(ArrayList::new));
+		// @formatter:on
 	}
 
 	private static List<Method> toSortedMutableList(Method[] methods) {
@@ -1038,15 +1032,8 @@ public final class ReflectionUtils {
 	}
 
 	static boolean isGeneric(Method method) {
-		if (isGeneric(method.getGenericReturnType())) {
-			return true;
-		}
-		for (Type type : method.getGenericParameterTypes()) {
-			if (isGeneric(type)) {
-				return true;
-			}
-		}
-		return false;
+		return isGeneric(method.getGenericReturnType())
+				|| Arrays.stream(method.getGenericParameterTypes()).anyMatch(ReflectionUtils::isGeneric);
 	}
 
 	private static boolean isGeneric(Type type) {

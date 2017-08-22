@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import static java.lang.String.join;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
@@ -51,15 +52,12 @@ public class ToStringBuilder {
 	}
 
 	private String toString(Object obj) {
-		if (obj instanceof CharSequence) {
-			return "'" + obj + "'";
-		}
-		return StringUtils.nullSafeToString(obj);
+		return (obj instanceof CharSequence) ? ("'" + obj + "'") : StringUtils.nullSafeToString(obj);
 	}
 
 	@Override
 	public String toString() {
-		return this.type.getSimpleName() + " [" + String.join(", ", this.values) + "]";
+		return this.type.getSimpleName() + " [" + join(", ", this.values) + "]";
 	}
 
 }

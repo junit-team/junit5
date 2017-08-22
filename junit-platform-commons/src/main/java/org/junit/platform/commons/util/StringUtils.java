@@ -70,17 +70,7 @@ public final class StringUtils {
 	 * @see Character#isWhitespace(int)
 	 */
 	public static boolean containsWhitespace(String str) {
-		if (str == null) {
-			return false;
-		}
-
-		for (int i = 0; i < str.length(); i++) {
-			if (Character.isWhitespace(str.codePointAt(i))) {
-				return true;
-			}
-		}
-
-		return false;
+		return str != null && str.codePoints().anyMatch(Character::isWhitespace);
 	}
 
 	/**
@@ -106,17 +96,7 @@ public final class StringUtils {
 	 * @see Character#isISOControl(int)
 	 */
 	public static boolean containsIsoControlCharacter(String str) {
-		if (str == null) {
-			return false;
-		}
-
-		for (int i = 0; i < str.length(); i++) {
-			if (Character.isISOControl(str.codePointAt(i))) {
-				return true;
-			}
-		}
-
-		return false;
+		return str != null && str.codePoints().anyMatch(Character::isISOControl);
 	}
 
 	/**
