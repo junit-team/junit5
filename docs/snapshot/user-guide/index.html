@@ -3264,6 +3264,28 @@ excluded using <code>packages {include &#8230;&#8203;}</code> or <code>packages 
 </div>
 </div>
 <div class="sect4">
+<h5 id="running-tests-build-gradle-config-params"><a class="anchor" href="#running-tests-build-gradle-config-params"></a>Configuration Parameters</h5>
+<div class="paragraph">
+<p>You can set configuration parameters to influence test discovery and execution by using
+the <code>configurationParameter</code> or <code>configurationParameters</code> DSL. The former can be used to
+set a single configuration parameter, while the latter takes a map of configuration
+parameters to set multiple key-value pairs at once. All keys and values must be <code>Strings</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">junitPlatform {
+    <span class="comment">// ...</span>
+    configurationParameter <span class="string"><span class="delimiter">'</span><span class="content">junit.jupiter.conditions.deactivate</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">*</span><span class="delimiter">'</span></span>
+    configurationParameters([
+        <span class="string"><span class="delimiter">'</span><span class="content">junit.jupiter.extensions.autodetection.enabled</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">true</span><span class="delimiter">'</span></span>,
+        <span class="string"><span class="delimiter">'</span><span class="content">junit.jupiter.testinstance.lifecycle.default</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">per_class</span><span class="delimiter">'</span></span>
+    ])
+    <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
 <h5 id="running-tests-build-gradle-engines-configure"><a class="anchor" href="#running-tests-build-gradle-engines-configure"></a>Configuring Test Engines</h5>
 <div class="paragraph">
 <p>In order to have the JUnit Gradle plugin run any tests at all, a <code>TestEngine</code>
@@ -3533,7 +3555,7 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-maven-filter-tags"><a class="anchor" href="#running-tests-build-maven-filter-tags"></a>Filtering by tags</h5>
+<h5 id="running-tests-build-maven-filter-tags"><a class="anchor" href="#running-tests-build-maven-filter-tags"></a>Filtering by Tags</h5>
 <div class="paragraph">
 <p>You can filter tests by tags using the following configuration properties.</p>
 </div>
@@ -3560,6 +3582,41 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
                 <span class="tag">&lt;properties&gt;</span>
                     <span class="tag">&lt;includeTags&gt;</span>acceptance<span class="tag">&lt;/includeTags&gt;</span>
                     <span class="tag">&lt;excludeTags&gt;</span>integration, regression<span class="tag">&lt;/excludeTags&gt;</span>
+                <span class="tag">&lt;/properties&gt;</span>
+            <span class="tag">&lt;/configuration&gt;</span>
+            <span class="tag">&lt;dependencies&gt;</span>
+                ...
+            <span class="tag">&lt;/dependencies&gt;</span>
+        <span class="tag">&lt;/plugin&gt;</span>
+    <span class="tag">&lt;/plugins&gt;</span>
+<span class="tag">&lt;/build&gt;</span>
+...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="running-tests-build-maven-config-params"><a class="anchor" href="#running-tests-build-maven-config-params"></a>Configuration Parameters</h5>
+<div class="paragraph">
+<p>You can set configuration parameters to influence test discovery and execution by using
+the <code>configurationParameters</code> property and providing key-value pairs in the Java
+<code>Properties</code> file syntax.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">...
+<span class="tag">&lt;build&gt;</span>
+    <span class="tag">&lt;plugins&gt;</span>
+        ...
+        <span class="tag">&lt;plugin&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;configuration&gt;</span>
+                <span class="tag">&lt;properties&gt;</span>
+                    <span class="tag">&lt;configurationParameters&gt;</span>
+                        junit.jupiter.conditions.deactivate = *
+                        junit.jupiter.extensions.autodetection.enabled = true
+                        junit.jupiter.testinstance.lifecycle.default = per_class
+                    <span class="tag">&lt;/configurationParameters&gt;</span>
                 <span class="tag">&lt;/properties&gt;</span>
             <span class="tag">&lt;/configuration&gt;</span>
             <span class="tag">&lt;dependencies&gt;</span>
@@ -3710,7 +3767,10 @@ failed. Otherwise the exit code is <code>0</code>.
                                                 repeated.
 -E, --exclude-engine &lt;String&gt;                 Provide the ID of an engine to be excluded
                                                 from the test run. This option can be
-                                                repeated.</pre>
+                                                repeated.
+--config &lt;key=value&gt;                          Set a configuration parameter for test
+                                                discovery and execution. This option can
+                                                be repeated.</pre>
 </div>
 </div>
 </div>
@@ -3904,7 +3964,24 @@ engines running on the JUnit Platform via one of the following mechanisms.</p>
 <li>
 <p>The <code>configurationParameter()</code> and <code>configurationParameters()</code> methods in the
 <code>LauncherDiscoveryRequestBuilder</code> which is used to build a request supplied to the
-<a href="#launcher-api"><code>Launcher</code> API</a>.</p>
+<a href="#launcher-api"><code>Launcher</code> API</a>. When running tests via one of the tools provided
+by the JUnit Platform you can specify configuration parameters as follows:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#running-tests-console-launcher">Console Launcher</a>: use the <code>--config</code>
+command-line option.</p>
+</li>
+<li>
+<p><a href="#running-tests-build-gradle-config-params">Gradle plugin</a>: use the
+<code>configurationParameter</code> or <code>configurationParameters</code> DSL.</p>
+</li>
+<li>
+<p><a href="#running-tests-build-maven-config-params">Maven Surefire provider</a>: use the
+<code>configurationParameters</code> property.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>JVM system properties.</p>
@@ -7001,9 +7078,28 @@ reasons.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><em>Configuration parameters</em> can now be supplied via a file named
+<p><em>Configuration parameters</em> can now be supplied in a number of new ways:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>via a file named
 <code>junit-platform.properties</code> in the root of the class path. See
 <a href="#running-tests-config-params">Configuration Parameters</a> for details.</p>
+</li>
+<li>
+<p>via the <code>--config</code> command-line option when using the
+<a href="#running-tests-console-launcher">Console Launcher</a>.</p>
+</li>
+<li>
+<p>via the <code>configurationParameter</code> or <code>configurationParameters</code> DSL when using the
+<a href="#running-tests-build-gradle-config-params">Gradle plugin</a>.</p>
+</li>
+<li>
+<p>via the <code>configurationParameters</code> property when using the
+<a href="#running-tests-build-maven-config-params">Maven Surefire provider</a>.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -7104,7 +7200,7 @@ the <code>selectMethod()</code> variants in <code>DiscoverySelectors</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-22 11:09:18 EDT
+Last updated 2017-08-22 14:04:00 EDT
 </div>
 </div>
 </body>
