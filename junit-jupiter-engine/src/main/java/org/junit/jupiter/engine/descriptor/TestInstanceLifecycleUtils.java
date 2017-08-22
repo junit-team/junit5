@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.logging.Level.WARNING;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
 
 import java.util.Optional;
@@ -69,11 +68,10 @@ final class TestInstanceLifecycleUtils {
 			catch (Exception ex) {
 				// local copy necessary for use in lambda expression
 				String constant = constantName;
-				logger.log(WARNING, ex,
-					() -> String.format(
-						"Invalid test instance lifecycle mode '%s' set via the '%s' configuration parameter. "
-								+ "Falling back to %s lifecycle semantics.",
-						constant, propertyName, Lifecycle.PER_METHOD.name()));
+				logger.warning(() -> String.format(
+					"Invalid test instance lifecycle mode '%s' set via the '%s' configuration parameter. "
+							+ "Falling back to %s lifecycle semantics.",
+					constant, propertyName, Lifecycle.PER_METHOD.name()));
 			}
 		}
 
