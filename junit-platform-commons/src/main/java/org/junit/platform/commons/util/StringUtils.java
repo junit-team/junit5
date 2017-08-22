@@ -71,7 +71,6 @@ public final class StringUtils {
 	 */
 	public static boolean containsWhitespace(String str) {
 		return str != null && str.codePoints().anyMatch(Character::isWhitespace);
-
 	}
 
 	/**
