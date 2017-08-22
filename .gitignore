@@ -17,6 +17,7 @@ bin/
 *.iws
 *.uml
 .idea/
+*/out/*
 
 # Misc
 *.log
