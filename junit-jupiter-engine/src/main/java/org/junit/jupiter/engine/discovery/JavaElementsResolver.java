@@ -34,6 +34,7 @@ import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.UniqueId.Segment;
 
 /**
  * @since 5.0
@@ -57,7 +58,7 @@ class JavaElementsResolver {
 		resolvedDescriptors.forEach(this::resolveChildren);
 
 		if (resolvedDescriptors.isEmpty()) {
-			logger.warning(() -> format("Class '%s' could not be resolved", testClass.getName()));
+			logger.warning(() -> format("Class '%s' could not be resolved.", testClass.getName()));
 		}
 	}
 
@@ -66,7 +67,7 @@ class JavaElementsResolver {
 		Set<TestDescriptor> resolvedDescriptors = resolveForAllParents(testMethod, potentialParents);
 
 		if (resolvedDescriptors.isEmpty()) {
-			logger.warning(() -> format("Method '%s' could not be resolved", testMethod.toGenericString()));
+			logger.warning(() -> format("Method '%s' could not be resolved.", testMethod.toGenericString()));
 		}
 
 		logMultipleTestDescriptorsForSingleElement(testMethod, resolvedDescriptors);
@@ -87,29 +88,45 @@ class JavaElementsResolver {
 
 			// Ignore Unique IDs from other test engines.
 			if (JupiterTestEngine.ENGINE_ID.equals(engineId)) {
-				List<UniqueId.Segment> segments = new ArrayList<>(uniqueId.getSegments());
+				List<Segment> remainingSegments = new ArrayList<>(uniqueId.getSegments());
 
 				// Ignore engine ID
-				segments.remove(0);
+				remainingSegments.remove(0);
 
-				if (!resolveUniqueId(this.engineDescriptor, segments)) {
-					logger.warning(() -> format("Unique ID '%s' could not be resolved", uniqueId));
+				int numSegmentsToResolve = remainingSegments.size();
+				int numSegmentsResolved = resolveUniqueId(this.engineDescriptor, remainingSegments);
+
+				if (numSegmentsResolved == 0) {
+					logger.warning(() -> format("Unique ID '%s' could not be resolved.", uniqueId));
+				}
+				else if (numSegmentsResolved != numSegmentsToResolve) {
+					logger.warning(() -> {
+						List<Segment> segments = uniqueId.getSegments();
+						List<Segment> unresolved = segments.subList(1, segments.size()); // Remove engine ID
+						unresolved = unresolved.subList(numSegmentsResolved, unresolved.size()); // Remove resolved segments
+						return format("Unique ID '%s' could only be partially resolved. "
+								+ "All resolved segments will be executed; however, the "
+								+ "following segments could not be resolved: %s",
+							uniqueId, unresolved);
+					});
 				}
 			}
 		});
 	}
 
 	/**
-	 * Return true if all segments of unique ID could be resolved
+	 * Attempt to resolve all segments for the supplied unique ID.
+	 *
+	 * @return the number of segments resolved
 	 */
-	private boolean resolveUniqueId(TestDescriptor parent, List<UniqueId.Segment> remainingSegments) {
+	private int resolveUniqueId(TestDescriptor parent, List<Segment> remainingSegments) {
 		if (remainingSegments.isEmpty()) {
 			resolveChildren(parent);
-			return true;
+			return 0;
 		}
 
-		UniqueId.Segment head = remainingSegments.remove(0);
-		for (ElementResolver resolver : resolvers) {
+		Segment head = remainingSegments.remove(0);
+		for (ElementResolver resolver : this.resolvers) {
 			Optional<TestDescriptor> resolvedDescriptor = resolver.resolveUniqueId(head, parent);
 			if (!resolvedDescriptor.isPresent()) {
 				continue;
@@ -122,13 +139,15 @@ class JavaElementsResolver {
 				parent.addChild(newDescriptor);
 				return newDescriptor;
 			});
-			return resolveUniqueId(descriptor, remainingSegments);
+			return 1 + resolveUniqueId(descriptor, remainingSegments);
 		}
-		return false;
+
+		return 0;
 	}
 
 	private Set<TestDescriptor> resolveContainerWithChildren(Class<?> containerClass,
 			Set<TestDescriptor> potentialParents) {
+
 		Set<TestDescriptor> resolvedDescriptors = resolveForAllParents(containerClass, potentialParents);
 		resolvedDescriptors.forEach(this::resolveChildren);
 		return resolvedDescriptors;
