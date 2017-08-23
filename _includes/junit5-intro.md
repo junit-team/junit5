@@ -6,7 +6,7 @@ This includes focusing on Java 8 and above, as well as enabling many different s
 
 JUnit 5 is the result of [JUnit Lambda](http://junit.org/junit4/junit-lambda.html) and its [crowdfunding campaign on Indiegogo](http://junit.org/junit4/junit-lambda-campaign.html).
 
-The JUnit 5 team published [Release Candidate 2](docs/current/user-guide/#release-notes-5.0.0-rc2) on July 30, 2017, and is currently working on additional release candidates, and ultimately a GA release (see [Roadmap](https://github.com/junit-team/junit5/wiki/Roadmap) for details).
+The JUnit 5 team published [Release Candidate 3](docs/current/user-guide/#release-notes-5.0.0-rc3) on August 23, 2017, and is currently working on the first GA release (see [Roadmap](https://github.com/junit-team/junit5/wiki/Roadmap) for details).
 
 ### Resources
 
