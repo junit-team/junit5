@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -36,7 +37,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicTest;
@@ -323,32 +323,6 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	void resolvingDynamicTestByUniqueIdResolvesOnlyUpToParentTestFactory() {
-		UniqueIdSelector selector = selectUniqueId(
-			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()").append(
-				TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "#1"));
-
-		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
-
-		assertThat(engineDescriptor.getDescendants()).hasSize(2);
-
-		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(MyTestClass.class),
-			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
-	}
-
-	@Test
-	void resolvingTestFactoryMethodByUniqueId() {
-		UniqueIdSelector selector = selectUniqueId(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
-
-		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
-
-		assertThat(engineDescriptor.getDescendants()).hasSize(2);
-
-		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(MyTestClass.class),
-			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
-	}
-
-	@Test
 	void packageResolutionUsingExplicitBasePackage() {
 		PackageSelector selector = selectPackage("org.junit.jupiter.engine.descriptor.subpackage");
 
@@ -529,27 +503,49 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	void testTemplateMethodResolution() {
-		ClassSelector selector = selectClass(TestClassWithTemplate.class);
+	void testFactoryMethodResolutionByUniqueId() {
+		Class<?> clazz = MyTestClass.class;
+		UniqueId factoryUid = uniqueIdForTestFactoryMethod(clazz, "dynamicTest()");
 
-		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
+		resolver.resolveSelectors(request().selectors(selectUniqueId(factoryUid)).build(), engineDescriptor);
 
 		assertThat(engineDescriptor.getDescendants()).hasSize(2);
-		assertThat(uniqueIds()).contains(uniqueIdForTestTemplateMethod(TestClassWithTemplate.class, "testTemplate()"));
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(clazz), factoryUid);
 	}
 
 	@Test
-	void resolvingTestTemplateInvocationByUniqueIdResolvesOnlyUpToParentTestTemplat() {
-		UniqueIdSelector selector = selectUniqueId(
-			uniqueIdForTestTemplateMethod(TestClassWithTemplate.class, "testTemplate()").append(
-				TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1"));
+	void testTemplateMethodResolutionByUniqueId() {
+		Class<?> clazz = TestClassWithTemplate.class;
+		UniqueId templateUid = uniqueIdForTestTemplateMethod(clazz, "testTemplate()");
 
-		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
+		resolver.resolveSelectors(request().selectors(selectUniqueId(templateUid)).build(), engineDescriptor);
 
 		assertThat(engineDescriptor.getDescendants()).hasSize(2);
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(clazz), templateUid);
+	}
 
-		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(TestClassWithTemplate.class),
-			uniqueIdForTestTemplateMethod(TestClassWithTemplate.class, "testTemplate()"));
+	@Test
+	void resolvingDynamicTestByUniqueIdResolvesOnlyUpToParentTestFactory() {
+		Class<?> clazz = MyTestClass.class;
+		UniqueId factoryUid = uniqueIdForTestFactoryMethod(clazz, "dynamicTest()");
+		UniqueId dynamicTestUid = factoryUid.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "#1");
+
+		resolver.resolveSelectors(request().selectors(selectUniqueId(dynamicTestUid)).build(), engineDescriptor);
+
+		assertThat(engineDescriptor.getDescendants()).hasSize(2);
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(clazz), factoryUid);
+	}
+
+	@Test
+	void resolvingTestTemplateInvocationByUniqueIdResolvesOnlyUpToParentTestTemplate() {
+		Class<?> clazz = TestClassWithTemplate.class;
+		UniqueId templateUid = uniqueIdForTestTemplateMethod(clazz, "testTemplate()");
+		UniqueId invocationUid = templateUid.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+
+		resolver.resolveSelectors(request().selectors(selectUniqueId(invocationUid)).build(), engineDescriptor);
+
+		assertThat(engineDescriptor.getDescendants()).hasSize(2);
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(clazz), templateUid);
 	}
 
 	private TestDescriptor descriptorByUniqueId(UniqueId uniqueId) {
@@ -558,7 +554,7 @@ class DiscoverySelectorResolverTests {
 	}
 
 	private List<UniqueId> uniqueIds() {
-		return engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(Collectors.toList());
+		return engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toList());
 	}
 
 }
