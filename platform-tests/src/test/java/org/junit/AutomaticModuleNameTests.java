@@ -60,6 +60,7 @@ class AutomaticModuleNameTests {
 		throw new AssertionError("module name is unknown: " + module);
 	}
 
+	@SuppressWarnings("unused")
 	private static List<String> moduleDirectoryNames() throws IOException {
 		// @formatter:off
 		String startOfModuleLine = "include '";
