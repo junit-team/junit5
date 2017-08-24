@@ -3,10 +3,10 @@
 1 0 obj
 << /Title (JUnit 5 User Guide)
 /Author (Stefan Bechtold, Sam Brannen, Johannes Link, Matthias Merdes, Marc Philipp, Christian Stein)
-/Creator (Asciidoctor PDF 1.5.0.alpha.15, based on Prawn 2.2.2)
+/Creator (Asciidoctor PDF 1.5.0.alpha.16, based on Prawn 2.2.2)
 /Producer (Stefan Bechtold, Sam Brannen, Johannes Link, Matthias Merdes, Marc Philipp, Christian Stein)
-/ModDate (D:20170824002712-04'00')
-/CreationDate (D:20170824003254-04'00')
+/ModDate (D:20170823133127-04'00')
+/CreationDate (D:20170824090938-04'00')
 >>
 endobj
 2 0 obj
@@ -5166,7 +5166,7 @@ q
 2.0 w
 70.24 300.0777 m
 191.24 300.0777 l
-B
+S
 Q
 q
 0.0 0.0 0.0 scn
@@ -5198,7 +5198,7 @@ q
 2.0 w
 716.24 300.0777 m
 843.24 300.0777 l
-B
+S
 Q
 q
 0.0 0.0 0.0 scn
@@ -5230,7 +5230,7 @@ q
 2.0 w
 916.24 488.0777 m
 1050.24 488.0777 l
-B
+S
 Q
 q
 0.0 0.0 0.0 scn
@@ -5262,7 +5262,7 @@ q
 2.0 w
 636.24 99.0777 m
 750.24 99.0777 l
-B
+S
 Q
 q
 0.0 0.0 0.0 scn
