@@ -39,7 +39,7 @@ class TestClassCollector {
 	}
 
 	Stream<TestClassRequest> toRequests() {
-		return concat(completeRequests(), filteredRequests()).distinct();
+		return concat(completeRequests(), filteredRequests());
 	}
 
 	private Stream<TestClassRequest> completeRequests() {
