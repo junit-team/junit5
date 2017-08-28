@@ -13,7 +13,6 @@ package org.junit.platform.console;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.StringUtils.isBlank;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
@@ -24,15 +23,13 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.console.options.CommandLineOptionsParser;
 import org.junit.platform.console.options.JOptSimpleCommandLineOptionsParser;
 
 /**
  * @since 1.0
  */
-@API(Internal)
-public class ConsoleLauncherWrapper {
+class ConsoleLauncherWrapper {
 
 	private final Charset charset;
 	private final ByteArrayOutputStream out = new ByteArrayOutputStream();

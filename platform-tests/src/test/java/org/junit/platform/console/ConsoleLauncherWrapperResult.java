@@ -10,19 +10,15 @@
 
 package org.junit.platform.console;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
  * @since 1.0
  */
-@API(Internal)
 class ConsoleLauncherWrapperResult implements TestExecutionSummary {
 
 	final String[] args;
