@@ -12,6 +12,7 @@ package org.junit;
 
 import java.io.PrintStream;
 import java.lang.reflect.Modifier;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -101,10 +102,13 @@ class ApiReportGenerator {
 			out.printf("%n");
 			out.printf(FORMAT, "PACKAGE NAME", "CLASS NAME", "TYPE", " MODIFIERS");
 			// TODO Make dashed line lengths dynamic
-			out.printf(FORMAT, "--------------------------------------------------",
-				"----------------------------------------", "----------", "--------------------------");
+			out.printf(FORMAT, dashes(50), dashes(40), dashes(10), dashes(25));
 			types.forEach(type -> this.print(type, out));
 		}
+	}
+
+	private String dashes(int length) {
+		return CharBuffer.allocate(length).toString().replace('\0', '-');
 	}
 
 	private void print(Class<?> type, PrintStream out) {
