@@ -11,8 +11,8 @@
 package org.junit.vintage.engine.discovery;
 
 import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 import static org.junit.platform.commons.util.ReflectionUtils.isPublic;
-import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 import java.util.function.Predicate;
 
@@ -23,19 +23,18 @@ class IsPotentialJUnit4TestClass implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {
-		// Do not collapse into single return.
-		if (isAbstract(candidate))
+		// Do not collapse into a single return statement.
+		if (!isPublic(candidate)) {
 			return false;
-		if (!isPublic(candidate))
+		}
+		if (isAbstract(candidate)) {
 			return false;
-		if (isNonStaticMemberClass(candidate))
+		}
+		if (isInnerClass(candidate)) {
 			return false;
+		}
 
 		return true;
-	}
-
-	private boolean isNonStaticMemberClass(Class<?> candidate) {
-		return candidate.isMemberClass() && !isStatic(candidate);
 	}
 
 }

@@ -244,6 +244,10 @@ public final class ReflectionUtils {
 		return Modifier.isStatic(member.getModifiers());
 	}
 
+	public static boolean isInnerClass(Class<?> clazz) {
+		return clazz.isMemberClass() && !isStatic(clazz);
+	}
+
 	public static boolean returnsVoid(Method method) {
 		return method.getReturnType().equals(Void.TYPE);
 	}

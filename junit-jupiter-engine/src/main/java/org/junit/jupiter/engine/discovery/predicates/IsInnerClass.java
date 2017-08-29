@@ -11,8 +11,8 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
-import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 import java.util.function.Predicate;
 
@@ -28,14 +28,15 @@ public class IsInnerClass implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {
-		//please do not collapse into single return
-		if (isStatic(candidate)) {
-			return false;
-		}
+		// Do not collapse into a single return statement.
 		if (isPrivate(candidate)) {
 			return false;
 		}
-		return candidate.isMemberClass();
+		if (!isInnerClass(candidate)) {
+			return false;
+		}
+
+		return true;
 	}
 
 }
