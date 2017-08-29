@@ -9,6 +9,7 @@
 		<Logger name="org.junit" level="warn" />
 		<Logger name="org.junit.platform.commons.util.ClasspathScanner" level="error" />
 		<Logger name="org.junit.platform.launcher.core.DefaultLauncher" level="error" />
+		<Logger name="org.junit.ApiReportGenerator" level="error" />
 		<Logger name="org.junit.vintage.engine" level="error" />
 		<Logger name="org.junit.jupiter.engine" level="error" />
 		<Root level="error">
