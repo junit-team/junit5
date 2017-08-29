@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.meta.API.Usage;
-
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
+
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.meta.API.Usage;
 
 /**
  * @since 1.0
