@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -24,7 +24,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 1.0
  */
-@API(Experimental)
+@API(Stable)
 public class FilePosition implements Serializable {
 
 	private static final long serialVersionUID = 1L;

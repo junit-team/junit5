@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -32,7 +32,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see ClasspathRootSelector
  * @see #getClasspathResourceName()
  */
-@API(Experimental)
+@API(Stable)
 public class ClasspathResourceSelector implements DiscoverySelector {
 
 	private final String classpathResourceName;

@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.net.URI;
 
@@ -23,7 +23,7 @@ import org.junit.platform.engine.TestSource;
  * @since 1.0
  * @see org.junit.platform.engine.discovery.UriSelector
  */
-@API(Experimental)
+@API(Stable)
 public interface UriSource extends TestSource {
 
 	/**

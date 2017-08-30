@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.util.Objects;
 
@@ -29,7 +29,7 @@ import org.junit.platform.engine.discovery.PackageSelector;
  * @since 1.0
  * @see PackageSelector
  */
-@API(Experimental)
+@API(Stable)
 public class PackageSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;

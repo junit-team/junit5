@@ -11,7 +11,7 @@
 package org.junit.platform.launcher.listeners;
 
 import static java.util.stream.Stream.concat;
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
 import java.util.stream.Stream;
 
@@ -29,7 +29,7 @@ import org.junit.platform.launcher.TestPlan;
  * @since 1.0
  * @see #getSummary()
  */
-@API(Experimental)
+@API(Maintained)
 public class SummaryGeneratingListener implements TestExecutionListener {
 
 	private TestPlan testPlan;

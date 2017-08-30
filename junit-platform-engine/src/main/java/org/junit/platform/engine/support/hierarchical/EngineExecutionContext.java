@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
 import org.junit.platform.commons.meta.API;
 
@@ -21,6 +21,6 @@ import org.junit.platform.commons.meta.API;
  * @since 1.0
  * @see HierarchicalTestEngine
  */
-@API(Experimental)
+@API(Maintained)
 public interface EngineExecutionContext {
 }

@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -76,7 +76,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  * @see org.junit.platform.launcher.EngineFilter
  * @see org.junit.platform.launcher.TagFilter
  */
-@API(Experimental)
+@API(Stable)
 public final class LauncherDiscoveryRequestBuilder {
 
 	private List<DiscoverySelector> selectors = new LinkedList<>();

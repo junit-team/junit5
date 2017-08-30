@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.DiscoveryFilter;
@@ -21,7 +21,7 @@ import org.junit.platform.engine.DiscoveryFilter;
  * @since 1.0
  * @see #includeClassNamePatterns
  */
-@API(Experimental)
+@API(Stable)
 public interface ClassNameFilter extends DiscoveryFilter<String> {
 
 	/**

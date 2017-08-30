@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import org.junit.platform.commons.meta.API;
 
@@ -53,7 +53,7 @@ import org.junit.platform.commons.meta.API;
  * @see org.junit.platform.launcher.core.LauncherFactory
  * @see org.junit.platform.engine.TestEngine
  */
-@API(Experimental)
+@API(Stable)
 public interface Launcher {
 
 	/**

@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.filter;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.engine.Filter.composeFilters;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import org.junit.platform.engine.discovery.PackageNameFilter;
  *
  * @since 1.0
  */
-@API(Experimental)
+@API(Internal)
 public final class ClasspathScanningSupport {
 
 	///CLOVER:OFF

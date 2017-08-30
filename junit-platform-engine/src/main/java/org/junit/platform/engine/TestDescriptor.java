@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -26,7 +26,7 @@ import org.junit.platform.commons.meta.API;
  * @see TestEngine
  * @since 1.0
  */
-@API(Experimental)
+@API(Stable)
 public interface TestDescriptor {
 
 	/**

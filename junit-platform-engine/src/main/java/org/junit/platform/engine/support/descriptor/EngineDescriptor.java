@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.UniqueId;
@@ -21,7 +21,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 1.0
  */
-@API(Experimental)
+@API(Stable)
 public class EngineDescriptor extends AbstractTestDescriptor {
 
 	/**

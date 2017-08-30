@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestExecutionResult;
@@ -43,7 +43,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * @see TestPlan
  * @see TestIdentifier
  */
-@API(Experimental)
+@API(Stable)
 public interface TestExecutionListener {
 	///CLOVER:OFF
 

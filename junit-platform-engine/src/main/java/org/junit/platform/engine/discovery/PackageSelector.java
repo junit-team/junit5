@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -24,7 +24,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @since 1.0
  * @see org.junit.platform.engine.support.descriptor.PackageSource
  */
-@API(Experimental)
+@API(Stable)
 public class PackageSelector implements DiscoverySelector {
 
 	private final String packageName;

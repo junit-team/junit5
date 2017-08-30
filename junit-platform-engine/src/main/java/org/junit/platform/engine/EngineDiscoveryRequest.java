@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ import org.junit.platform.commons.meta.API;
  * @see ConfigurationParameters
  * @since 1.0
  */
-@API(Experimental)
+@API(Stable)
 public interface EngineDiscoveryRequest {
 
 	/**

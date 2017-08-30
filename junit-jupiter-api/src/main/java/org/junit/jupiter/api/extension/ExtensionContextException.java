@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.platform.commons.JUnitException;
@@ -22,7 +22,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  */
-@API(Experimental)
+@API(Stable)
 public class ExtensionContextException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

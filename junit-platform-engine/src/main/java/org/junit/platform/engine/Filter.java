@@ -11,7 +11,7 @@
 package org.junit.platform.engine;
 
 import static java.util.Arrays.asList;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.CompositeFilter.alwaysIncluded;
 
@@ -36,7 +36,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see DiscoveryFilter
  */
 @FunctionalInterface
-@API(Internal)
+@API(Stable)
 public interface Filter<T> {
 
 	/**
