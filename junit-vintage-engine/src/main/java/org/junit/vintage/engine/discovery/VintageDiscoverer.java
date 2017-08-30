@@ -10,12 +10,12 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static java.util.Arrays.asList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.adaptFilter;
 import static org.junit.platform.engine.Filter.composeFilters;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -38,11 +38,13 @@ public class VintageDiscoverer {
 
 	private static final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
 	private final CompleteTestClassesResolver completeTestClassesResolver;
+	private final FilteredTestClassesResolver filteredTestClassesResolver;
 	private final TestClassRequestResolver resolver;
 	private final Logger logger;
 
 	public VintageDiscoverer(Logger logger) {
 		this.completeTestClassesResolver = new CompleteTestClassesResolver();
+		this.filteredTestClassesResolver = new FilteredTestClassesResolver(logger);
 		this.logger = logger;
 		this.resolver = new TestClassRequestResolver(logger);
 	}
@@ -62,18 +64,9 @@ public class VintageDiscoverer {
 	private TestClassCollector collectTestClasses(EngineDiscoveryRequest discoveryRequest) {
 		Predicate<Class<?>> classFilter = createTestClassPredicate(discoveryRequest);
 		Set<Class<?>> completeTestClasses = completeTestClassesResolver.resolve(discoveryRequest, classFilter);
-		TestClassCollector collector = new TestClassCollector(completeTestClasses);
-		for (DiscoverySelectorResolver selectorResolver : getAllDiscoverySelectorResolvers()) {
-			selectorResolver.resolve(discoveryRequest, classFilter, collector);
-		}
-		return collector;
-	}
-
-	private List<DiscoverySelectorResolver> getAllDiscoverySelectorResolvers() {
-		return asList( //
-			new MethodSelectorResolver(), //
-			new UniqueIdSelectorResolver(logger)//
-		);
+		Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses = filteredTestClassesResolver.resolve(
+			discoveryRequest, classFilter);
+		return new TestClassCollector(completeTestClasses, filteredTestClasses);
 	}
 
 	private Predicate<Class<?>> createTestClassPredicate(EngineDiscoveryRequest discoveryRequest) {

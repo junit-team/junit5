@@ -15,6 +15,7 @@ import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_I
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
 
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.logging.Logger;
@@ -27,7 +28,7 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
 /**
  * @since 4.12
  */
-class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
+class UniqueIdSelectorResolver {
 
 	private final Logger logger;
 
@@ -35,8 +36,8 @@ class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 		this.logger = logger;
 	}
 
-	@Override
-	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter, TestClassCollector collector) {
+	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter,
+			BiConsumer<Class<?>, RunnerTestDescriptorAwareFilter> collector) {
 		// @formatter:off
 		request.getSelectorsByType(UniqueIdSelector.class)
 			.stream()
@@ -64,12 +65,12 @@ class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 	}
 
 	private void resolveIntoFilteredTestClass(UniqueId uniqueId, Predicate<Class<?>> classFilter,
-			TestClassCollector collector) {
+			BiConsumer<Class<?>, RunnerTestDescriptorAwareFilter> collector) {
 		// @formatter:off
 		determineTestClassName(uniqueId)
 				.flatMap(testClassName -> loadTestClass(testClassName, uniqueId))
 				.filter(classFilter)
-				.ifPresent(testClass -> collector.addFiltered(testClass, new UniqueIdFilter(uniqueId)));
+				.ifPresent(testClass -> collector.accept(testClass, new UniqueIdFilter(uniqueId)));
 		// @formatter:on
 	}
 

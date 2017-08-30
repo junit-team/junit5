@@ -13,8 +13,6 @@ package org.junit.vintage.engine.discovery;
 import static java.util.stream.Stream.concat;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,14 +25,12 @@ import java.util.stream.Stream;
 class TestClassCollector {
 
 	private final Set<Class<?>> completeTestClasses;
-	private final Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses = new LinkedHashMap<>();
+	private final Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses;
 
-	TestClassCollector(Set<Class<?>> completeTestClasses) {
+	TestClassCollector(Set<Class<?>> completeTestClasses,
+			Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses) {
 		this.completeTestClasses = completeTestClasses;
-	}
-
-	void addFiltered(Class<?> testClass, RunnerTestDescriptorAwareFilter filter) {
-		filteredTestClasses.computeIfAbsent(testClass, key -> new ArrayList<>()).add(filter);
+		this.filteredTestClasses = filteredTestClasses;
 	}
 
 	Stream<TestClassRequest> toRequests() {

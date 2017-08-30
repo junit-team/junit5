@@ -13,6 +13,7 @@ package org.junit.vintage.engine.discovery;
 import static org.junit.vintage.engine.discovery.RunnerTestDescriptorAwareFilter.adapter;
 
 import java.lang.reflect.Method;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -23,19 +24,20 @@ import org.junit.runner.manipulation.Filter;
 /**
  * @since 4.12
  */
-class MethodSelectorResolver implements DiscoverySelectorResolver {
+class MethodSelectorResolver {
 
-	@Override
-	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter, TestClassCollector collector) {
+	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter,
+			BiConsumer<Class<?>, RunnerTestDescriptorAwareFilter> collector) {
 		request.getSelectorsByType(MethodSelector.class).forEach(selector -> resolve(selector, classFilter, collector));
 	}
 
-	private void resolve(MethodSelector selector, Predicate<Class<?>> classFilter, TestClassCollector collector) {
+	private void resolve(MethodSelector selector, Predicate<Class<?>> classFilter,
+			BiConsumer<Class<?>, RunnerTestDescriptorAwareFilter> collector) {
 		Class<?> testClass = selector.getJavaClass();
 		if (classFilter.test(testClass)) {
 			Method testMethod = selector.getJavaMethod();
 			Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());
-			collector.addFiltered(testClass, adapter(matchMethodDescription(methodDescription)));
+			collector.accept(testClass, adapter(matchMethodDescription(methodDescription)));
 		}
 	}
 
