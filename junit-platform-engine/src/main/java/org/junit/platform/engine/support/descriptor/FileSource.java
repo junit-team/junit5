@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @since 1.0
  * @see org.junit.platform.engine.discovery.FileSelector
  */
-@API(Experimental)
+@API(Stable)
 public class FileSource implements FileSystemSource {
 
 	private static final long serialVersionUID = 1L;

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -34,7 +34,7 @@ import org.junit.platform.commons.meta.API;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(Maintained)
+@API(Stable)
 public @interface Tags {
 
 	/**

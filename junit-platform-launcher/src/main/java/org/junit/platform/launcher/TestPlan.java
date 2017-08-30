@@ -12,8 +12,8 @@ package org.junit.platform.launcher;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -51,7 +51,7 @@ import org.junit.platform.engine.TestDescriptor.Visitor;
  * @see Launcher
  * @see TestExecutionListener
  */
-@API(Experimental)
+@API(Stable)
 public final class TestPlan {
 
 	private final Set<TestIdentifier> roots = Collections.synchronizedSet(new LinkedHashSet<>(4));

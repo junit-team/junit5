@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import org.junit.platform.commons.meta.API;
 
@@ -33,7 +33,7 @@ import org.junit.platform.commons.meta.API;
  * @see RepeatedTest
  * @see TestInfo
  */
-@API(Experimental)
+@API(Stable)
 public interface RepetitionInfo {
 
 	/**

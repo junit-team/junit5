@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import org.junit.platform.commons.meta.API;
 
@@ -25,6 +25,6 @@ import org.junit.platform.commons.meta.API;
  * @see EngineDiscoveryRequest
  * @see TestEngine
  */
-@API(Experimental)
+@API(Stable)
 public interface DiscoveryFilter<T> extends Filter<T> {
 }

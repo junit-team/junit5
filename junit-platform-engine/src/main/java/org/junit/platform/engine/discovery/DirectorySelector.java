@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.io.File;
 import java.nio.file.FileSystem;
@@ -34,7 +34,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see #getPath()
  * @see #getRawPath()
  */
-@API(Experimental)
+@API(Stable)
 public class DirectorySelector implements DiscoverySelector {
 
 	private final String path;

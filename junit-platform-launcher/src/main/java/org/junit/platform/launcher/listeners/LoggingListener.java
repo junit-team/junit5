@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher.listeners;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -34,7 +34,7 @@ import org.junit.platform.launcher.TestPlan;
  * @see #forJavaUtilLogging(Level)
  * @see LoggingListener#LoggingListener(BiConsumer)
  */
-@API(Experimental)
+@API(Maintained)
 public class LoggingListener implements TestExecutionListener {
 
 	/**

@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
@@ -33,8 +33,8 @@ import org.junit.vintage.engine.execution.RunnerExecutor;
  *
  * @since 4.12
  */
-@API(Experimental)
-public class VintageTestEngine implements TestEngine {
+@API(Internal)
+public final class VintageTestEngine implements TestEngine {
 
 	private static final Logger logger = Logger.getLogger(VintageTestEngine.class.getName());
 

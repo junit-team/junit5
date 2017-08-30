@@ -12,7 +12,7 @@ package org.junit.platform.launcher;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ import org.junit.platform.engine.TestTag;
  * @see #includeTags(String...)
  * @see #excludeTags(String...)
  */
-@API(Experimental)
+@API(Stable)
 public final class TagFilter {
 
 	///CLOVER:OFF

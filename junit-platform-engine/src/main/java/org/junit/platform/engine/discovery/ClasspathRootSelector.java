@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.net.URI;
 
@@ -34,7 +34,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see ClasspathResourceSelector
  * @see Thread#getContextClassLoader()
  */
-@API(Experimental)
+@API(Stable)
 public class ClasspathRootSelector implements DiscoverySelector {
 
 	private final URI classpathRoot;

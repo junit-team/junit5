@@ -11,7 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -37,7 +37,7 @@ import org.opentest4j.MultipleFailuresError;
  * @see org.opentest4j.AssertionFailedError
  * @see Assumptions
  */
-@API(Maintained)
+@API(Stable)
 public final class Assertions {
 
 	///CLOVER:OFF
@@ -1036,7 +1036,6 @@ public final class Assertions {
 	 * @see #assertAll(Stream)
 	 * @see #assertAll(String, Stream)
 	 */
-	@API(Experimental)
 	public static void assertAll(Executable... executables) throws MultipleFailuresError {
 		AssertAll.assertAll(executables);
 	}
@@ -1052,7 +1051,6 @@ public final class Assertions {
 	 * @see #assertAll(String, Executable...)
 	 * @see #assertAll(String, Stream)
 	 */
-	@API(Experimental)
 	public static void assertAll(Stream<Executable> executables) throws MultipleFailuresError {
 		AssertAll.assertAll(executables);
 	}
@@ -1068,7 +1066,6 @@ public final class Assertions {
 	 * @see #assertAll(Stream)
 	 * @see #assertAll(String, Stream)
 	 */
-	@API(Experimental)
 	public static void assertAll(String heading, Executable... executables) throws MultipleFailuresError {
 		AssertAll.assertAll(heading, executables);
 	}

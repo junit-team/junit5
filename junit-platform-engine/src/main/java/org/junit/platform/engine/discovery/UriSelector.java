@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.net.URI;
 
@@ -28,7 +28,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see DirectorySelector
  * @see org.junit.platform.engine.support.descriptor.UriSource
  */
-@API(Experimental)
+@API(Stable)
 public class UriSelector implements DiscoverySelector {
 
 	private final URI uri;

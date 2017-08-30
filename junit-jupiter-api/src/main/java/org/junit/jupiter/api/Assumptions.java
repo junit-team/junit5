@@ -10,8 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -39,7 +38,7 @@ import org.opentest4j.TestAbortedException;
  * @see TestAbortedException
  * @see Assertions
  */
-@API(Maintained)
+@API(Stable)
 public final class Assumptions {
 
 	///CLOVER:OFF
@@ -212,7 +211,6 @@ public final class Assumptions {
 	 * @param executable the block of code to execute if the assumption is valid
 	 * @see #assumingThat(boolean, Executable)
 	 */
-	@API(Experimental)
 	public static void assumingThat(BooleanSupplier assumptionSupplier, Executable executable) {
 		assumingThat(assumptionSupplier.getAsBoolean(), executable);
 	}
@@ -231,7 +229,6 @@ public final class Assumptions {
 	 * @param executable the block of code to execute if the assumption is valid
 	 * @see #assumingThat(BooleanSupplier, Executable)
 	 */
-	@API(Experimental)
 	public static void assumingThat(boolean assumption, Executable executable) {
 		if (assumption) {
 			try {

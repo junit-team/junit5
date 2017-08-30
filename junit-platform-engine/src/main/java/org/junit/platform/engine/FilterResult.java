@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -23,7 +23,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 1.0
  */
-@API(Experimental)
+@API(Stable)
 public class FilterResult {
 
 	/**

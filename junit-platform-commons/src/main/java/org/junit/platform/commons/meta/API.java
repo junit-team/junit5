@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.meta;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(Experimental)
+@API(Internal)
 public @interface API {
 
 	Usage value();

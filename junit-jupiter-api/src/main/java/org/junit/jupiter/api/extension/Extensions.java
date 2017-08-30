@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -37,7 +37,7 @@ import org.junit.platform.commons.meta.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@API(Experimental)
+@API(Stable)
 public @interface Extensions {
 
 	/**
