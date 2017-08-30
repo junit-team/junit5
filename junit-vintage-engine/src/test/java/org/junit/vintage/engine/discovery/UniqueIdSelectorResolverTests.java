@@ -10,6 +10,7 @@
 
 package org.junit.vintage.engine.discovery;
 
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
@@ -39,7 +40,7 @@ class UniqueIdSelectorResolverTests {
 
 	private static final Predicate<Class<?>> allClassesPredicate = clazz -> true;
 	private RecordCollectingLogger logger = new RecordCollectingLogger();
-	private TestClassCollector collector = new TestClassCollector();
+	private TestClassCollector collector = new TestClassCollector(emptySet());
 
 	@Test
 	void logsWarningOnUnloadableTestClass() {

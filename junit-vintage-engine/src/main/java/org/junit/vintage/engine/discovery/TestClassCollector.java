@@ -15,7 +15,6 @@ import static org.junit.platform.commons.util.FunctionUtils.where;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,11 +26,11 @@ import java.util.stream.Stream;
  */
 class TestClassCollector {
 
-	private final Set<Class<?>> completeTestClasses = new LinkedHashSet<>();
+	private final Set<Class<?>> completeTestClasses;
 	private final Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses = new LinkedHashMap<>();
 
-	void addCompletely(Class<?> testClass) {
-		completeTestClasses.add(testClass);
+	TestClassCollector(Set<Class<?>> completeTestClasses) {
+		this.completeTestClasses = completeTestClasses;
 	}
 
 	void addFiltered(Class<?> testClass, RunnerTestDescriptorAwareFilter filter) {
