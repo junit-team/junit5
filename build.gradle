@@ -167,6 +167,12 @@ allprojects { subproj ->
 		options.compilerArgs += '-parameters'
 	}
 
+	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+		kotlinOptions {
+			jvmTarget = rootProject.sourceCompatibility
+		}
+	}
+
 	checkstyle {
 		toolVersion = '7.6'
 	}
