@@ -47,7 +47,7 @@ class AssertionsAssertAllKotlinTests {
 
     @Test
     fun `assertAll with streamOf functions that throw AssertionErrors`() {
-        val multipleFailuresError = assertThrows<MultipleFailuresError> {
+        val multipleFailuresError = assertThrows<MultipleFailuresError>("Should have thrown multiple errors") {
             assertAll(Stream.of({ assertFalse(true) }, { assertFalse(true) }))
         }
         assertExpectedExceptionTypes(multipleFailuresError, AssertionFailedError::class, AssertionFailedError::class)

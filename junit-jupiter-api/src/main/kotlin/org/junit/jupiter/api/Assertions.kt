@@ -12,6 +12,7 @@ package org.junit.jupiter.api
 import org.junit.jupiter.api.function.Executable
 import org.junit.platform.commons.meta.API
 import org.junit.platform.commons.meta.API.Usage.Experimental
+import java.util.function.Supplier
 import java.util.stream.Stream
 
 /**
@@ -33,7 +34,7 @@ fun assertAll(executables: ExecutableStream) =
  * @since 5.0
  */
 @API(Experimental)
-fun assertAll(heading : String?, executables: ExecutableStream) =
+fun assertAll(heading: String?, executables: ExecutableStream) =
     Assertions.assertAll(heading, executables.convert())
 
 /**
@@ -64,5 +65,35 @@ fun assertAll(heading: String?, vararg executables: () -> Unit) =
  * @since 5.0
  */
 @API(Experimental)
-inline fun <reified T : Throwable> assertThrows(noinline executable : () -> Unit) : T =
+inline fun <reified T : Throwable> assertThrows(noinline executable: () -> Unit): T =
     Assertions.assertThrows(T::class.java, Executable(executable))
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val exception = assertThrows<IllegalArgumentException>("Should throw an Exception") {
+ *     throw IllegalArgumentException("Talk to a duck")
+ * }
+ * assertEquals("Talk to a duck", exception.message)
+ * ```
+ * @see Assertions.assertThrows
+ * @since 5.0
+ */
+@API(Experimental)
+inline fun <reified T : Throwable> assertThrows(message: String, noinline executable: () -> Unit): T =
+    assertThrows({ message }, executable)
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val exception = assertThrows<IllegalArgumentException>({ "Should throw an Exception" }) {
+ *     throw IllegalArgumentException("Talk to a duck")
+ * }
+ * assertEquals("Talk to a duck", exception.message)
+ * ```
+ * @see Assertions.assertThrows
+ * @since 5.0
+ */
+@API(Experimental)
+inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, noinline executable: () -> Unit): T =
+    Assertions.assertThrows(T::class.java, Executable(executable), Supplier(message))
