@@ -21,8 +21,5 @@ include 'platform-tests'
 // based on the project name
 rootProject.children.each { project ->
 	project.buildFileName = "${project.name}.gradle"
-	if (!project.buildFile.isFile()) {
-		project.buildFileName = "${project.name}.gradle.kts"
-	}
 	assert project.buildFile.isFile()
 }
