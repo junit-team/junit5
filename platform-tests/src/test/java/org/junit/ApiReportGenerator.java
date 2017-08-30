@@ -31,11 +31,11 @@ import org.junit.platform.commons.meta.API.Usage;
  */
 class ApiReportGenerator {
 
-	private static final String EOL = System.lineSeparator();
-
-	private static final String FORMAT = "  %-50s %-40s %-10s %s%n";
-
 	private static final Logger logger = Logger.getLogger(ApiReportGenerator.class.getName());
+
+	private static final String MARKDOWN_FORMAT = "%-52s | %-42s | %-12s | %-27s%n";
+
+	private static final String EOL = System.lineSeparator();
 
 	public static void main(String... args) {
 		ApiReportGenerator reportGenerator = new ApiReportGenerator();
@@ -43,7 +43,7 @@ class ApiReportGenerator {
 		// scan all types below "org.junit" package
 		reportGenerator.scanPackages("org.junit");
 
-		reportGenerator.printReport(System.out);
+		reportGenerator.printMarkdownReport(System.out);
 	}
 
 	private List<Class<?>> types;
@@ -73,7 +73,7 @@ class ApiReportGenerator {
 		this.types = scanResult.classNamesToClassRefs(names);
 		// only retain directly annotated types
 		this.types.removeIf(c -> !c.isAnnotationPresent(API.class));
-		this.types.sort(Comparator.comparing(type -> type.getPackage().getName()));
+		this.types.sort(Comparator.comparing(type -> type.getName()));
 
 		logger.fine(() -> {
 			StringBuilder builder = new StringBuilder("Listing of all " + this.types.size() + " annotated types:");
@@ -86,37 +86,35 @@ class ApiReportGenerator {
 
 		// Build usage map
 		for (Usage usage : Usage.values()) {
-			usageMap.put(usage, new ArrayList<>());
+			this.usageMap.put(usage, new ArrayList<>());
 		}
-		this.types.forEach(type -> usageMap.get(type.getAnnotation(API.class).value()).add(type));
+		this.types.forEach(type -> this.usageMap.get(type.getAnnotation(API.class).value()).add(type));
 	}
 
-	public void printReport(PrintStream out) {
-		out.println("Discovered " + this.types.size() + " types with @API declarations.");
-		usageMap.forEach((k, v) -> this.print(k, v, out));
+	public void printMarkdownReport(PrintStream out) {
+		out.println("# `@API` Declarations");
+		out.println();
+		out.println("Discovered " + this.types.size() + " types with `@API` declarations.");
+		this.usageMap.forEach((k, v) -> this.printMarkdown(k, v, out));
 	}
 
-	private void print(Usage usage, List<Class<?>> types, PrintStream out) {
-		out.printf("%n## @API(%s) (%d)%n", usage, types.size());
+	private void printMarkdown(Usage usage, List<Class<?>> types, PrintStream out) {
+		out.printf("%n## `@API(%s)`%n", usage);
+		out.printf("%nDiscovered %d `@API(%s)` declarations.%n", types.size(), usage);
 		if (types.size() > 0) {
 			out.printf("%n");
-			out.printf(FORMAT, "PACKAGE NAME", "CLASS NAME", "TYPE", " MODIFIERS");
-			// TODO Make dashed line lengths dynamic
-			out.printf(FORMAT, dashes(50), dashes(40), dashes(10), dashes(25));
-			types.forEach(type -> this.print(type, out));
+			out.printf(MARKDOWN_FORMAT, "PACKAGE NAME", "CLASS NAME", "TYPE", "MODIFIERS");
+			out.printf(MARKDOWN_FORMAT, dashes(52), dashes(42), dashes(12), dashes(27));
+			types.forEach(type -> this.printMarkdown(type, out));
 		}
 	}
 
-	private String dashes(int length) {
-		return CharBuffer.allocate(length).toString().replace('\0', '-');
-	}
-
-	private void print(Class<?> type, PrintStream out) {
-		out.printf(FORMAT, //
-			type.getPackage().getName(), //
-			type.getSimpleName(), //
-			getKind(type), //
-			Modifier.toString(type.getModifiers()) //
+	private void printMarkdown(Class<?> type, PrintStream out) {
+		out.printf(MARKDOWN_FORMAT, //
+			code(type.getPackage().getName()), //
+			code(type.getSimpleName()), //
+			code(getKind(type)), //
+			code(Modifier.toString(type.getModifiers())) //
 		);
 	}
 
@@ -131,6 +129,14 @@ class ApiReportGenerator {
 			return "interface";
 		}
 		return "class";
+	}
+
+	private static String code(String element) {
+		return "`" + element + "`";
+	}
+
+	private static String dashes(int length) {
+		return CharBuffer.allocate(length).toString().replace('\0', '-');
 	}
 
 }
