@@ -36,6 +36,8 @@ dependencies {
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(':junit-jupiter-engine'))
 	testRuntimeOnly(project(':junit-vintage-engine'))
+	testRuntimeOnly(project(':junit-jupiter-migrationsupport')) // included for @API report
+	testRuntimeOnly(project(':junit-platform-surefire-provider')) // included for @API report
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }
