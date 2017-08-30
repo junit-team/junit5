@@ -56,9 +56,9 @@ fun assertAll(heading: String?, vararg executables: () -> Unit) =
  * Example usage:
  * ```kotlin
  * val exception = assertThrows<IllegalArgumentException> {
- *     throw IllegalArgumentException("Talk to a 🦆")
+ *     throw IllegalArgumentException("Talk to a duck")
  * }
- * assertEquals("Talk to a 🦆", exception.message)
+ * assertEquals("Talk to a duck", exception.message)
  * ```
  * @see Assertions.assertThrows
  * @since 5.0
