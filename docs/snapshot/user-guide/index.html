@@ -874,7 +874,8 @@ projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respect
 <div class="sect2">
 <h3 id="writing-tests-annotations"><a class="anchor" href="#writing-tests-annotations"></a>3.1. Annotations</h3>
 <div class="paragraph">
-<p>JUnit Jupiter supports the following annotations for configuring tests and extending the framework.</p>
+<p>JUnit Jupiter supports the following annotations for configuring tests and extending the
+framework.</p>
 </div>
 <div class="paragraph">
 <p>All core annotations are located in the <code><a href="../api/org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></code> package in the <code>junit-jupiter-api</code>
@@ -955,8 +956,8 @@ module.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Methods annotated with <code>@Test</code>, <code>@TestTemplate</code>, <code>@RepeatedTest</code>, <code>@BeforeAll</code>, <code>@AfterAll</code>,
-<code>@BeforeEach</code>, or <code>@AfterEach</code> annotations must not return a value.</p>
+<p>Methods annotated with <code>@Test</code>, <code>@TestTemplate</code>, <code>@RepeatedTest</code>, <code>@BeforeAll</code>,
+<code>@AfterAll</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code> annotations must not return a value.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -974,14 +975,15 @@ Some annotations may currently be <em>experimental</em>. Consult the table in
 <div class="sect3">
 <h4 id="writing-tests-meta-annotations"><a class="anchor" href="#writing-tests-meta-annotations"></a>3.1.1. Meta-Annotations and Composed Annotations</h4>
 <div class="paragraph">
-<p>JUnit Jupiter annotations can be used as <em>meta-annotations</em>. That means that you can define
-your own <em>composed annotation</em> that will automatically <em>inherit</em> the semantics of its
-meta-annotations.</p>
+<p>JUnit Jupiter annotations can be used as <em>meta-annotations</em>. That means that you can
+define your own <em>composed annotation</em> that will automatically <em>inherit</em> the semantics of
+its meta-annotations.</p>
 </div>
 <div class="paragraph">
 <p>For example, instead of copying and pasting <code>@Tag("fast")</code> throughout your code base (see
-<a href="#writing-tests-tagging-and-filtering">Tagging and Filtering</a>), you can create a custom <em>composed annotation</em> named <code>@Fast</code>
-as follows. <code>@Fast</code> can then be used as a drop-in replacement for <code>@Tag("fast")</code>.</p>
+<a href="#writing-tests-tagging-and-filtering">Tagging and Filtering</a>), you can create a custom <em>composed annotation</em>
+named <code>@Fast</code> as follows. <code>@Fast</code> can then be used as a drop-in replacement for
+<code>@Tag("fast")</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1279,9 +1281,9 @@ then use them in tests like in the <code>assertWithHamcrestMatcher()</code> meth
 <div class="sect2">
 <h3 id="writing-tests-assumptions"><a class="anchor" href="#writing-tests-assumptions"></a>3.5. Assumptions</h3>
 <div class="paragraph">
-<p>JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and adds a
-few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assumptions
-are static methods in the <code><a href="../api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.Assumptions</a></code> class.</p>
+<p>JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and
+adds a few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter
+assumptions are static methods in the <code><a href="../api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.Assumptions</a></code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1709,15 +1711,15 @@ however, that <code>RepetitionInfoParameterResolver</code> is not registered out
 of a <code>@RepeatedTest</code>. See <a href="#writing-tests-repeated-tests-examples">Repeated Test Examples</a>.</p>
 </li>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="../api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>, the
-<code>TestReporterParameterResolver</code> will supply an instance of <code>TestReporter</code>.
-The <code>TestReporter</code> can be used to publish additional data about the current test run.
-The data can be consumed through <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a>.reportingEntryPublished()</code> and thus
-be viewed by IDEs or included in reports.</p>
+<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="../api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>,
+the <code>TestReporterParameterResolver</code> will supply an instance of <code>TestReporter</code>. The
+<code>TestReporter</code> can be used to publish additional data about the current test run. The
+data can be consumed through <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a>.reportingEntryPublished()</code> and
+thus be viewed by IDEs or included in reports.</p>
 <div class="paragraph">
-<p>In JUnit Jupiter you should use <code>TestReporter</code> where
-you used to print information to <code>stdout</code> or <code>stderr</code> in JUnit 4.
-Using <code>@RunWith(JUnitPlatform.class)</code> will even output all reported entries to <code>stdout</code>.</p>
+<p>In JUnit Jupiter you should use <code>TestReporter</code> where you used to print information to
+<code>stdout</code> or <code>stderr</code> in JUnit 4. Using <code>@RunWith(JUnitPlatform.class)</code> will even output
+all reported entries to <code>stdout</code>.</p>
 </div>
 </li>
 </ul>
@@ -2239,10 +2241,10 @@ to the console.</p>
 <div class="sect2">
 <h3 id="writing-tests-parameterized-tests"><a class="anchor" href="#writing-tests-parameterized-tests"></a>3.13. Parameterized Tests</h3>
 <div class="paragraph">
-<p>Parameterized tests make it possible to run a test multiple times with different arguments. They are
-declared just like regular <code>@Test</code> methods but use the <code>@ParameterizedTest</code> annotation instead. In
-addition, you must declare at least one <em>source</em> that will provide the arguments for each
-invocation.</p>
+<p>Parameterized tests make it possible to run a test multiple times with different
+arguments. They are declared just like regular <code>@Test</code> methods but use the
+<code>@ParameterizedTest</code> annotation instead. In addition, you must declare at least one
+<em>source</em> that will provide the arguments for each invocation.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -2267,9 +2269,10 @@ in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for details.
 </div>
 </div>
 <div class="paragraph">
-<p>This parameterized test uses the <code>@ValueSource</code> annotation to specify a <code>String</code> array as the source
-of arguments. When executing this method, each invocation will be reported separately. For instance,
-the <code>ConsoleLauncher</code> will print output similar to the following.</p>
+<p>This parameterized test uses the <code>@ValueSource</code> annotation to specify a <code>String</code> array as
+the source of arguments. When executing this method, each invocation will be reported
+separately. For instance, the <code>ConsoleLauncher</code> will print output similar to the
+following.</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -2281,8 +2284,8 @@ the <code>ConsoleLauncher</code> will print output similar to the following.</p>
 <div class="sect3">
 <h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>3.13.1. Required Setup</h4>
 <div class="paragraph">
-<p>In order to use parameterized tests you need to add a dependency on the <code>junit-jupiter-params</code>
-artifact. Please refer to <a href="#dependency-metadata">Dependency Metadata</a> for details.</p>
+<p>In order to use parameterized tests you need to add a dependency on the
+<code>junit-jupiter-params</code> artifact. Please refer to <a href="#dependency-metadata">Dependency Metadata</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
@@ -2296,9 +2299,9 @@ information.</p>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-ValueSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-ValueSource"></a>@ValueSource</h5>
 <div class="paragraph">
-<p><code>@ValueSource</code> is one of the simplest possible sources. It lets you specify an array of literals of
-primitive types (either <code>String</code>, <code>int</code>, <code>long</code>, or <code>double</code>) and can only be used for providing a
-single parameter per invocation.</p>
+<p><code>@ValueSource</code> is one of the simplest possible sources. It lets you specify an array of
+literals of primitive types (either <code>String</code>, <code>int</code>, <code>long</code>, or <code>double</code>) and can only be
+used for providing a single parameter per invocation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2313,9 +2316,9 @@ single parameter per invocation.</p>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-EnumSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-EnumSource"></a>@EnumSource</h5>
 <div class="paragraph">
-<p><code>@EnumSource</code> provides a convenient way to use <code>Enum</code> constants. The annotation provides an optional
-<code>names</code> parameter that lets you specify which constants shall be used. If omitted, all constants
-will be used like in the following example.</p>
+<p><code>@EnumSource</code> provides a convenient way to use <code>Enum</code> constants. The annotation provides
+an optional <code>names</code> parameter that lets you specify which constants shall be used. If
+omitted, all constants will be used like in the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2389,7 +2392,8 @@ directly as demonstrated by the following example.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Streams for primitive types (<code>DoubleStream</code>, <code>IntStream</code>, and <code>LongStream</code>) are also supported.</p>
+<p>Streams for primitive types (<code>DoubleStream</code>, <code>IntStream</code>, and <code>LongStream</code>) are also
+supported.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2405,8 +2409,9 @@ directly as demonstrated by the following example.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In case you need multiple parameters, you need to return an <code>Arguments</code> instances as shown below.
-Note that <code>Arguments.of(Object&#8230;&#8203;)</code> is a static factory method defined in the interface itself.</p>
+<p>In case you need multiple parameters, you need to return an <code>Arguments</code> instances as
+shown below. Note that <code>Arguments.of(Object&#8230;&#8203;)</code> is a static factory method defined in
+the interface itself.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2547,8 +2552,9 @@ target type of a <code>null</code> reference is a primitive type.
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-argument-conversion-implicit"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-implicit"></a>Implicit Conversion</h5>
 <div class="paragraph">
-<p>To support use cases like <code>@CsvSource</code>, JUnit Jupiter provides a number of built-in implicit
-type converters. The conversion process depends on the declared type of each method parameter.</p>
+<p>To support use cases like <code>@CsvSource</code>, JUnit Jupiter provides a number of built-in
+implicit type converters. The conversion process depends on the declared type of each
+method parameter.</p>
 </div>
 <div class="paragraph">
 <p>For example, if a <code>@ParameterizedTest</code> declares a parameter of type <code>TimeUnit</code> and the
@@ -2657,8 +2663,9 @@ be converted into the corresponding <code>TimeUnit</code> enum constant.</p>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-argument-conversion-explicit"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-explicit"></a>Explicit Conversion</h5>
 <div class="paragraph">
-<p>Instead of using implicit argument conversion you may explicitly specify an <code>ArgumentConverter</code> to
-use for a certain parameter using the <code>@ConvertWith</code> annotation like in the following example.</p>
+<p>Instead of using implicit argument conversion you may explicitly specify an
+<code>ArgumentConverter</code> to use for a certain parameter using the <code>@ConvertWith</code> annotation
+like in the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2680,9 +2687,9 @@ use for a certain parameter using the <code>@ConvertWith</code> annotation like 
 </div>
 <div class="paragraph">
 <p>Explicit argument converters are meant to be implemented by test authors. Thus,
-<code>junit-jupiter-params</code> only provides a single explicit argument converter that may also serve as a
-reference implementation: <code>JavaTimeArgumentConverter</code>. It is used via the composed annotation
-<code>JavaTimeConversionPattern</code>.</p>
+<code>junit-jupiter-params</code> only provides a single explicit argument converter that may also
+serve as a reference implementation: <code>JavaTimeArgumentConverter</code>. It is used via the
+composed annotation <code>JavaTimeConversionPattern</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2763,11 +2770,11 @@ test tree of an IDE. You may at will mix regular <code>@Test</code> methods and 
 methods within the same test class.</p>
 </div>
 <div class="paragraph">
-<p>You may use <code>ParameterResolver</code> extensions with <code>@ParameterizedTest</code> methods. However, method
-parameters that are resolved by argument sources need to come first in the argument list.
-Since a test class may contain regular tests as well as parameterized tests with different
-parameter lists, values from argument sources are not resolved for lifecycle methods (e.g.
-<code>@BeforeEach</code>) and test class constructors.</p>
+<p>You may use <code>ParameterResolver</code> extensions with <code>@ParameterizedTest</code> methods. However,
+method parameters that are resolved by argument sources need to come first in the
+argument list. Since a test class may contain regular tests as well as parameterized
+tests with different parameter lists, values from argument sources are not resolved for
+lifecycle methods (e.g. <code>@BeforeEach</code>) and test class constructors.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2793,54 +2800,53 @@ parameter lists, values from argument sources are not resolved for lifecycle met
 <div class="sect2">
 <h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.14. Test Templates</h3>
 <div class="paragraph">
-<p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method is not a regular test case but rather a template for test cases.
-As such, it is designed to be invoked multiple times depending on the number of invocation
-contexts returned by the registered providers. Thus, it must be used in conjunction with
-a registered <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> extension. Each invocation of a
-test template method behaves like the execution of a regular <code>@Test</code> method with full
-support for the same lifecycle callbacks and extensions. Please refer to
+<p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method is not a regular test case but rather a template for test
+cases. As such, it is designed to be invoked multiple times depending on the number of
+invocation contexts returned by the registered providers. Thus, it must be used in
+conjunction with a registered <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> extension. Each
+invocation of a test template method behaves like the execution of a regular <code>@Test</code>
+method with full support for the same lifecycle callbacks and extensions. Please refer to
 <a href="#extensions-test-templates">Providing Invocation Contexts for Test Templates</a> for usage examples.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.15. Dynamic Tests</h3>
 <div class="paragraph">
-<p>The standard <code>@Test</code> annotation in JUnit Jupiter described in <a href="#writing-tests-annotations">Annotations</a>
-is very similar to the <code>@Test</code> annotation in JUnit 4.
-Both describe methods that implement test cases.
-These test cases are static in the sense that they are fully specified at compile time,
-and their behavior cannot be changed by anything happening at runtime.
-<em>Assumptions provide a basic form of dynamic behavior but are intentionally rather limited in their expressiveness.</em></p>
+<p>The standard <code>@Test</code> annotation in JUnit Jupiter described in
+<a href="#writing-tests-annotations">Annotations</a> is very similar to the <code>@Test</code> annotation in JUnit 4. Both
+describe methods that implement test cases. These test cases are static in the sense that
+they are fully specified at compile time, and their behavior cannot be changed by
+anything happening at runtime. <em>Assumptions provide a basic form of dynamic behavior but
+are intentionally rather limited in their expressiveness.</em></p>
 </div>
 <div class="paragraph">
-<p>In addition to these standard tests a completely new kind of test programming model has been introduced in JUnit Jupiter.
-This new kind of test is a <em>dynamic test</em> which is generated at runtime by a factory method
-that is annotated with <code>@TestFactory</code>.</p>
+<p>In addition to these standard tests a completely new kind of test programming model has
+been introduced in JUnit Jupiter. This new kind of test is a <em>dynamic test</em> which is
+generated at runtime by a factory method that is annotated with <code>@TestFactory</code>.</p>
 </div>
 <div class="paragraph">
-<p>In contrast to <code>@Test</code> methods, a <code>@TestFactory</code> method is not itself a test case but rather a factory for test cases.
-Thus, a dynamic test is the product of a factory.
-Technically speaking, a <code>@TestFactory</code> method must return a <code>Stream</code>,
-<code>Collection</code>, <code>Iterable</code>, or <code>Iterator</code> of <code>DynamicNode</code> instances.
-Instantiable subclasses of <code>DynamicNode</code> are <code>DynamicContainer</code> and <code>DynamicTest</code>.
-<code>DynamicContainer</code> instances are composed of a <em>display name</em> and a list of dynamic child nodes,
-enabling the creation of arbitrarily nested hierarchies of dynamic nodes.
-<code>DynamicTest</code> instances will then be executed lazily,
-enabling dynamic and even non-deterministic generation of test cases.</p>
+<p>In contrast to <code>@Test</code> methods, a <code>@TestFactory</code> method is not itself a test case but
+rather a factory for test cases. Thus, a dynamic test is the product of a factory.
+Technically speaking, a <code>@TestFactory</code> method must return a <code>Stream</code>, <code>Collection</code>,
+<code>Iterable</code>, or <code>Iterator</code> of <code>DynamicNode</code> instances. Instantiable subclasses of
+<code>DynamicNode</code> are <code>DynamicContainer</code> and <code>DynamicTest</code>. <code>DynamicContainer</code> instances are
+composed of a <em>display name</em> and a list of dynamic child nodes, enabling the creation of
+arbitrarily nested hierarchies of dynamic nodes. <code>DynamicTest</code> instances will then be
+executed lazily, enabling dynamic and even non-deterministic generation of test cases.</p>
 </div>
 <div class="paragraph">
-<p>Any <code>Stream</code> returned by a <code>@TestFactory</code> will be properly closed by calling <code>stream.close()</code>,
-making it safe to use a resource such as <code>Files.lines()</code>.</p>
+<p>Any <code>Stream</code> returned by a <code>@TestFactory</code> will be properly closed by calling
+<code>stream.close()</code>, making it safe to use a resource such as <code>Files.lines()</code>.</p>
 </div>
 <div class="paragraph">
-<p>As with <code>@Test</code> methods, <code>@TestFactory</code> methods must not be <code>private</code> or <code>static</code>
-and may optionally declare parameters to be resolved by <code>ParameterResolvers</code>.</p>
+<p>As with <code>@Test</code> methods, <code>@TestFactory</code> methods must not be <code>private</code> or <code>static</code> and may
+optionally declare parameters to be resolved by <code>ParameterResolvers</code>.</p>
 </div>
 <div class="paragraph">
-<p>A <code>DynamicTest</code> is a test case generated at runtime.
-It is composed of a <em>display name</em> and an <code>Executable</code>. <code>Executable</code> is a <code>@FunctionalInterface</code>
-which means that the implementations of dynamic tests can be provided as <em>lambda expressions</em>
-or <em>method references</em>.</p>
+<p>A <code>DynamicTest</code> is a test case generated at runtime. It is composed of a <em>display name</em>
+and an <code>Executable</code>. <code>Executable</code> is a <code>@FunctionalInterface</code> which means that the
+implementations of dynamic tests can be provided as <em>lambda expressions</em> or <em>method
+references</em>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -2852,11 +2858,12 @@ or <em>method references</em>.</p>
 <div class="title">Dynamic Test Lifecycle</div>
 The execution lifecycle of a dynamic test is quite different than it is for a
 standard <code>@Test</code> case. Specifically, there are no lifecycle callbacks for individual
-dynamic tests. This means that <code>@BeforeEach</code> and <code>@AfterEach</code> methods and their corresponding
-extension callbacks are executed for the <code>@TestFactory</code> method but not for each <em>dynamic test</em>.
-In other words, if you access fields from the test instance within a lambda expression for
-a dynamic test, those fields will not be reset by callback methods or extensions between
-the execution of individual dynamic tests generated by the same <code>@TestFactory</code> method.
+dynamic tests. This means that <code>@BeforeEach</code> and <code>@AfterEach</code> methods and their
+corresponding extension callbacks are executed for the <code>@TestFactory</code> method but not for
+each <em>dynamic test</em>. In other words, if you access fields from the test instance within a
+lambda expression for a dynamic test, those fields will not be reset by callback methods
+or extensions between the execution of individual dynamic tests generated by the same
+<code>@TestFactory</code> method.
 </td>
 </tr>
 </table>
@@ -2882,7 +2889,8 @@ Dynamic tests are currently an <em>experimental</em> feature. Consult the table 
 <div class="sect3">
 <h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.15.1. Dynamic Test Examples</h4>
 <div class="paragraph">
-<p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories and dynamic tests.</p>
+<p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories
+and dynamic tests.</p>
 </div>
 <div class="paragraph">
 <p>The first method returns an invalid return type. Since an invalid return type cannot be
@@ -2890,22 +2898,23 @@ detected at compile time, a <code>JUnitException</code> is thrown when it is det
 </div>
 <div class="paragraph">
 <p>The next five methods are very simple examples that demonstrate the generation of a
-<code>Collection</code>, <code>Iterable</code>, <code>Iterator</code>, or <code>Stream</code> of <code>DynamicTest</code> instances.
-Most of these examples do not really exhibit dynamic behavior
-but merely demonstrate the supported return types in principle.
-However, <code>dynamicTestsFromStream()</code> and <code>dynamicTestsFromIntStream()</code> demonstrate how
-easy it is to generate dynamic tests for a given set of strings or a range of input numbers.</p>
+<code>Collection</code>, <code>Iterable</code>, <code>Iterator</code>, or <code>Stream</code> of <code>DynamicTest</code> instances. Most of
+these examples do not really exhibit dynamic behavior but merely demonstrate the
+supported return types in principle. However, <code>dynamicTestsFromStream()</code> and
+<code>dynamicTestsFromIntStream()</code> demonstrate how easy it is to generate dynamic tests for a
+given set of strings or a range of input numbers.</p>
 </div>
 <div class="paragraph">
-<p>The next method is truly dynamic in nature.
-<code>generateRandomNumberOfTests()</code> implements an <code>Iterator</code> that generates random numbers, a
-display name generator, and a test executor and then provides all three to <code>DynamicTest.stream()</code>.
-Although the non-deterministic behavior of <code>generateRandomNumberOfTests()</code> is of course in conflict with
-test repeatability and should thus be used with care, it serves to demonstrate the expressiveness
-and power of dynamic tests.</p>
+<p>The next method is truly dynamic in nature. <code>generateRandomNumberOfTests()</code> implements an
+<code>Iterator</code> that generates random numbers, a display name generator, and a test executor
+and then provides all three to <code>DynamicTest.stream()</code>. Although the non-deterministic
+behavior of <code>generateRandomNumberOfTests()</code> is of course in conflict with test
+repeatability and should thus be used with care, it serves to demonstrate the
+expressiveness and power of dynamic tests.</p>
 </div>
 <div class="paragraph">
-<p>The last method generates a nested hierarchy of dynamic tests utilizing <code>DynamicContainer</code>.</p>
+<p>The last method generates a nested hierarchy of dynamic tests utilizing
+<code>DynamicContainer</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3343,9 +3352,9 @@ parameters to set multiple key-value pairs at once. All keys and values must be 
 implementation must be on the classpath.</p>
 </div>
 <div class="paragraph">
-<p>To configure support for JUnit Jupiter based tests, configure a <code>testCompile</code> dependency on the
-JUnit Jupiter API and a <code>testRuntime</code> dependency on the JUnit Jupiter <code>TestEngine</code> implementation
-similar to the following.</p>
+<p>To configure support for JUnit Jupiter based tests, configure a <code>testCompile</code> dependency
+on the JUnit Jupiter API and a <code>testRuntime</code> dependency on the JUnit Jupiter <code>TestEngine</code>
+implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3516,13 +3525,13 @@ currently only works with Surefire 2.19.1.
 <div class="sect4">
 <h5 id="running-tests-build-maven-engines-configure"><a class="anchor" href="#running-tests-build-maven-engines-configure"></a>Configuring Test Engines</h5>
 <div class="paragraph">
-<p>In order to have Maven Surefire run any tests at all, a <code>TestEngine</code> implementation must be added
-to the runtime classpath.</p>
+<p>In order to have Maven Surefire run any tests at all, a <code>TestEngine</code> implementation must
+be added to the runtime classpath.</p>
 </div>
 <div class="paragraph">
-<p>To configure support for JUnit Jupiter based tests, configure a <code>test</code> dependency on the JUnit
-Jupiter API, and add the JUnit Jupiter <code>TestEngine</code> implementation to the dependencies of the
-<code>maven-surefire-plugin</code> similar to the following.</p>
+<p>To configure support for JUnit Jupiter based tests, configure a <code>test</code> dependency on the
+JUnit Jupiter API, and add the JUnit Jupiter <code>TestEngine</code> implementation to the
+dependencies of the <code>maven-surefire-plugin</code> similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3562,9 +3571,9 @@ Jupiter API, and add the JUnit Jupiter <code>TestEngine</code> implementation to
 </div>
 </div>
 <div class="paragraph">
-<p>The JUnit Platform Surefire Provider can run JUnit 4 based tests as long as you configure a
-<code>test</code> dependency on JUnit 4 and add the JUnit Vintage <code>TestEngine</code> implementation to the
-dependencies of the <code>maven-surefire-plugin</code> similar to the following.</p>
+<p>The JUnit Platform Surefire Provider can run JUnit 4 based tests as long as you configure
+a <code>test</code> dependency on JUnit 4 and add the JUnit Vintage <code>TestEngine</code> implementation to
+the dependencies of the <code>maven-surefire-plugin</code> similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4202,11 +4211,11 @@ determine if a given test method should be executed based on the supplied
 <code>ExtensionContext</code>.</p>
 </div>
 <div class="paragraph">
-<p>When multiple <code>ExecutionCondition</code> extensions are registered,
-a container or test is disabled as soon as one of the conditions returns <em>disabled</em>.
-Thus, there is no guarantee that a condition is evaluated because another extension might
-have already caused a container or test to be disabled. In other words, the evaluation works like
-the short-circuiting boolean OR operator.</p>
+<p>When multiple <code>ExecutionCondition</code> extensions are registered, a container or test is
+disabled as soon as one of the conditions returns <em>disabled</em>. Thus, there is no guarantee
+that a condition is evaluated because another extension might have already caused a
+container or test to be disabled. In other words, the evaluation works like the
+short-circuiting boolean OR operator.</p>
 </div>
 <div class="paragraph">
 <p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
@@ -4220,7 +4229,8 @@ order to see if they are still <em>broken</em>. To do this, simply provide a pat
 <code>junit.jupiter.conditions.deactivate</code> <em>configuration parameter</em> to specify which
 conditions should be deactivated (i.e., not evaluated) for the current test run. The
 pattern can be supplied as a JVM system property, as a <em>configuration parameter</em> in the
-<code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>, or via the JUnit Platform configuration file (see <a href="#running-tests-config-params">Configuration Parameters</a> for details).</p>
+<code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>, or via the JUnit Platform
+configuration file (see <a href="#running-tests-config-params">Configuration Parameters</a> for details).</p>
 </div>
 <div class="paragraph">
 <p>For example, to deactivate JUnit&#8217;s <code>@Disabled</code> condition, you can start your JVM with the
@@ -4553,14 +4563,14 @@ functionality.</p>
 <div class="paragraph">
 <p>Usually, an extension is instantiated only once. So the question becomes relevant: How do
 you keep the state from one invocation of an extension to the next? The
-<code>ExtensionContext</code> API provides a <code>Store</code> exactly for this purpose.  Extensions may
-put values into a store for later retrieval.  See the
-<code><a href="#extensions-lifecycle-callbacks-timing-extension">TimingExtension</a></code> for an example of using the
-<code>Store</code> with a method-level scope. It is important to remember that values stored in an
-<code>ExtensionContext</code> during test execution will not be available in the surrounding
-<code>ExtensionContext</code>. Since <code>ExtensionContexts</code> may be nested, the scope of inner
-contexts may also be limited. Consult the corresponding Javadoc for details on the methods
-available for storing and retrieving values via the <code><a href="../api/org/junit/jupiter/api/extension/ExtensionContext.Store.html">Store</a></code>.</p>
+<code>ExtensionContext</code> API provides a <code>Store</code> exactly for this purpose. Extensions may put
+values into a store for later retrieval. See the
+<code><a href="#extensions-lifecycle-callbacks-timing-extension">TimingExtension</a></code> for an example of
+using the <code>Store</code> with a method-level scope. It is important to remember that values
+stored in an <code>ExtensionContext</code> during test execution will not be available in the
+surrounding <code>ExtensionContext</code>. Since <code>ExtensionContexts</code> may be nested, the scope of
+inner contexts may also be limited. Consult the corresponding Javadoc for details on the
+methods available for storing and retrieving values via the <code><a href="../api/org/junit/jupiter/api/extension/ExtensionContext.Store.html">Store</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -7412,7 +7422,7 @@ the <code>selectMethod()</code> variants in <code>DiscoverySelectors</code>.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-08-31 11:00:05 EDT
+Last updated 2017-08-31 11:12:33 EDT
 </div>
 </div>
 </body>
