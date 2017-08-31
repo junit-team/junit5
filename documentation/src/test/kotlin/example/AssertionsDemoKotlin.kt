@@ -46,7 +46,7 @@ class AssertionsDemoKotlin {
             people
                 .stream()
                 .map {
-                    // This map returns Stream<() -> Unit>
+                    // This mapping returns Stream<() -> Unit>
                     { assertTrue(it.firstName.startsWith("J")) }
                 }
         )
