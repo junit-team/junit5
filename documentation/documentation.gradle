@@ -35,6 +35,7 @@ dependencies {
 	testImplementation(project(path: ':junit-jupiter-params', configuration: 'shadow'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-launcher'))
+	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
@@ -67,6 +68,7 @@ asciidoctor {
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
+				'kotlinTestDir' : project.sourceSets.test.kotlin.srcDirs[0],
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
 				'outdir': outputDir.absolutePath,
 				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend and on MS Windows
