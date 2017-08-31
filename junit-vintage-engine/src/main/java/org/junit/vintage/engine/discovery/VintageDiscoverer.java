@@ -10,6 +10,7 @@
 
 package org.junit.vintage.engine.discovery;
 
+import static java.util.stream.Stream.concat;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.adaptFilter;
 import static org.junit.platform.engine.Filter.composeFilters;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
@@ -52,8 +54,7 @@ public class VintageDiscoverer {
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit Vintage");
 		// @formatter:off
-		collectTestClasses(discoveryRequest)
-				.toRequests()
+		collectTestClassRequests(discoveryRequest)
 				.map(request -> resolver.createRunnerTestDescriptor(request, uniqueId))
 				.filter(Objects::nonNull)
 				.forEach(engineDescriptor::addChild);
@@ -61,14 +62,14 @@ public class VintageDiscoverer {
 		return engineDescriptor;
 	}
 
-	private TestClassCollector collectTestClasses(EngineDiscoveryRequest discoveryRequest) {
+	private Stream<TestClassRequest> collectTestClassRequests(EngineDiscoveryRequest discoveryRequest) {
 		Predicate<Class<?>> classFilter = createTestClassPredicate(discoveryRequest);
 		Set<Class<?>> completeTestClasses = completeTestClassesResolver.resolve(discoveryRequest, classFilter);
 		Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses = filteredTestClassesResolver.resolve(
 			discoveryRequest,
 			//only include filtered classes that are not already included completely
 			classFilter.and(notIn(completeTestClasses)));
-		return new TestClassCollector(completeTestClasses, filteredTestClasses);
+		return concat(asTestClassRequests(completeTestClasses), asTestClassRequests(filteredTestClasses));
 	}
 
 	private Predicate<Class<?>> createTestClassPredicate(EngineDiscoveryRequest discoveryRequest) {
@@ -82,5 +83,15 @@ public class VintageDiscoverer {
 
 	private Predicate<? super Class<?>> notIn(Set<Class<?>> testClasses) {
 		return testClass -> !testClasses.contains(testClass);
+	}
+
+	private Stream<TestClassRequest> asTestClassRequests(Set<Class<?>> completeTestClasses) {
+		return completeTestClasses.stream().map(TestClassRequest::new);
+	}
+
+	private Stream<TestClassRequest> asTestClassRequests(
+			Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses) {
+		return filteredTestClasses.entrySet().stream().map(
+			entry -> new TestClassRequest(entry.getKey(), entry.getValue()));
 	}
 }
