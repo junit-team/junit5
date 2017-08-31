@@ -1,0 +1,28 @@
+[[release-notes-5.0.0-GA]]
+=== 5.0.0-GA
+
+*Date of Release:* Unreleased
+
+*Scope:* Addition of Kotlin assertion helpers
+
+
+[[release-notes-5.0.0-GA-junit-platform]]
+==== JUnit Platform
+
+No changes.
+
+
+[[release-notes-5.0.0-GA-junit-jupiter]]
+==== JUnit Jupiter
+
+===== New Features and Improvements
+
+* New Kotlin friendly assertions added as top-level functions in the `org.junit.jupiter.api` package.
+** `assertAll` that takes `Stream<() -> Unit>` or `vararg () -> Unit`.
+** `assertThrow` that uses Kotlin reified generics.
+
+
+[[release-notes-5.0.0-GA-junit-vintage]]
+==== JUnit Vintage
+
+No changes.
