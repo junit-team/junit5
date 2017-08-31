@@ -13,15 +13,15 @@ package org.junit.jupiter.api;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 class DynamicTestTests {
 
-	private final List<String> assertedValues = new LinkedList<>();
+	private final List<String> assertedValues = new ArrayList<>();
 
 	@Test
 	void streamFromIterator() throws Throwable {

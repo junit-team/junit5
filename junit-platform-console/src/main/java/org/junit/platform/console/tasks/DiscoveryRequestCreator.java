@@ -22,8 +22,8 @@ import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -73,7 +73,7 @@ class DiscoveryRequestCreator {
 	}
 
 	private List<DiscoverySelector> createExplicitDiscoverySelectors(CommandLineOptions options) {
-		List<DiscoverySelector> selectors = new LinkedList<>();
+		List<DiscoverySelector> selectors = new ArrayList<>();
 		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
 		options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
 		options.getSelectedDirectories().stream().map(DiscoverySelectors::selectDirectory).forEach(selectors::add);
