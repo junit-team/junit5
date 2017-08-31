@@ -65,7 +65,9 @@ public class VintageDiscoverer {
 		Predicate<Class<?>> classFilter = createTestClassPredicate(discoveryRequest);
 		Set<Class<?>> completeTestClasses = completeTestClassesResolver.resolve(discoveryRequest, classFilter);
 		Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses = filteredTestClassesResolver.resolve(
-			discoveryRequest, classFilter);
+			discoveryRequest,
+			//only include filtered classes that are not already included completely
+			classFilter.and(notIn(completeTestClasses)));
 		return new TestClassCollector(completeTestClasses, filteredTestClasses);
 	}
 
@@ -76,5 +78,9 @@ public class VintageDiscoverer {
 			(testClass, reason) -> logger.debug(() -> String.format("Class %s was excluded by a class filter: %s",
 				testClass.getName(), reason.orElse("<unknown reason>"))));
 		return classFilter.toPredicate().and(isPotentialJUnit4TestClass);
+	}
+
+	private Predicate<? super Class<?>> notIn(Set<Class<?>> testClasses) {
+		return testClass -> !testClasses.contains(testClass);
 	}
 }

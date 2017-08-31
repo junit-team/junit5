@@ -11,11 +11,9 @@
 package org.junit.vintage.engine.discovery;
 
 import static java.util.stream.Stream.concat;
-import static org.junit.platform.commons.util.FunctionUtils.where;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -45,7 +43,6 @@ class TestClassCollector {
 		// @formatter:off
 		return filteredTestClasses.entrySet()
 				.stream()
-				.filter(where(Entry::getKey, testClass -> !completeTestClasses.contains(testClass)))
 				.map(entry -> new TestClassRequest(entry.getKey(), entry.getValue()));
 		// @formatter:on
 	}
