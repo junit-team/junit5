@@ -11,6 +11,8 @@ package org.junit.jupiter.api
 
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
+import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
 import org.opentest4j.AssertionFailedError
 import org.opentest4j.MultipleFailuresError
 import java.util.stream.Stream
@@ -51,6 +53,17 @@ class AssertionsAssertAllKotlinTests {
             assertAll(Stream.of({ assertFalse(true) }, { assertFalse(true) }))
         }
         assertExpectedExceptionTypes(multipleFailuresError, AssertionFailedError::class, AssertionFailedError::class)
+    }
+
+    @Test
+    fun `assertThrows that does not have exception thrown does not throw KotlinNullPointer`() {
+        val assertionMessage = "This will not throw an exception"
+        val error = assertThrows<AssertionFailedError>("assertThrows did not throw the correct exception") {
+            assertThrows<IllegalStateException>(assertionMessage) { }
+            // This should never execute
+            expectAssertionFailedError()
+        }
+        assertMessageStartsWith(error, assertionMessage)
     }
 
     companion object {
