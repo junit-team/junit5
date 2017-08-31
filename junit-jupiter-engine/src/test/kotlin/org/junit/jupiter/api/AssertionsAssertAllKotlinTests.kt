@@ -19,7 +19,7 @@ import java.util.stream.Stream
 import kotlin.reflect.KClass
 
 /**
- * Unit tests for JUnit Jupiter {@link Assertions}.
+ * Unit tests for JUnit Jupiter [org.junit.jupiter.api] top-level assertion functions.
  *
  * @since 5.0
  */
