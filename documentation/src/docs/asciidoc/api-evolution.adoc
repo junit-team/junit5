@@ -12,9 +12,9 @@ classes, and methods.
 [[api-evolution-annotations]]
 === API Annotations
 
-Every published artifact has a version number `<major>.<minor>.<patch>` and all
-publicly available interfaces, classes, and methods are annotated with {API}. The
-annotation's `Usage` value can be assigned one of the following five values:
+Every published artifact has a version number `<major>.<minor>.<patch>` and all publicly
+available interfaces, classes, and methods are annotated with {API}. The annotation's
+`Usage` value can be assigned one of the following five values:
 
 [cols="20,80"]
 |===
@@ -36,9 +36,45 @@ If the `@API` annotation is present on a type, it is considered to be applicable
 public members of that type as well. A member is allowed to declare a different `Usage`
 value of lower stability.
 
+[[api-evolution-experimental-apis]]
+=== Experimental APIs
+
+The following table lists which APIs are currently marked as _experimental_. Caution
+should be taken when relying on such APIs.
+
+|===
+| Package Name                               | Class Name                                 | Type
+
+| `org.junit.jupiter.api`                    | `DynamicContainer`                         | `class`
+| `org.junit.jupiter.api`                    | `DynamicNode`                              | `class`
+| `org.junit.jupiter.api`                    | `DynamicTest`                              | `class`
+| `org.junit.jupiter.api`                    | `TestFactory`                              | `annotation`
+| `org.junit.jupiter.migrationsupport.rules` | `EnableRuleMigrationSupport`               | `annotation`
+| `org.junit.jupiter.migrationsupport.rules` | `ExpectedExceptionSupport`                 | `class`
+| `org.junit.jupiter.migrationsupport.rules` | `ExternalResourceSupport`                  | `class`
+| `org.junit.jupiter.migrationsupport.rules` | `VerifierSupport`                          | `class`
+| `org.junit.jupiter.params`                 | `ParameterizedTest`                        | `annotation`
+| `org.junit.jupiter.params.converter`       | `ArgumentConversionException`              | `class`
+| `org.junit.jupiter.params.converter`       | `ArgumentConverter`                        | `interface`
+| `org.junit.jupiter.params.converter`       | `ConvertWith`                              | `annotation`
+| `org.junit.jupiter.params.converter`       | `JavaTimeConversionPattern`                | `annotation`
+| `org.junit.jupiter.params.converter`       | `SimpleArgumentConverter`                  | `class`
+| `org.junit.jupiter.params.provider`        | `Arguments`                                | `interface`
+| `org.junit.jupiter.params.provider`        | `ArgumentsProvider`                        | `interface`
+| `org.junit.jupiter.params.provider`        | `ArgumentsSource`                          | `annotation`
+| `org.junit.jupiter.params.provider`        | `ArgumentsSources`                         | `annotation`
+| `org.junit.jupiter.params.provider`        | `CsvFileSource`                            | `annotation`
+| `org.junit.jupiter.params.provider`        | `CsvSource`                                | `annotation`
+| `org.junit.jupiter.params.provider`        | `EnumSource`                               | `annotation`
+| `org.junit.jupiter.params.provider`        | `MethodSource`                             | `annotation`
+| `org.junit.jupiter.params.provider`        | `ValueSource`                              | `annotation`
+| `org.junit.jupiter.params.support`         | `AnnotationConsumer`                       | `interface`
+| `org.junit.platform.surefire.provider`     | `JUnitPlatformProvider`                    | `class`
+|===
+
 [[api-evolution-tooling]]
 === Tooling Support
 
 The JUnit team plans to provide native tooling support for all JUnit users, extenders,
-and tool builders. The tooling support will provide a means to check if the JUnit APIs
-are being used in accordance with `@API` annotation declarations.
+and tool builders. The tooling support will likely provide a means to check if the JUnit
+APIs are being used in accordance with `@API` annotation declarations.

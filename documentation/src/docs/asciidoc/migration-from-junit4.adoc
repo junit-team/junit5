@@ -71,3 +71,6 @@ support extensions: `VerifierSupport`, `ExternalResourceSupport`, and `ExpectedE
 
 However, if you intend to develop a new extension for JUnit 5
 please use the new extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.
+
+WARNING: JUnit 4 `Rule` support in JUnit Jupiter is currently an _experimental_ feature.
+Consult the table in <<api-evolution-experimental-apis>> for detail.
