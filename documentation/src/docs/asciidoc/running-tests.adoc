@@ -244,9 +244,9 @@ junitPlatform {
 In order to have the JUnit Gradle plugin run any tests at all, a `TestEngine`
 implementation must be on the classpath.
 
-To configure support for JUnit Jupiter based tests, configure a `testCompile` dependency on the
-JUnit Jupiter API and a `testRuntime` dependency on the JUnit Jupiter `TestEngine` implementation
-similar to the following.
+To configure support for JUnit Jupiter based tests, configure a `testCompile` dependency
+on the JUnit Jupiter API and a `testRuntime` dependency on the JUnit Jupiter `TestEngine`
+implementation similar to the following.
 
 [source,java,indent=0]
 [subs=attributes+]
@@ -382,12 +382,12 @@ currently only works with Surefire 2.19.1.
 [[running-tests-build-maven-engines-configure]]
 ===== Configuring Test Engines
 
-In order to have Maven Surefire run any tests at all, a `TestEngine` implementation must be added
-to the runtime classpath.
+In order to have Maven Surefire run any tests at all, a `TestEngine` implementation must
+be added to the runtime classpath.
 
-To configure support for JUnit Jupiter based tests, configure a `test` dependency on the JUnit
-Jupiter API, and add the JUnit Jupiter `TestEngine` implementation to the dependencies of the
-`maven-surefire-plugin` similar to the following.
+To configure support for JUnit Jupiter based tests, configure a `test` dependency on the
+JUnit Jupiter API, and add the JUnit Jupiter `TestEngine` implementation to the
+dependencies of the `maven-surefire-plugin` similar to the following.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -427,9 +427,9 @@ Jupiter API, and add the JUnit Jupiter `TestEngine` implementation to the depend
 	...
 ----
 
-The JUnit Platform Surefire Provider can run JUnit 4 based tests as long as you configure a
-`test` dependency on JUnit 4 and add the JUnit Vintage `TestEngine` implementation to the
-dependencies of the `maven-surefire-plugin` similar to the following.
+The JUnit Platform Surefire Provider can run JUnit 4 based tests as long as you configure
+a `test` dependency on JUnit 4 and add the JUnit Vintage `TestEngine` implementation to
+the dependencies of the `maven-surefire-plugin` similar to the following.
 
 [source,xml,indent=0]
 [subs=attributes+]

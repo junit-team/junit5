@@ -121,11 +121,11 @@ determine if all the tests it contains should be executed based on the supplied
 determine if a given test method should be executed based on the supplied
 `ExtensionContext`.
 
-When multiple `ExecutionCondition` extensions are registered,
-a container or test is disabled as soon as one of the conditions returns _disabled_.
-Thus, there is no guarantee that a condition is evaluated because another extension might
-have already caused a container or test to be disabled. In other words, the evaluation works like
-the short-circuiting boolean OR operator.
+When multiple `ExecutionCondition` extensions are registered, a container or test is
+disabled as soon as one of the conditions returns _disabled_. Thus, there is no guarantee
+that a condition is evaluated because another extension might have already caused a
+container or test to be disabled. In other words, the evaluation works like the
+short-circuiting boolean OR operator.
 
 See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examples.
 
@@ -138,7 +138,8 @@ order to see if they are still _broken_. To do this, simply provide a pattern fo
 `junit.jupiter.conditions.deactivate` _configuration parameter_ to specify which
 conditions should be deactivated (i.e., not evaluated) for the current test run. The
 pattern can be supplied as a JVM system property, as a _configuration parameter_ in the
-`LauncherDiscoveryRequest` that is passed to the `Launcher`, or via the JUnit Platform configuration file (see <<running-tests-config-params>> for details).
+`LauncherDiscoveryRequest` that is passed to the `Launcher`, or via the JUnit Platform
+configuration file (see <<running-tests-config-params>> for details).
 
 For example, to deactivate JUnit's `@Disabled` condition, you can start your JVM with the
 following system property.
@@ -306,14 +307,14 @@ functionality.
 
 Usually, an extension is instantiated only once. So the question becomes relevant: How do
 you keep the state from one invocation of an extension to the next? The
-`ExtensionContext` API provides a `Store` exactly for this purpose.  Extensions may
-put values into a store for later retrieval.  See the
-`<<extensions-lifecycle-callbacks-timing-extension, TimingExtension>>` for an example of using the
-`Store` with a method-level scope. It is important to remember that values stored in an
-`ExtensionContext` during test execution will not be available in the surrounding
-`ExtensionContext`. Since `ExtensionContexts` may be nested, the scope of inner
-contexts may also be limited. Consult the corresponding Javadoc for details on the methods
-available for storing and retrieving values via the `{ExtensionContext_Store}`.
+`ExtensionContext` API provides a `Store` exactly for this purpose. Extensions may put
+values into a store for later retrieval. See the
+`<<extensions-lifecycle-callbacks-timing-extension, TimingExtension>>` for an example of
+using the `Store` with a method-level scope. It is important to remember that values
+stored in an `ExtensionContext` during test execution will not be available in the
+surrounding `ExtensionContext`. Since `ExtensionContexts` may be nested, the scope of
+inner contexts may also be limited. Consult the corresponding Javadoc for details on the
+methods available for storing and retrieving values via the `{ExtensionContext_Store}`.
 
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
