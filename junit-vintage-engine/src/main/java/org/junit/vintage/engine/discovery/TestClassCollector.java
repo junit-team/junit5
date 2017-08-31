@@ -13,9 +13,9 @@ package org.junit.vintage.engine.discovery;
 import static java.util.stream.Stream.concat;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,7 +35,7 @@ class TestClassCollector {
 	}
 
 	void addFiltered(Class<?> testClass, RunnerTestDescriptorAwareFilter filter) {
-		filteredTestClasses.computeIfAbsent(testClass, key -> new LinkedList<>()).add(filter);
+		filteredTestClasses.computeIfAbsent(testClass, key -> new ArrayList<>()).add(filter);
 	}
 
 	Stream<TestClassRequest> toRequests() {
