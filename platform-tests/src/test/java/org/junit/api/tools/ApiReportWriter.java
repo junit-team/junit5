@@ -10,7 +10,7 @@
 
 package org.junit.api.tools;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.EnumSet;
 
 import org.junit.platform.commons.meta.API.Usage;
@@ -20,8 +20,8 @@ import org.junit.platform.commons.meta.API.Usage;
  */
 interface ApiReportWriter {
 
-	void printReportHeader(PrintStream out);
+	void printReportHeader(PrintWriter out);
 
-	void printDeclarationInfo(PrintStream out, EnumSet<Usage> usages);
+	void printDeclarationInfo(PrintWriter out, EnumSet<Usage> usages);
 
 }

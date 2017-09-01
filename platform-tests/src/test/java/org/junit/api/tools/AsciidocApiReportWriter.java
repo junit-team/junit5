@@ -10,7 +10,7 @@
 
 package org.junit.api.tools;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 
 /**
  * @since 1.0
@@ -34,14 +34,14 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
-	protected void printDeclarationTableHeader(PrintStream out) {
+	protected void printDeclarationTableHeader(PrintWriter out) {
 		out.println("|===");
 		out.printf(ASCIIDOC_FORMAT, "Package Name", "Class Name", "Type");
 		out.println();
 	}
 
 	@Override
-	protected void printDeclarationTableDetails(Class<?> type, PrintStream out) {
+	protected void printDeclarationTableDetails(Class<?> type, PrintWriter out) {
 		out.printf(ASCIIDOC_FORMAT, //
 			code(type.getPackage().getName()), //
 			code(type.getSimpleName()), //
@@ -50,7 +50,7 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
-	protected void printDeclarationTableFooter(PrintStream out) {
+	protected void printDeclarationTableFooter(PrintWriter out) {
 		out.println("|===");
 	}
 

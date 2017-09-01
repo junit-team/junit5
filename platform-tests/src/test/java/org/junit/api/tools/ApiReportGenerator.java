@@ -10,6 +10,7 @@
 
 package org.junit.api.tools;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -30,6 +31,7 @@ import org.junit.platform.commons.meta.API.Usage;
 class ApiReportGenerator {
 
 	public static void main(String... args) {
+		PrintWriter writer = new PrintWriter(System.out, true);
 		ApiReportGenerator reportGenerator = new ApiReportGenerator();
 
 		// scan all types below "org.junit" package
@@ -38,13 +40,13 @@ class ApiReportGenerator {
 		// ApiReportWriter reportWriter = new MarkdownApiReportWriter(apiReport);
 		ApiReportWriter reportWriter = new AsciidocApiReportWriter(apiReport);
 
-		reportWriter.printReportHeader(System.out);
+		reportWriter.printReportHeader(writer);
 
 		// Print report for all Usage enum constants
-		// reportWriter.printDeclarationInfo(System.out, EnumSet.allOf(Usage.class));
+		// reportWriter.printDeclarationInfo(writer, EnumSet.allOf(Usage.class));
 
 		// Print report only for Experimental Usage constant
-		reportWriter.printDeclarationInfo(System.out, EnumSet.of(Usage.Experimental));
+		reportWriter.printDeclarationInfo(writer, EnumSet.of(Usage.Experimental));
 	}
 
 	// -------------------------------------------------------------------------

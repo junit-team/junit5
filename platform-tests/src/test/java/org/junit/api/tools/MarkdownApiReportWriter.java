@@ -10,7 +10,7 @@
 
 package org.junit.api.tools;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Modifier;
 
 /**
@@ -35,13 +35,13 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
-	protected void printDeclarationTableHeader(PrintStream out) {
+	protected void printDeclarationTableHeader(PrintWriter out) {
 		out.printf(MARKDOWN_FORMAT, "Package Name", "Class Name", "Type", "Modifiers");
 		out.printf(MARKDOWN_FORMAT, dashes(52), dashes(42), dashes(12), dashes(27));
 	}
 
 	@Override
-	protected void printDeclarationTableDetails(Class<?> type, PrintStream out) {
+	protected void printDeclarationTableDetails(Class<?> type, PrintWriter out) {
 		out.printf(MARKDOWN_FORMAT, //
 			code(type.getPackage().getName()), //
 			code(type.getSimpleName()), //
@@ -51,7 +51,7 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
-	protected void printDeclarationTableFooter(PrintStream out) {
+	protected void printDeclarationTableFooter(PrintWriter out) {
 		/* no-op */
 	}
 

@@ -10,7 +10,7 @@
 
 package org.junit.api.tools;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.nio.CharBuffer;
 import java.util.EnumSet;
 import java.util.List;
@@ -29,14 +29,14 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 	}
 
 	@Override
-	public void printReportHeader(PrintStream out) {
+	public void printReportHeader(PrintWriter out) {
 		out.println(h1("`@API` Declarations"));
 		out.println();
 		out.printf("Discovered %d types with `@API` declarations.%n%n", this.apiReport.getTypes().size());
 	}
 
 	@Override
-	public void printDeclarationInfo(PrintStream out, EnumSet<Usage> usages) {
+	public void printDeclarationInfo(PrintWriter out, EnumSet<Usage> usages) {
 		// @formatter:off
 		this.apiReport.getDeclarationsMap().entrySet().stream()
 				.filter(e -> usages.contains(e.getKey()))
@@ -44,7 +44,7 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		// @formatter:on
 	}
 
-	protected void printDeclarationSection(Usage usage, List<Class<?>> types, PrintStream out) {
+	protected void printDeclarationSection(Usage usage, List<Class<?>> types, PrintWriter out) {
 		printDeclarationHeader(usage, types, out);
 		if (types.size() > 0) {
 			printDeclarationTableHeader(out);
@@ -54,7 +54,7 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		}
 	}
 
-	protected void printDeclarationHeader(Usage usage, List<Class<?>> types, PrintStream out) {
+	protected void printDeclarationHeader(Usage usage, List<Class<?>> types, PrintWriter out) {
 		out.println(h2(String.format("`@API(%s)`", usage)));
 		out.println();
 		out.printf("Discovered %d `@API(%s)` declarations.%n%n", types.size(), usage);
@@ -64,11 +64,11 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 
 	protected abstract String h2(String header);
 
-	protected abstract void printDeclarationTableHeader(PrintStream out);
+	protected abstract void printDeclarationTableHeader(PrintWriter out);
 
-	protected abstract void printDeclarationTableDetails(Class<?> type, PrintStream out);
+	protected abstract void printDeclarationTableDetails(Class<?> type, PrintWriter out);
 
-	protected abstract void printDeclarationTableFooter(PrintStream out);
+	protected abstract void printDeclarationTableFooter(PrintWriter out);
 
 	protected String getKind(Class<?> type) {
 		if (type.isAnnotation()) {
