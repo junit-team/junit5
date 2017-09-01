@@ -22,10 +22,10 @@ For details please see the https://blog.jetbrains.com/idea/2016/08/using-junit-5
 |===
 
 WARNING: IntelliJ IDEA bundles a certain version of JUnit 5. That means, if you want to
-use the a newer milestone version of the Jupiter API, executing the tests might not work.
+use a newer milestone version of the Jupiter API, executing the tests might not work.
 This situation will improve once the first GA version of JUnit 5 has been released.
-In the meantime, please follow the instructions below to use an newer version of JUnit 5
-than the one with IntelliJ IDEA.
+In the meantime, please follow the instructions below to use a newer version of JUnit 5
+than the one bundled with IntelliJ IDEA.
 
 In order to use a different JUnit 5 version, you have to manually add the
 `junit-platform-launcher`, `junit-jupiter-engine`, and `junit-vintage-engine` JARs to the
