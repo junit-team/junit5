@@ -30,9 +30,9 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 
 	@Override
 	public void printReportHeader(PrintWriter out) {
-		out.println(h1("`@API` Declarations"));
+		out.println(h1("@API Declarations"));
 		out.println();
-		out.printf("Discovered %d types with `@API` declarations.%n%n", this.apiReport.getTypes().size());
+		out.printf("Discovered %d types with " + code("@API") + " declarations.%n%n", this.apiReport.getTypes().size());
 	}
 
 	@Override
@@ -55,9 +55,9 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 	}
 
 	protected void printDeclarationHeader(Usage usage, List<Class<?>> types, PrintWriter out) {
-		out.println(h2(String.format("`@API(%s)`", usage)));
+		out.println(h2(String.format("@API(%s)", usage)));
 		out.println();
-		out.printf("Discovered %d `@API(%s)` declarations.%n%n", types.size(), usage);
+		out.printf("Discovered %d " + code("@API(%s)") + " declarations.%n%n", types.size(), usage);
 	}
 
 	protected abstract String h1(String header);

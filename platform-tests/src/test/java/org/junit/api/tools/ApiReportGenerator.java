@@ -43,10 +43,10 @@ class ApiReportGenerator {
 		reportWriter.printReportHeader(writer);
 
 		// Print report for all Usage enum constants
-		// reportWriter.printDeclarationInfo(writer, EnumSet.allOf(Usage.class));
+		reportWriter.printDeclarationInfo(writer, EnumSet.allOf(Usage.class));
 
 		// Print report only for Experimental Usage constant
-		reportWriter.printDeclarationInfo(writer, EnumSet.of(Usage.Experimental));
+		// reportWriter.printDeclarationInfo(writer, EnumSet.of(Usage.Experimental));
 	}
 
 	// -------------------------------------------------------------------------
