@@ -69,6 +69,13 @@ should be taken when relying on such APIs.
 | `org.junit.jupiter.params.provider`        | `MethodSource`                | `annotation`
 | `org.junit.jupiter.params.provider`        | `ValueSource`                 | `annotation`
 | `org.junit.jupiter.params.support`         | `AnnotationConsumer`          | `interface`
+| `org.junit.platform.gradle.plugin`         | `EnginesExtension`            | `class`
+| `org.junit.platform.gradle.plugin`         | `FiltersExtension`            | `class`
+| `org.junit.platform.gradle.plugin`         | `JUnitPlatformExtension`      | `class`
+| `org.junit.platform.gradle.plugin`         | `JUnitPlatformPlugin`         | `class`
+| `org.junit.platform.gradle.plugin`         | `PackagesExtension`           | `class`
+| `org.junit.platform.gradle.plugin`         | `SelectorsExtension`          | `class`
+| `org.junit.platform.gradle.plugin`         | `TagsExtension`               | `class`
 | `org.junit.platform.surefire.provider`     | `JUnitPlatformProvider`       | `class`
 |===
 
