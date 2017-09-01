@@ -21,7 +21,7 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 
 	private static final String MARKDOWN_FORMAT = "%-52s | %-42s | %-12s | %-27s%n";
 
-	public MarkdownApiReportWriter(ApiReport apiReport) {
+	MarkdownApiReportWriter(ApiReport apiReport) {
 		super(apiReport);
 	}
 
@@ -51,7 +51,7 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
-	protected void printDeclarationTableDetails(Class<?> type, PrintWriter out) {
+	protected void printDeclarationTableRow(Class<?> type, PrintWriter out) {
 		out.printf(MARKDOWN_FORMAT, //
 			code(type.getPackage().getName()), //
 			code(type.getSimpleName()), //

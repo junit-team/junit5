@@ -19,7 +19,7 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 
 	private static final String ASCIIDOC_FORMAT = "| %-52s | %-42s | %-12s%n";
 
-	public AsciidocApiReportWriter(ApiReport apiReport) {
+	AsciidocApiReportWriter(ApiReport apiReport) {
 		super(apiReport);
 	}
 
@@ -46,7 +46,7 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
-	protected void printDeclarationTableDetails(Class<?> type, PrintWriter out) {
+	protected void printDeclarationTableRow(Class<?> type, PrintWriter out) {
 		out.printf(ASCIIDOC_FORMAT, //
 			code(type.getPackage().getName()), //
 			code(type.getSimpleName()), //

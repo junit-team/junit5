@@ -43,21 +43,21 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		// @formatter:off
 		this.apiReport.getDeclarationsMap().entrySet().stream()
 				.filter(e -> usages.contains(e.getKey()))
-				.forEach(e -> this.printDeclarationSection(e.getKey(), e.getValue(), out));
+				.forEach(e -> printDeclarationSection(e.getKey(), e.getValue(), out));
 		// @formatter:on
 	}
 
 	protected void printDeclarationSection(Usage usage, List<Class<?>> types, PrintWriter out) {
-		printDeclarationHeader(usage, types, out);
+		printDeclarationSectionHeader(usage, types, out);
 		if (types.size() > 0) {
 			printDeclarationTableHeader(out);
-			types.forEach(type -> this.printDeclarationTableDetails(type, out));
+			types.forEach(type -> printDeclarationTableRow(type, out));
 			printDeclarationTableFooter(out);
 			out.println();
 		}
 	}
 
-	protected void printDeclarationHeader(Usage usage, List<Class<?>> types, PrintWriter out) {
+	protected void printDeclarationSectionHeader(Usage usage, List<Class<?>> types, PrintWriter out) {
 		out.println(h2(format("@API(%s)", usage)));
 		out.println();
 		out.println(paragraph(format("Discovered %d " + code("@API(%s)") + " declarations.", types.size(), usage)));
@@ -76,7 +76,7 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 
 	protected abstract void printDeclarationTableHeader(PrintWriter out);
 
-	protected abstract void printDeclarationTableDetails(Class<?> type, PrintWriter out);
+	protected abstract void printDeclarationTableRow(Class<?> type, PrintWriter out);
 
 	protected abstract void printDeclarationTableFooter(PrintWriter out);
 

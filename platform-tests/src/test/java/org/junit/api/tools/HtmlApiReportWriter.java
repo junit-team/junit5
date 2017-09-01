@@ -20,7 +20,7 @@ class HtmlApiReportWriter extends AbstractApiReportWriter {
 	private static final String HTML_HEADER_FORMAT = "\t<tr><th>%s</th><th>%s</th><th>%s</th></tr>%n";
 	private static final String HTML_ROW_FORMAT = "\t<tr><td>%s</td><td>%s</td><td>%s</td></tr>%n";
 
-	public HtmlApiReportWriter(ApiReport apiReport) {
+	HtmlApiReportWriter(ApiReport apiReport) {
 		super(apiReport);
 	}
 
@@ -51,7 +51,7 @@ class HtmlApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
-	protected void printDeclarationTableDetails(Class<?> type, PrintWriter out) {
+	protected void printDeclarationTableRow(Class<?> type, PrintWriter out) {
 		out.printf(HTML_ROW_FORMAT, //
 			code(type.getPackage().getName()), //
 			code(type.getSimpleName()), //
