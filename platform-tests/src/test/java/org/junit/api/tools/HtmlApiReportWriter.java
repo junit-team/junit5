@@ -11,58 +11,57 @@
 package org.junit.api.tools;
 
 import java.io.PrintWriter;
-import java.lang.reflect.Modifier;
-import java.nio.CharBuffer;
 
 /**
  * @since 1.0
  */
-class MarkdownApiReportWriter extends AbstractApiReportWriter {
+class HtmlApiReportWriter extends AbstractApiReportWriter {
 
-	private static final String MARKDOWN_FORMAT = "%-52s | %-42s | %-12s | %-27s%n";
+	private static final String HTML_HEADER_FORMAT = "\t<tr><th>%s</th><th>%s</th><th>%s</th></tr>%n";
+	private static final String HTML_ROW_FORMAT = "\t<tr><td>%s</td><td>%s</td><td>%s</td></tr>%n";
 
-	public MarkdownApiReportWriter(ApiReport apiReport) {
+	public HtmlApiReportWriter(ApiReport apiReport) {
 		super(apiReport);
 	}
 
 	@Override
 	protected String h1(String header) {
-		return "# " + header;
+		return "<h1>" + header + "</h1>";
 	}
 
 	@Override
 	protected String h2(String header) {
-		return "## " + header;
+		return "<h2>" + header + "</h2>";
 	}
 
 	@Override
 	protected String code(String element) {
-		return "`" + element + "`";
+		return "<span class='code'>" + element + "</span>";
+	}
+
+	@Override
+	protected String paragraph(String element) {
+		return "<p>" + element + "</p>";
 	}
 
 	@Override
 	protected void printDeclarationTableHeader(PrintWriter out) {
-		out.printf(MARKDOWN_FORMAT, "Package Name", "Class Name", "Type", "Modifiers");
-		out.printf(MARKDOWN_FORMAT, dashes(52), dashes(42), dashes(12), dashes(27));
-	}
-
-	private String dashes(int length) {
-		return CharBuffer.allocate(length).toString().replace('\0', '-');
+		out.println("<table>");
+		out.printf(HTML_HEADER_FORMAT, "Package Name", "Class Name", "Type");
 	}
 
 	@Override
 	protected void printDeclarationTableDetails(Class<?> type, PrintWriter out) {
-		out.printf(MARKDOWN_FORMAT, //
+		out.printf(HTML_ROW_FORMAT, //
 			code(type.getPackage().getName()), //
 			code(type.getSimpleName()), //
-			code(getKind(type)), //
-			code(Modifier.toString(type.getModifiers())) //
+			code(getKind(type)) //
 		);
 	}
 
 	@Override
 	protected void printDeclarationTableFooter(PrintWriter out) {
-		/* no-op */
+		out.println("</table>");
 	}
 
 }

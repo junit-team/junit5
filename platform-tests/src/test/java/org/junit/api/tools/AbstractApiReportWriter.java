@@ -10,8 +10,9 @@
 
 package org.junit.api.tools;
 
+import static java.lang.String.format;
+
 import java.io.PrintWriter;
-import java.nio.CharBuffer;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -32,7 +33,9 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 	public void printReportHeader(PrintWriter out) {
 		out.println(h1("@API Declarations"));
 		out.println();
-		out.printf("Discovered %d types with " + code("@API") + " declarations.%n%n", this.apiReport.getTypes().size());
+		out.println(paragraph(
+			format("Discovered %d types with %s declarations.", this.apiReport.getTypes().size(), code("@API"))));
+		out.println();
 	}
 
 	@Override
@@ -55,14 +58,21 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 	}
 
 	protected void printDeclarationHeader(Usage usage, List<Class<?>> types, PrintWriter out) {
-		out.println(h2(String.format("@API(%s)", usage)));
+		out.println(h2(format("@API(%s)", usage)));
 		out.println();
-		out.printf("Discovered %d " + code("@API(%s)") + " declarations.%n%n", types.size(), usage);
+		out.println(paragraph(format("Discovered %d " + code("@API(%s)") + " declarations.", types.size(), usage)));
+		out.println();
 	}
 
 	protected abstract String h1(String header);
 
 	protected abstract String h2(String header);
+
+	protected abstract String code(String element);
+
+	protected String paragraph(String element) {
+		return element;
+	}
 
 	protected abstract void printDeclarationTableHeader(PrintWriter out);
 
@@ -81,14 +91,6 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 			return "interface";
 		}
 		return "class";
-	}
-
-	protected String code(String element) {
-		return "`" + element + "`";
-	}
-
-	protected String dashes(int length) {
-		return CharBuffer.allocate(length).toString().replace('\0', '-');
 	}
 
 }

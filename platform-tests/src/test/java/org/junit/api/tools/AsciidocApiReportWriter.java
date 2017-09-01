@@ -34,6 +34,11 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
+	protected String code(String element) {
+		return "`" + element + "`";
+	}
+
+	@Override
 	protected void printDeclarationTableHeader(PrintWriter out) {
 		out.println("|===");
 		out.printf(ASCIIDOC_FORMAT, "Package Name", "Class Name", "Type");
