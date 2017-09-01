@@ -8,11 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit;
+package org.junit.api.tools;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -36,12 +37,33 @@ class ApiReportGenerator {
 		ApiReportGenerator reportGenerator = new ApiReportGenerator();
 
 		// scan all types below "org.junit" package
-		ApiReport apiReport = reportGenerator.generateReport("org.junit");
+		// ApiReport apiReport = reportGenerator.generateMarkdownReport("org.junit");
+		ApiReport apiReport = reportGenerator.generateAsciidocReport("org.junit");
 
-		apiReport.printMarkdownReport(System.out);
+		apiReport.printReportHeader(System.out);
+
+		// Print report for all Usage enum constants
+		// apiReport.printDeclarationInfo(System.out, EnumSet.allOf(Usage.class));
+
+		// Print report only for Experimental Usage constant
+		apiReport.printDeclarationInfo(System.out, EnumSet.of(Usage.Experimental));
 	}
 
-	ApiReport generateReport(String... packages) {
+	private List<Class<?>> types;
+
+	private Map<Usage, List<Class<?>>> declarationsMap;
+
+	ApiReport generateMarkdownReport(String... packages) {
+		generateReportArtifacts(packages);
+		return new MarkdownApiReport(this.types, this.declarationsMap);
+	}
+
+	ApiReport generateAsciidocReport(String... packages) {
+		generateReportArtifacts(packages);
+		return new AsciidocApiReport(this.types, this.declarationsMap);
+	}
+
+	private void generateReportArtifacts(String... packages) {
 		// Scan packages
 		ScanResult scanResult = new FastClasspathScanner(packages).scan();
 
@@ -60,26 +82,24 @@ class ApiReportGenerator {
 		});
 
 		// Collect types
-		List<Class<?>> types = scanResult.classNamesToClassRefs(names);
+		this.types = scanResult.classNamesToClassRefs(names);
 		// only retain directly annotated types
-		types.removeIf(c -> !c.isAnnotationPresent(API.class));
-		types.sort(Comparator.comparing(type -> type.getName()));
+		this.types.removeIf(c -> !c.isAnnotationPresent(API.class));
+		this.types.sort(Comparator.comparing(type -> type.getName()));
 
 		logger.fine(() -> {
-			StringBuilder builder = new StringBuilder("Listing of all " + types.size() + " annotated types:");
+			StringBuilder builder = new StringBuilder("Listing of all " + this.types.size() + " annotated types:");
 			builder.append(EOL);
-			types.forEach(e -> builder.append(e).append(EOL));
+			this.types.forEach(e -> builder.append(e).append(EOL));
 			return builder.toString();
 		});
 
 		// Build map
-		Map<Usage, List<Class<?>>> declarationsMap = new EnumMap<>(Usage.class);
+		this.declarationsMap = new EnumMap<>(Usage.class);
 		for (Usage usage : Usage.values()) {
-			declarationsMap.put(usage, new ArrayList<>());
+			this.declarationsMap.put(usage, new ArrayList<>());
 		}
-		types.forEach(type -> declarationsMap.get(type.getAnnotation(API.class).value()).add(type));
-
-		return new ApiReport(types, declarationsMap);
+		this.types.forEach(type -> this.declarationsMap.get(type.getAnnotation(API.class).value()).add(type));
 	}
 
 }
