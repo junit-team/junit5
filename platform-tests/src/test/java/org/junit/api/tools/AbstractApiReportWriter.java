@@ -14,45 +14,31 @@ import java.io.PrintStream;
 import java.nio.CharBuffer;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.platform.commons.meta.API.Usage;
 
 /**
  * @since 1.0
  */
-abstract class AbstractApiReport implements ApiReport {
+abstract class AbstractApiReportWriter implements ApiReportWriter {
 
-	private final List<Class<?>> types;
+	private final ApiReport apiReport;
 
-	private final Map<Usage, List<Class<?>>> declarationsMap;
-
-	AbstractApiReport(List<Class<?>> types, Map<Usage, List<Class<?>>> declarationsMap) {
-		this.types = types;
-		this.declarationsMap = declarationsMap;
-	}
-
-	@Override
-	public List<Class<?>> getTypes() {
-		return this.types;
-	}
-
-	@Override
-	public Map<Usage, List<Class<?>>> getDeclarationsMap() {
-		return this.declarationsMap;
+	AbstractApiReportWriter(ApiReport apiReport) {
+		this.apiReport = apiReport;
 	}
 
 	@Override
 	public void printReportHeader(PrintStream out) {
 		out.println(h1("`@API` Declarations"));
 		out.println();
-		out.printf("Discovered %d types with `@API` declarations.%n%n", getTypes().size());
+		out.printf("Discovered %d types with `@API` declarations.%n%n", this.apiReport.getTypes().size());
 	}
 
 	@Override
 	public void printDeclarationInfo(PrintStream out, EnumSet<Usage> usages) {
 		// @formatter:off
-		getDeclarationsMap().entrySet().stream()
+		this.apiReport.getDeclarationsMap().entrySet().stream()
 				.filter(e -> usages.contains(e.getKey()))
 				.forEach(e -> this.printDeclarationSection(e.getKey(), e.getValue(), out));
 		// @formatter:on

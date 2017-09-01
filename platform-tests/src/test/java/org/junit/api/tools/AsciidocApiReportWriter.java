@@ -11,20 +11,16 @@
 package org.junit.api.tools;
 
 import java.io.PrintStream;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.platform.commons.meta.API.Usage;
 
 /**
  * @since 1.0
  */
-class AsciidocApiReport extends AbstractApiReport {
+class AsciidocApiReportWriter extends AbstractApiReportWriter {
 
 	private static final String ASCIIDOC_FORMAT = "| %-52s | %-42s | %-12s%n";
 
-	public AsciidocApiReport(List<Class<?>> types, Map<Usage, List<Class<?>>> declarationsMap) {
-		super(types, declarationsMap);
+	public AsciidocApiReportWriter(ApiReport apiReport) {
+		super(apiReport);
 	}
 
 	@Override

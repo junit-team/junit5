@@ -12,20 +12,16 @@ package org.junit.api.tools;
 
 import java.io.PrintStream;
 import java.lang.reflect.Modifier;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.platform.commons.meta.API.Usage;
 
 /**
  * @since 1.0
  */
-class MarkdownApiReport extends AbstractApiReport {
+class MarkdownApiReportWriter extends AbstractApiReportWriter {
 
 	private static final String MARKDOWN_FORMAT = "%-52s | %-42s | %-12s | %-27s%n";
 
-	public MarkdownApiReport(List<Class<?>> types, Map<Usage, List<Class<?>>> declarationsMap) {
-		super(types, declarationsMap);
+	public MarkdownApiReportWriter(ApiReport apiReport) {
+		super(apiReport);
 	}
 
 	@Override

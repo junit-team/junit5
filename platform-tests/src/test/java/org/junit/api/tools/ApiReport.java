@@ -10,8 +10,6 @@
 
 package org.junit.api.tools;
 
-import java.io.PrintStream;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -20,14 +18,23 @@ import org.junit.platform.commons.meta.API.Usage;
 /**
  * @since 1.0
  */
-interface ApiReport {
+class ApiReport {
 
-	List<Class<?>> getTypes();
+	private final List<Class<?>> types;
 
-	Map<Usage, List<Class<?>>> getDeclarationsMap();
+	private final Map<Usage, List<Class<?>>> declarationsMap;
 
-	void printReportHeader(PrintStream out);
+	ApiReport(List<Class<?>> types, Map<Usage, List<Class<?>>> declarationsMap) {
+		this.types = types;
+		this.declarationsMap = declarationsMap;
+	}
 
-	void printDeclarationInfo(PrintStream out, EnumSet<Usage> usages);
+	List<Class<?>> getTypes() {
+		return this.types;
+	}
+
+	Map<Usage, List<Class<?>>> getDeclarationsMap() {
+		return this.declarationsMap;
+	}
 
 }
