@@ -9,11 +9,16 @@
  */
 package org.junit.platform.gradle.plugin
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental
+
+import org.junit.platform.commons.meta.API
+
 /**
  * TestEngine configuration options for the JUnit Platform Gradle plugin.
  *
  * @since 1.0
  */
+@API(Experimental)
 class EnginesExtension {
 
 	/**

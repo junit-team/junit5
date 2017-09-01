@@ -9,9 +9,12 @@
  */
 package org.junit.platform.gradle.plugin
 
+import static org.junit.platform.commons.meta.API.Usage.Experimental
+
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.tasks.Input
+import org.junit.platform.commons.meta.API
 import org.junit.platform.commons.util.Preconditions
 import org.junit.platform.console.options.Details
 
@@ -20,6 +23,7 @@ import org.junit.platform.console.options.Details
  *
  * @since 1.0
  */
+@API(Experimental)
 class JUnitPlatformExtension {
 
 	private final Project project
