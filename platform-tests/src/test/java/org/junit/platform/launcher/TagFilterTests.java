@@ -23,7 +23,6 @@ import java.lang.annotation.RetentionPolicy;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.DemoClassTestDescriptor;
 
@@ -38,14 +37,14 @@ import org.junit.platform.engine.support.descriptor.DemoClassTestDescriptor;
  */
 class TagFilterTests {
 
-	private static final TestDescriptor classWithTag1 = classTestDescriptor("class1", ClassWithTag1.class);
-	private static final TestDescriptor classWithTag1AndSurroundingWhitespace = classTestDescriptor(
+	private static final TestIdentifier classWithTag1 = classTestIdentifier("class1", ClassWithTag1.class);
+	private static final TestIdentifier classWithTag1AndSurroundingWhitespace = classTestIdentifier(
 		"class1-surrounding-whitespace", ClassWithTag1AndSurroundingWhitespace.class);
-	private static final TestDescriptor classWithTag2 = classTestDescriptor("class2", ClassWithTag2.class);
-	private static final TestDescriptor classWithBothTags = classTestDescriptor("class12", ClassWithBothTags.class);
-	private static final TestDescriptor classWithDifferentTags = classTestDescriptor("classX",
+	private static final TestIdentifier classWithTag2 = classTestIdentifier("class2", ClassWithTag2.class);
+	private static final TestIdentifier classWithBothTags = classTestIdentifier("class12", ClassWithBothTags.class);
+	private static final TestIdentifier classWithDifferentTags = classTestIdentifier("classX",
 		ClassWithDifferentTags.class);
-	private static final TestDescriptor classWithNoTags = classTestDescriptor("class", ClassWithNoTags.class);
+	private static final TestIdentifier classWithNoTags = classTestIdentifier("class", ClassWithNoTags.class);
 
 	@Test
 	void includeTagsWithInvalidSyntax() {
@@ -187,9 +186,9 @@ class TagFilterTests {
 	private static class ClassWithNoTags {
 	}
 
-	private static TestDescriptor classTestDescriptor(String uniqueId, Class<?> testClass) {
+	private static TestIdentifier classTestIdentifier(String uniqueId, Class<?> testClass) {
 		UniqueId rootUniqueId = UniqueId.root("class", uniqueId);
-		return new DemoClassTestDescriptor(rootUniqueId, testClass);
+		return TestIdentifier.from(new DemoClassTestDescriptor(rootUniqueId, testClass));
 	}
 
 }

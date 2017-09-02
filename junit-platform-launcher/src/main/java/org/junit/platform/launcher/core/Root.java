@@ -20,6 +20,7 @@ import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TestIdentifier;
 
 /**
  * Represents the root of all discovered {@link TestEngine TestEngines} and
@@ -51,7 +52,7 @@ class Root {
 	}
 
 	void applyPostDiscoveryFilters(LauncherDiscoveryRequest discoveryRequest) {
-		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
+		Filter<TestIdentifier> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
 		TestDescriptor.Visitor removeExcludedTestDescriptors = descriptor -> {
 			if (!descriptor.isRoot() && isExcluded(descriptor, postDiscoveryFilter)) {
 				descriptor.removeFromHierarchy();
@@ -71,8 +72,9 @@ class Root {
 		acceptInAllTestEngines(TestDescriptor::prune);
 	}
 
-	private boolean isExcluded(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
-		return descriptor.getChildren().isEmpty() && postDiscoveryFilter.apply(descriptor).excluded();
+	private boolean isExcluded(TestDescriptor descriptor, Filter<TestIdentifier> postDiscoveryFilter) {
+		return descriptor.getChildren().isEmpty()
+				&& postDiscoveryFilter.apply(TestIdentifier.from(descriptor)).excluded();
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
