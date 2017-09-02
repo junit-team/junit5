@@ -51,6 +51,12 @@ class Root {
 		return this.testEngineDescriptors.get(testEngine);
 	}
 
+	void applyVisitors(LauncherDiscoveryRequest discoveryRequest) {
+		for (TestDescriptor.Visitor visitor : discoveryRequest.getTestVisitors()) {
+			acceptInAllTestEngines(d -> visitor.visit(new UnmodifiableTestDescriptor(d)));
+		}
+	}
+
 	void applyPostDiscoveryFilters(LauncherDiscoveryRequest discoveryRequest) {
 		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
 		TestDescriptor.Visitor removeExcludedTestDescriptors = descriptor -> {
@@ -77,7 +83,7 @@ class Root {
 				&& postDiscoveryFilter.apply(new UnmodifiableTestDescriptor(descriptor)).excluded();
 	}
 
-	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
+	void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
 		this.testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
 	}
 

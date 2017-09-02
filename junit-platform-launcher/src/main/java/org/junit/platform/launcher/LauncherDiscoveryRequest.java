@@ -19,6 +19,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.TestDescriptor;
 
 /**
  * {@code LauncherDiscoveryRequest} extends the {@link EngineDiscoveryRequest} API
@@ -66,6 +67,15 @@ public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 	 * {@code null} but potentially empty
 	 */
 	List<EngineFilter> getEngineFilters();
+
+	/**
+	 * Get the visitors to visit each {@link TestDescriptor} after the
+	 * discovery phase has completed, but before the filtering has occurred.
+	 *
+	 * @return the list of visitors for this request; never {@code null} but
+	 * potentially empty
+	 */
+	List<TestDescriptor.Visitor> getTestVisitors();
 
 	/**
 	 * Get the {@code PostDiscoveryFilters} for this request.
