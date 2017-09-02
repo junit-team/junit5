@@ -19,6 +19,7 @@ import java.util.Map;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.support.descriptor.UnmodifiableTestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
@@ -72,7 +73,8 @@ class Root {
 	}
 
 	private boolean isExcluded(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
-		return descriptor.getChildren().isEmpty() && postDiscoveryFilter.apply(descriptor).excluded();
+		return descriptor.getChildren().isEmpty()
+				&& postDiscoveryFilter.apply(new UnmodifiableTestDescriptor(descriptor)).excluded();
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
