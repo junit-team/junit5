@@ -399,7 +399,11 @@ class JUnitPlatformPluginSpec extends Specification {
 		configuration.getAllDependencies()
 				.findAll { dependency -> "org.junit.platform" == dependency.getGroup() }
 				.collect { dependency -> dependency.getVersion() }
-				.findAll { version -> version.startsWith("1.") && !version.contains("+")}
+				// The version will be @VERSION if the placeholder in
+				// src/main/resources/org/junit/platform/gradle/plugin/version.properties
+				// did not get replaced by the Gradle build (e.g., when executing tests
+				// in an IDE).
+				.findAll { version -> (version.startsWith("1.") && !version.contains("+")) || version.equals("@VERSION") }
 				.size() == 2
 	}
 
