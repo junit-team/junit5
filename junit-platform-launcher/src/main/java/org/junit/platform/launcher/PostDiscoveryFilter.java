@@ -21,6 +21,9 @@ import org.junit.platform.engine.TestEngine;
  * A {@code PostDiscoveryFilter} is applied to {@link TestDescriptor TestDescriptors}
  * after test discovery.
  *
+ * <p>A {@code PostDiscoveryFilter} must <strong>not</strong> modify the
+ * {@link TestDescriptor TestDescriptors} it is applied to in any way.
+ *
  * <p>{@link TestEngine TestEngines} must <strong>not</strong> apply
  * {@code PostDiscoveryFilters} during the test discovery phase.
  *
