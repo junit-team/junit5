@@ -15,8 +15,9 @@ import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -36,7 +37,7 @@ import org.junit.vintage.engine.execution.RunnerExecutor;
 @API(Internal)
 public final class VintageTestEngine implements TestEngine {
 
-	private static final Logger logger = Logger.getLogger(VintageTestEngine.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(VintageTestEngine.class);
 
 	@Override
 	public String getId() {

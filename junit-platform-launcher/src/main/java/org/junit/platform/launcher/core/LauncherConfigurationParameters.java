@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -30,7 +30,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 class LauncherConfigurationParameters implements ConfigurationParameters {
 
-	private static final Logger logger = Logger.getLogger(LauncherConfigurationParameters.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(LauncherConfigurationParameters.class);
 
 	private final Map<String, String> explicitConfigParams;
 	private final Properties configParamsFromFile;
@@ -55,7 +55,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 			if (!resources.isEmpty()) {
 				if (resources.size() > 1) {
-					logger.warning(() -> String.format(
+					logger.warn(() -> String.format(
 						"Discovered %d '%s' configuration files in the classpath; only the first will be used.",
 						resources.size(), configFileName));
 				}
@@ -69,7 +69,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			}
 		}
 		catch (Exception ex) {
-			logger.log(Level.WARNING, ex,
+			logger.warn(ex,
 				() -> String.format(
 					"Failed to load JUnit Platform configuration parameters from classpath resource [%s].",
 					configFileName));

@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.IntFunction;
-import java.util.logging.Logger;
 
+import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -68,7 +68,7 @@ class TestClassRequestResolver {
 				runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, filteredRunner, engineId);
 			}
 			else {
-				logger.warning(() -> "Runner " + runner.getClass().getName() //
+				logger.warn(() -> "Runner " + runner.getClass().getName() //
 						+ " (used on " + testClass.getName() + ") does not support filtering" //
 						+ " and will therefore be run completely.");
 			}

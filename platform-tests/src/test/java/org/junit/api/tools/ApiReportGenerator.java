@@ -17,11 +17,12 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.meta.API.Usage;
 
@@ -53,7 +54,7 @@ class ApiReportGenerator {
 	// -------------------------------------------------------------------------
 
 	ApiReport generateReport(String... packages) {
-		final Logger logger = Logger.getLogger(ApiReportGenerator.class.getName());
+		final Logger logger = LoggerFactory.getLogger(ApiReportGenerator.class);
 		final String EOL = System.lineSeparator();
 
 		// Scan packages
@@ -64,7 +65,7 @@ class ApiReportGenerator {
 		names.addAll(scanResult.getNamesOfClassesWithAnnotation(API.class));
 		names.addAll(scanResult.getNamesOfAnnotationsWithMetaAnnotation(API.class));
 
-		logger.fine(() -> {
+		logger.debug(() -> {
 			StringBuilder builder = new StringBuilder(
 				names.size() + " @API declarations (including meta) found in class-path:");
 			builder.append(EOL);
@@ -79,7 +80,7 @@ class ApiReportGenerator {
 		types.removeIf(c -> !c.isAnnotationPresent(API.class));
 		types.sort(Comparator.comparing(type -> type.getName()));
 
-		logger.fine(() -> {
+		logger.debug(() -> {
 			StringBuilder builder = new StringBuilder("Listing of all " + types.size() + " annotated types:");
 			builder.append(EOL);
 			types.forEach(e -> builder.append(e).append(EOL));

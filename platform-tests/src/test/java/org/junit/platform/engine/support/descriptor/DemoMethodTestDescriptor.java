@@ -16,9 +16,10 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Tag;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestTag;
@@ -29,7 +30,7 @@ import org.junit.platform.engine.UniqueId;
  */
 public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 
-	private static final Logger logger = Logger.getLogger(DemoMethodTestDescriptor.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(DemoMethodTestDescriptor.class);
 
 	private final Class<?> testClass;
 	private final Method testMethod;
@@ -58,7 +59,7 @@ public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 						//
 						// As an alternative to a precondition check here, we could catch any
 						// PreconditionViolationException thrown by TestTag::create.
-						logger.warning(() -> String.format(
+						logger.warn(() -> String.format(
 							"Configuration error: invalid tag syntax in @Tag(\"%s\") declaration on [%s]. Tag will be ignored.",
 							tag, this.testMethod));
 					}

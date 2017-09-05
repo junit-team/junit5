@@ -16,9 +16,10 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.engine.TestEngine;
@@ -28,7 +29,7 @@ import org.junit.platform.engine.TestEngine;
  */
 class ServiceLoaderTestEngineRegistry {
 
-	private static final Logger logger = Logger.getLogger(ServiceLoaderTestEngineRegistry.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(ServiceLoaderTestEngineRegistry.class);
 
 	public Iterable<TestEngine> loadTestEngines() {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,

@@ -21,13 +21,14 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -43,7 +44,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(Internal)
 public class ExecutableInvoker {
 
-	private static final Logger logger = Logger.getLogger(ExecutableInvoker.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(ExecutableInvoker.class);
 
 	/**
 	 * Invoke the supplied constructor with dynamic parameter resolution.
@@ -206,7 +207,7 @@ public class ExecutableInvoker {
 			Object value = resolver.resolveParameter(parameterContext, extensionContext);
 			validateResolvedType(parameterContext.getParameter(), value, executable, resolver);
 
-			logger.finer(() -> String.format(
+			logger.trace(() -> String.format(
 				"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in executable [%s].",
 				resolver.getClass().getName(), (value != null ? value.getClass().getName() : null),
 				parameterContext.getParameter(), executable.toGenericString()));

@@ -14,8 +14,9 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 
 import java.util.ServiceLoader;
-import java.util.logging.Logger;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.launcher.TestExecutionListener;
 
@@ -24,7 +25,7 @@ import org.junit.platform.launcher.TestExecutionListener;
  */
 class ServiceLoaderTestExecutionListenerRegistry {
 
-	private static final Logger logger = Logger.getLogger(ServiceLoaderTestExecutionListenerRegistry.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(ServiceLoaderTestExecutionListenerRegistry.class);
 
 	Iterable<TestExecutionListener> loadListeners() {
 		Iterable<TestExecutionListener> listeners = ServiceLoader.load(TestExecutionListener.class,

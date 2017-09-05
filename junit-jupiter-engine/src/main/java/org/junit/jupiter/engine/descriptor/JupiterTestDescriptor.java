@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -34,6 +33,8 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -50,7 +51,7 @@ import org.junit.platform.engine.support.hierarchical.Node;
 public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		implements Node<JupiterEngineExecutionContext> {
 
-	private static final Logger logger = Logger.getLogger(JupiterTestDescriptor.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(JupiterTestDescriptor.class);
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
@@ -72,7 +73,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 						//
 						// As an alternative to a precondition check here, we could catch any
 						// PreconditionViolationException thrown by TestTag::create.
-						logger.warning(() -> String.format(
+						logger.warn(() -> String.format(
 							"Configuration error: invalid tag syntax in @Tag(\"%s\") declaration on [%s]. Tag will be ignored.",
 							tag, element));
 					}
@@ -93,7 +94,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 			// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
 			// handling validation exceptions during the TestEngine discovery phase.
 			if (StringUtils.isBlank(displayName)) {
-				logger.warning(() -> String.format(
+				logger.warn(() -> String.format(
 					"Configuration error: @DisplayName on [%s] must be declared with a non-empty value.", element));
 			}
 			else {

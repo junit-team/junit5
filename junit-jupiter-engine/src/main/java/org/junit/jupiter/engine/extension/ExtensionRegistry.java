@@ -22,13 +22,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.engine.Constants;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -49,7 +50,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 @API(Internal)
 public class ExtensionRegistry {
 
-	private static final Logger logger = Logger.getLogger(ExtensionRegistry.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);
 
 	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
 		new DisabledCondition(), //
@@ -74,7 +75,7 @@ public class ExtensionRegistry {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
 
 		// @formatter:off
-		logger.finest(() -> "Registering default extensions: " + DEFAULT_EXTENSIONS.stream()
+		logger.trace(() -> "Registering default extensions: " + DEFAULT_EXTENSIONS.stream()
 						.map(extension -> extension.getClass().getName())
 						.collect(toList()));
 		// @formatter:on
@@ -238,7 +239,7 @@ public class ExtensionRegistry {
 	 * @param source the source of the extension
 	 */
 	public void registerExtension(Extension extension, Object source) {
-		logger.finer(() -> String.format("Registering extension [%s] from source [%s].", extension, source));
+		logger.trace(() -> String.format("Registering extension [%s] from source [%s].", extension, source));
 		this.registeredExtensions.add(extension);
 	}
 

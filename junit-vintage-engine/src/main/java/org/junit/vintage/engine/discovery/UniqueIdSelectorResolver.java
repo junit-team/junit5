@@ -16,8 +16,8 @@ import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_
 
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 
+import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.UniqueId;
@@ -50,8 +50,7 @@ class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 	private boolean isNotEngineId(UniqueId uniqueId) {
 		boolean isEngineId = UniqueId.forEngine(ENGINE_ID).equals(uniqueId);
 		if (isEngineId) {
-			logger.warning(
-				() -> format("Unresolvable Unique ID (%s): Cannot resolve the engine's unique ID", uniqueId));
+			logger.warn(() -> format("Unresolvable Unique ID (%s): Cannot resolve the engine's unique ID", uniqueId));
 		}
 		return !isEngineId;
 	}
@@ -77,7 +76,7 @@ class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 	private Optional<Class<?>> loadTestClass(String className, UniqueId uniqueId) {
 		Optional<Class<?>> testClass = ReflectionUtils.loadClass(className);
 		if (!testClass.isPresent()) {
-			logger.warning(() -> format("Unresolvable Unique ID (%s): Unknown class %s", uniqueId, className));
+			logger.warn(() -> format("Unresolvable Unique ID (%s): Unknown class %s", uniqueId, className));
 		}
 		return testClass;
 	}
@@ -87,7 +86,7 @@ class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 		if (SEGMENT_TYPE_RUNNER.equals(runnerSegment.getType())) {
 			return Optional.of(runnerSegment.getValue());
 		}
-		logger.warning(
+		logger.warn(
 			() -> format("Unresolvable Unique ID (%s): Unique ID segment after engine segment must be of type \""
 					+ SEGMENT_TYPE_RUNNER + "\"",
 				uniqueId));

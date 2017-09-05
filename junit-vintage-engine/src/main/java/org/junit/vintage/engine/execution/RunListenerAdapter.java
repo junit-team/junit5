@@ -14,9 +14,9 @@ import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_
 
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 import org.junit.Ignore;
+import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;

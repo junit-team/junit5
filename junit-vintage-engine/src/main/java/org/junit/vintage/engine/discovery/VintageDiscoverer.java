@@ -19,8 +19,8 @@ import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 
+import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.Filter;
@@ -81,7 +81,7 @@ public class VintageDiscoverer {
 		List<ClassNameFilter> allClassNameFilters = discoveryRequest.getFiltersByType(ClassNameFilter.class);
 		Filter<Class<?>> adaptedFilter = adaptFilter(composeFilters(allClassNameFilters), Class::getName);
 		Filter<Class<?>> classFilter = new ExclusionReasonConsumingFilter<>(adaptedFilter,
-			(testClass, reason) -> logger.fine(() -> String.format("Class %s was excluded by a class filter: %s",
+			(testClass, reason) -> logger.debug(() -> String.format("Class %s was excluded by a class filter: %s",
 				testClass.getName(), reason.orElse("<unknown reason>"))));
 		return classFilter.toPredicate().and(isPotentialJUnit4TestClass);
 	}

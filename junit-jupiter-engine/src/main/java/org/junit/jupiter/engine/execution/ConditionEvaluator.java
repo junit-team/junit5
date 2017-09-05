@@ -16,7 +16,6 @@ import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_P
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +24,8 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -38,7 +39,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 @API(Internal)
 public class ConditionEvaluator {
 
-	private static final Logger logger = Logger.getLogger(ConditionEvaluator.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(ConditionEvaluator.class);
 
 	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(
 		"No 'disabled' conditions encountered");
@@ -81,7 +82,7 @@ public class ConditionEvaluator {
 	}
 
 	private void logResult(Class<?> conditionType, ConditionEvaluationResult result) {
-		logger.finer(() -> format("Evaluation of condition [%s] resulted in: %s", conditionType.getName(), result));
+		logger.trace(() -> format("Evaluation of condition [%s] resulted in: %s", conditionType.getName(), result));
 	}
 
 	private ConditionEvaluationException evaluationException(Class<?> conditionType, Exception ex) {

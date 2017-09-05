@@ -10,15 +10,14 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static java.util.logging.Level.WARNING;
-
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 
 import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.internal.builders.AnnotatedBuilder;
 import org.junit.internal.builders.JUnit4Builder;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.runner.Runner;
 import org.junit.runners.model.RunnerBuilder;
@@ -34,7 +33,7 @@ import org.junit.runners.model.RunnerBuilder;
  */
 class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBuilder {
 
-	private static final Logger logger = Logger.getLogger(DefensiveAllDefaultPossibilitiesBuilder.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(DefensiveAllDefaultPossibilitiesBuilder.class);
 
 	private final AnnotatedBuilder annotatedBuilder;
 	private final DefensiveJUnit4Builder defensiveJUnit4Builder;
@@ -69,7 +68,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		public Runner buildRunner(Class<? extends Runner> runnerClass, Class<?> testClass) throws Exception {
 			// Referenced by name because it might not be available at runtime.
 			if ("org.junit.platform.runner.JUnitPlatform".equals(runnerClass.getName())) {
-				logger.log(WARNING, () -> "Ignoring test class using JUnitPlatform runner: " + testClass.getName());
+				logger.warn(() -> "Ignoring test class using JUnitPlatform runner: " + testClass.getName());
 				return null;
 			}
 			return super.buildRunner(runnerClass, testClass);

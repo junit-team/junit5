@@ -26,11 +26,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -41,7 +42,7 @@ import org.junit.platform.engine.UniqueId.Segment;
  */
 class JavaElementsResolver {
 
-	private static final Logger logger = Logger.getLogger(JavaElementsResolver.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(JavaElementsResolver.class);
 
 	private static final IsInnerClass isInnerClass = new IsInnerClass();
 
@@ -58,7 +59,7 @@ class JavaElementsResolver {
 		resolvedDescriptors.forEach(this::resolveChildren);
 
 		if (resolvedDescriptors.isEmpty()) {
-			logger.warning(() -> format("Class '%s' could not be resolved.", testClass.getName()));
+			logger.warn(() -> format("Class '%s' could not be resolved.", testClass.getName()));
 		}
 	}
 
@@ -67,7 +68,7 @@ class JavaElementsResolver {
 		Set<TestDescriptor> resolvedDescriptors = resolveForAllParents(testMethod, potentialParents);
 
 		if (resolvedDescriptors.isEmpty()) {
-			logger.warning(() -> format("Method '%s' could not be resolved.", testMethod.toGenericString()));
+			logger.warn(() -> format("Method '%s' could not be resolved.", testMethod.toGenericString()));
 		}
 
 		logMultipleTestDescriptorsForSingleElement(testMethod, resolvedDescriptors);
@@ -97,10 +98,10 @@ class JavaElementsResolver {
 				int numSegmentsResolved = resolveUniqueId(this.engineDescriptor, remainingSegments);
 
 				if (numSegmentsResolved == 0) {
-					logger.warning(() -> format("Unique ID '%s' could not be resolved.", uniqueId));
+					logger.warn(() -> format("Unique ID '%s' could not be resolved.", uniqueId));
 				}
 				else if (numSegmentsResolved != numSegmentsToResolve) {
-					logger.warning(() -> {
+					logger.warn(() -> {
 						List<Segment> segments = uniqueId.getSegments();
 						List<Segment> unresolved = segments.subList(1, segments.size()); // Remove engine ID
 						unresolved = unresolved.subList(numSegmentsResolved, unresolved.size()); // Remove resolved segments
@@ -220,7 +221,7 @@ class JavaElementsResolver {
 	private void logMultipleTestDescriptorsForSingleElement(AnnotatedElement element, Set<TestDescriptor> descriptors) {
 		if (descriptors.size() > 1 && element instanceof Method) {
 			Method method = (Method) element;
-			logger.warning(() -> String.format(
+			logger.warn(() -> String.format(
 				"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. "
 						+ "This is typically the result of annotating a method with multiple competing annotations "
 						+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
