@@ -58,7 +58,7 @@ public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 						//
 						// As an alternative to a precondition check here, we could catch any
 						// PreconditionViolationException thrown by TestTag::create.
-						logger.warning(String.format(
+						logger.warning(() -> String.format(
 							"Configuration error: invalid tag syntax in @Tag(\"%s\") declaration on [%s]. Tag will be ignored.",
 							tag, this.testMethod));
 					}
