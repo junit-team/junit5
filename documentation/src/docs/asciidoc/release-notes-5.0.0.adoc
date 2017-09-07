@@ -1,0 +1,58 @@
+[[release-notes-5.0.0]]
+=== 5.0.0
+
+*Date of Release:* September, 2017
+
+*Scope:* First General Availability Release
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/10?closed=1+[5.0 GA] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.0.0-junit-platform]]
+==== JUnit Platform
+
+===== Bug Fixes
+
+* ❓
+
+===== Deprecations and Breaking Changes
+
+* ❓
+
+===== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.0.0-junit-jupiter]]
+==== JUnit Jupiter
+
+===== Bug Fixes
+
+* ❓
+
+===== Deprecations and Breaking Changes
+
+* ❓
+
+===== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.0.0-junit-vintage]]
+==== JUnit Vintage
+
+===== Bug Fixes
+
+* ❓
+
+===== Deprecations and Breaking Changes
+
+* ❓
+
+===== New Features and Improvements
+
+* ❓

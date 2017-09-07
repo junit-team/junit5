@@ -23,4 +23,6 @@ include::release-notes-5.0.0-RC2.adoc[]
 
 include::release-notes-5.0.0-RC3.adoc[]
 
+include::release-notes-5.0.0.adoc[]
+
 :numbered:
