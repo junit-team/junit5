@@ -24,6 +24,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -79,11 +80,12 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
 @API(Stable)
 public final class LauncherDiscoveryRequestBuilder {
 
-	private List<DiscoverySelector> selectors = new ArrayList<>();
-	private List<EngineFilter> engineFilters = new ArrayList<>();
-	private List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
-	private List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
-	private Map<String, String> configurationParameters = new HashMap<>();
+	List<DiscoverySelector> selectors = new ArrayList<>();
+	List<EngineFilter> engineFilters = new ArrayList<>();
+	List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
+	List<TestDescriptor.Visitor> testVisitors = new ArrayList<>();
+	List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
+	Map<String, String> configurationParameters = new HashMap<>();
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
@@ -116,6 +118,22 @@ public final class LauncherDiscoveryRequestBuilder {
 		Preconditions.notNull(selectors, "selectors list must not be null");
 		Preconditions.containsNoNullElements(selectors, "individual selectors must not be null");
 		this.selectors.addAll(selectors);
+		return this;
+	}
+
+	/**
+	 * Add all of the supplied {@code visitors} to the request.
+	 *
+	 * <p>The {@code visitors} are called after the tests are discovered, but before
+	 * the filters are applied.
+	 *
+	 * @param visitors the {@code Visitor} instances to add; never {@code null}
+	 * @return this builder for method chaining
+	 */
+	public LauncherDiscoveryRequestBuilder visitors(TestDescriptor.Visitor... visitors) {
+		Preconditions.notNull(visitors, "visitors array must not be null");
+		Preconditions.containsNoNullElements(visitors, "individual visitors must not be null");
+		testVisitors.addAll(Arrays.asList(visitors));
 		return this;
 	}
 
@@ -191,10 +209,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * this builder.
 	 */
 	public LauncherDiscoveryRequest build() {
-		LauncherConfigurationParameters launcherConfigurationParameters = new LauncherConfigurationParameters(
-			this.configurationParameters);
-		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
-			this.postDiscoveryFilters, launcherConfigurationParameters);
+		return new DefaultDiscoveryRequest(this);
 	}
 
 }

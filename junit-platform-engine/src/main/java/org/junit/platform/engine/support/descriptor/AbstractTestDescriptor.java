@@ -97,12 +97,16 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public final void setParent(TestDescriptor parent) {
+		if (this.parent != null && parent != null) {
+			throw new IllegalStateException("TestDescriptor already has a parent");
+		}
 		this.parent = parent;
 	}
 
 	@Override
 	public void removeChild(TestDescriptor child) {
 		Preconditions.notNull(child, "child must not be null");
+		Preconditions.condition(child.getParent().orElse(null) == this, "child is not a child of this TestDescriptor");
 		this.children.remove(child);
 		child.setParent(null);
 	}
@@ -134,7 +138,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public void addChild(TestDescriptor child) {
 		Preconditions.notNull(child, "child must not be null");
-		child.setParent(this);
+		child.setParent(this); // throws if child has a parent already
 		this.children.add(child);
 	}
 

@@ -20,6 +20,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -41,20 +42,22 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	// Discovery filters are handed through to all engines to be applied during discovery.
 	private final List<DiscoveryFilter<?>> discoveryFilters;
 
-	// Descriptor filters are applied by the launcher itself after engines have performed discovery.
+	// Descriptor visitors are visited by the launcher itself after engines have performed discovery.
+	private final List<TestDescriptor.Visitor> testVisitors;
+
+	// Descriptor filters are applied by the launcher itself after visitors are visited.
 	private final List<PostDiscoveryFilter> postDiscoveryFilters;
 
 	// Configuration parameters can be used to provide custom configuration to engines, e.g. for extensions
 	private final LauncherConfigurationParameters configurationParameters;
 
-	DefaultDiscoveryRequest(List<DiscoverySelector> selectors, List<EngineFilter> engineFilters,
-			List<DiscoveryFilter<?>> discoveryFilters, List<PostDiscoveryFilter> postDiscoveryFilters,
-			LauncherConfigurationParameters configurationParameters) {
-		this.selectors = selectors;
-		this.engineFilters = engineFilters;
-		this.discoveryFilters = discoveryFilters;
-		this.postDiscoveryFilters = postDiscoveryFilters;
-		this.configurationParameters = configurationParameters;
+	DefaultDiscoveryRequest(LauncherDiscoveryRequestBuilder builder) {
+		this.selectors = builder.selectors;
+		this.engineFilters = builder.engineFilters;
+		this.discoveryFilters = builder.discoveryFilters;
+		this.testVisitors = builder.testVisitors;
+		this.postDiscoveryFilters = builder.postDiscoveryFilters;
+		this.configurationParameters = new LauncherConfigurationParameters(builder.configurationParameters);
 	}
 
 	@Override
@@ -72,6 +75,11 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	public <T extends DiscoveryFilter<?>> List<T> getFiltersByType(Class<T> filterType) {
 		Preconditions.notNull(filterType, "filterType must not be null");
 		return this.discoveryFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
+	}
+
+	@Override
+	public List<TestDescriptor.Visitor> getTestVisitors() {
+		return unmodifiableList(this.testVisitors);
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import java.util.Map;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.support.descriptor.UnmodifiableTestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
@@ -50,6 +51,12 @@ class Root {
 		return this.testEngineDescriptors.get(testEngine);
 	}
 
+	void applyVisitors(LauncherDiscoveryRequest discoveryRequest) {
+		for (TestDescriptor.Visitor visitor : discoveryRequest.getTestVisitors()) {
+			acceptInAllTestEngines(d -> visitor.visit(new UnmodifiableTestDescriptor(d)));
+		}
+	}
+
 	void applyPostDiscoveryFilters(LauncherDiscoveryRequest discoveryRequest) {
 		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
 		TestDescriptor.Visitor removeExcludedTestDescriptors = descriptor -> {
@@ -72,10 +79,11 @@ class Root {
 	}
 
 	private boolean isExcluded(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
-		return descriptor.getChildren().isEmpty() && postDiscoveryFilter.apply(descriptor).excluded();
+		return descriptor.getChildren().isEmpty()
+				&& postDiscoveryFilter.apply(new UnmodifiableTestDescriptor(descriptor)).excluded();
 	}
 
-	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
+	void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
 		this.testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
 	}
 
