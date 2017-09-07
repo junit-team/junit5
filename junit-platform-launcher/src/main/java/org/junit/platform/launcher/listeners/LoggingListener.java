@@ -68,6 +68,10 @@ public class LoggingListener implements TestExecutionListener {
 	 * Create a {@code LoggingListener} which delegates to the supplied
 	 * {@link BiConsumer} for consumption of logging messages.
 	 *
+	 * <p>The {@code BiConsumer's} arguments are a {@link Throwable} (potentially
+	 * {@code null}) and a {@link Supplier} (never {@code null}) for the log
+	 * message.
+	 *
 	 * @param logger a logger implemented as a {@code BiConsumer};
 	 * never {@code null}
 	 *
