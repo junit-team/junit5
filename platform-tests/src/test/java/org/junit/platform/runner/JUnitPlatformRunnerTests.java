@@ -39,6 +39,7 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -68,6 +69,7 @@ import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
@@ -191,9 +193,9 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			PostDiscoveryFilter filter = filters.get(0);
-			assertTrue(filter.apply(testDescriptorWithTag("foo")).included());
-			assertTrue(filter.apply(testDescriptorWithTag("bar")).included());
-			assertTrue(filter.apply(testDescriptorWithTag("baz")).excluded());
+			assertTrue(filter.apply(testIdentifierWithTag("foo")).included());
+			assertTrue(filter.apply(testIdentifierWithTag("bar")).included());
+			assertTrue(filter.apply(testIdentifierWithTag("baz")).excluded());
 		}
 
 		@Test
@@ -209,9 +211,9 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			PostDiscoveryFilter filter = filters.get(0);
-			assertTrue(filter.apply(testDescriptorWithTag("foo")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTag("bar")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTag("baz")).included());
+			assertTrue(filter.apply(testIdentifierWithTag("foo")).excluded());
+			assertTrue(filter.apply(testIdentifierWithTag("bar")).excluded());
+			assertTrue(filter.apply(testIdentifierWithTag("baz")).included());
 		}
 
 		@Test
@@ -664,10 +666,28 @@ class JUnitPlatformRunnerTests {
 		return createTestDescription(uniqueId, uniqueId, uniqueId);
 	}
 
-	private TestDescriptor testDescriptorWithTag(String tag) {
-		TestDescriptor testDescriptor = mock(TestDescriptor.class);
-		when(testDescriptor.getTags()).thenReturn(singleton(TestTag.create(tag)));
-		return testDescriptor;
+	private TestIdentifier testIdentifierWithTag(String tag) {
+		TestDescriptor testDescriptor = new FakeTestDescriptor(TestTag.create(tag));
+		return TestIdentifier.from(testDescriptor);
+	}
+
+	private static class FakeTestDescriptor extends AbstractTestDescriptor {
+		private final TestTag tag;
+
+		FakeTestDescriptor(TestTag tag) {
+			super(UniqueId.forEngine("fake"), "displayName");
+			this.tag = tag;
+		}
+
+		@Override
+		public Type getType() {
+			return Type.TEST;
+		}
+
+		@Override
+		public Set<TestTag> getTags() {
+			return singleton(tag);
+		}
 	}
 
 	private LauncherDiscoveryRequest instantiateRunnerAndCaptureGeneratedRequest(Class<?> testClass)

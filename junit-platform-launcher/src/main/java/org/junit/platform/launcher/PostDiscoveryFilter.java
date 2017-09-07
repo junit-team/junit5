@@ -14,11 +14,10 @@ import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.Filter;
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 
 /**
- * A {@code PostDiscoveryFilter} is applied to {@link TestDescriptor TestDescriptors}
+ * A {@code PostDiscoveryFilter} is applied to {@link TestIdentifier TestIdentifiers}
  * after test discovery.
  *
  * <p>A {@code PostDiscoveryFilter} must <strong>not</strong> modify the
@@ -32,5 +31,5 @@ import org.junit.platform.engine.TestEngine;
  * @see TestEngine
  */
 @API(Stable)
-public interface PostDiscoveryFilter extends Filter<TestDescriptor> {
+public interface PostDiscoveryFilter extends Filter<TestIdentifier> {
 }

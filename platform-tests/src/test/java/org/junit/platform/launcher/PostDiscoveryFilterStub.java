@@ -14,18 +14,17 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.junit.platform.engine.FilterResult;
-import org.junit.platform.engine.TestDescriptor;
 
 /**
  * @since 1.0
  */
-public class PostDiscoveryFilterStub extends FilterStub<TestDescriptor> implements PostDiscoveryFilter {
+public class PostDiscoveryFilterStub extends FilterStub<TestIdentifier> implements PostDiscoveryFilter {
 
 	public PostDiscoveryFilterStub(String toString) {
 		super(toString);
 	}
 
-	public PostDiscoveryFilterStub(Function<TestDescriptor, FilterResult> function, Supplier<String> toString) {
+	public PostDiscoveryFilterStub(Function<TestIdentifier, FilterResult> function, Supplier<String> toString) {
 		super(function, toString);
 	}
 
