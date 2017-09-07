@@ -38,7 +38,7 @@ public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 		super(uniqueId,
 			String.format("%s(%s)", Preconditions.notNull(testMethod, "Method must not be null").getName(),
 				ClassUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes())),
-			new MethodSource(testMethod));
+			MethodSource.from(testMethod));
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = testMethod;

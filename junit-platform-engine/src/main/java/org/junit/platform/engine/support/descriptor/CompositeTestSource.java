@@ -34,8 +34,6 @@ public class CompositeTestSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
 
-	private final List<TestSource> sources;
-
 	/**
 	 * Create a new {@code CompositeTestSource} based on the supplied
 	 * collection of {@link TestSource sources}.
@@ -47,7 +45,13 @@ public class CompositeTestSource implements TestSource {
 	 * @param sources the collection of sources to store in this
 	 * {@code CompositeTestSource}; never {@code null} or empty
 	 */
-	public CompositeTestSource(Collection<? extends TestSource> sources) {
+	public static CompositeTestSource from(Collection<? extends TestSource> sources) {
+		return new CompositeTestSource(sources);
+	}
+
+	private final List<TestSource> sources;
+
+	private CompositeTestSource(Collection<? extends TestSource> sources) {
 		Preconditions.notEmpty(sources, "TestSource collection must not be null or empty");
 		Preconditions.containsNoNullElements(sources, "individual TestSources must not be null");
 		this.sources = Collections.unmodifiableList(new ArrayList<>(sources));

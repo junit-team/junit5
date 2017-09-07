@@ -27,7 +27,7 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 	private final Runner runner;
 
 	public RunnerTestDescriptor(UniqueId uniqueId, Class<?> testClass, Runner runner) {
-		super(uniqueId, runner.getDescription(), testClass.getName(), new ClassSource(testClass));
+		super(uniqueId, runner.getDescription(), testClass.getName(), ClassSource.from(testClass));
 		this.runner = runner;
 	}
 

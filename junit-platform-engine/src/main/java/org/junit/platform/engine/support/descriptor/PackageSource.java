@@ -34,15 +34,13 @@ public class PackageSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String packageName;
-
 	/**
 	 * Create a new {@code PackageSource} using the supplied Java {@link Package}.
 	 *
 	 * @param javaPackage the Java package; must not be {@code null}
 	 */
-	public PackageSource(Package javaPackage) {
-		this(Preconditions.notNull(javaPackage, "package must not be null").getName());
+	public static PackageSource from(Package javaPackage) {
+		return new PackageSource(javaPackage);
 	}
 
 	/**
@@ -50,7 +48,17 @@ public class PackageSource implements TestSource {
 	 *
 	 * @param packageName the package name; must not be {@code null} or blank
 	 */
-	public PackageSource(String packageName) {
+	public static PackageSource from(String packageName) {
+		return new PackageSource(packageName);
+	}
+
+	private final String packageName;
+
+	private PackageSource(Package javaPackage) {
+		this(Preconditions.notNull(javaPackage, "package must not be null").getName());
+	}
+
+	private PackageSource(String packageName) {
 		this.packageName = Preconditions.notBlank(packageName, "package name must not be null or blank");
 	}
 

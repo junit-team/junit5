@@ -36,10 +36,6 @@ public class MethodSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String className;
-	private final String methodName;
-	private final String methodParameterTypes;
-
 	/**
 	 * Create a new {@code MethodSource} using the supplied
 	 * class and method name.
@@ -47,8 +43,8 @@ public class MethodSource implements TestSource {
 	 * @param className the {@link Class} name; must not be {@code null} or blank
 	 * @param methodName the {@link Method} name; must not be {@code null} or blank
 	 */
-	public MethodSource(String className, String methodName) {
-		this(className, methodName, null);
+	public static MethodSource from(String className, String methodName) {
+		return new MethodSource(className, methodName);
 	}
 
 	/**
@@ -59,12 +55,8 @@ public class MethodSource implements TestSource {
 	 * @param methodName the {@link Method} name; must not be {@code null} or blank
 	 * @param methodParameterTypes the {@link Method} parameter types as string
 	 */
-	public MethodSource(String className, String methodName, String methodParameterTypes) {
-		Preconditions.notBlank(className, "Class name must not be null or blank");
-		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		this.className = className;
-		this.methodName = methodName;
-		this.methodParameterTypes = methodParameterTypes;
+	public static MethodSource from(String className, String methodName, String methodParameterTypes) {
+		return new MethodSource(className, methodName, methodParameterTypes);
 	}
 
 	/**
@@ -73,7 +65,27 @@ public class MethodSource implements TestSource {
 	 *
 	 * @param method the Java method; must not be {@code null}
 	 */
-	public MethodSource(Method method) {
+	public static MethodSource from(Method method) {
+		return new MethodSource(method);
+	}
+
+	private final String className;
+	private final String methodName;
+	private final String methodParameterTypes;
+
+	private MethodSource(String className, String methodName) {
+		this(className, methodName, null);
+	}
+
+	private MethodSource(String className, String methodName, String methodParameterTypes) {
+		Preconditions.notBlank(className, "Class name must not be null or blank");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		this.className = className;
+		this.methodName = methodName;
+		this.methodParameterTypes = methodParameterTypes;
+	}
+
+	private MethodSource(Method method) {
 		Preconditions.notNull(method, "method must not be null");
 		this.className = method.getDeclaringClass().getName();
 		this.methodName = method.getName();

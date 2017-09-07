@@ -32,15 +32,19 @@ public class DirectorySource implements FileSystemSource {
 
 	private static final long serialVersionUID = 1L;
 
-	private final File directory;
-
 	/**
 	 * Create a new {@code DirectorySource} using the supplied
 	 * {@linkplain File directory}.
 	 *
 	 * @param directory the source directory; must not be {@code null}
 	 */
-	public DirectorySource(File directory) {
+	public static DirectorySource from(File directory) {
+		return new DirectorySource(directory);
+	}
+
+	private final File directory;
+
+	private DirectorySource(File directory) {
 		Preconditions.notNull(directory, "directory must not be null");
 		try {
 			this.directory = directory.getCanonicalFile();

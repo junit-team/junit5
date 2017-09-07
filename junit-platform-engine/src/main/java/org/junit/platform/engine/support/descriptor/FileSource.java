@@ -35,16 +35,13 @@ public class FileSource implements FileSystemSource {
 
 	private static final long serialVersionUID = 1L;
 
-	private final File file;
-	private final FilePosition filePosition;
-
 	/**
 	 * Create a new {@code FileSource} using the supplied {@link File file}.
 	 *
 	 * @param file the source file; must not be {@code null}
 	 */
-	public FileSource(File file) {
-		this(file, null);
+	public static FileSource from(File file) {
+		return new FileSource(file);
 	}
 
 	/**
@@ -54,7 +51,18 @@ public class FileSource implements FileSystemSource {
 	 * @param file the source file; must not be {@code null}
 	 * @param filePosition the position in the source file; may be {@code null}
 	 */
-	public FileSource(File file, FilePosition filePosition) {
+	public static FileSource from(File file, FilePosition filePosition) {
+		return new FileSource(file, filePosition);
+	}
+
+	private final File file;
+	private final FilePosition filePosition;
+
+	private FileSource(File file) {
+		this(file, null);
+	}
+
+	private FileSource(File file, FilePosition filePosition) {
 		Preconditions.notNull(file, "file must not be null");
 		try {
 			this.file = file.getCanonicalFile();

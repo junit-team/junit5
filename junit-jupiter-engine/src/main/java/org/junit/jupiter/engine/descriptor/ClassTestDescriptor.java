@@ -78,7 +78,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			Class<?> testClass) {
 
 		super(uniqueId, determineDisplayName(Preconditions.notNull(testClass, "Class must not be null"),
-			defaultDisplayNameGenerator), new ClassSource(testClass));
+			defaultDisplayNameGenerator), ClassSource.from(testClass));
 
 		this.testClass = testClass;
 	}

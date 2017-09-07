@@ -134,9 +134,10 @@ class SummaryGenerationTests {
 	void canGetListOfFailures() {
 		RuntimeException failedException = new RuntimeException("Pow!");
 		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "1"), "failingTest") {
+
 			@Override
 			public Optional<TestSource> getSource() {
-				return Optional.of(new ClassSource(Object.class));
+				return Optional.of(ClassSource.from(Object.class));
 			}
 		};
 		TestIdentifier failingTest = TestIdentifier.from(testDescriptor);
@@ -158,7 +159,7 @@ class SummaryGenerationTests {
 
 			@Override
 			public Optional<TestSource> getSource() {
-				return Optional.of(new ClassSource(Object.class));
+				return Optional.of(ClassSource.from(Object.class));
 			}
 		};
 		TestIdentifier failed = TestIdentifier.from(testDescriptor);

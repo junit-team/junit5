@@ -35,20 +35,14 @@ public class ClassSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String className;
-
-	private Class<?> javaClass;
-
-	private final FilePosition filePosition;
-
 	/**
 	 * Create a new {@code ClassSource} using the supplied
 	 * className.
 	 *
 	 * @param className the Java class name; must not be {@code null}
 	 */
-	public ClassSource(String className) {
-		this(className, null);
+	public static ClassSource from(String className) {
+		return new ClassSource(className);
 	}
 
 	/**
@@ -58,9 +52,8 @@ public class ClassSource implements TestSource {
 	 * @param className the Java class name; must not be {@code null}
 	 * @param filePosition the position in the Java source file; may be {@code null}
 	 */
-	public ClassSource(String className, FilePosition filePosition) {
-		this.className = className;
-		this.filePosition = filePosition;
+	public static ClassSource from(String className, FilePosition filePosition) {
+		return new ClassSource(className, filePosition);
 	}
 
 	/**
@@ -69,8 +62,8 @@ public class ClassSource implements TestSource {
 	 *
 	 * @param javaClass the Java class; must not be {@code null}
 	 */
-	public ClassSource(Class<?> javaClass) {
-		this(javaClass, null);
+	public static ClassSource from(Class<?> javaClass) {
+		return new ClassSource(javaClass);
 	}
 
 	/**
@@ -80,7 +73,28 @@ public class ClassSource implements TestSource {
 	 * @param javaClass the Java class; must not be {@code null}
 	 * @param filePosition the position in the Java source file; may be {@code null}
 	 */
-	public ClassSource(Class<?> javaClass, FilePosition filePosition) {
+	public static ClassSource from(Class<?> javaClass, FilePosition filePosition) {
+		return new ClassSource(javaClass, filePosition);
+	}
+
+	private final String className;
+	private final FilePosition filePosition;
+	private Class<?> javaClass;
+
+	private ClassSource(String className) {
+		this(className, null);
+	}
+
+	private ClassSource(String className, FilePosition filePosition) {
+		this.className = className;
+		this.filePosition = filePosition;
+	}
+
+	private ClassSource(Class<?> javaClass) {
+		this(javaClass, null);
+	}
+
+	private ClassSource(Class<?> javaClass, FilePosition filePosition) {
 		this.javaClass = Preconditions.notNull(javaClass, "class must not be null");
 		this.className = this.javaClass.getName();
 		this.filePosition = filePosition;
