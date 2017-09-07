@@ -51,7 +51,7 @@ public final class DemoHierarchicalTestEngine extends HierarchicalTestEngine<Dem
 
 	public DemoHierarchicalTestDescriptor addTest(Method testMethod, Runnable executeBlock) {
 		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", testMethod.getName());
-		MethodSource source = new MethodSource(testMethod);
+		MethodSource source = MethodSource.from(testMethod);
 		DemoHierarchicalTestDescriptor child = new DemoHierarchicalTestDescriptor(uniqueId, testMethod.getName(),
 			source, executeBlock);
 		engineDescriptor.addChild(child);

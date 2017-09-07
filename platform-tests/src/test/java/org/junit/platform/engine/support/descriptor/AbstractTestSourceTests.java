@@ -20,13 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.platform.engine.TestSource;
 
 /**
- * Abstract base class for unit tests involving {@link TestSource TestSources}.
+ * Abstract base class for unit tests involving {@link TestSource TestSources}
+ * and {@link FilePosition FilePositions}.
  *
  * @since 1.0
  */
 abstract class AbstractTestSourceTests {
 
-	protected void assertEqualsAndHashCode(TestSource equal1, TestSource equal2, TestSource different) {
+	protected <T> void assertEqualsAndHashCode(T equal1, T equal2, T different) {
 		assertNotNull(equal1);
 		assertNotNull(equal2);
 		assertNotNull(different);

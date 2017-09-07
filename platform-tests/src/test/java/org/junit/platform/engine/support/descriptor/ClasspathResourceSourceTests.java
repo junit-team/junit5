@@ -28,14 +28,14 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void preconditions() {
-		assertThrows(PreconditionViolationException.class, () -> new ClasspathResourceSource(null));
-		assertThrows(PreconditionViolationException.class, () -> new ClasspathResourceSource(""));
-		assertThrows(PreconditionViolationException.class, () -> new ClasspathResourceSource("   "));
+		assertThrows(PreconditionViolationException.class, () -> ClasspathResourceSource.from(null));
+		assertThrows(PreconditionViolationException.class, () -> ClasspathResourceSource.from(""));
+		assertThrows(PreconditionViolationException.class, () -> ClasspathResourceSource.from("   "));
 	}
 
 	@Test
 	void resourceWithoutPosition() throws Exception {
-		ClasspathResourceSource source = new ClasspathResourceSource(FOO_RESOURCE);
+		ClasspathResourceSource source = ClasspathResourceSource.from(FOO_RESOURCE);
 
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
 		assertThat(source.getPosition()).isEmpty();
@@ -43,7 +43,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void resourceWithLeadingSlashWithoutPosition() throws Exception {
-		ClasspathResourceSource source = new ClasspathResourceSource("/" + FOO_RESOURCE);
+		ClasspathResourceSource source = ClasspathResourceSource.from("/" + FOO_RESOURCE);
 
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
 		assertThat(source.getPosition()).isEmpty();
@@ -51,8 +51,8 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void resourceWithPosition() throws Exception {
-		FilePosition position = new FilePosition(42, 23);
-		ClasspathResourceSource source = new ClasspathResourceSource(FOO_RESOURCE, position);
+		FilePosition position = FilePosition.from(42, 23);
+		ClasspathResourceSource source = ClasspathResourceSource.from(FOO_RESOURCE, position);
 
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
 		assertThat(source.getPosition()).hasValue(position);
@@ -60,12 +60,12 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void equalsAndHashCode() {
-		assertEqualsAndHashCode(new ClasspathResourceSource(FOO_RESOURCE), new ClasspathResourceSource(FOO_RESOURCE),
-			new ClasspathResourceSource(BAR_RESOURCE));
+		assertEqualsAndHashCode(ClasspathResourceSource.from(FOO_RESOURCE), ClasspathResourceSource.from(FOO_RESOURCE),
+			ClasspathResourceSource.from(BAR_RESOURCE));
 
-		FilePosition position = new FilePosition(42, 23);
-		assertEqualsAndHashCode(new ClasspathResourceSource(FOO_RESOURCE, position),
-			new ClasspathResourceSource(FOO_RESOURCE, position), new ClasspathResourceSource(BAR_RESOURCE, position));
+		FilePosition position = FilePosition.from(42, 23);
+		assertEqualsAndHashCode(ClasspathResourceSource.from(FOO_RESOURCE, position),
+			ClasspathResourceSource.from(FOO_RESOURCE, position), ClasspathResourceSource.from(BAR_RESOURCE, position));
 	}
 
 }

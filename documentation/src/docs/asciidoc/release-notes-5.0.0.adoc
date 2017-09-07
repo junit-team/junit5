@@ -19,9 +19,22 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
+* The constructor for `FilePosition` has been replaced with a static factory method named
+  `from(int, int)`.
+* A `FilePosition` can now be constructed solely from a line number via the new
+  `from(int)` static factory method.
+* `FilePosition.getColumn()` now returns `Optional<Integer>` instead of `int`.
+* The constructors in the following concrete `TestSource` implementations have been
+  replaced with static factory methods named `from(...)`.
+  - `ClasspathResourceSource`
+  - `ClassSource`
+  - `CompositeTestSource`
+  - `DirectorySource`
+  - `FileSource`
+  - `MethodSource`
+  - `PackageSource`
 * The constructor for `LoggingListener` has been replaced with a static factory method
   named `forBiConsumer(...)`.
-
 
 ===== New Features and Improvements
 

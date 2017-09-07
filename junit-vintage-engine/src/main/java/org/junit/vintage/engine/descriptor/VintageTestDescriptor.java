@@ -107,7 +107,7 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 					return methodSource;
 				}
 			}
-			return new ClassSource(testClass);
+			return ClassSource.from(testClass);
 		}
 		return null;
 	}
@@ -119,7 +119,7 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 		}
 		else {
 			List<Method> methods = findMethods(testClass, where(Method::getName, isEqual(methodName)));
-			return (methods.size() == 1) ? new MethodSource(getOnlyElement(methods)) : null;
+			return (methods.size() == 1) ? MethodSource.from(getOnlyElement(methods)) : null;
 		}
 	}
 

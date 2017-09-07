@@ -32,9 +32,6 @@ public class ClasspathResourceSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String classpathResourceName;
-	private final FilePosition filePosition;
-
 	/**
 	 * Create a new {@code ClasspathResourceSource} using the supplied classpath
 	 * resource name.
@@ -51,8 +48,8 @@ public class ClasspathResourceSource implements TestSource {
 	 * @see ClassLoader#getResourceAsStream(String)
 	 * @see ClassLoader#getResources(String)
 	 */
-	public ClasspathResourceSource(String classpathResourceName) {
-		this(classpathResourceName, null);
+	public static ClasspathResourceSource from(String classpathResourceName) {
+		return new ClasspathResourceSource(classpathResourceName, null);
 	}
 
 	/**
@@ -69,7 +66,18 @@ public class ClasspathResourceSource implements TestSource {
 	 * {@code null} or blank
 	 * @param filePosition the position in the classpath resource; may be {@code null}
 	 */
-	public ClasspathResourceSource(String classpathResourceName, FilePosition filePosition) {
+	public static ClasspathResourceSource from(String classpathResourceName, FilePosition filePosition) {
+		return new ClasspathResourceSource(classpathResourceName, filePosition);
+	}
+
+	private final String classpathResourceName;
+	private final FilePosition filePosition;
+
+	private ClasspathResourceSource(String classpathResourceName) {
+		this(classpathResourceName, null);
+	}
+
+	private ClasspathResourceSource(String classpathResourceName, FilePosition filePosition) {
 		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
 		this.classpathResourceName = (startsWithSlash ? classpathResourceName.substring(1) : classpathResourceName);

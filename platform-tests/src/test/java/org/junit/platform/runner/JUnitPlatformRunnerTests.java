@@ -581,10 +581,10 @@ class JUnitPlatformRunnerTests {
 			DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
 			DemoHierarchicalContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
-				"containerDisplayName", new ClassSource(getClass()));
+				"containerDisplayName", ClassSource.from(getClass()));
 			containerDescriptor.addChild(
 				new DemoHierarchicalTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
-					"testDisplayName", new MethodSource(failingTest), () -> {
+					"testDisplayName", MethodSource.from(failingTest), () -> {
 					}));
 
 			JUnitPlatform platformRunner = new JUnitPlatform(TestClass.class, createLauncher(engine));
@@ -617,10 +617,10 @@ class JUnitPlatformRunnerTests {
 			DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
 			DemoHierarchicalContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
-				"containerDisplayName", new ClassSource(getClass()));
+				"containerDisplayName", ClassSource.from(getClass()));
 			containerDescriptor.addChild(
 				new DemoHierarchicalTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
-					"testDisplayName", new MethodSource(failingTest), () -> {
+					"testDisplayName", MethodSource.from(failingTest), () -> {
 					}));
 
 			JUnitPlatform platformRunner = new JUnitPlatform(TestClassWithTechnicalNames.class, createLauncher(engine));

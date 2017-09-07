@@ -14,13 +14,15 @@ import static org.junit.platform.commons.meta.API.Usage.Stable;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * Position inside a file represented by {@linkplain #getLine line} and
- * {@linkplain #getColumn column}.
+ * {@linkplain #getColumn column} numbers.
  *
  * @since 1.0
  */
@@ -29,33 +31,60 @@ public class FilePosition implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private final int line;
-	private final int column;
-
 	/**
-	 * Create a new {@code FilePosition} using the supplied {@code line} and
-	 * {@code column}.
+	 * Create a new {@code FilePosition} using the supplied {@code line} number
+	 * and an undefined column number.
 	 *
-	 * @param line the line (1-based)
-	 * @param column the column (1-based)
+	 * @param line the line number; must be greater than zero
 	 */
-	public FilePosition(int line, int column) {
-		this.line = line;
-		this.column = column;
+	public static FilePosition from(int line) {
+		return new FilePosition(line);
 	}
 
 	/**
-	 * Get the line (1-based) of this position.
+	 * Create a new {@code FilePosition} using the supplied {@code line} and
+	 * {@code column} numbers.
+	 *
+	 * @param line the line number; must be greater than zero
+	 * @param column the column number; must be greater than zero
+	 */
+	public static FilePosition from(int line, int column) {
+		return new FilePosition(line, column);
+	}
+
+	private final int line;
+	private final Integer column;
+
+	private FilePosition(int line) {
+		Preconditions.condition(line > 0, "line number must be greater than zero");
+		this.line = line;
+		this.column = null;
+	}
+
+	private FilePosition(int line, int column) {
+		Preconditions.condition(line > 0, "line number must be greater than zero");
+		Preconditions.condition(column > 0, "column number must be greater than zero");
+		this.line = line;
+		this.column = Integer.valueOf(column);
+	}
+
+	/**
+	 * Get the line number of this {@code FilePosition}.
+	 *
+	 * @return the line number
 	 */
 	public int getLine() {
 		return this.line;
 	}
 
 	/**
-	 * Get the column (1-based) of this position.
+	 * Get the column number of this {@code FilePosition}, if available.
+	 *
+	 * @return an {@code Optional} containing the column number; never
+	 * {@code null} but potentially empty
 	 */
-	public int getColumn() {
-		return this.column;
+	public Optional<Integer> getColumn() {
+		return Optional.ofNullable(this.column);
 	}
 
 	@Override
@@ -80,7 +109,7 @@ public class FilePosition implements Serializable {
 		// @formatter:off
 		return new ToStringBuilder(this)
 				.append("line", this.line)
-				.append("column", this.column)
+				.append("column", getColumn().orElse(-1))
 				.toString();
 		// @formatter:on
 	}
