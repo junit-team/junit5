@@ -19,7 +19,9 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* ❓
+* The constructor for `LoggingListener` has been replaced with a static factory method
+  named `forBiConsumer(...)`.
+
 
 ===== New Features and Improvements
 
