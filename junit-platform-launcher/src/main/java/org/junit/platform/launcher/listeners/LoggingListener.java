@@ -41,7 +41,9 @@ public class LoggingListener implements TestExecutionListener {
 	 * Create a {@code LoggingListener} which delegates to a
 	 * {@link java.util.logging.Logger} using a log level of
 	 * {@link Level#FINE FINE}.
+	 *
 	 * @see #forJavaUtilLogging(Level)
+	 * @see #forBiConsumer(BiConsumer)
 	 */
 	public static LoggingListener forJavaUtilLogging() {
 		return forJavaUtilLogging(Level.FINE);
@@ -54,14 +56,13 @@ public class LoggingListener implements TestExecutionListener {
 	 *
 	 * @param logLevel the log level to use; never {@code null}
 	 * @see #forJavaUtilLogging()
+	 * @see #forBiConsumer(BiConsumer)
 	 */
 	public static LoggingListener forJavaUtilLogging(Level logLevel) {
 		Preconditions.notNull(logLevel, "logLevel must not be null");
 		Logger logger = Logger.getLogger(LoggingListener.class.getName());
 		return new LoggingListener((t, messageSupplier) -> logger.log(logLevel, t, messageSupplier));
 	}
-
-	private final BiConsumer<Throwable, Supplier<String>> logger;
 
 	/**
 	 * Create a {@code LoggingListener} which delegates to the supplied
@@ -73,7 +74,13 @@ public class LoggingListener implements TestExecutionListener {
 	 * @see #forJavaUtilLogging()
 	 * @see #forJavaUtilLogging(Level)
 	 */
-	public LoggingListener(BiConsumer<Throwable, Supplier<String>> logger) {
+	public static LoggingListener forBiConsumer(BiConsumer<Throwable, Supplier<String>> logger) {
+		return new LoggingListener(logger);
+	}
+
+	private final BiConsumer<Throwable, Supplier<String>> logger;
+
+	private LoggingListener(BiConsumer<Throwable, Supplier<String>> logger) {
 		this.logger = Preconditions.notNull(logger, "logger must not be null");
 	}
 
