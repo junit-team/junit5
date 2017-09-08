@@ -67,11 +67,24 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
-	licenseHeaderFileProvider = { project -> (
+	licenses = [
+		'EPL-2.0': [
+			name: 'Eclipse Public License v2.0',
+			url: 'http://www.eclipse.org/legal/epl-v20.html',
+			headerFile: 'eclipse-public-license-2.0.java'
+		],
+		'Apache-2.0': [
+			name: 'The Apache License, Version 2.0',
+			url: 'http://www.apache.org/licenses/LICENSE-2.0.txt',
+			headerFile: 'apache-license-2.0.java'
+		]
+	]
+
+	licenseOf = { project -> licenses[
 		project.name == 'junit-platform-surefire-provider'
-			? 'apache-license-2.0.java'
-			: 'eclipse-public-license-2.0.java'
-		)
+			? 'Apache-2.0'
+			: 'EPL-2.0'
+		]
 	}
 
 	cloverTestProjects = [
@@ -300,6 +313,8 @@ subprojects { subproj ->
 						authentication(userName: ossrhUsername, password: ossrhPassword)
 					}
 
+					def projectLicense = licenseOf(project)
+
 					pom.project {
 						name "${project.group}:${project.name}"
 						packaging 'jar'
@@ -314,8 +329,8 @@ subprojects { subproj ->
 
 						licenses {
 							license {
-								name 'Eclipse Public License v2.0'
-								url 'http://www.eclipse.org/legal/epl-v20.html'
+								name projectLicense['name']
+								url projectLicense['url']
 							}
 						}
 
@@ -400,7 +415,7 @@ subprojects { subproj ->
 	}
 
 	spotless {
-		def headerFile = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
+		def headerFile = rootProject.file('src/spotless/' + licenseOf(project)['headerFile'])
 		def importOrderConfigFile = rootProject.file('src/eclipse/junit-eclipse.importorder')
 		def javaFormatterConfigFile = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 		def groovyFormatterConfigFile = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
