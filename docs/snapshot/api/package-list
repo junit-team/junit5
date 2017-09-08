@@ -16,6 +16,7 @@ org.junit.jupiter.params.provider
 org.junit.jupiter.params.support
 org.junit.platform.commons
 org.junit.platform.commons.annotation
+org.junit.platform.commons.logging
 org.junit.platform.commons.meta
 org.junit.platform.commons.support
 org.junit.platform.commons.util
