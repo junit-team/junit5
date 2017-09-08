@@ -52,7 +52,7 @@ class UniqueIdReaderTests {
 		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
 		assertEquals(Level.WARNING, logRecord.getLevel());
 		assertEquals(
-			"Could not read unique id for Description, using display name instead: " + description.getDisplayName(),
+			"Could not read unique ID for Description; using display name instead: " + description.getDisplayName(),
 			logRecord.getMessage());
 	}
 

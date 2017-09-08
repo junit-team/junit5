@@ -45,7 +45,7 @@ public class UniqueIdReader implements Function<Description, Serializable> {
 	public Serializable apply(Description description) {
 		Optional<Object> result = readFieldValue(Description.class, fieldName, description);
 		return result.map(Serializable.class::cast).orElseGet(() -> {
-			logger.warn(() -> format("Could not read unique id for Description, using display name instead: %s",
+			logger.warn(() -> format("Could not read unique ID for Description; using display name instead: %s",
 				description.toString()));
 			return description.getDisplayName();
 		});
