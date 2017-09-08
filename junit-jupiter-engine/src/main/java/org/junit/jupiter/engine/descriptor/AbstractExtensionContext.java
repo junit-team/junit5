@@ -74,11 +74,10 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	@Override
 	public ExtensionContext getRoot() {
-		ExtensionContext root = this;
-		while (parent != null && parent != root) {
-			root = parent;
+		if (parent != null) {
+			return parent.getRoot();
 		}
-		return root;
+		return this;
 	}
 
 	protected T getTestDescriptor() {
