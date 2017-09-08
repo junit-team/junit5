@@ -53,17 +53,17 @@ class AssertionUtils {
 	}
 
 	static String nullSafeGet(Supplier<String> messageSupplier) {
-		return (messageSupplier != null ? messageSupplier.get() : null);
+		return (messageSupplier != null) ? messageSupplier.get() : null;
 	}
 
 	static String buildPrefix(String message) {
-		return (StringUtils.isNotBlank(message) ? message + " ==> " : "");
+		return StringUtils.isNotBlank(message) ? (message + " ==> ") : "";
 	}
 
 	static String getCanonicalName(Class<?> clazz) {
 		try {
 			String canonicalName = clazz.getCanonicalName();
-			return (canonicalName != null ? canonicalName : clazz.getName());
+			return (canonicalName != null) ? canonicalName : clazz.getName();
 		}
 		catch (Throwable t) {
 			return clazz.getName();
@@ -87,23 +87,25 @@ class AssertionUtils {
 	private static String formatClassAndValue(Object value, String valueString) {
 		String classAndHash = getClassName(value) + toHash(value);
 		// if it's a class, there's no need to repeat the class name contained in the valueString.
-		return (value instanceof Class ? "<" + classAndHash + ">" : classAndHash + "<" + valueString + ">");
+		return (value instanceof Class) ? ("<" + classAndHash + ">") : (classAndHash + "<" + valueString + ">");
 	}
 
 	private static String toString(Object obj) {
-		if (obj instanceof Class) {
-			return getCanonicalName((Class<?>) obj);
-		}
-		return StringUtils.nullSafeToString(obj);
+		return (obj instanceof Class) ? getCanonicalName((Class<?>) obj) : StringUtils.nullSafeToString(obj);
 	}
 
 	private static String toHash(Object obj) {
-		return (obj == null ? "" : "@" + Integer.toHexString(System.identityHashCode(obj)));
+		return (obj == null) ? "" : ("@" + Integer.toHexString(System.identityHashCode(obj)));
 	}
 
 	private static String getClassName(Object obj) {
-		return (obj == null ? "null"
-				: obj instanceof Class ? getCanonicalName((Class<?>) obj) : obj.getClass().getName());
+		if (obj == null) {
+			return "null";
+		}
+		if (obj instanceof Class) {
+			return getCanonicalName((Class<?>) obj);
+		}
+		return obj.getClass().getName();
 	}
 
 	static String formatIndexes(Deque<Integer> indexes) {
@@ -145,10 +147,7 @@ class AssertionUtils {
 	}
 
 	static boolean objectsAreEqual(Object obj1, Object obj2) {
-		if (obj1 == null) {
-			return (obj2 == null);
-		}
-		return obj1.equals(obj2);
+		return (obj1 == null) ? (obj2 == null) : obj1.equals(obj2);
 	}
 
 	private static void failIllegalDelta(String delta) {
