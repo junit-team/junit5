@@ -46,7 +46,7 @@ import org.junit.platform.commons.meta.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Repeatable(Tags.class)
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public @interface Tag {
 
 	/**

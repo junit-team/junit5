@@ -50,7 +50,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @since 5.0
  * @see org.junit.jupiter.params.converter.ArgumentConverter
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();

@@ -24,7 +24,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 1.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class UniqueIdSelector implements DiscoverySelector {
 
 	private final UniqueId uniqueId;

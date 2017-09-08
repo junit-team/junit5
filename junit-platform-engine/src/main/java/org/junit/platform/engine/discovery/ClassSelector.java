@@ -35,7 +35,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @since 1.0
  * @see org.junit.platform.engine.support.descriptor.ClassSource
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class ClassSelector implements DiscoverySelector {
 
 	private final String className;

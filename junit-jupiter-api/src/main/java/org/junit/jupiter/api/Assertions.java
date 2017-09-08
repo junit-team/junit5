@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.time.Duration;
@@ -37,7 +36,7 @@ import org.opentest4j.MultipleFailuresError;
  * @see org.opentest4j.AssertionFailedError
  * @see Assumptions
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public final class Assertions {
 
 	///CLOVER:OFF
@@ -1089,7 +1088,6 @@ public final class Assertions {
 	 * @see #assertAll(String, Executable...)
 	 * @see #assertAll(Stream)
 	 */
-	@API(status = EXPERIMENTAL)
 	public static void assertAll(String heading, Stream<Executable> executables) throws MultipleFailuresError {
 		AssertAll.assertAll(heading, executables);
 	}

@@ -23,7 +23,7 @@ import org.junit.platform.console.options.Details
  *
  * @since 1.0
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "1.0")
 class JUnitPlatformExtension {
 
 	private final Project project

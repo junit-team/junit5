@@ -36,7 +36,7 @@ import org.junit.platform.commons.meta.API;
  * @see AfterAllCallback
  */
 @FunctionalInterface
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface AfterTestExecutionCallback extends Extension {
 
 	/**

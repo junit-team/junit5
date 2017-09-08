@@ -58,7 +58,7 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
  *
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();

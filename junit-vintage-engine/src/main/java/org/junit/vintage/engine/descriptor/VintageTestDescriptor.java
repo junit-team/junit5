@@ -38,7 +38,7 @@ import org.junit.runner.Description;
 /**
  * @since 4.12
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "4.12")
 public class VintageTestDescriptor extends AbstractTestDescriptor {
 
 	public static final String ENGINE_ID = "junit-vintage";

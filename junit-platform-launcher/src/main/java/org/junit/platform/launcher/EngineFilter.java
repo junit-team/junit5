@@ -38,7 +38,7 @@ import org.junit.platform.engine.TestEngine;
  * @see #excludeEngines(String...)
  * @see LauncherDiscoveryRequest
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class EngineFilter implements Filter<TestEngine> {
 
 	/**

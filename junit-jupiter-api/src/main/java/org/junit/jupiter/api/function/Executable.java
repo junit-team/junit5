@@ -40,7 +40,7 @@ import org.junit.platform.commons.meta.API;
  * @see ThrowingConsumer
  */
 @FunctionalInterface
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface Executable {
 
 	void execute() throws Throwable;

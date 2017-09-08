@@ -34,7 +34,7 @@ import org.junit.platform.commons.meta.API;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public @interface ArgumentsSources {
 
 	/**

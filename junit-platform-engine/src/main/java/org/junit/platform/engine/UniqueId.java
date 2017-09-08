@@ -33,7 +33,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 1.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class UniqueId implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -181,7 +181,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 * A segment of a {@link UniqueId} comprises a <em>type</em> and a
 	 * <em>value</em>.
 	 */
-	@API(status = STABLE)
+	@API(status = STABLE, since = "1.0")
 	public static class Segment implements Serializable {
 
 		private static final long serialVersionUID = 1L;

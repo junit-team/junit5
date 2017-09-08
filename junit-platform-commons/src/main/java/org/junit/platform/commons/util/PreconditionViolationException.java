@@ -21,7 +21,7 @@ import org.junit.platform.commons.meta.API;
  * @since 1.0
  * @see Preconditions
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public class PreconditionViolationException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

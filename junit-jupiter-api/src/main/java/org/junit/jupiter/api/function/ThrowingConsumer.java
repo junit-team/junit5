@@ -38,7 +38,7 @@ import org.junit.platform.commons.meta.API;
  * @see Executable
  */
 @FunctionalInterface
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface ThrowingConsumer<T> {
 
 	/**

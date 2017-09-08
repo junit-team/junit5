@@ -37,7 +37,7 @@ import org.junit.platform.launcher.TestExecutionListener;
  * @since 1.0
  * @see Launcher
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class LauncherFactory {
 
 	///CLOVER:OFF

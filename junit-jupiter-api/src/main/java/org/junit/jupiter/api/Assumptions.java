@@ -38,7 +38,7 @@ import org.opentest4j.TestAbortedException;
  * @see TestAbortedException
  * @see Assertions
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public final class Assumptions {
 
 	///CLOVER:OFF

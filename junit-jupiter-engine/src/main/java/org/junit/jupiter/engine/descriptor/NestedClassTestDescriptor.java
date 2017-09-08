@@ -36,7 +36,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();

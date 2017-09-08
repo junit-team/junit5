@@ -34,7 +34,7 @@ import org.junit.platform.commons.meta.API;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 @ArgumentsSource(CsvArgumentsProvider.class)
 public @interface CsvSource {
 

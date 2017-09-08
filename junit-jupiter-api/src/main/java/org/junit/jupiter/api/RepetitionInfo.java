@@ -33,7 +33,7 @@ import org.junit.platform.commons.meta.API;
  * @see RepeatedTest
  * @see TestInfo
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface RepetitionInfo {
 
 	/**

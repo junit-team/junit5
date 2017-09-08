@@ -43,7 +43,7 @@ import org.junit.rules.ExpectedException;
  * @see org.junit.rules.TestRule
  * @see org.junit.Rule
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutionExceptionHandler {
 
 	private static final String EXCEPTION_WAS_HANDLED = "exceptionWasHandled";

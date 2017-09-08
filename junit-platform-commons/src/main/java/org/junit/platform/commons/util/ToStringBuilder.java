@@ -30,7 +30,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public class ToStringBuilder {
 
 	private final Class<?> type;

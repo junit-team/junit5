@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public @interface API {
 
 	/**
@@ -81,8 +81,8 @@ public @interface API {
 		 * Intended for new, experimental features where the publisher of the
 		 * API is looking for feedback.
 		 *
-		 * <p>Use with caution. Might be promoted to {@link #Maintained} or
-		 * {@link #Stable} in the future, but might also be removed without
+		 * <p>Use with caution. Might be promoted to {@link #MAINTAINED} or
+		 * {@link #STABLE} in the future, but might also be removed without
 		 * prior notice.
 		 */
 		EXPERIMENTAL,
@@ -91,7 +91,7 @@ public @interface API {
 		 * Intended for features that will not be changed in a backwards-
 		 * incompatible way for at least the next minor release of the current
 		 * major version. If scheduled for removal, such a feature will be
-		 * demoted to {@link #Deprecated} first.
+		 * demoted to {@link #DEPRECATED} first.
 		 */
 		MAINTAINED,
 

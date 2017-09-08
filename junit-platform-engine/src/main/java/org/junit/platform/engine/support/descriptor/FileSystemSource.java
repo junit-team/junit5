@@ -25,7 +25,7 @@ import org.junit.platform.engine.TestSource;
  *
  * @since 1.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface FileSystemSource extends UriSource {
 
 	/**

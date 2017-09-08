@@ -22,7 +22,7 @@ import org.junit.platform.commons.meta.API;
  * @since 5.0
  * @see ArgumentConverter
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public abstract class SimpleArgumentConverter implements ArgumentConverter {
 
 	@Override

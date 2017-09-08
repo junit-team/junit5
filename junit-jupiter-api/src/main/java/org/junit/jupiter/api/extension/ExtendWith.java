@@ -49,7 +49,7 @@ import org.junit.platform.commons.meta.API;
 @Documented
 @Inherited
 @Repeatable(Extensions.class)
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public @interface ExtendWith {
 
 	/**

@@ -35,7 +35,7 @@ import org.junit.platform.commons.meta.API;
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.converter.ConvertWith
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public interface ArgumentConverter {
 
 	/**

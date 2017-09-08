@@ -55,7 +55,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
 /**
  * @since 1.0
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "1.0")
 public class JUnitPlatformProvider extends AbstractProvider {
 
 	// Parameter names processed to determine which @Tags should be executed.

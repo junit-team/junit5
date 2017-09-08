@@ -30,7 +30,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @since 1.0
  * @see org.junit.platform.engine.discovery.FileSelector
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class FileSource implements FileSystemSource {
 
 	private static final long serialVersionUID = 1L;

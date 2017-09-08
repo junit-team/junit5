@@ -26,7 +26,7 @@ import org.junit.platform.engine.FilterResult;
  *
  * @since 1.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public class ExclusionReasonConsumingFilter<T> implements Filter<T> {
 
 	private final Filter<T> filter;

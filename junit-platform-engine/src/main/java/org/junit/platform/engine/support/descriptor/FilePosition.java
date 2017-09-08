@@ -26,7 +26,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 1.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class FilePosition implements Serializable {
 
 	private static final long serialVersionUID = 1L;

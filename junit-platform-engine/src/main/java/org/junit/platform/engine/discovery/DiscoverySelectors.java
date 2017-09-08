@@ -43,7 +43,7 @@ import org.junit.platform.engine.UniqueId;
  * @see MethodSelector
  * @see PackageSelector
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public final class DiscoverySelectors {
 
 	private static final Pattern fullyQualifiedMethodNamePattern = Pattern.compile("([^#]+)#([^(]+)(?:\\((.*)\\))?");

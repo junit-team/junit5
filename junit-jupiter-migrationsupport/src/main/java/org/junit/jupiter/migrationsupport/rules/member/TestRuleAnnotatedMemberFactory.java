@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public final class TestRuleAnnotatedMemberFactory {
 
 	///CLOVER:OFF

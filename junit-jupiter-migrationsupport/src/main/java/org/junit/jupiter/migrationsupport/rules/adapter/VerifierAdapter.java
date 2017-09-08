@@ -19,7 +19,7 @@ import org.junit.rules.Verifier;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class VerifierAdapter extends AbstractTestRuleAdapter {
 
 	public VerifierAdapter(TestRuleAnnotatedMember annotatedMember) {

@@ -31,7 +31,7 @@ import org.junit.platform.commons.meta.API;
 /**
  * @since 1.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public class CommandLineOptions {
 
 	static final Details DEFAULT_DETAILS = Details.TREE;

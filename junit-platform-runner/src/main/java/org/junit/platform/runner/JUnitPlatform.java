@@ -97,7 +97,7 @@ import org.junit.runners.model.InitializationError;
  * @see ExcludeEngines
  * @see UseTechnicalNames
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class JUnitPlatform extends Runner implements Filterable {
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];

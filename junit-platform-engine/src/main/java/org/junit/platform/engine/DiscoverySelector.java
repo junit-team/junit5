@@ -22,6 +22,6 @@ import org.junit.platform.commons.meta.API;
  * @since 1.0
  * @see EngineDiscoveryRequest
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface DiscoverySelector {
 }

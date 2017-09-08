@@ -29,7 +29,7 @@ import org.junit.platform.commons.util.AnnotationUtils;
  *
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public final class AnnotationConsumerInitializer {
 
 	///CLOVER:OFF

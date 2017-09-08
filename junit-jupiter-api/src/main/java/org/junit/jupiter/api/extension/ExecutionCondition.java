@@ -29,7 +29,7 @@ import org.junit.platform.commons.meta.API;
  * @see org.junit.jupiter.api.Disabled
  */
 @FunctionalInterface
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface ExecutionCondition extends Extension {
 
 	/**

@@ -57,7 +57,7 @@ import org.junit.platform.commons.meta.API;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 @Testable
 public @interface TestTemplate {
 }

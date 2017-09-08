@@ -24,7 +24,7 @@ import org.junit.platform.launcher.TestIdentifier;
  * @since 1.0
  * @see SummaryGeneratingListener
  */
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "1.0")
 public interface TestExecutionSummary {
 
 	/**

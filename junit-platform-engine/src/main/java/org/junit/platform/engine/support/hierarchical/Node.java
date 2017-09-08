@@ -26,7 +26,7 @@ import org.junit.platform.engine.TestDescriptor;
  * @since 1.0
  * @see HierarchicalTestEngine
  */
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "1.0")
 public interface Node<C extends EngineExecutionContext> {
 
 	/**

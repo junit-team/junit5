@@ -53,7 +53,7 @@ import org.junit.platform.commons.meta.API;
  * @see org.junit.platform.launcher.core.LauncherFactory
  * @see org.junit.platform.engine.TestEngine
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface Launcher {
 
 	/**

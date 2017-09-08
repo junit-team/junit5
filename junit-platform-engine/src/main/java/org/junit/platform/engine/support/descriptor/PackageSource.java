@@ -29,7 +29,7 @@ import org.junit.platform.engine.discovery.PackageSelector;
  * @since 1.0
  * @see PackageSelector
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class PackageSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;

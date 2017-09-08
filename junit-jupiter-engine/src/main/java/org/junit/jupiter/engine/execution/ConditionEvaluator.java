@@ -36,7 +36,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  * @since 5.0
  * @see ExecutionCondition
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class ConditionEvaluator {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConditionEvaluator.class);

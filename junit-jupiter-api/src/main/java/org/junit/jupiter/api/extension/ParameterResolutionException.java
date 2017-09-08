@@ -22,7 +22,7 @@ import org.junit.platform.commons.meta.API;
  * @since 5.0
  * @see ParameterResolver
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public class ParameterResolutionException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

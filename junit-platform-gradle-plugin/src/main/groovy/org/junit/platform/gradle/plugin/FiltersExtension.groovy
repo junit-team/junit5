@@ -20,7 +20,7 @@ import org.junit.platform.engine.discovery.ClassNameFilter
  *
  * @since 1.0
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "1.0")
 class FiltersExtension {
 
 	/**

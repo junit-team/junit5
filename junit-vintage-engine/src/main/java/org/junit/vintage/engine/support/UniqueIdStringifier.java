@@ -28,7 +28,7 @@ import org.junit.platform.commons.meta.API;
 /**
  * @since 4.12
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "4.12")
 public class UniqueIdStringifier implements Function<Serializable, String> {
 
 	static final Charset CHARSET = StandardCharsets.UTF_8;

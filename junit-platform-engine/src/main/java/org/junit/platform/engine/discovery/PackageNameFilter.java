@@ -23,7 +23,7 @@ import org.junit.platform.engine.DiscoveryFilter;
  * @since 1.0
  * @see #includePackageNames
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface PackageNameFilter extends DiscoveryFilter<String> {
 
 	/**

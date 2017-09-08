@@ -29,6 +29,6 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface TestSource extends Serializable {
 }

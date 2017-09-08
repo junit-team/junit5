@@ -23,7 +23,7 @@ import org.junit.platform.console.ConsoleLauncher
 /**
  * @since 1.0
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "1.0")
 class JUnitPlatformPlugin implements Plugin<Project> {
 
 	private static final String EXTENSION_NAME = 'junitPlatform'

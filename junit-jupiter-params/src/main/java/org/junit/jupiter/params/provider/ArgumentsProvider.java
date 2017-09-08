@@ -32,7 +32,7 @@ import org.junit.platform.commons.meta.API;
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.Arguments
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public interface ArgumentsProvider {
 
 	/**

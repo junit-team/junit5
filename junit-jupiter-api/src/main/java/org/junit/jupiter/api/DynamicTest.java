@@ -44,7 +44,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see TestFactory
  * @see Executable
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public class DynamicTest extends DynamicNode {
 
 	/**

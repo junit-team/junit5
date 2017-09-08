@@ -38,7 +38,7 @@ import org.junit.platform.commons.meta.API;
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "1.0")
 public @interface SelectPackages {
 
 	/**

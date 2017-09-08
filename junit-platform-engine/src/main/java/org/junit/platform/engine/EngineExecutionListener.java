@@ -28,7 +28,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * @see TestEngine
  * @see ExecutionRequest
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface EngineExecutionListener {
 
 	/**

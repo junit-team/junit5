@@ -24,7 +24,7 @@ import org.junit.platform.engine.EngineExecutionListener;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTestDescriptor> {
 
 	private final Object testInstance;

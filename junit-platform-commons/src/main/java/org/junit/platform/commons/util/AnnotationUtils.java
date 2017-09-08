@@ -54,7 +54,7 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
  * @see AnnotatedElement
  * @see org.junit.platform.commons.support.AnnotationSupport
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public final class AnnotationUtils {
 
 	///CLOVER:OFF

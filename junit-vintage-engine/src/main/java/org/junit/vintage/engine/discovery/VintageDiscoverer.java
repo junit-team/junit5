@@ -33,7 +33,7 @@ import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 /**
  * @since 4.12
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "4.12")
 public class VintageDiscoverer {
 
 	private static final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();

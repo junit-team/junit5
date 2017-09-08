@@ -25,6 +25,6 @@ import org.junit.platform.commons.meta.API;
  * @see EngineDiscoveryRequest
  * @see TestEngine
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface DiscoveryFilter<T> extends Filter<T> {
 }

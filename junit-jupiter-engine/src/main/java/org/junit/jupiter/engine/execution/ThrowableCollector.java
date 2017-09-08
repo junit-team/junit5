@@ -23,7 +23,7 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class ThrowableCollector {
 
 	private Throwable throwable;

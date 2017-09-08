@@ -28,7 +28,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see DirectorySelector
  * @see org.junit.platform.engine.support.descriptor.UriSource
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class UriSelector implements DiscoverySelector {
 
 	private final URI uri;

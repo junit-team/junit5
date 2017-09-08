@@ -29,7 +29,7 @@ import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
  *
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecutionContext> {
 
 	public static final String ENGINE_ID = "junit-jupiter";

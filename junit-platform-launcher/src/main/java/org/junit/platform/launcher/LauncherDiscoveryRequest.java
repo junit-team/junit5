@@ -53,7 +53,7 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
  * @see #getEngineFilters()
  * @see #getPostDiscoveryFilters()
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 
 	/**

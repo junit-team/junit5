@@ -33,7 +33,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class ExtensionValuesStore {
 
 	private final ExtensionValuesStore parentStore;

@@ -28,7 +28,7 @@ import org.junit.platform.commons.meta.API;
  * @see org.junit.jupiter.api.TestTemplate
  * @see TestTemplateInvocationContextProvider
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface TestTemplateInvocationContext {
 
 	/**

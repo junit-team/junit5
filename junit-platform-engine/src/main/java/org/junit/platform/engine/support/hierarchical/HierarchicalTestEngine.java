@@ -24,7 +24,7 @@ import org.junit.platform.engine.TestEngine;
  * @since 1.0
  * @see Node
  */
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "1.0")
 public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
 
 	/**

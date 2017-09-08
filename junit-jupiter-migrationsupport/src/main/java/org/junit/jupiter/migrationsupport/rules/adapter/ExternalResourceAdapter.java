@@ -19,7 +19,7 @@ import org.junit.rules.ExternalResource;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class ExternalResourceAdapter extends AbstractTestRuleAdapter {
 
 	public ExternalResourceAdapter(TestRuleAnnotatedMember annotatedMember) {

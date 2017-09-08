@@ -21,7 +21,7 @@ import org.junit.platform.engine.TestExecutionResult;
 /**
  * @since 1.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public enum Theme {
 
 	/**

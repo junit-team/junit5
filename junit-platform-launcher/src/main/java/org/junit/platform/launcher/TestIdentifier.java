@@ -35,7 +35,7 @@ import org.junit.platform.engine.TestTag;
  * @since 1.0
  * @see TestPlan
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public final class TestIdentifier implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -51,7 +51,7 @@ public final class TestIdentifier implements Serializable {
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
 	 */
-	@API(status = INTERNAL)
+	@API(status = INTERNAL, since = "1.0")
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		String uniqueId = testDescriptor.getUniqueId().toString();

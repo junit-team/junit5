@@ -28,6 +28,6 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public interface AnnotationConsumer<A extends Annotation> extends Consumer<A> {
 }

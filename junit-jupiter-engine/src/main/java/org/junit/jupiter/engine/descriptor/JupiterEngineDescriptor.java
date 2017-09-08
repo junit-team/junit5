@@ -25,7 +25,7 @@ import org.junit.platform.engine.support.hierarchical.Node;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class JupiterEngineDescriptor extends EngineDescriptor implements Node<JupiterEngineExecutionContext> {
 
 	public JupiterEngineDescriptor(UniqueId uniqueId) {

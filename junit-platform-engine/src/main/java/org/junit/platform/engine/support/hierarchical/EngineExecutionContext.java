@@ -21,6 +21,6 @@ import org.junit.platform.commons.meta.API;
  * @since 1.0
  * @see HierarchicalTestEngine
  */
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "1.0")
 public interface EngineExecutionContext {
 }

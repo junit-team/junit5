@@ -21,7 +21,7 @@ import org.junit.platform.commons.meta.API;
  * @since 5.0
  */
 @FunctionalInterface
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public interface TestInstanceProvider {
 
 	Object getTestInstance(Optional<ExtensionRegistry> childExtensionRegistry);

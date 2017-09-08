@@ -23,7 +23,7 @@ import org.junit.platform.commons.meta.API;
  * @since 5.0
  * @see org.junit.jupiter.params.converter.ArgumentConverter
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public class ArgumentConversionException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

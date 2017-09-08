@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 1.0
  */
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "5.0")
 public final class ReflectionSupport {
 
 	///CLOVER:OFF

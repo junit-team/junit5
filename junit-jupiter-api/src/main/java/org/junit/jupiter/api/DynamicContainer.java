@@ -29,7 +29,7 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * @since 5.0
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public class DynamicContainer extends DynamicNode {
 
 	/**

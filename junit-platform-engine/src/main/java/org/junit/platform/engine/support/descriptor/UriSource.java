@@ -23,7 +23,7 @@ import org.junit.platform.engine.TestSource;
  * @since 1.0
  * @see org.junit.platform.engine.discovery.UriSelector
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface UriSource extends TestSource {
 
 	/**

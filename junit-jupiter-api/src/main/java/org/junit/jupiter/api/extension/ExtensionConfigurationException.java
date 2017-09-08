@@ -21,7 +21,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public class ExtensionConfigurationException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

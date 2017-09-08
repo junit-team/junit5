@@ -34,7 +34,7 @@ import org.junit.vintage.engine.execution.RunnerExecutor;
  *
  * @since 4.12
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "4.12")
 public final class VintageTestEngine implements TestEngine {
 
 	private static final Logger logger = LoggerFactory.getLogger(VintageTestEngine.class);

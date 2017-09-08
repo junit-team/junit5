@@ -43,7 +43,7 @@ import org.junit.platform.commons.util.PackageUtils;
  * @see org.junit.platform.commons.annotation.Testable
  * @since 1.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface TestEngine {
 
 	/**

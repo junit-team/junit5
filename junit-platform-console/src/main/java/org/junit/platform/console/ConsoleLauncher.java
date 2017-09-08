@@ -32,16 +32,15 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
  *
  * @since 1.0
  */
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "1.0")
 public class ConsoleLauncher {
 
-	@API(status = MAINTAINED)
 	public static void main(String... args) {
 		int exitCode = execute(System.out, System.err, args).getExitCode();
 		System.exit(exitCode);
 	}
 
-	@API(status = INTERNAL)
+	@API(status = INTERNAL, since = "1.0")
 	public static ConsoleLauncherExecutionResult execute(PrintStream out, PrintStream err, String... args) {
 		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
 		ConsoleLauncher consoleLauncher = new ConsoleLauncher(parser, out, err);

@@ -38,7 +38,7 @@ import org.junit.platform.commons.meta.API;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 @ExtendWith(ExternalResourceSupport.class)
 @ExtendWith(VerifierSupport.class)
 @ExtendWith(ExpectedExceptionSupport.class)

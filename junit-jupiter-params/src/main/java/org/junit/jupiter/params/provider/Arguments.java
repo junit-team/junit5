@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public interface Arguments {
 
 	/**

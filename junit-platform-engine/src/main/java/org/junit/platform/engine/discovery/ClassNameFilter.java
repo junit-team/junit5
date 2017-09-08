@@ -21,7 +21,7 @@ import org.junit.platform.engine.DiscoveryFilter;
  * @since 1.0
  * @see #includeClassNamePatterns
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface ClassNameFilter extends DiscoveryFilter<String> {
 
 	/**

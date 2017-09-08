@@ -42,7 +42,7 @@ import org.junit.rules.ExternalResource;
  * @see org.junit.rules.TestRule
  * @see org.junit.Rule
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCallback {
 
 	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = ExternalResourceAdapter::new;

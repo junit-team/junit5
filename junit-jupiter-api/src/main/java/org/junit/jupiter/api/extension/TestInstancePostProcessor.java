@@ -27,7 +27,7 @@ import org.junit.platform.commons.meta.API;
  * @since 5.0
  * @see #postProcessTestInstance(Object, ExtensionContext)
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface TestInstancePostProcessor extends Extension {
 
 	/**

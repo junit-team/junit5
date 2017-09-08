@@ -22,6 +22,6 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface Extension {
 }

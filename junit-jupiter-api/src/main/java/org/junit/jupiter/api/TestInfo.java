@@ -31,7 +31,7 @@ import org.junit.platform.commons.meta.API;
  * @see Test
  * @see DisplayName
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface TestInfo {
 
 	/**

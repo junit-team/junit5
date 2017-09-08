@@ -43,7 +43,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @since 1.0
  * @see org.junit.platform.engine.support.descriptor.MethodSource
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class MethodSelector implements DiscoverySelector {
 
 	private final String className;

@@ -41,7 +41,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class ExecutableInvoker {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExecutableInvoker.class);

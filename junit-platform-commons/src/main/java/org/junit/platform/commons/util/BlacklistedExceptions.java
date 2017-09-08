@@ -36,7 +36,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public final class BlacklistedExceptions {
 
 	private static final List<Class<? extends Throwable>> blacklist = Collections.singletonList(OutOfMemoryError.class);

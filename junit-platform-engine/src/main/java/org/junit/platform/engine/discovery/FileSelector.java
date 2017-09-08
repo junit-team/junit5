@@ -34,7 +34,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see #getPath()
  * @see #getRawPath()
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class FileSelector implements DiscoverySelector {
 
 	private final String path;

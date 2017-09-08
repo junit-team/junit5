@@ -27,7 +27,7 @@ import org.opentest4j.TestAbortedException;
  * @since 1.0
  * @see #executeSafely(Executable)
  */
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "1.0")
 public class SingleTestExecutor {
 
 	/**

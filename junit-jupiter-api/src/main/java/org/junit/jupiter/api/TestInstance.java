@@ -10,12 +10,16 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.platform.commons.meta.API.Status.STABLE;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.junit.platform.commons.meta.API;
 
 /**
  * {@code @TestInstance} is a type-level annotation that is used to configure
@@ -57,6 +61,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
+@API(status = STABLE, since = "5.0")
 public @interface TestInstance {
 
 	/**

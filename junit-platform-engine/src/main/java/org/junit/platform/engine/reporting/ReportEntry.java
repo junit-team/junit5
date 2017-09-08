@@ -29,7 +29,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @see #from(Map)
  * @see #from(String, String)
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public final class ReportEntry {
 
 	private final LocalDateTime timestamp = LocalDateTime.now();

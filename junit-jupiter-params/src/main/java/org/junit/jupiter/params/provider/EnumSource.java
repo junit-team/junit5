@@ -46,7 +46,7 @@ import org.junit.platform.commons.util.Preconditions;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 @ArgumentsSource(EnumArgumentsProvider.class)
 public @interface EnumSource {
 

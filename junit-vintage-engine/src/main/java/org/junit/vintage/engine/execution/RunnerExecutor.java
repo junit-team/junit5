@@ -23,7 +23,7 @@ import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 /**
  * @since 4.12
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "4.12")
 public class RunnerExecutor {
 
 	private final EngineExecutionListener engineExecutionListener;

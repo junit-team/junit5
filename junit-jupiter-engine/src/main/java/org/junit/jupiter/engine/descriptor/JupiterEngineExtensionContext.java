@@ -22,7 +22,7 @@ import org.junit.platform.engine.EngineExecutionListener;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public final class JupiterEngineExtensionContext extends AbstractExtensionContext<JupiterEngineDescriptor> {
 
 	public JupiterEngineExtensionContext(EngineExecutionListener engineExecutionListener,

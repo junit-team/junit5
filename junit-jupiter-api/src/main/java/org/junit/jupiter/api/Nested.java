@@ -29,6 +29,6 @@ import org.junit.platform.commons.meta.API;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public @interface Nested {
 }

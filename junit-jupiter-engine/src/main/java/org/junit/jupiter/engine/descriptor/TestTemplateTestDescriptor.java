@@ -33,7 +33,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 
 	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod) {

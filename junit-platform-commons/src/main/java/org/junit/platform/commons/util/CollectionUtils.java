@@ -42,7 +42,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public final class CollectionUtils {
 
 	///CLOVER:OFF

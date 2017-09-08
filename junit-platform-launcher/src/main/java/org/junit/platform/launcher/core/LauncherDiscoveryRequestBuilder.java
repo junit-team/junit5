@@ -76,7 +76,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  * @see org.junit.platform.launcher.EngineFilter
  * @see org.junit.platform.launcher.TagFilter
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public final class LauncherDiscoveryRequestBuilder {
 
 	private List<DiscoverySelector> selectors = new ArrayList<>();

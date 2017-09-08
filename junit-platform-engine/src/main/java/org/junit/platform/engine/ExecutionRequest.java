@@ -27,7 +27,7 @@ import org.junit.platform.commons.meta.API;
  * @see TestEngine
  * @since 1.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class ExecutionRequest {
 
 	private final TestDescriptor rootTestDescriptor;
@@ -36,7 +36,7 @@ public class ExecutionRequest {
 
 	private final ConfigurationParameters configurationParameters;
 
-	@API(status = INTERNAL)
+	@API(status = INTERNAL, since = "1.0")
 	public ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener,
 			ConfigurationParameters configurationParameters) {
 		this.rootTestDescriptor = rootTestDescriptor;

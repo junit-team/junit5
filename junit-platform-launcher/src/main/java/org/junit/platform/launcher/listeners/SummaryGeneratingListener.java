@@ -29,7 +29,7 @@ import org.junit.platform.launcher.TestPlan;
  * @since 1.0
  * @see #getSummary()
  */
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "1.0")
 public class SummaryGeneratingListener implements TestExecutionListener {
 
 	private TestPlan testPlan;

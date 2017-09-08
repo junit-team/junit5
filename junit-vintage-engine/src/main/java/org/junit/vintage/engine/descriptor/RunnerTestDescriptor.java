@@ -21,7 +21,7 @@ import org.junit.runner.Runner;
 /**
  * @since 4.12
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "4.12")
 public class RunnerTestDescriptor extends VintageTestDescriptor {
 
 	private final Runner runner;

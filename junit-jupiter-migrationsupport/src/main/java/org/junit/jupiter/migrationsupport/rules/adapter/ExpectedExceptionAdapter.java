@@ -20,7 +20,7 @@ import org.junit.rules.ExpectedException;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class ExpectedExceptionAdapter extends AbstractTestRuleAdapter {
 
 	public ExpectedExceptionAdapter(TestRuleAnnotatedMember annotatedMember) {

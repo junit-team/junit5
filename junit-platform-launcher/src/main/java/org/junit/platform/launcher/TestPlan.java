@@ -51,7 +51,7 @@ import org.junit.platform.engine.TestDescriptor.Visitor;
  * @see Launcher
  * @see TestExecutionListener
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public final class TestPlan {
 
 	private final Set<TestIdentifier> roots = Collections.synchronizedSet(new LinkedHashSet<>(4));
@@ -73,7 +73,7 @@ public final class TestPlan {
 	 * plan should be created; never {@code null}
 	 * @return a new test plan
 	 */
-	@API(status = INTERNAL)
+	@API(status = INTERNAL, since = "1.0")
 	public static TestPlan from(Collection<TestDescriptor> engineDescriptors) {
 		Preconditions.notNull(engineDescriptors, "Cannot create TestPlan from a null collection of TestDescriptors");
 		TestPlan testPlan = new TestPlan(engineDescriptors.stream().anyMatch(TestDescriptor::containsTests));

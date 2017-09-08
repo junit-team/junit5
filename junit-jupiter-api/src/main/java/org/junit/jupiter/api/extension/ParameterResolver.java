@@ -37,7 +37,7 @@ import org.junit.platform.commons.meta.API;
  * @see #resolveParameter(ParameterContext, ExtensionContext)
  * @see ParameterContext
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface ParameterResolver extends Extension {
 
 	/**

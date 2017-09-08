@@ -74,6 +74,6 @@ import org.junit.platform.commons.meta.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public @interface Testable {
 }

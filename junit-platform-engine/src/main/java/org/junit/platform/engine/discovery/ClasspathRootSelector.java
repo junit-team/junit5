@@ -34,7 +34,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see ClasspathResourceSelector
  * @see Thread#getContextClassLoader()
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class ClasspathRootSelector implements DiscoverySelector {
 
 	private final URI classpathRoot;

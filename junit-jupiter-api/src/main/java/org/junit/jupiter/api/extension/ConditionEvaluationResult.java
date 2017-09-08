@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 5.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public class ConditionEvaluationResult {
 
 	/**

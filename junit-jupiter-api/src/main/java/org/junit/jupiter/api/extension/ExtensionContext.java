@@ -38,7 +38,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see Store
  * @see Namespace
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface ExtensionContext {
 
 	/**

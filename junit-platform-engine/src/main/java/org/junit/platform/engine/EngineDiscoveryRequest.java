@@ -36,7 +36,7 @@ import org.junit.platform.commons.meta.API;
  * @see ConfigurationParameters
  * @since 1.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface EngineDiscoveryRequest {
 
 	/**

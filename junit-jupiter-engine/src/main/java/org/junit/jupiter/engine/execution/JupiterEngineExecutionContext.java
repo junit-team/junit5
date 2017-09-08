@@ -23,7 +23,7 @@ import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;

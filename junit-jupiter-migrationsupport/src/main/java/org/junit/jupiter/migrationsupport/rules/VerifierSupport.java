@@ -41,7 +41,7 @@ import org.junit.rules.Verifier;
  * @see org.junit.rules.TestRule
  * @see org.junit.Rule
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public class VerifierSupport implements AfterEachCallback {
 
 	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = VerifierAdapter::new;

@@ -47,7 +47,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  *
  * @since 5.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class ExtensionRegistry {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);

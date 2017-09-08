@@ -28,7 +28,7 @@ import org.junit.platform.engine.discovery.PackageNameFilter;
  *
  * @since 1.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public final class ClasspathScanningSupport {
 
 	///CLOVER:OFF

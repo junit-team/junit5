@@ -33,7 +33,7 @@ import org.junit.platform.commons.meta.API;
  * @see java.lang.reflect.Method
  * @see java.lang.reflect.Constructor
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "5.0")
 public interface ParameterContext {
 
 	/**

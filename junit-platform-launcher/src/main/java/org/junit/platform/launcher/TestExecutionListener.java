@@ -43,7 +43,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * @see TestPlan
  * @see TestIdentifier
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface TestExecutionListener {
 	///CLOVER:OFF
 

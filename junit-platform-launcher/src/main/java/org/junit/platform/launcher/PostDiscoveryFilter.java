@@ -31,6 +31,6 @@ import org.junit.platform.engine.TestEngine;
  * @see LauncherDiscoveryRequest
  * @see TestEngine
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public interface PostDiscoveryFilter extends Filter<TestDescriptor> {
 }

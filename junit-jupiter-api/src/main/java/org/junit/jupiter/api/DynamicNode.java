@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 5.0
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.0")
 public abstract class DynamicNode {
 
 	private final String displayName;

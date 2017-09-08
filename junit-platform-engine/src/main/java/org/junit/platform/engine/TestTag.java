@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.StringUtils;
  * @see #isValid(String)
  * @see #create(String)
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public final class TestTag implements Serializable {
 
 	private static final long serialVersionUID = 1L;

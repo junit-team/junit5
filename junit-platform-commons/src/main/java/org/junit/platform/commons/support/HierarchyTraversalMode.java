@@ -22,7 +22,7 @@ import org.junit.platform.commons.meta.API;
  * @see #TOP_DOWN
  * @see #BOTTOM_UP
  */
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "5.0")
 public enum HierarchyTraversalMode {
 
 	/**

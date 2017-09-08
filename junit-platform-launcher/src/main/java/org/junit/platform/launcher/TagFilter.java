@@ -30,7 +30,7 @@ import org.junit.platform.engine.TestTag;
  * @see #includeTags(String...)
  * @see #excludeTags(String...)
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public final class TagFilter {
 
 	///CLOVER:OFF

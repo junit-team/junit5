@@ -31,7 +31,7 @@ import org.junit.platform.engine.discovery.MethodSelector;
  * @since 1.0
  * @see MethodSelector
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class MethodSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;

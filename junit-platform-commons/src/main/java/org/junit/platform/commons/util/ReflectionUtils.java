@@ -65,7 +65,7 @@ import org.junit.platform.commons.meta.API;
  * @since 1.0
  * @see org.junit.platform.commons.support.ReflectionSupport
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public final class ReflectionUtils {
 
 	///CLOVER:OFF

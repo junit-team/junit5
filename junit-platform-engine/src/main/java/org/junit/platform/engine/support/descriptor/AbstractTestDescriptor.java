@@ -35,7 +35,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 1.0
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final UniqueId uniqueId;

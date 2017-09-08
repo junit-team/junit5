@@ -30,7 +30,7 @@ import org.junit.platform.engine.discovery.ClassSelector;
  * @since 1.0
  * @see ClassSelector
  */
-@API(status = STABLE)
+@API(status = STABLE, since = "1.0")
 public class ClassSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;

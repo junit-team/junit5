@@ -18,7 +18,7 @@ import org.junit.platform.commons.meta.API
  *
  * @since 1.0
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "1.0")
 class EnginesExtension {
 
 	/**

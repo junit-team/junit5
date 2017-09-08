@@ -38,7 +38,7 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
  * @since 5.0
  * @see JavaElementsResolver
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "5.0")
 public class DiscoverySelectorResolver {
 
 	private static final IsScannableTestClass isScannableTestClass = new IsScannableTestClass();

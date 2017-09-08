@@ -34,7 +34,7 @@ import org.junit.platform.launcher.TestPlan;
  * @see #forJavaUtilLogging(Level)
  * @see LoggingListener#LoggingListener(BiConsumer)
  */
-@API(status = MAINTAINED)
+@API(status = MAINTAINED, since = "1.0")
 public class LoggingListener implements TestExecutionListener {
 
 	/**

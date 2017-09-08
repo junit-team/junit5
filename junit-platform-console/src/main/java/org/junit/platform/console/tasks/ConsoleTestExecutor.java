@@ -37,7 +37,7 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
 /**
  * @since 1.0
  */
-@API(status = INTERNAL)
+@API(status = INTERNAL, since = "1.0")
 public class ConsoleTestExecutor {
 
 	private final CommandLineOptions options;
