@@ -10,15 +10,14 @@
 
 package org.junit.jupiter.engine;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.classTestDescriptor;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.engineDescriptor;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.nestedClassTestDescriptor;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -34,7 +33,7 @@ import org.junit.platform.engine.discovery.PackageNameFilter;
  */
 class DiscoveryFilterApplierTests {
 
-	DiscoveryFilterApplier applier = new DiscoveryFilterApplier();
+	private final DiscoveryFilterApplier applier = new DiscoveryFilterApplier();
 
 	@Test
 	void packageNameFilterInclude_nonMatchingPackagesAreExcluded() {
@@ -48,13 +47,13 @@ class DiscoveryFilterApplierTests {
 						classTestDescriptor("matching", MatchingClass.class)
 				)
 				.build();
-		// @formatter:on
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
-			TestDescriptor::getUniqueId).collect(Collectors.toList());
-		Assertions.assertEquals(0, includedDescriptors.size());
+		Stream<UniqueId> includedDescriptors =
+				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
+		assertThat(includedDescriptors).isEmpty();
+		// @formatter:on
 	}
 
 	@Test
@@ -69,14 +68,14 @@ class DiscoveryFilterApplierTests {
 						classTestDescriptor("matching", MatchingClass.class)
 				)
 				.build();
-		// @formatter:on
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
-			TestDescriptor::getUniqueId).collect(Collectors.toList());
-		Assertions.assertEquals(1, includedDescriptors.size());
-		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
+		Stream<UniqueId> includedDescriptors =
+				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
+		assertThat(includedDescriptors)
+				.containsExactly(UniqueId.root("class", "matching"));
+		// @formatter:on
 	}
 
 	@Test
@@ -91,13 +90,13 @@ class DiscoveryFilterApplierTests {
 						classTestDescriptor("matching", MatchingClass.class)
 				)
 				.build();
-		// @formatter:on
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
-			TestDescriptor::getUniqueId).collect(Collectors.toList());
-		Assertions.assertEquals(0, includedDescriptors.size());
+		Stream<UniqueId> includedDescriptors =
+				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
+		assertThat(includedDescriptors).isEmpty();
+		// @formatter:on
 	}
 
 	@Test
@@ -112,14 +111,14 @@ class DiscoveryFilterApplierTests {
 						classTestDescriptor("matching", MatchingClass.class)
 				)
 				.build();
-		// @formatter:on
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
-			TestDescriptor::getUniqueId).collect(Collectors.toList());
-		Assertions.assertEquals(1, includedDescriptors.size());
-		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
+		Stream<UniqueId> includedDescriptors =
+				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
+		assertThat(includedDescriptors)
+				.containsExactly(UniqueId.root("class", "matching"));
+		// @formatter:on
 	}
 
 	@Test
@@ -130,19 +129,19 @@ class DiscoveryFilterApplierTests {
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
-			.with(
-				classTestDescriptor("matching", MatchingClass.class),
-				classTestDescriptor("other", OtherClass.class)
-			)
-			.build();
-		// @formatter:on
+				.with(
+						classTestDescriptor("matching", MatchingClass.class),
+						classTestDescriptor("other", OtherClass.class)
+				)
+				.build();
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
-			TestDescriptor::getUniqueId).collect(Collectors.toList());
-		Assertions.assertEquals(1, includedDescriptors.size());
-		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
+		Stream<UniqueId> includedDescriptors =
+				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
+		assertThat(includedDescriptors)
+				.containsExactly(UniqueId.root("class", "matching"));
+		// @formatter:on
 	}
 
 	@Test
@@ -152,20 +151,21 @@ class DiscoveryFilterApplierTests {
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
-			.with(
-				classTestDescriptor("matching", MatchingClass.class)
-					.with(nestedClassTestDescriptor("nested", MatchingClass.NestedClass.class))
-			)
-			.build();
-		// @formatter:on
+				.with(
+						classTestDescriptor("matching", MatchingClass.class)
+								.with(nestedClassTestDescriptor("nested", MatchingClass.NestedClass.class))
+				)
+				.build();
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		List<UniqueId> includedDescriptors = engineDescriptor.getDescendants().stream().map(
-			TestDescriptor::getUniqueId).collect(Collectors.toList());
-		Assertions.assertEquals(2, includedDescriptors.size());
-		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
-		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("nested-class", "nested")));
+		Stream<UniqueId> includedDescriptors =
+				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
+		assertThat(includedDescriptors).containsExactlyInAnyOrder(
+				UniqueId.root("class", "matching"),
+				UniqueId.root("nested-class", "nested")
+		);
+		// @formatter:on
 	}
 
 	private static class MatchingClass {
