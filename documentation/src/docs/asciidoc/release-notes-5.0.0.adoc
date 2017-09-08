@@ -46,7 +46,8 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* Fix implementation of `AbstractExtensionContext.getRoot()` to actually
+  traverse the complete hierarchy and return the root.
 
 ===== Deprecations and Breaking Changes
 
