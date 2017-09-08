@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine.support;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import org.junit.platform.commons.meta.API;
 /**
  * @since 4.12
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class UniqueIdStringifier implements Function<Serializable, String> {
 
 	static final Charset CHARSET = StandardCharsets.UTF_8;

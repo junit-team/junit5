@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -37,7 +37,7 @@ import org.junit.platform.commons.meta.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Repeatable(ArgumentsSources.class)
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public @interface ArgumentsSource {
 
 	/**

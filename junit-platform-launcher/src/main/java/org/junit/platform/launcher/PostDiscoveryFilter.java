@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.Filter;
@@ -31,6 +31,6 @@ import org.junit.platform.engine.TestEngine;
  * @see LauncherDiscoveryRequest
  * @see TestEngine
  */
-@API(Stable)
+@API(status = STABLE)
 public interface PostDiscoveryFilter extends Filter<TestDescriptor> {
 }

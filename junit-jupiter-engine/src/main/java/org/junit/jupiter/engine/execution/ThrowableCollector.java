@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.meta.API;
@@ -23,7 +23,7 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class ThrowableCollector {
 
 	private Throwable throwable;

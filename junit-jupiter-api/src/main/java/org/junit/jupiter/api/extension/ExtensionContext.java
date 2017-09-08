@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -38,7 +38,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see Store
  * @see Namespace
  */
-@API(Stable)
+@API(status = STABLE)
 public interface ExtensionContext {
 
 	/**

@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import org.junit.platform.engine.DiscoveryFilter;
  * @since 1.0
  * @see #includePackageNames
  */
-@API(Stable)
+@API(status = STABLE)
 public interface PackageNameFilter extends DiscoveryFilter<String> {
 
 	/**

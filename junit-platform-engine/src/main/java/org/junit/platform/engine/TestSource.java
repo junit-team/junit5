@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.io.Serializable;
 
@@ -29,6 +29,6 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(Stable)
+@API(status = STABLE)
 public interface TestSource extends Serializable {
 }

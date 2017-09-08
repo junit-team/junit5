@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.converter;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.meta.API;
@@ -22,7 +22,7 @@ import org.junit.platform.commons.meta.API;
  * @since 5.0
  * @see ArgumentConverter
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public abstract class SimpleArgumentConverter implements ArgumentConverter {
 
 	@Override

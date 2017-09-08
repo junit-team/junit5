@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
@@ -31,7 +31,7 @@ import org.junit.platform.engine.discovery.MethodSelector;
  * @since 1.0
  * @see MethodSelector
  */
-@API(Stable)
+@API(status = STABLE)
 public class MethodSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;

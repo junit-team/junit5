@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -38,7 +38,7 @@ import org.junit.platform.commons.meta.API;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 @ExtendWith(ExternalResourceSupport.class)
 @ExtendWith(VerifierSupport.class)
 @ExtendWith(ExpectedExceptionSupport.class)

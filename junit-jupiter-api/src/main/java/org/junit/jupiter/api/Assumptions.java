@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -38,7 +38,7 @@ import org.opentest4j.TestAbortedException;
  * @see TestAbortedException
  * @see Assertions
  */
-@API(Stable)
+@API(status = STABLE)
 public final class Assumptions {
 
 	///CLOVER:OFF

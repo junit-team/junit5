@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 /**
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public final class TestRuleAnnotatedMemberFactory {
 
 	///CLOVER:OFF

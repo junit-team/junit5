@@ -13,7 +13,7 @@ package org.junit.jupiter.params.converter;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -50,7 +50,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @since 5.0
  * @see org.junit.jupiter.params.converter.ArgumentConverter
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();

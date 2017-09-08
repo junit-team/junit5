@@ -15,7 +15,7 @@ import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -42,7 +42,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public final class CollectionUtils {
 
 	///CLOVER:OFF

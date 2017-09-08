@@ -10,8 +10,8 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import org.junit.platform.commons.meta.API;
 
@@ -27,7 +27,7 @@ import org.junit.platform.commons.meta.API;
  * @see TestEngine
  * @since 1.0
  */
-@API(Stable)
+@API(status = STABLE)
 public class ExecutionRequest {
 
 	private final TestDescriptor rootTestDescriptor;
@@ -36,7 +36,7 @@ public class ExecutionRequest {
 
 	private final ConfigurationParameters configurationParameters;
 
-	@API(Internal)
+	@API(status = INTERNAL)
 	public ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener,
 			ConfigurationParameters configurationParameters) {
 		this.rootTestDescriptor = rootTestDescriptor;

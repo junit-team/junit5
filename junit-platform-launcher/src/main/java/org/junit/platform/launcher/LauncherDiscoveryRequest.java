@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
  * @see #getEngineFilters()
  * @see #getPostDiscoveryFilters()
  */
-@API(Stable)
+@API(status = STABLE)
 public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 
 	/**

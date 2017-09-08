@@ -12,7 +12,7 @@ package org.junit.jupiter.migrationsupport.rules;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import java.util.function.Function;
 
@@ -43,7 +43,7 @@ import org.junit.rules.ExpectedException;
  * @see org.junit.rules.TestRule
  * @see org.junit.Rule
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutionExceptionHandler {
 
 	private static final String EXCEPTION_WAS_HANDLED = "exceptionWasHandled";

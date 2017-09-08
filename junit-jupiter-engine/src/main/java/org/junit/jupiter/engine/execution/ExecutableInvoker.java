@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.execution;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
 import java.lang.reflect.Constructor;
@@ -41,7 +41,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class ExecutableInvoker {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExecutableInvoker.class);

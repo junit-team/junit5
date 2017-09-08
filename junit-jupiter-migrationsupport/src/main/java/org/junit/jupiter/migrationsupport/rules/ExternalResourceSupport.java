@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import java.util.function.Function;
 
@@ -42,7 +42,7 @@ import org.junit.rules.ExternalResource;
  * @see org.junit.rules.TestRule
  * @see org.junit.Rule
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCallback {
 
 	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = ExternalResourceAdapter::new;

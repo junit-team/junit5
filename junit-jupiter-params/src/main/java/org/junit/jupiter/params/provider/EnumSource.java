@@ -12,7 +12,7 @@ package org.junit.jupiter.params.provider;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -46,7 +46,7 @@ import org.junit.platform.commons.util.Preconditions;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 @ArgumentsSource(EnumArgumentsProvider.class)
 public @interface EnumSource {
 

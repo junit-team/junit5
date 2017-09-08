@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules.adapter;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.invokeMethod;
 
@@ -26,7 +26,7 @@ import org.junit.rules.TestRule;
 /**
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAdvice {
 
 	private final TestRule target;

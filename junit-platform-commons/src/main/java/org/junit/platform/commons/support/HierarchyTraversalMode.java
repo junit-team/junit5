@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.support;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
 
 import org.junit.platform.commons.meta.API;
 
@@ -22,7 +22,7 @@ import org.junit.platform.commons.meta.API;
  * @see #TOP_DOWN
  * @see #BOTTOM_UP
  */
-@API(Maintained)
+@API(status = MAINTAINED)
 public enum HierarchyTraversalMode {
 
 	/**

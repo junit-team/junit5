@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -30,7 +30,7 @@ import org.junit.platform.engine.discovery.ClassSelector;
  * @since 1.0
  * @see ClassSelector
  */
-@API(Stable)
+@API(status = STABLE)
 public class ClassSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;

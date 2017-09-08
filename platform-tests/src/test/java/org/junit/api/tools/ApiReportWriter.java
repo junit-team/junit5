@@ -13,7 +13,7 @@ package org.junit.api.tools;
 import java.io.PrintWriter;
 import java.util.EnumSet;
 
-import org.junit.platform.commons.meta.API.Usage;
+import org.junit.platform.commons.meta.API.Status;
 
 /**
  * @since 1.0
@@ -22,6 +22,6 @@ interface ApiReportWriter {
 
 	void printReportHeader(PrintWriter out);
 
-	void printDeclarationInfo(PrintWriter out, EnumSet<Usage> usages);
+	void printDeclarationInfo(PrintWriter out, EnumSet<Status> statuses);
 
 }

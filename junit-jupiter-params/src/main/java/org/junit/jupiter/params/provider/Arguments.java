@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public interface Arguments {
 
 	/**

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.converter;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.meta.API;
@@ -35,7 +35,7 @@ import org.junit.platform.commons.meta.API;
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.converter.ConvertWith
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public interface ArgumentConverter {
 
 	/**

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.meta.API;
@@ -20,7 +20,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class IsTestMethod extends IsTestableMethod {
 
 	public IsTestMethod() {

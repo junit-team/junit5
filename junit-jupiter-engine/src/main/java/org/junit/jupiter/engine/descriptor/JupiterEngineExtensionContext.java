@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -22,7 +22,7 @@ import org.junit.platform.engine.EngineExecutionListener;
 /**
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public final class JupiterEngineExtensionContext extends AbstractExtensionContext<JupiterEngineDescriptor> {
 
 	public JupiterEngineExtensionContext(EngineExecutionListener engineExecutionListener,

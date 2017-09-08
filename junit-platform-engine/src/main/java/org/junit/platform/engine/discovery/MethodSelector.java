@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.lang.reflect.Method;
 
@@ -43,7 +43,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @since 1.0
  * @see org.junit.platform.engine.support.descriptor.MethodSource
  */
-@API(Stable)
+@API(status = STABLE)
 public class MethodSelector implements DiscoverySelector {
 
 	private final String className;

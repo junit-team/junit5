@@ -10,7 +10,7 @@
 
 package org.junit.platform.console.options;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -21,7 +21,7 @@ import org.junit.platform.engine.TestExecutionResult;
 /**
  * @since 1.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public enum Theme {
 
 	/**

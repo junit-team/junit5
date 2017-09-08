@@ -10,8 +10,8 @@
 
 package org.junit.platform.console;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
@@ -32,16 +32,16 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
  *
  * @since 1.0
  */
-@API(Maintained)
+@API(status = MAINTAINED)
 public class ConsoleLauncher {
 
-	@API(Maintained)
+	@API(status = MAINTAINED)
 	public static void main(String... args) {
 		int exitCode = execute(System.out, System.err, args).getExitCode();
 		System.exit(exitCode);
 	}
 
-	@API(Internal)
+	@API(status = INTERNAL)
 	public static ConsoleLauncherExecutionResult execute(PrintStream out, PrintStream err, String... args) {
 		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
 		ConsoleLauncher consoleLauncher = new ConsoleLauncher(parser, out, err);

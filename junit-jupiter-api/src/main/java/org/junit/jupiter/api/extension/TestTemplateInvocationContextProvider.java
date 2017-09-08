@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.stream.Stream;
 
@@ -47,7 +47,7 @@ import org.junit.platform.commons.meta.API;
  * @see TestTemplateInvocationContext
  * @since 5.0
  */
-@API(Stable)
+@API(status = STABLE)
 public interface TestTemplateInvocationContextProvider extends Extension {
 
 	/**

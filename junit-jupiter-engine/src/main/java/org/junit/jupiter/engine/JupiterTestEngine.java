@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecutionContext> {
 
 	public static final String ENGINE_ID = "junit-jupiter";

@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.StringUtils;
  * @see #isValid(String)
  * @see #create(String)
  */
-@API(Stable)
+@API(status = STABLE)
 public final class TestTag implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.Extension;
@@ -25,7 +25,7 @@ import org.junit.platform.commons.meta.API;
  * @since 5.0
  */
 @FunctionalInterface
-@API(Internal)
+@API(status = INTERNAL)
 public interface AfterEachMethodAdapter extends Extension {
 
 	void invokeAfterEachMethod(ExtensionContext context, ExtensionRegistry registry) throws Throwable;

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import org.junit.platform.commons.meta.API;
 
@@ -22,6 +22,6 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  */
-@API(Stable)
+@API(status = STABLE)
 public interface Extension {
 }

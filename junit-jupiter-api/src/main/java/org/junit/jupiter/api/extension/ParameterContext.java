@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Parameter;
@@ -33,7 +33,7 @@ import org.junit.platform.commons.meta.API;
  * @see java.lang.reflect.Method
  * @see java.lang.reflect.Constructor
  */
-@API(Stable)
+@API(status = STABLE)
 public interface ParameterContext {
 
 	/**

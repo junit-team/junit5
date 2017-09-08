@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
@@ -23,7 +23,7 @@ import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
 /**
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;

@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.io.File;
@@ -43,7 +43,7 @@ import org.junit.platform.engine.UniqueId;
  * @see MethodSelector
  * @see PackageSelector
  */
-@API(Stable)
+@API(status = STABLE)
 public final class DiscoverySelectors {
 
 	private static final Pattern fullyQualifiedMethodNamePattern = Pattern.compile("([^#]+)#([^(]+)(?:\\((.*)\\))?");

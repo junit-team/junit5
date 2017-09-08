@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.util.EnumSet;
 import java.util.List;
 
-import org.junit.platform.commons.meta.API.Usage;
+import org.junit.platform.commons.meta.API.Status;
 
 /**
  * @since 1.0
@@ -39,16 +39,16 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 	}
 
 	@Override
-	public void printDeclarationInfo(PrintWriter out, EnumSet<Usage> usages) {
+	public void printDeclarationInfo(PrintWriter out, EnumSet<Status> statuses) {
 		// @formatter:off
 		this.apiReport.getDeclarationsMap().entrySet().stream()
-				.filter(e -> usages.contains(e.getKey()))
+				.filter(e -> statuses.contains(e.getKey()))
 				.forEach(e -> printDeclarationSection(e.getKey(), e.getValue(), out));
 		// @formatter:on
 	}
 
-	protected void printDeclarationSection(Usage usage, List<Class<?>> types, PrintWriter out) {
-		printDeclarationSectionHeader(usage, types, out);
+	protected void printDeclarationSection(Status status, List<Class<?>> types, PrintWriter out) {
+		printDeclarationSectionHeader(status, types, out);
 		if (types.size() > 0) {
 			printDeclarationTableHeader(out);
 			types.forEach(type -> printDeclarationTableRow(type, out));
@@ -57,10 +57,10 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		}
 	}
 
-	protected void printDeclarationSectionHeader(Usage usage, List<Class<?>> types, PrintWriter out) {
-		out.println(h2(format("@API(%s)", usage)));
+	protected void printDeclarationSectionHeader(Status status, List<Class<?>> types, PrintWriter out) {
+		out.println(h2(format("@API(%s)", status)));
 		out.println();
-		out.println(paragraph(format("Discovered %d " + code("@API(%s)") + " declarations.", types.size(), usage)));
+		out.println(paragraph(format("Discovered %d " + code("@API(%s)") + " declarations.", types.size(), status)));
 		out.println();
 	}
 

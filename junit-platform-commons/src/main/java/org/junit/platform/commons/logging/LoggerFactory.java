@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.logging;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -24,7 +24,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public final class LoggerFactory {
 
 	///CLOVER:OFF

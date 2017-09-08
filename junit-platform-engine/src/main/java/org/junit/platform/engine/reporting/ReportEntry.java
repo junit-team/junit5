@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.reporting;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -29,7 +29,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @see #from(Map)
  * @see #from(String, String)
  */
-@API(Stable)
+@API(status = STABLE)
 public final class ReportEntry {
 
 	private final LocalDateTime timestamp = LocalDateTime.now();

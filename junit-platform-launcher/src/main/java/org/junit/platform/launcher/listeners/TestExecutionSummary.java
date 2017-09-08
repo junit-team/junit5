@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher.listeners;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -24,7 +24,7 @@ import org.junit.platform.launcher.TestIdentifier;
  * @since 1.0
  * @see SummaryGeneratingListener
  */
-@API(Maintained)
+@API(status = MAINTAINED)
 public interface TestExecutionSummary {
 
 	/**

@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine.execution;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import org.junit.platform.commons.logging.Logger;
@@ -23,7 +23,7 @@ import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 /**
  * @since 4.12
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class RunnerExecutor {
 
 	private final EngineExecutionListener engineExecutionListener;

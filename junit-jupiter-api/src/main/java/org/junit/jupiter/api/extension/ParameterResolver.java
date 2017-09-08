@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.lang.reflect.Parameter;
 
@@ -37,7 +37,7 @@ import org.junit.platform.commons.meta.API;
  * @see #resolveParameter(ParameterContext, ExtensionContext)
  * @see ParameterContext
  */
-@API(Stable)
+@API(status = STABLE)
 public interface ParameterResolver extends Extension {
 
 	/**

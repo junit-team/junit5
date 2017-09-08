@@ -12,8 +12,8 @@ package org.junit.platform.launcher;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -51,7 +51,7 @@ import org.junit.platform.engine.TestDescriptor.Visitor;
  * @see Launcher
  * @see TestExecutionListener
  */
-@API(Stable)
+@API(status = STABLE)
 public final class TestPlan {
 
 	private final Set<TestIdentifier> roots = Collections.synchronizedSet(new LinkedHashSet<>(4));
@@ -73,7 +73,7 @@ public final class TestPlan {
 	 * plan should be created; never {@code null}
 	 * @return a new test plan
 	 */
-	@API(Internal)
+	@API(status = INTERNAL)
 	public static TestPlan from(Collection<TestDescriptor> engineDescriptors) {
 		Preconditions.notNull(engineDescriptors, "Cannot create TestPlan from a null collection of TestDescriptors");
 		TestPlan testPlan = new TestPlan(engineDescriptors.stream().anyMatch(TestDescriptor::containsTests));

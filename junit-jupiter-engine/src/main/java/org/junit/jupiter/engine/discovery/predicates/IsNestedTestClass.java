@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.util.function.Predicate;
@@ -23,7 +23,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class IsNestedTestClass implements Predicate<Class<?>> {
 
 	private static final IsInnerClass isInnerClass = new IsInnerClass();

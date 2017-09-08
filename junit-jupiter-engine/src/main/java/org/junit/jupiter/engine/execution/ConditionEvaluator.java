@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.execution;
 import static java.lang.String.format;
 import static org.junit.jupiter.engine.Constants.DEACTIVATE_ALL_CONDITIONS_PATTERN;
 import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -36,7 +36,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  * @since 5.0
  * @see ExecutionCondition
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class ConditionEvaluator {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConditionEvaluator.class);

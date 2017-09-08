@@ -11,7 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static java.util.Arrays.asList;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.lang.annotation.Annotation;
@@ -54,7 +54,7 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
  * @see AnnotatedElement
  * @see org.junit.platform.commons.support.AnnotationSupport
  */
-@API(Internal)
+@API(status = INTERNAL)
 public final class AnnotationUtils {
 
 	///CLOVER:OFF

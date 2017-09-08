@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class ExtensionRegistry {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);

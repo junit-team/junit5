@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -29,7 +29,7 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * @since 5.0
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public class DynamicContainer extends DynamicNode {
 
 	/**

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.lang.reflect.Method;
 
@@ -27,7 +27,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescriptor {
 
 	public static final String SEGMENT_TYPE = "test-template-invocation";

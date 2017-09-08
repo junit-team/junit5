@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
 
 import java.util.Optional;
 
@@ -26,7 +26,7 @@ import org.junit.platform.engine.TestDescriptor;
  * @since 1.0
  * @see HierarchicalTestEngine
  */
-@API(Maintained)
+@API(status = MAINTAINED)
 public interface Node<C extends EngineExecutionContext> {
 
 	/**

@@ -11,7 +11,7 @@
 package org.junit.platform.engine.support.descriptor;
 
 import static java.util.Collections.emptySet;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -35,7 +35,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 1.0
  */
-@API(Stable)
+@API(status = STABLE)
 public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final UniqueId uniqueId;

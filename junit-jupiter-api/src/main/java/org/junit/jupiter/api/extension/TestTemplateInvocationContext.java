@@ -11,7 +11,7 @@
 package org.junit.jupiter.api.extension;
 
 import static java.util.Collections.emptyList;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import org.junit.platform.commons.meta.API;
  * @see org.junit.jupiter.api.TestTemplate
  * @see TestTemplateInvocationContextProvider
  */
-@API(Stable)
+@API(status = STABLE)
 public interface TestTemplateInvocationContext {
 
 	/**

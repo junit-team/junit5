@@ -11,8 +11,8 @@
 package org.junit.platform.launcher;
 
 import static java.util.Collections.unmodifiableSet;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.io.Serializable;
 import java.util.LinkedHashSet;
@@ -35,7 +35,7 @@ import org.junit.platform.engine.TestTag;
  * @since 1.0
  * @see TestPlan
  */
-@API(Stable)
+@API(status = STABLE)
 public final class TestIdentifier implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -51,7 +51,7 @@ public final class TestIdentifier implements Serializable {
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
 	 */
-	@API(Internal)
+	@API(status = INTERNAL)
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		String uniqueId = testDescriptor.getUniqueId().toString();

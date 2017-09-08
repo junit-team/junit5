@@ -11,7 +11,7 @@
 package org.junit.vintage.engine.support;
 
 import static java.lang.String.format;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 
 import java.io.Serializable;
@@ -25,7 +25,7 @@ import org.junit.runner.Description;
 /**
  * @since 4.12
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class UniqueIdReader implements Function<Description, Serializable> {
 
 	private final Logger logger;

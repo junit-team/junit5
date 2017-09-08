@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.support;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Annotation;
 import java.util.function.Consumer;
@@ -28,6 +28,6 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 5.0
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public interface AnnotationConsumer<A extends Annotation> extends Consumer<A> {
 }

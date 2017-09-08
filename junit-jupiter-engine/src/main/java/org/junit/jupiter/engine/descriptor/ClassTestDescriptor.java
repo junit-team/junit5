@@ -15,7 +15,7 @@ import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfter
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
 import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.getTestInstanceLifecycle;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -58,7 +58,7 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();

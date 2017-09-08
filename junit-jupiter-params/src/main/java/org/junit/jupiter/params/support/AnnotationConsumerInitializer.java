@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.support;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 
@@ -29,7 +29,7 @@ import org.junit.platform.commons.util.AnnotationUtils;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public final class AnnotationConsumerInitializer {
 
 	///CLOVER:OFF

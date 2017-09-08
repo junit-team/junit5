@@ -10,14 +10,14 @@
 
 package org.junit.jupiter.migrationsupport.rules.adapter;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import org.junit.platform.commons.meta.API;
 
 /**
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public interface GenericBeforeAndAfterAdvice {
 
 	default void before() {

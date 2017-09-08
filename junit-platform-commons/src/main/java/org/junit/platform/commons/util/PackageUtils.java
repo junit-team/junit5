@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.util;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.io.File;
 import java.net.URL;
@@ -38,7 +38,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public final class PackageUtils {
 
 	///CLOVER:OFF

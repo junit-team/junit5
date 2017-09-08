@@ -9,7 +9,7 @@
  */
 package org.junit.platform.gradle.plugin
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL
 
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -23,7 +23,7 @@ import org.junit.platform.console.ConsoleLauncher
 /**
  * @since 1.0
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 class JUnitPlatformPlugin implements Plugin<Project> {
 
 	private static final String EXTENSION_NAME = 'junitPlatform'

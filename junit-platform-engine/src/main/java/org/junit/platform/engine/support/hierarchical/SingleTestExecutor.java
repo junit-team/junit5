@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.engine.TestExecutionResult.aborted;
 import static org.junit.platform.engine.TestExecutionResult.failed;
@@ -27,7 +27,7 @@ import org.opentest4j.TestAbortedException;
  * @since 1.0
  * @see #executeSafely(Executable)
  */
-@API(Maintained)
+@API(status = MAINTAINED)
 public class SingleTestExecutor {
 
 	/**

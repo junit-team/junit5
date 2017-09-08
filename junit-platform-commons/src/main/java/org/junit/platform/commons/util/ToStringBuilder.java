@@ -11,7 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static java.lang.String.join;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class ToStringBuilder {
 
 	private final Class<?> type;

@@ -11,7 +11,7 @@
 package org.junit.vintage.engine.discovery;
 
 import static java.util.Arrays.asList;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.adaptFilter;
 import static org.junit.platform.engine.Filter.composeFilters;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
@@ -33,7 +33,7 @@ import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 /**
  * @since 4.12
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class VintageDiscoverer {
 
 	private static final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();

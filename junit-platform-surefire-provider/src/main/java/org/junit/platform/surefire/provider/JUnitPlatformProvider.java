@@ -17,7 +17,7 @@
 package org.junit.platform.surefire.provider;
 
 import static java.util.Collections.emptyMap;
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -55,7 +55,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
 /**
  * @since 1.0
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public class JUnitPlatformProvider extends AbstractProvider {
 
 	// Parameter names processed to determine which @Tags should be executed.

@@ -11,7 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -25,7 +25,7 @@ import org.junit.platform.engine.support.hierarchical.Node;
 /**
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class JupiterEngineDescriptor extends EngineDescriptor implements Node<JupiterEngineExecutionContext> {
 
 	public JupiterEngineDescriptor(UniqueId uniqueId) {

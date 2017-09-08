@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.UniqueId;
@@ -21,7 +21,7 @@ import org.junit.runner.Runner;
 /**
  * @since 4.12
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class RunnerTestDescriptor extends VintageTestDescriptor {
 
 	private final Runner runner;

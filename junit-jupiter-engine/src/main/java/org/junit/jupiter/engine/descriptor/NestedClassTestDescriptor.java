@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.lang.reflect.Constructor;
 import java.util.Optional;
@@ -36,7 +36,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();

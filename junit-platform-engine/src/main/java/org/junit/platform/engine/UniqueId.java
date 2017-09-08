@@ -12,7 +12,7 @@ package org.junit.platform.engine;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 1.0
  */
-@API(Stable)
+@API(status = STABLE)
 public class UniqueId implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -152,10 +152,12 @@ public class UniqueId implements Cloneable, Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		UniqueId that = (UniqueId) o;
 		return this.segments.equals(that.segments);
@@ -179,7 +181,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 * A segment of a {@link UniqueId} comprises a <em>type</em> and a
 	 * <em>value</em>.
 	 */
-	@API(Stable)
+	@API(status = STABLE)
 	public static class Segment implements Serializable {
 
 		private static final long serialVersionUID = 1L;
@@ -220,10 +222,12 @@ public class UniqueId implements Cloneable, Serializable {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o)
+			if (this == o) {
 				return true;
-			if (o == null || getClass() != o.getClass())
+			}
+			if (o == null || getClass() != o.getClass()) {
 				return false;
+			}
 
 			Segment that = (Segment) o;
 			return Objects.equals(this.type, that.type) && Objects.equals(this.value, that.value);

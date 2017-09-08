@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,7 +76,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  * @see org.junit.platform.launcher.EngineFilter
  * @see org.junit.platform.launcher.TagFilter
  */
-@API(Stable)
+@API(status = STABLE)
 public final class LauncherDiscoveryRequestBuilder {
 
 	private List<DiscoverySelector> selectors = new ArrayList<>();

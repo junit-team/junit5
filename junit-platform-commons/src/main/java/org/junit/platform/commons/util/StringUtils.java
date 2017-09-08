@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.util;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.util.Arrays;
 
@@ -28,7 +28,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @since 1.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public final class StringUtils {
 
 	///CLOVER:OFF

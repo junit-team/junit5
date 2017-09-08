@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +29,7 @@ import org.junit.platform.engine.TestSource;
  *
  * @since 1.0
  */
-@API(Stable)
+@API(status = STABLE)
 public class CompositeTestSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;

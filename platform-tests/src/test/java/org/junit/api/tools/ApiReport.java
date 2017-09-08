@@ -13,7 +13,7 @@ package org.junit.api.tools;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.platform.commons.meta.API.Usage;
+import org.junit.platform.commons.meta.API.Status;
 
 /**
  * @since 1.0
@@ -22,9 +22,9 @@ class ApiReport {
 
 	private final List<Class<?>> types;
 
-	private final Map<Usage, List<Class<?>>> declarationsMap;
+	private final Map<Status, List<Class<?>>> declarationsMap;
 
-	ApiReport(List<Class<?>> types, Map<Usage, List<Class<?>>> declarationsMap) {
+	ApiReport(List<Class<?>> types, Map<Status, List<Class<?>>> declarationsMap) {
 		this.types = types;
 		this.declarationsMap = declarationsMap;
 	}
@@ -33,7 +33,7 @@ class ApiReport {
 		return this.types;
 	}
 
-	Map<Usage, List<Class<?>>> getDeclarationsMap() {
+	Map<Status, List<Class<?>>> getDeclarationsMap() {
 		return this.declarationsMap;
 	}
 

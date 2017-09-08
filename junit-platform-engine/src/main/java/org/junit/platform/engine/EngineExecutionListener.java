@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestExecutionResult.Status;
@@ -28,7 +28,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * @see TestEngine
  * @see ExecutionRequest
  */
-@API(Stable)
+@API(status = STABLE)
 public interface EngineExecutionListener {
 
 	/**

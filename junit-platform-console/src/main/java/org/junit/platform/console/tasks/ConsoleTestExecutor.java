@@ -10,7 +10,7 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.io.PrintWriter;
 import java.net.URL;
@@ -37,7 +37,7 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
 /**
  * @since 1.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class ConsoleTestExecutor {
 
 	private final CommandLineOptions options;

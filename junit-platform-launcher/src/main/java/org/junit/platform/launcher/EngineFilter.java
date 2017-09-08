@@ -11,7 +11,7 @@
 package org.junit.platform.launcher;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 import static org.junit.platform.engine.FilterResult.includedIf;
 
 import java.util.Arrays;
@@ -38,7 +38,7 @@ import org.junit.platform.engine.TestEngine;
  * @see #excludeEngines(String...)
  * @see LauncherDiscoveryRequest
  */
-@API(Stable)
+@API(status = STABLE)
 public class EngineFilter implements Filter<TestEngine> {
 
 	/**

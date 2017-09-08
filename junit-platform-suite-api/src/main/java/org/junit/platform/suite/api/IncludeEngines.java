@@ -10,7 +10,7 @@
 
 package org.junit.platform.suite.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -39,7 +39,7 @@ import org.junit.platform.commons.meta.API;
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-@API(Maintained)
+@API(status = MAINTAINED)
 public @interface IncludeEngines {
 
 	/**

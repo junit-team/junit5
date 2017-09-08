@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
@@ -37,7 +37,7 @@ import org.junit.platform.launcher.TestExecutionListener;
  * @since 1.0
  * @see Launcher
  */
-@API(Stable)
+@API(status = STABLE)
 public class LauncherFactory {
 
 	///CLOVER:OFF

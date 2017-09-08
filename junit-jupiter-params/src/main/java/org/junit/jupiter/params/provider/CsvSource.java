@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -34,7 +34,7 @@ import org.junit.platform.commons.meta.API;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 @ArgumentsSource(CsvArgumentsProvider.class)
 public @interface CsvSource {
 

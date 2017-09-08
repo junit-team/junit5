@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.io.File;
 
@@ -25,7 +25,7 @@ import org.junit.platform.engine.TestSource;
  *
  * @since 1.0
  */
-@API(Stable)
+@API(status = STABLE)
 public interface FileSystemSource extends UriSource {
 
 	/**

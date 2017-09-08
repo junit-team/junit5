@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.Collections;
 import java.util.Map;
@@ -28,7 +28,7 @@ import org.junit.platform.commons.meta.API;
  * @since 5.0
  */
 @FunctionalInterface
-@API(Stable)
+@API(status = STABLE)
 public interface TestReporter {
 
 	/**

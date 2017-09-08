@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.util.function.Function;
 
@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class NamespaceAwareStore implements Store {
 
 	private final ExtensionValuesStore valuesStore;

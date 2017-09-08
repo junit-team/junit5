@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 5.0
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public abstract class DynamicNode {
 
 	private final String displayName;

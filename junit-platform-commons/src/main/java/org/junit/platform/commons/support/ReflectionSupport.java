@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.support;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 1.0
  */
-@API(Maintained)
+@API(status = MAINTAINED)
 public final class ReflectionSupport {
 
 	///CLOVER:OFF

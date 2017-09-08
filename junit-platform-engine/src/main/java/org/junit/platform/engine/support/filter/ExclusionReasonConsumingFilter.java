@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.filter;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -26,7 +26,7 @@ import org.junit.platform.engine.FilterResult;
  *
  * @since 1.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class ExclusionReasonConsumingFilter<T> implements Filter<T> {
 
 	private final Filter<T> filter;

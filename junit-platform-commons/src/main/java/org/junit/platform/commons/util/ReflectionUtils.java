@@ -13,7 +13,7 @@ package org.junit.platform.commons.util;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
@@ -65,7 +65,7 @@ import org.junit.platform.commons.meta.API;
  * @since 1.0
  * @see org.junit.platform.commons.support.ReflectionSupport
  */
-@API(Internal)
+@API(status = INTERNAL)
 public final class ReflectionUtils {
 
 	///CLOVER:OFF

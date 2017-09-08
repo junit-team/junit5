@@ -12,7 +12,7 @@ package org.junit.vintage.engine.descriptor;
 
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.isEqual;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
@@ -38,7 +38,7 @@ import org.junit.runner.Description;
 /**
  * @since 4.12
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class VintageTestDescriptor extends AbstractTestDescriptor {
 
 	public static final String ENGINE_ID = "junit-vintage";

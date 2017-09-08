@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -31,7 +31,7 @@ import org.junit.platform.commons.meta.API;
  * @see Test
  * @see DisplayName
  */
-@API(Stable)
+@API(status = STABLE)
 public interface TestInfo {
 
 	/**

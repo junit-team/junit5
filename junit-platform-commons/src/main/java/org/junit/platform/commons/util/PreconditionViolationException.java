@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.util;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
@@ -21,7 +21,7 @@ import org.junit.platform.commons.meta.API;
  * @since 1.0
  * @see Preconditions
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class PreconditionViolationException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

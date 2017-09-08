@@ -24,7 +24,7 @@ import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.meta.API.Usage;
+import org.junit.platform.commons.meta.API.Status;
 
 /**
  * @since 1.0
@@ -48,7 +48,7 @@ class ApiReportGenerator {
 		// reportWriter.printDeclarationInfo(writer, EnumSet.allOf(Usage.class));
 
 		// Print report only for Experimental Usage constant
-		reportWriter.printDeclarationInfo(writer, EnumSet.of(Usage.Experimental));
+		reportWriter.printDeclarationInfo(writer, EnumSet.of(Status.EXPERIMENTAL));
 	}
 
 	// -------------------------------------------------------------------------
@@ -88,11 +88,11 @@ class ApiReportGenerator {
 		});
 
 		// Build map
-		Map<Usage, List<Class<?>>> declarationsMap = new EnumMap<>(Usage.class);
-		for (Usage usage : Usage.values()) {
-			declarationsMap.put(usage, new ArrayList<>());
+		Map<Status, List<Class<?>>> declarationsMap = new EnumMap<>(Status.class);
+		for (Status status : Status.values()) {
+			declarationsMap.put(status, new ArrayList<>());
 		}
-		types.forEach(type -> declarationsMap.get(type.getAnnotation(API.class).value()).add(type));
+		types.forEach(type -> declarationsMap.get(type.getAnnotation(API.class).status()).add(type));
 
 		// Create report
 		return new ApiReport(types, declarationsMap);

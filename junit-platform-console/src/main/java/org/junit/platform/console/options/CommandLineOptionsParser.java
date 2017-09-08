@@ -10,7 +10,7 @@
 
 package org.junit.platform.console.options;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.io.Writer;
 
@@ -19,7 +19,7 @@ import org.junit.platform.commons.meta.API;
 /**
  * @since 1.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public interface CommandLineOptionsParser {
 
 	CommandLineOptions parse(String... arguments);

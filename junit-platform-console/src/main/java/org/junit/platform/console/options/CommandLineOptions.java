@@ -13,7 +13,7 @@ package org.junit.platform.console.options;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
 import java.net.URI;
@@ -31,7 +31,7 @@ import org.junit.platform.commons.meta.API;
 /**
  * @since 1.0
  */
-@API(Internal)
+@API(status = INTERNAL)
 public class CommandLineOptions {
 
 	static final Details DEFAULT_DETAILS = Details.TREE;

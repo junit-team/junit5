@@ -12,7 +12,7 @@ package org.junit.jupiter.api;
 
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
 
 import java.util.Iterator;
 import java.util.function.Function;
@@ -44,7 +44,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see TestFactory
  * @see Executable
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL)
 public class DynamicTest extends DynamicNode {
 
 	/**

@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.junit.platform.commons.meta.API.Status.STABLE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -27,7 +27,7 @@ import org.junit.platform.engine.TestSource;
  * @since 1.0
  * @see org.junit.platform.engine.discovery.ClasspathResourceSelector
  */
-@API(Stable)
+@API(status = STABLE)
 public class ClasspathResourceSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
