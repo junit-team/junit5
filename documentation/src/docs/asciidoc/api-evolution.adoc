@@ -12,28 +12,28 @@ classes, and methods.
 [[api-evolution-annotations]]
 === API Annotations
 
-Every published artifact has a version number `<major>.<minor>.<patch>` and all publicly
+Every published artifact has a version number `<major>.<minor>.<patch>`, and all publicly
 available interfaces, classes, and methods are annotated with {API}. The annotation's
-`Usage` value can be assigned one of the following five values:
+`status` attribute can be assigned one of the following values:
 
 [cols="20,80"]
 |===
-| Usage            | Description
+| Status           | Description
 
-| `Internal`       | Must not be used by any code other than JUnit itself. Might be removed without prior notice.
-| `Deprecated`     | Should no longer be used; might disappear in the next minor release.
-| `Experimental`   | Intended for new, experimental features where we are looking for feedback. +
-                     Use this element with caution; it might be promoted to `Maintained` or
-                     `Stable` in the future, but might also be removed without prior notice, even in a patch.
-| `Maintained`     | Intended for features that will not be changed in a backwards-
+| `INTERNAL`       | Must not be used by any code other than JUnit itself. Might be removed without prior notice.
+| `DEPRECATED`     | Should no longer be used; might disappear in the next minor release.
+| `EXPERIMENTAL`   | Intended for new, experimental features where we are looking for feedback. +
+                     Use this element with caution; it might be promoted to `MAINTAINED` or
+                     `STABLE` in the future, but might also be removed without prior notice, even in a patch.
+| `MAINTAINED`     | Intended for features that will not be changed in a backwards-
                      incompatible way for *at least* the next minor release of the current
-                     major version. If scheduled for removal, it will be demoted to `Deprecated` first.
-| `Stable`         | Intended for features that will not be changed in a backwards-
+                     major version. If scheduled for removal, it will be demoted to `DEPRECATED` first.
+| `STABLE`         | Intended for features that will not be changed in a backwards-
                      incompatible way in the current major version (`5.*`).
 |===
 
 If the `@API` annotation is present on a type, it is considered to be applicable for all
-public members of that type as well. A member is allowed to declare a different `Usage`
+public members of that type as well. A member is allowed to declare a different `status`
 value of lower stability.
 
 [[api-evolution-experimental-apis]]
