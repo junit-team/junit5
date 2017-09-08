@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.meta;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -20,12 +20,12 @@ import java.lang.annotation.Target;
 
 /**
  * {@code @API} is used to annotate public types, methods, constructors, and
- * fields within JUnit in order to indicate their level of stability and how
- * they are intended to be used.
+ * fields within a framework or application in order to indicate their level of
+ * stability and how they are intended to be used by consumers of the API.
  *
  * <p>If {@code @API} is present on a type, it is considered to hold for
  * all public members of the type as well. However, a member of such an
- * annotated type is allowed to declare a different {@link Usage} of lower
+ * annotated type is allowed to declare a different {@link Status} of lower
  * stability.
  *
  * @since 1.0
@@ -33,36 +33,59 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(Internal)
+@API(status = INTERNAL)
 public @interface API {
 
-	Usage value();
+	/**
+	 * The current {@linkplain Status status} of the API.
+	 */
+	Status status();
 
 	/**
-	 * Indicates the level of stability of an API element.
+	 * The version of the API when the {@link #status} was last changed.
+	 *
+	 * <p>Defaults to an empty string, signifying that the <em>since</em>
+	 * version is unknown.
 	 */
-	enum Usage {
+	String since() default "";
+
+	/**
+	 * List of packages belonging to intended consumers.
+	 *
+	 * <p>The supplied packages can be fully qualified package names or
+	 * patterns containing asterisks that will be used as wildcards.
+	 *
+	 * <p>Defaults to {@code "*"}, signifying that the API is intended to be
+	 * consumed by any package.
+	 */
+	String[] consumers() default "*";
+
+	/**
+	 * Indicates the status of an API element and therefore its level of
+	 * stability as well.
+	 */
+	enum Status {
 
 		/**
-		 * Must not be used by any code other than JUnit itself. Might be
-		 * removed without prior notice.
+		 * Must not be used by any external code. Might be removed without prior
+		 * notice.
 		 */
-		Internal,
+		INTERNAL,
 
 		/**
 		 * Should no longer be used. Might disappear in the next minor release.
 		 */
-		Deprecated,
+		DEPRECATED,
 
 		/**
-		 * Intended for new, experimental features where the JUnit team is
-		 * looking for feedback.
+		 * Intended for new, experimental features where the publisher of the
+		 * API is looking for feedback.
 		 *
 		 * <p>Use with caution. Might be promoted to {@link #Maintained} or
 		 * {@link #Stable} in the future, but might also be removed without
 		 * prior notice.
 		 */
-		Experimental,
+		EXPERIMENTAL,
 
 		/**
 		 * Intended for features that will not be changed in a backwards-
@@ -70,13 +93,13 @@ public @interface API {
 		 * major version. If scheduled for removal, such a feature will be
 		 * demoted to {@link #Deprecated} first.
 		 */
-		Maintained,
+		MAINTAINED,
 
 		/**
 		 * Intended for features that will not be changed in a backwards-
 		 * incompatible way in the current major version.
 		 */
-		Stable;
+		STABLE;
 
 	}
 
