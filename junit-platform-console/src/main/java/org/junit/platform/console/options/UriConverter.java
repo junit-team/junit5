@@ -20,7 +20,7 @@ import joptsimple.ValueConverter;
 /**
  * @since 1.0
  */
-class URIConverter implements ValueConverter<URI> {
+class UriConverter implements ValueConverter<URI> {
 
 	@Override
 	public URI convert(String value) {
