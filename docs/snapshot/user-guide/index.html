@@ -4991,9 +4991,9 @@ classes, and methods.</p>
 <div class="sect2">
 <h3 id="api-evolution-annotations"><a class="anchor" href="#api-evolution-annotations"></a>8.1. API Annotations</h3>
 <div class="paragraph">
-<p>Every published artifact has a version number <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code> and all publicly
+<p>Every published artifact has a version number <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code>, and all publicly
 available interfaces, classes, and methods are annotated with <a href="../api/org/junit/platform/commons/meta/API.html">@API</a>. The annotation&#8217;s
-<code>Usage</code> value can be assigned one of the following five values:</p>
+<code>status</code> attribute can be assigned one of the following values:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -5002,33 +5002,33 @@ available interfaces, classes, and methods are annotated with <a href="../api/or
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Status</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTERNAL</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Must not be used by any code other than JUnit itself. Might be removed without prior notice.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Deprecated</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEPRECATED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Should no longer be used; might disappear in the next minor release.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Experimental</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EXPERIMENTAL</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Intended for new, experimental features where we are looking for feedback.<br>
-                     Use this element with caution; it might be promoted to <code>Maintained</code> or
-                     <code>Stable</code> in the future, but might also be removed without prior notice, even in a patch.</p></td>
+                     Use this element with caution; it might be promoted to <code>MAINTAINED</code> or
+                     <code>STABLE</code> in the future, but might also be removed without prior notice, even in a patch.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Maintained</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MAINTAINED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Intended for features that will not be changed in a backwards-
                      incompatible way for <strong>at least</strong> the next minor release of the current
-                     major version. If scheduled for removal, it will be demoted to <code>Deprecated</code> first.</p></td>
+                     major version. If scheduled for removal, it will be demoted to <code>DEPRECATED</code> first.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>STABLE</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Intended for features that will not be changed in a backwards-
                      incompatible way in the current major version (<code>5.*</code>).</p></td>
 </tr>
@@ -5036,7 +5036,7 @@ available interfaces, classes, and methods are annotated with <a href="../api/or
 </table>
 <div class="paragraph">
 <p>If the <code>@API</code> annotation is present on a type, it is considered to be applicable for all
-public members of that type as well. A member is allowed to declare a different <code>Usage</code>
+public members of that type as well. A member is allowed to declare a different <code>status</code>
 value of lower stability.</p>
 </div>
 </div>
