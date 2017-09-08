@@ -70,7 +70,7 @@ ext {
 	licenseHeaderFileProvider = { project -> (
 		project.name == 'junit-platform-surefire-provider'
 			? 'apache-license-2.0.java'
-			: 'eclipse-public-license-1.0.java'
+			: 'eclipse-public-license-2.0.java'
 		)
 	}
 
@@ -314,8 +314,8 @@ subprojects { subproj ->
 
 						licenses {
 							license {
-								name 'Eclipse Public License v1.0'
-								url 'http://www.eclipse.org/legal/epl-v10.html'
+								name 'Eclipse Public License v2.0'
+								url 'http://www.eclipse.org/legal/epl-v20.html'
 							}
 						}
 
