@@ -52,34 +52,34 @@ class XmlReportData {
 	}
 
 	TestPlan getTestPlan() {
-		return testPlan;
+		return this.testPlan;
 	}
 
 	Clock getClock() {
-		return clock;
+		return this.clock;
 	}
 
 	void markSkipped(TestIdentifier testIdentifier, String reason) {
-		skippedTests.put(testIdentifier, reason == null ? "" : reason);
+		this.skippedTests.put(testIdentifier, reason == null ? "" : reason);
 	}
 
 	void markStarted(TestIdentifier testIdentifier) {
-		startInstants.put(testIdentifier, clock.instant());
+		this.startInstants.put(testIdentifier, this.clock.instant());
 	}
 
 	void markFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
-		endInstants.put(testIdentifier, clock.instant());
+		this.endInstants.put(testIdentifier, this.clock.instant());
 		if (result.getStatus() == ABORTED) {
 			String reason = result.getThrowable().map(ExceptionUtils::readStackTrace).orElse("");
-			skippedTests.put(testIdentifier, reason);
+			this.skippedTests.put(testIdentifier, reason);
 		}
 		else {
-			finishedTests.put(testIdentifier, result);
+			this.finishedTests.put(testIdentifier, result);
 		}
 	}
 
 	void addReportEntry(TestIdentifier testIdentifier, ReportEntry entry) {
-		List<ReportEntry> entries = reportEntries.computeIfAbsent(testIdentifier, key -> new ArrayList<>());
+		List<ReportEntry> entries = this.reportEntries.computeIfAbsent(testIdentifier, key -> new ArrayList<>());
 		entries.add(entry);
 	}
 
@@ -88,14 +88,14 @@ class XmlReportData {
 	}
 
 	double getDurationInSeconds(TestIdentifier testIdentifier) {
-		Instant startInstant = startInstants.getOrDefault(testIdentifier, Instant.EPOCH);
-		Instant endInstant = endInstants.getOrDefault(testIdentifier, startInstant);
+		Instant startInstant = this.startInstants.getOrDefault(testIdentifier, Instant.EPOCH);
+		Instant endInstant = this.endInstants.getOrDefault(testIdentifier, startInstant);
 		return Duration.between(startInstant, endInstant).toMillis() / (double) MILLIS_PER_SECOND;
 	}
 
 	String getSkipReason(TestIdentifier testIdentifier) {
 		return findSkippedAncestor(testIdentifier).map(skippedTestIdentifier -> {
-			String reason = skippedTests.get(skippedTestIdentifier);
+			String reason = this.skippedTests.get(skippedTestIdentifier);
 			if (!testIdentifier.equals(skippedTestIdentifier)) {
 				reason = "parent was skipped: " + reason;
 			}
@@ -104,13 +104,13 @@ class XmlReportData {
 	}
 
 	Optional<TestExecutionResult> getResult(TestIdentifier testIdentifier) {
-		if (finishedTests.containsKey(testIdentifier)) {
-			return Optional.of(finishedTests.get(testIdentifier));
+		if (this.finishedTests.containsKey(testIdentifier)) {
+			return Optional.of(this.finishedTests.get(testIdentifier));
 		}
-		Optional<TestIdentifier> parent = testPlan.getParent(testIdentifier);
-		Optional<TestIdentifier> ancestor = findAncestor(parent, finishedTests::containsKey);
+		Optional<TestIdentifier> parent = this.testPlan.getParent(testIdentifier);
+		Optional<TestIdentifier> ancestor = findAncestor(parent, this.finishedTests::containsKey);
 		if (ancestor.isPresent()) {
-			TestExecutionResult result = finishedTests.get(ancestor.get());
+			TestExecutionResult result = this.finishedTests.get(ancestor.get());
 			if (result.getStatus() != SUCCESSFUL) {
 				return Optional.of(result);
 			}
@@ -119,11 +119,11 @@ class XmlReportData {
 	}
 
 	List<ReportEntry> getReportEntries(TestIdentifier testIdentifier) {
-		return reportEntries.getOrDefault(testIdentifier, emptyList());
+		return this.reportEntries.getOrDefault(testIdentifier, emptyList());
 	}
 
 	private Optional<TestIdentifier> findSkippedAncestor(TestIdentifier testIdentifier) {
-		return findAncestor(Optional.of(testIdentifier), skippedTests::containsKey);
+		return findAncestor(Optional.of(testIdentifier), this.skippedTests::containsKey);
 	}
 
 	private Optional<TestIdentifier> findAncestor(Optional<TestIdentifier> testIdentifier,
@@ -133,7 +133,7 @@ class XmlReportData {
 			if (predicate.test(current.get())) {
 				return current;
 			}
-			current = testPlan.getParent(current.get());
+			current = this.testPlan.getParent(current.get());
 		}
 		return Optional.empty();
 	}
