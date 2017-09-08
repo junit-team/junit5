@@ -71,7 +71,7 @@ possible.
 - Favor `{@code foo}` over `<code>foo</code>`.
 - Favor literals (e.g., `{@literal @}`) over HTML entities.
 - Use `@since 5.0` instead of `@since 5.0.0`.
-- Do not use `@author`tags. Instead, contributors will be listed on the website and in release notes.
+- Do not use `@author` tags. Instead, contributors are listed on [GitHub](https://github.com/junit-team/junit5/graphs/contributors).
 
 ### Tests
 
