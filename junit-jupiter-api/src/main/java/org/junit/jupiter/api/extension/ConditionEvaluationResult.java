@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.util.Optional;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**

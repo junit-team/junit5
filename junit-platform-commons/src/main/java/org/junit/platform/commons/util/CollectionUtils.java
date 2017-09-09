@@ -15,7 +15,7 @@ import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -29,7 +29,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * Collection of utilities for working with {@link Collection Collections}.

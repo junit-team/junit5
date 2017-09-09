@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**

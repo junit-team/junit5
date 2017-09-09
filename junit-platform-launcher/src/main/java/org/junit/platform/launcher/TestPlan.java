@@ -12,8 +12,8 @@ package org.junit.platform.launcher;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;

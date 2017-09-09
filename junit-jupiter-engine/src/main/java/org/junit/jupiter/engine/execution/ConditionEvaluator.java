@@ -11,14 +11,15 @@
 package org.junit.jupiter.engine.execution;
 
 import static java.lang.String.format;
+import static org.apiguardian.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.Constants.DEACTIVATE_ALL_CONDITIONS_PATTERN;
 import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -26,7 +27,6 @@ import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 

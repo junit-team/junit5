@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.util.Optional;
 
+import org.apiguardian.API;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
-import org.junit.platform.commons.meta.API;
 
 /**
  * @since 5.0

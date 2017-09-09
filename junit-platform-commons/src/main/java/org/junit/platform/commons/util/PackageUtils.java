@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.util;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.io.File;
 import java.net.URL;
@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 import javax.lang.model.SourceVersion;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * Collection of utilities for working with {@linkplain Package packages}.

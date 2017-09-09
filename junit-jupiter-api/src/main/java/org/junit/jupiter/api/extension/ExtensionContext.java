@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 

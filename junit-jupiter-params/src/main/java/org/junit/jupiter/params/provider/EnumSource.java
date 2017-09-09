@@ -12,7 +12,7 @@ package org.junit.jupiter.params.provider;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
+import static org.apiguardian.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -25,7 +25,7 @@ import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 

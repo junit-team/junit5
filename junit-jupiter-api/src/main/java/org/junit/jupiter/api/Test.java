@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -18,8 +18,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.annotation.Testable;
-import org.junit.platform.commons.meta.API;
 
 /**
  * {@code @Test} is used to signal that the annotated method is a

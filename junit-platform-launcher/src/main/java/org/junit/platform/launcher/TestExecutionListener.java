@@ -10,9 +10,9 @@
 
 package org.junit.platform.launcher;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.engine.reporting.ReportEntry;

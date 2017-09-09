@@ -9,12 +9,12 @@
  */
 package org.junit.platform.gradle.plugin
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL
+import static org.apiguardian.API.Status.EXPERIMENTAL
 
+import org.apiguardian.API
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.tasks.Input
-import org.junit.platform.commons.meta.API
 import org.junit.platform.commons.util.Preconditions
 import org.junit.platform.console.options.Details
 

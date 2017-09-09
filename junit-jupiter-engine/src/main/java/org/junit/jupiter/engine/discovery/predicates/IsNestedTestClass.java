@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.util.function.Predicate;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.Nested;
-import org.junit.platform.commons.meta.API;
 
 /**
  * Test if a class is a JUnit Jupiter {@link Nested @Nested} test class.

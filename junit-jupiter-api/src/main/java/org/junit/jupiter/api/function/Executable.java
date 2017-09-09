@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.api.function;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * {@code Executable} is a functional interface that can be used to

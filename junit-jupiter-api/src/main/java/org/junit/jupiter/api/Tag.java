@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -19,7 +19,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * {@code @Tag} is a {@linkplain Repeatable repeatable} annotation that is

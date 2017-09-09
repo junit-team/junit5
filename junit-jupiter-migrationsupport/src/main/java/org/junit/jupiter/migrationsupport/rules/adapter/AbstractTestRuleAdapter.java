@@ -10,15 +10,15 @@
 
 package org.junit.jupiter.migrationsupport.rules.adapter;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.invokeMethod;
 
 import java.lang.reflect.Method;
 
+import org.apiguardian.API;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.rules.TestRule;

@@ -10,14 +10,14 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * Mutable descriptor for a test or container that has been discovered by a

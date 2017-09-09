@@ -10,11 +10,11 @@
 
 package org.junit.vintage.engine.execution;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.runner.JUnitCore;

@@ -10,12 +10,12 @@
 
 package org.junit.platform.console.options;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.engine.TestExecutionResult;
 
 /**

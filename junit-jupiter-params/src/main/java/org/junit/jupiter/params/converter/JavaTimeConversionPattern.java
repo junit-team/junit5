@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.converter;
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
+import static org.apiguardian.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -18,8 +18,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apiguardian.API;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.platform.commons.meta.API;
 
 /**
  * {@code @JavaTimeConversionPattern} is an annotation that allows a date/time

@@ -21,10 +21,10 @@ import java.util.Map;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
 
+import org.apiguardian.API;
+import org.apiguardian.API.Status;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.meta.API.Status;
 
 /**
  * @since 1.0

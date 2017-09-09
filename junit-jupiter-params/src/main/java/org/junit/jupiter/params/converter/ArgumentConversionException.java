@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.params.converter;
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
+import static org.apiguardian.API.Status.EXPERIMENTAL;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 
 /**
  * {@code ArgumentConversionException} is an exception that can

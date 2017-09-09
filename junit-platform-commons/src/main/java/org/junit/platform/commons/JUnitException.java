@@ -10,9 +10,9 @@
 
 package org.junit.platform.commons;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * Base class for all {@link RuntimeException RuntimeExceptions} thrown

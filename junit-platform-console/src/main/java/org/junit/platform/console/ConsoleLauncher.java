@@ -10,8 +10,8 @@
 
 package org.junit.platform.console;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
-import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
+import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.MAINTAINED;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
@@ -19,7 +19,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.CommandLineOptionsParser;
 import org.junit.platform.console.options.JOptSimpleCommandLineOptionsParser;

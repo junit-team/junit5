@@ -10,7 +10,7 @@
 
 package org.junit.platform.suite.api;
 
-import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
+import static org.apiguardian.API.Status.MAINTAINED;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -19,7 +19,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * {@code @ExcludeClassNamePatterns} specifies regular expressions that are used

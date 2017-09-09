@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.util.function.Function;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 
 /**

@@ -10,7 +10,7 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.io.PrintWriter;
 import java.net.URL;
@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.Details;

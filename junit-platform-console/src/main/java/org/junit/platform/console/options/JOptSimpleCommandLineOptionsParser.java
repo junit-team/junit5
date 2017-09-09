@@ -10,7 +10,7 @@
 
 package org.junit.platform.console.options;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -23,8 +23,8 @@ import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 
 /**
  * @since 1.0

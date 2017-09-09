@@ -10,15 +10,15 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
+import static org.apiguardian.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.commons.meta.API;
 
 /**
  * This class-level annotation enables native JUnit 4 rule support

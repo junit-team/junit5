@@ -10,16 +10,16 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
+import static org.apiguardian.API.Status.EXPERIMENTAL;
 
 import java.util.function.Function;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.VerifierAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
-import org.junit.platform.commons.meta.API;
 import org.junit.rules.Verifier;
 
 /**

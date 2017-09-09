@@ -10,13 +10,14 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -31,7 +32,6 @@ import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;

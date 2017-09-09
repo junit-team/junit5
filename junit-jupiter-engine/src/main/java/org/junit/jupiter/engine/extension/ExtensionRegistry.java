@@ -12,8 +12,8 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
+import static org.apiguardian.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,12 +25,12 @@ import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.engine.Constants;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;

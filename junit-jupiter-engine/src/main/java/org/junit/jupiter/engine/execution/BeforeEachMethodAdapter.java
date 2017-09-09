@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
-import org.junit.platform.commons.meta.API;
 
 /**
  * Functional interface for registering a {@link BeforeEach @BeforeEach} method

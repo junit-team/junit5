@@ -12,10 +12,11 @@ package org.junit.jupiter.migrationsupport.rules;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
+import static org.apiguardian.API.Status.EXPERIMENTAL;
 
 import java.util.function.Function;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -24,7 +25,6 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.ExpectedExceptionAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
-import org.junit.platform.commons.meta.API;
 import org.junit.rules.ExpectedException;
 
 /**

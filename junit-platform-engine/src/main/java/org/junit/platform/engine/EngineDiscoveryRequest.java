@@ -10,11 +10,11 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.util.List;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * {@code EngineDiscoveryRequest} provides a {@link TestEngine} access to the

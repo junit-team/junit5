@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.params.converter;
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
+import static org.apiguardian.API.Status.EXPERIMENTAL;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.platform.commons.meta.API;
 
 /**
  * {@code SimpleArgumentConverter} is an abstract base class for {@link ArgumentConverter}

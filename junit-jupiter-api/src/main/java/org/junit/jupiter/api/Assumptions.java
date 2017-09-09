@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.function.Executable;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.opentest4j.TestAbortedException;

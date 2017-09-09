@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.function.Executable;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 

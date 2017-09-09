@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.apiguardian.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;

@@ -11,7 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static java.util.Arrays.asList;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.lang.annotation.Annotation;
@@ -33,8 +33,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 
 /**

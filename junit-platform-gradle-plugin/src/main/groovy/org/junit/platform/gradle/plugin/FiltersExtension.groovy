@@ -9,10 +9,10 @@
  */
 package org.junit.platform.gradle.plugin
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL
+import static org.apiguardian.API.Status.EXPERIMENTAL
 
+import org.apiguardian.API
 import org.gradle.api.Action
-import org.junit.platform.commons.meta.API
 import org.junit.platform.engine.discovery.ClassNameFilter
 
 /**

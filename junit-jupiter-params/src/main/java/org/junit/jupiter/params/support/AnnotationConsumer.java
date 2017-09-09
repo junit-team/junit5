@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.params.support;
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
+import static org.apiguardian.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Annotation;
 import java.util.function.Consumer;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * {@code @AnnotationConsumer} is a {@code @FunctionalInterface} for consuming

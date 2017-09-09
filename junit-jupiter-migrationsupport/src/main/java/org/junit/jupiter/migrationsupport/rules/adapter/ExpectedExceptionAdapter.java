@@ -11,10 +11,10 @@
 package org.junit.jupiter.migrationsupport.rules.adapter;
 
 import static java.lang.Boolean.TRUE;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
+import org.apiguardian.API;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
-import org.junit.platform.commons.meta.API;
 import org.junit.rules.ExpectedException;
 
 /**

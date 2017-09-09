@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * {@code TestInfo} is used to inject information about the current test or

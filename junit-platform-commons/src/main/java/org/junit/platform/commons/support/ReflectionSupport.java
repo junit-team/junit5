@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.support;
 
-import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
+import static org.apiguardian.API.Status.MAINTAINED;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 

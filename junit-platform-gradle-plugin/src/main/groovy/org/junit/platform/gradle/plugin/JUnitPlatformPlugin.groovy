@@ -9,15 +9,15 @@
  */
 package org.junit.platform.gradle.plugin
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL
+import static org.apiguardian.API.Status.EXPERIMENTAL
 
+import org.apiguardian.API
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.tasks.JavaExec
 import org.gradle.util.GradleVersion
-import org.junit.platform.commons.meta.API
 import org.junit.platform.console.ConsoleLauncher
 
 /**

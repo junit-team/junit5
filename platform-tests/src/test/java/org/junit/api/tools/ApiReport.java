@@ -13,7 +13,7 @@ package org.junit.api.tools;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.platform.commons.meta.API.Status;
+import org.apiguardian.API.Status;
 
 /**
  * @since 1.0

@@ -11,12 +11,12 @@
 package org.junit.platform.commons.util;
 
 import static java.lang.String.join;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * Simple builder for generating strings in custom implementations of

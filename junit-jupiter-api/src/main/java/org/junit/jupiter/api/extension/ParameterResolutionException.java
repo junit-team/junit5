@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 
 /**
  * Thrown if an error is encountered in the configuration or execution of a

@@ -12,7 +12,7 @@ package org.junit.platform.engine;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 

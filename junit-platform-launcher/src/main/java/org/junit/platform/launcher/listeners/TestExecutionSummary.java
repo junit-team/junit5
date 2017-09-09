@@ -10,12 +10,12 @@
 
 package org.junit.platform.launcher.listeners;
 
-import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
+import static org.apiguardian.API.Status.MAINTAINED;
 
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.launcher.TestIdentifier;
 
 /**

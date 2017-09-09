@@ -10,15 +10,15 @@
 
 package org.junit.vintage.engine;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
 import java.util.Optional;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;

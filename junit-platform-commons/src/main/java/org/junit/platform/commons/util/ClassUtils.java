@@ -12,11 +12,11 @@ package org.junit.platform.commons.util;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.util.function.Function;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * Collection of utilities for working with {@link Class classes}.

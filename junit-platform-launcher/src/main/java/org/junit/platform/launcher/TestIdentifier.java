@@ -11,8 +11,8 @@
 package org.junit.platform.launcher;
 
 import static java.util.Collections.unmodifiableSet;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.io.Serializable;
 import java.util.LinkedHashSet;
@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;

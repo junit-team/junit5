@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.execution;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
 import java.lang.reflect.Constructor;
@@ -22,6 +22,7 @@ import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Optional;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -29,7 +30,6 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 

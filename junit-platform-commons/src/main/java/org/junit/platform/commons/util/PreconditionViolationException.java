@@ -10,10 +10,10 @@
 
 package org.junit.platform.commons.util;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 
 /**
  * Thrown if a <em>precondition</em> is violated.

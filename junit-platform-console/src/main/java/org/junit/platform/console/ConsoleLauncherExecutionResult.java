@@ -10,11 +10,11 @@
 
 package org.junit.platform.console;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.util.Optional;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**

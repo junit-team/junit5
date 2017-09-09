@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine.support;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import java.util.Base64;
 import java.util.Locale;
 import java.util.function.Function;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * @since 4.12

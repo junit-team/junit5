@@ -10,9 +10,9 @@
 
 package org.junit.platform.launcher;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * The {@code Launcher} API is the main entry point for client code that

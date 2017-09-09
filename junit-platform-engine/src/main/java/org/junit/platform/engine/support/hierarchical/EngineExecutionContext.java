@@ -10,9 +10,9 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
+import static org.apiguardian.API.Status.MAINTAINED;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * Marker interface for an execution context used by a concrete implementation

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
@@ -19,8 +19,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import org.apiguardian.API;
 import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassSelector;

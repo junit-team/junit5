@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
 import java.util.stream.Stream;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * {@code TestTemplateInvocationContextProvider} defines the API for

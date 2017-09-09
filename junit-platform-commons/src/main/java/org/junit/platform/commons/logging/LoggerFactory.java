@@ -10,14 +10,14 @@
 
 package org.junit.platform.commons.logging;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import org.apiguardian.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 
 /**
  * Factory for the {@link Logger} facade for JUL.

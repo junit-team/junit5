@@ -9,9 +9,9 @@
  */
 package org.junit.platform.gradle.plugin
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL
+import static org.apiguardian.API.Status.EXPERIMENTAL
 
-import org.junit.platform.commons.meta.API
+import org.apiguardian.API
 
 /**
  * Tag configuration options for the JUnit Platform Gradle plugin.

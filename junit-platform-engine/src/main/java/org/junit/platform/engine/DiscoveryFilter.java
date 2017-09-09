@@ -10,9 +10,9 @@
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * A {@link DiscoveryFilter} is applied during test discovery to determine if

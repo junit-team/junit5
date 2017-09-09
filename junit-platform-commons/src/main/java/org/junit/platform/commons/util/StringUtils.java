@@ -10,11 +10,11 @@
 
 package org.junit.platform.commons.util;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.util.Arrays;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * Collection of utilities for working with {@link String Strings},

@@ -10,14 +10,14 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.util.Optional;
 
+import org.apiguardian.API;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;

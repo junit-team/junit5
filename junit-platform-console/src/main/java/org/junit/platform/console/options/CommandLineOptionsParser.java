@@ -10,11 +10,11 @@
 
 package org.junit.platform.console.options;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
 import java.io.Writer;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * @since 1.0

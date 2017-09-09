@@ -10,11 +10,11 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.junit.platform.commons.meta.API.Status.MAINTAINED;
+import static org.apiguardian.API.Status.MAINTAINED;
 
 import java.util.Optional;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
 

@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.platform.commons.meta.API.Status.INTERNAL;
+import static org.apiguardian.API.Status.INTERNAL;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.meta.API;
 
 /**
  * Test if a method is a JUnit Jupiter {@link Test @Test} method.

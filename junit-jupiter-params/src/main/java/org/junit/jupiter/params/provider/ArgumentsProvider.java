@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.params.provider;
 
-import static org.junit.platform.commons.meta.API.Status.EXPERIMENTAL;
+import static org.apiguardian.API.Status.EXPERIMENTAL;
 
 import java.util.stream.Stream;
 
+import org.apiguardian.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.commons.meta.API;
 
 /**
  * An {@code ArgumentsProvider} is responsible for {@linkplain #provideArguments

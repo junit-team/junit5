@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Status.STABLE;
+import static org.apiguardian.API.Status.STABLE;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.API;
 
 /**
  * {@code RepetitionInfo} is used to inject information about the current
