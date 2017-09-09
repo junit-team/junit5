@@ -114,6 +114,10 @@ allprojects { subproj ->
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 
+	dependencies {
+		api("org.apiguardian:apiguardian:${apiGuardianVersion}")
+	}
+
 	tasks.withType(Test) { task ->
 		task.testLogging.exceptionFormat = 'full'
 	}
