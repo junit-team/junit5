@@ -33,7 +33,7 @@ class TestTagTests {
 		// @formatter:off
 		assertAll("Valid Tag Syntax",
 			() -> yep("fast"),
-			() -> yep("super-fast!"),
+			() -> yep("super-fast"),
 			() -> yep("unit-test"),
 			() -> yep("org.example.CustomTagClass"),
 			() -> yep("  surrounded-by-whitespace\t\n"),
@@ -44,7 +44,13 @@ class TestTagTests {
 			() -> nope("\f"),
 			() -> nope("\r"),
 			() -> nope("\n"),
-			() -> nope("custom tag")
+			() -> nope("custom tag"), // internal space
+			() -> nope("a,b"),        // comma
+			() -> nope("(a"),         // opening parenthesis
+			() -> nope("b)"),         // closing parenthesis
+			() -> nope("a & b"),      // boolean AND
+			() -> nope("a | b"),      // boolean OR
+			() -> nope("!a")          // boolean NOT
 		);
 		// @formatter:on
 	}

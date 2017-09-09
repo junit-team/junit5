@@ -36,6 +36,20 @@ public final class TestTag implements Serializable {
 	private final String name;
 
 	/**
+	 * <em>Reserved characters</em> that are not permissible as part of a tag name.
+	 *
+	 * <ul>
+	 * <li>{@code ","}</li>
+	 * <li>{@code "("}</li>
+	 * <li>{@code ")"}</li>
+	 * <li>{@code "&"}</li>
+	 * <li>{@code "|"}</li>
+	 * <li>{@code "!"}</li>
+	 * </ul>
+	 */
+	public static final String[] RESERVED_CHARACTERS = { ",", "(", ")", "&", "|", "!" };
+
+	/**
 	 * Determine if the supplied tag name is valid with regard to the supported
 	 * syntax for tags.
 	 *
@@ -45,6 +59,8 @@ public final class TestTag implements Serializable {
 	 * <li>A tag must not be blank.</li>
 	 * <li>A trimmed tag must not contain whitespace.</li>
 	 * <li>A trimmed tag must not contain ISO control characters.</li>
+	 * <li>A trimmed tag must not contain {@linkplain #RESERVED_CHARACTERS
+	 * reserved characters}.</li>
 	 * </ul>
 	 *
 	 * <p>If this method returns {@code true} for a given name, it is then a
@@ -58,6 +74,7 @@ public final class TestTag implements Serializable {
 	 * @see String#trim()
 	 * @see StringUtils#doesNotContainWhitespace(String)
 	 * @see StringUtils#doesNotContainIsoControlCharacter(String)
+	 * @see #RESERVED_CHARACTERS
 	 * @see TestTag#create(String)
 	 */
 	public static boolean isValid(String name) {
@@ -68,7 +85,17 @@ public final class TestTag implements Serializable {
 
 		return !name.isEmpty() && //
 				StringUtils.doesNotContainWhitespace(name) && //
-				StringUtils.doesNotContainIsoControlCharacter(name);
+				StringUtils.doesNotContainIsoControlCharacter(name) && //
+				doesNotContainReservedCharacter(name);
+	}
+
+	private static boolean doesNotContainReservedCharacter(String str) {
+		for (String reservedCharacter : RESERVED_CHARACTERS) {
+			if (str.contains(reservedCharacter)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
