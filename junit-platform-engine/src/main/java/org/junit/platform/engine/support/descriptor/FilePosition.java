@@ -96,7 +96,7 @@ public class FilePosition implements Serializable {
 			return false;
 		}
 		FilePosition that = (FilePosition) o;
-		return this.line == that.line && this.column == that.column;
+		return (this.line == that.line) && Objects.equals(this.column, that.column);
 	}
 
 	@Override
