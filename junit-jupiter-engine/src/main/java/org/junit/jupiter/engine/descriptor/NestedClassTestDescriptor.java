@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Constructor;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;

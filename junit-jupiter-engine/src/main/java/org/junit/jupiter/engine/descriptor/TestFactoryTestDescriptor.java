@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;

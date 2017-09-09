@@ -10,13 +10,13 @@
 
 package org.junit.platform.commons.util;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * Collection of utilities for asserting preconditions for method and

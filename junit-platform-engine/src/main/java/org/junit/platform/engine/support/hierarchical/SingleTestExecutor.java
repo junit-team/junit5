@@ -10,13 +10,13 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.apiguardian.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.engine.TestExecutionResult.aborted;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult;
 import org.opentest4j.TestAbortedException;
 

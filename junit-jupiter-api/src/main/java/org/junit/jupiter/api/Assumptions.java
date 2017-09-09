@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.StringUtils;

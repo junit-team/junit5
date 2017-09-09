@@ -21,8 +21,8 @@ import java.util.Map;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
 
-import org.apiguardian.API;
-import org.apiguardian.API.Status;
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 

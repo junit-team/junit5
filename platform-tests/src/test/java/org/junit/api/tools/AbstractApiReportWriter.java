@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.util.EnumSet;
 import java.util.List;
 
-import org.apiguardian.API.Status;
+import org.apiguardian.api.API.Status;
 
 /**
  * @since 1.0

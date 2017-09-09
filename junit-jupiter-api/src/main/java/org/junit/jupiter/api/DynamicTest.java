@@ -12,14 +12,14 @@ package org.junit.jupiter.api;
 
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
-import static org.apiguardian.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Iterator;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.commons.util.Preconditions;

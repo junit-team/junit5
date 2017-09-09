@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;

@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collections;
 import java.util.Map;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * Parameters of type {@code TestReporter} can be injected into methods of

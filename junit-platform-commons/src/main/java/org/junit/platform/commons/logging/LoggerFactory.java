@@ -10,13 +10,13 @@
 
 package org.junit.platform.commons.logging;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 
 /**

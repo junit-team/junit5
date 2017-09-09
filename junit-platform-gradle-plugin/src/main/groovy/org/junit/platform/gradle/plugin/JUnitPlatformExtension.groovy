@@ -9,9 +9,9 @@
  */
 package org.junit.platform.gradle.plugin
 
-import static org.apiguardian.API.Status.EXPERIMENTAL
+import static org.apiguardian.api.API.Status.EXPERIMENTAL
 
-import org.apiguardian.API
+import org.apiguardian.api.API
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.tasks.Input

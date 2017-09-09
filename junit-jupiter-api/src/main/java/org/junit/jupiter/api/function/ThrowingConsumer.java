@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.api.function;
 
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * {@code ThrowingConsumer} is a functional interface that can be used to

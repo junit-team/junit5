@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 

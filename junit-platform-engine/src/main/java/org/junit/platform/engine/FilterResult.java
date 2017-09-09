@@ -10,12 +10,12 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**

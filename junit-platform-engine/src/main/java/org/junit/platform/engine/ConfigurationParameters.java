@@ -10,11 +10,11 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Optional;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * Configuration parameters that {@link TestEngine TestEngines} may use to

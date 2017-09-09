@@ -11,11 +11,11 @@
 package org.junit.jupiter.api.extension;
 
 import static java.util.Collections.emptyList;
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * {@code TestTemplateInvocationContext} represents the <em>context</em> of a

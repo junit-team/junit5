@@ -10,9 +10,9 @@
 
 package org.junit.vintage.engine.descriptor;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.runner.Request;

@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.rules.TestRule;
 
 /**

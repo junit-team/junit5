@@ -13,7 +13,7 @@ package org.junit.jupiter.params.converter;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 

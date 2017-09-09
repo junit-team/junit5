@@ -12,11 +12,11 @@ package org.junit.jupiter.migrationsupport.rules;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.apiguardian.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.function.Function;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;

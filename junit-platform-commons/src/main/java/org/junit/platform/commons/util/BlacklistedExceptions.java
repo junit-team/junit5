@@ -10,12 +10,12 @@
 
 package org.junit.platform.commons.util;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * Internal utilities for working with <em>blacklisted</em> exceptions.

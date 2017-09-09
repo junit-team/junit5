@@ -10,13 +10,13 @@
 
 package org.junit.platform.commons.util;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.Optional;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * Collection of utilities for working with {@linkplain ClassLoader} and associated tasks.

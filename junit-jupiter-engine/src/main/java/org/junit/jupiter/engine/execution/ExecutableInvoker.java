@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.execution;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
 import java.lang.reflect.Constructor;
@@ -22,7 +22,7 @@ import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Optional;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;

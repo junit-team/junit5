@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.util.function.Predicate;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.Nested;
 
 /**

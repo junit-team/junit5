@@ -10,11 +10,11 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * Representation of the source of a test or container used to navigate to

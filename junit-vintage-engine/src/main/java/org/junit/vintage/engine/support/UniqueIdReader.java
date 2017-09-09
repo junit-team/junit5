@@ -11,14 +11,14 @@
 package org.junit.vintage.engine.support;
 
 import static java.lang.String.format;
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.runner.Description;
 

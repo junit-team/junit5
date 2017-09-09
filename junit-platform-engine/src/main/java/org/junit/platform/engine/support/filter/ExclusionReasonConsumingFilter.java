@@ -10,12 +10,12 @@
 
 package org.junit.platform.engine.support.filter;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.FilterResult;

@@ -115,7 +115,7 @@ allprojects { subproj ->
 	}
 
 	dependencies {
-		api("org.apiguardian:apiguardian:${apiGuardianVersion}")
+		api("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	}
 
 	tasks.withType(Test) { task ->

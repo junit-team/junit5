@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 
 /**

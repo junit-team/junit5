@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.support;
 
-import static org.apiguardian.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 

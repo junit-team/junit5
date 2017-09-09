@@ -13,7 +13,7 @@ package org.junit.api.tools;
 import java.io.PrintWriter;
 import java.util.EnumSet;
 
-import org.apiguardian.API.Status;
+import org.apiguardian.api.API.Status;
 
 /**
  * @since 1.0

@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * {@code TestExecutionExceptionHandler} defines the API for {@link Extension

@@ -11,7 +11,7 @@
 package org.junit.platform.engine;
 
 import static java.util.Arrays.asList;
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.CompositeFilter.alwaysIncluded;
 
@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 
 /**

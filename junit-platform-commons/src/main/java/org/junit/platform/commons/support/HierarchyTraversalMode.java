@@ -10,9 +10,9 @@
 
 package org.junit.platform.commons.support;
 
-import static org.apiguardian.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * Modes in which a hierarchy can be traversed &mdash; for example, when

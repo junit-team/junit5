@@ -17,7 +17,7 @@
 package org.junit.platform.surefire.provider;
 
 import static java.util.Collections.emptyMap;
-import static org.apiguardian.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -44,7 +44,7 @@ import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;

@@ -10,9 +10,9 @@
 
 package org.junit.platform.console.options;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * @since 1.0

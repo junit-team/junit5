@@ -10,10 +10,10 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.API.Status.INTERNAL;
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * Provides a single {@link TestEngine} access to the information necessary to

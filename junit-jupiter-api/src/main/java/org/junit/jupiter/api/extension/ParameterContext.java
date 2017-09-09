@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * {@code ParameterContext} encapsulates the <em>context</em> in which an

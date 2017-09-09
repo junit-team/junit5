@@ -10,11 +10,11 @@
 
 package org.junit.platform.commons.logging;
 
-import static org.apiguardian.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Supplier;
 
-import org.apiguardian.API;
+import org.apiguardian.api.API;
 
 /**
  * The {@code Logger} API serves as a simple logging facade for
