@@ -33,8 +33,9 @@ class TestTagTests {
 		// @formatter:off
 		assertAll("Valid Tag Syntax",
 			() -> yep("fast"),
-			() -> yep("super-fast"),
+			() -> yep("super_fast"),
 			() -> yep("unit-test"),
+			() -> yep("integration.test"),
 			() -> yep("org.example.CustomTagClass"),
 			() -> yep("  surrounded-by-whitespace\t\n"),
 			() -> nope(null),
