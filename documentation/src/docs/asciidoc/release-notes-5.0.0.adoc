@@ -1,7 +1,7 @@
 [[release-notes-5.0.0]]
 === 5.0.0
 
-*Date of Release:* September, 2017
+*Date of Release:* September 10, 2017
 
 *Scope:* First General Availability Release
 
@@ -12,10 +12,6 @@ on GitHub.
 
 [[release-notes-5.0.0-junit-platform]]
 ==== JUnit Platform
-
-===== Bug Fixes
-
-* ❓
 
 ===== Deprecations and Breaking Changes
 
@@ -40,39 +36,17 @@ on GitHub.
 * The constructor for `LoggingListener` has been replaced with a static factory method
   named `forBiConsumer(...)`.
 
-===== New Features and Improvements
-
-* ❓
-
 
 [[release-notes-5.0.0-junit-jupiter]]
 ==== JUnit Jupiter
 
 ===== Bug Fixes
 
-* Fix implementation of `AbstractExtensionContext.getRoot()` to actually
-  traverse the complete hierarchy and return the root.
-
-===== Deprecations and Breaking Changes
-
-* ❓
-
-===== New Features and Improvements
-
-* ❓
+* Fix implementation of `AbstractExtensionContext.getRoot()` so that it actually
+  traverses the complete hierarchy and returns the true root.
 
 
 [[release-notes-5.0.0-junit-vintage]]
 ==== JUnit Vintage
 
-===== Bug Fixes
-
-* ❓
-
-===== Deprecations and Breaking Changes
-
-* ❓
-
-===== New Features and Improvements
-
-* ❓
+No changes.
