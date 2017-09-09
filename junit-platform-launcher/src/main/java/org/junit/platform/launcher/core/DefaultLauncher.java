@@ -19,16 +19,14 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.ConfigurationParameters;
-import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.CollectingLauncher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TestCollection;
 import org.junit.platform.launcher.TestExecutionListener;
-import org.junit.platform.launcher.TestPlan;
 
 /**
  * Default implementation of the {@link Launcher} API.
@@ -39,7 +37,7 @@ import org.junit.platform.launcher.TestPlan;
  * @see Launcher
  * @see LauncherFactory
  */
-class DefaultLauncher implements Launcher {
+class DefaultLauncher implements CollectingLauncher {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultLauncher.class);
 
@@ -77,17 +75,15 @@ class DefaultLauncher implements Launcher {
 	}
 
 	@Override
-	public TestPlan discover(LauncherDiscoveryRequest discoveryRequest) {
-		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
-		return TestPlan.from(discoverRoot(discoveryRequest, "discovery").getEngineDescriptors());
+	public TestCollection collect(LauncherDiscoveryRequest discoveryRequest) {
+		return collect(discoveryRequest, "discovery");
 	}
 
-	@Override
-	public void execute(LauncherDiscoveryRequest discoveryRequest, TestExecutionListener... listeners) {
+	private TestCollection collect(LauncherDiscoveryRequest discoveryRequest, String phase) {
 		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
-		Preconditions.notNull(listeners, "TestExecutionListener array must not be null");
-		Preconditions.containsNoNullElements(listeners, "individual listeners must not be null");
-		execute(discoverRoot(discoveryRequest, "execution"), discoveryRequest.getConfigurationParameters(), listeners);
+		Root root = discoverRoot(discoveryRequest, phase);
+
+		return new DefaultTestCollection(root, this.listenerRegistry, discoveryRequest.getConfigurationParameters());
 	}
 
 	TestExecutionListenerRegistry getTestExecutionListenerRegistry() {
@@ -114,16 +110,15 @@ class DefaultLauncher implements Launcher {
 			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			Optional<TestDescriptor> engineRoot = discoverEngineRoot(testEngine, discoveryRequest);
+			Optional<TestDescriptor> engineRoot = discoverEngineRoot(testEngine, discoveryRequest, phase);
 			engineRoot.ifPresent(rootDescriptor -> root.add(testEngine, rootDescriptor));
 		}
-		root.applyPostDiscoveryFilters(discoveryRequest);
-		root.prune();
+		root.applyPostDiscoveryFilters(discoveryRequest.getPostDiscoveryFilters());
 		return root;
 	}
 
 	private Optional<TestDescriptor> discoverEngineRoot(TestEngine testEngine,
-			LauncherDiscoveryRequest discoveryRequest) {
+			LauncherDiscoveryRequest discoveryRequest, String phase) {
 
 		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 		try {
@@ -135,43 +130,14 @@ class DefaultLauncher implements Launcher {
 			return Optional.of(engineRoot);
 		}
 		catch (Throwable throwable) {
-			handleThrowable(testEngine, "discover", throwable);
+			handleThrowable(testEngine, phase, throwable);
 			return Optional.empty();
 		}
 	}
 
-	private void execute(Root root, ConfigurationParameters configurationParameters,
-			TestExecutionListener... listeners) {
-
-		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
-		TestPlan testPlan = TestPlan.from(root.getEngineDescriptors());
-		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
-		testExecutionListener.testPlanExecutionStarted(testPlan);
-		ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
-			testExecutionListener);
-		for (TestEngine testEngine : root.getTestEngines()) {
-			TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
-			execute(testEngine, new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
-		}
-		testExecutionListener.testPlanExecutionFinished(testPlan);
-	}
-
-	private TestExecutionListenerRegistry buildListenerRegistryForExecution(TestExecutionListener... listeners) {
-		if (listeners.length == 0) {
-			return this.listenerRegistry;
-		}
-		TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry(this.listenerRegistry);
-		registry.registerListeners(listeners);
-		return registry;
-	}
-
-	private void execute(TestEngine testEngine, ExecutionRequest executionRequest) {
-		try {
-			testEngine.execute(executionRequest);
-		}
-		catch (Throwable throwable) {
-			handleThrowable(testEngine, "execute", throwable);
-		}
+	@Override
+	public void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners) {
+		collect(launcherDiscoveryRequest, "execution").execute(listeners);
 	}
 
 	private void handleThrowable(TestEngine testEngine, String phase, Throwable throwable) {

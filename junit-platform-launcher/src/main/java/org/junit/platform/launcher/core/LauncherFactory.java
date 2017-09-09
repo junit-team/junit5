@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.launcher.CollectingLauncher;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestExecutionListener;
 
@@ -55,8 +56,8 @@ public class LauncherFactory {
 	 *
 	 * @throws PreconditionViolationException if no test engines are detected
 	 */
-	public static Launcher create() throws PreconditionViolationException {
-		Launcher launcher = new DefaultLauncher(new ServiceLoaderTestEngineRegistry().loadTestEngines());
+	public static CollectingLauncher create() throws PreconditionViolationException {
+		CollectingLauncher launcher = new DefaultLauncher(new ServiceLoaderTestEngineRegistry().loadTestEngines());
 		for (TestExecutionListener listener : new ServiceLoaderTestExecutionListenerRegistry().loadListeners()) {
 			launcher.registerTestExecutionListeners(listener);
 		}

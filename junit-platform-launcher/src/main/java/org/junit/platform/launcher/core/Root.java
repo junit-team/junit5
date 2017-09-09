@@ -14,12 +14,13 @@ import static org.junit.platform.engine.Filter.composeFilters;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.PostDiscoveryFilter;
 
 /**
  * Represents the root of all discovered {@link TestEngine TestEngines} and
@@ -50,14 +51,15 @@ class Root {
 		return this.testEngineDescriptors.get(testEngine);
 	}
 
-	void applyPostDiscoveryFilters(LauncherDiscoveryRequest discoveryRequest) {
-		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
+	void applyPostDiscoveryFilters(List<PostDiscoveryFilter> filters) {
+		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(filters);
 		TestDescriptor.Visitor removeExcludedTestDescriptors = descriptor -> {
 			if (!descriptor.isRoot() && isExcluded(descriptor, postDiscoveryFilter)) {
 				descriptor.removeFromHierarchy();
 			}
 		};
 		acceptInAllTestEngines(removeExcludedTestDescriptors);
+		prune();
 	}
 
 	/**
@@ -67,7 +69,7 @@ class Root {
 	 * <p>If a {@link TestEngine} ends up with no {@code TestDescriptors} after
 	 * pruning, it will <strong>not</strong> be removed.
 	 */
-	void prune() {
+	private void prune() {
 		acceptInAllTestEngines(TestDescriptor::prune);
 	}
 
