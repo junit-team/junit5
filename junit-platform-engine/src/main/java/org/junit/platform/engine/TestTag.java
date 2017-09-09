@@ -13,6 +13,7 @@ package org.junit.platform.engine;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Objects;
 
 import org.apiguardian.api.API;
@@ -90,12 +91,7 @@ public final class TestTag implements Serializable {
 	}
 
 	private static boolean doesNotContainReservedCharacter(String str) {
-		for (String reservedCharacter : RESERVED_CHARACTERS) {
-			if (str.contains(reservedCharacter)) {
-				return false;
-			}
-		}
-		return true;
+		return Arrays.stream(RESERVED_CHARACTERS).noneMatch(str::contains);
 	}
 
 	/**
