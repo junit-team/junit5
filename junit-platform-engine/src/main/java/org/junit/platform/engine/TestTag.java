@@ -14,7 +14,10 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
@@ -48,7 +51,8 @@ public final class TestTag implements Serializable {
 	 * <li>{@code "!"}</li>
 	 * </ul>
 	 */
-	public static final String[] RESERVED_CHARACTERS = { ",", "(", ")", "&", "|", "!" };
+	public static final Set<String> RESERVED_CHARACTERS = Collections.unmodifiableSet(
+		new HashSet<>(Arrays.asList(",", "(", ")", "&", "|", "!")));
 
 	/**
 	 * Determine if the supplied tag name is valid with regard to the supported
@@ -91,7 +95,7 @@ public final class TestTag implements Serializable {
 	}
 
 	private static boolean doesNotContainReservedCharacter(String str) {
-		return Arrays.stream(RESERVED_CHARACTERS).noneMatch(str::contains);
+		return RESERVED_CHARACTERS.stream().noneMatch(str::contains);
 	}
 
 	/**
