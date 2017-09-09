@@ -46,12 +46,12 @@ class TestTagTests {
 			() -> nope("\r"),
 			() -> nope("\n"),
 			() -> nope("custom tag"), // internal space
-			() -> nope("a,b"),        // comma
-			() -> nope("(a"),         // opening parenthesis
-			() -> nope("b)"),         // closing parenthesis
-			() -> nope("a & b"),      // boolean AND
-			() -> nope("a | b"),      // boolean OR
-			() -> nope("!a")          // boolean NOT
+			() -> nope(","),          // comma
+			() -> nope("("),          // opening parenthesis
+			() -> nope(")"),          // closing parenthesis
+			() -> nope("&"),          // boolean AND
+			() -> nope("|"),          // boolean OR
+			() -> nope("!")           // boolean NOT
 		);
 		// @formatter:on
 	}
