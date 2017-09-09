@@ -23,6 +23,7 @@ dependencies {
 	testImplementation(project(path: ':junit-platform-console', configuration: 'shadow'))
 	testImplementation(project(':junit-platform-engine'))
 	testImplementation(project(':junit-platform-launcher'))
+	testImplementation(project(':junit-jupiter-engine'))
 
 	// --- Things we are testing with ---------------------------------------------
 	testImplementation(project(':junit-jupiter-api'))
@@ -36,7 +37,6 @@ dependencies {
 	testImplementation("io.github.lukehutch:fast-classpath-scanner:2.4.7")
 
 	// --- Test run-time dependencies ---------------------------------------------
-	testRuntimeOnly(project(':junit-jupiter-engine'))
 	testRuntimeOnly(project(':junit-vintage-engine'))
 	testRuntimeOnly(project(':junit-jupiter-migrationsupport')) // included for @API report
 	testRuntimeOnly(project(':junit-platform-gradle-plugin')) // included for @API report
