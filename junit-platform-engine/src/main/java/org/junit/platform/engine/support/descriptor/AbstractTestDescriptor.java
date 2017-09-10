@@ -101,6 +101,16 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
+	public Set<TestTag> getTags() {
+		return emptySet();
+	}
+
+	@Override
+	public Optional<TestSource> getSource() {
+		return Optional.ofNullable(this.source);
+	}
+
+	@Override
 	public final Optional<TestDescriptor> getParent() {
 		return Optional.ofNullable(this.parent);
 	}
@@ -108,6 +118,18 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public final void setParent(TestDescriptor parent) {
 		this.parent = parent;
+	}
+
+	@Override
+	public final Set<? extends TestDescriptor> getChildren() {
+		return Collections.unmodifiableSet(this.children);
+	}
+
+	@Override
+	public void addChild(TestDescriptor child) {
+		Preconditions.notNull(child, "child must not be null");
+		child.setParent(this);
+		this.children.add(child);
 	}
 
 	@Override
@@ -138,28 +160,6 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 				.findAny()
 				.orElse(Optional.empty());
 		// @formatter:on
-	}
-
-	@Override
-	public void addChild(TestDescriptor child) {
-		Preconditions.notNull(child, "child must not be null");
-		child.setParent(this);
-		this.children.add(child);
-	}
-
-	@Override
-	public final Set<? extends TestDescriptor> getChildren() {
-		return Collections.unmodifiableSet(this.children);
-	}
-
-	@Override
-	public Set<TestTag> getTags() {
-		return emptySet();
-	}
-
-	@Override
-	public Optional<TestSource> getSource() {
-		return Optional.ofNullable(this.source);
 	}
 
 	@Override
