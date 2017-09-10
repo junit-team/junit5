@@ -466,6 +466,7 @@ configure(rootProject) {
 	uploadArchives.enabled = false
 
 	def ota4jDocVersion = ota4jVersion.contains('SNAPSHOT') ? 'snapshot' : ota4jVersion
+	def apiGuardianDocVersion = apiGuardianVersion.contains('SNAPSHOT') ? 'snapshot' : apiGuardianVersion
 
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
@@ -485,7 +486,11 @@ configure(rootProject) {
 		options.addStringOption('Xdoclint:none', '-quiet')
 		options.encoding = 'UTF-8'
 		options.jFlags '-Xmx1g'
-		options.links 'https://docs.oracle.com/javase/8/docs/api/', "http://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/"
+		options.links(
+			'https://docs.oracle.com/javase/8/docs/api/',
+			"https://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/",
+			"https://apiguardian-team.github.io/apiguardian/docs/${apiGuardianDocVersion}/api/"
+		)
 		options.stylesheetFile rootProject.file("src/javadoc/stylesheet.css")
 		options
 			.group("Jupiter", ["org.junit.jupiter.*"])
