@@ -36,6 +36,10 @@ on GitHub.
 * The constructor for `LoggingListener` has been replaced with a static factory method
   named `forBiConsumer(...)`.
 
+===== Bug Fixes
+
+* The `removeFromHierarchy()` implementation in `AbstractTestDescriptor ` now also
+  clears parent relationships from all children.
 
 [[release-notes-5.0.0-junit-jupiter]]
 ==== JUnit Jupiter

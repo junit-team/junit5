@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.descriptor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -62,7 +63,7 @@ class AbstractTestDescriptorTests {
 	@Test
 	void removeFromHierarchyClearsParentFromAllChildren() {
 		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
-		assertTrue(group.getParent().orElseThrow(Error::new) == engineDescriptor);
+		assertSame(engineDescriptor, group.getParent().orElseThrow(Error::new));
 		assertTrue(group.getChildren().stream().allMatch(d -> d.getParent().orElseThrow(Error::new) == group));
 
 		Set<? extends TestDescriptor> formerChildren = group.getChildren();
@@ -74,22 +75,20 @@ class AbstractTestDescriptorTests {
 	}
 
 	@Test
-	void setParentFailsWhenAlreadySet() {
+	void setParentToOtherInstance() {
 		TestDescriptor newEngine = new EngineDescriptor(UniqueId.forEngine("newEngine"), "newEngine");
 		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
-		JUnitException e = assertThrows(JUnitException.class, () -> group.setParent(newEngine));
-		assertTrue(e.toString().contains("parent already set"));
-		assertTrue(e.toString().contains(engineDescriptor.getDisplayName()));
-		assertTrue(e.toString().contains("cannot be reset"));
-		assertTrue(e.toString().contains(newEngine.getDisplayName()));
+		assertSame(engineDescriptor, group.getParent().orElseThrow(Error::new));
+		group.setParent(newEngine);
+		assertSame(newEngine, group.getParent().orElseThrow(Error::new));
 	}
 
 	@Test
-	void resetParentInTwoStepsWorks() {
-		TestDescriptor newEngine = new EngineDescriptor(UniqueId.forEngine("newEngine"), "newEngine");
+	void setParentToNull() {
 		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
+		assertTrue(group.getParent().isPresent());
 		group.setParent(null);
-		group.setParent(newEngine);
+		assertFalse(group.getParent().isPresent());
 	}
 
 	@Test

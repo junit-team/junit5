@@ -96,10 +96,6 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public final void setParent(TestDescriptor parent) {
-		if (this.parent != null) {
-			Preconditions.condition(parent == null,
-				"parent already set to " + this.parent + " -- cannot be reset to " + parent);
-		}
 		this.parent = parent;
 	}
 
