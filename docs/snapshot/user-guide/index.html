@@ -7468,6 +7468,17 @@ on GitHub.</p>
 <div class="sect3">
 <h4 id="release-notes-5.0.0-junit-platform"><a class="anchor" href="#release-notes-5.0.0-junit-platform"></a>JUnit Platform</h4>
 <div class="sect4">
+<h5 id="bug-fixes-20"><a class="anchor" href="#bug-fixes-20"></a>Bug Fixes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>removeFromHierarchy()</code> implementation in `AbstractTestDescriptor ` now also
+clears parent relationships from all children.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
 <h5 id="deprecations-and-breaking-changes-11"><a class="anchor" href="#deprecations-and-breaking-changes-11"></a>Deprecations and Breaking Changes</h5>
 <div class="ulist">
 <ul>
@@ -7529,16 +7540,19 @@ replaced with static factory methods named <code>from(&#8230;&#8203;)</code>.</p
 <p>The constructor for <code>LoggingListener</code> has been replaced with a static factory method
 named <code>forBiConsumer(&#8230;&#8203;)</code>.</p>
 </li>
+<li>
+<p>The <code>getParent()</code> method in <code>AbstractTestDescriptor</code> is now <code>final</code>.</p>
+</li>
 </ul>
 </div>
 </div>
 <div class="sect4">
-<h5 id="bug-fixes-20"><a class="anchor" href="#bug-fixes-20"></a>Bug Fixes</h5>
+<h5 id="new-features-and-improvements-11"><a class="anchor" href="#new-features-and-improvements-11"></a>New Features and Improvements</h5>
 <div class="ulist">
 <ul>
 <li>
-<p>The <code>removeFromHierarchy()</code> implementation in `AbstractTestDescriptor ` now also
-clears parent relationships from all children.</p>
+<p>The <code>children</code> field in <code>AbstractTestDescriptor</code> is now <code>protected</code> in order to provide
+access to subclasses.</p>
 </li>
 </ul>
 </div>
@@ -7551,8 +7565,8 @@ clears parent relationships from all children.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fix implementation of <code>AbstractExtensionContext.getRoot()</code> so that it actually
-traverses the complete hierarchy and returns the true root.</p>
+<p><code>AbstractExtensionContext.getRoot()</code> now actually traverses the complete hierarchy and
+returns the true root context.</p>
 </li>
 </ul>
 </div>
