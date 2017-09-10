@@ -43,9 +43,20 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final TestSource source;
 
-	private final Set<TestDescriptor> children = Collections.synchronizedSet(new LinkedHashSet<>(16));
-
 	private TestDescriptor parent;
+
+	/**
+	 * The synchronized set of children associated with this {@code TestDescriptor}.
+	 *
+	 * <p>This set is used in methods such as {@link #addChild(TestDescriptor)},
+	 * {@link #removeChild(TestDescriptor)}, {@link #removeFromHierarchy()}, and
+	 * {@link #findByUniqueId(UniqueId)}, and an immutable copy of this set is
+	 * returned by {@link #getChildren()}.
+	 *
+	 * <p>If a subclass overrides any of the methods related to children, this
+	 * set should be used instead of a set local to the subclass.
+	 */
+	protected final Set<TestDescriptor> children = Collections.synchronizedSet(new LinkedHashSet<>(16));
 
 	/**
 	 * Create a new {@code AbstractTestDescriptor} with the supplied

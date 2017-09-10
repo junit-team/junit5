@@ -13,6 +13,11 @@ on GitHub.
 [[release-notes-5.0.0-junit-platform]]
 ==== JUnit Platform
 
+===== Bug Fixes
+
+* The `removeFromHierarchy()` implementation in `AbstractTestDescriptor ` now also
+  clears parent relationships from all children.
+
 ===== Deprecations and Breaking Changes
 
 * The `@API` annotation has been removed from the `junit-platform-commons` project and
@@ -37,18 +42,19 @@ on GitHub.
   named `forBiConsumer(...)`.
 * The `getParent()` method in `AbstractTestDescriptor` is now `final`.
 
-===== Bug Fixes
+===== New Features and Improvements
 
-* The `removeFromHierarchy()` implementation in `AbstractTestDescriptor ` now also
-  clears parent relationships from all children.
+* The `children` field in `AbstractTestDescriptor` is now `protected` in order to provide
+  access to subclasses.
+
 
 [[release-notes-5.0.0-junit-jupiter]]
 ==== JUnit Jupiter
 
 ===== Bug Fixes
 
-* Fix implementation of `AbstractExtensionContext.getRoot()` so that it actually
-  traverses the complete hierarchy and returns the true root.
+* `AbstractExtensionContext.getRoot()` now actually traverses the complete hierarchy and
+  returns the true root context.
 
 
 [[release-notes-5.0.0-junit-vintage]]
