@@ -605,9 +605,9 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#api-evolution">8. API Evolution</a>
 <ul class="sectlevel2">
-<li><a href="#api-evolution-annotations">8.1. API Annotations</a></li>
+<li><a href="#api-evolution-version-and-status">8.1. API Version and Status</a></li>
 <li><a href="#api-evolution-experimental-apis">8.2. Experimental APIs</a></li>
-<li><a href="#api-evolution-tooling">8.3. Tooling Support</a></li>
+<li><a href="#api-evolution-tooling">8.3. @API Tooling Support</a></li>
 </ul>
 </li>
 <li><a href="#contributors">9. Contributors</a></li>
@@ -4989,11 +4989,12 @@ builders. That made changing JUnit 4 especially difficult and sometimes impossib
 classes, and methods.</p>
 </div>
 <div class="sect2">
-<h3 id="api-evolution-annotations"><a class="anchor" href="#api-evolution-annotations"></a>8.1. API Annotations</h3>
+<h3 id="api-evolution-version-and-status"><a class="anchor" href="#api-evolution-version-and-status"></a>8.1. API Version and Status</h3>
 <div class="paragraph">
 <p>Every published artifact has a version number <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code>, and all publicly
-available interfaces, classes, and methods are annotated with <a href="https://apiguardian-team.github.io/apiguardian/docs/current/api/">@API</a>. The annotation&#8217;s
-<code>status</code> attribute can be assigned one of the following values:</p>
+available interfaces, classes, and methods are annotated with <a href="https://apiguardian-team.github.io/apiguardian/docs/current/api/">@API</a> from the
+<a href="https://github.com/apiguardian-team/apiguardian">@API Guardian</a> project. The annotation&#8217;s <code>status</code> attribute can be assigned one of the
+following values.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -5043,8 +5044,8 @@ value of lower stability.</p>
 <div class="sect2">
 <h3 id="api-evolution-experimental-apis"><a class="anchor" href="#api-evolution-experimental-apis"></a>8.2. Experimental APIs</h3>
 <div class="paragraph">
-<p>The following table lists which APIs are currently marked as <em>experimental</em>. Caution
-should be taken when relying on such APIs.</p>
+<p>The following table lists which APIs are currently designated as <em>experimental</em> (via
+<code>@API(status = EXPERIMENTAL)</code>). Caution should be taken when relying on such APIs.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -5224,11 +5225,12 @@ should be taken when relying on such APIs.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="api-evolution-tooling"><a class="anchor" href="#api-evolution-tooling"></a>8.3. Tooling Support</h3>
+<h3 id="api-evolution-tooling"><a class="anchor" href="#api-evolution-tooling"></a>8.3. @API Tooling Support</h3>
 <div class="paragraph">
-<p>The JUnit team plans to provide native tooling support for all JUnit users, extenders,
-and tool builders. The tooling support will likely provide a means to check if the JUnit
-APIs are being used in accordance with <code>@API</code> annotation declarations.</p>
+<p>The <a href="https://github.com/apiguardian-team/apiguardian">@API Guardian</a> project plans to provide tooling support for publishers and consumers
+of APIs annotated with <a href="https://apiguardian-team.github.io/apiguardian/docs/current/api/">@API</a>. For example, the tooling support will likely provide a
+means to check if JUnit APIs are being used in accordance with <code>@API</code> annotation
+declarations.</p>
 </div>
 </div>
 </div>
@@ -7472,7 +7474,7 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The <code>removeFromHierarchy()</code> implementation in `AbstractTestDescriptor ` now also
+<p>The <code>removeFromHierarchy()</code> implementation in <code>AbstractTestDescriptor</code> now also
 clears parent relationships from all children.</p>
 </li>
 </ul>
@@ -7484,7 +7486,7 @@ clears parent relationships from all children.</p>
 <ul>
 <li>
 <p>The <code>@API</code> annotation has been removed from the <code>junit-platform-commons</code> project and
-relocated to a new standalone project on GitHub called the <em>@API Guardian</em>.</p>
+relocated to a new standalone project on GitHub called the <a href="https://github.com/apiguardian-team/apiguardian">@API Guardian</a>.</p>
 </li>
 <li>
 <p>Tags are no longer permitted to contain any of the following <em>reserved characters</em>.</p>
@@ -7585,7 +7587,7 @@ returns the true root context.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2017-09-09 09:59:23 EDT
+Last updated 2017-09-10 10:49:03 EDT
 </div>
 </div>
 </body>
