@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
@@ -97,6 +96,10 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public final void setParent(TestDescriptor parent) {
+		if (this.parent != null) {
+			Preconditions.condition(parent == null,
+				"parent already set to " + this.parent + " -- cannot be reset to " + parent);
+		}
 		this.parent = parent;
 	}
 
@@ -109,10 +112,9 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public void removeFromHierarchy() {
-		if (isRoot()) {
-			throw new JUnitException("You cannot remove the root of a hierarchy.");
-		}
+		Preconditions.condition(!isRoot(), "cannot remove the root of a hierarchy");
 		this.parent.removeChild(this);
+		this.children.forEach(child -> child.setParent(null));
 		this.children.clear();
 	}
 

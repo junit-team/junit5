@@ -12,14 +12,17 @@ package org.junit.platform.engine.support.descriptor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -33,7 +36,7 @@ class AbstractTestDescriptorTests {
 	EngineDescriptor engineDescriptor;
 
 	@BeforeEach
-	public void initTree() {
+	void initTree() {
 		engineDescriptor = new EngineDescriptor(UniqueId.forEngine("testEngine"), "testEngine");
 		GroupDescriptor group1 = new GroupDescriptor(UniqueId.root("group", "group1"));
 		engineDescriptor.addChild(group1);
@@ -48,6 +51,45 @@ class AbstractTestDescriptorTests {
 		group2.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf2-1")));
 
 		group11.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf11-1")));
+	}
+
+	@Test
+	void removeRootFromHierarchyFails() {
+		JUnitException e = assertThrows(JUnitException.class, () -> engineDescriptor.removeFromHierarchy());
+		assertTrue(e.toString().contains("cannot remove the root of a hierarchy"));
+	}
+
+	@Test
+	void removeFromHierarchyClearsParentFromAllChildren() {
+		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
+		assertTrue(group.getParent().orElseThrow(Error::new) == engineDescriptor);
+		assertTrue(group.getChildren().stream().allMatch(d -> d.getParent().orElseThrow(Error::new) == group));
+
+		Set<? extends TestDescriptor> formerChildren = group.getChildren();
+		group.removeFromHierarchy();
+
+		assertFalse(group.getParent().isPresent());
+		assertTrue(group.getChildren().isEmpty());
+		assertTrue(formerChildren.stream().noneMatch(d -> d.getParent().isPresent()));
+	}
+
+	@Test
+	void setParentFailsWhenAlreadySet() {
+		TestDescriptor newEngine = new EngineDescriptor(UniqueId.forEngine("newEngine"), "newEngine");
+		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
+		JUnitException e = assertThrows(JUnitException.class, () -> group.setParent(newEngine));
+		assertTrue(e.toString().contains("parent already set"));
+		assertTrue(e.toString().contains(engineDescriptor.getDisplayName()));
+		assertTrue(e.toString().contains("cannot be reset"));
+		assertTrue(e.toString().contains(newEngine.getDisplayName()));
+	}
+
+	@Test
+	void resetParentInTwoStepsWorks() {
+		TestDescriptor newEngine = new EngineDescriptor(UniqueId.forEngine("newEngine"), "newEngine");
+		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
+		group.setParent(null);
+		group.setParent(newEngine);
 	}
 
 	@Test
