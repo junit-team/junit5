@@ -165,6 +165,8 @@ Test classes and methods can be tagged. Those tags can later be used to filter
 * A tag must not be `null` or _blank_.
 * A _trimmed_ tag must not contain whitespace.
 * A _trimmed_ tag must not contain ISO control characters.
+* A _trimmed_ tag must not contain any of the following _reserved characters_.
+  - `,`, `(`, `)`, `&`, `|`, `!`
 
 NOTE: In the above context, "trimmed" means that leading and trailing whitespace
 characters have been removed.
