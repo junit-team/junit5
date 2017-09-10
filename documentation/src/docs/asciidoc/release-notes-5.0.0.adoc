@@ -15,7 +15,7 @@ on GitHub.
 
 ===== Bug Fixes
 
-* The `removeFromHierarchy()` implementation in `AbstractTestDescriptor ` now also
+* The `removeFromHierarchy()` implementation in `AbstractTestDescriptor` now also
   clears parent relationships from all children.
 
 ===== Deprecations and Breaking Changes
