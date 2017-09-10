@@ -29,8 +29,8 @@ import org.junit.platform.engine.UniqueId;
  * Abstract base implementation of {@link TestDescriptor} that may be used by
  * custom {@link org.junit.platform.engine.TestEngine TestEngines}.
  *
- * <p>Subclasses should provide a {@code source} in their constructor, if
- * possible, and override {@link #getTags}, if appropriate.
+ * <p>Subclasses should provide a {@link TestSource} in their constructor, if
+ * possible, and override {@link #getTags()}, if appropriate.
  *
  * @since 1.0
  */
@@ -41,11 +41,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final String displayName;
 
-	private TestDescriptor parent;
-
 	private final TestSource source;
 
 	private final Set<TestDescriptor> children = Collections.synchronizedSet(new LinkedHashSet<>(16));
+
+	private TestDescriptor parent;
 
 	/**
 	 * Create a new {@code AbstractTestDescriptor} with the supplied
@@ -90,7 +90,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public Optional<TestDescriptor> getParent() {
+	public final Optional<TestDescriptor> getParent() {
 		return Optional.ofNullable(this.parent);
 	}
 

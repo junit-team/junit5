@@ -35,6 +35,7 @@ on GitHub.
   - `PackageSource`
 * The constructor for `LoggingListener` has been replaced with a static factory method
   named `forBiConsumer(...)`.
+* The `getParent()` method in `AbstractTestDescriptor` is now `final`.
 
 ===== Bug Fixes
 
