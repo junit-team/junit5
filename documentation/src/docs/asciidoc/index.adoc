@@ -73,6 +73,7 @@ ifdef::backend-pdf[:imagesdir: {outdir}/{imagesdir}]
 :MockitoExtension:                  {junit5-samples-repo}/tree/{release-branch}/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
 //
 :API:                               https://apiguardian-team.github.io/apiguardian/docs/current/api/[@API]
+:API_Guardian:                      https://github.com/apiguardian-team/apiguardian[@API Guardian]
 :AssertJ:                           http://joel-costigliola.github.io/assertj/[AssertJ]
 :Gitter:                            https://gitter.im/junit-team/junit5[Gitter]
 :Hamcrest:                          http://hamcrest.org/JavaHamcrest/[Hamcrest]
