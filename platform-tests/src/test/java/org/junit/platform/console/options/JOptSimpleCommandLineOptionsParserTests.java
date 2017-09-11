@@ -63,6 +63,9 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertEquals(Optional.empty(), options.getReportsDir()),
 			() -> assertEquals(emptyList(), options.getSelectedUris()),
 			() -> assertEquals(emptyList(), options.getSelectedFiles()),
+			() -> assertEquals(emptyList(), options.getSelectedModules()),
+			() -> assertEquals(emptyList(), options.getSelectedPackages()),
+			() -> assertEquals(emptyList(), options.getSelectedMethods()),
 			() -> assertEquals(emptyList(), options.getSelectedDirectories()),
 			() -> assertEquals(emptyList(), options.getSelectedClasspathEntries()),
 			() -> assertEquals(emptyMap(), options.getConfigurationParameters())
@@ -347,6 +350,26 @@ class JOptSimpleCommandLineOptionsParserTests {
 	@Test
 	void parseInvalidDirectorySelectors() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-d", "--select-directory");
+	}
+
+	@Test
+	void parseValidModuleSelectors() {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-o com.acme.foo").getSelectedModules()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("--o com.acme.foo").getSelectedModules()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-select-module com.acme.foo").getSelectedModules()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("-select-module=com.acme.foo").getSelectedModules()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("--select-module com.acme.foo").getSelectedModules()),
+				() -> assertEquals(singletonList("com.acme.foo"), parseArgLine("--select-module=com.acme.foo").getSelectedModules()),
+				() -> assertEquals(asList("com.acme.foo", "com.example.bar"), parseArgLine("-o com.acme.foo -o com.example.bar").getSelectedModules())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void parseInvalidModuleSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-o", "--select-module");
 	}
 
 	@Test

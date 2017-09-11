@@ -23,6 +23,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +56,9 @@ class DiscoveryRequestCreator {
 				"Scanning the classpath and using explicit selectors at the same time is not supported");
 			return createClasspathRootSelectors(options);
 		}
+		if (options.isScanModulepath()) {
+			return Collections.singletonList(DiscoverySelectors.selectModulepath());
+		}
 		return createExplicitDiscoverySelectors(options);
 	}
 
@@ -77,6 +81,7 @@ class DiscoveryRequestCreator {
 		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
 		options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
 		options.getSelectedDirectories().stream().map(DiscoverySelectors::selectDirectory).forEach(selectors::add);
+		options.getSelectedModules().stream().map(DiscoverySelectors::selectModule).forEach(selectors::add);
 		options.getSelectedPackages().stream().map(DiscoverySelectors::selectPackage).forEach(selectors::add);
 		options.getSelectedClasses().stream().map(DiscoverySelectors::selectClass).forEach(selectors::add);
 		options.getSelectedMethods().stream().map(DiscoverySelectors::selectMethod).forEach(selectors::add);
