@@ -123,7 +123,7 @@ Once the JUnit Gradle plugin has been applied, you can configure it as follows.
 [source,java,indent=0]
 ----
 junitPlatform {
-	platformVersion 1.0
+	platformVersion '1.0.0'
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 	reportsDir file('build/test-results/junit-platform') // this is the default
 	// enableStandardTestTask true
