@@ -285,7 +285,9 @@ subprojects { subproj ->
 			}
 		}
 
-		def signArtifacts = !project.version.contains('SNAPSHOT')
+		def isSnapshot = project.version.contains('SNAPSHOT')
+		def isContinuousIntegrationEnvironment = Boolean.parseBoolean(System.getenv("JITPACK"))
+		def signArtifacts = !(isSnapshot || isContinuousIntegrationEnvironment)
 
 		afterEvaluate {
 			if (signArtifacts && uploadArchives.enabled) {
