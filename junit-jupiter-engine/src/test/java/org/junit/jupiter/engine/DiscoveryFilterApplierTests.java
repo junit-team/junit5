@@ -50,9 +50,7 @@ class DiscoveryFilterApplierTests {
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		Stream<UniqueId> includedDescriptors =
-				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
-		assertThat(includedDescriptors).isEmpty();
+		assertThat(engineDescriptor.getDescendants()).isEmpty();
 		// @formatter:on
 	}
 
@@ -71,9 +69,8 @@ class DiscoveryFilterApplierTests {
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		Stream<UniqueId> includedDescriptors =
-				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
-		assertThat(includedDescriptors)
+		assertThat(engineDescriptor.getDescendants())
+				.extracting(TestDescriptor::getUniqueId)
 				.containsExactly(UniqueId.root("class", "matching"));
 		// @formatter:on
 	}
@@ -93,9 +90,7 @@ class DiscoveryFilterApplierTests {
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		Stream<UniqueId> includedDescriptors =
-				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
-		assertThat(includedDescriptors).isEmpty();
+		assertThat(engineDescriptor.getDescendants()).isEmpty();
 		// @formatter:on
 	}
 
@@ -114,9 +109,8 @@ class DiscoveryFilterApplierTests {
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		Stream<UniqueId> includedDescriptors =
-				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
-		assertThat(includedDescriptors)
+		assertThat(engineDescriptor.getDescendants())
+				.extracting(TestDescriptor::getUniqueId)
 				.containsExactly(UniqueId.root("class", "matching"));
 		// @formatter:on
 	}
@@ -137,9 +131,8 @@ class DiscoveryFilterApplierTests {
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		Stream<UniqueId> includedDescriptors =
-				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
-		assertThat(includedDescriptors)
+		assertThat(engineDescriptor.getDescendants())
+				.extracting(TestDescriptor::getUniqueId)
 				.containsExactly(UniqueId.root("class", "matching"));
 		// @formatter:on
 	}
@@ -159,12 +152,12 @@ class DiscoveryFilterApplierTests {
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		Stream<UniqueId> includedDescriptors =
-				engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId);
-		assertThat(includedDescriptors).containsExactlyInAnyOrder(
-				UniqueId.root("class", "matching"),
-				UniqueId.root("nested-class", "nested")
-		);
+		assertThat(engineDescriptor.getDescendants())
+				.extracting(TestDescriptor::getUniqueId)
+				.containsExactlyInAnyOrder(
+						UniqueId.root("class", "matching"),
+						UniqueId.root("nested-class", "nested")
+				);
 		// @formatter:on
 	}
 
