@@ -81,7 +81,7 @@ ifdef::backend-pdf[:imagesdir: {outdir}/{imagesdir}]
 :SpringExtension:                   https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
 :StackOverflow:                     https://stackoverflow.com/questions/tagged/junit5[Stack Overflow]
 :Truth:                             http://google.github.io/truth/[Truth]
-
+:GeneratedAdocs:                    ../../../build/generated/asciidoc
 
 include::overview.adoc[]
 
