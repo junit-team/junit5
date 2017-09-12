@@ -45,11 +45,11 @@ class DiscoveryFilterApplierTests {
 						classTestDescriptor("matching", MatchingClass.class)
 				)
 				.build();
+		// @formatter:on
 
 		applier.applyAllFilters(request, engineDescriptor);
 
 		assertThat(engineDescriptor.getDescendants()).isEmpty();
-		// @formatter:on
 	}
 
 	@Test
@@ -85,11 +85,11 @@ class DiscoveryFilterApplierTests {
 						classTestDescriptor("matching", MatchingClass.class)
 				)
 				.build();
+		// @formatter:on
 
 		applier.applyAllFilters(request, engineDescriptor);
 
 		assertThat(engineDescriptor.getDescendants()).isEmpty();
-		// @formatter:on
 	}
 
 	@Test
