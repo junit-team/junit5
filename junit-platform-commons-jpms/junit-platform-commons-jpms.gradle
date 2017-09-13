@@ -1,0 +1,109 @@
+repositories {
+	maven { url 'https://jitpack.io' }
+}
+
+//
+// TODO Replace jitpack coordinates with local project references after merging "module" branch
+//
+dependencies {
+	implementation 'com.github.junit-team.junit5:junit-platform-commons:module-SNAPSHOT'
+	testImplementation 'com.github.junit-team.junit5:junit-jupiter-api:module-SNAPSHOT'
+	testRuntimeOnly 'com.github.junit-team.junit5:junit-platform-console:module-SNAPSHOT'
+	testRuntimeOnly 'com.github.junit-team.junit5:junit-jupiter-engine:module-SNAPSHOT'
+}
+
+// enable on your own risk: issues with Java 9, Gradle and others...
+checkstyleMain.enabled = false
+checkstyleTest.enabled = false
+degraph.enabled = false
+javadoc.enabled = false
+test.enabled = false // replaced by tasks `testModule` and `testIntegration` below
+
+//
+// define global properties
+//
+ext.moduleName = 'org.junit.platform.commons.jpms'
+ext.deps = buildDir.toPath().resolve('deps').toString()
+ext.integrationModules = buildDir.toPath().resolve('classes/java/test-integration').toString()
+ext.mainClasses = sourceSets.main.java.outputDir.toString()
+ext.testClasses = sourceSets.test.java.outputDir.toString()
+
+//
+// copy compile- and runtime dependencies to a single directory
+//
+task generateDependenciesDirectory(type: Copy) {
+	into deps
+	from configurations.compileClasspath
+	from configurations.testRuntimeClasspath
+}
+
+//
+// compile 'org.junit.platform.commons.jpms' main sources
+//
+compileJava() {
+	sourceCompatibility = JavaVersion.VERSION_1_9
+	targetCompatibility = JavaVersion.VERSION_1_9
+	options.compilerArgs = ['--module-path', deps]
+	classpath = files()
+}
+
+compileJava.dependsOn generateDependenciesDirectory
+
+//
+// compile 'org.junit.platform.commons.jpms' test sources
+//
+compileTestJava {
+	sourceCompatibility = JavaVersion.VERSION_1_9
+	targetCompatibility = JavaVersion.VERSION_1_9
+	options.compilerArgs = [
+		'--module-path', files(deps, mainClasses).asPath,
+		'--add-modules', "org.junit.jupiter.api",
+		'--add-modules', "org.opentest4j",
+		'--add-reads', "$moduleName=org.junit.jupiter.api",
+		'--add-reads', "$moduleName=org.opentest4j",
+		'--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+	]
+	classpath = files()
+}
+
+//
+// run tests for 'org.junit.platform.commons.jpms'
+//
+task testModule(type: Exec, dependsOn: compileTestJava) {
+	executable = 'java'
+	args = [
+			'--module-path', files(deps, mainClasses, testClasses).asPath,
+			'--add-modules', 'ALL-MODULE-PATH',
+			'--add-opens', "$moduleName/$moduleName=org.junit.platform.commons",
+			'--patch-module', "$moduleName=$testClasses",
+			'--module', 'org.junit.platform.console',
+			'--scan-module-path'
+	]
+}
+
+check.dependsOn testModule
+
+//
+// compile and run integration tests using module 'jpms.integration' in 'test-integration'
+//
+task compileIntegration(type: Exec, dependsOn: compileJava) {
+	executable = 'javac'
+	args = [
+			'-d', integrationModules,
+			'--module-path', deps,
+			'--module-source-path', 'src/test-integration',
+			'--module', 'jpms.integration'
+	]
+}
+
+task testIntegration(type: Exec, dependsOn: compileIntegration) {
+	executable = 'java'
+	args = [
+			'--module-path', files(deps, mainClasses, integrationModules).asPath,
+			'--add-modules', 'ALL-MODULE-PATH',
+			'--module', 'org.junit.platform.console',
+			'--scan-module-path'
+	]
+}
+
+check.dependsOn testIntegration
