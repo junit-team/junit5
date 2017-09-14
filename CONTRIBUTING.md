@@ -92,11 +92,12 @@ possible.
 
 ### Logging
 
-- All logging must be performed via the internal `Logger` façade provided via the JUnit [LoggerFactory](http://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/LoggerFactory.html)
-- Use sparingly
-- Levels
-  - `SEVERE` (Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
-  - `WARNING` (Log4J: `WARN`): potential usage errors that should not halt execution
-  - `INFO`: stuff the users might want to know but not by default (Example: `ServiceLoaderTestEngineRegistry` logs IDs of discovered engines)
-  - `FINE` (Log4J: `DEBUG`)
-  - `FINER` (Log4J: `TRACE`)
+- In general, logging should be used sparingly.
+- All logging must be performed via the internal `Logger` façade provided via the JUnit [LoggerFactory](http://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/LoggerFactory.html).
+- Levels defined in JUnit's [Logger](http://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/Logger.html) façade.
+  - _error_ (JUL: `SEVERE`, Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
+  - _warn_ (JUL: `WARNING`, Log4J: `WARN`): potential usage or configuration errors that should not halt execution
+  - _info_ (JUL: `INFO`, Log4J: `INFO`): information the users might want to know but not by default
+  - _config_ (JUL: `CONFIG`, Log4J: `CONFIG`): information related to configuration of the system (Example: `ServiceLoaderTestEngineRegistry` logs IDs of discovered engines)
+  - _debug_ (JUL: `FINE`, Log4J: `DEBUG`)
+  - _trace_ (JUL: `FINER`, Log4J: `TRACE`)
