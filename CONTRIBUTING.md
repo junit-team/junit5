@@ -92,8 +92,8 @@ possible.
 
 ### Logging
 
+- All logging must be performed via the internal `Logger` façade provided via the JUnit [LoggerFactory](http://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/LoggerFactory.html)
 - Use sparingly
-- Do not log in utility classes (junit-platform-commons)
 - Levels
   - `SEVERE` (Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
   - `WARNING` (Log4J: `WARN`): potential usage errors that should not halt execution
