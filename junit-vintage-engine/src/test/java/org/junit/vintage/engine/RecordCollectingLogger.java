@@ -10,6 +10,13 @@
 
 package org.junit.vintage.engine;
 
+import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -26,79 +33,83 @@ public class RecordCollectingLogger implements Logger {
 	private final List<LogRecord> logRecords = new ArrayList<>();
 
 	public List<LogRecord> getLogRecords() {
-		return logRecords;
+		return this.logRecords;
 	}
 
 	@Override
 	public void error(Supplier<String> messageSupplier) {
-		logRecords.add(new LogRecord(Level.SEVERE, messageSupplier.get()));
+		log(SEVERE, messageSupplier);
 	}
 
 	@Override
 	public void error(Throwable throwable, Supplier<String> messageSupplier) {
-		LogRecord logRecord = new LogRecord(Level.SEVERE, messageSupplier.get());
-		logRecord.setThrown(throwable);
-		logRecords.add(logRecord);
+		log(SEVERE, throwable, messageSupplier);
 	}
 
 	@Override
 	public void warn(Supplier<String> messageSupplier) {
-		logRecords.add(new LogRecord(Level.WARNING, messageSupplier.get()));
+		log(WARNING, messageSupplier);
 	}
 
 	@Override
 	public void warn(Throwable throwable, Supplier<String> messageSupplier) {
-		LogRecord logRecord = new LogRecord(Level.WARNING, messageSupplier.get());
-		logRecord.setThrown(throwable);
-		logRecords.add(logRecord);
+		log(WARNING, throwable, messageSupplier);
 	}
 
 	@Override
 	public void info(Supplier<String> messageSupplier) {
-		logRecords.add(new LogRecord(Level.INFO, messageSupplier.get()));
+		log(INFO, messageSupplier);
 	}
 
 	@Override
 	public void info(Throwable throwable, Supplier<String> messageSupplier) {
-		LogRecord logRecord = new LogRecord(Level.INFO, messageSupplier.get());
-		logRecord.setThrown(throwable);
-		logRecords.add(logRecord);
+		log(INFO, throwable, messageSupplier);
 	}
 
 	@Override
 	public void config(Supplier<String> messageSupplier) {
-		logRecords.add(new LogRecord(Level.CONFIG, messageSupplier.get()));
+		log(CONFIG, messageSupplier);
 	}
 
 	@Override
 	public void config(Throwable throwable, Supplier<String> messageSupplier) {
-		LogRecord logRecord = new LogRecord(Level.CONFIG, messageSupplier.get());
-		logRecord.setThrown(throwable);
-		logRecords.add(logRecord);
+		log(CONFIG, throwable, messageSupplier);
 	}
 
 	@Override
 	public void debug(Supplier<String> messageSupplier) {
-		logRecords.add(new LogRecord(Level.FINE, messageSupplier.get()));
+		log(FINE, messageSupplier);
 	}
 
 	@Override
 	public void debug(Throwable throwable, Supplier<String> messageSupplier) {
-		LogRecord logRecord = new LogRecord(Level.FINE, messageSupplier.get());
-		logRecord.setThrown(throwable);
-		logRecords.add(logRecord);
+		log(FINE, throwable, messageSupplier);
 	}
 
 	@Override
 	public void trace(Supplier<String> messageSupplier) {
-		logRecords.add(new LogRecord(Level.FINER, messageSupplier.get()));
+		log(FINER, messageSupplier);
 	}
 
 	@Override
 	public void trace(Throwable throwable, Supplier<String> messageSupplier) {
-		LogRecord logRecord = new LogRecord(Level.FINER, messageSupplier.get());
+		log(FINER, throwable, messageSupplier);
+	}
+
+	private void log(Level level, Supplier<String> messageSupplier) {
+		log(level, null, messageSupplier);
+	}
+
+	private void log(Level level, Throwable throwable, Supplier<String> messageSupplier) {
+		LogRecord logRecord = new LogRecord(level, nullSafeGet(messageSupplier));
+		logRecord.setLoggerName(getClass().getName());
 		logRecord.setThrown(throwable);
-		logRecords.add(logRecord);
+
+		this.logRecords.add(logRecord);
+	}
+
+	private static String nullSafeGet(Supplier<String> messageSupplier) {
+		return (messageSupplier != null ? messageSupplier.get() : null);
 	}
 
 }
