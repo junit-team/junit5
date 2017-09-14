@@ -10,7 +10,8 @@ include::{testDir}/example/FirstJUnit5Tests.java[tags=user_guide]
 [[writing-tests-annotations]]
 === Annotations
 
-JUnit Jupiter supports the following annotations for configuring tests and extending the framework.
+JUnit Jupiter supports the following annotations for configuring tests and extending the
+framework.
 
 All core annotations are located in the `{api-package}` package in the `junit-jupiter-api`
 module.
@@ -36,19 +37,23 @@ module.
 | `@ExtendWith`        | Used to register custom <<extensions,extensions>>. Such annotations are _inherited_.
 |===
 
-Methods annotated with `@Test`, `@TestTemplate`, `@RepeatedTest`, `@BeforeAll`, `@AfterAll`,
-`@BeforeEach`, or `@AfterEach` annotations must not return a value.
+Methods annotated with `@Test`, `@TestTemplate`, `@RepeatedTest`, `@BeforeAll`,
+`@AfterAll`, `@BeforeEach`, or `@AfterEach` annotations must not return a value.
+
+WARNING: Some annotations may currently be _experimental_. Consult the table in
+<<api-evolution-experimental-apis>> for details.
 
 [[writing-tests-meta-annotations]]
 ==== Meta-Annotations and Composed Annotations
 
-JUnit Jupiter annotations can be used as _meta-annotations_. That means that you can define
-your own _composed annotation_ that will automatically _inherit_ the semantics of its
-meta-annotations.
+JUnit Jupiter annotations can be used as _meta-annotations_. That means that you can
+define your own _composed annotation_ that will automatically _inherit_ the semantics of
+its meta-annotations.
 
 For example, instead of copying and pasting `@Tag("fast")` throughout your code base (see
-<<writing-tests-tagging-and-filtering>>), you can create a custom _composed annotation_ named `@Fast`
-as follows. `@Fast` can then be used as a drop-in replacement for `@Tag("fast")`.
+<<writing-tests-tagging-and-filtering>>), you can create a custom _composed annotation_
+named `@Fast` as follows. `@Fast` can then be used as a drop-in replacement for
+`@Tag("fast")`.
 
 [source,java,indent=0]
 ----
@@ -133,9 +138,9 @@ Naturally, legacy tests based on the JUnit 4 programming model can continue usin
 [[writing-tests-assumptions]]
 === Assumptions
 
-JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and adds a
-few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assumptions
-are static methods in the `{Assumptions}` class.
+JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and
+adds a few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter
+assumptions are static methods in the `{Assumptions}` class.
 
 [source,java,indent=0]
 ----
@@ -170,6 +175,8 @@ Test classes and methods can be tagged. Those tags can later be used to filter
 * A tag must not be `null` or _blank_.
 * A _trimmed_ tag must not contain whitespace.
 * A _trimmed_ tag must not contain ISO control characters.
+* A _trimmed_ tag must not contain any of the following _reserved characters_.
+  - `,`, `(`, `)`, `&`, `|`, `!`
 
 NOTE: In the above context, "trimmed" means that leading and trailing whitespace
 characters have been removed.
@@ -303,15 +310,15 @@ include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
   however, that `RepetitionInfoParameterResolver` is not registered outside the context
   of a `@RepeatedTest`. See <<writing-tests-repeated-tests-examples>>.
 
-* `{TestReporterParameterResolver}`: if a method parameter is of type `{TestReporter}`, the
-  `TestReporterParameterResolver` will supply an instance of `TestReporter`.
-  The `TestReporter` can be used to publish additional data about the current test run.
-  The data can be consumed through `{TestExecutionListener}.reportingEntryPublished()` and thus
-  be viewed by IDEs or included in reports.
+* `{TestReporterParameterResolver}`: if a method parameter is of type `{TestReporter}`,
+  the `TestReporterParameterResolver` will supply an instance of `TestReporter`. The
+  `TestReporter` can be used to publish additional data about the current test run. The
+  data can be consumed through `{TestExecutionListener}.reportingEntryPublished()` and
+  thus be viewed by IDEs or included in reports.
 +
-In JUnit Jupiter you should use `TestReporter` where
-you used to print information to `stdout` or `stderr` in JUnit 4.
-Using `@RunWith(JUnitPlatform.class)` will even output all reported entries to `stdout`.
+In JUnit Jupiter you should use `TestReporter` where you used to print information to
+`stdout` or `stderr` in JUnit 4. Using `@RunWith(JUnitPlatform.class)` will even output
+all reported entries to `stdout`.
 
 [source,java,indent=0]
 ----
@@ -593,19 +600,23 @@ to the console.
 [[writing-tests-parameterized-tests]]
 === Parameterized Tests
 
-Parameterized tests make it possible to run a test multiple times with different arguments. They are
-declared just like regular `@Test` methods but use the `@ParameterizedTest` annotation instead. In
-addition, you must declare at least one _source_ that will provide the arguments for each
-invocation.
+Parameterized tests make it possible to run a test multiple times with different
+arguments. They are declared just like regular `@Test` methods but use the
+`@ParameterizedTest` annotation instead. In addition, you must declare at least one
+_source_ that will provide the arguments for each invocation.
+
+WARNING: Parameterized tests are currently an _experimental_ feature. Consult the table
+in <<api-evolution-experimental-apis>> for details.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=first_example]
 ----
 
-This parameterized test uses the `@ValueSource` annotation to specify a `String` array as the source
-of arguments. When executing this method, each invocation will be reported separately. For instance,
-the `ConsoleLauncher` will print output similar to the following.
+This parameterized test uses the `@ValueSource` annotation to specify a `String` array as
+the source of arguments. When executing this method, each invocation will be reported
+separately. For instance, the `ConsoleLauncher` will print output similar to the
+following.
 
 ....
 testWithStringParameter(String) ✔
@@ -616,8 +627,8 @@ testWithStringParameter(String) ✔
 [[writing-tests-parameterized-tests-setup]]
 ==== Required Setup
 
-In order to use parameterized tests you need to add a dependency on the `junit-jupiter-params`
-artifact. Please refer to <<dependency-metadata>> for details.
+In order to use parameterized tests you need to add a dependency on the
+`junit-jupiter-params` artifact. Please refer to <<dependency-metadata>> for details.
 
 [[writing-tests-parameterized-tests-sources]]
 ==== Sources of Arguments
@@ -630,9 +641,9 @@ information.
 [[writing-tests-parameterized-tests-sources-ValueSource]]
 ===== @ValueSource
 
-`@ValueSource` is one of the simplest possible sources. It lets you specify an array of literals of
-primitive types (either `String`, `int`, `long`, or `double`) and can only be used for providing a
-single parameter per invocation.
+`@ValueSource` is one of the simplest possible sources. It lets you specify an array of
+literals of primitive types (either `String`, `int`, `long`, or `double`) and can only be
+used for providing a single parameter per invocation.
 
 [source,java,indent=0]
 ----
@@ -642,9 +653,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ValueSource_example]
 [[writing-tests-parameterized-tests-sources-EnumSource]]
 ===== @EnumSource
 
-`@EnumSource` provides a convenient way to use `Enum` constants. The annotation provides an optional
-`names` parameter that lets you specify which constants shall be used. If omitted, all constants
-will be used like in the following example.
+`@EnumSource` provides a convenient way to use `Enum` constants. The annotation provides
+an optional `names` parameter that lets you specify which constants shall be used. If
+omitted, all constants will be used like in the following example.
 
 [source,java,indent=0]
 ----
@@ -687,15 +698,17 @@ directly as demonstrated by the following example.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=simple_MethodSource_example]
 ----
 
-Streams for primitive types (`DoubleStream`, `IntStream`, and `LongStream`) are also supported.
+Streams for primitive types (`DoubleStream`, `IntStream`, and `LongStream`) are also
+supported.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=primitive_MethodSource_example]
 ----
 
-In case you need multiple parameters, you need to return an `Arguments` instances as shown below.
-Note that `Arguments.of(Object...)` is a static factory method defined in the interface itself.
+In case you need multiple parameters, you need to return an `Arguments` instances as
+shown below. Note that `Arguments.of(Object...)` is a static factory method defined in
+the interface itself.
 
 [source,java,indent=0]
 ----
@@ -769,8 +782,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsSource_examp
 [[writing-tests-parameterized-tests-argument-conversion-implicit]]
 ===== Implicit Conversion
 
-To support use cases like `@CsvSource`, JUnit Jupiter provides a number of built-in implicit
-type converters. The conversion process depends on the declared type of each method parameter.
+To support use cases like `@CsvSource`, JUnit Jupiter provides a number of built-in
+implicit type converters. The conversion process depends on the declared type of each
+method parameter.
 
 For example, if a `@ParameterizedTest` declares a parameter of type `TimeUnit` and the
 actual type supplied by the declared source is a `String`, the string will automatically
@@ -810,8 +824,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 [[writing-tests-parameterized-tests-argument-conversion-explicit]]
 ===== Explicit Conversion
 
-Instead of using implicit argument conversion you may explicitly specify an `ArgumentConverter` to
-use for a certain parameter using the `@ConvertWith` annotation like in the following example.
+Instead of using implicit argument conversion you may explicitly specify an
+`ArgumentConverter` to use for a certain parameter using the `@ConvertWith` annotation
+like in the following example.
 
 [source,java,indent=0]
 ----
@@ -819,9 +834,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_e
 ----
 
 Explicit argument converters are meant to be implemented by test authors. Thus,
-`junit-jupiter-params` only provides a single explicit argument converter that may also serve as a
-reference implementation: `JavaTimeArgumentConverter`. It is used via the composed annotation
-`JavaTimeConversionPattern`.
+`junit-jupiter-params` only provides a single explicit argument converter that may also
+serve as a reference implementation: `JavaTimeArgumentConverter`. It is used via the
+composed annotation `JavaTimeConversionPattern`.
 
 [source,java,indent=0]
 ----
@@ -872,11 +887,11 @@ Similar to <<writing-tests-dynamic-tests>>, invocations will appear one by one i
 test tree of an IDE. You may at will mix regular `@Test` methods and `@ParameterizedTest`
 methods within the same test class.
 
-You may use `ParameterResolver` extensions with `@ParameterizedTest` methods. However, method
-parameters that are resolved by argument sources need to come first in the argument list.
-Since a test class may contain regular tests as well as parameterized tests with different
-parameter lists, values from argument sources are not resolved for lifecycle methods (e.g.
-`@BeforeEach`) and test class constructors.
+You may use `ParameterResolver` extensions with `@ParameterizedTest` methods. However,
+method parameters that are resolved by argument sources need to come first in the
+argument list. Since a test class may contain regular tests as well as parameterized
+tests with different parameter lists, values from argument sources are not resolved for
+lifecycle methods (e.g. `@BeforeEach`) and test class constructors.
 
 [source,java,indent=0]
 ----
@@ -887,86 +902,91 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ParameterResolver_exa
 [[writing-tests-test-templates]]
 === Test Templates
 
-A `{TestTemplate}` method is not a regular test case but rather a template for test cases.
-As such, it is designed to be invoked multiple times depending on the number of invocation
-contexts returned by the registered providers. Thus, it must be used in conjunction with
-a registered `{TestTemplateInvocationContextProvider}` extension. Each invocation of a
-test template method behaves like the execution of a regular `@Test` method with full
-support for the same lifecycle callbacks and extensions. Please refer to
+A `{TestTemplate}` method is not a regular test case but rather a template for test
+cases. As such, it is designed to be invoked multiple times depending on the number of
+invocation contexts returned by the registered providers. Thus, it must be used in
+conjunction with a registered `{TestTemplateInvocationContextProvider}` extension. Each
+invocation of a test template method behaves like the execution of a regular `@Test`
+method with full support for the same lifecycle callbacks and extensions. Please refer to
 <<extensions-test-templates>> for usage examples.
 
 
 [[writing-tests-dynamic-tests]]
 === Dynamic Tests
 
-The standard `@Test` annotation in JUnit Jupiter described in <<writing-tests-annotations>>
-is very similar to the `@Test` annotation in JUnit 4.
-Both describe methods that implement test cases.
-These test cases are static in the sense that they are fully specified at compile time,
-and their behavior cannot be changed by anything happening at runtime.
-_Assumptions provide a basic form of dynamic behavior but are intentionally rather limited in their expressiveness._
+The standard `@Test` annotation in JUnit Jupiter described in
+<<writing-tests-annotations>> is very similar to the `@Test` annotation in JUnit 4. Both
+describe methods that implement test cases. These test cases are static in the sense that
+they are fully specified at compile time, and their behavior cannot be changed by
+anything happening at runtime. _Assumptions provide a basic form of dynamic behavior but
+are intentionally rather limited in their expressiveness._
 
-In addition to these standard tests a completely new kind of test programming model has been introduced in JUnit Jupiter.
-This new kind of test is a _dynamic test_ which is generated at runtime by a factory method
-that is annotated with `@TestFactory`.
+In addition to these standard tests a completely new kind of test programming model has
+been introduced in JUnit Jupiter. This new kind of test is a _dynamic test_ which is
+generated at runtime by a factory method that is annotated with `@TestFactory`.
 
-In contrast to `@Test` methods, a `@TestFactory` method is not itself a test case but rather a factory for test cases.
-Thus, a dynamic test is the product of a factory.
-Technically speaking, a `@TestFactory` method must return a `Stream`,
-`Collection`, `Iterable`, or `Iterator` of `DynamicNode` instances.
-Instantiable subclasses of `DynamicNode` are `DynamicContainer` and `DynamicTest`.
-`DynamicContainer` instances are composed of a _display name_ and a list of dynamic child nodes,
-enabling the creation of arbitrarily nested hierarchies of dynamic nodes.
-`DynamicTest` instances will then be executed lazily,
-enabling dynamic and even non-deterministic generation of test cases.
+In contrast to `@Test` methods, a `@TestFactory` method is not itself a test case but
+rather a factory for test cases. Thus, a dynamic test is the product of a factory.
+Technically speaking, a `@TestFactory` method must return a `Stream`, `Collection`,
+`Iterable`, or `Iterator` of `DynamicNode` instances. Instantiable subclasses of
+`DynamicNode` are `DynamicContainer` and `DynamicTest`. `DynamicContainer` instances are
+composed of a _display name_ and a list of dynamic child nodes, enabling the creation of
+arbitrarily nested hierarchies of dynamic nodes. `DynamicTest` instances will then be
+executed lazily, enabling dynamic and even non-deterministic generation of test cases.
 
-Any `Stream` returned by a `@TestFactory` will be properly closed by calling `stream.close()`,
-making it safe to use a resource such as `Files.lines()`.
+Any `Stream` returned by a `@TestFactory` will be properly closed by calling
+`stream.close()`, making it safe to use a resource such as `Files.lines()`.
 
-As with `@Test` methods, `@TestFactory` methods must not be `private` or `static`
-and may optionally declare parameters to be resolved by `ParameterResolvers`.
+As with `@Test` methods, `@TestFactory` methods must not be `private` or `static` and may
+optionally declare parameters to be resolved by `ParameterResolvers`.
 
-A `DynamicTest` is a test case generated at runtime.
-It is composed of a _display name_ and an `Executable`. `Executable` is a `@FunctionalInterface`
-which means that the implementations of dynamic tests can be provided as _lambda expressions_
-or _method references_.
+A `DynamicTest` is a test case generated at runtime. It is composed of a _display name_
+and an `Executable`. `Executable` is a `@FunctionalInterface` which means that the
+implementations of dynamic tests can be provided as _lambda expressions_ or _method
+references_.
 
 .Dynamic Test Lifecycle
 WARNING: The execution lifecycle of a dynamic test is quite different than it is for a
 standard `@Test` case. Specifically, there are no lifecycle callbacks for individual
-dynamic tests. This means that `@BeforeEach` and `@AfterEach` methods and their corresponding
-extension callbacks are executed for the `@TestFactory` method but not for each _dynamic test_.
-In other words, if you access fields from the test instance within a lambda expression for
-a dynamic test, those fields will not be reset by callback methods or extensions between
-the execution of individual dynamic tests generated by the same `@TestFactory` method.
+dynamic tests. This means that `@BeforeEach` and `@AfterEach` methods and their
+corresponding extension callbacks are executed for the `@TestFactory` method but not for
+each _dynamic test_. In other words, if you access fields from the test instance within a
+lambda expression for a dynamic test, those fields will not be reset by callback methods
+or extensions between the execution of individual dynamic tests generated by the same
+`@TestFactory` method.
 
 As of JUnit Jupiter {jupiter-version}, dynamic tests must always be created by factory
 methods; however, this might be complemented by a registration facility in a later
 release.
 
+WARNING: Dynamic tests are currently an _experimental_ feature. Consult the table in
+<<api-evolution-experimental-apis>> for details.
+
 [[writing-tests-dynamic-tests-examples]]
 ==== Dynamic Test Examples
 
-The following `DynamicTestsDemo` class demonstrates several examples of test factories and dynamic tests.
+The following `DynamicTestsDemo` class demonstrates several examples of test factories
+and dynamic tests.
 
 The first method returns an invalid return type. Since an invalid return type cannot be
 detected at compile time, a `JUnitException` is thrown when it is detected at runtime.
 
 The next five methods are very simple examples that demonstrate the generation of a
-`Collection`, `Iterable`, `Iterator`, or `Stream` of `DynamicTest` instances.
-Most of these examples do not really exhibit dynamic behavior
-but merely demonstrate the supported return types in principle.
-However, `dynamicTestsFromStream()` and `dynamicTestsFromIntStream()` demonstrate how
-easy it is to generate dynamic tests for a given set of strings or a range of input numbers.
+`Collection`, `Iterable`, `Iterator`, or `Stream` of `DynamicTest` instances. Most of
+these examples do not really exhibit dynamic behavior but merely demonstrate the
+supported return types in principle. However, `dynamicTestsFromStream()` and
+`dynamicTestsFromIntStream()` demonstrate how easy it is to generate dynamic tests for a
+given set of strings or a range of input numbers.
 
-The next method is truly dynamic in nature.
-`generateRandomNumberOfTests()` implements an `Iterator` that generates random numbers, a
-display name generator, and a test executor and then provides all three to `DynamicTest.stream()`.
-Although the non-deterministic behavior of `generateRandomNumberOfTests()` is of course in conflict with
-test repeatability and should thus be used with care, it serves to demonstrate the expressiveness
-and power of dynamic tests.
+The next method is truly dynamic in nature. `generateRandomNumberOfTests()` implements an
+`Iterator` that generates random numbers, a display name generator, and a test executor
+and then provides all three to `DynamicTest.stream()`. Although the non-deterministic
+behavior of `generateRandomNumberOfTests()` is of course in conflict with test
+repeatability and should thus be used with care, it serves to demonstrate the
+expressiveness and power of dynamic tests.
 
-The last method generates a nested hierarchy of dynamic tests utilizing `DynamicContainer`.
+The last method generates a nested hierarchy of dynamic tests utilizing
+`DynamicContainer`.
 
 [source,java]
 ----

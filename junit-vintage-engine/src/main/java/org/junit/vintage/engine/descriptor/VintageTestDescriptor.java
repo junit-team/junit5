@@ -2,17 +2,17 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.vintage.engine.descriptor;
 
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.isEqual;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
@@ -23,8 +23,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apiguardian.api.API;
 import org.junit.experimental.categories.Category;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
@@ -38,7 +38,7 @@ import org.junit.runner.Description;
 /**
  * @since 4.12
  */
-@API(Internal)
+@API(status = INTERNAL, since = "4.12")
 public class VintageTestDescriptor extends AbstractTestDescriptor {
 
 	public static final String ENGINE_ID = "junit-vintage";
@@ -107,7 +107,7 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 					return methodSource;
 				}
 			}
-			return new ClassSource(testClass);
+			return ClassSource.from(testClass);
 		}
 		return null;
 	}
@@ -119,7 +119,7 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 		}
 		else {
 			List<Method> methods = findMethods(testClass, where(Method::getName, isEqual(methodName)));
-			return (methods.size() == 1) ? new MethodSource(getOnlyElement(methods)) : null;
+			return (methods.size() == 1) ? MethodSource.from(getOnlyElement(methods)) : null;
 		}
 	}
 

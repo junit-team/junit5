@@ -2,24 +2,24 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.function.Function;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.VerifierAdapter;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
-import org.junit.platform.commons.meta.API;
 import org.junit.rules.Verifier;
 
 /**
@@ -41,7 +41,7 @@ import org.junit.rules.Verifier;
  * @see org.junit.rules.TestRule
  * @see org.junit.Rule
  */
-@API(Experimental)
+@API(status = EXPERIMENTAL, since = "5.0")
 public class VerifierSupport implements AfterEachCallback {
 
 	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = VerifierAdapter::new;

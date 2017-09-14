@@ -2,17 +2,17 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -33,7 +33,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 1.0
  */
-@API(Stable)
+@API(status = STABLE, since = "1.0")
 public class UniqueId implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -152,10 +152,12 @@ public class UniqueId implements Cloneable, Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		UniqueId that = (UniqueId) o;
 		return this.segments.equals(that.segments);
@@ -179,7 +181,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 * A segment of a {@link UniqueId} comprises a <em>type</em> and a
 	 * <em>value</em>.
 	 */
-	@API(Stable)
+	@API(status = STABLE, since = "1.0")
 	public static class Segment implements Serializable {
 
 		private static final long serialVersionUID = 1L;
@@ -220,10 +222,12 @@ public class UniqueId implements Cloneable, Serializable {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o)
+			if (this == o) {
 				return true;
-			if (o == null || getClass() != o.getClass())
+			}
+			if (o == null || getClass() != o.getClass()) {
 				return false;
+			}
 
 			Segment that = (Segment) o;
 			return Objects.equals(this.type, that.type) && Objects.equals(this.value, that.value);

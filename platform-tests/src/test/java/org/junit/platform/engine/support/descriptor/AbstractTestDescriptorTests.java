@@ -2,24 +2,28 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.support.descriptor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -33,7 +37,7 @@ class AbstractTestDescriptorTests {
 	EngineDescriptor engineDescriptor;
 
 	@BeforeEach
-	public void initTree() {
+	void initTree() {
 		engineDescriptor = new EngineDescriptor(UniqueId.forEngine("testEngine"), "testEngine");
 		GroupDescriptor group1 = new GroupDescriptor(UniqueId.root("group", "group1"));
 		engineDescriptor.addChild(group1);
@@ -48,6 +52,43 @@ class AbstractTestDescriptorTests {
 		group2.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf2-1")));
 
 		group11.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf11-1")));
+	}
+
+	@Test
+	void removeRootFromHierarchyFails() {
+		JUnitException e = assertThrows(JUnitException.class, () -> engineDescriptor.removeFromHierarchy());
+		assertTrue(e.toString().contains("cannot remove the root of a hierarchy"));
+	}
+
+	@Test
+	void removeFromHierarchyClearsParentFromAllChildren() {
+		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
+		assertSame(engineDescriptor, group.getParent().orElseThrow(Error::new));
+		assertTrue(group.getChildren().stream().allMatch(d -> d.getParent().orElseThrow(Error::new) == group));
+
+		Set<? extends TestDescriptor> formerChildren = group.getChildren();
+		group.removeFromHierarchy();
+
+		assertFalse(group.getParent().isPresent());
+		assertTrue(group.getChildren().isEmpty());
+		assertTrue(formerChildren.stream().noneMatch(d -> d.getParent().isPresent()));
+	}
+
+	@Test
+	void setParentToOtherInstance() {
+		TestDescriptor newEngine = new EngineDescriptor(UniqueId.forEngine("newEngine"), "newEngine");
+		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
+		assertSame(engineDescriptor, group.getParent().orElseThrow(Error::new));
+		group.setParent(newEngine);
+		assertSame(newEngine, group.getParent().orElseThrow(Error::new));
+	}
+
+	@Test
+	void setParentToNull() {
+		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
+		assertTrue(group.getParent().isPresent());
+		group.setParent(null);
+		assertFalse(group.getParent().isPresent());
 	}
 
 	@Test

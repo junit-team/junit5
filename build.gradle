@@ -12,15 +12,9 @@ buildscript {
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
 		classpath 'org.ajoberstar:gradle-git:1.7.2'
 		classpath 'org.ajoberstar:gradle-git-publish:0.3.0'
-		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
+		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0'
 
-		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}") {
-			// temporary workaround for incompatibility of commons-lang:2.4 with
-			// versioning scheme of Java 9
-			// see: https://youtrack.jetbrains.com/issue/KT-18832
-			exclude module: 'commons-lang'
-		}
-		classpath 'commons-lang:commons-lang:2.6'
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 	}
 }
 
@@ -73,11 +67,24 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
-	licenseHeaderFileProvider = { project -> (
+	licenses = [
+		'EPL-2.0': [
+			name: 'Eclipse Public License v2.0',
+			url: 'http://www.eclipse.org/legal/epl-v20.html',
+			headerFile: 'eclipse-public-license-2.0.java'
+		],
+		'Apache-2.0': [
+			name: 'The Apache License, Version 2.0',
+			url: 'http://www.apache.org/licenses/LICENSE-2.0.txt',
+			headerFile: 'apache-license-2.0.java'
+		]
+	]
+
+	licenseOf = { project -> licenses[
 		project.name == 'junit-platform-surefire-provider'
-			? 'apache-license-2.0.java'
-			: 'eclipse-public-license-1.0.java'
-		)
+			? 'Apache-2.0'
+			: 'EPL-2.0'
+		]
 	}
 
 	cloverTestProjects = [
@@ -105,6 +112,10 @@ allprojects { subproj ->
 		// mavenLocal()
 		mavenCentral()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+	}
+
+	dependencies {
+		api("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	}
 
 	tasks.withType(Test) { task ->
@@ -280,7 +291,9 @@ subprojects { subproj ->
 			}
 		}
 
-		def signArtifacts = !project.version.contains('SNAPSHOT')
+		def isSnapshot = project.version.contains('SNAPSHOT')
+		def isContinuousIntegrationEnvironment = Boolean.parseBoolean(System.getenv("JITPACK"))
+		def signArtifacts = !(isSnapshot || isContinuousIntegrationEnvironment)
 
 		afterEvaluate {
 			if (signArtifacts && uploadArchives.enabled) {
@@ -312,6 +325,8 @@ subprojects { subproj ->
 						authentication(userName: ossrhUsername, password: ossrhPassword)
 					}
 
+					def projectLicense = licenseOf(project)
+
 					pom.project {
 						name "${project.group}:${project.name}"
 						packaging 'jar'
@@ -326,8 +341,8 @@ subprojects { subproj ->
 
 						licenses {
 							license {
-								name 'Eclipse Public License v1.0'
-								url 'http://www.eclipse.org/legal/epl-v10.html'
+								name projectLicense['name']
+								url projectLicense['url']
 							}
 						}
 
@@ -412,7 +427,7 @@ subprojects { subproj ->
 	}
 
 	spotless {
-		def headerFile = rootProject.file('src/spotless/' + licenseHeaderFileProvider.call(project))
+		def headerFile = rootProject.file('src/spotless/' + licenseOf(project)['headerFile'])
 		def importOrderConfigFile = rootProject.file('src/eclipse/junit-eclipse.importorder')
 		def javaFormatterConfigFile = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 		def groovyFormatterConfigFile = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
@@ -466,6 +481,7 @@ configure(rootProject) {
 	uploadArchives.enabled = false
 
 	def ota4jDocVersion = ota4jVersion.contains('SNAPSHOT') ? 'snapshot' : ota4jVersion
+	def apiGuardianDocVersion = apiGuardianVersion.contains('SNAPSHOT') ? 'snapshot' : apiGuardianVersion
 
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
@@ -485,7 +501,11 @@ configure(rootProject) {
 		options.addStringOption('Xdoclint:none', '-quiet')
 		options.encoding = 'UTF-8'
 		options.jFlags '-Xmx1g'
-		options.links 'https://docs.oracle.com/javase/8/docs/api/', "http://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/"
+		options.links(
+			'https://docs.oracle.com/javase/8/docs/api/',
+			"https://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/",
+			"https://apiguardian-team.github.io/apiguardian/docs/${apiGuardianDocVersion}/api/"
+		)
 		options.stylesheetFile rootProject.file("src/javadoc/stylesheet.css")
 		options
 			.group("Jupiter", ["org.junit.jupiter.*"])

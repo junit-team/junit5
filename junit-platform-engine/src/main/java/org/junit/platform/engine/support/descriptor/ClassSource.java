@@ -2,20 +2,20 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -30,16 +30,10 @@ import org.junit.platform.engine.discovery.ClassSelector;
  * @since 1.0
  * @see ClassSelector
  */
-@API(Stable)
+@API(status = STABLE, since = "1.0")
 public class ClassSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
-
-	private final String className;
-
-	private Class<?> javaClass;
-
-	private final FilePosition filePosition;
 
 	/**
 	 * Create a new {@code ClassSource} using the supplied
@@ -47,8 +41,8 @@ public class ClassSource implements TestSource {
 	 *
 	 * @param className the Java class name; must not be {@code null}
 	 */
-	public ClassSource(String className) {
-		this(className, null);
+	public static ClassSource from(String className) {
+		return new ClassSource(className);
 	}
 
 	/**
@@ -58,9 +52,8 @@ public class ClassSource implements TestSource {
 	 * @param className the Java class name; must not be {@code null}
 	 * @param filePosition the position in the Java source file; may be {@code null}
 	 */
-	public ClassSource(String className, FilePosition filePosition) {
-		this.className = className;
-		this.filePosition = filePosition;
+	public static ClassSource from(String className, FilePosition filePosition) {
+		return new ClassSource(className, filePosition);
 	}
 
 	/**
@@ -69,8 +62,8 @@ public class ClassSource implements TestSource {
 	 *
 	 * @param javaClass the Java class; must not be {@code null}
 	 */
-	public ClassSource(Class<?> javaClass) {
-		this(javaClass, null);
+	public static ClassSource from(Class<?> javaClass) {
+		return new ClassSource(javaClass);
 	}
 
 	/**
@@ -80,7 +73,28 @@ public class ClassSource implements TestSource {
 	 * @param javaClass the Java class; must not be {@code null}
 	 * @param filePosition the position in the Java source file; may be {@code null}
 	 */
-	public ClassSource(Class<?> javaClass, FilePosition filePosition) {
+	public static ClassSource from(Class<?> javaClass, FilePosition filePosition) {
+		return new ClassSource(javaClass, filePosition);
+	}
+
+	private final String className;
+	private final FilePosition filePosition;
+	private Class<?> javaClass;
+
+	private ClassSource(String className) {
+		this(className, null);
+	}
+
+	private ClassSource(String className, FilePosition filePosition) {
+		this.className = className;
+		this.filePosition = filePosition;
+	}
+
+	private ClassSource(Class<?> javaClass) {
+		this(javaClass, null);
+	}
+
+	private ClassSource(Class<?> javaClass, FilePosition filePosition) {
 		this.javaClass = Preconditions.notNull(javaClass, "class must not be null");
 		this.className = this.javaClass.getName();
 		this.filePosition = filePosition;

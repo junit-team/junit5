@@ -2,10 +2,10 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.support.descriptor;
@@ -32,20 +32,20 @@ class CompositeTestSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void createCompositeTestSourceFromNullList() {
-		assertThrows(PreconditionViolationException.class, () -> new CompositeTestSource(null));
+		assertThrows(PreconditionViolationException.class, () -> CompositeTestSource.from(null));
 	}
 
 	@Test
 	void createCompositeTestSourceFromEmptyList() {
-		assertThrows(PreconditionViolationException.class, () -> new CompositeTestSource(Collections.emptyList()));
+		assertThrows(PreconditionViolationException.class, () -> CompositeTestSource.from(Collections.emptyList()));
 	}
 
 	@Test
 	void createCompositeTestSourceFromClassAndFileSources() {
-		FileSource fileSource = new FileSource(new File("example.test"));
-		ClassSource classSource = new ClassSource(getClass());
+		FileSource fileSource = FileSource.from(new File("example.test"));
+		ClassSource classSource = ClassSource.from(getClass());
 		List<TestSource> sources = new ArrayList<>(Arrays.asList(fileSource, classSource));
-		CompositeTestSource compositeTestSource = new CompositeTestSource(sources);
+		CompositeTestSource compositeTestSource = CompositeTestSource.from(sources);
 
 		assertThat(compositeTestSource.getSources().size()).isEqualTo(2);
 		assertThat(compositeTestSource.getSources()).contains(fileSource, classSource);
@@ -60,10 +60,10 @@ class CompositeTestSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void equalsAndHashCode() {
-		List<TestSource> sources1 = Arrays.asList(new ClassSource(Number.class));
-		List<TestSource> sources2 = Arrays.asList(new ClassSource(String.class));
-		assertEqualsAndHashCode(new CompositeTestSource(sources1), new CompositeTestSource(sources1),
-			new CompositeTestSource(sources2));
+		List<TestSource> sources1 = Arrays.asList(ClassSource.from(Number.class));
+		List<TestSource> sources2 = Arrays.asList(ClassSource.from(String.class));
+		assertEqualsAndHashCode(CompositeTestSource.from(sources1), CompositeTestSource.from(sources1),
+			CompositeTestSource.from(sources2));
 	}
 
 }

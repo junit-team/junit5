@@ -11,7 +11,7 @@
 ### Project Licenses
 
 - `junit-platform-surefire-provider` uses [Apache License v2.0](junit-platform-surefire-provider/LICENSE.md)
-- All other modules use [Eclipse Public License v1.0](junit-jupiter-api/LICENSE.md).
+- All other modules use [Eclipse Public License v2.0](junit-jupiter-api/LICENSE.md).
 
 ## Commit Messages
 
@@ -71,7 +71,7 @@ possible.
 - Favor `{@code foo}` over `<code>foo</code>`.
 - Favor literals (e.g., `{@literal @}`) over HTML entities.
 - Use `@since 5.0` instead of `@since 5.0.0`.
-- Do not use `@author`tags. Instead, contributors will be listed on the website and in release notes.
+- Do not use `@author` tags. Instead, contributors are listed on [GitHub](https://github.com/junit-team/junit5/graphs/contributors).
 
 ### Tests
 
@@ -92,11 +92,12 @@ possible.
 
 ### Logging
 
-- Use sparingly
-- Do not log in utility classes (junit-platform-commons)
-- Levels
-  - `SEVERE` (Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
-  - `WARNING` (Log4J: `WARN`): potential usage errors that should not halt execution
-  - `INFO`: stuff the users might want to know but not by default (Example: `ServiceLoaderTestEngineRegistry` logs IDs of discovered engines)
-  - `FINE` (Log4J: `DEBUG`)
-  - `FINER` (Log4J: `TRACE`)
+- In general, logging should be used sparingly.
+- All logging must be performed via the internal `Logger` façade provided via the JUnit [LoggerFactory](http://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/LoggerFactory.html).
+- Levels defined in JUnit's [Logger](http://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/Logger.html) façade.
+  - _error_ (JUL: `SEVERE`, Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
+  - _warn_ (JUL: `WARNING`, Log4J: `WARN`): potential usage or configuration errors that should not halt execution
+  - _info_ (JUL: `INFO`, Log4J: `INFO`): information the users might want to know but not by default
+  - _config_ (JUL: `CONFIG`, Log4J: `CONFIG`): information related to configuration of the system (Example: `ServiceLoaderTestEngineRegistry` logs IDs of discovered engines)
+  - _debug_ (JUL: `FINE`, Log4J: `DEBUG`)
+  - _trace_ (JUL: `FINER`, Log4J: `TRACE`)

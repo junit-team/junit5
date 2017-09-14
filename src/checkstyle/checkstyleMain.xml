@@ -14,7 +14,7 @@
 			<property name="validateThrows" value="true" />
 		</module>
 		<module name="AtclauseOrder">
-			<property name="tagOrder" value="@param, @return, @throws, @exception, @since, @author, @see" />
+			<property name="tagOrder" value="@param, @return, @throws, @exception, @since, @see" />
 		</module>
 		<module name="NonEmptyAtclauseDescription" />
 
@@ -27,5 +27,10 @@
 
 	<module name="JavadocPackage" />
 	<module name="SuppressWarningsFilter" />
+	<module name="RegexpSingleline">
+		<property name="format" value="@author" />
+		<property name="message" value="Don't use Javadoc @author tags" />
+		<property name="fileExtensions" value="java,groovy,kt" />
+	</module>
 
 </module>

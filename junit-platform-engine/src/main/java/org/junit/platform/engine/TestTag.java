@@ -2,20 +2,24 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
@@ -28,12 +32,27 @@ import org.junit.platform.commons.util.StringUtils;
  * @see #isValid(String)
  * @see #create(String)
  */
-@API(Stable)
+@API(status = STABLE, since = "1.0")
 public final class TestTag implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private final String name;
+
+	/**
+	 * <em>Reserved characters</em> that are not permissible as part of a tag name.
+	 *
+	 * <ul>
+	 * <li>{@code ","}</li>
+	 * <li>{@code "("}</li>
+	 * <li>{@code ")"}</li>
+	 * <li>{@code "&"}</li>
+	 * <li>{@code "|"}</li>
+	 * <li>{@code "!"}</li>
+	 * </ul>
+	 */
+	public static final Set<String> RESERVED_CHARACTERS = Collections.unmodifiableSet(
+		new HashSet<>(Arrays.asList(",", "(", ")", "&", "|", "!")));
 
 	/**
 	 * Determine if the supplied tag name is valid with regard to the supported
@@ -45,6 +64,8 @@ public final class TestTag implements Serializable {
 	 * <li>A tag must not be blank.</li>
 	 * <li>A trimmed tag must not contain whitespace.</li>
 	 * <li>A trimmed tag must not contain ISO control characters.</li>
+	 * <li>A trimmed tag must not contain {@linkplain #RESERVED_CHARACTERS
+	 * reserved characters}.</li>
 	 * </ul>
 	 *
 	 * <p>If this method returns {@code true} for a given name, it is then a
@@ -58,6 +79,7 @@ public final class TestTag implements Serializable {
 	 * @see String#trim()
 	 * @see StringUtils#doesNotContainWhitespace(String)
 	 * @see StringUtils#doesNotContainIsoControlCharacter(String)
+	 * @see #RESERVED_CHARACTERS
 	 * @see TestTag#create(String)
 	 */
 	public static boolean isValid(String name) {
@@ -68,7 +90,12 @@ public final class TestTag implements Serializable {
 
 		return !name.isEmpty() && //
 				StringUtils.doesNotContainWhitespace(name) && //
-				StringUtils.doesNotContainIsoControlCharacter(name);
+				StringUtils.doesNotContainIsoControlCharacter(name) && //
+				doesNotContainReservedCharacter(name);
+	}
+
+	private static boolean doesNotContainReservedCharacter(String str) {
+		return RESERVED_CHARACTERS.stream().noneMatch(str::contains);
 	}
 
 	/**

@@ -2,22 +2,22 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -27,12 +27,10 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @since 1.0
  * @see org.junit.platform.engine.discovery.DirectorySelector
  */
-@API(Stable)
+@API(status = STABLE, since = "1.0")
 public class DirectorySource implements FileSystemSource {
 
 	private static final long serialVersionUID = 1L;
-
-	private final File directory;
 
 	/**
 	 * Create a new {@code DirectorySource} using the supplied
@@ -40,7 +38,13 @@ public class DirectorySource implements FileSystemSource {
 	 *
 	 * @param directory the source directory; must not be {@code null}
 	 */
-	public DirectorySource(File directory) {
+	public static DirectorySource from(File directory) {
+		return new DirectorySource(directory);
+	}
+
+	private final File directory;
+
+	private DirectorySource(File directory) {
 		Preconditions.notNull(directory, "directory must not be null");
 		try {
 			this.directory = directory.getCanonicalFile();

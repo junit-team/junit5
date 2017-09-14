@@ -2,18 +2,18 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.engine.extension;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,14 +22,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.engine.Constants;
-import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -46,10 +47,10 @@ import org.junit.platform.engine.ConfigurationParameters;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL, since = "5.0")
 public class ExtensionRegistry {
 
-	private static final Logger logger = Logger.getLogger(ExtensionRegistry.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);
 
 	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
 		new DisabledCondition(), //
@@ -74,7 +75,7 @@ public class ExtensionRegistry {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
 
 		// @formatter:off
-		logger.finest(() -> "Registering default extensions: " + DEFAULT_EXTENSIONS.stream()
+		logger.trace(() -> "Registering default extensions: " + DEFAULT_EXTENSIONS.stream()
 						.map(extension -> extension.getClass().getName())
 						.collect(toList()));
 		// @formatter:on
@@ -238,7 +239,7 @@ public class ExtensionRegistry {
 	 * @param source the source of the extension
 	 */
 	public void registerExtension(Extension extension, Object source) {
-		logger.finer(() -> String.format("Registering extension [%s] from source [%s].", extension, source));
+		logger.trace(() -> String.format("Registering extension [%s] from source [%s].", extension, source));
 		this.registeredExtensions.add(extension);
 	}
 

@@ -2,22 +2,22 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.launcher.listeners;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -34,14 +34,16 @@ import org.junit.platform.launcher.TestPlan;
  * @see #forJavaUtilLogging(Level)
  * @see LoggingListener#LoggingListener(BiConsumer)
  */
-@API(Maintained)
+@API(status = MAINTAINED, since = "1.0")
 public class LoggingListener implements TestExecutionListener {
 
 	/**
 	 * Create a {@code LoggingListener} which delegates to a
 	 * {@link java.util.logging.Logger} using a log level of
 	 * {@link Level#FINE FINE}.
+	 *
 	 * @see #forJavaUtilLogging(Level)
+	 * @see #forBiConsumer(BiConsumer)
 	 */
 	public static LoggingListener forJavaUtilLogging() {
 		return forJavaUtilLogging(Level.FINE);
@@ -54,6 +56,7 @@ public class LoggingListener implements TestExecutionListener {
 	 *
 	 * @param logLevel the log level to use; never {@code null}
 	 * @see #forJavaUtilLogging()
+	 * @see #forBiConsumer(BiConsumer)
 	 */
 	public static LoggingListener forJavaUtilLogging(Level logLevel) {
 		Preconditions.notNull(logLevel, "logLevel must not be null");
@@ -61,11 +64,13 @@ public class LoggingListener implements TestExecutionListener {
 		return new LoggingListener((t, messageSupplier) -> logger.log(logLevel, t, messageSupplier));
 	}
 
-	private final BiConsumer<Throwable, Supplier<String>> logger;
-
 	/**
 	 * Create a {@code LoggingListener} which delegates to the supplied
 	 * {@link BiConsumer} for consumption of logging messages.
+	 *
+	 * <p>The {@code BiConsumer's} arguments are a {@link Throwable} (potentially
+	 * {@code null}) and a {@link Supplier} (never {@code null}) for the log
+	 * message.
 	 *
 	 * @param logger a logger implemented as a {@code BiConsumer};
 	 * never {@code null}
@@ -73,7 +78,13 @@ public class LoggingListener implements TestExecutionListener {
 	 * @see #forJavaUtilLogging()
 	 * @see #forJavaUtilLogging(Level)
 	 */
-	public LoggingListener(BiConsumer<Throwable, Supplier<String>> logger) {
+	public static LoggingListener forBiConsumer(BiConsumer<Throwable, Supplier<String>> logger) {
+		return new LoggingListener(logger);
+	}
+
+	private final BiConsumer<Throwable, Supplier<String>> logger;
+
+	private LoggingListener(BiConsumer<Throwable, Supplier<String>> logger) {
 		this.logger = Preconditions.notNull(logger, "logger must not be null");
 	}
 

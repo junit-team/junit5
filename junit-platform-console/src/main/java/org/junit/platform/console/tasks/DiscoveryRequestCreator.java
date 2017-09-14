@@ -2,10 +2,10 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.console.tasks;
@@ -22,8 +22,8 @@ import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -73,7 +73,7 @@ class DiscoveryRequestCreator {
 	}
 
 	private List<DiscoverySelector> createExplicitDiscoverySelectors(CommandLineOptions options) {
-		List<DiscoverySelector> selectors = new LinkedList<>();
+		List<DiscoverySelector> selectors = new ArrayList<>();
 		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
 		options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
 		options.getSelectedDirectories().stream().map(DiscoverySelectors::selectDirectory).forEach(selectors::add);

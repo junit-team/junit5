@@ -2,21 +2,21 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.engine.TestExecutionResult.aborted;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult;
 import org.opentest4j.TestAbortedException;
 
@@ -27,7 +27,7 @@ import org.opentest4j.TestAbortedException;
  * @since 1.0
  * @see #executeSafely(Executable)
  */
-@API(Maintained)
+@API(status = MAINTAINED, since = "1.0")
 public class SingleTestExecutor {
 
 	/**

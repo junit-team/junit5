@@ -2,16 +2,15 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -21,9 +20,9 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
-import org.junit.platform.commons.meta.API;
 import org.opentest4j.MultipleFailuresError;
 
 /**
@@ -40,7 +39,7 @@ import org.opentest4j.MultipleFailuresError;
  * @see org.opentest4j.AssertionFailedError
  * @see Assumptions
  */
-@API(Stable)
+@API(status = STABLE, since = "5.0")
 public final class Assertions {
 
 	///CLOVER:OFF
@@ -1092,7 +1091,6 @@ public final class Assertions {
 	 * @see #assertAll(String, Executable...)
 	 * @see #assertAll(Stream)
 	 */
-	@API(Experimental)
 	public static void assertAll(String heading, Stream<Executable> executables) throws MultipleFailuresError {
 		AssertAll.assertAll(heading, executables);
 	}

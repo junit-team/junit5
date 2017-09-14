@@ -2,10 +2,10 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.launcher.core;
@@ -13,10 +13,10 @@ package org.junit.platform.launcher.core;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -41,7 +41,7 @@ import org.junit.platform.launcher.TestPlan;
  */
 class DefaultLauncher implements Launcher {
 
-	private static final Logger logger = Logger.getLogger(DefaultLauncher.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(DefaultLauncher.class);
 
 	private final TestExecutionListenerRegistry listenerRegistry = new TestExecutionListenerRegistry();
 	private final Iterable<TestEngine> testEngines;
@@ -105,13 +105,13 @@ class DefaultLauncher implements Launcher {
 			// @formatter:on
 
 			if (engineIsExcluded) {
-				logger.fine(() -> String.format(
+				logger.debug(() -> String.format(
 					"Test discovery for engine '%s' was skipped due to an EngineFilter in phase '%s'.",
 					testEngine.getId(), phase));
 				continue;
 			}
 
-			logger.fine(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
+			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
 			Optional<TestDescriptor> engineRoot = discoverEngineRoot(testEngine, discoveryRequest);
@@ -175,7 +175,7 @@ class DefaultLauncher implements Launcher {
 	}
 
 	private void handleThrowable(TestEngine testEngine, String phase, Throwable throwable) {
-		logger.log(Level.WARNING, throwable,
+		logger.warn(throwable,
 			() -> String.format("TestEngine with ID '%s' failed to %s tests", testEngine.getId(), phase));
 		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 	}

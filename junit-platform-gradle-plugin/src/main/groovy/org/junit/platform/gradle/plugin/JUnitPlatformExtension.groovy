@@ -2,13 +2,16 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 package org.junit.platform.gradle.plugin
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL
+
+import org.apiguardian.api.API
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.tasks.Input
@@ -20,6 +23,7 @@ import org.junit.platform.console.options.Details
  *
  * @since 1.0
  */
+@API(status = EXPERIMENTAL, since = "1.0")
 class JUnitPlatformExtension {
 
 	private final Project project

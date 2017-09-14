@@ -2,10 +2,10 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.console.tasks;
@@ -28,6 +28,13 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
+ * {@link TestExecutionListener} that writes a separate XML report for each
+ * root in the {@link TestPlan}.
+ *
+ * <p>Note that the generated XML format is compatible with the de facto
+ * standard for JUnit 4 based test reports that was made popular by the
+ * Ant build system.
+ *
  * @since 1.0
  */
 class XmlReportsWritingListener implements TestExecutionListener {
@@ -57,10 +64,10 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	public void testPlanExecutionStarted(TestPlan testPlan) {
 		this.reportData = new XmlReportData(testPlan, clock);
 		try {
-			Files.createDirectories(reportsDir);
+			Files.createDirectories(this.reportsDir);
 		}
 		catch (IOException e) {
-			printException("Could not create reports directory: " + reportsDir, e);
+			printException("Could not create reports directory: " + this.reportsDir, e);
 		}
 	}
 
@@ -71,44 +78,44 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		reportData.markSkipped(testIdentifier, reason);
+		this.reportData.markSkipped(testIdentifier, reason);
 		writeXmlReportInCaseOfRoot(testIdentifier);
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		reportData.markStarted(testIdentifier);
+		this.reportData.markStarted(testIdentifier);
 	}
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		reportData.addReportEntry(testIdentifier, entry);
+		this.reportData.addReportEntry(testIdentifier, entry);
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
-		reportData.markFinished(testIdentifier, result);
+		this.reportData.markFinished(testIdentifier, result);
 		writeXmlReportInCaseOfRoot(testIdentifier);
 	}
 
 	private void writeXmlReportInCaseOfRoot(TestIdentifier testIdentifier) {
-		if (isARoot(testIdentifier)) {
+		if (isRoot(testIdentifier)) {
 			String rootName = UniqueId.parse(testIdentifier.getUniqueId()).getSegments().get(0).getValue();
 			writeXmlReportSafely(testIdentifier, rootName);
 		}
 	}
 
 	private void writeXmlReportSafely(TestIdentifier testIdentifier, String rootName) {
-		Path xmlFile = reportsDir.resolve("TEST-" + rootName + ".xml");
+		Path xmlFile = this.reportsDir.resolve("TEST-" + rootName + ".xml");
 		try (Writer fileWriter = Files.newBufferedWriter(xmlFile)) {
-			new XmlReportWriter(reportData).writeXmlReport(testIdentifier, fileWriter);
+			new XmlReportWriter(this.reportData).writeXmlReport(testIdentifier, fileWriter);
 		}
 		catch (XMLStreamException | IOException e) {
 			printException("Could not write XML report: " + xmlFile, e);
 		}
 	}
 
-	private boolean isARoot(TestIdentifier testIdentifier) {
+	private boolean isRoot(TestIdentifier testIdentifier) {
 		return !testIdentifier.getParentId().isPresent();
 	}
 

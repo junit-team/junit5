@@ -10,4 +10,9 @@
 		<module name="AvoidStarImport"/>
 	</module>
 	<module name="SuppressWarningsFilter" />
+	<module name="RegexpSingleline">
+		<property name="format" value="@author" />
+		<property name="message" value="Don't use Javadoc @author tags" />
+		<property name="fileExtensions" value="java,groovy,kt" />
+	</module>
 </module>

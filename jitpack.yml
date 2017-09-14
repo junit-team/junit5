@@ -1,0 +1,4 @@
+jdk: oraclejdk9
+
+install:
+  - ./gradlew install -x test

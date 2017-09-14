@@ -2,15 +2,15 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +18,8 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -30,21 +30,18 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @since 1.0
  * @see org.junit.platform.engine.discovery.FileSelector
  */
-@API(Stable)
+@API(status = STABLE, since = "1.0")
 public class FileSource implements FileSystemSource {
 
 	private static final long serialVersionUID = 1L;
-
-	private final File file;
-	private final FilePosition filePosition;
 
 	/**
 	 * Create a new {@code FileSource} using the supplied {@link File file}.
 	 *
 	 * @param file the source file; must not be {@code null}
 	 */
-	public FileSource(File file) {
-		this(file, null);
+	public static FileSource from(File file) {
+		return new FileSource(file);
 	}
 
 	/**
@@ -54,7 +51,18 @@ public class FileSource implements FileSystemSource {
 	 * @param file the source file; must not be {@code null}
 	 * @param filePosition the position in the source file; may be {@code null}
 	 */
-	public FileSource(File file, FilePosition filePosition) {
+	public static FileSource from(File file, FilePosition filePosition) {
+		return new FileSource(file, filePosition);
+	}
+
+	private final File file;
+	private final FilePosition filePosition;
+
+	private FileSource(File file) {
+		this(file, null);
+	}
+
+	private FileSource(File file, FilePosition filePosition) {
 		Preconditions.notNull(file, "file must not be null");
 		try {
 			this.file = file.getCanonicalFile();

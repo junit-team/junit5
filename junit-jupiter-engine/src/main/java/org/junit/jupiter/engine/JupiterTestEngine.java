@@ -2,22 +2,22 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.engine;
 
-import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -29,7 +29,7 @@ import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL, since = "5.0")
 public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecutionContext> {
 
 	public static final String ENGINE_ID = "junit-jupiter";

@@ -2,21 +2,21 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
@@ -31,14 +31,10 @@ import org.junit.platform.engine.discovery.MethodSelector;
  * @since 1.0
  * @see MethodSelector
  */
-@API(Stable)
+@API(status = STABLE, since = "1.0")
 public class MethodSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
-
-	private final String className;
-	private final String methodName;
-	private final String methodParameterTypes;
 
 	/**
 	 * Create a new {@code MethodSource} using the supplied
@@ -47,8 +43,8 @@ public class MethodSource implements TestSource {
 	 * @param className the {@link Class} name; must not be {@code null} or blank
 	 * @param methodName the {@link Method} name; must not be {@code null} or blank
 	 */
-	public MethodSource(String className, String methodName) {
-		this(className, methodName, null);
+	public static MethodSource from(String className, String methodName) {
+		return new MethodSource(className, methodName);
 	}
 
 	/**
@@ -59,12 +55,8 @@ public class MethodSource implements TestSource {
 	 * @param methodName the {@link Method} name; must not be {@code null} or blank
 	 * @param methodParameterTypes the {@link Method} parameter types as string
 	 */
-	public MethodSource(String className, String methodName, String methodParameterTypes) {
-		Preconditions.notBlank(className, "Class name must not be null or blank");
-		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		this.className = className;
-		this.methodName = methodName;
-		this.methodParameterTypes = methodParameterTypes;
+	public static MethodSource from(String className, String methodName, String methodParameterTypes) {
+		return new MethodSource(className, methodName, methodParameterTypes);
 	}
 
 	/**
@@ -73,7 +65,27 @@ public class MethodSource implements TestSource {
 	 *
 	 * @param method the Java method; must not be {@code null}
 	 */
-	public MethodSource(Method method) {
+	public static MethodSource from(Method method) {
+		return new MethodSource(method);
+	}
+
+	private final String className;
+	private final String methodName;
+	private final String methodParameterTypes;
+
+	private MethodSource(String className, String methodName) {
+		this(className, methodName, null);
+	}
+
+	private MethodSource(String className, String methodName, String methodParameterTypes) {
+		Preconditions.notBlank(className, "Class name must not be null or blank");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		this.className = className;
+		this.methodName = methodName;
+		this.methodParameterTypes = methodParameterTypes;
+	}
+
+	private MethodSource(Method method) {
 		Preconditions.notNull(method, "method must not be null");
 		this.className = method.getDeclaringClass().getName();
 		this.methodName = method.getName();

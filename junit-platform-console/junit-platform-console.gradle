@@ -12,7 +12,7 @@ buildscript {
 dependencies {
 	api(project(':junit-platform-launcher'))
 
-	shadow('net.sf.jopt-simple:jopt-simple:5.0.3')
+	shadow('net.sf.jopt-simple:jopt-simple:5.0.4')
 }
 
 sourceSets.main.compileClasspath += configurations.shadow

@@ -2,10 +2,10 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.launcher;
@@ -56,13 +56,13 @@ class TestIdentifierTests {
 	@Test
 	void serialization() throws Exception {
 		TestIdentifier identifier = serializeAndDeserialize(//
-			new TestIdentifier("uniqueId", "displayName", new ClassSource(TestIdentifierTests.class),
+			new TestIdentifier("uniqueId", "displayName", ClassSource.from(TestIdentifierTests.class),
 				singleton(TestTag.create("aTag")), TestDescriptor.Type.TEST, "parentId", "reportingName"));
 
 		assertEquals("uniqueId", identifier.getUniqueId());
 		assertEquals("displayName", identifier.getDisplayName());
 		assertEquals("reportingName", identifier.getLegacyReportingName());
-		assertThat(identifier.getSource()).contains(new ClassSource(TestIdentifierTests.class));
+		assertThat(identifier.getSource()).contains(ClassSource.from(TestIdentifierTests.class));
 		assertEquals(singleton(TestTag.create("aTag")), identifier.getTags());
 		assertEquals(TestDescriptor.Type.TEST, identifier.getType());
 		assertTrue(identifier.isTest());

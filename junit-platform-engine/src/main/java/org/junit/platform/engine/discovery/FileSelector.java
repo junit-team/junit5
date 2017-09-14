@@ -2,15 +2,15 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.discovery;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
 import java.nio.file.FileSystem;
@@ -18,7 +18,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
@@ -34,7 +34,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see #getPath()
  * @see #getRawPath()
  */
-@API(Stable)
+@API(status = STABLE, since = "1.0")
 public class FileSelector implements DiscoverySelector {
 
 	private final String path;

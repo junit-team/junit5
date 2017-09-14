@@ -2,17 +2,17 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.commons.support;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 
 /**
  * Modes in which a hierarchy can be traversed &mdash; for example, when
@@ -22,7 +22,7 @@ import org.junit.platform.commons.meta.API;
  * @see #TOP_DOWN
  * @see #BOTTOM_UP
  */
-@API(Maintained)
+@API(status = MAINTAINED, since = "5.0")
 public enum HierarchyTraversalMode {
 
 	/**

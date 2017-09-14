@@ -2,17 +2,17 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.params.provider;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
-import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -25,7 +25,7 @@ import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -46,7 +46,7 @@ import org.junit.platform.commons.util.Preconditions;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(Experimental)
+@API(status = EXPERIMENTAL, since = "5.0")
 @ArgumentsSource(EnumArgumentsProvider.class)
 public @interface EnumSource {
 

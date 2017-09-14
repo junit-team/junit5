@@ -2,22 +2,22 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
@@ -29,12 +29,10 @@ import org.junit.platform.engine.TestSource;
  *
  * @since 1.0
  */
-@API(Stable)
+@API(status = STABLE, since = "1.0")
 public class CompositeTestSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
-
-	private final List<TestSource> sources;
 
 	/**
 	 * Create a new {@code CompositeTestSource} based on the supplied
@@ -47,7 +45,13 @@ public class CompositeTestSource implements TestSource {
 	 * @param sources the collection of sources to store in this
 	 * {@code CompositeTestSource}; never {@code null} or empty
 	 */
-	public CompositeTestSource(Collection<? extends TestSource> sources) {
+	public static CompositeTestSource from(Collection<? extends TestSource> sources) {
+		return new CompositeTestSource(sources);
+	}
+
+	private final List<TestSource> sources;
+
+	private CompositeTestSource(Collection<? extends TestSource> sources) {
 		Preconditions.notEmpty(sources, "TestSource collection must not be null or empty");
 		Preconditions.containsNoNullElements(sources, "individual TestSources must not be null");
 		this.sources = Collections.unmodifiableList(new ArrayList<>(sources));

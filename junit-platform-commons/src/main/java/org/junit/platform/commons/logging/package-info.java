@@ -1,5 +1,5 @@
 /**
- * Internal <em>meta</em> package.
+ * Internal <em>logging</em> package.
  *
  * <h3>DISCLAIMER</h3>
  *
@@ -8,4 +8,4 @@
  * Use at your own risk!
  */
 
-package org.junit.platform.commons.meta;
+package org.junit.platform.commons.logging;

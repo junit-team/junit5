@@ -2,20 +2,20 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterEachMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
 import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.getTestInstanceLifecycle;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -39,7 +40,6 @@ import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -58,7 +58,7 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
  *
  * @since 5.0
  */
-@API(Internal)
+@API(status = INTERNAL, since = "5.0")
 public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
@@ -78,7 +78,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			Class<?> testClass) {
 
 		super(uniqueId, determineDisplayName(Preconditions.notNull(testClass, "Class must not be null"),
-			defaultDisplayNameGenerator), new ClassSource(testClass));
+			defaultDisplayNameGenerator), ClassSource.from(testClass));
 
 		this.testClass = testClass;
 	}

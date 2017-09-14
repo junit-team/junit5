@@ -2,10 +2,10 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.support.descriptor;
@@ -27,7 +27,7 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void nullSourceFileOrDirectoryYieldsException() {
-		assertThrows(PreconditionViolationException.class, () -> new FileSource(null));
+		assertThrows(PreconditionViolationException.class, () -> FileSource.from(null));
 	}
 
 	@Test
@@ -35,7 +35,7 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 		File canonicalDir = new File(".").getCanonicalFile();
 		File relativeDir = new File("..", canonicalDir.getName());
 
-		DirectorySource source = new DirectorySource(relativeDir);
+		DirectorySource source = DirectorySource.from(relativeDir);
 
 		assertThat(source.getUri()).isEqualTo(canonicalDir.toURI());
 		assertThat(source.getFile()).isEqualTo(canonicalDir);
@@ -48,7 +48,7 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 		File relativeFile = new File(relativeDir, "test.txt");
 		File canonicalFile = relativeFile.getCanonicalFile();
 
-		FileSource source = new FileSource(relativeFile);
+		FileSource source = FileSource.from(relativeFile);
 
 		assertThat(source.getUri()).isEqualTo(canonicalFile.toURI());
 		assertThat(source.getFile()).isEqualTo(canonicalFile);
@@ -58,8 +58,8 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 	@Test
 	void fileWithPosition() throws Exception {
 		File file = new File("test.txt");
-		FilePosition position = new FilePosition(42, 23);
-		FileSource source = new FileSource(file, position);
+		FilePosition position = FilePosition.from(42, 23);
+		FileSource source = FileSource.from(file, position);
 
 		assertThat(source.getUri()).isEqualTo(file.getAbsoluteFile().toURI());
 		assertThat(source.getFile()).isEqualTo(file.getAbsoluteFile());
@@ -70,18 +70,18 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 	void equalsAndHashCodeForFileSource() {
 		File file1 = new File("foo.txt");
 		File file2 = new File("bar.txt");
-		assertEqualsAndHashCode(new FileSource(file1), new FileSource(file1), new FileSource(file2));
+		assertEqualsAndHashCode(FileSource.from(file1), FileSource.from(file1), FileSource.from(file2));
 
-		FilePosition position = new FilePosition(42, 23);
-		assertEqualsAndHashCode(new FileSource(file1, position), new FileSource(file1, position),
-			new FileSource(file2, position));
+		FilePosition position = FilePosition.from(42, 23);
+		assertEqualsAndHashCode(FileSource.from(file1, position), FileSource.from(file1, position),
+			FileSource.from(file2, position));
 	}
 
 	@Test
 	void equalsAndHashCodeForDirectorySource() {
 		File dir1 = new File(".");
 		File dir2 = new File("..");
-		assertEqualsAndHashCode(new DirectorySource(dir1), new DirectorySource(dir1), new DirectorySource(dir2));
+		assertEqualsAndHashCode(DirectorySource.from(dir1), DirectorySource.from(dir1), DirectorySource.from(dir2));
 	}
 
 }

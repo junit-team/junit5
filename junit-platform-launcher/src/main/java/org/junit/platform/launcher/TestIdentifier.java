@@ -2,17 +2,17 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.launcher;
 
 import static java.util.Collections.unmodifiableSet;
-import static org.junit.platform.commons.meta.API.Usage.Internal;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
 import java.util.LinkedHashSet;
@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
@@ -35,7 +35,7 @@ import org.junit.platform.engine.TestTag;
  * @since 1.0
  * @see TestPlan
  */
-@API(Stable)
+@API(status = STABLE, since = "1.0")
 public final class TestIdentifier implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -51,7 +51,7 @@ public final class TestIdentifier implements Serializable {
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
 	 */
-	@API(Internal)
+	@API(status = INTERNAL, since = "1.0")
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		String uniqueId = testDescriptor.getUniqueId().toString();

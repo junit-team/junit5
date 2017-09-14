@@ -2,16 +2,15 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.commons.util;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
-import static java.util.logging.Level.WARNING;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -19,14 +18,16 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
+
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 
 /**
  * @since 1.0
  */
 class ClassFileVisitor extends SimpleFileVisitor<Path> {
 
-	private static final Logger logger = Logger.getLogger(ClassFileVisitor.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(ClassFileVisitor.class);
 
 	static final String CLASS_FILE_SUFFIX = ".class";
 	private static final String PACKAGE_INFO_FILE_NAME = "package-info" + CLASS_FILE_SUFFIX;
@@ -47,15 +48,15 @@ class ClassFileVisitor extends SimpleFileVisitor<Path> {
 	}
 
 	@Override
-	public FileVisitResult visitFileFailed(Path file, IOException exc) {
-		logger.log(WARNING, exc, () -> "I/O error visiting file: " + file);
+	public FileVisitResult visitFileFailed(Path file, IOException ex) {
+		logger.warn(ex, () -> "I/O error visiting file: " + file);
 		return CONTINUE;
 	}
 
 	@Override
-	public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
-		if (exc != null) {
-			logger.log(WARNING, exc, () -> "I/O error visiting directory: " + dir);
+	public FileVisitResult postVisitDirectory(Path dir, IOException ex) {
+		if (ex != null) {
+			logger.warn(ex, () -> "I/O error visiting directory: " + dir);
 		}
 		return CONTINUE;
 	}

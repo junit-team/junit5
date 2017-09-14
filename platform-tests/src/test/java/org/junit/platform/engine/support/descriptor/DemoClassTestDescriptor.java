@@ -2,10 +2,10 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine.support.descriptor;
@@ -15,9 +15,10 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Tag;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -27,13 +28,13 @@ import org.junit.platform.engine.UniqueId;
  */
 public class DemoClassTestDescriptor extends AbstractTestDescriptor {
 
-	private static final Logger logger = Logger.getLogger(DemoClassTestDescriptor.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(DemoClassTestDescriptor.class);
 
 	private final Class<?> testClass;
 
 	public DemoClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
 		super(uniqueId, Preconditions.notNull(testClass, "Class must not be null").getSimpleName(),
-			new ClassSource(testClass));
+			ClassSource.from(testClass));
 		this.testClass = testClass;
 	}
 
@@ -51,7 +52,7 @@ public class DemoClassTestDescriptor extends AbstractTestDescriptor {
 						//
 						// As an alternative to a precondition check here, we could catch any
 						// PreconditionViolationException thrown by TestTag::create.
-						logger.warning(String.format(
+						logger.warn(() -> String.format(
 							"Configuration error: invalid tag syntax in @Tag(\"%s\") declaration on [%s]. Tag will be ignored.",
 							tag, this.testClass));
 					}

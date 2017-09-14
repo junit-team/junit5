@@ -2,10 +2,10 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.commons.util;
@@ -31,9 +31,10 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
+
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 
 /**
  * <h3>DISCLAIMER</h3>
@@ -46,7 +47,7 @@ import java.util.stream.Stream;
  */
 class ClasspathScanner {
 
-	private static final Logger logger = Logger.getLogger(ClasspathScanner.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(ClasspathScanner.class);
 
 	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
 	private static final char PACKAGE_SEPARATOR_CHAR = '.';
@@ -112,7 +113,7 @@ class ClasspathScanner {
 			throw ex;
 		}
 		catch (Exception ex) {
-			logWarning(ex, () -> "Error scanning files for URI " + baseUri);
+			logger.warn(ex, () -> "Error scanning files for URI " + baseUri);
 			return emptyList();
 		}
 	}
@@ -126,7 +127,7 @@ class ClasspathScanner {
 				basePackageName, classFilter, classNameFilter, classFile, classes::add)));
 		}
 		catch (IOException ex) {
-			logWarning(ex, () -> "I/O error scanning files in " + baseDir);
+			logger.warn(ex, () -> "I/O error scanning files in " + baseDir);
 		}
 		return classes;
 	}
@@ -194,7 +195,7 @@ class ClasspathScanner {
 
 	private void logMalformedClassName(Path classFile, String fullyQualifiedClassName, InternalError ex) {
 		try {
-			logWarning(ex, () -> format("The java.lang.Class loaded from path [%s] has a malformed class name [%s].",
+			logger.warn(ex, () -> format("The java.lang.Class loaded from path [%s] has a malformed class name [%s].",
 				classFile.toAbsolutePath(), fullyQualifiedClassName));
 		}
 		catch (Throwable t) {
@@ -204,7 +205,7 @@ class ClasspathScanner {
 	}
 
 	private void logGenericFileProcessingException(Path classFile, Throwable throwable) {
-		logWarning(throwable, () -> format("Failed to load java.lang.Class for path [%s] during classpath scanning.",
+		logger.warn(throwable, () -> format("Failed to load java.lang.Class for path [%s] during classpath scanning.",
 			classFile.toAbsolutePath()));
 	}
 
@@ -227,13 +228,9 @@ class ClasspathScanner {
 			return uris;
 		}
 		catch (Exception ex) {
-			logWarning(ex, () -> "Error reading URIs from class loader for base package " + basePackageName);
+			logger.warn(ex, () -> "Error reading URIs from class loader for base package " + basePackageName);
 			return emptyList();
 		}
-	}
-
-	private static void logWarning(Throwable throwable, Supplier<String> msgSupplier) {
-		logger.log(Level.WARNING, throwable, msgSupplier);
 	}
 
 }

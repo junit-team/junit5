@@ -2,17 +2,17 @@
  * Copyright 2015-2017 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which
+ * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.runner;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.meta.API.Usage.Stable;
+import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 import static org.junit.platform.engine.discovery.ClassNameFilter.excludeClassNamePatterns;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
@@ -97,7 +97,7 @@ import org.junit.runners.model.InitializationError;
  * @see ExcludeEngines
  * @see UseTechnicalNames
  */
-@API(Stable)
+@API(status = STABLE, since = "1.0")
 public class JUnitPlatform extends Runner implements Filterable {
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
