@@ -15,7 +15,7 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 junitPlatform {
 	details 'tree'
 	filters {
-		includeClassNamePattern '.+(Tests|Demo)$'
+		includeClassNamePattern '.+(Tests|Demo|Doc)$'
 		tags {
 			exclude 'exclude'
 		}
@@ -38,7 +38,7 @@ dependencies {
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
-	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testCompile(project(path: ':junit-platform-console', configuration: 'shadow'))
 
 	testRuntimeOnly(project(':junit-vintage-engine'))
 	testRuntimeOnly(project(':junit-jupiter-engine'))
@@ -51,6 +51,7 @@ asciidoctorj {
 }
 
 asciidoctor {
+	dependsOn test
 	// enable the Asciidoctor Diagram extension
 	requires 'asciidoctor-diagram'
 
