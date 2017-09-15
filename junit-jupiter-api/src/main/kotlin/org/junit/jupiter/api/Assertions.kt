@@ -7,7 +7,7 @@
  *
  * http://www.eclipse.org/legal/epl-v20.html
  */
-@file:API(status = EXPERIMENTAL, since = "5.0.1")
+@file:API(status = EXPERIMENTAL, since = "5.1")
 package org.junit.jupiter.api
 
 import org.apiguardian.api.API

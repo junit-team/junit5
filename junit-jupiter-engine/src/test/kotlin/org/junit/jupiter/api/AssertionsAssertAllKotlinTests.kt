@@ -20,8 +20,6 @@ import kotlin.reflect.KClass
 
 /**
  * Unit tests for JUnit Jupiter [org.junit.jupiter.api] top-level assertion functions.
- *
- * @since 5.0
  */
 class AssertionsAssertAllKotlinTests {
 
