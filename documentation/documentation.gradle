@@ -23,6 +23,10 @@ junitPlatform {
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
 
+configurations {
+	standalone
+}
+
 /*
 test {
 	scanForTestClasses = false
@@ -44,13 +48,35 @@ dependencies {
 	testRuntimeOnly(project(':junit-jupiter-engine'))
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+
+	standalone(project(path: ':junit-platform-console-standalone', configuration: 'shadow'))
 }
 
 asciidoctorj {
 	version = '1.5.6'
 }
 
+ext {
+	generatedAsciiDocInputDir = file("$buildDir/generated/asciidoc")
+}
+
+task generateConsoleLauncherOptions(type: JavaExec){
+	def outputFile = file("$generatedAsciiDocInputDir/console-launcher-options.txt")
+	outputs.file(outputFile)
+	inputs.files(rootProject.fileTree('junit-platform-console'))
+	classpath configurations.standalone
+	main 'org.junit.platform.console.ConsoleLauncher'
+	args '--help'
+	outputFile.getParentFile().mkdirs()
+	standardOutput = new FileOutputStream(outputFile)
+	doLast {
+		standardOutput.close()
+	}
+}
+
 asciidoctor {
+	dependsOn generateConsoleLauncherOptions
+
 	// enable the Asciidoctor Diagram extension
 	requires 'asciidoctor-diagram'
 
@@ -67,6 +93,7 @@ asciidoctor {
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
+				'generatedAsciiDocInputDir': generatedAsciiDocInputDir,
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
 				'outdir': outputDir.absolutePath,
 				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend and on MS Windows
