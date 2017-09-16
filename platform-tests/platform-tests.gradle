@@ -30,6 +30,7 @@ dependencies {
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
 	testImplementation("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
+	testImplementation("org.apiguardian:apiguardian-report:${apiGuardianVersion}")
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
 	testImplementation("io.github.lukehutch:fast-classpath-scanner:2.4.5")

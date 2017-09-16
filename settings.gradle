@@ -17,6 +17,11 @@ include 'junit-platform-surefire-provider'
 include 'junit-vintage-engine'
 include 'platform-tests'
 
+final String apiguardianDir = "../apiguardian"
+if (file(apiguardianDir).exists()) {
+	includeBuild(apiguardianDir)
+}
+
 // check that every subproject has a custom build file
 // based on the project name
 rootProject.children.each { project ->

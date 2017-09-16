@@ -12,6 +12,8 @@ package org.junit.api.tools;
 
 import java.io.PrintWriter;
 
+import org.apiguardian.report.ApiReport;
+
 /**
  * @since 1.0
  */
