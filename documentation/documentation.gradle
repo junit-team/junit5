@@ -67,10 +67,9 @@ task generateConsoleLauncherOptions(type: JavaExec){
 	classpath configurations.standalone
 	main 'org.junit.platform.console.ConsoleLauncher'
 	args '--help'
-	outputFile.getParentFile().mkdirs()
-	standardOutput = new FileOutputStream(outputFile)
+	standardOutput = new ByteArrayOutputStream()
 	doLast {
-		standardOutput.close()
+		java.nio.file.Files.write(outputFile.toPath(), standardOutput.toByteArray())
 	}
 }
 
