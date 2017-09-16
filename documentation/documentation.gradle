@@ -69,6 +69,7 @@ task generateConsoleLauncherOptions(type: JavaExec){
 	args '--help'
 	standardOutput = new ByteArrayOutputStream()
 	doLast {
+		java.nio.file.Files.createDirectories(outputFile.toPath().getParent())
 		java.nio.file.Files.write(outputFile.toPath(), standardOutput.toByteArray())
 	}
 }
