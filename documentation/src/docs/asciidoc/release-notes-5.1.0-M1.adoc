@@ -23,7 +23,8 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* ❓
+* The `junit-platform-surefire-provider` now requires `maven-surefire-plugin` version
+  2.20.1 or higher.
 
 
 [[release-notes-5.1.0-junit-jupiter]]
