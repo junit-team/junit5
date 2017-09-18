@@ -14,17 +14,13 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.util.function.Function;
-
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.ExpectedExceptionAdapter;
-import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.rules.ExpectedException;
 
 /**
@@ -48,18 +44,12 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 
 	private static final String EXCEPTION_WAS_HANDLED = "exceptionWasHandled";
 
-	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = ExpectedExceptionAdapter::new;
-
-	private final TestRuleFieldSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator,
-		ExpectedException.class);
-	private final TestRuleMethodSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator,
-		ExpectedException.class);
+	private final TestRuleSupport support = new TestRuleSupport(ExpectedExceptionAdapter::new, ExpectedException.class);
 
 	@Override
 	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 		getStore(context).put(EXCEPTION_WAS_HANDLED, TRUE);
-		this.methodSupport.handleTestExecutionException(context, throwable);
-		this.fieldSupport.handleTestExecutionException(context, throwable);
+		this.support.handleTestExecutionException(context, throwable);
 	}
 
 	@Override
@@ -67,8 +57,7 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 		boolean exceptionWasHandled = getStore(context).getOrComputeIfAbsent(EXCEPTION_WAS_HANDLED, key -> FALSE,
 			Boolean.class);
 		if (!exceptionWasHandled) {
-			this.methodSupport.afterEach(context);
-			this.fieldSupport.afterEach(context);
+			this.support.afterEach(context);
 		}
 	}
 
