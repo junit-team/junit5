@@ -49,6 +49,7 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 
 	TestRuleSupport(Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator,
 			Class<? extends TestRule> ruleType) {
+
 		this.adapterGenerator = adapterGenerator;
 		this.ruleType = ruleType;
 	}
