@@ -47,8 +47,6 @@ class ExpectedExceptionSupportTests {
 	void expectedExceptionIsProcessedCorrectly() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(ExpectedExceptionTestCase.class);
 
-		// eventRecorder.getExecutionEvents().stream().forEach(System.err::println);
-
 		assertEquals(4, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
@@ -72,7 +70,7 @@ class ExpectedExceptionSupportTests {
 	}
 
 	@Test
-	void expectedExceptionSupportWithExpectedExceptionRule() {
+	void expectedExceptionSupportWithoutExpectedExceptionRule() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(
 			ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase.class);
 
