@@ -54,7 +54,7 @@ abstract class AbstractTestRuleSupport<T extends Member>
 
 	@Override
 	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-		invokeAppropriateMethodOnRuleAnnotatedMembers(context, advice -> {
+		int numRuleAnnotatedMembers = invokeAppropriateMethodOnRuleAnnotatedMembers(context, advice -> {
 			try {
 				advice.handleTestExecutionException(throwable);
 			}
@@ -62,6 +62,13 @@ abstract class AbstractTestRuleSupport<T extends Member>
 				throw ExceptionUtils.throwAsUncheckedException(t);
 			}
 		});
+
+		// If no appropriate @Rule annotated members were discovered, we then
+		// have to rethrow the exception in order not to silently swallow it.
+		// Fixes bug: https://github.com/junit-team/junit5/issues/1069
+		if (numRuleAnnotatedMembers == 0) {
+			throw throwable;
+		}
 	}
 
 	@Override
@@ -69,7 +76,10 @@ abstract class AbstractTestRuleSupport<T extends Member>
 		invokeAppropriateMethodOnRuleAnnotatedMembers(context, GenericBeforeAndAfterAdvice::after);
 	}
 
-	private void invokeAppropriateMethodOnRuleAnnotatedMembers(ExtensionContext context,
+	/**
+	 * @return the number of appropriate rule-annotated members that were discovered
+	 */
+	private int invokeAppropriateMethodOnRuleAnnotatedMembers(ExtensionContext context,
 			Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
 
 		Object testInstance = context.getRequiredTestInstance();
@@ -81,6 +91,8 @@ abstract class AbstractTestRuleSupport<T extends Member>
 				.map(this.adapterGenerator)
 				.forEach(methodCaller::accept);
 		// @formatter:on
+
+		return members.size();
 	}
 
 }
