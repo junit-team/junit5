@@ -13,6 +13,7 @@ package org.junit.jupiter.migrationsupport.rules;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
@@ -35,11 +36,18 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.rules.ExpectedException;
 
+/**
+ * Integration tests for {@link ExpectedExceptionSupport}.
+ *
+ * @since 5.0
+ */
 class ExpectedExceptionSupportTests {
 
 	@Test
 	void expectedExceptionIsProcessedCorrectly() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(ExpectedExceptionTestCase.class);
+
+		// eventRecorder.getExecutionEvents().stream().forEach(System.err::println);
 
 		assertEquals(4, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -61,6 +69,24 @@ class ExpectedExceptionSupportTests {
 					event(test("wrongExceptionExpected"), //
 						finishedWithFailure(allOf(isA(AssertionError.class), //
 							message(value -> value.contains("Expected: an instance of java.io.IOException"))))));
+	}
+
+	@Test
+	void expectedExceptionSupportWithExpectedExceptionRule() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(
+			ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase.class);
+
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+
+		assertThat(eventRecorder.getSuccessfulTestFinishedEvents()).have(
+			event(test("success"), finishedSuccessfully()));
+
+		assertThat(eventRecorder.getFailedTestFinishedEvents())//
+				.haveExactly(1, event(test("failure"), //
+					finishedWithFailure(message("must fail"))));
 	}
 
 	private ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
@@ -97,7 +123,22 @@ class ExpectedExceptionSupportTests {
 		@Test
 		void correctExceptionExpectedThrown() {
 			thrown.expect(RuntimeException.class);
-			throw new RuntimeException("wrong exception");
+			throw new RuntimeException("right exception");
+		}
+
+	}
+
+	@ExtendWith(ExpectedExceptionSupport.class)
+	private static class ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase {
+
+		@Test
+		void success() {
+			/* no-op */
+		}
+
+		@Test
+		void failure() {
+			fail("must fail");
 		}
 
 	}
