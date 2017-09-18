@@ -12,15 +12,11 @@ package org.junit.jupiter.migrationsupport.rules;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.util.function.Function;
-
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.ExternalResourceAdapter;
-import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.rules.ExternalResource;
 
 /**
@@ -45,23 +41,16 @@ import org.junit.rules.ExternalResource;
 @API(status = EXPERIMENTAL, since = "5.0")
 public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCallback {
 
-	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = ExternalResourceAdapter::new;
-
-	private final TestRuleFieldSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator,
-		ExternalResource.class);
-	private final TestRuleMethodSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator,
-		ExternalResource.class);
+	private final TestRuleSupport support = new TestRuleSupport(ExternalResourceAdapter::new, ExternalResource.class);
 
 	@Override
 	public void beforeEach(ExtensionContext context) throws Exception {
-		this.fieldSupport.beforeEach(context);
-		this.methodSupport.beforeEach(context);
+		this.support.beforeEach(context);
 	}
 
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
-		this.methodSupport.afterEach(context);
-		this.fieldSupport.afterEach(context);
+		this.support.afterEach(context);
 	}
 
 }

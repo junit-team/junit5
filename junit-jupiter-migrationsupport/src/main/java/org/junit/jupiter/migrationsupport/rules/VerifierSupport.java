@@ -12,14 +12,10 @@ package org.junit.jupiter.migrationsupport.rules;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.util.function.Function;
-
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.VerifierAdapter;
-import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.rules.Verifier;
 
 /**
@@ -44,16 +40,11 @@ import org.junit.rules.Verifier;
 @API(status = EXPERIMENTAL, since = "5.0")
 public class VerifierSupport implements AfterEachCallback {
 
-	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator = VerifierAdapter::new;
-
-	private final TestRuleFieldSupport fieldSupport = new TestRuleFieldSupport(this.adapterGenerator, Verifier.class);
-	private final TestRuleMethodSupport methodSupport = new TestRuleMethodSupport(this.adapterGenerator,
-		Verifier.class);
+	private final TestRuleSupport support = new TestRuleSupport(VerifierAdapter::new, Verifier.class);
 
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
-		this.fieldSupport.afterEach(context);
-		this.methodSupport.afterEach(context);
+		this.support.afterEach(context);
 	}
 
 }
