@@ -35,7 +35,7 @@ public final class TestRuleAnnotatedMemberFactory {
 		if (member instanceof Method) {
 			return new TestRuleAnnotatedMethod(testInstance, (Method) member);
 		}
-		else if (member instanceof Field) {
+		if (member instanceof Field) {
 			return new TestRuleAnnotatedField(testInstance, (Field) member);
 		}
 		throw new PreconditionViolationException(
