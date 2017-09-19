@@ -116,6 +116,7 @@ allprojects { subproj ->
 
 	dependencies {
 		compileOnly("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
+		testCompileOnly("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	}
 
 	tasks.withType(Test) { task ->
