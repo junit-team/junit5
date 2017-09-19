@@ -12,11 +12,12 @@ package org.junit.platform.commons.util;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.function.Predicate;
+import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
@@ -45,34 +46,53 @@ public final class ModuleUtils {
 	///CLOVER:ON
 
 	/**
-	 * Convenient short-cut for finding all classes in all modules that are on the module-path.
+	 * Find all classes in the specified module.
+	 *
+	 * @param filter filter to apply to each candidate
+	 * @param moduleName name of the module to inspect
+	 * @return list of classes matching the passed-in criteria
 	 */
-	public static List<Class<?>> findAllClassesInModulepath(Predicate<Class<?>> classTester,
-			Predicate<String> classNameFilter) {
-		return findAllClassesInModule(ModuleClassFinder.ALL_MODULE_PATH, classTester, classNameFilter);
+	public static List<Class<?>> findAllClassesInModule(ClassFilter filter, String moduleName) {
+		Preconditions.notNull(filter, "class filter must not be null");
+		Preconditions.notBlank(moduleName, "module name must not be null or blank");
+
+		return find(finder -> finder.findAllClassesInModule(filter, moduleName));
 	}
 
 	/**
-	 * Find all classes in the specified module.
+	 * Find all classes in all modules that are on the boot module-path.
 	 *
-	 * @param moduleName name of the module to inspect or {@code ALL-MODULE-PATH}
-	 * @param classTester filter to apply to each class instance
-	 * @param classNameFilter filter to apply to the fully qualified class name
+	 * @param filter filter to apply to each candidate
 	 * @return list of classes matching the passed-in criteria
 	 */
-	public static List<Class<?>> findAllClassesInModule(String moduleName, Predicate<Class<?>> classTester,
-			Predicate<String> classNameFilter) {
-		Preconditions.notBlank(moduleName, "module name must not be null or blank");
-		Preconditions.notNull(classTester, "class tester must not be null");
-		Preconditions.notNull(classNameFilter, "class name filter must not be null");
+	public static List<Class<?>> findAllClassesOnModulePath(ClassFilter filter) {
+		Preconditions.notNull(filter, "class filter must not be null");
 
+		return find(finder -> finder.findAllClassesOnModulePath(filter));
+	}
+
+	/**
+	 * Find all classes in all modules that are locatable on the given path entries.
+	 *
+	 * @param filter filter to apply to each candidate
+	 * @param parent class loader parent
+	 * @return list of classes matching the passed-in criteria
+	 */
+	public static List<Class<?>> findAllClassesOnModulePath(ClassFilter filter, ClassLoader parent, Path... entries) {
+		Preconditions.notNull(filter, "class filter must not be null");
+		Preconditions.notNull(filter, "class loader must not be null");
+
+		return find(finder -> finder.findAllClassesOnModulePath(filter, parent, entries));
+	}
+
+	private static List<Class<?>> find(Function<ModuleClassFinder, List<Class<?>>> function) {
 		ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
 		List<Class<?>> classes = new ArrayList<>();
 
 		logger.config(() -> "Loading auto-detected class finders...");
 		int serviceCounter = 0;
 		for (ModuleClassFinder classFinder : ServiceLoader.load(ModuleClassFinder.class, classLoader)) {
-			classes.addAll(classFinder.findAllClassesInModule(moduleName, classTester, classNameFilter));
+			classes.addAll(function.apply(classFinder));
 			serviceCounter++;
 		}
 		if (serviceCounter == 0) {

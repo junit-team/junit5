@@ -10,21 +10,24 @@
 
 package org.junit.platform.commons.util;
 
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
-
-import org.junit.jupiter.api.Test;
 
 public class ModuleTestFinder implements ModuleClassFinder {
 
-	@Test
-	void test() {
+	@Override
+	public List<Class<?>> findAllClassesInModule(ClassFilter filter, String moduleName) {
+		return Collections.singletonList(getClass());
 	}
 
 	@Override
-	public List<Class<?>> findAllClassesInModule(String moduleName, Predicate<Class<?>> classTester,
-			Predicate<String> classNameFilter) {
+	public List<Class<?>> findAllClassesOnModulePath(ClassFilter filter) {
+		return Collections.singletonList(getClass());
+	}
+
+	@Override
+	public List<Class<?>> findAllClassesOnModulePath(ClassFilter filter, ClassLoader loader, Path... entries) {
 		return Collections.singletonList(getClass());
 	}
 }

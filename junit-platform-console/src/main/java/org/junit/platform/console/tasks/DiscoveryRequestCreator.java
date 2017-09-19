@@ -57,7 +57,7 @@ class DiscoveryRequestCreator {
 			return createClasspathRootSelectors(options);
 		}
 		if (options.isScanModulepath()) {
-			return Collections.singletonList(DiscoverySelectors.selectModulepath());
+			return Collections.singletonList(DiscoverySelectors.selectModulePath());
 		}
 		return createExplicitDiscoverySelectors(options);
 	}

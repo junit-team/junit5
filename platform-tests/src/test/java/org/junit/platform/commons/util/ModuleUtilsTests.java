@@ -26,7 +26,8 @@ class ModuleUtilsTests {
 
 	@Test
 	void loadsTestFinder() {
-		List<Class<?>> classes = ModuleUtils.findAllClassesInModule("*", __ -> true, __ -> true);
+		ClassFilter filter = ClassFilter.of(__ -> true, __ -> true);
+		List<Class<?>> classes = ModuleUtils.findAllClassesInModule(filter, "?");
 		assertTrue(classes.size() > 0);
 		assertEquals(1, classes.stream().filter(type -> type == ModuleTestFinder.class).count());
 	}

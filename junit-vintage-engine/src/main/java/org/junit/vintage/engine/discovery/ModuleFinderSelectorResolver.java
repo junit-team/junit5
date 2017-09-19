@@ -10,31 +10,33 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static org.junit.platform.commons.util.ModuleUtils.findAllClassesInModulepath;
+import static org.junit.platform.commons.util.ModuleUtils.findAllClassesOnModulePath;
 
 import java.util.Collection;
 import java.util.function.Predicate;
 
+import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
-import org.junit.platform.engine.discovery.ModulepathSelector;
+import org.junit.platform.engine.discovery.ModuleFinderSelector;
 
 /**
  * @since 4.12.1
  */
-class ModulepathSelectorResolver implements DiscoverySelectorResolver {
+class ModuleFinderSelectorResolver implements DiscoverySelectorResolver {
 
 	private final Predicate<String> classNamePredicate;
 
-	ModulepathSelectorResolver(Predicate<String> classNamePredicate) {
+	ModuleFinderSelectorResolver(Predicate<String> classNamePredicate) {
 		this.classNamePredicate = classNamePredicate;
 	}
 
 	@Override
 	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter, TestClassCollector collector) {
+		ClassFilter filter = ClassFilter.of(classFilter, classNamePredicate);
 		// @formatter:off
-		request.getSelectorsByType(ModulepathSelector.class)
+		request.getSelectorsByType(ModuleFinderSelector.class)
 			.stream()
-			.map(name -> findAllClassesInModulepath(classFilter, classNamePredicate))
+			.map(selector -> findAllClassesOnModulePath(filter, selector.getClassLoader(), selector.getPaths()))
 			.flatMap(Collection::stream)
 			.forEach(collector::addCompletely);
 		// @formatter:on

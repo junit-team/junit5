@@ -24,9 +24,9 @@ import org.junit.platform.engine.DiscoverySelector;
  * @since 1.1
  */
 @API(status = EXPERIMENTAL, since = "1.1")
-public class ModulepathSelector implements DiscoverySelector {
+public class ModulePathSelector implements DiscoverySelector {
 
-	ModulepathSelector() {
+	ModulePathSelector() {
 	}
 
 	@Override

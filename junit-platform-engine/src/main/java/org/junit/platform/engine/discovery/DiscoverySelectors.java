@@ -21,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -242,13 +243,34 @@ public final class DiscoverySelectors {
 	}
 
 	/**
-	 * Create a {@code ModulepathSelector} for scanning all modules on the module-path.
+	 * Create a {@code ModulePathSelector} for scanning all modules on the module-path.
 	 *
-	 * @see ModulepathSelector
+	 * @see ModulePathSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "1.1")
-	public static ModulepathSelector selectModulepath() {
-		return new ModulepathSelector();
+	public static ModulePathSelector selectModulePath() {
+		return new ModulePathSelector();
+	}
+
+	/**
+	 * Create a {@code ModulePathSelector} for scanning all modules on the module-path.
+	 *
+	 * @see ModuleFinderSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "1.1")
+	public static ModuleFinderSelector selectModuleFinder(ClassLoader loader, Path... entries) {
+		String[] strings = Arrays.stream(entries).map(Path::toString).toArray(String[]::new);
+		return new ModuleFinderSelector(loader, strings);
+	}
+
+	/**
+	 * Create a {@code ModulePathSelector} for scanning all modules on the module-path.
+	 *
+	 * @see ModuleFinderSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "1.1")
+	public static ModuleFinderSelector selectModuleFinder(ClassLoader loader, String... entries) {
+		return new ModuleFinderSelector(loader, entries);
 	}
 
 	/**

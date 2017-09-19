@@ -12,8 +12,8 @@ package org.junit.platform.commons.util;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.nio.file.Path;
 import java.util.List;
-import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 
@@ -32,20 +32,30 @@ import org.apiguardian.api.API;
 public interface ModuleClassFinder {
 
 	/**
-	 * Special name indicating a search for all classes in all modules on the module-path.
-	 */
-	String ALL_MODULE_PATH = "ALL-MODULE-PATH";
-
-	/**
 	 * Return list of classes found in the named module that may contain testable methods.
 	 *
-	 * @param moduleName name of the module to inspect or {@code ALL-MODULE-PATH}
-	 * @param classTester filter to apply to each class instance
-	 * @param classNameFilter filter to apply to the fully qualified class name
+	 * @param filter filter to apply to each class candidate
+	 * @param moduleName name of the module to inspect
 	 * @return list of test classes
-	 *
-	 * @see #ALL_MODULE_PATH
 	 */
-	List<Class<?>> findAllClassesInModule(String moduleName, Predicate<Class<?>> classTester,
-			Predicate<String> classNameFilter);
+	List<Class<?>> findAllClassesInModule(ClassFilter filter, String moduleName);
+
+	/**
+	 * Return list of classes found on the boot module-path that may contain testable methods.
+	 *
+	 * @param filter filter to apply to each class candidate
+	 * @return list of test classes
+	 */
+	List<Class<?>> findAllClassesOnModulePath(ClassFilter filter);
+
+	/**
+	 * Return list of classes found at the given path roots that may contain testable methods.
+	 *
+	 * @param filter filter to apply to each class candidate
+	 * @param parent class loader instance to used the parent class loader
+	 * @param entries a possibly-empty array of paths to directories of modules or paths to packaged or exploded modules
+	 * @return list of test classes
+	 * @see <a href="http://download.java.net/java/jdk9/docs/api/java/lang/module/ModuleFinder.html">ModuleFinder</a>
+	 */
+	List<Class<?>> findAllClassesOnModulePath(ClassFilter filter, ClassLoader parent, Path... entries);
 }

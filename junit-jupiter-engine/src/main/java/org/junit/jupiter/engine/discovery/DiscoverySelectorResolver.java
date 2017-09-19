@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.discovery;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ModuleUtils.findAllClassesInModule;
-import static org.junit.platform.commons.util.ModuleUtils.findAllClassesInModulepath;
+import static org.junit.platform.commons.util.ModuleUtils.findAllClassesOnModulePath;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
@@ -23,13 +23,15 @@ import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
+import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.ModuleFinderSelector;
+import org.junit.platform.engine.discovery.ModulePathSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
-import org.junit.platform.engine.discovery.ModulepathSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 
@@ -50,18 +52,21 @@ public class DiscoverySelectorResolver {
 	public void resolveSelectors(EngineDiscoveryRequest request, TestDescriptor engineDescriptor) {
 		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(engineDescriptor);
 		Predicate<String> classNamePredicate = buildClassNamePredicate(request);
+		ClassFilter classFilter = ClassFilter.of(isScannableTestClass, classNamePredicate);
 
 		request.getSelectorsByType(ClasspathRootSelector.class).forEach(selector -> {
 			findAllClassesInClasspathRoot(selector.getClasspathRoot(), isScannableTestClass,
 				classNamePredicate).forEach(javaElementsResolver::resolveClass);
 		});
-		request.getSelectorsByType(ModulepathSelector.class).forEach(selector -> {
-			findAllClassesInModulepath(isScannableTestClass, classNamePredicate).forEach(
-				javaElementsResolver::resolveClass);
-		});
 		request.getSelectorsByType(ModuleSelector.class).forEach(selector -> {
-			findAllClassesInModule(selector.getModuleName(), isScannableTestClass, classNamePredicate).forEach(
-				javaElementsResolver::resolveClass);
+			findAllClassesInModule(classFilter, selector.getModuleName()).forEach(javaElementsResolver::resolveClass);
+		});
+		request.getSelectorsByType(ModulePathSelector.class).forEach(selector -> {
+			findAllClassesOnModulePath(classFilter).forEach(javaElementsResolver::resolveClass);
+		});
+		request.getSelectorsByType(ModuleFinderSelector.class).forEach(selector -> {
+			findAllClassesOnModulePath(classFilter, selector.getClassLoader(), selector.getPaths()) //
+					.forEach(javaElementsResolver::resolveClass);
 		});
 		request.getSelectorsByType(PackageSelector.class).forEach(selector -> {
 			findAllClassesInPackage(selector.getPackageName(), isScannableTestClass, classNamePredicate).forEach(
