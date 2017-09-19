@@ -23,7 +23,8 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* ❓
+* The `junit-platform-surefire-provider` now requires `maven-surefire-plugin` version
+  2.20.1 or higher.
 
 
 [[release-notes-5.1.0-junit-jupiter]]
@@ -31,7 +32,11 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* `ExpectedExceptionSupport` from the `junit-jupiter-migrationsupport` module no longer
+  swallows exceptions if the test class does not declare a JUnit 4 `ExpectedException`
+  rule.
+  - Consequently, `@EnableRuleMigrationSupport` and `ExpectedExceptionSupport` may now be
+    used without declaring an `ExpectedException` rule.
 
 ===== Deprecations and Breaking Changes
 

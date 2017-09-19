@@ -1,5 +1,9 @@
 buildscript {
 	dependencies {
+		// upgrade to latest jruby version due to a bugfix needed for Windows 10.
+		// can be removed, when asciidoctorj uses this as a default version.
+		classpath 'org.jruby:jruby-complete:9.1.13.0'
+
 		// classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.16'
 		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16'
 		classpath 'org.asciidoctor:asciidoctorj-diagram:1.5.4.1'
@@ -51,7 +55,26 @@ asciidoctorj {
 	version = '1.5.6'
 }
 
+ext {
+	generatedAsciiDocInputDir = buildDir.toPath().resolve('generated/asciidoc').toString()
+}
+
+task generateConsoleLauncherOptions(type: JavaExec){
+	def outputPath = java.nio.file.Paths.get(generatedAsciiDocInputDir)
+	def outputFile = outputPath.resolve('console-launcher-options.txt')
+	classpath = configurations.testRuntimeClasspath
+	main = 'org.junit.platform.console.ConsoleLauncher'
+	args = ['--help']
+	standardOutput = new ByteArrayOutputStream()
+	doLast {
+		java.nio.file.Files.createDirectories(outputPath)
+		java.nio.file.Files.write(outputFile, standardOutput.toByteArray())
+	}
+}
+
 asciidoctor {
+	dependsOn generateConsoleLauncherOptions
+
 	// enable the Asciidoctor Diagram extension
 	requires 'asciidoctor-diagram'
 
@@ -69,6 +92,7 @@ asciidoctor {
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
 				'kotlinTestDir' : project.sourceSets.test.kotlin.srcDirs[0],
+				'generatedAsciiDocInputDir': generatedAsciiDocInputDir,
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
 				'outdir': outputDir.absolutePath,
 				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend and on MS Windows
