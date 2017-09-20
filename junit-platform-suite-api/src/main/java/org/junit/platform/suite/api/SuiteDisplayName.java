@@ -10,15 +10,15 @@
 
 package org.junit.platform.suite.api;
 
-import static org.junit.platform.commons.meta.API.Usage.Maintained;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.junit.platform.commons.meta.API;
+import org.apiguardian.api.API;
 
 /**
  * {@code @SuiteDisplayName} is used to declare a {@linkplain #value custom
@@ -35,10 +35,10 @@ import org.junit.platform.commons.meta.API;
  * @since 1.1
  * @see org.junit.platform.runner.JUnitPlatform
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Retention(RUNTIME)
+@Target(TYPE)
 @Documented
-@API(Maintained)
+@API(status = MAINTAINED, since = "1.1")
 public @interface SuiteDisplayName {
 
 	/**
