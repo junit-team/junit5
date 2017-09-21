@@ -572,7 +572,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#running-tests-ide">4.1. IDE Support</a></li>
 <li><a href="#running-tests-build">4.2. Build Support</a></li>
 <li><a href="#running-tests-console-launcher">4.3. Console Launcher</a></li>
-<li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to Run the JUnit Platform</a></li>
+<li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to run the JUnit Platform</a></li>
 <li><a href="#running-tests-config-params">4.5. Configuration Parameters</a></li>
 </ul>
 </li>
@@ -746,7 +746,7 @@ See <a href="#launcher-api">JUnit Platform Launcher API</a> for details.</p>
 <dt class="hdlist1"><code>junit-platform-runner</code></dt>
 <dd>
 <p>Runner for executing tests and test suites on the JUnit Platform in a JUnit 4
-environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to Run the JUnit Platform</a> for details.</p>
+environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to run the JUnit Platform</a> for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-suite-api</code></dt>
 <dd>
@@ -3851,7 +3851,7 @@ failed. Otherwise the exit code is <code>0</code>.
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-junit-platform-runner"><a class="anchor" href="#running-tests-junit-platform-runner"></a>4.4. Using JUnit 4 to Run the JUnit Platform</h3>
+<h3 id="running-tests-junit-platform-runner"><a class="anchor" href="#running-tests-junit-platform-runner"></a>4.4. Using JUnit 4 to run the JUnit Platform</h3>
 <div class="paragraph">
 <p>The <code>JUnitPlatform</code> runner is a JUnit 4 based <code>Runner</code> which enables you to run any test
 whose programming model is supported on the JUnit Platform in a JUnit 4 environment&#8201;&#8212;&#8201;for example, a JUnit Jupiter test class.</p>
@@ -3879,24 +3879,23 @@ time being the <code>JUnitPlatform</code> runner is an easy way to get started.
 <h4 id="running-tests-junit-platform-runner-setup"><a class="anchor" href="#running-tests-junit-platform-runner-setup"></a>4.4.1. Setup</h4>
 <div class="paragraph">
 <p>You need the following artifacts and their dependencies on the classpath. See
-<a href="#dependency-metadata">Dependency Metadata</a> for details regarding group IDs, artifact IDs, and
-versions.</p>
+<a href="#dependency-metadata">Dependency Metadata</a> for details regarding group IDs, artifact IDs, and versions.</p>
 </div>
 <div class="sect4">
 <h5 id="explicit-dependencies"><a class="anchor" href="#explicit-dependencies"></a>Explicit Dependencies</h5>
 <div class="ulist">
 <ul>
 <li>
-<p><code>junit-4.12.jar</code> in <em>test</em> scope: to run tests using JUnit 4.</p>
-</li>
-<li>
 <p><code>junit-platform-runner</code> in <em>test</em> scope: location of the <code>JUnitPlatform</code> runner</p>
 </li>
 <li>
-<p><code>junit-jupiter-api</code> in <em>test</em> scope: API for writing tests, including <code>@Test</code>, etc.</p>
+<p><code>junit-4.12.jar</code> in <em>test</em> scope: to run tests using JUnit 4</p>
 </li>
 <li>
-<p><code>junit-jupiter-engine</code> in <em>test runtime</em> scope: implementation of the Engine API for JUnit Jupiter</p>
+<p><code>junit-jupiter-api</code> in <em>test</em> scope: API for writing tests using JUnit Jupiter, including <code>@Test</code>, etc.</p>
+</li>
+<li>
+<p><code>junit-jupiter-engine</code> in <em>test runtime</em> scope: implementation of the <code>TestEngine</code> API for JUnit Jupiter</p>
 </li>
 </ul>
 </div>
@@ -3905,6 +3904,9 @@ versions.</p>
 <h5 id="transitive-dependencies"><a class="anchor" href="#transitive-dependencies"></a>Transitive Dependencies</h5>
 <div class="ulist">
 <ul>
+<li>
+<p><code>junit-platform-suite-api</code> in <em>test</em> scope</p>
+</li>
 <li>
 <p><code>junit-platform-launcher</code> in <em>test</em> scope</p>
 </li>
@@ -3924,6 +3926,10 @@ versions.</p>
 <div class="sect3">
 <h4 id="running-tests-junit-platform-runner-technical-names"><a class="anchor" href="#running-tests-junit-platform-runner-technical-names"></a>4.4.2. Display Names vs. Technical Names</h4>
 <div class="paragraph">
+<p>To define a custom <em>display name</em> for the class run via <code>@RunWith(JUnitPlatform.class)</code>
+simply annotate the class with <code>@SuiteDisplayName</code> and provide a custom value.</p>
+</div>
+<div class="paragraph">
 <p>By default, <em>display names</em> will be used for test artifacts; however, when the
 <code>JUnitPlatform</code> runner is used to execute tests with a build tool such as Gradle or
 Maven, the generated test report often needs to include the <em>technical names</em> of test
@@ -3931,6 +3937,10 @@ artifacts — for example, fully qualified class names — instead of shorter di
 like the simple name of a test class or a custom display name containing special
 characters. To enable technical names for reporting purposes, simply declare the
 <code>@UseTechnicalNames</code> annotation alongside <code>@RunWith(JUnitPlatform.class)</code>.</p>
+</div>
+<div class="paragraph">
+<p>Note that the presence of <code>@UseTechnicalNames</code> overrides any custom display name
+configured via <code>@SuiteDisplayName</code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -3940,7 +3950,7 @@ characters. To enable technical names for reporting purposes, simply declare the
 <code>@RunWith(JUnitPlatform.class)</code> directly. Please note that the test methods in the
 following example are annotated with <code>org.junit.jupiter.api.Test</code> (JUnit Jupiter), not
 <code>org.junit.Test</code> (JUnit Vintage). Moreover, in this case the test class must be <code>public</code>;
-otherwise, IDEs won&#8217;t recognize it as a JUnit 4 test class.</p>
+otherwise, some IDEs and build tools might not recognize it as a JUnit 4 test class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3977,9 +3987,11 @@ following example.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.junit.platform.runner.JUnitPlatform</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.suite.api.SelectPackages</span>;
+<span class="keyword">import</span> <span class="include">org.junit.platform.suite.api.SuiteDisplayName</span>;
 <span class="keyword">import</span> <span class="include">org.junit.runner.RunWith</span>;
 
 <span class="annotation">@RunWith</span>(JUnitPlatform.class)
+<span class="annotation">@SuiteDisplayName</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">JUnit 4 Suite Demo</span><span class="delimiter">&quot;</span></span>)
 <span class="annotation">@SelectPackages</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">example</span><span class="delimiter">&quot;</span></span>)
 <span class="directive">public</span> <span class="type">class</span> <span class="class">JUnit4SuiteDemo</span> {
 }</code></pre>
@@ -5302,6 +5314,18 @@ on GitHub.</p>
 <li>
 <p>The <code>junit-platform-surefire-provider</code> now requires <code>maven-surefire-plugin</code> version
 2.20.1 or higher.</p>
+</li>
+<li>
+<p>New <code>@SuiteDisplayName</code> annotation in the <code>junit-platform-suite-api</code> module for
+declaring a custom <em>display name</em> for a test suite.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Supported by the <code>JUnitPlatform</code> runner for JUnit 4 in the <code>junit-platform-runner</code>
+module.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -7725,7 +7749,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-09-20 16:09:10 EDT
+Last updated 2017-09-20 15:23:57 EDT
 </div>
 </div>
 </body>
