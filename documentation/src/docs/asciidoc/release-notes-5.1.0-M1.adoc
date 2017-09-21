@@ -28,7 +28,9 @@ on GitHub.
   declaring a custom _display name_ for a test suite.
   - Supported by the `JUnitPlatform` runner for JUnit 4 in the `junit-platform-runner`
     module.
-
+* When running on Java 9 or higher the default implementations of `getVersion()` and
+  `getArtifactId()` in the interface `TestEngine` ask the Java Platform Module System
+  for these information.
 
 [[release-notes-5.1.0-junit-jupiter]]
 ==== JUnit Jupiter
