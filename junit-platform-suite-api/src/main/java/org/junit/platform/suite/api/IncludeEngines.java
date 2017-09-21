@@ -43,7 +43,7 @@ import org.apiguardian.api.API;
 public @interface IncludeEngines {
 
 	/**
-	 * One or more Engine IDs to be included in the test plan.
+	 * One or more TestEngine IDs to be included in the test plan.
 	 */
 	String[] value();
 

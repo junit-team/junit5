@@ -30,6 +30,18 @@ import org.apiguardian.api.API;
  * <li>A tag must not be blank.</li>
  * <li>A trimmed tag must not contain whitespace.</li>
  * <li>A trimmed tag must not contain ISO control characters.</li>
+ * <li>A trimmed tag must not contain <em>reserved characters</em>.</li>
+ * </ul>
+ *
+ * <p><em>Reserved characters</em> that are not permissible as part of a tag name.
+ *
+ * <ul>
+ * <li>{@code ","}</li>
+ * <li>{@code "("}</li>
+ * <li>{@code ")"}</li>
+ * <li>{@code "&"}</li>
+ * <li>{@code "|"}</li>
+ * <li>{@code "!"}</li>
  * </ul>
  *
  * <h4>JUnit 4 Suite Support</h4>
@@ -51,7 +63,9 @@ public @interface IncludeTags {
 	/**
 	 * One or more tags to include.
 	 *
-	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}.
+	 * <p>Note: each tag will be {@linkplain String#trim() trimmed} and
+	 * validated according to the <em>Syntax Rules for Tags</em> (see
+	 * {@linkplain IncludeTags class-level JavaDoc} for details).
 	 */
 	String[] value();
 
