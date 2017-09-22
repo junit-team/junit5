@@ -62,7 +62,7 @@ Whenever an acronym is included as part of a field name or parameter name:
 - If the acronym comes at the start of the field or parameter name, use lowercase for the
   entire acronym -- for example, `String url;`.
 - Otherwise, keep the first letter of the acronym uppercase and use lowercase for the
-  rest of the acronym -- for example, `String defaultUrl`.
+  rest of the acronym -- for example, `String defaultUrl;`.
 
 ### Formatting
 
