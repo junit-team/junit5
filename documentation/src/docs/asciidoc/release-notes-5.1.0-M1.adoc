@@ -19,12 +19,11 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* ❓
+* The `junit-platform-surefire-provider` now requires `maven-surefire-plugin` version
+  2.20.1 or higher.
 
 ===== New Features and Improvements
 
-* The `junit-platform-surefire-provider` now requires `maven-surefire-plugin` version
-  2.20.1 or higher.
 * New `@SuiteDisplayName` annotation in the `junit-platform-suite-api` module for
   declaring a custom _display name_ for a test suite.
   - Supported by the `JUnitPlatform` runner for JUnit 4 in the `junit-platform-runner`
