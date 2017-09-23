@@ -11,8 +11,6 @@
 package org.junit.vintage.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.FilterResult.includedIf;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -22,42 +20,69 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.vintage.engine.RecordCollectingLogger;
 import org.junit.vintage.engine.samples.junit3.AbstractJUnit3TestCase;
 import org.junit.vintage.engine.samples.junit4.AbstractJunit4TestCaseWithConstructorParameter;
 
 /**
+ * Tests for {@link VintageDiscoverer}.
+ *
  * @since 4.12
  */
+@TrackLogRecords
 class VintageDiscovererTests {
 
 	@Test
-	void logsWarningWhenFilterExcludesClass() {
-		RecordCollectingLogger logger = new RecordCollectingLogger();
-
-		ClassNameFilter filter = className -> includedIf(Foo.class.getName().equals(className), () -> "match",
+	void logsWarningWhenFilterExcludesClass(LogRecordListener listener) {
+		ClassNameFilter fooFilter = className -> includedIf(Foo.class.getName().equals(className), () -> "match",
 			() -> "no match");
+
 		// @formatter:off
 		EngineDiscoveryRequest request = request()
 				.selectors(selectClass(Foo.class), selectClass(Bar.class))
-				.filters(filter)
+				.filters(fooFilter)
 				.build();
 		// @formatter:on
 
-		VintageDiscoverer discoverer = new VintageDiscoverer(logger);
+		VintageDiscoverer discoverer = new VintageDiscoverer();
 		TestDescriptor testDescriptor = discoverer.discover(request, engineId());
 
 		assertThat(testDescriptor.getChildren()).hasSize(1);
 
-		assertThat(logger.getLogRecords()).hasSize(1);
-		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
-		assertEquals(Level.FINE, logRecord.getLevel());
-		assertEquals("Class " + Bar.class.getName() + " was excluded by a class filter: no match",
-			logRecord.getMessage());
+		// @formatter:off
+		assertThat(listener.getLogRecords(VintageDiscoverer.class).stream()
+			.filter(logRecord -> logRecord.getLevel() == Level.FINE)
+			.map(LogRecord::getMessage)
+			.filter(m -> m.equals("Class " + Bar.class.getName() + " was excluded by a class filter: no match"))
+			.findAny()
+		).isPresent();
+		// @formatter:on
+
+	}
+
+	@Test
+	void doesNotResolveAbstractJUnit3Classes(LogRecordListener listener) {
+		doesNotResolve(listener, AbstractJUnit3TestCase.class);
+	}
+
+	@Test
+	void doesNotResolveAbstractJUnit4Classes(LogRecordListener listener) {
+		doesNotResolve(listener, AbstractJunit4TestCaseWithConstructorParameter.class);
+	}
+
+	private void doesNotResolve(LogRecordListener listener, Class<?> testClass) {
+		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
+
+		VintageDiscoverer discoverer = new VintageDiscoverer();
+		TestDescriptor testDescriptor = discoverer.discover(request, engineId());
+
+		assertThat(testDescriptor.getChildren()).isEmpty();
+		assertThat(listener.getLogRecords(VintageDiscoverer.class)).isEmpty();
 	}
 
 	public static class Foo {
@@ -65,6 +90,7 @@ class VintageDiscovererTests {
 		@org.junit.Test
 		public void test() {
 		}
+
 	}
 
 	public static class Bar {
@@ -73,28 +99,6 @@ class VintageDiscovererTests {
 		public void test() {
 		}
 
-	}
-
-	@Test
-	void doesNotResolveAbstractJUnit3Classes() {
-		doesNotResolve(AbstractJUnit3TestCase.class);
-	}
-
-	@Test
-	void doesNotResolveAbstractJUnit4Classes() {
-		doesNotResolve(AbstractJunit4TestCaseWithConstructorParameter.class);
-	}
-
-	private void doesNotResolve(Class<?> testClass) {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
-
-		RecordCollectingLogger logger = new RecordCollectingLogger();
-
-		VintageDiscoverer discoverer = new VintageDiscoverer(logger);
-		TestDescriptor testDescriptor = discoverer.discover(request, engineId());
-
-		assertThat(testDescriptor.getChildren()).isEmpty();
-		assertThat(logger.getLogRecords()).isEmpty();
 	}
 
 }

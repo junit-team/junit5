@@ -20,6 +20,7 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.runner.Description;
 
 /**
@@ -28,16 +29,16 @@ import org.junit.runner.Description;
 @API(status = INTERNAL, since = "4.12")
 public class UniqueIdReader implements Function<Description, Serializable> {
 
-	private final Logger logger;
+	private static final Logger logger = LoggerFactory.getLogger(UniqueIdReader.class);
+
 	private final String fieldName;
 
-	public UniqueIdReader(Logger logger) {
-		this(logger, "fUniqueId");
+	public UniqueIdReader() {
+		this("fUniqueId");
 	}
 
 	// For tests only
-	UniqueIdReader(Logger logger, String fieldName) {
-		this.logger = logger;
+	UniqueIdReader(String fieldName) {
 		this.fieldName = fieldName;
 	}
 
@@ -45,8 +46,8 @@ public class UniqueIdReader implements Function<Description, Serializable> {
 	public Serializable apply(Description description) {
 		Optional<Object> result = readFieldValue(Description.class, fieldName, description);
 		return result.map(Serializable.class::cast).orElseGet(() -> {
-			logger.warn(() -> format("Could not read unique ID for Description; using display name instead: %s",
-				description.toString()));
+			logger.warn(
+				() -> format("Could not read unique ID for Description; using display name instead: %s", description));
 			return description.getDisplayName();
 		});
 	}

@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.function.IntFunction;
 
 import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -38,15 +39,15 @@ import org.junit.vintage.engine.support.UniqueIdStringifier;
  */
 class TestClassRequestResolver {
 
-	private static final RunnerBuilder RUNNER_BUILDER = new DefensiveAllDefaultPossibilitiesBuilder();
-	private final Logger logger;
+	private static final Logger logger = LoggerFactory.getLogger(TestClassRequestResolver.class);
 
-	private final UniqueIdReader uniqueIdReader;
+	private static final RunnerBuilder RUNNER_BUILDER = new DefensiveAllDefaultPossibilitiesBuilder();
+
+	private final UniqueIdReader uniqueIdReader = new UniqueIdReader();
+
 	private final UniqueIdStringifier uniqueIdStringifier = new UniqueIdStringifier();
 
-	TestClassRequestResolver(Logger logger) {
-		this.logger = logger;
-		this.uniqueIdReader = new UniqueIdReader(logger);
+	TestClassRequestResolver() {
 	}
 
 	RunnerTestDescriptor createRunnerTestDescriptor(TestClassRequest request, UniqueId engineId) {

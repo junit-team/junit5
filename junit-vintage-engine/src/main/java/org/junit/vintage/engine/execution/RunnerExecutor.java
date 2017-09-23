@@ -14,7 +14,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.runner.JUnitCore;
@@ -27,17 +26,15 @@ import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 public class RunnerExecutor {
 
 	private final EngineExecutionListener engineExecutionListener;
-	private final Logger logger;
 
-	public RunnerExecutor(EngineExecutionListener engineExecutionListener, Logger logger) {
+	public RunnerExecutor(EngineExecutionListener engineExecutionListener) {
 		this.engineExecutionListener = engineExecutionListener;
-		this.logger = logger;
 	}
 
 	public void execute(RunnerTestDescriptor runnerTestDescriptor) {
 		TestRun testRun = new TestRun(runnerTestDescriptor);
 		JUnitCore core = new JUnitCore();
-		core.addListener(new RunListenerAdapter(testRun, logger, engineExecutionListener));
+		core.addListener(new RunListenerAdapter(testRun, engineExecutionListener));
 		try {
 			core.run(runnerTestDescriptor.toRequest());
 		}

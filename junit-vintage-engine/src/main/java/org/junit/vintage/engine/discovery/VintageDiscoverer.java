@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
@@ -36,14 +37,11 @@ import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 @API(status = INTERNAL, since = "4.12")
 public class VintageDiscoverer {
 
-	private static final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
-	private final Logger logger;
-	private final TestClassRequestResolver resolver;
+	private static final Logger logger = LoggerFactory.getLogger(VintageDiscoverer.class);
 
-	public VintageDiscoverer(Logger logger) {
-		this.logger = logger;
-		this.resolver = new TestClassRequestResolver(logger);
-	}
+	private static final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
+
+	private final TestClassRequestResolver resolver = new TestClassRequestResolver();
 
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit Vintage");
@@ -73,7 +71,7 @@ public class VintageDiscoverer {
 			new PackageNameSelectorResolver(classNamePredicate), //
 			new ClassSelectorResolver(), //
 			new MethodSelectorResolver(), //
-			new UniqueIdSelectorResolver(logger)//
+			new UniqueIdSelectorResolver()//
 		);
 	}
 

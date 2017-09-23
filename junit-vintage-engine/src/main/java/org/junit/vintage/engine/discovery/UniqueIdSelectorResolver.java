@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.UniqueId;
@@ -29,11 +30,7 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
  */
 class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 
-	private final Logger logger;
-
-	UniqueIdSelectorResolver(Logger logger) {
-		this.logger = logger;
-	}
+	private static final Logger logger = LoggerFactory.getLogger(UniqueIdSelectorResolver.class);
 
 	@Override
 	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter, TestClassCollector collector) {

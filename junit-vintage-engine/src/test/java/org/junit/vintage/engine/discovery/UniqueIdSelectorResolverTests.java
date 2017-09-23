@@ -11,8 +11,6 @@
 package org.junit.vintage.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.vintage.engine.VintageUniqueIdBuilder.engineId;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
@@ -26,71 +24,80 @@ import java.util.logging.LogRecord;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
-import org.junit.vintage.engine.RecordCollectingLogger;
 import org.junit.vintage.engine.VintageUniqueIdBuilder;
 
 /**
+ * Tests for {@link UniqueIdSelectorResolver}.
+ *
  * @since 4.12
  */
+@TrackLogRecords
 class UniqueIdSelectorResolverTests {
 
 	private static final Predicate<Class<?>> allClassesPredicate = clazz -> true;
-	private RecordCollectingLogger logger = new RecordCollectingLogger();
-	private TestClassCollector collector = new TestClassCollector();
+
+	private final TestClassCollector collector = new TestClassCollector();
 
 	@Test
-	void logsWarningOnUnloadableTestClass() {
+	void logsWarningOnUnloadableTestClass(LogRecordListener listener) {
 		UniqueId uniqueId = VintageUniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
 		EngineDiscoveryRequest request = requestWithSelector(selectUniqueId(uniqueId));
 
-		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, collector);
+		new UniqueIdSelectorResolver().resolve(request, allClassesPredicate, collector);
 
 		assertNoRequests();
-		assertLoggedWarning("Unresolvable Unique ID (" + uniqueId + "): Unknown class foo.bar.UnknownClass");
+		assertLoggedWarning(listener, "Unresolvable Unique ID (" + uniqueId + "): Unknown class foo.bar.UnknownClass");
 	}
 
 	@Test
-	void logsWarningForEngineUniqueId() {
+	void logsWarningForEngineUniqueId(LogRecordListener listener) {
 		String uniqueId = engineId().toString();
 		EngineDiscoveryRequest request = requestWithSelector(selectUniqueId(uniqueId));
 
-		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, collector);
+		new UniqueIdSelectorResolver().resolve(request, allClassesPredicate, collector);
 
 		assertNoRequests();
-		assertLoggedWarning("Unresolvable Unique ID (" + engineId() + "): Cannot resolve the engine's unique ID");
+		assertLoggedWarning(listener,
+			"Unresolvable Unique ID (" + engineId() + "): Cannot resolve the engine's unique ID");
 	}
 
 	@Test
-	void ignoresUniqueIdsOfOtherEngines() {
+	void ignoresUniqueIdsOfOtherEngines(LogRecordListener listener) {
 		UniqueId uniqueId = UniqueId.forEngine("someEngine");
 		EngineDiscoveryRequest request = requestWithSelector(selectUniqueId(uniqueId));
 
-		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, collector);
+		new UniqueIdSelectorResolver().resolve(request, allClassesPredicate, collector);
 
 		assertNoRequests();
-		assertThat(logger.getLogRecords()).isEmpty();
+		assertThat(listener.getLogRecords(UniqueIdSelectorResolver.class)).isEmpty();
 	}
 
 	@Test
-	void logsWarningOnUnexpectedTestDescriptor() {
+	void logsWarningOnUnexpectedTestDescriptor(LogRecordListener listener) {
 		UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID).append("wrong-type", "foo:bar");
 		EngineDiscoveryRequest request = requestWithSelector(selectUniqueId(uniqueId));
 
-		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, collector);
+		new UniqueIdSelectorResolver().resolve(request, allClassesPredicate, collector);
 
 		assertNoRequests();
-		assertLoggedWarning("Unresolvable Unique ID (" + uniqueId
+		assertLoggedWarning(listener, "Unresolvable Unique ID (" + uniqueId
 				+ "): Unique ID segment after engine segment must be of type \"runner\"");
 	}
 
-	private void assertLoggedWarning(String expectedMessage) {
-		assertThat(logger.getLogRecords()).hasSize(1);
-		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
-		assertEquals(Level.WARNING, logRecord.getLevel());
-		assertEquals(expectedMessage, logRecord.getMessage());
+	private void assertLoggedWarning(LogRecordListener listener, String expectedMessage) {
+		// @formatter:off
+		assertThat(listener.getLogRecords(UniqueIdSelectorResolver.class).stream()
+			.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
+			.map(LogRecord::getMessage)
+			.filter(m -> m.equals(expectedMessage))
+			.count()
+		).isEqualTo(1);
+		// @formatter:on
 	}
 
 	private void assertNoRequests() {
@@ -103,4 +110,5 @@ class UniqueIdSelectorResolverTests {
 		when(request.getSelectorsByType(UniqueIdSelector.class)).thenReturn(Collections.singletonList(selector));
 		return request;
 	}
+
 }
