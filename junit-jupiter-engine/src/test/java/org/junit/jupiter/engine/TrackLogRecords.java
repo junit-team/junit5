@@ -60,7 +60,9 @@ public @interface TrackLogRecords {
 
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return parameterContext.getParameter().getType() == LogRecordListener.class;
+			boolean isTestMethodLevel = extensionContext.getTestMethod().isPresent();
+			boolean isListener = parameterContext.getParameter().getType() == LogRecordListener.class;
+			return isTestMethodLevel && isListener;
 		}
 
 		@Override
@@ -74,7 +76,7 @@ public @interface TrackLogRecords {
 		}
 
 		private Store getStore(ExtensionContext context) {
-			return context.getStore(Namespace.create(getClass(), context));
+			return context.getStore(Namespace.create(getClass(), context.getRequiredTestMethod()));
 		}
 
 	}
