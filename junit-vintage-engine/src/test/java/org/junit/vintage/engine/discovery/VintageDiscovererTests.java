@@ -55,7 +55,7 @@ class VintageDiscovererTests {
 		assertThat(testDescriptor.getChildren()).hasSize(1);
 
 		// @formatter:off
-		assertThat(listener.getLogRecords(VintageDiscoverer.class, Level.FINE).stream()
+		assertThat(listener.getLogRecords(VintageDiscoverer.class, Level.FINE)
 			.map(LogRecord::getMessage)
 			.filter(m -> m.equals("Class " + Bar.class.getName() + " was excluded by a class filter: no match"))
 			.count()

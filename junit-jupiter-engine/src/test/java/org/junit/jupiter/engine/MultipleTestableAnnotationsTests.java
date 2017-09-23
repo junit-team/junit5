@@ -36,7 +36,7 @@ class MultipleTestableAnnotationsTests extends AbstractJupiterTestEngineTests {
 		discoverTests(request().selectors(selectClass(TestCase.class)).build());
 
 		// @formatter:off
-		assertThat(listener.getLogRecords().stream()
+		assertThat(listener.getLogRecords()
 			.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
 			.map(LogRecord::getMessage)
 			.filter(m -> m.matches("Possible configuration error: method .+ resulted in multiple TestDescriptors .+"))

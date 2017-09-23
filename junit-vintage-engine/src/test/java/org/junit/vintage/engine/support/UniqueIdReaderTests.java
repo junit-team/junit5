@@ -51,7 +51,7 @@ class UniqueIdReaderTests {
 		assertEquals(description.getDisplayName(), uniqueId);
 
 		// @formatter:off
-		assertThat(listener.getLogRecords(UniqueIdReader.class, Level.WARNING).stream()
+		assertThat(listener.getLogRecords(UniqueIdReader.class, Level.WARNING)
 			.map(LogRecord::getMessage)
 			.filter(m -> m.equals("Could not read unique ID for Description; using display name instead: "
 					+ description.getDisplayName()))

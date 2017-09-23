@@ -67,7 +67,7 @@ class TestClassRequestResolverTests {
 		resolve(new TestClassRequest(testClass, asList(filter)));
 
 		// @formatter:off
-		assertThat(listener.getLogRecords(TestClassRequestResolver.class, Level.WARNING).stream()
+		assertThat(listener.getLogRecords(TestClassRequestResolver.class, Level.WARNING)
 			.map(LogRecord::getMessage)
 			.filter(m -> m.equals("Runner " + IgnoredClassRunner.class.getName() //
 				+ " (used on " + testClass.getName() + ") does not support filtering" //

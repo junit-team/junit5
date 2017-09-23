@@ -10,13 +10,13 @@
 
 package org.junit.platform.commons.logging;
 
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -41,73 +41,61 @@ public class LogRecordListener {
 	}
 
 	/**
-	 * Get the list of {@link LogRecord log records} that have been
+	 * Get a stream of {@link LogRecord log records} that have been
 	 * {@linkplain #logRecordSubmitted submitted} to this listener.
 	 *
 	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
-	 * the {@code LogRecords} in the returned list should only be inspected for
+	 * the {@code LogRecords} in the returned stream should only be inspected for
 	 * testing purposes and not modified in any way.
 	 */
-	public List<LogRecord> getLogRecords() {
-		return this.logRecords;
+	public Stream<LogRecord> getLogRecords() {
+		return this.logRecords.stream();
 	}
 
 	/**
-	 * Get the list of {@link LogRecord log records} that have been
-	 * {@linkplain #logRecordSubmitted submitted} to this listener
-	 * for the given class.
+	 * Get a stream of {@link LogRecord log records} that have been
+	 * {@linkplain #logRecordSubmitted submitted} to this listener for the
+	 * logger name equal to the name of the given class.
 	 *
 	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
-	 * the {@code LogRecords} in the returned list should only be inspected for
+	 * the {@code LogRecords} in the returned stream should only be inspected for
 	 * testing purposes and not modified in any way.
 	 *
 	 * @param clazz the class for which to get the log records; never {@code null}
 	 */
-	public List<LogRecord> getLogRecords(Class<?> clazz) {
+	public Stream<LogRecord> getLogRecords(Class<?> clazz) {
 		// NOTE: we cannot use org.junit.platform.commons.util.Preconditions here
 		// since that would introduce a package cycle.
 		if (clazz == null) {
 			throw new JUnitException("Class must not be null");
 		}
 
-		// @formatter:off
-		return this.logRecords.stream()
-				.filter(logRecord -> logRecord.getLoggerName().equals(clazz.getName()))
-				.collect(toList());
-		// @formatter:on
+		return getLogRecords().filter(logRecord -> logRecord.getLoggerName().equals(clazz.getName()));
 	}
 
 	/**
-	 * Get the list of {@link LogRecord log records} that have been
-	 * {@linkplain #logRecordSubmitted submitted} to this listener
-	 * for the given class at the given log level.
+	 * Get a stream of {@link LogRecord log records} that have been
+	 * {@linkplain #logRecordSubmitted submitted} to this listener for the
+	 * logger name equal to the name of the given class at the given log level.
 	 *
 	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
-	 * the {@code LogRecords} in the returned list should only be inspected for
+	 * the {@code LogRecords} in the returned stream should only be inspected for
 	 * testing purposes and not modified in any way.
 	 *
 	 * @param clazz the class for which to get the log records; never {@code null}
 	 * @param level the log level for which to get the log records; never {@code null}
 	 */
-	public List<LogRecord> getLogRecords(Class<?> clazz, Level level) {
+	public Stream<LogRecord> getLogRecords(Class<?> clazz, Level level) {
 		// NOTE: we cannot use org.junit.platform.commons.util.Preconditions here
 		// since that would introduce a package cycle.
-		if (clazz == null) {
-			throw new JUnitException("Class must not be null");
-		}
 		if (level == null) {
 			throw new JUnitException("Level must not be null");
 		}
 
-		// @formatter:off
-		return this.logRecords.stream()
-				.filter(logRecord -> logRecord.getLoggerName().equals(clazz.getName()))
-				.filter(logRecord -> logRecord.getLevel() == level)
-				.collect(toList());
-		// @formatter:on
+		return getLogRecords(clazz).filter(logRecord -> logRecord.getLevel() == level);
 	}
 
 }
