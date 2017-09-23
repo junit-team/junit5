@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.apiguardian.api.API;
@@ -74,6 +75,37 @@ public class LogRecordListener {
 		// @formatter:off
 		return this.logRecords.stream()
 				.filter(logRecord -> logRecord.getLoggerName().equals(clazz.getName()))
+				.collect(toList());
+		// @formatter:on
+	}
+
+	/**
+	 * Get the list of {@link LogRecord log records} that have been
+	 * {@linkplain #logRecordSubmitted submitted} to this listener
+	 * for the given class at the given log level.
+	 *
+	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
+	 * {@code LogRecord} should not be updated by the client application. Thus,
+	 * the {@code LogRecords} in the returned list should only be inspected for
+	 * testing purposes and not modified in any way.
+	 *
+	 * @param clazz the class for which to get the log records; never {@code null}
+	 * @param level the log level for which to get the log records; never {@code null}
+	 */
+	public List<LogRecord> getLogRecords(Class<?> clazz, Level level) {
+		// NOTE: we cannot use org.junit.platform.commons.util.Preconditions here
+		// since that would introduce a package cycle.
+		if (clazz == null) {
+			throw new JUnitException("Class must not be null");
+		}
+		if (level == null) {
+			throw new JUnitException("Level must not be null");
+		}
+
+		// @formatter:off
+		return this.logRecords.stream()
+				.filter(logRecord -> logRecord.getLoggerName().equals(clazz.getName()))
+				.filter(logRecord -> logRecord.getLevel() == level)
 				.collect(toList());
 		// @formatter:on
 	}

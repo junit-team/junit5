@@ -38,7 +38,7 @@ import org.junit.vintage.engine.samples.junit4.AbstractJunit4TestCaseWithConstru
 class VintageDiscovererTests {
 
 	@Test
-	void logsWarningWhenFilterExcludesClass(LogRecordListener listener) {
+	void logsDebugMessageWhenFilterExcludesClass(LogRecordListener listener) {
 		ClassNameFilter fooFilter = className -> includedIf(Foo.class.getName().equals(className), () -> "match",
 			() -> "no match");
 
@@ -55,8 +55,7 @@ class VintageDiscovererTests {
 		assertThat(testDescriptor.getChildren()).hasSize(1);
 
 		// @formatter:off
-		assertThat(listener.getLogRecords(VintageDiscoverer.class).stream()
-			.filter(logRecord -> logRecord.getLevel() == Level.FINE)
+		assertThat(listener.getLogRecords(VintageDiscoverer.class, Level.FINE).stream()
 			.map(LogRecord::getMessage)
 			.filter(m -> m.equals("Class " + Bar.class.getName() + " was excluded by a class filter: no match"))
 			.count()
