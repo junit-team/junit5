@@ -24,7 +24,7 @@ import org.apiguardian.api.API;
  *
  * @since 1.1
  */
-@API(status = INTERNAL, since = "1.0")
+@API(status = INTERNAL, since = "1.1")
 public class LogRecordListener {
 
 	private final List<LogRecord> logRecords = new ArrayList<>();
