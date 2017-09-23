@@ -116,6 +116,15 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
     JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e. tests
     written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.
 
+[[dependency-metadata-optional-dependencies]]
+==== Optional Dependencies
+
+All of the above artifacts have an _optional_ dependency to the following _@API Guardian_ JAR.
+
+* *Group ID*: `org.apiguardian`
+* *Artifact ID*: `apiguardian-api`
+* *Version*: `{apiguardian-version}`
+
 [[dependency-diagram]]
 === Dependency Diagram
 
