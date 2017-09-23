@@ -17,13 +17,14 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqu
 import static org.junit.vintage.engine.VintageUniqueIdBuilder.engineId;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -39,14 +40,14 @@ class UniqueIdSelectorResolverTests {
 
 	private static final Predicate<Class<?>> allClassesPredicate = clazz -> true;
 	private RecordCollectingLogger logger = new RecordCollectingLogger();
-	private TestClassCollector collector = new TestClassCollector();
+	private BiConsumer<Class<?>, RunnerTestDescriptorAwareFilter> consumer = mock(BiConsumer.class);
 
 	@Test
 	void logsWarningOnUnloadableTestClass() {
 		UniqueId uniqueId = VintageUniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
 		EngineDiscoveryRequest request = requestWithSelector(selectUniqueId(uniqueId));
 
-		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, collector);
+		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, consumer);
 
 		assertNoRequests();
 		assertLoggedWarning("Unresolvable Unique ID (" + uniqueId + "): Unknown class foo.bar.UnknownClass");
@@ -57,7 +58,7 @@ class UniqueIdSelectorResolverTests {
 		String uniqueId = engineId().toString();
 		EngineDiscoveryRequest request = requestWithSelector(selectUniqueId(uniqueId));
 
-		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, collector);
+		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, consumer);
 
 		assertNoRequests();
 		assertLoggedWarning("Unresolvable Unique ID (" + engineId() + "): Cannot resolve the engine's unique ID");
@@ -68,7 +69,7 @@ class UniqueIdSelectorResolverTests {
 		UniqueId uniqueId = UniqueId.forEngine("someEngine");
 		EngineDiscoveryRequest request = requestWithSelector(selectUniqueId(uniqueId));
 
-		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, collector);
+		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, consumer);
 
 		assertNoRequests();
 		assertThat(logger.getLogRecords()).isEmpty();
@@ -79,7 +80,7 @@ class UniqueIdSelectorResolverTests {
 		UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID).append("wrong-type", "foo:bar");
 		EngineDiscoveryRequest request = requestWithSelector(selectUniqueId(uniqueId));
 
-		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, collector);
+		new UniqueIdSelectorResolver(logger).resolve(request, allClassesPredicate, consumer);
 
 		assertNoRequests();
 		assertLoggedWarning("Unresolvable Unique ID (" + uniqueId
@@ -94,8 +95,7 @@ class UniqueIdSelectorResolverTests {
 	}
 
 	private void assertNoRequests() {
-		Stream<TestClassRequest> requests = collector.toRequests();
-		assertThat(requests).isEmpty();
+		verifyZeroInteractions(consumer);
 	}
 
 	private EngineDiscoveryRequest requestWithSelector(UniqueIdSelector selector) {

@@ -10,15 +10,17 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static java.util.Arrays.asList;
+import static java.util.stream.Stream.concat;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.adaptFilter;
 import static org.junit.platform.engine.Filter.composeFilters;
-import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
@@ -37,10 +39,14 @@ import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 public class VintageDiscoverer {
 
 	private static final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
-	private final Logger logger;
+	private final CompleteTestClassesResolver completeTestClassesResolver;
+	private final FilteredTestClassesResolver filteredTestClassesResolver;
 	private final TestClassRequestResolver resolver;
+	private final Logger logger;
 
 	public VintageDiscoverer(Logger logger) {
+		this.completeTestClassesResolver = new CompleteTestClassesResolver();
+		this.filteredTestClassesResolver = new FilteredTestClassesResolver(logger);
 		this.logger = logger;
 		this.resolver = new TestClassRequestResolver(logger);
 	}
@@ -48,8 +54,7 @@ public class VintageDiscoverer {
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit Vintage");
 		// @formatter:off
-		collectTestClasses(discoveryRequest)
-				.toRequests()
+		collectTestClassRequests(discoveryRequest)
 				.map(request -> resolver.createRunnerTestDescriptor(request, uniqueId))
 				.filter(Objects::nonNull)
 				.forEach(engineDescriptor::addChild);
@@ -57,24 +62,14 @@ public class VintageDiscoverer {
 		return engineDescriptor;
 	}
 
-	private TestClassCollector collectTestClasses(EngineDiscoveryRequest discoveryRequest) {
+	private Stream<TestClassRequest> collectTestClassRequests(EngineDiscoveryRequest discoveryRequest) {
 		Predicate<Class<?>> classFilter = createTestClassPredicate(discoveryRequest);
-		TestClassCollector collector = new TestClassCollector();
-		for (DiscoverySelectorResolver selectorResolver : getAllDiscoverySelectorResolvers(discoveryRequest)) {
-			selectorResolver.resolve(discoveryRequest, classFilter, collector);
-		}
-		return collector;
-	}
-
-	private List<DiscoverySelectorResolver> getAllDiscoverySelectorResolvers(EngineDiscoveryRequest request) {
-		Predicate<String> classNamePredicate = buildClassNamePredicate(request);
-		return asList( //
-			new ClasspathRootSelectorResolver(classNamePredicate), //
-			new PackageNameSelectorResolver(classNamePredicate), //
-			new ClassSelectorResolver(), //
-			new MethodSelectorResolver(), //
-			new UniqueIdSelectorResolver(logger)//
-		);
+		Set<Class<?>> completeTestClasses = completeTestClassesResolver.resolve(discoveryRequest, classFilter);
+		Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses = filteredTestClassesResolver.resolve(
+			discoveryRequest,
+			//only include filtered classes that are not already included completely
+			classFilter.and(notIn(completeTestClasses)));
+		return concat(asTestClassRequests(completeTestClasses), asTestClassRequests(filteredTestClasses));
 	}
 
 	private Predicate<Class<?>> createTestClassPredicate(EngineDiscoveryRequest discoveryRequest) {
@@ -84,5 +79,19 @@ public class VintageDiscoverer {
 			(testClass, reason) -> logger.debug(() -> String.format("Class %s was excluded by a class filter: %s",
 				testClass.getName(), reason.orElse("<unknown reason>"))));
 		return classFilter.toPredicate().and(isPotentialJUnit4TestClass);
+	}
+
+	private Predicate<? super Class<?>> notIn(Set<Class<?>> testClasses) {
+		return testClass -> !testClasses.contains(testClass);
+	}
+
+	private Stream<TestClassRequest> asTestClassRequests(Set<Class<?>> completeTestClasses) {
+		return completeTestClasses.stream().map(TestClassRequest::new);
+	}
+
+	private Stream<TestClassRequest> asTestClassRequests(
+			Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses) {
+		return filteredTestClasses.entrySet().stream().map(
+			entry -> new TestClassRequest(entry.getKey(), entry.getValue()));
 	}
 }
