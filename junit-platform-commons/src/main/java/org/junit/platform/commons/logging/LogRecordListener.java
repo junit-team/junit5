@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.logging;
 
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.logging.LogRecord;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * {@code LogRecordListener} is only intended for testing purposes within
@@ -48,6 +50,32 @@ public class LogRecordListener {
 	 */
 	public List<LogRecord> getLogRecords() {
 		return this.logRecords;
+	}
+
+	/**
+	 * Get the list of {@link LogRecord log records} that have been
+	 * {@linkplain #logRecordSubmitted submitted} to this listener
+	 * for the given class.
+	 *
+	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
+	 * {@code LogRecord} should not be updated by the client application. Thus,
+	 * the {@code LogRecords} in the returned list should only be inspected for
+	 * testing purposes and not modified in any way.
+	 *
+	 * @param clazz the class for which to get the log records; never {@code null}
+	 */
+	public List<LogRecord> getLogRecords(Class<?> clazz) {
+		// NOTE: we cannot use org.junit.platform.commons.util.Preconditions here
+		// since that would introduce a package cycle.
+		if (clazz == null) {
+			throw new JUnitException("Class must not be null");
+		}
+
+		// @formatter:off
+		return this.logRecords.stream()
+				.filter(logRecord -> logRecord.getLoggerName().equals(clazz.getName()))
+				.collect(toList());
+		// @formatter:on
 	}
 
 }
