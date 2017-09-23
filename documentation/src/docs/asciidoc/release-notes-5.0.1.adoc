@@ -9,6 +9,12 @@ For a complete list of all _closed_ issues and pull requests for this release, c
 link:{junit5-repo}+/milestone/16?closed=1+[5.0.1] milestone page in the JUnit repository
 on GitHub.
 
+[[release-notes-5.0.1-overall-improvements]]
+==== Overall Improvements
+
+* All artifacts now have an _optional_ instead of a mandatory dependency to the
+  _@API Guardian_ JAR.
+
 
 [[release-notes-5.0.1-junit-platform]]
 ==== JUnit Platform
