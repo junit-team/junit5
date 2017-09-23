@@ -37,6 +37,8 @@ import java.util.logging.Logger;
 
 import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
+import org.apache.maven.surefire.report.ConsoleOutputCapture;
+import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ReporterException;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
@@ -120,6 +122,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		ReporterFactory reporterFactory = parameters.getReporterFactory();
 		try {
 			RunListener runListener = reporterFactory.createReporter();
+			ConsoleOutputCapture.startCapture((ConsoleOutputReceiver) runListener);
 
 			for (Class<?> testClass : testsToRun) {
 				invokeSingleClass(testClass, runListener);
