@@ -59,10 +59,9 @@ class VintageDiscovererTests {
 			.filter(logRecord -> logRecord.getLevel() == Level.FINE)
 			.map(LogRecord::getMessage)
 			.filter(m -> m.equals("Class " + Bar.class.getName() + " was excluded by a class filter: no match"))
-			.findAny()
-		).isPresent();
+			.count()
+		).isEqualTo(1);
 		// @formatter:on
-
 	}
 
 	@Test

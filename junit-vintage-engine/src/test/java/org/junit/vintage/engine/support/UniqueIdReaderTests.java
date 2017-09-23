@@ -56,8 +56,8 @@ class UniqueIdReaderTests {
 			.map(LogRecord::getMessage)
 			.filter(m -> m.equals("Could not read unique ID for Description; using display name instead: "
 					+ description.getDisplayName()))
-			.findAny()
-		).isPresent();
+			.count()
+		).isEqualTo(1);
 		// @formatter:on
 	}
 

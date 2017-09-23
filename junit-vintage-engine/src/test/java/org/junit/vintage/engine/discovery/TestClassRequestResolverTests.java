@@ -73,8 +73,8 @@ class TestClassRequestResolverTests {
 			.filter(m -> m.equals("Runner " + IgnoredClassRunner.class.getName() //
 				+ " (used on " + testClass.getName() + ") does not support filtering" //
 				+ " and will therefore be run completely."))
-			.findAny()
-		).isPresent();
+			.count()
+		).isEqualTo(1);
 		// @formatter:on
 	}
 

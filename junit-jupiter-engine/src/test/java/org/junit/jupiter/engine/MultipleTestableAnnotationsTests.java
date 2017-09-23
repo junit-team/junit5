@@ -40,8 +40,8 @@ class MultipleTestableAnnotationsTests extends AbstractJupiterTestEngineTests {
 			.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
 			.map(LogRecord::getMessage)
 			.filter(m -> m.matches("Possible configuration error: method .+ resulted in multiple TestDescriptors .+"))
-			.findAny()
-		).isPresent();
+			.count()
+		).isEqualTo(1);
 		// @formatter:on
 	}
 
