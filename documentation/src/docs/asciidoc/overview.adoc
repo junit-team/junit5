@@ -119,7 +119,8 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 [[dependency-metadata-optional-dependencies]]
 ==== Optional Dependencies
 
-All of the above artifacts have an _optional_ dependency to the following _@API Guardian_ JAR.
+All of the above artifacts have an `optional` dependency in their published Maven POMs on
+the following _@API Guardian_ JAR.
 
 * *Group ID*: `org.apiguardian`
 * *Artifact ID*: `apiguardian-api`

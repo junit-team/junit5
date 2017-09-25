@@ -12,8 +12,8 @@ on GitHub.
 [[release-notes-5.0.1-overall-improvements]]
 ==== Overall Improvements
 
-* All artifacts now have an _optional_ instead of a mandatory dependency to the
-  _@API Guardian_ JAR.
+* All artifacts now have an `optional` instead of a mandatory dependency on the
+  _@API Guardian_ JAR in their published Maven POMs.
 
 
 [[release-notes-5.0.1-junit-platform]]
