@@ -707,8 +707,8 @@ public final class ReflectionUtils {
 	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
 		// unmodifiable since returned by public, non-internal method(s)
-		return Collections.unmodifiableList(
-			classpathScanner.scanForClassesInClasspathRoot(root, classTester, classNameFilter));
+		ClassFilter classFilter = ClassFilter.of(classNameFilter, classTester);
+		return Collections.unmodifiableList(classpathScanner.scanForClassesInClasspathRoot(root, classFilter));
 	}
 
 	/**
@@ -717,8 +717,8 @@ public final class ReflectionUtils {
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester,
 			Predicate<String> classNameFilter) {
 		// unmodifiable since returned by public, non-internal method(s)
-		return Collections.unmodifiableList(
-			classpathScanner.scanForClassesInPackage(basePackageName, classTester, classNameFilter));
+		ClassFilter classFilter = ClassFilter.of(classNameFilter, classTester);
+		return Collections.unmodifiableList(classpathScanner.scanForClassesInPackage(basePackageName, classFilter));
 	}
 
 	/**
