@@ -65,9 +65,9 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
-	void executesWithStringSource() {
+	void executesWithCsvSource() {
 		List<ExecutionEvent> executionEvents = execute(
-			selectMethod(TestCase.class, "testWithStringSource", String.class.getName()));
+			selectMethod(TestCase.class, "testWithCsvSource", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -152,7 +152,7 @@ class ParameterizedTestIntegrationTests {
 
 		@ParameterizedTest
 		@CsvSource({ "foo", "bar" })
-		void testWithStringSource(String argument) {
+		void testWithCsvSource(String argument) {
 			fail(argument);
 		}
 
