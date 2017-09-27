@@ -4347,13 +4347,14 @@ initialization methods on the test instance, etc.</p>
 runtime.</p>
 </div>
 <div class="paragraph">
-<p>If a test constructor or a <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>,
-<code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the parameter must be <em>resolved</em>
-at runtime by a <code>ParameterResolver</code>. A <code>ParameterResolver</code> can either be built-in (see
-<code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extensions-registration">registered by the user</a>.
-Generally speaking, parameters may be resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any
-combination thereof. For concrete examples, consult the source code for
-<code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
+<p>If a test constructor or a <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>,
+<code>@TestFactory</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts
+a parameter, the parameter must be <em>resolved</em> at runtime by a <code>ParameterResolver</code>. A
+<code>ParameterResolver</code> can either be built-in (see <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or
+<a href="#extensions-registration">registered by the user</a>. Generally speaking, parameters may be
+resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any combination thereof. For concrete
+examples, consult the source code for <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
+<code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -7838,7 +7839,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-09-25 15:23:01 EDT
+Last updated 2017-09-27 08:22:00 EDT
 </div>
 </div>
 </body>
