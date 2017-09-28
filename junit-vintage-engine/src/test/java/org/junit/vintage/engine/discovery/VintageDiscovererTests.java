@@ -11,6 +11,7 @@
 package org.junit.vintage.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.FilterResult.includedIf;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -53,6 +54,7 @@ class VintageDiscovererTests {
 		TestDescriptor testDescriptor = discoverer.discover(request, engineId());
 
 		assertThat(testDescriptor.getChildren()).hasSize(1);
+		assertThat(getOnlyElement(testDescriptor.getChildren()).getUniqueId().toString()).contains(Foo.class.getName());
 
 		// @formatter:off
 		assertThat(listener.getLogRecords(VintageDiscoverer.class, Level.FINE)

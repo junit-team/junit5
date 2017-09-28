@@ -128,8 +128,11 @@ class ClasspathScanner {
 			String fullyQualifiedClassName = determineFullyQualifiedClassName(baseDir, basePackageName, classFile);
 			if (classFilter.match(fullyQualifiedClassName)) {
 				try {
-					loadClass.apply(fullyQualifiedClassName, getClassLoader()).filter(classFilter).ifPresent(
-						classConsumer);
+					// @formatter:off
+					loadClass.apply(fullyQualifiedClassName, getClassLoader())
+							.filter(classFilter)
+							.ifPresent(classConsumer);
+					// @formatter:on
 				}
 				catch (InternalError internalError) {
 					handleInternalError(classFile, fullyQualifiedClassName, internalError);

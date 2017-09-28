@@ -14,7 +14,6 @@ import static java.util.Arrays.asList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.adaptFilter;
 import static org.junit.platform.engine.Filter.composeFilters;
-import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +22,7 @@ import java.util.function.Predicate;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
@@ -56,23 +56,26 @@ public class VintageDiscoverer {
 	}
 
 	private TestClassCollector collectTestClasses(EngineDiscoveryRequest discoveryRequest) {
-		Predicate<Class<?>> classFilter = createTestClassPredicate(discoveryRequest);
+		ClassFilter classFilter = createClassFilter(discoveryRequest);
 		TestClassCollector collector = new TestClassCollector();
-		for (DiscoverySelectorResolver selectorResolver : getAllDiscoverySelectorResolvers(discoveryRequest)) {
+		for (DiscoverySelectorResolver selectorResolver : getAllDiscoverySelectorResolvers()) {
 			selectorResolver.resolve(discoveryRequest, classFilter, collector);
 		}
 		return collector;
 	}
 
-	private List<DiscoverySelectorResolver> getAllDiscoverySelectorResolvers(EngineDiscoveryRequest request) {
-		Predicate<String> classNamePredicate = buildClassNamePredicate(request);
+	private List<DiscoverySelectorResolver> getAllDiscoverySelectorResolvers() {
 		return asList( //
-			new ClasspathRootSelectorResolver(classNamePredicate), //
-			new PackageNameSelectorResolver(classNamePredicate), //
+			new ClasspathRootSelectorResolver(), //
+			new PackageNameSelectorResolver(), //
 			new ClassSelectorResolver(), //
 			new MethodSelectorResolver(), //
 			new UniqueIdSelectorResolver()//
 		);
+	}
+
+	private ClassFilter createClassFilter(EngineDiscoveryRequest request) {
+		return ClassFilter.of(name -> true, createTestClassPredicate(request));
 	}
 
 	private Predicate<Class<?>> createTestClassPredicate(EngineDiscoveryRequest discoveryRequest) {

@@ -18,7 +18,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Stream;
@@ -26,6 +25,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -39,7 +39,7 @@ import org.junit.vintage.engine.VintageUniqueIdBuilder;
 @TrackLogRecords
 class UniqueIdSelectorResolverTests {
 
-	private static final Predicate<Class<?>> allClassesPredicate = clazz -> true;
+	private static final ClassFilter allClassesPredicate = ClassFilter.of(clazz -> true);
 
 	private final TestClassCollector collector = new TestClassCollector();
 
