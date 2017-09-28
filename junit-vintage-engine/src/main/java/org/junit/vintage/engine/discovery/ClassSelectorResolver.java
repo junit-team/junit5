@@ -10,8 +10,7 @@
 
 package org.junit.vintage.engine.discovery;
 
-import java.util.function.Predicate;
-
+import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.discovery.ClassSelector;
 
@@ -21,7 +20,7 @@ import org.junit.platform.engine.discovery.ClassSelector;
 class ClassSelectorResolver implements DiscoverySelectorResolver {
 
 	@Override
-	public void resolve(EngineDiscoveryRequest request, Predicate<Class<?>> classFilter, TestClassCollector collector) {
+	public void resolve(EngineDiscoveryRequest request, ClassFilter classFilter, TestClassCollector collector) {
 		// @formatter:off
 		request.getSelectorsByType(ClassSelector.class)
 			.stream()

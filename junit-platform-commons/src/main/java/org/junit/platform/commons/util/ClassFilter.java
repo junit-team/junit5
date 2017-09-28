@@ -41,9 +41,6 @@ public class ClassFilter implements Predicate<Class<?>> {
 	 * Create a {@link ClassFilter} instance that filters by names and classes.
 	 */
 	public static ClassFilter of(Predicate<String> namePredicate, Predicate<Class<?>> classPredicate) {
-		Preconditions.notNull(namePredicate, "name predicate must not be null");
-		Preconditions.notNull(classPredicate, "class predicate must not be null");
-
 		return new ClassFilter(namePredicate, classPredicate);
 	}
 
@@ -51,8 +48,8 @@ public class ClassFilter implements Predicate<Class<?>> {
 	private final Predicate<Class<?>> classPredicate;
 
 	private ClassFilter(Predicate<String> namePredicate, Predicate<Class<?>> classPredicate) {
-		this.classPredicate = classPredicate;
-		this.namePredicate = namePredicate;
+		this.namePredicate = Preconditions.notNull(namePredicate, "name predicate must not be null");
+		this.classPredicate = Preconditions.notNull(classPredicate, "class predicate must not be null");
 	}
 
 	/**
