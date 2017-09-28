@@ -130,7 +130,7 @@ class ClasspathScanner {
 				try {
 					// @formatter:off
 					loadClass.apply(fullyQualifiedClassName, getClassLoader())
-							.filter(classFilter)
+							.filter(classFilter) // Always use ".filter(classFilter)" to include future predicates.
 							.ifPresent(classConsumer);
 					// @formatter:on
 				}
