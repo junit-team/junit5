@@ -127,7 +127,7 @@ public interface TestEngine {
 	 * <p>Concrete test engine implementations may override this method in
 	 * order to determine the artifact ID by some other means.
 	 *
-	 * <p>implNote: Since JUnit Platform version 1.1 this default implementation
+	 * @implNote Since JUnit Platform version 1.1 this default implementation
 	 * returns the "module name" stored in the module (modular jar on the
 	 * module-path) of this test engine.
 	 *

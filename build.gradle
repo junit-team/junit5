@@ -270,6 +270,9 @@ subprojects { subproj ->
 			options.header = project.name
 			options.use = true
 			options.addStringOption('Xdoclint:html,syntax', '-quiet')
+			options.addStringOption('tag', 'apiNote:a:API Note:')
+			options.addStringOption('tag', 'implSpec:a:Implementation Requirements:')
+			options.addStringOption('tag', 'implNote:a:Implementation Note:')
 			options.encoding = 'UTF-8'
 		}
 
