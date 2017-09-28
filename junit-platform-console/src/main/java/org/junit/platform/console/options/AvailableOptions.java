@@ -50,6 +50,8 @@ class AvailableOptions {
 	private final OptionSpec<URI> selectedUris;
 	private final OptionSpec<String> selectedFiles;
 	private final OptionSpec<String> selectedDirectories;
+	private final OptionSpec<Void> scanModulePath;
+	private final OptionSpec<String> selectedModules;
 	private final OptionSpec<String> selectedPackages;
 	private final OptionSpec<String> selectedClasses;
 	private final OptionSpec<String> selectedMethods;
@@ -150,6 +152,16 @@ class AvailableOptions {
 			"Select a classpath resource for test discovery. This option can be repeated.") //
 				.withRequiredArg();
 
+		// --- Java Platform Module System -------------------------------------
+
+		scanModulePath = parser.acceptsAll(asList("scan-modulepath", "scan-module-path"), //
+			"EXPERIMENTAL: Scan all modules on the module-path for test discovery.");
+
+		selectedModules = parser.acceptsAll(asList("o", "select-module"), //
+			"EXPERIMENTAL: Select single module for test discovery. This option can be repeated.") //
+				.withRequiredArg() //
+				.describedAs("module name");
+
 		// --- Filters ---------------------------------------------------------
 
 		includeClassNamePattern = parser.acceptsAll(asList("n", "include-classname"),
@@ -217,6 +229,8 @@ class AvailableOptions {
 		result.setSelectedUris(detectedOptions.valuesOf(this.selectedUris));
 		result.setSelectedFiles(detectedOptions.valuesOf(this.selectedFiles));
 		result.setSelectedDirectories(detectedOptions.valuesOf(this.selectedDirectories));
+		result.setScanModulepath(detectedOptions.has(this.scanModulePath));
+		result.setSelectedModules(detectedOptions.valuesOf(this.selectedModules));
 		result.setSelectedPackages(detectedOptions.valuesOf(this.selectedPackages));
 		result.setSelectedClasses(detectedOptions.valuesOf(this.selectedClasses));
 		result.setSelectedMethods(detectedOptions.valuesOf(this.selectedMethods));

@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
@@ -20,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -238,6 +240,52 @@ public final class DiscoverySelectors {
 	public static ClasspathResourceSelector selectClasspathResource(String classpathResourceName) {
 		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
 		return new ClasspathResourceSelector(classpathResourceName);
+	}
+
+	/**
+	 * Create a {@code ModulePathSelector} for scanning all modules on the module-path.
+	 *
+	 * @see ModulePathSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "1.1")
+	public static ModulePathSelector selectModulePath() {
+		return new ModulePathSelector();
+	}
+
+	/**
+	 * Create a {@code ModulePathSelector} for scanning all modules on the module-path.
+	 *
+	 * @see ModuleFinderSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "1.1")
+	public static ModuleFinderSelector selectModuleFinder(ClassLoader loader, Path... entries) {
+		String[] strings = Arrays.stream(entries).map(Path::toString).toArray(String[]::new);
+		return new ModuleFinderSelector(loader, strings);
+	}
+
+	/**
+	 * Create a {@code ModulePathSelector} for scanning all modules on the module-path.
+	 *
+	 * @see ModuleFinderSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "1.1")
+	public static ModuleFinderSelector selectModuleFinder(ClassLoader loader, String... entries) {
+		return new ModuleFinderSelector(loader, entries);
+	}
+
+	/**
+	 * Create a {@code ModuleSelector} for the supplied module name.
+	 *
+	 * <p>The unnamed module is not supported.
+	 *
+	 * @param moduleName the module name to select; never {@code null} and
+	 * never blank
+	 * @see ModuleSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "1.1")
+	public static ModuleSelector selectModule(String moduleName) {
+		Preconditions.notBlank(moduleName, "Module name must not be null or blank");
+		return new ModuleSelector(moduleName.trim());
 	}
 
 	/**
