@@ -3,7 +3,7 @@
 
 *Date of Release:* ❓
 
-*Scope:* First maintenance release for 5.0.0
+*Scope:* Bug fixes for the 5.0.0 release
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/16?closed=1+[5.0.1] milestone page in the JUnit repository
@@ -41,4 +41,5 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* `PackageNameFilters` are now applied to tests selected via a `ClassSelector`,
+  `MethodSelector` or `UniqueIdSelector`.
