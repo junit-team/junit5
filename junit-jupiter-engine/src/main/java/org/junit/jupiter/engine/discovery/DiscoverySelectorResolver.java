@@ -44,8 +44,14 @@ public class DiscoverySelectorResolver {
 	private static final IsScannableTestClass isScannableTestClass = new IsScannableTestClass();
 
 	public void resolveSelectors(EngineDiscoveryRequest request, TestDescriptor engineDescriptor) {
-		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(engineDescriptor);
 		ClassFilter classFilter = buildClassFilter(request, isScannableTestClass);
+		resolve(request, engineDescriptor, classFilter);
+		filter(engineDescriptor, classFilter);
+		pruneTree(engineDescriptor);
+	}
+
+	private void resolve(EngineDiscoveryRequest request, TestDescriptor engineDescriptor, ClassFilter classFilter) {
+		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(engineDescriptor);
 
 		request.getSelectorsByType(ClasspathRootSelector.class).forEach(selector -> {
 			findAllClassesInClasspathRoot(selector.getClasspathRoot(), classFilter).forEach(
@@ -63,7 +69,10 @@ public class DiscoverySelectorResolver {
 		request.getSelectorsByType(UniqueIdSelector.class).forEach(selector -> {
 			javaElementsResolver.resolveUniqueId(selector.getUniqueId());
 		});
-		pruneTree(engineDescriptor);
+	}
+
+	private void filter(TestDescriptor engineDescriptor, ClassFilter classFilter) {
+		new DiscoveryFilterApplier().applyClassNamePredicate(classFilter::match, engineDescriptor);
 	}
 
 	private void pruneTree(TestDescriptor rootDescriptor) {
