@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine;
+package org.junit.jupiter.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.classTestDescriptor;
