@@ -14,15 +14,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.classTestDescriptor;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.engineDescriptor;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.nestedClassTestDescriptor;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.engine.Filter.composeFilters;
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
+import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
+import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClassNameFilter;
-import org.junit.platform.engine.discovery.PackageNameFilter;
 
 /**
  * Microtests for {@link DiscoveryFilterApplier}.
@@ -31,14 +32,8 @@ import org.junit.platform.engine.discovery.PackageNameFilter;
  */
 class DiscoveryFilterApplierTests {
 
-	private final DiscoveryFilterApplier applier = new DiscoveryFilterApplier();
-
 	@Test
 	void packageNameFilterInclude_nonMatchingPackagesAreExcluded() {
-
-		EngineDiscoveryRequest request = request().filters(
-			PackageNameFilter.includePackageNames("org.junit.jupiter.engine.unknown")).build();
-
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
 				.with(
@@ -47,16 +42,13 @@ class DiscoveryFilterApplierTests {
 				.build();
 		// @formatter:on
 
-		applier.applyAllFilters(request, engineDescriptor);
+		applyClassNamePredicate(engineDescriptor, includePackageNames("org.junit.jupiter.engine.unknown"));
 
 		assertThat(engineDescriptor.getDescendants()).isEmpty();
 	}
 
 	@Test
 	void packageNameFilterInclude_matchingPackagesAreIncluded() {
-
-		EngineDiscoveryRequest request = request().filters(
-			PackageNameFilter.includePackageNames("org.junit.jupiter.engine")).build();
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
@@ -65,7 +57,7 @@ class DiscoveryFilterApplierTests {
 				)
 				.build();
 
-		applier.applyAllFilters(request, engineDescriptor);
+		applyClassNamePredicate(engineDescriptor, includePackageNames("org.junit.jupiter.engine"));
 
 		assertThat(engineDescriptor.getDescendants())
 				.extracting(TestDescriptor::getUniqueId)
@@ -76,9 +68,6 @@ class DiscoveryFilterApplierTests {
 	@Test
 	void packageNameFilterExclude_matchingPackagesAreExcluded() {
 
-		EngineDiscoveryRequest request = request().filters(
-			PackageNameFilter.excludePackageNames("org.junit.jupiter.engine")).build();
-
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
 				.with(
@@ -87,16 +76,13 @@ class DiscoveryFilterApplierTests {
 				.build();
 		// @formatter:on
 
-		applier.applyAllFilters(request, engineDescriptor);
+		applyClassNamePredicate(engineDescriptor, excludePackageNames("org.junit.jupiter.engine"));
 
 		assertThat(engineDescriptor.getDescendants()).isEmpty();
 	}
 
 	@Test
 	void packageNameFilterExclude_nonMatchingPackagesAreIncluded() {
-
-		EngineDiscoveryRequest request = request().filters(
-			PackageNameFilter.excludePackageNames("org.junit.jupiter.engine.unknown")).build();
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
@@ -105,7 +91,7 @@ class DiscoveryFilterApplierTests {
 				)
 				.build();
 
-		applier.applyAllFilters(request, engineDescriptor);
+		applyClassNamePredicate(engineDescriptor, excludePackageNames("org.junit.jupiter.engine.unknown"));
 
 		assertThat(engineDescriptor.getDescendants())
 				.extracting(TestDescriptor::getUniqueId)
@@ -116,9 +102,6 @@ class DiscoveryFilterApplierTests {
 	@Test
 	void nonMatchingClassesAreExcluded() {
 
-		EngineDiscoveryRequest request = request().filters(
-			ClassNameFilter.includeClassNamePatterns(".*\\$MatchingClass")).build();
-
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
 				.with(
@@ -127,7 +110,7 @@ class DiscoveryFilterApplierTests {
 				)
 				.build();
 
-		applier.applyAllFilters(request, engineDescriptor);
+		applyClassNamePredicate(engineDescriptor, includeClassNamePatterns(".*\\$MatchingClass"));
 
 		assertThat(engineDescriptor.getDescendants())
 				.extracting(TestDescriptor::getUniqueId)
@@ -137,8 +120,6 @@ class DiscoveryFilterApplierTests {
 
 	@Test
 	void nestedTestClassesAreAlwaysIncludedWhenTheirParentIs() {
-		EngineDiscoveryRequest request = request().filters(
-			ClassNameFilter.includeClassNamePatterns(".*\\$MatchingClass")).build();
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
@@ -148,7 +129,7 @@ class DiscoveryFilterApplierTests {
 				)
 				.build();
 
-		applier.applyAllFilters(request, engineDescriptor);
+		applyClassNamePredicate(engineDescriptor, includeClassNamePatterns(".*\\$MatchingClass"));
 
 		assertThat(engineDescriptor.getDescendants())
 				.extracting(TestDescriptor::getUniqueId)
@@ -157,6 +138,11 @@ class DiscoveryFilterApplierTests {
 						UniqueId.root("nested-class", "nested")
 				);
 		// @formatter:on
+	}
+
+	private void applyClassNamePredicate(TestDescriptor engineDescriptor, Filter<String> filter) {
+		DiscoveryFilterApplier applier = new DiscoveryFilterApplier();
+		applier.applyClassNamePredicate(composeFilters(filter).toPredicate(), engineDescriptor);
 	}
 
 	private static class MatchingClass {
