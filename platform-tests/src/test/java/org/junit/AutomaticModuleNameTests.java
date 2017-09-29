@@ -93,10 +93,12 @@ class AutomaticModuleNameTests {
 					.map(ZipEntry::getName)
 					.filter(n -> n.endsWith(".class"))
 					.filter(n -> !n.startsWith(expectedStartOfPackageName))
+					.filter(n -> !(n.startsWith("META-INF/versions/") && n.contains(expectedStartOfPackageName)))
 					.collect(toList());
 			// @formatter:on
-			assertTrue(unexpectedNames.isEmpty(), unexpectedNames.size()
-					+ " entries are not located in (a sub-) package of " + expectedStartOfPackageName);
+			assertTrue(unexpectedNames.isEmpty(),
+				unexpectedNames.size() + " entries are not located in (a sub-) package of " + expectedStartOfPackageName
+						+ ": " + unexpectedNames);
 		}
 		catch (IOException e) {
 			fail("test jar file failed: " + e, e);
