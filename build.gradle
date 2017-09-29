@@ -45,6 +45,7 @@ ext {
 
 	platformProjects = [
 		'junit-platform-commons',
+		'junit-platform-commons-java-9',
 		'junit-platform-console',
 		'junit-platform-console-standalone',
 		'junit-platform-engine',
@@ -436,6 +437,27 @@ subprojects { subproj ->
 				'Implementation-Vendor': 'junit.org'
 			)
 		}
+		//
+		// Compile and include classes for the current Java version.
+		//
+		//   "junit-platform-commons" + "-java-" + "9"
+		//
+		def versionedName = project.name + '-java-' + JavaVersion.current().getMajorVersion()
+		def versionedProject = findProject(':' + versionedName)
+		if (versionedProject != null) {
+			dependsOn versionedProject.classes
+			doLast {
+				project.exec {
+					executable 'jar'
+					args = ['--update','--file', archivePath,
+							'--release', JavaVersion.current().getMajorVersion(),
+							'-C', versionedProject.compileJava.destinationDir,
+							'.'
+					]
+				}
+			}
+		}
+
 	}
 
 	spotless {
@@ -445,7 +467,7 @@ subprojects { subproj ->
 		def groovyFormatterConfigFile = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
 
 		java {
-			licenseHeaderFile headerFile, '(package|import) '
+			licenseHeaderFile headerFile, '(package|import|open|module) '
 			importOrderFile importOrderConfigFile
 			eclipse().configFile javaFormatterConfigFile
 			if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
