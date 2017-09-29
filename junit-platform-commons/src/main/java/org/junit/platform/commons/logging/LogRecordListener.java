@@ -95,7 +95,7 @@ public class LogRecordListener {
 			throw new JUnitException("Level must not be null");
 		}
 
-		return stream(clazz).filter(logRecord -> logRecord.getLevel() == level);
+		return stream(clazz).filter(logRecord -> logRecord.getLevel().equals(level));
 	}
 
 }

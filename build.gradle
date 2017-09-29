@@ -255,12 +255,13 @@ allprojects { subproj ->
 }
 
 subprojects { subproj ->
+	apply plugin: 'propdeps'
+	apply plugin: 'propdeps-maven'
+	apply plugin: 'propdeps-idea'
+	apply plugin: 'propdeps-eclipse'
+
 	if (subproj.name in mavenizedProjects) {
 		apply plugin: 'maven'
-		apply plugin: 'propdeps'
-		apply plugin: 'propdeps-maven'
-		apply plugin: 'propdeps-idea'
-		apply plugin: 'propdeps-eclipse'
 		apply plugin: 'signing'
 
 		if (subproj.name in platformProjects) {
@@ -531,6 +532,10 @@ subprojects { subproj ->
 			// TODO: JDK 9 fails to find any of the annotations from the package
 			// com.google.errorprone.annotations, even if they're applied to the JUnit 5 code base.
 			// Apply a select subset of them once they work properly with JDK 9.
+
+			// The 'optional' configuration is provided by the propdeps-plugin and allows
+			// us to declare dependencies that get flagged as optional in the generated
+			// Maven POMs.
 			optional('com.google.errorprone:error_prone_annotations:2.1.0')
 		}
 
