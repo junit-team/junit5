@@ -16,17 +16,20 @@ import static org.junit.platform.engine.Filter.adaptFilter;
 import static org.junit.platform.engine.Filter.composeFilters;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
+import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 
@@ -78,8 +81,10 @@ public class VintageDiscoverer {
 	}
 
 	private Predicate<Class<?>> createTestClassPredicate(EngineDiscoveryRequest discoveryRequest) {
-		List<ClassNameFilter> allClassNameFilters = discoveryRequest.getFiltersByType(ClassNameFilter.class);
-		Filter<Class<?>> adaptedFilter = adaptFilter(composeFilters(allClassNameFilters), Class::getName);
+		List<DiscoveryFilter<String>> filters = new ArrayList<>();
+		filters.addAll(discoveryRequest.getFiltersByType(ClassNameFilter.class));
+		filters.addAll(discoveryRequest.getFiltersByType(PackageNameFilter.class));
+		Filter<Class<?>> adaptedFilter = adaptFilter(composeFilters(filters), Class::getName);
 		Filter<Class<?>> classFilter = new ExclusionReasonConsumingFilter<>(adaptedFilter,
 			(testClass, reason) -> logger.debug(() -> String.format("Class %s was excluded by a class filter: %s",
 				testClass.getName(), reason.orElse("<unknown reason>"))));
