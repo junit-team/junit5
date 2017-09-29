@@ -13,6 +13,7 @@ package org.junit.jupiter.engine;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
@@ -22,6 +23,7 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.filter.ClasspathScanningSupport;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 
 /**
@@ -71,7 +73,8 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 
 	private void applyDiscoveryFilters(EngineDiscoveryRequest discoveryRequest,
 			JupiterEngineDescriptor engineDescriptor) {
-		new DiscoveryFilterApplier().applyAllFilters(discoveryRequest, engineDescriptor);
+		Predicate<String> classNamePredicate = ClasspathScanningSupport.buildClassNamePredicate(discoveryRequest);
+		new DiscoveryFilterApplier().applyClassNamePredicate(classNamePredicate, engineDescriptor);
 	}
 
 	@Override
