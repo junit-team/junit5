@@ -26,6 +26,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
@@ -265,6 +266,22 @@ class VintageTestEngineDiscoveryTests {
 			.contains(PlainJUnit4TestCaseWithSingleTestWhichFails.class.getName())
 			.doesNotContain(JUnit4TestCaseWithOverloadedMethod.class.getName())
 			.doesNotContain(PlainJUnit3TestCaseWithSingleTestWhichFails.class.getName());
+		// @formatter:on
+	}
+
+	@Test
+	void resolvesApplyingPackageNameFilters() throws Exception {
+		Path root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
+
+		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClasspathRoots(singleton(root))).filters(
+			includePackageNames("org"), includePackageNames("org.junit")).build();
+
+		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
+
+		// @formatter:off
+		assertThat(engineDescriptor.getChildren())
+				.extracting(TestDescriptor::getDisplayName)
+				.contains(PlainJUnit4TestCaseWithSingleTestWhichFails.class.getName());
 		// @formatter:on
 	}
 
@@ -554,6 +571,19 @@ class VintageTestEngineDiscoveryTests {
 		LauncherDiscoveryRequest request = request()
 				.selectors(selectMethod(testClass, testClass.getMethod("failingTest")))
 				.filters(includeClassNamePatterns("Foo"))
+				.build();
+		// @formatter:on
+
+		assertYieldsNoDescriptors(request);
+	}
+
+	@Test
+	void doesNotResolveMethodOfClassNotAcceptedByPackageNameFilter() throws Exception {
+		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
+		// @formatter:off
+		LauncherDiscoveryRequest request = request()
+				.selectors(selectMethod(testClass, testClass.getMethod("failingTest")))
+				.filters(includePackageNames("com.acme"))
 				.build();
 		// @formatter:on
 
