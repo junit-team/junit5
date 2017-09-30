@@ -49,7 +49,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.stream()
 				.map(ArgumentsSource::value)
 				.map(ReflectionUtils::newInstance)
-				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
+				.map(provider -> AnnotationConsumerInitializer.<ArgumentsProvider>initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, context))
 				.map(Arguments::get)
 				.map(arguments -> createInvocationContext(formatter, arguments))
