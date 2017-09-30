@@ -31,6 +31,9 @@ on GitHub.
 * When running on Java 9 or higher the default implementations of `getVersion()` and
   `getArtifactId()` in the interface `TestEngine` ask the Java Platform Module System
   for these information.
+* Class loading errors that occur during classpath scanning are now logged at `DEBUG`
+  level (i.e., the `FINE` log level in `java.util.logging`) instead of as warnings.
+
 
 [[release-notes-5.1.0-junit-jupiter]]
 ==== JUnit Jupiter
