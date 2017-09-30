@@ -524,6 +524,8 @@ subprojects { subproj ->
 
 	}
 
+	// TODO: Remove JDK 8 check when error-prone supports JDK 9
+	// (https://github.com/google/error-prone/issues/448)
 	if (JavaVersion.current() == JavaVersion.VERSION_1_8 && subproj.name != 'documentation') {
 		apply plugin: "net.ltgt.errorprone"
 
@@ -556,7 +558,7 @@ subprojects { subproj ->
 
 			// TODO: turning this check on and applying @com.google.errorprone.annotations.Immutable
 			// to immutable classes causes JDK 9 to fail to compile; investigate and consider
-			// turning it on when it no longer fails
+			// turning it on when error-prone supports JDK 9
 			'-Xep:Immutable:OFF',
 
 			// adds a lot of churn for not a lot of gain
@@ -580,7 +582,7 @@ subprojects { subproj ->
 
 			// TODO: turning this check on and applying @com.google.errorprone.annotations.Var to
 			// non-final variables causes JDK 9 to fail to compile; investigate and consider turning
-			// it on when it no longer fails
+			// it on when error-prone supports JDK 9
 			'-Xep:Var:OFF'
 		]
 		def testFlags = baseFlags + [
