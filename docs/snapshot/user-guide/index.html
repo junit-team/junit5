@@ -5349,9 +5349,9 @@ module.</p>
 </div>
 </li>
 <li>
-<p>When running on Java 9 or higher the default implementations of <code>getVersion()</code> and
-<code>getArtifactId()</code> in the interface <code>TestEngine</code> ask the Java Platform Module System
-for these information.</p>
+<p>When running on Java 9 or higher the <code>default</code> implementations of <code>getVersion()</code> and
+<code>getArtifactId()</code> in the <code>TestEngine</code> interface query the <em>Java Platform Module System</em>
+for this information.</p>
 </li>
 <li>
 <p>Class loading errors that occur during classpath scanning are now logged at <code>DEBUG</code>
