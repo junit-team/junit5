@@ -83,7 +83,7 @@ class VintageDiscovererTests {
 		TestDescriptor testDescriptor = discoverer.discover(request, engineId());
 
 		assertThat(testDescriptor.getChildren()).isEmpty();
-		assertThat(listener.getLogRecords(VintageDiscoverer.class)).isEmpty();
+		assertThat(listener.stream(VintageDiscoverer.class)).isEmpty();
 	}
 
 	public static class Foo {

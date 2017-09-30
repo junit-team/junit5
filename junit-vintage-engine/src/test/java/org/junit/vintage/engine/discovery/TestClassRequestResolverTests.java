@@ -45,7 +45,7 @@ class TestClassRequestResolverTests {
 
 		resolve(new TestClassRequest(testClass, asList(filter)));
 
-		assertThat(listener.getLogRecords(TestClassRequestResolver.class)).isEmpty();
+		assertThat(listener.stream(TestClassRequestResolver.class)).isEmpty();
 	}
 
 	@Test
@@ -55,7 +55,7 @@ class TestClassRequestResolverTests {
 
 		resolve(new TestClassRequest(testClass, filters));
 
-		assertThat(listener.getLogRecords(TestClassRequestResolver.class)).isEmpty();
+		assertThat(listener.stream(TestClassRequestResolver.class)).isEmpty();
 	}
 
 	@Test
@@ -67,7 +67,7 @@ class TestClassRequestResolverTests {
 		resolve(new TestClassRequest(testClass, asList(filter)));
 
 		// @formatter:off
-		assertThat(listener.getLogRecords(TestClassRequestResolver.class, Level.WARNING)
+		assertThat(listener.stream(TestClassRequestResolver.class, Level.WARNING)
 			.map(LogRecord::getMessage)
 			.filter(m -> m.equals("Runner " + IgnoredClassRunner.class.getName() //
 				+ " (used on " + testClass.getName() + ") does not support filtering" //

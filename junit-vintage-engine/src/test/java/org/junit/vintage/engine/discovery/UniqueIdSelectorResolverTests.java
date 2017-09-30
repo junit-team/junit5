@@ -74,7 +74,7 @@ class UniqueIdSelectorResolverTests {
 		new UniqueIdSelectorResolver().resolve(request, allClassesPredicate, collector);
 
 		assertNoRequests();
-		assertThat(listener.getLogRecords(UniqueIdSelectorResolver.class)).isEmpty();
+		assertThat(listener.stream(UniqueIdSelectorResolver.class)).isEmpty();
 	}
 
 	@Test
@@ -91,7 +91,7 @@ class UniqueIdSelectorResolverTests {
 
 	private void assertLoggedWarning(LogRecordListener listener, String expectedMessage) {
 		// @formatter:off
-		assertThat(listener.getLogRecords(UniqueIdSelectorResolver.class, Level.WARNING)
+		assertThat(listener.stream(UniqueIdSelectorResolver.class, Level.WARNING)
 			.map(LogRecord::getMessage)
 			.filter(m -> m.equals(expectedMessage))
 			.count()
