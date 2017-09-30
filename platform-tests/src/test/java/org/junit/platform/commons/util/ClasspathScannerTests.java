@@ -30,19 +30,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.jupiter.extensions.TempDirectory;
 import org.junit.jupiter.extensions.TempDirectory.Root;
+import org.junit.platform.commons.logging.LogRecordListener;
 
 /**
  * Unit tests for {@link ClasspathScanner}.
  *
  * @since 1.0
  */
+@TrackLogRecords
 class ClasspathScannerTests {
+
+	private static final ClassFilter allClasses = ClassFilter.of(type -> true);
 
 	private final List<Class<?>> loadedClasses = new ArrayList<>();
 
@@ -55,11 +62,9 @@ class ClasspathScannerTests {
 	private final ClasspathScanner classpathScanner = new ClasspathScanner(ClassLoaderUtils::getDefaultClassLoader,
 		trackingClassLoader);
 
-	private final ClassFilter allClasses = ClassFilter.of(type -> true);
-
 	@Test
-	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccursWithNullDetailedMessage()
-			throws Exception {
+	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccursWithNullDetailedMessage(
+			LogRecordListener listener) throws Exception {
 
 		Predicate<Class<?>> malformedClassNameSimulationFilter = clazz -> {
 			if (clazz.getSimpleName().equals(ClassForMalformedClassNameSimulation.class.getSimpleName())) {
@@ -69,10 +74,13 @@ class ClasspathScannerTests {
 		};
 
 		assertClassesScannedWhenExceptionIsThrown(malformedClassNameSimulationFilter);
+		assertWarningMessageLogged(listener, "Failed to load java.lang.Class for path .+ during classpath scanning.");
 	}
 
 	@Test
-	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccurs() throws Exception {
+	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccurs(LogRecordListener listener)
+			throws Exception {
+
 		Predicate<Class<?>> malformedClassNameSimulationFilter = clazz -> {
 			if (clazz.getSimpleName().equals(ClassForMalformedClassNameSimulation.class.getSimpleName())) {
 				throw new InternalError("Malformed class name");
@@ -81,10 +89,11 @@ class ClasspathScannerTests {
 		};
 
 		assertClassesScannedWhenExceptionIsThrown(malformedClassNameSimulationFilter);
+		assertWarningMessageLogged(listener, "The java.lang.Class loaded from path .+ has a malformed class name .+");
 	}
 
 	@Test
-	void scanForClassesInClasspathRootWhenOtherInternalErrorOccurs() throws Exception {
+	void scanForClassesInClasspathRootWhenOtherInternalErrorOccurs(LogRecordListener listener) throws Exception {
 		Predicate<Class<?>> otherInternalErrorSimulationFilter = clazz -> {
 			if (clazz.getSimpleName().equals(ClassForOtherInternalErrorSimulation.class.getSimpleName())) {
 				throw new InternalError("other internal error");
@@ -93,10 +102,11 @@ class ClasspathScannerTests {
 		};
 
 		assertClassesScannedWhenExceptionIsThrown(otherInternalErrorSimulationFilter);
+		assertWarningMessageLogged(listener, "Failed to load java.lang.Class for path .+ during classpath scanning.");
 	}
 
 	@Test
-	void scanForClassesInClasspathRootWhenGenericRuntimeExceptionOccurs() throws Exception {
+	void scanForClassesInClasspathRootWhenGenericRuntimeExceptionOccurs(LogRecordListener listener) throws Exception {
 		Predicate<Class<?>> runtimeExceptionSimulationFilter = clazz -> {
 			if (clazz.getSimpleName().equals(ClassForGenericRuntimeExceptionSimulation.class.getSimpleName())) {
 				throw new RuntimeException("a generic exception");
@@ -105,6 +115,7 @@ class ClasspathScannerTests {
 		};
 
 		assertClassesScannedWhenExceptionIsThrown(runtimeExceptionSimulationFilter);
+		assertWarningMessageLogged(listener, "Failed to load java.lang.Class for path .+ during classpath scanning.");
 	}
 
 	private void assertClassesScannedWhenExceptionIsThrown(Predicate<Class<?>> filter) throws Exception {
@@ -112,6 +123,16 @@ class ClasspathScannerTests {
 		List<Class<?>> classes = this.classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(),
 			classFilter);
 		assertThat(classes.size()).isGreaterThanOrEqualTo(150);
+	}
+
+	private void assertWarningMessageLogged(LogRecordListener listener, String regex) {
+		// @formatter:off
+		assertThat(listener.getLogRecords(ClasspathScanner.class, Level.WARNING)
+				.map(LogRecord::getMessage)
+				.filter(m -> m.matches(regex))
+				.count()
+		).isEqualTo(1);
+		// @formatter:on
 	}
 
 	@Test
