@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
@@ -238,6 +239,21 @@ public final class DiscoverySelectors {
 	public static ClasspathResourceSelector selectClasspathResource(String classpathResourceName) {
 		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
 		return new ClasspathResourceSelector(classpathResourceName);
+	}
+
+	/**
+	 * Create a {@code ModuleSelector} for the supplied module name.
+	 *
+	 * <p>The unnamed module is not supported.
+	 *
+	 * @param moduleName the module name to select; never {@code null} and
+	 * never blank
+	 * @see ModuleSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "1.1")
+	public static ModuleSelector selectModule(String moduleName) {
+		Preconditions.notBlank(moduleName, "Module name must not be null or blank");
+		return new ModuleSelector(moduleName.trim());
 	}
 
 	/**

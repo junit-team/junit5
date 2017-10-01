@@ -50,6 +50,7 @@ class AvailableOptions {
 	private final OptionSpec<URI> selectedUris;
 	private final OptionSpec<String> selectedFiles;
 	private final OptionSpec<String> selectedDirectories;
+	private final OptionSpec<String> selectedModules;
 	private final OptionSpec<String> selectedPackages;
 	private final OptionSpec<String> selectedClasses;
 	private final OptionSpec<String> selectedMethods;
@@ -134,6 +135,11 @@ class AvailableOptions {
 			"Select a directory for test discovery. This option can be repeated.") //
 				.withRequiredArg();
 
+		selectedModules = parser.acceptsAll(asList("o", "select-module"), //
+			"EXPERIMENTAL: Select single module for test discovery. This option can be repeated.") //
+				.withRequiredArg() //
+				.describedAs("module name");
+
 		selectedPackages = parser.acceptsAll(asList("p", "select-package"), //
 			"Select a package for test discovery. This option can be repeated.") //
 				.withRequiredArg();
@@ -217,6 +223,7 @@ class AvailableOptions {
 		result.setSelectedUris(detectedOptions.valuesOf(this.selectedUris));
 		result.setSelectedFiles(detectedOptions.valuesOf(this.selectedFiles));
 		result.setSelectedDirectories(detectedOptions.valuesOf(this.selectedDirectories));
+		result.setSelectedModules(detectedOptions.valuesOf(this.selectedModules));
 		result.setSelectedPackages(detectedOptions.valuesOf(this.selectedPackages));
 		result.setSelectedClasses(detectedOptions.valuesOf(this.selectedClasses));
 		result.setSelectedMethods(detectedOptions.valuesOf(this.selectedMethods));

@@ -55,6 +55,7 @@ class DiscoveryRequestCreator {
 				"Scanning the classpath and using explicit selectors at the same time is not supported");
 			return createClasspathRootSelectors(options);
 		}
+		// TODO if (options.isScanModulepath() {...}
 		return createExplicitDiscoverySelectors(options);
 	}
 
@@ -77,6 +78,7 @@ class DiscoveryRequestCreator {
 		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
 		options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
 		options.getSelectedDirectories().stream().map(DiscoverySelectors::selectDirectory).forEach(selectors::add);
+		options.getSelectedModules().stream().map(DiscoverySelectors::selectModule).forEach(selectors::add);
 		options.getSelectedPackages().stream().map(DiscoverySelectors::selectPackage).forEach(selectors::add);
 		options.getSelectedClasses().stream().map(DiscoverySelectors::selectClass).forEach(selectors::add);
 		options.getSelectedMethods().stream().map(DiscoverySelectors::selectMethod).forEach(selectors::add);

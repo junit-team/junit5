@@ -21,6 +21,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirectory;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModule;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
@@ -140,6 +141,12 @@ class DiscoverySelectorsTests {
 		// standard use case
 		selector = selectClasspathResource("A/B/C/spec.json");
 		assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
+	}
+
+	@Test
+	void selectModuleByName() {
+		ModuleSelector selector = selectModule("java.base");
+		assertEquals("java.base", selector.getModuleName());
 	}
 
 	@Test

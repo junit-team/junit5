@@ -48,6 +48,7 @@ public class CommandLineOptions {
 	private List<URI> selectedUris = emptyList();
 	private List<String> selectedFiles = emptyList();
 	private List<String> selectedDirectories = emptyList();
+	private List<String> selectedModules = emptyList();
 	private List<String> selectedPackages = emptyList();
 	private List<String> selectedClasses = emptyList();
 	private List<String> selectedMethods = emptyList();
@@ -130,6 +131,14 @@ public class CommandLineOptions {
 
 	public void setSelectedDirectories(List<String> selectedDirectories) {
 		this.selectedDirectories = selectedDirectories;
+	}
+
+	public List<String> getSelectedModules() {
+		return selectedModules;
+	}
+
+	public void setSelectedModules(List<String> selectedModules) {
+		this.selectedModules = selectedModules;
 	}
 
 	public List<String> getSelectedPackages() {
