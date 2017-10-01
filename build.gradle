@@ -101,6 +101,7 @@ ext {
 allprojects { subproj ->
 
 	apply plugin: 'java-library'
+	apply plugin: 'kotlin'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'com.diffplug.gradle.spotless'
@@ -226,17 +227,15 @@ allprojects { subproj ->
 			}
 		}
 
-		afterEvalute {
-			// Disable javac warnings when executing Clover
-			compileJava.options*.compilerArgs = ['-Xlint:none']
-			compileTestJava.options*.compilerArgs = ['-Xlint:none']
+		// Disable javac warnings when executing Clover
+		compileJava.options*.compilerArgs = ['-Xlint:none']
+		compileTestJava.options*.compilerArgs = ['-Xlint:none']
 
-			compileJava.source = instrumentedJavaSourcesDir
-			sourceSets.main.compileClasspath += configurations.clover
-			sourceSets.test.compileClasspath += configurations.clover
-			sourceSets.test.runtimeClasspath += configurations.clover
-			compileJava.dependsOn cloverInstrumentJava
-		}
+		compileJava.source = instrumentedJavaSourcesDir
+		sourceSets.main.compileClasspath += configurations.clover
+		sourceSets.test.compileClasspath += configurations.clover
+		sourceSets.test.runtimeClasspath += configurations.clover
+		compileJava.dependsOn cloverInstrumentJava
 	}
 }
 
