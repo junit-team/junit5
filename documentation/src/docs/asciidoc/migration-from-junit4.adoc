@@ -54,8 +54,8 @@ adapters and is limited to those rules that are semantically compatible to the J
 Jupiter extension model, i.e. those that do not completely change the overall execution
 flow of the test.
 
-JUnit Jupiter currently supports the following three `Rule` types including subclasses of
-those types:
+The `junit-jupiter-migrationsupport` module from JUnit Jupiter currently supports the
+following three `Rule` types including subclasses of those types:
 
 * `org.junit.rules.ExternalResource` (including `org.junit.rules.TemporaryFolder`)
 * `org.junit.rules.Verifier` (including `org.junit.rules.ErrorCollector`)
