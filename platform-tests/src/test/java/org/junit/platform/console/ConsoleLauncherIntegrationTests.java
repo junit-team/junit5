@@ -54,4 +54,12 @@ class ConsoleLauncherIntegrationTests {
 		);
 	}
 
+	@Test
+	void executeSelectingModuleNames() {
+		String[] args1 = { "-e", "junit-jupiter", "-o", "java.base" };
+		assertEquals(0, new ConsoleLauncherWrapper().execute(args1).getTestsFoundCount());
+		String[] args2 = { "-e", "junit-jupiter", "--select-module", "java.base" };
+		assertEquals(0, new ConsoleLauncherWrapper().execute(args2).getTestsFoundCount());
+	}
+
 }
