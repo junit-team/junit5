@@ -49,7 +49,7 @@ public class LogRecordListener {
 	 * the {@code LogRecords} in the returned stream should only be inspected for
 	 * testing purposes and not modified in any way.
 	 */
-	public Stream<LogRecord> getLogRecords() {
+	public Stream<LogRecord> stream() {
 		return this.logRecords.stream();
 	}
 
@@ -65,14 +65,14 @@ public class LogRecordListener {
 	 *
 	 * @param clazz the class for which to get the log records; never {@code null}
 	 */
-	public Stream<LogRecord> getLogRecords(Class<?> clazz) {
+	public Stream<LogRecord> stream(Class<?> clazz) {
 		// NOTE: we cannot use org.junit.platform.commons.util.Preconditions here
 		// since that would introduce a package cycle.
 		if (clazz == null) {
 			throw new JUnitException("Class must not be null");
 		}
 
-		return getLogRecords().filter(logRecord -> logRecord.getLoggerName().equals(clazz.getName()));
+		return stream().filter(logRecord -> logRecord.getLoggerName().equals(clazz.getName()));
 	}
 
 	/**
@@ -88,14 +88,14 @@ public class LogRecordListener {
 	 * @param clazz the class for which to get the log records; never {@code null}
 	 * @param level the log level for which to get the log records; never {@code null}
 	 */
-	public Stream<LogRecord> getLogRecords(Class<?> clazz, Level level) {
+	public Stream<LogRecord> stream(Class<?> clazz, Level level) {
 		// NOTE: we cannot use org.junit.platform.commons.util.Preconditions here
 		// since that would introduce a package cycle.
 		if (level == null) {
 			throw new JUnitException("Level must not be null");
 		}
 
-		return getLogRecords(clazz).filter(logRecord -> logRecord.getLevel() == level);
+		return stream(clazz).filter(logRecord -> logRecord.getLevel() == level);
 	}
 
 }

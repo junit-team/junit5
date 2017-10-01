@@ -86,6 +86,7 @@ asciidoctor {
 				'platform-version': project.property('platformVersion'),
 				'vintage-version': project.property('vintageVersion'),
 				'junit4-version': project.property('junit4Version'),
+				'apiguardian-version': project.property('apiGuardianVersion'),
 				'release-branch': project.property('releaseBranch'),
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],

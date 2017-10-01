@@ -28,6 +28,11 @@ on GitHub.
   declaring a custom _display name_ for a test suite.
   - Supported by the `JUnitPlatform` runner for JUnit 4 in the `junit-platform-runner`
     module.
+* When running on Java 9 or higher the `default` implementations of `getVersion()` and
+  `getArtifactId()` in the `TestEngine` interface query the _Java Platform Module System_
+  for this information.
+* Class loading errors that occur during classpath scanning are now logged at `DEBUG`
+  level (i.e., the `FINE` log level in `java.util.logging`) instead of as warnings.
 
 
 [[release-notes-5.1.0-junit-jupiter]]
@@ -35,11 +40,7 @@ on GitHub.
 
 ===== Bug Fixes
 
-* `ExpectedExceptionSupport` from the `junit-jupiter-migrationsupport` module no longer
-  swallows exceptions if the test class does not declare a JUnit 4 `ExpectedException`
-  rule.
-  - Consequently, `@EnableRuleMigrationSupport` and `ExpectedExceptionSupport` may now be
-    used without declaring an `ExpectedException` rule.
+* ❓
 
 ===== Deprecations and Breaking Changes
 

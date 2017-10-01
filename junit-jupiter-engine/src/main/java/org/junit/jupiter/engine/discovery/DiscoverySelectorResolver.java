@@ -13,14 +13,14 @@ package org.junit.jupiter.engine.discovery;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
-import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate;
+import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassFilter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
+import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassSelector;
@@ -44,16 +44,21 @@ public class DiscoverySelectorResolver {
 	private static final IsScannableTestClass isScannableTestClass = new IsScannableTestClass();
 
 	public void resolveSelectors(EngineDiscoveryRequest request, TestDescriptor engineDescriptor) {
+		ClassFilter classFilter = buildClassFilter(request, isScannableTestClass);
+		resolve(request, engineDescriptor, classFilter);
+		filter(engineDescriptor, classFilter);
+		pruneTree(engineDescriptor);
+	}
+
+	private void resolve(EngineDiscoveryRequest request, TestDescriptor engineDescriptor, ClassFilter classFilter) {
 		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(engineDescriptor);
-		Predicate<String> classNamePredicate = buildClassNamePredicate(request);
 
 		request.getSelectorsByType(ClasspathRootSelector.class).forEach(selector -> {
-			findAllClassesInClasspathRoot(selector.getClasspathRoot(), isScannableTestClass,
-				classNamePredicate).forEach(javaElementsResolver::resolveClass);
+			findAllClassesInClasspathRoot(selector.getClasspathRoot(), classFilter).forEach(
+				javaElementsResolver::resolveClass);
 		});
 		request.getSelectorsByType(PackageSelector.class).forEach(selector -> {
-			findAllClassesInPackage(selector.getPackageName(), isScannableTestClass, classNamePredicate).forEach(
-				javaElementsResolver::resolveClass);
+			findAllClassesInPackage(selector.getPackageName(), classFilter).forEach(javaElementsResolver::resolveClass);
 		});
 		request.getSelectorsByType(ClassSelector.class).forEach(selector -> {
 			javaElementsResolver.resolveClass(selector.getJavaClass());
@@ -64,7 +69,10 @@ public class DiscoverySelectorResolver {
 		request.getSelectorsByType(UniqueIdSelector.class).forEach(selector -> {
 			javaElementsResolver.resolveUniqueId(selector.getUniqueId());
 		});
-		pruneTree(engineDescriptor);
+	}
+
+	private void filter(TestDescriptor engineDescriptor, ClassFilter classFilter) {
+		new DiscoveryFilterApplier().applyClassNamePredicate(classFilter::match, engineDescriptor);
 	}
 
 	private void pruneTree(TestDescriptor rootDescriptor) {

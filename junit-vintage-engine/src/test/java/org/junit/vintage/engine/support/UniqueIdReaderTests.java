@@ -38,7 +38,7 @@ class UniqueIdReaderTests {
 		Serializable uniqueId = new UniqueIdReader().apply(description);
 
 		assertEquals("uniqueId", uniqueId);
-		assertThat(listener.getLogRecords(UniqueIdReader.class)).isEmpty();
+		assertThat(listener.stream(UniqueIdReader.class)).isEmpty();
 	}
 
 	@Test
@@ -51,7 +51,7 @@ class UniqueIdReaderTests {
 		assertEquals(description.getDisplayName(), uniqueId);
 
 		// @formatter:off
-		assertThat(listener.getLogRecords(UniqueIdReader.class, Level.WARNING)
+		assertThat(listener.stream(UniqueIdReader.class, Level.WARNING)
 			.map(LogRecord::getMessage)
 			.filter(m -> m.equals("Could not read unique ID for Description; using display name instead: "
 					+ description.getDisplayName()))

@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PackageUtils;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * A {@code TestEngine} facilitates <em>discovery</em> and <em>execution</em> of
@@ -126,6 +127,10 @@ public interface TestEngine {
 	 * <p>Concrete test engine implementations may override this method in
 	 * order to determine the artifact ID by some other means.
 	 *
+	 * @implNote Since JUnit Platform version 1.1 this default implementation
+	 * returns the "module name" stored in the module (modular jar on the
+	 * module-path) of this test engine.
+	 *
 	 * @return an {@code Optional} containing the artifact ID; never
 	 * {@code null} but potentially empty if the artifact ID is unknown
 	 * @see Class#getPackage()
@@ -134,6 +139,10 @@ public interface TestEngine {
 	 * @see #getVersion()
 	 */
 	default Optional<String> getArtifactId() {
+		if (ReflectionUtils.isJavaPlatformModuleSystemAvailable()) {
+			String[] getters = { "getModule", "getDescriptor", "name" };
+			return Optional.of(String.valueOf(ReflectionUtils.invokeGetters(getClass(), getters)));
+		}
 		return PackageUtils.getAttribute(getClass(), Package::getImplementationTitle);
 	}
 
@@ -159,6 +168,10 @@ public interface TestEngine {
 	 * <p>Concrete test engine implementations may override this method to
 	 * determine the version by some other means.
 	 *
+	 * <p>implNote: Since JUnit Platform version 1.1 this default implementation
+	 * honors the "raw version" information stored in the module (modular jar
+	 * on the module-path) of this test engine.
+	 *
 	 * @return an {@code Optional} containing the version; never {@code null}
 	 * but potentially empty if the version is unknown
 	 * @see Class#getPackage()
@@ -171,8 +184,12 @@ public interface TestEngine {
 		if (standalone.isPresent()) {
 			return standalone;
 		}
-		return Optional.of(
-			PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse("DEVELOPMENT"));
+		String fallback = "DEVELOPMENT";
+		if (ReflectionUtils.isJavaPlatformModuleSystemAvailable()) {
+			String[] getters = { "getModule", "getDescriptor", "rawVersion" };
+			return ReflectionUtils.invokeGetters(Optional.of(fallback), getClass(), getters);
+		}
+		return Optional.of(PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse(fallback));
 	}
 
 }
