@@ -13,6 +13,7 @@ package org.junit.platform.commons.util;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.IOException;
+import java.lang.module.ModuleFinder;
 import java.lang.module.ModuleReader;
 import java.lang.module.ModuleReference;
 import java.lang.module.ResolvedModule;
@@ -23,8 +24,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.lang.model.SourceVersion;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -46,11 +45,25 @@ import org.junit.platform.commons.logging.LoggerFactory;
 @API(status = INTERNAL, since = "1.1")
 public class JigsawUtils {
 
+	/**
+	 * Special module name to scan all resolved modules found in the boot layer configuration.
+	 */
+	private static final String ALL_MODULES = "ALL-MODULES";
+
 	private static final Logger logger = LoggerFactory.getLogger(JigsawUtils.class);
 
 	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter filter) {
-		logger.config(() -> "findAllClassesInModule(" + moduleName + ")");
-		return scan(boot(moduleName::equals), filter, JigsawUtils.class.getClassLoader());
+		Preconditions.notBlank(moduleName, "Module name must not be null or empty");
+		Preconditions.notNull(filter, "Class filter must not be null");
+
+		logger.debug(() -> "Looking for classes in module: " + moduleName);
+		Predicate<String> moduleNamePredicate = moduleName::equals;
+		if (ALL_MODULES.equals(moduleName)) {
+			Set<String> systemModules = ModuleFinder.ofSystem().findAll().stream().map(
+				reference -> reference.descriptor().name()).collect(Collectors.toSet());
+			moduleNamePredicate = name -> !systemModules.contains(name);
+		}
+		return scan(boot(moduleNamePredicate), filter, JigsawUtils.class.getClassLoader());
 	}
 
 	// collect module references from boot module layer
@@ -62,11 +75,13 @@ public class JigsawUtils {
 
 	// scan for classes
 	private static List<Class<?>> scan(Set<ModuleReference> references, ClassFilter filter, ClassLoader loader) {
+		logger.debug(() -> "Scanning " + references.size() + " module references: " + references);
 		ModuleReferenceScanner scanner = new ModuleReferenceScanner(filter, loader);
 		List<Class<?>> classes = new ArrayList<>();
 		for (ModuleReference reference : references) {
 			classes.addAll(scanner.scan(reference));
 		}
+		logger.debug(() -> "Found " + classes.size() + " classes: " + classes);
 		return Collections.unmodifiableList(classes);
 	}
 
@@ -92,7 +107,7 @@ public class JigsawUtils {
 					// @formatter:off
 					return names.filter(name -> name.endsWith(".class"))
 							.map(this::className)
-							.filter(SourceVersion::isIdentifier)
+							.filter(name -> !name.equals("module-info"))
 							.filter(classFilter::match)
 							.map(this::loadClassUnchecked)
 							.filter(classFilter::match)
