@@ -226,15 +226,17 @@ allprojects { subproj ->
 			}
 		}
 
-		// Disable javac warnings when executing Clover
-		compileJava.options*.compilerArgs = ['-Xlint:none']
-		compileTestJava.options*.compilerArgs = ['-Xlint:none']
+		afterEvalute {
+			// Disable javac warnings when executing Clover
+			compileJava.options*.compilerArgs = ['-Xlint:none']
+			compileTestJava.options*.compilerArgs = ['-Xlint:none']
 
-		compileJava.source = instrumentedJavaSourcesDir
-		sourceSets.main.compileClasspath += configurations.clover
-		sourceSets.test.compileClasspath += configurations.clover
-		sourceSets.test.runtimeClasspath += configurations.clover
-		compileJava.dependsOn cloverInstrumentJava
+			compileJava.source = instrumentedJavaSourcesDir
+			sourceSets.main.compileClasspath += configurations.clover
+			sourceSets.test.compileClasspath += configurations.clover
+			sourceSets.test.runtimeClasspath += configurations.clover
+			compileJava.dependsOn cloverInstrumentJava
+		}
 	}
 }
 
