@@ -437,20 +437,23 @@ subprojects { subproj ->
 				'Implementation-Vendor': 'junit.org'
 			)
 		}
-		//
-		// Compile and include classes for the current Java version.
-		//
-		//   "junit-platform-commons" + "-java-" + "9"
-		//
-		def versionedName = project.name + '-java-' + JavaVersion.current().getMajorVersion()
-		def versionedProject = findProject(':' + versionedName)
-		if (versionedProject != null) {
-			dependsOn versionedProject.classes
+
+		// If available, compile and include classes for other Java versions.
+		['9'].each { version ->
+			def versionedName = project.name + '-java-' + version
+			def versionedProject = findProject(':' + versionedName)
+			if (versionedProject == null) {
+				return
+			}
+			// We're only interested in the compiled classes. So we depend
+			// on the classes task and change (-C) to the destination
+			// directory of the version-aware project later.
+			dependsOn = [versionedProject.classes]
 			doLast {
 				project.exec {
 					executable 'jar'
 					args = ['--update','--file', archivePath,
-							'--release', JavaVersion.current().getMajorVersion(),
+							'--release', version,
 							'-C', versionedProject.compileJava.destinationDir,
 							'.'
 					]

@@ -46,12 +46,25 @@ import org.junit.platform.commons.logging.LoggerFactory;
 public class JigsawUtils {
 
 	/**
+	 * Version hint is set to {@code "9"} here.
+	 */
+	public static final String VERSION = "9";
+
+	/**
 	 * Special module name to scan all resolved modules found in the boot layer configuration.
 	 */
 	private static final String ALL_MODULES = "ALL-MODULES";
 
 	private static final Logger logger = LoggerFactory.getLogger(JigsawUtils.class);
 
+	/**
+	 * Find all classes for the given module name.
+	 *
+	 * @param moduleName name of the module to scan
+	 * @param filter class filter to apply
+	 * @return an immutable list of all such classes found; never {@code null}
+	 * but potentially empty
+	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter filter) {
 		Preconditions.notBlank(moduleName, "Module name must not be null or empty");
 		Preconditions.notNull(filter, "Class filter must not be null");

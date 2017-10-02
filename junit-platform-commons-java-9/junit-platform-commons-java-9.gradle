@@ -18,11 +18,53 @@ dependencies {
 // https://github.com/schauder/degraph/issues/87
 degraph.enabled = false
 
-// No jar, no (Maven) install -- we just want the classes
+// No "main" jar, no (Maven) install -- we just want the classes
 jar.enabled = false
 install.enabled = false
 
-compileJava() {
+tasks.withType(JavaCompile) {
 	sourceCompatibility = JavaVersion.VERSION_1_9
 	targetCompatibility = JavaVersion.VERSION_1_9
+	options.encoding = 'UTF-8'
 }
+
+// Exclude "integration" package from default "class-path based" test run.
+// Tests in the "integration" package assume to be run on the module-path.
+junitPlatform {
+	filters {
+		packages {
+			exclude 'integration'
+		}
+	}
+}
+
+// Create "junit-commons-integration-tests.jar" archive which will be later
+// mounted as an automatic jar into the integration test module-path.
+task generateIntegrationTestsJar(type: Jar, dependsOn: compileTestJava) {
+	archiveName 'junit-commons-integration-tests.jar'
+	from compileTestJava.destinationDir
+	include("integration/**/*")
+}
+
+// Copy runtime dependencies to a single directory.
+task generateDependenciesDirectory(type: Copy) {
+	into buildDir.toPath().resolve('deps').toString()
+	from configurations.testRuntimeClasspath
+}
+
+// Execute console launcher on the module-path.
+task testScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, generateIntegrationTestsJar]) {
+	executable = 'java'
+	args = [
+			'--module-path', files(
+					generateDependenciesDirectory.destinationDir,
+					generateIntegrationTestsJar.archivePath
+				).asPath,
+			'--add-modules', 'ALL-MODULE-PATH',
+			'--module', 'org.junit.platform.console',
+			'--scan-module-path'
+	]
+	println args
+}
+
+test.dependsOn testScanModulepath

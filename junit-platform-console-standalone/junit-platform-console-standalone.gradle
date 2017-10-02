@@ -72,12 +72,17 @@ shadowJar {
 	manifest {
 		inheritFrom project.tasks.jar.manifest
 		attributes(
-			'Specification-Title': "$project.name",
-			'Implementation-Title': "$project.name",
-			// generate test engine version information in single shared manifest file
-			// pattern of key and value: `'Engine-Version-{YourTestEngine#getId()}': '47.11'`
-			'Engine-Version-junit-jupiter': "$rootProject.version",
-			'Engine-Version-junit-vintage': "$vintageVersion"
+			'Specification-Title': project.name,
+			'Implementation-Title': project.name,
+			// Generate test engine version information in single shared manifest file.
+			// Pattern of key and value: `'Engine-Version-{YourTestEngine#getId()}': '47.11'`
+			'Engine-Version-junit-jupiter': rootProject.version,
+			'Engine-Version-junit-vintage': vintageVersion,
+			// Version-aware binaries are already included - set Multi-Release flag here.
+			// See http://openjdk.java.net/jeps/238 for details
+			// Note: the "jar --update ... --release X" command does not work with the
+			// shadowed JAR as it contains nested classes that do comply multi-release jars.
+			'Multi-Release': 'true'
 		)
 	}
 }

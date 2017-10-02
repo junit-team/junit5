@@ -23,6 +23,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,7 +56,12 @@ class DiscoveryRequestCreator {
 				"Scanning the classpath and using explicit selectors at the same time is not supported");
 			return createClasspathRootSelectors(options);
 		}
-		// TODO if (options.isScanModulepath() {...}
+		if (options.isScanModulepath()) {
+			Preconditions.condition(!options.hasExplicitSelectors(),
+				"Scanning the module-path and using explicit selectors at the same time is not supported");
+			return Collections.singletonList(DiscoverySelectors.selectModule("ALL-MODULES"));
+
+		}
 		return createExplicitDiscoverySelectors(options);
 	}
 
