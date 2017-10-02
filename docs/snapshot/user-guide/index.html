@@ -2298,9 +2298,9 @@ in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for details.
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">World</span><span class="delimiter">&quot;</span></span> })
-<span class="type">void</span> testWithStringParameter(<span class="predefined-type">String</span> argument) {
-    assertNotNull(argument);
+<span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content">racecar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">radar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">able was I ere I saw elba</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> palindromes(<span class="predefined-type">String</span> candidate) {
+    assertTrue(isPalindrome(candidate));
 }</code></pre>
 </div>
 </div>
@@ -7843,7 +7843,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-10-01 11:23:20 EDT
+Last updated 2017-10-02 12:09:59 EDT
 </div>
 </div>
 </body>
