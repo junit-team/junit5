@@ -50,11 +50,14 @@ class AvailableOptions {
 	private final OptionSpec<URI> selectedUris;
 	private final OptionSpec<String> selectedFiles;
 	private final OptionSpec<String> selectedDirectories;
-	private final OptionSpec<String> selectedModules;
 	private final OptionSpec<String> selectedPackages;
 	private final OptionSpec<String> selectedClasses;
 	private final OptionSpec<String> selectedMethods;
 	private final OptionSpec<String> selectedClasspathResources;
+
+	// Java Platform Module System Options
+	private final OptionSpec<Void> scanModulepath;
+	private final OptionSpec<String> selectedModules;
 
 	// Filters
 	private final OptionSpec<String> includeClassNamePattern;
@@ -109,6 +112,16 @@ class AvailableOptions {
 				.withRequiredArg() //
 				.withValuesConvertedBy(new PathConverter());
 
+		// --- Java Platform Module System -------------------------------------
+
+		scanModulepath = parser.acceptsAll(asList("scan-module-path", "scan-modulepath"), //
+			"EXPERIMENTAL: Scan all modules on the module-path for test discovery.");
+
+		selectedModules = parser.acceptsAll(asList("o", "select-module"), //
+			"EXPERIMENTAL: Select single module for test discovery. This option can be repeated.") //
+				.withRequiredArg() //
+				.describedAs("module name");
+
 		// --- Selectors -------------------------------------------------------
 
 		selectedClasspathEntries = parser.acceptsAll(asList("scan-class-path", "scan-classpath"), //
@@ -134,11 +147,6 @@ class AvailableOptions {
 		selectedDirectories = parser.acceptsAll(asList("d", "select-directory"), //
 			"Select a directory for test discovery. This option can be repeated.") //
 				.withRequiredArg();
-
-		selectedModules = parser.acceptsAll(asList("o", "select-module"), //
-			"EXPERIMENTAL: Select single module for test discovery. This option can be repeated.") //
-				.withRequiredArg() //
-				.describedAs("module name");
 
 		selectedPackages = parser.acceptsAll(asList("p", "select-package"), //
 			"Select a package for test discovery. This option can be repeated.") //
@@ -217,13 +225,16 @@ class AvailableOptions {
 		// Reports
 		result.setReportsDir(detectedOptions.valueOf(this.reportsDir));
 
+		// Java Platform Module System
+		result.setScanModulepath(detectedOptions.has(this.scanModulepath));
+		result.setSelectedModules(detectedOptions.valuesOf(this.selectedModules));
+
 		// Selectors
 		result.setScanClasspath(detectedOptions.has(this.selectedClasspathEntries));
 		result.setSelectedClasspathEntries(detectedOptions.valuesOf(this.selectedClasspathEntries));
 		result.setSelectedUris(detectedOptions.valuesOf(this.selectedUris));
 		result.setSelectedFiles(detectedOptions.valuesOf(this.selectedFiles));
 		result.setSelectedDirectories(detectedOptions.valuesOf(this.selectedDirectories));
-		result.setSelectedModules(detectedOptions.valuesOf(this.selectedModules));
 		result.setSelectedPackages(detectedOptions.valuesOf(this.selectedPackages));
 		result.setSelectedClasses(detectedOptions.valuesOf(this.selectedClasses));
 		result.setSelectedMethods(detectedOptions.valuesOf(this.selectedMethods));

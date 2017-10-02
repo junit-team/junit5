@@ -8,24 +8,24 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.util;
+package integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
+import org.junit.platform.commons.util.JigsawUtils;
 
 /**
- * Unit tests for {@link JigsawUtils}.
+ * Integration tests for {@link JigsawUtils}.
+ *
+ * <p>The integration tests are meant to be executed on the module-path by
+ * running JUnit Platform {@link org.junit.platform.console.ConsoleLauncher}
+ * with the {@code --scan-module-path} option.
  *
  * @since 1.1
  */
-class JigsawUtilsTests {
-
-	private final ClassFilter testClasses = ClassFilter.of(new IsScannableTestClass());
+class IntegrationTests {
 
 	@Test
 	void version() {
@@ -33,8 +33,13 @@ class JigsawUtilsTests {
 	}
 
 	@Test
-	void find() {
-		List<Class<?>> classes = JigsawUtils.findAllClassesInModule("java.base", testClasses);
-		assertTrue(classes.isEmpty());
+	void packageName() {
+		assertEquals("integration", getClass().getPackageName());
 	}
+
+	@Test
+	void moduleIsNamed() {
+		assertTrue(getClass().getModule().isNamed());
+	}
+
 }
