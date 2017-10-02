@@ -220,7 +220,7 @@ public final class Preconditions {
 			throws PreconditionViolationException {
 
 		if (collection != null) {
-			collection.forEach(object -> notNull(object, messageSupplier));
+			collection.forEach((Object object) -> notNull(object, messageSupplier));
 		}
 		return collection;
 	}
