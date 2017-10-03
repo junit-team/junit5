@@ -1,7 +1,7 @@
 [[release-notes-5.0.1]]
 === 5.0.1
 
-*Date of Release:* ❓
+*Date of Release:* October 3, 2017
 
 *Scope:* Bug fixes for the 5.0.0 release
 
@@ -19,9 +19,7 @@ on GitHub.
 [[release-notes-5.0.1-junit-platform]]
 ==== JUnit Platform
 
-===== Bug Fixes
-
-* ❓
+No code changes.
 
 
 [[release-notes-5.0.1-junit-jupiter]]
