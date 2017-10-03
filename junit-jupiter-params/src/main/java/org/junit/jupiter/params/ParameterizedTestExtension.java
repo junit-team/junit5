@@ -15,6 +15,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
@@ -52,6 +53,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, context))
 				.map(Arguments::get)
+				.map(arguments -> consumedArguments(arguments, templateMethod))
 				.map(arguments -> createInvocationContext(formatter, arguments))
 				.peek(invocationContext -> invocationCount.incrementAndGet())
 				.onClose(() ->
@@ -81,6 +83,11 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		catch (Exception e) {
 			throw ExceptionUtils.throwAsUncheckedException(e);
 		}
+	}
+
+	private Object[] consumedArguments(Object[] arguments, Method templateMethod) {
+		int parametersCount = templateMethod.getParameterCount();
+		return arguments.length > parametersCount ? Arrays.copyOf(arguments, parametersCount) : arguments;
 	}
 
 }
