@@ -48,7 +48,7 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* ❓
+* Unused arguments are now omitted from display names of parameterized tests.
 
 
 [[release-notes-5.1.0-junit-vintage]]
