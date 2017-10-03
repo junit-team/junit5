@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.FilterResult.excluded;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModule;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
@@ -37,6 +38,7 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.test.TestEngineStub;
@@ -53,6 +55,20 @@ class LauncherDiscoveryRequestBuilderTests {
 
 	@Nested
 	class DiscoverySelectionTests {
+
+		@Test
+		void modulesAreStoredInDiscoveryRequest() {
+			// @formatter:off
+			LauncherDiscoveryRequest discoveryRequest = request()
+					.selectors(
+							selectModule("java.base")
+					).build();
+			// @formatter:on
+
+			List<String> packageSelectors = discoveryRequest.getSelectorsByType(ModuleSelector.class).stream().map(
+				ModuleSelector::getModuleName).collect(toList());
+			assertThat(packageSelectors).contains("java.base");
+		}
 
 		@Test
 		void packagesAreStoredInDiscoveryRequest() {

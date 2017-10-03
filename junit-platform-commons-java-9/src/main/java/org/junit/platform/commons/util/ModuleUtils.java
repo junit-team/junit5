@@ -43,7 +43,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
  * @since 1.1
  */
 @API(status = INTERNAL, since = "1.1")
-public class JigsawUtils {
+public class ModuleUtils {
 
 	/**
 	 * Version hint is set to {@code "9"} here.
@@ -53,9 +53,9 @@ public class JigsawUtils {
 	/**
 	 * Special module name to scan all resolved modules found in the boot layer configuration.
 	 */
-	private static final String ALL_MODULES = "ALL-MODULES";
+	public static final String ALL_MODULES = "ALL-MODULES";
 
-	private static final Logger logger = LoggerFactory.getLogger(JigsawUtils.class);
+	private static final Logger logger = LoggerFactory.getLogger(ModuleUtils.class);
 
 	/**
 	 * Find all classes for the given module name.
@@ -76,7 +76,7 @@ public class JigsawUtils {
 				reference -> reference.descriptor().name()).collect(Collectors.toSet());
 			moduleNamePredicate = name -> !systemModules.contains(name);
 		}
-		return scan(boot(moduleNamePredicate), filter, JigsawUtils.class.getClassLoader());
+		return scan(boot(moduleNamePredicate), filter, ModuleUtils.class.getClassLoader());
 	}
 
 	// collect module references from boot module layer

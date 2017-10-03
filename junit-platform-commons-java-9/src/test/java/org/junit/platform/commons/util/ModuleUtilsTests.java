@@ -19,22 +19,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
 
 /**
- * Unit tests for {@link JigsawUtils}.
+ * Unit tests for {@link ModuleUtils}.
  *
  * @since 1.1
  */
-class JigsawUtilsTests {
+class ModuleUtilsTests {
 
 	private final ClassFilter testClasses = ClassFilter.of(new IsScannableTestClass());
 
 	@Test
 	void version() {
-		assertEquals("9", JigsawUtils.VERSION);
+		assertEquals("9", ModuleUtils.VERSION);
 	}
 
 	@Test
 	void find() {
-		List<Class<?>> classes = JigsawUtils.findAllClassesInModule("java.base", testClasses);
+		List<Class<?>> classes = ModuleUtils.findAllClassesInModule("java.base", testClasses);
 		assertTrue(classes.isEmpty());
 	}
 }

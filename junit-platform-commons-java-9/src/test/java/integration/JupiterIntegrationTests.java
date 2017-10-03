@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.JigsawUtils;
+import org.junit.platform.commons.util.ModuleUtils;
 
 /**
- * Integration tests for {@link JigsawUtils}.
+ * Integration tests for {@link ModuleUtils}.
  *
  * <p>The integration tests are meant to be executed on the module-path by
  * running JUnit Platform {@link org.junit.platform.console.ConsoleLauncher}
@@ -25,11 +25,11 @@ import org.junit.platform.commons.util.JigsawUtils;
  *
  * @since 1.1
  */
-class IntegrationTests {
+class JupiterIntegrationTests {
 
 	@Test
 	void version() {
-		assertEquals("9", JigsawUtils.VERSION);
+		assertEquals("9", ModuleUtils.VERSION);
 	}
 
 	@Test
