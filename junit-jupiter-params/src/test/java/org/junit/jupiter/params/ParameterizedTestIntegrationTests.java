@@ -43,6 +43,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -58,7 +59,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithSingleArgumentsProviderWithMultipleInvocations() {
 		List<ExecutionEvent> executionEvents = execute(
-			selectMethod(TestCase.class, "testWithTwoSingleStringArgumentsProvider", String.class.getName()));
+				selectMethod(TestCase.class, "testWithTwoSingleStringArgumentsProvider", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -67,7 +68,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithCsvSource() {
 		List<ExecutionEvent> executionEvents = execute(
-			selectMethod(TestCase.class, "testWithCsvSource", String.class.getName()));
+				selectMethod(TestCase.class, "testWithCsvSource", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -76,7 +77,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithCustomName() {
 		List<ExecutionEvent> executionEvents = execute(
-			selectMethod(TestCase.class, "testWithCustomName", String.class.getName() + "," + Integer.TYPE.getName()));
+				selectMethod(TestCase.class, "testWithCustomName", String.class.getName() + "," + Integer.TYPE.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("foo and 23"), finishedWithFailure(message("foo, 23")))) //
 				.haveExactly(1, event(test(), displayName("bar and 42"), finishedWithFailure(message("bar, 42"))));
@@ -85,10 +86,46 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithExplicitConverter() {
 		List<ExecutionEvent> executionEvents = execute(
-			selectMethod(TestCase.class, "testWithExplicitConverter", Integer.TYPE.getName()));
+				selectMethod(TestCase.class, "testWithExplicitConverter", Integer.TYPE.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] O"), finishedWithFailure(message("length: 1")))) //
 				.haveExactly(1, event(test(), displayName("[2] XXX"), finishedWithFailure(message("length: 3"))));
+	}
+
+	@Test
+	void executesWithArgumentsSourceProvidingRedundantArguments() {
+		List<ExecutionEvent> executionEvents = execute(
+				selectMethod(RedundantParametersTestCase.class, "testWithTwoRedundantStringArgumentsProvider", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+	}
+
+	@Test
+	void executesWithCsvSourceContainingRedundantArguments() {
+		List<ExecutionEvent> executionEvents = execute(
+				selectMethod(RedundantParametersTestCase.class, "testWithCsvSourceContainingRedundantArguments", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+	}
+
+	@Test
+	void executesWithCsvFileSourceContainingRedundantArguments() {
+		List<ExecutionEvent> executionEvents = execute(
+				selectMethod(RedundantParametersTestCase.class, "testWithCsvFileSourceContainingRedundantArguments", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+	}
+
+	@Test
+	void executesWithMethodSourceProvidingRedundantArguments() {
+		List<ExecutionEvent> executionEvents = execute(
+				selectMethod(RedundantParametersTestCase.class, "testWithMethodSourceProvidingRedundantArguments", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 	}
 
 	@Test
@@ -132,10 +169,10 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void failsContainerOnEmptyName() {
 		List<ExecutionEvent> executionEvents = execute(
-			selectMethod(TestCase.class, "testWithEmptyName", String.class.getName()));
+				selectMethod(TestCase.class, "testWithEmptyName", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(container(), displayName("testWithEmptyName(String)"), //
-					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
+						finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
 	}
 
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
@@ -173,6 +210,38 @@ class ParameterizedTestIntegrationTests {
 		void testWithEmptyName(String argument) {
 			fail(argument);
 		}
+	}
+
+	static class RedundantParametersTestCase {
+
+		@ParameterizedTest
+		@ArgumentsSource(TwoRedundantStringArgumentsProvider.class)
+		void testWithTwoRedundantStringArgumentsProvider(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@CsvSource({ "foo, redundant1", "bar, redundant2" })
+		void testWithCsvSourceContainingRedundantArguments(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@CsvFileSource(resources = "two-column.csv")
+		void testWithCsvFileSourceContainingRedundantArguments(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@MethodSource("redundantArgumentsProviderMethod")
+		void testWithMethodSourceProvidingRedundantArguments(String argument) {
+			fail(argument);
+		}
+
+		static Stream<Arguments> redundantArgumentsProviderMethod() {
+			return Stream.of(Arguments.of("foo", "redundant1"), Arguments.of("bar", "redundant2"));
+		}
+
 	}
 
 	static class LifecycleTestCase {
@@ -235,6 +304,14 @@ class ParameterizedTestIntegrationTests {
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
 			return Stream.of(Arguments.of("foo"), Arguments.of("bar"));
+		}
+	}
+
+	private static class TwoRedundantStringArgumentsProvider implements ArgumentsProvider {
+
+		@Override
+		public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+			return Stream.of(Arguments.of("foo", "redundant1"), Arguments.of("bar", "redundant2"));
 		}
 	}
 
