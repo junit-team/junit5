@@ -32,14 +32,19 @@ import org.junit.platform.commons.logging.LoggerFactory;
  * @since 1.1
  */
 @API(status = INTERNAL, since = "1.1")
-public class JigsawUtils {
+public class ModuleUtils {
 
 	/**
 	 * Version hint is set to {@code "base"} here.
 	 */
 	public static final String VERSION = "base";
 
-	private static final Logger logger = LoggerFactory.getLogger(JigsawUtils.class);
+	/**
+	 * Special module name to scan all resolved modules found in the boot layer configuration.
+	 */
+	public static final String ALL_MODULES = "ALL-MODULES";
+
+	private static final Logger logger = LoggerFactory.getLogger(ModuleUtils.class);
 
 	/**
 	 * Find all classes for the given module name.

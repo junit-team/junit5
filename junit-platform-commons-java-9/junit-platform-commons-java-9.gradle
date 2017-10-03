@@ -7,9 +7,11 @@ dependencies {
 	// Needed for testing.
 	testImplementation(project(':junit-jupiter-api'))
 	testImplementation(project(':junit-jupiter-engine'))
+	testImplementation("junit:junit:${junit4Version}")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
+	testRuntimeOnly(project(':junit-vintage-engine'))
 	testRuntimeOnly(project(':junit-platform-engine'))
 	testRuntimeOnly(project(':junit-platform-launcher'))
 	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
@@ -48,7 +50,7 @@ task generateIntegrationTestsJar(type: Jar, dependsOn: compileTestJava) {
 
 // Copy runtime dependencies to a single directory.
 task generateDependenciesDirectory(type: Copy) {
-	into buildDir.toPath().resolve('deps').toString()
+	into "$buildDir/deps"
 	from configurations.testRuntimeClasspath
 }
 
@@ -64,7 +66,6 @@ task testScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, g
 			'--module', 'org.junit.platform.console',
 			'--scan-module-path'
 	]
-	println args
 }
 
 test.dependsOn testScanModulepath

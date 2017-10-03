@@ -28,6 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
@@ -59,7 +60,7 @@ class DiscoveryRequestCreator {
 		if (options.isScanModulepath()) {
 			Preconditions.condition(!options.hasExplicitSelectors(),
 				"Scanning the module-path and using explicit selectors at the same time is not supported");
-			return Collections.singletonList(DiscoverySelectors.selectModule("ALL-MODULES"));
+			return Collections.singletonList(DiscoverySelectors.selectModule(ModuleUtils.ALL_MODULES));
 
 		}
 		return createExplicitDiscoverySelectors(options);

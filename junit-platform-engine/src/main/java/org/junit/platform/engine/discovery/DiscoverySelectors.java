@@ -246,8 +246,7 @@ public final class DiscoverySelectors {
 	 *
 	 * <p>The unnamed module is not supported.
 	 *
-	 * @param moduleName the module name to select; never {@code null} and
-	 * never blank
+	 * @param moduleName the module name to select; never {@code null} or blank
 	 * @see ModuleSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "1.1")
