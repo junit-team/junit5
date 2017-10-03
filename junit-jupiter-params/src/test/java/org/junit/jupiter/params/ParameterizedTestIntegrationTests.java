@@ -59,7 +59,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithSingleArgumentsProviderWithMultipleInvocations() {
 		List<ExecutionEvent> executionEvents = execute(
-				selectMethod(TestCase.class, "testWithTwoSingleStringArgumentsProvider", String.class.getName()));
+			selectMethod(TestCase.class, "testWithTwoSingleStringArgumentsProvider", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -68,7 +68,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithCsvSource() {
 		List<ExecutionEvent> executionEvents = execute(
-				selectMethod(TestCase.class, "testWithCsvSource", String.class.getName()));
+			selectMethod(TestCase.class, "testWithCsvSource", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -77,7 +77,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithCustomName() {
 		List<ExecutionEvent> executionEvents = execute(
-				selectMethod(TestCase.class, "testWithCustomName", String.class.getName() + "," + Integer.TYPE.getName()));
+			selectMethod(TestCase.class, "testWithCustomName", String.class.getName() + "," + Integer.TYPE.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("foo and 23"), finishedWithFailure(message("foo, 23")))) //
 				.haveExactly(1, event(test(), displayName("bar and 42"), finishedWithFailure(message("bar, 42"))));
@@ -86,7 +86,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithExplicitConverter() {
 		List<ExecutionEvent> executionEvents = execute(
-				selectMethod(TestCase.class, "testWithExplicitConverter", Integer.TYPE.getName()));
+			selectMethod(TestCase.class, "testWithExplicitConverter", Integer.TYPE.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] O"), finishedWithFailure(message("length: 1")))) //
 				.haveExactly(1, event(test(), displayName("[2] XXX"), finishedWithFailure(message("length: 3"))));
@@ -94,8 +94,8 @@ class ParameterizedTestIntegrationTests {
 
 	@Test
 	void executesWithArgumentsSourceProvidingRedundantArguments() {
-		List<ExecutionEvent> executionEvents = execute(
-				selectMethod(RedundantParametersTestCase.class, "testWithTwoRedundantStringArgumentsProvider", String.class.getName()));
+		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
+			"testWithTwoRedundantStringArgumentsProvider", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -103,8 +103,8 @@ class ParameterizedTestIntegrationTests {
 
 	@Test
 	void executesWithCsvSourceContainingRedundantArguments() {
-		List<ExecutionEvent> executionEvents = execute(
-				selectMethod(RedundantParametersTestCase.class, "testWithCsvSourceContainingRedundantArguments", String.class.getName()));
+		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
+			"testWithCsvSourceContainingRedundantArguments", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -112,8 +112,8 @@ class ParameterizedTestIntegrationTests {
 
 	@Test
 	void executesWithCsvFileSourceContainingRedundantArguments() {
-		List<ExecutionEvent> executionEvents = execute(
-				selectMethod(RedundantParametersTestCase.class, "testWithCsvFileSourceContainingRedundantArguments", String.class.getName()));
+		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
+			"testWithCsvFileSourceContainingRedundantArguments", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -121,8 +121,8 @@ class ParameterizedTestIntegrationTests {
 
 	@Test
 	void executesWithMethodSourceProvidingRedundantArguments() {
-		List<ExecutionEvent> executionEvents = execute(
-				selectMethod(RedundantParametersTestCase.class, "testWithMethodSourceProvidingRedundantArguments", String.class.getName()));
+		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
+			"testWithMethodSourceProvidingRedundantArguments", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -169,10 +169,10 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void failsContainerOnEmptyName() {
 		List<ExecutionEvent> executionEvents = execute(
-				selectMethod(TestCase.class, "testWithEmptyName", String.class.getName()));
+			selectMethod(TestCase.class, "testWithEmptyName", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(container(), displayName("testWithEmptyName(String)"), //
-						finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
+					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
 	}
 
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
