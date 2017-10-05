@@ -5388,6 +5388,18 @@ level (i.e., the <code>FINE</code> log level in <code>java.util.logging</code>) 
 <div class="ulist">
 <ul>
 <li>
+<p>Failure messages for <code>assertTrue()</code> and <code>assertFalse()</code> in the <code>Assertions</code> class now
+include details about the expected and actual boolean values.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For example, the generated failure message for a call to <code>assertTrue(false)</code> is now
+"expected: &lt;true&gt; but was: &lt;false&gt;" instead of an empty string.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>Unused arguments are now omitted from display names of parameterized tests.</p>
 </li>
 </ul>
@@ -7837,7 +7849,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-10-05 14:51:12 EDT
+Last updated 2017-10-05 15:38:58 EDT
 </div>
 </div>
 </body>
