@@ -48,6 +48,10 @@ on GitHub.
 
 ===== New Features and Improvements
 
+* Failure messages for `assertTrue()` and `assertFalse()` in the `Assertions` class now
+  include details about the expected and actual boolean values.
+  - For example, the generated failure message for a call to `assertTrue(false)` is now
+    "expected: <true> but was: <false>" instead of an empty string.
 * Unused arguments are now omitted from display names of parameterized tests.
 
 

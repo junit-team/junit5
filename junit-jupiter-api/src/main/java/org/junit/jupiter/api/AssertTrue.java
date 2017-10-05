@@ -11,6 +11,8 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionUtils.format;
+import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -51,7 +53,7 @@ class AssertTrue {
 
 	static void assertTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
 		if (!booleanSupplier.getAsBoolean()) {
-			fail(messageSupplier);
+			fail(format(true, false, nullSafeGet(messageSupplier)));
 		}
 	}
 
