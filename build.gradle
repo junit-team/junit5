@@ -45,6 +45,7 @@ ext {
 
 	platformProjects = [
 		'junit-platform-commons',
+		'junit-platform-commons-jpms',
 		'junit-platform-console',
 		'junit-platform-console-standalone',
 		'junit-platform-engine',
@@ -445,7 +446,7 @@ subprojects { subproj ->
 		def groovyFormatterConfigFile = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
 
 		java {
-			licenseHeaderFile headerFile, '(package|import) '
+			licenseHeaderFile headerFile, '(package|import|open|module) '
 			importOrderFile importOrderConfigFile
 			eclipse().configFile javaFormatterConfigFile
 			if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
