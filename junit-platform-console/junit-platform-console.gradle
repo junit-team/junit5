@@ -5,7 +5,7 @@ buildscript {
 		jcenter()
 	}
 	dependencies {
-		classpath "com.github.jengelman.gradle.plugins:shadow:${shadowVersion}"
+		classpath("com.github.jengelman.gradle.plugins:shadow:${shadowVersion}")
 	}
 }
 
