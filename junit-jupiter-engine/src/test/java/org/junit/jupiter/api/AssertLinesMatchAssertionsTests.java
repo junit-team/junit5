@@ -34,7 +34,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-class AssertionsAssertLinesMatchTests {
+class AssertLinesMatchAssertionsTests {
 
 	@Test
 	void assertLinesMatchEmptyLists() {

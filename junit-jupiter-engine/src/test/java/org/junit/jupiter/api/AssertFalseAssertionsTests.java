@@ -21,7 +21,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-class AssertionsAssertFalseTests {
+class AssertFalseAssertionsTests {
 
 	@Test
 	void assertFalseWithBooleanFalse() {
