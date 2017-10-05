@@ -9,13 +9,13 @@ buildscript {
 		maven { url 'http://repo.spring.io/plugins-release' }
 	}
 	dependencies {
-		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.5.2'
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
-		classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
-		classpath 'org.ajoberstar:gradle-git-publish:0.3.0'
-		classpath 'org.ajoberstar:gradle-git:1.7.2'
-		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.1'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
+		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.5.2')
+		classpath('com.github.ben-manes:gradle-versions-plugin:0.15.0')
+		classpath('io.spring.gradle:propdeps-plugin:0.0.9.RELEASE')
+		classpath('org.ajoberstar:gradle-git-publish:0.3.0')
+		classpath('org.ajoberstar:gradle-git:1.7.2')
+		classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.1')
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 	}
 }
 
@@ -118,7 +118,7 @@ allprojects { subproj ->
 	dependencies {
 		// The following dependency is necessary to avoid compiler warnings about
 		// not being able to find the @API annotation when compiling test sources.
-		testCompileOnly "org.apiguardian:apiguardian-api:${apiGuardianVersion}"
+		testCompileOnly("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	}
 
 	tasks.withType(Test) { task ->
@@ -198,7 +198,7 @@ allprojects { subproj ->
 		}
 
 		dependencies {
-			clover 'com.atlassian.clover:clover:4.1.2'
+			clover('com.atlassian.clover:clover:4.1.2')
 		}
 
 		ext.cloverDir = file("$buildDir/clover")
