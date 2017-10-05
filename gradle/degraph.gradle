@@ -16,7 +16,7 @@ buildscript {
 
 task degraph(type: DegraphCheck) {
 	reportFile = new File(buildDir, "reports/degraph/testResult.graphml")
-	classpath = sourceSets.main.output
+	classpath = sourceSets.main.output // TODO Replace with: files(sourceSets.main.java.outputDir) ?
 }
 
 check.dependsOn degraph
