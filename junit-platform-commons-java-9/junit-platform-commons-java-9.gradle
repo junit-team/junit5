@@ -24,7 +24,7 @@ degraph.enabled = false
 jar.enabled = false
 install.enabled = false
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).all {
 	sourceCompatibility = JavaVersion.VERSION_1_9
 	targetCompatibility = JavaVersion.VERSION_1_9
 	options.encoding = 'UTF-8'
@@ -55,7 +55,7 @@ task generateDependenciesDirectory(type: Copy) {
 }
 
 // Execute console launcher on the module-path.
-task testScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, generateIntegrationTestsJar]) {
+task execScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, generateIntegrationTestsJar]) {
 	executable = 'java'
 	args = [
 			'--module-path', files(
@@ -66,6 +66,64 @@ task testScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, g
 			'--module', 'org.junit.platform.console',
 			'--scan-module-path'
 	]
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+/*
+.
++-- JUnit Vintage [OK]
+| '-- integration.VintageIntegrationTest [OK]
+|   '-- successfulTest [OK]
+'-- JUnit Jupiter [OK]
+'-- JupiterIntegrationTests [OK]
+	+-- version() [OK]
+	+-- moduleIsNamed() [OK]
+	'-- packageName() [OK]
+
+Test run finished after 54 ms
+[         4 containers found      ]
+[         0 containers skipped    ]
+[         4 containers started    ]
+[         0 containers aborted    ]
+[         4 containers successful ]
+[         0 containers failed     ]
+[         4 tests found           ]
+[         0 tests skipped         ]
+[         4 tests started         ]
+[         0 tests aborted         ]
+[         4 tests successful      ]
+[         0 tests failed          ]
+*/
+task testScanModulepath(dependsOn: execScanModulepath) {
+	doLast {
+		String text = execScanModulepath.errorOutput.toString() + execScanModulepath.standardOutput.toString()
+		// tree node names
+		assert text.contains("JUnit Vintage")
+		assert text.contains("integration.VintageIntegrationTest")
+		assert text.contains("successfulTest")
+		assert text.contains("JUnit Jupiter")
+		assert text.contains("JupiterIntegrationTests")
+		assert text.contains("version()")
+		assert text.contains("moduleIsNamed()")
+		assert text.contains("packageName()")
+		// summary
+		assert text.contains("Test run finished after")
+		// container summary
+		assert text.contains("4 containers found")
+		assert text.contains("0 containers skipped")
+		assert text.contains("4 containers started")
+		assert text.contains("0 containers aborted")
+		assert text.contains("4 containers successful")
+		assert text.contains("0 containers failed")
+		// tests summary
+		assert text.contains("4 tests found")
+		assert text.contains("0 tests skipped")
+		assert text.contains("4 tests started")
+		assert text.contains("0 tests aborted")
+		assert text.contains("4 tests successful")
+		assert text.contains("0 tests failed")
+	}
 }
 
 test.dependsOn testScanModulepath
