@@ -39,13 +39,13 @@ class AssertTrueAssertionsTests {
 	}
 
 	@Test
-	void assertTrueWithBooleanFalse() {
+	void assertTrueWithBooleanFalseAndDefaultMessage() {
 		try {
 			assertTrue(false);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "");
+			assertMessageEquals(ex, "expected: <true> but was: <false>");
 		}
 	}
 
@@ -56,7 +56,7 @@ class AssertTrueAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "test");
+			assertMessageEquals(ex, "test ==> expected: <true> but was: <false>");
 		}
 	}
 
@@ -67,7 +67,7 @@ class AssertTrueAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "test");
+			assertMessageEquals(ex, "test ==> expected: <true> but was: <false>");
 		}
 	}
 
@@ -78,7 +78,7 @@ class AssertTrueAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "test");
+			assertMessageEquals(ex, "test ==> expected: <true> but was: <false>");
 		}
 	}
 
