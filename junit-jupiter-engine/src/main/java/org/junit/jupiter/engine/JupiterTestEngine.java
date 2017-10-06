@@ -58,20 +58,8 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(uniqueId);
-		resolveDiscoveryRequest(discoveryRequest, engineDescriptor);
+		new DiscoverySelectorResolver().resolveSelectors(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
-	}
-
-	private void resolveDiscoveryRequest(EngineDiscoveryRequest discoveryRequest,
-			JupiterEngineDescriptor engineDescriptor) {
-		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
-		resolver.resolveSelectors(discoveryRequest, engineDescriptor);
-		applyDiscoveryFilters(discoveryRequest, engineDescriptor);
-	}
-
-	private void applyDiscoveryFilters(EngineDiscoveryRequest discoveryRequest,
-			JupiterEngineDescriptor engineDescriptor) {
-		new DiscoveryFilterApplier().applyAllFilters(discoveryRequest, engineDescriptor);
 	}
 
 	@Override

@@ -40,6 +40,7 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -79,6 +80,7 @@ import org.junit.platform.suite.api.IncludePackages;
 import org.junit.platform.suite.api.IncludeTags;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.NoTestsRemainException;
@@ -577,6 +579,35 @@ class JUnitPlatformRunnerTests {
 	class Descriptions {
 
 		@Test
+		@DisplayName("Suite with default display name")
+		void descriptionForTestSuiteWithDefaultDisplayName() throws Exception {
+			Class<?> testClass = TestSuiteWithDefaultDisplayName.class;
+			JUnitPlatform platformRunner = new JUnitPlatform(testClass,
+				createLauncher(new DemoHierarchicalTestEngine("suite names")));
+
+			assertEquals(testClass.getName(), platformRunner.getDescription().getDisplayName());
+		}
+
+		@Test
+		@DisplayName("Suite with @SuiteDisplayName")
+		void descriptionForTestSuiteWithCustomDisplayName() throws Exception {
+			JUnitPlatform platformRunner = new JUnitPlatform(TestSuiteWithCustomDisplayName.class,
+				createLauncher(new DemoHierarchicalTestEngine("suite names")));
+
+			assertEquals("Sweeeeeeet Name!", platformRunner.getDescription().getDisplayName());
+		}
+
+		@Test
+		@DisplayName("Suite with @SuiteDisplayName and @UseTechnicalNames")
+		void descriptionForTestSuiteWithCustomDisplayNameAndTechnicalNames() throws Exception {
+			Class<?> testClass = TestSuiteWithCustomDisplayNameAndTechnicalNames.class;
+			JUnitPlatform platformRunner = new JUnitPlatform(testClass,
+				createLauncher(new DemoHierarchicalTestEngine("suite names")));
+
+			assertEquals(testClass.getName(), platformRunner.getDescription().getDisplayName());
+		}
+
+		@Test
 		void descriptionForJavaMethodAndClassSources() throws Exception {
 			DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
@@ -686,6 +717,18 @@ class JUnitPlatformRunnerTests {
 
 	@UseTechnicalNames
 	private static class TestClassWithTechnicalNames {
+	}
+
+	private static class TestSuiteWithDefaultDisplayName {
+	}
+
+	@SuiteDisplayName("Sweeeeeeet Name!")
+	private static class TestSuiteWithCustomDisplayName {
+	}
+
+	@SuiteDisplayName("Sweeeeeeet Name!")
+	@UseTechnicalNames
+	private static class TestSuiteWithCustomDisplayNameAndTechnicalNames {
 	}
 
 	private static class DynamicTestEngine implements TestEngine {

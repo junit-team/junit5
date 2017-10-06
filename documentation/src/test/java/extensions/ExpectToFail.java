@@ -29,20 +29,22 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 @ExtendWith(ExpectToFail.Extension.class)
 public @interface ExpectToFail {
 
-	static class Extension implements TestExecutionExceptionHandler, AfterEachCallback {
+	class Extension implements TestExecutionExceptionHandler, AfterEachCallback {
+
+		private static final String KEY = "exception";
 
 		@Override
 		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-			getExceptionStore(context).put("exception", throwable);
+			getExceptionStore(context).put(KEY, throwable);
 		}
 
 		@Override
 		public void afterEach(ExtensionContext context) throws Exception {
-			assertNotNull(getExceptionStore(context).get("exception"), "Test should have failed");
+			assertNotNull(getExceptionStore(context).get(KEY), "Test should have failed");
 		}
 
 		private Store getExceptionStore(ExtensionContext context) {
-			return context.getStore(Namespace.create(context));
+			return context.getStore(Namespace.create(getClass(), context.getRequiredTestMethod()));
 		}
 	}
 

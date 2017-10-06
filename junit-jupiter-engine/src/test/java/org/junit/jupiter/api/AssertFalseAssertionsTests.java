@@ -21,7 +21,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-class AssertionsAssertFalseTests {
+class AssertFalseAssertionsTests {
 
 	@Test
 	void assertFalseWithBooleanFalse() {
@@ -34,24 +34,29 @@ class AssertionsAssertFalseTests {
 	}
 
 	@Test
+	void assertFalseWithBooleanFalseAndString() {
+		assertFalse(false, "test");
+	}
+
+	@Test
+	void assertFalseWithBooleanTrueAndDefaultMessage() {
+		try {
+			assertFalse(true);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: <false> but was: <true>");
+		}
+	}
+
+	@Test
 	void assertFalseWithBooleanTrueAndString() {
 		try {
 			assertFalse(true, "test");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "test");
-		}
-	}
-
-	@Test
-	void assertFalseWithBooleanTrueAndMessageSupplier() {
-		try {
-			assertFalse(true, () -> "test");
-			expectAssertionFailedError();
-		}
-		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "test");
+			assertMessageEquals(ex, "test ==> expected: <false> but was: <true>");
 		}
 	}
 
@@ -62,7 +67,18 @@ class AssertionsAssertFalseTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "test");
+			assertMessageEquals(ex, "test ==> expected: <false> but was: <true>");
+		}
+	}
+
+	@Test
+	void assertFalseWithBooleanTrueAndMessageSupplier() {
+		try {
+			assertFalse(true, () -> "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "test ==> expected: <false> but was: <true>");
 		}
 	}
 
@@ -73,7 +89,7 @@ class AssertionsAssertFalseTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "test");
+			assertMessageEquals(ex, "test ==> expected: <false> but was: <true>");
 		}
 	}
 

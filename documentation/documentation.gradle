@@ -2,11 +2,11 @@ buildscript {
 	dependencies {
 		// upgrade to latest jruby version due to a bugfix needed for Windows 10.
 		// can be removed, when asciidoctorj uses this as a default version.
-		classpath 'org.jruby:jruby-complete:9.1.13.0'
+		classpath('org.jruby:jruby-complete:9.1.13.0')
 
-		// classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.16'
-		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16'
-		classpath 'org.asciidoctor:asciidoctorj-diagram:1.5.4.1'
+		// classpath('org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.16')
+		classpath('org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16')
+		classpath('org.asciidoctor:asciidoctorj-diagram:1.5.4.1')
 	}
 }
 
@@ -87,6 +87,7 @@ asciidoctor {
 				'platform-version': project.property('platformVersion'),
 				'vintage-version': project.property('vintageVersion'),
 				'junit4-version': project.property('junit4Version'),
+				'apiguardian-version': project.property('apiGuardianVersion'),
 				'release-branch': project.property('releaseBranch'),
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],

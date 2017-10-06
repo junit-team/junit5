@@ -12,7 +12,6 @@ package org.junit.vintage.engine.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.runner.Description.createTestDescription;
 
 import java.io.Serializable;
@@ -20,40 +19,45 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.runner.Description;
-import org.junit.vintage.engine.RecordCollectingLogger;
 
 /**
+ * Tests for {@link UniqueIdReader}.
+ *
  * @since 4.12
  */
+@TrackLogRecords
 class UniqueIdReaderTests {
 
 	@Test
-	void readsUniqueId() {
-		RecordCollectingLogger logger = new RecordCollectingLogger();
+	void readsUniqueId(LogRecordListener listener) {
 		Description description = createTestDescription("ClassName", "methodName", "uniqueId");
 
-		Serializable uniqueId = new UniqueIdReader(logger).apply(description);
+		Serializable uniqueId = new UniqueIdReader().apply(description);
 
 		assertEquals("uniqueId", uniqueId);
-		assertThat(logger.getLogRecords()).isEmpty();
+		assertThat(listener.stream(UniqueIdReader.class)).isEmpty();
 	}
 
 	@Test
-	void returnsDisplayNameWhenUniqueIdCannotBeRead() {
-		RecordCollectingLogger logger = new RecordCollectingLogger();
+	void returnsDisplayNameWhenUniqueIdCannotBeRead(LogRecordListener listener) {
 		Description description = createTestDescription("ClassName", "methodName", "uniqueId");
 		assertEquals("methodName(ClassName)", description.getDisplayName());
 
-		Serializable uniqueId = new UniqueIdReader(logger, "wrongFieldName").apply(description);
+		Serializable uniqueId = new UniqueIdReader("wrongFieldName").apply(description);
 
 		assertEquals(description.getDisplayName(), uniqueId);
-		assertThat(logger.getLogRecords()).hasSize(1);
-		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
-		assertEquals(Level.WARNING, logRecord.getLevel());
-		assertEquals(
-			"Could not read unique ID for Description; using display name instead: " + description.getDisplayName(),
-			logRecord.getMessage());
+
+		// @formatter:off
+		assertThat(listener.stream(UniqueIdReader.class, Level.WARNING)
+			.map(LogRecord::getMessage)
+			.filter(m -> m.equals("Could not read unique ID for Description; using display name instead: "
+					+ description.getDisplayName()))
+			.count()
+		).isEqualTo(1);
+		// @formatter:on
 	}
 
 }

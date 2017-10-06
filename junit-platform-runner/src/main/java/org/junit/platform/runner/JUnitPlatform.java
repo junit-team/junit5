@@ -51,6 +51,7 @@ import org.junit.platform.suite.api.IncludePackages;
 import org.junit.platform.suite.api.IncludeTags;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -87,6 +88,7 @@ import org.junit.runners.model.InitializationError;
  * ClassNameFilter#STANDARD_INCLUDE_PATTERN}).
  *
  * @since 1.0
+ * @see SuiteDisplayName
  * @see SelectPackages
  * @see SelectClasses
  * @see IncludeClassNamePatterns

@@ -13,7 +13,6 @@ package org.junit.vintage.engine.discovery;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.runner.Description.createTestDescription;
 import static org.junit.runner.manipulation.Filter.matchMethodDescription;
 import static org.junit.vintage.engine.discovery.RunnerTestDescriptorAwareFilter.adapter;
@@ -24,62 +23,63 @@ import java.util.logging.LogRecord;
 
 import org.junit.internal.builders.IgnoredClassRunner;
 import org.junit.jupiter.api.Test;
-import org.junit.vintage.engine.RecordCollectingLogger;
+import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.vintage.engine.VintageUniqueIdBuilder;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
 
 /**
+ * Tests for {@link TestClassRequestResolver}.
+ *
  * @since 4.12
  */
+@TrackLogRecords
 class TestClassRequestResolverTests {
 
 	@Test
-	void doesNotLogAnythingForFilterableRunner() {
+	void doesNotLogAnythingForFilterableRunner(LogRecordListener listener) {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		RunnerTestDescriptorAwareFilter filter = adapter(
 			matchMethodDescription(createTestDescription(testClass, "failingTest")));
 
-		List<LogRecord> logRecords = resolve(new TestClassRequest(testClass, asList(filter)));
+		resolve(new TestClassRequest(testClass, asList(filter)));
 
-		assertThat(logRecords).isEmpty();
+		assertThat(listener.stream(TestClassRequestResolver.class)).isEmpty();
 	}
 
 	@Test
-	void doesNotLogAnythingForNonFilterableRunnerIfNoFiltersAreToBeApplied() {
+	void doesNotLogAnythingForNonFilterableRunnerIfNoFiltersAreToBeApplied(LogRecordListener listener) {
 		Class<?> testClass = IgnoredJUnit4TestCase.class;
 		List<RunnerTestDescriptorAwareFilter> filters = emptyList();
 
-		List<LogRecord> logRecords = resolve(new TestClassRequest(testClass, filters));
+		resolve(new TestClassRequest(testClass, filters));
 
-		assertThat(logRecords).isEmpty();
+		assertThat(listener.stream(TestClassRequestResolver.class)).isEmpty();
 	}
 
 	@Test
-	void logsWarningOnNonFilterableRunner() {
+	void logsWarningOnNonFilterableRunner(LogRecordListener listener) {
 		Class<?> testClass = IgnoredJUnit4TestCase.class;
 		RunnerTestDescriptorAwareFilter filter = adapter(
 			matchMethodDescription(createTestDescription(testClass, "test")));
 
-		List<LogRecord> logRecords = resolve(new TestClassRequest(testClass, asList(filter)));
+		resolve(new TestClassRequest(testClass, asList(filter)));
 
-		assertThat(logRecords).hasSize(1);
-
-		LogRecord logRecord = logRecords.get(0);
-		assertEquals(Level.WARNING, logRecord.getLevel());
-		assertEquals("Runner " + IgnoredClassRunner.class.getName() //
+		// @formatter:off
+		assertThat(listener.stream(TestClassRequestResolver.class, Level.WARNING)
+			.map(LogRecord::getMessage)
+			.filter(m -> m.equals("Runner " + IgnoredClassRunner.class.getName() //
 				+ " (used on " + testClass.getName() + ") does not support filtering" //
-				+ " and will therefore be run completely.",
-			logRecord.getMessage());
+				+ " and will therefore be run completely."))
+			.count()
+		).isEqualTo(1);
+		// @formatter:on
 	}
 
-	private List<LogRecord> resolve(TestClassRequest request) {
-		RecordCollectingLogger logger = new RecordCollectingLogger();
-
-		TestClassRequestResolver resolver = new TestClassRequestResolver(logger);
+	private void resolve(TestClassRequest request) {
+		TestClassRequestResolver resolver = new TestClassRequestResolver();
 		resolver.createRunnerTestDescriptor(request, VintageUniqueIdBuilder.engineId());
-
-		return logger.getLogRecords();
 	}
 
 }

@@ -44,6 +44,26 @@ I hereby agree to the terms of the JUnit Contributor License Agreement.
 
 ## Coding Conventions
 
+### Naming Conventions
+
+Whenever an acronym is included as part of a type name or method name, keep the first
+letter of the acronym uppercase and use lowercase for the rest of the acronym. Otherwise,
+it becomes _impossible_ to perform camel-cased searches in IDEs, and it becomes
+potentially very difficult for mere humans to read or reason about the element without
+reading documentation (if documentation even exists).
+
+Consider for example a use case needing to support an HTTP URL. Calling the method
+`getHTTPURL()` is absolutely horrible in terms of usability; whereas, `getHttpUrl()` is
+great in terms of usability. The same applies for types `HTTPURLProvider` vs
+`HttpUrlProvider`, etc.
+
+Whenever an acronym is included as part of a field name or parameter name:
+
+- If the acronym comes at the start of the field or parameter name, use lowercase for the
+  entire acronym -- for example, `String url;`.
+- Otherwise, keep the first letter of the acronym uppercase and use lowercase for the
+  rest of the acronym -- for example, `String defaultUrl;`.
+
 ### Formatting
 
 Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless)

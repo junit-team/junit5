@@ -12,6 +12,8 @@ package org.junit.platform.commons.logging;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -33,6 +35,8 @@ public final class LoggerFactory {
 	}
 	///CLOVER:ON
 
+	private static final Set<LogRecordListener> listeners = ConcurrentHashMap.newKeySet();
+
 	/**
 	 * Get a {@link Logger} for the specified class.
 	 *
@@ -47,6 +51,22 @@ public final class LoggerFactory {
 		}
 
 		return new DelegatingLogger(clazz.getName());
+	}
+
+	/**
+	 * Add the supplied {@link LogRecordListener} to the set of registered
+	 * listeners.
+	 */
+	public static void addListener(LogRecordListener listener) {
+		listeners.add(listener);
+	}
+
+	/**
+	 * Remove the supplied {@link LogRecordListener} from the set of registered
+	 * listeners.
+	 */
+	public static void removeListener(LogRecordListener listener) {
+		listeners.remove(listener);
 	}
 
 	private static final class DelegatingLogger implements Logger {
@@ -123,8 +143,13 @@ public final class LoggerFactory {
 		}
 
 		private void log(Level level, Throwable throwable, Supplier<String> messageSupplier) {
-			if (this.julLogger.isLoggable(level)) {
-				this.julLogger.log(createLogRecord(level, throwable, messageSupplier));
+			boolean loggable = this.julLogger.isLoggable(level);
+			if (loggable || !listeners.isEmpty()) {
+				LogRecord logRecord = createLogRecord(level, throwable, messageSupplier);
+				if (loggable) {
+					this.julLogger.log(logRecord);
+				}
+				listeners.forEach(l -> l.logRecordSubmitted(logRecord));
 			}
 		}
 

@@ -32,7 +32,7 @@ import org.opentest4j.MultipleFailuresError;
  *
  * @since 5.0
  */
-class AssertionsAssertAllTests {
+class AssertAllAssertionsTests {
 
 	@Test
 	void assertAllWithNullInExecutableArray() {

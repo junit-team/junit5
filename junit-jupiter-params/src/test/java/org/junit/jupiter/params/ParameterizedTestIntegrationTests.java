@@ -43,6 +43,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -65,9 +66,9 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
-	void executesWithStringSource() {
+	void executesWithCsvSource() {
 		List<ExecutionEvent> executionEvents = execute(
-			selectMethod(TestCase.class, "testWithStringSource", String.class.getName()));
+			selectMethod(TestCase.class, "testWithCsvSource", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -89,6 +90,42 @@ class ParameterizedTestIntegrationTests {
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] O"), finishedWithFailure(message("length: 1")))) //
 				.haveExactly(1, event(test(), displayName("[2] XXX"), finishedWithFailure(message("length: 3"))));
+	}
+
+	@Test
+	void executesWithArgumentsSourceProvidingRedundantArguments() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
+			"testWithTwoRedundantStringArgumentsProvider", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+	}
+
+	@Test
+	void executesWithCsvSourceContainingRedundantArguments() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
+			"testWithCsvSourceContainingRedundantArguments", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+	}
+
+	@Test
+	void executesWithCsvFileSourceContainingRedundantArguments() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
+			"testWithCsvFileSourceContainingRedundantArguments", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+	}
+
+	@Test
+	void executesWithMethodSourceProvidingRedundantArguments() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
+			"testWithMethodSourceProvidingRedundantArguments", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 	}
 
 	@Test
@@ -152,7 +189,7 @@ class ParameterizedTestIntegrationTests {
 
 		@ParameterizedTest
 		@CsvSource({ "foo", "bar" })
-		void testWithStringSource(String argument) {
+		void testWithCsvSource(String argument) {
 			fail(argument);
 		}
 
@@ -173,6 +210,38 @@ class ParameterizedTestIntegrationTests {
 		void testWithEmptyName(String argument) {
 			fail(argument);
 		}
+	}
+
+	static class RedundantParametersTestCase {
+
+		@ParameterizedTest
+		@ArgumentsSource(TwoRedundantStringArgumentsProvider.class)
+		void testWithTwoRedundantStringArgumentsProvider(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@CsvSource({ "foo, redundant1", "bar, redundant2" })
+		void testWithCsvSourceContainingRedundantArguments(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@CsvFileSource(resources = "two-column.csv")
+		void testWithCsvFileSourceContainingRedundantArguments(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@MethodSource("redundantArgumentsProviderMethod")
+		void testWithMethodSourceProvidingRedundantArguments(String argument) {
+			fail(argument);
+		}
+
+		static Stream<Arguments> redundantArgumentsProviderMethod() {
+			return Stream.of(Arguments.of("foo", "redundant1"), Arguments.of("bar", "redundant2"));
+		}
+
 	}
 
 	static class LifecycleTestCase {
@@ -235,6 +304,14 @@ class ParameterizedTestIntegrationTests {
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
 			return Stream.of(Arguments.of("foo"), Arguments.of("bar"));
+		}
+	}
+
+	private static class TwoRedundantStringArgumentsProvider implements ArgumentsProvider {
+
+		@Override
+		public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+			return Stream.of(Arguments.of("foo", "redundant1"), Arguments.of("bar", "redundant2"));
 		}
 	}
 

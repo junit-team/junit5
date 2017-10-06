@@ -17,8 +17,6 @@ import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_I
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -36,8 +34,6 @@ import org.junit.vintage.engine.execution.RunnerExecutor;
  */
 @API(status = INTERNAL, since = "4.12")
 public final class VintageTestEngine implements TestEngine {
-
-	private static final Logger logger = LoggerFactory.getLogger(VintageTestEngine.class);
 
 	@Override
 	public String getId() {
@@ -62,7 +58,7 @@ public final class VintageTestEngine implements TestEngine {
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		return new VintageDiscoverer(logger).discover(discoveryRequest, uniqueId);
+		return new VintageDiscoverer().discover(discoveryRequest, uniqueId);
 	}
 
 	@Override
@@ -70,7 +66,7 @@ public final class VintageTestEngine implements TestEngine {
 		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
 		TestDescriptor engineTestDescriptor = request.getRootTestDescriptor();
 		engineExecutionListener.executionStarted(engineTestDescriptor);
-		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener, logger);
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
 		executeAllChildren(runnerExecutor, engineTestDescriptor);
 		engineExecutionListener.executionFinished(engineTestDescriptor, successful());
 	}
@@ -83,4 +79,5 @@ public final class VintageTestEngine implements TestEngine {
 				.forEach(runnerExecutor::execute);
 		// @formatter:on
 	}
+
 }

@@ -22,12 +22,14 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
@@ -61,9 +63,19 @@ class JUnitPlatformTestTree {
 	}
 
 	private Description generateSuiteDescription(TestPlan testPlan, Class<?> testClass) {
-		Description suiteDescription = Description.createSuiteDescription(testClass.getName());
+		String displayName = useTechnicalNames(testClass) ? testClass.getName() : getSuiteDisplayName(testClass);
+		Description suiteDescription = Description.createSuiteDescription(displayName);
 		buildDescriptionTree(suiteDescription, testPlan);
 		return suiteDescription;
+	}
+
+	private String getSuiteDisplayName(Class<?> testClass) {
+		// @formatter:off
+		return AnnotationUtils.findAnnotation(testClass, SuiteDisplayName.class)
+				.map(SuiteDisplayName::value)
+				.filter(StringUtils::isNotBlank)
+				.orElse(testClass.getName());
+		// @formatter:on
 	}
 
 	private void buildDescriptionTree(Description suiteDescription, TestPlan testPlan) {

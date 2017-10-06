@@ -124,7 +124,7 @@ class AvailableOptions {
 		selectedUris = parser.acceptsAll(asList("u", "select-uri"), //
 			"Select a URI for test discovery. This option can be repeated.") //
 				.withRequiredArg() //
-				.withValuesConvertedBy(new URIConverter());
+				.withValuesConvertedBy(new UriConverter());
 
 		selectedFiles = parser.acceptsAll(asList("f", "select-file"), //
 			"Select a file for test discovery. This option can be repeated.") //

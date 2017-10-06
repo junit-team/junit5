@@ -26,7 +26,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-class AssertionsFailTests {
+class FailAssertionsTests {
 
 	@Test
 	void failWithString() {

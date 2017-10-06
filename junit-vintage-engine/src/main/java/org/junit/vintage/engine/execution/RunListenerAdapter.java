@@ -16,7 +16,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import org.junit.Ignore;
-import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -39,10 +38,10 @@ class RunListenerAdapter extends RunListener {
 	private final EngineExecutionListener listener;
 	private final Function<Description, String> uniqueIdExtractor;
 
-	RunListenerAdapter(TestRun testRun, Logger logger, EngineExecutionListener listener) {
+	RunListenerAdapter(TestRun testRun, EngineExecutionListener listener) {
 		this.testRun = testRun;
 		this.listener = listener;
-		this.uniqueIdExtractor = new UniqueIdReader(logger).andThen(new UniqueIdStringifier());
+		this.uniqueIdExtractor = new UniqueIdReader().andThen(new UniqueIdStringifier());
 	}
 
 	@Override

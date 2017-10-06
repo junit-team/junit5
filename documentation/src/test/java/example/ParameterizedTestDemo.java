@@ -45,11 +45,21 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class ParameterizedTestDemo {
 
+	private static boolean isPalindrome(String candidate) {
+		int length = candidate.length();
+		for (int i = 0; i < length / 2; i++) {
+			if (candidate.charAt(i) != candidate.charAt(length - (i + 1))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	// tag::first_example[]
 	@ParameterizedTest
-	@ValueSource(strings = { "Hello", "World" })
-	void testWithStringParameter(String argument) {
-		assertNotNull(argument);
+	@ValueSource(strings = { "racecar", "radar", "able was I ere I saw elba" })
+	void palindromes(String candidate) {
+		assertTrue(isPalindrome(candidate));
 	}
 	// end::first_example[]
 

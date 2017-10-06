@@ -13,9 +13,11 @@ package example;
 //tag::user_guide[]
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
+@SuiteDisplayName("JUnit 4 Suite Demo")
 @SelectPackages("example")
 //end::user_guide[]
 @org.junit.platform.suite.api.ExcludeTags("exclude")

@@ -121,9 +121,10 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 Once the JUnit Gradle plugin has been applied, you can configure it as follows.
 
 [source,java,indent=0]
+[subs=attributes+]
 ----
 junitPlatform {
-	platformVersion '1.0.0'
+	platformVersion '{platform-version}' // optional, defaults to plugin version
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 	reportsDir file('build/test-results/junit-platform') // this is the default
 	// enableStandardTestTask true
@@ -594,7 +595,7 @@ include::{generatedAsciiDocInputDir}/console-launcher-options.txt[]
 
 
 [[running-tests-junit-platform-runner]]
-=== Using JUnit 4 to Run the JUnit Platform
+=== Using JUnit 4 to run the JUnit Platform
 
 The `JUnitPlatform` runner is a JUnit 4 based `Runner` which enables you to run any test
 whose programming model is supported on the JUnit Platform in a JUnit 4 environment --
@@ -612,18 +613,18 @@ time being the `JUnitPlatform` runner is an easy way to get started.
 ==== Setup
 
 You need the following artifacts and their dependencies on the classpath. See
-<<dependency-metadata>> for details regarding group IDs, artifact IDs, and
-versions.
+<<dependency-metadata>> for details regarding group IDs, artifact IDs, and versions.
 
 ===== Explicit Dependencies
 
-* `junit-{junit4-version}.jar` in _test_ scope: to run tests using JUnit 4.
 * `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
-* `junit-jupiter-api` in _test_ scope: API for writing tests, including `@Test`, etc.
-* `junit-jupiter-engine` in _test runtime_ scope: implementation of the Engine API for JUnit Jupiter
+* `junit-{junit4-version}.jar` in _test_ scope: to run tests using JUnit 4
+* `junit-jupiter-api` in _test_ scope: API for writing tests using JUnit Jupiter, including `@Test`, etc.
+* `junit-jupiter-engine` in _test runtime_ scope: implementation of the `TestEngine` API for JUnit Jupiter
 
 ===== Transitive Dependencies
 
+* `junit-platform-suite-api` in _test_ scope
 * `junit-platform-launcher` in _test_ scope
 * `junit-platform-engine` in _test_ scope
 * `junit-platform-commons` in _test_ scope
@@ -631,6 +632,9 @@ versions.
 
 [[running-tests-junit-platform-runner-technical-names]]
 ==== Display Names vs. Technical Names
+
+To define a custom _display name_ for the class run via `@RunWith(JUnitPlatform.class)`
+simply annotate the class with `@SuiteDisplayName` and provide a custom value.
 
 By default, _display names_ will be used for test artifacts; however, when the
 `JUnitPlatform` runner is used to execute tests with a build tool such as Gradle or
@@ -640,6 +644,9 @@ like the simple name of a test class or a custom display name containing special
 characters. To enable technical names for reporting purposes, simply declare the
 `@UseTechnicalNames` annotation alongside `@RunWith(JUnitPlatform.class)`.
 
+Note that the presence of `@UseTechnicalNames` overrides any custom display name
+configured via `@SuiteDisplayName`.
+
 [[running-tests-junit-platform-runner-single-test]]
 ==== Single Test Class
 
@@ -647,7 +654,7 @@ One way to use the `JUnitPlatform` runner is to annotate a test class with
 `@RunWith(JUnitPlatform.class)` directly. Please note that the test methods in the
 following example are annotated with `org.junit.jupiter.api.Test` (JUnit Jupiter), not
 `org.junit.Test` (JUnit Vintage). Moreover, in this case the test class must be `public`;
-otherwise, IDEs won't recognize it as a JUnit 4 test class.
+otherwise, some IDEs and build tools might not recognize it as a JUnit 4 test class.
 
 [source,java,indent=0]
 ----

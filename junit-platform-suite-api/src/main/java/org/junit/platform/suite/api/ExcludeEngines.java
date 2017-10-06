@@ -43,7 +43,7 @@ import org.apiguardian.api.API;
 public @interface ExcludeEngines {
 
 	/**
-	 * One or more Engine IDs to be excluded from the test plan.
+	 * One or more TestEngine IDs to be excluded from the test plan.
 	 */
 	String[] value();
 

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.discovery.ClassNameFilter;
@@ -48,6 +49,18 @@ public final class ClasspathScanningSupport {
 		filters.addAll(request.getFiltersByType(ClassNameFilter.class));
 		filters.addAll(request.getFiltersByType(PackageNameFilter.class));
 		return composeFilters(filters).toPredicate();
+	}
+
+	/**
+	 * Build a {@link ClassFilter} by combining the name predicate built by
+	 * {@link #buildClassNamePredicate(EngineDiscoveryRequest)} and the passed-in
+	 * class predicate.
+	 *
+	 * @param request the request to build a name predicate from
+	 * @param classPredicate the class predicate
+	 */
+	public static ClassFilter buildClassFilter(EngineDiscoveryRequest request, Predicate<Class<?>> classPredicate) {
+		return ClassFilter.of(buildClassNamePredicate(request), classPredicate);
 	}
 
 }

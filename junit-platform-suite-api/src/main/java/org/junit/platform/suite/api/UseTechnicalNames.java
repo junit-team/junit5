@@ -34,11 +34,15 @@ import org.apiguardian.api.API;
  * of shorter <em>display names</em> like the simple name of a test class or a
  * custom display name containing special characters.
  *
+ * <p>Note that the presence of {@code @UseTechnicalNames} overrides any custom
+ * display name configured for the suite via {@link SuiteDisplayName @SuiteDisplayName}.
+ *
  * <h4>JUnit 4 Suite Support</h4>
  * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
  * {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 1.0
+ * @see SuiteDisplayName
  * @see org.junit.platform.runner.JUnitPlatform
  */
 @Retention(RetentionPolicy.RUNTIME)

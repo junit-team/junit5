@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionTestUtils.assertExpectedAndActualValues;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEndsWith;
-import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.opentest4j.AssertionFailedError;
 
@@ -23,33 +23,48 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-class AssertionsAssertNotNullTests {
+class AssertNullAssertionsTests {
 
 	@Test
-	void assertNotNullWithNonNullObject() {
-		assertNotNull("foo");
+	void assertNullWithNull() {
+		assertNull(null);
 	}
 
 	@Test
-	void assertNotNullWithNull() {
+	void assertNullWithNonNullObject() {
 		try {
-			assertNotNull(null);
+			assertNull("foo");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected: not <null>");
+			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+			assertExpectedAndActualValues(ex, null, "foo");
 		}
 	}
 
 	@Test
-	void assertNotNullWithNullAndMessageSupplier() {
+	void assertNullWithNonNullObjectAndMessage() {
 		try {
-			assertNotNull(null, () -> "test");
+			assertNull("foo", "a message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "a message");
+			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+			assertExpectedAndActualValues(ex, null, "foo");
+		}
+	}
+
+	@Test
+	void assertNullWithNonNullObjectAndMessageSupplier() {
+		try {
+			assertNull("foo", () -> "test");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "test");
-			assertMessageEndsWith(ex, "expected: not <null>");
+			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+			assertExpectedAndActualValues(ex, null, "foo");
 		}
 	}
 
