@@ -15,7 +15,13 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
- * @since 4.12
+ * Integration tests for {@code ModuleUtils} using JUnit Vintage.
+ *
+ * <p>The integration tests are meant to be executed on the module-path by
+ * running JUnit Platform {@link org.junit.platform.console.ConsoleLauncher}
+ * with the {@code --scan-module-path} option.
+ *
+ * @since 1.1
  */
 public class VintageIntegrationTest {
 

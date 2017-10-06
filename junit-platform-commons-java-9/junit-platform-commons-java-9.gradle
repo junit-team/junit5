@@ -5,16 +5,15 @@ dependencies {
 	implementation(project(':junit-platform-commons'))
 
 	// Needed for testing.
+	testImplementation(project(':junit-platform-launcher'))
 	testImplementation(project(':junit-jupiter-api'))
 	testImplementation(project(':junit-jupiter-engine'))
 	testImplementation("junit:junit:${junit4Version}")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
-	testRuntimeOnly(project(':junit-vintage-engine'))
-	testRuntimeOnly(project(':junit-platform-engine'))
-	testRuntimeOnly(project(':junit-platform-launcher'))
 	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly(project(':junit-vintage-engine'))
 }
 
 // https://github.com/schauder/degraph/issues/87
@@ -71,15 +70,30 @@ task execScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, g
 }
 
 /*
-.
-+-- JUnit Vintage [OK]
-| '-- integration.VintageIntegrationTest [OK]
-|   '-- successfulTest [OK]
-'-- JUnit Jupiter [OK]
-'-- JupiterIntegrationTests [OK]
-	+-- version() [OK]
-	+-- moduleIsNamed() [OK]
-	'-- packageName() [OK]
+| .
+| +-- JUnit Vintage [OK]
+| | '-- integration.VintageIntegrationTest [OK]
+| |   '-- successfulTest [OK]
+| '-- JUnit Jupiter [OK]
+|   '-- JupiterIntegrationTests [OK]
+|     +-- version() [OK]
+|     +-- moduleIsNamed() [OK]
+|     +-- packageName() [OK]
+|     '-- resolve() [OK]
+
+Test run finished after 43 ms
+[         4 containers found      ]
+[         0 containers skipped    ]
+[         4 containers started    ]
+[         0 containers aborted    ]
+[         4 containers successful ]
+[         0 containers failed     ]
+[         5 tests found           ]
+[         0 tests skipped         ]
+[         5 tests started         ]
+[         0 tests aborted         ]
+[         5 tests successful      ]
+[         0 tests failed          ]
 
 Test run finished after 54 ms
 [         4 containers found      ]
@@ -117,11 +131,11 @@ task testScanModulepath(dependsOn: execScanModulepath) {
 		assert text.contains("4 containers successful")
 		assert text.contains("0 containers failed")
 		// tests summary
-		assert text.contains("4 tests found")
+		assert text.contains("5 tests found")
 		assert text.contains("0 tests skipped")
-		assert text.contains("4 tests started")
+		assert text.contains("5 tests started")
 		assert text.contains("0 tests aborted")
-		assert text.contains("4 tests successful")
+		assert text.contains("5 tests successful")
 		assert text.contains("0 tests failed")
 	}
 }

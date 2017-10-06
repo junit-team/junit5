@@ -11,12 +11,13 @@
 package org.junit.platform.commons.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.module.ModuleDescriptor;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
 
 /**
  * Unit tests for {@link ModuleUtils}.
@@ -25,8 +26,6 @@ import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
  */
 class ModuleUtilsTests {
 
-	private final ClassFilter testClasses = ClassFilter.of(new IsScannableTestClass());
-
 	@Test
 	void version() {
 		assertEquals("9", ModuleUtils.VERSION);
@@ -34,7 +33,10 @@ class ModuleUtilsTests {
 
 	@Test
 	void find() {
-		List<Class<?>> classes = ModuleUtils.findAllClassesInModule("java.base", testClasses);
-		assertTrue(classes.isEmpty());
+		ClassFilter modular = ClassFilter.of(name -> name.contains("Module"), type -> true);
+		List<Class<?>> classes = ModuleUtils.findAllClassesInModule("java.base", modular);
+		assertFalse(classes.isEmpty());
+		assertTrue(classes.contains(Module.class));
+		assertTrue(classes.contains(ModuleDescriptor.class));
 	}
 }
