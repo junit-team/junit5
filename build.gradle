@@ -445,6 +445,10 @@ subprojects { subproj ->
 			if (versionedProject == null) {
 				return
 			}
+			if (project.hasProperty('enableClover')) {
+				println "Skip updating $archivePath with $versionedProject - Clover is enabled!"
+				return
+			}
 			// We're only interested in the compiled classes. So we depend
 			// on the classes task and change (-C) to the destination
 			// directory of the version-aware project later.
