@@ -68,7 +68,7 @@ class AssertionsAssertAllKotlinTests {
         fun assertExpectedExceptionTypes(
             multipleFailuresError: MultipleFailuresError,
             vararg exceptionTypes: KClass<out Throwable>) =
-            AssertionsAssertAllTests.assertExpectedExceptionTypes(
+            AssertAllAssertionsTests.assertExpectedExceptionTypes(
                 multipleFailuresError, *exceptionTypes.map { it.java }.toTypedArray())
     }
 }
