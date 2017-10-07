@@ -1,4 +1,6 @@
 language: java
+jdk: oraclejdk9
+
 sudo: false
 dist: trusty
 
@@ -6,14 +8,6 @@ dist: trusty
 branches:
   except:
     - /^r\d.*$/
-
-env:
-  - _JAVA_OPTIONS='-Xmx500m'
-
-matrix:
-  include:
-    - jdk: oraclejdk8 # JDK 1.8.0_131-b11 or newer
-    - jdk: oraclejdk9 # JDK 9+175 or newer
 
 # Don't let Travis CI execute './gradlew assemble' by default
 install:
