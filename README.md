@@ -36,7 +36,7 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with us on [Gitter].
 
 | CI Server | OS      | Status | Description |
 | --------- | ------- | ------ | ----------- |
-| Jenkins   | Linux   | [![Build Status](https://junit.ci.cloudbees.com/job/JUnit5/badge/icon)](https://junit.ci.cloudbees.com/job/JUnit5) | Official CI build server for JUnit 5 |
+| Jenkins   | Linux   | [![Build Status](https://junit.ci.cloudbees.com/job/JUnit5/job/master/badge/icon)](https://junit.ci.cloudbees.com/blue/organizations/jenkins/JUnit5/branches/) | Official CI build server for JUnit 5 |
 | Travis CI | Linux   | [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5) | Used to perform quick checks on submitted pull requests and for build matrices including JDK 8 and JDK 9 early access builds |
 | AppVeyor  | Windows | [![Build status](https://ci.appveyor.com/api/projects/status/xv8wc8w9sr44ghc4/branch/master?svg=true)](https://ci.appveyor.com/project/marcphilipp/junit5/branch/master) | Used to ensure that JUnit 5 can be built on Windows |
 
@@ -148,7 +148,7 @@ as it is not intended to be used as a module.
 [Clover]: https://www.atlassian.com/software/clover/
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
-[Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/lastSuccessfulBuild/clover-report/
+[Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/clover-report/
 [JUnit 5 Javadoc]: http://junit.org/junit5/docs/current/api/
 [JUnit 5 User Guide]: http://junit.org/junit5/docs/current/user-guide/
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
