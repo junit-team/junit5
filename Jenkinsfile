@@ -28,6 +28,16 @@ pipeline {
         sh './gradlew --no-daemon clean build -x test'
       }
     }
+    stage('Publish Artifacts') {
+      when {
+        branch 'master'
+      }
+      steps {
+        withCredentials([usernamePassword(credentialsId: '50481102-b416-45bd-8628-bd890c4f0188', usernameVariable: 'ORG_GRADLE_PROJECT_ossrhUsername', passwordVariable: 'ORG_GRADLE_PROJECT_ossrhPassword')]) {
+          sh './gradlew --no-daemon uploadArchives -x test'
+        }
+      }
+    }
     stage('Aggregate Javadoc') {
       tools {
         jdk 'Oracle JDK 8 (latest)' // Use JDK 8 because of custom stylesheet
@@ -51,16 +61,6 @@ pipeline {
       }
       steps {
         sh './gradlew --no-daemon asciidoctor'
-      }
-    }
-    stage('Publish Artifacts') {
-      when {
-        branch 'master'
-      }
-      steps {
-        withCredentials([usernamePassword(credentialsId: '50481102-b416-45bd-8628-bd890c4f0188', usernameVariable: 'ORG_GRADLE_PROJECT_ossrhUsername', passwordVariable: 'ORG_GRADLE_PROJECT_ossrhPassword')]) {
-          sh './gradlew --no-daemon uploadArchives'
-        }
       }
     }
     stage('Update Website') {
