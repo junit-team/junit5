@@ -4,28 +4,14 @@ pipeline {
     jdk 'Oracle JDK 9'
   }
   stages {
-    stage('Run Tests with Coverage') {
+    stage('Build') {
       steps {
-        withCredentials([file(credentialsId: 'CLOVER_LICENSE', variable: 'ORG_GRADLE_PROJECT_clover.license.path')]) {
-          sh './gradlew --no-daemon --refresh-dependencies -PenableClover clean cloverHtmlReport cloverXmlReport'
-        }
+        sh './gradlew --no-daemon clean build'
       }
       post {
         always {
           junit '**/build/test-results/**/*.xml'
         }
-        success {
-          step([
-            $class: 'CloverPublisher',
-            cloverReportDir: 'build/reports/clover',
-            cloverReportFileName: 'clover.xml'
-          ])
-        }
-      }
-    }
-    stage('Check & Assemble') {
-      steps {
-        sh './gradlew --no-daemon clean build -x test'
       }
     }
     stage('Publish Artifacts') {
@@ -72,6 +58,22 @@ pipeline {
         milestone 2
         withCredentials([string(credentialsId: '9f982a37-747d-42bd-abf9-643534f579bd', variable: 'GRGIT_USER')]) {
           sh './gradlew --no-daemon gitPublishPush'
+        }
+      }
+    }
+    stage('Coverage') {
+      steps {
+        withCredentials([file(credentialsId: 'CLOVER_LICENSE', variable: 'ORG_GRADLE_PROJECT_clover.license.path')]) {
+          sh './gradlew --no-daemon --refresh-dependencies -PenableClover clean cloverHtmlReport cloverXmlReport'
+        }
+      }
+      post {
+        success {
+          step([
+            $class: 'CloverPublisher',
+            cloverReportDir: 'build/reports/clover',
+            cloverReportFileName: 'clover.xml'
+          ])
         }
       }
     }
