@@ -66,9 +66,7 @@ pipeline {
     }
     stage('Coverage') {
       steps {
-        withCredentials([file(credentialsId: 'CLOVER_LICENSE', variable: 'ORG_GRADLE_PROJECT_clover.license.path')]) {
-          sh './gradlew --no-daemon --refresh-dependencies -PenableClover clean cloverHtmlReport cloverXmlReport'
-        }
+        sh './gradlew --no-daemon --refresh-dependencies -PenableClover clean cloverHtmlReport cloverXmlReport'
       }
       post {
         success {

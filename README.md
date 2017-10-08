@@ -42,13 +42,12 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with us on [Gitter].
 
 ## Code Coverage
 
-Code coverage using [Clover] for the latest build is available on the [Jenkins CI server].
-We are thankful to [Atlassian] for providing the Clover license free of charge.
+Code coverage using [OpenClover] for the latest build is available on the
+[Jenkins CI server].
 
 A code coverage report can also be generated locally by executing
-`gradlew -PenableClover clean cloverHtmlReport` if you have a local Clover license file
-on your computer. The results will be available in
-`junit-tests/build/reports/clover/html/index.html`.
+`gradlew -PenableClover clean cloverHtmlReport`. The results will be available in
+`build/reports/clover/html/index.html`.
 
 ## Gradle Build Scans
 
@@ -143,9 +142,8 @@ The `junit-platform-console-standalone` JAR does not provide an automatic module
 as it is not intended to be used as a module.
 
 
-[Atlassian]: https://www.atlassian.com/
 [Automatic-Module-Name]: http://mail.openjdk.java.net/pipermail/jpms-spec-experts/2017-April/000667.html
-[Clover]: https://www.atlassian.com/software/clover/
+[OpenClover]: http://openclover.org
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
 [Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/clover-report/

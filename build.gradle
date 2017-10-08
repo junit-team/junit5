@@ -198,7 +198,7 @@ allprojects { subproj ->
 		}
 
 		dependencies {
-			clover('com.atlassian.clover:clover:4.1.2')
+			clover('org.openclover:clover:4.2.0')
 		}
 
 		ext.cloverDir = file("$buildDir/clover")
@@ -207,10 +207,7 @@ allprojects { subproj ->
 		def instrumentedJavaSourcesDir = file("$cloverDir/instrumentedSources/java")
 
 		task cloverTaskdef {
-			def cloverLicensePath = (project.hasProperty('clover.license.path')
-					? project.property('clover.license.path') : rootProject.file('clover.license').absolutePath)
 			ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
-			ant.property(name: 'clover.license.path', value: cloverLicensePath)
 		}
 
 		task cloverInstrumentJava(dependsOn: cloverTaskdef) {
