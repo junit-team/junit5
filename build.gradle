@@ -9,12 +9,12 @@ buildscript {
 		maven { url 'http://repo.spring.io/plugins-release' }
 	}
 	dependencies {
-		classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.5.2'
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
-		classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
-		classpath 'org.ajoberstar:gradle-git-publish:0.3.0'
-		classpath 'org.ajoberstar:gradle-git:1.7.2'
-		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0'
+		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.5.2')
+		classpath('com.github.ben-manes:gradle-versions-plugin:0.15.0')
+		classpath('io.spring.gradle:propdeps-plugin:0.0.9.RELEASE')
+		classpath('org.ajoberstar:gradle-git-publish:0.3.0')
+		classpath('org.ajoberstar:gradle-git:1.7.2')
+		classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.1')
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 	}
 }
@@ -116,7 +116,7 @@ allprojects { subproj ->
 	}
 
 	dependencies {
-		// The following dependency is only necesssary to avoid compiler warnings about
+		// The following dependency is necessary to avoid compiler warnings about
 		// not being able to find the @API annotation when compiling test sources.
 		testCompileOnly("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	}
@@ -198,7 +198,7 @@ allprojects { subproj ->
 		}
 
 		dependencies {
-			clover 'com.atlassian.clover:clover:4.1.2'
+			clover('org.openclover:clover:4.2.0')
 		}
 
 		ext.cloverDir = file("$buildDir/clover")
@@ -207,10 +207,7 @@ allprojects { subproj ->
 		def instrumentedJavaSourcesDir = file("$cloverDir/instrumentedSources/java")
 
 		task cloverTaskdef {
-			def cloverLicensePath = (project.hasProperty('clover.license.path')
-					? project.property('clover.license.path') : rootProject.file('clover.license').absolutePath)
 			ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
-			ant.property(name: 'clover.license.path', value: cloverLicensePath)
 		}
 
 		task cloverInstrumentJava(dependsOn: cloverTaskdef) {
@@ -265,7 +262,7 @@ subprojects { subproj ->
 		}
 
 		javadoc {
-			options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+			options.memberLevel = JavadocMemberLevel.PROTECTED
 			options.author = true
 			options.header = project.name
 			options.use = true
@@ -279,7 +276,7 @@ subprojects { subproj ->
 		task sourcesJar(type: Jar, dependsOn: classes) {
 			classifier = 'sources'
 			from sourceSets.main.allSource
-			duplicatesStrategy = 'exclude'
+			duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 		}
 
 		task javadocJar(type: Jar) {
@@ -408,7 +405,7 @@ subprojects { subproj ->
 		try {
 			(versionLiteral =~ /(\d+)\.(\d+)\.(\d+).*/)[0][1..3].join('.')
 		} catch(x) {
-			throw new GradleException("Version '$versionLiteral' does not match version pattern, e.g. 5.0.0-QUALIFIER")
+			throw new GradleException("Version '$versionLiteral' does not match version pattern, e.g. 5.0.0-QUALIFIER", x)
 		}
 	}
 
@@ -448,7 +445,7 @@ subprojects { subproj ->
 			licenseHeaderFile headerFile, '(package|import) '
 			importOrderFile importOrderConfigFile
 			eclipse().configFile javaFormatterConfigFile
-			if (org.gradle.api.JavaVersion.current() == org.gradle.api.JavaVersion.VERSION_1_8) {
+			if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
 				removeUnusedImports()
 			}
 
@@ -493,13 +490,9 @@ configure(rootProject) {
 		description = "Generates aggregated Javadocs"
 		title = "JUnit ${version} API"
 
-		dependsOn {
-			subprojects.collect {
-				it.tasks.getByName("jar")
-			}
-		}
+		setDependsOn subprojects.collect { it.tasks.getByName("jar") }
 
-		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+		options.memberLevel = JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = rootProject.description
 		options.use = true
@@ -518,9 +511,7 @@ configure(rootProject) {
 			.group("Vintage", ["org.junit.vintage.*"])
 			.group("Platform", ["org.junit.platform.*"])
 
-		source subprojects.collect { project ->
-			project.sourceSets.main.allJava
-		}
+		setSource subprojects.collect { it.sourceSets.main.allJava }
 
 		maxMemory = "1024m"
 		destinationDir = new File(buildDir, "docs/javadoc")

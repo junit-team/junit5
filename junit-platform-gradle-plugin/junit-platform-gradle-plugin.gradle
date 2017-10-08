@@ -29,8 +29,8 @@ Task createClasspathManifests = tasks.create('createClasspathManifests') {
 }
 
 dependencies {
-	implementation localGroovy()
-	implementation gradleApi()
+	implementation(localGroovy())
+	implementation(gradleApi())
 	api(project(path: ':junit-platform-console', configuration: 'shadow'))
 	api(project(':junit-platform-launcher'))
 	testRuntimeOnly("junit:junit:${junit4Version}")

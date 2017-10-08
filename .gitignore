@@ -23,6 +23,5 @@ bin/
 *.log
 *.graphml
 coverage.db*
-clover.license
 out
 .metadata

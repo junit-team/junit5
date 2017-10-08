@@ -2,8 +2,8 @@
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-[JUnit 5.0.0](https://github.com/junit-team/junit5/releases/tag/r5.0.0)
-was released on September 10, 2017.
+[JUnit 5.0.1](https://github.com/junit-team/junit5/releases/tag/r5.0.1)
+was released on October 3, 2017.
 
 ## Roadmap
 
@@ -36,19 +36,18 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with us on [Gitter].
 
 | CI Server | OS      | Status | Description |
 | --------- | ------- | ------ | ----------- |
-| Jenkins   | Linux   | [![Build Status](https://junit.ci.cloudbees.com/job/JUnit5/badge/icon)](https://junit.ci.cloudbees.com/job/JUnit5) | Official CI build server for JUnit 5 |
+| Jenkins   | Linux   | [![Build Status](https://junit.ci.cloudbees.com/job/JUnit5/job/master/badge/icon)](https://junit.ci.cloudbees.com/blue/organizations/jenkins/JUnit5/branches/) | Official CI build server for JUnit 5 |
 | Travis CI | Linux   | [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5) | Used to perform quick checks on submitted pull requests and for build matrices including JDK 8 and JDK 9 early access builds |
 | AppVeyor  | Windows | [![Build status](https://ci.appveyor.com/api/projects/status/xv8wc8w9sr44ghc4/branch/master?svg=true)](https://ci.appveyor.com/project/marcphilipp/junit5/branch/master) | Used to ensure that JUnit 5 can be built on Windows |
 
 ## Code Coverage
 
-Code coverage using [Clover] for the latest build is available on the [Jenkins CI server].
-We are thankful to [Atlassian] for providing the Clover license free of charge.
+Code coverage using [OpenClover] for the latest build is available on the
+[Jenkins CI server].
 
 A code coverage report can also be generated locally by executing
-`gradlew -PenableClover clean cloverHtmlReport` if you have a local Clover license file
-on your computer. The results will be available in
-`junit-tests/build/reports/clover/html/index.html`.
+`gradlew -PenableClover clean cloverHtmlReport`. The results will be available in
+`build/reports/clover/html/index.html`.
 
 ## Gradle Build Scans
 
@@ -92,7 +91,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.0.0` or `1.1.0-SNAPSHOT`
+- **Version**: `1.0.1` or `1.1.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
@@ -107,7 +106,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.0.0` or `5.1.0-SNAPSHOT`
+- **Version**: `5.0.1` or `5.1.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
   - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
@@ -117,7 +116,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `4.12.0` or `4.12.1-SNAPSHOT`
+- **Version**: `4.12.1` or `4.12.2-SNAPSHOT`
 - **Artifact ID** and **Automatic-Module-Name**:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
@@ -143,12 +142,11 @@ The `junit-platform-console-standalone` JAR does not provide an automatic module
 as it is not intended to be used as a module.
 
 
-[Atlassian]: https://www.atlassian.com/
 [Automatic-Module-Name]: http://mail.openjdk.java.net/pipermail/jpms-spec-experts/2017-April/000667.html
-[Clover]: https://www.atlassian.com/software/clover/
+[OpenClover]: http://openclover.org
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
-[Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/lastSuccessfulBuild/clover-report/
+[Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/clover-report/
 [JUnit 5 Javadoc]: http://junit.org/junit5/docs/current/api/
 [JUnit 5 User Guide]: http://junit.org/junit5/docs/current/user-guide/
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
