@@ -3,6 +3,9 @@ pipeline {
   tools {
     jdk 'Oracle JDK 9'
   }
+  options {
+    ansiColor('xterm')
+  }
   stages {
     stage('Build') {
       steps {
