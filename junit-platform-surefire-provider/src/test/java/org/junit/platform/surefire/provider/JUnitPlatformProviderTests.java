@@ -237,7 +237,8 @@ class JUnitPlatformProviderTests {
 		when(runOrderCalculator.orderTestClasses(any())).thenReturn(testsToRun);
 
 		ReporterFactory reporterFactory = mock(ReporterFactory.class);
-		RunListener runListener = mock(ForkingRunListener.class, withSettings().extraInterfaces(ConsoleOutputReceiver.class));
+		RunListener runListener = mock(ForkingRunListener.class,
+			withSettings().extraInterfaces(ConsoleOutputReceiver.class));
 		when(reporterFactory.createReporter()).thenReturn(runListener);
 
 		ProviderParameters providerParameters = mock(ProviderParameters.class);
