@@ -61,7 +61,7 @@ pipeline {
     }
     stage('Coverage') {
       steps {
-        sh './gradlew --no-daemon -PenableClover clean cloverHtmlReport cloverXmlReport'
+        sh './gradlew --no-daemon --refresh-dependencies -PenableClover clean cloverHtmlReport cloverXmlReport'
       }
       post {
         success {
