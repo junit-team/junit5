@@ -94,11 +94,16 @@ ext {
 		'junit-platform-surefire-provider',
 		'platform-tests'
 	]
+
+	jacocoTestProjects = cloverTestProjects << 'junit-platform-gradle-plugin'
+	jacocoCoveredProjects = mavenizedProjects - ['junit-platform-console-standalone']
+	jacocoClassesDir = "$buildDir/jacoco/classes"
 }
 
 allprojects { subproj ->
 
 	apply plugin: 'java-library'
+	apply plugin: 'groovy' // apply for all projects so rootProject sees groovy output dir
 	if (gradle.ext.kotlinIsSupported) apply plugin: 'kotlin'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
@@ -106,6 +111,13 @@ allprojects { subproj ->
 	apply plugin: 'checkstyle'
 	apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates
 	apply from: "$rootDir/gradle/degraph.gradle"
+
+	if (project.hasProperty('enableJaCoCo')) {
+		apply plugin: "jacoco"
+		jacoco {
+			toolVersion = '0.8.0'
+		}
+	}
 
 	repositories {
 		// mavenLocal()
@@ -201,7 +213,7 @@ allprojects { subproj ->
 		configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
 	}
 
-	if (project.hasProperty('enableClover') && subproj.name != "documentation") {
+	if (project.hasProperty('enableClover')) {
 
 		configurations {
 			clover
@@ -547,8 +559,30 @@ subprojects { subproj ->
 	}
 
 	afterEvaluate {
-		if (project.hasProperty('enableClover') && subproj.name in cloverTestProjects) {
-			cloverAggregateDatabases.dependsOn subproj.tasks.test
+
+		if (project.hasProperty('enableJaCoCo')) {
+
+			if (subproj.name in jacocoTestProjects) {
+				jacoco {
+					applyTo subproj.tasks.matching { it.name == 'junitPlatformTest' }
+				}
+			}
+
+			if (subproj.name in jacocoCoveredProjects) {
+				def jarTask = subproj.tasks.findByName('shadowJar') ?: subproj.jar
+				task extractJar(type: Copy) {
+					from zipTree(jarTask.archivePath)
+					into jacocoClassesDir
+					include '**/*.class'
+					// don't report coverage for shadowed classes
+					exclude '**/shadow/**'
+					// don't version-specific classes of MR JARs
+					exclude 'META-INF/versions/**'
+					includeEmptyDirs = false
+					onlyIf { jarTask.enabled }
+				}
+				jarTask.finalizedBy(extractJar)
+			}
 		}
 	}
 
@@ -621,6 +655,8 @@ configure(rootProject) {
 
 		task cloverAggregateDatabases(dependsOn: cloverTaskdef) {
 			outputs.file cloverAggregationFile
+			subprojects.findAll { it.name in cloverTestProjects }
+				.each { dependsOn it.tasks.withType(Test) }
 			doLast {
 				ant.'clover-merge'(initString: cloverAggregationFile) {
 					subprojects.each { project ->
@@ -652,6 +688,30 @@ configure(rootProject) {
 						format(type: 'xml')
 					}
 				}
+			}
+		}
+	}
+
+	if (project.hasProperty('enableJaCoCo')) {
+
+		task jacocoMerge(type: JacocoMerge) {
+			subprojects.findAll { it.name in jacocoTestProjects }
+				.each { subproj ->
+				executionData fileTree(dir: "${subproj.buildDir}/jacoco", include: '*.exec')
+				dependsOn subproj.tasks.withType(Test)
+			}
+		}
+
+		task jacocoRootReport(type: JacocoReport, dependsOn: jacocoMerge) {
+			sourceDirectories = files(subprojects
+				.findAll { it.name in jacocoCoveredProjects }
+				.sourceSets.main.allSource.srcDirs)
+			classDirectories = files(jacocoClassesDir)
+			executionData jacocoMerge.destinationFile
+			reports {
+				html.enabled = true
+				xml.enabled = true
+				csv.enabled = false
 			}
 		}
 	}

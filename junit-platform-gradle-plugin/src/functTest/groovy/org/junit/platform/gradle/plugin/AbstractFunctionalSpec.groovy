@@ -28,6 +28,12 @@ abstract class AbstractFunctionalSpec extends Specification {
 		buildFile = temporaryFolder.newFile('build.gradle')
 		settingsFile = temporaryFolder.newFile('settings.gradle')
 
+		// Add JaCoCo agent from Properties file written by pl.droidsonroids.jacoco.testkit Gradle plugin
+		def testkitGradleProperties = getClass().getClassLoader().getResource('testkit-gradle.properties')
+		if (testkitGradleProperties) {
+			temporaryFolder.newFile('gradle.properties') << testkitGradleProperties.text
+		}
+
 		buildFile << """
 			plugins {
 				id 'org.junit.platform.gradle.plugin'
