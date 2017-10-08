@@ -28,6 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ import java.util.Map;
 
 import org.apache.maven.surefire.booter.ForkingRunListener;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
+import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
@@ -235,7 +237,8 @@ class JUnitPlatformProviderTests {
 		when(runOrderCalculator.orderTestClasses(any())).thenReturn(testsToRun);
 
 		ReporterFactory reporterFactory = mock(ReporterFactory.class);
-		RunListener runListener = mock(ForkingRunListener.class);
+		RunListener runListener = mock(ForkingRunListener.class,
+			withSettings().extraInterfaces(ConsoleOutputReceiver.class));
 		when(reporterFactory.createReporter()).thenReturn(runListener);
 
 		ProviderParameters providerParameters = mock(ProviderParameters.class);
