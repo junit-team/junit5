@@ -126,13 +126,14 @@ allprojects { subproj ->
 	}
 
 	tasks.withType(JavaCompile) {
-		sourceCompatibility = rootProject.sourceCompatibility
-		targetCompatibility = rootProject.targetCompatibility
+		sourceCompatibility = rootProject.javacRelease // needed by clover
+		targetCompatibility = rootProject.javacRelease // needed by clover/asm
 		options.encoding = 'UTF-8'
 	}
 
-	// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
+	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
 	compileJava.options*.compilerArgs = [
+		'--release', rootProject.javacRelease,
 		'-Xlint:cast',
 		'-Xlint:classfile',
 		'-Xlint:deprecation',
@@ -154,8 +155,9 @@ allprojects { subproj ->
 		'-Werror'
 	]
 
-	// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
+	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
 	compileTestJava.options*.compilerArgs = [
+		'--release', rootProject.javacRelease,
 		'-Xlint:cast',
 		'-Xlint:classfile',
 		'-Xlint:deprecation',
@@ -218,6 +220,7 @@ allprojects { subproj ->
 					initstring: cloverInitstring,
 					recordTestResults: false,
 					destdir: instrumentedJavaSourcesDir,
+					encoding: 'UTF-8',
 					source: compileJava.sourceCompatibility) {
 					sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
 				}

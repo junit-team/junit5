@@ -29,9 +29,6 @@ pipeline {
       }
     }
     stage('Aggregate Javadoc') {
-      tools {
-        jdk 'Oracle JDK 8 (latest)' // Use JDK 8 because of custom stylesheet
-      }
       steps {
         sh './gradlew --no-daemon aggregateJavadocs'
       }
@@ -46,9 +43,6 @@ pipeline {
       }
     }
     stage('Generate User Guide') {
-      tools {
-        jdk 'Oracle JDK 8 (latest)' // Use JDK 8 because AsciiDoctor has problems on JDK 9
-      }
       steps {
         sh './gradlew --no-daemon asciidoctor'
       }
