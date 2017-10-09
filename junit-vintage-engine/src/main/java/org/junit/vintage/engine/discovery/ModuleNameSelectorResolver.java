@@ -29,7 +29,7 @@ class ModuleNameSelectorResolver implements DiscoverySelectorResolver {
 		request.getSelectorsByType(ModuleSelector.class)
 			.stream()
 			.map(ModuleSelector::getModuleName)
-			.map(packageName -> findAllClassesInModule(packageName, classFilter))
+			.map(moduleName -> findAllClassesInModule(moduleName, classFilter))
 			.flatMap(Collection::stream)
 			.forEach(collector::addCompletely);
 		// @formatter:on
