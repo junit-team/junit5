@@ -126,6 +126,8 @@ allprojects { subproj ->
 	}
 
 	tasks.withType(JavaCompile) {
+		sourceCompatibility = rootProject.javacRelease // needed by clover
+		targetCompatibility = rootProject.javacRelease // needed by clover/asm
 		options.encoding = 'UTF-8'
 	}
 
@@ -218,6 +220,7 @@ allprojects { subproj ->
 					initstring: cloverInitstring,
 					recordTestResults: false,
 					destdir: instrumentedJavaSourcesDir,
+					encoding: 'UTF-8',
 					source: compileJava.sourceCompatibility) {
 					sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
 				}
