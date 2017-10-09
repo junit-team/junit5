@@ -6,21 +6,38 @@ body {
     font-family:'Open Sans', Arial, Helvetica, sans-serif;
     font-size:14px;
     margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
 }
-a:link, a:visited, a:active {
+iframe {
+    margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
+    overflow-y:scroll;
+    border:none;
+}
+a:link, a:visited {
     text-decoration:none;
     color:#dc524a;
 }
-a:hover, a:focus {
-    text-decoration:underline;
+a[href]:hover, a[href]:focus {
+    text-decoration:none;
     color:#b62b23;
 }
 a[name] {
     color:#353833;
 }
-a[name]:hover {
-    text-decoration:none;
-    color:#353833;
+a[name]:before, a[name]:target, a[id]:before, a[id]:target {
+    content:"";
+    display:inline-block;
+    position:relative;
+    padding-top:129px;
+    margin-top:-129px;
+}
+.searchTagResult:before, .searchTagResult:target {
+    color:red;
 }
 pre {
     font-family:"Fira Mono", monospace;
@@ -114,6 +131,15 @@ Navigation bar styles
     font-size:14px;
     margin:0;
 }
+.navPadding {
+    padding-top: 107px;
+}
+.fixedNav {
+    position:fixed;
+    width:100%;
+    z-index:999;
+    background-color:#ffffff;
+}
 .topNav {
     background-color:#25a162;
     color:#FFFFFF;
@@ -163,7 +189,22 @@ ul.navList li{
     padding: 5px 6px;
     text-transform:uppercase;
 }
-ul.subNavList li{
+ul.navListSearch {
+    float:right;
+    margin:0 0 0 0;
+    padding:0;
+}
+ul.navListSearch li {
+    list-style:none;
+    float:right;
+    padding: 5px 6px;
+    text-transform:uppercase;
+}
+ul.navListSearch li span {
+    position:relative;
+    right:-16px;
+}
+ul.subNavList li {
     list-style:none;
     float:left;
 }
@@ -196,20 +237,23 @@ Page header and footer styles
     margin:0 20px;
     padding:5px 0 0 0;
 }
-.header h2 {
-
-}
-.indexHeader {
-    margin:10px;
+.indexNav {
     position:relative;
 }
-.indexHeader span{
-    margin-right:15px;
+.indexNav ul {
+    margin-top:0;
+    padding:10px;
 }
-.indexHeader h1 {
+.indexNav ul li {
+    display:inline;
+    list-style-type:none;
+    padding-right:10px;
+}
+.indexNav h1 {
     font-size:13px;
 }
 .title {
+    color:#2c4557;
     margin:10px 0;
     font-size: 32px;
 }
@@ -263,6 +307,7 @@ Page layout container styles
 }
 .indexContainer h2 {
     font-size:16px;
+    padding:0 0 3px 0;
 }
 .indexContainer ul {
     margin:0;
@@ -295,6 +340,9 @@ Page layout container styles
 /*
 List styles
 */
+li.circle {
+    list-style:circle;
+}
 ul.horizontal li {
     display:inline;
     font-size:0.9em;
@@ -349,17 +397,20 @@ table tr td dl, table tr td dl dt, table tr td dl dd {
 /*
 Table styles
 */
-.overviewSummary, .memberSummary, .typeSummary, .useSummary, .constantsSummary, .deprecatedSummary {
+.overviewSummary, .memberSummary, .typeSummary, .useSummary, .constantsSummary, .deprecatedSummary,
+.requiresSummary, .packagesSummary, .providesSummary, .usesSummary {
     width:100%;
+    border-spacing:0;
     border-left:1px solid #EEE;
     border-right:1px solid #EEE;
     border-bottom:1px solid #EEE;
 }
-.overviewSummary, .memberSummary  {
+.overviewSummary, .memberSummary, .requiresSummary, .packagesSummary, .providesSummary, .usesSummary  {
     padding:0px;
 }
 .overviewSummary caption, .memberSummary caption, .typeSummary caption,
-.useSummary caption, .constantsSummary caption, .deprecatedSummary caption {
+.useSummary caption, .constantsSummary caption, .deprecatedSummary caption,
+.requiresSummary caption, .packagesSummary caption, .providesSummary caption, .usesSummary caption {
     position:relative;
     text-align:left;
     background-repeat:no-repeat;
@@ -375,16 +426,26 @@ Table styles
 }
 .overviewSummary caption a:link, .memberSummary caption a:link, .typeSummary caption a:link,
 .useSummary caption a:link, .constantsSummary caption a:link, .deprecatedSummary caption a:link,
+.requiresSummary caption a:link, .packagesSummary caption a:link, providesSummary caption a:link,
+.usesSummary caption a:link,
 .overviewSummary caption a:hover, .memberSummary caption a:hover, .typeSummary caption a:hover,
 .useSummary caption a:hover, .constantsSummary caption a:hover, .deprecatedSummary caption a:hover,
+.requiresSummary caption a:hover, .packagesSummary caption a:hover, providesSummary caption a:hover,
+.usesSummary caption a:hover,
 .overviewSummary caption a:active, .memberSummary caption a:active, .typeSummary caption a:active,
 .useSummary caption a:active, .constantsSummary caption a:active, .deprecatedSummary caption a:active,
+.requiresSummary caption a:active, .packagesSummary caption a:active, providesSummary caption a:active,
+.usesSummary caption a:active,
 .overviewSummary caption a:visited, .memberSummary caption a:visited, .typeSummary caption a:visited,
-.useSummary caption a:visited, .constantsSummary caption a:visited, .deprecatedSummary caption a:visited {
+.useSummary caption a:visited, .constantsSummary caption a:visited, .deprecatedSummary caption a:visited
+.requiresSummary caption a:visited, .packagesSummary caption a:visited, providesSummary caption a:visited,
+.usesSummary caption a:visited {
     color:#FFFFFF;
 }
 .overviewSummary caption span, .memberSummary caption span, .typeSummary caption span,
-.useSummary caption span, .constantsSummary caption span, .deprecatedSummary caption span {
+.useSummary caption span, .constantsSummary caption span, .deprecatedSummary caption span,
+.requiresSummary caption span, .packagesSummary caption span, .providesSummary caption span,
+.usesSummary caption span {
     white-space:nowrap;
     padding-top:5px;
     padding-left:12px;
@@ -397,7 +458,7 @@ Table styles
     border: none;
     height:16px;
 }
-.memberSummary caption span.activeTableTab span {
+.memberSummary caption span.activeTableTab span, .packagesSummary caption span.activeTableTab span {
     white-space:nowrap;
     padding-top:5px;
     padding-left:12px;
@@ -409,7 +470,7 @@ Table styles
     color:#fff;
     height:16px;
 }
-.memberSummary caption span.tableTab span {
+.memberSummary caption span.tableTab span, .packagesSummary caption span.tableTab span {
     white-space:nowrap;
     padding-top:5px;
     padding-left:12px;
@@ -420,7 +481,8 @@ Table styles
     background-color:#aaa;
     height:16px;
 }
-.memberSummary caption span.tableTab, .memberSummary caption span.activeTableTab {
+.memberSummary caption span.tableTab, .memberSummary caption span.activeTableTab,
+.packagesSummary caption span.tableTab, .packagesSummary caption span.activeTableTab {
     padding-top:0px;
     padding-left:0px;
     padding-right:0px;
@@ -429,14 +491,15 @@ Table styles
     display:inline;
 }
 .overviewSummary .tabEnd, .memberSummary .tabEnd, .typeSummary .tabEnd,
-.useSummary .tabEnd, .constantsSummary .tabEnd, .deprecatedSummary .tabEnd {
+.useSummary .tabEnd, .constantsSummary .tabEnd, .deprecatedSummary .tabEnd,
+.requiresSummary .tabEnd, .packagesSummary .tabEnd, .providesSummary .tabEnd, .usesSummary .tabEnd {
     display:none;
     width:5px;
     position:relative;
     float:left;
     background-color:#dc524a;
 }
-.memberSummary .activeTableTab .tabEnd {
+.memberSummary .activeTableTab .tabEnd, .packagesSummary .activeTableTab .tabEnd {
     display:none;
     width:5px;
     margin-right:3px;
@@ -444,7 +507,7 @@ Table styles
     float:left;
     background-color:#dc524a;
 }
-.memberSummary .tableTab .tabEnd {
+.memberSummary .tableTab .tabEnd, .packagesSummary .tableTab .tabEnd {
     display:none;
     width:5px;
     margin-right:3px;
@@ -454,42 +517,59 @@ Table styles
 
 }
 .overviewSummary td, .memberSummary td, .typeSummary td,
-.useSummary td, .constantsSummary td, .deprecatedSummary td {
+.useSummary td, .constantsSummary td, .deprecatedSummary td,
+.requiresSummary td, .packagesSummary td, .providesSummary td, .usesSummary td {
     text-align:left;
     padding:0px 0px 12px 10px;
 }
-th.colOne, th.colFirst, th.colLast, .useSummary th, .constantsSummary th,
-td.colOne, td.colFirst, td.colLast, .useSummary td, .constantsSummary td{
+th.colFirst, th.colSecond, th.colLast, th.colConstructorName, .useSummary th, .constantsSummary th, .packagesSummary th,
+td.colFirst, td.colSecond, td.colLast, .useSummary td, .constantsSummary td {
     vertical-align:top;
     padding-right:0px;
     padding-top:8px;
     padding-bottom:3px;
 }
-th.colFirst, th.colLast, th.colOne, .constantsSummary th {
+th.colFirst, th.colSecond, th.colLast, th.colConstructorName, .constantsSummary th, .packagesSummary th {
     background:#ddd;
     text-align:left;
     padding: 8px 3px 6px 10px;
 }
 td.colFirst, th.colFirst {
     white-space:nowrap;
+    font-size:13px;
+}
+td.colSecond, th.colSecond, td.colLast, th.colConstructorName, th.colLast {
+    font-size:13px;
+}
+.constantsSummary th, .packagesSummary th {
+    font-size:13px;
+}
+.providesSummary th.colFirst, .providesSummary th.colLast, .providesSummary td.colFirst,
+.providesSummary td.colLast {
+    white-space:normal;
+    font-size:13px;
 }
 .overviewSummary td.colFirst, .overviewSummary th.colFirst,
-.useSummary td.colFirst, .useSummary th.colFirst,
-.overviewSummary td.colOne, .overviewSummary th.colOne,
+.requiresSummary td.colFirst, .requiresSummary th.colFirst,
+.packagesSummary td.colFirst, .packagesSummary td.colSecond, .packagesSummary th.colFirst, .packagesSummary th,
+.usesSummary td.colFirst, .usesSummary th.colFirst,
+.providesSummary td.colFirst, .providesSummary th.colFirst,
 .memberSummary td.colFirst, .memberSummary th.colFirst,
-.memberSummary td.colOne, .memberSummary th.colOne,
-.typeSummary td.colFirst{
-    width:25%;
+.memberSummary td.colSecond, .memberSummary th.colSecond, .memberSummary th.colConstructorName,
+.typeSummary td.colFirst {
     vertical-align:top;
 }
+.packagesSummary th.colLast, .packagesSummary td.colLast {
+    white-space:normal;
+}
 .tableSubHeadingColor {
-    background-color:#eee;
+    background-color:#EEEEFF;
 }
-.altColor {
-    background-color:#fff;
+.altColor, .altColor th {
+    background-color:#FFFFFF;
 }
-.rowColor {
-    background-color:#eee;
+.rowColor, .rowColor th {
+    background-color:#EEEEEF;
 }
 /*
 Content styles
@@ -536,12 +616,13 @@ h1.hidden {
 }
 .block {
     display:block;
-    margin:3px 10px 2px 0px;
+    margin:0 10px 5px 0px;
     color:#474747;
 }
-.deprecatedLabel, .descfrmTypeLabel, .memberNameLabel, .memberNameLink,
-.overrideSpecifyLabel, .packageHierarchyLabel, .paramLabel, .returnLabel,
-.seeLabel, .simpleTagLabel, .throwsLabel, .typeNameLabel, .typeNameLink {
+.deprecatedLabel, .descfrmTypeLabel, .implementationLabel, .memberNameLabel, .memberNameLink,
+.moduleLabelInPackage, .moduleLabelInType, .overrideSpecifyLabel, .packageLabelInType,
+.packageHierarchyLabel, .paramLabel, .returnLabel, .seeLabel, .simpleTagLabel,
+.throwsLabel, .typeNameLabel, .typeNameLink, .searchTagLink {
     font-weight:bold;
 }
 .deprecationComment, .emphasizedPhrase, .interfaceName {
@@ -553,8 +634,134 @@ div.block div.block span.interfaceName {
     font-style:normal;
 }
 
-div.contentContainer ul.blockList li.blockList h2{
+div.contentContainer ul.blockList li.blockList h2 {
     padding-bottom:0px;
+}
+/*
+IFRAME specific styles
+*/
+.mainContainer {
+    margin:0 auto;
+    padding:0;
+    height:100%;
+    width:100%;
+    position:fixed;
+    top:0;
+    left:0;
+}
+.leftContainer {
+    height:100%;
+    position:fixed;
+    width:320px;
+}
+.leftTop {
+    position:relative;
+    float:left;
+    width:315px;
+    top:0;
+    left:0;
+    height:30%;
+    border-right:6px solid #ccc;
+    border-bottom:6px solid #ccc;
+}
+.leftBottom {
+    position:relative;
+    float:left;
+    width:315px;
+    bottom:0;
+    left:0;
+    height:70%;
+    border-right:6px solid #ccc;
+    border-top:1px solid #000;
+}
+.rightContainer {
+    position:absolute;
+    left:320px;
+    top:0;
+    bottom:0;
+    height:100%;
+    right:0;
+    border-left:1px solid #000;
+}
+.rightIframe {
+    margin:0;
+    padding:0;
+    height:100%;
+    right:30px;
+    width:100%;
+    overflow:visible;
+    margin-bottom:30px;
+}
+/*
+HTML5 specific styles
+*/
+main, nav, header, footer, section {
+    display:block;
+}
+.ui-widget {
+    font-family:'Open Sans', Arial, Helvetica, sans-serif !important;
+}
+.ui-autocomplete-category {
+    font-weight:bold;
+    font-size:14px;
+    padding:7px 0 7px 3px;
+    background-color:#aaa;
+    color:#FFFFFF;
+}
+.resultItem {
+    font-size:13px;
+}
+.ui-autocomplete {
+    max-height:85%;
+    max-width:65%;
+    overflow-y:scroll;
+    overflow-x:scroll;
+    white-space:nowrap;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+ul.ui-autocomplete {
+    position:fixed;
+    z-index:999999;
+}
+ul.ui-autocomplete  li {
+    float:left;
+    clear:both;
+    width:100%;
+}
+.resultHighlight {
+    font-weight:bold;
+}
+#search {
+    background-image:url('resources/glass.png');
+    background-size:13px;
+    background-repeat:no-repeat;
+    background-position:2px 3px;
+    padding-left:20px;
+    position:relative;
+    right:-18px;
+}
+#reset {
+    background-color: rgb(255,255,255);
+    border:0 none;
+    width:16px;
+    height:17px;
+    position:relative;
+    left:-2px;
+    background-image:url('resources/x.png');
+    background-repeat:no-repeat;
+    background-size:12px;
+    background-position:center;
+}
+.watermark {
+    color:#888;
+}
+.searchTagDescResult {
+    font-style:italic;
+    font-size:11px;
+}
+.searchTagHolderResult {
+    font-style:italic;
+    font-size:12px;
 }
 
 hr {
