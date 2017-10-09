@@ -27,8 +27,9 @@ public interface ClassNameFilter extends DiscoveryFilter<String> {
 	/**
 	 * Standard include pattern in the form of a regular expression that is
 	 * used to match against fully qualified class names:
-	 * {@value #STANDARD_INCLUDE_PATTERN} which matches against class names
-	 * ending in {@code Test} or {@code Tests} (in any package).
+	 * {@value org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN}
+	 * which matches against class names ending in {@code Test} or
+	 * {@code Tests} (in any package).
 	 */
 	String STANDARD_INCLUDE_PATTERN = "^.*Tests?$";
 

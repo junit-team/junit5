@@ -76,7 +76,7 @@ public @interface RepeatedTest {
 	String TOTAL_REPETITIONS_PLACEHOLDER = "{totalRepetitions}";
 
 	/**
-	 * <em>Short</em> display name pattern for a repeated test: {@value #SHORT_DISPLAY_NAME}
+	 * <em>Short</em> display name pattern for a repeated test: {@value}
 	 *
 	 * @see #CURRENT_REPETITION_PLACEHOLDER
 	 * @see #TOTAL_REPETITIONS_PLACEHOLDER
@@ -85,7 +85,7 @@ public @interface RepeatedTest {
 	String SHORT_DISPLAY_NAME = "repetition " + CURRENT_REPETITION_PLACEHOLDER + " of " + TOTAL_REPETITIONS_PLACEHOLDER;
 
 	/**
-	 * <em>Long</em> display name pattern for a repeated test: {@value #LONG_DISPLAY_NAME}
+	 * <em>Long</em> display name pattern for a repeated test: {@value}
 	 *
 	 * @see #DISPLAY_NAME_PLACEHOLDER
 	 * @see #SHORT_DISPLAY_NAME
