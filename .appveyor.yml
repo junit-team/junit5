@@ -1,6 +1,8 @@
+build: off
+
 install:
   - cinst jdk9 -params 'installdir=C:\\jdk9'
-  - SET PATH=C:\jdk9\bin;%PATH%
 
 test_script:
-  - javac --version
+  - gradlew -version
+  - gradlew build --stacktrace
