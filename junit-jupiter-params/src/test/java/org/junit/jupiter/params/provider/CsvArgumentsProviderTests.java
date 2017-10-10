@@ -17,7 +17,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.JUnitException;
 
@@ -84,10 +83,9 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
-	@Disabled("https://github.com/junit-team/junit5/issues/1100")
 	void trailingSpacesAreTrimmed() {
 		Stream<Object[]> arguments = provideArguments(',', "1,''", "2, ''", "3,'' ", "4, '' ");
-		// actual: [["1", ""], ["2", ""], ["3", null], ["4", null]]
+
 		assertThat(arguments).containsExactly(new String[][] { { "1", "" }, { "2", "" }, { "3", "" }, { "4", "" } });
 	}
 

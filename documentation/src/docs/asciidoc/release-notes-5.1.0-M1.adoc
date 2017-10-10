@@ -40,7 +40,7 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* Trailing space characters in a CsvSource input line do not longer yield `null` values.
 
 ===== Deprecations and Breaking Changes
 

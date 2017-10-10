@@ -23,7 +23,8 @@ junitPlatform {
 dependencies {
 	api(project(':junit-jupiter-api'))
 
-	shadow('com.univocity:univocity-parsers:2.5.5')
+	// TODO Upgrade to non-SNAPSHOT version before 5.1 GA
+	shadow('com.univocity:univocity-parsers:2.5.8-SNAPSHOT')
 
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
