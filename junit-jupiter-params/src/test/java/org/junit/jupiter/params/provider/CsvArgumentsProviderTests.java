@@ -79,14 +79,14 @@ class CsvArgumentsProviderTests {
 	void leadingSpacesAreTrimmed() {
 		Stream<Object[]> arguments = provideArguments(',', "'', 1", " '', 2", "'' , 3", " '' , 4");
 
-		assertThat(arguments).containsExactly(new String[][] { { "", "1" }, { "", "2" }, { "", "3" }, { "", "4" } });
+		assertThat(arguments).containsExactly(new Object[][] { { "", "1" }, { "", "2" }, { "", "3" }, { "", "4" } });
 	}
 
 	@Test
 	void trailingSpacesAreTrimmed() {
 		Stream<Object[]> arguments = provideArguments(',', "1,''", "2, ''", "3,'' ", "4, '' ");
 
-		assertThat(arguments).containsExactly(new String[][] { { "1", "" }, { "2", "" }, { "3", "" }, { "4", "" } });
+		assertThat(arguments).containsExactly(new Object[][] { { "1", "" }, { "2", "" }, { "3", "" }, { "4", "" } });
 	}
 
 	private Stream<Object[]> provideArguments(char delimiter, String... value) {
