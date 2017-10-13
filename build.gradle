@@ -254,13 +254,13 @@ allprojects { subproj ->
 
 subprojects { subproj ->
 	apply plugin: 'propdeps'
-	apply plugin: 'propdeps-maven'
 	apply plugin: 'propdeps-idea'
 	apply plugin: 'propdeps-eclipse'
 
 	if (subproj.name in mavenizedProjects) {
 		apply plugin: 'maven'
 		apply plugin: 'signing'
+		apply plugin: 'propdeps-maven'
 
 		if (subproj.name in platformProjects) {
 			subproj.group = platformGroup
