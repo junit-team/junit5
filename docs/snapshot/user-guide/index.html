@@ -2306,15 +2306,16 @@ in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for details.
 </div>
 <div class="paragraph">
 <p>This parameterized test uses the <code>@ValueSource</code> annotation to specify a <code>String</code> array as
-the source of arguments. When executing this method, each invocation will be reported
-separately. For instance, the <code>ConsoleLauncher</code> will print output similar to the
+the source of arguments. When executing the above method, each invocation will be
+reported separately. For instance, the <code>ConsoleLauncher</code> will print output similar to the
 following.</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>testWithStringParameter(String) ✔
-├─ [1] Hello ✔
-└─ [2] World ✔</pre>
+<pre>palindromes(String) ✔
+├─ [1] racecar ✔
+├─ [2] radar ✔
+└─ [3] able was I ere I saw elba ✔</pre>
 </div>
 </div>
 <div class="sect3">
@@ -2405,14 +2406,14 @@ following examples.</p>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-MethodSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-MethodSource"></a>@MethodSource</h5>
 <div class="paragraph">
-<p><code>@MethodSource</code> allows you to refer to one or more methods of the test class. Each method
-must return a <code>Stream</code>, <code>Iterable</code>, <code>Iterator</code>, or array of arguments. In addition, each
-method must not accept any arguments. By default such methods must be <code>static</code> unless the
-test class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
+<p><code>@MethodSource</code> allows you to refer to one or more <em>factory</em> methods of the test class.
+Such methods must return a <code>Stream</code>, <code>Iterable</code>, <code>Iterator</code>, or array of arguments. In
+addition, such methods must not accept any arguments. By default such methods must be
+<code>static</code> unless the test class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
 </div>
 <div class="paragraph">
-<p>If you only need a single parameter, you can return instances of the parameter type
-directly as demonstrated by the following example.</p>
+<p>If you only need a single parameter, you can return a <code>Stream</code> of instances of the
+parameter type as demonstrated by the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2429,7 +2430,7 @@ directly as demonstrated by the following example.</p>
 </div>
 <div class="paragraph">
 <p>Streams for primitive types (<code>DoubleStream</code>, <code>IntStream</code>, and <code>LongStream</code>) are also
-supported.</p>
+supported as demonstrated by the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2445,21 +2446,25 @@ supported.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In case you need multiple parameters, you need to return an <code>Arguments</code> instances as
-shown below. Note that <code>Arguments.of(Object&#8230;&#8203;)</code> is a static factory method defined in
-the interface itself.</p>
+<p>If a test method declares multiple parameters, you need to return a collection or stream
+of <code>Arguments</code> instances as shown below. Note that <code>Arguments.of(Object&#8230;&#8203;)</code> is a static
+factory method defined in the <code>Arguments</code> interface.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@MethodSource</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">stringAndIntProvider</span><span class="delimiter">&quot;</span></span>)
-<span class="type">void</span> testWithMultiArgMethodSource(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
-    assertNotNull(first);
-    assertNotEquals(<span class="integer">0</span>, second);
+<span class="annotation">@MethodSource</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">stringIntAndListProvider</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> testWithMultiArgMethodSource(<span class="predefined-type">String</span> str, <span class="type">int</span> num, <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; list) {
+    assertEquals(<span class="integer">3</span>, str.length());
+    assertTrue(num &gt;=<span class="integer">1</span> &amp;&amp; num &lt;=<span class="integer">2</span>);
+    assertEquals(<span class="integer">2</span>, list.size());
 }
 
-<span class="directive">static</span> Stream&lt;Arguments&gt; stringAndIntProvider() {
-    <span class="keyword">return</span> Stream.of(Arguments.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>), Arguments.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>));
+<span class="directive">static</span> Stream&lt;Arguments&gt; stringIntAndListProvider() {
+    <span class="keyword">return</span> Stream.of(
+        Arguments.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>)),
+        Arguments.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">x</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">y</span><span class="delimiter">&quot;</span></span>))
+    );
 }</code></pre>
 </div>
 </div>
@@ -7850,7 +7855,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-10-10 12:28:32 EDT
+Last updated 2017-10-13 10:43:03 EDT
 </div>
 </div>
 </body>
