@@ -19,7 +19,9 @@ import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -130,18 +132,24 @@ class ParameterizedTestDemo {
 	}
 	// end::primitive_MethodSource_example[]
 
+	// @formatter:off
 	// tag::multi_arg_MethodSource_example[]
 	@ParameterizedTest
-	@MethodSource("stringAndIntProvider")
-	void testWithMultiArgMethodSource(String first, int second) {
-		assertNotNull(first);
-		assertNotEquals(0, second);
+	@MethodSource("stringIntAndListProvider")
+	void testWithMultiArgMethodSource(String str, int num, List<String> list) {
+		assertEquals(3, str.length());
+		assertTrue(num >=1 && num <=2);
+		assertEquals(2, list.size());
 	}
 
-	static Stream<Arguments> stringAndIntProvider() {
-		return Stream.of(Arguments.of("foo", 1), Arguments.of("bar", 2));
+	static Stream<Arguments> stringIntAndListProvider() {
+		return Stream.of(
+			Arguments.of("foo", 1, Arrays.asList("a", "b")),
+			Arguments.of("bar", 2, Arrays.asList("x", "y"))
+		);
 	}
 	// end::multi_arg_MethodSource_example[]
+	// @formatter:on
 
 	// tag::CsvSource_example[]
 	@ParameterizedTest
