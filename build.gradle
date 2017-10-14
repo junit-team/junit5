@@ -140,6 +140,7 @@ allprojects { subproj ->
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
 	compileJava.options*.compilerArgs = [
+		'--release', rootProject.javacRelease,
 		'-Xlint:cast',
 		'-Xlint:classfile',
 		'-Xlint:deprecation',
@@ -163,6 +164,7 @@ allprojects { subproj ->
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
 	compileTestJava.options*.compilerArgs = [
+		'--release', rootProject.javacRelease,
 		'-Xlint:cast',
 		'-Xlint:classfile',
 		'-Xlint:deprecation',
@@ -523,7 +525,7 @@ subprojects { subproj ->
 	}
 
 	if (subproj.name != 'documentation') {
-		apply plugin: 'net.ltgt.errorprone'
+		apply plugin: 'net.ltgt.errorprone-base'
 
 		dependencies {
 			errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
@@ -595,11 +597,35 @@ subprojects { subproj ->
 			'-Xep:ReturnValueIgnored:OFF'
 		]
 
-		compileJava {
-			options.compilerArgs += baseFlags
+//		compileJava {
+//			options.compilerArgs += baseFlags
+//		}
+//		compileTestJava {
+//			options.compilerArgs += testFlags
+//		}
+
+		task compileJavaWithErrorProne(type: JavaCompile) {
+			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
+			classpath = compileJava.classpath
+			source = compileJava.source
+			destinationDir = file("${buildDir}/classes/java-error-prone")
+			options.compilerArgs = baseFlags +
+					compileJava
+							.options
+							.compilerArgs
+							.findAll { !it.equals("--release") }
 		}
-		compileTestJava {
-			options.compilerArgs += testFlags
+
+		task compileTestJavaWithErrorProne(type: JavaCompile) {
+			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
+			classpath = compileJava.classpath
+			source = compileJava.source
+			destinationDir = file("${buildDir}/classes/java-error-prone")
+			options.compilerArgs = testFlags +
+					compileTestJava
+							.options
+							.compilerArgs
+							.findAll { !it.equals("--release") }
 		}
 	}
 
