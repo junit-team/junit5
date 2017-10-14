@@ -98,6 +98,51 @@ ext {
 		'junit-platform-surefire-provider',
 		'platform-tests'
 	]
+
+	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
+	compileJavaBaseArgs = [
+		'-Xlint:cast',
+		'-Xlint:classfile',
+		'-Xlint:deprecation',
+		'-Xlint:dep-ann',
+		'-Xlint:divzero',
+		'-Xlint:empty',
+		'-Xlint:fallthrough',
+		'-Xlint:finally',
+		'-Xlint:overrides',
+		'-Xlint:path',
+		'-Xlint:processing',
+		'-Xlint:rawtypes',
+		'-Xlint:serial',
+		'-Xlint:static',
+		'-Xlint:try',
+		'-Xlint:unchecked',
+		'-Xlint:varargs',
+		'-Xlint:-options',
+		'-Werror'
+	]
+
+	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
+	compileTestJavaBaseArgs = [
+		'-Xlint:cast',
+		'-Xlint:classfile',
+		'-Xlint:deprecation',
+		'-Xlint:dep-ann',
+		'-Xlint:divzero',
+		'-Xlint:empty',
+		'-Xlint:fallthrough',
+		'-Xlint:finally',
+		'-Xlint:path',
+		'-Xlint:processing',
+		'-Xlint:rawtypes',
+		'-Xlint:serial',
+		'-Xlint:static',
+		'-Xlint:try',
+		'-Xlint:unchecked',
+		'-Xlint:varargs',
+		'-Xlint:-options',
+		'-Xlint:-overrides'
+	]
 }
 
 allprojects { subproj ->
@@ -127,63 +172,19 @@ allprojects { subproj ->
 		task.testLogging.exceptionFormat = 'full'
 	}
 
-	// Declare "javacRelease" as a global property to make it overridable by
-	// a sub-project.
-	ext.javacRelease = rootProject.javacRelease
-
 	tasks.withType(JavaCompile) {
-		sourceCompatibility = javacRelease // needed by clover
-		targetCompatibility = javacRelease // needed by clover/asm
-		options.compilerArgs += ['--release', javacRelease]
+		sourceCompatibility = rootProject.javacRelease // needed by clover
+		targetCompatibility = rootProject.javacRelease // needed by clover/asm
 		options.encoding = 'UTF-8'
 	}
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileJava.options*.compilerArgs = [
-		'--release', rootProject.javacRelease,
-		'-Xlint:cast',
-		'-Xlint:classfile',
-		'-Xlint:deprecation',
-		'-Xlint:dep-ann',
-		'-Xlint:divzero',
-		'-Xlint:empty',
-		'-Xlint:fallthrough',
-		'-Xlint:finally',
-		'-Xlint:overrides',
-		'-Xlint:path',
-		'-Xlint:processing',
-		'-Xlint:rawtypes',
-		'-Xlint:serial',
-		'-Xlint:static',
-		'-Xlint:try',
-		'-Xlint:unchecked',
-		'-Xlint:varargs',
-		'-Xlint:-options',
-		'-Werror'
-	]
+	compileJava.options*.compilerArgs =
+			compileJavaBaseArgs + ['--release', rootProject.javacRelease]
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileTestJava.options*.compilerArgs = [
-		'--release', rootProject.javacRelease,
-		'-Xlint:cast',
-		'-Xlint:classfile',
-		'-Xlint:deprecation',
-		'-Xlint:dep-ann',
-		'-Xlint:divzero',
-		'-Xlint:empty',
-		'-Xlint:fallthrough',
-		'-Xlint:finally',
-		'-Xlint:path',
-		'-Xlint:processing',
-		'-Xlint:rawtypes',
-		'-Xlint:serial',
-		'-Xlint:static',
-		'-Xlint:try',
-		'-Xlint:unchecked',
-		'-Xlint:varargs',
-		'-Xlint:-options',
-		'-Xlint:-overrides'
-	]
+	compileTestJava.options*.compilerArgs =
+			compileTestJavaBaseArgs + ['--release', rootProject.javacRelease]
 
 	compileTestJava {
 		options.encoding = 'UTF-8'
@@ -539,7 +540,7 @@ subprojects { subproj ->
 			optional("com.google.errorprone:error_prone_annotations:${errorproneVersion}")
 		}
 
-		def baseFlags = [
+		def errorproneBaseFlags = [
 			// enable experimental checks
 			'-XepAllDisabledChecksAsWarnings',
 
@@ -587,7 +588,8 @@ subprojects { subproj ->
 			// https://github.com/google/error-prone/commit/67196dcc28c3bd7048289a9c7b81b3c6f25e1934
 			'-Xep:LiteralClassName:OFF'
 		]
-		def testFlags = baseFlags + [
+
+		def errorproneTestFlags = errorproneBaseFlags + [
 			'-Xep:ClassCanBeStatic:OFF',
 			'-Xep:ConstantField:OFF',
 			'-Xep:ConstructorInvokesOverridable:OFF',
@@ -597,35 +599,45 @@ subprojects { subproj ->
 			'-Xep:ReturnValueIgnored:OFF'
 		]
 
-//		compileJava {
-//			options.compilerArgs += baseFlags
-//		}
-//		compileTestJava {
-//			options.compilerArgs += testFlags
-//		}
-
 		task compileJavaWithErrorProne(type: JavaCompile) {
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
 			classpath = compileJava.classpath
 			source = compileJava.source
-			destinationDir = file("${buildDir}/classes/java-error-prone")
-			options.compilerArgs = baseFlags +
-					compileJava
-							.options
-							.compilerArgs
-							.findAll { !it.equals("--release") }
+			destinationDir = file("$buildDir/classes/error-prone-java")
+			options.compilerArgs = compileJavaBaseArgs + errorproneBaseFlags
+
+//			doFirst {
+//				taskGraph.whenReady { taskGraph ->
+//					taskGraph.getAllTasks().findAll { it.name == 'compileJava' }.each {
+//						it.enabled = false
+//					}
+//				}
+//			}
+//			doLast {
+//				taskGraph.whenReady { taskGraph ->
+//					taskGraph.getAllTasks().findAll { it.name == 'compileJava' }.each {
+//						it.enabled = true
+//					}
+//				}
+//			}
 		}
+
+// =================================================================
+//
+//		taskGraph.whenReady { taskGraph ->
+//			compileJava.onlyIf {
+//				taskGraph.getAllTasks().stream().noneMatch { task ->
+//					task.name == 'compileJavaWithErrorProne'
+//				}
+//			}
+//		}
 
 		task compileTestJavaWithErrorProne(type: JavaCompile) {
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
 			classpath = compileJava.classpath
 			source = compileJava.source
-			destinationDir = file("${buildDir}/classes/java-error-prone")
-			options.compilerArgs = testFlags +
-					compileTestJava
-							.options
-							.compilerArgs
-							.findAll { !it.equals("--release") }
+			destinationDir = file("$buildDir/classes/error-prone-java")
+			options.compilerArgs = compileTestJavaBaseArgs + errorproneTestFlags
 		}
 	}
 
