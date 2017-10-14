@@ -523,7 +523,7 @@ subprojects { subproj ->
 	}
 
 	if (subproj.name != 'documentation') {
-		apply plugin: "net.ltgt.errorprone"
+		apply plugin: 'net.ltgt.errorprone-base'
 
 		dependencies {
 			errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
@@ -579,7 +579,11 @@ subprojects { subproj ->
 			// TODO: turning this check on and applying @com.google.errorprone.annotations.Var to
 			// non-final variables causes JDK 9 to fail to compile; investigate and consider turning
 			// it on when error-prone supports JDK 9
-			'-Xep:Var:OFF'
+			'-Xep:Var:OFF',
+
+			// this check will be removed in a future release of error-prone:
+			// https://github.com/google/error-prone/commit/67196dcc28c3bd7048289a9c7b81b3c6f25e1934
+			'-Xep:LiteralClassName:OFF'
 		]
 		def testFlags = baseFlags + [
 			'-Xep:ClassCanBeStatic:OFF',
@@ -591,11 +595,19 @@ subprojects { subproj ->
 			'-Xep:ReturnValueIgnored:OFF'
 		]
 
-		compileJava {
-			options.compilerArgs += baseFlags
+		task compileJavaWithErrorProne(type: JavaCompile) {
+			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
+			classpath = compileJava.classpath
+			source = compileJava.source
+			destinationDir = file("${buildDir}/classes/java-error-prone")
+			options.compilerArgs += compileJava.options.compilerArgs + baseFlags
 		}
-		compileTestJava {
-			options.compilerArgs += testFlags
+		task compileTestJavaWithErrorProne(type: JavaCompile) {
+			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
+			classpath = compileTestJava.classpath
+			source = compileTestJava.source
+			destinationDir = file("${buildDir}/classes/java-test-error-prone")
+			options.compilerArgs += compileTestJava.options.compilerArgs + testFlags
 		}
 	}
 
