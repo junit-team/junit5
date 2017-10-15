@@ -303,7 +303,7 @@ public interface ExtensionContext {
 		 * the type of object we wish to retrieve from the store.
 		 *
 		 * <pre style="code">
-		 * X x = store.getOrComputeIfAbsent(X.class, key -> new X(), X.class);
+		 * X x = store.getOrComputeIfAbsent(X.class, key -&gt; new X(), X.class);
 		 * // Equivalent to:
 		 * // X x = store.getOrComputeIfAbsent(X.class);
 		 * </pre>
