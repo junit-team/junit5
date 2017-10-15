@@ -603,40 +603,15 @@ subprojects { subproj ->
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
 			classpath = compileJava.classpath
 			source = compileJava.source
-			destinationDir = file("$buildDir/classes/error-prone-java")
+			destinationDir = file("$buildDir/classes/error-prone-java/main")
 			options.compilerArgs = compileJavaBaseArgs + errorproneBaseFlags
-
-//			doFirst {
-//				taskGraph.whenReady { taskGraph ->
-//					taskGraph.getAllTasks().findAll { it.name == 'compileJava' }.each {
-//						it.enabled = false
-//					}
-//				}
-//			}
-//			doLast {
-//				taskGraph.whenReady { taskGraph ->
-//					taskGraph.getAllTasks().findAll { it.name == 'compileJava' }.each {
-//						it.enabled = true
-//					}
-//				}
-//			}
 		}
-
-// =================================================================
-//
-//		taskGraph.whenReady { taskGraph ->
-//			compileJava.onlyIf {
-//				taskGraph.getAllTasks().stream().noneMatch { task ->
-//					task.name == 'compileJavaWithErrorProne'
-//				}
-//			}
-//		}
 
 		task compileTestJavaWithErrorProne(type: JavaCompile) {
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
-			classpath = compileJava.classpath
-			source = compileJava.source
-			destinationDir = file("$buildDir/classes/error-prone-java")
+			classpath = compileTestJava.classpath
+			source = compileTestJava.source
+			destinationDir = file("$buildDir/classes/error-prone-java/test")
 			options.compilerArgs = compileTestJavaBaseArgs + errorproneTestFlags
 		}
 	}
