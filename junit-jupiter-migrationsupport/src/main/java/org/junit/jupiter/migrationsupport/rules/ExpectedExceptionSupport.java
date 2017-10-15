@@ -54,15 +54,14 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
-		boolean exceptionWasHandled = getStore(context).getOrComputeIfAbsent(EXCEPTION_WAS_HANDLED, key -> FALSE,
-			Boolean.class);
-		if (!exceptionWasHandled) {
+		boolean handled = getStore(context).getOrComputeIfAbsent(EXCEPTION_WAS_HANDLED, key -> FALSE, Boolean.class);
+		if (!handled) {
 			this.support.afterEach(context);
 		}
 	}
 
 	private Store getStore(ExtensionContext context) {
-		return context.getStore(Namespace.create(ExpectedExceptionSupport.class, context.getUniqueId()));
+		return context.getStore(Namespace.create(getClass(), context.getUniqueId()));
 	}
 
 }
