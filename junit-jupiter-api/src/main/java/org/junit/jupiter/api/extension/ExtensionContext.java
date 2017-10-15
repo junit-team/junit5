@@ -434,7 +434,7 @@ public interface ExtensionContext {
 
 		@Override
 		public int hashCode() {
-			return parts.hashCode();
+			return this.parts.hashCode();
 		}
 
 	}
