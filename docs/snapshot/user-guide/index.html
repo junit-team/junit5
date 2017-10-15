@@ -5408,6 +5408,21 @@ include details about the expected and actual boolean values.</p>
 <li>
 <p>Unused arguments are now omitted from display names of parameterized tests.</p>
 </li>
+<li>
+<p>New <code>getOrComputeIfAbsent(Class)</code> convenience method in <code>ExtensionContext.Store</code> that
+simplifies use cases where an extension wishes to store a single object of a given type
+(keyed by that type) in the <code>Store</code> and the object is created using the default
+constructor for that type.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For example, code such as
+<code>store.getOrComputeIfAbsent(X.class, key -&gt; new X(), X.class)</code> can now replaced with
+<code>store.getOrComputeIfAbsent(X.class)</code>.</p>
+</li>
+</ul>
+</div>
+</li>
 </ul>
 </div>
 </div>
@@ -7855,7 +7870,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-10-13 10:43:03 EDT
+Last updated 2017-10-15 12:18:12 EDT
 </div>
 </div>
 </body>
