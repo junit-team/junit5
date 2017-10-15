@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -293,6 +294,34 @@ public interface ExtensionContext {
 		<V> V get(Object key, Class<V> requiredType);
 
 		/**
+		 * Get the object of type {@code type} that is present in this
+		 * {@code Store} (<em>keyed</em> by {@code type}); and otherwise invoke
+		 * the default constructor for {@code type} to generate the object,
+		 * store it, and return it.
+		 *
+		 * <p>This method is a shortcut for the following, where {@code X} is
+		 * the type of object we wish to retrieve from the store.
+		 *
+		 * <pre style="code">
+		 * X x = store.getOrComputeIfAbsent(X.class, key -> new X(), X.class);
+		 * // Equivalent to:
+		 * // X x = store.getOrComputeIfAbsent(X.class);
+		 * </pre>
+		 *
+		 * <p>See {@link #getOrComputeIfAbsent(Object, Function, Class)} for
+		 * further details.
+		 *
+		 * @param type the type of object to retrieve; never {@code null}
+		 * @param <V> the key and value type
+		 * @return the object; never {@code null}
+		 * @see #getOrComputeIfAbsent(Object, Function)
+		 * @see #getOrComputeIfAbsent(Object, Function, Class)
+		 */
+		default <V> V getOrComputeIfAbsent(Class<V> type) {
+			return getOrComputeIfAbsent(type, ReflectionSupport::newInstance, type);
+		}
+
+		/**
 		 * Get the value that is stored under the supplied {@code key}.
 		 *
 		 * <p>If no value is stored in the current {@link ExtensionContext}
@@ -311,6 +340,7 @@ public interface ExtensionContext {
 		 * @param <K> the key type
 		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
+		 * @see #getOrComputeIfAbsent(Class)
 		 * @see #getOrComputeIfAbsent(Object, Function, Class)
 		 */
 		<K, V> Object getOrComputeIfAbsent(K key, Function<K, V> defaultCreator);
@@ -333,6 +363,7 @@ public interface ExtensionContext {
 		 * @param <K> the key type
 		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
+		 * @see #getOrComputeIfAbsent(Class)
 		 * @see #getOrComputeIfAbsent(Object, Function)
 		 */
 		<K, V> V getOrComputeIfAbsent(K key, Function<K, V> defaultCreator, Class<V> requiredType);

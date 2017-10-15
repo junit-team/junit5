@@ -54,6 +54,13 @@ on GitHub.
   - For example, the generated failure message for a call to `assertTrue(false)` is now
     "expected: <true> but was: <false>" instead of an empty string.
 * Unused arguments are now omitted from display names of parameterized tests.
+* New `getOrComputeIfAbsent(Class)` convenience method in `ExtensionContext.Store` that
+  simplifies use cases where an extension wishes to store a single object of a given type
+  (keyed by that type) in the `Store` and the object is created using the default
+  constructor for that type.
+  - For example, code such as
+    `store.getOrComputeIfAbsent(X.class, key \-> new X(), X.class)` can now replaced with
+    `store.getOrComputeIfAbsent(X.class)`.
 
 
 [[release-notes-5.1.0-junit-vintage]]
