@@ -22,10 +22,11 @@ javacRelease = 9
 // https://github.com/schauder/degraph/issues/87
 degraph.enabled = false
 
-// No "main" jar, no Javadoc, no (Maven) install -- we just want the classes.
+// No "main" jar, no Javadoc, no (Maven) install, no upload -- we just want the classes.
 jar.enabled = false
 javadoc.enabled = false
 install.enabled = false
+uploadArchives.enabled = false
 
 // Exclude "integration" package from default "class-path based" test run.
 // Tests in the "integration" package assume to be run on the module-path.
