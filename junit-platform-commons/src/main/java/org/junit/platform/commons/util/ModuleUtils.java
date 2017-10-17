@@ -10,10 +10,12 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
@@ -39,12 +41,18 @@ public class ModuleUtils {
 	 */
 	public static final String VERSION = "base";
 
-	/**
-	 * Special module name to scan all resolved modules found in the boot layer configuration.
-	 */
-	public static final String ALL_MODULES = "ALL-MODULES";
-
 	private static final Logger logger = LoggerFactory.getLogger(ModuleUtils.class);
+
+	/**
+	 * Find all non-system boot modules names.
+	 *
+	 * @return a set of all such module names; never {@code null} but
+	 * potentially empty
+	 */
+	public static Set<String> findAllNonSystemBootModuleNames() {
+		logger.config(() -> "Basic version of findAllNonSystemBootModuleNames() always returns an empty set!");
+		return emptySet();
+	}
 
 	/**
 	 * Find all classes for the given module name.
@@ -56,6 +64,6 @@ public class ModuleUtils {
 	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter filter) {
 		logger.config(() -> "Basic version of findAllClassesInModule() always returns an empty list!");
-		return Collections.emptyList();
+		return emptyList();
 	}
 }

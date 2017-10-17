@@ -256,6 +256,27 @@ public final class DiscoverySelectors {
 	}
 
 	/**
+	 * Create a list of {@code ModuleSelectors} for the supplied module names.
+	 *
+	 * <p>The unnamed module is not supported.
+	 *
+	 * @param moduleNames the module names to select; never {@code null}, never
+	 * containing {@code null} or blank
+	 * @see ModuleSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "1.1")
+	public static List<ModuleSelector> selectModules(Set<String> moduleNames) {
+		Preconditions.notNull(moduleNames, "moduleNames must not be null");
+
+		// @formatter:off
+		return moduleNames.stream()
+				.map(DiscoverySelectors::selectModule)
+				// unmodifiable since this is a public, non-internal method
+				.collect(toUnmodifiableList());
+		// @formatter:on
+	}
+
+	/**
 	 * Create a {@code PackageSelector} for the supplied package name.
 	 *
 	 * <p>The default package is represented by an empty string ({@code ""}).

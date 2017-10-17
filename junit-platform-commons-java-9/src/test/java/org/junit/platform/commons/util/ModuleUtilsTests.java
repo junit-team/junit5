@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.module.ModuleDescriptor;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +33,14 @@ class ModuleUtilsTests {
 	}
 
 	@Test
-	void find() {
+	void findAllNonSystemBootModuleNames() {
+		Set<String> moduleNames = ModuleUtils.findAllNonSystemBootModuleNames();
+
+		assertTrue(moduleNames.isEmpty());
+	}
+
+	@Test
+	void findAllClassesInModule() {
 		ClassFilter modular = ClassFilter.of(name -> name.contains("Module"), type -> true);
 		List<Class<?>> classes = ModuleUtils.findAllClassesInModule("java.base", modular);
 		assertFalse(classes.isEmpty());
