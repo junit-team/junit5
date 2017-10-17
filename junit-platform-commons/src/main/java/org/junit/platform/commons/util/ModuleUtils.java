@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
@@ -52,6 +53,23 @@ public class ModuleUtils {
 	public static Set<String> findAllNonSystemBootModuleNames() {
 		logger.config(() -> "Basic version of findAllNonSystemBootModuleNames() always returns an empty set!");
 		return emptySet();
+	}
+
+	/**
+	 * Determine if the current Java runtime supports the Java Platform Module System.
+	 *
+	 * @return {@code true} if the Java Platform Module System is available, otherwise {@code false}
+	 */
+	public static boolean isJavaPlatformModuleSystemAvailable() {
+		return false;
+	}
+
+	public static Optional<String> getModuleName(Class<?> type) {
+		return Optional.empty();
+	}
+
+	public static Optional<String> getModuleVersion(Class<?> type) {
+		return Optional.empty();
 	}
 
 	/**
