@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -71,6 +72,24 @@ public class ModuleUtils {
 				.map(ResolvedModule::name)
 				.collect(toCollection(LinkedHashSet::new));
 		// @formatter:on
+	}
+
+	/**
+	 * Java 9 runtime supports the Java Platform Module System.
+	 *
+	 * @return {@code true}
+	 */
+	public static boolean isJavaPlatformModuleSystemAvailable() {
+		return true;
+	}
+
+	public static Optional<String> getModuleName(Class<?> type) {
+		return Optional.of(type.getModule().getName());
+	}
+
+	public static Optional<String> getModuleVersion(Class<?> type) {
+		Module module = type.getModule();
+		return module.isNamed() ? module.getDescriptor().rawVersion() : Optional.empty();
 	}
 
 	/**
