@@ -3819,6 +3819,11 @@ failed. Otherwise the exit code is <code>0</code>.
 --reports-dir &lt;Path&gt;                          Enable report output into a specified
                                                 local directory (will be created if it
                                                 does not exist).
+--scan-module-path, --scan-modulepath         EXPERIMENTAL: Scan all modules on the
+                                                module-path for test discovery.
+-o, --select-module &lt;String: module name&gt;     EXPERIMENTAL: Select single module for
+                                                test discovery. This option can be
+                                                repeated.
 --scan-class-path, --scan-classpath [Path:    Scan all directories on the classpath or
   path1:path2:...]                              explicit classpath roots. Without
                                                 arguments, only directories on the
@@ -5362,6 +5367,16 @@ for this information.</p>
 <p>Class loading errors that occur during classpath scanning are now logged at <code>DEBUG</code>
 level (i.e., the <code>FINE</code> log level in <code>java.util.logging</code>) instead of as warnings.</p>
 </li>
+<li>
+<p>New discovery selector <code>ModuleSelector</code> for scanning Java 9 modules for test classes.</p>
+</li>
+<li>
+<p>New console launcher option <code>--select-module &lt;name&gt;</code> or <code>-o &lt;name&gt;</code>.</p>
+</li>
+<li>
+<p>New console launcher option <code>--scan-module-path</code> for selecting all resolved modules
+available on the boot layer configuration.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -5423,6 +5438,9 @@ constructor for that type.</p>
 </ul>
 </div>
 </li>
+<li>
+<p>Support new JUnit Platform <code>ModuleSelector</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -5454,7 +5472,7 @@ constructor for that type.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Support new JUnit Platform <code>ModuleSelector</code>.</p>
 </li>
 </ul>
 </div>
@@ -7870,7 +7888,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-10-15 12:19:01 EDT
+Last updated 2017-10-17 08:34:29 EDT
 </div>
 </div>
 </body>
