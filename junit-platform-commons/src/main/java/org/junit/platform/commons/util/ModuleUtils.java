@@ -15,8 +15,8 @@ import static java.util.Collections.emptySet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.List;
-import java.util.Set;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
@@ -58,16 +58,29 @@ public class ModuleUtils {
 	/**
 	 * Determine if the current Java runtime supports the Java Platform Module System.
 	 *
-	 * @return {@code true} if the Java Platform Module System is available, otherwise {@code false}
+	 * @return {@code true} if the Java Platform Module System is available,
+	 * otherwise {@code false}
 	 */
 	public static boolean isJavaPlatformModuleSystemAvailable() {
 		return false;
 	}
 
+	/**
+	 * Return the name of the module that the class or interface is a member of.
+	 *
+	 * @param type class or interface to analyze
+	 * @return the module name; never {@code null} but potentially empty
+	 */
 	public static Optional<String> getModuleName(Class<?> type) {
 		return Optional.empty();
 	}
 
+	/**
+	 * Return the raw version of the module that the class or interface is a member of.
+	 *
+	 * @param type class or interface to analyze
+	 * @return the raw module version; never {@code null} but potentially empty
+	 */
 	public static Optional<String> getModuleVersion(Class<?> type) {
 		return Optional.empty();
 	}
