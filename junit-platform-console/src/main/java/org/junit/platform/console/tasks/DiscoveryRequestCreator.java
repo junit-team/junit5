@@ -13,6 +13,7 @@ package org.junit.platform.console.tasks;
 import static org.junit.platform.engine.discovery.ClassNameFilter.excludeClassNamePatterns;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModules;
 import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
 import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
@@ -23,7 +24,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,8 +60,7 @@ class DiscoveryRequestCreator {
 		if (options.isScanModulepath()) {
 			Preconditions.condition(!options.hasExplicitSelectors(),
 				"Scanning the module-path and using explicit selectors at the same time is not supported");
-			return Collections.singletonList(DiscoverySelectors.selectModule(ModuleUtils.ALL_MODULES));
-
+			return selectModules(ModuleUtils.findAllNonSystemBootModuleNames());
 		}
 		return createExplicitDiscoverySelectors(options);
 	}

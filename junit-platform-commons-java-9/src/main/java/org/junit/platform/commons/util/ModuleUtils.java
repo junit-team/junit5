@@ -10,6 +10,9 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.function.Predicate.isEqual;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.IOException;
@@ -19,6 +22,7 @@ import java.lang.module.ModuleReference;
 import java.lang.module.ResolvedModule;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -50,12 +54,24 @@ public class ModuleUtils {
 	 */
 	public static final String VERSION = "9";
 
-	/**
-	 * Special module name to scan all resolved modules found in the boot layer configuration.
-	 */
-	public static final String ALL_MODULES = "ALL-MODULES";
-
 	private static final Logger logger = LoggerFactory.getLogger(ModuleUtils.class);
+
+	/**
+	 * Find all non-system boot modules names.
+	 *
+	 * @return a set of all such module names; never {@code null} but
+	 * potentially empty
+	 */
+	public static Set<String> findAllNonSystemBootModuleNames() {
+		// @formatter:off
+		Set<String> systemModules = ModuleFinder.ofSystem().findAll().stream()
+				.map(reference -> reference.descriptor().name())
+				.collect(toSet());
+		return boot(name -> !systemModules.contains(name))
+				.map(ResolvedModule::name)
+				.collect(toCollection(LinkedHashSet::new));
+		// @formatter:on
+	}
 
 	/**
 	 * Find all classes for the given module name.
@@ -70,20 +86,18 @@ public class ModuleUtils {
 		Preconditions.notNull(filter, "Class filter must not be null");
 
 		logger.debug(() -> "Looking for classes in module: " + moduleName);
-		Predicate<String> moduleNamePredicate = moduleName::equals;
-		if (ALL_MODULES.equals(moduleName)) {
-			Set<String> systemModules = ModuleFinder.ofSystem().findAll().stream().map(
-				reference -> reference.descriptor().name()).collect(Collectors.toSet());
-			moduleNamePredicate = name -> !systemModules.contains(name);
-		}
-		return scan(boot(moduleNamePredicate), filter, ModuleUtils.class.getClassLoader());
+		// @formatter:off
+		Set<ModuleReference> moduleReferences = boot(isEqual(moduleName))
+				.map(ResolvedModule::reference)
+				.collect(toSet());
+		// @formatter:on
+		return scan(moduleReferences, filter, ModuleUtils.class.getClassLoader());
 	}
 
 	// collect module references from boot module layer
-	private static Set<ModuleReference> boot(Predicate<String> moduleNamePredicate) {
+	private static Stream<ResolvedModule> boot(Predicate<String> moduleNamePredicate) {
 		Stream<ResolvedModule> stream = ModuleLayer.boot().configuration().modules().stream();
-		stream = stream.filter(module -> moduleNamePredicate.test(module.name()));
-		return stream.map(ResolvedModule::reference).collect(Collectors.toSet());
+		return stream.filter(module -> moduleNamePredicate.test(module.name()));
 	}
 
 	// scan for classes
