@@ -54,7 +54,7 @@ pipeline {
       steps {
         milestone 2
         withCredentials([string(credentialsId: '9f982a37-747d-42bd-abf9-643534f579bd', variable: 'GRGIT_USER')]) {
-          sh './gradlew --no-daemon gitPublishPush'
+          sh './gradlew --no-daemon --stacktrace --debug gitPublishPush'
         }
       }
     }
