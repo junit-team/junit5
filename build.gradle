@@ -444,7 +444,7 @@ subprojects { subproj ->
 			classpath.entries.findAll { it.kind == 'con' && it.path.contains('JavaSE-9') }.each {
 				classpath.entries.remove(it)
 			}
-		}			
+		}
 	}
 
 	task eclipseJdtPrepare(type: Copy) {
