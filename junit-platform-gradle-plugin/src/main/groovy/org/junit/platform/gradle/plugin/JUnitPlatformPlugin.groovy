@@ -100,6 +100,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			inputs.property('selectors.classes', junitExtension.selectors.classes)
 			inputs.property('selectors.methods', junitExtension.selectors.methods)
 			inputs.property('selectors.resources', junitExtension.selectors.resources)
+			inputs.property('selectors.modules', junitExtension.selectors.modules)
 			inputs.property('filters.engines.include', junitExtension.filters.engines.include)
 			inputs.property('filters.engines.exclude', junitExtension.filters.engines.exclude)
 			inputs.property('filters.tags.include', junitExtension.filters.tags.include)
@@ -117,15 +118,25 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 			configureTaskDependencies(project, it, junitExtension)
 
-			// Build the classpath from the user's test runtime classpath and the JUnit
-			// Platform modules.
-			//
-			// Note: the user's test runtime classpath must come first; otherwise, code
-			// instrumented by Clover in JUnit's build will be shadowed by JARs pulled in
-			// via the junitPlatform configuration... leading to zero code coverage for
-			// the respective modules.
-			classpath = project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform
-
+			if (junitExtension.enableModulePath) {
+				// Set module-path and clear classpath.
+				jvmArgs = [
+					'--module-path',
+					project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform,
+					'--add-modules',
+					'ALL-MODULE-PATH'
+				]
+				classpath = []
+			} else {
+				// Build the classpath from the user's test runtime classpath and the JUnit
+				// Platform modules.
+				//
+				// Note: the user's test runtime classpath must come first; otherwise, code
+				// instrumented by Clover in JUnit's build will be shadowed by JARs pulled in
+				// via the junitPlatform configuration... leading to zero code coverage for
+				// the respective modules.
+				classpath = project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform
+			}
 			main = ConsoleLauncher.class.getName()
 			args buildArgs(project, junitExtension, reportsDir)
 		}
@@ -149,7 +160,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			args.add(junitExtension.details.name())
 		}
 
-		addSelectors(project, junitExtension.selectors, args)
+		addSelectors(project, junitExtension, args)
 		addFilters(junitExtension.filters, args)
 
 		junitExtension.configurationParameters.each { key, value ->
@@ -189,8 +200,13 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		}
 	}
 
-	private void addSelectors(project, selectors, args) {
+	private void addSelectors(project, junitExtension, args) {
+		def selectors = junitExtension.selectors
 		if (selectors.empty) {
+			if (junitExtension.enableModulePath) {
+				args '--scan-module-path'
+				return
+			}
 			def rootDirs = []
 			project.sourceSets.each { sourceSet ->
 				if (sourceSet.output.hasProperty('classesDirs')) {
@@ -202,28 +218,32 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 				rootDirs.addAll(sourceSet.output.dirs.files)
 			}
 			args.addAll(['--scan-class-path', rootDirs.join(File.pathSeparator)])
-		} else {
-			selectors.uris.each { uri ->
-				args.addAll(['-u', uri])
-			}
-			selectors.files.each { file ->
-				args.addAll(['-f', file])
-			}
-			selectors.directories.each { directory ->
-				args.addAll(['-d', directory])
-			}
-			selectors.packages.each { aPackage ->
-				args.addAll(['-p', aPackage])
-			}
-			selectors.classes.each { aClass ->
-				args.addAll(['-c', aClass])
-			}
-			selectors.methods.each { method ->
-				args.addAll(['-m', method])
-			}
-			selectors.resources.each { resource ->
-				args.addAll(['-r', resource])
-			}
+			return
+		}
+		// At least one selector is available...
+		selectors.uris.each { uri ->
+			args.addAll(['-u', uri])
+		}
+		selectors.files.each { file ->
+			args.addAll(['-f', file])
+		}
+		selectors.directories.each { directory ->
+			args.addAll(['-d', directory])
+		}
+		selectors.packages.each { aPackage ->
+			args.addAll(['-p', aPackage])
+		}
+		selectors.classes.each { aClass ->
+			args.addAll(['-c', aClass])
+		}
+		selectors.methods.each { method ->
+			args.addAll(['-m', method])
+		}
+		selectors.resources.each { resource ->
+			args.addAll(['-r', resource])
+		}
+		selectors.modules.each { module ->
+			args.addAll(['-o', module])
 		}
 	}
 
