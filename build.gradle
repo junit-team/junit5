@@ -421,6 +421,43 @@ subprojects { subproj ->
 		generateManifest = true
 	}
 
+	eclipse {
+		if (project.name.endsWith('-java-9')) {
+			jdt {
+				// Note: this does not work with Gradle 4.3-rc-2, but hopefully it will
+				// in a later Gradle release. Thus, for now we still need the custom
+				// eclipseJdtPrepare task.
+				sourceCompatibility = 9
+				targetCompatibility = 9
+			}
+		} else {
+			jdt {
+				sourceCompatibility = 1.8
+				targetCompatibility = 1.8
+			}
+			classpath.containers "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"
+		}
+	}
+
+	eclipse.classpath.file.whenMerged { classpath ->
+		if (!project.name.endsWith('-java-9')) {
+			classpath.entries.findAll { it.kind == 'con' && it.path.contains('JavaSE-9') }.each {
+				classpath.entries.remove(it)
+			}
+		}			
+	}
+
+	task eclipseJdtPrepare(type: Copy) {
+		if (project.name.endsWith('-java-9')) {
+			from rootProject.file('src/eclipse/org.eclipse.jdt.core.prefs-jdk9')
+			into project.file('.settings/')
+			rename 'org.eclipse.jdt.core.prefs-jdk9', 'org.eclipse.jdt.core.prefs'
+			outputs.upToDateWhen { false }
+		}
+	}
+
+	tasks["eclipse"].dependsOn(eclipseJdtPrepare)
+
 	jar {
 		onlyIf {
 			project.generateManifest
@@ -448,6 +485,7 @@ subprojects { subproj ->
 			if (versionedProject == null) {
 				return
 			}
+
 			if (project.hasProperty('enableClover')) {
 				println "Skip updating $archivePath with $versionedProject - Clover is enabled!"
 				return
