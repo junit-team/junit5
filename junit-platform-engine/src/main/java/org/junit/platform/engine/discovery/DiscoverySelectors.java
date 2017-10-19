@@ -267,6 +267,7 @@ public final class DiscoverySelectors {
 	@API(status = EXPERIMENTAL, since = "1.1")
 	public static List<ModuleSelector> selectModules(Set<String> moduleNames) {
 		Preconditions.notNull(moduleNames, "moduleNames must not be null");
+		Preconditions.containsNoNullElements(moduleNames, "individual module name must not be null");
 
 		// @formatter:off
 		return moduleNames.stream()

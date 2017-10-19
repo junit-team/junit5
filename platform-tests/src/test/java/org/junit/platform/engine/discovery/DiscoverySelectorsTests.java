@@ -22,6 +22,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirec
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModule;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModules;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
@@ -30,7 +31,10 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +51,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class DiscoverySelectorsTests {
 
 	@Test
-	void selectUriByName() throws Exception {
+	void selectUriByName() {
 		assertThrows(PreconditionViolationException.class, () -> selectUri((String) null));
 		assertThrows(PreconditionViolationException.class, () -> selectUri("   "));
 		assertThrows(PreconditionViolationException.class, () -> selectUri("foo:"));
@@ -70,7 +74,7 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectFileByName() throws Exception {
+	void selectFileByName() {
 		assertThrows(PreconditionViolationException.class, () -> selectFile((String) null));
 		assertThrows(PreconditionViolationException.class, () -> selectFile("   "));
 
@@ -99,7 +103,7 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectDirectoryByName() throws Exception {
+	void selectDirectoryByName() {
 		assertThrows(PreconditionViolationException.class, () -> selectDirectory((String) null));
 		assertThrows(PreconditionViolationException.class, () -> selectDirectory("   "));
 
@@ -150,6 +154,26 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
+	void selectModuleByNamePreconditions() {
+		assertThrows(PreconditionViolationException.class, () -> selectModule(null));
+		assertThrows(PreconditionViolationException.class, () -> selectModule(""));
+		assertThrows(PreconditionViolationException.class, () -> selectModule("   "));
+	}
+
+	@Test
+	void selectModulesByNames() {
+		List<ModuleSelector> selectors = selectModules(new HashSet<>(Arrays.asList("a", "b")));
+		List<String> names = selectors.stream().map(ModuleSelector::getModuleName).collect(Collectors.toList());
+		assertThat(names).containsExactlyInAnyOrder("b", "a");
+	}
+
+	@Test
+	void selectModulesByNamesPreconditions() {
+		assertThrows(PreconditionViolationException.class, () -> selectModules(null));
+		assertThrows(PreconditionViolationException.class, () -> selectModules(new HashSet<>(Arrays.asList("a", " "))));
+	}
+
+	@Test
 	void selectPackageByName() {
 		PackageSelector selector = selectPackage(getClass().getPackage().getName());
 		assertEquals(getClass().getPackage().getName(), selector.getPackageName());
@@ -162,7 +186,7 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectMethodByFullyQualifiedNamePreconditions() throws Exception {
+	void selectMethodByFullyQualifiedNamePreconditions() {
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(null));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(""));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod("   "));
@@ -175,7 +199,7 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectMethodByClassNameAndMethodNamePreconditions() throws Exception {
+	void selectMethodByClassNameAndMethodNamePreconditions() {
 		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", null));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", ""));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", "  "));
@@ -185,7 +209,7 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectMethodByClassNameMethodNameAndMethodParameterTypesPreconditions() throws Exception {
+	void selectMethodByClassNameMethodNameAndMethodParameterTypesPreconditions() {
 		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", null, "int"));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", "", "int"));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", "  ", "int"));
@@ -196,7 +220,7 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectMethodByClassAndMethodNamePreconditions() throws Exception {
+	void selectMethodByClassAndMethodNamePreconditions() {
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), (String) null));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), ""));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), "  "));
@@ -206,7 +230,7 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectMethodByClassMethodNameAndMethodParameterTypesPreconditions() throws Exception {
+	void selectMethodByClassMethodNameAndMethodParameterTypesPreconditions() {
 		assertThrows(PreconditionViolationException.class, () -> selectMethod((Class<?>) null, "method", "int"));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), null, "int"));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), "", "int"));
@@ -215,7 +239,7 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectMethodByClassAndMethodPreconditions() throws Exception {
+	void selectMethodByClassAndMethodPreconditions() {
 		Method method = getClass().getDeclaredMethods()[0];
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(null, method));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), (Method) null));
@@ -450,14 +474,14 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectClasspathRootsWithNonExistingDirectory() throws Exception {
+	void selectClasspathRootsWithNonExistingDirectory() {
 		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(Paths.get("some", "local", "path")));
 
 		assertThat(selectors).isEmpty();
 	}
 
 	@Test
-	void selectClasspathRootsWithNonExistingJarFile() throws Exception {
+	void selectClasspathRootsWithNonExistingJarFile() {
 		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(Paths.get("some.jar")));
 
 		assertThat(selectors).isEmpty();
@@ -465,7 +489,7 @@ class DiscoverySelectorsTests {
 
 	@Test
 	@ExtendWith(TempDirectory.class)
-	public void selectClasspathRootsWithExistingDirectory(@Root Path tempDir) throws Exception {
+	void selectClasspathRootsWithExistingDirectory(@Root Path tempDir) {
 		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(tempDir));
 
 		assertThat(selectors).extracting(ClasspathRootSelector::getClasspathRoot).containsExactly(tempDir.toUri());
