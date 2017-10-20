@@ -119,15 +119,18 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			configureTaskDependencies(project, it, junitExtension)
 
 			if (junitExtension.enableModulePath) {
-				// Set module-path and clear classpath.
+				// Set module-path and clear classpath and main class.
 				jvmArgs = [
 					'--module-path',
-					project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform,
+					project.files(project.sourceSets.test.runtimeClasspath, project.configurations.junitPlatform).asPath,
 					'--add-modules',
-					'ALL-MODULE-PATH'
+					'ALL-MODULE-PATH',
+					//'--module',
+					//'org.junit.platform.console' ... args will cover that
 				]
-				classpath = files()
-				main = ConsoleLauncher.class.getModule().getName()
+
+				classpath = project.files()
+				main = ""
 			} else {
 				// Build the classpath from the user's test runtime classpath and the JUnit
 				// Platform modules.
@@ -155,6 +158,10 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	private List<String> buildArgs(project, junitExtension, reportsDir) {
 
 		def args = []
+
+		if (junitExtension.enableModulePath) {
+			args.addAll('--module', 'org.junit.platform.console')
+		}
 
 		if (junitExtension.details) {
 			args.add('--details')
@@ -205,7 +212,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		def selectors = junitExtension.selectors
 		if (selectors.empty) {
 			if (junitExtension.enableModulePath) {
-				args '--scan-module-path'
+				args.add('--scan-module-path')
 				return
 			}
 			def rootDirs = []
