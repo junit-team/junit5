@@ -126,7 +126,8 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 					'--add-modules',
 					'ALL-MODULE-PATH'
 				]
-				classpath = []
+				classpath = files()
+				main = ConsoleLauncher.class.getModule().getName()
 			} else {
 				// Build the classpath from the user's test runtime classpath and the JUnit
 				// Platform modules.
@@ -136,8 +137,8 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 				// via the junitPlatform configuration... leading to zero code coverage for
 				// the respective modules.
 				classpath = project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform
+				main = ConsoleLauncher.class.getName()
 			}
-			main = ConsoleLauncher.class.getName()
 			args buildArgs(project, junitExtension, reportsDir)
 		}
 	}
