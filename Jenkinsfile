@@ -54,13 +54,13 @@ pipeline {
       steps {
         milestone 2
         withCredentials([string(credentialsId: '9f982a37-747d-42bd-abf9-643534f579bd', variable: 'GRGIT_USER')]) {
-          sh './gradlew --no-daemon --stacktrace --debug gitPublishPush'
+          sh './gradlew --no-daemon --stacktrace gitPublishPush'
         }
       }
     }
     stage('Coverage') {
       steps {
-        sh './gradlew --no-daemon --refresh-dependencies -PenableClover clean cloverHtmlReport cloverXmlReport'
+        sh './gradlew --no-daemon -PenableClover clean cloverHtmlReport cloverXmlReport'
       }
       post {
         success {

@@ -6,5 +6,5 @@ install:
   - SET PATH=C:\jdk9\bin;%PATH%
 
 test_script:
-  - gradlew -version
-  - gradlew build --stacktrace
+  - gradlew --no-daemon -version
+  - gradlew --no-daemon --stacktrace build
