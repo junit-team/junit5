@@ -93,6 +93,12 @@ class JUnitPlatformExtension {
 	 */
 	Details details = Details.NONE
 
+	/**
+	 * Whether or not the JPMS (Jigsaw) {@code --module-path} should be enabled.
+	 *
+	 * <p>Defaults to {@code false}.
+	 */
+	boolean enableModulePath = false
 
 	/**
 	 * Configure the {@link SelectorsExtension} for this plugin.

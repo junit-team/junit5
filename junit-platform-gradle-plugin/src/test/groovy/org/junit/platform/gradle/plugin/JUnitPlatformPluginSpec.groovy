@@ -122,6 +122,7 @@ class JUnitPlatformPluginSpec extends Specification {
 			it.method 'com.example.app.Application#run(java.lang.String[])'
 			it.resources '/bar.csv', '/foo/input.json'
 			it.resource '/com/acme/my.properties'
+			it.module 'foo.bar'
 		}
 		junitPlatform.filters {
 			it.includeClassNamePattern '.*Tests?'
@@ -306,6 +307,8 @@ class JUnitPlatformPluginSpec extends Specification {
 				method 'com.example.app.Application#run(java.lang.String[])'
 				resources '/bar.csv', '/foo/input.json'
 				resource '/com/acme/my.properties'
+				modules 'foo', 'bar'
+				module 'baz'
 			}
 		}
 		project.evaluate()
@@ -323,6 +326,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask.args.containsAll('-c', 'com.acme.Foo', '-c', 'com.acme.Bar', '-c', 'com.example.app.Application')
 		junitTask.args.containsAll('-m', 'com.acme.Foo#a', '-m', 'com.acme.Foo#b', '-m', 'com.example.app.Application#run(java.lang.String[])')
 		junitTask.args.containsAll('-r', '/bar.csv', '-r', '/foo/input.json', '-r', '/com/acme/my.properties')
+		junitTask.args.containsAll('-o', 'foo', '-o', 'bar', '-o', 'baz')
 	}
 
 	def "configuration parameters can be specified"() {

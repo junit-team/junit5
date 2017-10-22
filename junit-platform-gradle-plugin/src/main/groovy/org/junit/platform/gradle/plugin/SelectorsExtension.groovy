@@ -57,6 +57,11 @@ class SelectorsExtension {
 	List<String> resources = []
 
 	/**
+	 * A list of <em>modules</em> that are to be used for test discovery.
+	 */
+	List<String> modules = []
+
+	/**
 	 * Add a <em>URI</em> to be used for test discovery.
 	 */
 	void uri(String uri) {
@@ -154,8 +159,22 @@ class SelectorsExtension {
 		this.resources.addAll resources
 	}
 
+	/**
+	 * Add a <em>module</em> to be used for test discovery.
+	 */
+	void module(String module) {
+		modules(module)
+	}
+
+	/**
+	 * Add one or more <em>modules</em> to be used for test discovery.
+	 */
+	void modules(String... modules) {
+		this.modules.addAll modules
+	}
+
 	protected boolean isEmpty() {
-		return uris.empty && files.empty && directories.empty && packages.empty && classes.empty && methods.empty && resources.empty
+		return uris.empty && files.empty && directories.empty && packages.empty && classes.empty && methods.empty && resources.empty && modules.empty
 	}
 
 }
