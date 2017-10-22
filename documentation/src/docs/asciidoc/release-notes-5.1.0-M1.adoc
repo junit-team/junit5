@@ -19,8 +19,7 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* The `junit-platform-surefire-provider` now requires `maven-surefire-plugin` version
-  2.20.1 or higher.
+* ❓
 
 ===== New Features and Improvements
 
