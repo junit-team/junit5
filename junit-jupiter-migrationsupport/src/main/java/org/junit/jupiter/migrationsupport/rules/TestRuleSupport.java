@@ -10,9 +10,10 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toCollection;
 import static org.junit.platform.commons.util.AnnotationUtils.findPublicAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Field;
@@ -34,8 +35,9 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.migrationsupport.rules.adapter.AbstractTestRuleAdapter;
 import org.junit.jupiter.migrationsupport.rules.adapter.GenericBeforeAndAfterAdvice;
+import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedField;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
-import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMemberFactory;
+import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMethod;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.rules.TestRule;
 
@@ -57,14 +59,27 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 		this.ruleType = ruleType;
 	}
 
+	/**
+	 * @see org.junit.runners.BlockJUnit4ClassRunner#withRules
+	 * @see org.junit.rules.RunRules
+	 */
 	private List<TestRuleAnnotatedMember> findRuleAnnotatedMembers(Object testInstance) {
 		// @formatter:off
-		return Stream.concat(
-					findAnnotatedFields(testInstance).stream(),
-					findAnnotatedMethods(testInstance).stream())
-				.map(member -> TestRuleAnnotatedMemberFactory.from(testInstance, member))
-				.collect(toList());
+		// Fields are already instantiated because we have a test instance
+		List<TestRuleAnnotatedField> fields = findAnnotatedFields(testInstance).stream()
+				.map(field -> new TestRuleAnnotatedField(testInstance, field))
+				.collect(toCollection(ArrayList::new));
+		// Instantiate rules from methods by calling them
+		List<TestRuleAnnotatedMethod> methods = findAnnotatedMethods(testInstance).stream()
+				.map(method -> new TestRuleAnnotatedMethod(testInstance, method))
+				.collect(toCollection(ArrayList::new));
 		// @formatter:on
+		// Due to how rules are applied (see RunRules), the last rule gets called first.
+		// Rules from fields get called before those from methods.
+		// Thus, we reverse both lists and join them afterwards.
+		Collections.reverse(fields);
+		Collections.reverse(methods);
+		return Stream.concat(fields.stream(), methods.stream()).collect(toUnmodifiableList());
 	}
 
 	private List<Method> findAnnotatedMethods(Object testInstance) {
