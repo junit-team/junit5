@@ -10,10 +10,9 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static java.util.stream.Collectors.toCollection;
+import static java.util.Collections.unmodifiableList;
 import static org.junit.platform.commons.util.AnnotationUtils.findPublicAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Field;
@@ -64,22 +63,22 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 	 * @see org.junit.rules.RunRules
 	 */
 	private List<TestRuleAnnotatedMember> findRuleAnnotatedMembers(Object testInstance) {
+		List<TestRuleAnnotatedMember> result = new ArrayList<>();
 		// @formatter:off
-		// Fields are already instantiated because we have a test instance
-		List<TestRuleAnnotatedField> fields = findAnnotatedFields(testInstance).stream()
-				.map(field -> new TestRuleAnnotatedField(testInstance, field))
-				.collect(toCollection(ArrayList::new));
 		// Instantiate rules from methods by calling them
-		List<TestRuleAnnotatedMethod> methods = findAnnotatedMethods(testInstance).stream()
+		findAnnotatedMethods(testInstance).stream()
 				.map(method -> new TestRuleAnnotatedMethod(testInstance, method))
-				.collect(toCollection(ArrayList::new));
+				.forEach(result::add);
+		// Fields are already instantiated because we have a test instance
+		findAnnotatedFields(testInstance).stream()
+				.map(field -> new TestRuleAnnotatedField(testInstance, field))
+				.forEach(result::add);
 		// @formatter:on
 		// Due to how rules are applied (see RunRules), the last rule gets called first.
 		// Rules from fields get called before those from methods.
-		// Thus, we reverse both lists and join them afterwards.
-		Collections.reverse(fields);
-		Collections.reverse(methods);
-		return Stream.concat(fields.stream(), methods.stream()).collect(toUnmodifiableList());
+		// Thus, we first add methods and then fields and reverse the list in the end.
+		Collections.reverse(result);
+		return unmodifiableList(result);
 	}
 
 	private List<Method> findAnnotatedMethods(Object testInstance) {
