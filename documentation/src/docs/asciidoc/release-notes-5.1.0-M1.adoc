@@ -44,6 +44,11 @@ on GitHub.
 
 * Trailing spaces in a `@CsvSource` or `@CsvFileSource` input line no longer yield `null`
   values.
+* `@EnableRuleMigrationSupport` failed to recognize `@Rule` methods that returned a
+  subtype of one of the supported `TestRule` types. Moreover, it mistakenly instantiated
+  some rules declared using methods multiple times. Now, once enabled, it will instantiate
+  all declared rules (fields _and_ methods) exactly once and call them in the same order
+  used by Vintage.
 
 ===== Deprecations and Breaking Changes
 
