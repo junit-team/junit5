@@ -5396,6 +5396,13 @@ available on the boot layer configuration.</p>
 <p>Trailing spaces in a <code>@CsvSource</code> or <code>@CsvFileSource</code> input line no longer yield <code>null</code>
 values.</p>
 </li>
+<li>
+<p><code>@EnableRuleMigrationSupport</code> failed to recognize <code>@Rule</code> methods that returned a
+subtype of one of the supported <code>TestRule</code> types. Moreover, it mistakenly instantiated
+some rules declared using methods multiple times. Now, once enabled, it will instantiate
+all declared rules (fields <em>and</em> methods) exactly once and call them in the same order
+used by Vintage.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -7893,7 +7900,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-10-21 20:34:39 EDT
+Last updated 2017-10-30 06:38:24 EDT
 </div>
 </div>
 </body>
