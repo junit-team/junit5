@@ -9,10 +9,10 @@ buildscript {
 		maven { url 'http://repo.spring.io/plugins-release' }
 	}
 	dependencies {
-		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.5.2')
+		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.6.0')
 		classpath('com.github.ben-manes:gradle-versions-plugin:0.15.0')
 		classpath('io.spring.gradle:propdeps-plugin:0.0.9.RELEASE')
-		classpath('org.ajoberstar:gradle-git-publish:0.3.0')
+		classpath('org.ajoberstar:gradle-git-publish:0.3.2-rc.2')
 		classpath('org.ajoberstar:gradle-git:1.7.2')
 		classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.1')
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
@@ -45,6 +45,7 @@ ext {
 
 	platformProjects = [
 		'junit-platform-commons',
+		'junit-platform-commons-java-9',
 		'junit-platform-console',
 		'junit-platform-console-standalone',
 		'junit-platform-engine',
@@ -125,13 +126,18 @@ allprojects { subproj ->
 		task.testLogging.exceptionFormat = 'full'
 	}
 
+	// Declare "javacRelease" as a global property to make it overridable by
+	// a sub-project.
+	ext.javacRelease = rootProject.javacRelease
+
 	tasks.withType(JavaCompile) {
-		sourceCompatibility = rootProject.sourceCompatibility
-		targetCompatibility = rootProject.targetCompatibility
+		sourceCompatibility = javacRelease // needed by clover
+		targetCompatibility = javacRelease // needed by clover/asm
+		options.compilerArgs += ['--release', javacRelease]
 		options.encoding = 'UTF-8'
 	}
 
-	// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
+	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
 	compileJava.options*.compilerArgs = [
 		'-Xlint:cast',
 		'-Xlint:classfile',
@@ -154,7 +160,7 @@ allprojects { subproj ->
 		'-Werror'
 	]
 
-	// See: http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html#BHCJCABJ
+	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
 	compileTestJava.options*.compilerArgs = [
 		'-Xlint:cast',
 		'-Xlint:classfile',
@@ -218,6 +224,7 @@ allprojects { subproj ->
 					initstring: cloverInitstring,
 					recordTestResults: false,
 					destdir: instrumentedJavaSourcesDir,
+					encoding: 'UTF-8',
 					source: compileJava.sourceCompatibility) {
 					sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
 				}
@@ -414,6 +421,43 @@ subprojects { subproj ->
 		generateManifest = true
 	}
 
+	eclipse {
+		if (project.name.endsWith('-java-9')) {
+			jdt {
+				// Note: this does not work with Gradle 4.3-rc-2, but hopefully it will
+				// in a later Gradle release. Thus, for now we still need the custom
+				// eclipseJdtPrepare task.
+				sourceCompatibility = 9
+				targetCompatibility = 9
+			}
+		} else {
+			jdt {
+				sourceCompatibility = 1.8
+				targetCompatibility = 1.8
+			}
+			classpath.containers "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"
+		}
+	}
+
+	eclipse.classpath.file.whenMerged { classpath ->
+		if (!project.name.endsWith('-java-9')) {
+			classpath.entries.findAll { it.kind == 'con' && it.path.contains('JavaSE-9') }.each {
+				classpath.entries.remove(it)
+			}
+		}
+	}
+
+	task eclipseJdtPrepare(type: Copy) {
+		if (project.name.endsWith('-java-9')) {
+			from rootProject.file('src/eclipse/org.eclipse.jdt.core.prefs-jdk9')
+			into project.file('.settings/')
+			rename 'org.eclipse.jdt.core.prefs-jdk9', 'org.eclipse.jdt.core.prefs'
+			outputs.upToDateWhen { false }
+		}
+	}
+
+	tasks["eclipse"].dependsOn(eclipseJdtPrepare)
+
 	jar {
 		onlyIf {
 			project.generateManifest
@@ -433,6 +477,35 @@ subprojects { subproj ->
 				'Implementation-Vendor': 'junit.org'
 			)
 		}
+
+		// If available, compile and include classes for other Java versions.
+		['9'].each { version ->
+			def versionedName = project.name + '-java-' + version
+			def versionedProject = findProject(':' + versionedName)
+			if (versionedProject == null) {
+				return
+			}
+
+			if (project.hasProperty('enableClover')) {
+				println "Skip updating $archivePath with $versionedProject - Clover is enabled!"
+				return
+			}
+			// We're only interested in the compiled classes. So we depend
+			// on the classes task and change (-C) to the destination
+			// directory of the version-aware project later.
+			dependsOn = [versionedProject.classes]
+			doLast {
+				project.exec {
+					executable 'jar'
+					args = ['--update','--file', archivePath,
+							'--release', version,
+							'-C', versionedProject.compileJava.destinationDir,
+							'.'
+					]
+				}
+			}
+		}
+
 	}
 
 	spotless {
@@ -442,7 +515,7 @@ subprojects { subproj ->
 		def groovyFormatterConfigFile = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
 
 		java {
-			licenseHeaderFile headerFile, '(package|import) '
+			licenseHeaderFile headerFile, '(package|import|open|module) '
 			importOrderFile importOrderConfigFile
 			eclipse().configFile javaFormatterConfigFile
 			if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
@@ -629,7 +702,7 @@ configure(rootProject) {
 
 task wrapper(type: Wrapper) {
 	description = 'Generates gradlew and gradlew.bat scripts'
-	gradleVersion = '4.1'
+	gradleVersion = '4.3'
 	/*
 	* Reasoning for using BIN:
 	* https://github.com/junit-team/junit5/pull/1012#discussion_r132061924

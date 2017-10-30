@@ -47,9 +47,10 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		AtomicLong index = new AtomicLong(0);
 		// @formatter:off
 		return Arrays.stream(lines)
-				.map(line ->
-						Preconditions.notNull(csvParser.parseLine(line),
-								() -> "Line at index " + index.get() + " contains invalid CSV: \"" + line + "\""))
+				.map(
+					line -> Preconditions.notNull(csvParser.parseLine(line),
+					() -> "Line at index " + index.get() + " contains invalid CSV: \"" + line + "\"")
+				)
 				.peek(values -> index.incrementAndGet())
 				.map(Arguments::of);
 		// @formatter:on

@@ -19,8 +19,7 @@ on GitHub.
 
 ===== Deprecations and Breaking Changes
 
-* The `junit-platform-surefire-provider` now requires `maven-surefire-plugin` version
-  2.20.1 or higher.
+* ❓
 
 ===== New Features and Improvements
 
@@ -33,14 +32,23 @@ on GitHub.
   for this information.
 * Class loading errors that occur during classpath scanning are now logged at `DEBUG`
   level (i.e., the `FINE` log level in `java.util.logging`) instead of as warnings.
-
+* New discovery selector `ModuleSelector` for scanning Java 9 modules for test classes.
+* New console launcher option `--select-module <name>` or `-o <name>`.
+* New console launcher option `--scan-module-path` for selecting all resolved modules
+  available on the boot layer configuration.
 
 [[release-notes-5.1.0-junit-jupiter]]
 ==== JUnit Jupiter
 
 ===== Bug Fixes
 
-* ❓
+* Trailing spaces in a `@CsvSource` or `@CsvFileSource` input line no longer yield `null`
+  values.
+* `@EnableRuleMigrationSupport` failed to recognize `@Rule` methods that returned a
+  subtype of one of the supported `TestRule` types. Moreover, it mistakenly instantiated
+  some rules declared using methods multiple times. Now, once enabled, it will instantiate
+  all declared rules (fields _and_ methods) exactly once and call them in the same order
+  used by Vintage.
 
 ===== Deprecations and Breaking Changes
 
@@ -53,6 +61,14 @@ on GitHub.
   - For example, the generated failure message for a call to `assertTrue(false)` is now
     "expected: <true> but was: <false>" instead of an empty string.
 * Unused arguments are now omitted from display names of parameterized tests.
+* New `getOrComputeIfAbsent(Class)` convenience method in `ExtensionContext.Store` that
+  simplifies use cases where an extension wishes to store a single object of a given type
+  (keyed by that type) in the `Store` and the object is created using the default
+  constructor for that type.
+  - For example, code such as
+    `store.getOrComputeIfAbsent(X.class, key \-> new X(), X.class)` can now replaced with
+    `store.getOrComputeIfAbsent(X.class)`.
+* Support new JUnit Platform `ModuleSelector`.
 
 
 [[release-notes-5.1.0-junit-vintage]]
@@ -68,4 +84,4 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* ❓
+* Support new JUnit Platform `ModuleSelector`.

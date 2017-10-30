@@ -59,6 +59,7 @@ project, click on "See console output" on the build scan page.
 
 ## Building from Source
 
+You need [JDK-9] or higher to build JUnit 5.
 All modules can be built with Gradle using the following command.
 
 ```
@@ -152,3 +153,4 @@ as it is not intended to be used as a module.
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [Twitter]: https://twitter.com/junitlambda
+[JDK-9]: http://jdk.java.net/9/

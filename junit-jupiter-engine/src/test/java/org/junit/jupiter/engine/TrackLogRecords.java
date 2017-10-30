@@ -71,8 +71,7 @@ public @interface TrackLogRecords {
 		}
 
 		private LogRecordListener getListener(ExtensionContext context) {
-			return getStore(context).getOrComputeIfAbsent(LogRecordListener.class, k -> new LogRecordListener(),
-				LogRecordListener.class);
+			return getStore(context).getOrComputeIfAbsent(LogRecordListener.class);
 		}
 
 		private Store getStore(ExtensionContext context) {

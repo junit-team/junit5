@@ -17,6 +17,8 @@ junitPlatformTest.dependsOn(
 	project(':junit-platform-surefire-provider').jar
 )
 
+junitPlatformTest.systemProperty 'coverage.enabled', project.hasProperty('enableClover') ? 'true' : 'false'
+
 dependencies {
 	// --- Things we are testing --------------------------------------------------
 	testImplementation(project(':junit-platform-commons'))

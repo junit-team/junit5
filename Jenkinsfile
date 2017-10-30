@@ -29,9 +29,6 @@ pipeline {
       }
     }
     stage('Aggregate Javadoc') {
-      tools {
-        jdk 'Oracle JDK 8 (latest)' // Use JDK 8 because of custom stylesheet
-      }
       steps {
         sh './gradlew --no-daemon aggregateJavadocs'
       }
@@ -46,9 +43,6 @@ pipeline {
       }
     }
     stage('Generate User Guide') {
-      tools {
-        jdk 'Oracle JDK 8 (latest)' // Use JDK 8 because AsciiDoctor has problems on JDK 9
-      }
       steps {
         sh './gradlew --no-daemon asciidoctor'
       }
@@ -60,13 +54,13 @@ pipeline {
       steps {
         milestone 2
         withCredentials([string(credentialsId: '9f982a37-747d-42bd-abf9-643534f579bd', variable: 'GRGIT_USER')]) {
-          sh './gradlew --no-daemon gitPublishPush'
+          sh './gradlew --no-daemon --stacktrace gitPublishPush'
         }
       }
     }
     stage('Coverage') {
       steps {
-        sh './gradlew --no-daemon --refresh-dependencies -PenableClover clean cloverHtmlReport cloverXmlReport'
+        sh './gradlew --no-daemon -PenableClover clean cloverHtmlReport cloverXmlReport'
       }
       post {
         success {

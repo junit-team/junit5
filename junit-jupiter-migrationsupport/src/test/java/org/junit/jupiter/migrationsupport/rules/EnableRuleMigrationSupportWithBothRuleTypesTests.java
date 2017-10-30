@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.migrationsupport.rules.FailAfterAllHelper.fail;
 
@@ -27,8 +30,14 @@ public class EnableRuleMigrationSupportWithBothRuleTypesTests {
 	private static boolean beforeOfRule2WasExecuted = false;
 	private static boolean afterOfRule2WasExecuted = false;
 
+	private static int numberOfRule1InstancesCreated = 0;
+	private static int numberOfRule2InstancesCreated = 0;
+
 	@Rule
 	public Verifier verifier1 = new Verifier() {
+		{
+			numberOfRule1InstancesCreated++;
+		}
 
 		@Override
 		protected void verify() throws Throwable {
@@ -36,21 +45,28 @@ public class EnableRuleMigrationSupportWithBothRuleTypesTests {
 		}
 	};
 
-	private ExternalResource resource2 = new ExternalResource() {
-		@Override
-		protected void before() throws Throwable {
-			beforeOfRule2WasExecuted = true;
-		}
-
-		@Override
-		protected void after() {
-			afterOfRule2WasExecuted = true;
-		}
-	};
-
 	@Rule
 	public ExternalResource getResource2() {
-		return resource2;
+		return new ExternalResource() {
+			{
+				numberOfRule2InstancesCreated++;
+			}
+
+			private Object instance;
+
+			@Override
+			protected void before() throws Throwable {
+				instance = this;
+				beforeOfRule2WasExecuted = true;
+			}
+
+			@Override
+			protected void after() {
+				assertNotNull(instance);
+				assertSame(instance, this);
+				afterOfRule2WasExecuted = true;
+			}
+		};
 	}
 
 	@Test
@@ -60,6 +76,8 @@ public class EnableRuleMigrationSupportWithBothRuleTypesTests {
 
 	@AfterAll
 	static void afterMethodsOfBothRulesWereExecuted() {
+		assertEquals(1, numberOfRule1InstancesCreated);
+		assertEquals(1, numberOfRule2InstancesCreated);
 		if (!afterOfRule1WasExecuted)
 			fail();
 		if (!afterOfRule2WasExecuted)
