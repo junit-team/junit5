@@ -66,8 +66,8 @@ import org.mockito.ArgumentCaptor;
  */
 class JUnitPlatformProviderTests {
 
-	private final PrintStream orgSystemOut = System.out;
-	private final PrintStream orgSystemErr = System.err;
+	private final PrintStream systemOut = System.out;
+	private final PrintStream systemErr = System.err;
 	private final boolean isSystemSecurityManagerNull = System.getSecurityManager() == null;
 
 	@Test
@@ -274,13 +274,15 @@ class JUnitPlatformProviderTests {
 	 * Invokes the provider, then restores system out and system error.
 	 * @see <a href="https://github.com/junit-team/junit5/issues/986">#986</a>
 	 */
-	private void invokeProvider(JUnitPlatformProvider provider, Object forkTestSet) throws TestSetFailedException, InvocationTargetException {
+	private void invokeProvider(JUnitPlatformProvider provider, Object forkTestSet)
+			throws TestSetFailedException, InvocationTargetException {
 		try {
 			provider.invoke(forkTestSet);
-		} finally {
+		}
+		finally {
 			if (isSystemSecurityManagerNull) {
-				System.setOut(orgSystemOut);
-				System.setErr(orgSystemErr);
+				System.setOut(systemOut);
+				System.setErr(systemErr);
 			}
 		}
 	}
