@@ -110,13 +110,18 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	private Optional<String> getClassName(TestIdentifier testIdentifier) {
 		TestSource testSource = testIdentifier.getSource().orElse(null);
-		if (testSource instanceof ClassSource) {
-			return Optional.of(((ClassSource) testSource).getJavaClass().getName());
+
+		if (testSource != null) {
+			if (testSource instanceof ClassSource) {
+				return Optional.of(((ClassSource) testSource).getJavaClass().getName());
+			}
+			if (testSource instanceof MethodSource) {
+				return Optional.of(((MethodSource) testSource).getClassName());
+			}
 		}
-		if (testSource instanceof MethodSource) {
-			return Optional.of(((MethodSource) testSource).getClassName());
-		}
-		return Optional.empty();
+
+		return testPlan.flatMap(plan -> plan.getParent(testIdentifier))
+			.flatMap(this::getClassName);
 	}
 
 	private Optional<String> getMethodName(TestIdentifier testIdentifier) {
