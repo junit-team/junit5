@@ -17,6 +17,9 @@ on GitHub.
 
 * Maven Surefire: Ensure failed tests of test engines that do not use `MethodSource` (e.g.
   Spek) are reported correctly.
+* Maven Surefire: In some cases, tests writing to `System.out` or `System.err`, in
+  particular via a logging framework, were not reported correctly when executed with a
+  non-zero `forkCount`.
 
 ===== Deprecations and Breaking Changes
 
@@ -37,6 +40,7 @@ on GitHub.
 * New console launcher option `--select-module <name>` or `-o <name>`.
 * New console launcher option `--scan-module-path` for selecting all resolved modules
   available on the boot layer configuration.
+* Maven Surefire: Add support for the `redirectTestOutputToFile` feature.
 
 [[release-notes-5.1.0-junit-jupiter]]
 ==== JUnit Jupiter
