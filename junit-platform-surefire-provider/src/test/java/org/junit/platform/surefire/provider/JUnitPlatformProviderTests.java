@@ -23,7 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.mockito.AdditionalMatchers.gt;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -135,12 +137,15 @@ class JUnitPlatformProviderTests {
 
 		invokeProvider(provider, VerboseTestClass.class);
 
-		String lineSeparator = System.lineSeparator();
+		ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
 		// @formatter:off
 		verify((ConsoleOutputReceiver) runListener)
-				.writeTestOutput(("stdout" + lineSeparator).getBytes(), 0, 6 + lineSeparator.length(), true);
+				.writeTestOutput(captor.capture(), eq(0), gt(6), eq(true));
 		verify((ConsoleOutputReceiver) runListener)
-				.writeTestOutput(("stderr" + lineSeparator).getBytes(), 0, 6 + lineSeparator.length(), false);
+				.writeTestOutput(captor.capture(), eq(0), gt(6), eq(false));
+		assertThat(captor.getAllValues())
+				.extracting(bytes -> new String(bytes, 0, 6))
+				.containsExactly("stdout", "stderr");
 		// @formatter:on
 	}
 
