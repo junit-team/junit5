@@ -217,6 +217,14 @@ class RunListenerAdapterTests {
 	}
 
 	@Test
+	void stackTraceWriterPresentEvenWithoutException() throws Exception {
+		adapter.executionFinished(newMethodIdentifier(), TestExecutionResult.failed(null));
+		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
+		verify(listener).testError(entryCaptor.capture());
+		assertNotNull(entryCaptor.getValue().getStackTraceWriter());
+	}
+
+	@Test
 	void displayNamesIgnoredInReport() throws NoSuchMethodException {
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(newId(), MyTestClass.class,
 			MyTestClass.class.getDeclaredMethod("myNamedTestMethod"));
