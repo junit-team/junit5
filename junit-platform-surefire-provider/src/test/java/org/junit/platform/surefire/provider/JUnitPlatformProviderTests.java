@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -39,7 +39,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.maven.surefire.booter.ForkingRunListener;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
 import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ReportEntry;
@@ -65,10 +64,6 @@ import org.mockito.ArgumentCaptor;
  * @since 1.0
  */
 class JUnitPlatformProviderTests {
-
-	private final PrintStream systemOut = System.out;
-	private final PrintStream systemErr = System.err;
-	private final boolean isSystemSecurityManagerNull = System.getSecurityManager() == null;
 
 	@Test
 	void getSuitesReturnsScannedClasses() throws Exception {
@@ -130,6 +125,23 @@ class JUnitPlatformProviderTests {
 		assertThat(executionListener.summaries).hasSize(2);
 		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
 		TestClass2.verifyExecutionSummary(executionListener.summaries.get(1));
+	}
+
+	@Test
+	void outputIsCaptured() throws Exception {
+		Launcher launcher = LauncherFactory.create();
+		RunListener runListener = mock(RunListener.class, withSettings().extraInterfaces(ConsoleOutputReceiver.class));
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParametersMock(runListener), launcher);
+
+		invokeProvider(provider, VerboseTestClass.class);
+
+		String lineSeparator = System.lineSeparator();
+		// @formatter:off
+		verify((ConsoleOutputReceiver) runListener)
+				.writeTestOutput(("stdout" + lineSeparator).getBytes(), 0, 6 + lineSeparator.length(), true);
+		verify((ConsoleOutputReceiver) runListener)
+				.writeTestOutput(("stderr" + lineSeparator).getBytes(), 0, 6 + lineSeparator.length(), false);
+		// @formatter:on
 	}
 
 	@Test
@@ -233,6 +245,11 @@ class JUnitPlatformProviderTests {
 	}
 
 	private static ProviderParameters providerParametersMock(Class<?>... testClasses) {
+		RunListener runListener = mock(RunListener.class, withSettings().extraInterfaces(ConsoleOutputReceiver.class));
+		return providerParametersMock(runListener, testClasses);
+	}
+
+	private static ProviderParameters providerParametersMock(RunListener runListener, Class<?>... testClasses) {
 		TestsToRun testsToRun = newTestsToRun(testClasses);
 
 		ScanResult scanResult = mock(ScanResult.class);
@@ -242,8 +259,6 @@ class JUnitPlatformProviderTests {
 		when(runOrderCalculator.orderTestClasses(any())).thenReturn(testsToRun);
 
 		ReporterFactory reporterFactory = mock(ReporterFactory.class);
-		RunListener runListener = mock(ForkingRunListener.class,
-			withSettings().extraInterfaces(ConsoleOutputReceiver.class));
 		when(reporterFactory.createReporter()).thenReturn(runListener);
 
 		ProviderParameters providerParameters = mock(ProviderParameters.class);
@@ -276,18 +291,18 @@ class JUnitPlatformProviderTests {
 	 */
 	private void invokeProvider(JUnitPlatformProvider provider, Object forkTestSet)
 			throws TestSetFailedException, InvocationTargetException {
+		PrintStream systemOut = System.out;
+		PrintStream systemErr = System.err;
 		try {
 			provider.invoke(forkTestSet);
 		}
 		finally {
-			if (isSystemSecurityManagerNull) {
-				System.setOut(systemOut);
-				System.setErr(systemErr);
-			}
+			System.setOut(systemOut);
+			System.setErr(systemErr);
 		}
 	}
 
-	private static class TestClass1 {
+	static class TestClass1 {
 
 		@Test
 		void test1() {
@@ -317,7 +332,7 @@ class JUnitPlatformProviderTests {
 		}
 	}
 
-	private static class TestClass2 {
+	static class TestClass2 {
 
 		@Test
 		void test1() {
@@ -340,6 +355,14 @@ class JUnitPlatformProviderTests {
 			assertEquals(0, summary.getTestsSkippedCount());
 			assertEquals(1, summary.getTestsAbortedCount());
 			assertEquals(1, summary.getTestsFailedCount());
+		}
+	}
+
+	static class VerboseTestClass {
+		@Test
+		void test() {
+			System.out.println("stdout");
+			System.err.println("stderr");
 		}
 	}
 
