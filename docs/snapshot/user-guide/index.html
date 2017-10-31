@@ -5335,6 +5335,11 @@ on GitHub.</p>
 <p>Maven Surefire: Ensure failed tests of test engines that do not use <code>MethodSource</code> (e.g.
 Spek) are reported correctly.</p>
 </li>
+<li>
+<p>Maven Surefire: In some cases, tests writing to <code>System.out</code> or <code>System.err</code>, in
+particular via a logging framework, were not reported correctly when executed with a
+non-zero <code>forkCount</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -5382,6 +5387,9 @@ level (i.e., the <code>FINE</code> log level in <code>java.util.logging</code>) 
 <li>
 <p>New console launcher option <code>--scan-module-path</code> for selecting all resolved modules
 available on the boot layer configuration.</p>
+</li>
+<li>
+<p>Maven Surefire: Add support for the <code>redirectTestOutputToFile</code> feature.</p>
 </li>
 </ul>
 </div>
