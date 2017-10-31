@@ -22,6 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -117,7 +118,14 @@ class TestInstanceLifecycleUtilsTests {
 
 	@Test
 	void getTestInstanceLifecycleFromMetaAnnotationWithNoConfigParamSet() {
-		Class<?> testClass = MetaAnnotationTestCase.class;
+		Class<?> testClass = BaseMetaAnnotatedTestCase.class;
+		Lifecycle lifecycle = getTestInstanceLifecycle(testClass, mock(ConfigurationParameters.class));
+		assertThat(lifecycle).isEqualTo(PER_CLASS);
+	}
+
+	@Test
+	void getTestInstanceLifecycleFromSpecializedClassWithNoConfigParamSet() {
+		Class<?> testClass = SpecializedTestCase.class;
 		Lifecycle lifecycle = getTestInstanceLifecycle(testClass, mock(ConfigurationParameters.class));
 		assertThat(lifecycle).isEqualTo(PER_CLASS);
 	}
@@ -126,6 +134,7 @@ class TestInstanceLifecycleUtilsTests {
 	private static class TestCase {
 	}
 
+	@Inherited
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	@TestInstance(Lifecycle.PER_CLASS)
@@ -133,7 +142,10 @@ class TestInstanceLifecycleUtilsTests {
 	}
 
 	@PerClassLifeCycle
-	private static class MetaAnnotationTestCase {
+	private static class BaseMetaAnnotatedTestCase {
+	}
+
+	private static class SpecializedTestCase extends BaseMetaAnnotatedTestCase {
 	}
 
 }
