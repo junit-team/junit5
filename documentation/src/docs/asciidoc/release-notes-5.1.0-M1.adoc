@@ -15,7 +15,8 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* Maven Surefire: Ensure failed tests of test engines that do not use `MethodSource` (e.g.
+  Spek) are reported correctly.
 
 ===== Deprecations and Breaking Changes
 
