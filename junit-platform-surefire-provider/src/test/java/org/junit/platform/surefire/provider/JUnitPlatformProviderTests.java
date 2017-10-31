@@ -28,7 +28,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +39,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.maven.surefire.booter.ForkingRunListener;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
+import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
@@ -62,6 +66,10 @@ import org.mockito.ArgumentCaptor;
  */
 class JUnitPlatformProviderTests {
 
+	private final PrintStream systemOut = System.out;
+	private final PrintStream systemErr = System.err;
+	private final boolean isSystemSecurityManagerNull = System.getSecurityManager() == null;
+
 	@Test
 	void getSuitesReturnsScannedClasses() throws Exception {
 		ProviderParameters providerParameters = providerParametersMock(TestClass1.class, TestClass2.class);
@@ -75,7 +83,7 @@ class JUnitPlatformProviderTests {
 		ProviderParameters providerParameters = providerParametersMock(Integer.class);
 		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
 
-		assertThrows(IllegalArgumentException.class, () -> provider.invoke("wrong forkTestSet"));
+		assertThrows(IllegalArgumentException.class, () -> invokeProvider(provider, "wrong forkTestSet"));
 	}
 
 	@Test
@@ -87,7 +95,7 @@ class JUnitPlatformProviderTests {
 		launcher.registerTestExecutionListeners(executionListener);
 
 		TestsToRun testsToRun = newTestsToRun(TestClass1.class, TestClass2.class);
-		provider.invoke(testsToRun);
+		invokeProvider(provider, testsToRun);
 
 		assertThat(executionListener.summaries).hasSize(2);
 		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
@@ -102,7 +110,7 @@ class JUnitPlatformProviderTests {
 		TestPlanSummaryListener executionListener = new TestPlanSummaryListener();
 		launcher.registerTestExecutionListeners(executionListener);
 
-		provider.invoke(TestClass1.class);
+		invokeProvider(provider, TestClass1.class);
 
 		assertThat(executionListener.summaries).hasSize(1);
 		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
@@ -117,7 +125,7 @@ class JUnitPlatformProviderTests {
 		TestPlanSummaryListener executionListener = new TestPlanSummaryListener();
 		launcher.registerTestExecutionListeners(executionListener);
 
-		provider.invoke(null);
+		invokeProvider(provider, null);
 
 		assertThat(executionListener.summaries).hasSize(2);
 		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
@@ -234,7 +242,8 @@ class JUnitPlatformProviderTests {
 		when(runOrderCalculator.orderTestClasses(any())).thenReturn(testsToRun);
 
 		ReporterFactory reporterFactory = mock(ReporterFactory.class);
-		RunListener runListener = mock(RunListener.class);
+		RunListener runListener = mock(ForkingRunListener.class,
+			withSettings().extraInterfaces(ConsoleOutputReceiver.class));
 		when(reporterFactory.createReporter()).thenReturn(runListener);
 
 		ProviderParameters providerParameters = mock(ProviderParameters.class);
@@ -258,6 +267,23 @@ class JUnitPlatformProviderTests {
 		public void testPlanExecutionFinished(TestPlan testPlan) {
 			super.testPlanExecutionFinished(testPlan);
 			summaries.add(getSummary());
+		}
+	}
+
+	/**
+	 * Invokes the provider, then restores system out and system error.
+	 * @see <a href="https://github.com/junit-team/junit5/issues/986">#986</a>
+	 */
+	private void invokeProvider(JUnitPlatformProvider provider, Object forkTestSet)
+			throws TestSetFailedException, InvocationTargetException {
+		try {
+			provider.invoke(forkTestSet);
+		}
+		finally {
+			if (isSystemSecurityManagerNull) {
+				System.setOut(systemOut);
+				System.setErr(systemErr);
+			}
 		}
 	}
 
@@ -326,7 +352,7 @@ class JUnitPlatformProviderTests {
 		JUnitPlatformProvider jUnitPlatformProvider = new JUnitPlatformProvider(providerParameters);
 		TestsToRun testsToRun = newTestsToRun(Sub1Tests.class, Sub2Tests.class);
 
-		jUnitPlatformProvider.invoke(testsToRun);
+		invokeProvider(jUnitPlatformProvider, testsToRun);
 		RunListener reporter = providerParameters.getReporterFactory().createReporter();
 
 		ArgumentCaptor<ReportEntry> reportEntryArgumentCaptor = ArgumentCaptor.forClass(ReportEntry.class);
