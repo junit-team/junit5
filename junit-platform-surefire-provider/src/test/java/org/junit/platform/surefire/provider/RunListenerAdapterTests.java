@@ -59,7 +59,7 @@ class RunListenerAdapterTests {
 	@BeforeEach
 	public void setUp() {
 		listener = mock(RunListener.class);
-		adapter = new RunListenerAdapter(listener);
+		adapter = new RunListenerAdapter(MyTestClass.class, listener);
 	}
 
 	@Test
@@ -181,7 +181,7 @@ class RunListenerAdapterTests {
 
 		// Use the test plan to set up child with parent.
 		final String parentDisplay = "I am your father";
-		TestIdentifier child = newSourcelessIdentifierWithParent(plan, parentDisplay, null);
+		TestIdentifier child = newSourcelessChildIdentifierWithParent(plan, parentDisplay, null);
 		adapter.executionStarted(child);
 
 		// Check that the adapter has informed Surefire that the test has been invoked,
@@ -196,7 +196,19 @@ class RunListenerAdapterTests {
 		TestPlan plan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Some Plan")));
 		adapter.testPlanExecutionStarted(plan);
 
-		TestIdentifier child = newSourcelessIdentifierWithParent(plan, "Parent", ClassSource.from(MyTestClass.class));
+		TestIdentifier child = newSourcelessChildIdentifierWithParent(plan, "Parent", ClassSource.from(MyTestClass.class));
+		adapter.executionFinished(child, TestExecutionResult.failed(new RuntimeException()));
+		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
+		verify(listener).testError(entryCaptor.capture());
+		assertNotNull(entryCaptor.getValue().getStackTraceWriter());
+	}
+
+	@Test
+	void stackTraceWriterDefaultsToTestClass() throws Exception {
+		TestPlan plan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Some Plan")));
+		adapter.testPlanExecutionStarted(plan);
+
+		TestIdentifier child = newSourcelessChildIdentifierWithParent(plan, "Parent", null);
 		adapter.executionFinished(child, TestExecutionResult.failed(new RuntimeException()));
 		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 		verify(listener).testError(entryCaptor.capture());
@@ -236,13 +248,13 @@ class RunListenerAdapterTests {
 		return new ClassTestDescriptor(UniqueId.forEngine("class"), MyTestClass.class);
 	}
 
-	private static TestIdentifier newSourcelessIdentifierWithParent(TestPlan testPlan, String parentDisplay, TestSource testSource) {
+	private static TestIdentifier newSourcelessChildIdentifierWithParent(TestPlan testPlan, String parentDisplay, TestSource parentTestSource) {
 		// A parent test identifier with a name.
 		TestDescriptor parent = mock(TestDescriptor.class);
 		when(parent.getUniqueId()).thenReturn(newId());
 		when(parent.getDisplayName()).thenReturn(parentDisplay);
 		when(parent.getLegacyReportingName()).thenReturn(parentDisplay);
-		when(parent.getSource()).thenReturn(Optional.ofNullable(testSource));
+		when(parent.getSource()).thenReturn(Optional.ofNullable(parentTestSource));
 		when(parent.getType()).thenReturn(TestDescriptor.Type.CONTAINER);
 		TestIdentifier parentId = TestIdentifier.from(parent);
 

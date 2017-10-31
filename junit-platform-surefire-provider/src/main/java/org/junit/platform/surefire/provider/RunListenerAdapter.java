@@ -39,10 +39,12 @@ import org.junit.platform.launcher.TestPlan;
  */
 final class RunListenerAdapter implements TestExecutionListener {
 
+	private final Class<?> testClass;
 	private final RunListener runListener;
 	private Optional<TestPlan> testPlan = Optional.empty();
 
-	public RunListenerAdapter(RunListener runListener) {
+	public RunListenerAdapter(Class<?> testClass, RunListener runListener) {
+		this.testClass = testClass;
 		this.runListener = runListener;
 	}
 
@@ -111,17 +113,20 @@ final class RunListenerAdapter implements TestExecutionListener {
 	private Optional<String> getClassName(TestIdentifier testIdentifier) {
 		TestSource testSource = testIdentifier.getSource().orElse(null);
 
-		if (testSource != null) {
-			if (testSource instanceof ClassSource) {
-				return Optional.of(((ClassSource) testSource).getJavaClass().getName());
-			}
-			if (testSource instanceof MethodSource) {
-				return Optional.of(((MethodSource) testSource).getClassName());
-			}
+		if (testSource instanceof ClassSource) {
+			return Optional.of(((ClassSource) testSource).getJavaClass().getName());
+		}
+		if (testSource instanceof MethodSource) {
+			return Optional.of(((MethodSource) testSource).getClassName());
 		}
 
-		return testPlan.flatMap(plan -> plan.getParent(testIdentifier))
-			.flatMap(this::getClassName);
+		final TestIdentifier parent = testPlan.flatMap(plan -> plan.getParent(testIdentifier)).orElse(null);
+
+		if (parent == null) {
+			return Optional.of(testClass.getName());
+		}
+
+		return getClassName(parent);
 	}
 
 	private Optional<String> getMethodName(TestIdentifier testIdentifier) {
