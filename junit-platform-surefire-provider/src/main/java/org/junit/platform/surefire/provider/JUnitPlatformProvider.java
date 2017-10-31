@@ -123,7 +123,6 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		try {
 			RunListener runListener = reporterFactory.createReporter();
 			ConsoleOutputCapture.startCapture((ConsoleOutputReceiver) runListener);
-			launcher.registerTestExecutionListeners(new RunListenerAdapter(runListener));
 
 			for (Class<?> testClass : testsToRun) {
 				invokeSingleClass(testClass, runListener);
@@ -144,7 +143,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 				.filters(includeAndExcludeFilters) //
 				.configurationParameters(configurationParameters) //
 				.build();
-		launcher.execute(discoveryRequest);
+		launcher.execute(discoveryRequest, new RunListenerAdapter(testClass, runListener));
 
 		runListener.testSetCompleted(classEntry);
 	}
