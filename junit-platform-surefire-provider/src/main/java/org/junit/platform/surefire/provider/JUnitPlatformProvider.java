@@ -43,7 +43,6 @@ import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ReporterException;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
-import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
@@ -54,6 +53,7 @@ import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 
 /**
@@ -125,10 +125,8 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		try {
 			RunListener runListener = reporterFactory.createReporter();
 			ConsoleOutputCapture.startCapture((ConsoleOutputReceiver) runListener);
-
-			for (Class<?> testClass : testsToRun) {
-				invokeSingleClass(testClass, runListener);
-			}
+			LauncherDiscoveryRequest discoveryRequest = buildLauncherDiscoveryRequest(testsToRun);
+			launcher.execute(discoveryRequest, new RunListenerAdapter(runListener));
 		}
 		finally {
 			runResult = reporterFactory.close();
@@ -136,18 +134,14 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		return runResult;
 	}
 
-	private void invokeSingleClass(Class<?> testClass, RunListener runListener) {
-		SimpleReportEntry classEntry = new SimpleReportEntry(getClass().getName(), testClass.getName());
-		runListener.testSetStarting(classEntry);
-
-		LauncherDiscoveryRequest discoveryRequest = request() //
-				.selectors(selectClass(testClass)) //
+	private LauncherDiscoveryRequest buildLauncherDiscoveryRequest(TestsToRun testsToRun) {
+		LauncherDiscoveryRequestBuilder builder = request() //
 				.filters(includeAndExcludeFilters) //
-				.configurationParameters(configurationParameters) //
-				.build();
-		launcher.execute(discoveryRequest, new RunListenerAdapter(testClass, runListener));
-
-		runListener.testSetCompleted(classEntry);
+				.configurationParameters(configurationParameters);
+		for (Class<?> testClass : testsToRun) {
+			builder.selectors(selectClass(testClass));
+		}
+		return builder.build();
 	}
 
 	private Filter<?>[] getIncludeAndExcludeFilters() {
