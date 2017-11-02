@@ -17,6 +17,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import org.apiguardian.api.API.Status;
+import org.apiguardian.report.ApiReport;
 
 /**
  * @since 1.0

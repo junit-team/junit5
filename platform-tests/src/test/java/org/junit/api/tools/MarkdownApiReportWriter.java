@@ -14,6 +14,8 @@ import java.io.PrintWriter;
 import java.lang.reflect.Modifier;
 import java.nio.CharBuffer;
 
+import org.apiguardian.report.ApiReport;
+
 /**
  * @since 1.0
  */
