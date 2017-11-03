@@ -111,11 +111,8 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	private boolean isTestSetStarted(TestIdentifier testIdentifier) {
-		if (testSetNodes.contains(testIdentifier)) {
-			return true;
-		}
-		Optional<TestIdentifier> parent = testPlan.getParent(testIdentifier);
-		return parent.isPresent() && isTestSetStarted(parent.get());
+		return testSetNodes.contains(testIdentifier)
+				|| testPlan.getParent(testIdentifier).map(this::isTestSetStarted).orElse(false);
 	}
 
 	private void startTestSetIfPossible(TestIdentifier testIdentifier) {
