@@ -345,5 +345,28 @@
     "speakers": [
       "marcphilipp"
     ]
+  },
+  {
+    "title": "JUnit 5 — The New Testing Framework for Java and Platform for the JVM",
+    "event": "Devoxx",
+    "date": "2017-11-08",
+    "location": "Antwerp, Belgium",
+    "link": "https://cfp.devoxx.be/2017/talk/DQL-2850/JUnit_5_%E2%80%94_The_New_Testing_Framework_for_Java_and_Platform_for_the_JVM",
+    "speakers": [
+      "marcphilipp",
+      "sbrannen"
+    ]
+  },
+  {
+    "title": "Celebrating the Release of JUnit 5",
+    "event": "Devoxx",
+    "date": "2017-11-08",
+    "location": "Antwerp, Belgium",
+    "link": "https://cfp.devoxx.be/2017/talk/HTX-6465/Celebrating_the_Release_of_JUnit_5",
+    "speakers": [
+      "marcphilipp",
+      "sbrannen",
+      "sormuras"
+    ]
   }
 ]
