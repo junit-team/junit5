@@ -5412,6 +5412,10 @@ some rules declared using methods multiple times. Now, once enabled, it will ins
 all declared rules (fields <em>and</em> methods) exactly once and call them in the same order
 used by Vintage.</p>
 </li>
+<li>
+<p>Disabled test classes were eagerly instantiated when <code>Lifecycle.PER_CLASS</code> was used.
+Now, <code>ExecutionCondition</code> evaluation always takes place before test class instantiation.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -7909,7 +7913,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-10-31 11:44:17 EDT
+Last updated 2017-11-03 17:04:26 EDT
 </div>
 </div>
 </body>
