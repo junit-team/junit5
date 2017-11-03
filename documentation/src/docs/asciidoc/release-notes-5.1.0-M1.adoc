@@ -54,6 +54,8 @@ on GitHub.
   some rules declared using methods multiple times. Now, once enabled, it will instantiate
   all declared rules (fields _and_ methods) exactly once and call them in the same order
   used by Vintage.
+* Disabled test classes were eagerly instantiated when `Lifecycle.PER_CLASS` was used.
+  Now, `ExecutionCondition` evaluation always takes place before test class instantiation.
 
 ===== Deprecations and Breaking Changes
 
