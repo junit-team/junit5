@@ -24,7 +24,6 @@ import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.ModuleSelector;
-import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
 /**
  * Integration tests for {@link ModuleUtils} using JUnit Jupiter.
@@ -60,7 +59,7 @@ class JupiterIntegrationTests {
 		ModuleSelector selector = DiscoverySelectors.selectModule(getClass().getModule().getName());
 		assertEquals(getClass().getModule().getName(), selector.getModuleName());
 
-		EngineDescriptor engine = new JupiterEngineDescriptor(UniqueId.forEngine(JupiterTestEngine.ENGINE_ID));
+		JupiterEngineDescriptor engine = new JupiterEngineDescriptor(UniqueId.forEngine(JupiterTestEngine.ENGINE_ID));
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engine);

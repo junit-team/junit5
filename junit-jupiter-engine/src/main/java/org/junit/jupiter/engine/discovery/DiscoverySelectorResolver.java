@@ -20,6 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
 import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -45,14 +46,15 @@ public class DiscoverySelectorResolver {
 
 	private static final IsScannableTestClass isScannableTestClass = new IsScannableTestClass();
 
-	public void resolveSelectors(EngineDiscoveryRequest request, TestDescriptor engineDescriptor) {
+	public void resolveSelectors(EngineDiscoveryRequest request, JupiterEngineDescriptor engineDescriptor) {
 		ClassFilter classFilter = buildClassFilter(request, isScannableTestClass);
 		resolve(request, engineDescriptor, classFilter);
 		filter(engineDescriptor, classFilter);
 		pruneTree(engineDescriptor);
 	}
 
-	private void resolve(EngineDiscoveryRequest request, TestDescriptor engineDescriptor, ClassFilter classFilter) {
+	private void resolve(EngineDiscoveryRequest request, JupiterEngineDescriptor engineDescriptor,
+			ClassFilter classFilter) {
 		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(engineDescriptor);
 
 		request.getSelectorsByType(ClasspathRootSelector.class).forEach(selector -> {
@@ -84,13 +86,14 @@ public class DiscoverySelectorResolver {
 		rootDescriptor.accept(TestDescriptor::prune);
 	}
 
-	private JavaElementsResolver createJavaElementsResolver(TestDescriptor engineDescriptor) {
+	private JavaElementsResolver createJavaElementsResolver(JupiterEngineDescriptor engineDescriptor) {
 		Set<ElementResolver> resolvers = new LinkedHashSet<>();
 		resolvers.add(new TestContainerResolver());
 		resolvers.add(new NestedTestsResolver());
 		resolvers.add(new TestMethodResolver());
 		resolvers.add(new TestFactoryMethodResolver());
 		resolvers.add(new TestTemplateMethodResolver());
+		resolvers.add(new EngineExecutionCallbackResolver(engineDescriptor));
 		return new JavaElementsResolver(engineDescriptor, resolvers);
 	}
 
