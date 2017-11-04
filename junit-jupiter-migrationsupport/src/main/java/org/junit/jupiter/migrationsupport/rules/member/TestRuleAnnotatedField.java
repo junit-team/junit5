@@ -22,7 +22,7 @@ import org.junit.rules.TestRule;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL, since = "5.1")
+@API(status = INTERNAL, since = "5.0.2")
 public final class TestRuleAnnotatedField extends AbstractTestRuleAnnotatedMember {
 
 	public TestRuleAnnotatedField(Object testInstance, Field field) {
