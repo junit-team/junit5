@@ -41,6 +41,7 @@ on GitHub.
 * New console launcher option `--scan-module-path` for selecting all resolved modules
   available on the boot layer configuration.
 * Maven Surefire: Add support for the `redirectTestOutputToFile` feature.
+* Maven Surefire: Add support to accept empty strings in `@IncludeTags` and `@ExcludeTags`.
 
 [[release-notes-5.1.0-junit-jupiter]]
 ==== JUnit Jupiter
