@@ -104,9 +104,9 @@ public @interface RepeatedTest {
 	 *
 	 * <h4>Supported placeholders</h4>
 	 * <ul>
-	 * <li>{@value #DISPLAY_NAME_PLACEHOLDER}</li>
-	 * <li>{@value #CURRENT_REPETITION_PLACEHOLDER}</li>
-	 * <li>{@value #TOTAL_REPETITIONS_PLACEHOLDER}</li>
+	 * <li>{displayName}</li>
+	 * <li>{currentRepetition}</li>
+	 * <li>{totalRepetitions}</li>
 	 * </ul>
 	 *
 	 * <p>Defaults to {@link #SHORT_DISPLAY_NAME}, resulting in
