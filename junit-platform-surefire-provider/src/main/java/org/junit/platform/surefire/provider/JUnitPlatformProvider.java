@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
@@ -48,6 +49,7 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -182,8 +184,9 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	private Optional<List<String>> getPropertiesList(String key) {
 		List<String> compoundProperties = null;
 		String property = parameters.getProviderProperties().get(key);
-		if (property != null) {
-			compoundProperties = Arrays.asList(property.split("[, ]+"));
+		if (StringUtils.isNotBlank(property)) {
+			compoundProperties = Arrays.stream(property.split("[, ]+")).filter(StringUtils::isNotBlank).collect(
+				Collectors.toList());
 		}
 		return Optional.ofNullable(compoundProperties);
 	}

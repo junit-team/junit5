@@ -192,6 +192,34 @@ class JUnitPlatformProviderTests {
 	}
 
 	@Test
+	void noFiltersAreCreatedIfTagsAreEmpty() throws Exception {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.INCLUDE_TAGS, "");
+		properties.put(JUnitPlatformProvider.INCLUDE_GROUPS, "");
+
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+		assertEquals(0, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
+	void filtersWithEmptyTagsAreNotRegistered() throws Exception {
+		Map<String, String> properties = new HashMap<>();
+
+		// Here only tagOne is registered as a valid tag and other tags are ignored as they are empty
+		properties.put(JUnitPlatformProvider.EXCLUDE_GROUPS, "tagOne,");
+		properties.put(JUnitPlatformProvider.EXCLUDE_TAGS, "");
+
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+		assertEquals(1, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
 	void bothIncludeAndExcludeAreAllowed() throws Exception {
 		Map<String, String> properties = new HashMap<>();
 		properties.put(JUnitPlatformProvider.INCLUDE_TAGS, "tagOne, tagTwo");
