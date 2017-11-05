@@ -19,7 +19,7 @@ pipeline {
     }
     stage('Publish Artifacts') {
       when {
-        branch 'master'
+        anyOf { branch 'master'; branch 'releases/*' }
       }
       steps {
         milestone 1
