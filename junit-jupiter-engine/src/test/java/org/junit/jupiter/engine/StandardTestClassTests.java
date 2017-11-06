@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterEngineExecution;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,6 +110,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(MyStandardTestCase.class);
 
 		assertEquals(4, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(4, MyStandardTestCase.atomic, " atomic value");
 		assertEquals(2, MyStandardTestCase.countBefore0, "# before0 calls");
 		assertEquals(2, MyStandardTestCase.countAfter0, "# after0 calls");
 
@@ -144,18 +147,16 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	}
 
 	public static class AlphaOmega implements BeforeEngineExecutionCallback, AfterEngineExecutionCallback {
-		public AlphaOmega() {
-			// System.out.println("AlphaOmega.<init>");
-		}
-
 		@Override
 		public void beforeEngineExecution(ExtensionContext context) {
-			// System.out.println("AlphaOmega.beforeEngineExecution() context = [" + context + "]");
+			context.getStore(ExtensionContext.Namespace.GLOBAL).getOrComputeIfAbsent("atomic", key -> new AtomicLong(),
+				AtomicLong.class).incrementAndGet();
 		}
 
 		@Override
 		public void afterEngineExecution(ExtensionContext context) {
-			// System.out.println("AlphaOmega.afterEngineExecution() context = [" + context + "]");
+			context.getStore(ExtensionContext.Namespace.GLOBAL).getOrComputeIfAbsent("atomic", key -> new AtomicLong(),
+				AtomicLong.class).incrementAndGet();
 		}
 	}
 
@@ -168,6 +169,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 		static int countBefore2 = 0;
 		static int countAfter0 = 0;
 		static int countAfter1 = 0;
+		static long atomic = 0L;
 
 		@BeforeEngineExecution
 		static void before0() {
@@ -177,18 +179,24 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 		@BeforeEngineExecution
 		static void before0(ExtensionContext context) {
 			context.getStore(ExtensionContext.Namespace.GLOBAL).put("alpha", "omega");
+			MyStandardTestCase.atomic = context.getStore(ExtensionContext.Namespace.GLOBAL).getOrComputeIfAbsent(
+				"atomic", key -> new AtomicLong(), AtomicLong.class).incrementAndGet();
 			countBefore0++;
 		}
 
 		@AfterEngineExecution
 		static void after0(ExtensionContext context) {
 			assertEquals("omega", context.getStore(ExtensionContext.Namespace.GLOBAL).get("alpha"));
+			MyStandardTestCase.atomic = context.getStore(ExtensionContext.Namespace.GLOBAL).getOrComputeIfAbsent(
+				"atomic", key -> new AtomicLong(), AtomicLong.class).incrementAndGet();
 			countAfter0++;
 		}
 
 		@AfterEngineExecution
 		void after0NonStatic(ExtensionContext context) {
 			assertEquals("omega", context.getStore(ExtensionContext.Namespace.GLOBAL).get("alpha"));
+			MyStandardTestCase.atomic = context.getStore(ExtensionContext.Namespace.GLOBAL).getOrComputeIfAbsent(
+				"atomic", key -> new AtomicLong(), AtomicLong.class).incrementAndGet();
 			countAfter0++;
 		}
 

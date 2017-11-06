@@ -10,11 +10,13 @@
 
 package org.junit.jupiter.engine.discovery;
 
+import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -23,6 +25,7 @@ import org.junit.jupiter.api.AfterEngineExecution;
 import org.junit.jupiter.api.BeforeEngineExecution;
 import org.junit.jupiter.api.extension.AfterEngineExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEngineExecutionCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.platform.commons.util.AnnotationUtils;
@@ -45,6 +48,18 @@ class EngineExecutionCallbackResolver implements ElementResolver {
 
 	@Override
 	public Set<TestDescriptor> resolveElement(AnnotatedElement element, TestDescriptor parent) {
+		// @formatter:off
+		findRepeatableAnnotations(element, ExtendWith.class)
+				.stream()
+				.map(ExtendWith::value)
+				.flatMap(Arrays::stream)
+				.map(ReflectionUtils::newInstance)
+				.filter(x -> x instanceof BeforeEngineExecutionCallback)
+				.filter(x -> x instanceof AfterEngineExecutionCallback)
+				.forEach(engineDescriptor::registerExtension);
+				//.forEach(System.out::println);
+		// @formatter:on
+
 		if ((element instanceof Class)) {
 			//@formatter:off
 			AnnotationUtils.findAnnotatedMethods((Class<?>) element, BeforeEngineExecution.class, TOP_DOWN)
