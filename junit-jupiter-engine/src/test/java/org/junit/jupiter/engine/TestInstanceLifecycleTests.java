@@ -694,6 +694,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private static class SubInstancePerClassTestCase extends InstancePerClassTestCase {
+		@SuppressWarnings("unused")
 		SubInstancePerClassTestCase() {
 			incrementInstanceCount(SubInstancePerClassTestCase.class);
 		}
