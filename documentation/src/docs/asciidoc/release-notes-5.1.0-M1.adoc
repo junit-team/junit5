@@ -58,6 +58,9 @@ on GitHub.
   used by Vintage.
 * Disabled test classes were eagerly instantiated when `Lifecycle.PER_CLASS` was used.
   Now, `ExecutionCondition` evaluation always takes place before test class instantiation.
+* The `junit-jupiter-migrationsupport` module no longer incorrectly attempts to register
+  the `JupiterTestEngine` via the `ServiceLoader` mechanism, thereby allowing it to be
+  used as a module on the Java 9 module-path.
 
 ===== Deprecations and Breaking Changes
 
