@@ -5420,6 +5420,11 @@ used by Vintage.</p>
 <p>Disabled test classes were eagerly instantiated when <code>Lifecycle.PER_CLASS</code> was used.
 Now, <code>ExecutionCondition</code> evaluation always takes place before test class instantiation.</p>
 </li>
+<li>
+<p>The <code>junit-jupiter-migrationsupport</code> module no longer incorrectly attempts to register
+the <code>JupiterTestEngine</code> via the <code>ServiceLoader</code> mechanism, thereby allowing it to be
+used as a module on the Java 9 module-path.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -7917,7 +7922,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-11-07 11:24:28 EST
+Last updated 2017-11-07 11:59:18 EST
 </div>
 </div>
 </body>
