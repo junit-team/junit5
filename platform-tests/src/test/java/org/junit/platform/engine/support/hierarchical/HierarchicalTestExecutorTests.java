@@ -501,7 +501,7 @@ class HierarchicalTestExecutorTests {
 	private static class MyExecutor extends HierarchicalTestExecutor<MyEngineExecutionContext> {
 
 		MyExecutor(ExecutionRequest request, MyEngineExecutionContext rootContext) {
-			super(request, rootContext, new SameThreadTestDescriptorExecutorService());
+			super(request, rootContext, new SameThreadHierarchicalTestExecutorService<>());
 		}
 	}
 

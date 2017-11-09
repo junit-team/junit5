@@ -12,9 +12,6 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.ExecutionRequest;
@@ -44,15 +41,15 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	 */
 	@Override
 	public final void execute(ExecutionRequest request) {
-		try (TestDescriptorExecutorService executorService = createExecutorService(request)) {
+		try (HierarchicalTestExecutorService<C> executorService = createExecutorService(request)) {
 			new HierarchicalTestExecutor<>(request, createExecutionContext(request), executorService).execute();
 		} catch (Exception exception) {
 			throw new JUnitException("Error executing tests for engine " + getId(), exception);
 		}
 	}
 
-	protected TestDescriptorExecutorService createExecutorService(ExecutionRequest request) {
-		return new SameThreadTestDescriptorExecutorService();
+	protected HierarchicalTestExecutorService<C> createExecutorService(ExecutionRequest request) {
+		return new SameThreadHierarchicalTestExecutorService<>();
 	}
 
 	/**

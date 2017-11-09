@@ -23,9 +23,9 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.hierarchical.ForkJoinPoolBasedTestDescriptorExecutorService;
+import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
-import org.junit.platform.engine.support.hierarchical.TestDescriptorExecutorService;
+import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
 
 /**
  * The JUnit Jupiter {@link org.junit.platform.engine.TestEngine}.
@@ -66,9 +66,9 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	}
 
 	@Override
-	protected TestDescriptorExecutorService createExecutorService(ExecutionRequest request) {
+	protected HierarchicalTestExecutorService<JupiterEngineExecutionContext> createExecutorService(ExecutionRequest request) {
 		if (request.getConfigurationParameters().getBoolean(ENABLE_PARALLEL_EXECUTION).orElse(false)) {
-			return new ForkJoinPoolBasedTestDescriptorExecutorService();
+			return new ForkJoinPoolHierarchicalTestExecutorService<>();
 		}
 		return super.createExecutorService(request);
 	}

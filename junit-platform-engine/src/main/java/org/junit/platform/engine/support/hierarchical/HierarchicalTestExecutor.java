@@ -23,7 +23,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
-import org.junit.platform.engine.support.hierarchical.TestDescriptorExecutorService.TestExecution;
+import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 
 /**
  * Implementation core of all {@link TestEngine TestEngines} that wish to
@@ -46,9 +46,9 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	private final TestDescriptor rootTestDescriptor;
 	private final EngineExecutionListener listener;
 	private final C rootContext;
-	private TestDescriptorExecutorService executorService;
+	private HierarchicalTestExecutorService<C> executorService;
 
-	HierarchicalTestExecutor(ExecutionRequest request, C rootContext, TestDescriptorExecutorService executorService) {
+	HierarchicalTestExecutor(ExecutionRequest request, C rootContext, HierarchicalTestExecutorService<C> executorService) {
 		this.rootTestDescriptor = request.getRootTestDescriptor();
 		this.listener = request.getEngineExecutionListener();
 		this.rootContext = rootContext;
@@ -56,7 +56,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	}
 
 	void execute() {
-		waitFor(executorService.submit(this.rootTestDescriptor, toTestExecution(this.rootContext)));
+		waitFor(executorService.submit(toTestTask(this.rootTestDescriptor, this.rootContext)));
 	}
 
 	private void execute(TestDescriptor testDescriptor, C parentContext) {
@@ -91,13 +91,13 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 				C contextForDynamicChildren = context;
 				context = node.execute(context, dynamicTestDescriptor -> {
 					this.listener.dynamicTestRegistered(dynamicTestDescriptor);
-					futures.put(dynamicTestDescriptor, executorService.submit(dynamicTestDescriptor, toTestExecution(contextForDynamicChildren)));
+					futures.put(dynamicTestDescriptor, executorService.submit(toTestTask(dynamicTestDescriptor, contextForDynamicChildren)));
 				});
 
 				C contextForStaticChildren = context;
 				// @formatter:off
 				testDescriptor.getChildren()
-						.forEach(child -> futures.computeIfAbsent(child, d -> executorService.submit(child, toTestExecution(contextForStaticChildren))));
+						.forEach(child -> futures.computeIfAbsent(child, d -> executorService.submit(toTestTask(child, contextForStaticChildren))));
 				testDescriptor.getChildren().stream()
 						.map(futures::get)
 						.forEach(this::waitFor);
@@ -115,12 +115,13 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		try {
             future.get();
         } catch (Exception e) {
+			// TODO do something sensible
             throw ExceptionUtils.throwAsUncheckedException(e);
         }
 	}
 
-	private TestExecution toTestExecution(C context) {
-		return testDescriptor -> execute(testDescriptor, context);
+	private TestTask<C> toTestTask(TestDescriptor testDescriptor, C context) {
+		return new DefaultTestTask(testDescriptor, context);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -132,4 +133,29 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	private static final Node noOpNode = new Node() {
 	};
 
+	private class DefaultTestTask implements TestTask<C> {
+
+		private final TestDescriptor testDescriptor;
+		private final C context;
+
+		DefaultTestTask(TestDescriptor testDescriptor, C context) {
+			this.testDescriptor = testDescriptor;
+			this.context = context;
+		}
+
+		@Override
+        public TestDescriptor getTestDescriptor() {
+            return testDescriptor;
+        }
+
+		@Override
+        public C getParentExecutionContext() {
+            return context;
+        }
+
+		@Override
+        public void execute() {
+            HierarchicalTestExecutor.this.execute(testDescriptor, context);
+        }
+	}
 }

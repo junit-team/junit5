@@ -4,13 +4,11 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 
 import java.util.concurrent.Future;
 
-import org.junit.platform.engine.TestDescriptor;
-
-public class SameThreadTestDescriptorExecutorService implements TestDescriptorExecutorService {
+public class SameThreadHierarchicalTestExecutorService<C extends EngineExecutionContext> implements HierarchicalTestExecutorService<C> {
 
     @Override
-    public Future<Void> submit(TestDescriptor testDescriptor, TestExecution testExecution) {
-        testExecution.execute(testDescriptor);
+    public Future<Void> submit(TestTask<C> testTask) {
+        testTask.execute();
         return completedFuture(null);
     }
 
