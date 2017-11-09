@@ -21,6 +21,11 @@ import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.get
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -111,8 +116,36 @@ class TestInstanceLifecycleUtilsTests {
 		assertThat(lifecycle).isEqualTo(PER_METHOD);
 	}
 
+	@Test
+	void getTestInstanceLifecycleFromMetaAnnotationWithNoConfigParamSet() {
+		Class<?> testClass = BaseMetaAnnotatedTestCase.class;
+		Lifecycle lifecycle = getTestInstanceLifecycle(testClass, mock(ConfigurationParameters.class));
+		assertThat(lifecycle).isEqualTo(PER_CLASS);
+	}
+
+	@Test
+	void getTestInstanceLifecycleFromSpecializedClassWithNoConfigParamSet() {
+		Class<?> testClass = SpecializedTestCase.class;
+		Lifecycle lifecycle = getTestInstanceLifecycle(testClass, mock(ConfigurationParameters.class));
+		assertThat(lifecycle).isEqualTo(PER_CLASS);
+	}
+
 	@TestInstance(Lifecycle.PER_METHOD)
 	private static class TestCase {
+	}
+
+	@Inherited
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@TestInstance(Lifecycle.PER_CLASS)
+	private @interface PerClassLifeCycle {
+	}
+
+	@PerClassLifeCycle
+	private static class BaseMetaAnnotatedTestCase {
+	}
+
+	private static class SpecializedTestCase extends BaseMetaAnnotatedTestCase {
 	}
 
 }

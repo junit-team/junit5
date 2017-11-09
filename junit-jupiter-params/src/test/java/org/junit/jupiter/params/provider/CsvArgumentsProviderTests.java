@@ -75,6 +75,20 @@ class CsvArgumentsProviderTests {
 		assertThat(arguments).containsExactly(new String[] { "null", null, "empty", "" });
 	}
 
+	@Test
+	void leadingSpacesAreTrimmed() {
+		Stream<Object[]> arguments = provideArguments(',', "'', 1", " '', 2", "'' , 3", " '' , 4");
+
+		assertThat(arguments).containsExactly(new Object[][] { { "", "1" }, { "", "2" }, { "", "3" }, { "", "4" } });
+	}
+
+	@Test
+	void trailingSpacesAreTrimmed() {
+		Stream<Object[]> arguments = provideArguments(',', "1,''", "2, ''", "3,'' ", "4, '' ");
+
+		assertThat(arguments).containsExactly(new Object[][] { { "1", "" }, { "2", "" }, { "3", "" }, { "4", "" } });
+	}
+
 	private Stream<Object[]> provideArguments(char delimiter, String... value) {
 		CsvSource annotation = mock(CsvSource.class);
 		when(annotation.value()).thenReturn(value);

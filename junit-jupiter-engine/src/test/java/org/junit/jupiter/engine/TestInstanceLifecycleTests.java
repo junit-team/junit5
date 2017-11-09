@@ -12,6 +12,7 @@ package org.junit.jupiter.engine;
 
 import static java.lang.String.join;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -68,9 +69,8 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	private static final Map<String, Object> instanceMap = new LinkedHashMap<>();
 	private static final List<String> testsInvoked = new ArrayList<>();
+	private static final Map<Class<?>, Integer> instanceCount = new LinkedHashMap<>();
 
-	private static int instanceCount;
-	private static int nestedInstanceCount;
 	private static int beforeAllCount;
 	private static int afterAllCount;
 	private static int beforeEachCount;
@@ -80,8 +80,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	void init() {
 		instanceMap.clear();
 		testsInvoked.clear();
-		instanceCount = 0;
-		nestedInstanceCount = 0;
+		instanceCount.clear();
 		beforeAllCount = 0;
 		afterAllCount = 0;
 		beforeEachCount = 0;
@@ -93,12 +92,11 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = InstancePerMethodTestCase.class;
 		int containers = 3;
 		int tests = 3;
-		int instances = 3;
-		int nestedInstances = 0;
+		Map.Entry<Class<?>, Integer>[] instances = instanceCounts(entry(InstancePerMethodTestCase.class, 3));
 		int allMethods = 1;
 		int eachMethods = 3;
 
-		performAssertions(testClass, containers, tests, instances, nestedInstances, allMethods, eachMethods);
+		performAssertions(testClass, containers, tests, instances, allMethods, eachMethods);
 
 		String containerExecutionConditionKey = executionConditionKey(testClass, null);
 		String postProcessTestInstanceKey = postProcessTestInstanceKey(testClass);
@@ -157,23 +155,22 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void instancePerClass() {
-		instancePerClass(InstancePerClassTestCase.class);
+		instancePerClass(InstancePerClassTestCase.class, instanceCounts(entry(InstancePerClassTestCase.class, 1)));
 	}
 
 	@Test
 	void instancePerClassWithInheritedLifecycleMode() {
-		instancePerClass(SubInstancePerClassTestCase.class);
+		instancePerClass(SubInstancePerClassTestCase.class,
+			instanceCounts(entry(SubInstancePerClassTestCase.class, 1)));
 	}
 
-	private void instancePerClass(Class<?> testClass) {
+	private void instancePerClass(Class<?> testClass, Map.Entry<Class<?>, Integer>[] instances) {
 		int containers = 3;
 		int tests = 3;
-		int instances = 1;
-		int nestedInstances = 0;
 		int allMethods = 2;
 		int eachMethods = 3;
 
-		performAssertions(testClass, containers, tests, instances, nestedInstances, allMethods, eachMethods);
+		performAssertions(testClass, containers, tests, instances, allMethods, eachMethods);
 
 		String containerExecutionConditionKey = executionConditionKey(testClass, null);
 		String testTemplateKey = testTemplateKey(testClass, "singletonTest");
@@ -222,7 +219,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(instance, instanceMap.get(beforeEachCallbackKey3));
 		assertSame(instance, instanceMap.get(afterEachCallbackKey3));
 		assertSame(instance, instanceMap.get(postProcessTestInstanceKey));
-		assertSame(instance, instanceMap.get(containerExecutionConditionKey));
+		assertNull(instanceMap.get(containerExecutionConditionKey));
 	}
 
 	@Test
@@ -231,12 +228,11 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		Class<?> nestedTestClass = InstancePerMethodOuterTestCase.NestedInstancePerMethodTestCase.class;
 		int containers = 4;
 		int tests = 4;
-		int instances = 4;
-		int nestedInstances = 3;
+		Map.Entry<Class<?>, Integer>[] instances = instanceCounts(entry(testClass, 4), entry(nestedTestClass, 3));
 		int allMethods = 1;
 		int eachMethods = 3;
 
-		performAssertions(testClass, containers, tests, instances, nestedInstances, allMethods, eachMethods);
+		performAssertions(testClass, containers, tests, instances, allMethods, eachMethods);
 
 		String containerExecutionConditionKey = executionConditionKey(testClass, null);
 		String nestedContainerExecutionConditionKey = executionConditionKey(nestedTestClass, null);
@@ -336,12 +332,11 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		Class<?> nestedTestClass = InstancePerClassOuterTestCase.NestedInstancePerClassTestCase.class;
 		int containers = 4;
 		int tests = 4;
-		int instances = 1;
-		int nestedInstances = 1;
+		Map.Entry<Class<?>, Integer>[] instances = instanceCounts(entry(testClass, 1), entry(nestedTestClass, 1));
 		int allMethods = 2;
 		int eachMethods = 3;
 
-		performAssertions(testClass, containers, tests, instances, nestedInstances, allMethods, eachMethods);
+		performAssertions(testClass, containers, tests, instances, allMethods, eachMethods);
 
 		String containerExecutionConditionKey = executionConditionKey(testClass, null);
 		String nestedContainerExecutionConditionKey = executionConditionKey(nestedTestClass, null);
@@ -393,7 +388,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		Object instance = instanceMap.get(postProcessTestInstanceKey);
 		assertNotNull(instance);
-		assertSame(instance, instanceMap.get(containerExecutionConditionKey));
+		assertNull(instanceMap.get(containerExecutionConditionKey));
 		assertSame(instance, instanceMap.get(beforeAllCallbackKey));
 		assertSame(instance, instanceMap.get(afterAllCallbackKey));
 		assertSame(instance, instanceMap.get(outerTestExecutionConditionKey));
@@ -403,7 +398,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		Object nestedInstance = instanceMap.get(nestedPostProcessTestInstanceKey);
 		assertNotNull(nestedInstance);
 		assertNotSame(instance, nestedInstance);
-		assertSame(nestedInstance, instanceMap.get(nestedContainerExecutionConditionKey));
+		assertNull(instanceMap.get(nestedContainerExecutionConditionKey));
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeAllCallbackKey));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterAllCallbackKey));
 		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey1));
@@ -426,12 +421,11 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		Class<?> nestedTestClass = MixedLifecyclesOuterTestCase.NestedInstancePerClassTestCase.class;
 		int containers = 4;
 		int tests = 4;
-		int instances = 2;
-		int nestedInstances = 1;
+		Map.Entry<Class<?>, Integer>[] instances = instanceCounts(entry(testClass, 2), entry(nestedTestClass, 1));
 		int allMethods = 1;
 		int eachMethods = 7;
 
-		performAssertions(testClass, containers, tests, instances, nestedInstances, allMethods, eachMethods);
+		performAssertions(testClass, containers, tests, instances, allMethods, eachMethods);
 
 		String containerExecutionConditionKey = executionConditionKey(testClass, null);
 		String nestedContainerExecutionConditionKey = executionConditionKey(nestedTestClass, null);
@@ -492,7 +486,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		Object nestedInstance = instanceMap.get(nestedPostProcessTestInstanceKey);
 		assertNotNull(nestedInstance);
 		assertNotSame(instance, nestedInstance);
-		assertSame(nestedInstance, instanceMap.get(nestedContainerExecutionConditionKey));
+		assertNull(instanceMap.get(nestedContainerExecutionConditionKey));
 		assertSame(nestedInstance, instanceMap.get(nestedBeforeAllCallbackKey));
 		assertSame(nestedInstance, instanceMap.get(nestedAfterAllCallbackKey));
 		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey1));
@@ -558,8 +552,8 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 				.containsEntry("afterEach", 1);
 	}
 
-	private void performAssertions(Class<?> testClass, int containers, int tests, int instances, int nestedInstances,
-			int allMethods, int eachMethods) {
+	private void performAssertions(Class<?> testClass, int containers, int tests,
+			Map.Entry<Class<?>, Integer>[] instanceCountEntries, int allMethods, int eachMethods) {
 
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
 
@@ -569,14 +563,23 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			() -> assertEquals(containers, eventRecorder.getContainerFinishedCount(), "# containers finished"),
 			() -> assertEquals(tests, eventRecorder.getTestStartedCount(), "# tests started"),
 			() -> assertEquals(tests, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(instances, instanceCount, "instance count"),
-			() -> assertEquals(nestedInstances, nestedInstanceCount, "nested instance count"),
+			() -> assertThat(instanceCount).describedAs("instance count").contains(instanceCountEntries),
 			() -> assertEquals(allMethods, beforeAllCount, "@BeforeAll count"),
 			() -> assertEquals(allMethods, afterAllCount, "@AfterAll count"),
 			() -> assertEquals(eachMethods, beforeEachCount, "@BeforeEach count"),
 			() -> assertEquals(eachMethods, afterEachCount, "@AfterEach count")
 		);
 		// @formatter:on
+	}
+
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	private final Map.Entry<Class<?>, Integer>[] instanceCounts(Map.Entry<Class<?>, Integer>... entries) {
+		return entries;
+	}
+
+	private static void incrementInstanceCount(Class<?> testClass) {
+		instanceCount.compute(testClass, (key, value) -> value == null ? 1 : value + 1);
 	}
 
 	private static String executionConditionKey(Class<?> testClass, String testMethod) {
@@ -627,7 +630,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	private static class InstancePerMethodTestCase {
 
 		InstancePerMethodTestCase() {
-			instanceCount++;
+			incrementInstanceCount(InstancePerMethodTestCase.class);
 		}
 
 		@BeforeAll
@@ -672,6 +675,10 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	@TestInstance(Lifecycle.PER_CLASS)
 	static class InstancePerClassTestCase extends InstancePerMethodTestCase {
 
+		InstancePerClassTestCase() {
+			incrementInstanceCount(InstancePerClassTestCase.class);
+		}
+
 		@BeforeAll
 		void beforeAll(TestInfo testInfo) {
 			assertNotNull(testInfo);
@@ -687,6 +694,10 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private static class SubInstancePerClassTestCase extends InstancePerClassTestCase {
+		@SuppressWarnings("unused")
+		SubInstancePerClassTestCase() {
+			incrementInstanceCount(SubInstancePerClassTestCase.class);
+		}
 	}
 
 	@ExtendWith(InstanceTrackingExtension.class)
@@ -696,7 +707,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@SuppressWarnings("unused")
 		InstancePerMethodOuterTestCase() {
-			instanceCount++;
+			incrementInstanceCount(InstancePerMethodOuterTestCase.class);
 		}
 
 		@BeforeAll
@@ -723,7 +734,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 			@SuppressWarnings("unused")
 			NestedInstancePerMethodTestCase() {
-				nestedInstanceCount++;
+				incrementInstanceCount(NestedInstancePerMethodTestCase.class);
 			}
 
 			@BeforeEach
@@ -762,7 +773,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@SuppressWarnings("unused")
 		InstancePerClassOuterTestCase() {
-			instanceCount++;
+			incrementInstanceCount(InstancePerClassOuterTestCase.class);
 		}
 
 		@BeforeAll
@@ -788,7 +799,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 			@SuppressWarnings("unused")
 			NestedInstancePerClassTestCase() {
-				nestedInstanceCount++;
+				incrementInstanceCount(NestedInstancePerClassTestCase.class);
 			}
 
 			@BeforeAll
@@ -840,7 +851,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@SuppressWarnings("unused")
 		MixedLifecyclesOuterTestCase() {
-			instanceCount++;
+			incrementInstanceCount(MixedLifecyclesOuterTestCase.class);
 		}
 
 		@BeforeEach
@@ -864,7 +875,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 			@SuppressWarnings("unused")
 			NestedInstancePerClassTestCase() {
-				nestedInstanceCount++;
+				incrementInstanceCount(NestedInstancePerClassTestCase.class);
 			}
 
 			@BeforeAll
@@ -918,8 +929,13 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-			instanceMap.put(executionConditionKey(context.getRequiredTestClass(),
-				context.getTestMethod().map(Method::getName).orElse(null)), context.getTestInstance().orElse(null));
+			String testMethod = context.getTestMethod().map(Method::getName).orElse(null);
+			if (testMethod == null) {
+				assertThat(context.getTestInstance()).isNotPresent();
+				assertThat(instanceCount.getOrDefault(context.getRequiredTestClass(), 0)).isEqualTo(0);
+			}
+			instanceMap.put(executionConditionKey(context.getRequiredTestClass(), testMethod),
+				context.getTestInstance().orElse(null));
 
 			return ConditionEvaluationResult.enabled("enigma");
 		}

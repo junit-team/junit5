@@ -52,6 +52,11 @@ processResources {
 	}
 }
 
+compileGroovy.doLast {
+	// Enable JAR manifest generation
+	parent.generateManifest = true
+}
+
 jar {
 	manifest {
 		attributes(

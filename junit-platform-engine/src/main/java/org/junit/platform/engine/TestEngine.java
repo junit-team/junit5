@@ -15,8 +15,8 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.commons.util.PackageUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * A {@code TestEngine} facilitates <em>discovery</em> and <em>execution</em> of
@@ -139,9 +139,9 @@ public interface TestEngine {
 	 * @see #getVersion()
 	 */
 	default Optional<String> getArtifactId() {
-		if (ReflectionUtils.isJavaPlatformModuleSystemAvailable()) {
-			String[] getters = { "getModule", "getDescriptor", "name" };
-			return Optional.of(String.valueOf(ReflectionUtils.invokeGetters(getClass(), getters)));
+		Optional<String> moduleName = ModuleUtils.getModuleName(getClass());
+		if (moduleName.isPresent()) {
+			return moduleName;
 		}
 		return PackageUtils.getAttribute(getClass(), Package::getImplementationTitle);
 	}
@@ -185,9 +185,9 @@ public interface TestEngine {
 			return standalone;
 		}
 		String fallback = "DEVELOPMENT";
-		if (ReflectionUtils.isJavaPlatformModuleSystemAvailable()) {
-			String[] getters = { "getModule", "getDescriptor", "rawVersion" };
-			return ReflectionUtils.invokeGetters(Optional.of(fallback), getClass(), getters);
+		Optional<String> moduleVersion = ModuleUtils.getModuleVersion(getClass());
+		if (moduleVersion.isPresent()) {
+			return moduleVersion;
 		}
 		return Optional.of(PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse(fallback));
 	}

@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -133,7 +134,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		// @formatter:off
 		return context.extend()
-				.withTestInstanceProvider(testInstanceProvider(context, registry, extensionContext, lifecycle))
+				.withTestInstanceProvider(testInstanceProvider(context, registry, extensionContext))
 				.withExtensionRegistry(registry)
 				.withExtensionContext(extensionContext)
 				.withThrowableCollector(throwableCollector)
@@ -143,6 +144,14 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) throws Exception {
+		Lifecycle lifecycle = getTestInstanceLifecycle(testClass, context.getConfigurationParameters());
+		if (lifecycle == Lifecycle.PER_CLASS) {
+			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
+			// and store the instance in the ExtensionContext.
+			ClassExtensionContext extensionContext = (ClassExtensionContext) context.getExtensionContext();
+			extensionContext.setTestInstance(context.getTestInstanceProvider().getTestInstance(Optional.empty()));
+		}
+
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		invokeBeforeAllCallbacks(context);
@@ -167,19 +176,12 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ClassExtensionContext extensionContext, Lifecycle lifecycle) {
+			ExtensionRegistry registry, ClassExtensionContext extensionContext) {
 
-		if (lifecycle == Lifecycle.PER_CLASS) {
-			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
-			// and store the instance in the ExtensionContext.
-			Object instance = instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry);
-			extensionContext.setTestInstance(instance);
-			return childRegistry -> instance;
-		}
-
-		// else Lifecycle.PER_METHOD
-		return childRegistry -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext,
-			childRegistry.orElse(registry));
+		TestInstanceProvider testInstanceProvider = childRegistry -> instantiateAndPostProcessTestInstance(
+			parentExecutionContext, extensionContext, childRegistry.orElse(registry));
+		return childRegistry -> extensionContext.getTestInstance().orElseGet(
+			() -> testInstanceProvider.getTestInstance(childRegistry));
 	}
 
 	private Object instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext context,

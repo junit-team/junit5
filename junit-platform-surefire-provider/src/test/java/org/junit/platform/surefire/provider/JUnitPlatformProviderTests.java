@@ -23,12 +23,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.AdditionalMatchers.gt;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.surefire.providerapi.ProviderParameters;
+import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
@@ -75,7 +80,7 @@ class JUnitPlatformProviderTests {
 		ProviderParameters providerParameters = providerParametersMock(Integer.class);
 		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
 
-		assertThrows(IllegalArgumentException.class, () -> provider.invoke("wrong forkTestSet"));
+		assertThrows(IllegalArgumentException.class, () -> invokeProvider(provider, "wrong forkTestSet"));
 	}
 
 	@Test
@@ -87,7 +92,7 @@ class JUnitPlatformProviderTests {
 		launcher.registerTestExecutionListeners(executionListener);
 
 		TestsToRun testsToRun = newTestsToRun(TestClass1.class, TestClass2.class);
-		provider.invoke(testsToRun);
+		invokeProvider(provider, testsToRun);
 
 		assertThat(executionListener.summaries).hasSize(2);
 		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
@@ -102,7 +107,7 @@ class JUnitPlatformProviderTests {
 		TestPlanSummaryListener executionListener = new TestPlanSummaryListener();
 		launcher.registerTestExecutionListeners(executionListener);
 
-		provider.invoke(TestClass1.class);
+		invokeProvider(provider, TestClass1.class);
 
 		assertThat(executionListener.summaries).hasSize(1);
 		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
@@ -117,11 +122,31 @@ class JUnitPlatformProviderTests {
 		TestPlanSummaryListener executionListener = new TestPlanSummaryListener();
 		launcher.registerTestExecutionListeners(executionListener);
 
-		provider.invoke(null);
+		invokeProvider(provider, null);
 
 		assertThat(executionListener.summaries).hasSize(2);
 		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
 		TestClass2.verifyExecutionSummary(executionListener.summaries.get(1));
+	}
+
+	@Test
+	void outputIsCaptured() throws Exception {
+		Launcher launcher = LauncherFactory.create();
+		RunListener runListener = mock(RunListener.class, withSettings().extraInterfaces(ConsoleOutputReceiver.class));
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParametersMock(runListener), launcher);
+
+		invokeProvider(provider, VerboseTestClass.class);
+
+		ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
+		// @formatter:off
+		verify((ConsoleOutputReceiver) runListener)
+				.writeTestOutput(captor.capture(), eq(0), gt(6), eq(true));
+		verify((ConsoleOutputReceiver) runListener)
+				.writeTestOutput(captor.capture(), eq(0), gt(6), eq(false));
+		assertThat(captor.getAllValues())
+				.extracting(bytes -> new String(bytes, 0, 6))
+				.containsExactly("stdout", "stderr");
+		// @formatter:on
 	}
 
 	@Test
@@ -163,6 +188,34 @@ class JUnitPlatformProviderTests {
 
 		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
 
+		assertEquals(1, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
+	void noFiltersAreCreatedIfTagsAreEmpty() throws Exception {
+		Map<String, String> properties = new HashMap<>();
+		properties.put(JUnitPlatformProvider.INCLUDE_TAGS, "");
+		properties.put(JUnitPlatformProvider.INCLUDE_GROUPS, "");
+
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
+		assertEquals(0, provider.includeAndExcludeFilters.length);
+	}
+
+	@Test
+	void filtersWithEmptyTagsAreNotRegistered() throws Exception {
+		Map<String, String> properties = new HashMap<>();
+
+		// Here only tagOne is registered as a valid tag and other tags are ignored as they are empty
+		properties.put(JUnitPlatformProvider.EXCLUDE_GROUPS, "tagOne,");
+		properties.put(JUnitPlatformProvider.EXCLUDE_TAGS, "");
+
+		ProviderParameters providerParameters = providerParametersMock(TestClass1.class);
+		when(providerParameters.getProviderProperties()).thenReturn(properties);
+
+		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters);
 		assertEquals(1, provider.includeAndExcludeFilters.length);
 	}
 
@@ -225,6 +278,11 @@ class JUnitPlatformProviderTests {
 	}
 
 	private static ProviderParameters providerParametersMock(Class<?>... testClasses) {
+		RunListener runListener = mock(RunListener.class, withSettings().extraInterfaces(ConsoleOutputReceiver.class));
+		return providerParametersMock(runListener, testClasses);
+	}
+
+	private static ProviderParameters providerParametersMock(RunListener runListener, Class<?>... testClasses) {
 		TestsToRun testsToRun = newTestsToRun(testClasses);
 
 		ScanResult scanResult = mock(ScanResult.class);
@@ -234,7 +292,6 @@ class JUnitPlatformProviderTests {
 		when(runOrderCalculator.orderTestClasses(any())).thenReturn(testsToRun);
 
 		ReporterFactory reporterFactory = mock(ReporterFactory.class);
-		RunListener runListener = mock(RunListener.class);
 		when(reporterFactory.createReporter()).thenReturn(runListener);
 
 		ProviderParameters providerParameters = mock(ProviderParameters.class);
@@ -261,7 +318,24 @@ class JUnitPlatformProviderTests {
 		}
 	}
 
-	private static class TestClass1 {
+	/**
+	 * Invokes the provider, then restores system out and system error.
+	 * @see <a href="https://github.com/junit-team/junit5/issues/986">#986</a>
+	 */
+	private void invokeProvider(JUnitPlatformProvider provider, Object forkTestSet)
+			throws TestSetFailedException, InvocationTargetException {
+		PrintStream systemOut = System.out;
+		PrintStream systemErr = System.err;
+		try {
+			provider.invoke(forkTestSet);
+		}
+		finally {
+			System.setOut(systemOut);
+			System.setErr(systemErr);
+		}
+	}
+
+	static class TestClass1 {
 
 		@Test
 		void test1() {
@@ -291,7 +365,7 @@ class JUnitPlatformProviderTests {
 		}
 	}
 
-	private static class TestClass2 {
+	static class TestClass2 {
 
 		@Test
 		void test1() {
@@ -317,6 +391,14 @@ class JUnitPlatformProviderTests {
 		}
 	}
 
+	static class VerboseTestClass {
+		@Test
+		void test() {
+			System.out.println("stdout");
+			System.err.println("stderr");
+		}
+	}
+
 	@Test
 	void usesClassNamesForXmlReport() throws TestSetFailedException, InvocationTargetException {
 		String[] classNames = { "org.junit.platform.surefire.provider.JUnitPlatformProviderTests$Sub1Tests",
@@ -326,7 +408,7 @@ class JUnitPlatformProviderTests {
 		JUnitPlatformProvider jUnitPlatformProvider = new JUnitPlatformProvider(providerParameters);
 		TestsToRun testsToRun = newTestsToRun(Sub1Tests.class, Sub2Tests.class);
 
-		jUnitPlatformProvider.invoke(testsToRun);
+		invokeProvider(jUnitPlatformProvider, testsToRun);
 		RunListener reporter = providerParameters.getReporterFactory().createReporter();
 
 		ArgumentCaptor<ReportEntry> reportEntryArgumentCaptor = ArgumentCaptor.forClass(ReportEntry.class);

@@ -55,6 +55,10 @@ class AvailableOptions {
 	private final OptionSpec<String> selectedMethods;
 	private final OptionSpec<String> selectedClasspathResources;
 
+	// Java Platform Module System Options
+	private final OptionSpec<Void> scanModulepath;
+	private final OptionSpec<String> selectedModules;
+
 	// Filters
 	private final OptionSpec<String> includeClassNamePattern;
 	private final OptionSpec<String> excludeClassNamePattern;
@@ -107,6 +111,16 @@ class AvailableOptions {
 			"Enable report output into a specified local directory (will be created if it does not exist).") //
 				.withRequiredArg() //
 				.withValuesConvertedBy(new PathConverter());
+
+		// --- Java Platform Module System -------------------------------------
+
+		scanModulepath = parser.acceptsAll(asList("scan-module-path", "scan-modulepath"), //
+			"EXPERIMENTAL: Scan all modules on the module-path for test discovery.");
+
+		selectedModules = parser.acceptsAll(asList("o", "select-module"), //
+			"EXPERIMENTAL: Select single module for test discovery. This option can be repeated.") //
+				.withRequiredArg() //
+				.describedAs("module name");
 
 		// --- Selectors -------------------------------------------------------
 
@@ -210,6 +224,10 @@ class AvailableOptions {
 
 		// Reports
 		result.setReportsDir(detectedOptions.valueOf(this.reportsDir));
+
+		// Java Platform Module System
+		result.setScanModulepath(detectedOptions.has(this.scanModulepath));
+		result.setSelectedModules(detectedOptions.valuesOf(this.selectedModules));
 
 		// Selectors
 		result.setScanClasspath(detectedOptions.has(this.selectedClasspathEntries));

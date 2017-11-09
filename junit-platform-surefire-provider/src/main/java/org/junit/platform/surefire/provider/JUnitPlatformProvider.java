@@ -34,9 +34,12 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
+import org.apache.maven.surefire.report.ConsoleOutputCapture;
+import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ReporterException;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
@@ -46,6 +49,7 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -120,7 +124,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		ReporterFactory reporterFactory = parameters.getReporterFactory();
 		try {
 			RunListener runListener = reporterFactory.createReporter();
-			launcher.registerTestExecutionListeners(new RunListenerAdapter(runListener));
+			ConsoleOutputCapture.startCapture((ConsoleOutputReceiver) runListener);
 
 			for (Class<?> testClass : testsToRun) {
 				invokeSingleClass(testClass, runListener);
@@ -141,7 +145,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 				.filters(includeAndExcludeFilters) //
 				.configurationParameters(configurationParameters) //
 				.build();
-		launcher.execute(discoveryRequest);
+		launcher.execute(discoveryRequest, new RunListenerAdapter(testClass, runListener));
 
 		runListener.testSetCompleted(classEntry);
 	}
@@ -180,8 +184,9 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	private Optional<List<String>> getPropertiesList(String key) {
 		List<String> compoundProperties = null;
 		String property = parameters.getProviderProperties().get(key);
-		if (property != null) {
-			compoundProperties = Arrays.asList(property.split("[, ]+"));
+		if (StringUtils.isNotBlank(property)) {
+			compoundProperties = Arrays.stream(property.split("[, ]+")).filter(StringUtils::isNotBlank).collect(
+				Collectors.toList());
 		}
 		return Optional.ofNullable(compoundProperties);
 	}

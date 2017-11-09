@@ -13,6 +13,7 @@ package org.junit.platform.console.tasks;
 import static org.junit.platform.engine.discovery.ClassNameFilter.excludeClassNamePatterns;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModules;
 import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
 import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
@@ -27,6 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
@@ -55,6 +57,11 @@ class DiscoveryRequestCreator {
 				"Scanning the classpath and using explicit selectors at the same time is not supported");
 			return createClasspathRootSelectors(options);
 		}
+		if (options.isScanModulepath()) {
+			Preconditions.condition(!options.hasExplicitSelectors(),
+				"Scanning the module-path and using explicit selectors at the same time is not supported");
+			return selectModules(ModuleUtils.findAllNonSystemBootModuleNames());
+		}
 		return createExplicitDiscoverySelectors(options);
 	}
 
@@ -77,6 +84,7 @@ class DiscoveryRequestCreator {
 		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
 		options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
 		options.getSelectedDirectories().stream().map(DiscoverySelectors::selectDirectory).forEach(selectors::add);
+		options.getSelectedModules().stream().map(DiscoverySelectors::selectModule).forEach(selectors::add);
 		options.getSelectedPackages().stream().map(DiscoverySelectors::selectPackage).forEach(selectors::add);
 		options.getSelectedClasses().stream().map(DiscoverySelectors::selectClass).forEach(selectors::add);
 		options.getSelectedMethods().stream().map(DiscoverySelectors::selectMethod).forEach(selectors::add);

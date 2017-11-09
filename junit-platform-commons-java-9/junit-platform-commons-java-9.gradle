@@ -1,0 +1,142 @@
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+dependencies {
+	// This is project we are extending.
+	implementation(project(':junit-platform-commons'))
+
+	// Needed for testing.
+	testImplementation(project(':junit-platform-launcher'))
+	testImplementation(project(':junit-jupiter-api'))
+	testImplementation(project(':junit-jupiter-engine'))
+	testImplementation("junit:junit:${junit4Version}")
+
+	// Include junit-platform-console so that the JUnit Gradle plugin
+	// uses the local version of the ConsoleLauncher.
+	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly(project(':junit-vintage-engine'))
+}
+
+// Compiles against the public, supported and documented Java 9 API.
+javacRelease = 9
+
+// https://github.com/schauder/degraph/issues/87
+degraph.enabled = false
+
+// No "main" jar, no Javadoc, no (Maven) install, no upload -- we just want the classes.
+jar.enabled = false
+javadoc.enabled = false
+install.enabled = false
+uploadArchives.enabled = false
+
+// Exclude "integration" package from default "class-path based" test run.
+// Tests in the "integration" package assume to be run on the module-path.
+junitPlatform {
+	filters {
+		packages {
+			exclude 'integration'
+		}
+	}
+}
+
+// Create "junit-commons-integration-tests.jar" archive which will be later
+// mounted as an automatic jar into the integration test module-path.
+task generateIntegrationTestsJar(type: Jar, dependsOn: compileTestJava) {
+	archiveName 'junit-commons-integration-tests.jar'
+	from compileTestJava.destinationDir
+	include("integration/**/*")
+}
+
+// Copy runtime dependencies to a single directory.
+task generateDependenciesDirectory(type: Copy) {
+	into "$buildDir/deps"
+	from configurations.testRuntimeClasspath
+}
+
+// Execute console launcher on the module-path.
+task execScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, generateIntegrationTestsJar]) {
+	executable = 'java'
+	args = [
+			'--module-path', files(
+					generateDependenciesDirectory.destinationDir,
+					generateIntegrationTestsJar.archivePath
+				).asPath,
+			'--add-modules', 'ALL-MODULE-PATH',
+			'--module', 'org.junit.platform.console',
+			'--scan-module-path'
+	]
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = new ByteArrayOutputStream()
+}
+
+/*
+| .
+| +-- JUnit Vintage [OK]
+| | '-- integration.VintageIntegrationTest [OK]
+| |   '-- successfulTest [OK]
+| '-- JUnit Jupiter [OK]
+|   '-- JupiterIntegrationTests [OK]
+|     +-- version() [OK]
+|     +-- moduleIsNamed() [OK]
+|     +-- packageName() [OK]
+|     '-- resolve() [OK]
+
+Test run finished after 43 ms
+[         4 containers found      ]
+[         0 containers skipped    ]
+[         4 containers started    ]
+[         0 containers aborted    ]
+[         4 containers successful ]
+[         0 containers failed     ]
+[         5 tests found           ]
+[         0 tests skipped         ]
+[         5 tests started         ]
+[         0 tests aborted         ]
+[         5 tests successful      ]
+[         0 tests failed          ]
+
+Test run finished after 54 ms
+[         4 containers found      ]
+[         0 containers skipped    ]
+[         4 containers started    ]
+[         0 containers aborted    ]
+[         4 containers successful ]
+[         0 containers failed     ]
+[         4 tests found           ]
+[         0 tests skipped         ]
+[         4 tests started         ]
+[         0 tests aborted         ]
+[         4 tests successful      ]
+[         0 tests failed          ]
+*/
+task testScanModulepath(dependsOn: execScanModulepath) {
+	doLast {
+		String text = execScanModulepath.errorOutput.toString() + execScanModulepath.standardOutput.toString()
+		// tree node names
+		assert text.contains("JUnit Vintage")
+		assert text.contains("integration.VintageIntegrationTest")
+		assert text.contains("successfulTest")
+		assert text.contains("JUnit Jupiter")
+		assert text.contains("JupiterIntegrationTests")
+		assert text.contains("version()")
+		assert text.contains("moduleIsNamed()")
+		assert text.contains("packageName()")
+		// summary
+		assert text.contains("Test run finished after")
+		// container summary
+		assert text.contains("4 containers found")
+		assert text.contains("0 containers skipped")
+		assert text.contains("4 containers started")
+		assert text.contains("0 containers aborted")
+		assert text.contains("4 containers successful")
+		assert text.contains("0 containers failed")
+		// tests summary
+		assert text.contains("5 tests found")
+		assert text.contains("0 tests skipped")
+		assert text.contains("5 tests started")
+		assert text.contains("0 tests aborted")
+		assert text.contains("5 tests successful")
+		assert text.contains("0 tests failed")
+	}
+}
+
+test.dependsOn testScanModulepath

@@ -37,6 +37,7 @@ public class VintageDiscoverer {
 	private final List<DiscoverySelectorResolver> selectorResolvers = asList(
 	// @formatter:off
 			new ClasspathRootSelectorResolver(),
+			new ModuleNameSelectorResolver(),
 			new PackageNameSelectorResolver(),
 			new ClassSelectorResolver(),
 			new MethodSelectorResolver(),

@@ -28,38 +28,34 @@ public class ExternalResourceSupportForMultipleMethodRulesTests {
 	private static boolean afterOfRule1WasExecuted = false;
 	private static boolean afterOfRule2WasExecuted = false;
 
-	private ExternalResource resource1 = new ExternalResource() {
-		@Override
-		protected void before() throws Throwable {
-			beforeOfRule1WasExecuted = true;
-		}
-
-		@Override
-		protected void after() {
-			afterOfRule1WasExecuted = true;
-		}
-	};
-
-	private ExternalResource resource2 = new ExternalResource() {
-		@Override
-		protected void before() throws Throwable {
-			beforeOfRule2WasExecuted = true;
-		}
-
-		@Override
-		protected void after() {
-			afterOfRule2WasExecuted = true;
-		}
-	};
-
 	@Rule
 	public ExternalResource getResource1() {
-		return resource1;
+		return new ExternalResource() {
+			@Override
+			protected void before() throws Throwable {
+				beforeOfRule1WasExecuted = true;
+			}
+
+			@Override
+			protected void after() {
+				afterOfRule1WasExecuted = true;
+			}
+		};
 	}
 
 	@Rule
 	public ExternalResource getResource2() {
-		return resource2;
+		return new ExternalResource() {
+			@Override
+			protected void before() throws Throwable {
+				beforeOfRule2WasExecuted = true;
+			}
+
+			@Override
+			protected void after() {
+				afterOfRule2WasExecuted = true;
+			}
+		};
 	}
 
 	@Test

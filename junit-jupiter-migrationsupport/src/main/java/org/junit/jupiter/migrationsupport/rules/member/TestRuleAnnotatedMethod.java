@@ -10,17 +10,21 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.lang.reflect.Method;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.rules.TestRule;
 
 /**
  * @since 5.0
  */
-class TestRuleAnnotatedMethod extends AbstractTestRuleAnnotatedMember {
+@API(status = INTERNAL, since = "5.1")
+public final class TestRuleAnnotatedMethod extends AbstractTestRuleAnnotatedMember {
 
-	TestRuleAnnotatedMethod(Object testInstance, Method method) {
+	public TestRuleAnnotatedMethod(Object testInstance, Method method) {
 		super((TestRule) ReflectionUtils.invokeMethod(method, testInstance));
 	}
 
