@@ -43,7 +43,8 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	public final void execute(ExecutionRequest request) {
 		try (HierarchicalTestExecutorService<C> executorService = createExecutorService(request)) {
 			new HierarchicalTestExecutor<>(request, createExecutionContext(request), executorService).execute();
-		} catch (Exception exception) {
+		}
+		catch (Exception exception) {
 			throw new JUnitException("Error executing tests for engine " + getId(), exception);
 		}
 	}

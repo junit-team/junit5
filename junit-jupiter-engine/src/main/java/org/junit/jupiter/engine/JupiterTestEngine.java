@@ -66,7 +66,8 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	}
 
 	@Override
-	protected HierarchicalTestExecutorService<JupiterEngineExecutionContext> createExecutorService(ExecutionRequest request) {
+	protected HierarchicalTestExecutorService<JupiterEngineExecutionContext> createExecutorService(
+			ExecutionRequest request) {
 		if (request.getConfigurationParameters().getBoolean(ENABLE_PARALLEL_EXECUTION).orElse(false)) {
 			return new ForkJoinPoolHierarchicalTestExecutorService<>();
 		}

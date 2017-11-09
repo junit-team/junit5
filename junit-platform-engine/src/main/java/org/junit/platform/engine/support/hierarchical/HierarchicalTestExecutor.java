@@ -22,8 +22,8 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
+import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
 
 /**
  * Implementation core of all {@link TestEngine TestEngines} that wish to
@@ -48,7 +48,8 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	private final C rootContext;
 	private HierarchicalTestExecutorService<C> executorService;
 
-	HierarchicalTestExecutor(ExecutionRequest request, C rootContext, HierarchicalTestExecutorService<C> executorService) {
+	HierarchicalTestExecutor(ExecutionRequest request, C rootContext,
+			HierarchicalTestExecutorService<C> executorService) {
 		this.rootTestDescriptor = request.getRootTestDescriptor();
 		this.listener = request.getEngineExecutionListener();
 		this.rootContext = rootContext;
@@ -91,7 +92,8 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 				C contextForDynamicChildren = context;
 				context = node.execute(context, dynamicTestDescriptor -> {
 					this.listener.dynamicTestRegistered(dynamicTestDescriptor);
-					futures.put(dynamicTestDescriptor, executorService.submit(toTestTask(dynamicTestDescriptor, contextForDynamicChildren)));
+					futures.put(dynamicTestDescriptor,
+						executorService.submit(toTestTask(dynamicTestDescriptor, contextForDynamicChildren)));
 				});
 
 				C contextForStaticChildren = context;
@@ -113,11 +115,12 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	private void waitFor(Future<?> future) {
 		try {
-            future.get();
-        } catch (Exception e) {
+			future.get();
+		}
+		catch (Exception e) {
 			// TODO do something sensible
-            throw ExceptionUtils.throwAsUncheckedException(e);
-        }
+			throw ExceptionUtils.throwAsUncheckedException(e);
+		}
 	}
 
 	private TestTask<C> toTestTask(TestDescriptor testDescriptor, C context) {
@@ -144,18 +147,18 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		}
 
 		@Override
-        public TestDescriptor getTestDescriptor() {
-            return testDescriptor;
-        }
+		public TestDescriptor getTestDescriptor() {
+			return testDescriptor;
+		}
 
 		@Override
-        public C getParentExecutionContext() {
-            return context;
-        }
+		public C getParentExecutionContext() {
+			return context;
+		}
 
 		@Override
-        public void execute() {
-            HierarchicalTestExecutor.this.execute(testDescriptor, context);
-        }
+		public void execute() {
+			HierarchicalTestExecutor.this.execute(testDescriptor, context);
+		}
 	}
 }
