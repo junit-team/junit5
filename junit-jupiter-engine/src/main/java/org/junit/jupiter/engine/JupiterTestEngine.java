@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.Constants.ENABLE_PARALLEL_EXECUTION;
 
 import java.util.Optional;
 
@@ -22,7 +23,9 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.hierarchical.ForkJoinPoolBasedTestDescriptorExecutorService;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
+import org.junit.platform.engine.support.hierarchical.TestDescriptorExecutorService;
 
 /**
  * The JUnit Jupiter {@link org.junit.platform.engine.TestEngine}.
@@ -60,6 +63,14 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(uniqueId);
 		new DiscoverySelectorResolver().resolveSelectors(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
+	}
+
+	@Override
+	protected TestDescriptorExecutorService createExecutorService(ExecutionRequest request) {
+		if (request.getConfigurationParameters().getBoolean(ENABLE_PARALLEL_EXECUTION).orElse(false)) {
+			return new ForkJoinPoolBasedTestDescriptorExecutorService();
+		}
+		return super.createExecutorService(request);
 	}
 
 	@Override

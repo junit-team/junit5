@@ -12,12 +12,18 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
+
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
+import org.junit.platform.engine.support.hierarchical.TestDescriptorExecutorService.TestExecution;
 
 /**
  * Implementation core of all {@link TestEngine TestEngines} that wish to
@@ -40,20 +46,21 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	private final TestDescriptor rootTestDescriptor;
 	private final EngineExecutionListener listener;
 	private final C rootContext;
+	private TestDescriptorExecutorService executorService;
 
-	HierarchicalTestExecutor(ExecutionRequest request, C rootContext) {
+	HierarchicalTestExecutor(ExecutionRequest request, C rootContext, TestDescriptorExecutorService executorService) {
 		this.rootTestDescriptor = request.getRootTestDescriptor();
 		this.listener = request.getEngineExecutionListener();
 		this.rootContext = rootContext;
+		this.executorService = executorService;
 	}
 
 	void execute() {
-		execute(this.rootTestDescriptor, this.rootContext, new ExecutionTracker());
+		waitFor(executorService.submit(this.rootTestDescriptor, toTestExecution(this.rootContext)));
 	}
 
-	private void execute(TestDescriptor testDescriptor, C parentContext, ExecutionTracker tracker) {
+	private void execute(TestDescriptor testDescriptor, C parentContext) {
 		Node<C> node = asNode(testDescriptor);
-		tracker.markExecuted(testDescriptor);
 
 		C preparedContext;
 		try {
@@ -79,17 +86,21 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			try {
 				context = node.before(context);
 
+				Map<TestDescriptor, Future<?>> futures = new ConcurrentHashMap<>();
+
 				C contextForDynamicChildren = context;
 				context = node.execute(context, dynamicTestDescriptor -> {
 					this.listener.dynamicTestRegistered(dynamicTestDescriptor);
-					execute(dynamicTestDescriptor, contextForDynamicChildren, tracker);
+					futures.put(dynamicTestDescriptor, executorService.submit(dynamicTestDescriptor, toTestExecution(contextForDynamicChildren)));
 				});
 
 				C contextForStaticChildren = context;
 				// @formatter:off
+				testDescriptor.getChildren()
+						.forEach(child -> futures.computeIfAbsent(child, d -> executorService.submit(child, toTestExecution(contextForStaticChildren))));
 				testDescriptor.getChildren().stream()
-						.filter(child -> !tracker.wasAlreadyExecuted(child))
-						.forEach(child -> execute(child, contextForStaticChildren, tracker));
+						.map(futures::get)
+						.forEach(this::waitFor);
 				// @formatter:on
 			}
 			finally {
@@ -98,6 +109,18 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		});
 
 		this.listener.executionFinished(testDescriptor, result);
+	}
+
+	private void waitFor(Future<?> future) {
+		try {
+            future.get();
+        } catch (Exception e) {
+            throw ExceptionUtils.throwAsUncheckedException(e);
+        }
+	}
+
+	private TestExecution toTestExecution(C context) {
+		return testDescriptor -> execute(testDescriptor, context);
 	}
 
 	@SuppressWarnings("unchecked")
