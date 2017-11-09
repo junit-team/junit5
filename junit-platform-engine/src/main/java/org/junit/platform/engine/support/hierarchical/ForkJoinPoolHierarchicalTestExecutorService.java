@@ -20,7 +20,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService<C extends EngineExecuti
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         forkJoinPool.shutdownNow();
     }
 

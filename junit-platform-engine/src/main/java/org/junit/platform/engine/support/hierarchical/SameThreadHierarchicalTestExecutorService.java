@@ -13,7 +13,7 @@ public class SameThreadHierarchicalTestExecutorService<C extends EngineExecution
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         // nothing to do
     }
 

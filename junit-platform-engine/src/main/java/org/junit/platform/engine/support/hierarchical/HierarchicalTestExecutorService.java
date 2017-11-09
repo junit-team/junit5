@@ -8,6 +8,13 @@ public interface HierarchicalTestExecutorService<C extends EngineExecutionContex
 
     Future<Void> submit(TestTask<C> testTask);
 
+    /**
+     * Overridden to avoid warning caused by a javac bug:
+     * https://bugs.openjdk.java.net/browse/JDK-8155591
+     */
+    @Override
+    void close();
+
     interface TestTask<C extends EngineExecutionContext> {
 
         C getParentExecutionContext();
