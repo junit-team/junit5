@@ -94,7 +94,7 @@ are `static` methods in the `{Assertions}` class.
 include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 ----
 
-Junit Jupiter also comes with a few assertion methods that lend themselves well to being
+JUnit Jupiter also comes with a few assertion methods that lend themselves well to being
 used in https://kotlinlang.org/[Kotlin]. All JUnit Jupiter Kotlin assertions are top-level
 functions in the `org.junit.jupiter.api` package.
 
