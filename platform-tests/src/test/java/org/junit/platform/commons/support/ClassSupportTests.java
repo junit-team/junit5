@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ClassUtils;
 
 /**
- * @since 1.0.2
+ * @since 1.1
  */
 class ClassSupportTests {
 

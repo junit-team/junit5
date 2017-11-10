@@ -20,9 +20,9 @@ import org.junit.platform.commons.util.ClassUtils;
 /**
  * Common class support.
  *
- * @since 1.0.2
+ * @since 1.1
  */
-@API(status = MAINTAINED, since = "5.0.2")
+@API(status = MAINTAINED, since = "5.1")
 public final class ClassSupport {
 
 	///CLOVER:OFF
