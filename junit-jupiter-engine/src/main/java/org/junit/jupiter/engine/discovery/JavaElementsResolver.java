@@ -59,7 +59,7 @@ class JavaElementsResolver {
 		resolvedDescriptors.forEach(this::resolveChildren);
 
 		if (resolvedDescriptors.isEmpty()) {
-			logger.warn(() -> format("Class '%s' could not be resolved.", testClass.getName()));
+			logger.debug(() -> format("Class '%s' could not be resolved.", testClass.getName()));
 		}
 	}
 
@@ -68,7 +68,7 @@ class JavaElementsResolver {
 		Set<TestDescriptor> resolvedDescriptors = resolveForAllParents(testMethod, potentialParents);
 
 		if (resolvedDescriptors.isEmpty()) {
-			logger.warn(() -> format("Method '%s' could not be resolved.", testMethod.toGenericString()));
+			logger.debug(() -> format("Method '%s' could not be resolved.", testMethod.toGenericString()));
 		}
 
 		logMultipleTestDescriptorsForSingleElement(testMethod, resolvedDescriptors);
