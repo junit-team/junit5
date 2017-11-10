@@ -532,7 +532,12 @@ class AnnotationUtilsTests {
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
-	@Inherited
+	// Intentionally NOT @Inherited in order to ensure that the algorithm for
+	// findRepeatableAnnotations() in fact lives up to the claims in the 
+	// JavaDoc regarding searching for repeatable annotations with implicit
+	// "inheritance" if the repeatable annotation is @Inherited but the
+	// custom composed annotation is not @Inherited.
+	// @Inherited
 	@ExtendWith("bar")
 	@interface ExtendWithBar {
 	}
