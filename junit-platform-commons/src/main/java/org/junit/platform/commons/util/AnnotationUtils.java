@@ -130,11 +130,7 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * Find the first annotation of {@code annotationType} that is either
-	 * <em>present</em> or <em>meta-present</em> on the supplied optional
-	 * {@code element}.
-	 *
-	 * @see #findAnnotation(AnnotatedElement, Class)
+	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotation(Optional, Class)
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(Optional<? extends AnnotatedElement> element,
 			Class<A> annotationType) {
