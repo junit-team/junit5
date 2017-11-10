@@ -30,6 +30,6 @@ class ClassSupportTests {
 
 		Function<Class<?>, String> classToStringMapper = aClass -> aClass.getSimpleName() + "-Test";
 		assertEquals(ClassUtils.nullSafeToString(classToStringMapper, String.class, List.class),
-				ClassSupport.nullSafeToString(classToStringMapper, String.class, List.class));
+			ClassSupport.nullSafeToString(classToStringMapper, String.class, List.class));
 	}
 }
