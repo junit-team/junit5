@@ -3,7 +3,7 @@
 
 *Date of Release:* ❓
 
-*Scope:* ❓
+*Scope:* Addition of Kotlin assertion helpers.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/14?closed=1+[5.1 M1] milestone page in the JUnit repository
@@ -68,6 +68,11 @@ on GitHub.
 * The `JupiterTestEngine` supports the new JUnit Platform `ModuleSelector` for selecting
   Java 9 modules.
   - This is an alternative to the existing classpath scanning support.
+* Support new JUnit Platform `ModuleSelector`.
+* New Kotlin friendly assertions added as top-level functions in the
+  `org.junit.jupiter.api` package.
+** `assertAll` that takes `Stream<() -> Unit>` or `vararg () -> Unit`.
+** `assertThrow` that uses Kotlin reified generics.
 
 
 [[release-notes-5.1.0-junit-vintage]]

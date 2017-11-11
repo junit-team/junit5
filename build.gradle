@@ -187,6 +187,12 @@ allprojects { subproj ->
 		options.compilerArgs += '-parameters'
 	}
 
+	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+		kotlinOptions {
+			jvmTarget = '1.8'
+		}
+	}
+
 	checkstyle {
 		toolVersion = '7.6'
 	}
@@ -536,6 +542,13 @@ subprojects { subproj ->
 			endWithNewline()
 			replaceRegex 'Empty line between last method and class closure', /\n([\s]+)}\n}\n$/, '\n$1}\n\n}\n'
 			replaceRegex 'Remove line breaks between consecutive closing parentheses', /\)\n[\s]+\)\n/, '))\n'
+		}
+
+		kotlin {
+			ktlint("0.9.0")
+			licenseHeaderFile headerFile
+			trimTrailingWhitespace()
+			endWithNewline()
 		}
 	}
 
