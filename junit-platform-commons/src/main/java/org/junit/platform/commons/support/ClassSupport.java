@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.ClassUtils;
  *
  * @since 1.1
  */
-@API(status = MAINTAINED, since = "5.1")
+@API(status = MAINTAINED, since = "1.1")
 public final class ClassSupport {
 
 	///CLOVER:OFF
