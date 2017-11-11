@@ -5332,13 +5332,13 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Maven Surefire: Ensure failed tests of test engines that do not use <code>MethodSource</code> (e.g.
-Spek) are reported correctly.</p>
+<p>Failed tests are now reported correctly with Maven Surefire for test engines that do
+not use <code>MethodSource</code> (e.g. Spek).</p>
 </li>
 <li>
-<p>Maven Surefire: In some cases, tests writing to <code>System.out</code> or <code>System.err</code>, in
-particular via a logging framework, were not reported correctly when executed with a
-non-zero <code>forkCount</code>.</p>
+<p>Tests that write to <code>System.out</code> or <code>System.err</code>, in particular via a logging
+framework, are now consistently reported correctly when executed with a non-zero
+<code>forkCount</code> with Maven Surefire.</p>
 </li>
 </ul>
 </div>
@@ -5379,21 +5379,44 @@ for this information.</p>
 level (i.e., the <code>FINE</code> log level in <code>java.util.logging</code>) instead of as warnings.</p>
 </li>
 <li>
-<p>New discovery selector <code>ModuleSelector</code> for scanning Java 9 modules for test classes.</p>
+<p>New <code>ModuleSelector</code> discovery selector for scanning Java 9 modules for test classes.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This is an alternative to the existing classpath scanning support.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p>New console launcher option <code>--select-module &lt;name&gt;</code> or <code>-o &lt;name&gt;</code>.</p>
+<p>New console launcher option <code>--select-module &lt;name&gt;</code> or <code>-o &lt;name&gt;</code> for selecting Java
+9 modules for test discovery.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This is an alternative to the existing classpath scanning support.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p>New console launcher option <code>--scan-module-path</code> for selecting all resolved modules
-available on the boot layer configuration.</p>
+<p>New console launcher option <code>--scan-module-path</code> for scanning all resolved Java 9
+modules available on the boot layer configuration for test discovery.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This is an alternative to the existing classpath scanning support.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p>Maven Surefire: Add support for the <code>redirectTestOutputToFile</code> feature.</p>
+<p>The JUnit Platform Maven Surefire provider now supports the <code>redirectTestOutputToFile</code>
+Surefire feature.</p>
 </li>
 <li>
-<p>Maven Surefire: Accept and ignore empty strings for <code>&lt;includeTags/&gt;</code>, <code>&lt;groups/&gt;</code>,
-<code>&lt;excludeTags/&gt;</code> and <code>&lt;excludedGroups/&gt;</code>.</p>
+<p>The JUnit Platform Maven Surefire provider now ignores empty strings supplied via
+<code>&lt;includeTags/&gt;</code>, <code>&lt;groups/&gt;</code>, <code>&lt;excludeTags/&gt;</code>, and <code>&lt;excludedGroups/&gt;</code>.</p>
 </li>
 </ul>
 </div>
@@ -5410,15 +5433,16 @@ available on the boot layer configuration.</p>
 values.</p>
 </li>
 <li>
-<p><code>@EnableRuleMigrationSupport</code> failed to recognize <code>@Rule</code> methods that returned a
-subtype of one of the supported <code>TestRule</code> types. Moreover, it mistakenly instantiated
-some rules declared using methods multiple times. Now, once enabled, it will instantiate
-all declared rules (fields <em>and</em> methods) exactly once and call them in the same order
-used by Vintage.</p>
+<p><code>@EnableRuleMigrationSupport</code> previously failed to recognize <code>@Rule</code> methods that
+returned a subtype of one of the supported <code>TestRule</code> types. Moreover, it mistakenly
+instantiated some rules declared using methods multiple times. Now, once enabled, it
+will instantiate all declared rules (fields <em>and</em> methods) exactly once and call them
+in the same order used by JUnit 4.</p>
 </li>
 <li>
-<p>Disabled test classes were eagerly instantiated when <code>Lifecycle.PER_CLASS</code> was used.
-Now, <code>ExecutionCondition</code> evaluation always takes place before test class instantiation.</p>
+<p>Previously, disabled test classes were eagerly instantiated when <code>Lifecycle.PER_CLASS</code>
+was used. Now, <code>ExecutionCondition</code> evaluation always takes place before test class
+instantiation.</p>
 </li>
 <li>
 <p>The <code>junit-jupiter-migrationsupport</code> module no longer incorrectly attempts to register
@@ -5455,7 +5479,8 @@ include details about the expected and actual boolean values.</p>
 </div>
 </li>
 <li>
-<p>Unused arguments are now omitted from display names of parameterized tests.</p>
+<p>If a parameterized test does not consume all arguments supplied to it via argument
+sources, the unconsumed arguments are no longer included in the display name.</p>
 </li>
 <li>
 <p>New <code>getOrComputeIfAbsent(Class)</code> convenience method in <code>ExtensionContext.Store</code> that
@@ -5473,7 +5498,15 @@ constructor for that type.</p>
 </div>
 </li>
 <li>
-<p>Support new JUnit Platform <code>ModuleSelector</code>.</p>
+<p>The <code>JupiterTestEngine</code> supports the new JUnit Platform <code>ModuleSelector</code> for selecting
+Java 9 modules.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This is an alternative to the existing classpath scanning support.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -5506,7 +5539,15 @@ constructor for that type.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Support new JUnit Platform <code>ModuleSelector</code>.</p>
+<p>The <code>VintageTestEngine</code> supports the new JUnit Platform <code>ModuleSelector</code> for selecting
+Java 9 modules.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This is an alternative to the existing classpath scanning support.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -7922,7 +7963,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-11-10 19:03:49 EST
+Last updated 2017-11-11 17:27:04 EST
 </div>
 </div>
 </body>
