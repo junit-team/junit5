@@ -3,7 +3,7 @@
 
 *Date of Release:* ❓
 
-*Scope:* Addition of Kotlin assertion helpers.
+*Scope:* Discovering tests in Java 9 modules, improved Kotlin support.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/14?closed=1+[5.1 M1] milestone page in the JUnit repository

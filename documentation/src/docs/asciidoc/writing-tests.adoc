@@ -99,7 +99,7 @@ used in https://kotlinlang.org/[Kotlin]. All JUnit Jupiter Kotlin assertions are
 functions in the `org.junit.jupiter.api` package.
 
 // TODO: Change to using kotlin language highlighting after switch to rouge syntax highlighter
-[source,java,indent=0]
+[source,groovy,indent=0]
 ----
 include::{kotlinTestDir}/example/AssertionsDemoKotlin.kt[tags=user_guide]
 ----
