@@ -5405,6 +5405,11 @@ modules available on the boot layer configuration for test discovery.</p>
 </ul>
 </div>
 </li>
+<li>
+<p>The JUnit Platform Maven Surefire provider now runs all specified tests in a single
+test run, i.e. all registered <code>TestExecutionListeners</code> will receive a single <code>TestPlan</code>.
+Previously, a separate <code>TestPlan</code> was discovered and executed for each test class.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -8024,7 +8029,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-11-12 10:05:24 EST
+Last updated 2017-11-10 09:02:09 EST
 </div>
 </div>
 </body>
