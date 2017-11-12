@@ -24,6 +24,8 @@ junitPlatform {
 			exclude 'exclude'
 		}
 	}
+	// Testing parallel-execution with tree printing listener...
+	configurationParameter 'junit.jupiter.execution.parallel.enabled', 'true'
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
 

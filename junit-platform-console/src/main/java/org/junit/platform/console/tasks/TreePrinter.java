@@ -105,7 +105,8 @@ class TreePrinter {
 		if (node.reason().isPresent()) {
 			return color(SKIPPED, caption);
 		}
-		return color(Color.valueOf(node.identifier().orElseThrow(AssertionError::new)), caption);
+		Color color = node.identifier().map(Color::valueOf).orElse(Color.NONE);
+		return color(color, caption);
 	}
 
 	private void printThrowable(String indent, TestExecutionResult result) {
