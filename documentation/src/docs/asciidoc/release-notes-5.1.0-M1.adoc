@@ -41,7 +41,7 @@ on GitHub.
 * New console launcher option `--select-module <name>` or `-o <name>` for selecting Java
   9 modules for test discovery.
   - This is an alternative to the existing classpath scanning support.
-* New console launcher option `--scan-module-path` for scanning all resolved Java 9
+* New console launcher option `--scan-modules` for scanning all resolved Java 9
   modules available on the boot layer configuration for test discovery.
   - This is an alternative to the existing classpath scanning support.
 * The JUnit Platform Maven Surefire provider now supports the `redirectTestOutputToFile`

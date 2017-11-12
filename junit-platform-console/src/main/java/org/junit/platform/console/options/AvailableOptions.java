@@ -114,8 +114,8 @@ class AvailableOptions {
 
 		// --- Java Platform Module System -------------------------------------
 
-		scanModulepath = parser.acceptsAll(asList("scan-module-path", "scan-modulepath"), //
-			"EXPERIMENTAL: Scan all modules on the module-path for test discovery.");
+		scanModulepath = parser.acceptsAll(asList("scan-modules"), //
+			"EXPERIMENTAL: Scan all resolved modules for test discovery.");
 
 		selectedModules = parser.acceptsAll(asList("o", "select-module"), //
 			"EXPERIMENTAL: Select single module for test discovery. This option can be repeated.") //

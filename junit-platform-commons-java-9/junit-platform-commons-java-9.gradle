@@ -62,7 +62,7 @@ task execScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, g
 				).asPath,
 			'--add-modules', 'ALL-MODULE-PATH',
 			'--module', 'org.junit.platform.console',
-			'--scan-module-path'
+			'--scan-modules'
 	]
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
