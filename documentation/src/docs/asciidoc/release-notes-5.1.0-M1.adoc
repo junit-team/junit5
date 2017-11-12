@@ -15,11 +15,7 @@ on GitHub.
 
 ===== Bug Fixes
 
-* Failed tests are now reported correctly with Maven Surefire for test engines that do
-  not use `MethodSource` (e.g. Spek).
-* Tests that write to `System.out` or `System.err`, in particular via a logging
-  framework, are now consistently reported correctly when executed with a non-zero
-  `forkCount` with Maven Surefire.
+* ❓
 
 ===== Deprecations and Breaking Changes
 
@@ -44,10 +40,6 @@ on GitHub.
 * New console launcher option `--scan-modules` for scanning all resolved Java 9
   modules available on the boot layer configuration for test discovery.
   - This is an alternative to the existing classpath scanning support.
-* The JUnit Platform Maven Surefire provider now supports the `redirectTestOutputToFile`
-  Surefire feature.
-* The JUnit Platform Maven Surefire provider now ignores empty strings supplied via
-  `<includeTags/>`, `<groups/>`, `<excludeTags/>`, and `<excludedGroups/>`.
 
 
 [[release-notes-5.1.0-junit-jupiter]]
@@ -55,19 +47,7 @@ on GitHub.
 
 ===== Bug Fixes
 
-* Trailing spaces in a `@CsvSource` or `@CsvFileSource` input line no longer yield `null`
-  values.
-* `@EnableRuleMigrationSupport` previously failed to recognize `@Rule` methods that
-  returned a subtype of one of the supported `TestRule` types. Moreover, it mistakenly
-  instantiated some rules declared using methods multiple times. Now, once enabled, it
-  will instantiate all declared rules (fields _and_ methods) exactly once and call them
-  in the same order used by JUnit 4.
-* Previously, disabled test classes were eagerly instantiated when `Lifecycle.PER_CLASS`
-  was used. Now, `ExecutionCondition` evaluation always takes place before test class
-  instantiation.
-* The `junit-jupiter-migrationsupport` module no longer incorrectly attempts to register
-  the `JupiterTestEngine` via the `ServiceLoader` mechanism, thereby allowing it to be
-  used as a module on the Java 9 module-path.
+* ❓
 
 ===== Deprecations and Breaking Changes
 
@@ -75,12 +55,6 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* Failure messages for `assertTrue()` and `assertFalse()` in the `Assertions` class now
-  include details about the expected and actual boolean values.
-  - For example, the generated failure message for a call to `assertTrue(false)` is now
-    "expected: <true> but was: <false>" instead of an empty string.
-* If a parameterized test does not consume all arguments supplied to it via argument
-  sources, the unconsumed arguments are no longer included in the display name.
 * New `getOrComputeIfAbsent(Class)` convenience method in `ExtensionContext.Store` that
   simplifies use cases where an extension wishes to store a single object of a given type
   (keyed by that type) in the `Store` and the object is created using the default
