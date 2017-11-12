@@ -3825,8 +3825,8 @@ failed. Otherwise the exit code is <code>0</code>.
 --reports-dir &lt;Path&gt;                          Enable report output into a specified
                                                 local directory (will be created if it
                                                 does not exist).
---scan-module-path, --scan-modulepath         EXPERIMENTAL: Scan all modules on the
-                                                module-path for test discovery.
+--scan-modules                                EXPERIMENTAL: Scan all resolved modules
+                                                for test discovery.
 -o, --select-module &lt;String: module name&gt;     EXPERIMENTAL: Select single module for
                                                 test discovery. This option can be
                                                 repeated.
@@ -5400,7 +5400,7 @@ level (i.e., the <code>FINE</code> log level in <code>java.util.logging</code>) 
 </div>
 </li>
 <li>
-<p>New console launcher option <code>--scan-module-path</code> for scanning all resolved Java 9
+<p>New console launcher option <code>--scan-modules</code> for scanning all resolved Java 9
 modules available on the boot layer configuration for test discovery.</p>
 <div class="ulist">
 <ul>
@@ -7963,7 +7963,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-11-11 17:27:04 EST
+Last updated 2017-11-10 09:02:09 EST
 </div>
 </div>
 </body>
