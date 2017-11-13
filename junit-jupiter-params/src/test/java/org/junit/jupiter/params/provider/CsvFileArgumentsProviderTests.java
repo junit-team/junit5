@@ -93,12 +93,47 @@ class CsvFileArgumentsProviderTests {
 		assertThat(exception).hasMessageContaining("Classpath resource does not exist: does-not-exist.csv");
 	}
 
+	@Test
+	void readsFromSingleClasspathResourceWithHeaders() {
+		CsvFileSource annotation = annotation("ISO-8859-1", "\n", ',', 1, "/single-column.csv");
+
+		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).containsExactly(new Object[] { "bar" }, new Object[] { "baz" }, new Object[] { "qux" },
+				new Object[] { "" });
+	}
+
+	@Test
+	void readsFromSingleClasspathResourceWithMoreHeadersThanLines() {
+		CsvFileSource annotation = annotation("ISO-8859-1", "\n", ',', 10, "/single-column.csv");
+
+		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).containsExactly();
+	}
+
+	@Test
+	void readsFromMultipleClasspathResourcesWithHeaders() {
+		CsvFileSource annotation = annotation("ISO-8859-1", "\n", ',', 1, "/single-column.csv", "/single-column.csv");
+
+		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).containsExactly(new Object[] { "bar" }, new Object[] { "baz" }, new Object[] { "qux" },
+				new Object[] { "" }, new Object[] { "bar" }, new Object[] { "baz" }, new Object[] { "qux" },
+				new Object[] { "" });
+	}
+
 	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, String... resources) {
+		return annotation(charset, lineSeparator, delimiter, 0, resources);
+	}
+
+	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, int skipHeaderLines, String... resources) {
 		CsvFileSource annotation = mock(CsvFileSource.class);
 		when(annotation.resources()).thenReturn(resources);
 		when(annotation.encoding()).thenReturn(charset);
 		when(annotation.lineSeparator()).thenReturn(lineSeparator);
 		when(annotation.delimiter()).thenReturn(delimiter);
+		when(annotation.skipHeaderLines()).thenReturn(skipHeaderLines);
 		return annotation;
 	}
 
