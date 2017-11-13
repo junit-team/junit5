@@ -89,8 +89,17 @@ class CsvFileArgumentsProviderTests {
 
 		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
 
-		assertThat(arguments).containsExactly(new Object[] { "bar" }, new Object[] { "baz" }, new Object[] { "qux" },
-			new Object[] { "" });
+		assertThat(arguments).hasSize(4);
+	}
+
+	@Test
+	void readsFromMultipleClasspathResourcesWithHeaders() {
+		CsvFileSource annotation = annotation("ISO-8859-1", "\n", ',', true, "/single-column.csv",
+			"/single-column.csv");
+
+		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).hasSize(8);
 	}
 
 	@Test
