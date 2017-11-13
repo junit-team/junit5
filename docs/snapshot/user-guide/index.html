@@ -1256,6 +1256,52 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>JUnit Jupiter also comes with a few assertion methods that lend themselves well to being
+used in <a href="https://kotlinlang.org/">Kotlin</a>. All JUnit Jupiter Kotlin assertions are top-level
+functions in the <code>org.junit.jupiter.api</code> package.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertAll</span>
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertThrows</span>
+
+<span class="type">class</span> <span class="class">AssertionsDemoKotlin</span> {
+
+    <span class="annotation">@Test</span>
+    fun <span class="error">`</span>grouped assertions<span class="error">`</span>() {
+        assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">person</span><span class="delimiter">&quot;</span></span>,
+            { assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span>, person.firstName) },
+            { assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>, person.lastName) }
+        )
+    }
+
+    <span class="annotation">@Test</span>
+    fun <span class="error">`</span>exception testing<span class="error">`</span>() {
+        val exception = assertThrows&lt;<span class="exception">IllegalArgumentException</span>&gt; (<span class="string"><span class="delimiter">&quot;</span><span class="content">Should throw an exception</span><span class="delimiter">&quot;</span></span>) {
+            <span class="keyword">throw</span> <span class="exception">IllegalArgumentException</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">a message</span><span class="delimiter">&quot;</span></span>)
+        }
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">a message</span><span class="delimiter">&quot;</span></span>, exception.message)
+    }
+
+    <span class="annotation">@Test</span>
+    fun <span class="error">`</span>assertions from a stream<span class="error">`</span>() {
+        assertAll(
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">people with name starting with J</span><span class="delimiter">&quot;</span></span>,
+            people
+                .stream()
+                .map {
+                    <span class="comment">// This mapping returns Stream&lt;() -&gt; Unit&gt;</span>
+                    { assertTrue(<span class="local-variable">it</span>.firstName.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">J</span><span class="delimiter">&quot;</span></span>)) }
+                }
+        )
+    }
+}</code></pre>
+</div>
+</div>
 <div class="sect3">
 <h4 id="writing-tests-assertions-third-party"><a class="anchor" href="#writing-tests-assertions-third-party"></a>3.4.1. Third-party Assertion Libraries</h4>
 <div class="paragraph">
@@ -5319,7 +5365,7 @@ declarations.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong> Discovering tests in Java 9 modules, improved Kotlin support.</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -5462,6 +5508,23 @@ Java 9 modules.</p>
 <ul>
 <li>
 <p>This is an alternative to the existing classpath scanning support.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Support new JUnit Platform <code>ModuleSelector</code>.</p>
+</li>
+<li>
+<p>New Kotlin friendly assertions added as top-level functions in the
+<code>org.junit.jupiter.api</code> package.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>assertAll</code> that takes <code>Stream&lt;() &#8594; Unit&gt;</code> or <code>vararg () &#8594; Unit</code>.</p>
+</li>
+<li>
+<p><code>assertThrow</code> that uses Kotlin reified generics.</p>
 </li>
 </ul>
 </div>
@@ -8029,7 +8092,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-11-13 13:57:28 EST
+Last updated 2017-11-13 14:07:43 EST
 </div>
 </div>
 </body>
