@@ -72,6 +72,8 @@ public @interface CsvFileSource {
 	/**
 	 * If the CSV file resources have headers in their first line; This will activate the behaviour to skip the first
 	 * line lines for test purposes.
+	 *
+	 * <p>Defaults to {@code "false"}</p>
 	 */
 	boolean hasHeaders() default false;
 }
