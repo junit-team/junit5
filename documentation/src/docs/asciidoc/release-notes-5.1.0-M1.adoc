@@ -15,11 +15,7 @@ on GitHub.
 
 ===== Bug Fixes
 
-* Maven Surefire: Ensure failed tests of test engines that do not use `MethodSource` (e.g.
-  Spek) are reported correctly.
-* Maven Surefire: In some cases, tests writing to `System.out` or `System.err`, in
-  particular via a logging framework, were not reported correctly when executed with a
-  non-zero `forkCount`.
+* ❓
 
 ===== Deprecations and Breaking Changes
 
@@ -36,31 +32,25 @@ on GitHub.
   for this information.
 * Class loading errors that occur during classpath scanning are now logged at `DEBUG`
   level (i.e., the `FINE` log level in `java.util.logging`) instead of as warnings.
-* New discovery selector `ModuleSelector` for scanning Java 9 modules for test classes.
-* New console launcher option `--select-module <name>` or `-o <name>`.
-* New console launcher option `--scan-module-path` for selecting all resolved modules
-  available on the boot layer configuration.
-* Maven Surefire: Add support for the `redirectTestOutputToFile` feature.
-* Maven Surefire: Accept and ignore empty strings for `<includeTags/>`, `<groups/>`,
-  `<excludeTags/>` and `<excludedGroups/>`.
+* New `ModuleSelector` discovery selector for scanning Java 9 modules for test classes.
+  - This is an alternative to the existing classpath scanning support.
+* New console launcher option `--select-module <name>` or `-o <name>` for selecting Java
+  9 modules for test discovery.
+  - This is an alternative to the existing classpath scanning support.
+* New console launcher option `--scan-modules` for scanning all resolved Java 9
+  modules available on the boot layer configuration for test discovery.
+  - This is an alternative to the existing classpath scanning support.
+* The JUnit Platform Maven Surefire provider now runs all specified tests in a single
+  test run, i.e. all registered `TestExecutionListeners` will receive a single `TestPlan`.
+  Previously, a separate `TestPlan` was discovered and executed for each test class.
+
 
 [[release-notes-5.1.0-junit-jupiter]]
 ==== JUnit Jupiter
 
 ===== Bug Fixes
 
-* Trailing spaces in a `@CsvSource` or `@CsvFileSource` input line no longer yield `null`
-  values.
-* `@EnableRuleMigrationSupport` failed to recognize `@Rule` methods that returned a
-  subtype of one of the supported `TestRule` types. Moreover, it mistakenly instantiated
-  some rules declared using methods multiple times. Now, once enabled, it will instantiate
-  all declared rules (fields _and_ methods) exactly once and call them in the same order
-  used by Vintage.
-* Disabled test classes were eagerly instantiated when `Lifecycle.PER_CLASS` was used.
-  Now, `ExecutionCondition` evaluation always takes place before test class instantiation.
-* The `junit-jupiter-migrationsupport` module no longer incorrectly attempts to register
-  the `JupiterTestEngine` via the `ServiceLoader` mechanism, thereby allowing it to be
-  used as a module on the Java 9 module-path.
+* ❓
 
 ===== Deprecations and Breaking Changes
 
@@ -68,11 +58,6 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* Failure messages for `assertTrue()` and `assertFalse()` in the `Assertions` class now
-  include details about the expected and actual boolean values.
-  - For example, the generated failure message for a call to `assertTrue(false)` is now
-    "expected: <true> but was: <false>" instead of an empty string.
-* Unused arguments are now omitted from display names of parameterized tests.
 * New `getOrComputeIfAbsent(Class)` convenience method in `ExtensionContext.Store` that
   simplifies use cases where an extension wishes to store a single object of a given type
   (keyed by that type) in the `Store` and the object is created using the default
@@ -80,7 +65,9 @@ on GitHub.
   - For example, code such as
     `store.getOrComputeIfAbsent(X.class, key \-> new X(), X.class)` can now replaced with
     `store.getOrComputeIfAbsent(X.class)`.
-* Support new JUnit Platform `ModuleSelector`.
+* The `JupiterTestEngine` supports the new JUnit Platform `ModuleSelector` for selecting
+  Java 9 modules.
+  - This is an alternative to the existing classpath scanning support.
 * New Kotlin friendly assertions added as top-level functions in the `org.junit.jupiter.api` package.
 ** `assertAll` that takes `Stream<() -> Unit>` or `vararg () -> Unit`.
 ** `assertThrow` that uses Kotlin reified generics.
@@ -98,4 +85,6 @@ on GitHub.
 
 ===== New Features and Improvements
 
-* Support new JUnit Platform `ModuleSelector`.
+* The `VintageTestEngine` supports the new JUnit Platform `ModuleSelector` for selecting
+  Java 9 modules.
+  - This is an alternative to the existing classpath scanning support.

@@ -21,6 +21,8 @@ import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.maven.surefire.report.PojoStackTraceWriter;
 import org.apache.maven.surefire.report.RunListener;
@@ -39,36 +41,42 @@ import org.junit.platform.launcher.TestPlan;
  */
 final class RunListenerAdapter implements TestExecutionListener {
 
-	private final Class<?> testClass;
 	private final RunListener runListener;
-	private Optional<TestPlan> testPlan = Optional.empty();
+	private TestPlan testPlan;
+	private Set<TestIdentifier> testSetNodes = ConcurrentHashMap.newKeySet();
 
-	public RunListenerAdapter(Class<?> testClass, RunListener runListener) {
-		this.testClass = testClass;
+	RunListenerAdapter(RunListener runListener) {
 		this.runListener = runListener;
 	}
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		this.testPlan = Optional.of(testPlan);
+		updateTestPlan(testPlan);
 	}
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
-		this.testPlan = Optional.empty();
+		updateTestPlan(null);
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
+		if (testIdentifier.isContainer()
+				&& testIdentifier.getSource().filter(ClassSource.class::isInstance).isPresent()) {
+			startTestSetIfPossible(testIdentifier);
+		}
 		if (testIdentifier.isTest()) {
+			ensureTestSetStarted(testIdentifier);
 			runListener.testStarting(createReportEntry(testIdentifier));
 		}
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
+		ensureTestSetStarted(testIdentifier);
 		String source = sourceLegacyReportingName(testIdentifier);
 		runListener.testSkipped(ignored(source, testIdentifier.getLegacyReportingName(), reason));
+		completeTestSetIfNecessary(testIdentifier);
 	}
 
 	@Override
@@ -82,6 +90,51 @@ final class RunListenerAdapter implements TestExecutionListener {
 		else if (testIdentifier.isTest()) {
 			runListener.testSucceeded(createReportEntry(testIdentifier));
 		}
+		completeTestSetIfNecessary(testIdentifier);
+	}
+
+	private void updateTestPlan(TestPlan testPlan) {
+		this.testPlan = testPlan;
+		testSetNodes.clear();
+	}
+
+	private void ensureTestSetStarted(TestIdentifier testIdentifier) {
+		if (isTestSetStarted(testIdentifier)) {
+			return;
+		}
+		if (testIdentifier.isTest()) {
+			startTestSet(testPlan.getParent(testIdentifier).orElse(testIdentifier));
+		}
+		else {
+			startTestSet(testIdentifier);
+		}
+	}
+
+	private boolean isTestSetStarted(TestIdentifier testIdentifier) {
+		return testSetNodes.contains(testIdentifier)
+				|| testPlan.getParent(testIdentifier).map(this::isTestSetStarted).orElse(false);
+	}
+
+	private void startTestSetIfPossible(TestIdentifier testIdentifier) {
+		if (!isTestSetStarted(testIdentifier)) {
+			startTestSet(testIdentifier);
+		}
+	}
+
+	private void completeTestSetIfNecessary(TestIdentifier testIdentifier) {
+		if (testSetNodes.contains(testIdentifier)) {
+			completeTestSet(testIdentifier);
+		}
+	}
+
+	private void startTestSet(TestIdentifier testIdentifier) {
+		runListener.testSetStarting(createTestSetReportEntry(testIdentifier));
+		testSetNodes.add(testIdentifier);
+	}
+
+	private void completeTestSet(TestIdentifier testIdentifier) {
+		runListener.testSetCompleted(createTestSetReportEntry(testIdentifier));
+		testSetNodes.remove(testIdentifier);
 	}
 
 	private void reportFailedTest(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
@@ -92,6 +145,10 @@ final class RunListenerAdapter implements TestExecutionListener {
 		else {
 			runListener.testError(reportEntry);
 		}
+	}
+
+	private SimpleReportEntry createTestSetReportEntry(TestIdentifier testIdentifier) {
+		return new SimpleReportEntry(JUnitPlatformProvider.class.getName(), testIdentifier.getLegacyReportingName());
 	}
 
 	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier) {
@@ -111,7 +168,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	private String sourceLegacyReportingName(TestIdentifier testIdentifier) {
 		// @formatter:off
-		return testPlan.flatMap(plan -> plan.getParent(testIdentifier))
+		return testPlan.getParent(testIdentifier)
 				.map(TestIdentifier::getLegacyReportingName)
 				.orElse("<unrooted>");
 		// @formatter:on
@@ -142,9 +199,9 @@ final class RunListenerAdapter implements TestExecutionListener {
 			return ((MethodSource) testSource).getClassName();
 		}
 		// @formatter:off
-		return testPlan.flatMap(plan -> plan.getParent(testIdentifier))
+		return testPlan.getParent(testIdentifier)
 				.map(this::getClassName)
-				.orElseGet(testClass::getName);
+				.orElse("");
 		// @formatter:on
 	}
 

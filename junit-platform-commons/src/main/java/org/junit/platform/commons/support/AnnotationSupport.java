@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 1.0
  */
-@API(status = MAINTAINED, since = "5.0")
+@API(status = MAINTAINED, since = "1.0")
 public final class AnnotationSupport {
 
 	///CLOVER:OFF
@@ -46,6 +46,19 @@ public final class AnnotationSupport {
 	 */
 	public static boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType) {
 		return AnnotationUtils.isAnnotated(element, annotationType);
+	}
+
+	/**
+	 * Find the first annotation of {@code annotationType} that is either
+	 * <em>present</em> or <em>meta-present</em> on the supplied optional
+	 * {@code element}.
+	 *
+	 * @see #findAnnotation(AnnotatedElement, Class)
+	 */
+	public static <A extends Annotation> Optional<A> findAnnotation(Optional<? extends AnnotatedElement> element,
+			Class<A> annotationType) {
+
+		return AnnotationUtils.findAnnotation(element, annotationType);
 	}
 
 	/**
