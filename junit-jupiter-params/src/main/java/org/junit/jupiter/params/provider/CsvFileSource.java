@@ -70,10 +70,9 @@ public @interface CsvFileSource {
 	char delimiter() default ',';
 
 	/**
-	 * If the CSV file resources have headers in their first line; This will activate the behaviour to skip the first
-	 * line lines for test purposes.
+	 * The number of lines to skip, if the CSV files have header rows.
 	 *
-	 * <p>Defaults to {@code "false"}</p>
+	 * <p>Defaults to {@code 0}</p>
 	 */
-	boolean hasHeaders() default false;
+	int skipHeaderLines() default 0;
 }

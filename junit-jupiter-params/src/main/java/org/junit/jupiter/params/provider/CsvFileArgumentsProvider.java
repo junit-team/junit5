@@ -39,7 +39,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	private String[] resources;
 	private Charset charset;
 	private CsvParserSettings settings;
-	private boolean hasHeaders;
+	private int skipHeaderLines;
 
 	CsvFileArgumentsProvider() {
 		this(Class::getResourceAsStream);
@@ -53,7 +53,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	public void accept(CsvFileSource annotation) {
 		resources = annotation.resources();
 		charset = Charset.forName(annotation.encoding());
-		hasHeaders = annotation.hasHeaders();
+		skipHeaderLines = annotation.skipHeaderLines();
 		settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(annotation.delimiter());
 		settings.getFormat().setLineSeparator(annotation.lineSeparator());
@@ -87,7 +87,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 	private Stream<Arguments> toStream(CsvParser csvParser) {
 		return stream(spliteratorUnknownSize(new CsvParserIterator(csvParser), Spliterator.ORDERED), false) //
-				.skip(hasHeaders ? 1 : 0) //
+				.skip(skipHeaderLines) //
 				.onClose(csvParser::stopParsing);
 	}
 
