@@ -19,8 +19,8 @@ import java.util.stream.Stream
 /**
  * [Stream] of functions to be executed.
  */
-internal typealias ExecutableStream = Stream<() -> Unit>
-internal fun ExecutableStream.convert() = map { Executable(it) }
+private typealias ExecutableStream = Stream<() -> Unit>
+private fun ExecutableStream.convert() = map { Executable(it) }
 
 /**
  * @see Assertions.assertAll
