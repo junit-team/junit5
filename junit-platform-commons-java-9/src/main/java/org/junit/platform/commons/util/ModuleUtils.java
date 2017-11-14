@@ -84,10 +84,14 @@ public class ModuleUtils {
 	}
 
 	public static Optional<String> getModuleName(Class<?> type) {
-		return Optional.of(type.getModule().getName());
+		Preconditions.notNull(type, "Class type must not be null");
+
+		return Optional.ofNullable(type.getModule().getName());
 	}
 
 	public static Optional<String> getModuleVersion(Class<?> type) {
+		Preconditions.notNull(type, "Class type must not be null");
+
 		Module module = type.getModule();
 		return module.isNamed() ? module.getDescriptor().rawVersion() : Optional.empty();
 	}
