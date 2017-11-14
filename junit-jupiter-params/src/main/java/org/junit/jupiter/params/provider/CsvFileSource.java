@@ -74,5 +74,5 @@ public @interface CsvFileSource {
 	 *
 	 * <p>Defaults to {@code 0}</p>
 	 */
-	int skipLines() default 0;
+	int numLinesToSkip() default 0;
 }

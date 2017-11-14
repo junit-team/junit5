@@ -127,14 +127,14 @@ class CsvFileArgumentsProviderTests {
 		return annotation(charset, lineSeparator, delimiter, 0, resources);
 	}
 
-	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, int skipLines,
+	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, int numLinesToSkip,
 			String... resources) {
 		CsvFileSource annotation = mock(CsvFileSource.class);
 		when(annotation.resources()).thenReturn(resources);
 		when(annotation.encoding()).thenReturn(charset);
 		when(annotation.lineSeparator()).thenReturn(lineSeparator);
 		when(annotation.delimiter()).thenReturn(delimiter);
-		when(annotation.skipLines()).thenReturn(skipLines);
+		when(annotation.numLinesToSkip()).thenReturn(numLinesToSkip);
 		return annotation;
 	}
 

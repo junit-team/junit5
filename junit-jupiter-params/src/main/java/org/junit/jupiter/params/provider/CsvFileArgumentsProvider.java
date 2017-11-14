@@ -39,7 +39,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	private String[] resources;
 	private Charset charset;
 	private CsvParserSettings settings;
-	private int skipLines;
+	private int numLinesToSkip;
 
 	CsvFileArgumentsProvider() {
 		this(Class::getResourceAsStream);
@@ -53,7 +53,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	public void accept(CsvFileSource annotation) {
 		resources = annotation.resources();
 		charset = Charset.forName(annotation.encoding());
-		skipLines = annotation.skipLines();
+		numLinesToSkip = annotation.numLinesToSkip();
 		settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(annotation.delimiter());
 		settings.getFormat().setLineSeparator(annotation.lineSeparator());
@@ -87,7 +87,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 	private Stream<Arguments> toStream(CsvParser csvParser) {
 		return stream(spliteratorUnknownSize(new CsvParserIterator(csvParser), Spliterator.ORDERED), false) //
-				.skip(skipLines) //
+				.skip(numLinesToSkip) //
 				.onClose(csvParser::stopParsing);
 	}
 
