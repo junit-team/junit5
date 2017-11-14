@@ -39,10 +39,11 @@ import org.junit.platform.commons.annotation.Testable;
  * @since 5.0
  * @see TestInfo
  * @see DisplayName
- * @see BeforeEach
- * @see AfterEach
+ * @see Tag
  * @see BeforeAll
  * @see AfterAll
+ * @see BeforeEach
+ * @see AfterEach
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

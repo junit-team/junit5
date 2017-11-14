@@ -30,6 +30,7 @@ import org.apiguardian.api.API;
  * @since 5.0
  * @see Test
  * @see DisplayName
+ * @see Tag
  */
 @API(status = STABLE, since = "5.0")
 public interface TestInfo {

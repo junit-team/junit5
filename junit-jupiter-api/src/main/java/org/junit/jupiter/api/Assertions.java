@@ -29,8 +29,9 @@ import org.opentest4j.MultipleFailuresError;
  * {@code Assertions} is a collection of utility methods that support asserting
  * conditions in tests.
  *
- * <p>Additional <a href="https://kotlinlang.org/">Kotlin</a> assertions can be found
- * as top-level functions on the {@link org.junit.jupiter.api} package.
+ * <p>Additional <a href="https://kotlinlang.org/">Kotlin</a> assertions can be
+ * found as <em>top-level functions</em> in the {@link org.junit.jupiter.api}
+ * package.
  *
  * <p>Unless otherwise noted, a <em>failed</em> assertion will throw an
  * {@link org.opentest4j.AssertionFailedError} or a subclass thereof.
