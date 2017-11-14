@@ -99,7 +99,7 @@ class CsvFileArgumentsProviderTests {
 
 		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
 
-		assertThat(arguments).containsExactly();
+		assertThat(arguments).isEmpty();
 	}
 
 	@Test
@@ -127,14 +127,14 @@ class CsvFileArgumentsProviderTests {
 		return annotation(charset, lineSeparator, delimiter, 0, resources);
 	}
 
-	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, int skipHeaderLines,
+	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, int skipLines,
 			String... resources) {
 		CsvFileSource annotation = mock(CsvFileSource.class);
 		when(annotation.resources()).thenReturn(resources);
 		when(annotation.encoding()).thenReturn(charset);
 		when(annotation.lineSeparator()).thenReturn(lineSeparator);
 		when(annotation.delimiter()).thenReturn(delimiter);
-		when(annotation.skipHeaderLines()).thenReturn(skipHeaderLines);
+		when(annotation.skipLines()).thenReturn(skipLines);
 		return annotation;
 	}
 
