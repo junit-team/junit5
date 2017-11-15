@@ -70,7 +70,7 @@ on GitHub.
   - This is an alternative to the existing classpath scanning support.
 * New Kotlin friendly assertions added as _top-level functions_ in the
   `org.junit.jupiter.api` package.
-  - `assertAll()`: takes `Stream<() -> Unit>` or `vararg () -> Unit`.
+  - `assertAll()`: takes `Stream<() \-> Unit>` or `vararg () \-> Unit`.
   - `assertThrow()`: uses Kotlin reified generics.
 
 
