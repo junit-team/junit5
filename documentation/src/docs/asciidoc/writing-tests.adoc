@@ -761,10 +761,11 @@ include::{testResourcesDir}/two-column.csv[]
 ----
 
 NOTE: In contrast to the syntax used in `@CsvSource`, `@CsvFileSource` uses a double
-quote `"` as the quote character. See the `"baz, qux"` value in the example above. An
-empty, quoted value `""` results in an empty `String`; whereas, an entirely _empty_ value
-is interpreted as a `null` reference. An `ArgumentConversionException` is raised if the
-target type of a `null` reference is a primitive type.
+quote `"` as the quote character. See the `"United States of America"` value in the
+example above. An empty, quoted value `""` results in an empty `String`; whereas, an
+entirely _empty_ value is interpreted as a `null` reference. An
+`ArgumentConversionException` is raised if the target type of a `null` reference is a
+primitive type.
 
 [[writing-tests-parameterized-tests-sources-ArgumentsSource]]
 ===== @ArgumentsSource
