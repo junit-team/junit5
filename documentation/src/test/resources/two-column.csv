@@ -1,3 +1,4 @@
-foo, 1
-bar, 2
-"baz, qux", 3
+Country, reference
+Sweden, 1
+Poland, 2
+"United States of America", 3
