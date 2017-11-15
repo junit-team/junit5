@@ -51,5 +51,6 @@ class AssertionsDemoKotlin {
                 }
         )
     }
+
 }
 // end::user_guide[]

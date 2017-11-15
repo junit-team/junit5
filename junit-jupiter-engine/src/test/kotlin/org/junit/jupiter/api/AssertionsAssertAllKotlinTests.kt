@@ -15,7 +15,9 @@ import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
 import org.opentest4j.AssertionFailedError
 import org.opentest4j.MultipleFailuresError
+
 import java.util.stream.Stream
+
 import kotlin.reflect.KClass
 
 /**
@@ -71,4 +73,5 @@ class AssertionsAssertAllKotlinTests {
             AssertAllAssertionsTests.assertExpectedExceptionTypes(
                 multipleFailuresError, *exceptionTypes.map { it.java }.toTypedArray())
     }
+
 }
