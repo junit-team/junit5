@@ -162,7 +162,7 @@ class ParameterizedTestDemo {
 
 	// tag::CsvFileSource_example[]
 	@ParameterizedTest
-	@CsvFileSource(resources = "/two-column.csv")
+	@CsvFileSource(resources = "/two-column.csv", numLinesToSkip = 1)
 	void testWithCsvFileSource(String first, int second) {
 		assertNotNull(first);
 		assertNotEquals(0, second);

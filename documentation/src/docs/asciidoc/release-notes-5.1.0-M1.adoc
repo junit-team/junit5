@@ -43,6 +43,8 @@ on GitHub.
 * The JUnit Platform Maven Surefire provider now runs all specified tests in a single
   test run, i.e. all registered `TestExecutionListeners` will receive a single `TestPlan`.
   Previously, a separate `TestPlan` was discovered and executed for each test class.
+* `@CsvFileSource` now accepts a `numLinesToSkip` parameter, to support writing headers in
+  your CSV files.
 
 
 [[release-notes-5.1.0-junit-jupiter]]
