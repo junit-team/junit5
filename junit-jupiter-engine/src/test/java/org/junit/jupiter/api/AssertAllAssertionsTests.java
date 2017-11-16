@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -53,29 +53,17 @@ class AssertAllAssertionsTests {
 
 	@Test
 	void assertAllWithNullInExecutableArray() {
-		// @formatter:off
-		assertPrecondition("individual executables must not be null", () ->
-			assertAll(() -> {}, null)
-		);
-		// @formatter:on
+		assertPrecondition("individual executables must not be null", () -> assertAll((Executable) null));
 	}
 
 	@Test
 	void assertAllWithNullInExecutableCollection() {
-		// @formatter:off
-		assertPrecondition("individual executables must not be null", () ->
-			assertAll(Arrays.asList(() -> {}, null))
-		);
-		// @formatter:on
+		assertPrecondition("individual executables must not be null", () -> assertAll(asList((Executable) null)));
 	}
 
 	@Test
 	void assertAllWithNullInExecutableStream() {
-		// @formatter:off
-		assertPrecondition("individual executables must not be null", () ->
-			assertAll(Stream.of(() -> {}, null))
-		);
-		// @formatter:on
+		assertPrecondition("individual executables must not be null", () -> assertAll(Stream.of((Executable) null)));
 	}
 
 	@Test
@@ -83,8 +71,7 @@ class AssertAllAssertionsTests {
 		// @formatter:off
 		assertAll(
 			() -> assertTrue(true),
-			() -> assertFalse(false),
-			() -> assertTrue(true)
+			() -> assertFalse(false)
 		);
 		// @formatter:on
 	}
@@ -107,7 +94,7 @@ class AssertAllAssertionsTests {
 	void assertAllWithCollectionOfExecutablesThatThrowAssertionErrors() {
 		// @formatter:off
 		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () ->
-			assertAll(Arrays.asList(
+			assertAll(asList(
 				() -> assertFalse(true),
 				() -> assertFalse(true)
 			))
