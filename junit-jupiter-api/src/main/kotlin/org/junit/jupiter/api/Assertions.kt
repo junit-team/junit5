@@ -35,6 +35,24 @@ fun assertAll(heading: String?, executables: ExecutableStream) =
     Assertions.assertAll(heading, executables.convert())
 
 /**
+ * [Collection] of functions to be executed.
+ */
+private typealias ExecutableCollection = Collection<() -> Unit>
+private fun ExecutableCollection.convert() = map { Executable(it) }
+
+/**
+ * @see Assertions.assertAll
+ */
+fun assertAll(executables: ExecutableCollection) =
+    Assertions.assertAll(executables.convert())
+
+/**
+ * @see Assertions.assertAll
+ */
+fun assertAll(heading: String?, executables: ExecutableCollection) =
+    Assertions.assertAll(heading, executables.convert())
+
+/**
  * @see Assertions.assertAll
  */
 fun assertAll(vararg executables: () -> Unit) =
