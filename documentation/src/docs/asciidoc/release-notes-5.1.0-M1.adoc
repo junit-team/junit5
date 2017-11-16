@@ -60,6 +60,7 @@ on GitHub.
 
 ===== New Features and Improvements
 
+* New `assertAll()` variants in `Assertions` that accept collections of executables.
 * New `getOrComputeIfAbsent(Class)` convenience method in `ExtensionContext.Store` that
   simplifies use cases where an extension wishes to store a single object of a given type
   (keyed by that type) in the `Store` and the object is created using the default

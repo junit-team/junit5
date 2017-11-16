@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -36,52 +38,44 @@ class AssertAllAssertionsTests {
 
 	@Test
 	void assertAllWithNullExecutableArray() {
-		try {
-			assertAll((Executable[]) null);
-		}
-		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "executables array must not be null or empty");
-		}
+		assertPrecondition("executables array must not be null or empty", () -> assertAll((Executable[]) null));
+	}
+
+	@Test
+	void assertAllWithNullExecutableCollection() {
+		assertPrecondition("executables collection must not be null", () -> assertAll((Collection<Executable>) null));
 	}
 
 	@Test
 	void assertAllWithNullExecutableStream() {
-		try {
-			assertAll((Stream<Executable>) null);
-		}
-		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "executables stream must not be null");
-		}
+		assertPrecondition("executables stream must not be null", () -> assertAll((Stream<Executable>) null));
 	}
 
 	@Test
 	void assertAllWithNullInExecutableArray() {
-		try {
-			// @formatter:off
-			assertAll(
-				() -> {},
-				(Executable) null
-			);
-			// @formatter:on
-		}
-		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "individual executables must not be null");
-		}
+		// @formatter:off
+		assertPrecondition("individual executables must not be null", () ->
+			assertAll(() -> {}, null)
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void assertAllWithNullInExecutableCollection() {
+		// @formatter:off
+		assertPrecondition("individual executables must not be null", () ->
+			assertAll(Arrays.asList(() -> {}, null))
+		);
+		// @formatter:on
 	}
 
 	@Test
 	void assertAllWithNullInExecutableStream() {
-		try {
-			// @formatter:off
-			assertAll(Stream.of(
-				() -> {},
-				(Executable) null
-			));
-			// @formatter:on
-		}
-		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "individual executables must not be null");
-		}
+		// @formatter:off
+		assertPrecondition("individual executables must not be null", () ->
+			assertAll(Stream.of(() -> {}, null))
+		);
+		// @formatter:on
 	}
 
 	@Test
@@ -103,6 +97,20 @@ class AssertAllAssertionsTests {
 				() -> assertFalse(true),
 				() -> assertFalse(true)
 			)
+		);
+		// @formatter:on
+
+		assertExpectedExceptionTypes(multipleFailuresError, AssertionFailedError.class, AssertionFailedError.class);
+	}
+
+	@Test
+	void assertAllWithCollectionOfExecutablesThatThrowAssertionErrors() {
+		// @formatter:off
+		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () ->
+			assertAll(Arrays.asList(
+				() -> assertFalse(true),
+				() -> assertFalse(true)
+			))
 		);
 		// @formatter:on
 
@@ -164,6 +172,11 @@ class AssertAllAssertionsTests {
 			() -> assertAll(AssertionTestUtils::runOutOfMemory));
 
 		assertEquals("boom", outOfMemoryError.getMessage());
+	}
+
+	private void assertPrecondition(String msg, Executable executable) {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, executable);
+		assertMessageEquals(exception, msg);
 	}
 
 	@SafeVarargs

@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
@@ -1036,6 +1037,8 @@ public final class Assertions {
 	 * method's exception handling semantics.
 	 *
 	 * @see #assertAll(String, Executable...)
+	 * @see #assertAll(Collection)
+	 * @see #assertAll(String, Collection)
 	 * @see #assertAll(Stream)
 	 * @see #assertAll(String, Stream)
 	 */
@@ -1051,10 +1054,29 @@ public final class Assertions {
 	 * method's exception handling semantics.
 	 *
 	 * @see #assertAll(Executable...)
-	 * @see #assertAll(String, Executable...)
+	 * @see #assertAll(Collection)
+	 * @see #assertAll(Stream)
+	 * @see #assertAll(String, Collection)
 	 * @see #assertAll(String, Stream)
 	 */
-	public static void assertAll(Stream<Executable> executables) throws MultipleFailuresError {
+	public static void assertAll(String heading, Executable... executables) throws MultipleFailuresError {
+		AssertAll.assertAll(heading, executables);
+	}
+
+	/**
+	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw
+	 * exceptions.
+	 *
+	 * <p>See Javadoc for {@link #assertAll(String, Stream)} for an explanation of this
+	 * method's exception handling semantics.
+	 *
+	 * @see #assertAll(Executable...)
+	 * @see #assertAll(String, Executable...)
+	 * @see #assertAll(String, Collection)
+	 * @see #assertAll(Stream)
+	 * @see #assertAll(String, Stream)
+	 */
+	public static void assertAll(Collection<Executable> executables) {
 		AssertAll.assertAll(executables);
 	}
 
@@ -1066,11 +1088,30 @@ public final class Assertions {
 	 * method's exception handling semantics.
 	 *
 	 * @see #assertAll(Executable...)
+	 * @see #assertAll(String, Executable...)
+	 * @see #assertAll(Collection)
 	 * @see #assertAll(Stream)
 	 * @see #assertAll(String, Stream)
 	 */
-	public static void assertAll(String heading, Executable... executables) throws MultipleFailuresError {
+	public static void assertAll(String heading, Collection<Executable> executables) {
 		AssertAll.assertAll(heading, executables);
+	}
+
+	/**
+	 * <em>Asserts</em> that <em>all</em> supplied {@code executables} do not throw
+	 * exceptions.
+	 *
+	 * <p>See Javadoc for {@link #assertAll(String, Stream)} for an explanation of this
+	 * method's exception handling semantics.
+	 *
+	 * @see #assertAll(Executable...)
+	 * @see #assertAll(String, Executable...)
+	 * @see #assertAll(Collection)
+	 * @see #assertAll(String, Collection)
+	 * @see #assertAll(String, Stream)
+	 */
+	public static void assertAll(Stream<Executable> executables) throws MultipleFailuresError {
+		AssertAll.assertAll(executables);
 	}
 
 	/**
@@ -1090,6 +1131,8 @@ public final class Assertions {
 	 *
 	 * @see #assertAll(Executable...)
 	 * @see #assertAll(String, Executable...)
+	 * @see #assertAll(Collection)
+	 * @see #assertAll(String, Collection)
 	 * @see #assertAll(Stream)
 	 */
 	public static void assertAll(String heading, Stream<Executable> executables) throws MultipleFailuresError {

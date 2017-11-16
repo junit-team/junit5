@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -42,6 +43,16 @@ class AssertAll {
 		Preconditions.notEmpty(executables, "executables array must not be null or empty");
 		Preconditions.containsNoNullElements(executables, "individual executables must not be null");
 		assertAll(heading, Arrays.stream(executables));
+	}
+
+	static void assertAll(Collection<Executable> executables) {
+		assertAll(null, executables);
+	}
+
+	static void assertAll(String heading, Collection<Executable> executables) {
+		Preconditions.notNull(executables, "executables collection must not be null");
+		Preconditions.containsNoNullElements(executables, "individual executables must not be null");
+		assertAll(heading, executables.stream());
 	}
 
 	static void assertAll(Stream<Executable> executables) {
