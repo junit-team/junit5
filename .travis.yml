@@ -17,6 +17,8 @@ matrix:
 # Java 10
     - env: JDK_RELEASE='JDK 10 Early-Access'
       install: . ./src/install/install-jdk-10.sh
+  allow_failures:
+    - env: JDK_RELEASE='JDK 10 Early-Access'
 
 script:
 # Display Gradle, Groovy, JVM and other versions
