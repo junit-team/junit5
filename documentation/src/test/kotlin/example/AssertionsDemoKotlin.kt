@@ -52,5 +52,13 @@ class AssertionsDemoKotlin {
         )
     }
 
+    @Test
+    fun `assertions from a collection`() {
+        assertAll(
+            "people with last name of Doe",
+            people.map { { assertEquals("Doe", it.lastName) } }
+        )
+    }
+
 }
 // end::user_guide[]
