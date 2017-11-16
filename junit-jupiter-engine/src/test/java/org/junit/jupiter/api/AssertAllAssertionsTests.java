@@ -35,21 +35,6 @@ import org.opentest4j.MultipleFailuresError;
 class AssertAllAssertionsTests {
 
 	@Test
-	void assertAllWithNullInExecutableArray() {
-		try {
-			// @formatter:off
-			assertAll(
-				() -> {},
-				(Executable) null
-			);
-			// @formatter:on
-		}
-		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "individual executables must not be null");
-		}
-	}
-
-	@Test
 	void assertAllWithNullExecutableArray() {
 		try {
 			assertAll((Executable[]) null);
@@ -65,7 +50,37 @@ class AssertAllAssertionsTests {
 			assertAll((Stream<Executable>) null);
 		}
 		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "executables must not be null");
+			assertMessageEquals(ex, "executables stream must not be null");
+		}
+	}
+
+	@Test
+	void assertAllWithNullInExecutableArray() {
+		try {
+			// @formatter:off
+			assertAll(
+				() -> {},
+				(Executable) null
+			);
+			// @formatter:on
+		}
+		catch (PreconditionViolationException ex) {
+			assertMessageEquals(ex, "individual executables must not be null");
+		}
+	}
+
+	@Test
+	void assertAllWithNullInExecutableStream() {
+		try {
+			// @formatter:off
+			assertAll(Stream.of(
+				() -> {},
+				(Executable) null
+			));
+			// @formatter:on
+		}
+		catch (PreconditionViolationException ex) {
+			assertMessageEquals(ex, "individual executables must not be null");
 		}
 	}
 
@@ -98,7 +113,10 @@ class AssertAllAssertionsTests {
 	void assertAllWithStreamOfExecutablesThatThrowAssertionErrors() {
 		// @formatter:off
 		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () ->
-			assertAll(Stream.of(() -> assertFalse(true), () -> assertFalse(true)))
+			assertAll(Stream.of(
+				() -> assertFalse(true),
+				() -> assertFalse(true)
+			))
 		);
 		// @formatter:on
 

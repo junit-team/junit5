@@ -49,18 +49,20 @@ class AssertAll {
 	}
 
 	static void assertAll(String heading, Stream<Executable> executables) {
-		Preconditions.notNull(executables, "executables must not be null");
+		Preconditions.notNull(executables, "executables stream must not be null");
 
 		List<Throwable> failures = new ArrayList<>();
-		executables.forEach(executable -> {
-			try {
-				executable.execute();
-			}
-			catch (Throwable t) {
-				BlacklistedExceptions.rethrowIfBlacklisted(t);
-				failures.add(t);
-			}
-		});
+		executables//
+				.peek(executable -> Preconditions.notNull(executable, "individual executables must not be null"))//
+				.forEach(executable -> {
+					try {
+						executable.execute();
+					}
+					catch (Throwable t) {
+						BlacklistedExceptions.rethrowIfBlacklisted(t);
+						failures.add(t);
+					}
+				});
 
 		if (!failures.isEmpty()) {
 			throw new MultipleFailuresError(heading, failures);
