@@ -54,9 +54,11 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.engine.kotlin.ArbitraryNamingKotlinTestCase;
 import org.junit.jupiter.engine.kotlin.InstancePerClassKotlinTestCase;
 import org.junit.jupiter.engine.kotlin.InstancePerMethodKotlinTestCase;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 /**
@@ -550,6 +552,20 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 				.containsEntry("beforeEach", 1) //
 				.containsEntry("test", 1) //
 				.containsEntry("afterEach", 1);
+	}
+
+	@Test
+	void kotlinTestWithAVeryStrangeName() {
+		Class<?> testClass = ArbitraryNamingKotlinTestCase.class;
+
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+		assertThat(eventRecorder.getTestFinishedCount()).isEqualTo(1);
+		final ExecutionEvent executionEvent = eventRecorder.getSuccessfulTestFinishedEvents().get(0);
+		assertAll(
+			() -> assertEquals(ArbitraryNamingKotlinTestCase.METHOD_NAME + "()",
+				executionEvent.getTestDescriptor().getDisplayName()),
+			() -> assertEquals(ArbitraryNamingKotlinTestCase.METHOD_NAME + "()",
+				executionEvent.getTestDescriptor().getLegacyReportingName()));
 	}
 
 	private void performAssertions(Class<?> testClass, int containers, int tests,
