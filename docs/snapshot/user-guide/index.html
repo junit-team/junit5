@@ -1300,6 +1300,14 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
         )
     }
 
+    <span class="annotation">@Test</span>
+    fun <span class="error">`</span>assertions from a collection<span class="error">`</span>() {
+        assertAll(
+            <span class="string"><span class="delimiter">&quot;</span><span class="content">people with last name of Doe</span><span class="delimiter">&quot;</span></span>,
+            people.map { { assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>, <span class="local-variable">it</span>.lastName) } }
+        )
+    }
+
 }</code></pre>
 </div>
 </div>
