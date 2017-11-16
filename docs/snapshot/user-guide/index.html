@@ -5467,10 +5467,6 @@ available on the boot layer configuration for test discovery.</p>
 test run, i.e. all registered <code>TestExecutionListeners</code> will receive a single <code>TestPlan</code>.
 Previously, a separate <code>TestPlan</code> was discovered and executed for each test class.</p>
 </li>
-<li>
-<p><code>@CsvFileSource</code> now accepts a <code>numLinesToSkip</code> parameter, to support writing headers in
-your CSV files.</p>
-</li>
 </ul>
 </div>
 </div>
@@ -5505,6 +5501,25 @@ your CSV files.</p>
 <p>New <code>assertAll()</code> variants in <code>Assertions</code> that accept collections of executables.</p>
 </li>
 <li>
+<p>New Kotlin friendly assertions added as <em>top-level functions</em> in the
+<code>org.junit.jupiter.api</code> package.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>assertAll()</code>: takes <code>Stream&lt;() -&gt; Unit&gt;</code>, <code>Collection&lt;() -&gt; Unit&gt;</code>, or
+<code>vararg () -&gt; Unit</code>.</p>
+</li>
+<li>
+<p><code>assertThrows()</code>: uses Kotlin reified generics.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>@CsvFileSource</code> now supports a <code>numLinesToSkip</code> attribute which can be used to skip
+header lines in CSV files.</p>
+</li>
+<li>
 <p>New <code>getOrComputeIfAbsent(Class)</code> convenience method in <code>ExtensionContext.Store</code> that
 simplifies use cases where an extension wishes to store a single object of a given type
 (keyed by that type) in the <code>Store</code> and the object is created using the default
@@ -5526,20 +5541,6 @@ Java 9 modules.</p>
 <ul>
 <li>
 <p>This is an alternative to the existing classpath scanning support.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>New Kotlin friendly assertions added as <em>top-level functions</em> in the
-<code>org.junit.jupiter.api</code> package.</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>assertAll()</code>: takes <code>Stream&lt;() -&gt; Unit&gt;</code> or <code>vararg () -&gt; Unit</code>.</p>
-</li>
-<li>
-<p><code>assertThrow()</code>: uses Kotlin reified generics.</p>
 </li>
 </ul>
 </div>
@@ -8107,7 +8108,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-11-16 14:37:44 EST
+Last updated 2017-11-16 15:08:18 EST
 </div>
 </div>
 </body>
