@@ -1226,7 +1226,7 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
     <span class="type">void</span> timeoutNotExceededWithMethod() {
         <span class="comment">// The following assertion invokes a method reference and returns an object.</span>
         <span class="predefined-type">String</span> actualGreeting = assertTimeout(ofMinutes(<span class="integer">2</span>), AssertionsDemo::greeting);
-        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">hello world!</span><span class="delimiter">&quot;</span></span>, actualGreeting);
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, World!</span><span class="delimiter">&quot;</span></span>, actualGreeting);
     }
 
     <span class="annotation">@Test</span>
@@ -1250,7 +1250,7 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
     }
 
     <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> greeting() {
-        <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">hello world!</span><span class="delimiter">&quot;</span></span>;
+        <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, World!</span><span class="delimiter">&quot;</span></span>;
     }
 
 }</code></pre>
@@ -5494,6 +5494,9 @@ your CSV files.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>New <code>assertAll()</code> variants in <code>Assertions</code> that accept collections of executables.</p>
+</li>
+<li>
 <p>New <code>getOrComputeIfAbsent(Class)</code> convenience method in <code>ExtensionContext.Store</code> that
 simplifies use cases where an extension wishes to store a single object of a given type
 (keyed by that type) in the <code>Store</code> and the object is created using the default
@@ -8096,7 +8099,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-11-15 15:04:14 EST
+Last updated 2017-11-16 11:15:42 EST
 </div>
 </div>
 </body>
