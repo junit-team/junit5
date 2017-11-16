@@ -20,7 +20,7 @@ class AssertionsDemoKotlin {
 
     // end::user_guide[]
     val person = Person("John", "Doe")
-    val people = setOf(person, Person("James", "Doe"))
+    val people = setOf(person, Person("Jane", "Doe"))
 
     // tag::user_guide[]
     @Test

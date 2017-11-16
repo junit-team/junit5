@@ -48,7 +48,7 @@ class AssertionsAssertAllKotlinTests {
     }
 
     @Test
-    fun `assertAll with streamOf functions that throw AssertionErrors`() {
+    fun `assertAll with stream of functions that throw AssertionErrors`() {
         val multipleFailuresError = assertThrows<MultipleFailuresError>("Should have thrown multiple errors") {
             assertAll(Stream.of({ assertFalse(true) }, { assertFalse(true) }))
         }
@@ -56,11 +56,19 @@ class AssertionsAssertAllKotlinTests {
     }
 
     @Test
-    fun `assertThrows that does not have exception thrown does not throw KotlinNullPointer`() {
+    fun `assertAll with collection of functions that throw AssertionErrors`() {
+        val multipleFailuresError = assertThrows<MultipleFailuresError>("Should have thrown multiple errors") {
+            assertAll(setOf({ assertFalse(true) }, { assertFalse(true) }))
+        }
+        assertExpectedExceptionTypes(multipleFailuresError, AssertionFailedError::class, AssertionFailedError::class)
+    }
+
+    @Test
+    fun `assertThrows with function that does not throw an exception`() {
         val assertionMessage = "This will not throw an exception"
         val error = assertThrows<AssertionFailedError>("assertThrows did not throw the correct exception") {
             assertThrows<IllegalStateException>(assertionMessage) { }
-            // This should never execute
+            // This should never execute:
             expectAssertionFailedError()
         }
         assertMessageStartsWith(error, assertionMessage)
