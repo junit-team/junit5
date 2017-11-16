@@ -1076,7 +1076,7 @@ public final class Assertions {
 	 * @see #assertAll(Stream)
 	 * @see #assertAll(String, Stream)
 	 */
-	public static void assertAll(Collection<Executable> executables) {
+	public static void assertAll(Collection<Executable> executables) throws MultipleFailuresError {
 		AssertAll.assertAll(executables);
 	}
 
@@ -1093,7 +1093,7 @@ public final class Assertions {
 	 * @see #assertAll(Stream)
 	 * @see #assertAll(String, Stream)
 	 */
-	public static void assertAll(String heading, Collection<Executable> executables) {
+	public static void assertAll(String heading, Collection<Executable> executables) throws MultipleFailuresError {
 		AssertAll.assertAll(heading, executables);
 	}
 
