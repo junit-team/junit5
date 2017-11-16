@@ -23,7 +23,7 @@ import kotlin.reflect.KClass
 /**
  * Unit tests for JUnit Jupiter [org.junit.jupiter.api] top-level assertion functions.
  */
-class AssertionsAssertAllKotlinTests {
+class KotlinAssertionsTests {
 
     // Bonus: no null check tests as these get handled by the compiler!
 
