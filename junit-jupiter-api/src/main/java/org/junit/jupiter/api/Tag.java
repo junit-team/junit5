@@ -27,9 +27,9 @@ import org.apiguardian.api.API;
  *
  * <p>Tags are used to filter which tests are executed for a given test
  * plan. For example, a development team may tag tests with values such as
- * {@code "fast"}, {@code "slow"}, {@code "ci-server"}, etc. and then supply
- * a list of tags to be used for the current test plan, potentially
- * dependent on the current environment.
+ * {@code "fast"}, {@code "slow"}, {@code "ci-server"}, etc. and then supply a
+ * list of tags to be included in or excluded from the current test plan,
+ * potentially dependent on the current environment.
  *
  * <h3>Syntax Rules for Tags</h3>
  * <ul>
