@@ -34,8 +34,19 @@ import org.apiguardian.api.API;
  * <h3>Syntax Rules for Tags</h3>
  * <ul>
  * <li>A tag must not be blank.</li>
- * <li>A trimmed tag must not contain whitespace.</li>
- * <li>A trimmed tag must not contain ISO control characters.</li>
+ * <li>A <em>trimmed</em> tag must not contain whitespace.</li>
+ * <li>A <em>trimmed</em> tag must not contain ISO control characters.</li>
+ * <li>A <em>trimmed</em> tag must not contain any of the following
+ * <em>reserved characters</em>.
+ * <ul>
+ * <li>{@code ,}</li>
+ * <li>{@code (}</li>
+ * <li>{@code )}</li>
+ * <li>{@code &}</li>
+ * <li>{@code |}</li>
+ * <li>{@code !}</li>
+ * </ul>
+ * </li>
  * </ul>
  *
  * @since 5.0
