@@ -50,7 +50,7 @@ on GitHub.
 
 ===== Bug Fixes
 
-* ❓
+* The `@Tag` and `@Tags` annotations are now inherited within test class hierarchies.
 
 ===== Deprecations and Breaking Changes
 

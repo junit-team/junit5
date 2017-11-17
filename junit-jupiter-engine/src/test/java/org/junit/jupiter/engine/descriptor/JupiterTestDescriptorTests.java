@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -21,7 +21,6 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -48,15 +47,16 @@ class JupiterTestDescriptorTests {
 	private static final UniqueId uniqueId = UniqueId.root("enigma", "foo");
 
 	@Test
-	void constructFromClass() throws Exception {
+	void constructFromClass() {
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, TestCase.class);
 
 		assertEquals(TestCase.class, descriptor.getTestClass());
-		assertThat(descriptor.getTags()).containsExactly(TestTag.create("classTag1"), TestTag.create("classTag2"));
+		assertThat(descriptor.getTags()).containsExactly(TestTag.create("inherited-class-level-tag"),
+			TestTag.create("classTag1"), TestTag.create("classTag2"));
 	}
 
 	@Test
-	void constructFromClassWithInvalidBeforeAllDeclaration() throws Exception {
+	void constructFromClassWithInvalidBeforeAllDeclaration() {
 		// Note: if we can instantiate the descriptor, then the invalid configuration
 		// will not be reported during the test engine discovery phase.
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, TestCaseWithInvalidBeforeAllMethod.class);
@@ -65,7 +65,7 @@ class JupiterTestDescriptorTests {
 	}
 
 	@Test
-	void constructFromClassWithInvalidAfterAllDeclaration() throws Exception {
+	void constructFromClassWithInvalidAfterAllDeclaration() {
 		// Note: if we can instantiate the descriptor, then the invalid configuration
 		// will not be reported during the test engine discovery phase.
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, TestCaseWithInvalidAfterAllMethod.class);
@@ -74,7 +74,7 @@ class JupiterTestDescriptorTests {
 	}
 
 	@Test
-	void constructFromClassWithInvalidBeforeEachDeclaration() throws Exception {
+	void constructFromClassWithInvalidBeforeEachDeclaration() {
 		// Note: if we can instantiate the descriptor, then the invalid configuration
 		// will not be reported during the test engine discovery phase.
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, TestCaseWithInvalidBeforeEachMethod.class);
@@ -83,7 +83,7 @@ class JupiterTestDescriptorTests {
 	}
 
 	@Test
-	void constructFromClassWithInvalidAfterEachDeclaration() throws Exception {
+	void constructFromClassWithInvalidAfterEachDeclaration() {
 		// Note: if we can instantiate the descriptor, then the invalid configuration
 		// will not be reported during the test engine discovery phase.
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, TestCaseWithInvalidAfterEachMethod.class);
@@ -112,14 +112,9 @@ class JupiterTestDescriptorTests {
 		assertEquals(testMethod, methodDescriptor.getTestMethod());
 		assertEquals("custom test name", methodDescriptor.getDisplayName(), "display name:");
 
-		List<String> tags = methodDescriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
-		assertEquals(4, methodDescriptor.getTags().size());
-		assertTrue(tags.contains("methodTag1"));
-		assertTrue(tags.contains("methodTag2"));
-
-		// Methods "inherit" tags from their test class
-		assertTrue(tags.contains("classTag1"));
-		assertTrue(tags.contains("classTag2"));
+		List<String> tags = methodDescriptor.getTags().stream().map(TestTag::getName).collect(toList());
+		assertThat(tags).containsExactlyInAnyOrder("inherited-class-level-tag", "classTag1", "classTag2", "methodTag1",
+			"methodTag2");
 	}
 
 	@Test
@@ -204,11 +199,15 @@ class JupiterTestDescriptorTests {
 	@interface CustomTestAnnotation {
 	}
 
+	@Tag("inherited-class-level-tag")
+	private static abstract class AbstractTestCase {
+	}
+
 	@Tag("classTag1")
 	@Tag("classTag2")
 	@DisplayName("custom class name")
 	@SuppressWarnings("unused")
-	private static class TestCase {
+	private static class TestCase extends AbstractTestCase {
 
 		void test() {
 		}
