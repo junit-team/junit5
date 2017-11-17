@@ -157,8 +157,8 @@ include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 [[writing-tests-tagging-and-filtering]]
 === Tagging and Filtering
 
-Test classes and methods can be tagged. Those tags can later be used to filter
-<<running-tests,test discovery and execution>>.
+Test classes and methods can be tagged via the `@Tag` annotation. Those tags can later be
+used to filter <<running-tests,test discovery and execution>>.
 
 ==== Syntax Rules for Tags
 
