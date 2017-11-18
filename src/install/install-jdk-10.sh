@@ -2,7 +2,7 @@
 set -e
 
 JDK_FEATURE=10
-JDK_BUILD=31
+JDK_BUILD=32
 JDK_ARCHIVE=jdk-${JDK_FEATURE}-ea+${JDK_BUILD}_linux-x64_bin.tar.gz
 
 cd ~
