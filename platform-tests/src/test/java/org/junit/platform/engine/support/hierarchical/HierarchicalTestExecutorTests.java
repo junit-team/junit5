@@ -140,6 +140,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionStarted(root);
 		inOrder.verify(child).prepare(rootContext);
 		inOrder.verify(child).shouldBeSkipped(rootContext);
+		inOrder.verify(child).cleanUp(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		verify(listener, never()).executionStarted(child);
@@ -161,6 +162,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionStarted(root);
 		inOrder.verify(child).prepare(rootContext);
 		inOrder.verify(child).shouldBeSkipped(rootContext);
+		inOrder.verify(child).cleanUp(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		verify(listener, never()).executionStarted(child);
@@ -184,6 +186,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionStarted(root);
 		inOrder.verify(child).prepare(rootContext);
 		inOrder.verify(child).shouldBeSkipped(rootContext);
+		inOrder.verify(child).cleanUp(rootContext);
 		inOrder.verify(listener).executionStarted(child);
 		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
