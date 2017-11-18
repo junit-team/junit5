@@ -80,6 +80,7 @@ asciidoctor {
 
 	separateOutputDirs false
 	sources { include 'index.adoc' }
+	sources { include 'release-notes.adoc' }
 
 	backends 'html5' // , 'pdf' // , 'epub3'
 
