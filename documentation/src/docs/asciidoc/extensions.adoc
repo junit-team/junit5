@@ -326,6 +326,71 @@ with annotations, reflection, and classpath scanning tasks. `TestEngine` and `Ex
 authors are encouraged to use these supported methods in order to align with the behavior
 of the JUnit Platform.
 
+==== Annotation Support
+
+`AnnotationSupport` provides a number of static utility methods that operate upon annotated
+(and meta-annotated) classes, as follows:
+
+`boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType)`::
+  Determines if an annotation of a specific type is present on a supplied element.
+
+`<A extends Annotation> Optional<A> findAnnotation(Optional<? extends AnnotatedElement> element, Class<A> annotationType)`::
+  Finds the first annotation of a specific type that is present on a supplied optional element.
+
+`<A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType)`::
+  Finds the first annotation of a specific type that is present on a supplied element.
+  Implemented interfaces will also be searched.
+
+`<A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element, Class<A> annotationType)`::
+  Finds all repeatable annotations of a specific type that are present on a supplied element.
+  Inherited annotations and implemented interfaces will also be searched.
+
+`List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<?> fieldType, Class<? extends Annotation> annotationType)`::
+  Finds all public fields of a supplied class or interface that are of a specified type,
+  and are annotated with a specified annotation type.
+
+`List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode)`::
+  Finds all methods of a supplied class or interface that are annotated with a specified
+  annotation type.
+
+==== Reflection Support
+
+`ReflectionSupport` provides a number of static utility methods that augment the
+standard JDK reflection and class-loading methods, as follows:
+
+`Optional<Class<?>> loadClass(String name)`::
+  Loads a class by its name using the default class loader.
+
+`List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classTester, Predicate<String> classNameFilter)`::
+  Finds all classes of a supplied root URI that match specified class tester and class
+  name filter predicates.
+
+`List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester, Predicate<String> classNameFilter)`::
+  Finds all classes of a supplied base package name that match specified class tester
+  and class name filter predicates.
+
+`<T> T newInstance(Class<T> clazz, Object... args)`::
+  Creates a new instance of a specified class by invoking the constructor whose argument
+  list matches the types of the supplied arguments. The constructor will be made accessible
+  if necessary.
+
+`Object invokeMethod(Method method, Object target, Object... args)`::
+  Invokes a supplied method, making it accessible if necessary.
+
+`Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames)`::
+  Finds the first method of a supplied class or interface that meets a specified parameter
+  type name criteria, traversing up the type hierarchy if required.
+
+`Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes)`::
+  Finds the first method of a supplied class or interface that meets a specified parameter
+  type criteria, traversing up the type hierarchy if required.
+
+`List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, HierarchyTraversalMode traversalMode)`::
+  Finds all methods of a supplied class or interface that match a specified predicate.
+
+`List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate)`::
+  Finds all nested classes of a given class conforming to a given predicate.
+
 [[extensions-execution-order]]
 === Relative Execution Order of User Code and Extensions
 
