@@ -12,8 +12,10 @@ This subproject contains the AsciiDoc sources for the JUnit 5 User Guide.
 
 ### Generate AsciiDoc
 
+On linux, `graphviz` package providing `/usr/bin/dot` needs to be installed.
+
 ```
 gradle asciidoctor
 ```
 
-This task generates HTML files into `build/asciidoc/html5`.
+This task generates HTML files into `build/asciidoc`.
