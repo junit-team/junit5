@@ -45,7 +45,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New callback interface `CloseableResource` introduced in `ExtensionContext.Store`.
+  An extension context store is bound to its extension context lifecycle. When an
+  extension context lifecycle ends it closes its associated store. All stored values
+  that are instances of `ExtensionContext.Store.CloseableResource` are notified by
+  invoking their `close()` method.
 
 
 [[release-notes-5.1.0-M2-junit-vintage]]

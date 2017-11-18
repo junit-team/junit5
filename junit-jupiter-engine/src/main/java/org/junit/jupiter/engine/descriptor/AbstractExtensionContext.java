@@ -29,7 +29,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
 /**
  * @since 5.0
  */
-abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext {
+abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext, AutoCloseable {
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
@@ -50,6 +50,10 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 			parentStore = ((AbstractExtensionContext<?>) parent).valuesStore;
 		}
 		return new ExtensionValuesStore(parentStore);
+	}
+
+	public void close() {
+		valuesStore.closeAllStoredCloseableValues();
 	}
 
 	@Override

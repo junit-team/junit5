@@ -39,6 +39,16 @@ public interface Node<C extends EngineExecutionContext> {
 	}
 
 	/**
+	 * Cleanup the supplied {@code context} after execution.
+	 *
+	 * <p>The default implementation invokes {@link EngineExecutionContext#close()}
+	 * on the supplied context.
+	 */
+	default void cleanUp(C context) throws Exception {
+		context.close();
+	}
+
+	/**
 	 * Determine if the execution of the supplied {@code context} should be
 	 * <em>skipped</em>.
 	 *

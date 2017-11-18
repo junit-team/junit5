@@ -58,17 +58,39 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		C preparedContext;
 		try {
 			preparedContext = node.prepare(parentContext);
-			SkipResult skipResult = node.shouldBeSkipped(preparedContext);
-			if (skipResult.isSkipped()) {
-				this.listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
-				return;
-			}
 		}
 		catch (Throwable throwable) {
 			rethrowIfBlacklisted(throwable);
-			// We call executionStarted first to comply with the contract of EngineExecutionListener
-			this.listener.executionStarted(testDescriptor);
-			this.listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
+			reportAsFailed(testDescriptor, throwable);
+			return;
+		}
+
+		SkipResult skipResult;
+		try {
+			skipResult = node.shouldBeSkipped(preparedContext);
+		}
+		catch (Exception exception) {
+			rethrowIfBlacklisted(exception);
+			try {
+				node.cleanUp(preparedContext);
+			}
+			catch (Exception cleanupException) {
+				exception.addSuppressed(cleanupException);
+			}
+			finally {
+				reportAsFailed(testDescriptor, exception);
+			}
+			return;
+		}
+
+		if (skipResult.isSkipped()) {
+			try {
+				node.cleanUp(preparedContext);
+				this.listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
+			}
+			catch (Exception exception) {
+				reportAsFailed(testDescriptor, exception);
+			}
 			return;
 		}
 
@@ -93,11 +115,24 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 				// @formatter:on
 			}
 			finally {
-				node.after(context);
+				try {
+					node.after(context);
+				}
+				finally {
+					node.cleanUp(context);
+				}
 			}
 		});
 
 		this.listener.executionFinished(testDescriptor, result);
+	}
+
+	/**
+	 * Call executionStarted first to comply with the contract of EngineExecutionListener.
+	 */
+	private void reportAsFailed(TestDescriptor testDescriptor, Throwable throwable) {
+		this.listener.executionStarted(testDescriptor);
+		this.listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
 	}
 
 	@SuppressWarnings("unchecked")

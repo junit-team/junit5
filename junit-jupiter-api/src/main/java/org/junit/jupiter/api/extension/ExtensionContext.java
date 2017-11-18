@@ -247,6 +247,11 @@ public interface ExtensionContext {
 	 *
 	 * <p>Use {@code getStore(Namespace.GLOBAL)} to get the default, global {@link Namespace}.
 	 *
+	 * <p>A store is bound to its extension context lifecycle. When an extension
+	 * context lifecycle ends it closes its associated store. All stored values
+	 * that are instances of {@link ExtensionContext.Store.CloseableResource} are
+	 * notified by invoking their {@code close()} method.
+	 *
 	 * @param namespace the {@code Namespace} to get the store for; never {@code null}
 	 * @return the store in which to put and get objects for other invocations
 	 * working in the same namespace; never {@code null}
@@ -258,6 +263,19 @@ public interface ExtensionContext {
 	 * {@code Store} provides methods for extensions to save and retrieve data.
 	 */
 	interface Store {
+
+		/**
+		 * Classes implementing this interface indicate that they want to close
+		 * some underlying resources when the store is closed.
+		 */
+		interface CloseableResource {
+			/**
+			 * Close underlying resources.
+			 *
+			 * @throws Throwable any throwable is collected and rethrown.
+			 */
+			void close() throws Throwable;
+		}
 
 		/**
 		 * Get the value that is stored under the supplied {@code key}.
@@ -311,6 +329,10 @@ public interface ExtensionContext {
 		 * <p>See {@link #getOrComputeIfAbsent(Object, Function, Class)} for
 		 * further details.
 		 *
+		 * <p>If {@code type} implements {@link ExtensionContext.Store.CloseableResource}
+		 * the {@code close()} method will be invoked on the stored object when
+		 * the store is closed.
+		 *
 		 * @param type the type of object to retrieve; never {@code null}
 		 * @param <V> the key and value type
 		 * @return the object; never {@code null}
@@ -334,6 +356,10 @@ public interface ExtensionContext {
 		 * <p>For greater type safety, consider using
 		 * {@link #getOrComputeIfAbsent(Object, Function, Class)} instead.
 		 *
+		 * <p>If the created value is an instance of {@link ExtensionContext.Store.CloseableResource}
+		 * the {@code close()} method will be invoked on the stored object when
+		 * the store is closed.
+		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
 		 * to create a new value; never {@code null}
@@ -356,6 +382,10 @@ public interface ExtensionContext {
 		 * a new value will be computed by the {@code defaultCreator} (given
 		 * the {@code key} as input), stored, and returned.
 		 *
+		 * <p>If {@code requiredType} implements {@link ExtensionContext.Store.CloseableResource}
+		 * the {@code close()} method will be invoked on the stored object when
+		 * the store is closed.
+		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
 		 * to create a new value; never {@code null}
@@ -374,6 +404,10 @@ public interface ExtensionContext {
 		 * <p>A stored {@code value} is visible in child {@link ExtensionContext
 		 * ExtensionContexts} for the store's {@code Namespace} unless they
 		 * overwrite it.
+		 *
+		 * <p>If the {@code value} is an instance of {@link ExtensionContext.Store.CloseableResource}
+		 * the {@code close()} method will be invoked on the stored object when
+		 * the store is closed.
 		 *
 		 * @param key the key under which the value should be stored; never
 		 * {@code null}
