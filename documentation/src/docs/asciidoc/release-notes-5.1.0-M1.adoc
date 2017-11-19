@@ -1,7 +1,7 @@
 [[release-notes-5.1.0-M1]]
 === 5.1.0-M1
 
-*Date of Release:* ❓
+*Date of Release:* November 19, 2017
 
 *Scope:* Discovering tests in Java 9 modules, improved Kotlin support.
 
@@ -12,14 +12,6 @@ on GitHub.
 
 [[release-notes-5.1.0-junit-platform]]
 ==== JUnit Platform
-
-===== Bug Fixes
-
-* ❓
-
-===== Deprecations and Breaking Changes
-
-* ❓
 
 ===== New Features and Improvements
 
@@ -52,10 +44,6 @@ on GitHub.
 
 * The `@Tag` and `@Tags` annotations are now inherited within test class hierarchies.
 
-===== Deprecations and Breaking Changes
-
-* ❓
-
 ===== New Features and Improvements
 
 * New `assertAll()` variants in `Assertions` that accept collections of executables.
@@ -80,14 +68,6 @@ on GitHub.
 
 [[release-notes-5.1.0-junit-vintage]]
 ==== JUnit Vintage
-
-===== Bug Fixes
-
-* ❓
-
-===== Deprecations and Breaking Changes
-
-* ❓
 
 ===== New Features and Improvements
 
