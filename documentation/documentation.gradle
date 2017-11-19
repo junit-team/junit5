@@ -81,7 +81,7 @@ asciidoctor {
 	separateOutputDirs false
 	sources { include 'index.adoc' }
 
-	backends 'html5' , 'pdf' // , 'epub3'
+	backends 'html5' // , 'pdf' // , 'epub3'
 
 	attributes	'jupiter-version': project.property('version'),
 				'platform-version': project.property('platformVersion'),
