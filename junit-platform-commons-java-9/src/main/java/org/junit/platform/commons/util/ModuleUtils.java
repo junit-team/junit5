@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.IOException;
+import java.lang.module.Configuration;
 import java.lang.module.ModuleFinder;
 import java.lang.module.ModuleReader;
 import java.lang.module.ModuleReference;
@@ -68,7 +69,7 @@ public class ModuleUtils {
 		Set<String> systemModules = ModuleFinder.ofSystem().findAll().stream()
 				.map(reference -> reference.descriptor().name())
 				.collect(toSet());
-		return boot(name -> !systemModules.contains(name))
+		return stream(name -> !systemModules.contains(name))
 				.map(ResolvedModule::name)
 				.collect(toCollection(LinkedHashSet::new));
 		// @formatter:on
@@ -110,20 +111,34 @@ public class ModuleUtils {
 
 		logger.debug(() -> "Looking for classes in module: " + moduleName);
 		// @formatter:off
-		Set<ModuleReference> moduleReferences = boot(isEqual(moduleName))
+		Set<ModuleReference> moduleReferences = stream(isEqual(moduleName))
 				.map(ResolvedModule::reference)
 				.collect(toSet());
 		// @formatter:on
 		return scan(moduleReferences, filter, ModuleUtils.class.getClassLoader());
 	}
 
-	// collect module references from boot module layer
-	private static Stream<ResolvedModule> boot(Predicate<String> moduleNamePredicate) {
-		Stream<ResolvedModule> stream = ModuleLayer.boot().configuration().modules().stream();
+	// stream resolved modules from current (or boot) module layer
+	private static Stream<ResolvedModule> stream(Predicate<String> moduleNamePredicate) {
+		Module module = ModuleUtils.class.getModule();
+		ModuleLayer layer = module.getLayer();
+		if (layer == null) {
+			logger.warn(() -> ModuleUtils.class + " is a member of " + module + " - it has no layer!");
+			layer = ModuleLayer.boot();
+		}
+		return stream(layer, moduleNamePredicate);
+	}
+
+	// stream resolved modules from the passed layer
+	private static Stream<ResolvedModule> stream(ModuleLayer layer, Predicate<String> moduleNamePredicate) {
+		logger.debug(() -> "Streaming layer " + System.identityHashCode(layer) + ": " + layer);
+		Configuration configuration = layer.configuration();
+		logger.debug(() -> "Creating stream of resolved module configuration: " + configuration);
+		Stream<ResolvedModule> stream = configuration.modules().stream();
 		return stream.filter(module -> moduleNamePredicate.test(module.name()));
 	}
 
-	// scan for classes
+	// scan for classes using the passed set of module references, class filter and loader
 	private static List<Class<?>> scan(Set<ModuleReference> references, ClassFilter filter, ClassLoader loader) {
 		logger.debug(() -> "Scanning " + references.size() + " module references: " + references);
 		ModuleReferenceScanner scanner = new ModuleReferenceScanner(filter, loader);
