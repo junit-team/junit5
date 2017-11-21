@@ -503,6 +503,10 @@ subprojects { subproj ->
 			doLast {
 				project.exec {
 					executable 'jar'
+					args = ['--version']
+				}
+				project.exec {
+					executable 'jar'
 					args = ['--update','--file', archivePath,
 							'--release', version,
 							'-C', versionedProject.compileJava.destinationDir,
