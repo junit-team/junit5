@@ -24,6 +24,9 @@ import org.apiguardian.api.API;
  *
  * <p>Implementations must provide a no-args constructor.
  *
+ * <p>Extensions that implement {@code TestInstancePostProcessor} must be
+ * registered at the class level.
+ *
  * @since 5.0
  * @see #postProcessTestInstance(Object, ExtensionContext)
  */
