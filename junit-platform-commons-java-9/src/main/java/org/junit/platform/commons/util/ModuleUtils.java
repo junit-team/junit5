@@ -69,7 +69,7 @@ public class ModuleUtils {
 		Set<String> systemModules = ModuleFinder.ofSystem().findAll().stream()
 				.map(reference -> reference.descriptor().name())
 				.collect(toSet());
-		return stream(name -> !systemModules.contains(name))
+		return streamResolvedModules(name -> !systemModules.contains(name))
 				.map(ResolvedModule::name)
 				.collect(toCollection(LinkedHashSet::new));
 		// @formatter:on
@@ -111,7 +111,7 @@ public class ModuleUtils {
 
 		logger.debug(() -> "Looking for classes in module: " + moduleName);
 		// @formatter:off
-		Set<ModuleReference> moduleReferences = stream(isEqual(moduleName))
+		Set<ModuleReference> moduleReferences = streamResolvedModules(isEqual(moduleName))
 				.map(ResolvedModule::reference)
 				.collect(toSet());
 		// @formatter:on
@@ -119,21 +119,23 @@ public class ModuleUtils {
 	}
 
 	// stream resolved modules from current (or boot) module layer
-	private static Stream<ResolvedModule> stream(Predicate<String> moduleNamePredicate) {
+	private static Stream<ResolvedModule> streamResolvedModules(Predicate<String> moduleNamePredicate) {
 		Module module = ModuleUtils.class.getModule();
 		ModuleLayer layer = module.getLayer();
 		if (layer == null) {
-			logger.warn(() -> ModuleUtils.class + " is a member of " + module + " - it has no layer!");
+			logger.config(() -> ModuleUtils.class + " is a member of " + module
+					+ " - using boot layer returned by ModuleLayer.boot() as fall-back.");
 			layer = ModuleLayer.boot();
 		}
-		return stream(layer, moduleNamePredicate);
+		return streamResolvedModules(moduleNamePredicate, layer);
 	}
 
 	// stream resolved modules from the passed layer
-	private static Stream<ResolvedModule> stream(ModuleLayer layer, Predicate<String> moduleNamePredicate) {
-		logger.debug(() -> "Streaming layer " + System.identityHashCode(layer) + ": " + layer);
+	private static Stream<ResolvedModule> streamResolvedModules(Predicate<String> moduleNamePredicate,
+			ModuleLayer layer) {
+		logger.debug(() -> "Streaming modules for layer @" + System.identityHashCode(layer) + ": " + layer);
 		Configuration configuration = layer.configuration();
-		logger.debug(() -> "Creating stream of resolved module configuration: " + configuration);
+		logger.debug(() -> "Module layer configuration: " + configuration);
 		Stream<ResolvedModule> stream = configuration.modules().stream();
 		return stream.filter(module -> moduleNamePredicate.test(module.name()));
 	}
