@@ -65,7 +65,9 @@ public class ConsoleTestExecutor {
 		launcher.execute(discoveryRequest);
 
 		TestExecutionSummary summary = summaryListener.getSummary();
-		printSummary(summary, out);
+		if (summary.getTotalFailureCount() > 0 || options.getDetails() != Details.NONE) {
+			printSummary(summary, out);
+		}
 
 		return summary;
 	}
@@ -105,6 +107,9 @@ public class ConsoleTestExecutor {
 		boolean disableAnsiColors = options.isAnsiColorOutputDisabled();
 		Theme theme = options.getTheme();
 		switch (options.getDetails()) {
+			case SUMMARY:
+				// summary listener is always created and registered
+				return Optional.empty();
 			case FLAT:
 				return Optional.of(new FlatPrintingListener(out, disableAnsiColors));
 			case TREE:
@@ -122,7 +127,7 @@ public class ConsoleTestExecutor {
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
 		// Otherwise the failures have already been printed in detail
-		if (EnumSet.of(Details.NONE, Details.TREE).contains(options.getDetails())) {
+		if (EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE).contains(options.getDetails())) {
 			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);

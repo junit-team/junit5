@@ -26,6 +26,11 @@ public enum Details {
 	NONE,
 
 	/**
+	 * Print summary table of counts only.
+	 */
+	SUMMARY,
+
+	/**
 	 * Test plan execution details are rendered in a flat, line-by-line mode.
 	 */
 	FLAT,
