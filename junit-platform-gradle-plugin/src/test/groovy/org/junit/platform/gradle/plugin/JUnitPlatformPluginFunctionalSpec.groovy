@@ -140,6 +140,7 @@ dependencies {
 }
 
 junitPlatform {
+	details 'summary'
 	filters {
 		engines {
 			include 'junit-jupiter'
@@ -164,6 +165,7 @@ dependencies {
 }
 
 junitPlatform {
+	details 'summary'
 	filters {
 		engines {
 			include 'junit-jupiter'
