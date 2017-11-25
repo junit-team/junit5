@@ -4707,6 +4707,28 @@ with annotations, reflection, and classpath scanning tasks. <code>TestEngine</co
 authors are encouraged to use these supported methods in order to align with the behavior
 of the JUnit Platform.</p>
 </div>
+<div class="sect3">
+<h4 id="annotation-support"><a class="anchor" href="#annotation-support"></a>5.10.1. Annotation Support</h4>
+<div class="paragraph">
+<p><code>AnnotationSupport</code> provides a number of static utility methods that operate upon annotated
+(and meta-annotated) classes. These include methods to check whether elements are annotated,
+to locate specific annotations, and to find annotated methods and fields within a class.
+Some of these methods will search implemented interfaces and class hierarchies to
+discover related annotations. Full details of the methods are provided in the
+AnnotationSupport class JavaDocs.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="reflection-support"><a class="anchor" href="#reflection-support"></a>5.10.2. Reflection Support</h4>
+<div class="paragraph">
+<p><code>ReflectionSupport</code> provides a number of static utility methods that augment the
+standard JDK reflection and class-loading methods. These include methods to find classes
+matching a specified tester class, to load and create new instances of a class,
+and to find and invoke methods on a class. Some methods will traverse class hierarchies
+to locate matching methods. Full details of the methods are provided in the
+ReflectionSupport class JavaDocs.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.11. Relative Execution Order of User Code and Extensions</h3>
@@ -8058,7 +8080,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-11-24 11:41:40 EST
+Last updated 2017-11-25 10:42:02 EST
 </div>
 </div>
 </body>
