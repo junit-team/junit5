@@ -10,7 +10,7 @@ link:{junit5-repo}+/milestone/14?closed=1+[5.1 M1] milestone page in the JUnit r
 on GitHub.
 
 
-[[release-notes-5.1.0-junit-platform]]
+[[release-notes-5.1.0-M1-junit-platform]]
 ==== JUnit Platform
 
 ===== New Features and Improvements
@@ -37,7 +37,7 @@ on GitHub.
   Previously, a separate `TestPlan` was discovered and executed for each test class.
 
 
-[[release-notes-5.1.0-junit-jupiter]]
+[[release-notes-5.1.0-M1-junit-jupiter]]
 ==== JUnit Jupiter
 
 ===== Bug Fixes
@@ -66,7 +66,7 @@ on GitHub.
   - This is an alternative to the existing classpath scanning support.
 
 
-[[release-notes-5.1.0-junit-vintage]]
+[[release-notes-5.1.0-M1-junit-vintage]]
 ==== JUnit Vintage
 
 ===== New Features and Improvements
