@@ -4694,39 +4694,47 @@ values into a store for later retrieval. See the
 using the <code>Store</code> with a method-level scope. It is important to remember that values
 stored in an <code>ExtensionContext</code> during test execution will not be available in the
 surrounding <code>ExtensionContext</code>. Since <code>ExtensionContexts</code> may be nested, the scope of
-inner contexts may also be limited. Consult the corresponding Javadoc for details on the
+inner contexts may also be limited. Consult the corresponding JavaDoc for details on the
 methods available for storing and retrieving values via the <code><a href="../api/org/junit/jupiter/api/extension/ExtensionContext.Store.html">Store</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.10. Supported Utilities in Extensions</h3>
 <div class="paragraph">
-<p>The JUnit Platform Commons artifact exposes a package named
+<p>The <code>junit-platform-commons</code> artifact exposes a package named
 <code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that contains <em>maintained</em> utility methods for working
-with annotations, reflection, and classpath scanning tasks. <code>TestEngine</code> and <code>Extension</code>
-authors are encouraged to use these supported methods in order to align with the behavior
-of the JUnit Platform.</p>
+with annotations, classes, reflection, and classpath scanning tasks. <code>TestEngine</code> and
+<code>Extension</code> authors are encouraged to use these supported methods in order to align with
+the behavior of the JUnit Platform.</p>
 </div>
 <div class="sect3">
-<h4 id="annotation-support"><a class="anchor" href="#annotation-support"></a>5.10.1. Annotation Support</h4>
+<h4 id="extensions-supported-utilities-annotations"><a class="anchor" href="#extensions-supported-utilities-annotations"></a>5.10.1. Annotation Support</h4>
 <div class="paragraph">
-<p><code>AnnotationSupport</code> provides a number of static utility methods that operate upon annotated
-(and meta-annotated) classes. These include methods to check whether elements are annotated,
-to locate specific annotations, and to find annotated methods and fields within a class.
-Some of these methods will search implemented interfaces and class hierarchies to
-discover related annotations. Full details of the methods are provided in the
-AnnotationSupport class JavaDocs.</p>
+<p><code>AnnotationSupport</code> provides static utility methods that operate on annotated elements
+(e.g., packages, annotations, classes, interfaces, constructors, methods, and fields).
+These include methods to check whether an element is annotated or meta-annotated with a
+particular annotation, to search for specific annotations, and to find annotated methods
+and fields in a class or interface. Some of these methods search on implemented
+interfaces and within class hierarchies to find annotations. Consult the JavaDoc for
+<code><a href="../api/org/junit/platform/commons/support/AnnotationSupport.html">AnnotationSupport</a></code> for further details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="reflection-support"><a class="anchor" href="#reflection-support"></a>5.10.2. Reflection Support</h4>
+<h4 id="extensions-supported-utilities-classes"><a class="anchor" href="#extensions-supported-utilities-classes"></a>5.10.2. Class Support</h4>
 <div class="paragraph">
-<p><code>ReflectionSupport</code> provides a number of static utility methods that augment the
-standard JDK reflection and class-loading methods. These include methods to find classes
-matching a specified tester class, to load and create new instances of a class,
-and to find and invoke methods on a class. Some methods will traverse class hierarchies
-to locate matching methods. Full details of the methods are provided in the
-ReflectionSupport class JavaDocs.</p>
+<p><code>ClassSupport</code> provides static utility methods for working with classes (i.e., instances
+of <code>java.lang.Class</code>). Consult the JavaDoc for <code><a href="../api/org/junit/platform/commons/support/ClassSupport.html">ClassSupport</a></code> for further details.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="extensions-supported-utilities-reflection"><a class="anchor" href="#extensions-supported-utilities-reflection"></a>5.10.3. Reflection Support</h4>
+<div class="paragraph">
+<p><code>ReflectionSupport</code> provides static utility methods that augment the standard JDK
+reflection and class-loading mechanisms. These include methods to scan the classpath in
+search of classes matching specified predicates, to load and create new instances of a
+class, and to find and invoke methods. Some of these methods traverse class hierarchies
+to locate matching methods. Consult the JavaDoc for <code><a href="../api/org/junit/platform/commons/support/ReflectionSupport.html">ReflectionSupport</a></code> for further
+details.</p>
 </div>
 </div>
 </div>
@@ -8080,7 +8088,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-11-25 10:42:02 EST
+Last updated 2017-11-25 11:22:06 EST
 </div>
 </div>
 </body>
