@@ -3863,84 +3863,84 @@ failed. Otherwise the exit code is <code>0</code>.
 <h4 id="running-tests-console-launcher-options"><a class="anchor" href="#running-tests-console-launcher-options"></a>4.3.1. Options</h4>
 <div class="listingblock">
 <div class="content">
-<pre>Option                                        Description
-------                                        -----------
--h, --help                                    Display help information.
---disable-ansi-colors                         Disable ANSI colors in output (not
-                                                supported by all terminals).
---details &lt;[none,flat,tree,verbose]&gt;          Select an output details mode for when
-                                                tests are executed. Use one of: [none,
-                                                flat, tree, verbose]. If 'none' is
-                                                selected, then only the summary and test
-                                                failures are shown. (default: tree)
---details-theme &lt;[ascii,unicode]&gt;             Select an output details tree theme for
-                                                when tests are executed. Use one of:
-                                                [ascii, unicode] (default: unicode)
---class-path, --classpath, --cp &lt;Path:        Provide additional classpath entries --
-  path1:path2:...&gt;                              for example, for adding engines and
-                                                their dependencies. This option can be
-                                                repeated.
---reports-dir &lt;Path&gt;                          Enable report output into a specified
-                                                local directory (will be created if it
-                                                does not exist).
---scan-modules                                EXPERIMENTAL: Scan all resolved modules
-                                                for test discovery.
--o, --select-module &lt;String: module name&gt;     EXPERIMENTAL: Select single module for
-                                                test discovery. This option can be
-                                                repeated.
---scan-class-path, --scan-classpath [Path:    Scan all directories on the classpath or
-  path1:path2:...]                              explicit classpath roots. Without
-                                                arguments, only directories on the
-                                                system classpath as well as additional
-                                                classpath entries supplied via -cp
-                                                (directories and JAR files) are scanned.
-                                                Explicit classpath roots that are not on
-                                                the classpath will be silently ignored.
-                                                This option can be repeated.
--u, --select-uri &lt;URI&gt;                        Select a URI for test discovery. This
-                                                option can be repeated.
--f, --select-file &lt;String&gt;                    Select a file for test discovery. This
-                                                option can be repeated.
--d, --select-directory &lt;String&gt;               Select a directory for test discovery.
-                                                This option can be repeated.
--p, --select-package &lt;String&gt;                 Select a package for test discovery. This
-                                                option can be repeated.
--c, --select-class &lt;String&gt;                   Select a class for test discovery. This
-                                                option can be repeated.
--m, --select-method &lt;String&gt;                  Select a method for test discovery. This
-                                                option can be repeated.
--r, --select-resource &lt;String&gt;                Select a classpath resource for test
-                                                discovery. This option can be repeated.
--n, --include-classname &lt;String&gt;              Provide a regular expression to include
-                                                only classes whose fully qualified names
-                                                match. To avoid loading classes
-                                                unnecessarily, the default pattern only
-                                                includes class names that end with
-                                                "Test" or "Tests". When this option is
-                                                repeated, all patterns will be combined
-                                                using OR semantics. (default: ^.*Tests?$)
--N, --exclude-classname &lt;String&gt;              Provide a regular expression to exclude
-                                                those classes whose fully qualified
-                                                names match. When this option is
-                                                repeated, all patterns will be combined
-                                                using OR semantics.
---include-package &lt;String&gt;                    Provide a package to be included in the
-                                                test run. This option can be repeated.
---exclude-package &lt;String&gt;                    Provide a package to be excluded from the
-                                                test run. This option can be repeated.
--t, --include-tag &lt;String&gt;                    Provide a tag to be included in the test
-                                                run. This option can be repeated.
--T, --exclude-tag &lt;String&gt;                    Provide a tag to be excluded from the test
-                                                run. This option can be repeated.
--e, --include-engine &lt;String&gt;                 Provide the ID of an engine to be included
-                                                in the test run. This option can be
-                                                repeated.
--E, --exclude-engine &lt;String&gt;                 Provide the ID of an engine to be excluded
-                                                from the test run. This option can be
-                                                repeated.
---config &lt;key=value&gt;                          Set a configuration parameter for test
-                                                discovery and execution. This option can
-                                                be repeated.</pre>
+<pre>Option                                         Description
+------                                         -----------
+-h, --help                                     Display help information.
+--disable-ansi-colors                          Disable ANSI colors in output (not
+                                                 supported by all terminals).
+--details &lt;[none,summary,flat,tree,verbose]    Select an output details mode for when
+  &gt;                                              tests are executed. Use one of: [none,
+                                                 summary, flat, tree, verbose]. If 'none'
+                                                 is selected, then only the summary and
+                                                 test failures are shown. (default: tree)
+--details-theme &lt;[ascii,unicode]&gt;              Select an output details tree theme for
+                                                 when tests are executed. Use one of:
+                                                 [ascii, unicode] (default: unicode)
+--class-path, --classpath, --cp &lt;Path:         Provide additional classpath entries --
+  path1:path2:...&gt;                               for example, for adding engines and
+                                                 their dependencies. This option can be
+                                                 repeated.
+--reports-dir &lt;Path&gt;                           Enable report output into a specified
+                                                 local directory (will be created if it
+                                                 does not exist).
+--scan-modules                                 EXPERIMENTAL: Scan all resolved modules
+                                                 for test discovery.
+-o, --select-module &lt;String: module name&gt;      EXPERIMENTAL: Select single module for
+                                                 test discovery. This option can be
+                                                 repeated.
+--scan-class-path, --scan-classpath [Path:     Scan all directories on the classpath or
+  path1:path2:...]                               explicit classpath roots. Without
+                                                 arguments, only directories on the
+                                                 system classpath as well as additional
+                                                 classpath entries supplied via -cp
+                                                 (directories and JAR files) are scanned.
+                                                 Explicit classpath roots that are not on
+                                                 the classpath will be silently ignored.
+                                                 This option can be repeated.
+-u, --select-uri &lt;URI&gt;                         Select a URI for test discovery. This
+                                                 option can be repeated.
+-f, --select-file &lt;String&gt;                     Select a file for test discovery. This
+                                                 option can be repeated.
+-d, --select-directory &lt;String&gt;                Select a directory for test discovery.
+                                                 This option can be repeated.
+-p, --select-package &lt;String&gt;                  Select a package for test discovery. This
+                                                 option can be repeated.
+-c, --select-class &lt;String&gt;                    Select a class for test discovery. This
+                                                 option can be repeated.
+-m, --select-method &lt;String&gt;                   Select a method for test discovery. This
+                                                 option can be repeated.
+-r, --select-resource &lt;String&gt;                 Select a classpath resource for test
+                                                 discovery. This option can be repeated.
+-n, --include-classname &lt;String&gt;               Provide a regular expression to include
+                                                 only classes whose fully qualified names
+                                                 match. To avoid loading classes
+                                                 unnecessarily, the default pattern only
+                                                 includes class names that end with
+                                                 "Test" or "Tests". When this option is
+                                                 repeated, all patterns will be combined
+                                                 using OR semantics. (default: ^.*Tests?$)
+-N, --exclude-classname &lt;String&gt;               Provide a regular expression to exclude
+                                                 those classes whose fully qualified
+                                                 names match. When this option is
+                                                 repeated, all patterns will be combined
+                                                 using OR semantics.
+--include-package &lt;String&gt;                     Provide a package to be included in the
+                                                 test run. This option can be repeated.
+--exclude-package &lt;String&gt;                     Provide a package to be excluded from the
+                                                 test run. This option can be repeated.
+-t, --include-tag &lt;String&gt;                     Provide a tag to be included in the test
+                                                 run. This option can be repeated.
+-T, --exclude-tag &lt;String&gt;                     Provide a tag to be excluded from the test
+                                                 run. This option can be repeated.
+-e, --include-engine &lt;String&gt;                  Provide the ID of an engine to be included
+                                                 in the test run. This option can be
+                                                 repeated.
+-E, --exclude-engine &lt;String&gt;                  Provide the ID of an engine to be excluded
+                                                 from the test run. This option can be
+                                                 repeated.
+--config &lt;key=value&gt;                           Set a configuration parameter for test
+                                                 discovery and execution. This option can
+                                                 be repeated.</pre>
 </div>
 </div>
 </div>
@@ -5414,7 +5414,7 @@ declarations.</p>
 on GitHub.</p>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.1.0-junit-platform"><a class="anchor" href="#release-notes-5.1.0-junit-platform"></a>JUnit Platform</h4>
+<h4 id="release-notes-5.1.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.1.0-M1-junit-platform"></a>JUnit Platform</h4>
 <div class="sect4">
 <h5 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h5>
 <div class="ulist">
@@ -5482,7 +5482,7 @@ Previously, a separate <code>TestPlan</code> was discovered and executed for eac
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.1.0-junit-jupiter"><a class="anchor" href="#release-notes-5.1.0-junit-jupiter"></a>JUnit Jupiter</h4>
+<h4 id="release-notes-5.1.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.1.0-M1-junit-jupiter"></a>JUnit Jupiter</h4>
 <div class="sect4">
 <h5 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h5>
 <div class="ulist">
@@ -5550,7 +5550,7 @@ Java 9 modules.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-5.1.0-junit-vintage"><a class="anchor" href="#release-notes-5.1.0-junit-vintage"></a>JUnit Vintage</h4>
+<h4 id="release-notes-5.1.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.1.0-M1-junit-vintage"></a>JUnit Vintage</h4>
 <div class="sect4">
 <h5 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h5>
 <div class="ulist">
