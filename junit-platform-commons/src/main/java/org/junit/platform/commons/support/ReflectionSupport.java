@@ -57,35 +57,44 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Class classes} of the supplied {@code root}
-	 * {@linkplain URI} that match the specified {@code classTester} and
-	 * {@code classNameFilter} predicates.
+	 * Find all {@linkplain Class classes} in the supplied classpath {@code root}
+	 * that match the specified {@code classFilter} and {@code classNameFilter}
+	 * predicates.
 	 *
-	 * @param root the root URI to start scanning
-	 * @param classTester the class type filter; never {@code null}
+	 * <p>The classpath scanning algorithm searches recursively in subpackages
+	 * beginning with the root of the classpath.
+	 *
+	 * @param root the URI for the classpath root in which to scan
+	 * @param classFilter the class type filter; never {@code null}
 	 * @param classNameFilter the class name filter; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
 	 * but potentially empty
+	 * @see #findAllClassesInPackage(String, Predicate, Predicate)
 	 */
-	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classTester,
+	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
-		return ReflectionUtils.findAllClassesInClasspathRoot(root, classTester, classNameFilter);
+		return ReflectionUtils.findAllClassesInClasspathRoot(root, classFilter, classNameFilter);
 	}
 
 	/**
-	 * Find all {@linkplain Class classes} of the supplied {@code basePackageName}
-	 * that match the specified {@code classTester} and {@code classNameFilter}
+	 * Find all {@linkplain Class classes} in the supplied {@code basePackageName}
+	 * that match the specified {@code classFilter} and {@code classNameFilter}
 	 * predicates.
 	 *
-	 * @param basePackageName the base package name to start scanning
-	 * @param classTester the class type filter; never {@code null}
+	 * <p>The classpath scanning algorithm searches recursively in subpackages
+	 * beginning within the supplied base package.
+	 *
+	 * @param basePackageName the name of the base package in which to start
+	 * scanning
+	 * @param classFilter the class type filter; never {@code null}
 	 * @param classNameFilter the class name filter; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
 	 * but potentially empty
+	 * @see #findAllClassesInClasspathRoot(URI, Predicate, Predicate)
 	 */
-	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester,
+	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
-		return ReflectionUtils.findAllClassesInPackage(basePackageName, classTester, classNameFilter);
+		return ReflectionUtils.findAllClassesInPackage(basePackageName, classFilter, classNameFilter);
 	}
 
 	/**
@@ -129,6 +138,8 @@ public final class ReflectionSupport {
 	 * interface and traversing up the type hierarchy until such a method is
 	 * found or the type hierarchy is exhausted.
 	 *
+	 * <p>The algorithm does not search for methods in {@link java.lang.Object}.
+	 *
 	 * @param clazz the class or interface in which to find the method; never {@code null}
 	 * @param methodName the name of the method to find; never {@code null} or empty
 	 * @param parameterTypeNames the fully qualified names of the types of parameters
@@ -146,6 +157,8 @@ public final class ReflectionSupport {
 	 * meets the specified criteria, beginning with the specified class or
 	 * interface and traversing up the type hierarchy until such a method is
 	 * found or the type hierarchy is exhausted.
+	 *
+	 * <p>The algorithm does not search for methods in {@link java.lang.Object}.
 	 *
 	 * @param clazz the class or interface in which to find the method; never {@code null}
 	 * @param methodName the name of the method to find; never {@code null} or empty
@@ -167,7 +180,8 @@ public final class ReflectionSupport {
 	 * or {@code static} methods that are <em>hidden</em>.
 	 *
 	 * <p>If you're are looking for methods annotated with a certain annotation
-	 * type, consider using {@linkplain AnnotationSupport#findAnnotatedMethods(Class, Class, HierarchyTraversalMode)}.
+	 * type, consider using
+	 * {@link AnnotationSupport#findAnnotatedMethods(Class, Class, HierarchyTraversalMode)}.
 	 *
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param predicate the method filter; never {@code null}
@@ -183,7 +197,8 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Find all nested classes of the given class conforming to the given predicate.
+	 * Find all nested classes within the given class that conform to the given
+	 * predicate.
 	 *
 	 * @param clazz the class to be searched; never {@code null}
 	 * @param predicate the predicate against which the list of nested classes is

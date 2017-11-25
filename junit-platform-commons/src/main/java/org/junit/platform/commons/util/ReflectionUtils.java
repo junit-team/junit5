@@ -623,10 +623,10 @@ public final class ReflectionUtils {
 	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInClasspathRoot(URI, Predicate, Predicate)
 	 */
-	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classTester,
+	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 		// unmodifiable since returned by public, non-internal method(s)
-		return findAllClassesInClasspathRoot(root, ClassFilter.of(classNameFilter, classTester));
+		return findAllClassesInClasspathRoot(root, ClassFilter.of(classNameFilter, classFilter));
 	}
 
 	@API(status = INTERNAL, since = "1.1")
@@ -637,10 +637,10 @@ public final class ReflectionUtils {
 	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInPackage(String, Predicate, Predicate)
 	 */
-	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester,
+	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 		// unmodifiable since returned by public, non-internal method(s)
-		return findAllClassesInPackage(basePackageName, ClassFilter.of(classNameFilter, classTester));
+		return findAllClassesInPackage(basePackageName, ClassFilter.of(classNameFilter, classFilter));
 	}
 
 	@API(status = INTERNAL, since = "1.1")
