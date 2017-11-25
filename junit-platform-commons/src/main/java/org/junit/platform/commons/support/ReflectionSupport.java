@@ -26,6 +26,8 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * Common reflection and classpath scanning support.
  *
  * @since 1.0
+ * @see AnnotationSupport
+ * @see ClassSupport
  */
 @API(status = MAINTAINED, since = "1.0")
 public final class ReflectionSupport {
