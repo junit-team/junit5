@@ -326,6 +326,24 @@ with annotations, reflection, and classpath scanning tasks. `TestEngine` and `Ex
 authors are encouraged to use these supported methods in order to align with the behavior
 of the JUnit Platform.
 
+==== Annotation Support
+
+`AnnotationSupport` provides a number of static utility methods that operate upon annotated
+(and meta-annotated) classes. These include methods to check whether elements are annotated,
+to locate specific annotations, and to find annotated methods and fields within a class.
+Some of these methods will search implemented interfaces and class hierarchies to
+discover related annotations. Full details of the methods are provided in the
+AnnotationSupport class JavaDocs.
+
+==== Reflection Support
+
+`ReflectionSupport` provides a number of static utility methods that augment the
+standard JDK reflection and class-loading methods. These include methods to find classes
+matching a specified tester class, to load and create new instances of a class,
+and to find and invoke methods on a class. Some methods will traverse class hierarchies
+to locate matching methods. Full details of the methods are provided in the
+ReflectionSupport class JavaDocs.
+
 [[extensions-execution-order]]
 === Relative Execution Order of User Code and Extensions
 
