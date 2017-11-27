@@ -6,7 +6,7 @@
 *Scope:* Configuration parameters and bug fixes.
 
 WARNING: This is a pre-release and contains a few breaking changes. Please
-refer to the link:index.html#running-tests-ide-intellij-idea[instructions] in
+refer to the <<index.adoc#running-tests-ide-intellij-idea,instructions>> in
 the user manual to use this version in a version of IntelliJ IDEA that bundles
 an older milestone or release candidate.
 
@@ -29,13 +29,13 @@ on GitHub.
 
 * _Configuration parameters_ can now be supplied in a number of new ways:
 ** via a file named `junit-platform.properties` in the root of the class path. See
-   link:index.html#running-tests-config-params[running-tests-config-params] for details.
+   <<index.adoc#running-tests-config-params,Configuration Parameters>> for details.
 ** via the `--config` command-line option when using the
-   link:index.html#running-tests-console-launcher[Console Launcher].
+   <<index.adoc#running-tests-console-launcher,Console Launcher>>.
 ** via the `configurationParameter` or `configurationParameters` DSL when using the
-   link:index.html#running-tests-build-gradle-config-params[Gradle plugin].
+   <<index.adoc#running-tests-build-gradle-config-params,Gradle plugin>>.
 ** via the `configurationParameters` property when using the
-   link:index.html#running-tests-build-maven-config-params[Maven Surefire provider].
+   <<index.adoc#running-tests-build-maven-config-params,Maven Surefire provider>>.
 
 
 [[release-notes-5.0.0-rc3-junit-jupiter]]
@@ -70,7 +70,7 @@ on GitHub.
 
 * The _default_ test instance lifecycle mode can now be set via a _configuration
   parameter_ or JVM system property named `junit.jupiter.testinstance.lifecycle.default`.
-  See link:index.html#writing-tests-test-instance-lifecycle-changing-default[writing-tests-test-instance-lifecycle-changing-default] for details.
+  See <<index.adoc#writing-tests-test-instance-lifecycle-changing-default,Changing the Default Test Instance Lifecycle>> for details.
 * When using `@CsvSource` or `@CsvFileSource` in a parameterized test, if the CSV parser
   does not read any character from the input, and the input is within quotes, an empty
   string `""` is returned instead of `null`.

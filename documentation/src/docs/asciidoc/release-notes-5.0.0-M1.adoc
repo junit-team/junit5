@@ -23,7 +23,7 @@ on GitHub.
 ** See the https://github.com/junit-team/junit5/labels/up-for-grabs[up-for-grabs] label
    on GitHub.
 * Group IDs, artifact IDs, and versions have changed for all published artifacts.
-** See <<release-notes-5.0.0-m1-migration-artifacts>> and link:index.html#dependency-metadata[dependency-metadata].
+** See <<release-notes-5.0.0-m1-migration-artifacts>> and <<index.adoc#dependency-metadata,Dependency Metadata>>.
 * All base packages have been renamed.
 ** See <<release-notes-5.0.0-m1-migration-packages>>.
 
@@ -78,14 +78,14 @@ on GitHub.
 ** `@Classes` has been renamed to `@SelectClasses`.
 ** `@UniqueIds` has been removed.
 ** `@UseTechnicalNames` has been introduced.
-*** See link:index.html#running-tests-junit-platform-runner-technical-names[running-tests-junit-platform-runner-technical-names].
+*** See <<index.adoc#running-tests-junit-platform-runner-technical-names,Display Names vs. Technical Names>>.
 * The Gradle plugin for the JUnit Platform has been completely overhauled.
 ** The JUnit Platform Gradle plugin now requires Gradle 2.5 or higher.
 ** The `junit5Test` Gradle task has been renamed to `junitPlatformTest`.
 ** The `junit5` Gradle plugin configuration has been renamed to `junitPlatform`.
 *** `runJunit4` has been replaced by `enableStandardTestTask`.
 *** `version` has been replaced by `platformVersion`.
-** See link:index.html#running-tests-build-gradle[running-tests-build-gradle] for further details.
+** See <<index.adoc#running-tests-build-gradle,Gradle>> for further details.
 * XML test report generation has been overhauled.
 ** XML reports now contain newlines.
 ** Attributes specific to the JUnit Platform that do not align with standard attributes
@@ -137,7 +137,7 @@ on GitHub.
 ** `assertEquals()` for doubles and floats with deltas
 ** `assertArrayEquals()`
 ** Expected and actual values are now supplied to the `AssertionFailedError`.
-* link:index.html#writing-tests-dynamic-tests[Dynamic Tests]: tests can now be registered dynamically
+* <<index.adoc#writing-tests-dynamic-tests,Dynamic Tests>>: tests can now be registered dynamically
   at runtime via lambda expressions.
 * `TestInfo` now provides access to tags via `getTags()`.
 * `@AfterEach` methods and _after_ callbacks are now invoked if an exception is thrown by

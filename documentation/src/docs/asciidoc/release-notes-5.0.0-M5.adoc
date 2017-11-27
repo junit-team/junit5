@@ -7,7 +7,7 @@
 instance lifecycle management, and minor API changes.
 
 WARNING: This is a milestone release and contains breaking changes. Please
-refer to the link:index.html#running-tests-ide-intellij-idea[instructions] in
+refer to the <<index.adoc#running-tests-ide-intellij-idea,instructions>> in
 the user manual to use this version in a version of IntelliJ IDEA that bundles
 an older milestone release.
 
@@ -153,7 +153,7 @@ is placed on the Java 9 module path.
   new per-class mode via the new class-level `@TestInstance` annotation. This enables
   shared test instance state between test methods in a given test class as well as
   between non-static `@BeforeAll` and `@AfterAll` methods in the test class.
-  - See link:index.html#writing-tests-test-instance-lifecycle[writing-tests-test-instance-lifecycle] for details.
+  - See <<index.adoc#writing-tests-test-instance-lifecycle,Test Instance Lifecycle>> for details.
 * `@BeforeAll` and `@AfterAll` methods are no longer required to be `static` if the test
   class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`. This enables the
   following new features.
