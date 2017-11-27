@@ -35,4 +35,4 @@ include::contributors.adoc[]
 [[release-notes]]
 == Release Notes
 
-Release notes have been moved link:release-notes.html[here]
+The release notes are available <<release-notes.adoc#release-notes,here.>>
