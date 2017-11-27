@@ -10,9 +10,9 @@ buildscript {
 	}
 	dependencies {
 		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.6.0')
-		classpath('com.github.ben-manes:gradle-versions-plugin:0.15.0')
-		classpath('io.spring.gradle:propdeps-plugin:0.0.9.RELEASE')
-		classpath('org.ajoberstar:gradle-git-publish:0.3.2-rc.2')
+		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
+		classpath('io.spring.gradle:propdeps-plugin:0.0.10.RELEASE')
+		classpath('org.ajoberstar:gradle-git-publish:0.3.2')
 		classpath('org.ajoberstar:gradle-git:1.7.2')
 		classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.1')
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
@@ -20,7 +20,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.gradle.build-scan' version '1.9'
+	id 'com.gradle.build-scan' version '1.10.3'
 	id 'net.nemerosa.versioning' version '2.6.1'
 }
 
@@ -501,6 +501,10 @@ subprojects { subproj ->
 			// directory of the version-aware project later.
 			dependsOn = [versionedProject.classes]
 			doLast {
+				project.exec {
+					executable 'jar'
+					args = ['--version']
+				}
 				project.exec {
 					executable 'jar'
 					args = ['--update','--file', archivePath,

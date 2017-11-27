@@ -24,4 +24,4 @@ script:
 # Display Gradle, Groovy, JVM and other versions
   - ./gradlew -version
 # Build JUnit 5
-  - ./gradlew build --scan --stacktrace
+  - ./gradlew build --scan --stacktrace -Dkotlin.compiler.execution.strategy="in-process"

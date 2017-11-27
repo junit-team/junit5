@@ -23,6 +23,9 @@ import org.apiguardian.api.API;
  *
  * <p>Implementations must provide a no-args constructor.
  *
+ * <p>Extensions that implement {@code AfterAllCallback} must be registered at
+ * the class level.
+ *
  * @since 5.0
  * @see org.junit.jupiter.api.AfterAll
  * @see BeforeAllCallback

@@ -44,7 +44,7 @@ pipeline {
     }
     stage('Generate User Guide') {
       steps {
-        sh './gradlew --no-daemon asciidoctor'
+        sh './gradlew --no-daemon --stacktrace asciidoctor'
       }
     }
     stage('Update Website') {

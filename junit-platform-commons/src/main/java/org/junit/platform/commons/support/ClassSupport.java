@@ -21,6 +21,8 @@ import org.junit.platform.commons.util.ClassUtils;
  * Common class support.
  *
  * @since 1.1
+ * @see AnnotationSupport
+ * @see ReflectionSupport
  */
 @API(status = MAINTAINED, since = "1.1")
 public final class ClassSupport {

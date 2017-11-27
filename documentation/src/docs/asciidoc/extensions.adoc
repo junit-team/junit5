@@ -314,17 +314,44 @@ values into a store for later retrieval. See the
 using the `Store` with a method-level scope. It is important to remember that values
 stored in an `ExtensionContext` during test execution will not be available in the
 surrounding `ExtensionContext`. Since `ExtensionContexts` may be nested, the scope of
-inner contexts may also be limited. Consult the corresponding Javadoc for details on the
+inner contexts may also be limited. Consult the corresponding JavaDoc for details on the
 methods available for storing and retrieving values via the `{ExtensionContext_Store}`.
 
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
 
-The JUnit Platform Commons artifact exposes a package named
+The `junit-platform-commons` artifact exposes a package named
 `{junit-platform-support-package}` that contains _maintained_ utility methods for working
-with annotations, reflection, and classpath scanning tasks. `TestEngine` and `Extension`
-authors are encouraged to use these supported methods in order to align with the behavior
-of the JUnit Platform.
+with annotations, classes, reflection, and classpath scanning tasks. `TestEngine` and
+`Extension` authors are encouraged to use these supported methods in order to align with
+the behavior of the JUnit Platform.
+
+[[extensions-supported-utilities-annotations]]
+==== Annotation Support
+
+`AnnotationSupport` provides static utility methods that operate on annotated elements
+(e.g., packages, annotations, classes, interfaces, constructors, methods, and fields).
+These include methods to check whether an element is annotated or meta-annotated with a
+particular annotation, to search for specific annotations, and to find annotated methods
+and fields in a class or interface. Some of these methods search on implemented
+interfaces and within class hierarchies to find annotations. Consult the JavaDoc for
+`{AnnotationSupport}` for further details.
+
+[[extensions-supported-utilities-classes]]
+==== Class Support
+
+`ClassSupport` provides static utility methods for working with classes (i.e., instances
+of `java.lang.Class`). Consult the JavaDoc for `{ClassSupport}` for further details.
+
+[[extensions-supported-utilities-reflection]]
+==== Reflection Support
+
+`ReflectionSupport` provides static utility methods that augment the standard JDK
+reflection and class-loading mechanisms. These include methods to scan the classpath in
+search of classes matching specified predicates, to load and create new instances of a
+class, and to find and invoke methods. Some of these methods traverse class hierarchies
+to locate matching methods. Consult the JavaDoc for `{ReflectionSupport}` for further
+details.
 
 [[extensions-execution-order]]
 === Relative Execution Order of User Code and Extensions

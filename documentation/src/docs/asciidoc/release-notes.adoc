@@ -5,6 +5,8 @@ include::link-attributes.adoc[]
 
 :numbered!:
 
+include::release-notes-5.1.0-M2.adoc[]
+
 include::release-notes-5.1.0-M1.adoc[]
 
 include::release-notes-5.0.2.adoc[]

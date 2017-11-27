@@ -1,7 +1,7 @@
 [[release-notes-5.1.0-M1]]
 === 5.1.0-M1
 
-*Date of Release:* ❓
+*Date of Release:* November 19, 2017
 
 *Scope:* Discovering tests in Java 9 modules, improved Kotlin support.
 
@@ -10,16 +10,8 @@ link:{junit5-repo}+/milestone/14?closed=1+[5.1 M1] milestone page in the JUnit r
 on GitHub.
 
 
-[[release-notes-5.1.0-junit-platform]]
+[[release-notes-5.1.0-M1-junit-platform]]
 ==== JUnit Platform
-
-===== Bug Fixes
-
-* ❓
-
-===== Deprecations and Breaking Changes
-
-* ❓
 
 ===== New Features and Improvements
 
@@ -45,16 +37,12 @@ on GitHub.
   Previously, a separate `TestPlan` was discovered and executed for each test class.
 
 
-[[release-notes-5.1.0-junit-jupiter]]
+[[release-notes-5.1.0-M1-junit-jupiter]]
 ==== JUnit Jupiter
 
 ===== Bug Fixes
 
 * The `@Tag` and `@Tags` annotations are now inherited within test class hierarchies.
-
-===== Deprecations and Breaking Changes
-
-* ❓
 
 ===== New Features and Improvements
 
@@ -78,16 +66,8 @@ on GitHub.
   - This is an alternative to the existing classpath scanning support.
 
 
-[[release-notes-5.1.0-junit-vintage]]
+[[release-notes-5.1.0-M1-junit-vintage]]
 ==== JUnit Vintage
-
-===== Bug Fixes
-
-* ❓
-
-===== Deprecations and Breaking Changes
-
-* ❓
 
 ===== New Features and Improvements
 

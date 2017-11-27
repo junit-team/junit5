@@ -27,6 +27,8 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * Common annotation support.
  *
  * @since 1.0
+ * @see ClassSupport
+ * @see ReflectionSupport
  */
 @API(status = MAINTAINED, since = "1.0")
 public final class AnnotationSupport {
