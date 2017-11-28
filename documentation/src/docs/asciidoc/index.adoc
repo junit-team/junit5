@@ -31,7 +31,6 @@ include::api-evolution.adoc[]
 
 include::contributors.adoc[]
 
-
 [[release-notes]]
 == Release Notes
 
