@@ -7,8 +7,8 @@
 instance lifecycle management, and minor API changes.
 
 WARNING: This is a milestone release and contains breaking changes. Please refer to the
-<<index.adoc#running-tests-ide-intellij-idea,instructions>> in the user manual to use
-this version in a version of IntelliJ IDEA that bundles an older milestone release.
+<<index.adoc#running-tests-ide-intellij-idea,instructions>> in the User Guide to use this
+version in a version of IntelliJ IDEA that bundles an older milestone release.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/8?closed=1+[5.0 M5] milestone page in the JUnit repository
