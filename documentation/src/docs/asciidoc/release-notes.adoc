@@ -1,5 +1,7 @@
 [[release-notes]]
-== Release Notes
+== JUnit 5 Release Notes
+
+include::link-attributes.adoc[]
 
 :numbered!:
 

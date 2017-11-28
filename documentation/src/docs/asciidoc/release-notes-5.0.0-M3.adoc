@@ -61,7 +61,7 @@ on GitHub.
 * `LauncherDiscoveryRequestBuilder` no longer accepts `null` values for `selectors`, `filters`,
   or maps of configuration parameters.
 * Filters for class name, engine IDs, and tags in the Gradle plugin configuration now need to be
-  wrapped in a `filters` extension element (see <<running-tests-build-gradle-filters>>).
+  wrapped in a `filters` extension element (see <<index.adoc#running-tests-build-gradle-filters,Configuring Filters>>).
 
 ===== New Features
 
@@ -86,7 +86,7 @@ on GitHub.
   `{standard-include-class-name-pattern}` as the default pattern for class names to be included
   in the test run.
 * The Gradle plugin now allows to explicitly select which tests should be executed
-  (see <<running-tests-build-gradle-selectors>>).
+  (see <<index.adoc#running-tests-build-gradle-selectors,Configuring Selectors>>).
 * New `@Testable` annotation that `TestEngine` implementations can use to signal to IDEs
   and tooling vendors that the annotated or meta-annotated element is _testable_ (i.e.
   that it can be executed as a test on the JUnit Platform).
@@ -95,15 +95,15 @@ on GitHub.
 * Multiple regular expressions that are combined using OR semantics can now be passed via
   `@IncludeClassNamePatterns` to the `JUnitPlatform` runner.
 * Multiple regular expressions that are combined using OR semantics can now be passed to the JUnit
-  Platform Gradle plugin (see <<running-tests-build-gradle-filters>>) and the `{ConsoleLauncher}`
-  (see <<running-tests-console-launcher-options>>).
+  Platform Gradle plugin (see <<index.adoc#running-tests-build-gradle-filters,Configuring Filters>>) and the `{ConsoleLauncher}`
+  (see <<index.adoc#running-tests-console-launcher-options,Options>>).
 * Package names can now be included or excluded using `PackageNameFilter.includePackageNames`
   or `PackageNameFilter.excludePackageNames`.
 * Package names can now be included or excluded using `@IncludePackages` and `@ExcludePackages`
   in combination with the `JUnitPlatform` runner.
 * Package names can now be included or excluded via a filter configuration to the JUnit Platform
-  Gradle plugin (see <<running-tests-build-gradle-filters>>) and the `{ConsoleLauncher}`
-  (see <<running-tests-console-launcher-options>>).
+  Gradle plugin (see <<index.adoc#running-tests-build-gradle-filters,Configuring Filters>>) and the `{ConsoleLauncher}`
+  (see <<index.adoc#running-tests-console-launcher-options,Options>>).
 * The `junit-platform-console` no longer has a mandatory dependency on
   https://pholser.github.io/jopt-simple/[JOpt Simple]. Thus, it's now possible to test custom
   code that uses a different version of that library.
@@ -140,7 +140,7 @@ on GitHub.
 ===== New Features and Improvements
 
 * Support for lazy and preemptive _timeouts_ with lambda expressions in `Assertions`. See
-  examples in <<writing-tests-assertions,`AssertionsDemo`>> and consult the
+  examples in <<index.adoc#writing-tests-assertions,`AssertionsDemo`>> and consult the
   `{Assertions}` Javadoc for further details.
 * New `assertIterableEquals()` assertion that checks that two Iterables are deeply equal (see
   Javadoc for details).
