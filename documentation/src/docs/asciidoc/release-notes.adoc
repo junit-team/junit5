@@ -1,9 +1,13 @@
 [[release-notes]]
-== JUnit 5 Release Notes
+= JUnit 5 Release Notes
+Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Christian Stein
+//
+:docinfodir: docinfos
+:docinfo: private-head
+:numbered!:
+//
 
 include::link-attributes.adoc[]
-
-:numbered!:
 
 include::release-notes-5.1.0-M2.adoc[]
 
@@ -34,5 +38,3 @@ include::release-notes-5.0.0-M2.adoc[]
 include::release-notes-5.0.0-M1.adoc[]
 
 include::release-notes-5.0.0-ALPHA.adoc[]
-
-:numbered:
