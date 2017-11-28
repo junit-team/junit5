@@ -1,5 +1,5 @@
 [[release-notes]]
-== JUnit5 Release Notes
+== JUnit 5 Release Notes
 
 include::link-attributes.adoc[]
 
