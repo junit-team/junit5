@@ -1,12 +1,12 @@
 [[release-notes-5.0.0-m2]]
-=== 5.0.0-M2
+== 5.0.0-M2
 
 *Date of Release:* July 23, 2016
 
 *Scope:* Second milestone release of JUnit 5
 
 [[release-notes-5.0.0-m2-summary]]
-==== Summary of Changes
+=== Summary of Changes
 
 This release is primarily a bugfix release for bugs discovered since `5.0.0-M1`.
 
@@ -20,9 +20,9 @@ on GitHub.
 * A continuous integration build against Microsoft Windows has been set up on AppVeyor.
 
 [[release-notes-5.0.0-m2-junit-platform]]
-==== JUnit Platform
+=== JUnit Platform
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Failures in containers -- for example, `@BeforeAll` methods that throw exceptions --
   now fail the build when using the `ConsoleLauncher` or the JUnit Platform Gradle plugin.
@@ -39,26 +39,26 @@ on GitHub.
   the exception is a _blacklisted exception_ such as an `OutOfMemoryError`, however, it
   will be rethrown.
 
-===== Deprecations
+==== Deprecations
 
 * Generic name-based discovery selectors (i.e., `selectName()` and `selectNames()`) in
   `DiscoverySelectors` have been deprecated in favor of the dedicated
   `selectPackage(String)`, `selectClass(String)`, and `selectMethod(String)` methods.
 
-===== New Features
+==== New Features
 
 * New  `selectMethod(String)` method in `DiscoverySelectors` that supports selection of
   a _fully qualified method name_.
 
 [[release-notes-5.0.0-m2-junit-jupiter]]
-==== JUnit Jupiter
+=== JUnit Jupiter
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Extension implementations declared via `@ExtendWith` at the class-level and at the
   method-level will no longer be registered multiple times.
 
 [[release-notes-5.0.0-m2-junit-vintage]]
-==== JUnit Vintage
+=== JUnit Vintage
 
 _No changes since 5.0.0-M1_

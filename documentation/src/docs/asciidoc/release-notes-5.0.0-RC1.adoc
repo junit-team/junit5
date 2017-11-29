@@ -1,5 +1,5 @@
 [[release-notes-5.0.0-rc1]]
-=== 5.0.0-RC1
+== 5.0.0-RC1
 
 *Date of Release:* July 30, 2017
 
@@ -15,9 +15,9 @@ on GitHub.
 
 
 [[release-notes-5.0.0-rc1-junit-platform]]
-==== JUnit Platform
+=== JUnit Platform
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Generic, interface `default` methods that are not overridden by an implementing class
   can now be _selected_ by class, method name, and parameter types or by _fully qualified
@@ -29,7 +29,7 @@ on GitHub.
 * Overridden interface default methods are no longer discovered when searching for
   methods within a class hierarchy using `findMethods()` in `ReflectionSupport`.
 
-===== Deprecations and Breaking Changes
+==== Deprecations and Breaking Changes
 
 * Removed deprecated method `execute(LauncherDiscoveryRequest)` from `Launcher` class.
   The removed method was replaced in milestone 4 by method
@@ -37,9 +37,9 @@ on GitHub.
 
 
 [[release-notes-5.0.0-rc1-junit-jupiter]]
-==== JUnit Jupiter
+=== JUnit Jupiter
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Configuration errors regarding lifecycle methods annotated with `@BeforeAll`,
   `@AfterAll`, `BeforeEach`, or `@AfterEach` no longer halt the execution of the entire
@@ -52,7 +52,7 @@ on GitHub.
   applies to default methods annotated with Jupiter annotations such as `@Test`,
   `@BeforeEach`, etc.
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * New variants of `Assertions.assertThrows()` that accept a custom failure message as a
   `String` or `Supplier<String>`.
@@ -63,6 +63,6 @@ on GitHub.
 
 
 [[release-notes-5.0.0-rc1-junit-vintage]]
-==== JUnit Vintage
+=== JUnit Vintage
 
 No changes besides internal refactorings.

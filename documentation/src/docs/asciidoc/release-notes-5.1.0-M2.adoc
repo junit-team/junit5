@@ -1,5 +1,5 @@
 [[release-notes-5.1.0-M2]]
-=== 5.1.0-M2
+== 5.1.0-M2
 
 *Date of Release:* ❓
 
@@ -11,52 +11,52 @@ on GitHub.
 
 
 [[release-notes-5.1.0-M2-junit-platform]]
-==== JUnit Platform
+=== JUnit Platform
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Fixed a bug that emitted the summary table at the end of a console test run although
 the details mode `NONE` was selected.
 
-===== Deprecations and Breaking Changes
+==== Deprecations and Breaking Changes
 
 * ❓
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * Introduced new console details mode option `SUMMARY`. Use it to print only the
 table of counts at the end of a console test run.
 
 
 [[release-notes-5.1.0-M2-junit-jupiter]]
-==== JUnit Jupiter
+=== JUnit Jupiter
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Use current module layer when looking for test classes. The current module
 layer is the one that the class loader of class `ModuleUtils` returns. If the
 current layer can't be obtained the algorithm falls back to the boot layer.
 
-===== Deprecations and Breaking Changes
+==== Deprecations and Breaking Changes
 
 * ❓
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * ❓
 
 
 [[release-notes-5.1.0-M2-junit-vintage]]
-==== JUnit Vintage
+=== JUnit Vintage
 
-===== Bug Fixes
-
-* ❓
-
-===== Deprecations and Breaking Changes
+==== Bug Fixes
 
 * ❓
 
-===== New Features and Improvements
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
 
 * ❓

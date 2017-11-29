@@ -1,5 +1,5 @@
 [[release-notes-5.0.2]]
-=== 5.0.2
+== 5.0.2
 
 *Date of Release:* November 12, 2017
 
@@ -11,9 +11,9 @@ on GitHub.
 
 
 [[release-notes-5.0.2-junit-platform]]
-==== JUnit Platform
+=== JUnit Platform
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Failed tests are now reported correctly with Maven Surefire for test engines that do
   not use `MethodSource` (e.g. Spek).
@@ -21,7 +21,7 @@ on GitHub.
   framework, are now consistently reported correctly when executed with a non-zero
   `forkCount` with Maven Surefire.
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * The JUnit Platform Maven Surefire provider now supports the `redirectTestOutputToFile`
   Surefire feature.
@@ -30,9 +30,9 @@ on GitHub.
 
 
 [[release-notes-5.0.2-junit-jupiter]]
-==== JUnit Jupiter
+=== JUnit Jupiter
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Trailing spaces in a `@CsvSource` or `@CsvFileSource` input line no longer yield `null`
   values.
@@ -48,7 +48,7 @@ on GitHub.
   the `JupiterTestEngine` via the `ServiceLoader` mechanism, thereby allowing it to be
   used as a module on the Java 9 module-path.
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * Failure messages for `assertTrue()` and `assertFalse()` in the `Assertions` class now
   include details about the expected and actual boolean values.
@@ -59,6 +59,6 @@ on GitHub.
 
 
 [[release-notes-5.0.2-junit-vintage]]
-==== JUnit Vintage
+=== JUnit Vintage
 
 No changes.

@@ -1,5 +1,5 @@
 [[release-notes-5.1.0-M1]]
-=== 5.1.0-M1
+== 5.1.0-M1
 
 *Date of Release:* November 19, 2017
 
@@ -11,9 +11,9 @@ on GitHub.
 
 
 [[release-notes-5.1.0-M1-junit-platform]]
-==== JUnit Platform
+=== JUnit Platform
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * New `@SuiteDisplayName` annotation in the `junit-platform-suite-api` module for
   declaring a custom _display name_ for a test suite.
@@ -38,13 +38,13 @@ on GitHub.
 
 
 [[release-notes-5.1.0-M1-junit-jupiter]]
-==== JUnit Jupiter
+=== JUnit Jupiter
 
-===== Bug Fixes
+==== Bug Fixes
 
 * The `@Tag` and `@Tags` annotations are now inherited within test class hierarchies.
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * New `assertAll()` variants in `Assertions` that accept collections of executables.
 * New Kotlin friendly assertions added as _top-level functions_ in the
@@ -67,9 +67,9 @@ on GitHub.
 
 
 [[release-notes-5.1.0-M1-junit-vintage]]
-==== JUnit Vintage
+=== JUnit Vintage
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * The `VintageTestEngine` supports the new JUnit Platform `ModuleSelector` for selecting
   Java 9 modules.

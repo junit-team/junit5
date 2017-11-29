@@ -1,5 +1,5 @@
 [[release-notes-5.0.0-rc2]]
-=== 5.0.0-RC2
+== 5.0.0-RC2
 
 *Date of Release:* July 30, 2017
 
@@ -15,20 +15,20 @@ on GitHub.
 
 
 [[release-notes-5.0.0-rc2-junit-platform]]
-==== JUnit Platform
+=== JUnit Platform
 
 No changes.
 
 
 [[release-notes-5.0.0-rc2-junit-jupiter]]
-==== JUnit Jupiter
+=== JUnit Jupiter
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Fix invalid POM of `junit-jupiter-engine` by excluding `test` scope dependencies.
 
 
 [[release-notes-5.0.0-rc2-junit-vintage]]
-==== JUnit Vintage
+=== JUnit Vintage
 
 No changes.

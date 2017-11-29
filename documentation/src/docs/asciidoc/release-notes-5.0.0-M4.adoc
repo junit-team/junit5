@@ -1,5 +1,5 @@
 [[release-notes-5.0.0-m4]]
-=== 5.0.0-M4
+== 5.0.0-M4
 
 *Date of Release:* April 1, 2017
 
@@ -12,9 +12,9 @@ on GitHub.
 
 
 [[release-notes-5.0.0-m4-junit-platform]]
-==== JUnit Platform
+=== JUnit Platform
 
-===== Bug Fixes
+==== Bug Fixes
 
 * The JUnit Platform Gradle plugin now adds its dependencies with a fixed version (same as the plugin
   version) instead of a dynamic versioning scheme (was `1.+`) by default to ensure reproducible
@@ -32,7 +32,7 @@ on GitHub.
 * Updated `findNestedClasses()` in `ReflectionUtils` so that searches for nested classes also
   return inherited nested classes (regardless of whether they are static or not).
 
-===== Deprecations and Breaking Changes
+==== Deprecations and Breaking Changes
 
 * All _test suite_ annotations from the `org.junit.platform.runner` package have been
   moved to the `org.junit.platform.suite.api` package in the new `junit-platform-suite-api`
@@ -54,7 +54,7 @@ on GitHub.
   supplied `LauncherDiscoveryRequest`:
   `execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners)`
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * Custom `TestExecutionListener` implementations can now be registered automatically via
   Java's `ServiceLoader` mechanism.
@@ -105,9 +105,9 @@ on GitHub.
 
 
 [[release-notes-5.0.0-m4-junit-jupiter]]
-==== JUnit Jupiter
+=== JUnit Jupiter
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Fixed bug that prevented discovery of two or more methods in the same class when
   selected via a method selector.
@@ -119,13 +119,13 @@ on GitHub.
 * ``TestExecutionExceptionHandler``s are now invoked in the opposite order in which they
   were registered, analogous to all other "_after_" extensions.
 
-===== Deprecations and Breaking Changes
+==== Deprecations and Breaking Changes
 
 * Removed deprecated `Assertions.expectThrows()` method in favor of `Assertions.assertThrows()`.
 * ``ExtensionContext.Namespace``s composed of the same parts but in a different order are no longer considered
   equal to each other.
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * First-class support for _parameterized tests_ via the new `@ParameterizedTest` annotation.
   See <<index.adoc#writing-tests-parameterized-tests,Parameterized Tests>> for details.
@@ -147,9 +147,9 @@ on GitHub.
 
 
 [[release-notes-5.0.0-m4-junit-vintage]]
-==== JUnit Vintage
+=== JUnit Vintage
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Fixed bug that caused only the last failure of a test to be reported. For example, when using the
   `ErrorCollector` rule, only the last failed check was reported. Now, all failures are reported

@@ -1,12 +1,12 @@
 [[release-notes-5.0.0-m1]]
-=== 5.0.0-M1
+== 5.0.0-M1
 
 *Date of Release:* July 7, 2016
 
 *Scope:* First milestone release of JUnit 5
 
 [[release-notes-5.0.0-m1-summary]]
-==== Summary of Changes
+=== Summary of Changes
 
 The following is a list of global changes. For details regarding changes specific to the
 Platform, Jupiter, and Vintage, consult the dedicated subsections below. For a complete
@@ -66,7 +66,7 @@ on GitHub.
 
 
 [[release-notes-5.0.0-m1-junit-platform]]
-==== JUnit Platform
+=== JUnit Platform
 
 * The `ConsoleRunner` has been renamed to `ConsoleLauncher`.
 * `ConsoleLauncher` now always returns the status code on exit, and the _enable exit code_
@@ -128,7 +128,7 @@ on GitHub.
    `@IncludeEngines`, and `@ExcludeEngines`.
 
 [[release-notes-5.0.0-m1-junit-jupiter]]
-==== JUnit Jupiter
+=== JUnit Jupiter
 
 * The `junit5` engine ID has been renamed to `junit-jupiter`.
 * `JUnit5TestEngine` has been renamed to `JupiterTestEngine`.
@@ -175,7 +175,7 @@ on GitHub.
   of retrieving a context specific name via the current test class or test method.
 
 [[release-notes-5.0.0-m1-junit-vintage]]
-==== JUnit Vintage
+=== JUnit Vintage
 
 * The `junit4` engine ID has been renamed to `junit-vintage`.
 * `JUnit4TestEngine` has been renamed to `VintageTestEngine`.

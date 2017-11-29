@@ -1,5 +1,5 @@
 [[release-notes-5.0.0-m3]]
-=== 5.0.0-M3
+== 5.0.0-M3
 
 *Date of Release:* November 30, 2016
 
@@ -12,9 +12,9 @@ on GitHub.
 
 
 [[release-notes-5.0.0-m3-junit-platform]]
-==== JUnit Platform
+=== JUnit Platform
 
-===== Bug Fixes
+==== Bug Fixes
 
 * `ColoredPrintingTestListener`, which is used by the `ConsoleLauncher`, now outputs the
   actual exception type and its stack trace when printing an exception message.
@@ -24,7 +24,7 @@ on GitHub.
 * Classpath scanning no longer loads classes that are excluded by a class name filter.
 * Classpath scanning no longer attempts to load Java 9 `module-info.class` files.
 
-===== Deprecations and Breaking Changes
+==== Deprecations and Breaking Changes
 
 * `ClasspathSelector` has been renamed to `ClasspathRootSelector` to avoid confusion with
   `ClasspathResourceSelector`.
@@ -63,7 +63,7 @@ on GitHub.
 * Filters for class name, engine IDs, and tags in the Gradle plugin configuration now need to be
   wrapped in a `filters` extension element (see <<index.adoc#running-tests-build-gradle-filters,Configuring Filters>>).
 
-===== New Features
+==== New Features
 
 * New `selectUri(...)` methods in `DiscoverySelectors` for selecting URIs. A `TestEngine`
   can retrieve such values by querying registered instances of `UriSelector`.
@@ -116,9 +116,9 @@ on GitHub.
 
 
 [[release-notes-5.0.0-m3-junit-jupiter]]
-==== JUnit Jupiter
+=== JUnit Jupiter
 
-===== Bug Fixes
+==== Bug Fixes
 
 * `@AfterEach` methods are now executed with _bottom-up_ semantics within a test
   class hierarchy.
@@ -131,13 +131,13 @@ on GitHub.
   methods that accept arrays or primitive types as parameters.
 * `ExtensionContext.Store` is now thread-safe.
 
-===== Deprecations and Breaking Changes
+==== Deprecations and Breaking Changes
 
 * The `Executable` functional interface has been relocated to a new dedicated
   `org.junit.jupiter.api.function` package.
 * `Assertions.expectThrows()` has been deprecated in favor of `Assertions.assertThrows()`.
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * Support for lazy and preemptive _timeouts_ with lambda expressions in `Assertions`. See
   examples in <<index.adoc#writing-tests-assertions,`AssertionsDemo`>> and consult the
@@ -154,6 +154,6 @@ on GitHub.
 
 
 [[release-notes-5.0.0-m3-junit-vintage]]
-==== JUnit Vintage
+=== JUnit Vintage
 
 _No changes since 5.0.0-M2_
