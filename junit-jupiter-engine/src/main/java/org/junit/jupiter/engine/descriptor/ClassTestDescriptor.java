@@ -29,6 +29,7 @@ import java.util.function.Function;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEngineExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -149,7 +150,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ExtensionContext.
 			ClassExtensionContext extensionContext = (ClassExtensionContext) context.getExtensionContext();
-			extensionContext.setTestInstance(context.getTestInstanceProvider().getTestInstance(Optional.empty()));
+			Object instance = context.getTestInstanceProvider().getTestInstance(Optional.empty());
+			extensionContext.setTestInstance(instance);
+			// Also store the instance in the engine-level store.
+			storeTestInstanceForAfterEngineExecutionCallbacks(extensionContext.getRoot(), instance);
 		}
 
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
@@ -163,6 +167,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		throwableCollector.assertEmpty();
 
 		return context;
+	}
+
+	private void storeTestInstanceForAfterEngineExecutionCallbacks(ExtensionContext context, Object instance) {
+		context.getStore(AfterEngineExecutionCallback.NAMESPACE).put(instance.getClass(), instance);
 	}
 
 	@Override
