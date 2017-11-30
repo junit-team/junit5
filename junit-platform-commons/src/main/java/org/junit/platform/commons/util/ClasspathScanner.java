@@ -52,7 +52,9 @@ class ClasspathScanner {
 	private static final char PACKAGE_SEPARATOR_CHAR = '.';
 	private static final String PACKAGE_SEPARATOR_STRING = String.valueOf(PACKAGE_SEPARATOR_CHAR);
 
-	/** Malformed class name InternalError like reported in #401. */
+	/**
+	 * Malformed class name InternalError like reported in #401.
+	 */
 	private static final String MALFORMED_CLASS_NAME_ERROR_MESSAGE = "Malformed class name";
 
 	private final Supplier<ClassLoader> classLoaderSupplier;
