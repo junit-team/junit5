@@ -3,7 +3,7 @@
 
 *Date of Release:* ❓
 
-*Scope:* Bug-fixing and various enhancements
+*Scope:* Minor bug fixes and various enhancements
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/18?closed=1+[5.1 M2] milestone page in the JUnit repository
@@ -15,8 +15,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* Fixed a bug that emitted the summary table at the end of a console test run although
-the details mode `NONE` was selected.
+* Summary table is no longer printed via the `ConsoleLauncher` and Gradle plugin when
+  details mode `NONE` is selected, unless there are errors.
 
 ==== Deprecations and Breaking Changes
 
@@ -24,8 +24,9 @@ the details mode `NONE` was selected.
 
 ==== New Features and Improvements
 
-* Introduced new console details mode option `SUMMARY`. Use it to print only the
-table of counts at the end of a console test run.
+* New `SUMMARY` details mode for the `ConsoleLauncher` and Gradle plugin which prints
+  the table of success and failure counts at the end of test plan execution. This new
+  mode is analogous to the previous behavior of the `NONE` details mode.
 
 
 [[release-notes-5.1.0-M2-junit-jupiter]]
@@ -33,9 +34,10 @@ table of counts at the end of a console test run.
 
 ==== Bug Fixes
 
-* Use current module layer when looking for test classes. The current module
-layer is the one that the class loader of class `ModuleUtils` returns. If the
-current layer can't be obtained the algorithm falls back to the boot layer.
+* The current module layer is now used when scanning for test classes within modules. The
+  current module layer is the one that the class loader for the `ModuleUtils` class
+  returns. If the current layer cannot be obtained, the algorithm falls back to the boot
+  layer.
 
 ==== Deprecations and Breaking Changes
 
