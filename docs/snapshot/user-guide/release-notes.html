@@ -660,7 +660,7 @@ vendors.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> Bug-fixing and various enhancements</p>
+<p><strong>Scope:</strong> Minor bug fixes and various enhancements</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -674,8 +674,8 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fixed a bug that emitted the summary table at the end of a console test run although
-the details mode <code>NONE</code> was selected.</p>
+<p>Summary table is no longer printed via the <code>ConsoleLauncher</code> and Gradle plugin when
+details mode <code>NONE</code> is selected, unless there are errors.</p>
 </li>
 </ul>
 </div>
@@ -695,8 +695,9 @@ the details mode <code>NONE</code> was selected.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Introduced new console details mode option <code>SUMMARY</code>. Use it to print only the
-table of counts at the end of a console test run.</p>
+<p>New <code>SUMMARY</code> details mode for the <code>ConsoleLauncher</code> and Gradle plugin which prints
+the table of success and failure counts at the end of test plan execution. This new
+mode is analogous to the previous behavior of the <code>NONE</code> details mode.</p>
 </li>
 </ul>
 </div>
@@ -709,9 +710,10 @@ table of counts at the end of a console test run.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Use current module layer when looking for test classes. The current module
-layer is the one that the class loader of class <code>ModuleUtils</code> returns. If the
-current layer can&#8217;t be obtained the algorithm falls back to the boot layer.</p>
+<p>The current module layer is now used when scanning for test classes within modules. The
+current module layer is the one that the class loader for the <code>ModuleUtils</code> class
+returns. If the current layer cannot be obtained, the algorithm falls back to the boot
+layer.</p>
 </li>
 </ul>
 </div>
@@ -3487,7 +3489,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-11-30 09:59:59 EST
+Last updated 2017-11-30 10:12:00 EST
 </div>
 </div>
 </body>
