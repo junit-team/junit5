@@ -14,7 +14,7 @@ comprehensive reference documentation for programmers writing tests,
 extension authors, and engine authors as well as build tool and IDE
 vendors.
 
-include::link-attributes.adoc[]
+include::../link-attributes.adoc[]
 
 include::release-notes-5.1.0-M2.adoc[]
 
