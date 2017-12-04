@@ -43,6 +43,7 @@ import org.apiguardian.api.API;
  * </ul>
  *
  * @since 5.0
+ * @see RegisterExtension
  * @see Extension
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
