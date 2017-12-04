@@ -39,6 +39,7 @@ import org.apiguardian.api.API;
  * <li>{@link TestInstancePostProcessor}</li>
  * <li>{@link ParameterResolver}</li>
  * <li>{@link TestExecutionExceptionHandler}</li>
+ * <li>{@link TestTemplateInvocationContextProvider}</li>
  * </ul>
  *
  * @since 5.0
