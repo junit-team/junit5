@@ -17,10 +17,10 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
-import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.DisplayName;
@@ -43,6 +44,7 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -150,15 +152,15 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 		if (annotatedElement instanceof Class) {
 			Class<?> clazz = (Class<?>) annotatedElement;
-			// @formatter:off
-			findAnnotatedFields(clazz, RegisterExtension.class, field -> isStatic(field)).stream()
-				.map(field -> readFieldValue(clazz, field.getName(), null))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.filter(Extension.class::isInstance)
-				.map(Extension.class::cast)
-				.forEach(ext -> newRegistry.registerExtension(ext, clazz));
-			// @formatter:on
+			Predicate<Field> isStatic = ReflectionUtils::isStatic;
+			Predicate<Field> isExtension = field -> Extension.class.isAssignableFrom(field.getType());
+
+			findAnnotatedFields(clazz, RegisterExtension.class, isStatic.and(isExtension)).forEach(field -> {
+				readFieldValue(field).ifPresent(value -> {
+					Extension extension = (Extension) value;
+					newRegistry.registerExtension(extension, field);
+				});
+			});
 		}
 
 		return newRegistry;
