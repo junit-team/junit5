@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
@@ -162,13 +163,34 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void readFieldValueOfExistingField() {
-		assertThat(readFieldValue(MyClass.class, "value", new MyClass(42))).contains(42);
+	void readFieldValueOfNonexistentStaticField() {
+		assertThat(readFieldValue(MyClass.class, "doesNotExist", null)).isNotPresent();
+		assertThat(readFieldValue(MySubClass.class, "staticField", null)).isNotPresent();
 	}
 
 	@Test
-	void readFieldValueOfMissingField() {
-		assertThat(readFieldValue(MyClass.class, "doesNotExist", new MyClass(42))).isEmpty();
+	void readFieldValueOfNonexistentInstanceField() {
+		assertThat(readFieldValue(MyClass.class, "doesNotExist", new MyClass(42))).isNotPresent();
+		assertThat(readFieldValue(MyClass.class, "doesNotExist", new MySubClass(42))).isNotPresent();
+	}
+
+	@Test
+	void readFieldValueOfExistingStaticField() throws Exception {
+		assertThat(readFieldValue(MyClass.class, "staticField", null)).contains(42);
+
+		Field field = MyClass.class.getDeclaredField("staticField");
+		assertThat(readFieldValue(field)).contains(42);
+		assertThat(readFieldValue(field, null)).contains(42);
+	}
+
+	@Test
+	void readFieldValueOfExistingInstanceField() throws Exception {
+		MyClass instance = new MyClass(42);
+		assertThat(readFieldValue(MyClass.class, "instanceField", instance)).contains(42);
+
+		Field field = MyClass.class.getDeclaredField("instanceField");
+		assertThat(readFieldValue(field, instance)).contains(42);
+		assertThat(readFieldValue(field, null)).isNotPresent();
 	}
 
 	@Test
@@ -1136,10 +1158,19 @@ class ReflectionUtilsTests {
 
 	static class MyClass {
 
-		final int value;
+		static final int staticField = 42;
+
+		final int instanceField;
 
 		MyClass(int value) {
-			this.value = value;
+			this.instanceField = value;
+		}
+	}
+
+	static class MySubClass extends MyClass {
+
+		MySubClass(int value) {
+			super(value);
 		}
 	}
 

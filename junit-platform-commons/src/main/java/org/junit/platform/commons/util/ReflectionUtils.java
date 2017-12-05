@@ -360,7 +360,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Read the value of a potentially inaccessible field.
+	 * Read the value of a potentially inaccessible or nonexistent field.
 	 *
 	 * <p>If the field does not exist, an exception occurs while reading it, or
 	 * the value of the field is {@code null}, an empty {@link Optional} is
@@ -370,13 +370,55 @@ public final class ReflectionUtils {
 	 * @param fieldName the name of the field; never {@code null} or empty
 	 * @param instance the instance from where the value is to be read; may
 	 * be {@code null} for a static field
+	 * @see #readFieldValue(Field)
+	 * @see #readFieldValue(Field, Object)
 	 */
 	public static <T> Optional<Object> readFieldValue(Class<T> clazz, String fieldName, T instance) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(fieldName, "Field name must not be null or blank");
 
+		Field field = null;
 		try {
-			Field field = makeAccessible(clazz.getDeclaredField(fieldName));
+			field = makeAccessible(clazz.getDeclaredField(fieldName));
+		}
+		catch (Throwable t) {
+			BlacklistedExceptions.rethrowIfBlacklisted(t);
+			return Optional.empty();
+		}
+		return readFieldValue(field, instance);
+	}
+
+	/**
+	 * Read the value of a potentially inaccessible static field.
+	 *
+	 * <p>If an exception occurs while reading the field or if the value of the
+	 * field is {@code null}, an empty {@link Optional} is returned.
+	 *
+	 * @param field the field to read; never {@code null}
+	 * @see #readFieldValue(Field, Object)
+	 * @see #readFieldValue(Class, String, Object)
+	 */
+	public static Optional<Object> readFieldValue(Field field) {
+		return readFieldValue(field, null);
+	}
+
+	/**
+	 * Read the value of a potentially inaccessible field.
+	 *
+	 * <p>If an exception occurs while reading the field or if the value of the
+	 * field is {@code null}, an empty {@link Optional} is returned.
+	 *
+	 * @param field the field to read; never {@code null}
+	 * @param instance the instance from which the value is to be read; may
+	 * be {@code null} for a static field
+	 * @see #readFieldValue(Field)
+	 * @see #readFieldValue(Class, String, Object)
+	 */
+	public static <T> Optional<Object> readFieldValue(Field field, T instance) {
+		Preconditions.notNull(field, "Field must not be null");
+
+		try {
+			makeAccessible(field);
 			return Optional.ofNullable(field.get(instance));
 		}
 		catch (Throwable t) {
