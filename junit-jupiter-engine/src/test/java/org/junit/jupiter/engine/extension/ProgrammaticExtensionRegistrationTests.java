@@ -42,10 +42,19 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		assertOneTestSucceeded(InstanceLevelExtensionRegistrationTestCase.class);
 	}
 
-	@Disabled("Disabled until feature is completed")
 	@Test
 	void classLevel() {
 		assertOneTestSucceeded(ClassLevelExtensionRegistrationTestCase.class);
+	}
+
+	@Test
+	void classLevelFromSuperclass() {
+		assertOneTestSucceeded(SubClassLevelExtensionRegistrationTestCase.class);
+	}
+
+	@Test
+	void classLevelFromInterface() {
+		assertOneTestSucceeded(ExtensionRegistrationFromInterfaceTestCase.class);
 	}
 
 	private void assertOneTestSucceeded(Class<?> testClass) {
@@ -116,6 +125,52 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		@AfterAll
 		static void afterAll(String wisdom) {
 			assertWisdom(crystalBall, wisdom, "@AfterAll");
+		}
+
+	}
+
+	static class SubClassLevelExtensionRegistrationTestCase extends ClassLevelExtensionRegistrationTestCase {
+
+		@Test
+		@Override
+		void test(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "Overridden @Test");
+		}
+
+	}
+
+	interface ClassLevelExtensionRegistrationInterface {
+
+		@RegisterExtension
+		static final CrystalBall crystalBall = new CrystalBall("Outlook good");
+
+		@BeforeAll
+		static void beforeAll(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@BeforeAll");
+		}
+
+		@BeforeEach
+		default void beforeEach(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@BeforeEach");
+		}
+
+		@AfterEach
+		default void afterEach(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@AfterEach");
+		}
+
+		@AfterAll
+		static void afterAll(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@AfterAll");
+		}
+
+	}
+
+	static class ExtensionRegistrationFromInterfaceTestCase implements ClassLevelExtensionRegistrationInterface {
+
+		@Test
+		void test(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@Test");
 		}
 
 	}
