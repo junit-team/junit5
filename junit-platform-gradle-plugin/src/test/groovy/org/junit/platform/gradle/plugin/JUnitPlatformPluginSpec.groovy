@@ -379,7 +379,7 @@ class JUnitPlatformPluginSpec extends Specification {
 
 		then:
 		Configuration configuration = project.configurations.getByName("junitPlatform")
-		configuration.triggerWhenEmptyActionsIfNecessary()
+		configuration.runDependencyActions()
 
 		configuration.getAllDependencies().contains(
 				project.dependencies.create("org.junit.platform:junit-platform-launcher:1.0.0"),
@@ -398,7 +398,7 @@ class JUnitPlatformPluginSpec extends Specification {
 
 		then:
 		Configuration configuration = project.configurations.getByName("junitPlatform")
-		configuration.triggerWhenEmptyActionsIfNecessary()
+		configuration.runDependencyActions()
 
 		configuration.getAllDependencies()
 				.findAll { dependency -> "org.junit.platform" == dependency.getGroup() }
