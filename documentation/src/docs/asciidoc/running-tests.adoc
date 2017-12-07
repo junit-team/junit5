@@ -72,8 +72,6 @@ Eclipse offers full support for JUnit 5 as a part of their Oxygen.1a (4.7.1a) re
 
 For more information on using JUnit 5 in Eclipse check https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support[Eclipse Project Oxygen.1a (4.7.1a) - New and Noteworthy.]
 
-https://wiki.eclipse.org/JDT_UI/JUnit_5[Eclipse JDT UI/JUnit 5] wiki page.
-
 ==== Other IDEs
 
 At the time of this writing, there is no direct support for running tests on the JUnit
