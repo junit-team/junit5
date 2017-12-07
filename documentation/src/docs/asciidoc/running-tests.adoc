@@ -66,16 +66,18 @@ testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
 </dependency>
 ----
 
-==== Eclipse Beta Support
+==== Eclipse Support
 
-Eclipse 4.7 (_Oxygen_) has beta support for the JUnit Platform and JUnit Jupiter. For
-details on how to set it up, please consult the
+Eclipse offers full support for JUnit 5 as a part of their Oxygen.1a (4.7.1a) release.
+
+For more information on using JUnit 5 in Eclipse check https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support[Eclipse Project Oxygen.1a (4.7.1a) - New and Noteworthy.]
+
 https://wiki.eclipse.org/JDT_UI/JUnit_5[Eclipse JDT UI/JUnit 5] wiki page.
 
 ==== Other IDEs
 
 At the time of this writing, there is no direct support for running tests on the JUnit
-Platform within IDEs other than with IntelliJ IDEA or the beta support in Eclipse.
+Platform within IDEs other than with IntelliJ IDEA and Eclipse.
 However, the JUnit team provides two intermediate solutions so that you can go ahead and
 try out JUnit 5 within your IDE today. You can use the <<running-tests-console-launcher>>
 manually or execute tests with a <<running-tests-junit-platform-runner,JUnit 4 based
