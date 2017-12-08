@@ -3126,8 +3126,13 @@ expressiveness and power of dynamic tests.</p>
 <div class="sect3">
 <h4 id="running-tests-ide-intellij-idea"><a class="anchor" href="#running-tests-ide-intellij-idea"></a>4.1.1. IntelliJ IDEA</h4>
 <div class="paragraph">
-<p>IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2.
-For details please see the <a href="https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/">post on the IntelliJ IDEA blog</a>.</p>
+<p>IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2. For
+details please see the
+<a href="https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/">post on the
+IntelliJ IDEA blog</a>. Note, however, that it is recommended to use IDEA 2017.3 or newer
+since these newer versions of IDEA will download the following JARs automatically based
+on the API version used in the project: <code>junit-platform-launcher</code>,
+<code>junit-jupiter-engine</code>, and <code>junit-vintage-engine</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 1. JUnit 5 Versions Bundled in IntelliJ IDEA</caption>
@@ -3171,24 +3176,23 @@ For details please see the <a href="https://blog.jetbrains.com/idea/2016/08/usin
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-IntelliJ IDEA bundles a certain version of JUnit 5. That means, if you want to
-use a newer milestone version of the Jupiter API, executing the tests might not work.
-This situation will improve once the first GA version of JUnit 5 has been released.
-In the meantime, please follow the instructions below to use a newer version of JUnit 5
-than the one bundled with IntelliJ IDEA.
+IntelliJ IDEA (prior to IDEA 2017.3) bundles a certain version of JUnit 5. Thus,
+if you want to use a newer version of JUnit Jupiter, execution of tests within the IDE
+might fail due to version conflicts. In such cases, please follow the instructions below
+to use a newer version of JUnit 5 than the one bundled with IntelliJ IDEA.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>In order to use a different JUnit 5 version, you have to manually add the
-<code>junit-platform-launcher</code>, <code>junit-jupiter-engine</code>, and <code>junit-vintage-engine</code> JARs to the
-classpath.</p>
+<p>In order to use a different JUnit 5 version (e.g., 5.1.0-SNAPSHOT), you may need to
+include the corresponding versions of the <code>junit-platform-launcher</code>,
+<code>junit-jupiter-engine</code>, and <code>junit-vintage-engine</code> JARs in the classpath.</p>
 </div>
 <div class="listingblock">
 <div class="title">Additional Gradle Dependencies</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"><span class="comment">// Only needed to run tests in an IntelliJ IDEA that bundles an older version</span>
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="comment">// Only needed to run tests in a version of IntelliJ IDEA that bundles an older version</span>
 testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.platform:junit-platform-launcher:1.1.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
 testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-engine:5.1.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
 testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:5.1.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)</code></pre>
@@ -3197,7 +3201,7 @@ testRuntime(<span class="string"><span class="delimiter">&quot;</span><span clas
 <div class="listingblock">
 <div class="title">Additional Maven Dependencies</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="comment">&lt;!-- Only required to run tests in an IntelliJ IDEA that bundles an older version --&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="comment">&lt;!-- Only required to run tests in a version of IntelliJ IDEA that bundles an older version --&gt;</span>
 <span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>junit-platform-launcher<span class="tag">&lt;/artifactId&gt;</span>
@@ -3220,16 +3224,20 @@ testRuntime(<span class="string"><span class="delimiter">&quot;</span><span clas
 </div>
 </div>
 <div class="sect3">
-<h4 id="eclipse-support"><a class="anchor" href="#eclipse-support"></a>4.1.2. Eclipse Support</h4>
+<h4 id="running-tests-ide-eclipse"><a class="anchor" href="#running-tests-ide-eclipse"></a>4.1.2. Eclipse</h4>
 <div class="paragraph">
-<p>Eclipse offers full support for JUnit 5 as a part of their Oxygen.1a (4.7.1a) release.</p>
+<p>Eclipse IDE offers support for the JUnit Platform since the Eclipse Oxygen.1a (4.7.1a)
+release.</p>
 </div>
 <div class="paragraph">
-<p>For more information on using JUnit 5 in Eclipse check <a href="https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support">Eclipse Project Oxygen.1a (4.7.1a) - New and Noteworthy.</a></p>
+<p>For more information on using JUnit 5 in Eclipse consult the official <em>Eclipse support
+for JUnit 5</em> section of the
+<a href="https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support">Eclipse Project Oxygen.1a
+(4.7.1a) - New and Noteworthy</a> documentation.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="other-ides"><a class="anchor" href="#other-ides"></a>4.1.3. Other IDEs</h4>
+<h4 id="running-tests-ide-other"><a class="anchor" href="#running-tests-ide-other"></a>4.1.3. Other IDEs</h4>
 <div class="paragraph">
 <p>At the time of this writing, there is no direct support for running tests on the JUnit
 Platform within IDEs other than with IntelliJ IDEA and Eclipse.
@@ -5393,7 +5401,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-12-08 08:04:22 EST
+Last updated 2017-12-08 18:14:19 EST
 </div>
 </div>
 </body>
