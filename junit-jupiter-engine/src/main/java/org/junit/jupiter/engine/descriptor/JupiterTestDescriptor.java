@@ -63,6 +63,12 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
+	private static final Predicate<Field> isExtension = field -> Extension.class.isAssignableFrom(field.getType());
+	private static final Predicate<Field> isStatic = ReflectionUtils::isStatic;
+	private static final Predicate<Field> isStaticExtension = isStatic.and(isExtension);
+	private static final Predicate<Field> isNonStatic = isStatic.negate();
+	private static final Predicate<Field> isNonStaticExtension = isNonStatic.and(isExtension);
+
 	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
 		super(uniqueId, displayName, source);
 	}
@@ -142,28 +148,26 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	protected ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
 			ExtensionRegistry existingExtensionRegistry) {
+
 		// @formatter:off
 		List<Class<? extends Extension>> extensionTypes = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
 				.map(ExtendWith::value)
 				.flatMap(Arrays::stream)
 				.collect(toList());
 		// @formatter:on
-		ExtensionRegistry newRegistry = ExtensionRegistry.createRegistryFrom(existingExtensionRegistry, extensionTypes);
 
-		if (annotatedElement instanceof Class) {
-			Class<?> clazz = (Class<?>) annotatedElement;
-			Predicate<Field> isStatic = ReflectionUtils::isStatic;
-			Predicate<Field> isExtension = field -> Extension.class.isAssignableFrom(field.getType());
+		return ExtensionRegistry.createRegistryFrom(existingExtensionRegistry, extensionTypes);
+	}
 
-			findAnnotatedFields(clazz, RegisterExtension.class, isStatic.and(isExtension)).forEach(field -> {
-				readFieldValue(field).ifPresent(value -> {
-					Extension extension = (Extension) value;
-					newRegistry.registerExtension(extension, field);
-				});
+	protected void registerExtensionsFromFields(Class<?> clazz, ExtensionRegistry registry, Object instance) {
+		Predicate<Field> predicate = (instance == null) ? isStaticExtension : isNonStaticExtension;
+
+		findAnnotatedFields(clazz, RegisterExtension.class, predicate).forEach(field -> {
+			readFieldValue(field, instance).ifPresent(value -> {
+				Extension extension = (Extension) value;
+				registry.registerExtension(extension, field);
 			});
-		}
-
-		return newRegistry;
+		});
 	}
 
 	/**

@@ -120,6 +120,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.testClass,
 			context.getExtensionRegistry());
 
+		registerExtensionsFromFields(this.testClass, registry, null);
+		registerBeforeEachMethodAdapters(registry);
+		registerAfterEachMethodAdapters(registry);
+
 		Lifecycle lifecycle = getTestInstanceLifecycle(this.testClass, context.getConfigurationParameters());
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
@@ -127,9 +131,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		this.beforeAllMethods = findBeforeAllMethods(this.testClass, lifecycle == Lifecycle.PER_METHOD);
 		this.afterAllMethods = findAfterAllMethods(this.testClass, lifecycle == Lifecycle.PER_METHOD);
-
-		registerBeforeEachMethodAdapters(registry);
-		registerAfterEachMethodAdapters(registry);
 
 		// @formatter:off
 		return context.extend()

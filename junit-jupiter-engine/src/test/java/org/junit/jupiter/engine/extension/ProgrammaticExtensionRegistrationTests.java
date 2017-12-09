@@ -18,7 +18,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -36,7 +35,6 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
  */
 class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTests {
 
-	@Disabled("Disabled until feature is completed")
 	@Test
 	void instanceLevel() {
 		assertOneTestSucceeded(InstanceLevelExtensionRegistrationTestCase.class);
