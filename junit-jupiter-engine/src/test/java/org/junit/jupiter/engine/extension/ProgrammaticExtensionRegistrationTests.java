@@ -13,12 +13,14 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -38,6 +40,11 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	@Test
 	void instanceLevel() {
 		assertOneTestSucceeded(InstanceLevelExtensionRegistrationTestCase.class);
+	}
+
+	@Test
+	void instanceLevelWithTestInstancePerClassLifecycle() {
+		assertOneTestSucceeded(InstanceLevelExtensionRegistrationWithTestInstancePerClassLifecycleTestCase.class);
 	}
 
 	@Test
@@ -91,6 +98,39 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		@AfterEach
 		void afterEach(String wisdom) {
 			assertWisdom(crystalBall, wisdom, "@AfterEach");
+		}
+
+	}
+
+	@TestInstance(PER_CLASS)
+	static class InstanceLevelExtensionRegistrationWithTestInstancePerClassLifecycleTestCase {
+
+		@RegisterExtension
+		final CrystalBall crystalBall = new CrystalBall("Outlook good");
+
+		@BeforeAll
+		void beforeAll(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@BeforeAll");
+		}
+
+		@BeforeEach
+		void beforeEach(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@BeforeEach");
+		}
+
+		@Test
+		void test(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@Test");
+		}
+
+		@AfterEach
+		void afterEach(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@AfterEach");
+		}
+
+		@AfterAll
+		void afterAll(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@AfterAll");
 		}
 
 	}

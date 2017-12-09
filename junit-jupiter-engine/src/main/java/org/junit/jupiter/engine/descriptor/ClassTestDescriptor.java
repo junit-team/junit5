@@ -120,6 +120,8 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.testClass,
 			context.getExtensionRegistry());
 
+		// Register extensions from static fields here, at the class level but
+		// after extensions registered via @ExtendWith.
 		registerExtensionsFromFields(this.testClass, registry, null);
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
@@ -180,6 +182,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		TestInstanceProvider testInstanceProvider = childRegistry -> instantiateAndPostProcessTestInstance(
 			parentExecutionContext, extensionContext, childRegistry.orElse(registry));
+
 		return childRegistry -> extensionContext.getTestInstance().orElseGet(
 			() -> testInstanceProvider.getTestInstance(childRegistry));
 	}
@@ -189,6 +192,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		Object instance = instantiateTestClass(context, registry, extensionContext);
 		invokeTestInstancePostProcessors(instance, registry, extensionContext);
+		// In addition, we register extensions from instance fields here since the
+		// best time to do that is immediately following test class instantiation
+		// and post processing.
+		registerExtensionsFromFields(this.testClass, registry, instance);
 		return instance;
 	}
 
