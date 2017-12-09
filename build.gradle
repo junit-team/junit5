@@ -20,7 +20,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.gradle.build-scan' version '1.10.3'
+	id 'com.gradle.build-scan' version '1.11'
 	id 'net.nemerosa.versioning' version '2.6.1'
 }
 
