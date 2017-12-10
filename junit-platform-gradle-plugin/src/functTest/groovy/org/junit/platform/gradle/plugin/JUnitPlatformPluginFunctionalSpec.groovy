@@ -9,12 +9,12 @@
  */
 package org.junit.platform.gradle.plugin
 
-import org.gradle.testkit.runner.BuildResult
-import org.gradle.testkit.runner.TaskOutcome
-
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+
+import org.gradle.testkit.runner.BuildResult
+import org.gradle.testkit.runner.TaskOutcome
 
 class JUnitPlatformPluginFunctionalSpec extends AbstractFunctionalSpec {
 
@@ -227,4 +227,5 @@ class AdderTest {
 		}
 		return classpathResource.readLines().collect { new File(it) }
 	}
+
 }

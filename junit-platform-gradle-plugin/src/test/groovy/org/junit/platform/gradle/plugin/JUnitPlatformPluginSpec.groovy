@@ -9,7 +9,10 @@
  */
 package org.junit.platform.gradle.plugin
 
+import static java.util.Collections.singletonMap
+
 import groovy.transform.CompileStatic
+
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.JavaPlugin
@@ -20,11 +23,10 @@ import org.gradle.testfixtures.ProjectBuilder
 import org.junit.platform.commons.util.PreconditionViolationException
 import org.junit.platform.console.ConsoleLauncher
 import org.junit.platform.engine.discovery.ClassNameFilter
+
 import spock.lang.Issue
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import static java.util.Collections.singletonMap
 
 /**
  * @since 1.0

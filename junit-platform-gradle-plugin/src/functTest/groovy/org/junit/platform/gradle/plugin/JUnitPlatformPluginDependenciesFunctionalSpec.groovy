@@ -1,3 +1,12 @@
+/*
+ * Copyright 2015-2017 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
 package org.junit.platform.gradle.plugin
 
 class JUnitPlatformPluginDependenciesFunctionalSpec extends AbstractFunctionalSpec {
@@ -15,7 +24,7 @@ class JUnitPlatformPluginDependenciesFunctionalSpec extends AbstractFunctionalSp
 			task $VERIFICATION_TASK_NAME {
 				doLast {
 					def allDeps = configurations.junitPlatform.incoming.dependencies
-					def expectedDeps = allDeps.findAll { 
+					def expectedDeps = allDeps.findAll {
 						(it.group == 'org.junit.platform' && it.name == 'junit-platform-launcher' && it.version == '1.0.0') || (it.group == 'org.junit.platform' && it.name == 'junit-platform-console' && it.version == '1.0.0')
 					}
 					assert expectedDeps.size() == 2
@@ -46,9 +55,10 @@ class JUnitPlatformPluginDependenciesFunctionalSpec extends AbstractFunctionalSp
 
 	static String platformVersion() {
 		"""
-			junitPlatform { 
-				platformVersion '1.0.0' 
+			junitPlatform {
+				platformVersion '1.0.0'
 			}
 		"""
 	}
+
 }
