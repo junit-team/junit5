@@ -27,6 +27,8 @@ on GitHub.
 * New `SUMMARY` details mode for the `ConsoleLauncher` and Gradle plugin which prints
   the table of success and failure counts at the end of test plan execution. This new
   mode is analogous to the previous behavior of the `NONE` details mode.
+* The summary table of a console launcher run now contains the initial ten stack trace
+  lines to better describe the location of the failure.
 * Non-inherited _composed annotations_ which are meta-annotated with a given `@Inherited`
   annotation are now considered to be implicitly _inherited_ when searching for the given
   meta-annotation within a class hierarchy.
