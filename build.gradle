@@ -525,7 +525,11 @@ subprojects { subproj ->
 
 	}
 
-	if (subproj.name != 'documentation') {
+	if (!project.name.endsWith('-java-9')
+		// error-prone doesn't work with Java 9 sources yet:
+		// https://github.com/google/error-prone/issues/448
+		&& subproj.name != 'documentation') {
+
 		apply plugin: 'net.ltgt.errorprone-base'
 
 		dependencies {
