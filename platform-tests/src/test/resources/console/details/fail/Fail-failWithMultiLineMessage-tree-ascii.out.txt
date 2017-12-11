@@ -13,6 +13,7 @@ Failures (1):
 line
 fail
 message
+>> STACKTRACE >>
 
 Test run finished after [\d]+ ms
 [         2 containers found      ]
