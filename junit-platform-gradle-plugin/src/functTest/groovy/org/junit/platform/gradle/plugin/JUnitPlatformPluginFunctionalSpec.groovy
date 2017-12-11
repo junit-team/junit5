@@ -14,34 +14,16 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 import org.gradle.testkit.runner.BuildResult
-import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
-import spock.lang.Specification
 
-class JUnitPlatformPluginFunctionalSpec extends Specification {
+class JUnitPlatformPluginFunctionalSpec extends AbstractFunctionalSpec {
 
-	@Rule
-	final TemporaryFolder testProjectDir = new TemporaryFolder()
-	private File buildFile
-	private List<File> pluginClasspath
 	private List<File> testCompileClasspath
 	private List<File> testRuntimeClasspath
 
 	def setup() {
-		pluginClasspath = loadClassPathManifestResource('plugin-classpath.txt')
 		testCompileClasspath = loadClassPathManifestResource('test-compile-classpath.txt')
 		testRuntimeClasspath = loadClassPathManifestResource('test-runtime-classpath.txt')
-		buildFile = testProjectDir.newFile('build.gradle')
-		buildFile << """
-buildscript {
-	dependencies {
-		classpath files(${splitClasspath(pluginClasspath)})
-	}
-}
-apply plugin: 'org.junit.platform.gradle.plugin'
-"""
 	}
 
 	def "can be used with 'java' plugin"() {
@@ -51,11 +33,7 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 		succeedingTestFile()
 
 		when:
-		BuildResult result = GradleRunner.create()
-				.withProjectDir(testProjectDir.root)
-				.withPluginClasspath(pluginClasspath)
-				.withArguments('build')
-				.build()
+		BuildResult result = build('build')
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.SUCCESS
@@ -70,11 +48,7 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 		javaLibraryPlugin()
 
 		when:
-		BuildResult result = GradleRunner.create()
-				.withProjectDir(testProjectDir.root)
-				.withPluginClasspath(pluginClasspath)
-				.withArguments('build')
-				.build()
+		BuildResult result = build('build')
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.SUCCESS
@@ -89,11 +63,7 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 		javaPlugin()
 
 		when:
-		BuildResult result = GradleRunner.create()
-				.withProjectDir(testProjectDir.root)
-				.withPluginClasspath(pluginClasspath)
-				.withArguments('build')
-				.buildAndFail()
+		BuildResult result = buildAndFail('build')
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.FAILED
@@ -107,11 +77,7 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 		javaLibraryPlugin()
 
 		when:
-		BuildResult result = GradleRunner.create()
-				.withProjectDir(testProjectDir.root)
-				.withPluginClasspath(pluginClasspath)
-				.withArguments('build')
-				.buildAndFail()
+		BuildResult result = buildAndFail('build')
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.FAILED
@@ -176,7 +142,7 @@ junitPlatform {
 	}
 
 	private void javaFile() {
-		Path javaFile = Paths.get(testProjectDir.root.toString(), 'src', 'main', 'java', 'org', 'junit', 'gradletest', 'Adder.java')
+		Path javaFile = Paths.get(temporaryFolder.root.toString(), 'src', 'main', 'java', 'org', 'junit', 'gradletest', 'Adder.java')
 		Files.createDirectories(javaFile.parent)
 		javaFile.withWriter {
 			it.write(
@@ -193,7 +159,7 @@ public class Adder {
 	}
 
 	private void failingTestFile() {
-		Path testPath = Paths.get(testProjectDir.root.toString(), 'src', 'test', 'java', 'org', 'junit', 'gradletest', 'AdderTest.java')
+		Path testPath = Paths.get(temporaryFolder.root.toString(), 'src', 'test', 'java', 'org', 'junit', 'gradletest', 'AdderTest.java')
 		Files.createDirectories(testPath.parent)
 		testPath.withWriter {
 			it.write(
@@ -222,28 +188,20 @@ class AdderTest {
 		succeedingTestFile()
 
 		when:
-		BuildResult result = GradleRunner.create()
-				.withProjectDir(testProjectDir.root)
-				.withPluginClasspath(pluginClasspath)
-				.withArguments('test')
-				.build()
+		BuildResult result = build('test')
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.SUCCESS
 
 		when:
-		result = GradleRunner.create()
-				.withProjectDir(testProjectDir.root)
-				.withPluginClasspath(pluginClasspath)
-				.withArguments('test')
-				.build()
+		result = build('test')
 
 		then:
 		result.task(':junitPlatformTest').outcome == TaskOutcome.UP_TO_DATE
 	}
 
 	private void succeedingTestFile() {
-		Path testPath = Paths.get(testProjectDir.root.toString(), 'src', 'test', 'java', 'org', 'junit', 'gradletest', 'AdderTest.java')
+		Path testPath = Paths.get(temporaryFolder.root.toString(), 'src', 'test', 'java', 'org', 'junit', 'gradletest', 'AdderTest.java')
 		Files.createDirectories(testPath.parent)
 		testPath.withWriter { it.write('''
 package org.junit.gradletest;

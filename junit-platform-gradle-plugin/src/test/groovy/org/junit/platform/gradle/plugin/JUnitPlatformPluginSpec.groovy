@@ -15,7 +15,6 @@ import groovy.transform.CompileStatic
 
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.ObjectConfigurationAction
 import org.gradle.api.tasks.JavaExec
@@ -367,48 +366,6 @@ class JUnitPlatformPluginSpec extends Specification {
 		[foo: null]               | 'value must not be null for key: "foo"'
 		['f=o': 'bar']            | 'key must not contain \'=\': "f=o"'
 		null                      | 'parameters must not be null'
-	}
-
-	def "adds dependencies to configuration"() {
-		given:
-		project.apply plugin: 'org.junit.platform.gradle.plugin'
-
-		when:
-		project.junitPlatform { platformVersion '1.0.0' }
-		project.evaluate()
-
-		then:
-		Configuration configuration = project.configurations.getByName("junitPlatform")
-		configuration.runDependencyActions()
-
-		configuration.getAllDependencies().contains(
-				project.dependencies.create("org.junit.platform:junit-platform-launcher:1.0.0"),
-				)
-
-		configuration.getAllDependencies().contains(
-				project.dependencies.create("org.junit.platform:junit-platform-console:1.0.0"))
-	}
-
-	def "adds dependencies with fixed version when not explicitly configured"() {
-		given:
-		project.apply plugin: 'org.junit.platform.gradle.plugin'
-
-		when:
-		project.evaluate()
-
-		then:
-		Configuration configuration = project.configurations.getByName("junitPlatform")
-		configuration.runDependencyActions()
-
-		configuration.getAllDependencies()
-				.findAll { dependency -> "org.junit.platform" == dependency.getGroup() }
-				.collect { dependency -> dependency.getVersion() }
-				// The version will be @VERSION if the placeholder in
-				// src/main/resources/org/junit/platform/gradle/plugin/version.properties
-				// did not get replaced by the Gradle build (e.g., when executing tests
-				// in an IDE).
-				.findAll { version -> (version.startsWith("1.") && !version.contains("+")) || version.equals("@VERSION") }
-				.size() == 2
 	}
 
 	@Issue('https://github.com/junit-team/junit5/issues/708')
