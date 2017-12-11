@@ -599,21 +599,25 @@ subprojects { subproj ->
 			'-Xep:ReturnValueIgnored:OFF'
 		]
 
-		task compileJavaWithErrorProne(type: JavaCompile) {
+		task compileJavaWithErrorProne(type: JavaCompile, dependsOn: compileKotlin) {
+			group = 'verification'
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
 			classpath = compileJava.classpath
 			source = compileJava.source
 			destinationDir = file("$buildDir/classes/error-prone-java/main")
 			options.compilerArgs = compileJavaBaseArgs + errorproneBaseFlags
 		}
+		check.dependsOn(compileJavaWithErrorProne)
 
-		task compileTestJavaWithErrorProne(type: JavaCompile) {
+		task compileTestJavaWithErrorProne(type: JavaCompile, dependsOn: compileTestKotlin) {
+			group = 'verification'
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
 			classpath = compileTestJava.classpath
 			source = compileTestJava.source
 			destinationDir = file("$buildDir/classes/error-prone-java/test")
 			options.compilerArgs = compileTestJavaBaseArgs + errorproneTestFlags
 		}
+		check.dependsOn(compileTestJavaWithErrorProne)
 	}
 
 	spotless {
