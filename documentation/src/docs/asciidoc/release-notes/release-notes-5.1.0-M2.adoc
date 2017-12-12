@@ -47,6 +47,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New `getConfigurationParameter(String key)` method in interface `ExtensionContext`.
+  Extensions can now access and evaluate configuration parameter values at runtime.
 * Due to a change in the JUnit Platform's `AnnotationUtils` class, non-inherited
   _composed annotations_ which are meta-annotated with a given `@Inherited` annotation
   are now considered to be implicitly _inherited_ when searching for the given
