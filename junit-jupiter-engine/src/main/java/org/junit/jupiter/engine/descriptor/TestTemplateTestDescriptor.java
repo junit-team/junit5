@@ -61,7 +61,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		Object testInstance = context.getExtensionContext().getTestInstance().orElse(null);
 
 		ExtensionContext extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, testInstance);
+			context.getExecutionListener(), this, context.getConfigurationParameters(), testInstance);
 
 		// @formatter:off
 		return context.extend()

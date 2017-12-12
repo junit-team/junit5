@@ -80,7 +80,8 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		Object testInstance = context.getTestInstanceProvider().getTestInstance(Optional.of(registry));
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 		ExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, testInstance, throwableCollector);
+			context.getExecutionListener(), this, context.getConfigurationParameters(), testInstance,
+			throwableCollector);
 
 		// @formatter:off
 		return context.extend()

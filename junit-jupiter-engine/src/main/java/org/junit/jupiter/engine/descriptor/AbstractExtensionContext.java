@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
@@ -34,13 +35,15 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
 	private final T testDescriptor;
+	private final ConfigurationParameters configurationParameters;
 	private final ExtensionValuesStore valuesStore;
 
-	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			T testDescriptor) {
+	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
+			ConfigurationParameters configurationParameters) {
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
+		this.configurationParameters = configurationParameters;
 		this.valuesStore = createStore(parent);
 	}
 
@@ -95,4 +98,8 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		return testDescriptor.getTags().stream().map(TestTag::getName).collect(toCollection(LinkedHashSet::new));
 	}
 
+	@Override
+	public Optional<String> getConfigurationParameter(String key) {
+		return configurationParameters.get(key);
+	}
 }
