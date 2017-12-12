@@ -15,18 +15,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
+import java.lang.reflect.Field;
+import java.util.function.Predicate;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 /**
@@ -40,6 +48,11 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	@Test
 	void instanceLevel() {
 		assertOneTestSucceeded(InstanceLevelExtensionRegistrationTestCase.class);
+	}
+
+	@Test
+	void instanceLevelWithInjectedExtension() {
+		assertOneTestSucceeded(InstanceLevelExtensionRegistrationWithInjectedExtensionTestCase.class);
 	}
 
 	@Test
@@ -84,6 +97,29 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 		@RegisterExtension
 		final CrystalBall crystalBall = new CrystalBall("Outlook good");
+
+		@BeforeEach
+		void beforeEach(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@BeforeEach");
+		}
+
+		@Test
+		void test(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@Test");
+		}
+
+		@AfterEach
+		void afterEach(String wisdom) {
+			assertWisdom(crystalBall, wisdom, "@AfterEach");
+		}
+
+	}
+
+	@ExtendWith(ExtensionInjector.class)
+	static class InstanceLevelExtensionRegistrationWithInjectedExtensionTestCase {
+
+		@RegisterExtension
+		private CrystalBall crystalBall; // Injected by ExtensionInjector.
 
 		@BeforeEach
 		void beforeEach(String wisdom) {
@@ -229,6 +265,36 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		@Override
 		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return this.wisdom;
+		}
+
+	}
+
+	/**
+	 * Mimics a dependency injection framework such as Spring, Guice, CDI, etc.,
+	 * where the instance of the extension registered via
+	 * {@link RegisterExtension @RegisterExtension} is managed by the DI
+	 * framework and injected into the test instance.
+	 */
+	private static class ExtensionInjector implements TestInstancePostProcessor {
+
+		private static final Predicate<Field> isCrystalBall = field -> CrystalBall.class.isAssignableFrom(
+			field.getType());
+
+		@Override
+		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
+			// @formatter:off
+			AnnotationUtils.findAnnotatedFields(testInstance.getClass(), RegisterExtension.class, isCrystalBall).stream()
+				.findFirst()
+				.ifPresent(field -> {
+					try {
+						ReflectionUtils.makeAccessible(field);
+						field.set(testInstance, new CrystalBall("Outlook good"));
+					}
+					catch (Throwable t) {
+						ExceptionUtils.throwAsUncheckedException(t);
+					}
+				});
+			// @formatter:on
 		}
 
 	}
