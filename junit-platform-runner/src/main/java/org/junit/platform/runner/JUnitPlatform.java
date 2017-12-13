@@ -28,17 +28,15 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.CollectingLauncher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.TestCollection;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
@@ -55,7 +53,6 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
@@ -106,9 +103,8 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
 	private final Class<?> testClass;
-	private final Launcher launcher;
+	private final CollectingLauncher launcher;
 
-	private LauncherDiscoveryRequest discoveryRequest;
 	private JUnitPlatformTestTree testTree;
 
 	public JUnitPlatform(Class<?> testClass) throws InitializationError {
@@ -116,11 +112,10 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	// For testing only
-	JUnitPlatform(Class<?> testClass, Launcher launcher) throws InitializationError {
-		this.launcher = launcher;
+	JUnitPlatform(Class<?> testClass, CollectingLauncher launcher) throws InitializationError {
 		this.testClass = testClass;
-		this.discoveryRequest = createDiscoveryRequest();
-		this.testTree = generateTestTree();
+		this.launcher = launcher;
+		this.testTree = generateTestTree(createDiscoveryRequest());
 	}
 
 	@Override
@@ -130,15 +125,13 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 	@Override
 	public void run(RunNotifier notifier) {
-		JUnitPlatformRunnerListener listener = new JUnitPlatformRunnerListener(this.testTree, notifier);
-		this.launcher.registerTestExecutionListeners(listener);
-		this.launcher.execute(this.discoveryRequest);
+		this.testTree.executeTests(notifier);
 	}
 
-	private JUnitPlatformTestTree generateTestTree() {
-		Preconditions.notNull(this.discoveryRequest, "DiscoveryRequest must not be null");
-		TestPlan plan = this.launcher.discover(this.discoveryRequest);
-		return new JUnitPlatformTestTree(plan, testClass);
+	private JUnitPlatformTestTree generateTestTree(LauncherDiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(discoveryRequest, "DiscoveryRequest must not be null");
+		TestCollection tests = this.launcher.collect(discoveryRequest);
+		return new JUnitPlatformTestTree(tests, testClass);
 	}
 
 	private LauncherDiscoveryRequest createDiscoveryRequest() {
@@ -303,23 +296,8 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	@Override
-	public void filter(Filter filter) throws NoTestsRemainException {
-		Set<TestIdentifier> filteredIdentifiers = testTree.getFilteredLeaves(filter);
-		if (filteredIdentifiers.isEmpty()) {
-			throw new NoTestsRemainException();
-		}
-		this.discoveryRequest = createDiscoveryRequestForUniqueIds(filteredIdentifiers);
-		this.testTree = generateTestTree();
-	}
-
-	private LauncherDiscoveryRequest createDiscoveryRequestForUniqueIds(Set<TestIdentifier> testIdentifiers) {
-		// @formatter:off
-		List<DiscoverySelector> selectors = testIdentifiers.stream()
-				.map(TestIdentifier::getUniqueId)
-				.map(DiscoverySelectors::selectUniqueId)
-				.collect(toList());
-		// @formatter:on
-		return request().selectors(selectors).build();
+	public void filter(org.junit.runner.manipulation.Filter filter) throws NoTestsRemainException {
+		testTree.filter(filter);
 	}
 
 }

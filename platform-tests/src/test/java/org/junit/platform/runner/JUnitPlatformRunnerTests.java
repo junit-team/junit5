@@ -43,6 +43,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -55,7 +56,6 @@ import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.discovery.PackageSelector;
-import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
@@ -65,10 +65,12 @@ import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescri
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.engine.test.TestEngineStub;
+import org.junit.platform.launcher.CollectingLauncher;
 import org.junit.platform.launcher.EngineFilter;
-import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.TestCollection;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
@@ -406,8 +408,8 @@ class JUnitPlatformRunnerTests {
 			container2.addChild(new TestDescriptorStub(UniqueId.root("root", "test2b"), "test2b"));
 			TestPlan testPlan = TestPlan.from(asList(container1, container2));
 
-			Launcher launcher = mock(Launcher.class);
-			when(launcher.discover(any())).thenReturn(testPlan);
+			CollectingLauncher launcher = mock(CollectingLauncher.class);
+			when(launcher.collect(any())).thenReturn(new FakeTestCollection(testPlan));
 
 			JUnitPlatform runner = new JUnitPlatform(TestClass.class, launcher);
 
@@ -435,47 +437,71 @@ class JUnitPlatformRunnerTests {
 
 		@Test
 		void appliesFilter() throws Exception {
+			JUnitPlatform runner = new JUnitPlatform(TestClass.class, createLauncher(new JupiterTestEngine()));
+			Description outerClassDescription = runner.getDescription();
+			assertEquals(createSuiteDescription(TestClass.class), outerClassDescription);
 
-			TestDescriptor originalParent1 = new TestDescriptorStub(UniqueId.root("root", "parent1"), "parent1");
-			originalParent1.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf1"), "leaf1"));
-			TestDescriptor originalParent2 = new TestDescriptorStub(UniqueId.root("root", "parent2"), "parent2");
-			originalParent2.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf2a"), "leaf2a"));
-			originalParent2.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf2b"), "leaf2b"));
-			TestPlan fullTestPlan = TestPlan.from(asList(originalParent1, originalParent2));
+			// @formatter:off
+			UniqueId uniqueId = UniqueId.forEngine("junit-jupiter")
+					.append("class", TestClass.class.getName())
+					.append("nested-class", "Parent2")
+					.append("method", "leaf2b()");
+			// @formatter:on
+			Description testToInclude = Description.createTestDescription("Parent2", "leaf2b()", uniqueId.toString());
 
-			TestDescriptor filteredParent = new TestDescriptorStub(UniqueId.root("root", "parent2"), "parent2");
-			filteredParent.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf2b"), "leaf2b"));
-			TestPlan filteredTestPlan = TestPlan.from(singleton(filteredParent));
+			runner.filter(matchMethodDescription(testToInclude));
 
-			Launcher launcher = mock(Launcher.class);
-			ArgumentCaptor<LauncherDiscoveryRequest> captor = ArgumentCaptor.forClass(LauncherDiscoveryRequest.class);
-			when(launcher.discover(captor.capture())).thenReturn(fullTestPlan).thenReturn(filteredTestPlan);
+			// After filtering, there should be one leaf. Find it.
+			outerClassDescription = runner.getDescription();
+			assertEquals(createSuiteDescription(TestClass.class), outerClassDescription);
+			Description testDescription = outerClassDescription;
+			while (testDescription.isSuite()) {
+				expectNumChildrenEquals(1, testDescription);
+				testDescription = testDescription.getChildren().get(0);
+			}
+			assertEquals(Description.createTestDescription("Parent2", "leaf2b()", uniqueId.toString()),
+				testDescription);
+		}
 
-			JUnitPlatform runner = new JUnitPlatform(TestClass.class, launcher);
-			runner.filter(matchMethodDescription(testDescription("[root:leaf2b]")));
+		@Test
+		void onlyFilteredTestsRun() throws Exception {
+			// @formatter:off
+			UniqueId uniqueId = UniqueId.forEngine("junit-jupiter")
+					.append("class", TestClass.class.getName())
+					.append("nested-class", "Parent2")
+					.append("method", "leaf2b()");
+			// @formatter:on
+			Description testToInclude = Description.createTestDescription("Parent2", "leaf2b()", uniqueId.toString());
 
-			LauncherDiscoveryRequest lastDiscoveryRequest = captor.getValue();
-			List<UniqueIdSelector> uniqueIdSelectors = lastDiscoveryRequest.getSelectorsByType(UniqueIdSelector.class);
-			assertEquals("[root:leaf2b]", getOnlyElement(uniqueIdSelectors).getUniqueId().toString());
+			RunListener runListener = mock(RunListener.class);
+			RunNotifier notifier = new RunNotifier();
+			notifier.addListener(runListener);
+			JUnitPlatform runner = new JUnitPlatform(TestClass.class, createLauncher(new JupiterTestEngine()));
+			runner.filter(matchMethodDescription(testToInclude));
 
-			Description parentDescription = getOnlyElement(runner.getDescription().getChildren());
-			assertEquals(suiteDescription("[root:parent2]"), parentDescription);
+			runner.run(notifier);
 
-			Description testDescription = getOnlyElement(parentDescription.getChildren());
-			assertEquals(testDescription("[root:leaf2b]"), testDescription);
+			InOrder inOrder = inOrder(runListener);
+
+			inOrder.verify(runListener).testStarted(testToInclude);
+			inOrder.verify(runListener).testFinished(testToInclude);
+			inOrder.verifyNoMoreInteractions();
 		}
 
 		@Test
 		void throwsNoTestsRemainExceptionWhenNoTestIdentifierMatchesFilter() throws Exception {
-			TestPlan testPlan = TestPlan.from(singleton(new TestDescriptorStub(UniqueId.root("root", "test"), "test")));
-
-			Launcher launcher = mock(Launcher.class);
-			when(launcher.discover(any())).thenReturn(testPlan);
+			CollectingLauncher launcher = createLauncher(new JupiterTestEngine());
 
 			JUnitPlatform runner = new JUnitPlatform(TestClass.class, launcher);
 
 			assertThrows(NoTestsRemainException.class,
 				() -> runner.filter(matchMethodDescription(suiteDescription("[root:doesNotExist]"))));
+		}
+
+		private void expectNumChildrenEquals(int expectedChildCount, Description description) {
+			List<Description> children = description.getChildren();
+			assertEquals(expectedChildCount, children.size(),
+				() -> String.format("Expected %s to have %d children", description, expectedChildCount));
 		}
 
 	}
@@ -703,9 +729,9 @@ class JUnitPlatformRunnerTests {
 
 	private LauncherDiscoveryRequest instantiateRunnerAndCaptureGeneratedRequest(Class<?> testClass)
 			throws InitializationError {
-		Launcher launcher = mock(Launcher.class);
+		CollectingLauncher launcher = mock(CollectingLauncher.class);
 		ArgumentCaptor<LauncherDiscoveryRequest> captor = ArgumentCaptor.forClass(LauncherDiscoveryRequest.class);
-		when(launcher.discover(captor.capture())).thenReturn(TestPlan.from(emptySet()));
+		when(launcher.collect(captor.capture())).thenReturn(new FakeTestCollection(TestPlan.from(emptySet())));
 
 		new JUnitPlatform(testClass, launcher);
 
@@ -713,6 +739,23 @@ class JUnitPlatformRunnerTests {
 	}
 
 	private static class TestClass {
+		@Nested
+		class Parent1 {
+			@Test
+			void leaf1() {
+			}
+		}
+
+		@Nested
+		class Parent2 {
+			@Test
+			void leaf2a() {
+			}
+
+			@Test
+			void leaf2b() {
+			}
+		}
 	}
 
 	@UseTechnicalNames
@@ -824,6 +867,30 @@ class JUnitPlatformRunnerTests {
 		public Type getType() {
 			return Type.CONTAINER_AND_TEST;
 		}
+	}
+
+	private static class FakeTestCollection implements TestCollection {
+		private final TestPlan testPlan;
+
+		FakeTestCollection(TestPlan testPlan) {
+			this.testPlan = testPlan;
+		}
+
+		@Override
+		public TestPlan testPlan() {
+			return testPlan;
+		}
+
+		@Override
+		public void applyPostDiscoveryFilters(PostDiscoveryFilter... filters) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void execute(TestExecutionListener... listeners) {
+			throw new UnsupportedOperationException();
+		}
+
 	}
 
 }

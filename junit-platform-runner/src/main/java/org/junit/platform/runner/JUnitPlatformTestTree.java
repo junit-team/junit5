@@ -23,16 +23,23 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.FilterResult;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.TestCollection;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runner.notification.RunNotifier;
 
 /**
  * @since 1.0
@@ -40,14 +47,22 @@ import org.junit.runner.manipulation.Filter;
 class JUnitPlatformTestTree {
 
 	private final Map<TestIdentifier, Description> descriptions = new HashMap<>();
-	private final TestPlan plan;
+	private final TestCollection testCollection;
 	private final Function<TestIdentifier, String> nameExtractor;
-	private final Description suiteDescription;
+	private final String suiteDisplayName;
+	private Description suiteDescription;
 
-	JUnitPlatformTestTree(TestPlan plan, Class<?> testClass) {
-		this.plan = plan;
-		this.nameExtractor = useTechnicalNames(testClass) ? this::getTechnicalName : TestIdentifier::getDisplayName;
-		this.suiteDescription = generateSuiteDescription(plan, testClass);
+	JUnitPlatformTestTree(TestCollection testCollection, Class<?> testClass) {
+		this.testCollection = testCollection;
+		if (useTechnicalNames(testClass)) {
+			this.nameExtractor = JUnitPlatformTestTree::getTechnicalName;
+			this.suiteDisplayName = testClass.getName();
+		}
+		else {
+			this.nameExtractor = TestIdentifier::getDisplayName;
+			this.suiteDisplayName = getSuiteDisplayName(testClass);
+		}
+		this.suiteDescription = generateSuiteDescription(testCollection);
 	}
 
 	private static boolean useTechnicalNames(Class<?> testClass) {
@@ -62,10 +77,30 @@ class JUnitPlatformTestTree {
 		return this.descriptions.get(identifier);
 	}
 
-	private Description generateSuiteDescription(TestPlan testPlan, Class<?> testClass) {
-		String displayName = useTechnicalNames(testClass) ? testClass.getName() : getSuiteDisplayName(testClass);
-		Description suiteDescription = Description.createSuiteDescription(displayName);
-		buildDescriptionTree(suiteDescription, testPlan);
+	void executeTests(RunNotifier notifier) {
+		JUnitPlatformRunnerListener listener = new JUnitPlatformRunnerListener(this, notifier);
+		this.testCollection.execute(listener);
+	}
+
+	void filter(Filter filter) throws NoTestsRemainException {
+		Set<TestIdentifier> filteredIdentifiers = getFilteredLeaves(filter);
+		if (filteredIdentifiers.isEmpty()) {
+			throw new NoTestsRemainException();
+		}
+
+		PostDiscoveryFilter postDiscoveryFilter = (TestDescriptor t) -> {
+			return FilterResult.includedIf(filteredIdentifiers.contains(TestIdentifier.from(t)));
+		};
+		testCollection.applyPostDiscoveryFilters(postDiscoveryFilter);
+
+		// Update our fields to match the testCollection
+		descriptions.clear();
+		suiteDescription = generateSuiteDescription(testCollection);
+	}
+
+	private Description generateSuiteDescription(TestCollection testCollection) {
+		Description suiteDescription = Description.createSuiteDescription(suiteDisplayName);
+		buildDescriptionTree(suiteDescription, testCollection);
 		return suiteDescription;
 	}
 
@@ -78,22 +113,37 @@ class JUnitPlatformTestTree {
 		// @formatter:on
 	}
 
-	private void buildDescriptionTree(Description suiteDescription, TestPlan testPlan) {
-		testPlan.getRoots().forEach(testIdentifier -> buildDescription(testIdentifier, suiteDescription, testPlan));
+	private void buildDescriptionTree(Description suiteDescription, TestCollection testCollection) {
+		TestPlan testPlan = testCollection.testPlan();
+		testPlan.getRoots().stream().filter(testIdentifier -> !testPlan.getChildren(testIdentifier).isEmpty()).forEach(
+			testIdentifier -> buildDescription(testIdentifier, suiteDescription, testPlan));
 	}
 
 	void addDynamicDescription(TestIdentifier newIdentifier, String parentId) {
-		Description parent = getDescription(this.plan.getTestIdentifier(parentId));
-		this.plan.add(newIdentifier);
-		buildDescription(newIdentifier, parent, this.plan);
+		TestPlan plan = this.testCollection.testPlan();
+		TestIdentifier parentTestIdentifier = plan.getTestIdentifier(parentId);
+		Description parent = getDescription(parentTestIdentifier);
+
+		if (parent == null) {
+			boolean parentIsRoot = plan.getRoots().contains(parentTestIdentifier);
+			Preconditions.condition(parentIsRoot,
+				() -> String.format("No matching Description for parentId=%s (testIdentifer=%s)", parentId,
+					parentTestIdentifier));
+			// This root was filtered out in buildDescriptionTree() because it had no children; add it back
+			parent = buildDescription(parentTestIdentifier, suiteDescription, plan);
+		}
+
+		plan.add(newIdentifier);
+		buildDescription(newIdentifier, parent, plan);
 	}
 
-	private void buildDescription(TestIdentifier identifier, Description parent, TestPlan testPlan) {
+	private Description buildDescription(TestIdentifier identifier, Description parent, TestPlan testPlan) {
 		Description newDescription = createJUnit4Description(identifier, testPlan);
 		parent.addChild(newDescription);
 		this.descriptions.put(identifier, newDescription);
 		testPlan.getChildren(identifier).forEach(
 			testIdentifier -> buildDescription(testIdentifier, newDescription, testPlan));
+		return newDescription;
 	}
 
 	private Description createJUnit4Description(TestIdentifier identifier, TestPlan testPlan) {
@@ -105,7 +155,7 @@ class JUnitPlatformTestTree {
 		return Description.createSuiteDescription(name, identifier.getUniqueId());
 	}
 
-	private String getTechnicalName(TestIdentifier testIdentifier) {
+	private static String getTechnicalName(TestIdentifier testIdentifier) {
 		Optional<TestSource> optionalSource = testIdentifier.getSource();
 		if (optionalSource.isPresent()) {
 			TestSource source = optionalSource.get();
@@ -128,13 +178,13 @@ class JUnitPlatformTestTree {
 
 	Set<TestIdentifier> getTestsInSubtree(TestIdentifier ancestor) {
 		// @formatter:off
-		return plan.getDescendants(ancestor).stream()
+		return testCollection.testPlan().getDescendants(ancestor).stream()
 				.filter(TestIdentifier::isTest)
 				.collect(toCollection(LinkedHashSet::new));
 		// @formatter:on
 	}
 
-	Set<TestIdentifier> getFilteredLeaves(Filter filter) {
+	private Set<TestIdentifier> getFilteredLeaves(Filter filter) {
 		Set<TestIdentifier> identifiers = applyFilterToDescriptions(filter);
 		return removeNonLeafIdentifiers(identifiers);
 	}
@@ -145,6 +195,7 @@ class JUnitPlatformTestTree {
 
 	private Predicate<? super TestIdentifier> isALeaf(Set<TestIdentifier> identifiers) {
 		return testIdentifier -> {
+			TestPlan plan = testCollection.testPlan();
 			Set<TestIdentifier> descendants = plan.getDescendants(testIdentifier);
 			return identifiers.stream().noneMatch(descendants::contains);
 		};
