@@ -119,7 +119,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	static class InstanceLevelExtensionRegistrationWithInjectedExtensionTestCase {
 
 		@RegisterExtension
-		private CrystalBall crystalBall; // Injected by ExtensionInjector.
+		protected CrystalBall crystalBall; // Injected by ExtensionInjector.
 
 		@BeforeEach
 		void beforeEach(String wisdom) {

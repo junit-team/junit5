@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -66,8 +67,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
-		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(getTestMethod(),
-			context.getExtensionRegistry());
+		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWithAnnotation(
+			context.getExtensionRegistry(), getTestMethod());
 
 		// The test instance should be properly maintained by the enclosing class's ExtensionContext.
 		Object testInstance = context.getExtensionContext().getTestInstance().orElse(null);

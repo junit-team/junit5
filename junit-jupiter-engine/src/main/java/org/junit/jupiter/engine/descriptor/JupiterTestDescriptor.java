@@ -12,39 +12,27 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
-import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extension;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -62,12 +50,6 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	private static final Logger logger = LoggerFactory.getLogger(JupiterTestDescriptor.class);
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
-
-	private static final Predicate<Field> isExtension = field -> Extension.class.isAssignableFrom(field.getType());
-	private static final Predicate<Field> isStatic = ReflectionUtils::isStatic;
-	private static final Predicate<Field> isStaticExtension = isStatic.and(isExtension);
-	private static final Predicate<Field> isNonStatic = isStatic.negate();
-	private static final Predicate<Field> isNonStaticExtension = isNonStatic.and(isExtension);
 
 	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
 		super(uniqueId, displayName, source);
@@ -144,30 +126,6 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	@Override
 	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
 		context.close();
-	}
-
-	protected ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
-			ExtensionRegistry existingExtensionRegistry) {
-
-		// @formatter:off
-		List<Class<? extends Extension>> extensionTypes = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
-				.map(ExtendWith::value)
-				.flatMap(Arrays::stream)
-				.collect(toList());
-		// @formatter:on
-
-		return ExtensionRegistry.createRegistryFrom(existingExtensionRegistry, extensionTypes);
-	}
-
-	protected void registerExtensionsFromFields(Class<?> clazz, ExtensionRegistry registry, Object instance) {
-		Predicate<Field> predicate = (instance == null) ? isStaticExtension : isNonStaticExtension;
-
-		findAnnotatedFields(clazz, RegisterExtension.class, predicate).forEach(field -> {
-			readFieldValue(field, instance).ifPresent(value -> {
-				Extension extension = (Extension) value;
-				registry.registerExtension(extension, field);
-			});
-		});
 	}
 
 	/**
