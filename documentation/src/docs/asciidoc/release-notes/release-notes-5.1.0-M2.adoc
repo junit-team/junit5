@@ -54,6 +54,13 @@ on GitHub.
 ** For example, an `@Inherited` annotation such as `@TestInstance` will now be discovered
    on a custom _composed annotation_ declared on a superclass even if the _composed
    annotation_ is not declared as `@Inherited`.
+* New Kotlin friendly `fail` methods added as _top-level functions_ in the
+  `org.junit.jupiter.api` package.
+ - When calling the original methods from Kotlin the compiler required the generic return
+   type of `fail` to be declared explicitly calling it.
+   Eg: `fail<Nothing>("Some message")`.
+   These new methods all return
+   https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing.html[`Nothing`].
 
 
 [[release-notes-5.1.0-M2-junit-vintage]]
