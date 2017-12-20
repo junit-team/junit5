@@ -271,6 +271,8 @@ subprojects { subproj ->
 			options.addStringOption('tag', 'implSpec:a:Implementation Requirements:')
 			options.addStringOption('tag', 'implNote:a:Implementation Note:')
 			options.encoding = 'UTF-8'
+			// Remove Kotlin classes from classpath due to "bad" class file: AssertionsKt$sam$Supplier$44378ebd.class
+			if (gradle.ext.kotlinIsSupported) classpath = classpath - files(compileKotlin.destinationDir)
 		}
 
 		task sourcesJar(type: Jar, dependsOn: classes) {
