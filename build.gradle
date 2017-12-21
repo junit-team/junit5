@@ -22,13 +22,13 @@ buildscript {
 plugins {
 	id 'com.gradle.build-scan' version '1.11'
 	id 'net.nemerosa.versioning' version '2.6.1'
+	id "tech.harmonysoft.oss.traute" version "1.1.2"
 }
 
 buildScan {
 	licenseAgreementUrl = 'https://gradle.com/terms-of-service'
 	licenseAgree = 'yes'
 }
-
 
 def buildTimeAndDate = OffsetDateTime.now()
 ext {
@@ -108,6 +108,7 @@ allprojects { subproj ->
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
 	apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates
+	apply plugin: "tech.harmonysoft.oss.traute"
 	apply from: "$rootDir/gradle/degraph.gradle"
 
 	repositories {
@@ -117,6 +118,7 @@ allprojects { subproj ->
 	}
 
 	dependencies {
+		compile("com.google.code.findbugs:jsr305:3.0.2")
 		// The following dependency is necessary to avoid compiler warnings about
 		// not being able to find the @API annotation when compiling test sources.
 		testCompileOnly("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
@@ -185,6 +187,15 @@ allprojects { subproj ->
 	compileTestJava {
 		options.encoding = 'UTF-8'
 		options.compilerArgs += '-parameters'
+	}
+
+	traute {
+		exceptionsToThrow = [
+				// Throw a PreconditionViolationException when a null is given to a method parameter marked by @NotNull
+				'parameter': 'org.junit.platform.commons.util.PreconditionViolationException'
+		]
+		// Use exception message like 'MyArg must not be null' for a method parameter named 'myArg'
+		exceptionTexts = [ 'parameter': '${capitalize(PARAMETER_NAME)} must not be null' ]
 	}
 
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {

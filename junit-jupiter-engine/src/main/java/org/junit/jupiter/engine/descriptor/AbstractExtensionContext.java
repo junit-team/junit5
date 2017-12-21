@@ -26,6 +26,8 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.reporting.ReportEntry;
 
+import javax.annotation.Nonnull;
+
 /**
  * @since 5.0
  */
@@ -85,8 +87,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	}
 
 	@Override
-	public Store getStore(Namespace namespace) {
-		Preconditions.notNull(namespace, "Namespace must not be null");
+	public Store getStore(@Nonnull Namespace namespace) {
 		return new NamespaceAwareStore(valuesStore, namespace);
 	}
 
