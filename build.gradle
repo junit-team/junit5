@@ -576,6 +576,7 @@ configure(rootProject) {
 
 	def docsVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
 	def docsDir = new File(buildDir, 'ghpages-docs')
+	def replaceCurrentDocs = project.hasProperty('replaceCurrentDocs')
 
 	task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: Copy) {
 		outputs.dir docsDir
@@ -607,7 +608,7 @@ configure(rootProject) {
 		into "${docsDir}/current"
 	}
 
-	createCurrentDocsFolder.onlyIf { project.hasProperty('replaceCurrentDocs') }
+	createCurrentDocsFolder.onlyIf { replaceCurrentDocs }
 
 	gitPublish {
 		repoUri = 'https://github.com/junit-team/junit5.git'
@@ -618,7 +619,13 @@ configure(rootProject) {
 			into "docs"
 		}
 
-		preserve { include '**/*' }
+		preserve {
+			include '**/*'
+			exclude "docs/${docsVersion}/**"
+			if (replaceCurrentDocs) {
+				exclude "docs/current/**"
+			}
+		}
 	}
 
 	gitPublishCommit.dependsOn(prepareDocsForUploadToGhPages)
