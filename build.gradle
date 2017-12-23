@@ -20,7 +20,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.gradle.build-scan' version '1.10.3'
+	id 'com.gradle.build-scan' version '1.11'
 	id 'net.nemerosa.versioning' version '2.6.1'
 }
 
@@ -670,6 +670,7 @@ configure(rootProject) {
 
 	def docsVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
 	def docsDir = new File(buildDir, 'ghpages-docs')
+	def replaceCurrentDocs = project.hasProperty('replaceCurrentDocs')
 
 	task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: Copy) {
 		outputs.dir docsDir
@@ -701,7 +702,7 @@ configure(rootProject) {
 		into "${docsDir}/current"
 	}
 
-	createCurrentDocsFolder.onlyIf { project.hasProperty('replaceCurrentDocs') }
+	createCurrentDocsFolder.onlyIf { replaceCurrentDocs }
 
 	gitPublish {
 		repoUri = 'https://github.com/junit-team/junit5.git'
@@ -712,7 +713,13 @@ configure(rootProject) {
 			into "docs"
 		}
 
-		preserve { include '**/*' }
+		preserve {
+			include '**/*'
+			exclude "docs/${docsVersion}/**"
+			if (replaceCurrentDocs) {
+				exclude "docs/current/**"
+			}
+		}
 	}
 
 	gitPublishCommit.dependsOn(prepareDocsForUploadToGhPages)
@@ -721,7 +728,7 @@ configure(rootProject) {
 
 task wrapper(type: Wrapper) {
 	description = 'Generates gradlew and gradlew.bat scripts'
-	gradleVersion = '4.3.1'
+	gradleVersion = '4.4.1'
 	/*
 	* Reasoning for using BIN:
 	* https://github.com/junit-team/junit5/pull/1012#discussion_r132061924

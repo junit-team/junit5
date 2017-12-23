@@ -1,47 +1,14 @@
 apply plugin: 'groovy'
-
-configurations {
-	functionalTestRuntimeTestCompile {
-		description = 'Local dependencies used for compiling tests source code inside of Gradle functional tests'
-	}
-	functionalTestRuntimeTestRuntime {
-		description = 'Local dependencies used for tests runtime inside of Gradle functional tests'
-	}
-}
-
-// Write the plugin's classpath to a file to share with the tests.
-// See https://docs.gradle.org/current/userguide/test_kit.html
-Task createClasspathManifests = tasks.create('createClasspathManifests') {
-	description = 'Generate classpath manifests for functional tests so that they can reference locally built libraries for use with Gradle Test Kit'
-	File functionalTestClasspathsDir = file("$buildDir/functionalTestClasspathManifests")
-
-	inputs.files sourceSets.main.runtimeClasspath
-	inputs.files configurations.functionalTestRuntimeTestCompile
-	inputs.files configurations.functionalTestRuntimeTestRuntime
-	outputs.dir functionalTestClasspathsDir
-
-	doLast {
-		functionalTestClasspathsDir.mkdirs()
-		file("$functionalTestClasspathsDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join(System.lineSeparator())
-		file("$functionalTestClasspathsDir/test-compile-classpath.txt").text = configurations.functionalTestRuntimeTestCompile.join(System.lineSeparator())
-		file("$functionalTestClasspathsDir/test-runtime-classpath.txt").text = configurations.functionalTestRuntimeTestRuntime.join(System.lineSeparator())
-	}
-}
+apply plugin: 'java-gradle-plugin'
+apply from: 'gradle/functional-test.gradle'
 
 dependencies {
-	implementation(localGroovy())
-	implementation(gradleApi())
 	api(project(path: ':junit-platform-console', configuration: 'shadow'))
 	api(project(':junit-platform-launcher'))
 	testRuntimeOnly("junit:junit:${junit4Version}")
 	testImplementation('org.spockframework:spock-core:1.1-groovy-2.4') {
 		exclude module: 'groovy-all'
 	}
-	testImplementation(gradleTestKit())
-	functionalTestRuntimeTestCompile(project(':junit-jupiter-api'))
-	functionalTestRuntimeTestRuntime(project(':junit-platform-console'))
-	functionalTestRuntimeTestRuntime(project(':junit-jupiter-engine'))
-	testRuntimeOnly(files(createClasspathManifests))
 }
 
 processResources {

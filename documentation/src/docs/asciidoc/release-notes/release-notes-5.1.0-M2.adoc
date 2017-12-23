@@ -27,7 +27,11 @@ on GitHub.
 * New `SUMMARY` details mode for the `ConsoleLauncher` and Gradle plugin which prints
   the table of success and failure counts at the end of test plan execution. This new
   mode is analogous to the previous behavior of the `NONE` details mode.
-
+* The summary table of a console launcher run now contains the initial ten stack trace
+  lines to better describe the location of the failure.
+* Non-inherited _composed annotations_ which are meta-annotated with a given `@Inherited`
+  annotation are now considered to be implicitly _inherited_ when searching for the given
+  meta-annotation within a class hierarchy.
 
 [[release-notes-5.1.0-M2-junit-jupiter]]
 === JUnit Jupiter
@@ -45,12 +49,18 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Due to a change in the JUnit Platform's `AnnotationUtils` class, non-inherited
+  _composed annotations_ which are meta-annotated with a given `@Inherited` annotation
+  are now considered to be implicitly _inherited_ when searching for the given
+  meta-annotation within a class hierarchy.
+** For example, an `@Inherited` annotation such as `@TestInstance` will now be discovered
+   on a custom _composed annotation_ declared on a superclass even if the _composed
+   annotation_ is not declared as `@Inherited`.
 * New callback interface `CloseableResource` introduced in `ExtensionContext.Store`.
   An extension context store is bound to its extension context lifecycle. When an
   extension context lifecycle ends it closes its associated store. All stored values
   that are instances of `ExtensionContext.Store.CloseableResource` are notified by
   invoking their `close()` method.
-
 
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage
