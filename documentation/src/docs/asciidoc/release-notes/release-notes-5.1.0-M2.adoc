@@ -36,6 +36,7 @@ on GitHub.
 * Non-inherited _composed annotations_ which are meta-annotated with a given `@Inherited`
   annotation are now considered to be implicitly _inherited_ when searching for the given
   meta-annotation within a class hierarchy.
+* New support for a tag expression language in `include-tag` and `exclude-tag`.
 
 [[release-notes-5.1.0-M2-junit-jupiter]]
 === JUnit Jupiter

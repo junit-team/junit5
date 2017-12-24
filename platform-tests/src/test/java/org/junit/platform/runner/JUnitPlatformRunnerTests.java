@@ -13,6 +13,7 @@ package org.junit.platform.runner;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -38,7 +39,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -214,6 +217,46 @@ class JUnitPlatformRunnerTests {
 			assertTrue(filter.apply(testDescriptorWithTag("foo")).excluded());
 			assertTrue(filter.apply(testDescriptorWithTag("bar")).excluded());
 			assertTrue(filter.apply(testDescriptorWithTag("baz")).included());
+		}
+
+		@Test
+		void includeTagsAcceptsTagExpressions() throws Exception {
+
+			@IncludeTags("foo & !bar")
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<PostDiscoveryFilter> filters = request.getPostDiscoveryFilters();
+			assertThat(filters).hasSize(1);
+
+			PostDiscoveryFilter filter = filters.get(0);
+			assertTrue(filter.apply(testDescriptorWithTag("foo")).included());
+			assertTrue(filter.apply(testDescriptorWithTag("foo", "any_other_tag")).included());
+			assertTrue(filter.apply(testDescriptorWithTag("foo", "bar")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTag("bar")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTag("bar", "any_other_tag")).excluded());
+		}
+
+		@Test
+		void excludeTagsAcceptsTagExpressions() throws Exception {
+
+			@ExcludeTags("foo & !bar")
+			class TestCase {
+			}
+
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			List<PostDiscoveryFilter> filters = request.getPostDiscoveryFilters();
+			assertThat(filters).hasSize(1);
+
+			PostDiscoveryFilter filter = filters.get(0);
+			assertTrue(filter.apply(testDescriptorWithTag("foo")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTag("foo", "any_other_tag")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTag("foo", "bar")).included());
+			assertTrue(filter.apply(testDescriptorWithTag("bar")).included());
+			assertTrue(filter.apply(testDescriptorWithTag("bar", "any_other_tag")).included());
 		}
 
 		@Test
@@ -695,9 +738,10 @@ class JUnitPlatformRunnerTests {
 		return createTestDescription(uniqueId, uniqueId, uniqueId);
 	}
 
-	private TestDescriptor testDescriptorWithTag(String tag) {
+	private TestDescriptor testDescriptorWithTag(String... tag) {
 		TestDescriptor testDescriptor = mock(TestDescriptor.class);
-		when(testDescriptor.getTags()).thenReturn(singleton(TestTag.create(tag)));
+		Set<TestTag> tags = Arrays.stream(tag).map(TestTag::create).collect(toSet());
+		when(testDescriptor.getTags()).thenReturn(tags);
 		return testDescriptor;
 	}
 

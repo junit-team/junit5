@@ -11,7 +11,7 @@
 package org.junit.platform.launcher;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -19,7 +19,6 @@ import java.util.List;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestTag;
 
 /**
@@ -76,8 +75,7 @@ public final class TagFilter {
 	 */
 	public static PostDiscoveryFilter includeTags(List<String> tags) throws PreconditionViolationException {
 		Preconditions.notEmpty(tags, "tags list must not be null or empty");
-		List<TestTag> activeTags = toTestTags(tags);
-		return descriptor -> FilterResult.includedIf(descriptor.getTags().stream().anyMatch(activeTags::contains));
+		return TagExpressionFilter.includeMatching(orExpressionFor(tags));
 	}
 
 	/**
@@ -117,12 +115,11 @@ public final class TagFilter {
 	 */
 	public static PostDiscoveryFilter excludeTags(List<String> tags) throws PreconditionViolationException {
 		Preconditions.notEmpty(tags, "tags list must not be null or empty");
-		List<TestTag> activeTags = toTestTags(tags);
-		return descriptor -> FilterResult.includedIf(descriptor.getTags().stream().noneMatch(activeTags::contains));
+		return TagExpressionFilter.includeMatching("! (" + orExpressionFor(tags) + ")");
 	}
 
-	private static List<TestTag> toTestTags(List<String> tags) {
-		return tags.stream().map(TestTag::create).collect(toList());
+	private static String orExpressionFor(List<String> tags) {
+		return tags.stream().map(tag -> null == tag ? "" : tag).collect(joining(" | "));
 	}
 
 }

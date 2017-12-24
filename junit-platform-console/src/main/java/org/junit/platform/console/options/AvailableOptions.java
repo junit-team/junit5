@@ -186,10 +186,12 @@ class AvailableOptions {
 				.withRequiredArg();
 
 		includeTag = parser.acceptsAll(asList("t", "include-tag"),
-			"Provide a tag to be included in the test run. This option can be repeated.") //
+			"Provide a tag expression to include only tests whose tags match. " + //
+					"When this option is repeated, all patterns will be combined using OR semantics.") //
 				.withRequiredArg();
 		excludeTag = parser.acceptsAll(asList("T", "exclude-tag"),
-			"Provide a tag to be excluded from the test run. This option can be repeated.") //
+			"Provide a tag expression to exclude those tests whose tags match. " + //
+					"When this option is repeated, all patterns will be combined using OR semantics.") //
 				.withRequiredArg();
 
 		includeEngine = parser.acceptsAll(asList("e", "include-engine"),

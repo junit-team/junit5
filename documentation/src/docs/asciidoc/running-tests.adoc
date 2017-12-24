@@ -730,3 +730,31 @@ Consequently, configuration parameters supplied directly to the `Launcher` take
 precedence over those supplied via system properties and the configuration file.
 Similarly, configuration parameters supplied via system properties take precedence over
 those supplied via the configuration file.
+
+[[tag-expression]]
+=== Tag Expressions
+Tag expressions are boolean expressions with the operators `!`, `&` and `|`.
+`(` and `)` can be used to adjust for operator precedence.
+
+Operators in descending precedence.
+|===
+|operator        | meaning |associativity
+
+| !              | not     | right
+| &              | and     | left
+| \|             | or      | left
+|===
+
+If you are tagging your tests across multiple dimensions tag expressions help you to select which tests to execute.
+Tagging by test type (_micro_, _integration_, _end-to-end_) and feature (*foo*, *bar*, *baz*) the following tag expressions can be useful.
+
+[cols="40,60"]
+|===
+|tag expression                             | selects
+
+| +foo+                                     | all tests for *foo*
+| +bar\|baz+                                | all tests for *bar* plus all tests for *baz*
+| +bar & baz+                               | all tests for the interaction between *bar* and *baz*
+| +foo & !end-to-end+                       | all tests for *foo*, but not the _end-to-end_ tests
+| +(micro \| integration) & (foo \| baz )+  | all _micro_ or _integration_ tests for *foo* or *baz*
+|===
