@@ -62,7 +62,7 @@ class TagFilterTests {
 	private void assertSyntaxViolationForIncludes(String tag) {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> includeTags(tag));
-		assertThat(exception).hasMessageContaining("Tag name [" + tag + "] must be syntactically valid");
+		assertThat(exception).hasMessageStartingWith("Unable to parse tag expression");
 	}
 
 	@Test
@@ -80,7 +80,7 @@ class TagFilterTests {
 	private void assertSyntaxViolationForExcludes(String tag) {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> excludeTags(tag));
-		assertThat(exception).hasMessageContaining("Tag name [" + tag + "] must be syntactically valid");
+		assertThat(exception).hasMessageStartingWith("Unable to parse tag expression");
 	}
 
 	@Test
@@ -127,6 +127,14 @@ class TagFilterTests {
 
 		assertTrue(filter.apply(classWithDifferentTags).included());
 		assertTrue(filter.apply(classWithNoTags).included());
+	}
+
+	@Test
+	void rejectUnParsableTagExpressions() {
+		String brokenTagExpression = "tag & ";
+		RuntimeException expected = assertThrows(PreconditionViolationException.class,
+			() -> TagFilter.includeTags(brokenTagExpression));
+		assertThat(expected).hasMessageStartingWith("Unable to parse tag expression [" + brokenTagExpression + "]");
 	}
 
 	private void includeSingleTag(PostDiscoveryFilter filter) {
