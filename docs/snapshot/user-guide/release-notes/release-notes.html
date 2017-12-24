@@ -677,6 +677,12 @@ on GitHub.</p>
 <p>Summary table is no longer printed via the <code>ConsoleLauncher</code> and Gradle plugin when
 details mode <code>NONE</code> is selected, unless there are errors.</p>
 </li>
+<li>
+<p>The current module layer is now used when scanning for test classes within modules. The
+current module layer is the one that the class loader for the <code>ModuleUtils</code> class
+returns. If the current layer cannot be obtained, the algorithm falls back to the boot
+layer.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -719,10 +725,7 @@ meta-annotation within a class hierarchy.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The current module layer is now used when scanning for test classes within modules. The
-current module layer is the one that the class loader for the <code>ModuleUtils</code> class
-returns. If the current layer cannot be obtained, the algorithm falls back to the boot
-layer.</p>
+<p>❓</p>
 </li>
 </ul>
 </div>
@@ -742,10 +745,6 @@ layer.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>New <code>getConfigurationParameter(String key)</code> method in interface <code>ExtensionContext</code>.
-Extensions can now access and evaluate configuration parameter values at runtime.</p>
-</li>
-<li>
 <p>Due to a change in the JUnit Platform&#8217;s <code>AnnotationUtils</code> class, non-inherited
 <em>composed annotations</em> which are meta-annotated with a given <code>@Inherited</code> annotation
 are now considered to be implicitly <em>inherited</em> when searching for the given
@@ -759,6 +758,11 @@ annotation</em> is not declared as <code>@Inherited</code>.</p>
 </li>
 </ul>
 </div>
+</li>
+<li>
+<p>Extensions for JUnit Jupiter can now access JUnit Platform configuration parameters at
+runtime via the new <code>getConfigurationParameter(String key)</code> method in the
+<code>ExtensionContext</code> API.</p>
 </li>
 </ul>
 </div>
@@ -3514,7 +3518,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-12-24 11:15:38 EST
+Last updated 2017-12-23 07:07:49 EST
 </div>
 </div>
 </body>
