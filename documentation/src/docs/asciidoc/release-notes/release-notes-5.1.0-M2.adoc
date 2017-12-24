@@ -17,6 +17,10 @@ on GitHub.
 
 * Summary table is no longer printed via the `ConsoleLauncher` and Gradle plugin when
   details mode `NONE` is selected, unless there are errors.
+* The current module layer is now used when scanning for test classes within modules. The
+  current module layer is the one that the class loader for the `ModuleUtils` class
+  returns. If the current layer cannot be obtained, the algorithm falls back to the boot
+  layer.
 
 ==== Deprecations and Breaking Changes
 
@@ -38,10 +42,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* The current module layer is now used when scanning for test classes within modules. The
-  current module layer is the one that the class loader for the `ModuleUtils` class
-  returns. If the current layer cannot be obtained, the algorithm falls back to the boot
-  layer.
+* ❓
 
 ==== Deprecations and Breaking Changes
 
@@ -49,8 +50,6 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* New `getConfigurationParameter(String key)` method in interface `ExtensionContext`.
-  Extensions can now access and evaluate configuration parameter values at runtime.
 * Due to a change in the JUnit Platform's `AnnotationUtils` class, non-inherited
   _composed annotations_ which are meta-annotated with a given `@Inherited` annotation
   are now considered to be implicitly _inherited_ when searching for the given
@@ -58,6 +57,9 @@ on GitHub.
 ** For example, an `@Inherited` annotation such as `@TestInstance` will now be discovered
    on a custom _composed annotation_ declared on a superclass even if the _composed
    annotation_ is not declared as `@Inherited`.
+* Extensions for JUnit Jupiter can now access JUnit Platform configuration parameters at
+  runtime via the new `getConfigurationParameter(String key)` method in the
+  `ExtensionContext` API.
 
 
 [[release-notes-5.1.0-M2-junit-vintage]]
