@@ -224,16 +224,17 @@ public interface ExtensionContext {
 	/**
 	 * Get the configuration parameter stored under the specified {@code key}.
 	 *
-	 * <p>If no such key is present in this {@code ConfigurationParameters},
-	 * an attempt will be made to look up the value as a JVM system property.
-	 * If no such system property exists, an attempt will be made to look up
-	 * the value in the {@code JUnit Platform properties file}.
+	 * <p>If no such key is present in the {@code ConfigurationParameters} for
+	 * the JUnit Platform, an attempt will be made to look up the value as a
+	 * JVM system property. If no such system property exists, an attempt will
+	 * be made to look up the value in the {@code JUnit Platform properties file}.
 	 *
 	 * @param key the key to look up; never {@code null} or blank
 	 * @return an {@code Optional} containing the value; never {@code null}
 	 * but potentially empty
 	 *
 	 * @see System#getProperty(String)
+	 * @see org.junit.platform.engine.ConfigurationParameters
 	 * @since 5.1
 	 */
 	@API(status = STABLE, since = "5.1")
