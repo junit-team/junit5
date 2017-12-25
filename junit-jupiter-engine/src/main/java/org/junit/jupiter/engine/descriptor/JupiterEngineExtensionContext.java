@@ -28,6 +28,7 @@ public final class JupiterEngineExtensionContext extends AbstractExtensionContex
 
 	public JupiterEngineExtensionContext(EngineExecutionListener engineExecutionListener,
 			JupiterEngineDescriptor testDescriptor, ConfigurationParameters configurationParameters) {
+
 		super(null, engineExecutionListener, testDescriptor, configurationParameters);
 	}
 

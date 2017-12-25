@@ -40,6 +40,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
 			ConfigurationParameters configurationParameters) {
+
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
@@ -67,30 +68,30 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	@Override
 	public void publishReportEntry(Map<String, String> values) {
-		engineExecutionListener.reportingEntryPublished(this.testDescriptor, ReportEntry.from(values));
+		this.engineExecutionListener.reportingEntryPublished(this.testDescriptor, ReportEntry.from(values));
 	}
 
 	@Override
 	public Optional<ExtensionContext> getParent() {
-		return Optional.ofNullable(parent);
+		return Optional.ofNullable(this.parent);
 	}
 
 	@Override
 	public ExtensionContext getRoot() {
-		if (parent != null) {
-			return parent.getRoot();
+		if (this.parent != null) {
+			return this.parent.getRoot();
 		}
 		return this;
 	}
 
 	protected T getTestDescriptor() {
-		return testDescriptor;
+		return this.testDescriptor;
 	}
 
 	@Override
 	public Store getStore(Namespace namespace) {
 		Preconditions.notNull(namespace, "Namespace must not be null");
-		return new NamespaceAwareStore(valuesStore, namespace);
+		return new NamespaceAwareStore(this.valuesStore, namespace);
 	}
 
 	@Override
@@ -100,6 +101,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	@Override
 	public Optional<String> getConfigurationParameter(String key) {
-		return configurationParameters.get(key);
+		return this.configurationParameters.get(key);
 	}
+
 }
