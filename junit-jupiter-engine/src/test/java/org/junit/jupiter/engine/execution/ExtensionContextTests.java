@@ -228,15 +228,26 @@ class ExtensionContextTests {
 	}
 
 	@TestFactory
-	Stream<DynamicTest> configurationParameter() {
+	Stream<DynamicTest> configurationParameter() throws Exception {
 		ConfigurationParameters echo = new EchoParameters();
 		String key = "123";
 		Optional<String> expected = Optional.of(key);
 
+		UniqueId engineUniqueId = UniqueId.parse("[engine:junit-jupiter]");
+		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineUniqueId);
+
+		UniqueId classUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(classUniqueId, getClass());
+
+		Method method = getClass().getDeclaredMethod("configurationParameter");
+		UniqueId methodUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
+		TestMethodTestDescriptor methodTestDescriptor = new TestMethodTestDescriptor(methodUniqueId, getClass(),
+			method);
+
 		return Stream.of( //
-			(ExtensionContext) new JupiterEngineExtensionContext(null, null, echo), //
-			new ClassExtensionContext(null, null, null, echo, null), //
-			new MethodExtensionContext(null, null, null, echo, null, null) //
+			(ExtensionContext) new JupiterEngineExtensionContext(null, engineDescriptor, echo), //
+			new ClassExtensionContext(null, null, classTestDescriptor, echo, null), //
+			new MethodExtensionContext(null, null, methodTestDescriptor, echo, null, null) //
 		).map(context -> dynamicTest(context.getClass().getSimpleName(),
 			() -> assertEquals(expected, context.getConfigurationParameter(key))));
 	}

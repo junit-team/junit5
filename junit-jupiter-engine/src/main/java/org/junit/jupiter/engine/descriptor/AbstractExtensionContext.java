@@ -10,8 +10,10 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +37,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
 	private final T testDescriptor;
+	private final Set<String> tags;
 	private final ConfigurationParameters configurationParameters;
 	private final ExtensionValuesStore valuesStore;
 
@@ -43,9 +46,15 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
-		this.testDescriptor = testDescriptor;
+		this.testDescriptor = Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		this.configurationParameters = configurationParameters;
 		this.valuesStore = createStore(parent);
+
+		// @formatter:off
+		this.tags = testDescriptor.getTags().stream()
+				.map(TestTag::getName)
+				.collect(collectingAndThen(toCollection(LinkedHashSet::new), Collections::unmodifiableSet));
+		// @formatter:on
 	}
 
 	private ExtensionValuesStore createStore(ExtensionContext parent) {
@@ -96,7 +105,8 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	@Override
 	public Set<String> getTags() {
-		return testDescriptor.getTags().stream().map(TestTag::getName).collect(toCollection(LinkedHashSet::new));
+		// return modifiable copy
+		return new LinkedHashSet<String>(this.tags);
 	}
 
 	@Override
