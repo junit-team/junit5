@@ -121,6 +121,17 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		return SkipResult.doNotSkip();
 	}
 
+	/**
+	 * Must be overridden and return a new context so cleanUp() does not accidentally close the parent context.
+	 */
+	@Override
+	public abstract JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception;
+
+	@Override
+	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
+		context.close();
+	}
+
 	protected ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
 			ExtensionRegistry existingExtensionRegistry) {
 		// @formatter:off

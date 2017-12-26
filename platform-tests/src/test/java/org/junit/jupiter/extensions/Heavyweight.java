@@ -11,16 +11,24 @@
 package org.junit.jupiter.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
-public class Heavyweight implements ParameterResolver {
+public class Heavyweight implements ParameterResolver, BeforeEachCallback {
+
+	@Override
+	public void beforeEach(ExtensionContext context) throws Exception {
+		context.getStore(ExtensionContext.Namespace.GLOBAL).put("once", new CloseableOnlyOnceResource());
+	}
 
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext context) {
@@ -67,6 +75,16 @@ public class Heavyweight implements ParameterResolver {
 		@Override
 		public int usages() {
 			return usages.get();
+		}
+	}
+
+	private static class CloseableOnlyOnceResource implements CloseableResource {
+
+		private final AtomicBoolean closed = new AtomicBoolean();
+
+		@Override
+		public void close() {
+			assertTrue(closed.compareAndSet(false, true), "already closed!");
 		}
 	}
 

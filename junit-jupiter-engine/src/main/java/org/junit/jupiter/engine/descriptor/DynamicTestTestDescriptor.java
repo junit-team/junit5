@@ -21,23 +21,18 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 5.0
  */
-class DynamicTestTestDescriptor extends JupiterTestDescriptor {
+class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 
 	private final DynamicTest dynamicTest;
 
 	DynamicTestTestDescriptor(UniqueId uniqueId, DynamicTest dynamicTest, TestSource source) {
-		super(uniqueId, dynamicTest.getDisplayName(), source);
+		super(uniqueId, dynamicTest, source);
 		this.dynamicTest = dynamicTest;
 	}
 
 	@Override
 	public Type getType() {
 		return Type.TEST;
-	}
-
-	@Override
-	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
-		return SkipResult.doNotSkip();
 	}
 
 	@Override

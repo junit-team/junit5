@@ -46,4 +46,8 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 		// @formatter:on
 	}
 
+	@Override
+	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
+		context.close();
+	}
 }
