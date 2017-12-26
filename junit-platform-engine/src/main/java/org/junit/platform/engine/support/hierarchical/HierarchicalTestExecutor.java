@@ -11,6 +11,10 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
+import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -48,91 +52,125 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	}
 
 	void execute() {
-		execute(this.rootTestDescriptor, this.rootContext, new ExecutionTracker());
+		new NodeExecutor(this.rootTestDescriptor).execute(this.rootContext, new ExecutionTracker());
 	}
 
-	private void execute(TestDescriptor testDescriptor, C parentContext, ExecutionTracker tracker) {
-		Node<C> node = asNode(testDescriptor);
-		tracker.markExecuted(testDescriptor);
+	class NodeExecutor {
 
-		C preparedContext;
-		try {
-			preparedContext = node.prepare(parentContext);
-		}
-		catch (Throwable throwable) {
-			rethrowIfBlacklisted(throwable);
-			reportAsFailed(testDescriptor, throwable);
-			return;
+		private final TestDescriptor testDescriptor;
+		private final Node<C> node;
+		private final List<Throwable> executionErrors = new ArrayList<>();
+		private C context;
+		private SkipResult skipResult;
+		private TestExecutionResult executionResult;
+
+		NodeExecutor(TestDescriptor testDescriptor) {
+			this.testDescriptor = testDescriptor;
+			node = asNode(testDescriptor);
 		}
 
-		SkipResult skipResult;
-		try {
-			skipResult = node.shouldBeSkipped(preparedContext);
+		void execute(C parentContext, ExecutionTracker tracker) {
+			tracker.markExecuted(testDescriptor);
+			prepare(parentContext);
+			if (executionErrors.isEmpty()) {
+				checkWhetherSkipped();
+			}
+			if (executionErrors.isEmpty() && !skipResult.isSkipped()) {
+				executeRecursively(tracker);
+			}
+			cleanUp();
+			reportDone();
 		}
-		catch (Exception exception) {
-			rethrowIfBlacklisted(exception);
+
+		private void prepare(C parentContext) {
 			try {
-				node.cleanUp(preparedContext);
+				context = node.prepare(parentContext);
 			}
-			catch (Exception cleanupException) {
-				exception.addSuppressed(cleanupException);
+			catch (Throwable t) {
+				addExecutionError(t);
 			}
-			finally {
-				reportAsFailed(testDescriptor, exception);
-			}
-			return;
 		}
 
-		if (skipResult.isSkipped()) {
+		private void checkWhetherSkipped() {
 			try {
-				node.cleanUp(preparedContext);
-				this.listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
+				skipResult = node.shouldBeSkipped(context);
 			}
-			catch (Exception exception) {
-				reportAsFailed(testDescriptor, exception);
+			catch (Throwable t) {
+				addExecutionError(t);
 			}
-			return;
 		}
 
-		this.listener.executionStarted(testDescriptor);
+		private void executeRecursively(ExecutionTracker tracker) {
+			listener.executionStarted(testDescriptor);
 
-		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
-			C context = preparedContext;
-			try {
-				context = node.before(context);
-
-				C contextForDynamicChildren = context;
-				context = node.execute(context, dynamicTestDescriptor -> {
-					this.listener.dynamicTestRegistered(dynamicTestDescriptor);
-					execute(dynamicTestDescriptor, contextForDynamicChildren, tracker);
-				});
-
-				C contextForStaticChildren = context;
-				// @formatter:off
-				testDescriptor.getChildren().stream()
-						.filter(child -> !tracker.wasAlreadyExecuted(child))
-						.forEach(child -> execute(child, contextForStaticChildren, tracker));
-				// @formatter:on
-			}
-			finally {
+			executionResult = singleTestExecutor.executeSafely(() -> {
 				try {
-					node.after(context);
+					context = node.before(context);
+
+					context = node.execute(context, dynamicTestDescriptor -> {
+						listener.dynamicTestRegistered(dynamicTestDescriptor);
+						new NodeExecutor(dynamicTestDescriptor).execute(context, tracker);
+					});
+
+					// @formatter:off
+					testDescriptor.getChildren().stream()
+							.filter(child -> !tracker.wasAlreadyExecuted(child))
+							.forEach(child -> new NodeExecutor(child).execute(context, tracker));
+					// @formatter:on
 				}
 				finally {
-					node.cleanUp(context);
+					node.after(context);
 				}
+			});
+		}
+
+		private void cleanUp() {
+			try {
+				node.cleanUp(context);
 			}
-		});
+			catch (Throwable t) {
+				addExecutionError(t);
+			}
+		}
 
-		this.listener.executionFinished(testDescriptor, result);
-	}
+		private void reportDone() {
+			if (executionResult != null) {
+				addExecutionErrorsToTestExecutionResult();
+				listener.executionFinished(testDescriptor, executionResult);
+			}
+			else if (executionErrors.isEmpty() && skipResult.isSkipped()) {
+				listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
+			}
+			else {
+				// Call executionStarted first to comply with the contract of EngineExecutionListener.
+				listener.executionStarted(testDescriptor);
+				listener.executionFinished(testDescriptor, createTestExecutionResultFromExecutionErrors());
+			}
+		}
 
-	/**
-	 * Call executionStarted first to comply with the contract of EngineExecutionListener.
-	 */
-	private void reportAsFailed(TestDescriptor testDescriptor, Throwable throwable) {
-		this.listener.executionStarted(testDescriptor);
-		this.listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
+		private void addExecutionErrorsToTestExecutionResult() {
+			if (executionErrors.isEmpty()) {
+				return;
+			}
+			if (executionResult.getStatus() == FAILED && executionResult.getThrowable().isPresent()) {
+				Throwable throwable = executionResult.getThrowable().get();
+				executionErrors.forEach(throwable::addSuppressed);
+			}
+			else {
+				executionResult = createTestExecutionResultFromExecutionErrors();
+			}
+		}
+
+		private TestExecutionResult createTestExecutionResultFromExecutionErrors() {
+			Throwable throwable = executionErrors.get(0);
+			executionErrors.stream().skip(1).forEach(throwable::addSuppressed);
+			return TestExecutionResult.failed(throwable);
+		}
+
+		private void addExecutionError(Throwable throwable) {
+			rethrowIfBlacklisted(throwable);
+			executionErrors.add(throwable);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
