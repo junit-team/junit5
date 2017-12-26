@@ -12,10 +12,15 @@ package org.junit.jupiter.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
@@ -35,9 +40,9 @@ class HeavyweightAlphaTests {
 		mark = resource.usages();
 	}
 
-	@Test
-	void alpha1(Heavyweight.Resource resource) {
-		assertTrue(resource.usages() > 1);
+	@TestFactory
+	Stream<DynamicTest> alpha1(Heavyweight.Resource resource) {
+		return Stream.of(dynamicTest("foo", () -> assertTrue(resource.usages() > 1)));
 	}
 
 	@Test
