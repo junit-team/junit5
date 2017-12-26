@@ -226,18 +226,19 @@ class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	void exceptionInContainerAfterAll() throws Exception {
+	void exceptionInContainerAfterAllAndCleanUp() throws Exception {
 
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "child container")));
 		root.addChild(child);
-		RuntimeException anException = new RuntimeException("in test");
-		doThrow(anException).when(root).after(rootContext);
-
-		InOrder inOrder = inOrder(listener, root, child);
+		RuntimeException afterException = new RuntimeException("in after()");
+		doThrow(afterException).when(root).after(rootContext);
+		RuntimeException cleanUpException = new RuntimeException("in cleanUp()");
+		doThrow(cleanUpException).when(root).cleanUp(rootContext);
 
 		executor.execute();
 
 		ArgumentCaptor<TestExecutionResult> rootExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		InOrder inOrder = inOrder(listener, root, child);
 		inOrder.verify(root).prepare(rootContext);
 		inOrder.verify(root).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(root);
@@ -246,11 +247,78 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(child).execute(eq(rootContext), any());
 		inOrder.verify(listener).executionFinished(eq(child), any(TestExecutionResult.class));
 		inOrder.verify(root).after(rootContext);
+		inOrder.verify(root).cleanUp(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
+		inOrder.verifyNoMoreInteractions();
 
-		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
-			"Execution of root should fail.");
-		assertSame(rootExecutionResult.getValue().getThrowable().get(), anException);
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(TestExecutionResult.Status.FAILED);
+		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(afterException);
+		assertThat(afterException.getSuppressed()).containsExactly(cleanUpException);
+	}
+
+	@Test
+	void exceptionInPrepare() throws Exception {
+		RuntimeException prepareException = new RuntimeException("in prepare()");
+		doThrow(prepareException).when(root).prepare(rootContext);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> rootExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		InOrder inOrder = inOrder(listener, root);
+		inOrder.verify(root).prepare(rootContext);
+		inOrder.verify(listener).executionStarted(root);
+		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
+		inOrder.verifyNoMoreInteractions();
+
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(TestExecutionResult.Status.FAILED);
+		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(prepareException);
+		assertThat(prepareException.getSuppressed()).isEmpty();
+	}
+
+	@Test
+	void exceptionInCleanUp() throws Exception {
+		RuntimeException cleanUpException = new RuntimeException("in cleanUp()");
+		doThrow(cleanUpException).when(root).cleanUp(rootContext);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> rootExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		InOrder inOrder = inOrder(listener, root);
+		inOrder.verify(root).prepare(rootContext);
+		inOrder.verify(root).shouldBeSkipped(rootContext);
+		inOrder.verify(listener).executionStarted(root);
+		inOrder.verify(root).execute(eq(rootContext), any());
+		inOrder.verify(root).after(rootContext);
+		inOrder.verify(root).cleanUp(rootContext);
+		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
+		inOrder.verifyNoMoreInteractions();
+
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(TestExecutionResult.Status.FAILED);
+		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(cleanUpException);
+		assertThat(cleanUpException.getSuppressed()).isEmpty();
+	}
+
+	@Test
+	void exceptionInShouldBeSkippedAndCleanUp() throws Exception {
+		RuntimeException shouldBeSkippedException = new RuntimeException("in prepare()");
+		doThrow(shouldBeSkippedException).when(root).shouldBeSkipped(rootContext);
+		RuntimeException cleanUpException = new RuntimeException("in cleanUp()");
+		doThrow(cleanUpException).when(root).cleanUp(rootContext);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> rootExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		InOrder inOrder = inOrder(listener, root);
+		inOrder.verify(root).prepare(rootContext);
+		inOrder.verify(root).shouldBeSkipped(rootContext);
+		inOrder.verify(root).cleanUp(rootContext);
+		inOrder.verify(listener).executionStarted(root);
+		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
+		inOrder.verifyNoMoreInteractions();
+
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(TestExecutionResult.Status.FAILED);
+		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(shouldBeSkippedException);
+		assertThat(shouldBeSkippedException.getSuppressed()).containsExactly(cleanUpException);
 	}
 
 	@Test
