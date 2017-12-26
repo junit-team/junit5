@@ -26,14 +26,16 @@ import org.apiguardian.api.API;
  * the {@linkplain Lifecycle lifecycle} of test instances for the annotated
  * test class or test interface.
  *
- * <p>If {@code @TestInstance} is not declared on a test class or implemented
- * test interface, the lifecycle mode will implicitly default to
- * {@link Lifecycle#PER_METHOD PER_METHOD}. Note, however, that an explicit
- * lifecycle mode is <em>inherited</em> within a test class hierarchy. In
- * addition, the <em>default</em> lifecycle mode may be set via the
- * {@code junit.jupiter.testinstance.lifecycle.default} <em>configuration
- * parameter</em> which can be supplied via the {@code Launcher} API or via a
- * JVM system property. Consult the User Guide for further information.
+ * <p>If {@code @TestInstance} is not explicitly declared on a test class or
+ * on a test interface implemented by a test class, the lifecycle mode will
+ * implicitly default to {@link Lifecycle#PER_METHOD PER_METHOD}. Note, however,
+ * that an explicit lifecycle mode is <em>inherited</em> within a test class
+ * hierarchy. In addition, the <em>default</em> lifecycle mode may be overridden
+ * via the {@code junit.jupiter.testinstance.lifecycle.default} <em>configuration
+ * parameter</em> which can be supplied via the {@code Launcher} API, build tools
+ * (e.g., Gradle and Maven), a JVM system property, or the JUnit Platform
+ * configuration file (i.e., a file named {@code junit-platform.properties} in
+ * the root of the class path). Consult the User Guide for further information.
  *
  * <h3>Use Cases</h3>
  * <p>Setting the test instance lifecycle mode to {@link Lifecycle#PER_CLASS
