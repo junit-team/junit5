@@ -44,7 +44,6 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 		this.state = state;
 	}
 
-	@Override
 	public void close() throws Exception {
 		ExtensionContext extensionContext = getExtensionContext();
 		if (extensionContext instanceof AutoCloseable) {
