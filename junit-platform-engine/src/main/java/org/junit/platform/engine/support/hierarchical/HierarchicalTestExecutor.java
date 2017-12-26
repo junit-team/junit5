@@ -78,7 +78,9 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			if (executionErrors.isEmpty() && !skipResult.isSkipped()) {
 				executeRecursively(tracker);
 			}
-			cleanUp();
+			if (context != null) {
+				cleanUp();
+			}
 			reportDone();
 		}
 
