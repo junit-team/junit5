@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -53,13 +54,18 @@ public final class MethodExtensionContext extends AbstractExtensionContext<TestM
 	}
 
 	@Override
-	public Optional<Method> getTestMethod() {
-		return Optional.of(getTestDescriptor().getTestMethod());
+	public Optional<Lifecycle> getTestInstanceLifecycle() {
+		return getParent().flatMap(ExtensionContext::getTestInstanceLifecycle);
 	}
 
 	@Override
 	public Optional<Object> getTestInstance() {
 		return Optional.of(this.testInstance);
+	}
+
+	@Override
+	public Optional<Method> getTestMethod() {
+		return Optional.of(getTestDescriptor().getTestMethod());
 	}
 
 	@Override

@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
@@ -139,6 +141,18 @@ public interface ExtensionContext {
 		return Preconditions.notNull(getTestClass().orElse(null),
 			"Illegal state: required test class is not present in the current ExtensionContext");
 	}
+
+	/**
+	 * Get the {@link Lifecycle} of the {@linkplain #getTestInstance() test
+	 * instance} associated with the current test or container, if available.
+	 *
+	 * @return an {@code Optional} containing the test instance {@code Lifecycle};
+	 * never {@code null} but potentially empty
+	 * @see TestInstance {@code @TestInstance}
+	 * @since 5.1
+	 */
+	@API(status = STABLE, since = "5.1")
+	Optional<Lifecycle> getTestInstanceLifecycle();
 
 	/**
 	 * Get the test instance associated with the current test or container,

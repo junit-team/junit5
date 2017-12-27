@@ -102,6 +102,8 @@ _@API Guardian_ JAR _mandatory_ again.
 * Extensions for JUnit Jupiter can now access JUnit Platform configuration parameters at
   runtime via the new `getConfigurationParameter(String key)` method in the
   `ExtensionContext` API.
+* Extensions for JUnit Jupiter can now access the `Lifecycle` of the current test
+  instance via the new `getTestInstanceLifecycle()` method in the `ExtensionContext` API.
 * New callback interface `CloseableResource` introduced in `ExtensionContext.Store`. A
   `Store` is bound to the lifecycle of its extension context. When the lifecycle of an
   extension context ends, the associated store is closed, and each stored value that is
