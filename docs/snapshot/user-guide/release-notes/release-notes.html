@@ -764,6 +764,13 @@ annotation</em> is not declared as <code>@Inherited</code>.</p>
 runtime via the new <code>getConfigurationParameter(String key)</code> method in the
 <code>ExtensionContext</code> API.</p>
 </li>
+<li>
+<p>New callback interface <code>CloseableResource</code> introduced in <code>ExtensionContext.Store</code>.
+An extension context store is bound to its extension context lifecycle. When an
+extension context lifecycle ends it closes its associated store. All stored values
+that are instances of <code>ExtensionContext.Store.CloseableResource</code> are notified by
+an invocation of their <code>close()</code> method.</p>
+</li>
 </ul>
 </div>
 </div>
