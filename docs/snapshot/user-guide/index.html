@@ -4704,6 +4704,22 @@ surrounding <code>ExtensionContext</code>. Since <code>ExtensionContexts</code> 
 inner contexts may also be limited. Consult the corresponding JavaDoc for details on the
 methods available for storing and retrieving values via the <code><a href="../api/org/junit/jupiter/api/extension/ExtensionContext.Store.html">Store</a></code>.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title"><code>ExtensionContext.Store.CloseableResource</code></div>
+An extension context store is bound to its extension context lifecycle. When an
+extension context lifecycle ends it closes its associated store. All stored values
+that are instances of <code>CloseableResource</code> are notified by
+an invocation of their <code>close()</code> method.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.10. Supported Utilities in Extensions</h3>
@@ -5416,7 +5432,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-12-28 05:11:17 EST
+Last updated 2017-12-28 14:07:47 EST
 </div>
 </div>
 </body>
