@@ -7,6 +7,12 @@ and IDE vendors.
 
 ifdef::backend-html5[This document is also available as a link:index.pdf[PDF download].]
 
+[[overview-translations]]
+=== Translations
+
+This document is translated into Chinese. Please consult http://sjyuan.cc/junit5/user-guide-cn[JUnit 5 User Guide(
+Simplified Chinese)].
+
 [[overview-what-is-junit-5]]
 === What is JUnit 5?
 
