@@ -60,7 +60,11 @@ on GitHub.
 * Extensions for JUnit Jupiter can now access JUnit Platform configuration parameters at
   runtime via the new `getConfigurationParameter(String key)` method in the
   `ExtensionContext` API.
-
+* New callback interface `CloseableResource` introduced in `ExtensionContext.Store`.
+  An extension context store is bound to its extension context lifecycle. When an
+  extension context lifecycle ends it closes its associated store. All stored values
+  that are instances of `ExtensionContext.Store.CloseableResource` are notified by
+  an invocation of their `close()` method.
 
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage
