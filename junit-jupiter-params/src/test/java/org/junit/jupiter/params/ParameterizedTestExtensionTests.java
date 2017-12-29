@@ -161,6 +161,11 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
+			public Optional<String> getConfigurationParameter(String key) {
+				return Optional.empty();
+			}
+
+			@Override
 			public void publishReportEntry(Map<String, String> map) {
 			}
 

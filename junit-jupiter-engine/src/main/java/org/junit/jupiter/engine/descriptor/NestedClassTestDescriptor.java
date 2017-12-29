@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Constructor;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,17 +42,25 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
+	/**
+	 * Set of local class-level tags; does not contain tags from parent.
+	 */
+	private final Set<TestTag> tags;
+
 	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
 		super(uniqueId, Class::getSimpleName, testClass);
+
+		this.tags = getTags(testClass);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public final Set<TestTag> getTags() {
-		Set<TestTag> localTags = super.getTags();
-		getParent().ifPresent(parentDescriptor -> localTags.addAll(parentDescriptor.getTags()));
-		return localTags;
+		// return modifiable copy
+		Set<TestTag> allTags = new LinkedHashSet<TestTag>(this.tags);
+		getParent().ifPresent(parentDescriptor -> allTags.addAll(parentDescriptor.getTags()));
+		return allTags;
 	}
 
 	// --- Node ----------------------------------------------------------------

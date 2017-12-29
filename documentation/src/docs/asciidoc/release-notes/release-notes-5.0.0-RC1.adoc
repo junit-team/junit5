@@ -6,7 +6,7 @@
 *Scope:* Bug fixes and documentation improvements before 5.0 GA
 
 WARNING: This is a pre-release and contains a few breaking changes. Please refer to the
-<<index.adoc#running-tests-ide-intellij-idea,instructions>> in the User Guide to use this
+<<../index.adoc#running-tests-ide-intellij-idea,instructions>> in the User Guide to use this
 version in a version of IntelliJ IDEA that bundles an older milestone release.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the

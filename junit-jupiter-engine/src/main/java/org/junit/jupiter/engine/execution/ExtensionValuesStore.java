@@ -43,6 +43,24 @@ public class ExtensionValuesStore {
 		this.parentStore = parentStore;
 	}
 
+	/**
+	 * Close all values that implement {@link ExtensionContext.Store.CloseableResource}.
+	 *
+	 * @implNote Only close values stored in this instance. This implementation
+	 * does not close values in parent stores.
+	 */
+	public void closeAllStoredCloseableValues() {
+		ThrowableCollector throwableCollector = new ThrowableCollector();
+		for (Supplier<Object> supplier : storedValues.values()) {
+			Object value = supplier.get();
+			if (value instanceof ExtensionContext.Store.CloseableResource) {
+				ExtensionContext.Store.CloseableResource resource = (ExtensionContext.Store.CloseableResource) value;
+				throwableCollector.execute(resource::close);
+			}
+		}
+		throwableCollector.assertEmpty();
+	}
+
 	Object get(Namespace namespace, Object key) {
 		Supplier<Object> storedValue = getStoredValue(new CompositeKey(namespace, key));
 		return (storedValue != null ? storedValue.get() : null);

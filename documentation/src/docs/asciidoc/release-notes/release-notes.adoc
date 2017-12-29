@@ -9,7 +9,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Chri
 
 This document contains the _change log_ for all JUnit 5 releases.
 
-Please refer to the <<index.adoc#user-guide,User Guide>> for
+Please refer to the <<../index.adoc#user-guide,User Guide>> for
 comprehensive reference documentation for programmers writing tests,
 extension authors, and engine authors as well as build tool and IDE
 vendors.

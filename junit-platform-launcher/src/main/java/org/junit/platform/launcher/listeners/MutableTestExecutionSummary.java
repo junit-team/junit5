@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.platform.launcher.TestIdentifier;
@@ -31,6 +30,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	private static final String TAB = "  ";
 	private static final String DOUBLE_TAB = TAB + TAB;
+	private static final int MAX_STACKTRACE_LINES = 10;
 
 	final AtomicLong containersFound = new AtomicLong();
 	final AtomicLong containersStarted = new AtomicLong();
@@ -140,8 +140,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	@Override
 	public void printTo(PrintWriter writer) {
 		// @formatter:off
-		writer.println(String.format(
-			"%nTest run finished after %d ms%n"
+		writer.printf("%nTest run finished after %d ms%n"
 
 			+ "[%10d containers found      ]%n"
 			+ "[%10d containers skipped    ]%n"
@@ -155,7 +154,8 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 			+ "[%10d tests started         ]%n"
 			+ "[%10d tests aborted         ]%n"
 			+ "[%10d tests successful      ]%n"
-			+ "[%10d tests failed          ]%n",
+			+ "[%10d tests failed          ]%n"
+			+ "%n",
 
 			(this.timeFinished - this.timeStarted),
 
@@ -172,7 +172,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 			getTestsAbortedCount(),
 			getTestsSucceededCount(),
 			getTestsFailedCount()
-		));
+		);
 		// @formatter:on
 
 		writer.flush();
@@ -181,12 +181,12 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	@Override
 	public void printFailuresTo(PrintWriter writer) {
 		if (getTotalFailureCount() > 0) {
-			writer.println();
-			writer.println(String.format("Failures (%d):", getTotalFailureCount()));
+			writer.printf("%nFailures (%d):%n", getTotalFailureCount());
 			this.failures.forEach(failure -> {
-				writer.println(TAB + describeTest(failure.getTestIdentifier()));
-				failure.getTestIdentifier().getSource().ifPresent(source -> writer.println(DOUBLE_TAB + source));
-				writer.println(String.format("%s=> %s", DOUBLE_TAB, failure.getException()));
+				writer.printf("%s%s%n", TAB, describeTest(failure.getTestIdentifier()));
+				printSource(writer, failure.getTestIdentifier());
+				writer.printf("%s=> %s%n", DOUBLE_TAB, failure.getException());
+				printStackTrace(writer, failure.getException(), MAX_STACKTRACE_LINES);
 			});
 			writer.flush();
 		}
@@ -199,15 +199,27 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	private String describeTest(TestIdentifier testIdentifier) {
 		List<String> descriptionParts = new ArrayList<>();
-		collectTestDescription(Optional.of(testIdentifier), descriptionParts);
+		collectTestDescription(testIdentifier, descriptionParts);
 		return join(":", descriptionParts);
 	}
 
-	private void collectTestDescription(Optional<TestIdentifier> optionalIdentifier, List<String> descriptionParts) {
-		optionalIdentifier.ifPresent(testIdentifier -> {
-			descriptionParts.add(0, testIdentifier.getDisplayName());
-			collectTestDescription(this.testPlan.getParent(testIdentifier), descriptionParts);
-		});
+	private void collectTestDescription(TestIdentifier identifier, List<String> descriptionParts) {
+		descriptionParts.add(0, identifier.getDisplayName());
+		this.testPlan.getParent(identifier).ifPresent(parent -> collectTestDescription(parent, descriptionParts));
+	}
+
+	private void printSource(PrintWriter writer, TestIdentifier testIdentifier) {
+		testIdentifier.getSource().ifPresent(source -> writer.printf("%s%s%n", DOUBLE_TAB, source));
+	}
+
+	private void printStackTrace(PrintWriter writer, Throwable throwable, int max) {
+		StackTraceElement[] elements = throwable.getStackTrace();
+		for (int i = 0; i < (elements.length > max ? max : elements.length); i++) {
+			writer.printf("%s   %s%n", DOUBLE_TAB, elements[i]);
+		}
+		if (elements.length > max) {
+			writer.printf("%s   [...]%n", DOUBLE_TAB);
+		}
 	}
 
 	private static class DefaultFailure implements Failure {

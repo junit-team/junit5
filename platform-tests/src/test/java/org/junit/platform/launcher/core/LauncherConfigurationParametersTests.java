@@ -13,6 +13,7 @@ package org.junit.platform.launcher.core;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Map;
@@ -20,8 +21,14 @@ import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 
 /**
  * Unit tests for {@link LauncherConfigurationParameters}.
@@ -112,12 +119,42 @@ class LauncherConfigurationParametersTests {
 		assertThat(configParams.toString()).contains(CONFIG_FILE);
 	}
 
+	@Test
+	void getValueInExtensionContext() {
+		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request() //
+				.configurationParameter("thing", "one else!") //
+				.selectors(DiscoverySelectors.selectClass(Something.class)).build();
+		SummaryGeneratingListener summary = new SummaryGeneratingListener();
+		LauncherFactory.create().execute(request, summary);
+		assertEquals(0, summary.getSummary().getTestsFailedCount());
+	}
+
 	private static LauncherConfigurationParameters fromMap(Map<String, String> map) {
 		return new LauncherConfigurationParameters(map);
 	}
 
 	private static LauncherConfigurationParameters fromMap(Map<String, String> map, String configFileName) {
 		return new LauncherConfigurationParameters(map, configFileName);
+	}
+
+	private static class Mutator implements TestInstancePostProcessor {
+		@Override
+		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
+			String value = context.getConfigurationParameter("thing").orElse("thing");
+			Something.class.getField("thing").set(testInstance, value);
+		}
+	}
+
+	@ExtendWith(Mutator.class)
+	static class Something {
+
+		// `public` is needed for simple "Class#getField(String)" to work
+		public String thing = "body.";
+
+		@Test
+		void some() {
+			assertEquals("Someone else!", "Some" + thing);
+		}
 	}
 
 }
