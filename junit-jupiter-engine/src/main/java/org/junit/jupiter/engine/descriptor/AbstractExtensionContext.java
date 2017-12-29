@@ -35,12 +35,12 @@ import org.junit.platform.engine.reporting.ReportEntry;
  */
 abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext, AutoCloseable {
 
-	private final ExtensionContext        parent;
+	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
-	private final T                       testDescriptor;
-	private final Set<String>             tags;
+	private final T testDescriptor;
+	private final Set<String> tags;
 	private final ConfigurationParameters configurationParameters;
-	private final ExtensionValuesStore    valuesStore;
+	private final ExtensionValuesStore valuesStore;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
 			ConfigurationParameters configurationParameters) {
