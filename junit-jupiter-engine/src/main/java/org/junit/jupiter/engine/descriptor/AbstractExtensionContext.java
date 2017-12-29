@@ -65,8 +65,9 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		return new ExtensionValuesStore(parentStore);
 	}
 
+	@Override
 	public void close() {
-		valuesStore.closeAllStoredCloseableValues();
+		this.valuesStore.closeAllStoredCloseableValues();
 	}
 
 	@Override
