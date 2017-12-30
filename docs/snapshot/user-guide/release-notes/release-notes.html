@@ -745,6 +745,10 @@ meta-annotation within a class hierarchy.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>New implicit conversions for parameters of type <code>java.net.URI</code>, <code>java.util.Currency</code>,
+and <code>java.util.Locale</code> in parameterized tests.</p>
+</li>
+<li>
 <p>Due to a change in the JUnit Platform&#8217;s <code>AnnotationUtils</code> class, non-inherited
 <em>composed annotations</em> which are meta-annotated with a given <code>@Inherited</code> annotation
 are now considered to be implicitly <em>inherited</em> when searching for the given
@@ -765,15 +769,11 @@ runtime via the new <code>getConfigurationParameter(String key)</code> method in
 <code>ExtensionContext</code> API.</p>
 </li>
 <li>
-<p>New callback interface <code>CloseableResource</code> introduced in <code>ExtensionContext.Store</code>.
-An extension context store is bound to its extension context lifecycle. When an
-extension context lifecycle ends it closes its associated store. All stored values
-that are instances of <code>ExtensionContext.Store.CloseableResource</code> are notified by
-an invocation of their <code>close()</code> method.</p>
-</li>
-<li>
-<p>New implicit conversions are introduced for <code>java.net.URI</code>, <code>java.util.Currency</code>,
-and <code>java.util.Locale</code> in <code>DefaultArgumentConverter</code> class.</p>
+<p>New callback interface <code>CloseableResource</code> introduced in <code>ExtensionContext.Store</code>. A
+<code>Store</code> is bound to the lifecycle of its extension context. When the lifecycle of an
+extension context ends, the associated store is closed, and each stored value that is
+an instance of <code>ExtensionContext.Store.CloseableResource</code> is notified by an invocation
+of its <code>close()</code> method.</p>
 </li>
 </ul>
 </div>
