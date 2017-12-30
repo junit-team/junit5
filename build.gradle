@@ -675,8 +675,9 @@ configure(rootProject) {
 	task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: Copy) {
 		outputs.dir docsDir
 
-		from(project(':documentation').buildDir) {
-			include 'asciidoc/**'
+		from("${project(':documentation').buildDir}/asciidoc") {
+			include 'user-guide/**'
+			include 'release-notes/**'
 		}
 		from("$buildDir/docs") {
 			include 'javadoc/**'
@@ -686,9 +687,6 @@ configure(rootProject) {
 			}
 		}
 		into "${docsDir}/${docsVersion}"
-		filesMatching('asciidoc/**') { fileCopyDetails ->
-			fileCopyDetails.path = fileCopyDetails.path.replace('asciidoc/', 'user-guide/')
-		}
 		filesMatching('javadoc/**') { fileCopyDetails ->
 			fileCopyDetails.path = fileCopyDetails.path.replace('javadoc/', 'api/')
 		}

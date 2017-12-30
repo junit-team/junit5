@@ -79,8 +79,14 @@ asciidoctor {
 	requires 'asciidoctor-diagram'
 
 	separateOutputDirs false
-	sources { include 'index.adoc' }
-	sources { include 'release-notes/release-notes.adoc' }
+	sources {
+		include '**/index.adoc'
+	}
+	resources {
+		from(sourceDir) {
+			include '**/images/**'
+		}
+	}
 
 	backends 'html5' // , 'pdf' // , 'epub3'
 
