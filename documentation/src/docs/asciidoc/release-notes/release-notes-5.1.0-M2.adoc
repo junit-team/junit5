@@ -50,6 +50,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New implicit conversions for parameters of type `java.net.URI`, `java.util.Currency`,
+  and `java.util.Locale` in parameterized tests.
 * Due to a change in the JUnit Platform's `AnnotationUtils` class, non-inherited
   _composed annotations_ which are meta-annotated with a given `@Inherited` annotation
   are now considered to be implicitly _inherited_ when searching for the given
@@ -60,13 +62,12 @@ on GitHub.
 * Extensions for JUnit Jupiter can now access JUnit Platform configuration parameters at
   runtime via the new `getConfigurationParameter(String key)` method in the
   `ExtensionContext` API.
-* New callback interface `CloseableResource` introduced in `ExtensionContext.Store`.
-  An extension context store is bound to its extension context lifecycle. When an
-  extension context lifecycle ends it closes its associated store. All stored values
-  that are instances of `ExtensionContext.Store.CloseableResource` are notified by
-  an invocation of their `close()` method.
-* New implicit conversions are introduced for `java.net.URI`, `java.util.Currency`,
-  and `java.util.Locale` in `DefaultArgumentConverter` class.
+* New callback interface `CloseableResource` introduced in `ExtensionContext.Store`. A
+  `Store` is bound to the lifecycle of its extension context. When the lifecycle of an
+  extension context ends, the associated store is closed, and each stored value that is
+  an instance of `ExtensionContext.Store.CloseableResource` is notified by an invocation
+  of its `close()` method.
+
 
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage
