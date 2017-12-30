@@ -23,8 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
@@ -46,8 +44,6 @@ import org.junit.platform.engine.UniqueId;
  */
 @API(status = STABLE, since = "1.0")
 public final class DiscoverySelectors {
-
-	private static final Pattern fullyQualifiedMethodNamePattern = Pattern.compile("([^#]+)#([^(]+)(?:\\((.*)\\))?");
 
 	///CLOVER:OFF
 	private DiscoverySelectors() {
@@ -362,16 +358,27 @@ public final class DiscoverySelectors {
 	public static MethodSelector selectMethod(String fullyQualifiedMethodName) throws PreconditionViolationException {
 		Preconditions.notBlank(fullyQualifiedMethodName, "fullyQualifiedMethodName must not be null or blank");
 
-		Matcher matcher = fullyQualifiedMethodNamePattern.matcher(fullyQualifiedMethodName);
-		Preconditions.condition(matcher.matches(),
-			fullyQualifiedMethodName + " is not a valid fully qualified method name");
+        boolean ok = fullyQualifiedMethodName.contains("#")
+                && !fullyQualifiedMethodName.startsWith("#")
+                && !fullyQualifiedMethodName.endsWith("#")
+                && !fullyQualifiedMethodName.endsWith("(");
+        Preconditions.condition(ok, fullyQualifiedMethodName + " is not a valid fully qualified method name");
 
-		String className = matcher.group(1);
-		String methodName = matcher.group(2);
-		String methodParameters = matcher.group(3);
-		if (StringUtils.isNotBlank(methodParameters)) {
-			return selectMethod(className, methodName, methodParameters);
-		}
+        String[] parts = fullyQualifiedMethodName.split("#", 2);
+        String className = parts[0];
+        String methodPart = parts[1];
+        String methodName = methodPart.replace("()", "");
+
+        if (methodPart.contains("(")) {
+            String methodParameters = methodPart.split("\\(")[1];
+            methodName = methodPart.split("\\(")[0];
+            methodParameters = methodParameters.replace(")", "");
+
+            if (StringUtils.isNotBlank(methodParameters)) {
+                return selectMethod(className, methodName, methodParameters);
+            }
+        }
+
 		return selectMethod(className, methodName);
 	}
 
