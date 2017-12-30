@@ -284,12 +284,12 @@ public interface ExtensionContext {
 	interface Store {
 
 		/**
-		 * Classes implementing this interface indicate that they want to close
-		 * some underlying resource or resources when the enclosing {@link Store}
+		 * Classes implementing this interface indicate that they want to {@link #close}
+		 * some underlying resource or resources when the enclosing {@link Store Store}
 		 * is closed.
 		 *
 		 * <p>Note that the {@code CloseableResource} API is only honored for
-		 * objects stored within an extension context {@link Store}.
+		 * objects stored within an extension context {@link Store Store}.
 		 *
 		 * @since 5.1
 		 */
