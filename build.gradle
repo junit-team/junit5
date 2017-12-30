@@ -6,13 +6,11 @@ buildscript {
 		// mavenLocal()
 		maven { url 'https://plugins.gradle.org/m2/' }
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-		maven { url 'http://repo.spring.io/plugins-release' }
 	}
 	dependencies {
 		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.6.0')
-		classpath('com.github.ben-manes:gradle-versions-plugin:0.15.0')
-		classpath('io.spring.gradle:propdeps-plugin:0.0.9.RELEASE')
-		classpath('org.ajoberstar:gradle-git-publish:0.3.2-rc.2')
+		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
+		classpath('org.ajoberstar:gradle-git-publish:0.3.2')
 		classpath('org.ajoberstar:gradle-git:1.7.2')
 		classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.1')
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
@@ -116,9 +114,7 @@ allprojects { subproj ->
 	}
 
 	dependencies {
-		// The following dependency is necessary to avoid compiler warnings about
-		// not being able to find the @API annotation when compiling test sources.
-		testCompileOnly("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
+		api("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	}
 
 	tasks.withType(Test) { task ->
@@ -242,10 +238,6 @@ allprojects { subproj ->
 subprojects { subproj ->
 	if (subproj.name in mavenizedProjects) {
 		apply plugin: 'maven'
-		apply plugin: 'propdeps'
-		apply plugin: 'propdeps-maven'
-		apply plugin: 'propdeps-idea'
-		apply plugin: 'propdeps-eclipse'
 		apply plugin: 'signing'
 
 		if (subproj.name in platformProjects) {
@@ -255,13 +247,6 @@ subprojects { subproj ->
 		else if (subproj.name in vintageProjects) {
 			subproj.group = vintageGroup
 			subproj.version = vintageVersion
-		}
-
-		dependencies {
-			// The 'optional' configuration is provided by the propdeps-plugin and allows
-			// us to declare dependencies that get flagged as optional in the generated
-			// Maven POMs.
-			optional("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 		}
 
 		javadoc {

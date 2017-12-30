@@ -122,15 +122,22 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
     JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e. tests
     written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.
 
-[[dependency-metadata-optional-dependencies]]
-==== Optional Dependencies
+[[dependency-metadata-dependencies]]
+==== Dependencies
 
-All of the above artifacts have an `optional` dependency in their published Maven POMs on
+All of the above artifacts have a dependency in their published Maven POMs on
 the following _@API Guardian_ JAR.
 
 * *Group ID*: `org.apiguardian`
 * *Artifact ID*: `apiguardian-api`
 * *Version*: `{apiguardian-version}`
+
+In addition, most of the above artifacts have a direct or transitive dependency to the
+following _OpenTest4J_ JAR.
+
+* *Group ID*: `org.opentest4j`
+* *Artifact ID*: `opentest4j`
+* *Version*: `{ota4j-version}`
 
 [[dependency-diagram]]
 === Dependency Diagram
@@ -166,6 +173,19 @@ package org.junit.platform {
 
 package org.opentest4j {
     [opentest4j]
+}
+
+package org.apiguardian {
+    [apiguardian-api] as apiguardian
+    note bottom of apiguardian #white
+        All artifacts except
+        opentest4j and junit:junit
+        have a dependency on this
+        artifact. The edges have
+        been omitted from this
+        diagram for the sake of
+        readability.
+    endnote
 }
 
 jupiter_api ..> opentest4j
