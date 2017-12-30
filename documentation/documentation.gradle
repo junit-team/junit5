@@ -95,6 +95,7 @@ asciidoctor {
 				'vintage-version': project.property('vintageVersion'),
 				'junit4-version': project.property('junit4Version'),
 				'apiguardian-version': project.property('apiGuardianVersion'),
+				'ota4j-version': project.property('ota4jVersion'),
 				'release-branch': project.property('releaseBranch'),
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],

@@ -9,6 +9,22 @@ For a complete list of all _closed_ issues and pull requests for this release, c
 link:{junit5-repo}+/milestone/18?closed=1+[5.1 M2] milestone page in the JUnit repository
 on GitHub.
 
+[[release-notes-5.1.0-M2-overall-improvements]]
+=== Overall Improvements
+
+* In 5.0.1, all artifacts were changed to have an _optional_ instead of a mandatory
+  dependency on the _@API Guardian_ JAR in their published Maven POMs. However, although
+  the Java compiler should ignore missing annotation types, a lot of users have reported
+  that compiling tests without having the _@API Guardian_ JAR on the classpath results in
+  warnings emitted by `javac` that look like this:
++
+----
+warning: unknown enum constant Status.STABLE
+reason: class file for org.apiguardian.api.API$Status not found
+----
++
+To avoid confusion, the JUnit team has decided to make the dependency to the
+_@API Guardian_ JAR _mandatory_ again.
 
 [[release-notes-5.1.0-M2-junit-platform]]
 === JUnit Platform
