@@ -15,6 +15,7 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.net.URI;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,8 +26,10 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -41,8 +44,10 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * <p>The {@code DefaultArgumentConverter} is able to convert from strings to a
  * number of primitive types and their corresponding wrapper types (Byte, Short,
- * Integer, Long, Float, and Double) as well as date and time types from the
- * {@code java.time} package.
+ * Integer, Long, Float, and Double), date and time types from the
+ * {@code java.time} package, and some miscellaneous types
+ * ({@link java.util.Currency}, {@link java.util.Locale}, and
+ * {@link java.net.URI}).
  *
  * <p>If the source and target types are identical the source object will not
  * be modified.
@@ -56,7 +61,8 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
 
 	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(
-		asList(new StringToPrimitiveConverter(), new StringToEnumConverter(), new StringToJavaTimeConverter()));
+		asList(new StringToPrimitiveConverter(), new StringToEnumConverter(), new StringToJavaTimeConverter(),
+			new StringToJavaMiscConverter()));
 
 	private DefaultArgumentConverter() {
 		// nothing to initialize
@@ -170,6 +176,29 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			converters.put(Year.class, Year::parse);
 			converters.put(YearMonth.class, YearMonth::parse);
 			converters.put(ZonedDateTime.class, ZonedDateTime::parse);
+			CONVERTERS = Collections.unmodifiableMap(converters);
+		}
+
+		@Override
+		public boolean canConvert(Class<?> targetType) {
+			return CONVERTERS.containsKey(targetType);
+		}
+
+		@Override
+		public Object convert(String source, Class<?> targetType) throws Exception {
+			return CONVERTERS.get(targetType).apply(source);
+		}
+	}
+
+	static class StringToJavaMiscConverter implements StringToObjectConverter {
+
+		private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
+
+		static {
+			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
+			converters.put(URI.class, URI::create);
+			converters.put(Currency.class, Currency::getInstance);
+			converters.put(Locale.class, Locale::new);
 			CONVERTERS = Collections.unmodifiableMap(converters);
 		}
 

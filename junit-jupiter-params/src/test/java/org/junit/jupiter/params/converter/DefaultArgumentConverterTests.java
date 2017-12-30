@@ -12,6 +12,7 @@ package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.URI;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,8 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Currency;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
@@ -80,6 +83,21 @@ class DefaultArgumentConverterTests {
 		assertConverts("2017-03", YearMonth.class, YearMonth.of(2017, 3));
 		assertConverts("2017-03-14T12:34:56.789Z", ZonedDateTime.class,
 			ZonedDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC));
+	}
+
+	@Test
+	void convertsStringsToURIInstances() {
+		assertConverts("http://java.sun.com/j2se/1.3/", URI.class, URI.create("http://java.sun.com/j2se/1.3/"));
+	}
+
+	@Test
+	void convertsStringsToCurrencyInstances() {
+		assertConverts("JPY", Currency.class, Currency.getInstance("JPY"));
+	}
+
+	@Test
+	void convertsStringsToLocaleInstances() {
+		assertConverts("en", Locale.class, new Locale("en"));
 	}
 
 	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
