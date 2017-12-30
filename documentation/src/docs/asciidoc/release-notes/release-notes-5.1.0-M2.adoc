@@ -65,6 +65,8 @@ on GitHub.
   extension context lifecycle ends it closes its associated store. All stored values
   that are instances of `ExtensionContext.Store.CloseableResource` are notified by
   an invocation of their `close()` method.
+* New implicit conversions are introduced for `java.net.URI`, `java.util.Currency`,
+  and `java.util.Locale` in `DefaultArgumentConverter` class.
 
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage
