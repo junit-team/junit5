@@ -90,8 +90,8 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
     environment. See <<running-tests-junit-platform-runner>> for details.
   `junit-platform-suite-api`::
     Annotations for configuring test suites on the JUnit Platform. Supported by the
-	<<running-tests-junit-platform-runner,JUnitPlatform runner>> and possibly by third-party
-	`TestEngine` implementations.
+    <<running-tests-junit-platform-runner,JUnitPlatform runner>> and possibly by third-party
+    `TestEngine` implementations.
   `junit-platform-surefire-provider`::
     Support for discovering and executing tests on the JUnit Platform using
     <<running-tests-build-maven,Maven Surefire>>.
