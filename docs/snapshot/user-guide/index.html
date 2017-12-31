@@ -750,7 +750,7 @@ environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to
 </dd>
 <dt class="hdlist1"><code>junit-platform-suite-api</code></dt>
 <dd>
-<p>   Annotations for configuring test suites on the JUnit Platform. Supported by the
+<p>Annotations for configuring test suites on the JUnit Platform. Supported by the
 <a href="#running-tests-junit-platform-runner">JUnitPlatform runner</a> and possibly by third-party
 <code>TestEngine</code> implementations.</p>
 </dd>
@@ -828,9 +828,9 @@ written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="dependency-metadata-optional-dependencies"><a class="anchor" href="#dependency-metadata-optional-dependencies"></a>2.1.4. Optional Dependencies</h4>
+<h4 id="dependency-metadata-dependencies"><a class="anchor" href="#dependency-metadata-dependencies"></a>2.1.4. Dependencies</h4>
 <div class="paragraph">
-<p>All of the above artifacts have an <code>optional</code> dependency in their published Maven POMs on
+<p>All of the above artifacts have a dependency in their published Maven POMs on
 the following <em>@API Guardian</em> JAR.</p>
 </div>
 <div class="ulist">
@@ -846,13 +846,30 @@ the following <em>@API Guardian</em> JAR.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>In addition, most of the above artifacts have a direct or transitive dependency to the
+following <em>OpenTest4J</em> JAR.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Group ID</strong>: <code>org.opentest4j</code></p>
+</li>
+<li>
+<p><strong>Artifact ID</strong>: <code>opentest4j</code></p>
+</li>
+<li>
+<p><strong>Version</strong>: <code>1.0.0</code></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="dependency-diagram"><a class="anchor" href="#dependency-diagram"></a>2.2. Dependency Diagram</h3>
 <div class="imageblock">
 <div class="content">
-<img src="images/component-diagram.svg" alt="component diagram" width="1484" height="503">
+<img src="images/component-diagram.svg" alt="component diagram" width="1720" height="584">
 </div>
 </div>
 </div>
@@ -5444,7 +5461,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-12-30 11:42:46 EST
+Last updated 2017-12-31 09:49:07 EST
 </div>
 </div>
 </body>

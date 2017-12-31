@@ -536,6 +536,7 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel1">
 <li><a href="#release-notes-5.1.0-M2">5.1.0-M2</a>
 <ul class="sectlevel2">
+<li><a href="#release-notes-5.1.0-M2-overall-improvements">Overall Improvements</a></li>
 <li><a href="#release-notes-5.1.0-M2-junit-platform">JUnit Platform</a></li>
 <li><a href="#release-notes-5.1.0-M2-junit-jupiter">JUnit Jupiter</a></li>
 <li><a href="#release-notes-5.1.0-M2-junit-vintage">JUnit Vintage</a></li>
@@ -667,6 +668,30 @@ vendors.</p>
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
 <a href="https://github.com/junit-team/junit5/milestone/18?closed=1">5.1 M2</a> milestone page in the JUnit repository
 on GitHub.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.1.0-M2-overall-improvements"><a class="anchor" href="#release-notes-5.1.0-M2-overall-improvements"></a>Overall Improvements</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>In 5.0.1, all artifacts were changed to have an <em>optional</em> instead of a mandatory
+dependency on the <em>@API Guardian</em> JAR in their published Maven POMs. However, although
+the Java compiler should ignore missing annotation types, a lot of users have reported
+that compiling tests without having the <em>@API Guardian</em> JAR on the classpath results in
+warnings emitted by <code>javac</code> that look like this:</p>
+<div class="listingblock">
+<div class="content">
+<pre>warning: unknown enum constant Status.STABLE
+reason: class file for org.apiguardian.api.API$Status not found</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To avoid confusion, the JUnit team has decided to make the dependency to the
+<em>@API Guardian</em> JAR <em>mandatory</em> again.</p>
+</div>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.1.0-M2-junit-platform"><a class="anchor" href="#release-notes-5.1.0-M2-junit-platform"></a>JUnit Platform</h3>
@@ -3530,7 +3555,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2017-12-30 11:42:46 EST
+Last updated 2017-12-31 09:49:07 EST
 </div>
 </div>
 </body>
