@@ -12,12 +12,14 @@ matrix:
   include:
 # Java 9 (openjdk-9.0.1 fails with java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty)
     - jdk: oraclejdk9
-      env: EXTRA_TASKS='-PenableClover cloverXmlReport'
-      env: JDK_RELEASE='JDK 9'
+      env:
+        - JDK_RELEASE='JDK 9'
+        - EXTRA_TASKS='-PenableClover cloverXmlReport'
       install: echo "Don't let Travis CI execute './gradlew assemble' by default"
 # Java 10
-    - env: JDK_RELEASE='JDK 10 Early-Access'
-      env: EXTRA_TASKS=''
+    - env:
+        - JDK_RELEASE='JDK 10 Early-Access'
+        - EXTRA_TASKS=''
       install: . ./src/install/install-jdk-10.sh
   allow_failures:
     - env: JDK_RELEASE='JDK 10 Early-Access'
