@@ -369,7 +369,7 @@ public final class DiscoverySelectors {
         String methodPart = parts[1];
         String methodName = methodPart.replace("()", "");
 
-        if (methodPart.contains("(")) {
+        if (methodPart.endsWith(")")) {
             String methodParameters = methodPart.split("\\(")[1];
             methodName = methodPart.split("\\(")[0];
             methodParameters = methodParameters.replace(")", "");
