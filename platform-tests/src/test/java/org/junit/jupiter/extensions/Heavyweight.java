@@ -61,6 +61,7 @@ public class Heavyweight implements ParameterResolver, BeforeEachCallback {
 		private static final AtomicInteger creations = new AtomicInteger();
 		private final AtomicInteger usages = new AtomicInteger();
 
+		@SuppressWarnings("unused") // used via reflection
 		ResourceValue() {
 			// Open long-living resources here.
 			assertEquals(1, creations.incrementAndGet(), "Singleton pattern failure!");

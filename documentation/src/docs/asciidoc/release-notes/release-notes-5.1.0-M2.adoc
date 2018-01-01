@@ -9,6 +9,22 @@ For a complete list of all _closed_ issues and pull requests for this release, c
 link:{junit5-repo}+/milestone/18?closed=1+[5.1 M2] milestone page in the JUnit repository
 on GitHub.
 
+[[release-notes-5.1.0-M2-overall-improvements]]
+=== Overall Improvements
+
+* In 5.0.1, all artifacts were changed to have an _optional_ instead of a mandatory
+  dependency on the _@API Guardian_ JAR in their published Maven POMs. However, although
+  the Java compiler should ignore missing annotation types, a lot of users have reported
+  that compiling tests without having the _@API Guardian_ JAR on the classpath results in
+  warnings emitted by `javac` that look like this:
++
+----
+warning: unknown enum constant Status.STABLE
+reason: class file for org.apiguardian.api.API$Status not found
+----
++
+To avoid confusion, the JUnit team has decided to make the dependency to the
+_@API Guardian_ JAR _mandatory_ again.
 
 [[release-notes-5.1.0-M2-junit-platform]]
 === JUnit Platform
@@ -51,6 +67,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New implicit conversions for parameters of type `java.net.URI`, `java.util.Currency`,
+  and `java.util.Locale` in parameterized tests.
 * Due to a change in the JUnit Platform's `AnnotationUtils` class, non-inherited
   _composed annotations_ which are meta-annotated with a given `@Inherited` annotation
   are now considered to be implicitly _inherited_ when searching for the given
@@ -61,11 +79,12 @@ on GitHub.
 * Extensions for JUnit Jupiter can now access JUnit Platform configuration parameters at
   runtime via the new `getConfigurationParameter(String key)` method in the
   `ExtensionContext` API.
-* New callback interface `CloseableResource` introduced in `ExtensionContext.Store`.
-  An extension context store is bound to its extension context lifecycle. When an
-  extension context lifecycle ends it closes its associated store. All stored values
-  that are instances of `ExtensionContext.Store.CloseableResource` are notified by
-  an invocation of their `close()` method.
+* New callback interface `CloseableResource` introduced in `ExtensionContext.Store`. A
+  `Store` is bound to the lifecycle of its extension context. When the lifecycle of an
+  extension context ends, the associated store is closed, and each stored value that is
+  an instance of `ExtensionContext.Store.CloseableResource` is notified by an invocation
+  of its `close()` method.
+
 
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage

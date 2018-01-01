@@ -7,7 +7,7 @@
 validation (e.g. tag syntax rules), and bug fixes.
 
 WARNING: This is a milestone release and contains breaking changes. Please refer to the
-<<../index.adoc#running-tests-ide-intellij-idea,instructions>> in the User Guide to use this
+<<../user-guide/index.adoc#running-tests-ide-intellij-idea,instructions>> in the User Guide to use this
 version in a version of IntelliJ IDEA that bundles an older milestone release.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the

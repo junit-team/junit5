@@ -80,6 +80,7 @@ class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void fromClassTestDescriptor() {
 		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
@@ -107,6 +108,7 @@ class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void tagsCanBeRetrievedInExtensionContext() {
 		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
@@ -131,6 +133,7 @@ class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void fromMethodTestDescriptor() {
 		TestMethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
@@ -164,6 +167,7 @@ class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void reportEntriesArePublishedToExecutionContext() {
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(null);
 		EngineExecutionListener engineExecutionListener = Mockito.spy(EngineExecutionListener.class);
@@ -191,6 +195,7 @@ class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void usingStore() {
 		TestMethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);

@@ -79,8 +79,14 @@ asciidoctor {
 	requires 'asciidoctor-diagram'
 
 	separateOutputDirs false
-	sources { include 'index.adoc' }
-	sources { include 'release-notes/release-notes.adoc' }
+	sources {
+		include '**/index.adoc'
+	}
+	resources {
+		from(sourceDir) {
+			include '**/images/**'
+		}
+	}
 
 	backends 'html5' // , 'pdf' // , 'epub3'
 
@@ -89,6 +95,7 @@ asciidoctor {
 				'vintage-version': project.property('vintageVersion'),
 				'junit4-version': project.property('junit4Version'),
 				'apiguardian-version': project.property('apiGuardianVersion'),
+				'ota4j-version': project.property('ota4jVersion'),
 				'release-branch': project.property('releaseBranch'),
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
