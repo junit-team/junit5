@@ -196,9 +196,9 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			PostDiscoveryFilter filter = filters.get(0);
-			assertTrue(filter.apply(testDescriptorWithTag("foo")).included());
-			assertTrue(filter.apply(testDescriptorWithTag("bar")).included());
-			assertTrue(filter.apply(testDescriptorWithTag("baz")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTags("foo")).included());
+			assertTrue(filter.apply(testDescriptorWithTags("bar")).included());
+			assertTrue(filter.apply(testDescriptorWithTags("baz")).excluded());
 		}
 
 		@Test
@@ -214,9 +214,9 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			PostDiscoveryFilter filter = filters.get(0);
-			assertTrue(filter.apply(testDescriptorWithTag("foo")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTag("bar")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTag("baz")).included());
+			assertTrue(filter.apply(testDescriptorWithTags("foo")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTags("bar")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTags("baz")).included());
 		}
 
 		@Test
@@ -232,11 +232,11 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			PostDiscoveryFilter filter = filters.get(0);
-			assertTrue(filter.apply(testDescriptorWithTag("foo")).included());
-			assertTrue(filter.apply(testDescriptorWithTag("foo", "any_other_tag")).included());
-			assertTrue(filter.apply(testDescriptorWithTag("foo", "bar")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTag("bar")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTag("bar", "any_other_tag")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTags("foo")).included());
+			assertTrue(filter.apply(testDescriptorWithTags("foo", "any_other_tag")).included());
+			assertTrue(filter.apply(testDescriptorWithTags("foo", "bar")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTags("bar")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTags("bar", "any_other_tag")).excluded());
 		}
 
 		@Test
@@ -252,11 +252,11 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			PostDiscoveryFilter filter = filters.get(0);
-			assertTrue(filter.apply(testDescriptorWithTag("foo")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTag("foo", "any_other_tag")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTag("foo", "bar")).included());
-			assertTrue(filter.apply(testDescriptorWithTag("bar")).included());
-			assertTrue(filter.apply(testDescriptorWithTag("bar", "any_other_tag")).included());
+			assertTrue(filter.apply(testDescriptorWithTags("foo")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTags("foo", "any_other_tag")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTags("foo", "bar")).included());
+			assertTrue(filter.apply(testDescriptorWithTags("bar")).included());
+			assertTrue(filter.apply(testDescriptorWithTags("bar", "any_other_tag")).included());
 		}
 
 		@Test
@@ -738,7 +738,7 @@ class JUnitPlatformRunnerTests {
 		return createTestDescription(uniqueId, uniqueId, uniqueId);
 	}
 
-	private TestDescriptor testDescriptorWithTag(String... tag) {
+	private TestDescriptor testDescriptorWithTags(String... tag) {
 		TestDescriptor testDescriptor = mock(TestDescriptor.class);
 		Set<TestTag> tags = Arrays.stream(tag).map(TestTag::create).collect(toSet());
 		when(testDescriptor.getTags()).thenReturn(tags);
