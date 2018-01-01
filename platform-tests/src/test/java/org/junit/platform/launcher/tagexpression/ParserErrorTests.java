@@ -64,31 +64,31 @@ class ParserErrorTests {
 
 	private static Stream<Arguments> data() {
 		// @formatter:off
-        return Stream.of(
-                Arguments.of("&", "& at <0> missing lhs and rhs operand"),
-                Arguments.of("|", "| at <0> missing lhs and rhs operand"),
-                Arguments.of("| |", "| at <0> missing lhs and rhs operand"),
-                Arguments.of("!", "! at <0> missing rhs operand"),
-                Arguments.of("foo bar", "missing operator"),
-                Arguments.of("foo bar |", "| at <2> missing rhs operand"),
-                Arguments.of("foo bar &", "& at <2> missing rhs operand"),
-                Arguments.of("foo & (bar !)", "! at <4> missing rhs operand"),
-                Arguments.of("( foo & bar ) )", ") at <5> missing opening parenthesis"),
-                Arguments.of("( ( foo & bar )", "( at <0> missing closing parenthesis"),
+		return Stream.of(
+				Arguments.of("&", "& at <0> missing lhs and rhs operand"),
+				Arguments.of("|", "| at <0> missing lhs and rhs operand"),
+				Arguments.of("| |", "| at <0> missing lhs and rhs operand"),
+				Arguments.of("!", "! at <0> missing rhs operand"),
+				Arguments.of("foo bar", "missing operator"),
+				Arguments.of("foo bar |", "| at <2> missing rhs operand"),
+				Arguments.of("foo bar &", "& at <2> missing rhs operand"),
+				Arguments.of("foo & (bar !)", "! at <4> missing rhs operand"),
+				Arguments.of("( foo & bar ) )", ") at <5> missing opening parenthesis"),
+				Arguments.of("( ( foo & bar )", "( at <0> missing closing parenthesis"),
 
-                Arguments.of("foo & (bar baz) |", "missing operator between bar <3> and baz <4>"),
+				Arguments.of("foo & (bar baz) |", "missing operator between bar <3> and baz <4>"),
 
-                Arguments.of("foo & (bar baz) &", "missing operator between bar <3> and baz <4>"),
-                Arguments.of("foo & (bar |baz) &", "& at <7> missing rhs operand"),
+				Arguments.of("foo & (bar baz) &", "missing operator between bar <3> and baz <4>"),
+				Arguments.of("foo & (bar |baz) &", "& at <7> missing rhs operand"),
 
-                Arguments.of("foo | (bar baz) &", "& at <6> missing rhs operand"),
-                Arguments.of("foo | (bar baz) &quux", "missing operator between bar <3> and (baz & quux) <6>"),
+				Arguments.of("foo | (bar baz) &", "& at <6> missing rhs operand"),
+				Arguments.of("foo | (bar baz) &quux", "missing operator between bar <3> and (baz & quux) <6>"),
 
-                Arguments.of("foo & |", "& at <1> missing rhs operand"),
-                Arguments.of("foo !& bar", "! at <1> missing rhs operand"),
-                Arguments.of("foo !| bar", "! at <1> missing rhs operand")
-        );
-        // @formatter:on
+				Arguments.of("foo & |", "& at <1> missing rhs operand"),
+				Arguments.of("foo !& bar", "! at <1> missing rhs operand"),
+				Arguments.of("foo !| bar", "! at <1> missing rhs operand")
+		);
+		// @formatter:on
 	}
 
 	private String parseErrorFromParsing(String tagExpression) {

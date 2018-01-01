@@ -64,9 +64,9 @@ class ParserTests {
 				Arguments.of("( ! foo & bar | baz)", "((!foo & bar) | baz)"),
 				Arguments.of("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
 				Arguments.of("! foo | bar & ! baz | ! quux | quuz & corge", "(((!foo | (bar & !baz)) | !quux) | (quuz & corge))"),
-                Arguments.of("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
-                Arguments.of("foo | bar & baz|quux", "((foo | (bar & baz)) | quux)")
-        );
+				Arguments.of("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
+				Arguments.of("foo | bar & baz|quux", "((foo | (bar & baz)) | quux)")
+		);
 		// @formatter:on
 	}
 
