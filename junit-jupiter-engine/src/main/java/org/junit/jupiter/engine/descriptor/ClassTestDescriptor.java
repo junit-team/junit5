@@ -21,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -65,6 +66,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final Class<?> testClass;
+	private final Set<TestTag> tags;
 
 	private List<Method> beforeAllMethods;
 	private List<Method> afterAllMethods;
@@ -82,13 +84,15 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			defaultDisplayNameGenerator), ClassSource.from(testClass));
 
 		this.testClass = testClass;
+		this.tags = getTags(testClass);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public Set<TestTag> getTags() {
-		return getTags(this.testClass);
+		// return modifiable copy
+		return new LinkedHashSet<TestTag>(this.tags);
 	}
 
 	public final Class<?> getTestClass() {
@@ -130,7 +134,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, throwableCollector);
+			context.getExecutionListener(), this, context.getConfigurationParameters(), throwableCollector);
 
 		// @formatter:off
 		return context.extend()

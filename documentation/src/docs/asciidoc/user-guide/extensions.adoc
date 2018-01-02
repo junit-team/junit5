@@ -1,0 +1,438 @@
+[[extensions]]
+== Extension Model
+
+[[extensions-overview]]
+=== Overview
+
+In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in
+JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concept: the
+`Extension` API. Note, however, that `Extension` itself is just a marker interface.
+
+[[extensions-registration]]
+=== Registering Extensions
+
+Extensions can be registered explicitly via
+<<extensions-registration-declarative,`{ExtendWith}`>> or automatically via Java's
+<<extensions-registration-automatic,`ServiceLoader` mechanism>>.
+
+[[extensions-registration-declarative]]
+==== Declarative Extension Registration
+
+Developers can register one or more extensions _declaratively_ by annotating a test
+interface, test class, test method, or custom _<<writing-tests-meta-annotations,composed
+annotation>>_ with `@ExtendWith(...)` and supplying class references for the extensions
+to register.
+
+For example, to register a custom `MockitoExtension` for a particular test method, you
+would annotate the test method as follows.
+
+[source,java,indent=0]
+----
+@ExtendWith(MockitoExtension.class)
+@Test
+void mockTest() {
+	// ...
+}
+----
+
+To register a custom `MockitoExtension` for all tests in a particular class and its
+subclasses, you would annotate the test class as follows.
+
+[source,java,indent=0]
+----
+@ExtendWith(MockitoExtension.class)
+class MockTests {
+	// ...
+}
+----
+
+Multiple extensions can be registered together like this:
+
+[source,java,indent=0]
+----
+@ExtendWith({ FooExtension.class, BarExtension.class })
+class MyTestsV1 {
+	// ...
+}
+----
+
+As an alternative, multiple extensions can be registered separately like this:
+
+[source,java,indent=0]
+----
+@ExtendWith(FooExtension.class)
+@ExtendWith(BarExtension.class)
+class MyTestsV2 {
+	// ...
+}
+----
+
+The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the
+`FooExtension` and `BarExtension`, in exactly that order.
+
+[[extensions-registration-automatic]]
+==== Automatic Extension Registration
+
+In addition to <<extensions-registration-declarative,declarative extension registration>>
+support using annotations, JUnit Jupiter also supports _global extension registration_
+via Java's `java.util.ServiceLoader` mechanism, allowing third-party extensions to be
+auto-detected and automatically registered based on what is available in the classpath.
+
+Specifically, a custom extension can be registered by supplying its fully qualified class
+name in a file named `org.junit.jupiter.api.extension.Extension` within the
+`/META-INF/services` folder in its enclosing JAR file.
+
+[[extensions-registration-automatic-enabling]]
+===== Enabling Automatic Extension Detection
+
+Auto-detection is an advanced feature and is therefore not enabled by default. To enable
+it, simply set the `junit.jupiter.extensions.autodetection.enabled` _configuration
+parameter_ to `true`. This can be supplied as a JVM system property, as a _configuration
+parameter_ in the `LauncherDiscoveryRequest` that is passed to the `Launcher`, or via the
+JUnit Platform configuration file (see <<running-tests-config-params>> for details).
+
+For example, to enable auto-detection of extensions, you can start your JVM with the
+following system property.
+
+`-Djunit.jupiter.extensions.autodetection.enabled=true`
+
+When auto-detection is enabled, extensions discovered via the `ServiceLoader` mechanism
+will be added to the extension registry after JUnit Jupiter's global extensions (e.g.,
+support for `TestInfo`, `TestReporter`, etc.).
+
+[[extensions-registration-inheritance]]
+==== Extension Inheritance
+
+Registered extensions are inherited within test class hierarchies with top-down
+semantics. Similarly, extensions registered at the class-level are inherited at the
+method-level. Furthermore, a specific extension implementation can only be registered
+once for a given extension context and its parent contexts. Consequently, any attempt to
+register a duplicate extension implementation will be ignored.
+
+[[extensions-conditions]]
+=== Conditional Test Execution
+
+`{ExecutionCondition}` defines the `Extension` API for programmatic, _conditional test
+execution_.
+
+An `ExecutionCondition` is _evaluated_ for each container (e.g., a test class) to
+determine if all the tests it contains should be executed based on the supplied
+`ExtensionContext`. Similarly, an `ExecutionCondition` is _evaluated_ for each test to
+determine if a given test method should be executed based on the supplied
+`ExtensionContext`.
+
+When multiple `ExecutionCondition` extensions are registered, a container or test is
+disabled as soon as one of the conditions returns _disabled_. Thus, there is no guarantee
+that a condition is evaluated because another extension might have already caused a
+container or test to be disabled. In other words, the evaluation works like the
+short-circuiting boolean OR operator.
+
+See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examples.
+
+[[extensions-conditions-deactivation]]
+==== Deactivating Conditions
+
+Sometimes it can be useful to run a test suite _without_ certain conditions being active.
+For example, you may wish to run tests even if they are annotated with `@Disabled` in
+order to see if they are still _broken_. To do this, simply provide a pattern for the
+`junit.jupiter.conditions.deactivate` _configuration parameter_ to specify which
+conditions should be deactivated (i.e., not evaluated) for the current test run. The
+pattern can be supplied as a JVM system property, as a _configuration parameter_ in the
+`LauncherDiscoveryRequest` that is passed to the `Launcher`, or via the JUnit Platform
+configuration file (see <<running-tests-config-params>> for details).
+
+For example, to deactivate JUnit's `@Disabled` condition, you can start your JVM with the
+following system property.
+
+`-Djunit.jupiter.conditions.deactivate=org.junit.*DisabledCondition`
+
+[[extensions-conditions-deactivation-patterns]]
+===== Pattern Matching Syntax
+
+If the `junit.jupiter.conditions.deactivate` pattern consists solely of an asterisk
+(`+*+`), all conditions will be deactivated. Otherwise, the pattern will be used to match
+against the fully qualified class name (_FQCN_) of each registered condition. Any dot
+(`.`) in the pattern will match against a dot (`.`) or a dollar sign (`$`) in the FQCN.
+Any asterisk (`+*+`) will match against one or more characters in the FQCN. All other
+characters in the pattern will be matched one-to-one against the FQCN.
+
+Examples:
+
+- `+*+`: deactivates all conditions.
+- `+org.junit.*+`: deactivates every condition under the `org.junit` base package and any
+  of its subpackages.
+- `+*.MyCondition+`: deactivates every condition whose simple class name is exactly
+  `MyCondition`.
+- `+*System*+`: deactivates every condition whose simple class name contains `System`.
+- `org.example.MyCondition`: deactivates the condition whose FQCN is exactly
+  `org.example.MyCondition`.
+
+[[extensions-test-instance-post-processing]]
+=== Test Instance Post-processing
+
+`{TestInstancePostProcessor}` defines the API for `Extensions` that wish to _post
+process_ test instances.
+
+Common use cases include injecting dependencies into the test instance, invoking custom
+initialization methods on the test instance, etc.
+
+For concrete examples, consult the source code for the `{MockitoExtension}` and the
+`{SpringExtension}`.
+
+[[extensions-parameter-resolution]]
+=== Parameter Resolution
+
+`{ParameterResolver}` defines the `Extension` API for dynamically resolving parameters at
+runtime.
+
+If a test constructor or a `@Test`, `@RepeatedTest`, `@ParameterizedTest`,
+`@TestFactory`, `@BeforeEach`, `@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts
+a parameter, the parameter must be _resolved_ at runtime by a `ParameterResolver`. A
+`ParameterResolver` can either be built-in (see `{TestInfoParameterResolver}`) or
+<<extensions-registration,registered by the user>>. Generally speaking, parameters may be
+resolved by _name_, _type_, _annotation_, or any combination thereof. For concrete
+examples, consult the source code for `{CustomTypeParameterResolver}` and
+`{CustomAnnotationParameterResolver}`.
+
+[[extensions-lifecycle-callbacks]]
+=== Test Lifecycle Callbacks
+
+The following interfaces define the APIs for extending tests at various points in the
+test execution lifecycle. Consult the following sections for examples and the Javadoc for
+each of these interfaces in the `{extension-api-package}` package for further details.
+
+* `{BeforeAllCallback}`
+** `{BeforeEachCallback}`
+*** `{BeforeTestExecutionCallback}`
+*** `{AfterTestExecutionCallback}`
+** `{AfterEachCallback}`
+* `{AfterAllCallback}`
+
+.Implementing Multiple Extension APIs
+NOTE: Extension developers may choose to implement any number of these interfaces
+within a single extension. Consult the source code of the `{SpringExtension}` for a
+concrete example.
+
+[[extensions-lifecycle-callbacks-before-after-execution]]
+==== Before and After Test Execution Callbacks
+
+`{BeforeTestExecutionCallback}` and `{AfterTestExecutionCallback}` define the APIs for
+`Extensions` that wish to add behavior that will be executed _immediately before_ and
+_immediately after_ a test method is executed, respectively. As such, these callbacks are
+well suited for timing, tracing, and similar use cases. If you need to implement
+callbacks that are invoked _around_ `@BeforeEach` and `@AfterEach` methods, implement
+`BeforeEachCallback` and `AfterEachCallback` instead.
+
+The following example shows how to use these callbacks to calculate and log the execution
+time of a test method. `TimingExtension` implements both `BeforeTestExecutionCallback`
+and `AfterTestExecutionCallback` in order to time and log the test execution.
+
+[[extensions-lifecycle-callbacks-timing-extension]]
+[source,java,indent=0]
+.An extension that times and logs the execution of test methods
+----
+include::{testDir}/example/timing/TimingExtension.java[tags=user_guide]
+----
+
+Since the `TimingExtensionTests` class registers the `TimingExtension` via `@ExtendWith`,
+its tests will have this timing applied when they execute.
+
+[source,java,indent=0]
+.A test class that uses the example TimingExtension
+----
+include::{testDir}/example/timing/TimingExtensionTests.java[tags=user_guide]
+----
+
+The following is an example of the logging produced when `TimingExtensionTests` is run.
+
+....
+INFO: Method [sleep20ms] took 24 ms.
+INFO: Method [sleep50ms] took 53 ms.
+....
+
+[[extensions-exception-handling]]
+=== Exception Handling
+
+`{TestExecutionExceptionHandler}` defines the API for `Extensions` that wish to handle
+exceptions thrown during test execution.
+
+The following example shows an extension which will swallow all instances of `IOException`
+but rethrow any other type of exception.
+
+[source,java,indent=0]
+.An exception handling extension
+----
+include::{testDir}/example/exception/IgnoreIOExceptionExtension.java[tags=user_guide]
+----
+
+[[extensions-test-templates]]
+=== Providing Invocation Contexts for Test Templates
+
+A `{TestTemplate}` method can only be executed when at least one
+`{TestTemplateInvocationContextProvider}` is registered. Each such provider is responsible
+for providing a `Stream` of `{TestTemplateInvocationContext}` instances. Each context may
+specify a custom display name and a list of additional extensions that will only be used
+for the next invocation of the `{TestTemplate}` method.
+
+The following example shows how to write a test template as well as how to register and
+implement a `{TestTemplateInvocationContextProvider}`.
+
+[source,java,indent=0]
+.A test template with accompanying extension
+----
+include::{testDir}/example/TestTemplateDemo.java[tags=user_guide]
+----
+
+In this example, the test template will be invoked twice. The display names of the
+invocations will be "`foo`" and "`bar`" as specified by the invocation context. Each
+invocation registers a custom `{ParameterResolver}` which is used to resolve the method
+parameter. The output when using the `ConsoleLauncher` is as follows.
+
+....
+└─ testTemplate(String) ✔
+   ├─ foo ✔
+   └─ bar ✔
+....
+
+The `{TestTemplateInvocationContextProvider}` extension API is primarily intended for
+implementing different kinds of tests that rely on repetitive invocation of a test-like
+method albeit in different contexts — for example, with different parameters, by preparing
+the test class instance differently, or multiple times without modifying the context.
+Please refer to the implementations of <<writing-tests-repeated-tests>> or
+<<writing-tests-parameterized-tests>> which use this extension point to provide their
+functionality.
+
+
+[[extensions-keeping-state]]
+=== Keeping State in Extensions
+
+Usually, an extension is instantiated only once. So the question becomes relevant: How do
+you keep the state from one invocation of an extension to the next? The
+`ExtensionContext` API provides a `Store` exactly for this purpose. Extensions may put
+values into a store for later retrieval. See the
+`<<extensions-lifecycle-callbacks-timing-extension, TimingExtension>>` for an example of
+using the `Store` with a method-level scope. It is important to remember that values
+stored in an `ExtensionContext` during test execution will not be available in the
+surrounding `ExtensionContext`. Since `ExtensionContexts` may be nested, the scope of
+inner contexts may also be limited. Consult the corresponding JavaDoc for details on the
+methods available for storing and retrieving values via the `{ExtensionContext_Store}`.
+
+.`ExtensionContext.Store.CloseableResource`
+NOTE: An extension context store is bound to its extension context lifecycle. When an
+extension context lifecycle ends it closes its associated store. All stored values
+that are instances of `CloseableResource` are notified by
+an invocation of their `close()` method.
+
+[[extensions-supported-utilities]]
+=== Supported Utilities in Extensions
+
+The `junit-platform-commons` artifact exposes a package named
+`{junit-platform-support-package}` that contains _maintained_ utility methods for working
+with annotations, classes, reflection, and classpath scanning tasks. `TestEngine` and
+`Extension` authors are encouraged to use these supported methods in order to align with
+the behavior of the JUnit Platform.
+
+[[extensions-supported-utilities-annotations]]
+==== Annotation Support
+
+`AnnotationSupport` provides static utility methods that operate on annotated elements
+(e.g., packages, annotations, classes, interfaces, constructors, methods, and fields).
+These include methods to check whether an element is annotated or meta-annotated with a
+particular annotation, to search for specific annotations, and to find annotated methods
+and fields in a class or interface. Some of these methods search on implemented
+interfaces and within class hierarchies to find annotations. Consult the JavaDoc for
+`{AnnotationSupport}` for further details.
+
+[[extensions-supported-utilities-classes]]
+==== Class Support
+
+`ClassSupport` provides static utility methods for working with classes (i.e., instances
+of `java.lang.Class`). Consult the JavaDoc for `{ClassSupport}` for further details.
+
+[[extensions-supported-utilities-reflection]]
+==== Reflection Support
+
+`ReflectionSupport` provides static utility methods that augment the standard JDK
+reflection and class-loading mechanisms. These include methods to scan the classpath in
+search of classes matching specified predicates, to load and create new instances of a
+class, and to find and invoke methods. Some of these methods traverse class hierarchies
+to locate matching methods. Consult the JavaDoc for `{ReflectionSupport}` for further
+details.
+
+[[extensions-execution-order]]
+=== Relative Execution Order of User Code and Extensions
+
+When executing a test class that contains one or more test methods, a number of extension
+callbacks are called in addition to the user-provided test and lifecycle methods. The
+following diagram illustrates the relative order of user-provided code and extension code.
+
+:figure-caption: User code and extension code
+
+[#extensions-execution-order-diagram,reftext='{figure-caption}']
+image::extensions_lifecycle.png[caption='',title='{figure-caption}']
+
+User-provided test and lifecycle methods are shown in orange, with callback code provided
+by extensions shown in blue. The grey box denotes the execution of a single test method
+and will be repeated for every test method in the test class.
+
+The following table further explains the twelve steps in the
+<<extensions-execution-order-diagram>> diagram.
+
+[cols="5,15,80"]
+|===
+| Step | Interface/Annotation | Description
+
+| 1
+| interface `org.junit.jupiter.api.extension.BeforeAllCallback`
+| extension code executed before all tests of the container are executed
+
+| 2
+| annotation `org.junit.jupiter.api.BeforeAll`
+| user code executed before all tests of the container are executed
+
+| 3
+| interface `org.junit.jupiter.api.extension.BeforeEachCallback`
+| extension code executed before each test is executed
+
+| 4
+| annotation `org.junit.jupiter.api.BeforeEach`
+| user code executed before each test is executed
+
+| 5
+| interface `org.junit.jupiter.api.extension.BeforeTestExecutionCallback`
+| extension code executed immediately before a test is executed
+
+| 6
+| annotation `org.junit.jupiter.api.Test`
+| user code of the actual test method
+
+| 7
+| interface `org.junit.jupiter.api.extension.TestExecutionExceptionHandler`
+| extension code for handling exceptions thrown during a test
+
+| 8
+| interface `org.junit.jupiter.api.extension.AfterTestExecutionCallback`
+| extension code executed immediately after test execution and its corresponding exception handlers
+
+| 9
+| annotation `org.junit.jupiter.api.AfterEach`
+| user code executed after each test is executed
+
+| 10
+| interface `org.junit.jupiter.api.extension.AfterEachCallback`
+| extension code executed after each test is executed
+
+| 11
+| annotation `org.junit.jupiter.api.AfterAll`
+| user code executed after all tests of the container are executed
+
+| 12
+| interface `org.junit.jupiter.api.extension.AfterAllCallback`
+| extension code executed after all tests of the container are executed
+
+|===
+
+In the simplest case only the actual test method will be executed (step 6); all other
+steps are optional depending on the presence of user code or extension support for the
+corresponding lifecycle callback. For further details on the various lifecycle callbacks
+please consult the respective JavaDoc for each annotation and extension.

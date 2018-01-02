@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -35,38 +37,33 @@ import org.opentest4j.MultipleFailuresError;
 class AssertAllAssertionsTests {
 
 	@Test
-	void assertAllWithNullInExecutableArray() {
-		try {
-			// @formatter:off
-			assertAll(
-				() -> {},
-				(Executable) null
-			);
-			// @formatter:on
-		}
-		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "individual executables must not be null");
-		}
+	void assertAllWithNullExecutableArray() {
+		assertPrecondition("executables array must not be null or empty", () -> assertAll((Executable[]) null));
 	}
 
 	@Test
-	void assertAllWithNullExecutableArray() {
-		try {
-			assertAll((Executable[]) null);
-		}
-		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "executables array must not be null or empty");
-		}
+	void assertAllWithNullExecutableCollection() {
+		assertPrecondition("executables collection must not be null", () -> assertAll((Collection<Executable>) null));
 	}
 
 	@Test
 	void assertAllWithNullExecutableStream() {
-		try {
-			assertAll((Stream<Executable>) null);
-		}
-		catch (PreconditionViolationException ex) {
-			assertMessageEquals(ex, "executables must not be null");
-		}
+		assertPrecondition("executables stream must not be null", () -> assertAll((Stream<Executable>) null));
+	}
+
+	@Test
+	void assertAllWithNullInExecutableArray() {
+		assertPrecondition("individual executables must not be null", () -> assertAll((Executable) null));
+	}
+
+	@Test
+	void assertAllWithNullInExecutableCollection() {
+		assertPrecondition("individual executables must not be null", () -> assertAll(asList((Executable) null)));
+	}
+
+	@Test
+	void assertAllWithNullInExecutableStream() {
+		assertPrecondition("individual executables must not be null", () -> assertAll(Stream.of((Executable) null)));
 	}
 
 	@Test
@@ -74,8 +71,7 @@ class AssertAllAssertionsTests {
 		// @formatter:off
 		assertAll(
 			() -> assertTrue(true),
-			() -> assertFalse(false),
-			() -> assertTrue(true)
+			() -> assertFalse(false)
 		);
 		// @formatter:on
 	}
@@ -95,10 +91,27 @@ class AssertAllAssertionsTests {
 	}
 
 	@Test
+	void assertAllWithCollectionOfExecutablesThatThrowAssertionErrors() {
+		// @formatter:off
+		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () ->
+			assertAll(asList(
+				() -> assertFalse(true),
+				() -> assertFalse(true)
+			))
+		);
+		// @formatter:on
+
+		assertExpectedExceptionTypes(multipleFailuresError, AssertionFailedError.class, AssertionFailedError.class);
+	}
+
+	@Test
 	void assertAllWithStreamOfExecutablesThatThrowAssertionErrors() {
 		// @formatter:off
 		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () ->
-			assertAll(Stream.of(() -> assertFalse(true), () -> assertFalse(true)))
+			assertAll(Stream.of(
+				() -> assertFalse(true),
+				() -> assertFalse(true)
+			))
 		);
 		// @formatter:on
 
@@ -148,8 +161,13 @@ class AssertAllAssertionsTests {
 		assertEquals("boom", outOfMemoryError.getMessage());
 	}
 
+	private void assertPrecondition(String msg, Executable executable) {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, executable);
+		assertMessageEquals(exception, msg);
+	}
+
 	@SafeVarargs
-	private static void assertExpectedExceptionTypes(MultipleFailuresError multipleFailuresError,
+	static void assertExpectedExceptionTypes(MultipleFailuresError multipleFailuresError,
 			Class<? extends Throwable>... exceptionTypes) {
 
 		assertNotNull(multipleFailuresError, "MultipleFailuresError");

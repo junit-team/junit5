@@ -16,6 +16,8 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
@@ -25,6 +27,8 @@ import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
  */
 @API(status = INTERNAL, since = "5.0")
 public class JupiterEngineExecutionContext implements EngineExecutionContext {
+
+	private static final Logger logger = LoggerFactory.getLogger(JupiterEngineExecutionContext.class);
 
 	private final State state;
 
@@ -38,6 +42,19 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 	private JupiterEngineExecutionContext(State state) {
 		this.state = state;
+	}
+
+	public void close() throws Exception {
+		ExtensionContext extensionContext = getExtensionContext();
+		if (extensionContext instanceof AutoCloseable) {
+			try {
+				((AutoCloseable) extensionContext).close();
+			}
+			catch (Exception e) {
+				logger.error(e, () -> "Caught exception while closing extension context: " + extensionContext);
+				throw e;
+			}
+		}
 	}
 
 	public EngineExecutionListener getExecutionListener() {

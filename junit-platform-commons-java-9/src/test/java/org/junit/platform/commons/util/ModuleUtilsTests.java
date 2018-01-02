@@ -12,6 +12,7 @@ package org.junit.platform.commons.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.module.ModuleDescriptor;
@@ -46,5 +47,16 @@ class ModuleUtilsTests {
 		assertFalse(classes.isEmpty());
 		assertTrue(classes.contains(Module.class));
 		assertTrue(classes.contains(ModuleDescriptor.class));
+	}
+
+	@Test
+	void preconditions() {
+		Class<PreconditionViolationException> expected = PreconditionViolationException.class;
+		assertThrows(expected, () -> ModuleUtils.getModuleName(null));
+		assertThrows(expected, () -> ModuleUtils.getModuleVersion(null));
+		assertThrows(expected, () -> ModuleUtils.findAllClassesInModule(null, null));
+		assertThrows(expected, () -> ModuleUtils.findAllClassesInModule("", null));
+		assertThrows(expected, () -> ModuleUtils.findAllClassesInModule(" ", null));
+		assertThrows(expected, () -> ModuleUtils.findAllClassesInModule("java.base", null));
 	}
 }

@@ -1,6 +1,0 @@
-[[release-notes-5.0.0-alpha]]
-=== 5.0.0-ALPHA
-
-*Date of Release:* February 1, 2016
-
-*Scope:* Alpha release of JUnit 5

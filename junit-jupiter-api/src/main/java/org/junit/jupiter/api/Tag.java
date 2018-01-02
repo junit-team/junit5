@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,15 +28,26 @@ import org.apiguardian.api.API;
  *
  * <p>Tags are used to filter which tests are executed for a given test
  * plan. For example, a development team may tag tests with values such as
- * {@code "fast"}, {@code "slow"}, {@code "ci-server"}, etc. and then supply
- * a list of tags to be used for the current test plan, potentially
- * dependent on the current environment.
+ * {@code "fast"}, {@code "slow"}, {@code "ci-server"}, etc. and then supply a
+ * list of tags to be included in or excluded from the current test plan,
+ * potentially dependent on the current environment.
  *
  * <h3>Syntax Rules for Tags</h3>
  * <ul>
  * <li>A tag must not be blank.</li>
- * <li>A trimmed tag must not contain whitespace.</li>
- * <li>A trimmed tag must not contain ISO control characters.</li>
+ * <li>A <em>trimmed</em> tag must not contain whitespace.</li>
+ * <li>A <em>trimmed</em> tag must not contain ISO control characters.</li>
+ * <li>A <em>trimmed</em> tag must not contain any of the following
+ * <em>reserved characters</em>.
+ * <ul>
+ * <li>{@code ,}</li>
+ * <li>{@code (}</li>
+ * <li>{@code )}</li>
+ * <li>{@code &}</li>
+ * <li>{@code |}</li>
+ * <li>{@code !}</li>
+ * </ul>
+ * </li>
  * </ul>
  *
  * @since 5.0
@@ -45,6 +57,7 @@ import org.apiguardian.api.API;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @Repeatable(Tags.class)
 @API(status = STABLE, since = "5.0")
 public @interface Tag {

@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import java.lang.reflect.Method;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.platform.commons.util.ClassUtils;
@@ -26,7 +27,13 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 
 	private final Class<?> testClass;
+
 	private final Method testMethod;
+
+	/**
+	 * Set of method-level tags; does not contain tags from parent.
+	 */
+	private final Set<TestTag> tags;
 
 	MethodBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		this(uniqueId, determineDisplayName(Preconditions.notNull(testMethod, "Method must not be null"),
@@ -38,13 +45,15 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = testMethod;
+		this.tags = getTags(testMethod);
 	}
 
 	@Override
 	public final Set<TestTag> getTags() {
-		Set<TestTag> methodTags = getTags(getTestMethod());
-		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
-		return methodTags;
+		// return modifiable copy
+		Set<TestTag> allTags = new LinkedHashSet<TestTag>(this.tags);
+		getParent().ifPresent(parentDescriptor -> allTags.addAll(parentDescriptor.getTags()));
+		return allTags;
 	}
 
 	public final Class<?> getTestClass() {

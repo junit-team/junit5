@@ -29,6 +29,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.0
  * @see Test
+ * @see Tag
  * @see TestInfo
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })

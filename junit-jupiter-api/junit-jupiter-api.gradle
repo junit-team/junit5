@@ -1,6 +1,7 @@
 dependencies {
 	api("org.opentest4j:opentest4j:${ota4jVersion}")
-	api(project(':junit-platform-commons'))
+	api(project(":junit-platform-commons"))
+	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
 }
 
 jar {
@@ -8,5 +9,24 @@ jar {
 		attributes(
 			'Automatic-Module-Name': 'org.junit.jupiter.api'
 		)
+	}
+}
+
+configurations {
+	apiElements {
+		/*
+		* Needed to configure kotlin to work correctly with the "java-library" plugin.
+		* See:
+		* https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_known_issues
+		* https://youtrack.jetbrains.com/issue/KT-18497
+		*/
+		outgoing
+			.variants
+			.getByName("classes")
+			.artifact(
+				"file" : compileKotlin.destinationDir,
+				"type" : "java-classes-directory",
+				"builtBy" : compileKotlin
+			)
 	}
 }

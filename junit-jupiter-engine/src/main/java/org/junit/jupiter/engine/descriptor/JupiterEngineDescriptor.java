@@ -33,10 +33,11 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 	}
 
 	@Override
-	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
+	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		ExtensionRegistry extensionRegistry = createRegistryWithDefaultExtensions(context.getConfigurationParameters());
 		EngineExecutionListener executionListener = context.getExecutionListener();
-		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionListener, this);
+		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionListener, this,
+			context.getConfigurationParameters());
 
 		// @formatter:off
 		return context.extend()
@@ -46,4 +47,8 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 		// @formatter:on
 	}
 
+	@Override
+	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
+		context.close();
+	}
 }

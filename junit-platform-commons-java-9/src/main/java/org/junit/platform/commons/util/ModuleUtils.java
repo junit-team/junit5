@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.IOException;
+import java.lang.module.Configuration;
 import java.lang.module.ModuleFinder;
 import java.lang.module.ModuleReader;
 import java.lang.module.ModuleReference;
@@ -50,12 +51,12 @@ import org.junit.platform.commons.logging.LoggerFactory;
 @API(status = INTERNAL, since = "1.1")
 public class ModuleUtils {
 
+	private static final Logger logger = LoggerFactory.getLogger(ModuleUtils.class);
+
 	/**
 	 * Version hint is set to {@code "9"} here.
 	 */
 	public static final String VERSION = "9";
-
-	private static final Logger logger = LoggerFactory.getLogger(ModuleUtils.class);
 
 	/**
 	 * Find all non-system boot modules names.
@@ -68,7 +69,7 @@ public class ModuleUtils {
 		Set<String> systemModules = ModuleFinder.ofSystem().findAll().stream()
 				.map(reference -> reference.descriptor().name())
 				.collect(toSet());
-		return boot(name -> !systemModules.contains(name))
+		return streamResolvedModules(name -> !systemModules.contains(name))
 				.map(ResolvedModule::name)
 				.collect(toCollection(LinkedHashSet::new));
 		// @formatter:on
@@ -84,10 +85,14 @@ public class ModuleUtils {
 	}
 
 	public static Optional<String> getModuleName(Class<?> type) {
-		return Optional.of(type.getModule().getName());
+		Preconditions.notNull(type, "Class type must not be null");
+
+		return Optional.ofNullable(type.getModule().getName());
 	}
 
 	public static Optional<String> getModuleVersion(Class<?> type) {
+		Preconditions.notNull(type, "Class type must not be null");
+
 		Module module = type.getModule();
 		return module.isNamed() ? module.getDescriptor().rawVersion() : Optional.empty();
 	}
@@ -95,8 +100,8 @@ public class ModuleUtils {
 	/**
 	 * Find all classes for the given module name.
 	 *
-	 * @param moduleName name of the module to scan
-	 * @param filter class filter to apply
+	 * @param moduleName the name of the module to scan
+	 * @param filter the class filter to apply
 	 * @return an immutable list of all such classes found; never {@code null}
 	 * but potentially empty
 	 */
@@ -106,20 +111,43 @@ public class ModuleUtils {
 
 		logger.debug(() -> "Looking for classes in module: " + moduleName);
 		// @formatter:off
-		Set<ModuleReference> moduleReferences = boot(isEqual(moduleName))
+		Set<ModuleReference> moduleReferences = streamResolvedModules(isEqual(moduleName))
 				.map(ResolvedModule::reference)
 				.collect(toSet());
 		// @formatter:on
 		return scan(moduleReferences, filter, ModuleUtils.class.getClassLoader());
 	}
 
-	// collect module references from boot module layer
-	private static Stream<ResolvedModule> boot(Predicate<String> moduleNamePredicate) {
-		Stream<ResolvedModule> stream = ModuleLayer.boot().configuration().modules().stream();
+	/**
+	 * Stream resolved modules from current (or boot) module layer.
+	 */
+	private static Stream<ResolvedModule> streamResolvedModules(Predicate<String> moduleNamePredicate) {
+		Module module = ModuleUtils.class.getModule();
+		ModuleLayer layer = module.getLayer();
+		if (layer == null) {
+			logger.config(() -> ModuleUtils.class + " is a member of " + module
+					+ " - using boot layer returned by ModuleLayer.boot() as fall-back.");
+			layer = ModuleLayer.boot();
+		}
+		return streamResolvedModules(moduleNamePredicate, layer);
+	}
+
+	/**
+	 * Stream resolved modules from the supplied layer.
+	 */
+	private static Stream<ResolvedModule> streamResolvedModules(Predicate<String> moduleNamePredicate,
+			ModuleLayer layer) {
+		logger.debug(() -> "Streaming modules for layer @" + System.identityHashCode(layer) + ": " + layer);
+		Configuration configuration = layer.configuration();
+		logger.debug(() -> "Module layer configuration: " + configuration);
+		Stream<ResolvedModule> stream = configuration.modules().stream();
 		return stream.filter(module -> moduleNamePredicate.test(module.name()));
 	}
 
-	// scan for classes
+	/**
+	 * Scan for classes using the supplied set of module references, class
+	 * filter, and loader.
+	 */
 	private static List<Class<?>> scan(Set<ModuleReference> references, ClassFilter filter, ClassLoader loader) {
 		logger.debug(() -> "Scanning " + references.size() + " module references: " + references);
 		ModuleReferenceScanner scanner = new ModuleReferenceScanner(filter, loader);
@@ -132,7 +160,7 @@ public class ModuleUtils {
 	}
 
 	/**
-	 * Module reference scanner.
+	 * {@link ModuleReference} scanner.
 	 */
 	static class ModuleReferenceScanner {
 
@@ -162,11 +190,13 @@ public class ModuleUtils {
 				}
 			}
 			catch (IOException e) {
-				throw new JUnitException("reading contents of " + reference + " failed", e);
+				throw new JUnitException("Failed to read contents of " + reference + ".", e);
 			}
 		}
 
-		/** Convert resource name to binary class name. */
+		/**
+		 * Convert resource name to binary class name.
+		 */
 		private String className(String resourceName) {
 			resourceName = resourceName.substring(0, resourceName.length() - 6); // 6 = ".class".length()
 			resourceName = resourceName.replace('/', '.');
@@ -183,9 +213,10 @@ public class ModuleUtils {
 				return classLoader.loadClass(binaryName);
 			}
 			catch (ClassNotFoundException e) {
-				throw new JUnitException("loading class with name '" + binaryName + "' failed", e);
+				throw new JUnitException("Failed to load class with name '" + binaryName + "'.", e);
 			}
 		}
 
 	}
+
 }

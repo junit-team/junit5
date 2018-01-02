@@ -107,7 +107,7 @@ class AssertionsDemo {
 	void timeoutNotExceededWithMethod() {
 		// The following assertion invokes a method reference and returns an object.
 		String actualGreeting = assertTimeout(ofMinutes(2), AssertionsDemo::greeting);
-		assertEquals("hello world!", actualGreeting);
+		assertEquals("Hello, World!", actualGreeting);
 	}
 
 	// end::user_guide[]
@@ -137,29 +137,9 @@ class AssertionsDemo {
 	}
 
 	private static String greeting() {
-		return "hello world!";
+		return "Hello, World!";
 	}
 
 }
 // end::user_guide[]
 // @formatter:on
-
-class Person {
-
-	private final String firstName;
-	private final String lastName;
-
-	Person(String firstName, String lastName) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
-
-	String getFirstName() {
-		return firstName;
-	}
-
-	String getLastName() {
-		return lastName;
-	}
-
-}

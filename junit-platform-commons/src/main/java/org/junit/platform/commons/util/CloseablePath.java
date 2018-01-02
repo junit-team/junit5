@@ -22,6 +22,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
+/**
+ * @since 1.0
+ */
 final class CloseablePath implements Closeable {
 
 	private static final String FILE_URI_SCHEME = "file";

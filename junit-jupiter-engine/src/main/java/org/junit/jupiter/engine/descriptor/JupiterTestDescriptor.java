@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -18,6 +19,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -80,7 +82,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 					return isValid;
 				})
 				.map(TestTag::create)
-				.collect(toCollection(LinkedHashSet::new));
+				.collect(collectingAndThen(toCollection(LinkedHashSet::new), Collections::unmodifiableSet));
 		// @formatter:on
 	}
 
@@ -119,6 +121,17 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
 		}
 		return SkipResult.doNotSkip();
+	}
+
+	/**
+	 * Must be overridden and return a new context so cleanUp() does not accidentally close the parent context.
+	 */
+	@Override
+	public abstract JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception;
+
+	@Override
+	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
+		context.close();
 	}
 
 	protected ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,

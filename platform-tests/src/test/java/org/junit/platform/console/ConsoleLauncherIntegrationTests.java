@@ -63,11 +63,9 @@ class ConsoleLauncherIntegrationTests {
 	}
 
 	@Test
-	void executeScanModulepath() {
-		String[] args1 = { "-e", "junit-jupiter", "--scan-module-path" };
+	void executeScanModules() {
+		String[] args1 = { "-e", "junit-jupiter", "--scan-modules" };
 		assertEquals(0, new ConsoleLauncherWrapper().execute(args1).getTestsFoundCount());
-		String[] args2 = { "-e", "junit-jupiter", "--scan-modulepath" };
-		assertEquals(0, new ConsoleLauncherWrapper().execute(args2).getTestsFoundCount());
 	}
 
 }

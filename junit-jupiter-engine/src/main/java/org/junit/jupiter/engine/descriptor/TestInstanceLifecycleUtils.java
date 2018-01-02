@@ -50,7 +50,6 @@ final class TestInstanceLifecycleUtils {
 		// @formatter:on
 	}
 
-	// TODO Consider looking up the default test instance lifecycle mode once per test plan execution.
 	static TestInstance.Lifecycle getDefaultTestInstanceLifecycle(ConfigurationParameters configParams) {
 		Preconditions.notNull(configParams, "ConfigurationParameters must not be null");
 		String propertyName = DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;

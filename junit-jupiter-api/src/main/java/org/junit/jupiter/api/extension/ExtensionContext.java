@@ -222,6 +222,25 @@ public interface ExtensionContext {
 	Optional<Throwable> getExecutionException();
 
 	/**
+	 * Get the configuration parameter stored under the specified {@code key}.
+	 *
+	 * <p>If no such key is present in the {@code ConfigurationParameters} for
+	 * the JUnit Platform, an attempt will be made to look up the value as a
+	 * JVM system property. If no such system property exists, an attempt will
+	 * be made to look up the value in the JUnit Platform properties file.
+	 *
+	 * @param key the key to look up; never {@code null} or blank
+	 * @return an {@code Optional} containing the value; never {@code null}
+	 * but potentially empty
+	 *
+	 * @see System#getProperty(String)
+	 * @see org.junit.platform.engine.ConfigurationParameters
+	 * @since 5.1
+	 */
+	@API(status = STABLE, since = "5.1")
+	Optional<String> getConfigurationParameter(String key);
+
+	/**
 	 * Publish a map of key-value pairs to be consumed by an
 	 * {@code org.junit.platform.engine.EngineExecutionListener}.
 	 *
@@ -247,6 +266,11 @@ public interface ExtensionContext {
 	 *
 	 * <p>Use {@code getStore(Namespace.GLOBAL)} to get the default, global {@link Namespace}.
 	 *
+	 * <p>A store is bound to its extension context lifecycle. When an extension
+	 * context lifecycle ends it closes its associated store. All stored values
+	 * that are instances of {@link ExtensionContext.Store.CloseableResource} are
+	 * notified by invoking their {@code close()} methods.
+	 *
 	 * @param namespace the {@code Namespace} to get the store for; never {@code null}
 	 * @return the store in which to put and get objects for other invocations
 	 * working in the same namespace; never {@code null}
@@ -258,6 +282,28 @@ public interface ExtensionContext {
 	 * {@code Store} provides methods for extensions to save and retrieve data.
 	 */
 	interface Store {
+
+		/**
+		 * Classes implementing this interface indicate that they want to {@link #close}
+		 * some underlying resource or resources when the enclosing {@link Store Store}
+		 * is closed.
+		 *
+		 * <p>Note that the {@code CloseableResource} API is only honored for
+		 * objects stored within an extension context {@link Store Store}.
+		 *
+		 * @since 5.1
+		 */
+		@API(status = STABLE, since = "5.1")
+		interface CloseableResource {
+
+			/**
+			 * Close underlying resources.
+			 *
+			 * @throws Throwable any throwable will be caught and rethrown
+			 */
+			void close() throws Throwable;
+
+		}
 
 		/**
 		 * Get the value that is stored under the supplied {@code key}.
@@ -311,11 +357,16 @@ public interface ExtensionContext {
 		 * <p>See {@link #getOrComputeIfAbsent(Object, Function, Class)} for
 		 * further details.
 		 *
+		 * <p>If {@code type} implements {@link ExtensionContext.Store.CloseableResource}
+		 * the {@code close()} method will be invoked on the stored object when
+		 * the store is closed.
+		 *
 		 * @param type the type of object to retrieve; never {@code null}
 		 * @param <V> the key and value type
 		 * @return the object; never {@code null}
 		 * @see #getOrComputeIfAbsent(Object, Function)
 		 * @see #getOrComputeIfAbsent(Object, Function, Class)
+		 * @see CloseableResource
 		 */
 		default <V> V getOrComputeIfAbsent(Class<V> type) {
 			return getOrComputeIfAbsent(type, ReflectionSupport::newInstance, type);
@@ -334,6 +385,10 @@ public interface ExtensionContext {
 		 * <p>For greater type safety, consider using
 		 * {@link #getOrComputeIfAbsent(Object, Function, Class)} instead.
 		 *
+		 * <p>If the created value is an instance of {@link ExtensionContext.Store.CloseableResource}
+		 * the {@code close()} method will be invoked on the stored object when
+		 * the store is closed.
+		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
 		 * to create a new value; never {@code null}
@@ -342,6 +397,7 @@ public interface ExtensionContext {
 		 * @return the value; potentially {@code null}
 		 * @see #getOrComputeIfAbsent(Class)
 		 * @see #getOrComputeIfAbsent(Object, Function, Class)
+		 * @see CloseableResource
 		 */
 		<K, V> Object getOrComputeIfAbsent(K key, Function<K, V> defaultCreator);
 
@@ -356,6 +412,10 @@ public interface ExtensionContext {
 		 * a new value will be computed by the {@code defaultCreator} (given
 		 * the {@code key} as input), stored, and returned.
 		 *
+		 * <p>If {@code requiredType} implements {@link ExtensionContext.Store.CloseableResource}
+		 * the {@code close()} method will be invoked on the stored object when
+		 * the store is closed.
+		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
 		 * to create a new value; never {@code null}
@@ -365,6 +425,7 @@ public interface ExtensionContext {
 		 * @return the value; potentially {@code null}
 		 * @see #getOrComputeIfAbsent(Class)
 		 * @see #getOrComputeIfAbsent(Object, Function)
+		 * @see CloseableResource
 		 */
 		<K, V> V getOrComputeIfAbsent(K key, Function<K, V> defaultCreator, Class<V> requiredType);
 
@@ -375,9 +436,14 @@ public interface ExtensionContext {
 		 * ExtensionContexts} for the store's {@code Namespace} unless they
 		 * overwrite it.
 		 *
+		 * <p>If the {@code value} is an instance of {@link ExtensionContext.Store.CloseableResource}
+		 * the {@code close()} method will be invoked on the stored object when
+		 * the store is closed.
+		 *
 		 * @param key the key under which the value should be stored; never
 		 * {@code null}
 		 * @param value the value to store; may be {@code null}
+		 * @see CloseableResource
 		 */
 		void put(Object key, Object value);
 
@@ -385,7 +451,8 @@ public interface ExtensionContext {
 		 * Remove the value that was previously stored under the supplied {@code key}.
 		 *
 		 * <p>The value will only be removed in the current {@link ExtensionContext},
-		 * not in ancestors.
+		 * not in ancestors. In addition, the {@link CloseableResource} API will not
+		 * be honored for values that are manually removed via this method.
 		 *
 		 * <p>For greater type safety, consider using {@link #remove(Object, Class)}
 		 * instead.
@@ -402,7 +469,8 @@ public interface ExtensionContext {
 		 * under the supplied {@code key}.
 		 *
 		 * <p>The value will only be removed in the current {@link ExtensionContext},
-		 * not in ancestors.
+		 * not in ancestors. In addition, the {@link CloseableResource} API will not
+		 * be honored for values that are manually removed via this method.
 		 *
 		 * @param key the key; never {@code null}
 		 * @param requiredType the required type of the value; never {@code null}

@@ -212,7 +212,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		def selectors = junitExtension.selectors
 		if (selectors.empty) {
 			if (junitExtension.enableModulePath) {
-				args.add('--scan-module-path')
+				args.add('--scan-modules')
 				return
 			}
 			def rootDirs = []

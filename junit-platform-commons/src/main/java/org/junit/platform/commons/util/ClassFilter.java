@@ -67,7 +67,7 @@ public class ClassFilter implements Predicate<Class<?>> {
 	}
 
 	/**
-	 * <p>implNote This implementation combines all tests stored in the predicates
+	 * @implNote This implementation combines all tests stored in the predicates
 	 * of this instance. Any new predicate must be added to this test method as
 	 * well.
 	 */

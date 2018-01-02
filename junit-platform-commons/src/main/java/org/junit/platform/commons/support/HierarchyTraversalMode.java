@@ -22,7 +22,7 @@ import org.apiguardian.api.API;
  * @see #TOP_DOWN
  * @see #BOTTOM_UP
  */
-@API(status = MAINTAINED, since = "5.0")
+@API(status = MAINTAINED, since = "1.0")
 public enum HierarchyTraversalMode {
 
 	/**

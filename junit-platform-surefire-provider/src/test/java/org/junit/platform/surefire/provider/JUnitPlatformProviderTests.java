@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.AdditionalMatchers.gt;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,6 +47,7 @@ import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
+import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.RunOrderCalculator;
 import org.apache.maven.surefire.util.ScanResult;
@@ -59,6 +61,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 
 /**
  * Unit tests for {@link JUnitPlatformProvider}.
@@ -94,9 +97,14 @@ class JUnitPlatformProviderTests {
 		TestsToRun testsToRun = newTestsToRun(TestClass1.class, TestClass2.class);
 		invokeProvider(provider, testsToRun);
 
-		assertThat(executionListener.summaries).hasSize(2);
-		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
-		TestClass2.verifyExecutionSummary(executionListener.summaries.get(1));
+		assertThat(executionListener.summaries).hasSize(1);
+		TestExecutionSummary summary = executionListener.summaries.get(0);
+		assertEquals(TestClass1.TESTS_FOUND + TestClass2.TESTS_FOUND, summary.getTestsFoundCount());
+		assertEquals(TestClass1.TESTS_STARTED + TestClass2.TESTS_STARTED, summary.getTestsStartedCount());
+		assertEquals(TestClass1.TESTS_SKIPPED + TestClass2.TESTS_SKIPPED, summary.getTestsSkippedCount());
+		assertEquals(TestClass1.TESTS_SUCCEEDED + TestClass2.TESTS_SUCCEEDED, summary.getTestsSucceededCount());
+		assertEquals(TestClass1.TESTS_ABORTED + TestClass2.TESTS_ABORTED, summary.getTestsAbortedCount());
+		assertEquals(TestClass1.TESTS_FAILED + TestClass2.TESTS_FAILED, summary.getTestsFailedCount());
 	}
 
 	@Test
@@ -110,12 +118,19 @@ class JUnitPlatformProviderTests {
 		invokeProvider(provider, TestClass1.class);
 
 		assertThat(executionListener.summaries).hasSize(1);
-		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
+		TestExecutionSummary summary = executionListener.summaries.get(0);
+		assertEquals(TestClass1.TESTS_FOUND, summary.getTestsFoundCount());
+		assertEquals(TestClass1.TESTS_STARTED, summary.getTestsStartedCount());
+		assertEquals(TestClass1.TESTS_SKIPPED, summary.getTestsSkippedCount());
+		assertEquals(TestClass1.TESTS_SUCCEEDED, summary.getTestsSucceededCount());
+		assertEquals(TestClass1.TESTS_ABORTED, summary.getTestsAbortedCount());
+		assertEquals(TestClass1.TESTS_FAILED, summary.getTestsFailedCount());
 	}
 
 	@Test
 	void allDiscoveredTestsAreInvokedForNullArgument() throws Exception {
-		ProviderParameters providerParameters = providerParametersMock(TestClass1.class, TestClass2.class);
+		RunListener runListener = mock(RunListener.class, withSettings().extraInterfaces(ConsoleOutputReceiver.class));
+		ProviderParameters providerParameters = providerParametersMock(runListener, TestClass1.class, TestClass2.class);
 		Launcher launcher = LauncherFactory.create();
 		JUnitPlatformProvider provider = new JUnitPlatformProvider(providerParameters, launcher);
 
@@ -124,9 +139,24 @@ class JUnitPlatformProviderTests {
 
 		invokeProvider(provider, null);
 
-		assertThat(executionListener.summaries).hasSize(2);
-		TestClass1.verifyExecutionSummary(executionListener.summaries.get(0));
-		TestClass2.verifyExecutionSummary(executionListener.summaries.get(1));
+		InOrder inOrder = inOrder(runListener);
+		inOrder.verify(runListener).testSetStarting(
+			new SimpleReportEntry(JUnitPlatformProvider.class.getName(), TestClass1.class.getName()));
+		inOrder.verify(runListener).testSetCompleted(
+			new SimpleReportEntry(JUnitPlatformProvider.class.getName(), TestClass1.class.getName()));
+		inOrder.verify(runListener).testSetStarting(
+			new SimpleReportEntry(JUnitPlatformProvider.class.getName(), TestClass2.class.getName()));
+		inOrder.verify(runListener).testSetCompleted(
+			new SimpleReportEntry(JUnitPlatformProvider.class.getName(), TestClass2.class.getName()));
+
+		assertThat(executionListener.summaries).hasSize(1);
+		TestExecutionSummary summary = executionListener.summaries.get(0);
+		assertEquals(TestClass1.TESTS_FOUND + TestClass2.TESTS_FOUND, summary.getTestsFoundCount());
+		assertEquals(TestClass1.TESTS_STARTED + TestClass2.TESTS_STARTED, summary.getTestsStartedCount());
+		assertEquals(TestClass1.TESTS_SKIPPED + TestClass2.TESTS_SKIPPED, summary.getTestsSkippedCount());
+		assertEquals(TestClass1.TESTS_SUCCEEDED + TestClass2.TESTS_SUCCEEDED, summary.getTestsSucceededCount());
+		assertEquals(TestClass1.TESTS_ABORTED + TestClass2.TESTS_ABORTED, summary.getTestsAbortedCount());
+		assertEquals(TestClass1.TESTS_FAILED + TestClass2.TESTS_FAILED, summary.getTestsFailedCount());
 	}
 
 	@Test
@@ -337,6 +367,13 @@ class JUnitPlatformProviderTests {
 
 	static class TestClass1 {
 
+		static final int TESTS_FOUND = 4;
+		static final int TESTS_STARTED = 3;
+		static final int TESTS_SKIPPED = 1;
+		static final int TESTS_SUCCEEDED = 2;
+		static final int TESTS_ABORTED = 0;
+		static final int TESTS_FAILED = 1;
+
 		@Test
 		void test1() {
 		}
@@ -355,17 +392,16 @@ class JUnitPlatformProviderTests {
 			throw new RuntimeException();
 		}
 
-		static void verifyExecutionSummary(TestExecutionSummary summary) {
-			assertEquals(4, summary.getTestsFoundCount());
-			assertEquals(3, summary.getTestsStartedCount());
-			assertEquals(2, summary.getTestsSucceededCount());
-			assertEquals(1, summary.getTestsSkippedCount());
-			assertEquals(0, summary.getTestsAbortedCount());
-			assertEquals(1, summary.getTestsFailedCount());
-		}
 	}
 
 	static class TestClass2 {
+
+		static final int TESTS_FOUND = 3;
+		static final int TESTS_STARTED = 3;
+		static final int TESTS_SKIPPED = 0;
+		static final int TESTS_SUCCEEDED = 1;
+		static final int TESTS_ABORTED = 1;
+		static final int TESTS_FAILED = 1;
 
 		@Test
 		void test1() {
@@ -381,14 +417,6 @@ class JUnitPlatformProviderTests {
 			assumeTrue(false);
 		}
 
-		static void verifyExecutionSummary(TestExecutionSummary summary) {
-			assertEquals(3, summary.getTestsFoundCount());
-			assertEquals(3, summary.getTestsStartedCount());
-			assertEquals(1, summary.getTestsSucceededCount());
-			assertEquals(0, summary.getTestsSkippedCount());
-			assertEquals(1, summary.getTestsAbortedCount());
-			assertEquals(1, summary.getTestsFailedCount());
-		}
 	}
 
 	static class VerboseTestClass {

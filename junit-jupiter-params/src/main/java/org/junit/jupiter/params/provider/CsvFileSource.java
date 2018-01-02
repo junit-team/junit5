@@ -69,4 +69,12 @@ public @interface CsvFileSource {
 	 */
 	char delimiter() default ',';
 
+	/**
+	 * The number of lines to skip when reading the CSV files.
+	 *
+	 * <p>Typically used to skip header lines.
+	 *
+	 * <p>Defaults to {@code 0}.
+	 */
+	int numLinesToSkip() default 0;
 }

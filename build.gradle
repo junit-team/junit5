@@ -6,13 +6,11 @@ buildscript {
 		// mavenLocal()
 		maven { url 'https://plugins.gradle.org/m2/' }
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-		maven { url 'http://repo.spring.io/plugins-release' }
 	}
 	dependencies {
 		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.6.0')
-		classpath('com.github.ben-manes:gradle-versions-plugin:0.15.0')
-		classpath('io.spring.gradle:propdeps-plugin:0.0.9.RELEASE')
-		classpath('org.ajoberstar:gradle-git-publish:0.3.2-rc.2')
+		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
+		classpath('org.ajoberstar:gradle-git-publish:0.3.2')
 		classpath('org.ajoberstar:gradle-git:1.7.2')
 		classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.1')
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
@@ -20,7 +18,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.gradle.build-scan' version '1.9'
+	id 'com.gradle.build-scan' version '1.11'
 	id 'net.nemerosa.versioning' version '2.6.1'
 }
 
@@ -117,9 +115,7 @@ allprojects { subproj ->
 	}
 
 	dependencies {
-		// The following dependency is necessary to avoid compiler warnings about
-		// not being able to find the @API annotation when compiling test sources.
-		testCompileOnly("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
+		api("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	}
 
 	tasks.withType(Test) { task ->
@@ -187,6 +183,14 @@ allprojects { subproj ->
 		options.compilerArgs += '-parameters'
 	}
 
+	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+		kotlinOptions {
+			jvmTarget = '1.8'
+			apiVersion = '1.1'
+			languageVersion = '1.1'
+		}
+	}
+
 	checkstyle {
 		toolVersion = '7.6'
 	}
@@ -246,10 +250,6 @@ allprojects { subproj ->
 subprojects { subproj ->
 	if (subproj.name in mavenizedProjects) {
 		apply plugin: 'maven'
-		apply plugin: 'propdeps'
-		apply plugin: 'propdeps-maven'
-		apply plugin: 'propdeps-idea'
-		apply plugin: 'propdeps-eclipse'
 		apply plugin: 'signing'
 
 		if (subproj.name in platformProjects) {
@@ -259,13 +259,6 @@ subprojects { subproj ->
 		else if (subproj.name in vintageProjects) {
 			subproj.group = vintageGroup
 			subproj.version = vintageVersion
-		}
-
-		dependencies {
-			// The 'optional' configuration is provided by the propdeps-plugin and allows
-			// us to declare dependencies that get flagged as optional in the generated
-			// Maven POMs.
-			optional("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 		}
 
 		javadoc {
@@ -497,6 +490,10 @@ subprojects { subproj ->
 			doLast {
 				project.exec {
 					executable 'jar'
+					args = ['--version']
+				}
+				project.exec {
+					executable 'jar'
 					args = ['--update','--file', archivePath,
 							'--release', version,
 							'-C', versionedProject.compileJava.destinationDir,
@@ -536,6 +533,13 @@ subprojects { subproj ->
 			endWithNewline()
 			replaceRegex 'Empty line between last method and class closure', /\n([\s]+)}\n}\n$/, '\n$1}\n\n}\n'
 			replaceRegex 'Remove line breaks between consecutive closing parentheses', /\)\n[\s]+\)\n/, '))\n'
+		}
+
+		kotlin {
+			ktlint("0.9.0")
+			licenseHeaderFile headerFile
+			trimTrailingWhitespace()
+			endWithNewline()
 		}
 	}
 
@@ -651,12 +655,14 @@ configure(rootProject) {
 
 	def docsVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
 	def docsDir = new File(buildDir, 'ghpages-docs')
+	def replaceCurrentDocs = project.hasProperty('replaceCurrentDocs')
 
 	task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: Copy) {
 		outputs.dir docsDir
 
-		from(project(':documentation').buildDir) {
-			include 'asciidoc/**'
+		from("${project(':documentation').buildDir}/asciidoc") {
+			include 'user-guide/**'
+			include 'release-notes/**'
 		}
 		from("$buildDir/docs") {
 			include 'javadoc/**'
@@ -666,9 +672,6 @@ configure(rootProject) {
 			}
 		}
 		into "${docsDir}/${docsVersion}"
-		filesMatching('asciidoc/**') { fileCopyDetails ->
-			fileCopyDetails.path = fileCopyDetails.path.replace('asciidoc/', 'user-guide/')
-		}
 		filesMatching('javadoc/**') { fileCopyDetails ->
 			fileCopyDetails.path = fileCopyDetails.path.replace('javadoc/', 'api/')
 		}
@@ -682,7 +685,7 @@ configure(rootProject) {
 		into "${docsDir}/current"
 	}
 
-	createCurrentDocsFolder.onlyIf { project.hasProperty('replaceCurrentDocs') }
+	createCurrentDocsFolder.onlyIf { replaceCurrentDocs }
 
 	gitPublish {
 		repoUri = 'https://github.com/junit-team/junit5.git'
@@ -693,7 +696,13 @@ configure(rootProject) {
 			into "docs"
 		}
 
-		preserve { include '**/*' }
+		preserve {
+			include '**/*'
+			exclude "docs/${docsVersion}/**"
+			if (replaceCurrentDocs) {
+				exclude "docs/current/**"
+			}
+		}
 	}
 
 	gitPublishCommit.dependsOn(prepareDocsForUploadToGhPages)
@@ -702,7 +711,7 @@ configure(rootProject) {
 
 task wrapper(type: Wrapper) {
 	description = 'Generates gradlew and gradlew.bat scripts'
-	gradleVersion = '4.3'
+	gradleVersion = '4.4.1'
 	/*
 	* Reasoning for using BIN:
 	* https://github.com/junit-team/junit5/pull/1012#discussion_r132061924

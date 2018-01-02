@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -21,7 +22,7 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @Tags} is a container for one or more {@code @Tag} declarations.
+ * {@code @Tags} is a container for one or more {@link Tag @Tag} declarations.
  *
  * <p>Note, however, that use of the {@code @Tags} container is completely
  * optional since {@code @Tag} is a {@linkplain java.lang.annotation.Repeatable
@@ -34,6 +35,7 @@ import org.apiguardian.api.API;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @API(status = STABLE, since = "5.0")
 public @interface Tags {
 

@@ -122,6 +122,15 @@ class AnnotationUtilsTests {
 		assertThat(findAnnotation(SubInheritedAnnotationClass.class, InheritedAnnotation.class)).isPresent();
 	}
 
+	/**
+	 * Test for https://github.com/junit-team/junit5/issues/1133
+	 */
+	@Test
+	void findInheritedAnnotationMetaPresentOnNonInheritedComposedAnnotationPresentOnSuperclass() {
+		assertThat(findAnnotation(SubNonInheritedCompositionOfInheritedAnnotationClass.class,
+			InheritedAnnotation.class)).isPresent();
+	}
+
 	@Test
 	void findAnnotationDirectlyPresentOnClass() {
 		assertThat(findAnnotation(Annotation1Class.class, Annotation1.class)).isPresent();
@@ -133,14 +142,15 @@ class AnnotationUtilsTests {
 	}
 
 	/**
-	 * <b>Note:</b> there is no findAnnotationIndirectlyMetaPresentOnMethod counterpart because {@link Inherited}
-	 * annotation has no effect if the annotated type is used to annotate anything other than a class.
+	 * <b>Note:</b> there is no findAnnotationIndirectlyMetaPresentOnMethod
+	 * counterpart because the {@code @Inherited} annotation has no effect if
+	 * the annotation type is used to annotate anything other than a class.
 	 *
 	 * @see Inherited
 	 */
 	@Test
 	void findAnnotationIndirectlyMetaPresentOnClass() {
-		assertThat(findAnnotation(InheritedComposedAnnotationSubClass.class, Annotation1.class)).isPresent();
+		assertThat(findAnnotation(SubInheritedComposedAnnotationClass.class, Annotation1.class)).isPresent();
 	}
 
 	@Test
@@ -475,8 +485,16 @@ class AnnotationUtilsTests {
 	@interface InheritedComposedAnnotation {
 	}
 
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@InheritedAnnotation
+	// DO NOT make this @Inherited.
+	@interface NonInheritedCompositionOfInheritedAnnotation {
+	}
+
 	@Target({ ElementType.TYPE, ElementType.METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
+	// DO NOT make this @Inherited.
 	@interface Tags {
 
 		Tag[] value();
@@ -485,6 +503,7 @@ class AnnotationUtilsTests {
 	@Target({ ElementType.TYPE, ElementType.METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Repeatable(Tags.class)
+	// DO NOT make this @Inherited.
 	@interface Tag {
 
 		String value();
@@ -532,7 +551,12 @@ class AnnotationUtilsTests {
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
-	@Inherited
+	// Intentionally NOT @Inherited in order to ensure that the algorithm for
+	// findRepeatableAnnotations() in fact lives up to the claims in the
+	// JavaDoc regarding searching for repeatable annotations with implicit
+	// "inheritance" if the repeatable annotation is @Inherited but the
+	// custom composed annotation is not @Inherited.
+	// @Inherited
 	@ExtendWith("bar")
 	@interface ExtendWithBar {
 	}
@@ -576,7 +600,15 @@ class AnnotationUtilsTests {
 		}
 	}
 
-	static class InheritedComposedAnnotationSubClass extends InheritedComposedAnnotationClass {
+	static class SubInheritedComposedAnnotationClass extends InheritedComposedAnnotationClass {
+	}
+
+	@NonInheritedCompositionOfInheritedAnnotation
+	static class NonInheritedCompositionOfInheritedAnnotationClass {
+	}
+
+	static class SubNonInheritedCompositionOfInheritedAnnotationClass
+			extends NonInheritedCompositionOfInheritedAnnotationClass {
 	}
 
 	@Annotation1

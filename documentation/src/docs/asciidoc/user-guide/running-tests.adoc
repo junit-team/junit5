@@ -1,0 +1,732 @@
+[[running-tests]]
+== Running Tests
+
+[[running-tests-ide]]
+=== IDE Support
+
+[[running-tests-ide-intellij-idea]]
+==== IntelliJ IDEA
+
+IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2. For
+details please see the
+https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/[post on the
+IntelliJ IDEA blog]. Note, however, that it is recommended to use IDEA 2017.3 or newer
+since these newer versions of IDEA will download the following JARs automatically based
+on the API version used in the project: `junit-platform-launcher`,
+`junit-jupiter-engine`, and `junit-vintage-engine`.
+
+.JUnit 5 Versions Bundled in IntelliJ IDEA
+|===
+| IntelliJ IDEA Version | Bundled JUnit 5 Version
+
+| 2016.2   | M2
+| 2016.3.1 | M3
+| 2017.1.2 | M4
+| 2017.2.1 | M5
+| 2017.2.3 | RC2
+|===
+
+WARNING: IntelliJ IDEA (prior to IDEA 2017.3) bundles a certain version of JUnit 5. Thus,
+if you want to use a newer version of JUnit Jupiter, execution of tests within the IDE
+might fail due to version conflicts. In such cases, please follow the instructions below
+to use a newer version of JUnit 5 than the one bundled with IntelliJ IDEA.
+
+In order to use a different JUnit 5 version (e.g., {jupiter-version}), you may need to
+include the corresponding versions of the `junit-platform-launcher`,
+`junit-jupiter-engine`, and `junit-vintage-engine` JARs in the classpath.
+
+.Additional Gradle Dependencies
+[source,groovy]
+[subs=attributes+]
+----
+// Only needed to run tests in a version of IntelliJ IDEA that bundles an older version
+testRuntime("org.junit.platform:junit-platform-launcher:{platform-version}")
+testRuntime("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
+testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
+----
+
+.Additional Maven Dependencies
+[source,xml]
+[subs=attributes+]
+----
+<!-- Only required to run tests in a version of IntelliJ IDEA that bundles an older version -->
+<dependency>
+	<groupId>org.junit.platform</groupId>
+	<artifactId>junit-platform-launcher</artifactId>
+	<version>{platform-version}</version>
+	<scope>test</scope>
+</dependency>
+<dependency>
+	<groupId>org.junit.jupiter</groupId>
+	<artifactId>junit-jupiter-engine</artifactId>
+	<version>{jupiter-version}</version>
+	<scope>test</scope>
+</dependency>
+<dependency>
+	<groupId>org.junit.vintage</groupId>
+	<artifactId>junit-vintage-engine</artifactId>
+	<version>{vintage-version}</version>
+	<scope>test</scope>
+</dependency>
+----
+
+[[running-tests-ide-eclipse]]
+==== Eclipse
+
+Eclipse IDE offers support for the JUnit Platform since the Eclipse Oxygen.1a (4.7.1a)
+release.
+
+For more information on using JUnit 5 in Eclipse consult the official _Eclipse support
+for JUnit 5_ section of the
+https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support[Eclipse Project Oxygen.1a
+(4.7.1a) - New and Noteworthy] documentation.
+
+[[running-tests-ide-other]]
+==== Other IDEs
+
+At the time of this writing, there is no direct support for running tests on the JUnit
+Platform within IDEs other than with IntelliJ IDEA and Eclipse.
+However, the JUnit team provides two intermediate solutions so that you can go ahead and
+try out JUnit 5 within your IDE today. You can use the <<running-tests-console-launcher>>
+manually or execute tests with a <<running-tests-junit-platform-runner,JUnit 4 based
+Runner>>.
+
+[[running-tests-build]]
+=== Build Support
+
+[[running-tests-build-gradle]]
+==== Gradle
+
+The JUnit team has developed a very basic Gradle plugin that allows you to run any kind
+of test that is supported by a `TestEngine` (e.g., JUnit 3, JUnit 4, JUnit Jupiter,
+{Specsy}, etc.). See `build.gradle` in the `{junit5-gradle-consumer}` project for an
+example of the plugin in action.
+
+[[running-tests-build-gradle-junit-enable]]
+===== Enabling the JUnit Gradle Plugin
+
+To use the JUnit Gradle plugin, you first need to make sure that you are running Gradle
+2.5 or higher. Once you've done that, you can configure `build.gradle` as follows.
+
+[source,java,indent=0]
+[subs=attributes+]
+----
+buildscript {
+	repositories {
+		mavenCentral()
+		// The following is only necessary if you want to use SNAPSHOT releases.
+		// maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+	}
+	dependencies {
+		classpath 'org.junit.platform:junit-platform-gradle-plugin:{platform-version}'
+	}
+}
+
+apply plugin: 'org.junit.platform.gradle.plugin'
+----
+
+[[running-tests-build-gradle-junit-configure]]
+===== Configuring the JUnit Gradle Plugin
+
+Once the JUnit Gradle plugin has been applied, you can configure it as follows.
+
+[source,java,indent=0]
+[subs=attributes+]
+----
+junitPlatform {
+	platformVersion '{platform-version}' // optional, defaults to plugin version
+	logManager 'org.apache.logging.log4j.jul.LogManager'
+	reportsDir file('build/test-results/junit-platform') // this is the default
+	// enableStandardTestTask true
+	// selectors (optional)
+	// filters (optional)
+}
+----
+
+Setting `logManager` instructs the JUnit Gradle plugin to set the
+`java.util.logging.manager` system property to the supplied _fully qualified class_ name
+of the `java.util.logging.LogManager` implementation to use. The above example
+demonstrates how to configure log4j as the `LogManager`.
+
+By default, the JUnit Gradle plugin disables the standard Gradle `test` task, but this
+can be overridden via the `enableStandardTestTask` flag.
+
+[[running-tests-build-gradle-selectors]]
+===== Configuring Selectors
+
+By default, the plugin will scan your project's output directories for tests. However,
+you can specify which tests to execute explicitly using the `selectors` extension element.
+
+[source,java,indent=0]
+----
+junitPlatform {
+	// ...
+	selectors {
+		uris 'file:///foo.txt', 'http://example.com/'
+		uri 'foo:resource' <1>
+		files 'foo.txt', 'bar.csv'
+		file 'qux.json' <2>
+		directories 'foo/bar', 'bar/qux'
+		directory 'qux/bar' <3>
+		packages 'com.acme.foo', 'com.acme.bar'
+		aPackage 'com.example.app' <4>
+		classes 'com.acme.Foo', 'com.acme.Bar'
+		aClass 'com.example.app.Application' <5>
+		methods 'com.acme.Foo#a', 'com.acme.Foo#b'
+		method 'com.example.app.Application#run(java.lang.String[])' <6>
+		resources '/bar.csv', '/foo/input.json'
+		resource '/com/acme/my.properties' <7>
+		modules 'foo', 'bar'
+		module 'baz' <8>
+	}
+	// ...
+}
+----
+<1> URIs
+<2> Local files
+<3> Local directories
+<4> Packages
+<5> Classes, fully qualified class names
+<6> Methods, fully qualified method names (see {DiscoverySelectors_selectMethod})
+<7> Classpath resources
+<8> Module names
+
+[[running-tests-build-gradle-filters]]
+===== Configuring Filters
+
+You can configure filters for the test plan by using the `filters` extension. By default,
+all engines and tags are included in the test plan. Only the default
+`includeClassNamePattern` (`{standard-include-class-name-pattern}`) is applied. You can
+override the default pattern as in the following example. When you specify multiple
+patterns, they are combined using OR semantics.
+
+[source,java,indent=0]
+----
+junitPlatform {
+	// ...
+	filters {
+		engines {
+			include 'junit-jupiter'
+			// exclude 'junit-vintage'
+		}
+		tags {
+			include 'fast', 'smoke'
+			// exclude 'slow', 'ci'
+		}
+		packages {
+			include 'com.sample.included1', 'com.sample.included2'
+			// exclude 'com.sample.excluded1', 'com.sample.excluded2'
+		}
+		includeClassNamePattern '.*Spec'
+		includeClassNamePatterns '.*Test', '.*Tests'
+	}
+	// ...
+}
+----
+
+If you supply a _Test Engine ID_ via `engines {include ...}` or `engines {exclude ...}`,
+the JUnit Gradle plugin will only run tests for the desired test engines. Similarly, if
+you supply a _tag_ via `tags {include ...}` or `tags {exclude ...}`, the JUnit Gradle
+plugin will only run tests that are _tagged_ accordingly (e.g., via the `@Tag` annotation
+for JUnit Jupiter based tests). The same applies to package names that can be included or
+excluded using `packages {include ...}` or `packages {exclude ...}`.
+
+[[running-tests-build-gradle-config-params]]
+===== Configuration Parameters
+
+You can set configuration parameters to influence test discovery and execution by using
+the `configurationParameter` or `configurationParameters` DSL. The former can be used to
+set a single configuration parameter, while the latter takes a map of configuration
+parameters to set multiple key-value pairs at once. All keys and values must be `Strings`.
+
+[source,java,indent=0]
+----
+junitPlatform {
+	// ...
+	configurationParameter 'junit.jupiter.conditions.deactivate', '*'
+	configurationParameters([
+		'junit.jupiter.extensions.autodetection.enabled': 'true',
+		'junit.jupiter.testinstance.lifecycle.default': 'per_class'
+	])
+	// ...
+}
+----
+
+[[running-tests-build-gradle-engines-configure]]
+===== Configuring Test Engines
+
+In order to have the JUnit Gradle plugin run any tests at all, a `TestEngine`
+implementation must be on the classpath.
+
+To configure support for JUnit Jupiter based tests, configure a `testCompile` dependency
+on the JUnit Jupiter API and a `testRuntime` dependency on the JUnit Jupiter `TestEngine`
+implementation similar to the following.
+
+[source,java,indent=0]
+[subs=attributes+]
+----
+dependencies {
+	testCompile("org.junit.jupiter:junit-jupiter-api:{jupiter-version}")
+	testRuntime("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
+}
+----
+
+The JUnit Gradle plugin can run JUnit 4 based tests as long as you configure a
+`testCompile` dependency on JUnit 4 and a `testRuntime` dependency on the JUnit Vintage
+`TestEngine` implementation similar to the following.
+
+[source,java,indent=0]
+[subs=attributes+]
+----
+dependencies {
+	testCompile("junit:junit:{junit4-version}")
+	testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
+}
+----
+
+[[running-tests-build-gradle-junit-using]]
+===== Using the JUnit Gradle Plugin
+
+Once the JUnit Gradle plugin has been applied and configured, you have a new
+`junitPlatformTest` task at your disposal.
+
+Invoking `gradlew junitPlatformTest` (or `gradlew test`) from the command line will
+execute all tests within the project whose class names match the regular expression
+supplied via the `includeClassNamePattern` (which defaults to
+`{standard-include-class-name-pattern}`).
+
+Executing the `junitPlatformTest` task in the `{junit5-gradle-consumer}` project results
+in output similar to the following:
+
+....
+:junitPlatformTest
+
+Test run finished after 93 ms
+[         3 containers found      ]
+[         0 containers skipped    ]
+[         3 containers started    ]
+[         0 containers aborted    ]
+[         3 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         1 tests skipped         ]
+[         2 tests started         ]
+[         0 tests aborted         ]
+[         2 tests successful      ]
+[         0 tests failed          ]
+
+BUILD SUCCESSFUL
+....
+
+If a test fails, the build will fail with output similar to the following:
+
+[subs=-callouts]
+....
+:junitPlatformTest
+
+Test failures (1):
+  JUnit Jupiter:SecondTest:mySecondTest()
+    MethodSource [className = 'com.example.project.SecondTest', methodName = 'mySecondTest', methodParameterTypes = '']
+    => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
+
+Test run finished after 99 ms
+[         3 containers found      ]
+[         0 containers skipped    ]
+[         3 containers started    ]
+[         0 containers aborted    ]
+[         3 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         0 tests skipped         ]
+[         3 tests started         ]
+[         0 tests aborted         ]
+[         2 tests successful      ]
+[         1 tests failed          ]
+
+:junitPlatformTest FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':junitPlatformTest'.
+> Process 'command '/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/bin/java'' finished with non-zero exit value 1
+....
+
+NOTE: The _exit value_ is `1` if any containers or tests failed; otherwise, it is `0`.
+
+.Current Limitations of the JUnit Gradle Plugin
+WARNING: The results of any tests run via the JUnit Gradle plugin will not be included
+in the standard test report generated by Gradle; however, the test results can
+typically be aggregated on a CI server. See the `reportsDir` property of the plugin.
+
+[[running-tests-build-maven]]
+==== Maven
+
+The JUnit team has developed a very basic provider for Maven Surefire that lets you run
+JUnit 4 and JUnit Jupiter tests via `mvn test`. The `pom.xml` file in the
+`{junit5-maven-consumer}` project demonstrates how to use it and can serve as a starting
+point.
+
+WARNING: Due to a memory leak in Surefire 2.20 and issues running on Java 9,
+the `junit-platform-surefire-provider` currently only works with Surefire 2.19.1.
+
+[source,xml,indent=0]
+[subs=attributes+]
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>{platform-version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+----
+
+[[running-tests-build-maven-engines-configure]]
+===== Configuring Test Engines
+
+In order to have Maven Surefire run any tests at all, a `TestEngine` implementation must
+be added to the runtime classpath.
+
+To configure support for JUnit Jupiter based tests, configure a `test` dependency on the
+JUnit Jupiter API, and add the JUnit Jupiter `TestEngine` implementation to the
+dependencies of the `maven-surefire-plugin` similar to the following.
+
+[source,xml,indent=0]
+[subs=attributes+]
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>{platform-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.junit.jupiter</groupId>
+						<artifactId>junit-jupiter-engine</artifactId>
+						<version>{jupiter-version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+	<dependencies>
+		...
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>{jupiter-version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	...
+----
+
+The JUnit Platform Surefire Provider can run JUnit 4 based tests as long as you configure
+a `test` dependency on JUnit 4 and add the JUnit Vintage `TestEngine` implementation to
+the dependencies of the `maven-surefire-plugin` similar to the following.
+
+[source,xml,indent=0]
+[subs=attributes+]
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>{platform-version}</version>
+					</dependency>
+					...
+					<dependency>
+						<groupId>org.junit.vintage</groupId>
+						<artifactId>junit-vintage-engine</artifactId>
+						<version>{vintage-version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+	<dependencies>
+		...
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>{junit4-version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	...
+----
+
+[[running-tests-build-maven-filter-tags]]
+===== Filtering by Tags
+
+You can filter tests by tags using the following configuration properties.
+
+- to include a tag, use either `groups` or `includeTags`
+- to exclude a tag, use either `excludedGroups` or `excludeTags`
+
+[source,xml,indent=0]
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<configuration>
+			        <properties>
+						<includeTags>acceptance</includeTags>
+			            <excludeTags>integration, regression</excludeTags>
+			        </properties>
+			    </configuration>
+				<dependencies>
+					...
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+----
+
+[[running-tests-build-maven-config-params]]
+===== Configuration Parameters
+
+You can set configuration parameters to influence test discovery and execution by using
+the `configurationParameters` property and providing key-value pairs in the Java
+`Properties` file syntax.
+
+[source,xml,indent=0]
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<configuration>
+					<properties>
+						<configurationParameters>
+							junit.jupiter.conditions.deactivate = *
+							junit.jupiter.extensions.autodetection.enabled = true
+							junit.jupiter.testinstance.lifecycle.default = per_class
+						</configurationParameters>
+					</properties>
+				</configuration>
+				<dependencies>
+					...
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+----
+
+[[running-tests-console-launcher]]
+=== Console Launcher
+
+The `{ConsoleLauncher}` is a command-line Java application that lets you launch
+the JUnit Platform from the console. For example, it can be used to run JUnit
+Vintage and JUnit Jupiter tests and print test execution results to the console.
+
+An executable `junit-platform-console-standalone-{platform-version}.jar` with all
+dependencies included is published in the central Maven repository under the
+https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
+directory. You can https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run] the
+standalone `ConsoleLauncher` as shown below.
+
+`java -jar junit-platform-console-standalone-{platform-version}.jar <<<running-tests-console-launcher-options>>>`
+
+Here's an example of its output:
+
+....
+├─ JUnit Vintage
+│  └─ example.JUnit4Tests
+│     └─ standardJUnit4Test ✔
+└─ JUnit Jupiter
+   ├─ StandardTests
+   │  ├─ succeedingTest() ✔
+   │  └─ skippedTest() ↷ for demonstration purposes
+   └─ A special test case
+      ├─ Custom test name containing spaces ✔
+      ├─ ╯°□°）╯ ✔
+      └─ 😱 ✔
+
+Test run finished after 64 ms
+[         5 containers found      ]
+[         0 containers skipped    ]
+[         5 containers started    ]
+[         0 containers aborted    ]
+[         5 containers successful ]
+[         0 containers failed     ]
+[         6 tests found           ]
+[         1 tests skipped         ]
+[         5 tests started         ]
+[         0 tests aborted         ]
+[         5 tests successful      ]
+[         0 tests failed          ]
+....
+
+.Exit Code
+NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
+failed. Otherwise the exit code is `0`.
+
+[[running-tests-console-launcher-options]]
+==== Options
+
+----
+include::{generatedAsciiDocInputDir}/console-launcher-options.txt[]
+----
+
+
+[[running-tests-junit-platform-runner]]
+=== Using JUnit 4 to run the JUnit Platform
+
+The `JUnitPlatform` runner is a JUnit 4 based `Runner` which enables you to run any test
+whose programming model is supported on the JUnit Platform in a JUnit 4 environment --
+for example, a JUnit Jupiter test class.
+
+Annotating a class with `@RunWith(JUnitPlatform.class)` allows it to be run with IDEs and
+build systems that support JUnit 4 but do not yet support the JUnit Platform directly.
+
+NOTE: Since the JUnit Platform has features that JUnit 4 does not have, the runner is
+only able to support a subset of the JUnit Platform functionality, especially with regard
+to reporting (see <<running-tests-junit-platform-runner-technical-names>>). But for the
+time being the `JUnitPlatform` runner is an easy way to get started.
+
+[[running-tests-junit-platform-runner-setup]]
+==== Setup
+
+You need the following artifacts and their dependencies on the classpath. See
+<<dependency-metadata>> for details regarding group IDs, artifact IDs, and versions.
+
+===== Explicit Dependencies
+
+* `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
+* `junit-{junit4-version}.jar` in _test_ scope: to run tests using JUnit 4
+* `junit-jupiter-api` in _test_ scope: API for writing tests using JUnit Jupiter, including `@Test`, etc.
+* `junit-jupiter-engine` in _test runtime_ scope: implementation of the `TestEngine` API for JUnit Jupiter
+
+===== Transitive Dependencies
+
+* `junit-platform-suite-api` in _test_ scope
+* `junit-platform-launcher` in _test_ scope
+* `junit-platform-engine` in _test_ scope
+* `junit-platform-commons` in _test_ scope
+* `opentest4j` in _test_ scope
+
+[[running-tests-junit-platform-runner-technical-names]]
+==== Display Names vs. Technical Names
+
+To define a custom _display name_ for the class run via `@RunWith(JUnitPlatform.class)`
+simply annotate the class with `@SuiteDisplayName` and provide a custom value.
+
+By default, _display names_ will be used for test artifacts; however, when the
+`JUnitPlatform` runner is used to execute tests with a build tool such as Gradle or
+Maven, the generated test report often needs to include the _technical names_ of test
+artifacts — for example, fully qualified class names — instead of shorter display names
+like the simple name of a test class or a custom display name containing special
+characters. To enable technical names for reporting purposes, simply declare the
+`@UseTechnicalNames` annotation alongside `@RunWith(JUnitPlatform.class)`.
+
+Note that the presence of `@UseTechnicalNames` overrides any custom display name
+configured via `@SuiteDisplayName`.
+
+[[running-tests-junit-platform-runner-single-test]]
+==== Single Test Class
+
+One way to use the `JUnitPlatform` runner is to annotate a test class with
+`@RunWith(JUnitPlatform.class)` directly. Please note that the test methods in the
+following example are annotated with `org.junit.jupiter.api.Test` (JUnit Jupiter), not
+`org.junit.Test` (JUnit Vintage). Moreover, in this case the test class must be `public`;
+otherwise, some IDEs and build tools might not recognize it as a JUnit 4 test class.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/JUnit4ClassDemo.java[tags=user_guide]
+----
+
+[[running-tests-junit-platform-runner-test-suite]]
+==== Test Suite
+
+If you have multiple test classes you can create a test suite as can be seen in the
+following example.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/JUnit4SuiteDemo.java[tags=user_guide]
+----
+
+The `JUnit4SuiteDemo` will discover and run all tests in the `example` package
+and its subpackages. By default, it will only include test classes whose names match the
+pattern `{standard-include-class-name-pattern}`.
+
+.Additional Configuration Options
+NOTE: There are more configuration options for discovering and filtering tests than just
+`@SelectPackages`. Please consult the
+{javadoc-root}/org/junit/platform/suite/api/package-summary.html[Javadoc] for further
+details.
+
+[[running-tests-config-params]]
+=== Configuration Parameters
+
+In addition to instructing the platform which test classes and test engines to include,
+which packages to scan, etc., it is sometimes necessary to provide additional custom
+configuration parameters that are specific to a particular test engine. For example, the
+JUnit Jupiter `TestEngine` supports _configuration parameters_ for the following use
+cases.
+
+- <<writing-tests-test-instance-lifecycle-changing-default>>
+- <<extensions-registration-automatic-enabling>>
+- <<extensions-conditions-deactivation>>
+
+_Configuration Parameters_ are text-based key-value pairs that can be supplied to test
+engines running on the JUnit Platform via one of the following mechanisms.
+
+1. The `configurationParameter()` and `configurationParameters()` methods in the
+  `LauncherDiscoveryRequestBuilder` which is used to build a request supplied to the
+  <<launcher-api, `Launcher` API>>. When running tests via one of the tools provided
+  by the JUnit Platform you can specify configuration parameters as follows:
+  * <<running-tests-console-launcher,Console Launcher>>: use the `--config`
+    command-line option.
+  * <<running-tests-build-gradle-config-params,Gradle plugin>>: use the
+    `configurationParameter` or `configurationParameters` DSL.
+  * <<running-tests-build-maven-config-params,Maven Surefire provider>>: use the
+    `configurationParameters` property.
+2. JVM system properties.
+3. The JUnit Platform configuration file: a file named `junit-platform.properties` in the
+  root of the class path that follows the syntax rules for a Java `Properties` file.
+
+NOTE: Configuration parameters are looked up in the exact order defined above.
+Consequently, configuration parameters supplied directly to the `Launcher` take
+precedence over those supplied via system properties and the configuration file.
+Similarly, configuration parameters supplied via system properties take precedence over
+those supplied via the configuration file.

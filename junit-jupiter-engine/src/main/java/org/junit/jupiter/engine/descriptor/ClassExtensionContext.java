@@ -19,6 +19,7 @@ import java.util.Optional;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 
 /**
@@ -31,9 +32,10 @@ public final class ClassExtensionContext extends AbstractExtensionContext<ClassT
 	private Object testInstance;
 
 	public ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			ClassTestDescriptor testDescriptor, ThrowableCollector throwableCollector) {
+			ClassTestDescriptor testDescriptor, ConfigurationParameters configurationParameters,
+			ThrowableCollector throwableCollector) {
 
-		super(parent, engineExecutionListener, testDescriptor);
+		super(parent, engineExecutionListener, testDescriptor, configurationParameters);
 		this.throwableCollector = throwableCollector;
 	}
 

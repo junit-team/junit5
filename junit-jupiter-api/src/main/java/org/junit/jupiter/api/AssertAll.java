@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -44,23 +45,35 @@ class AssertAll {
 		assertAll(heading, Arrays.stream(executables));
 	}
 
+	static void assertAll(Collection<Executable> executables) {
+		assertAll(null, executables);
+	}
+
+	static void assertAll(String heading, Collection<Executable> executables) {
+		Preconditions.notNull(executables, "executables collection must not be null");
+		Preconditions.containsNoNullElements(executables, "individual executables must not be null");
+		assertAll(heading, executables.stream());
+	}
+
 	static void assertAll(Stream<Executable> executables) {
 		assertAll(null, executables);
 	}
 
 	static void assertAll(String heading, Stream<Executable> executables) {
-		Preconditions.notNull(executables, "executables must not be null");
+		Preconditions.notNull(executables, "executables stream must not be null");
 
 		List<Throwable> failures = new ArrayList<>();
-		executables.forEach(executable -> {
-			try {
-				executable.execute();
-			}
-			catch (Throwable t) {
-				BlacklistedExceptions.rethrowIfBlacklisted(t);
-				failures.add(t);
-			}
-		});
+		executables//
+				.peek(executable -> Preconditions.notNull(executable, "individual executables must not be null"))//
+				.forEach(executable -> {
+					try {
+						executable.execute();
+					}
+					catch (Throwable t) {
+						BlacklistedExceptions.rethrowIfBlacklisted(t);
+						failures.add(t);
+					}
+				});
 
 		if (!failures.isEmpty()) {
 			throw new MultipleFailuresError(heading, failures);
