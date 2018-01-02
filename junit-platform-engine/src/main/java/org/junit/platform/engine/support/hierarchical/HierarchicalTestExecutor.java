@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
-import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -237,8 +236,8 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		}
 
 		@Override
-		public List<UseResource> getResources() {
-			return asNode(testDescriptor).getResources();
+		public List<ExclusiveResource> getExclusiveResources() {
+			return asNode(testDescriptor).getExclusiveResources();
 		}
 	}
 }

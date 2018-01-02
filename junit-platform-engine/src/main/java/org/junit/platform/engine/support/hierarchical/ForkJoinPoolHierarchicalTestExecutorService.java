@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 
-import org.junit.platform.commons.annotation.UseResource;
-
 public class ForkJoinPoolHierarchicalTestExecutorService<C extends EngineExecutionContext>
 		implements HierarchicalTestExecutorService<C> {
 
@@ -29,14 +27,14 @@ public class ForkJoinPoolHierarchicalTestExecutorService<C extends EngineExecuti
 	@Override
 	public Future<Void> submit(TestTask<C> testTask) {
 		return forkJoinPool.submit(() -> {
-			List<UseResource> resources = testTask.getResources();
-			CompositeLock locks = lockManager.getLocks(resources);
+			List<ExclusiveResource> resources = testTask.getExclusiveResources();
+			CompositeLock compositeLock = lockManager.getCompositeLock(resources);
 			ForkJoinPool.managedBlock(new ForkJoinPool.ManagedBlocker() {
 				private boolean acquired;
 
 				@Override
 				public boolean block() throws InterruptedException {
-					locks.acquire();
+					compositeLock.acquire();
 					acquired = true;
 					return true;
 				}
@@ -50,7 +48,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService<C extends EngineExecuti
 				testTask.execute();
 			}
 			finally {
-				locks.release();
+				compositeLock.release();
 			}
 			return null;
 		});

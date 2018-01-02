@@ -12,29 +12,30 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static org.junit.platform.commons.annotation.LockMode.Read;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import org.junit.platform.commons.annotation.UseResource;
 
 class LockManager {
 
 	private final Map<String, ReentrantReadWriteLock> locks = new ConcurrentHashMap<>();
 
-	CompositeLock getLocks(List<UseResource> resources) {
-		return new CompositeLock(resources.stream().sorted(comparing(UseResource::value)).map(resource -> {
-			String key = resource.value();
-			ReentrantReadWriteLock lock = locks.computeIfAbsent(key, k -> new ReentrantReadWriteLock());
-			if (resource.mode() == UseResource.LockMode.Read) {
-				return lock.readLock();
-			}
-			else {
-				return lock.writeLock();
-			}
-		}).collect(toList()));
+	CompositeLock getCompositeLock(List<ExclusiveResource> resources) {
+		// @formatter:off
+		List<Lock> locks = resources.stream()
+				.sorted(comparing(ExclusiveResource::getKey))
+				.map(resource -> {
+					ReentrantReadWriteLock lock = this.locks.computeIfAbsent(resource.getKey(),
+							key -> new ReentrantReadWriteLock());
+					return resource.getLockMode() == Read ? lock.readLock() : lock.writeLock();
+				})
+				.collect(toList());
+		// @formatter:on
+		return new CompositeLock(locks);
 	}
 
 }

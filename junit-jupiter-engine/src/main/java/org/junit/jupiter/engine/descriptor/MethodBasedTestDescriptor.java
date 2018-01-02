@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
 import java.lang.reflect.Method;
@@ -24,6 +25,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 
 /**
  * Base class for {@link TestDescriptor TestDescriptors} based on Java methods.
@@ -61,8 +63,12 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public List<UseResource> getResources() {
-		return findRepeatableAnnotations(getTestMethod(), UseResource.class);
+	public List<ExclusiveResource> getExclusiveResources() {
+		// @formatter:off
+		return findRepeatableAnnotations(getTestMethod(), UseResource.class).stream()
+				.map(ExclusiveResource::new)
+				.collect(toList());
+		// @formatter:on
 	}
 
 	public final Class<?> getTestClass() {

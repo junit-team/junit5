@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
 
@@ -115,7 +114,7 @@ public interface Node<C extends EngineExecutionContext> {
 	default void after(C context) throws Exception {
 	}
 
-	default List<UseResource> getResources() {
+	default List<ExclusiveResource> getExclusiveResources() {
 		return emptyList();
 	}
 

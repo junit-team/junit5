@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.annotation;
 
-import static org.junit.platform.commons.annotation.UseResource.LockMode.ReadWrite;
+import static org.junit.platform.commons.annotation.LockMode.ReadWrite;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -26,9 +26,5 @@ public @interface UseResource {
 	String value();
 
 	LockMode mode() default ReadWrite;
-
-	enum LockMode {
-		Read, ReadWrite
-	}
 
 }
