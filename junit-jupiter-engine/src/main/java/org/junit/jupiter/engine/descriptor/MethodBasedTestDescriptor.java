@@ -10,10 +10,14 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
+
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
@@ -54,6 +58,11 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 		Set<TestTag> allTags = new LinkedHashSet<TestTag>(this.tags);
 		getParent().ifPresent(parentDescriptor -> allTags.addAll(parentDescriptor.getTags()));
 		return allTags;
+	}
+
+	@Override
+	public List<UseResource> getResources() {
+		return findRepeatableAnnotations(getTestMethod(), UseResource.class);
 	}
 
 	public final Class<?> getTestClass() {

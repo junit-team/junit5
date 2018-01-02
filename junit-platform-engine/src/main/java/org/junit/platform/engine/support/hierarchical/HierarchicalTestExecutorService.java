@@ -10,8 +10,10 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import java.util.List;
 import java.util.concurrent.Future;
 
+import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.engine.TestDescriptor;
 
 public interface HierarchicalTestExecutorService<C extends EngineExecutionContext> extends AutoCloseable {
@@ -33,5 +35,6 @@ public interface HierarchicalTestExecutorService<C extends EngineExecutionContex
 
 		void execute();
 
+		List<UseResource> getResources();
 	}
 }

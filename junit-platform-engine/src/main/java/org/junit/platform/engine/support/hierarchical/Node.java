@@ -10,11 +10,14 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
 
@@ -110,6 +113,10 @@ public interface Node<C extends EngineExecutionContext> {
 	 * @see #execute
 	 */
 	default void after(C context) throws Exception {
+	}
+
+	default List<UseResource> getResources() {
+		return emptyList();
 	}
 
 	/**

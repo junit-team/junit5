@@ -10,12 +10,16 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
+
+import org.junit.platform.commons.annotation.UseResource;
 
 public class ForkJoinPoolHierarchicalTestExecutorService<C extends EngineExecutionContext>
 		implements HierarchicalTestExecutorService<C> {
 
+	private final LockManager lockManager = new LockManager();
 	private final ForkJoinPool forkJoinPool;
 
 	public ForkJoinPoolHierarchicalTestExecutorService() {
@@ -25,7 +29,29 @@ public class ForkJoinPoolHierarchicalTestExecutorService<C extends EngineExecuti
 	@Override
 	public Future<Void> submit(TestTask<C> testTask) {
 		return forkJoinPool.submit(() -> {
-			testTask.execute();
+			List<UseResource> resources = testTask.getResources();
+			CompositeLock locks = lockManager.getLocks(resources);
+			ForkJoinPool.managedBlock(new ForkJoinPool.ManagedBlocker() {
+				private boolean acquired;
+
+				@Override
+				public boolean block() throws InterruptedException {
+					locks.acquire();
+					acquired = true;
+					return true;
+				}
+
+				@Override
+				public boolean isReleasable() {
+					return acquired;
+				}
+			});
+			try {
+				testTask.execute();
+			}
+			finally {
+				locks.release();
+			}
 			return null;
 		});
 	}
