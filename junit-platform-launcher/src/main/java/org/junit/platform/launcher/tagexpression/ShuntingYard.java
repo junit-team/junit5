@@ -11,12 +11,12 @@
 package org.junit.platform.launcher.tagexpression;
 
 import static java.lang.Integer.MIN_VALUE;
-import static org.junit.platform.launcher.tagexpression.TagExpressions.tag;
 import static org.junit.platform.launcher.tagexpression.Operator.nullaryOperator;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.emptyTagExpression;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.missingClosingParenthesis;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.missingOpeningParenthesis;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.success;
+import static org.junit.platform.launcher.tagexpression.TagExpressions.tag;
 
 import java.util.List;
 
