@@ -25,33 +25,33 @@ class ParserTests {
 
 	@Test
 	void notHasHigherPrecedenceThanAnd() {
-		assertThat(expressionParsedFrom("! foo & bar")).hasToString("(!foo & bar)");
+		assertThat(tagExpressionParsedFrom("! foo & bar")).hasToString("(!foo & bar)");
 	}
 
 	@Test
 	void andHasHigherPrecedenceThanOr() {
-		assertThat(expressionParsedFrom("foo | bar & baz")).hasToString("(foo | (bar & baz))");
+		assertThat(tagExpressionParsedFrom("foo | bar & baz")).hasToString("(foo | (bar & baz))");
 	}
 
 	@Test
 	void notIsRightAssociative() {
-		assertThat(expressionParsedFrom("foo &! bar")).hasToString("(foo & !bar)");
+		assertThat(tagExpressionParsedFrom("foo &! bar")).hasToString("(foo & !bar)");
 	}
 
 	@Test
 	void andIsLeftAssociative() {
-		assertThat(expressionParsedFrom("foo & bar & baz")).hasToString("((foo & bar) & baz)");
+		assertThat(tagExpressionParsedFrom("foo & bar & baz")).hasToString("((foo & bar) & baz)");
 	}
 
 	@Test
 	void orIsLeftAssociative() {
-		assertThat(expressionParsedFrom("foo | bar | baz")).hasToString("((foo | bar) | baz)");
+		assertThat(tagExpressionParsedFrom("foo | bar | baz")).hasToString("((foo | bar) | baz)");
 	}
 
 	@ParameterizedTest
 	@MethodSource("data")
 	void acceptanceTests(String tagExpression, String expression) {
-		assertThat(expressionParsedFrom(tagExpression)).hasToString(expression);
+		assertThat(tagExpressionParsedFrom(tagExpression)).hasToString(expression);
 	}
 
 	private static Stream<Arguments> data() {
@@ -70,8 +70,8 @@ class ParserTests {
 		// @formatter:on
 	}
 
-	private Expression expressionParsedFrom(String tagExpression) {
-		return parser.parse(tagExpression).expressionOrThrow(
+	private TagExpression tagExpressionParsedFrom(String tagExpression) {
+		return parser.parse(tagExpression).tagExpressionOrThrow(
 			(error) -> new RuntimeException("[" + tagExpression + "] should be parsable"));
 	}
 }

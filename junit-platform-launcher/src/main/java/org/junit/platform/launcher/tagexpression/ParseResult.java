@@ -18,25 +18,25 @@ import java.util.function.Function;
 import org.apiguardian.api.API;
 
 /**
- * Either contains a successfully parsed {@link Expression} or an <em>error message</em> describing the parse error.
+ * Either contains a successfully parsed {@link TagExpression} or an <em>error message</em> describing the parse error.
  *
  * @since 1.1
  */
 @API(status = INTERNAL, since = "1.1")
 public interface ParseResult {
 
-	default Expression expressionOrThrow(Function<String, RuntimeException> error) {
+	default TagExpression tagExpressionOrThrow(Function<String, RuntimeException> error) {
 		if (errorMessage().isPresent()) {
 			throw error.apply(errorMessage().get());
 		}
-		return expression().get();
+		return tagExpression().get();
 	}
 
 	default Optional<String> errorMessage() {
 		return Optional.empty();
 	}
 
-	default Optional<Expression> expression() {
+	default Optional<TagExpression> tagExpression() {
 		return Optional.empty();
 	}
 

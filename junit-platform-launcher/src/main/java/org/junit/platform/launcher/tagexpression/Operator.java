@@ -25,8 +25,8 @@ class Operator {
 		Left, Right
 	}
 
-	interface ExpressionCreator {
-		ParseStatus createExpressionAndAddTo(Stack<TokenWith<Expression>> expressions, Token operatorToken);
+	interface TagExpressionCreator {
+		ParseStatus createExpressionAndAddTo(Stack<TokenWith<TagExpression>> expressions, Token operatorToken);
 	}
 
 	static Operator nullaryOperator(String representation, int precedence) {
@@ -34,9 +34,9 @@ class Operator {
 	}
 
 	static Operator unaryOperator(String representation, int precedence, Associativity associativity,
-			Function<Expression, Expression> unaryExpression) {
+			Function<TagExpression, TagExpression> unaryExpression) {
 		return new Operator(representation, precedence, 1, associativity, (expressions, operatorToken) -> {
-			TokenWith<Expression> rhs = expressions.pop();
+			TokenWith<TagExpression> rhs = expressions.pop();
 			if (operatorToken.isLeftOf(rhs.token)) {
 				Token combinedToken = operatorToken.concatenate(rhs.token);
 				expressions.push(new TokenWith<>(combinedToken, unaryExpression.apply(rhs.element)));
@@ -47,10 +47,10 @@ class Operator {
 	}
 
 	static Operator binaryOperator(String representation, int precedence, Associativity associativity,
-			BiFunction<Expression, Expression, Expression> binaryExpression) {
+			BiFunction<TagExpression, TagExpression, TagExpression> binaryExpression) {
 		return new Operator(representation, precedence, 2, associativity, (expressions, operatorToken) -> {
-			TokenWith<Expression> rhs = expressions.pop();
-			TokenWith<Expression> lhs = expressions.pop();
+			TokenWith<TagExpression> rhs = expressions.pop();
+			TokenWith<TagExpression> lhs = expressions.pop();
 			Token lhsToken = lhs.token;
 			if (lhsToken.isLeftOf(operatorToken) && operatorToken.isLeftOf(rhs.token)) {
 				Token combinedToken = lhsToken.concatenate(operatorToken).concatenate(rhs.token);
@@ -71,15 +71,15 @@ class Operator {
 	private final int precedence;
 	private final int arity;
 	private final Associativity associativity;
-	private final ExpressionCreator expressionCreator;
+	private final TagExpressionCreator tagExpressionCreator;
 
 	private Operator(String representation, int precedence, int arity, Associativity associativity,
-			ExpressionCreator expressionCreator) {
+			TagExpressionCreator tagExpressionCreator) {
 		this.representation = representation;
 		this.precedence = precedence;
 		this.arity = arity;
 		this.associativity = associativity;
-		this.expressionCreator = expressionCreator;
+		this.tagExpressionCreator = tagExpressionCreator;
 	}
 
 	boolean represents(String token) {
@@ -102,15 +102,15 @@ class Operator {
 		return Left == associativity;
 	}
 
-	ParseStatus createAndAddExpressionTo(Stack<TokenWith<Expression>> expressions, Token operatorToken) {
+	ParseStatus createAndAddExpressionTo(Stack<TokenWith<TagExpression>> expressions, Token operatorToken) {
 		if (expressions.size() < arity) {
 			String message = createMissingOperandMessage(expressions, operatorToken);
 			return ParseStatus.errorAt(operatorToken, representation, message);
 		}
-		return expressionCreator.createExpressionAndAddTo(expressions, operatorToken);
+		return tagExpressionCreator.createExpressionAndAddTo(expressions, operatorToken);
 	}
 
-	private String createMissingOperandMessage(Stack<TokenWith<Expression>> expressions, Token operatorToken) {
+	private String createMissingOperandMessage(Stack<TokenWith<TagExpression>> expressions, Token operatorToken) {
 		if (1 == arity) {
 			return missingOneOperand(associativity == Left ? "lhs" : "rhs");
 		}

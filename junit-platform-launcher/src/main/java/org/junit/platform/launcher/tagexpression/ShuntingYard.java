@@ -11,7 +11,7 @@
 package org.junit.platform.launcher.tagexpression;
 
 import static java.lang.Integer.MIN_VALUE;
-import static org.junit.platform.launcher.tagexpression.Expressions.tag;
+import static org.junit.platform.launcher.tagexpression.TagExpressions.tag;
 import static org.junit.platform.launcher.tagexpression.Operator.nullaryOperator;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.emptyTagExpression;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.missingClosingParenthesis;
@@ -32,7 +32,7 @@ class ShuntingYard {
 	private static final Token SentinelToken = new Token(-1, "");
 
 	private final Operators validOperators = new Operators();
-	private final Stack<TokenWith<Expression>> expressions = new DequeStack<>();
+	private final Stack<TokenWith<TagExpression>> expressions = new DequeStack<>();
 	private final Stack<TokenWith<Operator>> operators = new DequeStack<>();
 	private final List<Token> tokens;
 
@@ -110,8 +110,8 @@ class ShuntingYard {
 		return operators.peek().element;
 	}
 
-	private void pushExpressionAt(Token token, Expression expression) {
-		expressions.push(new TokenWith<>(token, expression));
+	private void pushExpressionAt(Token token, TagExpression tagExpression) {
+		expressions.push(new TokenWith<>(token, tagExpression));
 	}
 
 	private void pushOperatorAt(Token token, Operator operator) {
@@ -140,8 +140,8 @@ class ShuntingYard {
 		if (expressions.isEmpty()) {
 			return emptyTagExpression();
 		}
-		TokenWith<Expression> rhs = expressions.pop();
-		TokenWith<Expression> lhs = expressions.pop();
+		TokenWith<TagExpression> rhs = expressions.pop();
+		TokenWith<TagExpression> lhs = expressions.pop();
 		return ParseStatus.missingOperatorBetween(lhs, rhs);
 	}
 

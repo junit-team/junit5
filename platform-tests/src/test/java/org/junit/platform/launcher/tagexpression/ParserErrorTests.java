@@ -95,7 +95,7 @@ class ParserErrorTests {
 	private String parseErrorFromParsing(String tagExpression) {
 		try {
 			ParseResult parseResult = parser.parse(tagExpression);
-			parseResult.expressionOrThrow(RuntimeException::new);
+			parseResult.tagExpressionOrThrow(RuntimeException::new);
 			return null;
 		}
 		catch (RuntimeException ex) {

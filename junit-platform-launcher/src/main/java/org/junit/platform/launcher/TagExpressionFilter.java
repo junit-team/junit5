@@ -18,7 +18,6 @@ import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.launcher.tagexpression.Expression;
 import org.junit.platform.launcher.tagexpression.TagExpression;
 
 /**
@@ -48,11 +47,11 @@ public class TagExpressionFilter {
 	 * @throws PreconditionViolationException if the supplied infixTagExpression can not be parsed.
 	 */
 	public static PostDiscoveryFilter includeMatching(String infixTagExpression) {
-		Expression expression = TagExpression.parseFrom(infixTagExpression).expressionOrThrow(
+		TagExpression tagExpression = TagExpression.parseFrom(infixTagExpression).tagExpressionOrThrow(
 			(message) -> new PreconditionViolationException(
 				"Unable to parse tag expression [" + infixTagExpression + "]: " + message));
-		logger.config(() -> "parsed tag expression: " + expression);
-		return descriptor -> FilterResult.includedIf(expression.evaluate(descriptor.getTags()));
+		logger.config(() -> "parsed tag expression: " + tagExpression);
+		return descriptor -> FilterResult.includedIf(tagExpression.evaluate(descriptor.getTags()));
 	}
 
 }

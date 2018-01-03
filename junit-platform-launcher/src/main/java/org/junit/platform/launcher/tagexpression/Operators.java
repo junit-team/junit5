@@ -20,9 +20,9 @@ import java.util.stream.Stream;
 
 class Operators {
 
-	private static final Operator Not = Operator.unaryOperator("!", 3, Right, Expressions::not);
-	private static final Operator And = Operator.binaryOperator("&", 2, Left, Expressions::and);
-	private static final Operator Or = Operator.binaryOperator("|", 1, Left, Expressions::or);
+	private static final Operator Not = Operator.unaryOperator("!", 3, Right, TagExpressions::not);
+	private static final Operator And = Operator.binaryOperator("&", 2, Left, TagExpressions::and);
+	private static final Operator Or = Operator.binaryOperator("|", 1, Left, TagExpressions::or);
 
 	private final Map<String, Operator> representationToOperator = Stream.of(Not, And, Or).collect(
 		toMap(Operator::representation, identity()));
