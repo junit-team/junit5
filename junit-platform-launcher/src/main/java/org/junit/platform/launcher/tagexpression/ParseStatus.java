@@ -18,44 +18,38 @@ class ParseStatus {
 		return error(null);
 	}
 
-	static ParseStatus problemParsing(int position, String representation) {
-		return errorAt(position, representation, "problem parsing");
+	static ParseStatus problemParsing(Token token, String representation) {
+		return errorAt(token, representation, "problem parsing");
 	}
 
-	static ParseStatus missingOpeningParenthesis(int position, String representation) {
-		return errorAt(position, representation, "missing opening parenthesis");
+	static ParseStatus missingOpeningParenthesis(Token token, String representation) {
+		return errorAt(token, representation, "missing opening parenthesis");
 	}
 
-	static ParseStatus missingClosingParenthesis(int position, String representation) {
-		return errorAt(position, representation, "missing closing parenthesis");
+	static ParseStatus missingClosingParenthesis(Token token, String representation) {
+		return errorAt(token, representation, "missing closing parenthesis");
 	}
 
-	static ParseStatus missingRhsOperand(int position, String representation) {
-		return errorAt(position, representation, "missing rhs operand");
+	static ParseStatus missingRhsOperand(Token token, String representation) {
+		return errorAt(token, representation, "missing rhs operand");
 	}
 
-	static ParseStatus errorAt(int position, String operatorRepresentation, String message) {
-		return error(operatorRepresentation + " at " + format(position) + " " + message);
+	static ParseStatus errorAt(Token token, String operatorRepresentation, String message) {
+		return error(operatorRepresentation + " at " + format(token.trimmedTokenStartIndex()) + " " + message);
 	}
 
-	static ParseStatus missingOperatorBetween(Position<Expression> lhs, Position<Expression> rhs) {
-		return error("missing operator between " + format(lhs) + " and " + format(rhs));
-	}
-
-	static ParseStatus missingOperator() {
-		return error("missing operator");
+	static ParseStatus missingOperatorBetween(TokenWith<Expression> lhs, TokenWith<Expression> rhs) {
+		String lhsString = lhs.element.toString() + " " + format(lhs.token.lastCharacterIndex());
+		String rhsString = rhs.element.toString() + " " + format(rhs.token.trimmedTokenStartIndex());
+		return error("missing operator between " + lhsString + " and " + rhsString);
 	}
 
 	static ParseStatus emptyTagExpression() {
 		return error("empty tag expression");
 	}
 
-	private static String format(Position<Expression> position) {
-		return position.element.toString() + " " + format(position.position);
-	}
-
-	private static String format(int position) {
-		return "<" + position + ">";
+	private static String format(int indexInTagExpression) {
+		return "<" + indexInTagExpression + ">";
 	}
 
 	private static ParseStatus error(String errorMessage) {
@@ -79,7 +73,7 @@ class ParseStatus {
 		return !isSuccess();
 	}
 
-	public boolean isSuccess() {
+	private boolean isSuccess() {
 		return null == errorMessage;
 	}
 }

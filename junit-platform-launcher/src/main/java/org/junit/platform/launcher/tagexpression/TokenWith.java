@@ -10,12 +10,12 @@
 
 package org.junit.platform.launcher.tagexpression;
 
-class Position<T> {
-	final int position;
+class TokenWith<T> {
+	final Token token;
 	final T element;
 
-	Position(int position, T element) {
-		this.position = position;
+	TokenWith(Token token, T element) {
+		this.token = token;
 		this.element = element;
 	}
 }

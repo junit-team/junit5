@@ -16,7 +16,6 @@ import static org.junit.platform.launcher.tagexpression.Operator.nullaryOperator
 import static org.junit.platform.launcher.tagexpression.ParseStatus.emptyTagExpression;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.missingClosingParenthesis;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.missingOpeningParenthesis;
-import static org.junit.platform.launcher.tagexpression.ParseStatus.missingOperator;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.success;
 
 import java.util.List;
@@ -30,16 +29,16 @@ class ShuntingYard {
 	private static final Operator RightParenthesis = nullaryOperator(")", -1);
 	private static final Operator LeftParenthesis = nullaryOperator("(", -2);
 	private static final Operator Sentinel = nullaryOperator("sentinel", MIN_VALUE);
+	private static final Token SentinelToken = new Token(-1, "");
 
 	private final Operators validOperators = new Operators();
-	private final Stack<Position<Expression>> expressions = new DequeStack<>();
-	private final Stack<Position<Operator>> operators = new DequeStack<>();
+	private final Stack<TokenWith<Expression>> expressions = new DequeStack<>();
+	private final Stack<TokenWith<Operator>> operators = new DequeStack<>();
+	private final List<Token> tokens;
 
-	private final List<String> tokens;
-
-	ShuntingYard(List<String> tokens) {
+	ShuntingYard(List<Token> tokens) {
 		this.tokens = tokens;
-		pushOperatorAt(-1, Sentinel);
+		pushOperatorAt(SentinelToken, Sentinel);
 	}
 
 	public ParseResult execute() {
@@ -56,55 +55,54 @@ class ShuntingYard {
 
 	private ParseStatus processTokens() {
 		ParseStatus parseStatus = success();
-		for (int position = 0; parseStatus.isSuccess() && position < tokens.size(); ++position) {
-			parseStatus = processTokenAt(position);
+		for (Token token : tokens) {
+			parseStatus = parseStatus.process(() -> process(token));
 		}
 		return parseStatus;
 	}
 
-	private ParseStatus processTokenAt(int position) {
-		String token = tokens.get(position);
-		if (LeftParenthesis.represents(token)) {
-			pushOperatorAt(position, LeftParenthesis);
+	private ParseStatus process(Token token) {
+		if (LeftParenthesis.represents(token.string())) {
+			pushOperatorAt(token, LeftParenthesis);
 			return success();
 		}
-		if (RightParenthesis.represents(token)) {
-			return findMatchingLeftParenthesis(position);
+		if (RightParenthesis.represents(token.string())) {
+			return findMatchingLeftParenthesis(token);
 		}
-		if (validOperators.isOperator(token)) {
-			Operator operator = validOperators.operatorFor(token);
-			return findOperands(position, operator);
+		if (validOperators.isOperator(token.string())) {
+			Operator operator = validOperators.operatorFor(token.string());
+			return findOperands(token, operator);
 		}
-		pushExpressionAt(position, tag(token));
+		pushExpressionAt(token, tag(token.string()));
 		return success();
 	}
 
-	private ParseStatus findMatchingLeftParenthesis(int position) {
+	private ParseStatus findMatchingLeftParenthesis(Token token) {
 		while (!operators.isEmpty()) {
-			Position<Operator> positionWithOperator = operators.pop();
-			Operator operator = positionWithOperator.element;
+			TokenWith<Operator> tokenWithWithOperator = operators.pop();
+			Operator operator = tokenWithWithOperator.element;
 			if (LeftParenthesis.equals(operator)) {
 				return success();
 			}
-			ParseStatus parseStatus = operator.createAndAddExpressionTo(expressions, positionWithOperator.position);
+			ParseStatus parseStatus = operator.createAndAddExpressionTo(expressions, tokenWithWithOperator.token);
 			if (parseStatus.isError()) {
 				return parseStatus;
 			}
 		}
-		return missingOpeningParenthesis(position, RightParenthesis.representation());
+		return missingOpeningParenthesis(token, RightParenthesis.representation());
 	}
 
-	private ParseStatus findOperands(int position, Operator currentOperator) {
+	private ParseStatus findOperands(Token token, Operator currentOperator) {
 		while (currentOperator.hasLowerPrecedenceThan(previousOperator())
 				|| currentOperator.hasSamePrecedenceAs(previousOperator()) && currentOperator.isLeftAssociative()) {
-			Position<Operator> positionWithOperator = operators.pop();
-			ParseStatus parseStatus = positionWithOperator.element.createAndAddExpressionTo(expressions,
-				positionWithOperator.position);
+			TokenWith<Operator> tokenWithWithOperator = operators.pop();
+			ParseStatus parseStatus = tokenWithWithOperator.element.createAndAddExpressionTo(expressions,
+				tokenWithWithOperator.token);
 			if (parseStatus.isError()) {
 				return parseStatus;
 			}
 		}
-		pushOperatorAt(position, currentOperator);
+		pushOperatorAt(token, currentOperator);
 		return success();
 	}
 
@@ -112,22 +110,22 @@ class ShuntingYard {
 		return operators.peek().element;
 	}
 
-	private void pushExpressionAt(int position, Expression expression) {
-		expressions.push(new Position<>(position, expression));
+	private void pushExpressionAt(Token token, Expression expression) {
+		expressions.push(new TokenWith<>(token, expression));
 	}
 
-	private void pushOperatorAt(int position, Operator operator) {
-		operators.push(new Position<>(position, operator));
+	private void pushOperatorAt(Token token, Operator operator) {
+		operators.push(new TokenWith<>(token, operator));
 	}
 
 	private ParseStatus consumeRemainingOperators() {
 		while (!operators.isEmpty()) {
-			Position<Operator> positionWithOperator = operators.pop();
-			Operator operator = positionWithOperator.element;
+			TokenWith<Operator> tokenWithWithOperator = operators.pop();
+			Operator operator = tokenWithWithOperator.element;
 			if (LeftParenthesis.equals(operator)) {
-				return missingClosingParenthesis(positionWithOperator.position, operator.representation());
+				return missingClosingParenthesis(tokenWithWithOperator.token, operator.representation());
 			}
-			ParseStatus parseStatus = operator.createAndAddExpressionTo(expressions, positionWithOperator.position);
+			ParseStatus parseStatus = operator.createAndAddExpressionTo(expressions, tokenWithWithOperator.token);
 			if (parseStatus.isError()) {
 				return parseStatus;
 			}
@@ -142,7 +140,9 @@ class ShuntingYard {
 		if (expressions.isEmpty()) {
 			return emptyTagExpression();
 		}
-		return missingOperator();
+		TokenWith<Expression> rhs = expressions.pop();
+		TokenWith<Expression> lhs = expressions.pop();
+		return ParseStatus.missingOperatorBetween(lhs, rhs);
 	}
 
 }
