@@ -358,26 +358,24 @@ public final class DiscoverySelectors {
 	public static MethodSelector selectMethod(String fullyQualifiedMethodName) throws PreconditionViolationException {
 		Preconditions.notBlank(fullyQualifiedMethodName, "fullyQualifiedMethodName must not be null or blank");
 
-        boolean ok = fullyQualifiedMethodName.contains("#")
-                && !fullyQualifiedMethodName.startsWith("#")
-                && !fullyQualifiedMethodName.endsWith("#")
-                && !fullyQualifiedMethodName.endsWith("(");
-        Preconditions.condition(ok, fullyQualifiedMethodName + " is not a valid fully qualified method name");
+		boolean ok = fullyQualifiedMethodName.contains("#") && !fullyQualifiedMethodName.startsWith("#")
+				&& !fullyQualifiedMethodName.endsWith("#") && !fullyQualifiedMethodName.endsWith("(");
+		Preconditions.condition(ok, fullyQualifiedMethodName + " is not a valid fully qualified method name");
 
-        String[] parts = fullyQualifiedMethodName.split("#", 2);
-        String className = parts[0];
-        String methodPart = parts[1];
-        String methodName = methodPart.replace("()", "");
+		String[] parts = fullyQualifiedMethodName.split("#", 2);
+		String className = parts[0];
+		String methodPart = parts[1];
+		String methodName = methodPart.replace("()", "");
 
-        if (methodPart.endsWith(")")) {
-            String methodParameters = methodPart.split("\\(")[1];
-            methodName = methodPart.split("\\(")[0];
-            methodParameters = methodParameters.replace(")", "");
+		if (methodPart.endsWith(")")) {
+			String methodParameters = methodPart.split("\\(")[1];
+			methodName = methodPart.split("\\(")[0];
+			methodParameters = methodParameters.replace(")", "");
 
-            if (StringUtils.isNotBlank(methodParameters)) {
-                return selectMethod(className, methodName, methodParameters);
-            }
-        }
+			if (StringUtils.isNotBlank(methodParameters)) {
+				return selectMethod(className, methodName, methodParameters);
+			}
+		}
 
 		return selectMethod(className, methodName);
 	}

@@ -473,18 +473,18 @@ class DiscoverySelectorsTests {
 		assertEquals(methodParameters, selector.getMethodParameterTypes());
 	}
 
-    @Test
-    void selectMethodByFullyQualifiedNameIncludingParenthesesForKotlin() {
+	@Test
+	void selectMethodByFullyQualifiedNameIncludingParenthesesForKotlin() {
 
-        String kotlinClassName = "org.junit.jupiter.engine.kotlin.ArbitraryNamingKotlinTestCase";
-        String kotlinMethodName = "🦆 ~|~test with a really, (really) terrible name & that needs to be changed!~|~";
-        String kotlinFullyQualifiedMethodName = kotlinClassName + "#" + kotlinMethodName;
+		String kotlinClassName = "org.junit.jupiter.engine.kotlin.ArbitraryNamingKotlinTestCase";
+		String kotlinMethodName = "🦆 ~|~test with a really, (really) terrible name & that needs to be changed!~|~";
+		String kotlinFullyQualifiedMethodName = kotlinClassName + "#" + kotlinMethodName;
 
-        MethodSelector selector = selectMethod(kotlinFullyQualifiedMethodName);
-        assertEquals(kotlinClassName, selector.getClassName());
-        assertEquals(kotlinMethodName, selector.getMethodName());
-        assertEquals("", selector.getMethodParameterTypes());
-    }
+		MethodSelector selector = selectMethod(kotlinFullyQualifiedMethodName);
+		assertEquals(kotlinClassName, selector.getClassName());
+		assertEquals(kotlinMethodName, selector.getMethodName());
+		assertEquals("", selector.getMethodParameterTypes());
+	}
 
 	@Test
 	void selectClasspathRootsWithNonExistingDirectory() {
