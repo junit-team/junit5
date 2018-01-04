@@ -709,6 +709,10 @@ current module layer is the one that the class loader for the <code>ModuleUtils<
 returns. If the current layer cannot be obtained, the algorithm falls back to the boot
 layer.</p>
 </li>
+<li>
+<p>The XML report produced by the <code>ConsoleLauncher</code> is no longer invalid when the exception
+message of a failed test contains the XML CDATA end marker <code>]]&gt;</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -3555,7 +3559,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-04 09:42:12 EST
+Last updated 2018-01-04 09:53:58 EST
 </div>
 </div>
 </body>
