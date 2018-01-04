@@ -78,6 +78,13 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
+	void providesOnlyArgumentsUsingArgumentsStream() {
+		Stream<Object[]> arguments = provideArguments("argumentsStreamProviderOnly");
+
+		assertThat(arguments).containsExactly(array("bar"));
+	}
+
+	@Test
 	void providesArgumentsUsingObjectArrays() {
 		Stream<Object[]> arguments = provideArguments("objectArrayProvider");
 
@@ -255,6 +262,10 @@ class MethodArgumentsProviderTests {
 
 		static Stream<Arguments> argumentsStreamProvider() {
 			return Stream.of("foo", "bar").map(Arguments::of);
+		}
+
+		static Stream<Arguments> argumentsStreamProviderOnly() {
+			return Stream.of(Arguments.of("foo"), Arguments.only("bar"));
 		}
 
 		static Iterable<Object[]> objectArrayProvider() {

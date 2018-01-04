@@ -38,6 +38,10 @@ public interface Arguments {
 	 */
 	Object[] get();
 
+	default boolean only() {
+		return false;
+	}
+
 	/**
 	 * Factory method for creating an instance of {@code Arguments} based on
 	 * the supplied {@code arguments}.
@@ -51,4 +55,17 @@ public interface Arguments {
 		return () -> arguments;
 	}
 
+	static Arguments only(Object... arguments) {
+		return new Arguments() {
+			@Override
+			public Object[] get() {
+				return arguments;
+			}
+
+			@Override
+			public boolean only() {
+				return true;
+			}
+		};
+	}
 }
