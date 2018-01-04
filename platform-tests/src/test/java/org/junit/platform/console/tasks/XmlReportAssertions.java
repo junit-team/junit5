@@ -28,10 +28,9 @@ class XmlReportAssertions {
 
 	private static Validator schemaValidator;
 
-	static String ensureValidAccordingToJenkinsSchema(String content) throws Exception {
+	static void assertValidAccordingToJenkinsSchema(String content) throws Exception {
 		try {
 			getSchemaValidator().validate(new StreamSource(new StringReader(content)));
-			return content;
 		}
 		catch (SAXException e) {
 			throw new AssertionFailedError("Invalid XML document: " + content, e);

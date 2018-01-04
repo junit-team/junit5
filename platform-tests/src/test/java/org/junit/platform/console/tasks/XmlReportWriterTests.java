@@ -13,7 +13,7 @@ package org.junit.platform.console.tasks;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
-import static org.junit.platform.console.tasks.XmlReportAssertions.ensureValidAccordingToJenkinsSchema;
+import static org.junit.platform.console.tasks.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
@@ -33,20 +33,21 @@ import org.junit.platform.launcher.TestPlan;
  */
 class XmlReportWriterTests {
 
+	private EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+
 	@Test
 	void writesTestsuiteElementsWithoutTestcaseElementsWithoutAnyTests() throws Exception {
-		TestPlan testPlan = TestPlan.from(
-			singleton(new EngineDescriptor(UniqueId.forEngine("emptyEngine"), "Empty Engine")));
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 
-		StringWriter out = new StringWriter();
-		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+		String content = writeXmlReport(testPlan, reportData);
 
-		String content = ensureValidAccordingToJenkinsSchema(out.toString());
+		assertValidAccordingToJenkinsSchema(content);
 		//@formatter:off
 		assertThat(content)
 			.containsSubsequence(
-				"<testsuite name=\"Empty Engine\" tests=\"0\"",
+				"<testsuite name=\"Engine\" tests=\"0\"",
 				"</testsuite>")
 			.doesNotContain("<testcase");
 		//@formatter:on
@@ -54,22 +55,18 @@ class XmlReportWriterTests {
 
 	@Test
 	void writesReportEntry() throws Exception {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
-		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("test", "successfulTest"),
-			"successfulTest");
-
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		TestDescriptorStub testDescriptor = new TestDescriptorStub(uniqueId, "successfulTest");
 		engineDescriptor.addChild(testDescriptor);
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-
 		reportData.addReportEntry(TestIdentifier.from(testDescriptor), ReportEntry.from("myKey", "myValue"));
-		reportData.markFinished(testPlan.getTestIdentifier("[test:successfulTest]"), successful());
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), successful());
 
-		StringWriter out = new StringWriter();
-		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+		String content = writeXmlReport(testPlan, reportData);
 
-		String content = ensureValidAccordingToJenkinsSchema(out.toString());
-
+		assertValidAccordingToJenkinsSchema(content);
 		//@formatter:off
 		assertThat(content)
 			.containsSubsequence(
@@ -82,17 +79,16 @@ class XmlReportWriterTests {
 
 	@Test
 	void writesEmptySkippedElementForSkippedTestWithoutReason() throws Exception {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
-		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("test", "skippedTest"), "skippedTest"));
-
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "skippedTest"));
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markSkipped(testPlan.getTestIdentifier("[test:skippedTest]"), null);
+		reportData.markSkipped(testPlan.getTestIdentifier(uniqueId.toString()), null);
 
-		StringWriter out = new StringWriter();
-		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+		String content = writeXmlReport(testPlan, reportData);
 
-		String content = ensureValidAccordingToJenkinsSchema(out.toString());
+		assertValidAccordingToJenkinsSchema(content);
 		//@formatter:off
 		assertThat(content)
 			.containsSubsequence(
@@ -104,28 +100,27 @@ class XmlReportWriterTests {
 
 	@Test
 	void writesEmptyErrorElementForFailedTestWithoutCause() throws Exception {
-		UniqueId uniqueId = UniqueId.forEngine("myEngineId");
-		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "Fancy Engine") {
+		engineDescriptor = new EngineDescriptor(UniqueId.forEngine("myEngineId"), "Fancy Engine") {
 			@Override
 			public String getLegacyReportingName() {
 				return "myEngine";
 			}
 		};
-		engineDescriptor.addChild(new TestDescriptorStub(uniqueId.append("test", "failedTest"), "some fancy name") {
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "some fancy name") {
 			@Override
 			public String getLegacyReportingName() {
 				return "failedTest";
 			}
 		});
-
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markFinished(testPlan.getTestIdentifier("[engine:myEngineId]/[test:failedTest]"), failed(null));
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(null));
 
-		StringWriter out = new StringWriter();
-		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+		String content = writeXmlReport(testPlan, reportData);
 
-		String content = ensureValidAccordingToJenkinsSchema(out.toString());
+		assertValidAccordingToJenkinsSchema(content);
 		//@formatter:off
 		assertThat(content)
 			.containsSubsequence(
@@ -137,17 +132,16 @@ class XmlReportWriterTests {
 
 	@Test
 	void omitsMessageAttributeForFailedTestWithThrowableWithoutMessage() throws Exception {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
-		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("test", "failedTest"), "failedTest"));
-
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "failedTest"));
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markFinished(testPlan.getTestIdentifier("[test:failedTest]"), failed(new NullPointerException()));
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(new NullPointerException()));
 
-		StringWriter out = new StringWriter();
-		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+		String content = writeXmlReport(testPlan, reportData);
 
-		String content = ensureValidAccordingToJenkinsSchema(out.toString());
+		assertValidAccordingToJenkinsSchema(content);
 		//@formatter:off
 		assertThat(content)
 			.containsSubsequence(
@@ -155,6 +149,35 @@ class XmlReportWriterTests {
 				"<error type=\"java.lang.NullPointerException\">",
 				"</testcase>");
 		//@formatter:on
+	}
+
+	@Test
+	void writesValidXmlEvenIfExceptionMessageContainsCData() throws Exception {
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
+		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		AssertionError assertionError = new AssertionError("<foo><![CDATA[bar]]></foo>");
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(assertionError));
+
+		String content = writeXmlReport(testPlan, reportData);
+
+		assertValidAccordingToJenkinsSchema(content);
+		//@formatter:off
+		assertThat(content)
+				.containsSubsequence(
+						"<![CDATA[",
+						"<foo><![CDATA[bar]]]]><![CDATA[></foo>",
+						"]]>")
+				.doesNotContain(assertionError.getMessage());
+		//@formatter:on
+	}
+
+	private String writeXmlReport(TestPlan testPlan, XmlReportData reportData) throws Exception {
+		StringWriter out = new StringWriter();
+		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+		return out.toString();
 	}
 
 }
