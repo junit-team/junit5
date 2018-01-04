@@ -46,6 +46,9 @@ import org.junit.platform.launcher.TestIdentifier;
  */
 class XmlReportWriter {
 
+	private static final String CDATA_START = "<![CDATA[";
+	private static final String CDATA_END = "]]>";
+
 	private final XmlReportData reportData;
 
 	XmlReportWriter(XmlReportData reportData) {
@@ -178,7 +181,7 @@ class XmlReportWriter {
 	private void writeSkippedElement(String reason, XMLStreamWriter writer) throws XMLStreamException {
 		if (isNotBlank(reason)) {
 			writer.writeStartElement("skipped");
-			writer.writeCData(reason);
+			writeCDataSafely(writer, reason);
 			writer.writeEndElement();
 		}
 		else {
@@ -208,7 +211,7 @@ class XmlReportWriter {
 			writer.writeAttribute("message", throwable.getMessage());
 		}
 		writer.writeAttribute("type", throwable.getClass().getName());
-		writer.writeCData(readStackTrace(throwable));
+		writeCDataSafely(writer, readStackTrace(throwable));
 	}
 
 	private void writeReportEntriesToSystemOutElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
@@ -259,9 +262,13 @@ class XmlReportWriter {
 				+ "\ndisplay-name: " + testIdentifier.getDisplayName() + "\n";
 
 		writer.writeStartElement("system-out");
-		writer.writeCData(cData);
+		writeCDataSafely(writer, cData);
 		writer.writeEndElement();
 		newLine(writer);
+	}
+
+	private void writeCDataSafely(XMLStreamWriter writer, String data) throws XMLStreamException {
+		writer.writeCData(data.replace(CDATA_END, "]]" + CDATA_END + CDATA_START + ">"));
 	}
 
 	private void newLine(XMLStreamWriter xmlWriter) throws XMLStreamException {

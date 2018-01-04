@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static org.junit.platform.console.tasks.XmlReportAssertions.ensureValidAccordingToJenkinsSchema;
+import static org.junit.platform.console.tasks.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -422,7 +422,8 @@ class XmlReportsWritingListenerTests {
 	private String readValidXmlFile(Path xmlFile) throws Exception {
 		assertTrue(Files.exists(xmlFile), () -> "File does not exist: " + xmlFile);
 		String content = new String(Files.readAllBytes(xmlFile), UTF_8);
-		return ensureValidAccordingToJenkinsSchema(content);
+		assertValidAccordingToJenkinsSchema(content);
+		return content;
 	}
 
 }
