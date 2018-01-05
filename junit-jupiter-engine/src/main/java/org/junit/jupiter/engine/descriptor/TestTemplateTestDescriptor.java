@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apiguardian.api.API;
@@ -34,11 +35,22 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
+public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implements Filterable {
+
+	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
 
 	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod) {
 		super(uniqueId, testClass, templateMethod);
 	}
+
+	// --- Filterable ----------------------------------------------------------
+
+	@Override
+	public DynamicDescendantFilter getDynamicDescendantFilter() {
+		return dynamicDescendantFilter;
+	}
+
+	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public Type getType() {
@@ -83,6 +95,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		providers.stream()
 				.flatMap(provider -> provider.provideTestTemplateInvocationContexts(extensionContext))
 				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
 				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
 		// @formatter:on
 		validateWasAtLeastInvokedOnce(invocationIndex.get());
@@ -103,10 +117,14 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 				TestTemplateInvocationContextProvider.class.getSimpleName(), getTestMethod()));
 	}
 
-	private TestDescriptor createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext, int index) {
+	private Optional<TestDescriptor> createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext,
+			int index) {
 		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
-		return new TestTemplateInvocationTestDescriptor(uniqueId, getTestClass(), getTestMethod(), invocationContext,
-			index);
+		if (getDynamicDescendantFilter().test(uniqueId)) {
+			return Optional.of(new TestTemplateInvocationTestDescriptor(uniqueId, getTestClass(), getTestMethod(),
+				invocationContext, index));
+		}
+		return Optional.empty();
 	}
 
 	private void execute(DynamicTestExecutor dynamicTestExecutor, TestDescriptor testDescriptor) {

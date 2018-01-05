@@ -18,17 +18,19 @@ import static org.junit.platform.commons.util.ReflectionUtils.findNestedClasses;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -85,65 +87,68 @@ class JavaElementsResolver {
 	}
 
 	void resolveUniqueId(UniqueId uniqueId) {
-		uniqueId.getEngineId().ifPresent(engineId -> {
-
-			// Ignore Unique IDs from other test engines.
-			if (JupiterTestEngine.ENGINE_ID.equals(engineId)) {
-				List<Segment> remainingSegments = new ArrayList<>(uniqueId.getSegments());
-
-				// Ignore engine ID
-				remainingSegments.remove(0);
-
-				int numSegmentsToResolve = remainingSegments.size();
-				int numSegmentsResolved = resolveUniqueId(this.engineDescriptor, remainingSegments);
-
-				if (numSegmentsResolved == 0) {
-					logger.warn(() -> format("Unique ID '%s' could not be resolved.", uniqueId));
-				}
-				else if (numSegmentsResolved != numSegmentsToResolve) {
-					logger.warn(() -> {
-						List<Segment> segments = uniqueId.getSegments();
-						List<Segment> unresolved = segments.subList(1, segments.size()); // Remove engine ID
-						unresolved = unresolved.subList(numSegmentsResolved, unresolved.size()); // Remove resolved segments
-						return format("Unique ID '%s' could only be partially resolved. "
-								+ "All resolved segments will be executed; however, the "
-								+ "following segments could not be resolved: %s",
-							uniqueId, unresolved);
-					});
-				}
-			}
-		});
+		// Ignore Unique IDs from other test engines.
+		if (JupiterTestEngine.ENGINE_ID.equals(uniqueId.getEngineId().orElse(null))) {
+			Deque<TestDescriptor> resolvedDescriptors = resolveAllSegments(uniqueId);
+			handleResolvedDescriptorsForUniqueId(uniqueId, resolvedDescriptors);
+		}
 	}
 
 	/**
 	 * Attempt to resolve all segments for the supplied unique ID.
-	 *
-	 * @return the number of segments resolved
 	 */
-	private int resolveUniqueId(TestDescriptor parent, List<Segment> remainingSegments) {
-		if (remainingSegments.isEmpty()) {
-			resolveChildren(parent);
-			return 0;
-		}
+	private Deque<TestDescriptor> resolveAllSegments(UniqueId uniqueId) {
+		List<Segment> segments = uniqueId.getSegments();
+		Deque<TestDescriptor> resolvedDescriptors = new LinkedList<>();
+		resolvedDescriptors.addFirst(this.engineDescriptor);
 
-		Segment head = remainingSegments.remove(0);
-		for (ElementResolver resolver : this.resolvers) {
-			Optional<TestDescriptor> resolvedDescriptor = resolver.resolveUniqueId(head, parent);
+		for (int index = 1; index < segments.size() && resolvedDescriptors.size() == index; index++) {
+			Segment segment = segments.get(index);
+			TestDescriptor parent = resolvedDescriptors.getLast();
+			UniqueId partialUniqueId = parent.getUniqueId().append(segment);
+
+			Optional<TestDescriptor> resolvedDescriptor = findTestDescriptorByUniqueId(partialUniqueId);
 			if (!resolvedDescriptor.isPresent()) {
-				continue;
+				// @formatter:off
+				resolvedDescriptor = this.resolvers.stream()
+						.map(resolver -> resolver.resolveUniqueId(segment, parent))
+						.filter(Optional::isPresent)
+						.map(Optional::get)
+						.findFirst();
+				// @formatter:on
+				resolvedDescriptor.ifPresent(parent::addChild);
 			}
-
-			Optional<TestDescriptor> foundTestDescriptor = findTestDescriptorByUniqueId(
-				resolvedDescriptor.get().getUniqueId());
-			TestDescriptor descriptor = foundTestDescriptor.orElseGet(() -> {
-				TestDescriptor newDescriptor = resolvedDescriptor.get();
-				parent.addChild(newDescriptor);
-				return newDescriptor;
-			});
-			return 1 + resolveUniqueId(descriptor, remainingSegments);
+			resolvedDescriptor.ifPresent(resolvedDescriptors::addLast);
 		}
+		return resolvedDescriptors;
+	}
 
-		return 0;
+	private void handleResolvedDescriptorsForUniqueId(UniqueId uniqueId, Deque<TestDescriptor> resolvedDescriptors) {
+		List<Segment> segments = uniqueId.getSegments();
+		int numSegmentsToResolve = segments.size() - 1;
+		int numSegmentsResolved = resolvedDescriptors.size() - 1;
+
+		if (numSegmentsResolved == 0) {
+			logger.warn(() -> format("Unique ID '%s' could not be resolved.", uniqueId));
+		}
+		else if (numSegmentsResolved != numSegmentsToResolve) {
+			if (resolvedDescriptors.getLast() instanceof Filterable) {
+				((Filterable) resolvedDescriptors.getLast()).getDynamicDescendantFilter().allow(uniqueId);
+			}
+			else {
+				logger.warn(() -> {
+					List<Segment> unresolved = segments.subList(1, segments.size()); // Remove engine ID
+					unresolved = unresolved.subList(numSegmentsResolved, unresolved.size()); // Remove resolved segments
+					return format("Unique ID '%s' could only be partially resolved. "
+							+ "All resolved segments will be executed; however, the "
+							+ "following segments could not be resolved: %s",
+						uniqueId, unresolved);
+				});
+			}
+		}
+		else {
+			resolveChildren(resolvedDescriptors.getLast());
+		}
 	}
 
 	private Set<TestDescriptor> resolveContainerWithChildren(Class<?> containerClass,
@@ -157,6 +162,12 @@ class JavaElementsResolver {
 	private Set<TestDescriptor> resolveForAllParents(AnnotatedElement element, Set<TestDescriptor> potentialParents) {
 		Set<TestDescriptor> resolvedDescriptors = new HashSet<>();
 		potentialParents.forEach(parent -> resolvedDescriptors.addAll(resolve(element, parent)));
+		// @formatter:off
+		resolvedDescriptors.stream()
+				.filter(Filterable.class::isInstance)
+				.map(Filterable.class::cast)
+				.forEach(testDescriptor -> testDescriptor.getDynamicDescendantFilter().allowAll());
+		// @formatter:on
 		return resolvedDescriptors;
 	}
 
