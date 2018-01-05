@@ -118,6 +118,10 @@ _@API Guardian_ JAR _mandatory_ again.
   extension context ends, the associated store is closed, and each stored value that is
   an instance of `ExtensionContext.Store.CloseableResource` is notified by an invocation
   of its `close()` method.
+* Selected dynamic tests and test template invocations can now be executed separately
+  without running the complete test factory or test template. This allows to rerun single
+  or selected parameterized, repeated or dynamic tests by selecting their unique IDs in
+  subsequent discovery requests.
 
 
 [[release-notes-5.1.0-M2-junit-vintage]]

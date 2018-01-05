@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.discovery;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
 import org.junit.platform.engine.TestDescriptor;

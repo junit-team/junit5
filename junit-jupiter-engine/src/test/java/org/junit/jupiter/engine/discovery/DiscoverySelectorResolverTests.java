@@ -11,18 +11,22 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.util.Collections.singleton;
+import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_CONTAINER_SEGMENT_TYPE;
+import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.engineId;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestFactoryMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTopLevelClass;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -37,6 +41,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicTest;
@@ -44,13 +50,17 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.jupiter.engine.descriptor.DynamicDescendantFilter;
+import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
-import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
+import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -61,6 +71,7 @@ import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * @since 5.0
@@ -205,12 +216,22 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	void resolvingUniqueIdWithUnknownSegmentTypeResolvesNothing() {
-		UniqueIdSelector selector = selectUniqueId(engineId().append("bogus", "enigma").toString());
+	@TrackLogRecords
+	void resolvingUniqueIdWithUnknownSegmentTypeResolvesNothing(LogRecordListener listener) {
+		UniqueId uniqueId = engineId().append("bogus", "enigma");
+		UniqueIdSelector selector = selectUniqueId(uniqueId);
 		EngineDiscoveryRequest request = request().selectors(selector).build();
 
 		resolver.resolveSelectors(request, engineDescriptor);
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
+		// @formatter:off
+		assertThat(listener.stream()
+				.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
+				.filter(logRecord -> JavaElementsResolver.class.getName().equals(logRecord.getLoggerName()))
+				.map(LogRecord::getMessage)
+				.filter(isEqual("Unique ID '" + uniqueId + "' could not be resolved."))
+		).hasSize(1);
+		// @formatter:on
 	}
 
 	@Test
@@ -277,7 +298,8 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	void methodResolutionByUniqueIdWithParams() {
+	@TrackLogRecords
+	void methodResolutionByUniqueIdWithParams(LogRecordListener listener) {
 		UniqueIdSelector selector = selectUniqueId(
 			uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)").toString());
 
@@ -287,16 +309,31 @@ class DiscoverySelectorResolverTests {
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertThat(uniqueIds).contains(uniqueIdForClass(HerTestClass.class));
 		assertThat(uniqueIds).contains(uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)"));
+		// @formatter:off
+		assertThat(listener.stream()
+				.filter(logRecord -> JavaElementsResolver.class.getName().equals(logRecord.getLoggerName()))
+		).isEmpty();
+		// @formatter:on
 	}
 
 	@Test
-	void resolvingUniqueIdWithWrongParamsResolvesNothing() {
-		UniqueIdSelector selector = selectUniqueId(
-			uniqueIdForMethod(HerTestClass.class, "test7(java.math.BigDecimal)").toString());
-		EngineDiscoveryRequest request = request().selectors(selector).build();
+	@TrackLogRecords
+	void resolvingUniqueIdWithWrongParamsResolvesNothing(LogRecordListener listener) {
+		UniqueId uniqueId = uniqueIdForMethod(HerTestClass.class, "test7(java.math.BigDecimal)");
+		EngineDiscoveryRequest request = request().selectors(selectUniqueId(uniqueId)).build();
 
 		resolver.resolveSelectors(request, engineDescriptor);
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
+		// @formatter:off
+		assertThat(listener.stream()
+				.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
+				.filter(logRecord -> JavaElementsResolver.class.getName().equals(logRecord.getLoggerName()))
+				.map(LogRecord::getMessage)
+				.filter(isEqual("Unique ID '" + uniqueId + "' could only be partially resolved. "
+						+ "All resolved segments will be executed; however, the following segments "
+						+ "could not be resolved: [Segment [type = 'method', value = 'test7(java.math.BigDecimal)']]"))
+		).hasSize(1);
+		// @formatter:on
 	}
 
 	@Test
@@ -525,15 +562,82 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	void resolvingDynamicTestByUniqueIdResolvesOnlyUpToParentTestFactory() {
+	@TrackLogRecords
+	void resolvingDynamicTestByUniqueIdResolvesUpToParentTestFactory(LogRecordListener listener) {
 		Class<?> clazz = MyTestClass.class;
 		UniqueId factoryUid = uniqueIdForTestFactoryMethod(clazz, "dynamicTest()");
-		UniqueId dynamicTestUid = factoryUid.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "#1");
+		UniqueId dynamicTestUid = factoryUid.append(DYNAMIC_TEST_SEGMENT_TYPE, "#1");
+		UniqueId differentDynamicTestUid = factoryUid.append(DYNAMIC_TEST_SEGMENT_TYPE, "#2");
 
 		resolver.resolveSelectors(request().selectors(selectUniqueId(dynamicTestUid)).build(), engineDescriptor);
 
 		assertThat(engineDescriptor.getDescendants()).hasSize(2);
 		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(clazz), factoryUid);
+		TestDescriptor testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+
+		TestDescriptor testFactoryDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		DynamicDescendantFilter dynamicDescendantFilter = getDynamicDescendantFilter(testFactoryDescriptor);
+		assertThat(dynamicDescendantFilter.test(dynamicTestUid)).isTrue();
+		assertThat(dynamicDescendantFilter.test(differentDynamicTestUid)).isFalse();
+
+		// @formatter:off
+		assertThat(listener.stream()
+				.filter(logRecord -> JavaElementsResolver.class.getName().equals(logRecord.getLoggerName()))
+		).isEmpty();
+		// @formatter:on
+	}
+
+	@Test
+	@TrackLogRecords
+	void resolvingDynamicContainerByUniqueIdResolvesUpToParentTestFactory(LogRecordListener listener) {
+		Class<?> clazz = MyTestClass.class;
+		UniqueId factoryUid = uniqueIdForTestFactoryMethod(clazz, "dynamicTest()");
+		UniqueId dynamicContainerUid = factoryUid.append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#1");
+		UniqueId differentDynamicContainerUid = factoryUid.append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#2");
+		UniqueId dynamicTestUid = dynamicContainerUid.append(DYNAMIC_TEST_SEGMENT_TYPE, "#1");
+		UniqueId differentDynamicTestUid = dynamicContainerUid.append(DYNAMIC_TEST_SEGMENT_TYPE, "#2");
+
+		resolver.resolveSelectors(request().selectors(selectUniqueId(dynamicTestUid)).build(), engineDescriptor);
+
+		assertThat(engineDescriptor.getDescendants()).hasSize(2);
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(clazz), factoryUid);
+		TestDescriptor testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+
+		TestDescriptor testFactoryDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		DynamicDescendantFilter dynamicDescendantFilter = getDynamicDescendantFilter(testFactoryDescriptor);
+		assertThat(dynamicDescendantFilter.test(dynamicTestUid)).isTrue();
+		assertThat(dynamicDescendantFilter.test(differentDynamicContainerUid)).isFalse();
+		assertThat(dynamicDescendantFilter.test(differentDynamicTestUid)).isFalse();
+
+		// @formatter:off
+		assertThat(listener.stream()
+				.filter(logRecord -> JavaElementsResolver.class.getName().equals(logRecord.getLoggerName()))
+		).isEmpty();
+		// @formatter:on
+	}
+
+	@Test
+	void resolvingDynamicTestByUniqueIdAndTestFactoryByMethodSelectorResolvesTestFactory() {
+		Class<?> clazz = MyTestClass.class;
+		UniqueId factoryUid = uniqueIdForTestFactoryMethod(clazz, "dynamicTest()");
+		UniqueId dynamicTestUid = factoryUid.append(DYNAMIC_TEST_SEGMENT_TYPE, "#1");
+
+		LauncherDiscoveryRequest request = request() //
+				.selectors(selectUniqueId(dynamicTestUid), selectMethod(clazz, "dynamicTest")) //
+				.build();
+		resolver.resolveSelectors(request, engineDescriptor);
+
+		assertThat(engineDescriptor.getDescendants()).hasSize(2);
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(clazz), factoryUid);
+		TestDescriptor testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		TestDescriptor testFactoryDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		DynamicDescendantFilter dynamicDescendantFilter = getDynamicDescendantFilter(testFactoryDescriptor);
+		assertThat(dynamicDescendantFilter.test(UniqueId.root("foo", "bar"))).isTrue();
+	}
+
+	private DynamicDescendantFilter getDynamicDescendantFilter(TestDescriptor testDescriptor) {
+		assertThat(testDescriptor).isInstanceOf(JupiterTestDescriptor.class);
+		return ((Filterable) testDescriptor).getDynamicDescendantFilter();
 	}
 
 	@Test

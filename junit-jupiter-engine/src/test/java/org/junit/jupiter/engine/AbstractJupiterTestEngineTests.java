@@ -10,9 +10,14 @@
 
 package org.junit.jupiter.engine;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.util.Set;
+
+import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -29,7 +34,11 @@ public abstract class AbstractJupiterTestEngineTests {
 	private final JupiterTestEngine engine = new JupiterTestEngine();
 
 	protected ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
-		return executeTests(request().selectors(selectClass(testClass)).build());
+		return executeTests(selectClass(testClass));
+	}
+
+	protected ExecutionEventRecorder executeTests(DiscoverySelector... selectors) {
+		return executeTests(request().selectors(selectors).build());
 	}
 
 	protected ExecutionEventRecorder executeTests(LauncherDiscoveryRequest request) {
@@ -39,8 +48,24 @@ public abstract class AbstractJupiterTestEngineTests {
 		return eventRecorder;
 	}
 
+	protected TestDescriptor discoverTests(DiscoverySelector... selectors) {
+		return discoverTests(request().selectors(selectors).build());
+	}
+
 	protected TestDescriptor discoverTests(LauncherDiscoveryRequest request) {
 		return engine.discover(request, UniqueId.forEngine(engine.getId()));
+	}
+
+	protected UniqueId discoverUniqueId(Class<?> clazz, String methodName) {
+		TestDescriptor engineDescriptor = discoverTests(selectMethod(clazz, methodName));
+		Set<? extends TestDescriptor> descendants = engineDescriptor.getDescendants();
+		// @formatter:off
+		TestDescriptor testDescriptor = descendants.stream()
+				.skip(descendants.size() - 1)
+				.findFirst()
+				.orElseGet(() -> fail("no descendants"));
+		// @formatter:on
+		return testDescriptor.getUniqueId();
 	}
 
 }
