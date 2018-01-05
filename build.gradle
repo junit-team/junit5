@@ -43,7 +43,6 @@ ext {
 
 	platformProjects = [
 		'junit-platform-commons',
-		'junit-platform-commons-java-9',
 		'junit-platform-console',
 		'junit-platform-console-standalone',
 		'junit-platform-engine',
