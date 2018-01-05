@@ -267,10 +267,33 @@ subprojects { subproj ->
 		if (subproj.name in platformProjects) {
 			subproj.group = platformGroup
 			subproj.version = platformVersion
+			subproj.baseline = platformBaseline
 		}
 		else if (subproj.name in vintageProjects) {
 			subproj.group = vintageGroup
 			subproj.version = vintageVersion
+			subproj.baseline = vintageBaseline
+		}
+
+		configurations {
+			base
+		}
+
+		dependencies {
+			base(group: subproj.group, name: subproj.name, version: subproj.baseline) {
+				force = true
+				transitive = false
+			}
+		}
+
+		task japicc(type: Exec, dependsOn: assemble) {
+			// Requires https://github.com/lvc/japi-compliance-checker to be installed
+			def reportPath = "$buildDir/reports/japicc-${subproj.name}.html"
+			inputs.file configurations.base[0]
+			inputs.file jar.archivePath
+			outputs.file reportPath
+			commandLine 'japi-compliance-checker', configurations.base[0], jar.archivePath, '-report-path', reportPath
+			ignoreExitValue = true
 		}
 
 		javadoc {
