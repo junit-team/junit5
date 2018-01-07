@@ -128,7 +128,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 	}
 
-	static class StringToPrimitiveConverter implements StringToObjectConverter {
+	private static class StringToPrimitiveConverter implements StringToObjectConverter {
 
 		private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
 		static {
@@ -158,7 +158,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		}
 	}
 
-	static class StringToEnumConverter implements StringToObjectConverter {
+	private static class StringToEnumConverter implements StringToObjectConverter {
 
 		@Override
 		public boolean canConvert(Class<?> targetType) {
@@ -176,7 +176,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		}
 	}
 
-	static class StringToJavaTimeConverter implements StringToObjectConverter {
+	private static class StringToJavaTimeConverter implements StringToObjectConverter {
 
 		private static final Map<Class<?>, Function<CharSequence, ?>> CONVERTERS;
 		static {
@@ -204,7 +204,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		}
 	}
 
-	static class StringToCommonJavaTypesConverter implements StringToObjectConverter {
+	private static class StringToCommonJavaTypesConverter implements StringToObjectConverter {
 
 		private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
 
