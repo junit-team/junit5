@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.util.Collections.singleton;
-import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -224,14 +223,8 @@ class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request, engineDescriptor);
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		// @formatter:off
-		assertThat(listener.stream()
-				.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
-				.filter(logRecord -> JavaElementsResolver.class.getName().equals(logRecord.getLoggerName()))
-				.map(LogRecord::getMessage)
-				.filter(isEqual("Unique ID '" + uniqueId + "' could not be resolved."))
-		).hasSize(1);
-		// @formatter:on
+		assertThat(listener.stream(JavaElementsResolver.class, Level.WARNING).map(LogRecord::getMessage)) //
+				.contains("Unique ID '" + uniqueId + "' could not be resolved.");
 	}
 
 	@Test
@@ -309,11 +302,7 @@ class DiscoverySelectorResolverTests {
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertThat(uniqueIds).contains(uniqueIdForClass(HerTestClass.class));
 		assertThat(uniqueIds).contains(uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)"));
-		// @formatter:off
-		assertThat(listener.stream()
-				.filter(logRecord -> JavaElementsResolver.class.getName().equals(logRecord.getLoggerName()))
-		).isEmpty();
-		// @formatter:on
+		assertThat(listener.stream(JavaElementsResolver.class)).isEmpty();
 	}
 
 	@Test
@@ -324,16 +313,10 @@ class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request, engineDescriptor);
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		// @formatter:off
-		assertThat(listener.stream()
-				.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
-				.filter(logRecord -> JavaElementsResolver.class.getName().equals(logRecord.getLoggerName()))
-				.map(LogRecord::getMessage)
-				.filter(isEqual("Unique ID '" + uniqueId + "' could only be partially resolved. "
+		assertThat(listener.stream(JavaElementsResolver.class, Level.WARNING).map(LogRecord::getMessage)) //
+				.contains("Unique ID '" + uniqueId + "' could only be partially resolved. "
 						+ "All resolved segments will be executed; however, the following segments "
-						+ "could not be resolved: [Segment [type = 'method', value = 'test7(java.math.BigDecimal)']]"))
-		).hasSize(1);
-		// @formatter:on
+						+ "could not be resolved: [Segment [type = 'method', value = 'test7(java.math.BigDecimal)']]");
 	}
 
 	@Test
@@ -580,11 +563,7 @@ class DiscoverySelectorResolverTests {
 		assertThat(dynamicDescendantFilter.test(dynamicTestUid)).isTrue();
 		assertThat(dynamicDescendantFilter.test(differentDynamicTestUid)).isFalse();
 
-		// @formatter:off
-		assertThat(listener.stream()
-				.filter(logRecord -> JavaElementsResolver.class.getName().equals(logRecord.getLoggerName()))
-		).isEmpty();
-		// @formatter:on
+		assertThat(listener.stream(JavaElementsResolver.class)).isEmpty();
 	}
 
 	@Test
@@ -609,11 +588,7 @@ class DiscoverySelectorResolverTests {
 		assertThat(dynamicDescendantFilter.test(differentDynamicContainerUid)).isFalse();
 		assertThat(dynamicDescendantFilter.test(differentDynamicTestUid)).isFalse();
 
-		// @formatter:off
-		assertThat(listener.stream()
-				.filter(logRecord -> JavaElementsResolver.class.getName().equals(logRecord.getLoggerName()))
-		).isEmpty();
-		// @formatter:on
+		assertThat(listener.stream(JavaElementsResolver.class)).isEmpty();
 	}
 
 	@Test
