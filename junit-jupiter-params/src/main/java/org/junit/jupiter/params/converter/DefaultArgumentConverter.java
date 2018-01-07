@@ -106,8 +106,13 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 					return converter.get().convert((String) source, targetType);
 				}
 				catch (Exception ex) {
+					if (ex instanceof ArgumentConversionException) {
+						// simply rethrow it
+						throw (ArgumentConversionException) ex;
+					}
+					// else
 					throw new ArgumentConversionException(
-						"Failed to convert String [" + source + "] to type " + targetType.getName(), ex);
+						"Failed to convert String \"" + source + "\" to type " + targetType.getName(), ex);
 				}
 			}
 		}
@@ -232,12 +237,13 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			return CONVERTERS.get(targetType).apply(source);
 		}
 
-		private static URL toURL(String str) {
+		private static URL toURL(String url) {
 			try {
-				return new URL(str);
+				return new URL(url);
 			}
 			catch (MalformedURLException ex) {
-				throw new IllegalArgumentException(ex.getMessage(), ex);
+				throw new ArgumentConversionException(
+					"Failed to convert String \"" + url + "\" to type " + URL.class.getName(), ex);
 			}
 		}
 
