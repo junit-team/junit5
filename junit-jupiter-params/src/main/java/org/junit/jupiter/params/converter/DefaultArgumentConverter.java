@@ -14,6 +14,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -44,7 +45,6 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code DefaultArgumentConverter} is the default implementation of the
@@ -68,11 +68,12 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
 
-	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(asList(//
+	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(asList( //
 		new StringToPrimitiveConverter(), //
 		new StringToEnumConverter(), //
 		new StringToJavaTimeConverter(), //
-		new StringToCommonJavaTypesConverter() //
+		new StringToCommonJavaTypesConverter(), //
+		new GenericStringToObjectConverter() //
 	));
 
 	private DefaultArgumentConverter() {
@@ -92,7 +93,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 	}
 
 	private Class<?> toWrapperType(Class<?> targetType) {
-		Class<?> wrapperType = ReflectionUtils.getWrapperType(targetType);
+		Class<?> wrapperType = getWrapperType(targetType);
 		return wrapperType != null ? wrapperType : targetType;
 	}
 

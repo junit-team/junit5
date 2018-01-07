@@ -83,6 +83,18 @@ class ParameterizedTestIntegrationTests {
 				.haveExactly(1, event(test(), displayName("bar and 42"), finishedWithFailure(message("bar, 42"))));
 	}
 
+	/**
+	 * @since 5.1
+	 */
+	@Test
+	void executesWithImplicitGenericConverter() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(TestCase.class, "testWithImplicitGenericConverter", Book.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] book 1"), finishedWithFailure(message("book 1")))) //
+				.haveExactly(1, event(test(), displayName("[2] book 2"), finishedWithFailure(message("book 2"))));
+	}
+
 	@Test
 	void executesWithExplicitConverter() {
 		List<ExecutionEvent> executionEvents = execute(
@@ -197,6 +209,12 @@ class ParameterizedTestIntegrationTests {
 		@CsvSource({ "foo, 23", "bar, 42" })
 		void testWithCustomName(String argument, int i) {
 			fail(argument + ", " + i);
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "book 1", "book 2" })
+		void testWithImplicitGenericConverter(Book book) {
+			fail(book.title);
 		}
 
 		@ParameterizedTest
@@ -320,6 +338,19 @@ class ParameterizedTestIntegrationTests {
 		@Override
 		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
 			return String.valueOf(source).length();
+		}
+	}
+
+	static class Book {
+
+		private final String title;
+
+		private Book(String title) {
+			this.title = title;
+		}
+
+		static Book factory(String title) {
+			return new Book(title);
 		}
 	}
 
