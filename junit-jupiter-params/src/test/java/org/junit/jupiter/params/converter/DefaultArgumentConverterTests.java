@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -74,13 +76,20 @@ class DefaultArgumentConverterTests {
 		assertConverts("DAYS", TimeUnit.class, TimeUnit.DAYS);
 	}
 
-	// --- java.io -------------------------------------------------------------
+	// --- java.io and java.nio ------------------------------------------------
 
 	@Test
 	void convertsStringToFile() {
 		assertConverts("file", File.class, new File("file"));
 		assertConverts("/file", File.class, new File("/file"));
 		assertConverts("/some/file", File.class, new File("/some/file"));
+	}
+
+	@Test
+	void convertsStringToPath() {
+		assertConverts("path", Path.class, Paths.get("path"));
+		assertConverts("/path", Path.class, Paths.get("/path"));
+		assertConverts("/some/path", Path.class, Paths.get("/some/path"));
 	}
 
 	// --- java.math -----------------------------------------------------------

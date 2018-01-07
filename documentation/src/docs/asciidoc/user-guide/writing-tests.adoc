@@ -813,6 +813,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 | `double`/`Double`          | `"1.0"`                                  -> `1.0d`
 | `Enum` subclass            | `"SECONDS"`                              -> `TimeUnit.SECONDS`
 | `java.io.File`             | `"/path/to/file"`                        -> `new File("/path/to/file")`
+| `java.nio.file.Path`       | `"/path/to/file"`                        -> `Paths.get("/path/to/file")`
 | `java.math.BigDecimal`     | `"123.456e789"`                          -> `new BigDecimal("123.456e789")`
 | `java.math.BigInteger`     | `"1234567890123456789"`                  -> `new BigInteger("1234567890123456789")`
 | `java.net.URI`             | `"http://junit.org/"`                    -> `URI.create("http://junit.org/")`

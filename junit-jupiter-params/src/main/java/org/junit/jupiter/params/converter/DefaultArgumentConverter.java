@@ -21,6 +21,8 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -211,8 +213,9 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		static {
 			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
 
-			// java.io
+			// java.io and java.nio
 			converters.put(File.class, File::new);
+			converters.put(Path.class, Paths::get);
 			// java.net
 			converters.put(URI.class, URI::create);
 			converters.put(URL.class, StringToCommonJavaTypesConverter::toURL);
