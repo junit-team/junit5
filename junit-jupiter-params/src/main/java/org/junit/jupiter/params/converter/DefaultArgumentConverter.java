@@ -15,7 +15,12 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.io.File;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
@@ -45,9 +51,9 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * <p>The {@code DefaultArgumentConverter} is able to convert from strings to a
  * number of primitive types and their corresponding wrapper types (Byte, Short,
  * Integer, Long, Float, and Double), date and time types from the
- * {@code java.time} package, and some miscellaneous types
- * ({@link java.util.Currency}, {@link java.util.Locale}, and
- * {@link java.net.URI}).
+ * {@code java.time} package, and some additional common Java types such as
+ * {@link File}, {@link BigDecimal}, {@link BigInteger}, {@link Currency},
+ * {@link Locale}, {@link URI}, {@link URL}, {@link UUID}, etc.
  *
  * <p>If the source and target types are identical the source object will not
  * be modified.
@@ -60,9 +66,12 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
 
-	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(
-		asList(new StringToPrimitiveConverter(), new StringToEnumConverter(), new StringToJavaTimeConverter(),
-			new StringToJavaMiscConverter()));
+	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(asList(//
+		new StringToPrimitiveConverter(), //
+		new StringToEnumConverter(), //
+		new StringToJavaTimeConverter(), //
+		new StringToCommonJavaTypesConverter() //
+	));
 
 	private DefaultArgumentConverter() {
 		// nothing to initialize
@@ -190,15 +199,26 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		}
 	}
 
-	static class StringToJavaMiscConverter implements StringToObjectConverter {
+	static class StringToCommonJavaTypesConverter implements StringToObjectConverter {
 
 		private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
 
 		static {
 			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
+
+			// java.io
+			converters.put(File.class, File::new);
+			// java.net
 			converters.put(URI.class, URI::create);
+			converters.put(URL.class, StringToCommonJavaTypesConverter::toURL);
+			// java.math
+			converters.put(BigDecimal.class, BigDecimal::new);
+			converters.put(BigInteger.class, BigInteger::new);
+			// java.util
 			converters.put(Currency.class, Currency::getInstance);
 			converters.put(Locale.class, Locale::new);
+			converters.put(UUID.class, UUID::fromString);
+
 			CONVERTERS = Collections.unmodifiableMap(converters);
 		}
 
@@ -211,6 +231,16 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		public Object convert(String source, Class<?> targetType) throws Exception {
 			return CONVERTERS.get(targetType).apply(source);
 		}
+
+		private static URL toURL(String str) {
+			try {
+				return new URL(str);
+			}
+			catch (MalformedURLException ex) {
+				throw new IllegalArgumentException(ex.getMessage(), ex);
+			}
+		}
+
 	}
 
 }

@@ -68,8 +68,9 @@ _@API Guardian_ JAR _mandatory_ again.
 
 ==== New Features and Improvements
 
-* New implicit conversions for parameters of type `java.net.URI`, `java.util.Currency`,
-  and `java.util.Locale` in parameterized tests.
+* New implicit conversions for parameters of type `java.io.File`, `java.math.BigDecimal`,
+  `java.math.BigInteger`, `java.net.URI`, `java.net.URL`, `java.util.Currency`,
+  `java.util.Locale`, and `java.util.UUID` in parameterized tests.
 * Due to a change in the JUnit Platform's `AnnotationUtils` class, non-inherited
   _composed annotations_ which are meta-annotated with a given `@Inherited` annotation
   are now considered to be implicitly _inherited_ when searching for the given
