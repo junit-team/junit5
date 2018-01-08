@@ -33,11 +33,18 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	public static final String SEGMENT_TYPE = "test-template-invocation";
 
 	private TestTemplateInvocationContext invocationContext;
+	private final int index;
 
 	TestTemplateInvocationTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
 			TestTemplateInvocationContext invocationContext, int index) {
 		super(uniqueId, invocationContext.getDisplayName(index), testClass, templateMethod);
 		this.invocationContext = invocationContext;
+		this.index = index;
+	}
+
+	@Override
+	public String getLegacyReportingName() {
+		return super.getLegacyReportingName() + "[" + index + "]";
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -48,6 +49,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
@@ -93,6 +95,21 @@ class ParameterizedTestIntegrationTests {
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] book 1"), finishedWithFailure(message("book 1")))) //
 				.haveExactly(1, event(test(), displayName("[2] book 2"), finishedWithFailure(message("book 2"))));
+	}
+
+	@Test
+	void legacyReportingNames() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(TestCase.class, "testWithCustomName", String.class.getName() + "," + Integer.TYPE.getName()));
+
+		// @formatter:off
+		Stream<String> legacyReportingNames = executionEvents.stream()
+				.filter(event -> event.getType() == DYNAMIC_TEST_REGISTERED)
+				.map(ExecutionEvent::getTestDescriptor)
+				.map(TestDescriptor::getLegacyReportingName);
+		// @formatter:off
+		assertThat(legacyReportingNames).containsExactly("testWithCustomName(String, int)[1]",
+				"testWithCustomName(String, int)[2]");
 	}
 
 	@Test
