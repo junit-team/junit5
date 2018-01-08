@@ -25,8 +25,8 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 
 	private final DynamicTest dynamicTest;
 
-	DynamicTestTestDescriptor(UniqueId uniqueId, DynamicTest dynamicTest, TestSource source) {
-		super(uniqueId, dynamicTest, source);
+	DynamicTestTestDescriptor(UniqueId uniqueId, int index, DynamicTest dynamicTest, TestSource source) {
+		super(uniqueId, index, dynamicTest, source);
 		this.dynamicTest = dynamicTest;
 	}
 

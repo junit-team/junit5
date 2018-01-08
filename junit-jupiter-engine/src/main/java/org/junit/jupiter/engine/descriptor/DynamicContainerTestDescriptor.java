@@ -33,8 +33,9 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	private final DynamicContainer dynamicContainer;
 	private final TestSource testSource;
 
-	DynamicContainerTestDescriptor(UniqueId uniqueId, DynamicContainer dynamicContainer, TestSource testSource) {
-		super(uniqueId, dynamicContainer, testSource);
+	DynamicContainerTestDescriptor(UniqueId uniqueId, int index, DynamicContainer dynamicContainer,
+			TestSource testSource) {
+		super(uniqueId, index, dynamicContainer, testSource);
 		this.dynamicContainer = dynamicContainer;
 		this.testSource = testSource;
 	}

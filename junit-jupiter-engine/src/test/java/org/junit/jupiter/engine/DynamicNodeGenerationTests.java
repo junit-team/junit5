@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
@@ -47,6 +48,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
@@ -211,6 +213,24 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
 			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
 			() -> assertEquals(5, eventRecorder.getContainerFinishedCount(), "# container finished"));
+	}
+
+	@Test
+	void legacyReportingNames() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyDynamicTestCase.class, "nestedDynamicContainers")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		// @formatter:off
+		Stream<String> legacyReportingNames = eventRecorder.getExecutionEvents().stream()
+				.filter(event -> event.getType() == DYNAMIC_TEST_REGISTERED)
+				.map(ExecutionEvent::getTestDescriptor)
+				.map(TestDescriptor::getLegacyReportingName);
+		// @formatter:off
+		assertThat(legacyReportingNames)
+				.containsExactly("nestedDynamicContainers()[1]", "nestedDynamicContainers()[1][1]",
+						"nestedDynamicContainers()[1][1][1]", "nestedDynamicContainers()[1][1][2]");
 	}
 
 	@Test

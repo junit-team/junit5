@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
@@ -139,6 +140,23 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 				event(test("test-template-invocation:#2"),
 					finishedWithFailure(message("invocation is expected to fail"))), //
 				event(container("templateWithTwoRegisteredExtensions"), finishedSuccessfully())));
+	}
+
+	@Test
+	void legacyReportingNames() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "templateWithTwoRegisteredExtensions")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		// @formatter:off
+		Stream<String> legacyReportingNames = eventRecorder.getExecutionEvents().stream()
+				.filter(event -> event.getType() == DYNAMIC_TEST_REGISTERED)
+				.map(ExecutionEvent::getTestDescriptor)
+				.map(TestDescriptor::getLegacyReportingName);
+		// @formatter:off
+		assertThat(legacyReportingNames).containsExactly("templateWithTwoRegisteredExtensions()[1]",
+						"templateWithTwoRegisteredExtensions()[2]");
 	}
 
 	@Test
