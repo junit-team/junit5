@@ -28,13 +28,14 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 5.0
  */
-class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
+class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 
 	private final DynamicContainer dynamicContainer;
 	private final TestSource testSource;
 
-	DynamicContainerTestDescriptor(UniqueId uniqueId, DynamicContainer dynamicContainer, TestSource testSource) {
-		super(uniqueId, dynamicContainer.getDisplayName(), testSource);
+	DynamicContainerTestDescriptor(UniqueId uniqueId, int index, DynamicContainer dynamicContainer,
+			TestSource testSource) {
+		super(uniqueId, index, dynamicContainer, testSource);
 		this.dynamicContainer = dynamicContainer;
 		this.testSource = testSource;
 	}
@@ -42,11 +43,6 @@ class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 	@Override
 	public Type getType() {
 		return Type.CONTAINER;
-	}
-
-	@Override
-	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
-		return SkipResult.doNotSkip();
 	}
 
 	@Override
