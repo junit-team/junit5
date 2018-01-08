@@ -4951,6 +4951,17 @@ launcher.</p>
 <p>See the example projects in the <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository to
 find out how this is done with Gradle and Maven.</p>
 </div>
+<div class="sect3">
+<h4 id="migrating-from-junit4-categories-support"><a class="anchor" href="#migrating-from-junit4-categories-support"></a>6.1.1. Categories Support</h4>
+<div class="paragraph">
+<p>For test classes or methods that are annotated with <code>@Category</code>, the
+<em>JUnit Vintage test engine</em> exposes the category&#8217;s fully qualified class name as a tag
+of the corresponding test identifier. For example, if a test method is annotated with
+<code>@Category(Example.class)</code>, it will be tagged with <code>"com.acme.Example"</code>. Similar to the
+<code>Categories</code> runner in JUnit 4, this information can be used to filter the discovered
+tests before executing them (see <a href="#running-tests">Running Tests</a> for details).</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="migrating-from-junit4-tips"><a class="anchor" href="#migrating-from-junit4-tips"></a>6.2. Migration Tips</h3>
@@ -5485,7 +5496,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-04 09:42:12 EST
+Last updated 2018-01-08 13:54:06 EST
 </div>
 </div>
 </body>
