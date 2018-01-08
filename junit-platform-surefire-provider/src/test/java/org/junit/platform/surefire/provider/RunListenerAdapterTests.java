@@ -221,7 +221,7 @@ class RunListenerAdapterTests {
 
 		ReportEntry entry = entryCaptor.getValue();
 		assertTrue(MyTestClass.class.getTypeName().contains(entry.getName()));
-		assertEquals("engine", entry.getSourceName());
+		assertEquals(MyTestClass.class.getTypeName(), entry.getSourceName());
 	}
 
 	@Test
@@ -265,7 +265,7 @@ class RunListenerAdapterTests {
 		verify(listener).testFailed(entryCaptor.capture());
 
 		ReportEntry entry = entryCaptor.getValue();
-		assertEquals("engine", entry.getSourceName());
+		assertEquals(MyTestClass.class.getTypeName(), entry.getSourceName());
 		assertNotNull(entry.getStackTraceWriter());
 	}
 

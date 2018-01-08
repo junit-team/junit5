@@ -35,6 +35,7 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.listeners.LegacyReportingUtils;
 
 /**
  * @since 1.0
@@ -167,11 +168,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	private String sourceLegacyReportingName(TestIdentifier testIdentifier) {
-		// @formatter:off
-		return testPlan.getParent(testIdentifier)
-				.map(TestIdentifier::getLegacyReportingName)
-				.orElse("<unrooted>");
-		// @formatter:on
+		return LegacyReportingUtils.getLegacyReportingClassName(testPlan, testIdentifier);
 	}
 
 	private StackTraceWriter getStackTraceWriter(TestIdentifier testIdentifier,
