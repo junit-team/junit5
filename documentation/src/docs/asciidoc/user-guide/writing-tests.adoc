@@ -803,27 +803,33 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 |===
 | Target Type | Example
 
-| `boolean`/`Boolean` | `"true"` -> `true`
-| `byte`/`Byte` | `"1"` -> `(byte) 1`
-| `char`/`Character` | `"o"` -> `'o'`
-| `short`/`Short` | `"1"` -> `(short) 1`
-| `int`/`Integer` | `"1"` -> `1`
-| `long`/`Long` | `"1"` -> `1L`
-| `float`/`Float` | `"1.0"` -> `1.0f`
-| `double`/`Double` | `"1.0"` -> `1.0d`
-| `Enum` subclass | `"SECONDS"` -> `TimeUnit.SECONDS`
-| `java.net.URI` | `"http://junit.org/"` -> `URI.create("http://junit.org/")`
-| `java.time.Instant` | `"1970-01-01T00:00:00Z"` -> `Instant.ofEpochMilli(0)`
-| `java.time.LocalDate` | `"2017-03-14"` -> `LocalDate.of(2017, 3, 14)`
-| `java.time.LocalDateTime` | `"2017-03-14T12:34:56.789"` -> `LocalDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000)`
-| `java.time.LocalTime` | `"12:34:56.789"` -> `LocalTime.of(12, 34, 56, 789_000_000)`
-| `java.time.OffsetDateTime` | `"2017-03-14T12:34:56.789Z"` -> `OffsetDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)`
-| `java.time.OffsetTime` | `"12:34:56.789Z"` -> `OffsetTime.of(12, 34, 56, 789_000_000, ZoneOffset.UTC)`
-| `java.time.Year` | `"2017"` -> `Year.of(2017)`
-| `java.time.YearMonth` | `"2017-03"` -> `YearMonth.of(2017, 3)`
-| `java.time.ZonedDateTime` | `"2017-03-14T12:34:56.789Z"` -> `ZonedDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)`
-| `java.util.Currency` | `"JPY"` -> `Currency.getInstance("JPY")`
-| `java.util.Locale` | `"en"` -> `new Locale("en")`
+| `boolean`/`Boolean`        | `"true"`                                 -> `true`
+| `byte`/`Byte`              | `"1"`                                    -> `(byte) 1`
+| `char`/`Character`         | `"o"`                                    -> `'o'`
+| `short`/`Short`            | `"1"`                                    -> `(short) 1`
+| `int`/`Integer`            | `"1"`                                    -> `1`
+| `long`/`Long`              | `"1"`                                    -> `1L`
+| `float`/`Float`            | `"1.0"`                                  -> `1.0f`
+| `double`/`Double`          | `"1.0"`                                  -> `1.0d`
+| `Enum` subclass            | `"SECONDS"`                              -> `TimeUnit.SECONDS`
+| `java.io.File`             | `"/path/to/file"`                        -> `new File("/path/to/file")`
+| `java.nio.file.Path`       | `"/path/to/file"`                        -> `Paths.get("/path/to/file")`
+| `java.math.BigDecimal`     | `"123.456e789"`                          -> `new BigDecimal("123.456e789")`
+| `java.math.BigInteger`     | `"1234567890123456789"`                  -> `new BigInteger("1234567890123456789")`
+| `java.net.URI`             | `"http://junit.org/"`                    -> `URI.create("http://junit.org/")`
+| `java.net.URL`             | `"http://junit.org/"`                    -> `new URL("http://junit.org/")`
+| `java.time.Instant`        | `"1970-01-01T00:00:00Z"`                 -> `Instant.ofEpochMilli(0)`
+| `java.time.LocalDateTime`  | `"2017-03-14T12:34:56.789"`              -> `LocalDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000)`
+| `java.time.LocalDate`      | `"2017-03-14"`                           -> `LocalDate.of(2017, 3, 14)`
+| `java.time.LocalTime`      | `"12:34:56.789"`                         -> `LocalTime.of(12, 34, 56, 789_000_000)`
+| `java.time.OffsetDateTime` | `"2017-03-14T12:34:56.789Z"`             -> `OffsetDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)`
+| `java.time.OffsetTime`     | `"12:34:56.789Z"`                        -> `OffsetTime.of(12, 34, 56, 789_000_000, ZoneOffset.UTC)`
+| `java.time.YearMonth`      | `"2017-03"`                              -> `YearMonth.of(2017, 3)`
+| `java.time.Year`           | `"2017"`                                 -> `Year.of(2017)`
+| `java.time.ZonedDateTime`  | `"2017-03-14T12:34:56.789Z"`             -> `ZonedDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)`
+| `java.util.Currency`       | `"JPY"`                                  -> `Currency.getInstance("JPY")`
+| `java.util.Locale`         | `"en"`                                   -> `new Locale("en")`
+| `java.util.UUID`           | `"d043e930-7b3b-48e3-bdbe-5a3ccfb833db"` -> `UUID.fromString("d043e930-7b3b-48e3-bdbe-5a3ccfb833db")`
 |===
 
 [[writing-tests-parameterized-tests-argument-conversion-explicit]]
