@@ -10,24 +10,59 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
-class CompositeLock {
+class CompositeLock implements ResourceLock {
 	private final List<Lock> locks;
+
+	private final List<Lock> acquiredLocks;
 
 	CompositeLock(List<Lock> locks) {
 		this.locks = locks;
+		this.acquiredLocks = new ArrayList<>(locks.size());
 	}
 
-	void acquire() {
-		locks.forEach(Lock::lock);
+	@Override
+	public ResourceLock acquire() throws InterruptedException {
+		ForkJoinPool.managedBlock(new CompositeLockManagedBlocker());
+		return this;
 	}
 
-	void release() {
-		for (int i = locks.size() - 1; i >= 0; i--) {
-			locks.get(i).unlock();
+	private void _acquire() throws InterruptedException{
+		try {
+			for (Lock lock : locks) {
+				lock.lockInterruptibly();
+				acquiredLocks.add(lock);
+			}
+		} catch (InterruptedException e) {
+			release();
+			throw e;
 		}
 	}
 
+	@Override
+	public void release() {
+		for (int i = acquiredLocks.size() - 1; i >= 0; i--) {
+			acquiredLocks.get(i).unlock();
+		}
+	}
+
+	private class CompositeLockManagedBlocker implements ForkJoinPool.ManagedBlocker {
+		private boolean acquired;
+
+		@Override
+		public boolean block() throws InterruptedException {
+			_acquire();
+			acquired = true;
+			return true;
+		}
+
+		@Override
+		public boolean isReleasable() {
+			return acquired;
+		}
+	}
 }

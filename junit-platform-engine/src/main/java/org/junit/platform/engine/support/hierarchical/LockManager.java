@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.annotation.LockMode.Read;
 
@@ -24,10 +23,11 @@ class LockManager {
 
 	private final Map<String, ReentrantReadWriteLock> locks = new ConcurrentHashMap<>();
 
-	CompositeLock getCompositeLock(List<ExclusiveResource> resources) {
+	ResourceLock getLockForResources(List<ExclusiveResource> resources) {
 		// @formatter:off
 		List<Lock> locks = resources.stream()
-				.sorted(comparing(ExclusiveResource::getKey))
+				.distinct()
+				.sorted()
 				.map(resource -> {
 					ReentrantReadWriteLock lock = this.locks.computeIfAbsent(resource.getKey(),
 							key -> new ReentrantReadWriteLock());
@@ -35,6 +35,13 @@ class LockManager {
 				})
 				.collect(toList());
 		// @formatter:on
+		int size = locks.size();
+		if (size == 0) {
+			return NopLock.INSTANCE;
+		}
+		if(size==1){
+			return new SingleLock(locks.get(0));
+		}
 		return new CompositeLock(locks);
 	}
 

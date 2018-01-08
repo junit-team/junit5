@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
 
@@ -117,6 +118,8 @@ public interface Node<C extends EngineExecutionContext> {
 	default List<ExclusiveResource> getExclusiveResources() {
 		return emptyList();
 	}
+
+	default ExecutionMode getExecutionMode() {return ExecutionMode.Concurrent; }
 
 	/**
 	 * The result of determining whether the execution of a given {@code context}

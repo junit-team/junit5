@@ -10,6 +10,12 @@
 
 package org.junit.platform.commons.annotation;
 
+/**
+ * LockMode translates to the respective {@link java.util.concurrent.locks.ReentrantReadWriteLock} locks.
+ *
+ * Enum order is important, since it can be used to sort locks, so the stronger mode has to be first.
+ */
 public enum LockMode {
-	Read, ReadWrite
+	ReadWrite,
+	Read
 }
