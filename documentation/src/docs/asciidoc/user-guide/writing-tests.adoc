@@ -642,9 +642,24 @@ information.
 [[writing-tests-parameterized-tests-sources-ValueSource]]
 ===== @ValueSource
 
-`@ValueSource` is one of the simplest possible sources. It lets you specify an array of
-literals of primitive types (either `String`, `int`, `long`, or `double`) and can only be
-used for providing a single parameter per invocation.
+`@ValueSource` is one of the simplest possible sources. It lets you specify a single
+array of literal values and can only be used for providing a single parameter per
+parameterized test invocation.
+
+The following types of literal values are supported by `@ValueSource`.
+
+- `short`
+- `byte`
+- `int`
+- `long`
+- `float`
+- `double`
+- `char`
+- `java.lang.String`
+- `java.lang.Class`
+
+For example, the following `@ParameterizedTest` method will be invoked three times, with
+the values `1`, `2`, and `3` respectively.
 
 [source,java,indent=0]
 ----

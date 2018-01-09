@@ -71,6 +71,8 @@ _@API Guardian_ JAR _mandatory_ again.
 
 ==== New Features and Improvements
 
+* `@ValueSource` now additionally supports literal values of type `short`, `byte`,
+  `float`, `char`, and `java.lang.Class` for parameterized tests.
 * New support for parameterized tests for implicit conversion from a `String` to an
   argument of any of the following common Java types. See the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit-table,

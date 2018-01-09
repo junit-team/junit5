@@ -69,7 +69,7 @@ class ParameterizedTestDemo {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
 	void testWithValueSource(int argument) {
-		assertNotNull(argument);
+		assertTrue(argument > 0 && argument < 4);
 	}
 	// end::ValueSource_example[]
 
