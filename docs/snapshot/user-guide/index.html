@@ -2888,7 +2888,9 @@ like in the following example.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@EnumSource</span>(<span class="predefined-type">TimeUnit</span>.class)
-<span class="type">void</span> testWithExplicitArgumentConversion(<span class="annotation">@ConvertWith</span>(ToStringArgumentConverter.class) <span class="predefined-type">String</span> argument) {
+<span class="type">void</span> testWithExplicitArgumentConversion(
+        <span class="annotation">@ConvertWith</span>(ToStringArgumentConverter.class) <span class="predefined-type">String</span> argument) {
+
     assertNotNull(<span class="predefined-type">TimeUnit</span>.valueOf(argument));
 }
 
@@ -2912,7 +2914,9 @@ composed annotation <code>JavaTimeConversionPattern</code>.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content">01.01.2017</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">31.12.2017</span><span class="delimiter">&quot;</span></span> })
-<span class="type">void</span> testWithExplicitJavaTimeConverter(<span class="annotation">@JavaTimeConversionPattern</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">dd.MM.yyyy</span><span class="delimiter">&quot;</span></span>) LocalDate argument) {
+<span class="type">void</span> testWithExplicitJavaTimeConverter(
+        <span class="annotation">@JavaTimeConversionPattern</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">dd.MM.yyyy</span><span class="delimiter">&quot;</span></span>) LocalDate argument) {
+
     assertEquals(<span class="integer">2017</span>, argument.getYear());
 }</code></pre>
 </div>
@@ -5563,7 +5567,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-09 03:37:48 EST
+Last updated 2018-01-04 09:42:12 EST
 </div>
 </div>
 </body>
