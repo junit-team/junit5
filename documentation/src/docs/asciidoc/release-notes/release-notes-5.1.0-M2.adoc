@@ -9,6 +9,7 @@ For a complete list of all _closed_ issues and pull requests for this release, c
 link:{junit5-repo}+/milestone/18?closed=1+[5.1 M2] milestone page in the JUnit repository
 on GitHub.
 
+
 [[release-notes-5.1.0-M2-overall-improvements]]
 === Overall Improvements
 
@@ -25,6 +26,7 @@ reason: class file for org.apiguardian.api.API$Status not found
 +
 To avoid confusion, the JUnit team has decided to make the dependency to the
 _@API Guardian_ JAR _mandatory_ again.
+
 
 [[release-notes-5.1.0-M2-junit-platform]]
 === JUnit Platform
@@ -55,6 +57,7 @@ _@API Guardian_ JAR _mandatory_ again.
   annotation are now considered to be implicitly _inherited_ when searching for the given
   meta-annotation within a class hierarchy.
 
+
 [[release-notes-5.1.0-M2-junit-jupiter]]
 === JUnit Jupiter
 
@@ -68,9 +71,15 @@ _@API Guardian_ JAR _mandatory_ again.
 
 ==== New Features and Improvements
 
-* New implicit conversions for parameters of type `java.io.File`, `java.math.BigDecimal`,
-  `java.math.BigInteger`, `java.net.URI`, `java.net.URL`, `java.util.Currency`,
-  `java.util.Locale`, `java.util.UUID` and `java.nio.file.Path` in parameterized tests.
+* New implicit conversions from strings to arguments of type `java.io.File`,
+  `java.math.BigDecimal`, `java.math.BigInteger`, `java.net.URI`, `java.net.URL`,
+  `java.util.Currency`, `java.util.Locale`, `java.util.UUID`, and `java.nio.file.Path` in
+  parameterized tests.
+* New fallback mechanism for parameterized tests for implicit conversion from a `String`
+  to an argument of a given target type if the target type declares exactly one suitable
+  _factory method_ or a _factory constructor_.
+** See <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit-fallback,
+   Fallback String-to-Object Conversion>> in the User Guide for details.
 * Due to a change in the JUnit Platform's `AnnotationUtils` class, non-inherited
   _composed annotations_ which are meta-annotated with a given `@Inherited` annotation
   are now considered to be implicitly _inherited_ when searching for the given
