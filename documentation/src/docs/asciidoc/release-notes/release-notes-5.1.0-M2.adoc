@@ -71,10 +71,20 @@ _@API Guardian_ JAR _mandatory_ again.
 
 ==== New Features and Improvements
 
-* New implicit conversions from strings to arguments of type `java.io.File`,
-  `java.math.BigDecimal`, `java.math.BigInteger`, `java.net.URI`, `java.net.URL`,
-  `java.util.Currency`, `java.util.Locale`, `java.util.UUID`, and `java.nio.file.Path` in
-  parameterized tests.
+* New support for parameterized tests for implicit conversion from a `String` to an
+  argument of any of the following common Java types. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit-table,
+  implicit conversion table>> in the User Guide for examples.
+** `java.io.File`
+** `java.math.BigDecimal`
+** `java.math.BigInteger`
+** `java.net.URI`
+** `java.net.URL`
+** `java.nio.charset.Charset`
+** `java.nio.file.Path`
+** `java.util.Currency`
+** `java.util.Locale`
+** `java.util.UUID`
 * New fallback mechanism for parameterized tests for implicit conversion from a `String`
   to an argument of a given target type if the target type declares exactly one suitable
   _factory method_ or a _factory constructor_.

@@ -799,6 +799,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 
 `String` instances are currently implicitly converted to the following target types.
 
+[[writing-tests-parameterized-tests-argument-conversion-implicit-table]]
 [cols="10,90"]
 |===
 | Target Type | Example
@@ -813,11 +814,12 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 | `double`/`Double`          | `"1.0"`                                  -> `1.0d`
 | `Enum` subclass            | `"SECONDS"`                              -> `TimeUnit.SECONDS`
 | `java.io.File`             | `"/path/to/file"`                        -> `new File("/path/to/file")`
-| `java.nio.file.Path`       | `"/path/to/file"`                        -> `Paths.get("/path/to/file")`
 | `java.math.BigDecimal`     | `"123.456e789"`                          -> `new BigDecimal("123.456e789")`
 | `java.math.BigInteger`     | `"1234567890123456789"`                  -> `new BigInteger("1234567890123456789")`
 | `java.net.URI`             | `"http://junit.org/"`                    -> `URI.create("http://junit.org/")`
 | `java.net.URL`             | `"http://junit.org/"`                    -> `new URL("http://junit.org/")`
+| `java.nio.charset.Charset` | `"UTF-8"`                                -> `Charset.forName("UTF-8")`
+| `java.nio.file.Path`       | `"/path/to/file"`                        -> `Paths.get("/path/to/file")`
 | `java.time.Instant`        | `"1970-01-01T00:00:00Z"`                 -> `Instant.ofEpochMilli(0)`
 | `java.time.LocalDateTime`  | `"2017-03-14T12:34:56.789"`              -> `LocalDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000)`
 | `java.time.LocalDate`      | `"2017-03-14"`                           -> `LocalDate.of(2017, 3, 14)`
