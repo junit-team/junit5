@@ -87,7 +87,26 @@ class RunListenerAdapterTests {
 		verify(listener).testStarting(entryCaptor.capture());
 
 		ReportEntry entry = entryCaptor.getValue();
-		assertEquals(MY_TEST_METHOD_NAME + "()", entry.getName());
+		assertEquals(MY_TEST_METHOD_NAME, entry.getName());
+		assertEquals(MyTestClass.class.getName(), entry.getSourceName());
+		assertNull(entry.getStackTraceWriter());
+	}
+
+	@Test
+	void notifiedWithCompatibleNameForMethodWithArguments() throws Exception {
+		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
+
+		TestPlan testPlan = TestPlan.from(Collections.singletonList(new EngineDescriptor(newId(), "Luke's Plan")));
+		adapter.testPlanExecutionStarted(testPlan);
+
+		TestIdentifier methodIdentifier = identifiersAsParentOnTestPlan(testPlan, newClassDescriptor(),
+			newMethodDescriptor(String.class));
+
+		adapter.executionStarted(methodIdentifier);
+		verify(listener).testStarting(entryCaptor.capture());
+
+		ReportEntry entry = entryCaptor.getValue();
+		assertEquals(MY_TEST_METHOD_NAME + "{String}", entry.getName());
 		assertEquals(MyTestClass.class.getName(), entry.getSourceName());
 		assertNull(entry.getStackTraceWriter());
 	}
@@ -109,11 +128,11 @@ class RunListenerAdapterTests {
 		verifyNoMoreInteractions(listener);
 
 		adapter.executionStarted(TestIdentifier.from(child));
-		verify(listener).testStarting(new SimpleReportEntry(MyTestClass.class.getName(), MY_TEST_METHOD_NAME + "()"));
+		verify(listener).testStarting(new SimpleReportEntry(MyTestClass.class.getName(), MY_TEST_METHOD_NAME));
 		verifyNoMoreInteractions(listener);
 
 		adapter.executionFinished(TestIdentifier.from(child), successful());
-		verify(listener).testSucceeded(new SimpleReportEntry(MyTestClass.class.getName(), MY_TEST_METHOD_NAME + "()"));
+		verify(listener).testSucceeded(new SimpleReportEntry(MyTestClass.class.getName(), MY_TEST_METHOD_NAME));
 		verifyNoMoreInteractions(listener);
 
 		adapter.executionFinished(TestIdentifier.from(parent), successful());
@@ -357,16 +376,16 @@ class RunListenerAdapterTests {
 
 		ReportEntry value = entryCaptor.getValue();
 
-		assertEquals("myNamedTestMethod()", value.getName());
+		assertEquals("myNamedTestMethod", value.getName());
 	}
 
 	private static TestIdentifier newMethodIdentifier() throws Exception {
 		return TestIdentifier.from(newMethodDescriptor());
 	}
 
-	private static TestDescriptor newMethodDescriptor() throws Exception {
+	private static TestDescriptor newMethodDescriptor(Class<?>... parameterTypes) throws Exception {
 		return new TestMethodTestDescriptor(UniqueId.forEngine("method"), MyTestClass.class,
-			MyTestClass.class.getDeclaredMethod(MY_TEST_METHOD_NAME));
+			MyTestClass.class.getDeclaredMethod(MY_TEST_METHOD_NAME, parameterTypes));
 	}
 
 	private static TestIdentifier newClassIdentifier() {
@@ -392,6 +411,7 @@ class RunListenerAdapterTests {
 		TestDescriptor child = mock(TestDescriptor.class);
 		when(child.getUniqueId()).thenReturn(newId());
 		when(child.getType()).thenReturn(Type.TEST);
+		when(child.getLegacyReportingName()).thenReturn("child");
 
 		// Ensure the child source is null yet that there is a parent -- the special case to be tested.
 		when(child.getSource()).thenReturn(Optional.empty());
@@ -443,6 +463,10 @@ class RunListenerAdapterTests {
 	private static class MyTestClass {
 		@Test
 		void myTestMethod() {
+		}
+
+		@Test
+		void myTestMethod(String foo) {
 		}
 
 		@DisplayName("name")

@@ -75,8 +75,8 @@ final class RunListenerAdapter implements TestExecutionListener {
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		ensureTestSetStarted(testIdentifier);
-		String source = sourceLegacyReportingName(testIdentifier);
-		runListener.testSkipped(ignored(source, testIdentifier.getLegacyReportingName(), reason));
+		String source = getLegacyReportingClassName(testIdentifier);
+		runListener.testSkipped(ignored(source, getLegacyReportingName(testIdentifier), reason));
 		completeTestSetIfNecessary(testIdentifier);
 	}
 
@@ -162,12 +162,20 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier, StackTraceWriter stackTraceWriter) {
-		String source = sourceLegacyReportingName(testIdentifier);
-		String name = testIdentifier.getLegacyReportingName();
+		String source = getLegacyReportingClassName(testIdentifier);
+		String name = getLegacyReportingName(testIdentifier);
+
 		return SimpleReportEntry.withException(source, name, stackTraceWriter);
 	}
 
-	private String sourceLegacyReportingName(TestIdentifier testIdentifier) {
+	private String getLegacyReportingName(TestIdentifier testIdentifier) {
+		// Surefire cuts off the name at the first '(' character. Thus, we have to pick a different
+		// character to represent parentheses. "()" are removed entirely to maximize compatibility with
+		// existing reporting tools because in the old days test methods used to not have parameters.
+		return testIdentifier.getLegacyReportingName().replace("()", "").replace('(', '{').replace(')', '}');
+	}
+
+	private String getLegacyReportingClassName(TestIdentifier testIdentifier) {
 		return LegacyReportingUtils.getLegacyReportingClassName(testPlan, testIdentifier);
 	}
 
