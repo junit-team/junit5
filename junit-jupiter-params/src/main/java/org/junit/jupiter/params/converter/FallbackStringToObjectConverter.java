@@ -30,7 +30,7 @@ import org.junit.jupiter.params.converter.DefaultArgumentConverter.StringToObjec
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * {@code GenericStringToObjectConverter} is a {@link StringToObjectConverter}
+ * {@code FallbackStringToObjectConverter} is a {@link StringToObjectConverter}
  * that provides a fallback conversion strategy for converting from a
  * {@link String} to a given target type by invoking a static factory method
  * or factory constructor defined in the target type.
@@ -52,7 +52,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  * @see DefaultArgumentConverter
  */
-class GenericStringToObjectConverter implements StringToObjectConverter {
+class FallbackStringToObjectConverter implements StringToObjectConverter {
 
 	/**
 	 * Implementation of the NULL Object Pattern.

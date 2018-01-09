@@ -19,21 +19,21 @@ import java.util.Objects;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.converter.GenericStringToObjectConverter.IsFactoryConstructor;
-import org.junit.jupiter.params.converter.GenericStringToObjectConverter.IsFactoryMethod;
+import org.junit.jupiter.params.converter.FallbackStringToObjectConverter.IsFactoryConstructor;
+import org.junit.jupiter.params.converter.FallbackStringToObjectConverter.IsFactoryMethod;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * Unit tests for {@link GenericStringToObjectConverter}, {@link IsFactoryMethod},
+ * Unit tests for {@link FallbackStringToObjectConverter}, {@link IsFactoryMethod},
  * and {@link IsFactoryConstructor}.
  *
  * @since 5.1
  */
-class GenericStringToObjectConverterTests {
+class FallbackStringToObjectConverterTests {
 
 	private static final IsFactoryMethod isBookFactoryMethod = new IsFactoryMethod(Book.class);
 
-	private static final GenericStringToObjectConverter converter = new GenericStringToObjectConverter();
+	private static final FallbackStringToObjectConverter converter = new FallbackStringToObjectConverter();
 
 	@Test
 	void isNotFactoryMethodForWrongParameterType() {

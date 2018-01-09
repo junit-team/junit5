@@ -73,7 +73,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		new StringToEnumConverter(), //
 		new StringToJavaTimeConverter(), //
 		new StringToCommonJavaTypesConverter(), //
-		new GenericStringToObjectConverter() //
+		new FallbackStringToObjectConverter() //
 	));
 
 	private DefaultArgumentConverter() {
