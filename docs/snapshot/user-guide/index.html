@@ -2672,8 +2672,8 @@ method parameter.</p>
 </div>
 <div class="paragraph">
 <p>For example, if a <code>@ParameterizedTest</code> declares a parameter of type <code>TimeUnit</code> and the
-actual type supplied by the declared source is a <code>String</code>, the string will automatically
-be converted into the corresponding <code>TimeUnit</code> enum constant.</p>
+actual type supplied by the declared source is a <code>String</code>, the string will be
+automatically converted into the corresponding <code>TimeUnit</code> enum constant.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2809,11 +2809,78 @@ be converted into the corresponding <code>TimeUnit</code> enum constant.</p>
 </tr>
 </tbody>
 </table>
+<div class="sect5">
+<h6 id="writing-tests-parameterized-tests-argument-conversion-implicit-fallback"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-implicit-fallback"></a>Fallback String-to-Object Conversion</h6>
+<div class="paragraph">
+<p>In addition to implicit conversion from strings to the target types listed in the above
+table, JUnit Jupiter also provides a fallback mechanism for automatic conversion from a
+<code>String</code> to a given target type if the target type declares exactly one suitable <em>factory
+method</em> or a <em>factory constructor</em> as defined below.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>factory method</em>: a non-private, <code>static</code> method declared in the target type that
+accepts a single <code>String</code> argument and returns an instance of the target type. The name
+of the method can be arbitrary and need not follow any particular convention.</p>
+</li>
+<li>
+<p><em>factory constructor</em>: a non-private constructor in the target type that accepts a
+single <code>String</code> argument.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If multiple <em>factory methods</em> are discovered, they will be ignored. If a <em>factory
+method</em> and a <em>factory constructor</em> are discovered, the factory method will be used
+instead of the constructor.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For example, in the following <code>@ParameterizedTest</code> method, the <code>Book</code> argument will be
+created by invoking the <code>Book.fromTitle(String)</code> factory method and passing <code>"42 Cats"</code>
+as the title of the book.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@ValueSource</span>(strings = <span class="string"><span class="delimiter">&quot;</span><span class="content">42 Cats</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> testWithImplicitFallbackArgumentConversion(<span class="predefined-type">Book</span> book) {
+    assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">42 Cats</span><span class="delimiter">&quot;</span></span>, book.getTitle());
+}
+
+<span class="directive">static</span> <span class="type">class</span> <span class="class">Book</span> {
+
+    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> title;
+
+    <span class="directive">private</span> <span class="predefined-type">Book</span>(<span class="predefined-type">String</span> title) {
+        <span class="local-variable">this</span>.title = title;
+    }
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">Book</span> fromTitle(<span class="predefined-type">String</span> title) {
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="predefined-type">Book</span>(title);
+    }
+
+    <span class="directive">public</span> <span class="predefined-type">String</span> getTitle() {
+        <span class="keyword">return</span> <span class="local-variable">this</span>.title;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-argument-conversion-explicit"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-explicit"></a>Explicit Conversion</h5>
 <div class="paragraph">
-<p>Instead of using implicit argument conversion you may explicitly specify an
+<p>Instead of relying on implicit argument conversion you may explicitly specify an
 <code>ArgumentConverter</code> to use for a certain parameter using the <code>@ConvertWith</code> annotation
 like in the following example.</p>
 </div>
@@ -2836,9 +2903,9 @@ like in the following example.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Explicit argument converters are meant to be implemented by test authors. Thus,
-<code>junit-jupiter-params</code> only provides a single explicit argument converter that may also
-serve as a reference implementation: <code>JavaTimeArgumentConverter</code>. It is used via the
+<p>Explicit argument converters are meant to be implemented by test and extension authors.
+Thus, <code>junit-jupiter-params</code> only provides a single explicit argument converter that may
+also serve as a reference implementation: <code>JavaTimeArgumentConverter</code>. It is used via the
 composed annotation <code>JavaTimeConversionPattern</code>.</p>
 </div>
 <div class="listingblock">
@@ -5496,7 +5563,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-09 04:56:17 EST
+Last updated 2018-01-09 03:37:48 EST
 </div>
 </div>
 </body>

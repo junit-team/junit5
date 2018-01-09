@@ -775,9 +775,22 @@ meta-annotation within a class hierarchy.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>New implicit conversions for parameters of type <code>java.io.File</code>, <code>java.math.BigDecimal</code>,
-<code>java.math.BigInteger</code>, <code>java.net.URI</code>, <code>java.net.URL</code>, <code>java.util.Currency</code>,
-<code>java.util.Locale</code>, <code>java.util.UUID</code> and <code>java.nio.file.Path</code> in parameterized tests.</p>
+<p>New implicit conversions from strings to arguments of type <code>java.io.File</code>,
+<code>java.math.BigDecimal</code>, <code>java.math.BigInteger</code>, <code>java.net.URI</code>, <code>java.net.URL</code>,
+<code>java.util.Currency</code>, <code>java.util.Locale</code>, <code>java.util.UUID</code>, and <code>java.nio.file.Path</code> in
+parameterized tests.</p>
+</li>
+<li>
+<p>New fallback mechanism for parameterized tests for implicit conversion from a <code>String</code>
+to an argument of a given target type if the target type declares exactly one suitable
+<em>factory method</em> or a <em>factory constructor</em>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="../user-guide/index.html#writing-tests-parameterized-tests-argument-conversion-implicit-fallback">Fallback String-to-Object Conversion</a> in the User Guide for details.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>Due to a change in the JUnit Platform&#8217;s <code>AnnotationUtils</code> class, non-inherited
@@ -3560,7 +3573,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-09 04:56:17 EST
+Last updated 2018-01-09 03:37:48 EST
 </div>
 </div>
 </body>
