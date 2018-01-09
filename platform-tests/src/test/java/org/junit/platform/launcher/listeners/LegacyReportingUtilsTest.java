@@ -32,8 +32,8 @@ class LegacyReportingUtilsTest {
 		TestDescriptor testDescriptor = createTestDescriptor(uniqueId, "Bar", null);
 		engineDescriptor.addChild(testDescriptor);
 
-		assertThat(getLegacyReportingClassName(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
-		assertThat(getLegacyReportingClassName(uniqueId)).isEqualTo("Foo");
+		assertThat(getClassName(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
+		assertThat(getClassName(uniqueId)).isEqualTo("Foo");
 	}
 
 	@Test
@@ -51,16 +51,15 @@ class LegacyReportingUtilsTest {
 		TestDescriptor subSubDescriptor = createTestDescriptor(subSubUniqueId, "Qux", null);
 		subDescriptor.addChild(subSubDescriptor);
 
-		assertThat(getLegacyReportingClassName(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
-		assertThat(getLegacyReportingClassName(classUniqueId)).isEqualTo(LegacyReportingUtilsTest.class.getName());
-		assertThat(getLegacyReportingClassName(subUniqueId)).isEqualTo(LegacyReportingUtilsTest.class.getName());
-		assertThat(getLegacyReportingClassName(subSubUniqueId)).isEqualTo(LegacyReportingUtilsTest.class.getName());
+		assertThat(getClassName(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
+		assertThat(getClassName(classUniqueId)).isEqualTo(LegacyReportingUtilsTest.class.getName());
+		assertThat(getClassName(subUniqueId)).isEqualTo(LegacyReportingUtilsTest.class.getName());
+		assertThat(getClassName(subSubUniqueId)).isEqualTo(LegacyReportingUtilsTest.class.getName());
 	}
 
-	private String getLegacyReportingClassName(UniqueId uniqueId) {
+	private String getClassName(UniqueId uniqueId) {
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
-		return LegacyReportingUtils.getLegacyReportingClassName(testPlan,
-			testPlan.getTestIdentifier(uniqueId.toString()));
+		return LegacyReportingUtils.getClassName(testPlan, testPlan.getTestIdentifier(uniqueId.toString()));
 	}
 
 	private TestDescriptor createTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {

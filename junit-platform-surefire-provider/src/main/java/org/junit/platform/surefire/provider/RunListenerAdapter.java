@@ -176,7 +176,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	private String getLegacyReportingClassName(TestIdentifier testIdentifier) {
-		return LegacyReportingUtils.getLegacyReportingClassName(testPlan, testIdentifier);
+		return LegacyReportingUtils.getClassName(testPlan, testIdentifier);
 	}
 
 	private StackTraceWriter getStackTraceWriter(TestIdentifier testIdentifier,
