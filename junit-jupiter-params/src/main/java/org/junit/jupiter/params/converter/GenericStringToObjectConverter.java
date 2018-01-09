@@ -23,10 +23,10 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.params.converter.DefaultArgumentConverter.StringToObjectConverter;
-import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -57,16 +57,7 @@ class GenericStringToObjectConverter implements StringToObjectConverter {
 	/**
 	 * Implementation of the NULL Object Pattern.
 	 */
-	private static final Executable NULL_EXECUTABLE;
-
-	static {
-		try {
-			NULL_EXECUTABLE = GenericStringToObjectConverter.class.getDeclaredMethod("nullExecutable");
-		}
-		catch (Exception ex) {
-			throw new PreconditionViolationException("Failed to locate internal method 'nullExecutable()'.", ex);
-		}
-	}
+	private static final Function<String, Object> NULL_EXECUTABLE = source -> source;
 
 	/**
 	 * Cache for factory methods and factory constructors.
@@ -76,7 +67,8 @@ class GenericStringToObjectConverter implements StringToObjectConverter {
 	 * This prevents the framework from repeatedly searching for things which
 	 * are already known not to exist.
 	 */
-	private static final ConcurrentHashMap<Class<?>, Executable> factoryExecutableCache = new ConcurrentHashMap<>(64);
+	private static final ConcurrentHashMap<Class<?>, Function<String, Object>> factoryExecutableCache //
+		= new ConcurrentHashMap<>(64);
 
 	@Override
 	public boolean canConvert(Class<?> targetType) {
@@ -85,35 +77,22 @@ class GenericStringToObjectConverter implements StringToObjectConverter {
 
 	@Override
 	public Object convert(String source, Class<?> targetType) throws Exception {
-		Executable executable = findFactoryExecutable(targetType);
+		Function<String, Object> executable = findFactoryExecutable(targetType);
 		Preconditions.condition(executable != NULL_EXECUTABLE,
 			"Illegal state: convert() must not be called if canConvert() returned false");
 
-		if (executable instanceof Method) {
-			return invokeMethod((Method) executable, null, source);
-		}
-
-		if (executable instanceof Constructor<?>) {
-			return newInstance((Constructor<?>) executable, source);
-		}
-
-		// Should not actually get here since an Executable is either a Method
-		// or a Constructor, but just in case something unexpected happens in a
-		// future Java release...
-		throw new ArgumentConversionException(String.format(
-			"Failed to convert String \"%s\" to type %s via a static factory method or factory constructor", source,
-			targetType.getName()));
+		return executable.apply(source);
 	}
 
-	private static Executable findFactoryExecutable(Class<?> targetType) {
+	private static Function<String, Object> findFactoryExecutable(Class<?> targetType) {
 		return factoryExecutableCache.computeIfAbsent(targetType, type -> {
 			Method factoryMethod = findFactoryMethod(type);
 			if (factoryMethod != null) {
-				return factoryMethod;
+				return source -> invokeMethod(factoryMethod, null, source);
 			}
 			Constructor<?> constructor = findFactoryConstructor(type);
 			if (constructor != null) {
-				return constructor;
+				return source -> newInstance(constructor, source);
 			}
 			return NULL_EXECUTABLE;
 		});
@@ -190,13 +169,6 @@ class GenericStringToObjectConverter implements StringToObjectConverter {
 		return isNotPrivate(executable) //
 				&& (executable.getParameterCount() == 1) //
 				&& (executable.getParameterTypes()[0] == String.class);
-	}
-
-	/**
-	 * Loaded via reflection. See {@link #NULL_EXECUTABLE}.
-	 */
-	@SuppressWarnings("unused")
-	private static void nullExecutable() {
 	}
 
 }
