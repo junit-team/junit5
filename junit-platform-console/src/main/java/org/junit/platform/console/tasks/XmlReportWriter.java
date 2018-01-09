@@ -158,7 +158,7 @@ class XmlReportWriter {
 	}
 
 	private String getClassName(TestIdentifier testIdentifier) {
-		return LegacyReportingUtils.getLegacyReportingClassName(this.reportData.getTestPlan(), testIdentifier);
+		return LegacyReportingUtils.getClassName(this.reportData.getTestPlan(), testIdentifier);
 	}
 
 	private void writeSkippedOrErrorOrFailureElement(TestIdentifier testIdentifier, XMLStreamWriter writer)

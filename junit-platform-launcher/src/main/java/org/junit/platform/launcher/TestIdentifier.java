@@ -130,6 +130,7 @@ public final class TestIdentifier implements Serializable {
 	 *
 	 * @return the legacy reporting name; never {@code null} or blank
 	 * @see org.junit.platform.engine.TestDescriptor#getLegacyReportingName()
+	 * @see org.junit.platform.launcher.listeners.LegacyReportingUtils
 	 */
 	public String getLegacyReportingName() {
 		return this.legacyReportingName;
