@@ -775,10 +775,43 @@ meta-annotation within a class hierarchy.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>New implicit conversions from strings to arguments of type <code>java.io.File</code>,
-<code>java.math.BigDecimal</code>, <code>java.math.BigInteger</code>, <code>java.net.URI</code>, <code>java.net.URL</code>,
-<code>java.util.Currency</code>, <code>java.util.Locale</code>, <code>java.util.UUID</code>, and <code>java.nio.file.Path</code> in
-parameterized tests.</p>
+<p>New support for parameterized tests for implicit conversion from a <code>String</code> to an
+argument of any of the following common Java types. See the
+<a href="../user-guide/index.html#writing-tests-parameterized-tests-argument-conversion-implicit-table">implicit conversion table</a> in the User Guide for examples.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>java.io.File</code></p>
+</li>
+<li>
+<p><code>java.math.BigDecimal</code></p>
+</li>
+<li>
+<p><code>java.math.BigInteger</code></p>
+</li>
+<li>
+<p><code>java.net.URI</code></p>
+</li>
+<li>
+<p><code>java.net.URL</code></p>
+</li>
+<li>
+<p><code>java.nio.charset.Charset</code></p>
+</li>
+<li>
+<p><code>java.nio.file.Path</code></p>
+</li>
+<li>
+<p><code>java.util.Currency</code></p>
+</li>
+<li>
+<p><code>java.util.Locale</code></p>
+</li>
+<li>
+<p><code>java.util.UUID</code></p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>New fallback mechanism for parameterized tests for implicit conversion from a <code>String</code>
@@ -3573,7 +3606,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-04 09:42:12 EST
+Last updated 2018-01-09 03:37:48 EST
 </div>
 </div>
 </body>

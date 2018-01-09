@@ -2687,7 +2687,7 @@ automatically converted into the corresponding <code>TimeUnit</code> enum consta
 <div class="paragraph">
 <p><code>String</code> instances are currently implicitly converted to the following target types.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table id="writing-tests-parameterized-tests-argument-conversion-implicit-table" class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
 <col style="width: 90%;">
@@ -2740,10 +2740,6 @@ automatically converted into the corresponding <code>TimeUnit</code> enum consta
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"/path/to/file"</code>                        &#8594; <code>new File("/path/to/file")</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.nio.file.Path</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"/path/to/file"</code>                        &#8594; <code>Paths.get("/path/to/file")</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"123.456e789"</code>                          &#8594; <code>new BigDecimal("123.456e789")</code></p></td>
 </tr>
@@ -2758,6 +2754,14 @@ automatically converted into the corresponding <code>TimeUnit</code> enum consta
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.net.URL</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"http://junit.org/"</code>                    &#8594; <code>new URL("http://junit.org/")</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.nio.charset.Charset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"UTF-8"</code>                                &#8594; <code>Charset.forName("UTF-8")</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.nio.file.Path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"/path/to/file"</code>                        &#8594; <code>Paths.get("/path/to/file")</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Instant</code></p></td>
@@ -5567,7 +5571,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-04 09:42:12 EST
+Last updated 2018-01-09 03:37:48 EST
 </div>
 </div>
 </body>
