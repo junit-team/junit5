@@ -10,7 +10,13 @@
 
 package org.junit.jupiter.params.provider;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.util.stream.Collectors.groupingBy;
+
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -36,13 +42,15 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		Class<?> testClass = context.getRequiredTestClass();
 		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
-		return Arrays.stream(methodNames)
+		Stream<Arguments> allArgumentsStream = Arrays.stream(methodNames)
 				.map(methodName -> ReflectionUtils.findMethod(testClass, methodName)
 					.orElseThrow(() -> new JUnitException("Could not find method: " + methodName)))
 				.map(method -> ReflectionUtils.invokeMethod(method, testInstance))
 				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);
 		// @formatter:on
+		Map<Boolean, List<Arguments>> byOnly = allArgumentsStream.collect(groupingBy(o -> o.only()));
+		return byOnly.getOrDefault(TRUE, byOnly.get(FALSE)).stream();
 	}
 
 	private static Arguments toArguments(Object item) {
