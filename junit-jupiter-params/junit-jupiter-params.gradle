@@ -34,6 +34,7 @@ dependencies {
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
+	testRuntimeOnly(project(':junit-vintage-engine'))
 	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
