@@ -211,6 +211,31 @@ class ParameterizedTestDemo {
 	}
 	// end::implicit_conversion_example[]
 
+	// tag::implicit_fallback_conversion_example[]
+	@ParameterizedTest
+	@ValueSource(strings = "42 Cats")
+	void testWithImplicitFallbackArgumentConversion(Book book) {
+		assertEquals("42 Cats", book.getTitle());
+	}
+
+	static class Book {
+
+		private final String title;
+
+		private Book(String title) {
+			this.title = title;
+		}
+
+		public static Book fromTitle(String title) {
+			return new Book(title);
+		}
+
+		public String getTitle() {
+			return this.title;
+		}
+	}
+	// end::implicit_fallback_conversion_example[]
+
 	// tag::explicit_conversion_example[]
 	@ParameterizedTest
 	@EnumSource(TimeUnit.class)
