@@ -39,8 +39,17 @@ _@API Guardian_ JAR _mandatory_ again.
   current module layer is the one that the class loader for the `ModuleUtils` class
   returns. If the current layer cannot be obtained, the algorithm falls back to the boot
   layer.
-* The XML report produced by the `ConsoleLauncher` is no longer invalid when the exception
-  message of a failed test contains the XML CDATA end marker `]]>`.
+* The XML report produced by the `ConsoleLauncher` and Gradle plugin is no longer invalid
+  when the exception message of a failed test contains the XML CDATA end marker `]]>`.
+* The `ConsoleLauncher`, the Gradle plugin, and the Maven Surefire provider now attempt to
+  write a valid class name into the `classname` attribute of `<testcase/>` elements in the
+  XML reports. In addition, the `name` attribute of dynamic tests and test template
+  invocations (such as repeated and parameterized tests) is now suffixed with the index of
+  the invocation so they are distinguishable by reporting tools.
+* The Maven Surefire provider now includes the method parameter types when writing the
+  `name` attribute of `<testcase/>` elements into XML reports. However, due to a
+  limitation of Maven Surefire, instead of `methodName(Type)` they are written as
+  `methodName{Type}`.
 
 ==== Deprecations and Breaking Changes
 
