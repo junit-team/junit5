@@ -236,10 +236,13 @@ class ParameterizedTestDemo {
 	}
 	// end::implicit_fallback_conversion_example[]
 
+	// @formatter:off
 	// tag::explicit_conversion_example[]
 	@ParameterizedTest
 	@EnumSource(TimeUnit.class)
-	void testWithExplicitArgumentConversion(@ConvertWith(ToStringArgumentConverter.class) String argument) {
+	void testWithExplicitArgumentConversion(
+			@ConvertWith(ToStringArgumentConverter.class) String argument) {
+
 		assertNotNull(TimeUnit.valueOf(argument));
 	}
 
@@ -256,10 +259,13 @@ class ParameterizedTestDemo {
 	// tag::explicit_java_time_converter[]
 	@ParameterizedTest
 	@ValueSource(strings = { "01.01.2017", "31.12.2017" })
-	void testWithExplicitJavaTimeConverter(@JavaTimeConversionPattern("dd.MM.yyyy") LocalDate argument) {
+	void testWithExplicitJavaTimeConverter(
+			@JavaTimeConversionPattern("dd.MM.yyyy") LocalDate argument) {
+
 		assertEquals(2017, argument.getYear());
 	}
 	// end::explicit_java_time_converter[]
+	// @formatter:on
 
 	// tag::custom_display_names[]
 	@DisplayName("Display name of container")
