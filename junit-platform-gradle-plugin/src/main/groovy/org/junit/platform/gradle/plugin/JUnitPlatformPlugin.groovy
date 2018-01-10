@@ -119,18 +119,18 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			configureTaskDependencies(project, it, junitExtension)
 
 			if (junitExtension.enableModulePath) {
-				// Set module-path and clear classpath and main class.
+				// Set module-path and add all modules that are available.
 				jvmArgs = [
 					'--module-path',
 					project.files(project.sourceSets.test.runtimeClasspath, project.configurations.junitPlatform).asPath,
 					'--add-modules',
-					'ALL-MODULE-PATH',
-					//'--module',
-					//'org.junit.platform.console' ... args will cover that
+					'ALL-MODULE-PATH'
 				]
 
 				classpath = project.files()
-				main = ""
+				// Set main class name to '--module' (https://github.com/junit-team/junit5/issues/1234)
+				// The first argument will be 'org.junit.platform.console'
+				main = '--module'
 			} else {
 				// Build the classpath from the user's test runtime classpath and the JUnit
 				// Platform modules.
@@ -160,7 +160,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		def args = []
 
 		if (junitExtension.enableModulePath) {
-			args.addAll('--module', 'org.junit.platform.console')
+			args.add('org.junit.platform.console')
 		}
 
 		if (junitExtension.details) {
