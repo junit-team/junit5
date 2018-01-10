@@ -2407,16 +2407,54 @@ information.</p>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-ValueSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-ValueSource"></a>@ValueSource</h5>
 <div class="paragraph">
-<p><code>@ValueSource</code> is one of the simplest possible sources. It lets you specify an array of
-literals of primitive types (either <code>String</code>, <code>int</code>, <code>long</code>, or <code>double</code>) and can only be
-used for providing a single parameter per invocation.</p>
+<p><code>@ValueSource</code> is one of the simplest possible sources. It lets you specify a single
+array of literal values and can only be used for providing a single parameter per
+parameterized test invocation.</p>
+</div>
+<div class="paragraph">
+<p>The following types of literal values are supported by <code>@ValueSource</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>short</code></p>
+</li>
+<li>
+<p><code>byte</code></p>
+</li>
+<li>
+<p><code>int</code></p>
+</li>
+<li>
+<p><code>long</code></p>
+</li>
+<li>
+<p><code>float</code></p>
+</li>
+<li>
+<p><code>double</code></p>
+</li>
+<li>
+<p><code>char</code></p>
+</li>
+<li>
+<p><code>java.lang.String</code></p>
+</li>
+<li>
+<p><code>java.lang.Class</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, the following <code>@ParameterizedTest</code> method will be invoked three times, with
+the values <code>1</code>, <code>2</code>, and <code>3</code> respectively.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@ValueSource</span>(ints = { <span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span> })
 <span class="type">void</span> testWithValueSource(<span class="type">int</span> argument) {
-    assertNotNull(argument);
+    assertTrue(argument &gt; <span class="integer">0</span> &amp;&amp; argument &lt; <span class="integer">4</span>);
 }</code></pre>
 </div>
 </div>
@@ -5571,7 +5609,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-09 03:37:48 EST
+Last updated 2018-01-10 10:12:17 EST
 </div>
 </div>
 </body>
