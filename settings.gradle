@@ -24,3 +24,8 @@ rootProject.children.each { project ->
 	project.buildFileName = "${project.name}.gradle"
 	assert project.buildFile.isFile()
 }
+
+// Disable Kotlin support on Java 10 or higher
+// Details at https://github.com/junit-team/junit5/issues/1169
+// Blocked by https://youtrack.jetbrains.com/issue/KT-21303
+gradle.ext.kotlinIsSupported = Runtime.version().major() < 10

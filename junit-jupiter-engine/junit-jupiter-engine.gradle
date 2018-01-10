@@ -17,6 +17,20 @@ test {
 }
 */
 
+// Disable these tests on Java 10 as they depend on working
+// Kotlin compilation.
+if (!gradle.ext.kotlinIsSupported) {
+	sourceSets {
+		test {
+			java {
+				srcDir 'src'
+				exclude '**/AtypicalJvmMethodNameTests**'
+				exclude '**/TestInstanceLifecycleTests**'
+			}
+		}
+	}
+}
+
 jar {
 	manifest {
 		attributes(
