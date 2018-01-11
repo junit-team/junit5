@@ -22,11 +22,11 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 
-public class TestMethodFilter implements PostDiscoveryFilter {
+class TestMethodFilter implements PostDiscoveryFilter {
 
 	private final TestListResolver testListResolver;
 
-	public TestMethodFilter(TestListResolver testListResolver) {
+	TestMethodFilter(TestListResolver testListResolver) {
 		this.testListResolver = testListResolver;
 	}
 
