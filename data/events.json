@@ -368,5 +368,35 @@
       "sbrannen",
       "sormuras"
     ]
+  },
+  {
+    "title": "JUnit 5 — The New Testing Framework for Java and Platform for the JVM",
+    "event": "JAX",
+    "date": "2018-04-17",
+    "location": "Istanbul, Turkey",
+    "link": "http://www.istanbultechtalks.com/",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
+    "title": "JUnit 5 — The New Testing Framework for Java and Platform for the JVM",
+    "event": "JAX",
+    "date": "2018-04-24",
+    "location": "Mainz, Germany",
+    "link": "https://jax.de/core-java-jvm-languages/junit-5-the-new-testing-framework-for-java-and-platform-for-the-jvm/",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
+    "title": "JUnit 5 Extensions: From Conditional Test Execution to Test Templates",
+    "event": "GeeCON",
+    "date": "2018-05-09",
+    "location": "Krakow, Poland",
+    "link": "https://2018.geecon.org/",
+    "speakers": [
+      "marcphilipp"
+    ]
   }
 ]
