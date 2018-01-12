@@ -126,7 +126,10 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 					'--add-modules',
 					'ALL-MODULE-PATH'
 				]
-
+				// Clear classpath.
+				// Caveat: `JavaExec` task uses its `classpath` parameter to find tasks which create the
+				// needed JARs and marks these tasks as dependencies during the task graph generation phase.
+				// https://github.com/junit-team/junit5/issues/1233
 				classpath = project.files()
 				// Set main class name to '--module' (https://github.com/junit-team/junit5/issues/1234)
 				// The first argument will be 'org.junit.platform.console'
@@ -147,8 +150,9 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	}
 
 	private void configureTaskDependencies(project, junitTask, junitExtension) {
-		def testClassesTask = project.tasks.getByName('testClasses')
-		junitTask.dependsOn testClassesTask
+		// https://github.com/junit-team/junit5/issues/1233
+		junitTask.dependsOn.add(project.sourceSets.test.runtimeClasspath)
+		junitTask.dependsOn.add(project.configurations.junitPlatform)
 
 		def testTask = project.tasks.getByName('test')
 		testTask.dependsOn junitTask
