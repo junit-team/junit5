@@ -52,7 +52,7 @@ dependencies {
 }
 
 asciidoctorj {
-	version = '1.5.7'
+	version = '1.5.6'
 }
 
 ext {
