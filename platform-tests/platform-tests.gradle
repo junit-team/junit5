@@ -35,7 +35,7 @@ dependencies {
 	testImplementation("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-	testImplementation("io.github.lukehutch:fast-classpath-scanner:2.9.3")
+	testImplementation("io.github.lukehutch:fast-classpath-scanner:2.9.4")
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(':junit-jupiter-engine'))
