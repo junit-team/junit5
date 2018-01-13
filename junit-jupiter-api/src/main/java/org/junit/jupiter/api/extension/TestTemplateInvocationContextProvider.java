@@ -82,6 +82,6 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 * @see #supportsTestTemplate
 	 * @see ExtensionContext
 	 */
-	Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context);
+	Stream<? extends TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context);
 
 }
