@@ -476,7 +476,8 @@ public final class ReflectionUtils {
 			throws ClassNotFoundException {
 
 		Class<?> componentType = classNameToTypeMap.containsKey(componentTypeName)
-				? classNameToTypeMap.get(componentTypeName) : classLoader.loadClass(componentTypeName);
+				? classNameToTypeMap.get(componentTypeName)
+				: classLoader.loadClass(componentTypeName);
 
 		return Optional.of(Array.newInstance(componentType, new int[dimensions]).getClass());
 	}

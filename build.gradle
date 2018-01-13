@@ -8,7 +8,7 @@ buildscript {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
-		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.6.0')
+		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.8.0')
 		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
 		classpath('org.ajoberstar:gradle-git-publish:0.3.2')
 		classpath('org.ajoberstar:gradle-git:1.7.2')
