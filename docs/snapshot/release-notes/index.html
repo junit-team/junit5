@@ -710,8 +710,21 @@ returns. If the current layer cannot be obtained, the algorithm falls back to th
 layer.</p>
 </li>
 <li>
-<p>The XML report produced by the <code>ConsoleLauncher</code> is no longer invalid when the exception
-message of a failed test contains the XML CDATA end marker <code>]]&gt;</code>.</p>
+<p>The XML report produced by the <code>ConsoleLauncher</code> and Gradle plugin is no longer invalid
+when the exception message of a failed test contains the XML CDATA end marker <code>]]&gt;</code>.</p>
+</li>
+<li>
+<p>The <code>ConsoleLauncher</code>, the Gradle plugin, and the Maven Surefire provider now attempt to
+write a valid class name into the <code>classname</code> attribute of <code>&lt;testcase/&gt;</code> elements in the
+XML reports. In addition, the <code>name</code> attribute of dynamic tests and test template
+invocations (such as repeated and parameterized tests) is now suffixed with the index of
+the invocation so they are distinguishable by reporting tools.</p>
+</li>
+<li>
+<p>The Maven Surefire provider now includes the method parameter types when writing the
+<code>name</code> attribute of <code>&lt;testcase/&gt;</code> elements into XML reports. However, due to a
+limitation of Maven Surefire, instead of <code>methodName(Type)</code> they are written as
+<code>methodName{Type}</code>.</p>
 </li>
 </ul>
 </div>
@@ -3614,7 +3627,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-13 11:18:27 EST
+Last updated 2018-01-13 09:41:07 EST
 </div>
 </div>
 </body>
