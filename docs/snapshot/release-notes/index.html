@@ -873,6 +873,12 @@ extension context ends, the associated store is closed, and each stored value th
 an instance of <code>ExtensionContext.Store.CloseableResource</code> is notified by an invocation
 of its <code>close()</code> method.</p>
 </li>
+<li>
+<p>Selected dynamic tests and test template invocations can now be executed separately
+without running the complete test factory or test template. This allows to rerun single
+or selected parameterized, repeated or dynamic tests by selecting their unique IDs in
+subsequent discovery requests.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -3627,7 +3633,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-13 09:41:07 EST
+Last updated 2018-01-12 04:10:27 EST
 </div>
 </div>
 </body>
