@@ -11,7 +11,7 @@ buildscript {
 }
 
 plugins {
-	id 'org.asciidoctor.convert' version '1.5.6'
+	id 'org.asciidoctor.convert' version '1.5.7'
 }
 
 apply plugin: 'org.junit.platform.gradle.plugin'
@@ -52,7 +52,7 @@ dependencies {
 }
 
 asciidoctorj {
-	version = '1.5.6'
+	version = '1.5.7'
 }
 
 ext {
