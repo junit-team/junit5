@@ -29,20 +29,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.engine.FilterResult;
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
+/**
+ * Unit tests for {@link TestMethodFilter}.
+ *
+ * @since 1.1
+ */
 class TestMethodFilterTests {
+
+	private final TestListResolver resolver = mock(TestListResolver.class);
+
+	private final TestMethodFilter filter = new TestMethodFilter(this.resolver);
 
 	@Test
 	void includesBasedOnTestListResolver() throws Exception {
-		TestListResolver resolver = mock(TestListResolver.class);
 		when(resolver.shouldRun(toClassFileName(TestClass.class), "testMethod")).thenReturn(true);
 
-		TestMethodFilter filter = new TestMethodFilter(resolver);
-		TestDescriptor descriptor = newTestMethodDescriptor();
-
-		FilterResult result = filter.apply(descriptor);
+		FilterResult result = filter.apply(newTestMethodDescriptor());
 
 		assertTrue(result.included());
 		assertFalse(result.excluded());
@@ -50,13 +54,9 @@ class TestMethodFilterTests {
 
 	@Test
 	void excludesBasedOnTestListResolver() throws Exception {
-		TestListResolver resolver = mock(TestListResolver.class);
 		when(resolver.shouldRun(toClassFileName(TestClass.class), "testMethod")).thenReturn(false);
 
-		TestMethodFilter filter = new TestMethodFilter(resolver);
-		TestDescriptor descriptor = newTestMethodDescriptor();
-
-		FilterResult result = filter.apply(descriptor);
+		FilterResult result = filter.apply(newTestMethodDescriptor());
 
 		assertFalse(result.included());
 		assertTrue(result.excluded());
@@ -64,11 +64,7 @@ class TestMethodFilterTests {
 
 	@Test
 	void includesTestDescriptorWithClassSource() throws Exception {
-		TestListResolver resolver = mock(TestListResolver.class);
-		TestMethodFilter filter = new TestMethodFilter(resolver);
-		ClassTestDescriptor descriptor = newClassTestDescriptor();
-
-		FilterResult result = filter.apply(descriptor);
+		FilterResult result = filter.apply(newClassTestDescriptor());
 
 		assertTrue(result.included());
 		assertFalse(result.excluded());
@@ -90,4 +86,5 @@ class TestMethodFilterTests {
 		public void testMethod() {
 		}
 	}
+
 }
