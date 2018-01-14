@@ -757,6 +757,13 @@ lines to better describe the location of the failure.</p>
 annotation are now considered to be implicitly <em>inherited</em> when searching for the given
 meta-annotation within a class hierarchy.</p>
 </li>
+<li>
+<p>The Maven Surefire provider now supports the <code>test</code> parameter that tells Surefire to
+only execute a subset of test classes or methods, e.g. by specifying <code>-Dtest=&#8230;&#8203;</code> on the
+command line (see the
+<a href="http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#test">Surefire documentation</a>
+for details).</p>
+</li>
 </ul>
 </div>
 </div>
