@@ -19,7 +19,7 @@ import org.junit.platform.engine.UniqueId;
 /**
  * Base {@link TestDescriptor} for a {@link DynamicNode}.
  *
- * @since 5.1
+ * @since 5.0.3
  */
 abstract class DynamicNodeTestDescriptor extends JupiterTestDescriptor {
 
