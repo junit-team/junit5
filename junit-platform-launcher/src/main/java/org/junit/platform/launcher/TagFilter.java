@@ -17,9 +17,14 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.List;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.FilterResult;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
+import org.junit.platform.launcher.tagexpression.TagExpression;
 
 /**
  * Factory methods for creating {@link PostDiscoveryFilter PostDiscoveryFilters}
@@ -31,6 +36,8 @@ import org.junit.platform.engine.TestTag;
  */
 @API(status = STABLE, since = "1.0")
 public final class TagFilter {
+
+	private static final Logger logger = LoggerFactory.getLogger(TagFilter.class);
 
 	///CLOVER:OFF
 	private TagFilter() {
@@ -75,7 +82,7 @@ public final class TagFilter {
 	 */
 	public static PostDiscoveryFilter includeTags(List<String> tags) throws PreconditionViolationException {
 		Preconditions.notEmpty(tags, "tags list must not be null or empty");
-		return TagExpressionFilter.includeMatching(orExpressionFor(tags));
+		return includeMatching(orExpressionFor(tags));
 	}
 
 	/**
@@ -115,11 +122,26 @@ public final class TagFilter {
 	 */
 	public static PostDiscoveryFilter excludeTags(List<String> tags) throws PreconditionViolationException {
 		Preconditions.notEmpty(tags, "tags list must not be null or empty");
-		return TagExpressionFilter.includeMatching("! (" + orExpressionFor(tags) + ")");
+		return includeMatching("! (" + orExpressionFor(tags) + ")");
+	}
+
+	/**
+	 * Create an <em>include</em> filter based on the supplied {@code infixTagExpression}.
+	 *
+	 * <p>Containers and tests will only be executed if their tags match the supplied <em>infixTagExpression</em>.
+	 *
+	 * @param infixTagExpression to parse and evaluate against a {@link TestDescriptor}; never {@code null} or empty
+	 * @throws PreconditionViolationException if the supplied infixTagExpression can not be parsed.
+	 */
+	public static PostDiscoveryFilter includeMatching(String infixTagExpression) {
+		TagExpression tagExpression = TagExpression.parseFrom(infixTagExpression).tagExpressionOrThrow(
+			(message) -> new PreconditionViolationException(
+				"Unable to parse tag expression [" + infixTagExpression + "]: " + message));
+		logger.config(() -> "parsed tag expression: " + tagExpression);
+		return descriptor -> FilterResult.includedIf(tagExpression.evaluate(descriptor.getTags()));
 	}
 
 	private static String orExpressionFor(List<String> tags) {
 		return tags.stream().map(tag -> null == tag ? "" : tag).collect(joining(" | "));
 	}
-
 }

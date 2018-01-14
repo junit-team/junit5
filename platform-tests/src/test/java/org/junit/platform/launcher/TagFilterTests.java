@@ -129,6 +129,14 @@ class TagFilterTests {
 		assertTrue(filter.apply(classWithNoTags).included());
 	}
 
+	@Test
+	void rejectUnParsableTagExpressions() {
+		String brokenTagExpression = "tag & ";
+		RuntimeException expected = assertThrows(PreconditionViolationException.class,
+			() -> TagFilter.includeMatching(brokenTagExpression));
+		assertThat(expected).hasMessageStartingWith("Unable to parse tag expression [" + brokenTagExpression + "]");
+	}
+
 	private void includeSingleTag(PostDiscoveryFilter filter) {
 		assertTrue(filter.apply(classWithTag1).included());
 		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).included());
