@@ -22,6 +22,9 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 
+/**
+ * @since 1.0.3
+ */
 class TestMethodFilter implements PostDiscoveryFilter {
 
 	private final TestListResolver testListResolver;
@@ -34,8 +37,8 @@ class TestMethodFilter implements PostDiscoveryFilter {
 	public FilterResult apply(TestDescriptor descriptor) {
 		// @formatter:off
 		boolean shouldRun = descriptor.getSource()
-				.filter(source -> source instanceof MethodSource)
-				.map(source -> (MethodSource) source)
+				.filter(MethodSource.class::isInstance)
+				.map(MethodSource.class::cast)
 				.map(this::shouldRun)
 				.orElse(true);
 		// @formatter:on
@@ -46,6 +49,7 @@ class TestMethodFilter implements PostDiscoveryFilter {
 	private boolean shouldRun(MethodSource source) {
 		String testClass = TestListResolver.toClassFileName(source.getClassName());
 		String testMethod = source.getMethodName();
-		return testListResolver.shouldRun(testClass, testMethod);
+		return this.testListResolver.shouldRun(testClass, testMethod);
 	}
+
 }
