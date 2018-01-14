@@ -16,14 +16,15 @@ on November 19, 2017.
 
 Contributions to JUnit 5 are both welcomed and appreciated. For specific guidelines
 regarding contributions, please see [CONTRIBUTING.md] in the root directory of the
-project. Those willing to use the ALPHA, milestone, or SNAPSHOT releases are encouraged
+project. Those willing to use milestone or SNAPSHOT releases are encouraged
 to file feature requests and bug reports using the project's
 [issue tracker](https://github.com/junit-team/junit5/issues). Issues marked with an
 <a href="https://github.com/junit-team/junit5/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs">`up-for-grabs`</a>
 label are specifically targeted for community contributions.
 
 ## Getting Help
-Ask JUnit 5 related questions on [StackOverflow] or chat with us on [Gitter].
+
+Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the community on [Gitter].
 
 ## Continuous Integration Builds
 
