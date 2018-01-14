@@ -16,7 +16,6 @@ import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
-import org.gradle.api.tasks.JavaExec
 import org.gradle.util.GradleVersion
 import org.junit.platform.console.ConsoleLauncher
 
@@ -67,7 +66,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			deps.add(project.dependencies.create("org.junit.platform:junit-platform-console:${version}"))
 		}
 
-		JavaExec junitTask = project.tasks.create(TASK_NAME, JavaExec) {
+		JUnitPlatformJavaExec junitTask = project.tasks.create(TASK_NAME, JUnitPlatformJavaExec) {
 			it.with {
 				group = JavaBasePlugin.VERIFICATION_GROUP
 				description = 'Runs tests on the JUnit Platform.'
@@ -87,7 +86,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		return properties.getProperty("version")
 	}
 
-	private void configure(Project project, JavaExec junitTask, JUnitPlatformExtension junitExtension) {
+	private void configure(Project project, JUnitPlatformJavaExec junitTask, JUnitPlatformExtension junitExtension) {
 		junitTask.with {
 			group = JavaBasePlugin.VERIFICATION_GROUP
 			description = 'Runs tests on the JUnit Platform.'
@@ -120,12 +119,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 			if (junitExtension.enableModulePath) {
 				// Set module-path and add all modules that are available.
-				jvmArgs = [
-					'--module-path',
-					project.files(project.sourceSets.test.runtimeClasspath, project.configurations.junitPlatform).asPath,
-					'--add-modules',
-					'ALL-MODULE-PATH'
-				]
+				modulepath = project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform
 				// Clear classpath.
 				// Caveat: `JavaExec` task uses its `classpath` parameter to find tasks which create the
 				// needed JARs and marks these tasks as dependencies during the task graph generation phase.

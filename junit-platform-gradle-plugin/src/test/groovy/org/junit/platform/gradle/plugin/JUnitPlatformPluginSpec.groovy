@@ -24,7 +24,6 @@ import org.junit.platform.commons.util.PreconditionViolationException
 import org.junit.platform.console.ConsoleLauncher
 import org.junit.platform.engine.discovery.ClassNameFilter
 
-import spock.lang.Ignore
 import spock.lang.Issue
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -211,7 +210,6 @@ class JUnitPlatformPluginSpec extends Specification {
 		testTask.enabled == false
 	}
 
-	@Ignore('Cannot resolve external dependency org.junit.platform:junit-platform-launcher:@VERSION because no repositories are defined.')
 	@Issue('https://github.com/junit-team/junit5/issues/1234')
 	def "enable module-path sets main class name to --module"() {
 		given:
@@ -223,10 +221,18 @@ class JUnitPlatformPluginSpec extends Specification {
 
 		then:
 		Task junitTask = project.tasks.findByName('junitPlatformTest')
-		junitTask instanceof JavaExec
+		junitTask instanceof JUnitPlatformJavaExec
 		junitTask.main == '--module'
 
-		junitTask.args.containsAll('org.junit.platform.console')
+		// Both next statements fail with DefaultLenientConfiguration$ArtifactResolveException:
+		//
+		// * junitTask.modulepath.each { println it }
+		// * junitTask.getAllJvmArgs().containsAll('--module-path')
+		//
+		// Caused by org.gradle.internal.resolve.ModuleVersionNotFoundException:
+		//   Cannot resolve external dependency org.junit.platform:junit-platform-launcher:@VERSION
+		//     because no repositories are defined.
+		junitTask.args[0] == 'org.junit.platform.console'
 		junitTask.args.containsAll('--scan-modules')
 	}
 
