@@ -130,6 +130,7 @@ public final class TagFilter {
 	 *
 	 * <p>Containers and tests will only be executed if their tags match the supplied <em>infixTagExpression</em>.
 	 *
+	 * @since 1.1
 	 * @param infixTagExpression to parse and evaluate against a {@link TestDescriptor}; never {@code null} or empty
 	 * @throws PreconditionViolationException if the supplied infixTagExpression can not be parsed.
 	 */
