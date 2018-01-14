@@ -8,6 +8,7 @@
 	<Loggers>
 		<Logger name="org.junit" level="warn" />
 		<Logger name="org.junit.platform.commons.util.ClasspathScanner" level="error" />
+		<Logger name="org.junit.platform.engine.support.descriptor.DemoClassTestDescriptor" level="error" />
 		<Logger name="org.junit.platform.launcher.core.DefaultLauncher" level="error" />
 		<Logger name="org.junit.ApiReportGenerator" level="error" />
 		<Logger name="org.junit.vintage.engine" level="error" />

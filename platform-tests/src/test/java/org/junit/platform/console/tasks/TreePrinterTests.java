@@ -63,7 +63,7 @@ class TreePrinterTests {
 		root.addChild(new TreeNode(createEngineId("e-2", "engine two")).setResult(failed(null)));
 		root.addChild(new TreeNode(createEngineId("e-3", "engine three")).setResult(aborted(null)));
 		new TreePrinter(out, Theme.UNICODE, true).print(root);
-		assertIterableEquals(
+		assertIterableEquals( //
 			Arrays.asList( //
 				"╷", //
 				"├─ engine zero ↷ none", //

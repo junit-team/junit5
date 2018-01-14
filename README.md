@@ -7,19 +7,10 @@ was released on November 12, 2017;
 [JUnit 5.1.0-M1](https://github.com/junit-team/junit5/releases/tag/r5.1.0-M1)
 on November 19, 2017.
 
-## Roadmap
-
-Consult the wiki for details on the current [JUnit 5 roadmap](https://github.com/junit-team/junit5/wiki/Roadmap).
-
 ## Documentation
 
-### User Guide
-
-The [JUnit 5 User Guide] is available online.
-
-### API
-
-The [JUnit 5 Javadoc] is available online.
+- [User Guide]
+- [Javadoc]
 
 ## Contributing
 
@@ -150,8 +141,8 @@ as it is not intended to be used as a module.
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
 [Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/clover-report/
-[JUnit 5 Javadoc]: http://junit.org/junit5/docs/current/api/
-[JUnit 5 User Guide]: http://junit.org/junit5/docs/current/user-guide/
+[Javadoc]: http://junit.org/junit5/docs/current/api/
+[User Guide]: http://junit.org/junit5/docs/current/user-guide/
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [Twitter]: https://twitter.com/junitlambda

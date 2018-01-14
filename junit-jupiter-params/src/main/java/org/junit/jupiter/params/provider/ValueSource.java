@@ -21,12 +21,13 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @ValueSource} is an {@link ArgumentsSource} which provides
- * access to an array of literal values of primitive types.
+ * {@code @ValueSource} is an {@link ArgumentsSource} which provides access to
+ * an array of literal values.
  *
- * <p>Supported primitive types include {@link #strings}, {@link #ints},
- * {@link #longs}, and {@link #doubles}. You must not specify more than one
- * annotation attribute.
+ * <p>Supported types include {@link #shorts}, {@link #bytes}, {@link #ints},
+ * {@link #longs}, {@link #floats}, {@link #doubles}, {@link #chars},
+ * {@link #strings}, and {@link #classes}. Note, however, that only one of the
+ * supported types may be specified per {@code @ValueSource} declaration.
  *
  * <p>The supplied literal values will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method.
@@ -43,10 +44,18 @@ import org.apiguardian.api.API;
 public @interface ValueSource {
 
 	/**
-	 * The {@link String} values to use as sources of arguments; must not be
-	 * empty.
+	 * The {@code short} values to use as sources of arguments; must not be empty.
+	 *
+	 * @since 5.1
 	 */
-	String[] strings() default {};
+	short[] shorts() default {};
+
+	/**
+	 * The {@code byte} values to use as sources of arguments; must not be empty.
+	 *
+	 * @since 5.1
+	 */
+	byte[] bytes() default {};
 
 	/**
 	 * The {@code int} values to use as sources of arguments; must not be empty.
@@ -59,9 +68,34 @@ public @interface ValueSource {
 	long[] longs() default {};
 
 	/**
-	 * The {@code double} values to use as sources of arguments; must not be
-	 * empty.
+	 * The {@code float} values to use as sources of arguments; must not be empty.
+	 *
+	 * @since 5.1
+	 */
+	float[] floats() default {};
+
+	/**
+	 * The {@code double} values to use as sources of arguments; must not be empty.
 	 */
 	double[] doubles() default {};
+
+	/**
+	 * The {@code char} values to use as sources of arguments; must not be empty.
+	 *
+	 * @since 5.1
+	 */
+	char[] chars() default {};
+
+	/**
+	 * The {@link String} values to use as sources of arguments; must not be empty.
+	 */
+	String[] strings() default {};
+
+	/**
+	 * The {@link Class} values to use as sources of arguments; must not be empty.
+	 *
+	 * @since 5.1
+	 */
+	Class<?>[] classes() default {};
 
 }

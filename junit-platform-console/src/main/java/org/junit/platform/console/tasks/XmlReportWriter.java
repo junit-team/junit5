@@ -36,6 +36,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.listeners.LegacyReportingUtils;
 
 /**
  * {@code XmlReportWriter} writes an XML report whose format is compatible
@@ -157,11 +158,7 @@ class XmlReportWriter {
 	}
 
 	private String getClassName(TestIdentifier testIdentifier) {
-		// @formatter:off
-		return this.reportData.getTestPlan().getParent(testIdentifier)
-				.map(TestIdentifier::getLegacyReportingName)
-				.orElse("<unrooted>");
-		// @formatter:on
+		return LegacyReportingUtils.getClassName(this.reportData.getTestPlan(), testIdentifier);
 	}
 
 	private void writeSkippedOrErrorOrFailureElement(TestIdentifier testIdentifier, XMLStreamWriter writer)

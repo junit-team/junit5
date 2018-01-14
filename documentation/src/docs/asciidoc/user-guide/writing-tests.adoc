@@ -642,9 +642,24 @@ information.
 [[writing-tests-parameterized-tests-sources-ValueSource]]
 ===== @ValueSource
 
-`@ValueSource` is one of the simplest possible sources. It lets you specify an array of
-literals of primitive types (either `String`, `int`, `long`, or `double`) and can only be
-used for providing a single parameter per invocation.
+`@ValueSource` is one of the simplest possible sources. It lets you specify a single
+array of literal values and can only be used for providing a single parameter per
+parameterized test invocation.
+
+The following types of literal values are supported by `@ValueSource`.
+
+- `short`
+- `byte`
+- `int`
+- `long`
+- `float`
+- `double`
+- `char`
+- `java.lang.String`
+- `java.lang.Class`
+
+For example, the following `@ParameterizedTest` method will be invoked three times, with
+the values `1`, `2`, and `3` respectively.
 
 [source,java,indent=0]
 ----
@@ -789,8 +804,8 @@ implicit type converters. The conversion process depends on the declared type of
 method parameter.
 
 For example, if a `@ParameterizedTest` declares a parameter of type `TimeUnit` and the
-actual type supplied by the declared source is a `String`, the string will automatically
-be converted into the corresponding `TimeUnit` enum constant.
+actual type supplied by the declared source is a `String`, the string will be
+automatically converted into the corresponding `TimeUnit` enum constant.
 
 [source,java,indent=0]
 ----
@@ -799,6 +814,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 
 `String` instances are currently implicitly converted to the following target types.
 
+[[writing-tests-parameterized-tests-argument-conversion-implicit-table]]
 [cols="10,90"]
 |===
 | Target Type | Example
@@ -813,11 +829,12 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 | `double`/`Double`          | `"1.0"`                                  -> `1.0d`
 | `Enum` subclass            | `"SECONDS"`                              -> `TimeUnit.SECONDS`
 | `java.io.File`             | `"/path/to/file"`                        -> `new File("/path/to/file")`
-| `java.nio.file.Path`       | `"/path/to/file"`                        -> `Paths.get("/path/to/file")`
 | `java.math.BigDecimal`     | `"123.456e789"`                          -> `new BigDecimal("123.456e789")`
 | `java.math.BigInteger`     | `"1234567890123456789"`                  -> `new BigInteger("1234567890123456789")`
 | `java.net.URI`             | `"http://junit.org/"`                    -> `URI.create("http://junit.org/")`
 | `java.net.URL`             | `"http://junit.org/"`                    -> `new URL("http://junit.org/")`
+| `java.nio.charset.Charset` | `"UTF-8"`                                -> `Charset.forName("UTF-8")`
+| `java.nio.file.Path`       | `"/path/to/file"`                        -> `Paths.get("/path/to/file")`
 | `java.time.Instant`        | `"1970-01-01T00:00:00Z"`                 -> `Instant.ofEpochMilli(0)`
 | `java.time.LocalDateTime`  | `"2017-03-14T12:34:56.789"`              -> `LocalDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000)`
 | `java.time.LocalDate`      | `"2017-03-14"`                           -> `LocalDate.of(2017, 3, 14)`
@@ -832,10 +849,37 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 | `java.util.UUID`           | `"d043e930-7b3b-48e3-bdbe-5a3ccfb833db"` -> `UUID.fromString("d043e930-7b3b-48e3-bdbe-5a3ccfb833db")`
 |===
 
+[[writing-tests-parameterized-tests-argument-conversion-implicit-fallback]]
+====== Fallback String-to-Object Conversion
+
+In addition to implicit conversion from strings to the target types listed in the above
+table, JUnit Jupiter also provides a fallback mechanism for automatic conversion from a
+`String` to a given target type if the target type declares exactly one suitable _factory
+method_ or a _factory constructor_ as defined below.
+
+- __factory method__: a non-private, `static` method declared in the target type that
+  accepts a single `String` argument and returns an instance of the target type. The name
+  of the method can be arbitrary and need not follow any particular convention.
+- __factory constructor__: a non-private constructor in the target type that accepts a
+  single `String` argument.
+
+NOTE: If multiple _factory methods_ are discovered, they will be ignored. If a _factory
+method_ and a _factory constructor_ are discovered, the factory method will be used
+instead of the constructor.
+
+For example, in the following `@ParameterizedTest` method, the `Book` argument will be
+created by invoking the `Book.fromTitle(String)` factory method and passing `"42 Cats"`
+as the title of the book.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_fallback_conversion_example]
+----
+
 [[writing-tests-parameterized-tests-argument-conversion-explicit]]
 ===== Explicit Conversion
 
-Instead of using implicit argument conversion you may explicitly specify an
+Instead of relying on implicit argument conversion you may explicitly specify an
 `ArgumentConverter` to use for a certain parameter using the `@ConvertWith` annotation
 like in the following example.
 
@@ -844,9 +888,9 @@ like in the following example.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_example]
 ----
 
-Explicit argument converters are meant to be implemented by test authors. Thus,
-`junit-jupiter-params` only provides a single explicit argument converter that may also
-serve as a reference implementation: `JavaTimeArgumentConverter`. It is used via the
+Explicit argument converters are meant to be implemented by test and extension authors.
+Thus, `junit-jupiter-params` only provides a single explicit argument converter that may
+also serve as a reference implementation: `JavaTimeArgumentConverter`. It is used via the
 composed annotation `JavaTimeConversionPattern`.
 
 [source,java,indent=0]

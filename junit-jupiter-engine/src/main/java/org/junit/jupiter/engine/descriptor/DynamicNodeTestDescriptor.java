@@ -19,12 +19,25 @@ import org.junit.platform.engine.UniqueId;
 /**
  * Base {@link TestDescriptor} for a {@link DynamicNode}.
  *
- * @since 5.1
+ * @since 5.0.3
  */
 abstract class DynamicNodeTestDescriptor extends JupiterTestDescriptor {
 
-	DynamicNodeTestDescriptor(UniqueId uniqueId, DynamicNode dynamicNode, TestSource testSource) {
+	private final int index;
+
+	DynamicNodeTestDescriptor(UniqueId uniqueId, int index, DynamicNode dynamicNode, TestSource testSource) {
 		super(uniqueId, dynamicNode.getDisplayName(), testSource);
+		this.index = index;
+	}
+
+	@Override
+	public String getLegacyReportingName() {
+		// @formatter:off
+		return getParent()
+				.map(TestDescriptor::getLegacyReportingName)
+				.orElseGet(this::getDisplayName)
+						+ "[" + index + "]";
+		// @formatter:on
 	}
 
 	@Override

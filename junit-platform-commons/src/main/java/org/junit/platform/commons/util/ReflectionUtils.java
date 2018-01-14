@@ -228,6 +228,10 @@ public final class ReflectionUtils {
 		return Modifier.isPrivate(member.getModifiers());
 	}
 
+	public static boolean isNotPrivate(Member member) {
+		return !isPrivate(member);
+	}
+
 	public static boolean isAbstract(Class<?> clazz) {
 		return Modifier.isAbstract(clazz.getModifiers());
 	}
@@ -242,6 +246,10 @@ public final class ReflectionUtils {
 
 	public static boolean isStatic(Member member) {
 		return Modifier.isStatic(member.getModifiers());
+	}
+
+	public static boolean isNotStatic(Member member) {
+		return !isStatic(member);
 	}
 
 	public static boolean isInnerClass(Class<?> clazz) {
@@ -468,7 +476,8 @@ public final class ReflectionUtils {
 			throws ClassNotFoundException {
 
 		Class<?> componentType = classNameToTypeMap.containsKey(componentTypeName)
-				? classNameToTypeMap.get(componentTypeName) : classLoader.loadClass(componentTypeName);
+				? classNameToTypeMap.get(componentTypeName)
+				: classLoader.loadClass(componentTypeName);
 
 		return Optional.of(Array.newInstance(componentType, new int[dimensions]).getClass());
 	}
@@ -696,6 +705,30 @@ public final class ReflectionUtils {
 				() -> String.format("Class [%s] must declare a single constructor", clazz.getName()));
 
 			return (Constructor<T>) constructors[0];
+		}
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
+		}
+	}
+
+	/**
+	 * Find all constructors in the supplied class that match the supplied predicate.
+	 *
+	 * @param clazz the class in which to search for constructors; never {@code null}
+	 * @param predicate the predicate to use to test for a match; never {@code null}
+	 * @return an immutable list of all such constructors found; never {@code null}
+	 * but potentially empty
+	 */
+	public static List<Constructor<?>> findConstructors(Class<?> clazz, Predicate<Constructor<?>> predicate) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+
+		try {
+			// @formatter:off
+			return Arrays.stream(clazz.getDeclaredConstructors())
+					.filter(predicate)
+					.collect(toUnmodifiableList());
+			// @formatter:on
 		}
 		catch (Throwable t) {
 			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));

@@ -14,6 +14,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -41,6 +42,11 @@ final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTe
 	@Override
 	public Optional<Class<?>> getTestClass() {
 		return Optional.of(getTestDescriptor().getTestClass());
+	}
+
+	@Override
+	public Optional<Lifecycle> getTestInstanceLifecycle() {
+		return getParent().flatMap(ExtensionContext::getTestInstanceLifecycle);
 	}
 
 	@Override

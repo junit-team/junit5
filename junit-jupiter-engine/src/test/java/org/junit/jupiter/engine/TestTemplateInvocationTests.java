@@ -18,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
@@ -65,7 +67,9 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -142,6 +146,23 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void legacyReportingNames() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "templateWithTwoRegisteredExtensions")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		// @formatter:off
+		Stream<String> legacyReportingNames = eventRecorder.getExecutionEvents().stream()
+				.filter(event -> event.getType() == DYNAMIC_TEST_REGISTERED)
+				.map(ExecutionEvent::getTestDescriptor)
+				.map(TestDescriptor::getLegacyReportingName);
+		// @formatter:off
+		assertThat(legacyReportingNames).containsExactly("templateWithTwoRegisteredExtensions()[1]",
+						"templateWithTwoRegisteredExtensions()[2]");
+	}
+
+	@Test
 	void templateWithTwoInvocationsFromSingleExtensionIsInvoked() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithTwoInvocationsFromSingleExtension")).build();
@@ -155,6 +176,24 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 				event(test("test-template-invocation:#1"), started()), //
 				event(test("test-template-invocation:#1"),
 					finishedWithFailure(message("invocation is expected to fail"))), //
+				event(dynamicTestRegistered("test-template-invocation:#2"), displayName("[2]")), //
+				event(test("test-template-invocation:#2"), started()), //
+				event(test("test-template-invocation:#2"),
+					finishedWithFailure(message("invocation is expected to fail"))), //
+				event(container("templateWithTwoInvocationsFromSingleExtension"), finishedSuccessfully())));
+	}
+
+	@Test
+	void singleInvocationIsExecutedWhenDiscoveredByUniqueId() {
+		UniqueId uniqueId = discoverUniqueId(MyTestTemplateTestCase.class,
+			"templateWithTwoInvocationsFromSingleExtension") //
+					.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+
+		ExecutionEventRecorder eventRecorder = executeTests(selectUniqueId(uniqueId));
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("templateWithTwoInvocationsFromSingleExtension"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#2"), displayName("[2]")), //
 				event(test("test-template-invocation:#2"), started()), //
 				event(test("test-template-invocation:#2"),

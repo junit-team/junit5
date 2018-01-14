@@ -11,7 +11,7 @@ buildscript {
 }
 
 plugins {
-	id 'org.asciidoctor.convert' version '1.5.6'
+	id 'org.asciidoctor.convert' version '1.5.7'
 }
 
 apply plugin: 'org.junit.platform.gradle.plugin'
@@ -39,7 +39,7 @@ dependencies {
 	testImplementation(project(path: ':junit-jupiter-params', configuration: 'shadow'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-launcher'))
-	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	if (gradle.ext.kotlinIsSupported) testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
@@ -100,7 +100,6 @@ asciidoctor {
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
-				'kotlinTestDir' : project.sourceSets.test.kotlin.srcDirs[0],
 				'generatedAsciiDocInputDir': generatedAsciiDocInputDir,
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
 				'outdir': outputDir.absolutePath,
@@ -111,4 +110,7 @@ asciidoctor {
 				'sectanchors': true,
 				'idprefix': '',
 				'idseparator': '-'
+	if (gradle.ext.kotlinIsSupported) {
+		attributes.put('kotlinTestDir', project.sourceSets.test.kotlin.srcDirs[0])
+	}
 }

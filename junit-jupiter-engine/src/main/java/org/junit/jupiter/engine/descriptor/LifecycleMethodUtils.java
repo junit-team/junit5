@@ -55,7 +55,7 @@ final class LifecycleMethodUtils {
 	}
 
 	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
-		if (!ReflectionUtils.isStatic(method)) {
+		if (ReflectionUtils.isNotStatic(method)) {
 			throw new JUnitException(String.format(
 				"@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
 				annotationType.getSimpleName(), method.toGenericString()));

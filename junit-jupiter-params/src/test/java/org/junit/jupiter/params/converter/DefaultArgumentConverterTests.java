@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -77,6 +78,12 @@ class DefaultArgumentConverterTests {
 	}
 
 	// --- java.io and java.nio ------------------------------------------------
+
+	@Test
+	void convertsStringToCharset() {
+		assertConverts("ISO-8859-1", Charset.class, Charset.forName("ISO-8859-1"));
+		assertConverts("UTF-8", Charset.class, Charset.forName("UTF-8"));
+	}
 
 	@Test
 	void convertsStringToFile() {

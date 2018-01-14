@@ -56,14 +56,14 @@ class ExpectedExceptionSupportTests {
 			event(test("correctExceptionExpectedThrown"), finishedSuccessfully()));
 
 		assertThat(eventRecorder.getFailedTestFinishedEvents())//
-				.haveExactly(1,
+				.haveExactly(1, //
 					event(test("noExceptionExpectedButThrown"), //
 						finishedWithFailure(message("no exception expected")))) //
-				.haveExactly(1,
+				.haveExactly(1, //
 					event(test("exceptionExpectedButNotThrown"), //
 						finishedWithFailure(allOf(isA(AssertionError.class), //
 							message("Expected test to throw an instance of java.lang.RuntimeException"))))) //
-				.haveExactly(1,
+				.haveExactly(1, //
 					event(test("wrongExceptionExpected"), //
 						finishedWithFailure(allOf(isA(AssertionError.class), //
 							message(value -> value.contains("Expected: an instance of java.io.IOException"))))));

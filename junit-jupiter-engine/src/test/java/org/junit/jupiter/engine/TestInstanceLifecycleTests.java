@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -54,8 +53,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.jupiter.engine.kotlin.InstancePerClassKotlinTestCase;
-import org.junit.jupiter.engine.kotlin.InstancePerMethodKotlinTestCase;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
@@ -64,9 +61,11 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
  *
  * @since 5.0
  * @see TestInstanceLifecycleConfigurationTests
+ * @see TestInstanceLifecycleKotlinTests
  */
 class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
+	private static final Map<Class<?>, List<Lifecycle>> lifecyclesMap = new LinkedHashMap<>();
 	private static final Map<String, Object> instanceMap = new LinkedHashMap<>();
 	private static final List<String> testsInvoked = new ArrayList<>();
 	private static final Map<Class<?>, Integer> instanceCount = new LinkedHashMap<>();
@@ -78,6 +77,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	@BeforeEach
 	void init() {
+		lifecyclesMap.clear();
 		instanceMap.clear();
 		testsInvoked.clear();
 		instanceCount.clear();
@@ -151,6 +151,9 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(instance, instanceMap.get(afterEachCallbackKey3));
 		assertSame(instance, instanceMap.get(testExecutionConditionKey3));
 		assertSame(instance, instanceMap.get(postProcessTestInstanceKey));
+
+		assertThat(lifecyclesMap.keySet()).containsExactly(testClass);
+		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_METHOD::equals);
 	}
 
 	@Test
@@ -220,6 +223,9 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(instance, instanceMap.get(afterEachCallbackKey3));
 		assertSame(instance, instanceMap.get(postProcessTestInstanceKey));
 		assertNull(instanceMap.get(containerExecutionConditionKey));
+
+		assertThat(lifecyclesMap.keySet()).containsExactly(testClass);
+		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_CLASS::equals);
 	}
 
 	@Test
@@ -324,6 +330,10 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		// is only created in order to instantiate the nested test class for
 		// test2().
 		assertSame(outerInstance3, instanceMap.get(postProcessTestInstanceKey));
+
+		assertThat(lifecyclesMap.keySet()).containsExactly(testClass, nestedTestClass);
+		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_METHOD::equals);
+		assertThat(lifecyclesMap.get(nestedTestClass).stream()).allMatch(Lifecycle.PER_METHOD::equals);
 	}
 
 	@Test
@@ -413,6 +423,10 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		Object outerInstance = ReflectionUtils.getOutermostInstance(nestedInstance, testClass).get();
 		assertSame(outerInstance, instanceMap.get(postProcessTestInstanceKey));
+
+		assertThat(lifecyclesMap.keySet()).containsExactly(testClass, nestedTestClass);
+		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_CLASS::equals);
+		assertThat(lifecyclesMap.get(nestedTestClass).stream()).allMatch(Lifecycle.PER_CLASS::equals);
 	}
 
 	@Test
@@ -505,51 +519,10 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertEquals(instance.getClass(), outerInstance.getClass());
 		assertNotSame(instance, outerInstance);
 		assertSame(outerInstance, instanceMap.get(postProcessTestInstanceKey));
-	}
 
-	@Test
-	void instancePerClassCanBeUsedForKotlinTestClasses() {
-		Class<?> testClass = InstancePerClassKotlinTestCase.class;
-		InstancePerClassKotlinTestCase.TEST_INSTANCES.clear();
-
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
-
-		assertThat(eventRecorder.getTestFinishedCount()).isEqualTo(2);
-		assertThat(InstancePerClassKotlinTestCase.TEST_INSTANCES.keySet()).hasSize(1);
-		assertThat(getOnlyElement(InstancePerClassKotlinTestCase.TEST_INSTANCES.values())) //
-				.containsEntry("beforeAll", 1) //
-				.containsEntry("beforeEach", 2) //
-				.containsEntry("test", 2) //
-				.containsEntry("afterEach", 2) //
-				.containsEntry("afterAll", 1);
-	}
-
-	@Test
-	void instancePerMethodIsDefaultForKotlinTestClasses() {
-		Class<?> testClass = InstancePerMethodKotlinTestCase.class;
-		InstancePerMethodKotlinTestCase.TEST_INSTANCES.clear();
-
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
-
-		assertThat(eventRecorder.getTestFinishedCount()).isEqualTo(2);
-		List<Object> instances = new ArrayList<>(InstancePerMethodKotlinTestCase.TEST_INSTANCES.keySet());
-		assertThat(instances) //
-				.hasSize(3) //
-				.extracting(o -> (Object) o.getClass()) //
-				.containsExactly(InstancePerMethodKotlinTestCase.Companion.getClass(), //
-					InstancePerMethodKotlinTestCase.class, //
-					InstancePerMethodKotlinTestCase.class);
-		assertThat(InstancePerMethodKotlinTestCase.TEST_INSTANCES.get(instances.get(0))) //
-				.containsEntry("beforeAll", 1) //
-				.containsEntry("afterAll", 1);
-		assertThat(InstancePerMethodKotlinTestCase.TEST_INSTANCES.get(instances.get(1))) //
-				.containsEntry("beforeEach", 1) //
-				.containsEntry("test", 1) //
-				.containsEntry("afterEach", 1);
-		assertThat(InstancePerMethodKotlinTestCase.TEST_INSTANCES.get(instances.get(2))) //
-				.containsEntry("beforeEach", 1) //
-				.containsEntry("test", 1) //
-				.containsEntry("afterEach", 1);
+		assertThat(lifecyclesMap.keySet()).containsExactly(testClass, nestedTestClass);
+		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_METHOD::equals);
+		assertThat(lifecyclesMap.get(nestedTestClass).stream()).allMatch(Lifecycle.PER_CLASS::equals);
 	}
 
 	private void performAssertions(Class<?> testClass, int containers, int tests,
@@ -922,13 +895,14 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	// Intentionally not implementing BeforeTestExecutionCallback, AfterTestExecutionCallback,
 	// and TestExecutionExceptionHandler, since they are analogous to BeforeEachCallback and
-	// AfterEachCallback with regard to instance scope.
+	// AfterEachCallback with regard to instance scope and Lifecycle.
 	private static class InstanceTrackingExtension
 			implements ExecutionCondition, TestInstancePostProcessor, BeforeAllCallback, AfterAllCallback,
 			BeforeEachCallback, AfterEachCallback, TestTemplateInvocationContextProvider {
 
 		@Override
 		public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+			trackLifecycle(context);
 			String testMethod = context.getTestMethod().map(Method::getName).orElse(null);
 			if (testMethod == null) {
 				assertThat(context.getTestInstance()).isNotPresent();
@@ -942,6 +916,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+			trackLifecycle(context);
 			assertThat(context.getTestInstance()).isNotPresent();
 			assertNotNull(testInstance);
 			instanceMap.put(postProcessTestInstanceKey(context.getRequiredTestClass()), testInstance);
@@ -949,18 +924,21 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void beforeAll(ExtensionContext context) {
+			trackLifecycle(context);
 			instanceMap.put(beforeAllCallbackKey(context.getRequiredTestClass()),
 				context.getTestInstance().orElse(null));
 		}
 
 		@Override
 		public void afterAll(ExtensionContext context) {
+			trackLifecycle(context);
 			instanceMap.put(afterAllCallbackKey(context.getRequiredTestClass()),
 				context.getTestInstance().orElse(null));
 		}
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
+			trackLifecycle(context);
 			instanceMap.put(
 				beforeEachCallbackKey(context.getRequiredTestClass(), context.getRequiredTestMethod().getName()),
 				context.getRequiredTestInstance());
@@ -968,6 +946,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void afterEach(ExtensionContext context) {
+			trackLifecycle(context);
 			instanceMap.put(
 				afterEachCallbackKey(context.getRequiredTestClass(), context.getRequiredTestMethod().getName()),
 				context.getRequiredTestInstance());
@@ -975,16 +954,23 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public boolean supportsTestTemplate(ExtensionContext context) {
+			trackLifecycle(context);
 			return isAnnotated(context.getTestMethod(), SingletonTest.class);
 		}
 
 		@Override
 		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
+			trackLifecycle(context);
 			instanceMap.put(testTemplateKey(context.getRequiredTestClass(), context.getRequiredTestMethod().getName()),
 				context.getTestInstance().orElse(null));
 
 			return Stream.of(new TestTemplateInvocationContext() {
 			});
+		}
+
+		private static void trackLifecycle(ExtensionContext context) {
+			lifecyclesMap.computeIfAbsent(context.getRequiredTestClass(), clazz -> new ArrayList<>()).add(
+				context.getTestInstanceLifecycle().orElse(null));
 		}
 
 	}

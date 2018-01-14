@@ -44,9 +44,12 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
 			ConfigurationParameters configurationParameters) {
 
+		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
+		Preconditions.notNull(configurationParameters, "ConfigurationParameters must not be null");
+
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
-		this.testDescriptor = Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
+		this.testDescriptor = testDescriptor;
 		this.configurationParameters = configurationParameters;
 		this.valuesStore = createStore(parent);
 
