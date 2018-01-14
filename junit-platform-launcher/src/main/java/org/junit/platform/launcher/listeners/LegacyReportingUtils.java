@@ -22,9 +22,9 @@ import org.junit.platform.launcher.TestPlan;
  * Utility methods for dealing with legacy reporting infrastructure, such as
  * reporting systems built on the Ant-based XML reporting format for JUnit 4.
  *
- * @since 1.1
+ * @since 1.0.3
  */
-@API(status = MAINTAINED, since = "1.1")
+@API(status = MAINTAINED, since = "1.0.3")
 public class LegacyReportingUtils {
 
 	///CLOVER:OFF

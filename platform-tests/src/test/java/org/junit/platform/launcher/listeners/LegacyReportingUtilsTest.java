@@ -22,6 +22,9 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.launcher.TestPlan;
 
+/**
+ * @since 1.0.3
+ */
 class LegacyReportingUtilsTest {
 
 	private TestDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("foo"), "Foo");
