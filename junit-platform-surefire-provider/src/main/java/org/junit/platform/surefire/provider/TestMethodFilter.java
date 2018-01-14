@@ -23,7 +23,7 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 
 /**
- * @since 1.1
+ * @since 1.0.3
  */
 class TestMethodFilter implements PostDiscoveryFilter {
 

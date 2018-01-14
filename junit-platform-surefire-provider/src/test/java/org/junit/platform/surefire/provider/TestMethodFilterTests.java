@@ -34,7 +34,7 @@ import org.junit.platform.engine.UniqueId;
 /**
  * Unit tests for {@link TestMethodFilter}.
  *
- * @since 1.1
+ * @since 1.0.3
  */
 class TestMethodFilterTests {
 
