@@ -547,6 +547,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.1.0-M1-junit-platform">JUnit Platform</a></li>
 <li><a href="#release-notes-5.1.0-M1-junit-jupiter">JUnit Jupiter</a></li>
 <li><a href="#release-notes-5.1.0-M1-junit-vintage">JUnit Vintage</a></li>
+<li><a href="#release-notes-5.0.3">5.0.3</a></li>
 </ul>
 </li>
 <li><a href="#release-notes-5.0.2">5.0.2</a>
@@ -1096,6 +1097,138 @@ Java 9 modules.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="release-notes-5.0.3"><a class="anchor" href="#release-notes-5.0.3"></a>5.0.3</h3>
+<div class="paragraph">
+<p><strong>Date of Release:</strong> ❓</p>
+</div>
+<div class="paragraph">
+<p><strong>Scope:</strong> Bug fixes and small improvements for <code>ConsoleLauncher</code>, Gradle plugin, and Maven Surefire provider</p>
+</div>
+<div class="paragraph">
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
+<a href="https://github.com/junit-team/junit5/milestone/21?closed=1">5.0.3</a> milestone page in the JUnit repository
+on GitHub.</p>
+</div>
+<div class="sect3">
+<h4 id="release-notes-5.0.3-overall-improvements"><a class="anchor" href="#release-notes-5.0.3-overall-improvements"></a>Overall Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>In 5.0.1, all artifacts were changed to have an <em>optional</em> instead of a mandatory
+dependency on the <em>@API Guardian</em> JAR in their published Maven POMs. However, although
+the Java compiler should ignore missing annotation types, a lot of users have reported
+that compiling tests without having the <em>@API Guardian</em> JAR on the classpath results in
+warnings emitted by <code>javac</code> that look like this:</p>
+<div class="listingblock">
+<div class="content">
+<pre>warning: unknown enum constant Status.STABLE
+reason: class file for org.apiguardian.api.API$Status not found</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To avoid confusion, the JUnit team has decided to make the dependency to the
+<em>@API Guardian</em> JAR <em>mandatory</em> again.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="release-notes-5.0.3-junit-platform"><a class="anchor" href="#release-notes-5.0.3-junit-platform"></a>JUnit Platform</h4>
+<div class="sect4">
+<h5 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Summary table is no longer printed via the <code>ConsoleLauncher</code> and Gradle plugin when
+details mode <code>NONE</code> is selected, unless there are errors.</p>
+</li>
+<li>
+<p>The XML report produced by the <code>ConsoleLauncher</code> and Gradle plugin is no longer invalid
+when the exception message of a failed test contains the XML CDATA end marker <code>]]&gt;</code>.</p>
+</li>
+<li>
+<p>The <code>ConsoleLauncher</code>, the Gradle plugin, and the Maven Surefire provider now attempt to
+write a valid class name into the <code>classname</code> attribute of <code>&lt;testcase/&gt;</code> elements in the
+XML reports. In addition, the <code>name</code> attribute of dynamic tests and test template
+invocations (such as repeated and parameterized tests) is now suffixed with the index of
+the invocation so they are distinguishable by reporting tools.</p>
+</li>
+<li>
+<p>The Maven Surefire provider now includes the method parameter types when writing the
+<code>name</code> attribute of <code>&lt;testcase/&gt;</code> elements into XML reports. However, due to a
+limitation of Maven Surefire, instead of <code>methodName(Type)</code> they are written as
+<code>methodName{Type}</code>.</p>
+</li>
+<li>
+<p>Non-inherited <em>composed annotations</em> which are meta-annotated with a given <code>@Inherited</code>
+annotation are now considered to be implicitly <em>inherited</em> when searching for the given
+meta-annotation within a class hierarchy.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>The JUnit Platform Maven Surefire provider now runs all specified tests in a single
+test run, i.e. all registered <code>TestExecutionListeners</code> will receive a single <code>TestPlan</code>.
+Previously, a separate <code>TestPlan</code> was discovered and executed for each test class.</p>
+</li>
+<li>
+<p>New <code>SUMMARY</code> details mode for the <code>ConsoleLauncher</code> and Gradle plugin which prints
+the table of success and failure counts at the end of test plan execution. This new
+mode is analogous to the previous behavior of the <code>NONE</code> details mode.</p>
+</li>
+<li>
+<p>The Maven Surefire provider now supports the <code>test</code> parameter that tells Surefire to
+only execute a subset of test classes or methods, e.g. by specifying <code>-Dtest=&#8230;&#8203;</code> on the
+command line (see the
+<a href="http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#test">Surefire documentation</a>
+for details).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="release-notes-5.0.3-junit-jupiter"><a class="anchor" href="#release-notes-5.0.3-junit-jupiter"></a>JUnit Jupiter</h4>
+<div class="sect4">
+<h5 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>@Tag</code> and <code>@Tags</code> annotations are now inherited within test class hierarchies.</p>
+</li>
+<li>
+<p>Due to a change in the JUnit Platform&#8217;s <code>AnnotationUtils</code> class, non-inherited
+<em>composed annotations</em> which are meta-annotated with a given <code>@Inherited</code> annotation
+are now considered to be implicitly <em>inherited</em> when searching for the given
+meta-annotation within a class hierarchy.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For example, an <code>@Inherited</code> annotation such as <code>@TestInstance</code> will now be discovered
+on a custom <em>composed annotation</em> declared on a superclass even if the <em>composed
+annotation</em> is not declared as <code>@Inherited</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="release-notes-5.0.3-junit-vintage"><a class="anchor" href="#release-notes-5.0.3-junit-vintage"></a>JUnit Vintage</h4>
+<div class="paragraph">
+<p>No changes.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1115,7 +1248,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.2-junit-platform"><a class="anchor" href="#release-notes-5.0.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1131,7 +1264,7 @@ framework, are now consistently reported correctly when executed with a non-zero
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1149,7 +1282,7 @@ Surefire feature.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.2-junit-jupiter"><a class="anchor" href="#release-notes-5.0.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1177,7 +1310,7 @@ used as a module on the Java 9 module-path.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1242,7 +1375,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.1-junit-jupiter"><a class="anchor" href="#release-notes-5.0.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1265,7 +1398,7 @@ used without declaring an <code>ExpectedException</code> rule.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.1-junit-vintage"><a class="anchor" href="#release-notes-5.0.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1295,7 +1428,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-junit-platform"><a class="anchor" href="#release-notes-5.0.0-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-11"><a class="anchor" href="#bug-fixes-11"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1374,7 +1507,7 @@ named <code>forBiConsumer(&#8230;&#8203;)</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-10"><a class="anchor" href="#new-features-and-improvements-10"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1388,7 +1521,7 @@ access to subclasses.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-12"><a class="anchor" href="#bug-fixes-12"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1439,7 +1572,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-rc3-junit-platform"><a class="anchor" href="#release-notes-5.0.0-rc3-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-11"><a class="anchor" href="#bug-fixes-11"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-13"><a class="anchor" href="#bug-fixes-13"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1454,7 +1587,7 @@ reasons.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-10"><a class="anchor" href="#new-features-and-improvements-10"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-11"><a class="anchor" href="#new-features-and-improvements-11"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1487,7 +1620,7 @@ reasons.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-rc3-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-rc3-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-12"><a class="anchor" href="#bug-fixes-12"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-14"><a class="anchor" href="#bug-fixes-14"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1538,7 +1671,7 @@ instead.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-11"><a class="anchor" href="#new-features-and-improvements-11"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-12"><a class="anchor" href="#new-features-and-improvements-12"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1558,7 +1691,7 @@ string <code>""</code> is returned instead of <code>null</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-rc3-junit-vintage"><a class="anchor" href="#release-notes-5.0.0-rc3-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-13"><a class="anchor" href="#bug-fixes-13"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-15"><a class="anchor" href="#bug-fixes-15"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1611,7 +1744,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-rc2-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-rc2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-14"><a class="anchor" href="#bug-fixes-14"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-16"><a class="anchor" href="#bug-fixes-16"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1660,7 +1793,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-rc1-junit-platform"><a class="anchor" href="#release-notes-5.0.0-rc1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-15"><a class="anchor" href="#bug-fixes-15"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-17"><a class="anchor" href="#bug-fixes-17"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1697,7 +1830,7 @@ The removed method was replaced in milestone 4 by method
 <div class="sect2">
 <h3 id="release-notes-5.0.0-rc1-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-rc1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-16"><a class="anchor" href="#bug-fixes-16"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-18"><a class="anchor" href="#bug-fixes-18"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1720,7 +1853,7 @@ applies to default methods annotated with Jupiter annotations such as <code>@Tes
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-12"><a class="anchor" href="#new-features-and-improvements-12"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-13"><a class="anchor" href="#new-features-and-improvements-13"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1818,7 +1951,7 @@ for test module examples: <code>integration.pro</code> is a black-box test modul
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m6-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m6-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-17"><a class="anchor" href="#bug-fixes-17"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-19"><a class="anchor" href="#bug-fixes-19"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1871,7 +2004,7 @@ constructor with a <code>source</code> argument that can be used instead.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-13"><a class="anchor" href="#new-features-and-improvements-13"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-14"><a class="anchor" href="#new-features-and-improvements-14"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1914,7 +2047,7 @@ exposed via <code>org.junit.platform.commons.support.ReflectionSupport</code>:</
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m6-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-m6-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-18"><a class="anchor" href="#bug-fixes-18"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-20"><a class="anchor" href="#bug-fixes-20"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1939,7 +2072,7 @@ return type of static argument providing methods for parameterized tests.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-14"><a class="anchor" href="#new-features-and-improvements-14"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-15"><a class="anchor" href="#new-features-and-improvements-15"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1978,7 +2111,7 @@ effectively ignored.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m6-junit-vintage"><a class="anchor" href="#release-notes-5.0.0-m6-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-19"><a class="anchor" href="#bug-fixes-19"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-21"><a class="anchor" href="#bug-fixes-21"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2100,7 +2233,7 @@ is placed on the Java 9 module path.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m5-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m5-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-20"><a class="anchor" href="#bug-fixes-20"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-22"><a class="anchor" href="#bug-fixes-22"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2163,7 +2296,7 @@ interface has been removed.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-15"><a class="anchor" href="#new-features-and-improvements-15"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-16"><a class="anchor" href="#new-features-and-improvements-16"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2207,7 +2340,7 @@ the <code>EngineDescriptor</code> is now <code>TestDescriptor.Type.CONTAINER</co
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m5-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-m5-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-21"><a class="anchor" href="#bug-fixes-21"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-23"><a class="anchor" href="#bug-fixes-23"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2328,7 +2461,7 @@ single, general purpose extension API for conditional test execution:
 </table>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-16"><a class="anchor" href="#new-features-and-improvements-16"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-17"><a class="anchor" href="#new-features-and-improvements-17"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2401,7 +2534,7 @@ methods or <code>BeforeAllCallbacks</code> to <code>AfterAllCallbacks</code>.</p
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m5-junit-vintage"><a class="anchor" href="#release-notes-5.0.0-m5-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-22"><a class="anchor" href="#bug-fixes-22"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-24"><a class="anchor" href="#bug-fixes-24"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2436,7 +2569,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m4-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m4-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-23"><a class="anchor" href="#bug-fixes-23"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-25"><a class="anchor" href="#bug-fixes-25"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2512,7 +2645,7 @@ supplied <code>LauncherDiscoveryRequest</code>:
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-17"><a class="anchor" href="#new-features-and-improvements-17"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-18"><a class="anchor" href="#new-features-and-improvements-18"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2594,7 +2727,7 @@ to <code>TestDescriptor.Type</code> constants.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m4-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-m4-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-24"><a class="anchor" href="#bug-fixes-24"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-26"><a class="anchor" href="#bug-fixes-26"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2632,7 +2765,7 @@ equal to each other.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-18"><a class="anchor" href="#new-features-and-improvements-18"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-19"><a class="anchor" href="#new-features-and-improvements-19"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2675,7 +2808,7 @@ See <a href="../user-guide/index.html#extensions-registration-automatic">Automat
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m4-junit-vintage"><a class="anchor" href="#release-notes-5.0.0-m4-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-25"><a class="anchor" href="#bug-fixes-25"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-27"><a class="anchor" href="#bug-fixes-27"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2707,7 +2840,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m3-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m3-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-26"><a class="anchor" href="#bug-fixes-26"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-28"><a class="anchor" href="#bug-fixes-28"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2910,7 +3043,7 @@ code that uses a different version of that library.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m3-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-m3-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-27"><a class="anchor" href="#bug-fixes-27"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-29"><a class="anchor" href="#bug-fixes-29"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2951,7 +3084,7 @@ methods that accept arrays or primitive types as parameters.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-19"><a class="anchor" href="#new-features-and-improvements-19"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-20"><a class="anchor" href="#new-features-and-improvements-20"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -3025,7 +3158,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m2-junit-platform"><a class="anchor" href="#release-notes-5.0.0-m2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-28"><a class="anchor" href="#bug-fixes-28"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-30"><a class="anchor" href="#bug-fixes-30"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -3081,7 +3214,7 @@ a <em>fully qualified method name</em>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m2-junit-jupiter"><a class="anchor" href="#release-notes-5.0.0-m2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-29"><a class="anchor" href="#bug-fixes-29"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-31"><a class="anchor" href="#bug-fixes-31"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -3640,7 +3773,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-14 12:31:35 EST
+Last updated 2018-01-15 06:51:09 EST
 </div>
 </div>
 </body>
