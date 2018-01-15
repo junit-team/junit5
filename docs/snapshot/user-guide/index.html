@@ -3786,7 +3786,7 @@ the <code>junit-platform-surefire-provider</code> currently only works with Sure
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.19<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;dependencies&gt;</span>
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
@@ -3819,7 +3819,7 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.19<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;dependencies&gt;</span>
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
@@ -3861,7 +3861,7 @@ the dependencies of the <code>maven-surefire-plugin</code> similar to the follow
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.19<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;dependencies&gt;</span>
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
@@ -3893,6 +3893,43 @@ the dependencies of the <code>maven-surefire-plugin</code> similar to the follow
 </div>
 </div>
 <div class="sect4">
+<h5 id="running-tests-build-maven-test-system-property"><a class="anchor" href="#running-tests-build-maven-test-system-property"></a>Running a Single Test Class</h5>
+<div class="paragraph">
+<p>The JUnit Platform Surefire Provider supports the <code>test</code> JVM system property supported by
+the Maven Surefire Plugin. For example, to run only test methods in the
+<code>org.example.MyTest</code> test class you can execute <code>mvn -Dtest=org.example.MyTest test</code> from
+the command line. For further details, consult the
+<a href="https://maven.apache.org/surefire/maven-surefire-plugin/examples/single-test.html">Maven Surefire Plugin</a>
+documentation.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="running-tests-build-maven-filter-test-class-names"><a class="anchor" href="#running-tests-build-maven-filter-test-class-names"></a>Filtering by Test Class Names</h5>
+<div class="paragraph">
+<p>The Maven Surefire Plugin will scan for test classes whose fully qualified names match
+the following patterns.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>**/Test*.java</code></p>
+</li>
+<li>
+<p><code>**/*Test.java</code></p>
+</li>
+<li>
+<p><code>**/*TestCase.java</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note, however, that you can override this default behavior by configuring explicit
+<code>include</code> and <code>exclude</code> rules in your <code>pom.xml</code> file. See the
+<a href="https://maven.apache.org/surefire/maven-surefire-plugin/examples/inclusion-exclusion.html">Inclusions and Exclusions of Tests</a>
+documentation for Maven Surefire for details.</p>
+</div>
+</div>
+<div class="sect4">
 <h5 id="running-tests-build-maven-filter-tags"><a class="anchor" href="#running-tests-build-maven-filter-tags"></a>Filtering by Tags</h5>
 <div class="paragraph">
 <p>You can filter tests by tags using the following configuration properties.</p>
@@ -3900,10 +3937,10 @@ the dependencies of the <code>maven-surefire-plugin</code> similar to the follow
 <div class="ulist">
 <ul>
 <li>
-<p>to include a tag, use either <code>groups</code> or <code>includeTags</code></p>
+<p>To include a tag, use either <code>groups</code> or <code>includeTags</code>.</p>
 </li>
 <li>
-<p>to exclude a tag, use either <code>excludedGroups</code> or <code>excludeTags</code></p>
+<p>To exclude a tag, use either <code>excludedGroups</code> or <code>excludeTags</code>.</p>
 </li>
 </ul>
 </div>
@@ -3915,7 +3952,7 @@ the dependencies of the <code>maven-surefire-plugin</code> similar to the follow
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.19<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
                 <span class="tag">&lt;properties&gt;</span>
                     <span class="tag">&lt;includeTags&gt;</span>acceptance<span class="tag">&lt;/includeTags&gt;</span>
@@ -3947,7 +3984,7 @@ the <code>configurationParameters</code> property and providing key-value pairs 
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.19<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
                 <span class="tag">&lt;properties&gt;</span>
                     <span class="tag">&lt;configurationParameters&gt;</span>
@@ -5609,7 +5646,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-14 12:31:35 EST
+Last updated 2018-01-15 10:42:37 EST
 </div>
 </div>
 </body>
