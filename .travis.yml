@@ -34,3 +34,8 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
+# Run clover report and send report to codecov after build success for JDK 9 builds
+after_success:
+  - test "$JDK_RELEASE" = "JDK 9" && ./gradlew -PenableClover clean cloverXmlReport || true
+  - test "$JDK_RELEASE" = "JDK 9" && bash <(curl -s https://codecov.io/bash) || true
