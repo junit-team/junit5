@@ -36,6 +36,8 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 
 ## Code Coverage
 
+[![codecov](https://codecov.io/gh/junit-team/junit5/branch/master/graph/badge.svg)](https://codecov.io/gh/junit-team/junit5)
+
 Code coverage using [OpenClover] for the latest build is available on the
 [Jenkins CI server].
 
