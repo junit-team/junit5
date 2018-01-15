@@ -10,10 +10,19 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import org.junit.platform.commons.annotation.ExecutionMode;
+
+import java.util.Optional;
+
 public class NopLock implements ResourceLock {
 	public static final ResourceLock INSTANCE = new NopLock();
 
 	private NopLock() {
+	}
+
+	@Override
+	public Optional<ExecutionMode> getForcedExecutionMode() {
+		return Optional.empty();
 	}
 
 	@Override

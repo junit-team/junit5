@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -65,11 +66,7 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public List<ExclusiveResource> getExclusiveResources() {
-		// @formatter:off
-		return findRepeatableAnnotations(getTestMethod(), UseResource.class).stream()
-				.map(ExclusiveResource::new)
-				.collect(toList());
-		// @formatter:on
+		return getExclusiveResources(getTestMethod());
 	}
 
 	@Override

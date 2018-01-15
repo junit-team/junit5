@@ -38,6 +38,7 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.annotation.ExecutionControl;
 import org.junit.platform.commons.annotation.ExecutionMode;
+import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -46,6 +47,7 @@ import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
@@ -112,9 +114,22 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	// --- Node ----------------------------------------------------------------
 
 	protected ExecutionMode getExecutionMode(AnnotatedElement element) {
-		return findAnnotation(element, ExecutionControl.class).map(ExecutionControl::value).orElseGet(
-			() -> getParent().filter(parent -> parent instanceof Node).map(
-				parent -> ((Node<?>) parent).getExecutionMode()).orElse(ExecutionMode.Concurrent));
+		// @formatter:off
+		return findAnnotation(element, ExecutionControl.class)
+				.map(ExecutionControl::value)
+				.orElseGet(() -> getParent()
+						.filter(parent -> parent instanceof Node)
+						.map(parent -> ((Node<?>) parent).getExecutionMode())
+						.orElse(ExecutionMode.Concurrent));
+		// @formatter:on
+	}
+
+	protected List<ExclusiveResource> getExclusiveResources(AnnotatedElement element) {
+		// @formatter:off
+		return findRepeatableAnnotations(element, UseResource.class).stream()
+				.map(ExclusiveResource::new)
+				.collect(toList());
+		// @formatter:on
 	}
 
 	@Override

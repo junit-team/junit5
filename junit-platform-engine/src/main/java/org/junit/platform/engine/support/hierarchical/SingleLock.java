@@ -10,6 +10,9 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import org.junit.platform.commons.annotation.ExecutionMode;
+
+import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
@@ -18,6 +21,11 @@ public class SingleLock implements ResourceLock {
 
 	public SingleLock(Lock lock) {
 		this.lock = lock;
+	}
+
+	@Override
+	public Optional<ExecutionMode> getForcedExecutionMode() {
+		return Optional.of(ExecutionMode.SameThread);
 	}
 
 	@Override
