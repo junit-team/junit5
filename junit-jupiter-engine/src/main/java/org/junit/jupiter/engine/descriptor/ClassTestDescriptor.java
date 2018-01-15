@@ -42,6 +42,7 @@ import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -116,6 +117,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	// --- Node ----------------------------------------------------------------
+
+	@Override
+	public ExecutionMode getExecutionMode() {
+		return getExecutionMode(getTestClass());
+	}
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {

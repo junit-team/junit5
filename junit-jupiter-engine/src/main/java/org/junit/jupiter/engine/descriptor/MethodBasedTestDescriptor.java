@@ -18,6 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -69,6 +70,11 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 				.map(ExclusiveResource::new)
 				.collect(toList());
 		// @formatter:on
+	}
+
+	@Override
+	public ExecutionMode getExecutionMode() {
+		return getExecutionMode(getTestMethod());
 	}
 
 	public final Class<?> getTestClass() {

@@ -39,7 +39,7 @@ class LockManager {
 		if (size == 0) {
 			return NopLock.INSTANCE;
 		}
-		if(size==1){
+		if (size == 1) {
 			return new SingleLock(locks.get(0));
 		}
 		return new CompositeLock(locks);

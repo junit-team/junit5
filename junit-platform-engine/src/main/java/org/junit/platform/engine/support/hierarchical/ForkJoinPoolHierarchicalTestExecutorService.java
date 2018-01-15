@@ -18,7 +18,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 
 public class ForkJoinPoolHierarchicalTestExecutorService<C extends EngineExecutionContext>
-	implements HierarchicalTestExecutorService<C> {
+		implements HierarchicalTestExecutorService<C> {
 
 	private final LockManager lockManager = new LockManager();
 
@@ -38,19 +38,20 @@ public class ForkJoinPoolHierarchicalTestExecutorService<C extends EngineExecuti
 		});
 
 		switch (testTask.getExecutionMode()) {
-		case Concurrent:
-		return forkJoinPool.submit(exclusiveTask);
+			case Concurrent:
+				return forkJoinPool.submit(exclusiveTask);
 
-		case SameThread:
-		default:
-			try {
-				exclusiveTask.call();
-				return completedFuture(null);
-			} catch (Exception e) {
-				CompletableFuture<Void> exceptionFuture = new CompletableFuture<>();
-				exceptionFuture.completeExceptionally(e);
-				return exceptionFuture;
-			}
+			case SameThread:
+			default:
+				try {
+					exclusiveTask.call();
+					return completedFuture(null);
+				}
+				catch (Exception e) {
+					CompletableFuture<Void> exceptionFuture = new CompletableFuture<>();
+					exceptionFuture.completeExceptionally(e);
+					return exceptionFuture;
+				}
 		}
 	}
 

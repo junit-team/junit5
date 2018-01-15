@@ -31,13 +31,14 @@ class CompositeLock implements ResourceLock {
 		return this;
 	}
 
-	private void _acquire() throws InterruptedException{
+	private void _acquire() throws InterruptedException {
 		try {
 			for (Lock lock : locks) {
 				lock.lockInterruptibly();
 				acquiredLocks.add(lock);
 			}
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e) {
 			release();
 			throw e;
 		}

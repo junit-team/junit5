@@ -16,6 +16,5 @@ package org.junit.platform.commons.annotation;
  * Enum order is important, since it can be used to sort locks, so the stronger mode has to be first.
  */
 public enum LockMode {
-	ReadWrite,
-	Read
+	ReadWrite, Read
 }

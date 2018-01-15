@@ -47,8 +47,7 @@ public class ExclusiveResource implements Comparable<ExclusiveResource> {
 			return false;
 		}
 		ExclusiveResource that = (ExclusiveResource) o;
-		return Objects.equals(key, that.key) &&
-			lockMode == that.lockMode;
+		return Objects.equals(key, that.key) && lockMode == that.lockMode;
 	}
 
 	@Override

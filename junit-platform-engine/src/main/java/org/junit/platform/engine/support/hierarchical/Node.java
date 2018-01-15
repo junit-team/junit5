@@ -119,7 +119,9 @@ public interface Node<C extends EngineExecutionContext> {
 		return emptyList();
 	}
 
-	default ExecutionMode getExecutionMode() {return ExecutionMode.Concurrent; }
+	default ExecutionMode getExecutionMode() {
+		return ExecutionMode.Concurrent;
+	}
 
 	/**
 	 * The result of determining whether the execution of a given {@code context}

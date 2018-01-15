@@ -35,6 +35,7 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.
@@ -100,6 +101,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
+
+		context.getExecutionListener().reportingEntryPublished(this,
+			ReportEntry.from("thread", Thread.currentThread().getName()));
 
 		// @formatter:off
 		invokeBeforeEachCallbacks(context);
