@@ -1,9 +1,10 @@
 [[release-notes-5.0.3]]
 === 5.0.3
 
-*Date of Release:* ❓
+*Date of Release:* January 15, 2018
 
-*Scope:* Bug fixes and small improvements for `ConsoleLauncher`, Gradle plugin, and Maven Surefire provider
+*Scope:* Bug fixes and small improvements for `ConsoleLauncher`, Gradle plugin, and Maven
+Surefire provider
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/21?closed=1+[5.0.3] milestone page in the JUnit repository
