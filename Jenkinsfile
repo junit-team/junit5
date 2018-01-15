@@ -1,7 +1,7 @@
 pipeline {
   agent { label 'hi-speed' }
   tools {
-    jdk 'Oracle JDK 9'
+    jdk 'Oracle JDK 8 (latest)'
   }
   options {
     ansiColor('xterm')
