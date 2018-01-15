@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,8 +17,10 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 
 /**
@@ -32,9 +34,10 @@ public final class MethodExtensionContext extends AbstractExtensionContext<TestM
 	private final ThrowableCollector throwableCollector;
 
 	public MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			TestMethodTestDescriptor testDescriptor, Object testInstance, ThrowableCollector throwableCollector) {
+			TestMethodTestDescriptor testDescriptor, ConfigurationParameters configurationParameters,
+			Object testInstance, ThrowableCollector throwableCollector) {
 
-		super(parent, engineExecutionListener, testDescriptor);
+		super(parent, engineExecutionListener, testDescriptor, configurationParameters);
 
 		this.testInstance = testInstance;
 		this.throwableCollector = throwableCollector;
@@ -51,13 +54,18 @@ public final class MethodExtensionContext extends AbstractExtensionContext<TestM
 	}
 
 	@Override
-	public Optional<Method> getTestMethod() {
-		return Optional.of(getTestDescriptor().getTestMethod());
+	public Optional<Lifecycle> getTestInstanceLifecycle() {
+		return getParent().flatMap(ExtensionContext::getTestInstanceLifecycle);
 	}
 
 	@Override
 	public Optional<Object> getTestInstance() {
 		return Optional.of(this.testInstance);
+	}
+
+	@Override
+	public Optional<Method> getTestMethod() {
+		return Optional.of(getTestDescriptor().getTestMethod());
 	}
 
 	@Override

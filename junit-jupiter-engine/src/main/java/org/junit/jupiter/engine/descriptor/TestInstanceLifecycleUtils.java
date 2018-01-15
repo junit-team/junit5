@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -50,7 +50,6 @@ final class TestInstanceLifecycleUtils {
 		// @formatter:on
 	}
 
-	// TODO Consider looking up the default test instance lifecycle mode once per test plan execution.
 	static TestInstance.Lifecycle getDefaultTestInstanceLifecycle(ConfigurationParameters configParams) {
 		Preconditions.notNull(configParams, "ConfigurationParameters must not be null");
 		String propertyName = DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;

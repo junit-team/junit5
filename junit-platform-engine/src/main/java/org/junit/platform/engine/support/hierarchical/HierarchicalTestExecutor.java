@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,6 +11,10 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
+import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -48,56 +52,127 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	}
 
 	void execute() {
-		execute(this.rootTestDescriptor, this.rootContext, new ExecutionTracker());
+		new NodeExecutor(this.rootTestDescriptor).execute(this.rootContext, new ExecutionTracker());
 	}
 
-	private void execute(TestDescriptor testDescriptor, C parentContext, ExecutionTracker tracker) {
-		Node<C> node = asNode(testDescriptor);
-		tracker.markExecuted(testDescriptor);
+	class NodeExecutor {
 
-		C preparedContext;
-		try {
-			preparedContext = node.prepare(parentContext);
-			SkipResult skipResult = node.shouldBeSkipped(preparedContext);
-			if (skipResult.isSkipped()) {
-				this.listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
+		private final TestDescriptor testDescriptor;
+		private final Node<C> node;
+		private final List<Throwable> executionErrors = new ArrayList<>();
+		private C context;
+		private SkipResult skipResult;
+		private TestExecutionResult executionResult;
+
+		NodeExecutor(TestDescriptor testDescriptor) {
+			this.testDescriptor = testDescriptor;
+			node = asNode(testDescriptor);
+		}
+
+		void execute(C parentContext, ExecutionTracker tracker) {
+			tracker.markExecuted(testDescriptor);
+			prepare(parentContext);
+			if (executionErrors.isEmpty()) {
+				checkWhetherSkipped();
+			}
+			if (executionErrors.isEmpty() && !skipResult.isSkipped()) {
+				executeRecursively(tracker);
+			}
+			if (context != null) {
+				cleanUp();
+			}
+			reportDone();
+		}
+
+		private void prepare(C parentContext) {
+			try {
+				context = node.prepare(parentContext);
+			}
+			catch (Throwable t) {
+				addExecutionError(t);
+			}
+		}
+
+		private void checkWhetherSkipped() {
+			try {
+				skipResult = node.shouldBeSkipped(context);
+			}
+			catch (Throwable t) {
+				addExecutionError(t);
+			}
+		}
+
+		private void executeRecursively(ExecutionTracker tracker) {
+			listener.executionStarted(testDescriptor);
+
+			executionResult = singleTestExecutor.executeSafely(() -> {
+				try {
+					context = node.before(context);
+
+					context = node.execute(context, dynamicTestDescriptor -> {
+						listener.dynamicTestRegistered(dynamicTestDescriptor);
+						new NodeExecutor(dynamicTestDescriptor).execute(context, tracker);
+					});
+
+					// @formatter:off
+					testDescriptor.getChildren().stream()
+							.filter(child -> !tracker.wasAlreadyExecuted(child))
+							.forEach(child -> new NodeExecutor(child).execute(context, tracker));
+					// @formatter:on
+				}
+				finally {
+					node.after(context);
+				}
+			});
+		}
+
+		private void cleanUp() {
+			try {
+				node.cleanUp(context);
+			}
+			catch (Throwable t) {
+				addExecutionError(t);
+			}
+		}
+
+		private void reportDone() {
+			if (executionResult != null) {
+				addExecutionErrorsToTestExecutionResult();
+				listener.executionFinished(testDescriptor, executionResult);
+			}
+			else if (executionErrors.isEmpty() && skipResult.isSkipped()) {
+				listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
+			}
+			else {
+				// Call executionStarted first to comply with the contract of EngineExecutionListener.
+				listener.executionStarted(testDescriptor);
+				listener.executionFinished(testDescriptor, createTestExecutionResultFromExecutionErrors());
+			}
+		}
+
+		private void addExecutionErrorsToTestExecutionResult() {
+			if (executionErrors.isEmpty()) {
 				return;
 			}
+			if (executionResult.getStatus() == FAILED && executionResult.getThrowable().isPresent()) {
+				Throwable throwable = executionResult.getThrowable().get();
+				executionErrors.forEach(throwable::addSuppressed);
+			}
+			else {
+				executionResult = createTestExecutionResultFromExecutionErrors();
+			}
 		}
-		catch (Throwable throwable) {
+
+		private TestExecutionResult createTestExecutionResultFromExecutionErrors() {
+			Throwable throwable = executionErrors.get(0);
+			executionErrors.stream().skip(1).forEach(throwable::addSuppressed);
+			return TestExecutionResult.failed(throwable);
+		}
+
+		private void addExecutionError(Throwable throwable) {
 			rethrowIfBlacklisted(throwable);
-			// We call executionStarted first to comply with the contract of EngineExecutionListener
-			this.listener.executionStarted(testDescriptor);
-			this.listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
-			return;
+			executionErrors.add(throwable);
 		}
-
-		this.listener.executionStarted(testDescriptor);
-
-		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
-			C context = preparedContext;
-			try {
-				context = node.before(context);
-
-				C contextForDynamicChildren = context;
-				context = node.execute(context, dynamicTestDescriptor -> {
-					this.listener.dynamicTestRegistered(dynamicTestDescriptor);
-					execute(dynamicTestDescriptor, contextForDynamicChildren, tracker);
-				});
-
-				C contextForStaticChildren = context;
-				// @formatter:off
-				testDescriptor.getChildren().stream()
-						.filter(child -> !tracker.wasAlreadyExecuted(child))
-						.forEach(child -> execute(child, contextForStaticChildren, tracker));
-				// @formatter:on
-			}
-			finally {
-				node.after(context);
-			}
-		});
-
-		this.listener.executionFinished(testDescriptor, result);
 	}
 
 	@SuppressWarnings("unchecked")

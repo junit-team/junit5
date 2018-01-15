@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
@@ -34,9 +35,14 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.platform.commons.JUnitException;
 
+/**
+ * Unit tests for {@link ParameterizedTestExtension}.
+ *
+ * @since 5.0
+ */
 class ParameterizedTestExtensionTests {
 
-	ParameterizedTestExtension parameterizedTestExtension = new ParameterizedTestExtension();
+	private final ParameterizedTestExtension parameterizedTestExtension = new ParameterizedTestExtension();
 
 	static boolean streamWasClosed = false;
 
@@ -151,12 +157,22 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
+			public Optional<Lifecycle> getTestInstanceLifecycle() {
+				return Optional.empty();
+			}
+
+			@Override
 			public java.util.Optional<Object> getTestInstance() {
 				return Optional.empty();
 			}
 
 			@Override
 			public Optional<Throwable> getExecutionException() {
+				return Optional.empty();
+			}
+
+			@Override
+			public Optional<String> getConfigurationParameter(String key) {
 				return Optional.empty();
 			}
 

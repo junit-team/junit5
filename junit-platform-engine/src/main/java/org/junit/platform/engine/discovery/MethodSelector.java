@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -167,8 +167,9 @@ public class MethodSelector implements DiscoverySelector {
 		if (this.javaMethod == null) {
 			if (StringUtils.isNotBlank(this.methodParameterTypes)) {
 				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName,
-					this.methodParameterTypes).orElseThrow(() -> new PreconditionViolationException(
-						String.format("Could not find method with name [%s] and parameter types [%s] in class [%s].",
+					this.methodParameterTypes).orElseThrow(
+						() -> new PreconditionViolationException(String.format(
+							"Could not find method with name [%s] and parameter types [%s] in class [%s].",
 							this.methodName, this.methodParameterTypes, this.javaClass.getName())));
 			}
 			else {

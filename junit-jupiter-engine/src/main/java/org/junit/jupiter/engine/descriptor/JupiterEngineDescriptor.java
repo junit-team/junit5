@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -33,10 +33,11 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 	}
 
 	@Override
-	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
+	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		ExtensionRegistry extensionRegistry = createRegistryWithDefaultExtensions(context.getConfigurationParameters());
 		EngineExecutionListener executionListener = context.getExecutionListener();
-		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionListener, this);
+		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionListener, this,
+			context.getConfigurationParameters());
 
 		// @formatter:off
 		return context.extend()
@@ -46,4 +47,8 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 		// @formatter:on
 	}
 
+	@Override
+	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
+		context.close();
+	}
 }

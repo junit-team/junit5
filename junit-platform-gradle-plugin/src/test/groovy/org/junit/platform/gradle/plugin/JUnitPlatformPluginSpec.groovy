@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -24,6 +24,7 @@ import org.junit.platform.commons.util.PreconditionViolationException
 import org.junit.platform.console.ConsoleLauncher
 import org.junit.platform.engine.discovery.ClassNameFilter
 
+import spock.lang.Ignore
 import spock.lang.Issue
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -66,6 +67,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		project.junitPlatform {
 			platformVersion '5.0.0-M1'
 			enableStandardTestTask true
+			enableModulePath true
 			logManager 'org.apache.logging.log4j.jul.LogManager'
 
 			filters {
@@ -105,6 +107,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		JUnitPlatformExtension junitPlatform = project.extensions.getByType(JUnitPlatformExtension)
 		junitPlatform.platformVersion = '5.0.0-M1'
 		junitPlatform.enableStandardTestTask = true
+		junitPlatform.enableModulePath = true
 		junitPlatform.logManager = 'org.apache.logging.log4j.jul.LogManager'
 		junitPlatform.selectors {
 			it.uris'u:foo', 'u:bar'
@@ -206,6 +209,25 @@ class JUnitPlatformPluginSpec extends Specification {
 		Task testTask = project.tasks.findByName('test')
 		testTask instanceof Test
 		testTask.enabled == false
+	}
+
+	@Ignore('Cannot resolve external dependency org.junit.platform:junit-platform-launcher:@VERSION because no repositories are defined.')
+	@Issue('https://github.com/junit-team/junit5/issues/1234')
+	def "enable module-path sets main class name to --module"() {
+		given:
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		project.junitPlatform { enableModulePath true }
+		project.evaluate()
+
+		then:
+		Task junitTask = project.tasks.findByName('junitPlatformTest')
+		junitTask instanceof JavaExec
+		junitTask.main == '--module'
+
+		junitTask.args.containsAll('org.junit.platform.console')
+		junitTask.args.containsAll('--scan-modules')
 	}
 
 	def "scans classes dirs for non-Java languages"() {

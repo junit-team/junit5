@@ -17,11 +17,20 @@ matrix:
 # Java 10
     - env: JDK_RELEASE='JDK 10 Early-Access'
       install: . ./src/install/install-jdk-10.sh
-  allow_failures:
-    - env: JDK_RELEASE='JDK 10 Early-Access'
 
 script:
 # Display Gradle, Groovy, JVM and other versions
   - ./gradlew -version
 # Build JUnit 5
   - ./gradlew build --scan --stacktrace -Dkotlin.compiler.execution.strategy="in-process"
+
+# Do not store unnecessary files from Gradle dependency cache
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+# Store Gradle dependency cache and Gradle Wrapper files for next execution
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/

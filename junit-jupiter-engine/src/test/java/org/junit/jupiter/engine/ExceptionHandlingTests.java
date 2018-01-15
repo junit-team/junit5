@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -137,7 +137,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(engine(), started()), //
 			event(container(FailureTestCase.class), started()), //
 			event(test("testWithUncheckedException"), started()), //
-			event(test("testWithUncheckedException"),
+			event(test("testWithUncheckedException"), //
 				finishedWithFailure(allOf( //
 					isA(RuntimeException.class), //
 					message("unchecked"), //

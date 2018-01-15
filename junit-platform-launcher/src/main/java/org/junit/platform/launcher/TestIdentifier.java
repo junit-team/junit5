@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -130,6 +130,7 @@ public final class TestIdentifier implements Serializable {
 	 *
 	 * @return the legacy reporting name; never {@code null} or blank
 	 * @see org.junit.platform.engine.TestDescriptor#getLegacyReportingName()
+	 * @see org.junit.platform.launcher.listeners.LegacyReportingUtils
 	 */
 	public String getLegacyReportingName() {
 		return this.legacyReportingName;

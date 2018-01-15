@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -41,6 +41,24 @@ public class ExtensionValuesStore {
 
 	public ExtensionValuesStore(ExtensionValuesStore parentStore) {
 		this.parentStore = parentStore;
+	}
+
+	/**
+	 * Close all values that implement {@link ExtensionContext.Store.CloseableResource}.
+	 *
+	 * @implNote Only close values stored in this instance. This implementation
+	 * does not close values in parent stores.
+	 */
+	public void closeAllStoredCloseableValues() {
+		ThrowableCollector throwableCollector = new ThrowableCollector();
+		for (Supplier<Object> supplier : storedValues.values()) {
+			Object value = supplier.get();
+			if (value instanceof ExtensionContext.Store.CloseableResource) {
+				ExtensionContext.Store.CloseableResource resource = (ExtensionContext.Store.CloseableResource) value;
+				throwableCollector.execute(resource::close);
+			}
+		}
+		throwableCollector.assertEmpty();
 	}
 
 	Object get(Namespace namespace, Object key) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -28,10 +28,9 @@ class XmlReportAssertions {
 
 	private static Validator schemaValidator;
 
-	static String ensureValidAccordingToJenkinsSchema(String content) throws Exception {
+	static void assertValidAccordingToJenkinsSchema(String content) throws Exception {
 		try {
 			getSchemaValidator().validate(new StreamSource(new StringReader(content)));
-			return content;
 		}
 		catch (SAXException e) {
 			throw new AssertionFailedError("Invalid XML document: " + content, e);

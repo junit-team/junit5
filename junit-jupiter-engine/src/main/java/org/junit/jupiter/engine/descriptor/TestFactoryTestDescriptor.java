@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,6 +14,8 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -36,15 +38,24 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public class TestFactoryTestDescriptor extends TestMethodTestDescriptor {
+public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implements Filterable {
 
 	public static final String DYNAMIC_CONTAINER_SEGMENT_TYPE = "dynamic-container";
 	public static final String DYNAMIC_TEST_SEGMENT_TYPE = "dynamic-test";
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
+	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
+
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
+	}
+
+	// --- Filterable ----------------------------------------------------------
+
+	@Override
+	public DynamicDescendantFilter getDynamicDescendantFilter() {
+		return dynamicDescendantFilter;
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -76,8 +87,9 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor {
 				Iterator<DynamicNode> iterator = dynamicNodeStream.iterator();
 				while (iterator.hasNext()) {
 					DynamicNode dynamicNode = iterator.next();
-					JupiterTestDescriptor descriptor = createDynamicDescriptor(this, dynamicNode, index++, source);
-					dynamicTestExecutor.execute(descriptor);
+					Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index++,
+						source, getDynamicDescendantFilter());
+					descriptor.ifPresent(dynamicTestExecutor::execute);
 				}
 			}
 			catch (ClassCastException ex) {
@@ -96,21 +108,27 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor {
 		}
 	}
 
-	static JupiterTestDescriptor createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node, int index,
-			TestSource source) {
-		JupiterTestDescriptor descriptor;
+	static Optional<JupiterTestDescriptor> createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node,
+			int index, TestSource source, DynamicDescendantFilter dynamicDescendantFilter) {
+		UniqueId uniqueId;
+		Supplier<JupiterTestDescriptor> descriptorCreator;
 		if (node instanceof DynamicTest) {
 			DynamicTest test = (DynamicTest) node;
-			UniqueId uniqueId = parent.getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
-			descriptor = new DynamicTestTestDescriptor(uniqueId, test, source);
+			uniqueId = parent.getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
+			descriptorCreator = () -> new DynamicTestTestDescriptor(uniqueId, index, test, source);
 		}
 		else {
 			DynamicContainer container = (DynamicContainer) node;
-			UniqueId uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
-			descriptor = new DynamicContainerTestDescriptor(uniqueId, container, source);
+			uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
+			descriptorCreator = () -> new DynamicContainerTestDescriptor(uniqueId, index, container, source,
+				dynamicDescendantFilter);
 		}
-		parent.addChild(descriptor);
-		return descriptor;
+		if (dynamicDescendantFilter.test(uniqueId)) {
+			JupiterTestDescriptor descriptor = descriptorCreator.get();
+			parent.addChild(descriptor);
+			return Optional.of(descriptor);
+		}
+		return Optional.empty();
 	}
 
 	private JUnitException invalidReturnTypeException(Throwable cause) {

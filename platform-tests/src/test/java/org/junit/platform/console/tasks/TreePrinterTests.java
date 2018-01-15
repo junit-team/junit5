@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -63,7 +63,7 @@ class TreePrinterTests {
 		root.addChild(new TreeNode(createEngineId("e-2", "engine two")).setResult(failed(null)));
 		root.addChild(new TreeNode(createEngineId("e-3", "engine three")).setResult(aborted(null)));
 		new TreePrinter(out, Theme.UNICODE, true).print(root);
-		assertIterableEquals(
+		assertIterableEquals( //
 			Arrays.asList( //
 				"╷", //
 				"├─ engine zero ↷ none", //

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -36,6 +36,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.listeners.LegacyReportingUtils;
 
 /**
  * {@code XmlReportWriter} writes an XML report whose format is compatible
@@ -45,6 +46,9 @@ import org.junit.platform.launcher.TestIdentifier;
  * @since 1.0
  */
 class XmlReportWriter {
+
+	private static final String CDATA_START = "<![CDATA[";
+	private static final String CDATA_END = "]]>";
 
 	private final XmlReportData reportData;
 
@@ -154,11 +158,7 @@ class XmlReportWriter {
 	}
 
 	private String getClassName(TestIdentifier testIdentifier) {
-		// @formatter:off
-		return this.reportData.getTestPlan().getParent(testIdentifier)
-				.map(TestIdentifier::getLegacyReportingName)
-				.orElse("<unrooted>");
-		// @formatter:on
+		return LegacyReportingUtils.getClassName(this.reportData.getTestPlan(), testIdentifier);
 	}
 
 	private void writeSkippedOrErrorOrFailureElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
@@ -178,7 +178,7 @@ class XmlReportWriter {
 	private void writeSkippedElement(String reason, XMLStreamWriter writer) throws XMLStreamException {
 		if (isNotBlank(reason)) {
 			writer.writeStartElement("skipped");
-			writer.writeCData(reason);
+			writeCDataSafely(writer, reason);
 			writer.writeEndElement();
 		}
 		else {
@@ -208,7 +208,7 @@ class XmlReportWriter {
 			writer.writeAttribute("message", throwable.getMessage());
 		}
 		writer.writeAttribute("type", throwable.getClass().getName());
-		writer.writeCData(readStackTrace(throwable));
+		writeCDataSafely(writer, readStackTrace(throwable));
 	}
 
 	private void writeReportEntriesToSystemOutElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
@@ -259,9 +259,13 @@ class XmlReportWriter {
 				+ "\ndisplay-name: " + testIdentifier.getDisplayName() + "\n";
 
 		writer.writeStartElement("system-out");
-		writer.writeCData(cData);
+		writeCDataSafely(writer, cData);
 		writer.writeEndElement();
 		newLine(writer);
+	}
+
+	private void writeCDataSafely(XMLStreamWriter writer, String data) throws XMLStreamException {
+		writer.writeCData(data.replace(CDATA_END, "]]" + CDATA_END + CDATA_START + ">"));
 	}
 
 	private void newLine(XMLStreamWriter xmlWriter) throws XMLStreamException {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.discovery;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
 import org.junit.platform.engine.TestDescriptor;
