@@ -376,7 +376,7 @@ currently only works with Surefire 2.19.1.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19</version>
+				<version>2.19.1</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -409,7 +409,7 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19</version>
+				<version>2.19.1</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -451,7 +451,7 @@ the dependencies of the `maven-surefire-plugin` similar to the following.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19</version>
+				<version>2.19.1</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -481,13 +481,38 @@ the dependencies of the `maven-surefire-plugin` similar to the following.
 	...
 ----
 
+[[running-tests-build-maven-test-system-property]]
+===== Running a Single Test Class
+
+The JUnit Platform Surefire Provider supports the `test` JVM system property supported by
+the Maven Surefire Plugin. For example, to run only test methods in the
+`org.example.MyTest` test class you can execute `mvn -Dtest=org.example.MyTest test` from
+the command line. For further details, consult the
+https://maven.apache.org/surefire/maven-surefire-plugin/examples/single-test.html[Maven Surefire Plugin]
+documentation.
+
+[[running-tests-build-maven-filter-test-class-names]]
+===== Filtering by Test Class Names
+
+The Maven Surefire Plugin will scan for test classes whose fully qualified names match
+the following patterns.
+
+- `+**/Test*.java+`
+- `+**/*Test.java+`
+- `+**/*TestCase.java+`
+
+Note, however, that you can override this default behavior by configuring explicit
+`include` and `exclude` rules in your `pom.xml` file. See the
+https://maven.apache.org/surefire/maven-surefire-plugin/examples/inclusion-exclusion.html[Inclusions and Exclusions of Tests]
+documentation for Maven Surefire for details.
+
 [[running-tests-build-maven-filter-tags]]
 ===== Filtering by Tags
 
 You can filter tests by tags using the following configuration properties.
 
-- to include a tag, use either `groups` or `includeTags`
-- to exclude a tag, use either `excludedGroups` or `excludeTags`
+- To include a tag, use either `groups` or `includeTags`.
+- To exclude a tag, use either `excludedGroups` or `excludeTags`.
 
 [source,xml,indent=0]
 ----
@@ -497,7 +522,7 @@ You can filter tests by tags using the following configuration properties.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19</version>
+				<version>2.19.1</version>
 				<configuration>
 			        <properties>
 						<includeTags>acceptance</includeTags>
@@ -528,7 +553,7 @@ the `configurationParameters` property and providing key-value pairs in the Java
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19</version>
+				<version>2.19.1</version>
 				<configuration>
 					<properties>
 						<configurationParameters>
