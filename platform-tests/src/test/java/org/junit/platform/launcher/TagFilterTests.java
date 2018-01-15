@@ -133,7 +133,7 @@ class TagFilterTests {
 	void rejectUnParsableTagExpressions() {
 		String brokenTagExpression = "tag & ";
 		RuntimeException expected = assertThrows(PreconditionViolationException.class,
-			() -> TagFilter.includeMatching(brokenTagExpression));
+			() -> TagFilter.includeTags(brokenTagExpression));
 		assertThat(expected).hasMessageStartingWith("Unable to parse tag expression [" + brokenTagExpression + "]");
 	}
 

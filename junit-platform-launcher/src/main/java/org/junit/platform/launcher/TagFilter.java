@@ -132,9 +132,8 @@ public final class TagFilter {
 	 *
 	 * @param infixTagExpression to parse and evaluate against a {@link TestDescriptor}; never {@code null} or empty
 	 * @throws PreconditionViolationException if the supplied infixTagExpression can not be parsed.
-	 * @since 1.1
 	 */
-	public static PostDiscoveryFilter includeMatching(String infixTagExpression) {
+	private static PostDiscoveryFilter includeMatching(String infixTagExpression) {
 		TagExpression tagExpression = TagExpression.parseFrom(infixTagExpression).tagExpressionOrThrow(
 			(message) -> new PreconditionViolationException(
 				"Unable to parse tag expression [" + infixTagExpression + "]: " + message));
