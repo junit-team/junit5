@@ -1,5 +1,5 @@
 [[release-notes-5.0.3]]
-=== 5.0.3
+== 5.0.3
 
 *Date of Release:* January 15, 2018
 
@@ -12,7 +12,7 @@ on GitHub.
 
 
 [[release-notes-5.0.3-overall-improvements]]
-==== Overall Improvements
+=== Overall Improvements
 
 * In 5.0.1, all artifacts were changed to have an _optional_ instead of a mandatory
   dependency on the _@API Guardian_ JAR in their published Maven POMs. However, although
@@ -30,9 +30,9 @@ _@API Guardian_ JAR _mandatory_ again.
 
 
 [[release-notes-5.0.3-junit-platform]]
-==== JUnit Platform
+=== JUnit Platform
 
-===== Bug Fixes
+==== Bug Fixes
 
 * Summary table is no longer printed via the `ConsoleLauncher` and Gradle plugin when
   details mode `NONE` is selected, unless there are errors.
@@ -51,7 +51,7 @@ _@API Guardian_ JAR _mandatory_ again.
   annotation are now considered to be implicitly _inherited_ when searching for the given
   meta-annotation within a class hierarchy.
 
-===== New Features and Improvements
+==== New Features and Improvements
 
 * The JUnit Platform Maven Surefire provider now runs all specified tests in a single
   test run, i.e. all registered `TestExecutionListeners` will receive a single `TestPlan`.
@@ -67,9 +67,9 @@ _@API Guardian_ JAR _mandatory_ again.
 
 
 [[release-notes-5.0.3-junit-jupiter]]
-==== JUnit Jupiter
+=== JUnit Jupiter
 
-===== Bug Fixes
+==== Bug Fixes
 
 * The `@Tag` and `@Tags` annotations are now inherited within test class hierarchies.
 * Due to a change in the JUnit Platform's `AnnotationUtils` class, non-inherited
@@ -82,6 +82,6 @@ _@API Guardian_ JAR _mandatory_ again.
 
 
 [[release-notes-5.0.3-junit-vintage]]
-==== JUnit Vintage
+=== JUnit Vintage
 
 No changes.
