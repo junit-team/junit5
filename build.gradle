@@ -1,5 +1,6 @@
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import net.ltgt.gradle.errorprone.ErrorProneToolChain
 
 buildscript {
 	repositories {
@@ -525,10 +526,12 @@ subprojects { subproj ->
 
 	}
 
-	if (!subproj.name.endsWith('-java-9')
+	if (
 		// error-prone doesn't work with Java 9 sources yet:
 		// https://github.com/google/error-prone/issues/448
-		&& subproj.name != 'documentation') {
+		// TODO: Try removing this check, since errorprone may support Java 9 now?
+		!subproj.name.endsWith('-java-9')
+				&& subproj.name != 'documentation') {
 
 		println(String.format("Currently setting up error-prone for subproject: %s", subproj.name))
 
@@ -551,11 +554,10 @@ subprojects { subproj ->
 			'-XepAllDisabledChecksAsWarnings',
 
 			// generates too many false positives on constructors that call other constructors.
-			// TODO: once #939 is resolved, see if constructors can be refactored more easily
-			// to not call each other.
+			// TODO: see if constructors can be refactored more easily to not call each other.
 			'-Xep:ConstructorLeaksThis:OFF',
 
-			// This check is very experimental and prone to fail
+			// we don't use @Nullable
 			'-Xep:FieldMissingNullable:OFF',
 
 			// adds a lot of churn for not a lot of gain
@@ -576,6 +578,9 @@ subprojects { subproj ->
 			// we don't use @Nullable
 			'-Xep:ReturnMissingNullable:OFF',
 
+			// we do not use Guava, so we cannot import com.google.common.base.Splitter
+			'-Xep:StringSplitter:OFF',
+
 			// we target Java 8, not Android
 			'-Xep:StaticOrDefaultInterfaceMethod:OFF',
 
@@ -588,11 +593,7 @@ subprojects { subproj ->
 			// TODO: turning this check on and applying @com.google.errorprone.annotations.Var to
 			// non-final variables causes JDK 9 to fail to compile; investigate and consider turning
 			// it on when error-prone supports JDK 9
-			'-Xep:Var:OFF',
-
-			// this check will be removed in a future release of error-prone:
-			// https://github.com/google/error-prone/commit/67196dcc28c3bd7048289a9c7b81b3c6f25e1934
-			'-Xep:LiteralClassName:OFF'
+			'-Xep:Var:OFF'
 		]
 
 		def errorproneTestFlags = errorproneBaseFlags + [
@@ -605,23 +606,31 @@ subprojects { subproj ->
 			'-Xep:ReturnValueIgnored:OFF'
 		]
 
-		task compileJavaWithErrorProne(type: JavaCompile, dependsOn: compileKotlin) {
+		task compileJavaWithErrorProne(type: JavaCompile/*, dependsOn: compileKotlin*/) {
 			group = 'verification'
-			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
-			classpath = compileJava.classpath
-			source = compileJava.source
+			toolChain = ErrorProneToolChain.create(project)
+			classpath = compileJava.classpath + compileKotlin.classpath
+			//println("classpath = " + classpath.files)
+			source = compileJava.source + compileKotlin.source
+			//println("source = " + source.files)
+			options.compilerArgs =
+					compileJava.options.compilerArgs + compileJavaBaseArgs + errorproneBaseFlags
+			// println("compileJavaWithErrorProne.options.compilerArgs = $options.compilerArgs")
 			destinationDir = file("$buildDir/classes/error-prone-java/main")
-			options.compilerArgs = compileJavaBaseArgs + errorproneBaseFlags
 		}
 		check.dependsOn(compileJavaWithErrorProne)
 
-		task compileTestJavaWithErrorProne(type: JavaCompile, dependsOn: compileTestKotlin) {
+		task compileTestJavaWithErrorProne(type: JavaCompile/*, dependsOn: [compileKotlin, compileTestKotlin]*/) {
 			group = 'verification'
-			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
-			classpath = compileTestJava.classpath
-			source = compileTestJava.source
+			toolChain = ErrorProneToolChain.create(project)
+			classpath = compileTestJava.classpath + compileTestKotlin.classpath
+			//println("classpath = " + classpath.files)
+			source = compileTestJava.source + compileTestKotlin.source
+			//println("source = " + source.files)
+			options.compilerArgs +=
+					compileTestJava.options.compilerArgs + compileTestJavaBaseArgs + errorproneTestFlags
+			// println("compileTestJavaWithErrorProne.options.compilerArgs = $options.compilerArgs")
 			destinationDir = file("$buildDir/classes/error-prone-java/test")
-			options.compilerArgs = compileTestJavaBaseArgs + errorproneTestFlags
 		}
 		check.dependsOn(compileTestJavaWithErrorProne)
 	}
