@@ -66,7 +66,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		project.junitPlatform {
 			platformVersion '5.0.0-M1'
 			enableStandardTestTask true
-			enableModulePath true
+			modulepath = project.files("abc.jar")
 			logManager 'org.apache.logging.log4j.jul.LogManager'
 
 			filters {
@@ -106,7 +106,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		JUnitPlatformExtension junitPlatform = project.extensions.getByType(JUnitPlatformExtension)
 		junitPlatform.platformVersion = '5.0.0-M1'
 		junitPlatform.enableStandardTestTask = true
-		junitPlatform.enableModulePath = true
+		junitPlatform.modulepath = project.files("abc.jar")
 		junitPlatform.logManager = 'org.apache.logging.log4j.jul.LogManager'
 		junitPlatform.selectors {
 			it.uris'u:foo', 'u:bar'
@@ -216,24 +216,18 @@ class JUnitPlatformPluginSpec extends Specification {
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
-		project.junitPlatform { enableModulePath true }
+		project.junitPlatform { modulepath = project.files("abc.jar") }
 		project.evaluate()
 
 		then:
 		Task junitTask = project.tasks.findByName('junitPlatformTest')
-		junitTask instanceof JUnitPlatformJavaExec
-		junitTask.main == '--module'
+		junitTask instanceof JavaExec
 
-		// Both next statements fail with DefaultLenientConfiguration$ArtifactResolveException:
-		//
-		// * junitTask.modulepath.each { println it }
-		// * junitTask.getAllJvmArgs().containsAll('--module-path')
-		//
-		// Caused by org.gradle.internal.resolve.ModuleVersionNotFoundException:
-		//   Cannot resolve external dependency org.junit.platform:junit-platform-launcher:@VERSION
-		//     because no repositories are defined.
+		junitTask.jvmArgs.containsAll('--module-path', project.files("abc.jar").asPath)
+		junitTask.jvmArgs.containsAll('--add-modules', 'ALL-MODULE-PATH')
+		junitTask.main == '--module'
 		junitTask.args[0] == 'org.junit.platform.console'
-		junitTask.args.containsAll('--scan-modules')
+		junitTask.args.contains('--scan-modules')
 	}
 
 	def "scans classes dirs for non-Java languages"() {

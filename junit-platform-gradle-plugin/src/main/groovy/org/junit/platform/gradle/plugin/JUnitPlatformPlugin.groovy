@@ -16,6 +16,7 @@ import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
+import org.gradle.api.tasks.JavaExec
 import org.gradle.util.GradleVersion
 import org.junit.platform.console.ConsoleLauncher
 
@@ -66,7 +67,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			deps.add(project.dependencies.create("org.junit.platform:junit-platform-console:${version}"))
 		}
 
-		JUnitPlatformJavaExec junitTask = project.tasks.create(TASK_NAME, JUnitPlatformJavaExec) {
+		JavaExec junitTask = project.tasks.create(TASK_NAME, JavaExec) {
 			it.with {
 				group = JavaBasePlugin.VERIFICATION_GROUP
 				description = 'Runs tests on the JUnit Platform.'
@@ -86,7 +87,11 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		return properties.getProperty("version")
 	}
 
-	private void configure(Project project, JUnitPlatformJavaExec junitTask, JUnitPlatformExtension junitExtension) {
+	private static boolean isModulePathEnabled(JUnitPlatformExtension junitExtension) {
+		return !junitExtension.modulepath.isEmpty()
+	}
+
+	private void configure(Project project, JavaExec junitTask, JUnitPlatformExtension junitExtension) {
 		junitTask.with {
 			group = JavaBasePlugin.VERIFICATION_GROUP
 			description = 'Runs tests on the JUnit Platform.'
@@ -117,14 +122,20 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 			configureTaskDependencies(project, it, junitExtension)
 
-			if (junitExtension.enableModulePath) {
-				// Set module-path and add all modules that are available.
-				modulepath = project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform
+			if (isModulePathEnabled(junitExtension)) {
 				// Clear classpath.
 				// Caveat: `JavaExec` task uses its `classpath` parameter to find tasks which create the
 				// needed JARs and marks these tasks as dependencies during the task graph generation phase.
 				// https://github.com/junit-team/junit5/issues/1233
 				classpath = project.files()
+				// Set --module-path if not already set.
+				if (!jvmArgs.contains('--module-path') && !jvmArgs.contains('-p')) {
+					jvmArgs += ['--module-path', junitExtension.modulepath.asPath]
+				}
+				// Treat all modules on the path as root modules.
+				if (!jvmArgs.contains('--add-modules')) {
+					jvmArgs += ['--add-modules', 'ALL-MODULE-PATH']
+				}
 				// Set main class name to '--module' (https://github.com/junit-team/junit5/issues/1234)
 				// The first argument will be 'org.junit.platform.console'
 				main = '--module'
@@ -157,7 +168,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 		def args = []
 
-		if (junitExtension.enableModulePath) {
+		if (isModulePathEnabled(junitExtension)) {
 			args.add('org.junit.platform.console')
 		}
 
@@ -209,7 +220,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	private void addSelectors(project, junitExtension, args) {
 		def selectors = junitExtension.selectors
 		if (selectors.empty) {
-			if (junitExtension.enableModulePath) {
+			if (isModulePathEnabled(junitExtension)) {
 				args.add('--scan-modules')
 				return
 			}
