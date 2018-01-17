@@ -39,7 +39,7 @@ dependencies {
 	testImplementation(project(path: ':junit-jupiter-params', configuration: 'shadow'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-launcher'))
-	if (gradle.ext.kotlinIsSupported) testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	if (gradle.ext.kotlinIsSupported) testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.

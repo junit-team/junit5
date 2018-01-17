@@ -61,7 +61,7 @@ dependencies {
 	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-	testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	if (gradle.ext.kotlinIsSupported) testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
