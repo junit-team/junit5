@@ -28,7 +28,16 @@ import org.junit.platform.launcher.tagexpression.TagExpression;
 
 /**
  * Factory methods for creating {@link PostDiscoveryFilter PostDiscoveryFilters}
- * based on <em>included</em> and <em>excluded</em> tags.
+ * based on <em>included</em> and <em>excluded</em> tags or tag expressions.
+ *
+ * <p>Tag expressions are boolean expressions with the following allowed
+ * operators: {@code !} (not), {@code &} (and) and {@code |} (or). Parentheses
+ * can be used to adjust for operator precedence. Please refer to the
+ * <a href="http://junit.org/junit5/docs/current/user-guide/#running-tests-tag-expressions">JUnit 5 User Guide</a>
+ * for usage examples.
+ *
+ * <p>Please note that a tag name is a valid tag expression. Thus, wherever a tag
+ * expressions can be used, a tag name can be used, too.
  *
  * @since 1.0
  * @see #includeTags(String...)
@@ -46,92 +55,91 @@ public final class TagFilter {
 	///CLOVER:ON
 
 	/**
-	 * Create an <em>include</em> filter based on the supplied {@code tags}.
+	 * Create an <em>include</em> filter based on the supplied tag expressions.
 	 *
-	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}.
+	 * <p>Containers and tests will only be executed if their tags match at
+	 * least one of the supplied <em>included</em> tag expressions.
 	 *
-	 * <p>Containers and tests will only be executed if they are tagged with
-	 * at least one of the supplied <em>included</em> tags.
-	 *
-	 * @param tags the included tags; never {@code null} or empty
-	 * @throws PreconditionViolationException if the supplied tags array is
-	 * {@code null} or empty, or if any individual tag is not syntactically
-	 * valid
+	 * @param tagExpressions the included tag expressions; never {@code null} or
+	 * empty
+	 * @throws PreconditionViolationException if the supplied tag expressions
+	 * array is {@code null} or empty, or if any individual tag expression is
+	 * not syntactically valid
 	 * @see #includeTags(List)
 	 * @see TestTag#isValid(String)
 	 */
-	public static PostDiscoveryFilter includeTags(String... tags) throws PreconditionViolationException {
-		Preconditions.notNull(tags, "tags array must not be null");
-		return includeTags(asList(tags));
+	public static PostDiscoveryFilter includeTags(String... tagExpressions) throws PreconditionViolationException {
+		Preconditions.notNull(tagExpressions, "array of tag expression must not be null");
+		return includeTags(asList(tagExpressions));
 	}
 
 	/**
-	 * Create an <em>include</em> filter based on the supplied {@code tags}.
+	 * Create an <em>include</em> filter based on the supplied tag expressions.
 	 *
-	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}.
+	 * <p>Containers and tests will only be executed if their tags match at
+	 * least one of the supplied <em>included</em> tag expressions.
 	 *
-	 * <p>Containers and tests will only be executed if they are tagged with
-	 * at least one of the supplied <em>included</em> tags.
-	 *
-	 * @param tags the included tags; never {@code null} or empty
-	 * @throws PreconditionViolationException if the supplied tags list is
-	 * {@code null} or empty, or if any individual tag is not syntactically
-	 * valid
+	 * @param tagExpressions the included tag expressions; never {@code null} or
+	 * empty
+	 * @throws PreconditionViolationException if the supplied tag expressions
+	 * array is {@code null} or empty, or if any individual tag expression is
+	 * not syntactically valid
 	 * @see #includeTags(String...)
 	 * @see TestTag#isValid(String)
 	 */
-	public static PostDiscoveryFilter includeTags(List<String> tags) throws PreconditionViolationException {
-		Preconditions.notEmpty(tags, "tags list must not be null or empty");
-		return includeMatching(orExpressionFor(tags));
+	public static PostDiscoveryFilter includeTags(List<String> tagExpressions) throws PreconditionViolationException {
+		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
+		return includeMatching(orExpressionFor(tagExpressions));
 	}
 
 	/**
-	 * Create an <em>exclude</em> filter based on the supplied {@code tags}.
+	 * Create an <em>exclude</em> filter based on the supplied tag expressions.
 	 *
-	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}.
+	 * <p>Containers and tests will only be executed if their tags do
+	 * <em>not</em> match any of the supplied <em>excluded</em> tag expressions.
 	 *
-	 * <p>Containers and tests will only be executed if they are <em>not</em>
-	 * tagged with any of the supplied <em>excluded</em> tags.
-	 *
-	 * @param tags the excluded tags; never {@code null} or empty
-	 * @throws PreconditionViolationException if the supplied tags array is
-	 * {@code null} or empty, or if any individual tag is not syntactically
-	 * valid
+	 * @param tagExpressions the excluded tag expressions; never {@code null} or
+	 * empty
+	 * @throws PreconditionViolationException if the supplied tag expressions
+	 * array is {@code null} or empty, or if any individual tag expression is
+	 * not syntactically valid
 	 * @see #excludeTags(List)
 	 * @see TestTag#isValid(String)
 	 */
-	public static PostDiscoveryFilter excludeTags(String... tags) throws PreconditionViolationException {
-		Preconditions.notNull(tags, "tags array must not be null");
-		return excludeTags(asList(tags));
+	public static PostDiscoveryFilter excludeTags(String... tagExpressions) throws PreconditionViolationException {
+		Preconditions.notNull(tagExpressions, "array of tag expression must not be null");
+		return excludeTags(asList(tagExpressions));
 	}
 
 	/**
-	 * Create an <em>exclude</em> filter based on the supplied {@code tags}.
+	 * Create an <em>exclude</em> filter based on the supplied tag expressions.
 	 *
-	 * <p>Note: each tag will be {@linkplain String#trim() trimmed}.
+	 * <p>Containers and tests will only be executed if their tags do
+	 * <em>not</em> match any of the supplied <em>excluded</em> tag expressions.
 	 *
-	 * <p>Containers and tests will only be executed if they are <em>not</em>
-	 * tagged with any of the supplied <em>excluded</em> tags.
-	 *
-	 * @param tags the excluded tags; never {@code null} or empty
-	 * @throws PreconditionViolationException if the supplied tags list is
-	 * {@code null} or empty, or if any individual tag is not syntactically
-	 * valid
+	 * @param tagExpressions the excluded tag expressions; never {@code null} or
+	 * empty
+	 * @throws PreconditionViolationException if the supplied tag expressions
+	 * array is {@code null} or empty, or if any individual tag expression is
+	 * not syntactically valid
 	 * @see #excludeTags(String...)
 	 * @see TestTag#isValid(String)
 	 */
-	public static PostDiscoveryFilter excludeTags(List<String> tags) throws PreconditionViolationException {
-		Preconditions.notEmpty(tags, "tags list must not be null or empty");
-		return includeMatching("! (" + orExpressionFor(tags) + ")");
+	public static PostDiscoveryFilter excludeTags(List<String> tagExpressions) throws PreconditionViolationException {
+		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
+		return includeMatching("! (" + orExpressionFor(tagExpressions) + ")");
 	}
 
 	/**
-	 * Create an <em>include</em> filter based on the supplied {@code infixTagExpression}.
+	 * Create an <em>include</em> filter based on the supplied tag expressions.
 	 *
-	 * <p>Containers and tests will only be executed if their tags match the supplied <em>infixTagExpression</em>.
+	 * <p>Containers and tests will only be executed if their tags match the
+	 * supplied <em>tag expressions</em>.
 	 *
-	 * @param infixTagExpression to parse and evaluate against a {@link TestDescriptor}; never {@code null} or empty
-	 * @throws PreconditionViolationException if the supplied infixTagExpression can not be parsed.
+	 * @param infixTagExpression to parse and evaluate against a
+	 * {@link TestDescriptor}; never {@code null} or empty
+	 * @throws PreconditionViolationException if the supplied infixTagExpression
+	 * can not be parsed.
 	 */
 	private static PostDiscoveryFilter includeMatching(String infixTagExpression) {
 		TagExpression tagExpression = TagExpression.parseFrom(infixTagExpression).tagExpressionOrThrow(

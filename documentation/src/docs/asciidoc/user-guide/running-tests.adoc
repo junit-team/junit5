@@ -210,7 +210,7 @@ junitPlatform {
 			// exclude 'junit-vintage'
 		}
 		tags {
-			include 'fast', 'smoke'
+			include 'fast', 'smoke & feature-a'
 			// exclude 'slow', 'ci'
 		}
 		packages {
@@ -226,10 +226,11 @@ junitPlatform {
 
 If you supply a _Test Engine ID_ via `engines {include ...}` or `engines {exclude ...}`,
 the JUnit Gradle plugin will only run tests for the desired test engines. Similarly, if
-you supply a _tag_ via `tags {include ...}` or `tags {exclude ...}`, the JUnit Gradle
-plugin will only run tests that are _tagged_ accordingly (e.g., via the `@Tag` annotation
-for JUnit Jupiter based tests). The same applies to package names that can be included or
-excluded using `packages {include ...}` or `packages {exclude ...}`.
+you supply _tags_ or <<running-tests-tag-expressions, _tag expressions_>> via
+`tags {include ...}` or `tags {exclude ...}`, the JUnit Gradle plugin will only run tests
+that are _tagged_ accordingly (e.g., via the `@Tag` annotation for JUnit Jupiter based
+tests). The same applies to package names that can be included or excluded using
+`packages {include ...}` or `packages {exclude ...}`.
 
 [[running-tests-build-gradle-config-params]]
 ===== Configuration Parameters
@@ -512,10 +513,11 @@ documentation for Maven Surefire for details.
 [[running-tests-build-maven-filter-tags]]
 ===== Filtering by Tags
 
-You can filter tests by tags using the following configuration properties.
+You can filter tests by tags or <<running-tests-tag-expressions, tag expressions>> using
+the following configuration properties.
 
-- To include a tag, use either `groups` or `includeTags`.
-- To exclude a tag, use either `excludedGroups` or `excludeTags`.
+- to include _tags_ or _tag expressions_, use either `groups` or `includeTags`.
+- to exclude _tags_ or _tag expressions_, use either `excludedGroups` or `excludeTags`.
 
 [source,xml,indent=0]
 ----
@@ -528,7 +530,7 @@ You can filter tests by tags using the following configuration properties.
 				<version>2.19.1</version>
 				<configuration>
 			        <properties>
-						<includeTags>acceptance</includeTags>
+			            <includeTags>acceptance | !feature-a</includeTags>
 			            <excludeTags>integration, regression</excludeTags>
 			        </properties>
 			    </configuration>
@@ -756,30 +758,42 @@ precedence over those supplied via system properties and the configuration file.
 Similarly, configuration parameters supplied via system properties take precedence over
 those supplied via the configuration file.
 
-[[tag-expression]]
+[[running-tests-tag-expressions]]
 === Tag Expressions
-Tag expressions are boolean expressions with the operators `!`, `&` and `|`.
+Tag expressions are boolean expressions with the operators `!`, `&` and `|`. In addition,
 `(` and `)` can be used to adjust for operator precedence.
 
-Operators in descending precedence.
+.Operators (in descending order of precedence)
 |===
-|operator        | meaning |associativity
+| Operator | Meaning | Associativity
 
-| !              | not     | right
-| &              | and     | left
-| \|             | or      | left
+| `!`      | not     | right
+| `&`      | and     | left
+| `\|`     | or      | left
 |===
 
-If you are tagging your tests across multiple dimensions tag expressions help you to select which tests to execute.
-Tagging by test type (_micro_, _integration_, _end-to-end_) and feature (*foo*, *bar*, *baz*) the following tag expressions can be useful.
+If you are tagging your tests across multiple dimensions, tag expressions help you to
+select which tests to execute. Tagging by test type (e.g. _micro_, _integration_,
+_end-to-end_) and feature (e.g. *foo*, *bar*, *baz*) the following tag expressions can be
+useful.
 
-[cols="40,60"]
+[%header,cols="40,60"]
 |===
-|tag expression                             | selects
+| Tag Expression
+| Selection
 
-| +foo+                                     | all tests for *foo*
-| +bar\|baz+                                | all tests for *bar* plus all tests for *baz*
-| +bar & baz+                               | all tests for the interaction between *bar* and *baz*
-| +foo & !end-to-end+                       | all tests for *foo*, but not the _end-to-end_ tests
-| +(micro \| integration) & (foo \| baz )+  | all _micro_ or _integration_ tests for *foo* or *baz*
+| +foo+
+| all tests for *foo*
+
+| +bar \| baz+
+| all tests for *bar* plus all tests for *baz*
+
+| +bar & baz+
+| all tests for the interaction between *bar* and *baz*
+
+| +foo & !end-to-end+
+| all tests for *foo*, but not the _end-to-end_ tests
+
+| +(micro \| integration) & (foo \| baz)+
+| all _micro_ or _integration_ tests for *foo* or *baz*
 |===

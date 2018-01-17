@@ -57,8 +57,8 @@ class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertEquals(emptyList(), options.getExcludedClassNamePatterns()),
 			() -> assertEquals(emptyList(), options.getIncludedPackages()),
 			() -> assertEquals(emptyList(), options.getExcludedPackages()),
-			() -> assertEquals(emptyList(), options.getIncludedTags()),
-			() -> assertEquals(emptyList(), options.getExcludedTags()),
+			() -> assertEquals(emptyList(), options.getIncludedTagExpressions()),
+			() -> assertEquals(emptyList(), options.getExcludedTagExpressions()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getReportsDir()),
 			() -> assertEquals(emptyList(), options.getSelectedUris()),
@@ -190,10 +190,10 @@ class JOptSimpleCommandLineOptionsParserTests {
 	void parseValidIncludedTags() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("fast"), parseArgLine("-t fast").getIncludedTags()),
-			() -> assertEquals(asList("fast"), parseArgLine("--include-tag fast").getIncludedTags()),
-			() -> assertEquals(asList("fast"), parseArgLine("--include-tag=fast").getIncludedTags()),
-			() -> assertEquals(asList("fast", "slow"), parseArgLine("-t fast -t slow").getIncludedTags())
+			() -> assertEquals(asList("fast"), parseArgLine("-t fast").getIncludedTagExpressions()),
+			() -> assertEquals(asList("fast"), parseArgLine("--include-tag fast").getIncludedTagExpressions()),
+			() -> assertEquals(asList("fast"), parseArgLine("--include-tag=fast").getIncludedTagExpressions()),
+			() -> assertEquals(asList("fast", "slow"), parseArgLine("-t fast -t slow").getIncludedTagExpressions())
 		);
 		// @formatter:on
 	}
@@ -207,10 +207,10 @@ class JOptSimpleCommandLineOptionsParserTests {
 	void parseValidExcludedTags() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("fast"), parseArgLine("-T fast").getExcludedTags()),
-			() -> assertEquals(asList("fast"), parseArgLine("--exclude-tag fast").getExcludedTags()),
-			() -> assertEquals(asList("fast"), parseArgLine("--exclude-tag=fast").getExcludedTags()),
-			() -> assertEquals(asList("fast", "slow"), parseArgLine("-T fast -T slow").getExcludedTags())
+			() -> assertEquals(asList("fast"), parseArgLine("-T fast").getExcludedTagExpressions()),
+			() -> assertEquals(asList("fast"), parseArgLine("--exclude-tag fast").getExcludedTagExpressions()),
+			() -> assertEquals(asList("fast"), parseArgLine("--exclude-tag=fast").getExcludedTagExpressions()),
+			() -> assertEquals(asList("fast", "slow"), parseArgLine("-T fast -T slow").getExcludedTagExpressions())
 		);
 		// @formatter:on
 	}

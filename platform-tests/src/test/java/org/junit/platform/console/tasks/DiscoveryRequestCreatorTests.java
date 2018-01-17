@@ -159,8 +159,8 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void convertsTagOptions() {
 		options.setScanClasspath(true);
-		options.setIncludedTags(asList("fast", "medium", "slow"));
-		options.setExcludedTags(asList("slow"));
+		options.setIncludedTagExpressions(asList("fast", "medium", "slow"));
+		options.setExcludedTagExpressions(asList("slow"));
 
 		LauncherDiscoveryRequest request = convert();
 		List<PostDiscoveryFilter> postDiscoveryFilters = request.getPostDiscoveryFilters();

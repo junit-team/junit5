@@ -74,6 +74,6 @@ class ParseStatus {
 	}
 
 	private boolean isSuccess() {
-		return null == errorMessage;
+		return errorMessage == null;
 	}
 }
