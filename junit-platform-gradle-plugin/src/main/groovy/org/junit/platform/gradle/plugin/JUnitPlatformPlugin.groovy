@@ -97,6 +97,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			description = 'Runs tests on the JUnit Platform.'
 			inputs.property('enableStandardTestTask', junitExtension.enableStandardTestTask)
 			inputs.property('configurationParameters', junitExtension.configurationParameters)
+			inputs.property('modulepath', junitExtension.modulepath)
 			inputs.property('selectors.uris', junitExtension.selectors.uris)
 			inputs.property('selectors.files', junitExtension.selectors.files)
 			inputs.property('selectors.directories', junitExtension.selectors.directories)
