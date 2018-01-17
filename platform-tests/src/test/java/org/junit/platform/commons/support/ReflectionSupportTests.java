@@ -37,6 +37,13 @@ class ReflectionSupportTests {
 	private final Predicate<String> allNames = name -> true;
 	private final Predicate<Method> allMethods = name -> true;
 
+	@Test
+	void loadClassDelegates() {
+		assertEquals(ReflectionUtils.loadClass("-"), ReflectionSupport.loadClass("-"));
+		assertEquals(ReflectionUtils.loadClass("A"), ReflectionSupport.loadClass("A"));
+		assertEquals(ReflectionUtils.loadClass("java.io.Bits"), ReflectionSupport.loadClass("java.io.Bits"));
+	}
+
 	@TestFactory
 	List<DynamicTest> findAllClassesInClasspathRootDelegates() throws Throwable {
 		List<DynamicTest> tests = new ArrayList<>();
