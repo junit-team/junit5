@@ -186,11 +186,11 @@ class AvailableOptions {
 				.withRequiredArg();
 
 		includeTag = parser.acceptsAll(asList("t", "include-tag"),
-			"Provide a tag expression to include only tests whose tags match. " + //
+			"Provide a tag or tag expression to include only tests whose tags match. " + //
 					"When this option is repeated, all patterns will be combined using OR semantics.") //
 				.withRequiredArg();
 		excludeTag = parser.acceptsAll(asList("T", "exclude-tag"),
-			"Provide a tag expression to exclude those tests whose tags match. " + //
+			"Provide a tag or tag expression to exclude those tests whose tags match. " + //
 					"When this option is repeated, all patterns will be combined using OR semantics.") //
 				.withRequiredArg();
 
@@ -247,8 +247,8 @@ class AvailableOptions {
 		result.setExcludedClassNamePatterns(detectedOptions.valuesOf(this.excludeClassNamePattern));
 		result.setIncludedPackages(detectedOptions.valuesOf(this.includePackage));
 		result.setExcludedPackages(detectedOptions.valuesOf(this.excludePackage));
-		result.setIncludedTags(detectedOptions.valuesOf(this.includeTag));
-		result.setExcludedTags(detectedOptions.valuesOf(this.excludeTag));
+		result.setIncludedTagExpressions(detectedOptions.valuesOf(this.includeTag));
+		result.setExcludedTagExpressions(detectedOptions.valuesOf(this.excludeTag));
 		result.setIncludedEngines(detectedOptions.valuesOf(this.includeEngine));
 		result.setExcludedEngines(detectedOptions.valuesOf(this.excludeEngine));
 

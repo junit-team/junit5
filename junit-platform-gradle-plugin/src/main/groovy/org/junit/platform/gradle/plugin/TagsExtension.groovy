@@ -22,27 +22,31 @@ import org.apiguardian.api.API
 class TagsExtension {
 
 	/**
-	 * A list of <em>tags</em> to be included when building the test plan.
+	 * A list of <em>tags</em> or <em>tag expressions</em> to be included when
+	 * building the test plan.
 	 */
 	List<String> include = []
 
 	/**
-	 * A list of <em>tags</em> to be excluded when building the test plan.
+	 * A list of <em>tags</em> or <em>tag expressions</em> to be excluded when
+	 * building the test plan.
 	 */
 	List<String> exclude = []
 
 	/**
-	 * Add one or more <em>tags</em> to be included when building the test plan.
+	 * Add one or more <em>tags</em> or <em>tag expressions</em> to be included
+	 * when building the test plan.
 	 */
-	void include(String... tags) {
-		this.include.addAll tags
+	void include(String... tagExpressions) {
+		this.include.addAll tagExpressions
 	}
 
 	/**
-	 * Add one or more <em>tags</em> to be excluded when building the test plan.
+	 * Add one or more <em>tags</em> or <em>tag expressions</em> to be excluded
+	 * when building the test plan.
 	 */
-	void exclude(String... tags) {
-		this.exclude.addAll tags
+	void exclude(String... tagExpressions) {
+		this.exclude.addAll tagExpressions
 	}
 
 }

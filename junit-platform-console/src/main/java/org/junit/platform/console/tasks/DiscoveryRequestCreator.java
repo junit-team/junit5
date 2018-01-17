@@ -110,12 +110,12 @@ class DiscoveryRequestCreator {
 			requestBuilder.filters(excludePackageNames(options.getExcludedPackages()));
 		}
 
-		if (!options.getIncludedTags().isEmpty()) {
-			requestBuilder.filters(includeTags(options.getIncludedTags()));
+		if (!options.getIncludedTagExpressions().isEmpty()) {
+			requestBuilder.filters(includeTags(options.getIncludedTagExpressions()));
 		}
 
-		if (!options.getExcludedTags().isEmpty()) {
-			requestBuilder.filters(excludeTags(options.getExcludedTags()));
+		if (!options.getExcludedTagExpressions().isEmpty()) {
+			requestBuilder.filters(excludeTags(options.getExcludedTagExpressions()));
 		}
 
 		if (!options.getIncludedEngines().isEmpty()) {

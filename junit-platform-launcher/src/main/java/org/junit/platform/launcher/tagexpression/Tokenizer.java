@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 class Tokenizer {
 
 	List<Token> tokenize(String infixTagExpression) {
-		if (null == infixTagExpression) {
+		if (infixTagExpression == null) {
 			return emptyList();
 		}
 

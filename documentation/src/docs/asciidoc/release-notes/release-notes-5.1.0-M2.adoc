@@ -75,7 +75,9 @@ _@API Guardian_ JAR _mandatory_ again.
   command line (see the
   http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#test[Surefire documentation]
   for details).
-* New support for a tag expression language in `include-tag` and `exclude-tag`.
+* Tests can now be included or excluded based on their tags using a
+  <<../user-guide/index.adoc#running-tests-tag-expressions, tag expression language>> when
+  executed using the `ConsoleLauncher`, Gradle plugin, or Maven Surefire provider.
 
 
 [[release-notes-5.1.0-M2-junit-jupiter]]
