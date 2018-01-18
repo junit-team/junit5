@@ -30,11 +30,37 @@ import org.apiguardian.api.API;
  * to pass arguments to the extension's constructor, {@code static} factory
  * method, or builder API.
  *
- * <p>{@code @RegisterExtension} fields must not be {@code private}. If a
- * {@code @RegisterExtension} field is {@code static}, the extension will be
- * registered after extensions registered at the class level via
- * {@code @ExtendWith}; otherwise, the extension will be registered after
- * extensions registered at the method level via {@code @ExtendWith}.
+ * <p>{@code @RegisterExtension} fields must not be {@code private} or
+ * {@code null} (when evaluated) but may be either {@code static} or non-static.
+ *
+ * <h3>Static Fields</h3>
+ *
+ * <p>If a {@code @RegisterExtension} field is {@code static}, the extension
+ * will be registered after extensions that are registered at the class level
+ * via {@code @ExtendWith}. Such <em>static</em> extensions are not limited in
+ * which extension APIs they can implement. Extensions registered via static
+ * fields may therefore implement class-level and instance-level extension APIs
+ * such as {@link BeforeAllCallback}, {@link AfterAllCallback}, and
+ * {@link TestInstancePostProcessor} as well as method-level extension APIs
+ * such as {@link BeforeEachCallback}, etc.
+ *
+ * <h3>Instance Fields</h3>
+ *
+ * <p>If a {@code @RegisterExtension} field is non-static (i.e., an instance
+ * field), the extension will be registered after the test class has been
+ * instantiated and after all {@link TestInstancePostProcessor
+ * TestInstancePostProcessors} have been given a chance to post-process the
+ * test instance (potentially injecting the instance of the extension to be
+ * used into the annotated field). Thus, if such an <em>instance</em> extension
+ * implements class-level or instance-level extension APIs such as
+ * {@link BeforeAllCallback}, {@link AfterAllCallback}, or
+ * {@link TestInstancePostProcessor} those APIs will not be honored. By default,
+ * an instance extension will be registered <em>after</em> extensions that are
+ * registered at the method level via {@code @ExtendWith}; however, if the test
+ * class is configured with
+ * {@link org.junit.jupiter.api.TestInstance.Lifecycle @TestInstance(Lifecycle.PER_CLASS)}
+ * semantics, an instance extension will be registered <em>before</em> extensions
+ * that are registered at the method level via {@code @ExtendWith}.
  *
  * <h3>Example Usage</h3>
  *
