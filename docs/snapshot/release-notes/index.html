@@ -783,7 +783,11 @@ for details).</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Test classes selected via one of the <code>selectClass()</code> variants in <code>DiscoverySelectors</code>,
+via the <code>aClass</code> or <code>classes</code> element of the <code>selectors</code> configuration for the
+<code>junitPlatform</code> Gradle plugin, or via the <code>-select-class</code> or <code>-c</code> command-line options
+for the <code>ConsoleLauncher</code> are no longer allowed to be <code>private</code>. This aligns with the
+behavior for test classes discovered via package, class path, and module path scanning.</p>
 </li>
 </ul>
 </div>
@@ -3783,7 +3787,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-17 16:44:59 EST
+Last updated 2018-01-19 09:15:11 EST
 </div>
 </div>
 </body>
