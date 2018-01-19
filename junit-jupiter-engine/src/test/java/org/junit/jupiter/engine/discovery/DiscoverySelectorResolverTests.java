@@ -81,6 +81,23 @@ class DiscoverySelectorResolverTests {
 	private final DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 
 	@Test
+	void nonTestClassResolution() {
+		resolver.resolveSelectors(request().selectors(selectClass(NonTestClass.class)).build(), engineDescriptor);
+
+		assertTrue(engineDescriptor.getDescendants().isEmpty());
+	}
+
+	@Test
+	@TrackLogRecords
+	void abstractClassResolution(LogRecordListener listener) {
+		resolver.resolveSelectors(request().selectors(selectClass(AbstractTestClass.class)).build(), engineDescriptor);
+
+		assertTrue(engineDescriptor.getDescendants().isEmpty());
+		assertThat(listener.stream(JavaElementsResolver.class, Level.FINE).map(LogRecord::getMessage)) //
+				.contains("Class 'org.junit.jupiter.engine.discovery.AbstractTestClass' could not be resolved.");
+	}
+
+	@Test
 	void singleClassResolution() {
 		ClassSelector selector = selectClass(MyTestClass.class);
 
@@ -636,6 +653,17 @@ class DiscoverySelectorResolverTests {
 		return engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toList());
 	}
 
+}
+
+class NonTestClass {
+
+}
+
+abstract class AbstractTestClass {
+
+	@Test
+	void test() {
+	}
 }
 
 class MyTestClass {
