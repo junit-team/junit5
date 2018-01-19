@@ -130,10 +130,18 @@ class TagFilterTests {
 	}
 
 	@Test
-	void rejectUnParsableTagExpressions() {
+	void rejectSingleUnparsableTagExpressions() {
 		String brokenTagExpression = "tag & ";
 		RuntimeException expected = assertThrows(PreconditionViolationException.class,
 			() -> TagFilter.includeTags(brokenTagExpression));
+		assertThat(expected).hasMessageStartingWith("Unable to parse tag expression \"" + brokenTagExpression + "\"");
+	}
+
+	@Test
+	void rejectUnparsableTagExpressionFromArray() {
+		String brokenTagExpression = "tag & ";
+		RuntimeException expected = assertThrows(PreconditionViolationException.class,
+			() -> TagFilter.excludeTags(brokenTagExpression, "foo", "bar"));
 		assertThat(expected).hasMessageStartingWith("Unable to parse tag expression \"" + brokenTagExpression + "\"");
 	}
 

@@ -11,18 +11,19 @@
 package org.junit.platform.launcher;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.FilterResult;
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.launcher.tagexpression.TagExpression;
 
@@ -45,8 +46,6 @@ import org.junit.platform.launcher.tagexpression.TagExpression;
  */
 @API(status = STABLE, since = "1.0")
 public final class TagFilter {
-
-	private static final Logger logger = LoggerFactory.getLogger(TagFilter.class);
 
 	///CLOVER:OFF
 	private TagFilter() {
@@ -88,8 +87,7 @@ public final class TagFilter {
 	 * @see TestTag#isValid(String)
 	 */
 	public static PostDiscoveryFilter includeTags(List<String> tagExpressions) throws PreconditionViolationException {
-		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
-		return includeMatching(orExpressionFor(tagExpressions));
+		return includeMatching(tagExpressions, Stream::anyMatch);
 	}
 
 	/**
@@ -126,30 +124,27 @@ public final class TagFilter {
 	 * @see TestTag#isValid(String)
 	 */
 	public static PostDiscoveryFilter excludeTags(List<String> tagExpressions) throws PreconditionViolationException {
+		return includeMatching(tagExpressions, Stream::noneMatch);
+	}
+
+	private static PostDiscoveryFilter includeMatching(List<String> tagExpressions,
+			BiPredicate<Stream<TagExpression>, Predicate<TagExpression>> matcher) {
 		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
-		return includeMatching("! (" + orExpressionFor(tagExpressions) + ")");
+		List<TagExpression> parsedTagExpressions = parseAll(tagExpressions);
+		return descriptor -> {
+			Set<TestTag> tags = descriptor.getTags();
+			return FilterResult.includedIf(
+				matcher.test(parsedTagExpressions.stream(), expression -> expression.evaluate(tags)));
+		};
 	}
 
-	/**
-	 * Create an <em>include</em> filter based on the supplied tag expressions.
-	 *
-	 * <p>Containers and tests will only be executed if their tags match the
-	 * supplied <em>tag expressions</em>.
-	 *
-	 * @param infixTagExpression to parse and evaluate against a
-	 * {@link TestDescriptor}; never {@code null} or empty
-	 * @throws PreconditionViolationException if the supplied infixTagExpression
-	 * can not be parsed.
-	 */
-	private static PostDiscoveryFilter includeMatching(String infixTagExpression) {
-		TagExpression tagExpression = TagExpression.parseFrom(infixTagExpression).tagExpressionOrThrow(
-			(message) -> new PreconditionViolationException(
-				"Unable to parse tag expression \"" + infixTagExpression + "\": " + message));
-		logger.config(() -> "parsed tag expression: " + tagExpression);
-		return descriptor -> FilterResult.includedIf(tagExpression.evaluate(descriptor.getTags()));
+	private static List<TagExpression> parseAll(List<String> tagExpressions) {
+		return tagExpressions.stream().map(TagFilter::parse).collect(toUnmodifiableList());
 	}
 
-	private static String orExpressionFor(List<String> tags) {
-		return tags.stream().map(tag -> null == tag ? "" : tag).collect(joining(" | "));
+	private static TagExpression parse(String tagExpression) {
+		return TagExpression.parseFrom(tagExpression).tagExpressionOrThrow(
+			message -> new PreconditionViolationException(
+				"Unable to parse tag expression \"" + tagExpression + "\": " + message));
 	}
 }
