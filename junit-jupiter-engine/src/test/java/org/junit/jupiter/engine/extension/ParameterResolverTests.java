@@ -221,7 +221,6 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		private final TestInfo outerTestInfo;
 		private final CustomType outerCustomType;
 
-		@SuppressWarnings("unused")
 		ConstructorInjectionTestCase(TestInfo testInfo, CustomType customType) {
 			this.outerTestInfo = testInfo;
 			this.outerCustomType = customType;
@@ -239,7 +238,6 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 			private final TestInfo innerTestInfo;
 			private final CustomType innerCustomType;
 
-			@SuppressWarnings("unused")
 			NestedTestCase(TestInfo testInfo, CustomType customType) {
 				this.innerTestInfo = testInfo;
 				this.innerCustomType = customType;

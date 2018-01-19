@@ -101,7 +101,6 @@ class TestPlanScannerFilterTests {
 
 	static class ClassWithNestedTestClass {
 
-		@SuppressWarnings("unused")
 		void method() {
 		}
 

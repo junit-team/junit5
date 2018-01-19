@@ -667,7 +667,6 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	}
 
 	static class SubInstancePerClassTestCase extends InstancePerClassTestCase {
-		@SuppressWarnings("unused")
 		SubInstancePerClassTestCase() {
 			incrementInstanceCount(SubInstancePerClassTestCase.class);
 		}
@@ -678,7 +677,6 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	// @TestInstance(Lifecycle.PER_METHOD)
 	static class InstancePerMethodOuterTestCase {
 
-		@SuppressWarnings("unused")
 		InstancePerMethodOuterTestCase() {
 			incrementInstanceCount(InstancePerMethodOuterTestCase.class);
 		}
@@ -705,7 +703,6 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		// @TestInstance(Lifecycle.PER_METHOD)
 		class NestedInstancePerMethodTestCase {
 
-			@SuppressWarnings("unused")
 			NestedInstancePerMethodTestCase() {
 				incrementInstanceCount(NestedInstancePerMethodTestCase.class);
 			}
@@ -744,7 +741,6 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	@TestInstance(Lifecycle.PER_CLASS)
 	static class InstancePerClassOuterTestCase {
 
-		@SuppressWarnings("unused")
 		InstancePerClassOuterTestCase() {
 			incrementInstanceCount(InstancePerClassOuterTestCase.class);
 		}
@@ -770,7 +766,6 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		@TestInstance(Lifecycle.PER_CLASS)
 		class NestedInstancePerClassTestCase {
 
-			@SuppressWarnings("unused")
 			NestedInstancePerClassTestCase() {
 				incrementInstanceCount(NestedInstancePerClassTestCase.class);
 			}
@@ -822,7 +817,6 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	// @TestInstance(Lifecycle.PER_METHOD)
 	static class MixedLifecyclesOuterTestCase {
 
-		@SuppressWarnings("unused")
 		MixedLifecyclesOuterTestCase() {
 			incrementInstanceCount(MixedLifecyclesOuterTestCase.class);
 		}
@@ -846,7 +840,6 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		@TestInstance(Lifecycle.PER_CLASS)
 		class NestedInstancePerClassTestCase {
 
-			@SuppressWarnings("unused")
 			NestedInstancePerClassTestCase() {
 				incrementInstanceCount(NestedInstancePerClassTestCase.class);
 			}
