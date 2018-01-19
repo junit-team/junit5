@@ -97,7 +97,7 @@ class ExpectedExceptionSupportTests {
 	}
 
 	@ExtendWith(ExpectedExceptionSupport.class)
-	private static class ExpectedExceptionTestCase {
+	static class ExpectedExceptionTestCase {
 
 		@Rule
 		public ExpectedException thrown = ExpectedException.none();
@@ -127,7 +127,7 @@ class ExpectedExceptionSupportTests {
 	}
 
 	@ExtendWith(ExpectedExceptionSupport.class)
-	private static class ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase {
+	static class ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase {
 
 		@Test
 		void success() {

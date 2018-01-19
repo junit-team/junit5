@@ -144,7 +144,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@SystemProperty(key = FOO, value = BOGUS)
-	private static class TestCaseWithExecutionConditionOnClass {
+	static class TestCaseWithExecutionConditionOnClass {
 
 		@Test
 		void disabledTest() {
@@ -158,7 +158,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class TestCaseWithExecutionConditionOnMethods {
+	static class TestCaseWithExecutionConditionOnMethods {
 
 		@Test
 		void enabledTest() {

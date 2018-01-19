@@ -45,7 +45,7 @@ class MultipleTestableAnnotationsTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 	}
 
-	private static class TestCase {
+	static class TestCase {
 
 		@Test
 		@RepeatedTest(1)

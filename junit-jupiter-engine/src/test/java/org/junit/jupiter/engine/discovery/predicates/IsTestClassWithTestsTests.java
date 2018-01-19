@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -22,13 +23,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
 
+/**
+ * Unit tests for {@link IsTestClassWithTests}.
+ *
+ * @since 5.0
+ */
 class IsTestClassWithTestsTests {
 
 	private final Predicate<Class<?>> isTestClassWithTests = new IsTestClassWithTests();
 
 	@Test
-	void standardTestClassEvaluatesToTrue() {
-		assertTrue(isTestClassWithTests.test(ClassWithTestCases.class));
+	void classWithTestMethodEvaluatesToTrue() {
+		assertTrue(isTestClassWithTests.test(ClassWithTestMethod.class));
 	}
 
 	@Test
@@ -37,17 +43,118 @@ class IsTestClassWithTestsTests {
 	}
 
 	@Test
-	void classWithNestedTestCasesEvaluatesToTrue() {
-		assertTrue(isTestClassWithTests.test(ClassWithNestedTestCases.class));
-	}
-
-	@Test
 	void classWithTestTemplateEvaluatesToTrue() {
 		assertTrue(isTestClassWithTests.test(ClassWithTestTemplate.class));
 	}
+
+	@Test
+	void classWithNestedTestClassEvaluatesToTrue() {
+		assertTrue(isTestClassWithTests.test(ClassWithNestedTestClass.class));
+	}
+
+	@Test
+	void staticTestClassEvaluatesToTrue() {
+		assertTrue(isTestClassWithTests.test(StaticTestCase.class));
+	}
+
+	// -------------------------------------------------------------------------
+
+	@Test
+	void privateClassWithTestMethodEvaluatesToFalse() {
+		assertFalse(isTestClassWithTests.test(PrivateClassWithTestMethod.class));
+	}
+
+	@Test
+	void privateClassWithTestFactoryEvaluatesToFalse() {
+		assertFalse(isTestClassWithTests.test(PrivateClassWithTestFactory.class));
+	}
+
+	@Test
+	void privateClassWithTestTemplateEvaluatesToFalse() {
+		assertFalse(isTestClassWithTests.test(PrivateClassWithTestTemplate.class));
+	}
+
+	@Test
+	void privateClassWithNestedTestCasesEvaluatesToFalse() {
+		assertFalse(isTestClassWithTests.test(PrivateClassWithNestedTestClass.class));
+	}
+
+	@Test
+	void privateStaticTestClassEvaluatesToFalse() {
+		assertFalse(isTestClassWithTests.test(PrivateStaticTestCase.class));
+	}
+
+	// -------------------------------------------------------------------------
+
+	private class PrivateClassWithTestMethod {
+
+		@Test
+		void test() {
+		}
+
+	}
+
+	private class PrivateClassWithTestFactory {
+
+		@TestFactory
+		Collection<DynamicTest> factory() {
+			return new ArrayList<>();
+		}
+
+	}
+
+	private class PrivateClassWithTestTemplate {
+
+		@TestTemplate
+		void template(int a) {
+		}
+
+	}
+
+	private class PrivateClassWithNestedTestClass {
+
+		@Nested
+		class InnerClass {
+
+			@Test
+			void first() {
+			}
+
+			@Test
+			void second() {
+			}
+
+		}
+	}
+
+	// -------------------------------------------------------------------------
+
+	static class StaticTestCase {
+
+		@Test
+		void test() {
+		}
+	}
+
+	private static class PrivateStaticTestCase {
+
+		@Test
+		void test() {
+		}
+	}
+
 }
 
-//class name must not end with 'Tests', otherwise it would be picked up by the suite
+// -----------------------------------------------------------------------------
+
+class ClassWithTestMethod {
+
+	@Test
+	void test() {
+	}
+
+}
+
 class ClassWithTestFactory {
 
 	@TestFactory
@@ -57,21 +164,15 @@ class ClassWithTestFactory {
 
 }
 
-//class name must not end with 'Tests', otherwise it would be picked up by the suite
-class ClassWithTestCases {
+class ClassWithTestTemplate {
 
-	@Test
-	void first() {
-	}
-
-	@Test
-	void second() {
+	@TestTemplate
+	void template(int a) {
 	}
 
 }
 
-//class name must not end with 'Tests', otherwise it would be picked up by the suite
-class ClassWithNestedTestCases {
+class ClassWithNestedTestClass {
 
 	@Nested
 	class InnerClass {
@@ -85,13 +186,4 @@ class ClassWithNestedTestCases {
 		}
 
 	}
-}
-
-//class name must not end with 'Tests', otherwise it would be picked up by the suite
-class ClassWithTestTemplate {
-
-	@TestTemplate
-	void first(int a) {
-	}
-
 }

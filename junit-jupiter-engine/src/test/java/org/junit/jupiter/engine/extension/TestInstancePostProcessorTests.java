@@ -88,7 +88,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@ExtendWith(FooInstancePostProcessor.class)
-	private static class OuterTestCase implements Named {
+	static class OuterTestCase implements Named {
 
 		private String outerName;
 
@@ -134,7 +134,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	private static class TestCaseWithTestSpecificTestInstancePostProcessor implements Named {
+	static class TestCaseWithTestSpecificTestInstancePostProcessor implements Named {
 
 		private String name;
 
@@ -156,7 +156,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class FooInstancePostProcessor implements TestInstancePostProcessor {
+	static class FooInstancePostProcessor implements TestInstancePostProcessor {
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
@@ -167,7 +167,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class BarInstancePostProcessor implements TestInstancePostProcessor {
+	static class BarInstancePostProcessor implements TestInstancePostProcessor {
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {

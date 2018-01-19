@@ -43,7 +43,7 @@ class BeforeAllAndAfterAllComposedAnnotationTests extends AbstractJupiterTestEng
 		assertEquals(asList("beforeAll", "test", "afterAll"), methodsInvoked);
 	}
 
-	private static class TestCase {
+	static class TestCase {
 
 		@CustomBeforeAll
 		static void beforeAll() {

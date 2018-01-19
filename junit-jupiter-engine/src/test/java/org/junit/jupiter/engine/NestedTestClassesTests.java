@@ -95,7 +95,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------
 
-	private static class TestCaseWithNesting {
+	static class TestCaseWithNesting {
 
 		@Test
 		void someTest() {
@@ -115,7 +115,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class TestCaseWithDoubleNesting {
+	static class TestCaseWithDoubleNesting {
 
 		static int beforeTopCount = 0;
 		static int beforeNestedCount = 0;

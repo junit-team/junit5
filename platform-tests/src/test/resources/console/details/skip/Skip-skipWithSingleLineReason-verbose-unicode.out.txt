@@ -4,9 +4,9 @@ Test plan execution started. Number of static tests: 1
 │  ├─ Skip
 │  │  ├─ skipWithSingleLineReason()
 │  │  │       tags: []
-│  │  │   uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Skip]/[method:skipWithSingleLineReason()]
-│  │  │     parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Skip]
-│  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Skip', methodName = 'skipWithSingleLineReason', methodParameterTypes = '']
+│  │  │   uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$SkipTestCase]/[method:skipWithSingleLineReason()]
+│  │  │     parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$SkipTestCase]
+│  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$SkipTestCase', methodName = 'skipWithSingleLineReason', methodParameterTypes = '']
 │  │  │     reason: single line skip reason
 │  │  │     status: ↷ SKIPPED
 │  └─ Skip finished after [\d]+ ms\.

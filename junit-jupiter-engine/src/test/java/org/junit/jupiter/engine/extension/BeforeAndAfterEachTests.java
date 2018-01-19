@@ -309,11 +309,11 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------------
 
 	@ExtendWith(FooMethodLevelCallbacks.class)
-	private static class ParentTestCase {
+	static class ParentTestCase {
 	}
 
 	@ExtendWith(BarMethodLevelCallbacks.class)
-	private static class ChildTestCase extends ParentTestCase {
+	static class ChildTestCase extends ParentTestCase {
 
 		@Test
 		void test() {
@@ -331,7 +331,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(BarMethodLevelCallbacks.class)
-	private static class TestInterfaceTestCase implements TestInterface {
+	static class TestInterfaceTestCase implements TestInterface {
 
 		@Test
 		void localTest() {
@@ -340,7 +340,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith({ FooMethodLevelCallbacks.class, BarMethodLevelCallbacks.class })
-	private static class OuterTestCase {
+	static class OuterTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -380,7 +380,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	@ExtendWith({ FooMethodLevelCallbacks.class, ExceptionThrowingBeforeEachCallback.class,
 			BarMethodLevelCallbacks.class })
-	private static class ExceptionInBeforeEachCallbackTestCase {
+	static class ExceptionInBeforeEachCallbackTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -400,7 +400,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	@ExtendWith({ FooMethodLevelCallbacks.class, ExceptionThrowingAfterEachCallback.class,
 			BarMethodLevelCallbacks.class })
-	private static class ExceptionInAfterEachCallbackTestCase {
+	static class ExceptionInAfterEachCallbackTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -419,7 +419,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(FooMethodLevelCallbacks.class)
-	private static class ExceptionInBeforeEachMethodTestCase {
+	static class ExceptionInBeforeEachMethodTestCase {
 
 		@BeforeEach
 		void beforeEach1() {
@@ -446,7 +446,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(FooMethodLevelCallbacks.class)
-	private static class ExceptionInAfterEachMethodTestCase {
+	static class ExceptionInAfterEachMethodTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -466,7 +466,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(FooMethodLevelCallbacks.class)
-	private static class ExceptionInTestMethodTestCase {
+	static class ExceptionInTestMethodTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -487,7 +487,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
-	private static class FooMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
+	static class FooMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
@@ -501,7 +501,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class BarMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
+	static class BarMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
@@ -514,7 +514,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class FizzMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
+	static class FizzMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
@@ -527,7 +527,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class ExceptionThrowingBeforeEachCallback implements BeforeEachCallback {
+	static class ExceptionThrowingBeforeEachCallback implements BeforeEachCallback {
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
@@ -536,7 +536,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class ExceptionThrowingAfterEachCallback implements AfterEachCallback {
+	static class ExceptionThrowingAfterEachCallback implements AfterEachCallback {
 
 		@Override
 		public void afterEach(ExtensionContext context) {

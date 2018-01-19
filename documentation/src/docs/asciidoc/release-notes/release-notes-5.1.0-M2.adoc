@@ -77,7 +77,11 @@ _@API Guardian_ JAR _mandatory_ again.
 
 ==== Bug Fixes
 
-* ❓
+* Test classes selected via one of the `selectClass()` variants in `DiscoverySelectors`,
+  via the `aClass` or `classes` element of the `selectors` configuration for the
+  `junitPlatform` Gradle plugin, or via the `-select-class` or `-c` command-line options
+  for the `ConsoleLauncher` are no longer allowed to be `private`. This aligns with the
+  behavior for test classes discovered via package, class path, and module path scanning.
 
 ==== Deprecations and Breaking Changes
 

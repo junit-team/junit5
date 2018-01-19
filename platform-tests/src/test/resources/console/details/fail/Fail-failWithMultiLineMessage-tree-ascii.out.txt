@@ -8,7 +8,7 @@
 
 Failures (1):
   JUnit Jupiter:Fail:failWithMultiLineMessage()
-    MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Fail', methodName = 'failWithMultiLineMessage', methodParameterTypes = '']
+    MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$FailTestCase', methodName = 'failWithMultiLineMessage', methodParameterTypes = '']
     => org.opentest4j.AssertionFailedError: multi
 line
 fail

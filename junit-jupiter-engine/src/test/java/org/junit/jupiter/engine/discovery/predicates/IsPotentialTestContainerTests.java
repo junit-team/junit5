@@ -13,8 +13,6 @@ package org.junit.jupiter.engine.discovery.predicates;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.function.Predicate;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -22,7 +20,17 @@ import org.junit.jupiter.api.Test;
  */
 class IsPotentialTestContainerTests {
 
-	private final Predicate<Class<?>> isPotentialTestContainer = new IsPotentialTestContainer();
+	private final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
+
+	@Test
+	void staticClassEvaluatesToTrue() {
+		assertTrue(isPotentialTestContainer.test(StaticClass.class));
+	}
+
+	@Test
+	void privateStaticClassEvaluatesToFalse() {
+		assertFalse(isPotentialTestContainer.test(PrivateStaticClass.class));
+	}
 
 	@Test
 	void abstractClassEvaluatesToFalse() {
@@ -51,9 +59,7 @@ class IsPotentialTestContainerTests {
 		assertFalse(isPotentialTestContainer.test(object.getClass()));
 	}
 
-	@Test
-	void staticClassEvaluatesToTrue() {
-		assertTrue(isPotentialTestContainer.test(StaticClass.class));
+	private static class PrivateStaticClass {
 	}
 
 	static class StaticClass {

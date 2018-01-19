@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 import java.util.function.Predicate;
@@ -29,7 +30,10 @@ public class IsPotentialTestContainer implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {
-		//please do not collapse into single return
+		// Please do not collapse the following into a single statement.
+		if (isPrivate(candidate)) {
+			return false;
+		}
 		if (isAbstract(candidate)) {
 			return false;
 		}

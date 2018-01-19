@@ -20,7 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
+import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -43,10 +43,10 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
 @API(status = INTERNAL, since = "5.0")
 public class DiscoverySelectorResolver {
 
-	private static final IsScannableTestClass isScannableTestClass = new IsScannableTestClass();
+	private static final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
 
 	public void resolveSelectors(EngineDiscoveryRequest request, TestDescriptor engineDescriptor) {
-		ClassFilter classFilter = buildClassFilter(request, isScannableTestClass);
+		ClassFilter classFilter = buildClassFilter(request, isTestClassWithTests);
 		resolve(request, engineDescriptor, classFilter);
 		filter(engineDescriptor, classFilter);
 		pruneTree(engineDescriptor);

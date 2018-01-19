@@ -135,7 +135,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class LocalTestCase {
+	static class LocalTestCase {
 
 		@Test
 		void test1() {
@@ -169,11 +169,12 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	@interface CustomTestAnnotation {
 	}
 
-	private static class TestTemplateClass {
+	static class TestTemplateClass {
 
 		@TestTemplate
 		void testTemplate() {
 		}
 
 	}
+
 }

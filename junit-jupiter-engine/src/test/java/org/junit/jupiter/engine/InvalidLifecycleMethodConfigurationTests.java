@@ -74,14 +74,14 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 
 	// -------------------------------------------------------------------------
 
-	private static class TestCase {
+	static class TestCase {
 
 		@Test
 		void test() {
 		}
 	}
 
-	private static class TestCaseWithInvalidBeforeAllMethod {
+	static class TestCaseWithInvalidBeforeAllMethod {
 
 		// must be static
 		@BeforeAll
@@ -93,7 +93,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	private static class TestCaseWithInvalidAfterAllMethod {
+	static class TestCaseWithInvalidAfterAllMethod {
 
 		// must be static
 		@AfterAll
@@ -105,7 +105,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	private static class TestCaseWithInvalidBeforeEachMethod {
+	static class TestCaseWithInvalidBeforeEachMethod {
 
 		// must NOT be static
 		@BeforeEach
@@ -117,7 +117,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	private static class TestCaseWithInvalidAfterEachMethod {
+	static class TestCaseWithInvalidAfterEachMethod {
 
 		// must NOT be static
 		@AfterEach

@@ -86,7 +86,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 		assertTrue(first.isPresent());
 	}
 
-	private static class TestCase {
+	static class TestCase {
 
 		@Test
 		void test() {

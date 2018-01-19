@@ -53,7 +53,7 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@Disabled
-	private static class DisabledTestClassTestCase {
+	static class DisabledTestClassTestCase {
 
 		@Test
 		void disabledTest() {
@@ -61,7 +61,7 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class DisabledTestMethodsTestCase {
+	static class DisabledTestMethodsTestCase {
 
 		@Test
 		void enabledTest() {

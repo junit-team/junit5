@@ -43,7 +43,7 @@ class BeforeEachAndAfterEachComposedAnnotationTests extends AbstractJupiterTestE
 		assertEquals(asList("beforeEach", "test", "afterEach"), methodsInvoked);
 	}
 
-	private static class TestCase {
+	static class TestCase {
 
 		@CustomBeforeEach
 		void beforeEach() {

@@ -48,106 +48,33 @@ import org.junit.platform.console.options.Theme;
  */
 class ConsoleDetailsTests {
 
-	@DisplayName("Basic")
-	private static class Basic {
-
-		@Test
-		void empty() {
-		}
-
-		@Test
-		@DisplayName(".oO fancy display name Oo.")
-		void changeDisplayName() {
-		}
-
-	}
-
-	@DisplayName("Skip")
-	private static class Skip {
-
-		@Test
-		@Disabled("single line skip reason")
-		void skipWithSingleLineReason() {
-		}
-
-		@Test
-		@Disabled("multi\nline\nfail\nmessage")
-		void skipWithMultiLineMessage() {
-		}
-
-	}
-
-	@DisplayName("Fail")
-	private static class Fail {
-
-		@Test
-		void failWithSingleLineMessage() {
-			fail("single line fail message");
-		}
-
-		@Test
-		void failWithMultiLineMessage() {
-			fail("multi\nline\nfail\nmessage");
-		}
-
-	}
-
-	@DisplayName("Report")
-	private static class Report {
-
-		@Test
-		void reportSingleEntryWithSingleMapping(TestReporter reporter) {
-			reporter.publishEntry("foo", "bar");
-		}
-
-		@Test
-		void reportMultiEntriesWithSingleMapping(TestReporter reporter) {
-			reporter.publishEntry("foo", "bar");
-			reporter.publishEntry("far", "boo");
-		}
-
-		@Test
-		void reportMultiEntriesWithMultiMappings(TestReporter reporter) {
-			Map<String, String> values = new LinkedHashMap<>();
-			values.put("user name", "dk38");
-			values.put("award year", "1974");
-			reporter.publishEntry(values);
-			reporter.publishEntry("single", "mapping");
-			Map<String, String> more = new LinkedHashMap<>();
-			more.put("user name", "st77");
-			more.put("award year", "1977");
-			more.put("last seen", "2001");
-			reporter.publishEntry(more);
-		}
-
-	}
-
 	@TestFactory
 	@DisplayName("Basic tests and annotations usage")
 	List<DynamicNode> basic() {
-		return scanContainerClassAndCreateDynamicTests(Basic.class);
+		return scanContainerClassAndCreateDynamicTests(BasicTestCase.class);
 	}
 
 	@TestFactory
 	@DisplayName("Skipped and disabled tests")
 	List<DynamicNode> skipped() {
-		return scanContainerClassAndCreateDynamicTests(Skip.class);
+		return scanContainerClassAndCreateDynamicTests(SkipTestCase.class);
 	}
 
 	@TestFactory
 	@DisplayName("Failed tests")
 	List<DynamicNode> failed() {
-		return scanContainerClassAndCreateDynamicTests(Fail.class);
+		return scanContainerClassAndCreateDynamicTests(FailTestCase.class);
 	}
 
 	@TestFactory
 	@DisplayName("Tests publishing report entries")
 	List<DynamicNode> reports() {
-		return scanContainerClassAndCreateDynamicTests(Report.class);
+		return scanContainerClassAndCreateDynamicTests(ReportTestCase.class);
 	}
 
 	private List<DynamicNode> scanContainerClassAndCreateDynamicTests(Class<?> containerClass) {
-		String containerName = containerClass.getSimpleName();
+		String containerName = containerClass.getSimpleName().replace("TestCase", "");
+		// String containerName = containerClass.getSimpleName();
 		List<DynamicNode> nodes = new ArrayList<>();
 		Map<Details, List<DynamicTest>> map = new EnumMap<>(Details.class);
 		for (Method method : findMethods(containerClass, m -> m.isAnnotationPresent(Test.class))) {
@@ -176,7 +103,82 @@ class ConsoleDetailsTests {
 		return nodes;
 	}
 
+	@DisplayName("Basic")
+	static class BasicTestCase {
+
+		@Test
+		void empty() {
+		}
+
+		@Test
+		@DisplayName(".oO fancy display name Oo.")
+		void changeDisplayName() {
+		}
+
+	}
+
+	@DisplayName("Skip")
+	static class SkipTestCase {
+
+		@Test
+		@Disabled("single line skip reason")
+		void skipWithSingleLineReason() {
+		}
+
+		@Test
+		@Disabled("multi\nline\nfail\nmessage")
+		void skipWithMultiLineMessage() {
+		}
+
+	}
+
+	@DisplayName("Fail")
+	static class FailTestCase {
+
+		@Test
+		void failWithSingleLineMessage() {
+			fail("single line fail message");
+		}
+
+		@Test
+		void failWithMultiLineMessage() {
+			fail("multi\nline\nfail\nmessage");
+		}
+
+	}
+
+	@DisplayName("Report")
+	static class ReportTestCase {
+
+		@Test
+		void reportSingleEntryWithSingleMapping(TestReporter reporter) {
+			reporter.publishEntry("foo", "bar");
+		}
+
+		@Test
+		void reportMultiEntriesWithSingleMapping(TestReporter reporter) {
+			reporter.publishEntry("foo", "bar");
+			reporter.publishEntry("far", "boo");
+		}
+
+		@Test
+		void reportMultiEntriesWithMultiMappings(TestReporter reporter) {
+			Map<String, String> values = new LinkedHashMap<>();
+			values.put("user name", "dk38");
+			values.put("award year", "1974");
+			reporter.publishEntry(values);
+			reporter.publishEntry("single", "mapping");
+			Map<String, String> more = new LinkedHashMap<>();
+			more.put("user name", "st77");
+			more.put("award year", "1977");
+			more.put("last seen", "2001");
+			reporter.publishEntry(more);
+		}
+
+	}
+
 	private static class Runner implements Executable {
+
 		private final String dirName;
 		private final String outName;
 		private final String[] args;
@@ -217,4 +219,5 @@ class ConsoleDetailsTests {
 			assertLinesMatch(expectedLines, actualLines);
 		}
 	}
+
 }

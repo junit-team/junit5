@@ -600,7 +600,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	@ExtendWith(InstanceTrackingExtension.class)
 	// The following is commented out b/c it's the default.
 	// @TestInstance(Lifecycle.PER_METHOD)
-	private static class InstancePerMethodTestCase {
+	static class InstancePerMethodTestCase {
 
 		InstancePerMethodTestCase() {
 			incrementInstanceCount(InstancePerMethodTestCase.class);
@@ -666,7 +666,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	private static class SubInstancePerClassTestCase extends InstancePerClassTestCase {
+	static class SubInstancePerClassTestCase extends InstancePerClassTestCase {
 		@SuppressWarnings("unused")
 		SubInstancePerClassTestCase() {
 			incrementInstanceCount(SubInstancePerClassTestCase.class);
@@ -676,7 +676,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	@ExtendWith(InstanceTrackingExtension.class)
 	// The following is commented out b/c it's the default.
 	// @TestInstance(Lifecycle.PER_METHOD)
-	private static class InstancePerMethodOuterTestCase {
+	static class InstancePerMethodOuterTestCase {
 
 		@SuppressWarnings("unused")
 		InstancePerMethodOuterTestCase() {
@@ -742,7 +742,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	@ExtendWith(InstanceTrackingExtension.class)
 	@TestInstance(Lifecycle.PER_CLASS)
-	private static class InstancePerClassOuterTestCase {
+	static class InstancePerClassOuterTestCase {
 
 		@SuppressWarnings("unused")
 		InstancePerClassOuterTestCase() {
@@ -820,7 +820,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	@ExtendWith(InstanceTrackingExtension.class)
 	// The following is commented out b/c it's the default.
 	// @TestInstance(Lifecycle.PER_METHOD)
-	private static class MixedLifecyclesOuterTestCase {
+	static class MixedLifecyclesOuterTestCase {
 
 		@SuppressWarnings("unused")
 		MixedLifecyclesOuterTestCase() {
@@ -896,9 +896,8 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	// Intentionally not implementing BeforeTestExecutionCallback, AfterTestExecutionCallback,
 	// and TestExecutionExceptionHandler, since they are analogous to BeforeEachCallback and
 	// AfterEachCallback with regard to instance scope and Lifecycle.
-	private static class InstanceTrackingExtension
-			implements ExecutionCondition, TestInstancePostProcessor, BeforeAllCallback, AfterAllCallback,
-			BeforeEachCallback, AfterEachCallback, TestTemplateInvocationContextProvider {
+	static class InstanceTrackingExtension implements ExecutionCondition, TestInstancePostProcessor, BeforeAllCallback,
+			AfterAllCallback, BeforeEachCallback, AfterEachCallback, TestTemplateInvocationContextProvider {
 
 		@Override
 		public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {

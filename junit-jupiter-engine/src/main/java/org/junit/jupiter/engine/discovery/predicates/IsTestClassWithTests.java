@@ -10,18 +10,22 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Test if a class is a JUnit Jupiter test class containing executable tests,
- * test factories, or nested tests.
+ * test factories, test templates, or nested tests.
  *
  * @since 5.0
  */
-class IsTestClassWithTests implements Predicate<Class<?>> {
+@API(status = INTERNAL, since = "5.1")
+public class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
 
@@ -38,11 +42,8 @@ class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {
-		// please do not collapse into single return
-		if (!isPotentialTestContainer.test(candidate)) {
-			return false;
-		}
-		return hasTestOrTestFactoryOrTestTemplateMethods(candidate) || hasNestedTests(candidate);
+		return isPotentialTestContainer.test(candidate)
+				&& (hasTestOrTestFactoryOrTestTemplateMethods(candidate) || hasNestedTests(candidate));
 	}
 
 	private boolean hasTestOrTestFactoryOrTestTemplateMethods(Class<?> candidate) {

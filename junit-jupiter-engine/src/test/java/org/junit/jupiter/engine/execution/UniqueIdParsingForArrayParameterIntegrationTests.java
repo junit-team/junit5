@@ -56,7 +56,7 @@ class UniqueIdParsingForArrayParameterIntegrationTests extends AbstractJupiterTe
 	}
 
 	@ExtendWith(PrimitiveArrayParameterResolver.class)
-	private static class PrimitiveArrayMethodInjectionTestCase {
+	static class PrimitiveArrayMethodInjectionTestCase {
 
 		@Test
 		void primitiveArray(int... ints) {

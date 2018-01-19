@@ -190,7 +190,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.empty();
 	}
 
-	private static class FailureTestCase {
+	static class FailureTestCase {
 
 		static Optional<Throwable> exceptionToThrowInBeforeAll = Optional.empty();
 		static Optional<Throwable> exceptionToThrowInAfterAll = Optional.empty();

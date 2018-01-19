@@ -78,7 +78,7 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 	}
 
 	@EnableRuleMigrationSupport
-	private static class EnableRuleMigrationSupportWithBothRuleTypesTestCase {
+	static class EnableRuleMigrationSupportWithBothRuleTypesTestCase {
 
 		static boolean afterOfRule1WasExecuted = false;
 
@@ -119,7 +119,7 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 	}
 
 	@ExtendWith(VerifierSupport.class)
-	private static class VerifierSupportForErrorCollectorTestCase {
+	static class VerifierSupportForErrorCollectorTestCase {
 
 		static boolean survivedBothErrors = false;
 

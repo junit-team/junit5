@@ -76,11 +76,10 @@ class TestPlanScannerFilterTests {
 		return new TestPlanScannerFilter(LauncherFactory.create(), new Filter<?>[0]);
 	}
 
-	private static class EmptyClass {
+	static class EmptyClass {
 	}
 
-	@SuppressWarnings("unused")
-	private static class ClassWithMethods {
+	static class ClassWithMethods {
 
 		void method1() {
 		}
@@ -89,7 +88,7 @@ class TestPlanScannerFilterTests {
 		}
 	}
 
-	private static class ClassWithTestMethods {
+	static class ClassWithTestMethods {
 
 		@Test
 		void test1() {
@@ -100,7 +99,7 @@ class TestPlanScannerFilterTests {
 		}
 	}
 
-	private static class ClassWithNestedTestClass {
+	static class ClassWithNestedTestClass {
 
 		@SuppressWarnings("unused")
 		void method() {
@@ -115,7 +114,7 @@ class TestPlanScannerFilterTests {
 		}
 	}
 
-	private static class ClassWithDeeplyNestedTestClass {
+	static class ClassWithDeeplyNestedTestClass {
 
 		@Nested
 		class Level1 {
@@ -134,7 +133,7 @@ class TestPlanScannerFilterTests {
 		}
 	}
 
-	private static class ClassWithTestFactory {
+	static class ClassWithTestFactory {
 
 		@TestFactory
 		Stream<DynamicTest> tests() {
@@ -142,7 +141,7 @@ class TestPlanScannerFilterTests {
 		}
 	}
 
-	private static class ClassWithNestedTestFactory {
+	static class ClassWithNestedTestFactory {
 
 		@Nested
 		class TestClass {
