@@ -35,25 +35,25 @@ class ParserErrorTests {
 
 	@Test
 	void missingClosingParenthesis() {
-		assertThat(parseErrorFromParsing("(")).contains("( at <0> missing closing parenthesis");
-		assertThat(parseErrorFromParsing("( foo & bar")).contains("( at <0> missing closing parenthesis");
+		assertThat(parseErrorFromParsing("(")).contains("missing closing parenthesis for '(' at index <0>");
+		assertThat(parseErrorFromParsing("( foo & bar")).contains("missing closing parenthesis for '(' at index <0>");
 	}
 
 	@Test
 	void missingOpeningParenthesis() {
-		assertThat(parseErrorFromParsing(")")).contains(") at <0> missing opening parenthesis");
-		assertThat(parseErrorFromParsing(" foo | bar)")).contains(") at <10> missing opening parenthesis");
+		assertThat(parseErrorFromParsing(")")).contains("missing opening parenthesis for ')' at index <0>");
+		assertThat(parseErrorFromParsing(" foo | bar)")).contains("missing opening parenthesis for ')' at index <10>");
 	}
 
 	@Test
 	void partialUnaryOperator() {
-		assertThat(parseErrorFromParsing("!")).contains("! at <0> missing rhs operand");
+		assertThat(parseErrorFromParsing("!")).contains("missing rhs operand for '!' at index <0>");
 	}
 
 	@Test
 	void partialBinaryOperator() {
-		assertThat(parseErrorFromParsing("& foo")).contains("& at <0> missing lhs operand");
-		assertThat(parseErrorFromParsing("foo |")).contains("| at <4> missing rhs operand");
+		assertThat(parseErrorFromParsing("& foo")).contains("missing lhs operand for '&' at index <0>");
+		assertThat(parseErrorFromParsing("foo |")).contains("missing rhs operand for '|' at index <4>");
 	}
 
 	@ParameterizedTest
@@ -65,29 +65,29 @@ class ParserErrorTests {
 	private static Stream<Arguments> data() {
 		// @formatter:off
 		return Stream.of(
-				Arguments.of("&", "& at <0> missing lhs and rhs operand"),
-				Arguments.of("|", "| at <0> missing lhs and rhs operand"),
-				Arguments.of("| |", "| at <0> missing lhs and rhs operand"),
-				Arguments.of("!", "! at <0> missing rhs operand"),
-				Arguments.of("foo bar", "missing operator between foo <2> and bar <4>"),
-				Arguments.of("foo bar |", "| at <8> missing rhs operand"),
-				Arguments.of("foo bar | baz", "missing operator between foo <2> and (bar | baz) <4>"),
-				Arguments.of("foo bar &", "& at <8> missing rhs operand"),
-				Arguments.of("foo & (bar !)", "! at <11> missing rhs operand"),
-				Arguments.of("( foo & bar ) )", ") at <14> missing opening parenthesis"),
-				Arguments.of("( ( foo & bar )", "( at <0> missing closing parenthesis"),
+				Arguments.of("&", "missing lhs and rhs operand for '&' at index <0>"),
+				Arguments.of("|", "missing lhs and rhs operand for '|' at index <0>"),
+				Arguments.of("| |", "missing lhs and rhs operand for '|' at index <0>"),
+				Arguments.of("!", "missing rhs operand for '!' at index <0>"),
+				Arguments.of("foo bar", "missing operator between 'foo' at index <2> and 'bar' at index <4>"),
+				Arguments.of("foo bar |", "missing rhs operand for '|' at index <8>"),
+				Arguments.of("foo bar | baz", "missing operator between 'foo' at index <2> and '(bar | baz)' at index <4>"),
+				Arguments.of("foo bar &", "missing rhs operand for '&' at index <8>"),
+				Arguments.of("foo & (bar !)", "missing rhs operand for '!' at index <11>"),
+				Arguments.of("( foo & bar ) )", "missing opening parenthesis for ')' at index <14>"),
+				Arguments.of("( ( foo & bar )", "missing closing parenthesis for '(' at index <0>"),
 
-				Arguments.of("foo & (bar baz) |", "missing operator between bar <9> and baz <11>"),
+				Arguments.of("foo & (bar baz) |", "missing operator between 'bar' at index <9> and 'baz' at index <11>"),
 
-				Arguments.of("foo & (bar baz) &", "missing operator between bar <9> and baz <11>"),
-				Arguments.of("foo & (bar |baz) &", "& at <17> missing rhs operand"),
+				Arguments.of("foo & (bar baz) &", "missing operator between 'bar' at index <9> and 'baz' at index <11>"),
+				Arguments.of("foo & (bar |baz) &", "missing rhs operand for '&' at index <17>"),
 
-				Arguments.of("foo | (bar baz) &", "& at <16> missing rhs operand"),
-				Arguments.of("foo | (bar baz) &quux", "missing operator between bar <9> and (baz & quux) <11>"),
+				Arguments.of("foo | (bar baz) &", "missing rhs operand for '&' at index <16>"),
+				Arguments.of("foo | (bar baz) &quux", "missing operator between 'bar' at index <9> and '(baz & quux)' at index <11>"),
 
-				Arguments.of("foo & |", "& at <4> missing rhs operand"),
-				Arguments.of("foo !& bar", "! at <4> missing rhs operand"),
-				Arguments.of("foo !| bar", "! at <4> missing rhs operand")
+				Arguments.of("foo & |", "missing rhs operand for '&' at index <4>"),
+				Arguments.of("foo !& bar", "missing rhs operand for '!' at index <4>"),
+				Arguments.of("foo !| bar", "missing rhs operand for '!' at index <4>")
 		);
 		// @formatter:on
 	}
