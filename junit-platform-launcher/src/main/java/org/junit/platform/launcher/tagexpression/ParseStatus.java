@@ -35,12 +35,13 @@ class ParseStatus {
 	}
 
 	static ParseStatus errorAt(Token token, String operatorRepresentation, String message) {
-		return error(operatorRepresentation + " at " + format(token.trimmedTokenStartIndex()) + " " + message);
+		return error(
+			message + " for '" + operatorRepresentation + "' at index " + format(token.trimmedTokenStartIndex()));
 	}
 
 	static ParseStatus missingOperatorBetween(TokenWith<TagExpression> lhs, TokenWith<TagExpression> rhs) {
-		String lhsString = lhs.element.toString() + " " + format(lhs.token.lastCharacterIndex());
-		String rhsString = rhs.element.toString() + " " + format(rhs.token.trimmedTokenStartIndex());
+		String lhsString = "'" + lhs.element.toString() + "' at index " + format(lhs.token.lastCharacterIndex());
+		String rhsString = "'" + rhs.element.toString() + "' at index " + format(rhs.token.trimmedTokenStartIndex());
 		return error("missing operator between " + lhsString + " and " + rhsString);
 	}
 

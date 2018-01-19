@@ -144,7 +144,7 @@ public final class TagFilter {
 	private static PostDiscoveryFilter includeMatching(String infixTagExpression) {
 		TagExpression tagExpression = TagExpression.parseFrom(infixTagExpression).tagExpressionOrThrow(
 			(message) -> new PreconditionViolationException(
-				"Unable to parse tag expression [" + infixTagExpression + "]: " + message));
+				"Unable to parse tag expression \"" + infixTagExpression + "\": " + message));
 		logger.config(() -> "parsed tag expression: " + tagExpression);
 		return descriptor -> FilterResult.includedIf(tagExpression.evaluate(descriptor.getTags()));
 	}
