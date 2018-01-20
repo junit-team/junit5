@@ -4417,9 +4417,10 @@ JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concep
 <div class="sect2">
 <h3 id="extensions-registration"><a class="anchor" href="#extensions-registration"></a>5.2. Registering Extensions</h3>
 <div class="paragraph">
-<p>Extensions can be registered explicitly via
-<a href="#extensions-registration-declarative"><code><a href="../api/org/junit/jupiter/api/extension/ExtendWith.html">@ExtendWith</a></code></a> or automatically via Java&#8217;s
-<a href="#extensions-registration-automatic"><code>ServiceLoader</code> mechanism</a>.</p>
+<p>Extensions can be registered <em>declaratively</em> via
+<a href="#extensions-registration-declarative"><code>@ExtendWith</code></a>, <em>programmatically</em> via
+<a href="#extensions-registration-programmatic"><code>@RegisterExtension</code></a>, or <em>automatically</em> via
+Java&#8217;s <a href="#extensions-registration-automatic"><code>ServiceLoader</code></a> mechanism.</p>
 </div>
 <div class="sect3">
 <h4 id="extensions-registration-declarative"><a class="anchor" href="#extensions-registration-declarative"></a>5.2.1. Declarative Extension Registration</h4>
@@ -4477,18 +4478,143 @@ subclasses, you would annotate the test class as follows.</p>
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The execution of tests in both <code>MyTestsV1</code> and <code>MyTestsV2</code> will be extended by the
-<code>FooExtension</code> and <code>BarExtension</code>, in exactly that order.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Extension Registration Order</div>
+Extensions registered declaratively via <code>@ExtendWith</code> will be executed in the order
+in which they are declared in the source code. For example, the execution of tests in
+both <code>MyTestsV1</code> and <code>MyTestsV2</code> will be extended by the <code>FooExtension</code> and
+<code>BarExtension</code>, <strong>in exactly that order</strong>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-registration-automatic"><a class="anchor" href="#extensions-registration-automatic"></a>5.2.2. Automatic Extension Registration</h4>
+<h4 id="extensions-registration-programmatic"><a class="anchor" href="#extensions-registration-programmatic"></a>5.2.2. Programmatic Extension Registration</h4>
+<div class="paragraph">
+<p>Developers can register extensions <em>programmatically</em> by annotating fields in test
+classes with <code><a href="../api/org/junit/jupiter/api/extension/RegisterExtension.html">@RegisterExtension</a></code>.</p>
+</div>
+<div class="paragraph">
+<p>When an extension is registered <em>declaratively</em> via
+<a href="#extensions-registration-declarative"><code>@ExtendWith</code></a>, it can typically only be
+configured via annotations. In contrast, when an extension is registered via
+<code>@RegisterExtension</code>, it can be configured <em>programmatically</em> – for example, in order to
+pass arguments to the extension&#8217;s constructor, a static factory method, or a builder API.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>@RegisterExtension</code> fields must not be <code>private</code> or <code>null</code> (at evaluation time)
+but may be either <code>static</code> or non-static.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="extensions-registration-programmatic-static-fields"><a class="anchor" href="#extensions-registration-programmatic-static-fields"></a>Static Fields</h5>
+<div class="paragraph">
+<p>If a <code>@RegisterExtension</code> field is <code>static</code>, the extension will be registered after
+extensions that are registered at the class level via <code>@ExtendWith</code>. Such <em>static
+extensions</em> are not limited in which extension APIs they can implement. Extensions
+registered via static fields may therefore implement class-level and instance-level
+extension APIs such as <code>BeforeAllCallback</code>, <code>AfterAllCallback</code>, and
+<code>TestInstancePostProcessor</code> as well as method-level extension APIs such as
+<code>BeforeEachCallback</code>, etc.</p>
+</div>
+<div class="paragraph">
+<p>In the following example, the <code>server</code> field in the test class is initialized
+programmatically by using a builder pattern supported by the <code>WebServerExtension</code>. The
+configured <code>WebServerExtension</code> will be automatically registered as an extension at the
+class level – for example, in order to start the server before all tests in the class and
+then stop the server after all tests in the class have completed. In addition, static
+lifecycle methods annotated with <code>@BeforeAll</code> or <code>@AfterAll</code> as well as <code>@BeforeEach</code>,
+<code>@AfterEach</code>, and <code>@Test</code> methods can access the instance of the extension via the
+<code>server</code> field if necessary.</p>
+</div>
+<div class="listingblock">
+<div class="title">An extension registered via a static field</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">WebServerDemo</span> {
+
+    <span class="annotation">@RegisterExtension</span>
+    <span class="directive">static</span> WebServerExtension server = WebServerExtension.builder()
+        .enableSecurity(<span class="predefined-constant">false</span>)
+        .build();
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> getProductList() {
+        WebClient webClient = <span class="keyword">new</span> WebClient();
+        <span class="predefined-type">String</span> serverUrl = server.getServerUrl();
+        <span class="comment">// Use WebClient to connect to web server using serverUrl and verify response</span>
+        assertEquals(<span class="integer">200</span>, webClient.get(serverUrl + <span class="string"><span class="delimiter">&quot;</span><span class="content">/products</span><span class="delimiter">&quot;</span></span>).getResponseStatus());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="extensions-registration-programmatic-instance-fields"><a class="anchor" href="#extensions-registration-programmatic-instance-fields"></a>Instance Fields</h5>
+<div class="paragraph">
+<p>If a <code>@RegisterExtension</code> field is non-static (i.e., an instance field), the extension
+will be registered after the test class has been instantiated and after each registered
+<code>TestInstancePostProcessor</code> has been given a chance to post-process the test instance
+(potentially injecting the instance of the extension to be used into the annotated
+field). Thus, if such an <em>instance extension</em> implements class-level or instance-level
+extension APIs such as <code>BeforeAllCallback</code>, <code>AfterAllCallback</code>, or
+<code>TestInstancePostProcessor</code>, those APIs will not be honored. By default, an instance
+extension will be registered <em>after</em> extensions that are registered at the method level
+via <code>@ExtendWith</code>; however, if the test class is configured with
+<code>@TestInstance(Lifecycle.PER_CLASS)</code> semantics, an instance extension will be registered
+<em>before</em> extensions that are registered at the method level via <code>@ExtendWith</code>.</p>
+</div>
+<div class="paragraph">
+<p>In the following example, the <code>docs</code> field in the test class is initialized
+programmatically by invoking a custom <code>lookUpDocsDir()</code> method and supplying the result
+to the static <code>forPath()</code> factory method in the <code>DocumentationExtension</code>. The configured
+<code>DocumentationExtension</code> will be automatically registered as an extension at the method
+level. In addition, <code>@BeforeEach</code>, <code>@AfterEach</code>, and <code>@Test</code> methods can access the
+instance of the extension via the <code>docs</code> field if necessary.</p>
+</div>
+<div class="listingblock">
+<div class="title">An extension registered via an instance field</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">DocumentationDemo</span> {
+
+    <span class="directive">static</span> Path lookUpDocsDir() {
+        <span class="comment">// return path to docs dir</span>
+    }
+
+    <span class="annotation">@RegisterExtension</span>
+    DocumentationExtension docs = DocumentationExtension.forPath(lookUpDocsDir());
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> generateDocumentation() {
+        <span class="comment">// use this.docs ...</span>
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="extensions-registration-automatic"><a class="anchor" href="#extensions-registration-automatic"></a>5.2.3. Automatic Extension Registration</h4>
 <div class="paragraph">
 <p>In addition to <a href="#extensions-registration-declarative">declarative extension registration</a>
-support using annotations, JUnit Jupiter also supports <em>global extension registration</em>
-via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism, allowing third-party extensions to be
-auto-detected and automatically registered based on what is available in the classpath.</p>
+and <a href="#extensions-registration-programmatic">programmatic extension registration</a> support
+using annotations, JUnit Jupiter also supports <em>global extension registration</em> via Java&#8217;s
+<code>java.util.ServiceLoader</code> mechanism, allowing third-party extensions to be auto-detected
+and automatically registered based on what is available in the classpath.</p>
 </div>
 <div class="paragraph">
 <p>Specifically, a custom extension can be registered by supplying its fully qualified class
@@ -4519,7 +4645,7 @@ support for <code>TestInfo</code>, <code>TestReporter</code>, etc.).</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-registration-inheritance"><a class="anchor" href="#extensions-registration-inheritance"></a>5.2.3. Extension Inheritance</h4>
+<h4 id="extensions-registration-inheritance"><a class="anchor" href="#extensions-registration-inheritance"></a>5.2.4. Extension Inheritance</h4>
 <div class="paragraph">
 <p>Registered extensions are inherited within test class hierarchies with top-down
 semantics. Similarly, extensions registered at the class-level are inherited at the
