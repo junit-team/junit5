@@ -825,6 +825,21 @@ without running the complete test factory or test template. This allows to rerun
 or selected parameterized, repeated or dynamic tests by selecting their unique IDs in
 subsequent discovery requests.</p>
 </li>
+<li>
+<p>New Kotlin friendly <code>fail</code> methods added as <em>top-level functions</em> in the
+<code>org.junit.jupiter.api</code> package.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>When calling the original methods from Kotlin the compiler required the generic return
+type of <code>fail</code> to be declared explicitly calling it.
+Eg: <code>fail&lt;Nothing&gt;("Some message")</code>.
+These new methods all return
+<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing.html"><code>Nothing</code></a>.</p>
+</li>
+</ul>
+</div>
+</li>
 </ul>
 </div>
 </div>
@@ -1372,7 +1387,7 @@ online.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-19 16:26:32 EST
+Last updated 2018-01-20 10:49:30 EST
 </div>
 </div>
 </body>
