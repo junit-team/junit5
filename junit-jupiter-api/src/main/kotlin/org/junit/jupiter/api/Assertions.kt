@@ -8,6 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 @file:API(status = EXPERIMENTAL, since = "5.1")
+
 package org.junit.jupiter.api
 
 import org.apiguardian.api.API
@@ -15,6 +16,24 @@ import org.apiguardian.api.API.Status.EXPERIMENTAL
 import org.junit.jupiter.api.function.Executable
 import java.util.function.Supplier
 import java.util.stream.Stream
+
+/**
+ * @see Assertions.fail
+ */
+fun fail(message: String?, throwable: Throwable? = null): Nothing =
+    Assertions.fail<Nothing>(message, throwable)
+
+/**
+ * @see Assertions.fail
+ */
+fun fail(message: (() -> String)?): Nothing =
+    Assertions.fail<Nothing>(message)
+
+/**
+ * @see Assertions.fail
+ */
+fun fail(throwable: Throwable?): Nothing =
+    Assertions.fail<Nothing>(throwable)
 
 /**
  * [Stream] of functions to be executed.
@@ -101,11 +120,4 @@ inline fun <reified T : Throwable> assertThrows(message: String, noinline execut
  * @see Assertions.assertThrows
  */
 inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, noinline executable: () -> Unit): T =
-    Assertions.assertThrows(T::class.java, Executable(executable), Supplier {
-        /*
-         * This is a hacky workaround due to a bug in how the JDK 9 JavaDoc code generator interacts with the
-         * generated Kotlin Bytecode.
-         * https://youtrack.jetbrains.com/issue/KT-20025
-         */
-        message()
-    })
+    Assertions.assertThrows(T::class.java, Executable(executable), Supplier(message))
