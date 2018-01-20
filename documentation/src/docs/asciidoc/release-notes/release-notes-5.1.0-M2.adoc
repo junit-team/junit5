@@ -131,7 +131,11 @@ _@API Guardian_ JAR _mandatory_ again.
   without running the complete test factory or test template. This allows to rerun single
   or selected parameterized, repeated or dynamic tests by selecting their unique IDs in
   subsequent discovery requests.
-
+* New Kotlin friendly `fail` methods added as _top-level functions_ in the
+  `org.junit.jupiter.api` package. When calling the original methods from Kotlin the compiler
+  required the generic return type of `fail` to be declared explicitly calling it.
+** Eg: `fail<Nothing>("Some message")`. These new methods all return
+   https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing.html[`Nothing`].
 
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage

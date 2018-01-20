@@ -8,6 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 @file:API(status = EXPERIMENTAL, since = "5.1")
+
 package org.junit.jupiter.api
 
 import org.apiguardian.api.API
@@ -15,6 +16,24 @@ import org.apiguardian.api.API.Status.EXPERIMENTAL
 import org.junit.jupiter.api.function.Executable
 import java.util.function.Supplier
 import java.util.stream.Stream
+
+/**
+ * @see Assertions.fail
+ */
+fun fail(message: String?, throwable: Throwable? = null): Nothing =
+    Assertions.fail<Nothing>(message, throwable)
+
+/**
+ * @see Assertions.fail
+ */
+fun fail(message: (() -> String)?): Nothing =
+    Assertions.fail<Nothing>(message)
+
+/**
+ * @see Assertions.fail
+ */
+fun fail(throwable: Throwable): Nothing =
+    Assertions.fail<Nothing>(throwable)
 
 /**
  * [Stream] of functions to be executed.
