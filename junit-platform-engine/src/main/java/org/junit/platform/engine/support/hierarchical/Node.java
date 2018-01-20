@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -33,9 +33,22 @@ public interface Node<C extends EngineExecutionContext> {
 	 * Prepare the supplied {@code context} prior to execution.
 	 *
 	 * <p>The default implementation returns the supplied {@code context} unmodified.
+	 *
+	 * @see #cleanUp(EngineExecutionContext)
 	 */
 	default C prepare(C context) throws Exception {
 		return context;
+	}
+
+	/**
+	 * Cleanup the supplied {@code context} after execution.
+	 *
+	 * <p>The default implementation does nothing.
+	 *
+	 * @since 1.1
+	 * @see #prepare(EngineExecutionContext)
+	 */
+	default void cleanUp(C context) throws Exception {
 	}
 
 	/**

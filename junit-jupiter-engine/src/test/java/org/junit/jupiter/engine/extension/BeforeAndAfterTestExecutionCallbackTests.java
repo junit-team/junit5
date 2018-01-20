@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -272,11 +272,11 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	// -------------------------------------------------------------------------
 
 	@ExtendWith(FooTestExecutionCallbacks.class)
-	private static class ParentTestCase {
+	static class ParentTestCase {
 	}
 
 	@ExtendWith(BarTestExecutionCallbacks.class)
-	private static class ChildTestCase extends ParentTestCase {
+	static class ChildTestCase extends ParentTestCase {
 
 		@Test
 		void test() {
@@ -294,7 +294,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	}
 
 	@ExtendWith(BarTestExecutionCallbacks.class)
-	private static class TestInterfaceTestCase implements TestInterface {
+	static class TestInterfaceTestCase implements TestInterface {
 
 		@Test
 		void localTest() {
@@ -303,7 +303,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	}
 
 	@ExtendWith({ FooTestExecutionCallbacks.class, BarTestExecutionCallbacks.class })
-	private static class OuterTestCase {
+	static class OuterTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -343,7 +343,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 
 	@ExtendWith({ FooTestExecutionCallbacks.class, ExceptionThrowingBeforeTestExecutionCallback.class,
 			BarTestExecutionCallbacks.class })
-	private static class ExceptionInBeforeTestExecutionCallbackTestCase {
+	static class ExceptionInBeforeTestExecutionCallbackTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -363,7 +363,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 
 	@ExtendWith({ FooTestExecutionCallbacks.class, ExceptionThrowingAfterTestExecutionCallback.class,
 			BarTestExecutionCallbacks.class })
-	private static class ExceptionInAfterTestExecutionCallbackTestCase {
+	static class ExceptionInAfterTestExecutionCallbackTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -382,7 +382,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	}
 
 	@ExtendWith(FooTestExecutionCallbacks.class)
-	private static class ExceptionInBeforeEachMethodTestCase {
+	static class ExceptionInBeforeEachMethodTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -402,7 +402,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	}
 
 	@ExtendWith(FooTestExecutionCallbacks.class)
-	private static class ExceptionInTestMethodTestCase {
+	static class ExceptionInTestMethodTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -423,7 +423,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 
 	// -------------------------------------------------------------------------
 
-	private static class FooTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
+	static class FooTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
 		@Override
 		public void beforeTestExecution(ExtensionContext context) {
@@ -437,7 +437,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	private static class BarTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
+	static class BarTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
 		@Override
 		public void beforeTestExecution(ExtensionContext context) {
@@ -450,7 +450,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	private static class FizzTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
+	static class FizzTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
 		@Override
 		public void beforeTestExecution(ExtensionContext context) {
@@ -463,7 +463,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	private static class ExceptionThrowingBeforeTestExecutionCallback implements BeforeTestExecutionCallback {
+	static class ExceptionThrowingBeforeTestExecutionCallback implements BeforeTestExecutionCallback {
 
 		@Override
 		public void beforeTestExecution(ExtensionContext context) {
@@ -472,7 +472,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	private static class ExceptionThrowingAfterTestExecutionCallback implements AfterTestExecutionCallback {
+	static class ExceptionThrowingAfterTestExecutionCallback implements AfterTestExecutionCallback {
 
 		@Override
 		public void afterTestExecution(ExtensionContext context) {

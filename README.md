@@ -2,37 +2,29 @@
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-[JUnit 5.0.2](https://github.com/junit-team/junit5/releases/tag/r5.0.2)
-was released on November 12, 2017;
+[JUnit 5.0.3](https://github.com/junit-team/junit5/releases/tag/r5.0.3)
+was released on January 15, 2018;
 [JUnit 5.1.0-M1](https://github.com/junit-team/junit5/releases/tag/r5.1.0-M1)
 on November 19, 2017.
 
-## Roadmap
-
-Consult the wiki for details on the current [JUnit 5 roadmap](https://github.com/junit-team/junit5/wiki/Roadmap).
-
 ## Documentation
 
-### User Guide
-
-The [JUnit 5 User Guide] is available online.
-
-### API
-
-The [JUnit 5 Javadoc] is available online.
+- [User Guide]
+- [Javadoc]
 
 ## Contributing
 
 Contributions to JUnit 5 are both welcomed and appreciated. For specific guidelines
 regarding contributions, please see [CONTRIBUTING.md] in the root directory of the
-project. Those willing to use the ALPHA, milestone, or SNAPSHOT releases are encouraged
+project. Those willing to use milestone or SNAPSHOT releases are encouraged
 to file feature requests and bug reports using the project's
 [issue tracker](https://github.com/junit-team/junit5/issues). Issues marked with an
 <a href="https://github.com/junit-team/junit5/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs">`up-for-grabs`</a>
 label are specifically targeted for community contributions.
 
 ## Getting Help
-Ask JUnit 5 related questions on [StackOverflow] or chat with us on [Gitter].
+
+Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the community on [Gitter].
 
 ## Continuous Integration Builds
 
@@ -43,6 +35,8 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with us on [Gitter].
 | AppVeyor  | Windows | [![Build status](https://ci.appveyor.com/api/projects/status/xv8wc8w9sr44ghc4/branch/master?svg=true)](https://ci.appveyor.com/project/marcphilipp/junit5/branch/master) | Used to ensure that JUnit 5 can be built on Windows |
 
 ## Code Coverage
+
+[![codecov](https://codecov.io/gh/junit-team/junit5/branch/master/graph/badge.svg)](https://codecov.io/gh/junit-team/junit5)
 
 Code coverage using [OpenClover] for the latest build is available on the
 [Jenkins CI server].
@@ -94,7 +88,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.0.2` or `1.1.0-M1` or `1.1.0-SNAPSHOT`
+- **Version**: `1.0.3` or `1.1.0-M1` or `1.1.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
@@ -109,7 +103,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.0.2` or `5.1.0-M1` or `5.1.0-SNAPSHOT`
+- **Version**: `5.0.3` or `5.1.0-M1` or `5.1.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
   - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
@@ -119,7 +113,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `4.12.2` or `5.1.0-M1` or `5.1.0-SNAPSHOT`
+- **Version**: `4.12.3` or `5.1.0-M1` or `5.1.0-SNAPSHOT`
 - **Artifact ID** and **Automatic-Module-Name**:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
@@ -150,8 +144,8 @@ as it is not intended to be used as a module.
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
 [Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/clover-report/
-[JUnit 5 Javadoc]: http://junit.org/junit5/docs/current/api/
-[JUnit 5 User Guide]: http://junit.org/junit5/docs/current/user-guide/
+[Javadoc]: http://junit.org/junit5/docs/current/api/
+[User Guide]: http://junit.org/junit5/docs/current/user-guide/
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [Twitter]: https://twitter.com/junitlambda

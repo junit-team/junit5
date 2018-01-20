@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,8 +17,10 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 
 /**
@@ -27,13 +29,32 @@ import org.junit.platform.engine.EngineExecutionListener;
 @API(status = INTERNAL, since = "5.0")
 public final class ClassExtensionContext extends AbstractExtensionContext<ClassTestDescriptor> {
 
+	private final Lifecycle lifecycle;
+
 	private final ThrowableCollector throwableCollector;
+
 	private Object testInstance;
 
+	/**
+	 * Create a new {@code ClassExtensionContext} with {@link Lifecycle#PER_METHOD}.
+	 *
+	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassTestDescriptor, Lifecycle, ConfigurationParameters, ThrowableCollector)
+	 */
 	public ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			ClassTestDescriptor testDescriptor, ThrowableCollector throwableCollector) {
+			ClassTestDescriptor testDescriptor, ConfigurationParameters configurationParameters,
+			ThrowableCollector throwableCollector) {
 
-		super(parent, engineExecutionListener, testDescriptor);
+		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configurationParameters,
+			throwableCollector);
+	}
+
+	public ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+			ClassTestDescriptor testDescriptor, Lifecycle lifecycle, ConfigurationParameters configurationParameters,
+			ThrowableCollector throwableCollector) {
+
+		super(parent, engineExecutionListener, testDescriptor, configurationParameters);
+
+		this.lifecycle = lifecycle;
 		this.throwableCollector = throwableCollector;
 	}
 
@@ -45,6 +66,11 @@ public final class ClassExtensionContext extends AbstractExtensionContext<ClassT
 	@Override
 	public Optional<Class<?>> getTestClass() {
 		return Optional.of(getTestDescriptor().getTestClass());
+	}
+
+	@Override
+	public Optional<Lifecycle> getTestInstanceLifecycle() {
+		return Optional.of(this.lifecycle);
 	}
 
 	void setTestInstance(Object testInstance) {

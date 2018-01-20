@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.createDynamicDescriptor;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -28,25 +29,23 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 5.0
  */
-class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
+class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 
 	private final DynamicContainer dynamicContainer;
 	private final TestSource testSource;
+	private final DynamicDescendantFilter dynamicDescendantFilter;
 
-	DynamicContainerTestDescriptor(UniqueId uniqueId, DynamicContainer dynamicContainer, TestSource testSource) {
-		super(uniqueId, dynamicContainer.getDisplayName(), testSource);
+	DynamicContainerTestDescriptor(UniqueId uniqueId, int index, DynamicContainer dynamicContainer,
+			TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter) {
+		super(uniqueId, index, dynamicContainer, testSource);
 		this.dynamicContainer = dynamicContainer;
 		this.testSource = testSource;
+		this.dynamicDescendantFilter = dynamicDescendantFilter;
 	}
 
 	@Override
 	public Type getType() {
 		return Type.CONTAINER;
-	}
-
-	@Override
-	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
-		return SkipResult.doNotSkip();
 	}
 
 	@Override
@@ -57,13 +56,15 @@ class DynamicContainerTestDescriptor extends JupiterTestDescriptor {
 			// @formatter:off
 			children.peek(child -> Preconditions.notNull(child, "individual dynamic node must not be null"))
 					.map(child -> toDynamicDescriptor(index.getAndIncrement(), child))
+					.filter(Optional::isPresent)
+					.map(Optional::get)
 					.forEachOrdered(dynamicTestExecutor::execute);
 			// @formatter:on
 		}
 		return context;
 	}
 
-	private JupiterTestDescriptor toDynamicDescriptor(int index, DynamicNode childNode) {
-		return createDynamicDescriptor(this, childNode, index, testSource);
+	private Optional<JupiterTestDescriptor> toDynamicDescriptor(int index, DynamicNode childNode) {
+		return createDynamicDescriptor(this, childNode, index, testSource, dynamicDescendantFilter);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -56,14 +56,14 @@ class ExpectedExceptionSupportTests {
 			event(test("correctExceptionExpectedThrown"), finishedSuccessfully()));
 
 		assertThat(eventRecorder.getFailedTestFinishedEvents())//
-				.haveExactly(1,
+				.haveExactly(1, //
 					event(test("noExceptionExpectedButThrown"), //
 						finishedWithFailure(message("no exception expected")))) //
-				.haveExactly(1,
+				.haveExactly(1, //
 					event(test("exceptionExpectedButNotThrown"), //
 						finishedWithFailure(allOf(isA(AssertionError.class), //
 							message("Expected test to throw an instance of java.lang.RuntimeException"))))) //
-				.haveExactly(1,
+				.haveExactly(1, //
 					event(test("wrongExceptionExpected"), //
 						finishedWithFailure(allOf(isA(AssertionError.class), //
 							message(value -> value.contains("Expected: an instance of java.io.IOException"))))));
@@ -97,7 +97,7 @@ class ExpectedExceptionSupportTests {
 	}
 
 	@ExtendWith(ExpectedExceptionSupport.class)
-	private static class ExpectedExceptionTestCase {
+	static class ExpectedExceptionTestCase {
 
 		@Rule
 		public ExpectedException thrown = ExpectedException.none();
@@ -127,7 +127,7 @@ class ExpectedExceptionSupportTests {
 	}
 
 	@ExtendWith(ExpectedExceptionSupport.class)
-	private static class ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase {
+	static class ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase {
 
 		@Test
 		void success() {

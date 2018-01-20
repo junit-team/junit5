@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -216,12 +216,11 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@ExtendWith(CustomTypeParameterResolver.class)
-	private static class ConstructorInjectionTestCase {
+	static class ConstructorInjectionTestCase {
 
 		private final TestInfo outerTestInfo;
 		private final CustomType outerCustomType;
 
-		@SuppressWarnings("unused")
 		ConstructorInjectionTestCase(TestInfo testInfo, CustomType customType) {
 			this.outerTestInfo = testInfo;
 			this.outerCustomType = customType;
@@ -239,7 +238,6 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 			private final TestInfo innerTestInfo;
 			private final CustomType innerCustomType;
 
-			@SuppressWarnings("unused")
 			NestedTestCase(TestInfo testInfo, CustomType customType) {
 				this.innerTestInfo = testInfo;
 				this.innerCustomType = customType;
@@ -256,7 +254,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
-	private static class MethodInjectionTestCase {
+	static class MethodInjectionTestCase {
 
 		@Test
 		void parameterInjectionOfTestInfo(TestInfo testInfo) {
@@ -298,7 +296,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(NullIntegerParameterResolver.class)
-	private static class NullMethodInjectionTestCase {
+	static class NullMethodInjectionTestCase {
 
 		@Test
 		void injectWrapper(Integer number) {
@@ -312,7 +310,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(PrimitiveIntegerParameterResolver.class)
-	private static class PrimitiveIntegerMethodInjectionTestCase {
+	static class PrimitiveIntegerMethodInjectionTestCase {
 
 		@Test
 		void intPrimitive(int i) {
@@ -321,7 +319,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(PrimitiveArrayParameterResolver.class)
-	private static class PrimitiveArrayMethodInjectionTestCase {
+	static class PrimitiveArrayMethodInjectionTestCase {
 
 		@Test
 		void primitiveArray(int... ints) {
@@ -330,7 +328,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(NumberParameterResolver.class)
-	private static class PotentiallyIncompatibleTypeMethodInjectionTestCase {
+	static class PotentiallyIncompatibleTypeMethodInjectionTestCase {
 
 		@Test
 		void numberParameterInjection(Number number) {
@@ -352,7 +350,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class BeforeAndAfterMethodInjectionTestCase {
+	static class BeforeAndAfterMethodInjectionTestCase {
 
 		@BeforeEach
 		void before(TestInfo testInfo) {
@@ -371,7 +369,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@DisplayName("custom class name")
-	private static class BeforeAndAfterAllMethodInjectionTestCase {
+	static class BeforeAndAfterAllMethodInjectionTestCase {
 
 		@BeforeAll
 		static void beforeAll(TestInfo testInfo) {
@@ -388,7 +386,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class ExtendWithOnMethodTestCase {
+	static class ExtendWithOnMethodTestCase {
 
 		/**
 		 * This set-up / tear-down method is here to verify that {@code @BeforeEach}
@@ -414,7 +412,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class ParameterizedTypeTestCase {
+	static class ParameterizedTypeTestCase {
 
 		@Test
 		@ExtendWith(MapOfStringsParameterResolver.class)

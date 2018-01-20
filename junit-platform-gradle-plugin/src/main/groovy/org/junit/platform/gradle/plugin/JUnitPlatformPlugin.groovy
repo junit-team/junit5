@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -87,12 +87,17 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		return properties.getProperty("version")
 	}
 
+	private static boolean isModulePathEnabled(JUnitPlatformExtension junitExtension) {
+		return !junitExtension.modulepath.isEmpty()
+	}
+
 	private void configure(Project project, JavaExec junitTask, JUnitPlatformExtension junitExtension) {
 		junitTask.with {
 			group = JavaBasePlugin.VERIFICATION_GROUP
 			description = 'Runs tests on the JUnit Platform.'
 			inputs.property('enableStandardTestTask', junitExtension.enableStandardTestTask)
 			inputs.property('configurationParameters', junitExtension.configurationParameters)
+			inputs.property('modulepath', junitExtension.modulepath)
 			inputs.property('selectors.uris', junitExtension.selectors.uris)
 			inputs.property('selectors.files', junitExtension.selectors.files)
 			inputs.property('selectors.directories', junitExtension.selectors.directories)
@@ -118,19 +123,23 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 			configureTaskDependencies(project, it, junitExtension)
 
-			if (junitExtension.enableModulePath) {
-				// Set module-path and clear classpath and main class.
-				jvmArgs = [
-					'--module-path',
-					project.files(project.sourceSets.test.runtimeClasspath, project.configurations.junitPlatform).asPath,
-					'--add-modules',
-					'ALL-MODULE-PATH',
-					//'--module',
-					//'org.junit.platform.console' ... args will cover that
-				]
-
+			if (isModulePathEnabled(junitExtension)) {
+				// Clear classpath.
+				// Caveat: `JavaExec` task uses its `classpath` parameter to find tasks which create the
+				// needed JARs and marks these tasks as dependencies during the task graph generation phase.
+				// https://github.com/junit-team/junit5/issues/1233
 				classpath = project.files()
-				main = ""
+				// Set --module-path if not already set.
+				if (!jvmArgs.contains('--module-path') && !jvmArgs.contains('-p')) {
+					jvmArgs += ['--module-path', junitExtension.modulepath.asPath]
+				}
+				// Treat all modules on the path as root modules.
+				if (!jvmArgs.contains('--add-modules')) {
+					jvmArgs += ['--add-modules', 'ALL-MODULE-PATH']
+				}
+				// Set main class name to '--module' (https://github.com/junit-team/junit5/issues/1234)
+				// The first argument will be 'org.junit.platform.console'
+				main = '--module'
 			} else {
 				// Build the classpath from the user's test runtime classpath and the JUnit
 				// Platform modules.
@@ -147,8 +156,9 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	}
 
 	private void configureTaskDependencies(project, junitTask, junitExtension) {
-		def testClassesTask = project.tasks.getByName('testClasses')
-		junitTask.dependsOn testClassesTask
+		// https://github.com/junit-team/junit5/issues/1233
+		junitTask.dependsOn.add(project.sourceSets.test.runtimeClasspath)
+		junitTask.dependsOn.add(project.configurations.junitPlatform)
 
 		def testTask = project.tasks.getByName('test')
 		testTask.dependsOn junitTask
@@ -159,8 +169,8 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 		def args = []
 
-		if (junitExtension.enableModulePath) {
-			args.addAll('--module', 'org.junit.platform.console')
+		if (isModulePathEnabled(junitExtension)) {
+			args.add('org.junit.platform.console')
 		}
 
 		if (junitExtension.details) {
@@ -211,7 +221,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	private void addSelectors(project, junitExtension, args) {
 		def selectors = junitExtension.selectors
 		if (selectors.empty) {
-			if (junitExtension.enableModulePath) {
+			if (isModulePathEnabled(junitExtension)) {
 				args.add('--scan-modules')
 				return
 			}

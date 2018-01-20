@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -55,7 +55,7 @@ final class LifecycleMethodUtils {
 	}
 
 	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
-		if (!ReflectionUtils.isStatic(method)) {
+		if (ReflectionUtils.isNotStatic(method)) {
 			throw new JUnitException(String.format(
 				"@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
 				annotationType.getSimpleName(), method.toGenericString()));

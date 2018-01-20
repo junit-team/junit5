@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL
 import org.apiguardian.api.API
 import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.Input
 import org.junit.platform.commons.util.Preconditions
 import org.junit.platform.console.options.Details
@@ -94,11 +95,13 @@ class JUnitPlatformExtension {
 	Details details = Details.NONE
 
 	/**
-	 * Whether or not the JPMS (Jigsaw) {@code --module-path} should be enabled.
+	 * Module path entry collection.
 	 *
-	 * <p>Defaults to {@code false}.
+	 * <p>Defaults to an empty file collection.
+	 *
+	 * @since 1.1
 	 */
-	boolean enableModulePath = false
+	FileCollection modulepath = project.files()
 
 	/**
 	 * Configure the {@link SelectorsExtension} for this plugin.

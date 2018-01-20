@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,8 +10,10 @@
 
 package org.junit.platform.engine;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -20,17 +22,18 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.UniqueId.Segment;
 
 /**
  * Unit tests for {@link UniqueId}.
  *
  * @since 1.0
- * @see org.junit.jupiter.engine.execution.UniqueIdParsingForArrayParameterTests
+ * @see org.junit.jupiter.engine.execution.UniqueIdParsingForArrayParameterIntegrationTests
  */
 class UniqueIdTests {
 
-	static final String ENGINE_ID = "junit-jupiter";
+	private static final String ENGINE_ID = "junit-jupiter";
 
 	@Nested
 	class Creation {
@@ -46,7 +49,7 @@ class UniqueIdTests {
 		@Test
 		void retrievingOptionalEngineId() {
 			UniqueId uniqueIdWithEngine = UniqueId.forEngine(ENGINE_ID);
-			assertEquals("junit-jupiter", uniqueIdWithEngine.getEngineId().get());
+			assertThat(uniqueIdWithEngine.getEngineId()).contains("junit-jupiter");
 
 			UniqueId uniqueIdWithoutEngine = UniqueId.root("root", "avalue");
 			assertEquals(Optional.empty(), uniqueIdWithoutEngine.getEngineId());
@@ -64,7 +67,7 @@ class UniqueIdTests {
 		void rootSegmentCanBeRetrieved() {
 			UniqueId uniqueId = UniqueId.root("aType", "aValue");
 
-			assertEquals(new Segment("aType", "aValue"), uniqueId.getRoot().get());
+			assertThat(uniqueId.getRoot()).contains(new Segment("aType", "aValue"));
 		}
 
 		@Test
@@ -72,7 +75,7 @@ class UniqueIdTests {
 			UniqueId engineId = UniqueId.root("engine", ENGINE_ID);
 			UniqueId classId = engineId.append("class", "org.junit.MyClass");
 
-			assertEquals(2, classId.getSegments().size());
+			assertThat(classId.getSegments()).hasSize(2);
 			assertSegment(classId.getSegments().get(0), "engine", ENGINE_ID);
 			assertSegment(classId.getSegments().get(1), "class", "org.junit.MyClass");
 		}
@@ -82,7 +85,7 @@ class UniqueIdTests {
 			UniqueId uniqueId = UniqueId.root("engine", ENGINE_ID);
 			uniqueId.append("class", "org.junit.MyClass");
 
-			assertEquals(1, uniqueId.getSegments().size());
+			assertThat(uniqueId.getSegments()).hasSize(1);
 			assertSegment(uniqueId.getSegments().get(0), "engine", ENGINE_ID);
 		}
 
@@ -91,11 +94,32 @@ class UniqueIdTests {
 			UniqueId engineId = UniqueId.root("engine", ENGINE_ID);
 			UniqueId uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
 
-			assertEquals(4, uniqueId.getSegments().size());
+			assertThat(uniqueId.getSegments()).hasSize(4);
 			assertSegment(uniqueId.getSegments().get(0), "engine", ENGINE_ID);
 			assertSegment(uniqueId.getSegments().get(1), "t1", "v1");
 			assertSegment(uniqueId.getSegments().get(2), "t2", "v2");
 			assertSegment(uniqueId.getSegments().get(3), "t3", "v3");
+		}
+
+		@Test
+		void appendingSegmentInstance() {
+			UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID).append("t1", "v1");
+
+			uniqueId = uniqueId.append(new Segment("t2", "v2"));
+
+			assertThat(uniqueId.getSegments()).hasSize(3);
+			assertSegment(uniqueId.getSegments().get(0), "engine", ENGINE_ID);
+			assertSegment(uniqueId.getSegments().get(1), "t1", "v1");
+			assertSegment(uniqueId.getSegments().get(2), "t2", "v2");
+		}
+
+		@Test
+		void appendingNullIsNotAllowed() {
+			UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID);
+
+			assertThrows(PreconditionViolationException.class, () -> uniqueId.append(null));
+			assertThrows(PreconditionViolationException.class, () -> uniqueId.append(null, "foo"));
+			assertThrows(PreconditionViolationException.class, () -> uniqueId.append("foo", null));
 		}
 
 	}
@@ -191,6 +215,48 @@ class UniqueIdTests {
 			assertFalse(id1.equals(id2));
 			assertFalse(id2.equals(id1));
 		}
+	}
+
+	@Nested
+	class Prefixing {
+
+		@Test
+		void nullIsNotAPrefix() {
+			UniqueId id = UniqueId.forEngine(ENGINE_ID);
+
+			assertThrows(PreconditionViolationException.class, () -> id.hasPrefix(null));
+		}
+
+		@Test
+		void uniqueIdIsPrefixForItself() {
+			UniqueId id = UniqueId.forEngine(ENGINE_ID).append("t1", "v1").append("t2", "v2");
+
+			assertTrue(id.hasPrefix(id));
+		}
+
+		@Test
+		void uniqueIdIsPrefixForUniqueIdWithAdditionalSegments() {
+			UniqueId id1 = UniqueId.forEngine(ENGINE_ID);
+			UniqueId id2 = id1.append("t1", "v1");
+			UniqueId id3 = id2.append("t2", "v2");
+
+			assertFalse(id1.hasPrefix(id2));
+			assertFalse(id1.hasPrefix(id3));
+			assertTrue(id2.hasPrefix(id1));
+			assertFalse(id2.hasPrefix(id3));
+			assertTrue(id3.hasPrefix(id1));
+			assertTrue(id3.hasPrefix(id2));
+		}
+
+		@Test
+		void completelyUnrelatedUniqueIdsAreNotPrefixesForEachOther() {
+			UniqueId id1 = UniqueId.forEngine("foo");
+			UniqueId id2 = UniqueId.forEngine("bar");
+
+			assertFalse(id1.hasPrefix(id2));
+			assertFalse(id2.hasPrefix(id1));
+		}
+
 	}
 
 	private void assertSegment(Segment segment, String expectedType, String expectedValue) {

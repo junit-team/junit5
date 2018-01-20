@@ -10,6 +10,24 @@ link:{junit5-repo}+/milestone/18?closed=1+[5.1 M2] milestone page in the JUnit r
 on GitHub.
 
 
+[[release-notes-5.1.0-M2-overall-improvements]]
+=== Overall Improvements
+
+* In 5.0.1, all artifacts were changed to have an _optional_ instead of a mandatory
+  dependency on the _@API Guardian_ JAR in their published Maven POMs. However, although
+  the Java compiler should ignore missing annotation types, a lot of users have reported
+  that compiling tests without having the _@API Guardian_ JAR on the classpath results in
+  warnings emitted by `javac` that look like this:
++
+----
+warning: unknown enum constant Status.STABLE
+reason: class file for org.apiguardian.api.API$Status not found
+----
++
+To avoid confusion, the JUnit team has decided to make the dependency to the
+_@API Guardian_ JAR _mandatory_ again.
+
+
 [[release-notes-5.1.0-M2-junit-platform]]
 === JUnit Platform
 
@@ -17,6 +35,21 @@ on GitHub.
 
 * Summary table is no longer printed via the `ConsoleLauncher` and Gradle plugin when
   details mode `NONE` is selected, unless there are errors.
+* The current module layer is now used when scanning for test classes within modules. The
+  current module layer is the one that the class loader for the `ModuleUtils` class
+  returns. If the current layer cannot be obtained, the algorithm falls back to the boot
+  layer.
+* The XML report produced by the `ConsoleLauncher` and Gradle plugin is no longer invalid
+  when the exception message of a failed test contains the XML CDATA end marker `]]>`.
+* The `ConsoleLauncher`, the Gradle plugin, and the Maven Surefire provider now attempt to
+  write a valid class name into the `classname` attribute of `<testcase/>` elements in the
+  XML reports. In addition, the `name` attribute of dynamic tests and test template
+  invocations (such as repeated and parameterized tests) is now suffixed with the index of
+  the invocation so they are distinguishable by reporting tools.
+* The Maven Surefire provider now includes the method parameter types when writing the
+  `name` attribute of `<testcase/>` elements into XML reports. However, due to a
+  limitation of Maven Surefire, instead of `methodName(Type)` they are written as
+  `methodName{Type}`.
 
 ==== Deprecations and Breaking Changes
 
@@ -27,19 +60,28 @@ on GitHub.
 * New `SUMMARY` details mode for the `ConsoleLauncher` and Gradle plugin which prints
   the table of success and failure counts at the end of test plan execution. This new
   mode is analogous to the previous behavior of the `NONE` details mode.
+* The summary table of a console launcher run now contains the initial ten stack trace
+  lines to better describe the location of the failure.
 * Non-inherited _composed annotations_ which are meta-annotated with a given `@Inherited`
   annotation are now considered to be implicitly _inherited_ when searching for the given
   meta-annotation within a class hierarchy.
+* The Maven Surefire provider now supports the `test` parameter that tells Surefire to
+  only execute a subset of test classes or methods, e.g. by specifying `-Dtest=...` on the
+  command line (see the
+  http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#test[Surefire documentation]
+  for details).
+
 
 [[release-notes-5.1.0-M2-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
 
-* The current module layer is now used when scanning for test classes within modules. The
-  current module layer is the one that the class loader for the `ModuleUtils` class
-  returns. If the current layer cannot be obtained, the algorithm falls back to the boot
-  layer.
+* Test classes selected via one of the `selectClass()` variants in `DiscoverySelectors`,
+  via the `aClass` or `classes` element of the `selectors` configuration for the
+  `junitPlatform` Gradle plugin, or via the `-select-class` or `-c` command-line options
+  for the `ConsoleLauncher` are no longer allowed to be `private`. This aligns with the
+  behavior for test classes discovered via package, class path, and module path scanning.
 
 ==== Deprecations and Breaking Changes
 
@@ -47,6 +89,27 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* `@ValueSource` now additionally supports literal values of type `short`, `byte`,
+  `float`, `char`, and `java.lang.Class` for parameterized tests.
+* New support for parameterized tests for implicit conversion from a `String` to an
+  argument of any of the following common Java types. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit-table,
+  implicit conversion table>> in the User Guide for examples.
+** `java.io.File`
+** `java.math.BigDecimal`
+** `java.math.BigInteger`
+** `java.net.URI`
+** `java.net.URL`
+** `java.nio.charset.Charset`
+** `java.nio.file.Path`
+** `java.util.Currency`
+** `java.util.Locale`
+** `java.util.UUID`
+* New fallback mechanism for parameterized tests for implicit conversion from a `String`
+  to an argument of a given target type if the target type declares exactly one suitable
+  _factory method_ or a _factory constructor_.
+** See <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit-fallback,
+   Fallback String-to-Object Conversion>> in the User Guide for details.
 * Due to a change in the JUnit Platform's `AnnotationUtils` class, non-inherited
   _composed annotations_ which are meta-annotated with a given `@Inherited` annotation
   are now considered to be implicitly _inherited_ when searching for the given
@@ -54,14 +117,25 @@ on GitHub.
 ** For example, an `@Inherited` annotation such as `@TestInstance` will now be discovered
    on a custom _composed annotation_ declared on a superclass even if the _composed
    annotation_ is not declared as `@Inherited`.
+* Extensions for JUnit Jupiter can now access JUnit Platform configuration parameters at
+  runtime via the new `getConfigurationParameter(String key)` method in the
+  `ExtensionContext` API.
+* Extensions for JUnit Jupiter can now access the `Lifecycle` of the current test
+  instance via the new `getTestInstanceLifecycle()` method in the `ExtensionContext` API.
+* New callback interface `CloseableResource` introduced in `ExtensionContext.Store`. A
+  `Store` is bound to the lifecycle of its extension context. When the lifecycle of an
+  extension context ends, the associated store is closed, and each stored value that is
+  an instance of `ExtensionContext.Store.CloseableResource` is notified by an invocation
+  of its `close()` method.
+* Selected dynamic tests and test template invocations can now be executed separately
+  without running the complete test factory or test template. This allows to rerun single
+  or selected parameterized, repeated or dynamic tests by selecting their unique IDs in
+  subsequent discovery requests.
 * New Kotlin friendly `fail` methods added as _top-level functions_ in the
-  `org.junit.jupiter.api` package.
- - When calling the original methods from Kotlin the compiler required the generic return
-   type of `fail` to be declared explicitly calling it.
-   Eg: `fail<Nothing>("Some message")`.
-   These new methods all return
+  `org.junit.jupiter.api` package. When calling the original methods from Kotlin the compiler
+  required the generic return type of `fail` to be declared explicitly calling it.
+** Eg: `fail<Nothing>("Some message")`. These new methods all return
    https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing.html[`Nothing`].
-
 
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage

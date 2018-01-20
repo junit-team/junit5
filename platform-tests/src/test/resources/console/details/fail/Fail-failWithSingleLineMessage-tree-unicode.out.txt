@@ -5,8 +5,9 @@
 
 Failures (1):
   JUnit Jupiter:Fail:failWithSingleLineMessage()
-    MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Fail', methodName = 'failWithSingleLineMessage', methodParameterTypes = '']
+    MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$FailTestCase', methodName = 'failWithSingleLineMessage', methodParameterTypes = '']
     => org.opentest4j.AssertionFailedError: single line fail message
+>> STACKTRACE >>
 
 Test run finished after [\d]+ ms
 [         2 containers found      ]

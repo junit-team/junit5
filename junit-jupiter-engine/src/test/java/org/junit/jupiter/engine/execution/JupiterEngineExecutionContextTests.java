@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,15 +13,16 @@ package org.junit.jupiter.engine.execution;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassExtensionContext;
+import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.UniqueId;
 
 /**
- * Microtests for {@link JupiterEngineExecutionContext}.
+ * Unit tests for {@link JupiterEngineExecutionContext}.
  *
  * @since 5.0
  */
@@ -29,14 +30,10 @@ class JupiterEngineExecutionContextTests {
 
 	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 
-	private JupiterEngineExecutionContext originalContext;
-	private EngineExecutionListener engineExecutionListener;
+	private final EngineExecutionListener engineExecutionListener = mock(EngineExecutionListener.class);
 
-	@BeforeEach
-	void initOriginalContext() {
-		engineExecutionListener = mock(EngineExecutionListener.class);
-		originalContext = new JupiterEngineExecutionContext(engineExecutionListener, configParams);
-	}
+	private final JupiterEngineExecutionContext originalContext = new JupiterEngineExecutionContext(
+		engineExecutionListener, configParams);
 
 	@Test
 	void executionListenerIsHandedOnWhenContextIsExtended() {
@@ -47,7 +44,10 @@ class JupiterEngineExecutionContextTests {
 
 	@Test
 	void extendWithAllAttributes() {
-		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, null, null);
+		UniqueId uniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass());
+		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, classTestDescriptor,
+			configParams, null);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configParams);
 		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
@@ -63,10 +63,14 @@ class JupiterEngineExecutionContextTests {
 
 	@Test
 	void canOverrideAttributeWhenContextIsExtended() {
-		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, null, null);
+		UniqueId uniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass());
+		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, classTestDescriptor,
+			configParams, null);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configParams);
 		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
-		ClassExtensionContext newExtensionContext = new ClassExtensionContext(extensionContext, null, null, null);
+		ClassExtensionContext newExtensionContext = new ClassExtensionContext(extensionContext, null,
+			classTestDescriptor, configParams, null);
 
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
@@ -81,4 +85,5 @@ class JupiterEngineExecutionContextTests {
 		assertSame(extensionRegistry, newContext.getExtensionRegistry());
 		assertSame(testInstanceProvider, newContext.getTestInstanceProvider());
 	}
+
 }

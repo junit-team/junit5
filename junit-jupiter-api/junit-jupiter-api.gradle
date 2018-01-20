@@ -1,7 +1,7 @@
 dependencies {
 	api("org.opentest4j:opentest4j:${ota4jVersion}")
 	api(project(":junit-platform-commons"))
-	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
+	if (gradle.ext.kotlinIsSupported) compileOnly("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 }
 
 jar {
@@ -13,7 +13,7 @@ jar {
 }
 
 configurations {
-	apiElements {
+	if (gradle.ext.kotlinIsSupported) apiElements {
 		/*
 		* Needed to configure kotlin to work correctly with the "java-library" plugin.
 		* See:

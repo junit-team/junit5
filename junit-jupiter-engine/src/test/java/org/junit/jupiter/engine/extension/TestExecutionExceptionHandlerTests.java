@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -134,7 +134,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 	// -------------------------------------------------------------------
 
-	private static class ATestCase {
+	static class ATestCase {
 
 		@Test
 		@ExtendWith(RethrowException.class)
@@ -164,7 +164,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		}
 	}
 
-	private static class RethrowException implements TestExecutionExceptionHandler {
+	static class RethrowException implements TestExecutionExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
@@ -178,7 +178,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		}
 	}
 
-	private static class SwallowException implements TestExecutionExceptionHandler {
+	static class SwallowException implements TestExecutionExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
@@ -191,7 +191,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		}
 	}
 
-	private static class ConvertException implements TestExecutionExceptionHandler {
+	static class ConvertException implements TestExecutionExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
@@ -204,7 +204,8 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		}
 
 	}
-	private static class ShouldNotBeCalled implements TestExecutionExceptionHandler {
+
+	static class ShouldNotBeCalled implements TestExecutionExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
@@ -213,4 +214,5 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 			handleExceptionCalled = true;
 		}
 	}
+
 }

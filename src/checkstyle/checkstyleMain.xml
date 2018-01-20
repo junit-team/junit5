@@ -32,5 +32,8 @@
 		<property name="message" value="Don't use Javadoc @author tags" />
 		<property name="fileExtensions" value="java,groovy,kt" />
 	</module>
+	<module name="SuppressionFilter">
+		<property name="file" value="${config_loc}/suppressions.xml"/>
+	</module>
 
 </module>

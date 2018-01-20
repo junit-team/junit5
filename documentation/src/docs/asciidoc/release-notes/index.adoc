@@ -1,0 +1,29 @@
+[[release-notes]]
+= JUnit 5 Release Notes
+Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Christian Stein
+//
+:docinfodir: ../docinfos
+:docinfo: private-head
+:numbered!:
+//
+
+This document contains the _change log_ for all JUnit 5 releases since 5.0 GA.
+
+Please refer to the <<../user-guide/index.adoc#user-guide,User Guide>> for
+comprehensive reference documentation for programmers writing tests,
+extension authors, and engine authors as well as build tool and IDE
+vendors.
+
+include::../link-attributes.adoc[]
+
+include::release-notes-5.1.0-M2.adoc[]
+
+include::release-notes-5.1.0-M1.adoc[]
+
+include::release-notes-5.0.3.adoc[]
+
+include::release-notes-5.0.2.adoc[]
+
+include::release-notes-5.0.1.adoc[]
+
+include::release-notes-5.0.0.adoc[]

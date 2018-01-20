@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,6 +12,14 @@ package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.File;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URI;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +30,9 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Currency;
+import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
@@ -30,6 +41,12 @@ import org.junit.jupiter.api.Test;
  * @since 5.0
  */
 class DefaultArgumentConverterTests {
+
+	@Test
+	void isAwareOfNull() {
+		assertConverts(null, Object.class, null);
+		assertConverts(null, String.class, null);
+	}
 
 	@Test
 	void isAwareOfWrapperTypesForPrimitiveTypes() {
@@ -41,12 +58,6 @@ class DefaultArgumentConverterTests {
 		assertConverts(1L, long.class, 1L);
 		assertConverts(1.0f, float.class, 1.0f);
 		assertConverts(1.0d, double.class, 1.0d);
-	}
-
-	@Test
-	void isAwareOfNull() {
-		assertConverts(null, Object.class, null);
-		assertConverts(null, String.class, null);
 	}
 
 	@Test
@@ -66,6 +77,54 @@ class DefaultArgumentConverterTests {
 		assertConverts("DAYS", TimeUnit.class, TimeUnit.DAYS);
 	}
 
+	// --- java.io and java.nio ------------------------------------------------
+
+	@Test
+	void convertsStringToCharset() {
+		assertConverts("ISO-8859-1", Charset.class, Charset.forName("ISO-8859-1"));
+		assertConverts("UTF-8", Charset.class, Charset.forName("UTF-8"));
+	}
+
+	@Test
+	void convertsStringToFile() {
+		assertConverts("file", File.class, new File("file"));
+		assertConverts("/file", File.class, new File("/file"));
+		assertConverts("/some/file", File.class, new File("/some/file"));
+	}
+
+	@Test
+	void convertsStringToPath() {
+		assertConverts("path", Path.class, Paths.get("path"));
+		assertConverts("/path", Path.class, Paths.get("/path"));
+		assertConverts("/some/path", Path.class, Paths.get("/some/path"));
+	}
+
+	// --- java.math -----------------------------------------------------------
+
+	@Test
+	void convertsStringToBigDecimal() {
+		assertConverts("123.456e789", BigDecimal.class, new BigDecimal("123.456e789"));
+	}
+
+	@Test
+	void convertsStringToBigInteger() {
+		assertConverts("1234567890123456789", BigInteger.class, new BigInteger("1234567890123456789"));
+	}
+
+	// --- java.net ------------------------------------------------------------
+
+	@Test
+	void convertsStringToURI() {
+		assertConverts("http://java.sun.com/j2se/1.3/", URI.class, URI.create("http://java.sun.com/j2se/1.3/"));
+	}
+
+	@Test
+	void convertsStringToURL() throws Exception {
+		assertConverts("http://junit.org/junit5", URL.class, new URL("http://junit.org/junit5"));
+	}
+
+	// --- java.time -----------------------------------------------------------
+
 	@Test
 	void convertsStringsToJavaTimeInstances() {
 		assertConverts("1970-01-01T00:00:00Z", Instant.class, Instant.ofEpochMilli(0));
@@ -81,6 +140,27 @@ class DefaultArgumentConverterTests {
 		assertConverts("2017-03-14T12:34:56.789Z", ZonedDateTime.class,
 			ZonedDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC));
 	}
+
+	// --- java.util -----------------------------------------------------------
+
+	@Test
+	void convertsStringToCurrency() {
+		assertConverts("JPY", Currency.class, Currency.getInstance("JPY"));
+	}
+
+	@Test
+	void convertsStringToLocale() {
+		assertConverts("en", Locale.class, Locale.ENGLISH);
+		assertConverts("en_us", Locale.class, new Locale(Locale.US.toString()));
+	}
+
+	@Test
+	void convertsStringToUUID() {
+		String uuid = "d043e930-7b3b-48e3-bdbe-5a3ccfb833db";
+		assertConverts(uuid, UUID.class, UUID.fromString(uuid));
+	}
+
+	// -------------------------------------------------------------------------
 
 	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
 		Object result = DefaultArgumentConverter.INSTANCE.convert(input, targetClass);

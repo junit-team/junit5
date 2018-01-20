@@ -4,9 +4,9 @@ Test plan execution started. Number of static tests: 1
 │  ├─ Fail
 │  │  ├─ failWithSingleLineMessage()
 │  │  │       tags: []
-│  │  │   uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail]/[method:failWithSingleLineMessage()]
-│  │  │     parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Fail]
-│  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$Fail', methodName = 'failWithSingleLineMessage', methodParameterTypes = '']
+│  │  │   uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$FailTestCase]/[method:failWithSingleLineMessage()]
+│  │  │     parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$FailTestCase]
+│  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$FailTestCase', methodName = 'failWithSingleLineMessage', methodParameterTypes = '']
 │  │  │     caught: org.opentest4j.AssertionFailedError: single line fail message
 >> S T A C K T R A C E >>
 │  │  │   duration: [\d]+ ms

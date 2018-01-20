@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -74,14 +74,14 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 
 	// -------------------------------------------------------------------------
 
-	private static class TestCase {
+	static class TestCase {
 
 		@Test
 		void test() {
 		}
 	}
 
-	private static class TestCaseWithInvalidBeforeAllMethod {
+	static class TestCaseWithInvalidBeforeAllMethod {
 
 		// must be static
 		@BeforeAll
@@ -93,7 +93,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	private static class TestCaseWithInvalidAfterAllMethod {
+	static class TestCaseWithInvalidAfterAllMethod {
 
 		// must be static
 		@AfterAll
@@ -105,7 +105,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	private static class TestCaseWithInvalidBeforeEachMethod {
+	static class TestCaseWithInvalidBeforeEachMethod {
 
 		// must NOT be static
 		@BeforeEach
@@ -117,7 +117,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	private static class TestCaseWithInvalidAfterEachMethod {
+	static class TestCaseWithInvalidAfterEachMethod {
 
 		// must NOT be static
 		@AfterEach

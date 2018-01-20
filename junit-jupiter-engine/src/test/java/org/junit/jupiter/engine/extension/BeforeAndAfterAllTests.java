@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -226,7 +226,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(QuuxClassLevelCallbacks.class)
-	private static class ThirdLevelTestCase extends SecondLevelTestCase {
+	static class ThirdLevelTestCase extends SecondLevelTestCase {
 
 		@BeforeAll
 		static void beforeAll3() {
@@ -246,7 +246,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(QuuxClassLevelCallbacks.class)
-	private static class ThirdLevelStaticHidingTestCase extends SecondLevelTestCase {
+	static class ThirdLevelStaticHidingTestCase extends SecondLevelTestCase {
 
 		@BeforeAll
 		static void beforeAll1() {
@@ -286,7 +286,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(FooClassLevelCallbacks.class)
-	private static class ExceptionInBeforeAllMethodTestCase {
+	static class ExceptionInBeforeAllMethodTestCase {
 
 		@BeforeAll
 		static void beforeAll() {
@@ -306,7 +306,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith({ FooClassLevelCallbacks.class, ExceptionThrowingBeforeAllCallback.class })
-	private static class ExceptionInBeforeAllCallbackTestCase {
+	static class ExceptionInBeforeAllCallbackTestCase {
 
 		@BeforeAll
 		static void beforeAll() {
@@ -326,7 +326,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
-	private static class FooClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
+	static class FooClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
 		public void beforeAll(ExtensionContext context) {
@@ -340,7 +340,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class BarClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
+	static class BarClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
 		public void beforeAll(ExtensionContext context) {
@@ -353,7 +353,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class BazClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
+	static class BazClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
 		public void beforeAll(ExtensionContext context) {
@@ -366,7 +366,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class QuuxClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
+	static class QuuxClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
 		public void beforeAll(ExtensionContext context) {
@@ -379,7 +379,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class ExceptionThrowingBeforeAllCallback implements BeforeAllCallback {
+	static class ExceptionThrowingBeforeAllCallback implements BeforeAllCallback {
 
 		@Override
 		public void beforeAll(ExtensionContext context) {

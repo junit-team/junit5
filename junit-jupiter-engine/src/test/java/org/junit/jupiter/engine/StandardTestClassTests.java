@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -122,7 +122,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 		assertTrue(TestCaseWithFailingAfter.testExecuted, "test executed?");
 	}
 
-	private static class MyStandardTestCase {
+	static class MyStandardTestCase {
 
 		static int countBefore1 = 0;
 		static int countBefore2 = 0;
@@ -165,7 +165,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	private static class FirstOfTwoTestCases {
+	static class FirstOfTwoTestCases {
 
 		@Test
 		void succeedingTest1() {
@@ -184,7 +184,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	private static class SecondOfTwoTestCases {
+	static class SecondOfTwoTestCases {
 
 		@Test
 		void succeedingTest1() {
@@ -203,7 +203,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	private static class TestCaseWithFailingBefore {
+	static class TestCaseWithFailingBefore {
 
 		static int countBefore = 0;
 
@@ -223,7 +223,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	private static class TestCaseWithFailingAfter {
+	static class TestCaseWithFailingAfter {
 
 		static boolean testExecuted = false;
 

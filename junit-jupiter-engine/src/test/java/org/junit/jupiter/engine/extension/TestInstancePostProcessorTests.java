@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -88,7 +88,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@ExtendWith(FooInstancePostProcessor.class)
-	private static class OuterTestCase implements Named {
+	static class OuterTestCase implements Named {
 
 		private String outerName;
 
@@ -134,7 +134,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	private static class TestCaseWithTestSpecificTestInstancePostProcessor implements Named {
+	static class TestCaseWithTestSpecificTestInstancePostProcessor implements Named {
 
 		private String name;
 
@@ -156,7 +156,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class FooInstancePostProcessor implements TestInstancePostProcessor {
+	static class FooInstancePostProcessor implements TestInstancePostProcessor {
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
@@ -167,7 +167,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class BarInstancePostProcessor implements TestInstancePostProcessor {
+	static class BarInstancePostProcessor implements TestInstancePostProcessor {
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -31,11 +31,26 @@ class ValueArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Va
 
 	@Override
 	public void accept(ValueSource source) {
-		List<Object> arrays = Stream.of(source.strings(), source.ints(), source.longs(), source.doubles()) //
-				.filter(array -> Array.getLength(array) > 0) //
+		// @formatter:off
+		List<Object> arrays =
+				Stream.of(
+					source.shorts(),
+					source.bytes(),
+					source.ints(),
+					source.longs(),
+					source.floats(),
+					source.doubles(),
+					source.chars(),
+					source.strings(),
+					source.classes()
+				)
+				.filter(array -> Array.getLength(array) > 0)
 				.collect(toList());
+		// @formatter:on
+
 		Preconditions.condition(arrays.size() == 1, () -> "Exactly one type of input must be provided in the @"
-				+ ValueSource.class.getSimpleName() + " annotation but there were " + arrays.size());
+				+ ValueSource.class.getSimpleName() + " annotation, but there were " + arrays.size());
+
 		Object originalArray = arrays.get(0);
 		arguments = IntStream.range(0, Array.getLength(originalArray)) //
 				.mapToObj(index -> Array.get(originalArray, index)) //

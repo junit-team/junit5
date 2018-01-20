@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -77,8 +77,6 @@ public class UniqueId implements Cloneable, Serializable {
 	 * @see #forEngine(String)
 	 */
 	public static UniqueId root(String segmentType, String value) {
-		Preconditions.notBlank(segmentType, "segmentType must not be null or blank");
-		Preconditions.notBlank(value, "value must not be null or blank");
 		return new UniqueId(UniqueIdFormat.getDefault(), new Segment(segmentType, value));
 	}
 
@@ -138,11 +136,41 @@ public class UniqueId implements Cloneable, Serializable {
 	 * @param value the value of the segment; never {@code null} or blank
 	 */
 	public final UniqueId append(String segmentType, String value) {
-		Preconditions.notBlank(segmentType, "segmentType must not be null or blank");
-		Preconditions.notBlank(value, "value must not be null or blank");
+		return append(new Segment(segmentType, value));
+	}
+
+	/**
+	 * Construct a new {@code UniqueId} by appending a new {@link Segment} to
+	 * the end of this {@code UniqueId}.
+	 *
+	 * <p>This {@code UniqueId} will not be modified.
+	 *
+	 * @param segment the segment to be appended; never {@code null}
+	 *
+	 * @since 1.1
+	 */
+	@API(status = STABLE, since = "1.1")
+	public final UniqueId append(Segment segment) {
+		Preconditions.notNull(segment, "segment must not be null");
 		List<Segment> baseSegments = new ArrayList<>(this.segments);
-		baseSegments.add(new Segment(segmentType, value));
+		baseSegments.add(segment);
 		return new UniqueId(this.uniqueIdFormat, baseSegments);
+	}
+
+	/**
+	 * Determine if the supplied {@code UniqueId} is a prefix for this
+	 * {@code UniqueId}.
+	 *
+	 * @param potentialPrefix the {@code UniqueId} to be checked; never {@code null}
+	 *
+	 * @since 1.1
+	 */
+	@API(status = STABLE, since = "1.1")
+	public boolean hasPrefix(UniqueId potentialPrefix) {
+		Preconditions.notNull(potentialPrefix, "potentialPrefix must not be null");
+		int size = this.segments.size();
+		int prefixSize = potentialPrefix.segments.size();
+		return size >= prefixSize && this.segments.subList(0, prefixSize).equals(potentialPrefix.segments);
 	}
 
 	@Override
@@ -197,6 +225,8 @@ public class UniqueId implements Cloneable, Serializable {
 		 * @param value the value of this segment
 		 */
 		Segment(String type, String value) {
+			Preconditions.notBlank(type, "type must not be null or blank");
+			Preconditions.notBlank(value, "value must not be null or blank");
 			this.type = type;
 			this.value = value;
 		}

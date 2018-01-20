@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -504,7 +504,7 @@ class VintageTestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("example"), started()), //
-			event(test("example"),
+			event(test("example"), //
 				finishedWithFailure(allOf(isA(MultipleFailuresError.class), //
 					new Condition<>(throwable -> ((MultipleFailuresError) throwable).getFailures().size() == 3,
 						"Must contain multiple errors (3)")))), //
