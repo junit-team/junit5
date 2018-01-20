@@ -272,6 +272,7 @@ subprojects { subproj ->
 			options.addStringOption('tag', 'implNote:a:Implementation Note:')
 			options.encoding = 'UTF-8'
 			// Remove Kotlin classes from classpath due to "bad" class file: AssertionsKt$sam$Supplier$44378ebd.class
+			// see https://bugs.openjdk.java.net/browse/JDK-8187422
 			if (gradle.ext.kotlinIsSupported) classpath = classpath - files(compileKotlin.destinationDir)
 		}
 
@@ -594,10 +595,10 @@ configure(rootProject) {
 
 		maxMemory = "1024m"
 		destinationDir = new File(buildDir, "docs/javadoc")
-
-		doFirst {
-			classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
-		}
+		// Remove Kotlin classes from classpath due to "bad" class file
+		// see https://bugs.openjdk.java.net/browse/JDK-8187422
+		classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
+			.filter { !it.path.contains('kotlin') }
 	}
 
 	spotless {
