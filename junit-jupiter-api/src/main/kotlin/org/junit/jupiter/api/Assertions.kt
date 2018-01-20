@@ -120,11 +120,4 @@ inline fun <reified T : Throwable> assertThrows(message: String, noinline execut
  * @see Assertions.assertThrows
  */
 inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, noinline executable: () -> Unit): T =
-    Assertions.assertThrows(T::class.java, Executable(executable), Supplier {
-        /*
-         * This is a hacky workaround due to a bug in how the JDK 9 JavaDoc code generator interacts with the
-         * generated Kotlin Bytecode.
-         * https://youtrack.jetbrains.com/issue/KT-20025
-         */
-        message()
-    })
+    Assertions.assertThrows(T::class.java, Executable(executable), Supplier(message))
