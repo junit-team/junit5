@@ -11,6 +11,8 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromFields;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterEachMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
@@ -117,8 +119,14 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
-		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.testClass,
-			context.getExtensionRegistry());
+		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWithAnnotation(
+			context.getExtensionRegistry(), this.testClass);
+
+		// Register extensions from static fields here, at the class level but
+		// after extensions registered via @ExtendWith.
+		registerExtensionsFromFields(registry, this.testClass, null);
+		registerBeforeEachMethodAdapters(registry);
+		registerAfterEachMethodAdapters(registry);
 
 		Lifecycle lifecycle = getTestInstanceLifecycle(this.testClass, context.getConfigurationParameters());
 		ThrowableCollector throwableCollector = new ThrowableCollector();
@@ -127,9 +135,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		this.beforeAllMethods = findBeforeAllMethods(this.testClass, lifecycle == Lifecycle.PER_METHOD);
 		this.afterAllMethods = findAfterAllMethods(this.testClass, lifecycle == Lifecycle.PER_METHOD);
-
-		registerBeforeEachMethodAdapters(registry);
-		registerAfterEachMethodAdapters(registry);
 
 		// @formatter:off
 		return context.extend()
@@ -179,6 +184,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		TestInstanceProvider testInstanceProvider = childRegistry -> instantiateAndPostProcessTestInstance(
 			parentExecutionContext, extensionContext, childRegistry.orElse(registry));
+
 		return childRegistry -> extensionContext.getTestInstance().orElseGet(
 			() -> testInstanceProvider.getTestInstance(childRegistry));
 	}
@@ -188,6 +194,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		Object instance = instantiateTestClass(context, registry, extensionContext);
 		invokeTestInstancePostProcessors(instance, registry, extensionContext);
+		// In addition, we register extensions from instance fields here since the
+		// best time to do that is immediately following test class instantiation
+		// and post processing.
+		registerExtensionsFromFields(registry, this.testClass, instance);
 		return instance;
 	}
 

@@ -360,7 +360,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Read the value of a potentially inaccessible field.
+	 * Read the value of a potentially inaccessible or nonexistent field.
 	 *
 	 * <p>If the field does not exist, an exception occurs while reading it, or
 	 * the value of the field is {@code null}, an empty {@link Optional} is
@@ -370,13 +370,55 @@ public final class ReflectionUtils {
 	 * @param fieldName the name of the field; never {@code null} or empty
 	 * @param instance the instance from where the value is to be read; may
 	 * be {@code null} for a static field
+	 * @see #readFieldValue(Field)
+	 * @see #readFieldValue(Field, Object)
 	 */
 	public static <T> Optional<Object> readFieldValue(Class<T> clazz, String fieldName, T instance) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(fieldName, "Field name must not be null or blank");
 
+		Field field = null;
 		try {
-			Field field = makeAccessible(clazz.getDeclaredField(fieldName));
+			field = makeAccessible(clazz.getDeclaredField(fieldName));
+		}
+		catch (Throwable t) {
+			BlacklistedExceptions.rethrowIfBlacklisted(t);
+			return Optional.empty();
+		}
+		return readFieldValue(field, instance);
+	}
+
+	/**
+	 * Read the value of a potentially inaccessible static field.
+	 *
+	 * <p>If an exception occurs while reading the field or if the value of the
+	 * field is {@code null}, an empty {@link Optional} is returned.
+	 *
+	 * @param field the field to read; never {@code null}
+	 * @see #readFieldValue(Field, Object)
+	 * @see #readFieldValue(Class, String, Object)
+	 */
+	public static Optional<Object> readFieldValue(Field field) {
+		return readFieldValue(field, null);
+	}
+
+	/**
+	 * Read the value of a potentially inaccessible field.
+	 *
+	 * <p>If an exception occurs while reading the field or if the value of the
+	 * field is {@code null}, an empty {@link Optional} is returned.
+	 *
+	 * @param field the field to read; never {@code null}
+	 * @param instance the instance from which the value is to be read; may
+	 * be {@code null} for a static field
+	 * @see #readFieldValue(Field)
+	 * @see #readFieldValue(Class, String, Object)
+	 */
+	public static <T> Optional<Object> readFieldValue(Field field, T instance) {
+		Preconditions.notNull(field, "Field must not be null");
+
+		try {
+			makeAccessible(field);
 			return Optional.ofNullable(field.get(instance));
 		}
 		catch (Throwable t) {
@@ -736,6 +778,80 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Find all {@linkplain Field fields} of the supplied class or interface
+	 * that match the specified {@code predicate}, using top-down search semantics
+	 * within the type hierarchy.
+	 *
+	 * <p>The results will not contain fields that are <em>hidden</em>.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param predicate the field filter; never {@code null}
+	 * @return an immutable list of all such fields found; never {@code null}
+	 * but potentially empty
+	 * @see #findFields(Class, Predicate, HierarchyTraversalMode)
+	 */
+	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate) {
+		return findFields(clazz, predicate, TOP_DOWN);
+	}
+
+	/**
+	 * Find all {@linkplain Field fields} of the supplied class or interface
+	 * that match the specified {@code predicate}.
+	 *
+	 * <p>The results will not contain fields that are <em>hidden</em>.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param predicate the field filter; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @return an immutable list of all such fields found; never {@code null}
+	 * but potentially empty
+	 * @see #findFields(Class, Predicate)
+	 */
+	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
+			HierarchyTraversalMode traversalMode) {
+
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
+
+		// @formatter:off
+		return findAllFieldsInHierarchy(clazz, traversalMode).stream()
+				.filter(predicate)
+				// unmodifiable since returned by public, non-internal method(s)
+				.collect(toUnmodifiableList());
+		// @formatter:on
+	}
+
+	private static List<Field> findAllFieldsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
+
+		// @formatter:off
+		List<Field> localFields = getDeclaredFields(clazz).stream()
+				.filter(field -> !field.isSynthetic())
+				.collect(toList());
+		List<Field> superclassFields = getSuperclassFields(clazz, traversalMode).stream()
+				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
+				.collect(toList());
+		List<Field> interfaceFields = getInterfaceFields(clazz, traversalMode).stream()
+				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
+				.collect(toList());
+		// @formatter:on
+
+		List<Field> fields = new ArrayList<>();
+		if (traversalMode == TOP_DOWN) {
+			fields.addAll(superclassFields);
+			fields.addAll(interfaceFields);
+		}
+		fields.addAll(localFields);
+		if (traversalMode == BOTTOM_UP) {
+			fields.addAll(interfaceFields);
+			fields.addAll(superclassFields);
+		}
+		return fields;
+	}
+
+	/**
 	 * Determine if a {@link Method} matching the supplied {@link Predicate}
 	 * is present within the type hierarchy of the specified class, beginning
 	 * with the specified class or interface and traversing up the type
@@ -918,6 +1034,22 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Custom alternative to {@link Class#getFields()} that sorts the fields
+	 * and converts them to a mutable list.
+	 */
+	private static List<Field> getFields(Class<?> clazz) {
+		return toSortedMutableList(clazz.getFields());
+	}
+
+	/**
+	 * Custom alternative to {@link Class#getDeclaredFields()} that sorts the
+	 * fields and converts them to a mutable list.
+	 */
+	private static List<Field> getDeclaredFields(Class<?> clazz) {
+		return toSortedMutableList(clazz.getDeclaredFields());
+	}
+
+	/**
 	 * Custom alternative to {@link Class#getMethods()} that sorts the methods
 	 * and converts them to a mutable list.
 	 */
@@ -976,6 +1108,15 @@ public final class ReflectionUtils {
 		// @formatter:on
 	}
 
+	private static List<Field> toSortedMutableList(Field[] fields) {
+		// @formatter:off
+		return Arrays.stream(fields)
+				.sorted(ReflectionUtils::defaultFieldSorter)
+				// Use toCollection() instead of toList() to ensure list is mutable.
+				.collect(toCollection(ArrayList::new));
+		// @formatter:on
+	}
+
 	private static List<Method> toSortedMutableList(Method[] methods) {
 		// @formatter:off
 		return Arrays.stream(methods)
@@ -983,6 +1124,23 @@ public final class ReflectionUtils {
 				// Use toCollection() instead of toList() to ensure list is mutable.
 				.collect(toCollection(ArrayList::new));
 		// @formatter:on
+	}
+
+	/**
+	 * Field comparator inspired by JUnit 4's {@code org.junit.internal.MethodSorter}
+	 * implementation.
+	 */
+	private static int defaultFieldSorter(Field field1, Field field2) {
+		String name1 = field1.getName();
+		String name2 = field2.getName();
+		int comparison = Integer.compare(name1.hashCode(), name2.hashCode());
+		if (comparison == 0) {
+			comparison = name1.compareTo(name2);
+			if (comparison == 0) {
+				comparison = field1.toString().compareTo(field2.toString());
+			}
+		}
+		return comparison;
 	}
 
 	/**
@@ -1025,6 +1183,40 @@ public final class ReflectionUtils {
 			}
 		}
 		return allInterfaceMethods;
+	}
+
+	private static List<Field> getInterfaceFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
+		List<Field> allInterfaceFields = new ArrayList<>();
+		for (Class<?> ifc : clazz.getInterfaces()) {
+			List<Field> localInterfaceFields = getFields(ifc);
+
+			// @formatter:off
+			List<Field> superinterfaceFields = getInterfaceFields(ifc, traversalMode).stream()
+					.filter(field -> !isFieldShadowedByLocalFields(field, localInterfaceFields))
+					.collect(toList());
+			// @formatter:on
+
+			if (traversalMode == TOP_DOWN) {
+				allInterfaceFields.addAll(superinterfaceFields);
+			}
+			allInterfaceFields.addAll(localInterfaceFields);
+			if (traversalMode == BOTTOM_UP) {
+				allInterfaceFields.addAll(superinterfaceFields);
+			}
+		}
+		return allInterfaceFields;
+	}
+
+	private static List<Field> getSuperclassFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
+		Class<?> superclass = clazz.getSuperclass();
+		if (superclass == null || superclass == Object.class) {
+			return Collections.emptyList();
+		}
+		return findAllFieldsInHierarchy(superclass, traversalMode);
+	}
+
+	private static boolean isFieldShadowedByLocalFields(Field field, List<Field> localFields) {
+		return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
 	}
 
 	private static List<Method> getSuperclassMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {

@@ -89,6 +89,10 @@ _@API Guardian_ JAR _mandatory_ again.
 
 ==== New Features and Improvements
 
+* Developers can now register extensions _programmatically_ by annotating fields in test
+  classes with `{RegisterExtension}`.
+** See <<../user-guide/index.adoc#extensions-registration-programmatic, Programmatic
+   Extension Registration>> in the User Guide for details.
 * `@ValueSource` now additionally supports literal values of type `short`, `byte`,
   `float`, `char`, and `java.lang.Class` for parameterized tests.
 * New support for parameterized tests for implicit conversion from a `String` to an

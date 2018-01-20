@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedMethods;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findPublicAnnotatedFields;
@@ -41,6 +42,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
@@ -50,6 +52,8 @@ import org.junit.jupiter.api.Test;
  * @since 1.0
  */
 class AnnotationUtilsTests {
+
+	private static final Predicate<Field> isStringField = field -> field.getType() == String.class;
 
 	@Test
 	void getDefaultValueForNullAnnotation() {
@@ -344,7 +348,7 @@ class AnnotationUtilsTests {
 	void findAnnotatedMethodsForAnnotationOnMethodsInClassHierarchyUsingHierarchyUpMode() throws Exception {
 		Method method1 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method1");
 		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
-		Method superMethod = SuperClassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
+		Method superMethod = SuperclassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
 
 		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, BOTTOM_UP);
 
@@ -354,10 +358,10 @@ class AnnotationUtilsTests {
 	}
 
 	@Test
-	void findAnnotatedMethodsForAnnotationUsedInClassAndSuperClassHierarchyDown() throws Exception {
+	void findAnnotatedMethodsForAnnotationUsedInClassAndSuperclassHierarchyDown() throws Exception {
 		Method method1 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method1");
 		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
-		Method superMethod = SuperClassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
+		Method superMethod = SuperclassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
 
 		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, TOP_DOWN);
 
@@ -374,6 +378,100 @@ class AnnotationUtilsTests {
 
 		assertThat(methods).containsExactly(interfaceMethod);
 	}
+
+	// === findAnnotatedFields() ===============================================
+
+	@Test
+	void findAnnotatedFieldsForNullClass() {
+		assertThrows(PreconditionViolationException.class,
+			() -> findAnnotatedFields(null, Annotation1.class, isStringField, TOP_DOWN));
+	}
+
+	@Test
+	void findAnnotatedFieldsForNullAnnotationType() {
+		assertThrows(PreconditionViolationException.class,
+			() -> findAnnotatedFields(ClassWithAnnotatedFields.class, null, isStringField, TOP_DOWN));
+	}
+
+	@Test
+	void findAnnotatedFieldsForNullPredicate() {
+		assertThrows(PreconditionViolationException.class,
+			() -> findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation1.class, null, TOP_DOWN));
+	}
+
+	@Test
+	void findAnnotatedFieldsForAnnotationThatIsNotPresent() {
+		assertThat(findAnnotatedFields(ClassWithAnnotatedFields.class, Fast.class, isStringField, TOP_DOWN)).isEmpty();
+	}
+
+	@Test
+	void findAnnotatedFieldsForAnnotationOnFieldsInClassUsingHierarchyDownMode() throws Exception {
+		Field field2 = ClassWithAnnotatedFields.class.getDeclaredField("field2");
+		Field field3 = ClassWithAnnotatedFields.class.getDeclaredField("field3");
+
+		List<Field> fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation2.class, isStringField,
+			TOP_DOWN);
+
+		assertThat(fields).containsOnly(field2, field3);
+	}
+
+	@Test
+	void findAnnotatedFieldsForAnnotationOnFieldsInClassHierarchyUsingHierarchyUpMode() throws Exception {
+		Field field1 = ClassWithAnnotatedFields.class.getDeclaredField("field1");
+		Field field3 = ClassWithAnnotatedFields.class.getDeclaredField("field3");
+		Field superField = SuperclassWithAnnotatedField.class.getDeclaredField("superField");
+
+		List<Field> fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation1.class, isStringField,
+			BOTTOM_UP);
+
+		assertEquals(3, fields.size());
+		assertThat(fields.subList(0, 2)).containsOnly(field1, field3);
+		assertEquals(superField, fields.get(2));
+	}
+
+	@Test
+	void findAnnotatedFieldsForAnnotationUsedInClassAndSuperclassHierarchyDown() throws Exception {
+		Field field1 = ClassWithAnnotatedFields.class.getDeclaredField("field1");
+		Field field3 = ClassWithAnnotatedFields.class.getDeclaredField("field3");
+		Field superField = SuperclassWithAnnotatedField.class.getDeclaredField("superField");
+
+		List<Field> fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation1.class, isStringField,
+			TOP_DOWN);
+
+		assertEquals(3, fields.size());
+		assertEquals(superField, fields.get(0));
+		assertThat(fields.subList(1, 3)).containsOnly(field1, field3);
+	}
+
+	@Test
+	void findAnnotatedFieldsForAnnotationUsedInInterface() throws Exception {
+		Field interfaceField = InterfaceWithAnnotatedField.class.getDeclaredField("interfaceField");
+
+		List<Field> fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation3.class, isStringField,
+			BOTTOM_UP);
+
+		assertThat(fields).containsExactly(interfaceField);
+	}
+
+	@Test
+	void findAnnotatedFieldsForShadowedFields() throws Exception {
+		Class<?> clazz = ClassWithShadowedAnnotatedFields.class;
+		Field interfaceField = clazz.getDeclaredField("interfaceField");
+		Field superField = clazz.getDeclaredField("superField");
+		Field field1 = clazz.getDeclaredField("field1");
+		Field field2 = clazz.getDeclaredField("field2");
+		Field field3 = clazz.getDeclaredField("field3");
+
+		assertThat(findShadowingAnnotatedFields(Annotation1.class)).containsExactly(superField, field1, field3);
+		assertThat(findShadowingAnnotatedFields(Annotation2.class)).containsExactly(field2, field3);
+		assertThat(findShadowingAnnotatedFields(Annotation3.class)).containsExactly(interfaceField);
+	}
+
+	private List<Field> findShadowingAnnotatedFields(Class<? extends Annotation> annotationType) {
+		return findAnnotatedFields(ClassWithShadowedAnnotatedFields.class, annotationType, isStringField);
+	}
+
+	// === findPublicAnnotatedFields() =========================================
 
 	@Test
 	void findPublicAnnotatedFieldsForNullClass() {
@@ -432,7 +530,7 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findPublicAnnotatedFieldsForDirectlyAnnotatedFieldsInClassAndInterface() {
-		List<Field> fields = findPublicAnnotatedFields(ClassWithAnnotatedFieldsFromInterface.class, String.class,
+		List<Field> fields = findPublicAnnotatedFields(ClassWithPublicAnnotatedFieldsFromInterface.class, String.class,
 			Annotation1.class);
 		assertNotNull(fields);
 		assertThat(asNames(fields)).containsExactlyInAnyOrder("foo", "bar");
@@ -456,12 +554,12 @@ class AnnotationUtilsTests {
 	@interface Annotation1 {
 	}
 
-	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface Annotation2 {
 	}
 
-	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface Annotation3 {
 	}
@@ -726,14 +824,14 @@ class AnnotationUtilsTests {
 		}
 	}
 
-	static class SuperClassWithAnnotatedMethod {
+	static class SuperclassWithAnnotatedMethod {
 
 		@Annotation1
 		void superMethod() {
 		}
 	}
 
-	static class ClassWithAnnotatedMethods extends SuperClassWithAnnotatedMethod
+	static class ClassWithAnnotatedMethods extends SuperclassWithAnnotatedMethod
 			implements InterfaceWithAnnotatedDefaultMethod {
 
 		@Annotation1
@@ -749,6 +847,59 @@ class AnnotationUtilsTests {
 		void method3() {
 		}
 	}
+
+	// -------------------------------------------------------------------------
+
+	interface InterfaceWithAnnotatedField {
+
+		@Annotation3
+		String interfaceField = "interface";
+	}
+
+	static class SuperclassWithAnnotatedField {
+
+		@Annotation1
+		String superField = "super";
+	}
+
+	static class ClassWithAnnotatedFields extends SuperclassWithAnnotatedField implements InterfaceWithAnnotatedField {
+
+		@Annotation1
+		protected Object field0 = "?";
+
+		@Annotation1
+		protected String field1 = "foo";
+
+		@Annotation2
+		protected String field2 = "bar";
+
+		@Annotation1
+		@Annotation2
+		protected String field3 = "baz";
+
+	}
+
+	static class ClassWithShadowedAnnotatedFields extends ClassWithAnnotatedFields {
+
+		@Annotation3
+		String interfaceField = "interface-shadow";
+
+		@Annotation1
+		String superField = "super-shadow";
+
+		@Annotation1
+		protected String field1 = "foo-shadow";
+
+		@Annotation2
+		protected String field2 = "bar-shadow";
+
+		@Annotation1
+		@Annotation2
+		protected String field3 = "baz-shadow";
+
+	}
+
+	// -------------------------------------------------------------------------
 
 	@Annotation1
 	private Boolean privateDirectlyAnnotatedField;
@@ -768,7 +919,7 @@ class AnnotationUtilsTests {
 		boolean wrongType = false;
 	}
 
-	class ClassWithAnnotatedFieldsFromInterface implements InterfaceWithAnnotatedFields {
+	class ClassWithPublicAnnotatedFieldsFromInterface implements InterfaceWithAnnotatedFields {
 
 		@Annotation1
 		public String bar = "baz";

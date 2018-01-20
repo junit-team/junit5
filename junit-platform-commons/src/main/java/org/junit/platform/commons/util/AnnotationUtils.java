@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -341,6 +342,43 @@ public final class AnnotationUtils {
 				.filter(field -> fieldType.isAssignableFrom(field.getType()) && isAnnotated(field, annotationType))
 				.collect(toUnmodifiableList());
 		// @formatter:on
+	}
+
+	/**
+	 * Find all {@linkplain Field fields} of the supplied class or interface
+	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * {@code annotationType} and match the specified {@code predicate}, using
+	 * top-down search semantics within the type hierarchy.
+	 *
+	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
+	 */
+	public static List<Field> findAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationType,
+			Predicate<Field> predicate) {
+
+		return findAnnotatedFields(clazz, annotationType, predicate, HierarchyTraversalMode.TOP_DOWN);
+	}
+
+	/**
+	 * Find all {@linkplain Field fields} of the supplied class or interface
+	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * {@code annotationType} and match the specified {@code predicate}.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @param predicate the field filter; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @return the list of all such fields found; neither {@code null} nor mutable
+	 */
+	public static List<Field> findAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationType,
+			Predicate<Field> predicate, HierarchyTraversalMode traversalMode) {
+
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(annotationType, "annotationType must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+
+		Predicate<Field> annotated = field -> isAnnotated(field, annotationType);
+
+		return ReflectionUtils.findFields(clazz, annotated.and(predicate), traversalMode);
 	}
 
 	/**

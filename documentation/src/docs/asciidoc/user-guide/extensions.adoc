@@ -11,9 +11,10 @@ JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concep
 [[extensions-registration]]
 === Registering Extensions
 
-Extensions can be registered explicitly via
-<<extensions-registration-declarative,`{ExtendWith}`>> or automatically via Java's
-<<extensions-registration-automatic,`ServiceLoader` mechanism>>.
+Extensions can be registered _declaratively_ via
+<<extensions-registration-declarative,`@ExtendWith`>>, _programmatically_ via
+<<extensions-registration-programmatic,`@RegisterExtension`>>, or _automatically_ via
+Java's <<extensions-registration-automatic,`ServiceLoader`>> mechanism.
 
 [[extensions-registration-declarative]]
 ==== Declarative Extension Registration
@@ -67,16 +68,89 @@ class MyTestsV2 {
 }
 ----
 
-The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the
-`FooExtension` and `BarExtension`, in exactly that order.
+.Extension Registration Order
+NOTE: Extensions registered declaratively via `@ExtendWith` will be executed in the order
+in which they are declared in the source code. For example, the execution of tests in
+both `MyTestsV1` and `MyTestsV2` will be extended by the `FooExtension` and
+`BarExtension`, **in exactly that order**.
+
+[[extensions-registration-programmatic]]
+==== Programmatic Extension Registration
+
+Developers can register extensions _programmatically_ by annotating fields in test
+classes with `{RegisterExtension}`.
+
+When an extension is registered _declaratively_ via
+<<extensions-registration-declarative,`@ExtendWith`>>, it can typically only be
+configured via annotations. In contrast, when an extension is registered via
+`@RegisterExtension`, it can be configured _programmatically_ – for example, in order to
+pass arguments to the extension's constructor, a static factory method, or a builder API.
+
+NOTE: `@RegisterExtension` fields must not be `private` or `null` (at evaluation time)
+but may be either `static` or non-static.
+
+[[extensions-registration-programmatic-static-fields]]
+===== Static Fields
+
+If a `@RegisterExtension` field is `static`, the extension will be registered after
+extensions that are registered at the class level via `@ExtendWith`. Such _static
+extensions_ are not limited in which extension APIs they can implement. Extensions
+registered via static fields may therefore implement class-level and instance-level
+extension APIs such as `BeforeAllCallback`, `AfterAllCallback`, and
+`TestInstancePostProcessor` as well as method-level extension APIs such as
+`BeforeEachCallback`, etc.
+
+In the following example, the `server` field in the test class is initialized
+programmatically by using a builder pattern supported by the `WebServerExtension`. The
+configured `WebServerExtension` will be automatically registered as an extension at the
+class level – for example, in order to start the server before all tests in the class and
+then stop the server after all tests in the class have completed. In addition, static
+lifecycle methods annotated with `@BeforeAll` or `@AfterAll` as well as `@BeforeEach`,
+`@AfterEach`, and `@Test` methods can access the instance of the extension via the
+`server` field if necessary.
+
+[source,java,indent=0]
+.An extension registered via a static field
+----
+include::{testDir}/example/registration/WebServerDemo.java[tags=user_guide]
+----
+
+[[extensions-registration-programmatic-instance-fields]]
+===== Instance Fields
+
+If a `@RegisterExtension` field is non-static (i.e., an instance field), the extension
+will be registered after the test class has been instantiated and after each registered
+`TestInstancePostProcessor` has been given a chance to post-process the test instance
+(potentially injecting the instance of the extension to be used into the annotated
+field). Thus, if such an _instance extension_ implements class-level or instance-level
+extension APIs such as `BeforeAllCallback`, `AfterAllCallback`, or
+`TestInstancePostProcessor`, those APIs will not be honored. By default, an instance
+extension will be registered _after_ extensions that are registered at the method level
+via `@ExtendWith`; however, if the test class is configured with
+`@TestInstance(Lifecycle.PER_CLASS)` semantics, an instance extension will be registered
+_before_ extensions that are registered at the method level via `@ExtendWith`.
+
+In the following example, the `docs` field in the test class is initialized
+programmatically by invoking a custom `lookUpDocsDir()` method and supplying the result
+to the static `forPath()` factory method in the `DocumentationExtension`. The configured
+`DocumentationExtension` will be automatically registered as an extension at the method
+level. In addition, `@BeforeEach`, `@AfterEach`, and `@Test` methods can access the
+instance of the extension via the `docs` field if necessary.
+
+[source,java,indent=0]
+.An extension registered via an instance field
+----
+include::{testDir}/example/registration/DocumentationDemo.java[tags=user_guide]
+----
 
 [[extensions-registration-automatic]]
 ==== Automatic Extension Registration
 
 In addition to <<extensions-registration-declarative,declarative extension registration>>
-support using annotations, JUnit Jupiter also supports _global extension registration_
-via Java's `java.util.ServiceLoader` mechanism, allowing third-party extensions to be
-auto-detected and automatically registered based on what is available in the classpath.
+and <<extensions-registration-programmatic,programmatic extension registration>> support
+using annotations, JUnit Jupiter also supports _global extension registration_ via Java's
+`java.util.ServiceLoader` mechanism, allowing third-party extensions to be auto-detected
+and automatically registered based on what is available in the classpath.
 
 Specifically, a custom extension can be registered by supplying its fully qualified class
 name in a file named `org.junit.jupiter.api.extension.Extension` within the

@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -78,6 +79,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = populateNewExtensionRegistry(context);
 		Object testInstance = context.getTestInstanceProvider().getTestInstance(Optional.of(registry));
+
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 		ExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfigurationParameters(), testInstance,
@@ -93,7 +95,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	protected ExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
-		return populateNewExtensionRegistryFromExtendWith(getTestMethod(), context.getExtensionRegistry());
+		return populateNewExtensionRegistryFromExtendWithAnnotation(context.getExtensionRegistry(), getTestMethod());
 	}
 
 	@Override

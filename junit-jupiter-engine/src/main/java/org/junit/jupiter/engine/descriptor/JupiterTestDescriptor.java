@@ -12,16 +12,13 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -30,12 +27,9 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -132,17 +126,6 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	@Override
 	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
 		context.close();
-	}
-
-	protected ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
-			ExtensionRegistry existingExtensionRegistry) {
-		// @formatter:off
-		List<Class<? extends Extension>> extensionTypes = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
-				.map(ExtendWith::value)
-				.flatMap(Arrays::stream)
-				.collect(toList());
-		// @formatter:on
-		return ExtensionRegistry.createRegistryFrom(existingExtensionRegistry, extensionTypes);
 	}
 
 	/**
