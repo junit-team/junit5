@@ -635,6 +635,13 @@ reason: class file for org.apiguardian.api.API$Status not found</pre>
 <div class="ulist">
 <ul>
 <li>
+<p>Test methods selected by <em>fully qualified method name</em> via
+<code>DiscoverySelectors.selectMethod(String)</code>, via the <code>method</code> or <code>methods</code> element of the
+<code>selectors</code> configuration for the <code>junitPlatform</code> Gradle plugin, or via the
+<code>-select-method</code> or <code>-m</code> command-line options for the <code>ConsoleLauncher</code> can now contain
+special characters&#8201;&#8212;&#8201;for example, for JVM languages such as Kotlin and Groovy.</p>
+</li>
+<li>
 <p>Summary table is no longer printed via the <code>ConsoleLauncher</code> and Gradle plugin when
 details mode <code>NONE</code> is selected, unless there are errors.</p>
 </li>
@@ -1399,7 +1406,7 @@ online.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-19 09:41:40 EST
+Last updated 2018-01-20 10:49:30 EST
 </div>
 </div>
 </body>
