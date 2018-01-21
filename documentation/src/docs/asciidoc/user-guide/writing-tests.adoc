@@ -602,7 +602,7 @@ to the console.
 
 Parameterized tests make it possible to run a test multiple times with different
 arguments. They are declared just like regular `@Test` methods but use the
-`@ParameterizedTest` annotation instead. In addition, you must declare at least one
+`{ParameterizedTest}` annotation instead. In addition, you must declare at least one
 _source_ that will provide the arguments for each invocation.
 
 WARNING: Parameterized tests are currently an _experimental_ feature. Consult the table

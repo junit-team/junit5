@@ -3,7 +3,11 @@
 
 *Date of Release:* ❓
 
-*Scope:* Minor bug fixes and various enhancements
+*Scope:* <<../user-guide/index.adoc#extensions-registration-programmatic, Programmatic
+extension registration>> via `{RegisterExtension}`, improved implicit conversion support
+for `{ParameterizedTest}` arguments, refinements to the `ExtensionContext` API, support
+for re-running individual dynamic test and test template invocations within an IDE, minor
+bug fixes, and various additional enhancements.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/18?closed=1+[5.1 M2] milestone page in the JUnit repository
@@ -56,10 +60,6 @@ _@API Guardian_ JAR _mandatory_ again.
   limitation of Maven Surefire, instead of `methodName(Type)` they are written as
   `methodName{Type}`.
 
-==== Deprecations and Breaking Changes
-
-* ❓
-
 ==== New Features and Improvements
 
 * New `SUMMARY` details mode for the `ConsoleLauncher` and Gradle plugin which prints
@@ -87,10 +87,6 @@ _@API Guardian_ JAR _mandatory_ again.
   `junitPlatform` Gradle plugin, or via the `-select-class` or `-c` command-line options
   for the `ConsoleLauncher` are no longer allowed to be `private`. This aligns with the
   behavior for test classes discovered via package, class path, and module path scanning.
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
@@ -140,25 +136,16 @@ _@API Guardian_ JAR _mandatory_ again.
   without running the complete test factory or test template. This allows to rerun single
   or selected parameterized, repeated or dynamic tests by selecting their unique IDs in
   subsequent discovery requests.
-* New Kotlin friendly `fail` methods added as _top-level functions_ in the
+* New Kotlin-friendly `fail` methods added as _top-level functions_ in the
   `org.junit.jupiter.api` package.
-** When calling the original methods from Kotlin the compiler required the generic return
-   type of `fail` to be declared explicitly calling it.
-   Eg: `fail<Nothing>("Some message")`.
-   These new methods all return
+** When calling the `Assertions.fail` methods from Kotlin, the compiler required the
+   generic return type of `fail` to be declared explicitly when calling it -- for
+   example, `fail<Nothing>("Some message")`. These new top-level functions remove this
+   requirement by returning
    https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing.html[`Nothing`].
+
 
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+No changes.

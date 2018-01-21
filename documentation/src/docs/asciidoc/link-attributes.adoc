@@ -38,6 +38,7 @@
 :ExecutionCondition:                {javadoc-root}/org/junit/jupiter/api/extension/ExecutionCondition.html[ExecutionCondition]
 :ExtendWith:                        {javadoc-root}/org/junit/jupiter/api/extension/ExtendWith.html[@ExtendWith]
 :ExtensionContext_Store:            {javadoc-root}/org/junit/jupiter/api/extension/ExtensionContext.Store.html[Store]
+:ParameterizedTest:                 {javadoc-root}/org/junit/jupiter/params/ParameterizedTest.html[@ParameterizedTest]
 :ParameterResolver:                 {javadoc-root}/org/junit/jupiter/api/extension/ParameterResolver.html[ParameterResolver]
 :RegisterExtension:                 {javadoc-root}/org/junit/jupiter/api/extension/RegisterExtension.html[@RegisterExtension]
 :RepetitionInfo:                    {javadoc-root}/org/junit/jupiter/api/RepetitionInfo.html[RepetitionInfo]
