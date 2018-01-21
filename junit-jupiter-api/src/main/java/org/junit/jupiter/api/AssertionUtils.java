@@ -119,6 +119,10 @@ class AssertionUtils {
 		return floatsAreEqual(value1, value2) || Math.abs(value1 - value2) <= delta;
 	}
 
+	static boolean floatsAreEqual(float value1, float value2) {
+		return Float.floatToIntBits(value1) == Float.floatToIntBits(value2);
+	}
+
 	static void assertValidDelta(float delta) {
 		if (Float.isNaN(delta) || delta <= 0.0) {
 			failIllegalDelta(String.valueOf(delta));
@@ -129,10 +133,6 @@ class AssertionUtils {
 		if (Double.isNaN(delta) || delta <= 0.0) {
 			failIllegalDelta(String.valueOf(delta));
 		}
-	}
-
-	static boolean floatsAreEqual(float value1, float value2) {
-		return Float.floatToIntBits(value1) == Float.floatToIntBits(value2);
 	}
 
 	static boolean doublesAreEqual(double value1, double value2, double delta) {

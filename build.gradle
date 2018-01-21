@@ -1,5 +1,6 @@
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import net.ltgt.gradle.errorprone.ErrorProneToolChain
 
 buildscript {
 	repositories {
@@ -10,6 +11,7 @@ buildscript {
 	dependencies {
 		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.8.0')
 		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
+		classpath('net.ltgt.gradle:gradle-errorprone-plugin:0.0.13')
 		classpath('org.ajoberstar:gradle-git-publish:0.3.2')
 		classpath('org.ajoberstar:gradle-git:1.7.2')
 		classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.1')
@@ -94,6 +96,51 @@ ext {
 		'junit-platform-surefire-provider',
 		'platform-tests'
 	]
+
+	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
+	compileJavaBaseArgs = [
+		'-Xlint:cast',
+		'-Xlint:classfile',
+		'-Xlint:deprecation',
+		'-Xlint:dep-ann',
+		'-Xlint:divzero',
+		'-Xlint:empty',
+		'-Xlint:fallthrough',
+		'-Xlint:finally',
+		'-Xlint:overrides',
+		'-Xlint:path',
+		'-Xlint:processing',
+		'-Xlint:rawtypes',
+		'-Xlint:serial',
+		'-Xlint:static',
+		'-Xlint:try',
+		'-Xlint:unchecked',
+		'-Xlint:varargs',
+		'-Xlint:-options',
+		'-Werror'
+	]
+
+	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
+	compileTestJavaBaseArgs = [
+		'-Xlint:cast',
+		'-Xlint:classfile',
+		'-Xlint:deprecation',
+		'-Xlint:dep-ann',
+		'-Xlint:divzero',
+		'-Xlint:empty',
+		'-Xlint:fallthrough',
+		'-Xlint:finally',
+		'-Xlint:path',
+		'-Xlint:processing',
+		'-Xlint:rawtypes',
+		'-Xlint:serial',
+		'-Xlint:static',
+		'-Xlint:try',
+		'-Xlint:unchecked',
+		'-Xlint:varargs',
+		'-Xlint:-options',
+		'-Xlint:-overrides'
+	]
 }
 
 allprojects { subproj ->
@@ -133,49 +180,12 @@ allprojects { subproj ->
 	}
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileJava.options*.compilerArgs = [
-		'-Xlint:cast',
-		'-Xlint:classfile',
-		'-Xlint:deprecation',
-		'-Xlint:dep-ann',
-		'-Xlint:divzero',
-		'-Xlint:empty',
-		'-Xlint:fallthrough',
-		'-Xlint:finally',
-		'-Xlint:overrides',
-		'-Xlint:path',
-		'-Xlint:processing',
-		'-Xlint:rawtypes',
-		'-Xlint:serial',
-		'-Xlint:static',
-		'-Xlint:try',
-		'-Xlint:unchecked',
-		'-Xlint:varargs',
-		'-Xlint:-options',
-		'-Werror'
-	]
+	compileJava.options*.compilerArgs =
+			compileJavaBaseArgs + ['--release', rootProject.javacRelease]
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileTestJava.options*.compilerArgs = [
-		'-Xlint:cast',
-		'-Xlint:classfile',
-		'-Xlint:deprecation',
-		'-Xlint:dep-ann',
-		'-Xlint:divzero',
-		'-Xlint:empty',
-		'-Xlint:fallthrough',
-		'-Xlint:finally',
-		'-Xlint:path',
-		'-Xlint:processing',
-		'-Xlint:rawtypes',
-		'-Xlint:serial',
-		'-Xlint:static',
-		'-Xlint:try',
-		'-Xlint:unchecked',
-		'-Xlint:varargs',
-		'-Xlint:-options',
-		'-Xlint:-overrides'
-	]
+	compileTestJava.options*.compilerArgs =
+			compileTestJavaBaseArgs + ['--release', rootProject.javacRelease]
 
 	compileTestJava {
 		options.encoding = 'UTF-8'
@@ -506,6 +516,111 @@ subprojects { subproj ->
 			}
 		}
 
+	}
+
+	if (
+		// error-prone doesn't work with Java 9 sources yet:
+		// https://github.com/google/error-prone/issues/448
+		// TODO: Try removing this check, since errorprone may support Java 9 now?
+		!subproj.name.endsWith('-java-9')
+				&& subproj.name != 'documentation') {
+
+		println(String.format("Currently setting up error-prone for subproject: %s", subproj.name))
+
+		apply plugin: 'net.ltgt.errorprone-base'
+
+		dependencies {
+			errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
+			// TODO: JDK 9 fails to find any of the annotations from the package
+			// com.google.errorprone.annotations, even if they're applied to the JUnit 5 code base.
+			// Apply a select subset of them once they work properly with JDK 9.
+			compileOnly("com.google.errorprone:error_prone_annotations:${errorproneVersion}")
+		}
+
+		def errorproneBaseFlags = [
+			// enable experimental checks
+			'-XepAllDisabledChecksAsWarnings',
+
+			// generates too many false positives on constructors that call other constructors.
+			// TODO: see if constructors can be refactored more easily to not call each other.
+			'-Xep:ConstructorLeaksThis:OFF',
+
+			// we don't use @Nullable
+			'-Xep:FieldMissingNullable:OFF',
+
+			// adds a lot of churn for not a lot of gain
+			'-Xep:InconsistentOverloads:OFF',
+
+			// TODO: turning this check on and applying @com.google.errorprone.annotations.Immutable
+			// to immutable classes causes JDK 9 to fail to compile; investigate and consider
+			// turning it on when error-prone supports JDK 9
+			'-Xep:Immutable:OFF',
+
+			// adds a lot of churn for not a lot of gain
+			'-Xep:MethodCanBeStatic:OFF',
+
+			// we declare redundant `throws <general-exception>, <more-specific-exception>` for
+			// maintainability
+			'-Xep:RedundantThrows:OFF',
+
+			// we don't use @Nullable
+			'-Xep:ReturnMissingNullable:OFF',
+
+			// we do not use Guava, so we cannot import com.google.common.base.Splitter
+			'-Xep:StringSplitter:OFF',
+
+			// we target Java 8, not Android
+			'-Xep:StaticOrDefaultInterfaceMethod:OFF',
+
+			// we declare `throws <unchecked-exception>` for maintainability
+			'-Xep:ThrowsUncheckedException:OFF',
+
+			// we do not follow the Google Java Style Guide
+			'-Xep:UngroupedOverloads:OFF',
+
+			// TODO: turning this check on and applying @com.google.errorprone.annotations.Var to
+			// non-final variables causes JDK 9 to fail to compile; investigate and consider turning
+			// it on when error-prone supports JDK 9
+			'-Xep:Var:OFF'
+		]
+
+		def errorproneTestFlags = errorproneBaseFlags + [
+			'-Xep:ClassCanBeStatic:OFF',
+			'-Xep:ConstantField:OFF',
+			'-Xep:ConstructorInvokesOverridable:OFF',
+			'-Xep:EqualsHashCode:OFF',
+			'-Xep:MultipleTopLevelClasses:OFF',
+			'-Xep:PrivateConstructorForUtilityClass:OFF',
+			'-Xep:ReturnValueIgnored:OFF'
+		]
+
+		task compileJavaWithErrorProne(type: JavaCompile/*, dependsOn: compileKotlin*/) {
+			group = 'verification'
+			toolChain = ErrorProneToolChain.create(project)
+			classpath = compileJava.classpath + compileKotlin.classpath
+			//println("classpath = " + classpath.files)
+			source = compileJava.source + compileKotlin.source
+			//println("source = " + source.files)
+			options.compilerArgs =
+					compileJava.options.compilerArgs + compileJavaBaseArgs + errorproneBaseFlags
+			// println("compileJavaWithErrorProne.options.compilerArgs = $options.compilerArgs")
+			destinationDir = file("$buildDir/classes/error-prone-java/main")
+		}
+		check.dependsOn(compileJavaWithErrorProne)
+
+		task compileTestJavaWithErrorProne(type: JavaCompile/*, dependsOn: [compileKotlin, compileTestKotlin]*/) {
+			group = 'verification'
+			toolChain = ErrorProneToolChain.create(project)
+			classpath = compileTestJava.classpath + compileTestKotlin.classpath
+			//println("classpath = " + classpath.files)
+			source = compileTestJava.source + compileTestKotlin.source
+			//println("source = " + source.files)
+			options.compilerArgs +=
+					compileTestJava.options.compilerArgs + compileTestJavaBaseArgs + errorproneTestFlags
+			// println("compileTestJavaWithErrorProne.options.compilerArgs = $options.compilerArgs")
+			destinationDir = file("$buildDir/classes/error-prone-java/test")
+		}
+		check.dependsOn(compileTestJavaWithErrorProne)
 	}
 
 	spotless {

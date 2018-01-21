@@ -86,6 +86,7 @@ class TestRun {
 	 *
 	 * @param description the {@code Description} to look up
 	 */
+	@SuppressWarnings("ReferenceEquality")
 	Optional<VintageTestDescriptor> lookupTestDescriptor(Description description) {
 		List<VintageTestDescriptor> descriptors = descriptionToDescriptors.get(description);
 		if (descriptors == null) {

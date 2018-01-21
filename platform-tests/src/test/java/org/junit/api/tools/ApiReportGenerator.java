@@ -10,6 +10,9 @@
 
 package org.junit.api.tools;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -32,7 +35,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
 class ApiReportGenerator {
 
 	public static void main(String... args) {
-		PrintWriter writer = new PrintWriter(System.out, true);
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(System.out, UTF_8), true);
 		ApiReportGenerator reportGenerator = new ApiReportGenerator();
 
 		// scan all types below "org.junit" package

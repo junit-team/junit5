@@ -58,6 +58,9 @@ public final class Assertions {
 	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
 	 * this method's generic return type {@code V}.
 	 */
+	// we purposely return a V that has nothing to do with the parameters of this method; see
+	// the javadoc for details.
+	@SuppressWarnings("TypeParameterUnusedInFormals")
 	public static <V> V fail(String message) {
 		AssertionUtils.fail(message);
 		return null; // appeasing the compiler: this line will never be executed.
@@ -78,6 +81,9 @@ public final class Assertions {
 	 * Stream.of().map(entry -> fail("should not be called"));
 	 * }</pre>
 	 */
+	// we purposely return a V that has nothing to do with the parameters of this method; see
+	// the javadoc for details.
+	@SuppressWarnings("TypeParameterUnusedInFormals")
 	public static <V> V fail(String message, Throwable cause) {
 		AssertionUtils.fail(message, cause);
 		return null; // appeasing the compiler: this line will never be executed.
@@ -89,6 +95,9 @@ public final class Assertions {
 	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
 	 * this method's generic return type {@code V}.
 	 */
+	// we purposely return a V that has nothing to do with the parameters of this method; see
+	// the javadoc for details.
+	@SuppressWarnings("TypeParameterUnusedInFormals")
 	public static <V> V fail(Throwable cause) {
 		AssertionUtils.fail(cause);
 		return null; // appeasing the compiler: this line will never be executed.
@@ -101,6 +110,9 @@ public final class Assertions {
 	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
 	 * this method's generic return type {@code V}.
 	 */
+	// we purposely return a V that has nothing to do with the parameters of this method; see
+	// the javadoc for details.
+	@SuppressWarnings("TypeParameterUnusedInFormals")
 	public static <V> V fail(Supplier<String> messageSupplier) {
 		AssertionUtils.fail(messageSupplier);
 		return null; // appeasing the compiler: this line will never be executed.
