@@ -99,7 +99,7 @@ final class ExtensionUtils {
 		});
 	}
 
-	private static class IsNonStaticExtensionField implements Predicate<Field> {
+	static class IsNonStaticExtensionField implements Predicate<Field> {
 
 		@Override
 		public boolean test(Field field) {
@@ -117,7 +117,7 @@ final class ExtensionUtils {
 		}
 	}
 
-	private static class IsStaticExtensionField implements Predicate<Field> {
+	static class IsStaticExtensionField implements Predicate<Field> {
 
 		@Override
 		public boolean test(Field field) {
