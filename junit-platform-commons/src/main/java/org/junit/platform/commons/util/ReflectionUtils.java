@@ -91,9 +91,6 @@ public final class ReflectionUtils {
 		BOTTOM_UP;
 	}
 
-	// Pattern: [fully qualified class name]#[methodName]((comma-separated list of parameter type names))
-	private static final Pattern FULLY_QUALIFIED_METHOD_NAME_PATTERN = Pattern.compile("(.+)#([^()]+?)(\\((.*)\\))?");
-
 	// Pattern: "[Ljava.lang.String;", "[[[[Ljava.lang.String;", etc.
 	private static final Pattern VM_INTERNAL_OBJECT_ARRAY_PATTERN = Pattern.compile("^(\\[+)L(.+);$");
 
@@ -522,76 +519,6 @@ public final class ReflectionUtils {
 				: classLoader.loadClass(componentTypeName);
 
 		return Optional.of(Array.newInstance(componentType, new int[dimensions]).getClass());
-	}
-
-	/**
-	 * Load a method by its <em>fully qualified name</em>.
-	 *
-	 * <p>The following formats are supported.
-	 *
-	 * <ul>
-	 * <li>{@code [fully qualified class name]#[methodName]}</li>
-	 * <li>{@code [fully qualified class name]#[methodName](parameter type list)}
-	 * </ul>
-	 *
-	 * <p>The <em>parameter type list</em> is a comma-separated list of primitive
-	 * names or fully qualified class names for the types of parameters accepted
-	 * by the method.
-	 *
-	 * <p>See {@link #loadClass(String, ClassLoader)} for details on the supported
-	 * syntax for array parameter types.
-	 *
-	 * <h3>Examples</h3>
-	 *
-	 * <table border="1">
-	 * <tr><th>Method</th><th>Fully Qualified Method Name</th></tr>
-	 * <tr><td>{@code java.lang.String.chars()}</td><td>{@code java.lang.String#chars}</td></tr>
-	 * <tr><td>{@code java.lang.String.chars()}</td><td>{@code java.lang.String#chars()}</td></tr>
-	 * <tr><td>{@code java.lang.String.equalsIgnoreCase(String)}</td><td>{@code java.lang.String#equalsIgnoreCase(java.lang.String)}</td></tr>
-	 * <tr><td>{@code java.lang.String.substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
-	 * <tr><td>{@code example.Calc.avg(int[])}</td><td>{@code example.Calc#avg([I)}</td></tr>
-	 * <tr><td>{@code example.Calc.avg(int[])}</td><td>{@code example.Calc#avg(int[])}</td></tr>
-	 * <tr><td>{@code example.Matrix.multiply(double[][])}</td><td>{@code example.Matrix#multiply([[D)}</td></tr>
-	 * <tr><td>{@code example.Matrix.multiply(double[][])}</td><td>{@code example.Matrix#multiply(double[][])}</td></tr>
-	 * <tr><td>{@code example.Service.process(String[])}</td><td>{@code example.Service#process([Ljava.lang.String;)}</td></tr>
-	 * <tr><td>{@code example.Service.process(String[])}</td><td>{@code example.Service#process(java.lang.String[])}</td></tr>
-	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code example.Service#process([[Ljava.lang.String;)}</td></tr>
-	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code example.Service#process(java.lang.String[][])}</td></tr>
-	 * </table>
-	 *
-	 * @param fullyQualifiedMethodName the fully qualified name of the method to load;
-	 * never {@code null} or blank
-	 * @return an {@code Optional} containing the method; never {@code null} but
-	 * potentially empty
-	 * @see #getFullyQualifiedMethodName(Class, String, Class...)
-	 */
-	public static Optional<Method> loadMethod(String fullyQualifiedMethodName) {
-		Preconditions.notBlank(fullyQualifiedMethodName, "Fully qualified method name must not be null or blank");
-
-		String fqmn = fullyQualifiedMethodName.trim();
-		Matcher matcher = FULLY_QUALIFIED_METHOD_NAME_PATTERN.matcher(fqmn);
-
-		Preconditions.condition(matcher.matches(),
-			() -> String.format("Fully qualified method name [%s] does not match pattern [%s]", fqmn,
-				FULLY_QUALIFIED_METHOD_NAME_PATTERN));
-
-		String className = matcher.group(1);
-		String methodName = matcher.group(2);
-		// Note: group #3 includes the parameter types enclosed in parentheses;
-		// group #4 contains the actual parameter types.
-		String parameterTypeNames = matcher.group(4);
-
-		Optional<Class<?>> classOptional = loadClass(className);
-		if (classOptional.isPresent()) {
-			try {
-				return findMethod(classOptional.get(), methodName.trim(), parameterTypeNames);
-			}
-			catch (Exception ex) {
-				/* ignore */
-			}
-		}
-
-		return Optional.empty();
 	}
 
 	/**

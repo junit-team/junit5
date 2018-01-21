@@ -10,11 +10,9 @@
 
 package org.junit.platform.commons.util;
 
-import static java.lang.String.join;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -25,7 +23,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversal
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
-import static org.junit.platform.commons.util.ReflectionUtils.getFullyQualifiedMethodName;
 import static org.junit.platform.commons.util.ReflectionUtils.invokeMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 import static org.mockito.Mockito.mock;
@@ -366,145 +363,6 @@ class ReflectionUtilsTests {
 	void loadClassForMultidimensionalObjectArrayUsingSourceCodeSyntax() throws Exception {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("java.lang.String[][][][][]");
 		assertThat(optional).contains(String[][][][][].class);
-	}
-
-	@Test
-	void loadMethodPreconditions() {
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod(null));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod(""));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("    "));
-	}
-
-	@Test
-	void loadMethodWithInvalidFormatForFullyQualifiedMethodName() {
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod(null));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod(""));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("   "));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("method"));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("#nonexistentMethod"));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("java.lang.String#"));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("java.lang.String#chars("));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.loadMethod("java.lang.String#chars)"));
-	}
-
-	@Test
-	void loadMethod() {
-		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#publicMethod")).isPresent();
-		assertThat(ReflectionUtils.loadMethod(PrivateClass.class.getName() + "#privateMethod")).isPresent();
-		assertThat(ReflectionUtils.loadMethod("  " + PrivateClass.class.getName() + "#privateMethod  ")).isPresent();
-
-		assertThat(ReflectionUtils.loadMethod("org.example.NonexistentClass#nonexistentMethod")).isEmpty();
-		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#nonexistentMethod")).isEmpty();
-
-		// missing java.lang.String parameter type
-		assertThat(ReflectionUtils.loadMethod("java.lang.String#equalsIgnoreCase")).isEmpty();
-	}
-
-	@Test
-	void loadMethodWithPrimitiveParameters() {
-		assertFqmn(fqmn(PublicClass.class, "method", boolean.class, char.class));
-	}
-
-	@Test
-	void loadMethodWithObjectParameters() {
-		assertFqmn(fqmn(PublicClass.class, "method", String.class, Integer.class));
-	}
-
-	@Test
-	void loadMethodWithPrimitiveParametersUsingSourceCodeSyntax() {
-		assertFqmn(fqmnWithParamNames(PublicClass.class, "method", "boolean", "char"));
-	}
-
-	@Test
-	void loadMethodWithObjectParametersUsingSourceCodeSyntax() {
-		assertFqmn(fqmnWithParamNames(PublicClass.class, "method", "java.lang.String", "java.lang.Integer"));
-	}
-
-	@Test
-	void loadMethodWithPrimitiveArrayParameters() {
-		assertFqmn(fqmn(PublicClass.class, "method", char[].class, int[].class));
-	}
-
-	@Test
-	void loadMethodWithObjectArrayParameters() {
-		assertFqmn(fqmn(PublicClass.class, "method", String[].class, Integer[].class));
-	}
-
-	@Test
-	void loadMethodWithPrimitiveArrayParametersUsingSourceCodeSyntax() {
-		assertFqmn(fqmnWithParamNames(PublicClass.class, "method", "char[]", "int[]"));
-	}
-
-	@Test
-	void loadMethodWithObjectArrayParametersUsingSourceCodeSyntax() {
-		assertFqmn(fqmnWithParamNames(PublicClass.class, "method", "java.lang.String[]", "java.lang.Integer[]"));
-	}
-
-	@Test
-	void loadMethodWithTwoDimensionalPrimitiveArrayParameter() {
-		assertFqmn(fqmn(getClass(), "methodWithTwoDimensionalPrimitiveArray", int[][].class));
-	}
-
-	@Test
-	void loadMethodWithTwoDimensionalPrimitiveArrayParameterUsingSourceCodeSyntax() {
-		assertFqmn(fqmnWithParamNames(getClass(), "methodWithTwoDimensionalPrimitiveArray", "int[][]"));
-	}
-
-	@Test
-	void loadMethodWithMultidimensionalPrimitiveArrayParameter() {
-		assertFqmn(fqmn(getClass(), "methodWithMultidimensionalPrimitiveArray", int[][][][][].class));
-	}
-
-	@Test
-	void loadMethodWithMultidimensionalPrimitiveArrayParameterUsingSourceCodeSyntax() {
-		assertFqmn(fqmnWithParamNames(getClass(), "methodWithMultidimensionalPrimitiveArray", "int[][][][][]"));
-	}
-
-	@Test
-	void loadMethodWithTwoDimensionalObjectArrayParameter() {
-		assertFqmn(fqmn(getClass(), "methodWithTwoDimensionalObjectArray", String[][].class));
-	}
-
-	@Test
-	void loadMethodWithTwoDimensionalObjectArrayParameterUsingSourceCodeSyntax() {
-		assertFqmn(fqmnWithParamNames(getClass(), "methodWithTwoDimensionalObjectArray", "java.lang.String[][]"));
-	}
-
-	@Test
-	void loadMethodWithMultidimensionalObjectArrayParameter() {
-		assertFqmn(fqmn(getClass(), "methodWithMultidimensionalObjectArray", Double[][][][][].class));
-	}
-
-	@Test
-	void loadMethodWithMultidimensionalObjectArrayParameterUsingSourceCodeSyntax() {
-		assertFqmn(
-			fqmnWithParamNames(getClass(), "methodWithMultidimensionalObjectArray", "java.lang.Double[][][][][]"));
-	}
-
-	@Test
-	void loadMethodFromSuperclassOrInterface() throws Exception {
-		assertAll(//
-			() -> assertFqmn(fqmn(ChildClass.class, "method1")), //
-			() -> assertFqmn(fqmn(ChildClass.class, "method2")), //
-			() -> assertFqmn(fqmn(ChildClass.class, "method3")), //
-			() -> assertFqmn(fqmn(ChildClass.class, "method4"))//
-		);
-	}
-
-	private static String fqmn(Class<?> clazz, String methodName, Class<?>... params) {
-		return getFullyQualifiedMethodName(clazz, methodName, params);
-	}
-
-	private static String fqmnWithParamNames(Class<?> clazz, String methodName, String... params) {
-		Preconditions.notNull(clazz, "clazz must not be null");
-		Preconditions.notNull(methodName, "methodName must not be null");
-		Preconditions.notNull(params, "params must not be null");
-
-		return String.format("%s#%s(%s)", clazz.getName(), methodName, join(", ", params));
-	}
-
-	private static void assertFqmn(String fqmn) {
-		assertThat(ReflectionUtils.loadMethod(fqmn)).as(fqmn).isPresent();
 	}
 
 	@Test
