@@ -2,7 +2,7 @@
 int javaVersion = Integer.valueOf(JavaVersion.current().getMajorVersion())
 if (javaVersion < 9) {
 	throw new GradleException("The JUnit 5 build requires Java 9 or higher. " +
-		"Currently executing with Java " + JavaVersion.current().getMajorVersion() + ".")
+		"Currently executing with Java " + javaVersion + ".")
 }
 
 // Disable Kotlin support on Java 10 or higher
