@@ -35,11 +35,15 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.extensions.TempDirectory;
 import org.junit.jupiter.extensions.TempDirectory.Root;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -186,19 +190,6 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
-	void selectMethodByFullyQualifiedNamePreconditions() {
-		assertThrows(PreconditionViolationException.class, () -> selectMethod(null));
-		assertThrows(PreconditionViolationException.class, () -> selectMethod(""));
-		assertThrows(PreconditionViolationException.class, () -> selectMethod("   "));
-		assertThrows(PreconditionViolationException.class, () -> selectMethod("com.example"));
-		assertThrows(PreconditionViolationException.class, () -> selectMethod("com.example.Foo"));
-		assertThrows(PreconditionViolationException.class, () -> selectMethod("method"));
-		assertThrows(PreconditionViolationException.class, () -> selectMethod("#nonexistentMethod"));
-		assertThrows(PreconditionViolationException.class, () -> selectMethod("java.lang.String#"));
-		assertThrows(PreconditionViolationException.class, () -> selectMethod("java.lang.String#chars("));
-	}
-
-	@Test
 	void selectMethodByClassNameAndMethodNamePreconditions() {
 		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", null));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod("TestClass", ""));
@@ -243,6 +234,30 @@ class DiscoverySelectorsTests {
 		Method method = getClass().getDeclaredMethods()[0];
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(null, method));
 		assertThrows(PreconditionViolationException.class, () -> selectMethod(getClass(), (Method) null));
+	}
+
+	@ParameterizedTest(name = "FQMN: ''{0}''")
+	@MethodSource("invalidFullyQualifiedMethodNames")
+	void selectMethodByFullyQualifiedNamePreconditions(String fqmn, String message) {
+		Exception exception = assertThrows(PreconditionViolationException.class, () -> selectMethod(fqmn));
+		assertThat(exception).hasMessageContaining(message);
+	}
+
+	static Stream<Arguments> invalidFullyQualifiedMethodNames() {
+		// @formatter:off
+		return Stream.of(
+			Arguments.of(null, "must not be null or blank"),
+			Arguments.of("", "must not be null or blank"),
+			Arguments.of("   ", "must not be null or blank"),
+			Arguments.of("com.example", "not a valid fully qualified method name"),
+			Arguments.of("com.example.Foo", "not a valid fully qualified method name"),
+			Arguments.of("method", "not a valid fully qualified method name"),
+			Arguments.of("#method", "not a valid fully qualified method name"),
+			Arguments.of("#method()", "not a valid fully qualified method name"),
+			Arguments.of("#method(int)", "not a valid fully qualified method name"),
+			Arguments.of("java.lang.String#", "not a valid fully qualified method name")
+		);
+		// @formatter:on
 	}
 
 	@Test
@@ -363,6 +378,101 @@ class DiscoverySelectorsTests {
 			"java.lang.Double[][][][][]");
 	}
 
+	@Test
+	void selectMethodByFullyQualifiedNameEndingInOpeningParenthesis() {
+		String className = "org.example.MyClass";
+		// The following bizarre method name is not permissible in Java source
+		// code; however, it's permitted by the JVM -- for example, in Groovy
+		// or Kotlin source code using back ticks.
+		String methodName = ")--(";
+		String fqmn = className + "#" + methodName;
+
+		MethodSelector selector = selectMethod(fqmn);
+		assertEquals(className, selector.getClassName());
+		assertEquals(methodName, selector.getMethodName());
+		assertEquals("", selector.getMethodParameterTypes());
+	}
+
+	/**
+	 * Inspired by Spock specifications.
+	 */
+	@Test
+	void selectMethodByFullyQualifiedNameContainingHashtags() {
+		String className = "org.example.CalculatorSpec";
+		String methodName = "#a plus #b equals #c";
+		String fqmn = className + "#" + methodName;
+
+		MethodSelector selector = selectMethod(fqmn);
+		assertEquals(className, selector.getClassName());
+		assertEquals(methodName, selector.getMethodName());
+		assertEquals("", selector.getMethodParameterTypes());
+	}
+
+	/**
+	 * Inspired by Spock specifications.
+	 */
+	@Test
+	void selectMethodByFullyQualifiedNameContainingHashtagsAndWithParameterList() {
+		String className = "org.example.CalculatorSpec";
+		String methodName = "#a plus #b equals #c";
+		String methodParameters = "int, int, int";
+		String fqmn = String.format("%s#%s(%s)", className, methodName, methodParameters);
+
+		MethodSelector selector = selectMethod(fqmn);
+		assertEquals(className, selector.getClassName());
+		assertEquals(methodName, selector.getMethodName());
+		assertEquals(methodParameters, selector.getMethodParameterTypes());
+	}
+
+	/**
+	 * Inspired by Kotlin tests.
+	 */
+	@Test
+	void selectMethodByFullyQualifiedNameContainingParentheses() {
+		String className = "org.example.KotlinTestCase";
+		String methodName = "🦆 ~|~test with a really, (really) terrible name & that needs to be changed!~|~";
+		String fqmn = className + "#" + methodName;
+
+		MethodSelector selector = selectMethod(fqmn);
+
+		assertEquals(className, selector.getClassName());
+		assertEquals(methodName, selector.getMethodName());
+		assertEquals("", selector.getMethodParameterTypes());
+	}
+
+	/**
+	 * Inspired by Kotlin tests.
+	 */
+	@Test
+	void selectMethodByFullyQualifiedNameEndingWithParentheses() {
+		String className = "org.example.KotlinTestCase";
+		String methodName = "test name ends with parentheses()";
+		String fqmn = className + "#" + methodName + "()";
+
+		MethodSelector selector = selectMethod(fqmn);
+
+		assertEquals(className, selector.getClassName());
+		assertEquals(methodName, selector.getMethodName());
+		assertEquals("", selector.getMethodParameterTypes());
+	}
+
+	/**
+	 * Inspired by Kotlin tests.
+	 */
+	@Test
+	void selectMethodByFullyQualifiedNameEndingWithParenthesesAndWithParameterList() {
+		String className = "org.example.KotlinTestCase";
+		String methodName = "test name ends with parentheses()";
+		String methodParameters = "int, int, int";
+		String fqmn = String.format("%s#%s(%s)", className, methodName, methodParameters);
+
+		MethodSelector selector = selectMethod(fqmn);
+
+		assertEquals(className, selector.getClassName());
+		assertEquals(methodName, selector.getMethodName());
+		assertEquals(methodParameters, selector.getMethodParameterTypes());
+	}
+
 	private void assertSelectMethodByFullyQualifiedName(Class<?> clazz, Method method) {
 		MethodSelector selector = selectMethod(fqmn(clazz, method.getName()));
 		assertEquals(method, selector.getJavaMethod());
@@ -432,45 +542,20 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectClassByNameForSpockSpec() {
-		String spockClassName = "org.example.CalculatorSpec";
-		ClassSelector selector = selectClass(spockClassName);
-		assertEquals(spockClassName, selector.getClassName());
+		String className = "org.example.CalculatorSpec";
+		ClassSelector selector = selectClass(className);
+		assertEquals(className, selector.getClassName());
 	}
 
 	@Test
 	void selectMethodByClassAndNameForSpockSpec() {
-		String spockClassName = "org.example.CalculatorSpec";
-		String spockMethodName = "#a plus #b equals #c";
-
-		MethodSelector selector = selectMethod(spockClassName, spockMethodName);
-		assertEquals(spockClassName, selector.getClassName());
-		assertEquals(spockMethodName, selector.getMethodName());
-		assertEquals("", selector.getMethodParameterTypes());
-	}
-
-	@Test
-	void selectMethodByFullyQualifiedNameForSpockSpec() {
-		String spockClassName = "org.example.CalculatorSpec";
-		String spockMethodName = "#a plus #b equals #c";
-		String spockFullyQualifiedMethodName = spockClassName + "#" + spockMethodName;
-
-		MethodSelector selector = selectMethod(spockFullyQualifiedMethodName);
-		assertEquals(spockClassName, selector.getClassName());
-		assertEquals(spockMethodName, selector.getMethodName());
-		assertEquals("", selector.getMethodParameterTypes());
-	}
-
-	@Test
-	void selectMethodByFullyQualifiedNameForSpockSpecWithParameters() {
 		String className = "org.example.CalculatorSpec";
 		String methodName = "#a plus #b equals #c";
-		String methodParameters = "int, int, int";
-		String spockFullyQualifiedMethodName = String.format("%s#%s(%s)", className, methodName, methodParameters);
 
-		MethodSelector selector = selectMethod(spockFullyQualifiedMethodName);
+		MethodSelector selector = selectMethod(className, methodName);
 		assertEquals(className, selector.getClassName());
 		assertEquals(methodName, selector.getMethodName());
-		assertEquals(methodParameters, selector.getMethodParameterTypes());
+		assertEquals("", selector.getMethodParameterTypes());
 	}
 
 	@Test

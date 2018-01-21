@@ -23,13 +23,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.UniqueId;
 
@@ -46,8 +43,6 @@ import org.junit.platform.engine.UniqueId;
  */
 @API(status = STABLE, since = "1.0")
 public final class DiscoverySelectors {
-
-	private static final Pattern fullyQualifiedMethodNamePattern = Pattern.compile("([^#]+)#([^(]+)(?:\\((.*)\\))?");
 
 	///CLOVER:OFF
 	private DiscoverySelectors() {
@@ -362,17 +357,32 @@ public final class DiscoverySelectors {
 	public static MethodSelector selectMethod(String fullyQualifiedMethodName) throws PreconditionViolationException {
 		Preconditions.notBlank(fullyQualifiedMethodName, "fullyQualifiedMethodName must not be null or blank");
 
-		Matcher matcher = fullyQualifiedMethodNamePattern.matcher(fullyQualifiedMethodName);
-		Preconditions.condition(matcher.matches(),
-			fullyQualifiedMethodName + " is not a valid fully qualified method name");
+		int indexOfFirstHashtag = fullyQualifiedMethodName.indexOf('#');
+		boolean validSyntax = (indexOfFirstHashtag > 0)
+				&& (indexOfFirstHashtag < fullyQualifiedMethodName.length() - 1);
 
-		String className = matcher.group(1);
-		String methodName = matcher.group(2);
-		String methodParameters = matcher.group(3);
-		if (StringUtils.isNotBlank(methodParameters)) {
-			return selectMethod(className, methodName, methodParameters);
+		Preconditions.condition(validSyntax,
+			() -> "[" + fullyQualifiedMethodName + "] is not a valid fully qualified method name: "
+					+ "it must start with a fully qualified class name followed by a '#' "
+					+ "and then the method name, optionally followed by a parameter list enclosed in parentheses.");
+
+		String className = fullyQualifiedMethodName.substring(0, indexOfFirstHashtag);
+		String methodPart = fullyQualifiedMethodName.substring(indexOfFirstHashtag + 1);
+		String methodName = methodPart;
+		String methodParameters = "";
+
+		if (methodPart.endsWith("()")) {
+			methodName = methodPart.substring(0, methodPart.length() - 2);
 		}
-		return selectMethod(className, methodName);
+		else if (methodPart.endsWith(")")) {
+			int indexOfLastOpeningParenthesis = methodPart.lastIndexOf('(');
+			if ((indexOfLastOpeningParenthesis > 0) && (indexOfLastOpeningParenthesis < methodPart.length() - 1)) {
+				methodName = methodPart.substring(0, indexOfLastOpeningParenthesis);
+				methodParameters = methodPart.substring(indexOfLastOpeningParenthesis + 1, methodPart.length() - 1);
+			}
+		}
+
+		return selectMethod(className, methodName, methodParameters);
 	}
 
 	/**

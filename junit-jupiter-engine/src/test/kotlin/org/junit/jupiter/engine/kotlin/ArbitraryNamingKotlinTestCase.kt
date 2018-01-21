@@ -19,4 +19,8 @@ class ArbitraryNamingKotlinTestCase {
 
     @Test
     fun `🦆 ~|~test with a really, (really) terrible name & that needs to be changed!~|~`() { }
+
+    @Test
+    fun `test name ends with parentheses()`() { }
+
 }
