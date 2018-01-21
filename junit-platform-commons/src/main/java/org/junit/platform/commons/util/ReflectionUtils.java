@@ -779,23 +779,6 @@ public final class ReflectionUtils {
 
 	/**
 	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that match the specified {@code predicate}, using top-down search semantics
-	 * within the type hierarchy.
-	 *
-	 * <p>The results will not contain fields that are <em>hidden</em>.
-	 *
-	 * @param clazz the class or interface in which to find the fields; never {@code null}
-	 * @param predicate the field filter; never {@code null}
-	 * @return an immutable list of all such fields found; never {@code null}
-	 * but potentially empty
-	 * @see #findFields(Class, Predicate, HierarchyTraversalMode)
-	 */
-	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate) {
-		return findFields(clazz, predicate, TOP_DOWN);
-	}
-
-	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
 	 * that match the specified {@code predicate}.
 	 *
 	 * <p>The results will not contain fields that are <em>hidden</em>.
@@ -805,7 +788,6 @@ public final class ReflectionUtils {
 	 * @param traversalMode the hierarchy traversal mode; never {@code null}
 	 * @return an immutable list of all such fields found; never {@code null}
 	 * but potentially empty
-	 * @see #findFields(Class, Predicate)
 	 */
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
