@@ -28,6 +28,8 @@ class AssertNotSameAssertionsTests {
 	@Test
 	void assertNotSameWithDifferentObjects() {
 		assertNotSame(new Object(), new Object());
+		assertNotSame(new Object(), new Object(), "message");
+		assertNotSame(new Object(), new Object(), () -> "message");
 	}
 
 	@Test

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
 import org.opentest4j.AssertionFailedError
 import org.opentest4j.MultipleFailuresError
+import java.lang.AssertionError
 
 import java.util.stream.Stream
 
@@ -29,11 +30,12 @@ class KotlinAssertionsTests {
 
     @Test
     fun `assertAll with functions that do not throw exceptions`() {
-        assertAll(
-            { assertTrue(true) },
-            { assertFalse(false) },
-            { assertTrue(true) }
-        )
+        assertAll(Stream.of({ assertTrue(true) }, { assertFalse(false) }))
+        assertAll("heading", Stream.of({ assertTrue(true) }, { assertFalse(false) }))
+        assertAll(setOf({ assertTrue(true) }, { assertFalse(false) }))
+        assertAll("heading", setOf({ assertTrue(true) }, { assertFalse(false) }))
+        assertAll({ assertTrue(true) }, { assertFalse(false) })
+        assertAll("heading", { assertTrue(true) }, { assertFalse(false) })
     }
 
     @Test
@@ -45,6 +47,16 @@ class KotlinAssertionsTests {
             )
         }
         assertExpectedExceptionTypes(multipleFailuresError, AssertionFailedError::class, AssertionFailedError::class)
+    }
+
+    @Test
+    fun `assertThrows and fail`() {
+        assertThrows<AssertionError> { fail("message") }
+        assertThrows<AssertionError> { fail("message", AssertionError()) }
+        assertThrows<AssertionError> { fail("message", null) }
+        assertThrows<AssertionError>("should fail") { fail({ "message" }) }
+        assertThrows<AssertionError>({ "should fail" }) { fail(AssertionError()) }
+        assertThrows<AssertionError>({ "should fail" }) { fail(null as Throwable?) }
     }
 
     @Test

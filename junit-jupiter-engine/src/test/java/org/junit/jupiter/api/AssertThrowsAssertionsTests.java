@@ -43,6 +43,22 @@ class AssertThrowsAssertionsTests {
 	}
 
 	@Test
+	void assertThrowsThrowableWithMessage() {
+		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, () -> {
+			throw new EnigmaThrowable();
+		}, "message");
+		assertNotNull(enigmaThrowable);
+	}
+
+	@Test
+	void assertThrowsThrowableWithMessageSupplier() {
+		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, () -> {
+			throw new EnigmaThrowable();
+		}, () -> "message");
+		assertNotNull(enigmaThrowable);
+	}
+
+	@Test
 	void assertThrowsCheckedException() {
 		IOException exception = assertThrows(IOException.class, () -> {
 			throw new IOException();

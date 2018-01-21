@@ -73,6 +73,26 @@ class AssertAllAssertionsTests {
 			() -> assertTrue(true),
 			() -> assertFalse(false)
 		);
+		assertAll("heading",
+			() -> assertTrue(true),
+			() -> assertFalse(false)
+		);
+		assertAll(asList(
+			() -> assertTrue(true),
+			() -> assertFalse(false)
+		));
+		assertAll("heading", asList(
+			() -> assertTrue(true),
+			() -> assertFalse(false)
+		));
+		assertAll(Stream.of(
+				() -> assertTrue(true),
+				() -> assertFalse(false)
+		));
+		assertAll("heading", Stream.of(
+				() -> assertTrue(true),
+				() -> assertFalse(false)
+		));
 		// @formatter:on
 	}
 

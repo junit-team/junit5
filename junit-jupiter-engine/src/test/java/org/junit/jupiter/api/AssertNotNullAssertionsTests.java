@@ -28,6 +28,8 @@ class AssertNotNullAssertionsTests {
 	@Test
 	void assertNotNullWithNonNullObject() {
 		assertNotNull("foo");
+		assertNotNull("foo", "message");
+		assertNotNull("foo", () -> "message");
 	}
 
 	@Test

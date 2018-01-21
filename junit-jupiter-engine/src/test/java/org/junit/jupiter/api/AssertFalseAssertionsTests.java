@@ -26,16 +26,15 @@ class AssertFalseAssertionsTests {
 	@Test
 	void assertFalseWithBooleanFalse() {
 		assertFalse(false);
+		assertFalse(false, "test");
+		assertFalse(false, () -> "test");
 	}
 
 	@Test
 	void assertFalseWithBooleanSupplierFalse() {
 		assertFalse(() -> false);
-	}
-
-	@Test
-	void assertFalseWithBooleanFalseAndString() {
-		assertFalse(false, "test");
+		assertFalse(() -> false, "test");
+		assertFalse(() -> false, () -> "test");
 	}
 
 	@Test

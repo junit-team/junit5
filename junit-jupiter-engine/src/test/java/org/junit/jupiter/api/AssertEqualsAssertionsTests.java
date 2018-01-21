@@ -33,6 +33,8 @@ class AssertEqualsAssertionsTests {
 		byte expected = 1;
 		byte actual = 1;
 		assertEquals(expected, actual);
+		assertEquals(expected, actual, "message");
+		assertEquals(expected, actual, () -> "message");
 	}
 
 	@Test
@@ -84,6 +86,8 @@ class AssertEqualsAssertionsTests {
 		short expected = 1;
 		short actual = 1;
 		assertEquals(expected, actual);
+		assertEquals(expected, actual, "message");
+		assertEquals(expected, actual, () -> "message");
 	}
 
 	@Test
@@ -133,6 +137,8 @@ class AssertEqualsAssertionsTests {
 	@Test
 	void assertEqualsInt() {
 		assertEquals(1, 1);
+		assertEquals(1, 1, "message");
+		assertEquals(1, 1, () -> "message");
 	}
 
 	@Test
@@ -176,6 +182,8 @@ class AssertEqualsAssertionsTests {
 	@Test
 	void assertEqualsLong() {
 		assertEquals(1L, 1L);
+		assertEquals(1L, 1L, "message");
+		assertEquals(1L, 1L, () -> "message");
 	}
 
 	@Test
@@ -219,6 +227,8 @@ class AssertEqualsAssertionsTests {
 	@Test
 	void assertEqualsChar() {
 		assertEquals('a', 'a');
+		assertEquals('a', 'a', "message");
+		assertEquals('a', 'a', () -> "message");
 	}
 
 	@Test
@@ -262,6 +272,8 @@ class AssertEqualsAssertionsTests {
 	@Test
 	void assertEqualsFloat() {
 		assertEquals(1.0f, 1.0f);
+		assertEquals(1.0f, 1.0f, "message");
+		assertEquals(1.0f, 1.0f, () -> "message");
 		assertEquals(Float.NaN, Float.NaN);
 		assertEquals(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
 		assertEquals(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
@@ -311,6 +323,9 @@ class AssertEqualsAssertionsTests {
 
 	@Test
 	void assertEqualsFloatWithDelta() {
+		assertEquals(0.0f, 0.0f, 0.1f);
+		assertEquals(0.0f, 0.0f, 0.1f, "message");
+		assertEquals(0.0f, 0.0f, 0.1f, () -> "message");
 		assertEquals(0.56f, 0.6f, 0.05f);
 		assertEquals(0.01f, 0.011f, 0.002f);
 		assertEquals(Float.NaN, Float.NaN, 0.5f);
@@ -371,6 +386,8 @@ class AssertEqualsAssertionsTests {
 	@Test
 	void assertEqualsDouble() {
 		assertEquals(1.0d, 1.0d);
+		assertEquals(1.0d, 1.0d, "message");
+		assertEquals(1.0d, 1.0d, () -> "message");
 		assertEquals(Double.NaN, Double.NaN);
 		assertEquals(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
 		assertEquals(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
@@ -419,6 +436,9 @@ class AssertEqualsAssertionsTests {
 
 	@Test
 	void assertEqualsDoubleWithDelta() {
+		assertEquals(0.0d, 0.0d, 0.1d);
+		assertEquals(0.0d, 0.0d, 0.1d, "message");
+		assertEquals(0.0d, 0.0d, 0.1d, () -> "message");
 		assertEquals(0.42d, 0.24d, 0.19d);
 		assertEquals(0.02d, 0.011d, 0.01d);
 		assertEquals(Double.NaN, Double.NaN, 0.2d);
@@ -490,6 +510,8 @@ class AssertEqualsAssertionsTests {
 	void assertEqualsWithSameObject() {
 		Object foo = new Object();
 		assertEquals(foo, foo);
+		assertEquals(foo, foo, "message");
+		assertEquals(foo, foo, () -> "message");
 	}
 
 	@Test

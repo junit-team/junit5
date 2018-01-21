@@ -42,6 +42,10 @@ class AssertTimeoutAssertionsTests {
 		changed.get().set(false);
 		assertTimeout(ofMillis(500), () -> changed.get().set(true));
 		assertTrue(changed.get().get(), "should have executed in the same thread");
+		assertTimeout(ofMillis(500), () -> {
+		}, "message");
+		assertTimeout(ofMillis(500), () -> {
+		}, () -> "message");
 	}
 
 	@Test
@@ -91,6 +95,8 @@ class AssertTimeoutAssertionsTests {
 		});
 		assertTrue(changed.get().get(), "should have executed in the same thread");
 		assertEquals("Tempus Fugit", result);
+		assertEquals("Tempus Fugit", assertTimeout(ofMillis(500), () -> "Tempus Fugit", "message"));
+		assertEquals("Tempus Fugit", assertTimeout(ofMillis(500), () -> "Tempus Fugit", () -> "message"));
 	}
 
 	@Test
@@ -160,6 +166,10 @@ class AssertTimeoutAssertionsTests {
 		changed.get().set(false);
 		assertTimeoutPreemptively(ofMillis(500), () -> changed.get().set(true));
 		assertFalse(changed.get().get(), "should have executed in a different thread");
+		assertTimeoutPreemptively(ofMillis(500), () -> {
+		}, "message");
+		assertTimeoutPreemptively(ofMillis(500), () -> {
+		}, () -> "message");
 	}
 
 	@Test
@@ -215,6 +225,8 @@ class AssertTimeoutAssertionsTests {
 		});
 		assertFalse(changed.get().get(), "should have executed in a different thread");
 		assertEquals("Tempus Fugit", result);
+		assertEquals("Tempus Fugit", assertTimeoutPreemptively(ofMillis(500), () -> "Tempus Fugit", "message"));
+		assertEquals("Tempus Fugit", assertTimeoutPreemptively(ofMillis(500), () -> "Tempus Fugit", () -> "message"));
 	}
 
 	@Test

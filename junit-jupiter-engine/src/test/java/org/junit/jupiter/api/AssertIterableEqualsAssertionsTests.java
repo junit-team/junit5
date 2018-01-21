@@ -34,7 +34,8 @@ class AssertIterableEqualsAssertionsTests {
 	void assertIterableEqualsEqualToSelf() {
 		List<Object> list = listOf("a", 'b', 1, 2);
 		assertIterableEquals(list, list);
-		assertIterableEquals(list, list, () -> "should not fail");
+		assertIterableEquals(list, list, "message");
+		assertIterableEquals(list, list, () -> "message");
 
 		Set<Object> set = setOf("a", 'b', 1, 2);
 		assertIterableEquals(set, set);

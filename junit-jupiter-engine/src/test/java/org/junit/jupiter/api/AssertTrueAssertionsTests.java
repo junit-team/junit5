@@ -26,16 +26,15 @@ class AssertTrueAssertionsTests {
 	@Test
 	void assertTrueWithBooleanTrue() {
 		assertTrue(true);
+		assertTrue(true, "test");
+		assertTrue(true, () -> "test");
 	}
 
 	@Test
 	void assertTrueWithBooleanSupplierTrue() {
 		assertTrue(() -> true);
-	}
-
-	@Test
-	void assertTrueWithBooleanTrueAndString() {
-		assertTrue(true, "test");
+		assertTrue(() -> true, "test");
+		assertTrue(() -> true, () -> "test");
 	}
 
 	@Test

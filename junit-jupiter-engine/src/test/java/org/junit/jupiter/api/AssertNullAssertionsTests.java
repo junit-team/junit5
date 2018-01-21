@@ -28,6 +28,8 @@ class AssertNullAssertionsTests {
 	@Test
 	void assertNullWithNull() {
 		assertNull(null);
+		assertNull(null, "message");
+		assertNull(null, () -> "message");
 	}
 
 	@Test

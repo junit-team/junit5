@@ -40,6 +40,8 @@ class AssertArrayEqualsAssertionsTests {
 	@Test
 	void assertArrayEqualsBooleanArrays() {
 		assertArrayEquals(new boolean[] {}, new boolean[] {});
+		assertArrayEquals(new boolean[] {}, new boolean[] {}, "message");
+		assertArrayEquals(new boolean[] {}, new boolean[] {}, () -> "message");
 		assertArrayEquals(new boolean[] { true }, new boolean[] { true });
 		assertArrayEquals(new boolean[] { false, true, false, false }, new boolean[] { false, true, false, false });
 	}
@@ -179,6 +181,8 @@ class AssertArrayEqualsAssertionsTests {
 	@Test
 	void assertArrayEqualsCharArrays() {
 		assertArrayEquals(new char[] {}, new char[] {});
+		assertArrayEquals(new char[] {}, new char[] {}, "message");
+		assertArrayEquals(new char[] {}, new char[] {}, () -> "message");
 		assertArrayEquals(new char[] { 'a' }, new char[] { 'a' });
 		assertArrayEquals(new char[] { 'j', 'u', 'n', 'i', 't' }, new char[] { 'j', 'u', 'n', 'i', 't' });
 	}
@@ -317,6 +321,8 @@ class AssertArrayEqualsAssertionsTests {
 	@Test
 	void assertArrayEqualsByteArrays() {
 		assertArrayEquals(new byte[] {}, new byte[] {});
+		assertArrayEquals(new byte[] {}, new byte[] {}, "message");
+		assertArrayEquals(new byte[] {}, new byte[] {}, () -> "message");
 		assertArrayEquals(new byte[] { 42 }, new byte[] { 42 });
 		assertArrayEquals(new byte[] { 1, 2, 3, 42 }, new byte[] { 1, 2, 3, 42 });
 	}
@@ -456,6 +462,8 @@ class AssertArrayEqualsAssertionsTests {
 	@Test
 	void assertArrayEqualsShortArrays() {
 		assertArrayEquals(new short[] {}, new short[] {});
+		assertArrayEquals(new short[] {}, new short[] {}, "message");
+		assertArrayEquals(new short[] {}, new short[] {}, () -> "message");
 		assertArrayEquals(new short[] { 999 }, new short[] { 999 });
 		assertArrayEquals(new short[] { 111, 222, 333, 444, 999 }, new short[] { 111, 222, 333, 444, 999 });
 	}
@@ -595,6 +603,8 @@ class AssertArrayEqualsAssertionsTests {
 	@Test
 	void assertArrayEqualsIntArrays() {
 		assertArrayEquals(new int[] {}, new int[] {});
+		assertArrayEquals(new int[] {}, new int[] {}, "message");
+		assertArrayEquals(new int[] {}, new int[] {}, () -> "message");
 		assertArrayEquals(new int[] { Integer.MAX_VALUE }, new int[] { Integer.MAX_VALUE });
 		assertArrayEquals(new int[] { 1, 2, 3, 4, 5, 99_999 }, new int[] { 1, 2, 3, 4, 5, 99_999 });
 	}
@@ -737,6 +747,8 @@ class AssertArrayEqualsAssertionsTests {
 	@Test
 	void assertArrayEqualsLongArrays() {
 		assertArrayEquals(new long[] {}, new long[] {});
+		assertArrayEquals(new long[] {}, new long[] {}, "message");
+		assertArrayEquals(new long[] {}, new long[] {}, () -> "message");
 		assertArrayEquals(new long[] { Long.MAX_VALUE }, new long[] { Long.MAX_VALUE });
 		assertArrayEquals(new long[] { Long.MIN_VALUE, 10, 20, 30 }, new long[] { Long.MIN_VALUE, 10, 20, 30 });
 	}
@@ -877,6 +889,8 @@ class AssertArrayEqualsAssertionsTests {
 	@Test
 	void assertArrayEqualsFloatArrays() {
 		assertArrayEquals(new float[] {}, new float[] {});
+		assertArrayEquals(new float[] {}, new float[] {}, "message");
+		assertArrayEquals(new float[] {}, new float[] {}, () -> "message");
 		assertArrayEquals(new float[] { Float.MAX_VALUE }, new float[] { Float.MAX_VALUE });
 		assertArrayEquals(new float[] { Float.MIN_VALUE, 5F, 5.5F, 1.00F },
 			new float[] { Float.MIN_VALUE, 5F, 5.5F, 1.00F });
@@ -1030,6 +1044,8 @@ class AssertArrayEqualsAssertionsTests {
 	@Test
 	void assertArrayEqualsDeltaFloatArrays() {
 		assertArrayEquals(new float[] {}, new float[] {}, 0.001F);
+		assertArrayEquals(new float[] {}, new float[] {}, 0.001F, "message");
+		assertArrayEquals(new float[] {}, new float[] {}, 0.001F, () -> "message");
 		assertArrayEquals(new float[] { Float.MAX_VALUE }, new float[] { Float.MAX_VALUE }, 0.0001F);
 		assertArrayEquals(new float[] { Float.MIN_VALUE, 2.111F, 2.521F, 1.01F },
 			new float[] { Float.MIN_VALUE, 2.119F, 2.523F, 1.01001F }, 0.01F);
@@ -1216,6 +1232,8 @@ class AssertArrayEqualsAssertionsTests {
 	@Test
 	void assertArrayEqualsDoubleArrays() {
 		assertArrayEquals(new double[] {}, new double[] {});
+		assertArrayEquals(new double[] {}, new double[] {}, "message");
+		assertArrayEquals(new double[] {}, new double[] {}, () -> "message");
 		assertArrayEquals(new double[] { Double.MAX_VALUE }, new double[] { Double.MAX_VALUE });
 		assertArrayEquals(new double[] { Double.MIN_VALUE, 2.1, 5.5, 1.0 },
 			new double[] { Double.MIN_VALUE, 2.1, 5.5, 1.0 });
@@ -1369,6 +1387,8 @@ class AssertArrayEqualsAssertionsTests {
 	@Test
 	void assertArrayEqualsDeltaDoubleArrays() {
 		assertArrayEquals(new double[] {}, new double[] {}, 0.5);
+		assertArrayEquals(new double[] {}, new double[] {}, 0.5, "message");
+		assertArrayEquals(new double[] {}, new double[] {}, 0.5, () -> "message");
 		assertArrayEquals(new double[] { Double.MAX_VALUE, 0.1 }, new double[] { Double.MAX_VALUE, 0.2 }, 0.2);
 		assertArrayEquals(new double[] { Double.MIN_VALUE, 3.1, 1.3, 2.7 },
 			new double[] { Double.MIN_VALUE, 3.4, 1.7, 2.4 }, 0.5);
@@ -1557,8 +1577,8 @@ class AssertArrayEqualsAssertionsTests {
 		assertArrayEquals(array, array);
 
 		assertArrayEquals(new Object[] {}, new Object[] {});
-		assertArrayEquals(new Object[] {}, new Object[] {}, () -> "should not fail");
-
+		assertArrayEquals(new Object[] {}, new Object[] {}, "message");
+		assertArrayEquals(new Object[] {}, new Object[] {}, () -> "message");
 		assertArrayEquals(new Object[] { "abc" }, new Object[] { "abc" });
 		assertArrayEquals(new Object[] { "abc", 1, 2L, 3D }, new Object[] { "abc", 1, 2L, 3D });
 
