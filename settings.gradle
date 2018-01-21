@@ -1,3 +1,14 @@
+// Require Java 9 or higher
+if (Integer.valueOf(JavaVersion.current().getMajorVersion()) < 9) {
+	throw new GradleException("The JUnit 5 build requires Java 9 or higher. " +
+		"Currently executing with Java " + JavaVersion.current().getMajorVersion() + ".")
+}
+
+// Disable Kotlin support on Java 10 or higher
+// Details at https://github.com/junit-team/junit5/issues/1169
+// Blocked by https://youtrack.jetbrains.com/issue/KT-21303
+gradle.ext.kotlinIsSupported = Runtime.version().major() < 10
+
 rootProject.name = 'junit5'
 
 include 'documentation'
@@ -24,8 +35,3 @@ rootProject.children.each { project ->
 	project.buildFileName = "${project.name}.gradle"
 	assert project.buildFile.isFile()
 }
-
-// Disable Kotlin support on Java 10 or higher
-// Details at https://github.com/junit-team/junit5/issues/1169
-// Blocked by https://youtrack.jetbrains.com/issue/KT-21303
-gradle.ext.kotlinIsSupported = Runtime.version().major() < 10
