@@ -597,7 +597,11 @@ vendors.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> Minor bug fixes and various enhancements</p>
+<p><strong>Scope:</strong> <a href="../user-guide/index.html#extensions-registration-programmatic">Programmatic
+extension registration</a> via <code><a href="../api/org/junit/jupiter/api/extension/RegisterExtension.html">@RegisterExtension</a></code>, improved implicit conversion support
+for <code><a href="../api/org/junit/jupiter/params/ParameterizedTest.html">@ParameterizedTest</a></code> arguments, refinements to the <code>ExtensionContext</code> API, support
+for re-running individual dynamic test and test template invocations within an IDE, minor
+bug fixes, and various additional enhancements.</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -672,16 +676,6 @@ limitation of Maven Surefire, instead of <code>methodName(Type)</code> they are 
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
 <h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
@@ -722,16 +716,6 @@ via the <code>aClass</code> or <code>classes</code> element of the <code>selecto
 <code>junitPlatform</code> Gradle plugin, or via the <code>-select-class</code> or <code>-c</code> command-line options
 for the <code>ConsoleLauncher</code> are no longer allowed to be <code>private</code>. This aligns with the
 behavior for test classes discovered via package, class path, and module path scanning.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
 </li>
 </ul>
 </div>
@@ -845,15 +829,15 @@ or selected parameterized, repeated or dynamic tests by selecting their unique I
 subsequent discovery requests.</p>
 </li>
 <li>
-<p>New Kotlin friendly <code>fail</code> methods added as <em>top-level functions</em> in the
+<p>New Kotlin-friendly <code>fail</code> methods added as <em>top-level functions</em> in the
 <code>org.junit.jupiter.api</code> package.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>When calling the original methods from Kotlin the compiler required the generic return
-type of <code>fail</code> to be declared explicitly calling it.
-Eg: <code>fail&lt;Nothing&gt;("Some message")</code>.
-These new methods all return
+<p>When calling the <code>Assertions.fail</code> methods from Kotlin, the compiler required the
+generic return type of <code>fail</code> to be declared explicitly when calling it&#8201;&#8212;&#8201;for
+example, <code>fail&lt;Nothing&gt;("Some message")</code>. These new top-level functions remove this
+requirement by returning
 <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing.html"><code>Nothing</code></a>.</p>
 </li>
 </ul>
@@ -865,35 +849,8 @@ These new methods all return
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.1.0-M2-junit-vintage"><a class="anchor" href="#release-notes-5.1.0-M2-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
+<div class="paragraph">
+<p>No changes.</p>
 </div>
 </div>
 </div>
@@ -915,7 +872,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.1.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.1.0-M1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -983,7 +940,7 @@ Previously, a separate <code>TestPlan</code> was discovered and executed for eac
 <div class="sect2">
 <h3 id="release-notes-5.1.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.1.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -993,7 +950,7 @@ Previously, a separate <code>TestPlan</code> was discovered and executed for eac
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1051,7 +1008,7 @@ Java 9 modules.</p>
 <div class="sect2">
 <h3 id="release-notes-5.1.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.1.0-M1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1113,7 +1070,7 @@ reason: class file for org.apiguardian.api.API$Status not found</pre>
 <div class="sect2">
 <h3 id="release-notes-5.0.3-junit-platform"><a class="anchor" href="#release-notes-5.0.3-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1146,7 +1103,7 @@ meta-annotation within a class hierarchy.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1173,7 +1130,7 @@ for details).</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.3-junit-jupiter"><a class="anchor" href="#release-notes-5.0.3-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1223,7 +1180,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.2-junit-platform"><a class="anchor" href="#release-notes-5.0.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1239,7 +1196,7 @@ framework, are now consistently reported correctly when executed with a non-zero
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1257,7 +1214,7 @@ Surefire feature.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.2-junit-jupiter"><a class="anchor" href="#release-notes-5.0.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1285,7 +1242,7 @@ used as a module on the Java 9 module-path.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1350,7 +1307,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.1-junit-jupiter"><a class="anchor" href="#release-notes-5.0.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1373,7 +1330,7 @@ used without declaring an <code>ExpectedException</code> rule.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.1-junit-vintage"><a class="anchor" href="#release-notes-5.0.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1406,7 +1363,7 @@ online.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-20 10:49:30 EST
+Last updated 2018-01-19 09:41:40 EST
 </div>
 </div>
 </body>
