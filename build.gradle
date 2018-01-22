@@ -99,7 +99,7 @@ ext {
 allprojects { subproj ->
 
 	apply plugin: 'java-library'
-	if (Runtime.version().major() < 10) apply plugin: 'kotlin'
+	if (gradle.ext.kotlinIsSupported) apply plugin: 'kotlin'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'com.diffplug.gradle.spotless'
