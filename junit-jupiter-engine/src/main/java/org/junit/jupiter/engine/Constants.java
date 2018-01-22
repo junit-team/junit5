@@ -85,6 +85,13 @@ public final class Constants {
 	 */
 	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
 
+	/**
+	 * Name of the default {@link javax.script.ScriptEngine}.
+	 *
+	 * @see org.junit.jupiter.engine.extension.EnabledIfCondition
+	 */
+	public static final String DEFAULT_ENABLED_IF_SCRIPT_ENGINE_PROPERTY_NAME = "junit.jupiter.enabledif.scriptengine.default";
+
 	private Constants() {
 		/* no-op */
 	}

@@ -35,6 +35,8 @@ test {
 */
 
 dependencies {
+	runtimeOnly('org.codehaus.groovy:groovy-jsr223:2.4.12')
+
 	testImplementation(project(':junit-jupiter-api'))
 	testImplementation(project(path: ':junit-jupiter-params', configuration: 'shadow'))
 	testImplementation(project(':junit-platform-runner'))
