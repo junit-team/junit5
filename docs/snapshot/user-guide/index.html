@@ -574,6 +574,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#running-tests-console-launcher">4.3. Console Launcher</a></li>
 <li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to run the JUnit Platform</a></li>
 <li><a href="#running-tests-config-params">4.5. Configuration Parameters</a></li>
+<li><a href="#running-tests-tag-expressions">4.6. Tag Expressions</a></li>
 </ul>
 </li>
 <li><a href="#extensions">5. Extension Model</a>
@@ -3578,7 +3579,7 @@ patterns, they are combined using OR semantics.</p>
             <span class="comment">// exclude 'junit-vintage'</span>
         }
         tags {
-            include <span class="string"><span class="delimiter">'</span><span class="content">fast</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">smoke</span><span class="delimiter">'</span></span>
+            include <span class="string"><span class="delimiter">'</span><span class="content">fast</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">smoke &amp; feature-a</span><span class="delimiter">'</span></span>
             <span class="comment">// exclude 'slow', 'ci'</span>
         }
         packages {
@@ -3595,10 +3596,11 @@ patterns, they are combined using OR semantics.</p>
 <div class="paragraph">
 <p>If you supply a <em>Test Engine ID</em> via <code>engines {include &#8230;&#8203;}</code> or <code>engines {exclude &#8230;&#8203;}</code>,
 the JUnit Gradle plugin will only run tests for the desired test engines. Similarly, if
-you supply a <em>tag</em> via <code>tags {include &#8230;&#8203;}</code> or <code>tags {exclude &#8230;&#8203;}</code>, the JUnit Gradle
-plugin will only run tests that are <em>tagged</em> accordingly (e.g., via the <code>@Tag</code> annotation
-for JUnit Jupiter based tests). The same applies to package names that can be included or
-excluded using <code>packages {include &#8230;&#8203;}</code> or <code>packages {exclude &#8230;&#8203;}</code>.</p>
+you supply <em>tags</em> or <a href="#running-tests-tag-expressions"><em>tag expressions</em></a> via
+<code>tags {include &#8230;&#8203;}</code> or <code>tags {exclude &#8230;&#8203;}</code>, the JUnit Gradle plugin will only run tests
+that are <em>tagged</em> accordingly (e.g., via the <code>@Tag</code> annotation for JUnit Jupiter based
+tests). The same applies to package names that can be included or excluded using
+<code>packages {include &#8230;&#8203;}</code> or <code>packages {exclude &#8230;&#8203;}</code>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -3932,15 +3934,16 @@ documentation for Maven Surefire for details.</p>
 <div class="sect4">
 <h5 id="running-tests-build-maven-filter-tags"><a class="anchor" href="#running-tests-build-maven-filter-tags"></a>Filtering by Tags</h5>
 <div class="paragraph">
-<p>You can filter tests by tags using the following configuration properties.</p>
+<p>You can filter tests by tags or <a href="#running-tests-tag-expressions">tag expressions</a> using
+the following configuration properties.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>To include a tag, use either <code>groups</code> or <code>includeTags</code>.</p>
+<p>to include <em>tags</em> or <em>tag expressions</em>, use either <code>groups</code> or <code>includeTags</code>.</p>
 </li>
 <li>
-<p>To exclude a tag, use either <code>excludedGroups</code> or <code>excludeTags</code>.</p>
+<p>to exclude <em>tags</em> or <em>tag expressions</em>, use either <code>excludedGroups</code> or <code>excludeTags</code>.</p>
 </li>
 </ul>
 </div>
@@ -3955,7 +3958,7 @@ documentation for Maven Surefire for details.</p>
             <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
                 <span class="tag">&lt;properties&gt;</span>
-                    <span class="tag">&lt;includeTags&gt;</span>acceptance<span class="tag">&lt;/includeTags&gt;</span>
+                    <span class="tag">&lt;includeTags&gt;</span>acceptance | !feature-a<span class="tag">&lt;/includeTags&gt;</span>
                     <span class="tag">&lt;excludeTags&gt;</span>integration, regression<span class="tag">&lt;/excludeTags&gt;</span>
                 <span class="tag">&lt;/properties&gt;</span>
             <span class="tag">&lt;/configuration&gt;</span>
@@ -4138,10 +4141,14 @@ failed. Otherwise the exit code is <code>0</code>.
                                                  test run. This option can be repeated.
 --exclude-package &lt;String&gt;                     Provide a package to be excluded from the
                                                  test run. This option can be repeated.
--t, --include-tag &lt;String&gt;                     Provide a tag to be included in the test
-                                                 run. This option can be repeated.
--T, --exclude-tag &lt;String&gt;                     Provide a tag to be excluded from the test
-                                                 run. This option can be repeated.
+-t, --include-tag &lt;String&gt;                     Provide a tag or tag expression to include
+                                                 only tests whose tags match. When this
+                                                 option is repeated, all patterns will be
+                                                 combined using OR semantics.
+-T, --exclude-tag &lt;String&gt;                     Provide a tag or tag expression to exclude
+                                                 those tests whose tags match. When this
+                                                 option is repeated, all patterns will be
+                                                 combined using OR semantics.
 -e, --include-engine &lt;String&gt;                  Provide the ID of an engine to be included
                                                  in the test run. This option can be
                                                  repeated.
@@ -4400,6 +4407,85 @@ those supplied via the configuration file.
 </tr>
 </table>
 </div>
+</div>
+<div class="sect2">
+<h3 id="running-tests-tag-expressions"><a class="anchor" href="#running-tests-tag-expressions"></a>4.6. Tag Expressions</h3>
+<div class="paragraph">
+<p>Tag expressions are boolean expressions with the operators <code>!</code>, <code>&amp;</code> and <code>|</code>. In addition,
+<code>(</code> and <code>)</code> can be used to adjust for operator precedence.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Operators (in descending order of precedence)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Operator</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+<th class="tableblock halign-left valign-top">Associativity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>!</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">right</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&amp;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">and</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">left</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>|</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">or</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">left</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>If you are tagging your tests across multiple dimensions, tag expressions help you to
+select which tests to execute. Tagging by test type (e.g. <em>micro</em>, <em>integration</em>,
+<em>end-to-end</em>) and feature (e.g. <strong>foo</strong>, <strong>bar</strong>, <strong>baz</strong>) the following tag expressions can be
+useful.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tag Expression</th>
+<th class="tableblock halign-left valign-top">Selection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>foo</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bar | baz</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>bar</strong> plus all tests for <strong>baz</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bar &amp; baz</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for the interaction between <strong>bar</strong> and <strong>baz</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo &amp; !end-to-end</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>foo</strong>, but not the <em>end-to-end</em> tests</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(micro | integration) &amp; (foo | baz)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all <em>micro</em> or <em>integration</em> tests for <strong>foo</strong> or <strong>baz</strong></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -5772,7 +5858,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-23 15:42:19 EST
+Last updated 2018-01-23 15:52:19 EST
 </div>
 </div>
 </body>

@@ -31,6 +31,7 @@ org.junit.platform.engine.support.hierarchical
 org.junit.platform.launcher
 org.junit.platform.launcher.core
 org.junit.platform.launcher.listeners
+org.junit.platform.launcher.tagexpression
 org.junit.platform.runner
 org.junit.platform.suite.api
 org.junit.platform.surefire.provider
