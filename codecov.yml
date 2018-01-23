@@ -3,3 +3,4 @@ coverage:
     project:
       default:
         threshold: 1
+    patch: off
