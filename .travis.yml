@@ -12,17 +12,17 @@ matrix:
   include:
 # Java 9 (openjdk-9.0.1 fails with java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty)
     - jdk: oraclejdk9
-      env: JDK_RELEASE='JDK 9'
+      env: JDK_RELEASE='JDK 9' EXTRA_GRADLE_ARGS='-PenableJaCoCo'
       install: echo "Don't let Travis CI execute './gradlew assemble' by default"
 # Java 10
-    - env: JDK_RELEASE='JDK 10 Early-Access'
+    - env: JDK_RELEASE='JDK 10 Early-Access' EXTRA_GRADLE_ARGS=''
       install: . ./src/install/install-jdk-10.sh
 
 script:
 # Display Gradle, Groovy, JVM and other versions
   - ./gradlew -version
 # Build JUnit 5
-  - ./gradlew build --scan --stacktrace -Dkotlin.compiler.execution.strategy="in-process"
+  - ./gradlew build $EXTRA_GRADLE_ARGS --scan --stacktrace -Dkotlin.compiler.execution.strategy="in-process"
 
 # Do not store unnecessary files from Gradle dependency cache
 before_cache:
@@ -37,5 +37,5 @@ cache:
 
 # Run clover report and send report to codecov after build success for JDK 9 builds
 after_success:
-  - test "$JDK_RELEASE" = "JDK 9" && ./gradlew -PenableClover clean cloverXmlReport || true
+  - test "$JDK_RELEASE" = "JDK 9" && ./gradlew -PenableJaCoCo jacocoRootReport || true
   - test "$JDK_RELEASE" = "JDK 9" && bash <(curl -s https://codecov.io/bash) || true
