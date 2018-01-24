@@ -199,6 +199,11 @@ class AssertTimeoutAssertionsTests {
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 50 ms");
 	}
 
+	@Test
+	void assertTimeoutPreemptivelyWithMessageSupplierForExecutableThatCompletesBeforeTheTimeout() {
+		assertTimeoutPreemptively(ofMillis(100), () -> Thread.sleep(50), () -> "Tempus" + " " + "Fugit");
+	}
+
 	// -- supplier - preemptively ---
 
 	@Test

@@ -30,11 +30,13 @@ class AssertNotNull {
 	///CLOVER:ON
 
 	static void assertNotNull(Object actual) {
-		assertNotNull(actual, () -> null);
+		assertNotNull(actual, (String) null);
 	}
 
 	static void assertNotNull(Object actual, String message) {
-		assertNotNull(actual, () -> message);
+		if (actual == null) {
+			failNull(message);
+		}
 	}
 
 	static void assertNotNull(Object actual, Supplier<String> messageSupplier) {

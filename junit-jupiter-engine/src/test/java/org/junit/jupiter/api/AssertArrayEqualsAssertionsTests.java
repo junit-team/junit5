@@ -1557,6 +1557,8 @@ class AssertArrayEqualsAssertionsTests {
 		assertArrayEquals(array, array);
 
 		assertArrayEquals(new Object[] {}, new Object[] {});
+		assertArrayEquals(new Object[] {}, new Object[] {}, () -> "should not fail");
+
 		assertArrayEquals(new Object[] { "abc" }, new Object[] { "abc" });
 		assertArrayEquals(new Object[] { "abc", 1, 2L, 3D }, new Object[] { "abc", 1, 2L, 3D });
 

@@ -31,11 +31,13 @@ class AssertNotSame {
 	///CLOVER:ON
 
 	static void assertNotSame(Object unexpected, Object actual) {
-		assertNotSame(unexpected, actual, () -> null);
+		assertNotSame(unexpected, actual, (String) null);
 	}
 
 	static void assertNotSame(Object unexpected, Object actual, String message) {
-		assertNotSame(unexpected, actual, () -> message);
+		if (unexpected == actual) {
+			failSame(actual, message);
+		}
 	}
 
 	static void assertNotSame(Object unexpected, Object actual, Supplier<String> messageSupplier) {

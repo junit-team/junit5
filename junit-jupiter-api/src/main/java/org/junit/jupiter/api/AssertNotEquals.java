@@ -32,11 +32,14 @@ class AssertNotEquals {
 	///CLOVER:ON
 
 	static void assertNotEquals(Object unexpected, Object actual) {
-		assertNotEquals(unexpected, actual, () -> null);
+		assertNotEquals(unexpected, actual, (String) null);
 	}
 
 	static void assertNotEquals(Object unexpected, Object actual, String message) {
-		assertNotEquals(unexpected, actual, () -> message);
+		if (objectsAreEqual(unexpected, actual)) {
+			failEqual(actual, message);
+		}
+
 	}
 
 	static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {

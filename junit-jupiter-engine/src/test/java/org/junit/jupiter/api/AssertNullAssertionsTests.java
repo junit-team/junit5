@@ -31,6 +31,11 @@ class AssertNullAssertionsTests {
 	}
 
 	@Test
+	void assertNullWithNullAndMessageSupplier() {
+		assertNull(null, () -> "test");
+	}
+
+	@Test
 	void assertNullWithNonNullObject() {
 		try {
 			assertNull("foo");

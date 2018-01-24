@@ -31,6 +31,11 @@ class AssertNotSameAssertionsTests {
 	}
 
 	@Test
+	void assertNotSameWithDifferentObjectsAndMessageSupplier() {
+		assertNotSame(new Object(), new Object(), () -> "should not fail");
+	}
+
+	@Test
 	void assertNotSameWithObjectVsNull() {
 		assertNotSame(new Object(), null);
 	}

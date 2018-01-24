@@ -41,6 +41,11 @@ class AssertNotEqualsAssertionsTests {
 	}
 
 	@Test
+	void assertNotEqualsWithNullVsObjectAndMessageSupplier() {
+		assertNotEquals(null, "foo", () -> "test");
+	}
+
+	@Test
 	void assertNotEqualsWithEquivalentStringsAndMessage() {
 		try {
 			assertNotEquals(new String("foo"), new String("foo"), "test");
