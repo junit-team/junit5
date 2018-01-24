@@ -32,11 +32,13 @@ class AssertTrue {
 	///CLOVER:ON
 
 	static void assertTrue(boolean condition) {
-		assertTrue(() -> condition, () -> null);
+		assertTrue(condition, () -> null);
 	}
 
 	static void assertTrue(boolean condition, Supplier<String> messageSupplier) {
-		assertTrue(() -> condition, messageSupplier);
+		if (!condition) {
+			fail(format(true, false, nullSafeGet(messageSupplier)));
+		}
 	}
 
 	static void assertTrue(BooleanSupplier booleanSupplier) {
@@ -48,7 +50,7 @@ class AssertTrue {
 	}
 
 	static void assertTrue(boolean condition, String message) {
-		assertTrue(() -> condition, () -> message);
+		assertTrue(condition, () -> message);
 	}
 
 	static void assertTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
