@@ -23,6 +23,8 @@ script:
   - ./gradlew -version
 # Build JUnit 5
   - ./gradlew build --scan --stacktrace -Dkotlin.compiler.execution.strategy="in-process"
+# Run benchmarks
+  - ./gradlew :platform-tests:jmh
 
 # Do not store unnecessary files from Gradle dependency cache
 before_cache:
