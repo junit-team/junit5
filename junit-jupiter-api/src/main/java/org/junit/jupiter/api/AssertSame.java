@@ -24,18 +24,20 @@ import java.util.function.Supplier;
  */
 class AssertSame {
 
-	///CLOVER:OFF
+	/// CLOVER:OFF
 	private AssertSame() {
 		/* no-op */
 	}
-	///CLOVER:ON
+	/// CLOVER:ON
 
 	static void assertSame(Object expected, Object actual) {
-		assertSame(expected, actual, () -> null);
+		assertSame(expected, actual, (String) null);
 	}
 
 	static void assertSame(Object expected, Object actual, String message) {
-		assertSame(expected, actual, () -> message);
+		if (expected != actual) {
+			failNotSame(expected, actual, message);
+		}
 	}
 
 	static void assertSame(Object expected, Object actual, Supplier<String> messageSupplier) {

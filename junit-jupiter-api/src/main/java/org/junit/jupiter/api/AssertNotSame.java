@@ -17,25 +17,27 @@ import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import java.util.function.Supplier;
 
 /**
- * {@code AssertNotSame} is a collection of utility methods that support asserting
- * two objects are not the same.
+ * {@code AssertNotSame} is a collection of utility methods that support
+ * asserting two objects are not the same.
  *
  * @since 5.0
  */
 class AssertNotSame {
 
-	///CLOVER:OFF
+	/// CLOVER:OFF
 	private AssertNotSame() {
 		/* no-op */
 	}
-	///CLOVER:ON
+	/// CLOVER:ON
 
 	static void assertNotSame(Object unexpected, Object actual) {
-		assertNotSame(unexpected, actual, () -> null);
+		assertNotSame(unexpected, actual, (String) null);
 	}
 
 	static void assertNotSame(Object unexpected, Object actual, String message) {
-		assertNotSame(unexpected, actual, () -> message);
+		if (unexpected == actual) {
+			failSame(actual, message);
+		}
 	}
 
 	static void assertNotSame(Object unexpected, Object actual, Supplier<String> messageSupplier) {

@@ -26,14 +26,14 @@ import org.opentest4j.AssertionFailedError;
  */
 class AssertionUtils {
 
-	///CLOVER:OFF
+	/// CLOVER:OFF
 	private AssertionUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
+	/// CLOVER:ON
 
 	static void fail(String message) {
-		fail(() -> message);
+		throw new AssertionFailedError(message);
 	}
 
 	static void fail(String message, Throwable cause) {
@@ -52,8 +52,11 @@ class AssertionUtils {
 		throw new AssertionFailedError(message, expected, actual);
 	}
 
-	static String nullSafeGet(Supplier<String> messageSupplier) {
-		return (messageSupplier != null ? messageSupplier.get() : null);
+	static String nullSafeGet(Object messageContainer) {
+		return (messageContainer != null
+				? (messageContainer instanceof Supplier ? nullSafeGet(((Supplier<?>) messageContainer).get())
+						: messageContainer.toString())
+				: null);
 	}
 
 	static String buildPrefix(String message) {
@@ -64,8 +67,7 @@ class AssertionUtils {
 		try {
 			String canonicalName = clazz.getCanonicalName();
 			return (canonicalName != null ? canonicalName : clazz.getName());
-		}
-		catch (Throwable t) {
+		} catch (Throwable t) {
 			return clazz.getName();
 		}
 	}
@@ -79,14 +81,15 @@ class AssertionUtils {
 		String actualString = toString(actual);
 		if (expectedString.equals(actualString)) {
 			return String.format("expected: %s but was: %s", formatClassAndValue(expected, expectedString),
-				formatClassAndValue(actual, actualString));
+					formatClassAndValue(actual, actualString));
 		}
 		return String.format("expected: <%s> but was: <%s>", expectedString, actualString);
 	}
 
 	private static String formatClassAndValue(Object value, String valueString) {
 		String classAndHash = getClassName(value) + toHash(value);
-		// if it's a class, there's no need to repeat the class name contained in the valueString.
+		// if it's a class, there's no need to repeat the class name contained in the
+		// valueString.
 		return (value instanceof Class ? "<" + classAndHash + ">" : classAndHash + "<" + valueString + ">");
 	}
 

@@ -25,14 +25,20 @@ import java.util.function.Supplier;
  */
 class AssertTrue {
 
-	///CLOVER:OFF
+	/// CLOVER:OFF
 	private AssertTrue() {
 		/* no-op */
 	}
-	///CLOVER:ON
+	/// CLOVER:ON
 
 	static void assertTrue(boolean condition) {
-		assertTrue(condition, () -> null);
+		assertTrue(condition, (String) null);
+	}
+
+	static void assertTrue(boolean condition, String message) {
+		if (!condition) {
+			fail(format(true, false, message));
+		}
 	}
 
 	static void assertTrue(boolean condition, Supplier<String> messageSupplier) {
@@ -42,15 +48,13 @@ class AssertTrue {
 	}
 
 	static void assertTrue(BooleanSupplier booleanSupplier) {
-		assertTrue(booleanSupplier, () -> null);
+		assertTrue(booleanSupplier, (String) null);
 	}
 
 	static void assertTrue(BooleanSupplier booleanSupplier, String message) {
-		assertTrue(booleanSupplier, () -> message);
-	}
-
-	static void assertTrue(boolean condition, String message) {
-		assertTrue(condition, () -> message);
+		if (!booleanSupplier.getAsBoolean()) {
+			fail(format(true, false, message));
+		}
 	}
 
 	static void assertTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {

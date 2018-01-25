@@ -21,46 +21,49 @@ import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.AssertionFailedError;
 
 /**
- * {@code AssertThrows} is a collection of utility methods that support asserting
- * an exception of an expected type is thrown.
+ * {@code AssertThrows} is a collection of utility methods that support
+ * asserting an exception of an expected type is thrown.
  *
  * @since 5.0
  */
 class AssertThrows {
 
-	///CLOVER:OFF
+	/// CLOVER:OFF
 	private AssertThrows() {
 		/* no-op */
 	}
-	///CLOVER:ON
+	/// CLOVER:ON
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable) {
-		return assertThrows(expectedType, executable, () -> null);
+		return assertThrows(expectedType, executable, (Object) null);
 	}
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
-		return assertThrows(expectedType, executable, () -> message);
+		return assertThrows(expectedType, executable, (Object) message);
+	}
+
+	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
+			Supplier<String> messageSupplier) {
+		return assertThrows(expectedType, executable, (Object) messageSupplier);
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
-			Supplier<String> messageSupplier) {
+	private static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
+			Object messageContainer) {
 
 		try {
 			executable.execute();
-		}
-		catch (Throwable actualException) {
+		} catch (Throwable actualException) {
 			if (expectedType.isInstance(actualException)) {
 				return (T) actualException;
-			}
-			else {
-				String message = buildPrefix(nullSafeGet(messageSupplier))
+			} else {
+				String message = buildPrefix(nullSafeGet(messageContainer))
 						+ format(expectedType, actualException.getClass(), "Unexpected exception type thrown");
 				throw new AssertionFailedError(message, actualException);
 			}
 		}
 
-		String message = buildPrefix(nullSafeGet(messageSupplier))
+		String message = buildPrefix(nullSafeGet(messageContainer))
 				+ String.format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType));
 		throw new AssertionFailedError(message);
 	}

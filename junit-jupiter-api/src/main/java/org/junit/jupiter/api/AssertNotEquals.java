@@ -18,25 +18,28 @@ import static org.junit.jupiter.api.AssertionUtils.objectsAreEqual;
 import java.util.function.Supplier;
 
 /**
- * {@code AssertNotEquals} is a collection of utility methods that support asserting
- * inequality on objects in tests.
+ * {@code AssertNotEquals} is a collection of utility methods that support
+ * asserting inequality on objects in tests.
  *
  * @since 5.0
  */
 class AssertNotEquals {
 
-	///CLOVER:OFF
+	/// CLOVER:OFF
 	private AssertNotEquals() {
 		/* no-op */
 	}
-	///CLOVER:ON
+	/// CLOVER:ON
 
 	static void assertNotEquals(Object unexpected, Object actual) {
-		assertNotEquals(unexpected, actual, () -> null);
+		assertNotEquals(unexpected, actual, (String) null);
 	}
 
 	static void assertNotEquals(Object unexpected, Object actual, String message) {
-		assertNotEquals(unexpected, actual, () -> message);
+		if (objectsAreEqual(unexpected, actual)) {
+			failEqual(actual, message);
+		}
+
 	}
 
 	static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {

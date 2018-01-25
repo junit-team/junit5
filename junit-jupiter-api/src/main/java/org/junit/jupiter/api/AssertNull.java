@@ -24,18 +24,20 @@ import java.util.function.Supplier;
  */
 class AssertNull {
 
-	///CLOVER:OFF
+	/// CLOVER:OFF
 	private AssertNull() {
 		/* no-op */
 	}
-	///CLOVER:ON
+	/// CLOVER:ON
 
 	static void assertNull(Object actual) {
-		assertNull(actual, () -> null);
+		assertNull(actual, (String) null);
 	}
 
 	static void assertNull(Object actual, String message) {
-		assertNull(actual, () -> message);
+		if (actual != null) {
+			failNotNull(actual, message);
+		}
 	}
 
 	static void assertNull(Object actual, Supplier<String> messageSupplier) {
