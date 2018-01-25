@@ -147,7 +147,8 @@ _@API Guardian_ JAR _mandatory_ again.
    example, `fail<Nothing>("Some message")`. These new top-level functions remove this
    requirement by returning
    https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing.html[`Nothing`].
-
+* New `@EnabledIf` execution condition added. Supply a script, default language is
+  `JavaScript`, that controls whether the container or test is executed.
 
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage
