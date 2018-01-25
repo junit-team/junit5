@@ -10,23 +10,23 @@
 
 package org.junit.vintage.engine.samples.junit4;
 
+import org.junit.runner.notification.RunNotifier;
+
 /**
- * @since 4.12
+ * @since 5.1
  */
-public class Categories {
+public class NotFilterableRunner extends ConfigurableRunner {
 
-	public interface Plain {
+	public NotFilterableRunner(Class<?> testClass) {
+		super(testClass);
 	}
 
-	public interface Failing {
+	@Override
+	public void run(RunNotifier notifier) {
+		getDescription().getChildren().forEach(child -> {
+			notifier.fireTestStarted(child);
+			notifier.fireTestFinished(child);
+		});
 	}
 
-	public interface Skipped {
-	}
-
-	public interface SkippedWithReason extends Skipped {
-	}
-
-	public interface Successful {
-	}
 }

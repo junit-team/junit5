@@ -152,4 +152,10 @@ _@API Guardian_ JAR _mandatory_ again.
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage
 
-No changes.
+==== Bug Fixes
+
+* When using a tag filter to include/exclude a tag that represents a JUnit 4 category,
+  e.g. `"com.example.Integration"`, the Vintage Engine no longer mistakenly executes all
+  test methods of test classes that contain at least one included test method, e.g. one
+  that is annotated with `@Category(com.example.Integration.class)`, regardless whether
+  they belong to the same category.

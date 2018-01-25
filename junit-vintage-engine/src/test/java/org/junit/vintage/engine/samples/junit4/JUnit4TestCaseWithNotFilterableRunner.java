@@ -10,13 +10,15 @@
 
 package org.junit.vintage.engine.samples.junit4;
 
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.vintage.engine.samples.junit4.ConfigurableRunner.ChildCount;
 
 /**
- * @since 4.12
+ * @since 5.1
  */
-@RunWith(ExceptionThrowingRunner.class)
-@ChildCount(1)
-public class JUnit4SuiteWithExceptionThrowingRunner {
+@RunWith(NotFilterableRunner.class)
+@ChildCount(2)
+@Category(Categories.Successful.class)
+public class JUnit4TestCaseWithNotFilterableRunner {
 }

@@ -143,6 +143,8 @@ class VintageTestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(nestedClass), started()), //
+			event(test("successfulTest"), started()), //
+			event(test("successfulTest"), finishedSuccessfully()), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"),
 				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //

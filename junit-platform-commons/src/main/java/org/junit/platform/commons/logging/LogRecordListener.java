@@ -98,4 +98,12 @@ public class LogRecordListener {
 		return stream(clazz).filter(logRecord -> logRecord.getLevel() == level);
 	}
 
+	/**
+	 * Clear all existing {@link LogRecord log records} that have been
+	 * {@linkplain #logRecordSubmitted submitted} to this listener.
+	 */
+	public void clear() {
+		this.logRecords.clear();
+	}
+
 }

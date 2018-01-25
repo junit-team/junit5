@@ -16,6 +16,7 @@ import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  * @since 4.12
@@ -29,6 +30,7 @@ public class PlainJUnit4TestCaseWithTwoTestMethods {
 	}
 
 	@Test
+	@Category(Categories.Successful.class)
 	public void successfulTest() {
 		assertEquals(3, 1 + 2);
 	}

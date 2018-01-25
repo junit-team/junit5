@@ -18,9 +18,11 @@ import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apiguardian.api.API;
@@ -76,6 +78,37 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 		addTagsFromParent(tags);
 		addCategoriesAsTags(tags);
 		return tags;
+	}
+
+	@Override
+	public void removeFromHierarchy() {
+		if (canBeRemovedFromHierarchy()) {
+			super.removeFromHierarchy();
+		}
+	}
+
+	protected boolean canBeRemovedFromHierarchy() {
+		return tryToExcludeFromRunner(this.description);
+	}
+
+	protected boolean tryToExcludeFromRunner(Description description) {
+		// @formatter:off
+		return getParent().map(VintageTestDescriptor.class::cast)
+				.map(parent -> parent.tryToExcludeFromRunner(description))
+				.orElse(false);
+		// @formatter:on
+	}
+
+	void pruneDescriptorsForObsoleteDescriptions(List<Description> newSiblingDescriptions) {
+		Optional<Description> newDescription = newSiblingDescriptions.stream().filter(isEqual(description)).findAny();
+		if (newDescription.isPresent()) {
+			List<Description> newChildren = newDescription.get().getChildren();
+			new ArrayList<>(children).stream().map(VintageTestDescriptor.class::cast).forEach(
+				childDescriptor -> childDescriptor.pruneDescriptorsForObsoleteDescriptions(newChildren));
+		}
+		else {
+			super.removeFromHierarchy();
+		}
 	}
 
 	private void addTagsFromParent(Set<TestTag> tags) {

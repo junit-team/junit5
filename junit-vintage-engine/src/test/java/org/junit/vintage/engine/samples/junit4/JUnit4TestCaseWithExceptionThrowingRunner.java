@@ -11,7 +11,7 @@
 package org.junit.vintage.engine.samples.junit4;
 
 import org.junit.runner.RunWith;
-import org.junit.vintage.engine.samples.junit4.ExceptionThrowingRunner.ChildCount;
+import org.junit.vintage.engine.samples.junit4.ConfigurableRunner.ChildCount;
 
 /**
  * @since 4.12
