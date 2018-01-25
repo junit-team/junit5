@@ -67,7 +67,8 @@ class AssertionUtils {
 		try {
 			String canonicalName = clazz.getCanonicalName();
 			return (canonicalName != null ? canonicalName : clazz.getName());
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			return clazz.getName();
 		}
 	}
@@ -81,7 +82,7 @@ class AssertionUtils {
 		String actualString = toString(actual);
 		if (expectedString.equals(actualString)) {
 			return String.format("expected: %s but was: %s", formatClassAndValue(expected, expectedString),
-					formatClassAndValue(actual, actualString));
+				formatClassAndValue(actual, actualString));
 		}
 		return String.format("expected: <%s> but was: <%s>", expectedString, actualString);
 	}

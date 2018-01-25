@@ -82,7 +82,8 @@ class AssertIterableEquals {
 			Object messageContainer) {
 		if (expected instanceof Iterable && actual instanceof Iterable) {
 			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageContainer);
-		} else if (!Objects.equals(expected, actual)) {
+		}
+		else if (!Objects.equals(expected, actual)) {
 			assertIterablesNotNull(expected, actual, indexes, messageContainer);
 			failIterablesNotEqual(expected, actual, indexes, messageContainer);
 		}

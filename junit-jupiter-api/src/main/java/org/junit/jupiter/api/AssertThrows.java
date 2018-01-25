@@ -53,10 +53,12 @@ class AssertThrows {
 
 		try {
 			executable.execute();
-		} catch (Throwable actualException) {
+		}
+		catch (Throwable actualException) {
 			if (expectedType.isInstance(actualException)) {
 				return (T) actualException;
-			} else {
+			}
+			else {
 				String message = buildPrefix(nullSafeGet(messageContainer))
 						+ format(expectedType, actualException.getClass(), "Unexpected exception type thrown");
 				throw new AssertionFailedError(message, actualException);

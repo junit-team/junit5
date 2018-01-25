@@ -71,7 +71,7 @@ class AssertTimeout {
 	static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
 		return assertTimeout(timeout, supplier, (Object) messageSupplier);
 	}
-	
+
 	private static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, Object messageContainer) {
 		long timeoutInMillis = timeout.toMillis();
 		long start = System.currentTimeMillis();

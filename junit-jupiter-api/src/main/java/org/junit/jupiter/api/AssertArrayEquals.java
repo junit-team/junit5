@@ -358,28 +358,39 @@ class AssertArrayEquals {
 
 		if (expected instanceof Object[] && actual instanceof Object[]) {
 			assertArrayEquals((Object[]) expected, (Object[]) actual, indexes, messageContainer);
-		} else if (expected instanceof byte[] && actual instanceof byte[]) {
+		}
+		else if (expected instanceof byte[] && actual instanceof byte[]) {
 			assertArrayEquals((byte[]) expected, (byte[]) actual, indexes, messageContainer);
-		} else if (expected instanceof short[] && actual instanceof short[]) {
+		}
+		else if (expected instanceof short[] && actual instanceof short[]) {
 			assertArrayEquals((short[]) expected, (short[]) actual, indexes, messageContainer);
-		} else if (expected instanceof int[] && actual instanceof int[]) {
+		}
+		else if (expected instanceof int[] && actual instanceof int[]) {
 			assertArrayEquals((int[]) expected, (int[]) actual, indexes, messageContainer);
-		} else if (expected instanceof long[] && actual instanceof long[]) {
+		}
+		else if (expected instanceof long[] && actual instanceof long[]) {
 			assertArrayEquals((long[]) expected, (long[]) actual, indexes, messageContainer);
-		} else if (expected instanceof char[] && actual instanceof char[]) {
+		}
+		else if (expected instanceof char[] && actual instanceof char[]) {
 			assertArrayEquals((char[]) expected, (char[]) actual, indexes, messageContainer);
-		} else if (expected instanceof float[] && actual instanceof float[]) {
+		}
+		else if (expected instanceof float[] && actual instanceof float[]) {
 			assertArrayEquals((float[]) expected, (float[]) actual, indexes, messageContainer);
-		} else if (expected instanceof double[] && actual instanceof double[]) {
+		}
+		else if (expected instanceof double[] && actual instanceof double[]) {
 			assertArrayEquals((double[]) expected, (double[]) actual, indexes, messageContainer);
-		} else if (expected instanceof boolean[] && actual instanceof boolean[]) {
+		}
+		else if (expected instanceof boolean[] && actual instanceof boolean[]) {
 			assertArrayEquals((boolean[]) expected, (boolean[]) actual, indexes, messageContainer);
-		} else if (!Objects.equals(expected, actual)) {
+		}
+		else if (!Objects.equals(expected, actual)) {
 			if (expected == null && isArray(actual)) {
 				failExpectedArrayIsNull(indexes, messageContainer);
-			} else if (isArray(expected) && actual == null) {
+			}
+			else if (isArray(expected) && actual == null) {
 				failActualArrayIsNull(indexes, messageContainer);
-			} else {
+			}
+			else {
 				failArraysNotEqual(expected, actual, indexes, messageContainer);
 			}
 		}

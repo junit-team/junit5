@@ -108,7 +108,7 @@ public final class Assumptions {
 	 * @throws TestAbortedException if the assumption is not {@code true}
 	 */
 	public static void assumeTrue(boolean assumption, String message) throws TestAbortedException {
-		
+
 		if (!assumption) {
 			throwTestAbortedException(message);
 		}
