@@ -51,19 +51,19 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
 	// --- http://openjdk.java.net/projects/code-tools/jmh/ -----------------------
-	jmh('org.openjdk.jmh:jmh-core:1.20')
-	jmh('org.openjdk.jmh:jmh-generator-annprocess:1.20')
+	jmh("org.openjdk.jmh:jmh-core:${jmhVersion}")
+	jmh("org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}")
 	jmh(project(':junit-jupiter-api'))
+	jmh("junit:junit:${junit4Version}")
 }
 
 jmh {
-	jmhVersion = '1.20'
+	jmhVersion = "${jmhVersion}"
 
 	duplicateClassesStrategy = 'warn'
-	fork = 0 //instead of fork = 1 (Too long command line on Windows...)
-	iterations = 5
-	warmupIterations = 1
-	warmupBatchSize = 1
+	fork = 0 // Too long command line on Windows...
+	// warmupIterations = 1
+	// iterations = 5
 }
 
 checkstyleJmh { // use same style rules as defined for tests

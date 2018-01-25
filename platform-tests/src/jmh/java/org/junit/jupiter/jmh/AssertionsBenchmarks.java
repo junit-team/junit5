@@ -10,19 +10,35 @@
 
 package org.junit.jupiter.jmh;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.openjdk.jmh.annotations.Benchmark;
 
 public class AssertionsBenchmarks {
 
 	@Benchmark
-	public void assertTrueWithSimpleStringMessage() {
+	public void junit4_assertTrue_String_boolean() {
+		Assert.assertTrue("message", true);
+	}
+
+	@Benchmark
+	public void junit5_assertTrue_boolean_String() {
 		Assertions.assertTrue(true, "message");
 	}
 
 	@Benchmark
-	public void assertTrueWithSimpleStringMessageSupplier() {
+	public void junit5_assertTrue_boolean_Supplier() {
 		Assertions.assertTrue(true, () -> "message");
+	}
+
+	@Benchmark
+	public void junit5_assertTrue_Supplier_String() {
+		Assertions.assertTrue(() -> true, "message");
+	}
+
+	@Benchmark
+	public void junit5_assertTrue_Supplier_Supplier() {
+		Assertions.assertTrue(() -> true, () -> "message");
 	}
 
 }
