@@ -6,8 +6,8 @@
 *Scope:* <<../user-guide/index.adoc#extensions-registration-programmatic, Programmatic
 extension registration>> via `{RegisterExtension}`, improved implicit conversion support
 for `{ParameterizedTest}` arguments, refinements to the `ExtensionContext` API, support
-for re-running individual dynamic test and test template invocations within an IDE, minor
-bug fixes, and various additional enhancements.
+for re-running individual dynamic test and test template invocations within an IDE, tag
+expression language, minor bug fixes, and various additional enhancements.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/18?closed=1+[5.1 M2] milestone page in the JUnit repository
@@ -77,7 +77,8 @@ _@API Guardian_ JAR _mandatory_ again.
   for details).
 * Tests can now be included or excluded based on their tags using a
   <<../user-guide/index.adoc#running-tests-tag-expressions, tag expression language>> when
-  executed using the `ConsoleLauncher`, Gradle plugin, or Maven Surefire provider.
+  executed using the `Launcher`, `ConsoleLauncher`, Gradle plugin, or Maven Surefire
+  provider.
 
 
 [[release-notes-5.1.0-M2-junit-jupiter]]

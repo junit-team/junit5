@@ -1,3 +1,7 @@
+plugins {
+	id "me.champeau.gradle.jmh" version "0.4.5"
+}
+
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 junitPlatform {
@@ -45,4 +49,23 @@ dependencies {
 	testRuntimeOnly(project(':junit-platform-surefire-provider')) // included for @API report
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+
+	// --- http://openjdk.java.net/projects/code-tools/jmh/ -----------------------
+	jmh("org.openjdk.jmh:jmh-core:${jmhVersion}")
+	jmh("org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}")
+	jmh(project(':junit-jupiter-api'))
+	jmh("junit:junit:${junit4Version}")
+}
+
+jmh {
+	jmhVersion = "${jmhVersion}"
+
+	duplicateClassesStrategy = 'warn'
+	fork = 0 // Too long command line on Windows...
+	// warmupIterations = 1
+	// iterations = 5
+}
+
+checkstyleJmh { // use same style rules as defined for tests
+	configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
 }
