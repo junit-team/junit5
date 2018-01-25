@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -96,7 +97,7 @@ class TestRun {
 		}
 		// @formatter:off
 		return descriptors.stream()
-				.filter(testDescriptor -> description == testDescriptor.getDescription())
+				.filter(testDescriptor -> Objects.equals(description, testDescriptor.getDescription()))
 				.findFirst();
 		// @formatter:on
 	}

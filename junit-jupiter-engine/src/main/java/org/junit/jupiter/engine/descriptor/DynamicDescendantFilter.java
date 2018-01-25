@@ -44,6 +44,7 @@ public class DynamicDescendantFilter implements Predicate<UniqueId> {
 		this.allowed.clear();
 	}
 
+	@Override
 	public boolean test(UniqueId uniqueId) {
 		return allowed.isEmpty() || allowed.stream().anyMatch(allowedUniqueId -> isAllowed(uniqueId, allowedUniqueId));
 	}

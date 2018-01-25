@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -91,8 +90,10 @@ class UniqueIdFormat implements Serializable {
 	 * @throws JUnitException if the string cannot be parsed
 	 */
 	UniqueId parse(String source) throws JUnitException {
-		String[] parts = source.split(String.valueOf(this.segmentDelimiter));
-		List<Segment> segments = Arrays.stream(parts).map(this::createSegment).collect(toList());
+		List<Segment> segments = Pattern.compile(String.valueOf(this.segmentDelimiter)) //
+				.splitAsStream(source) //
+				.map(this::createSegment) //
+				.collect(toList());
 		return new UniqueId(this, segments);
 	}
 

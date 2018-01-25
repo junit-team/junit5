@@ -144,7 +144,7 @@ class TreePrinter {
 	}
 
 	private void printMessage(Color color, String indent, String message) {
-		String[] lines = message.split("\\R");
+		String[] lines = message.split("\\R", -1);
 		out.print(" ");
 		out.print(color(color, lines[0]));
 		if (lines.length > 1) {

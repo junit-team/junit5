@@ -17,6 +17,7 @@
 package org.junit.platform.surefire.provider;
 
 import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -26,7 +27,6 @@ import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
@@ -189,8 +189,11 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		List<String> compoundProperties = null;
 		String property = parameters.getProviderProperties().get(key);
 		if (StringUtils.isNotBlank(property)) {
-			compoundProperties = Arrays.stream(property.split("[, ]+")).filter(StringUtils::isNotBlank).collect(
-				Collectors.toList());
+			compoundProperties = //
+				Pattern.compile("[, ]+") //
+						.splitAsStream(property) //
+						.filter(StringUtils::isNotBlank) //
+						.collect(toList());
 		}
 		return Optional.ofNullable(compoundProperties);
 	}

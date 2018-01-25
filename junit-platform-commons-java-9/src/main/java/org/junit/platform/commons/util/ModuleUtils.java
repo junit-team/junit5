@@ -51,6 +51,12 @@ import org.junit.platform.commons.logging.LoggerFactory;
 @API(status = INTERNAL, since = "1.1")
 public class ModuleUtils {
 
+	///CLOVER:OFF
+	private ModuleUtils() {
+		/* no-op */
+	}
+	///CLOVER:ON
+
 	private static final Logger logger = LoggerFactory.getLogger(ModuleUtils.class);
 
 	/**
