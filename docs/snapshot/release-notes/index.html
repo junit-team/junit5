@@ -855,8 +855,19 @@ requirement by returning
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.1.0-M2-junit-vintage"><a class="anchor" href="#release-notes-5.1.0-M2-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
+<div class="sect3">
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>When using a tag filter to include/exclude a tag that represents a JUnit 4 category,
+e.g. <code>"com.example.Integration"</code>, the Vintage Engine no longer mistakenly executes all
+test methods of test classes that contain at least one included test method, e.g. one
+that is annotated with <code>@Category(com.example.Integration.class)</code>, regardless whether
+they belong to the same category.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -946,7 +957,7 @@ Previously, a separate <code>TestPlan</code> was discovered and executed for eac
 <div class="sect2">
 <h3 id="release-notes-5.1.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.1.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1076,7 +1087,7 @@ reason: class file for org.apiguardian.api.API$Status not found</pre>
 <div class="sect2">
 <h3 id="release-notes-5.0.3-junit-platform"><a class="anchor" href="#release-notes-5.0.3-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1136,7 +1147,7 @@ for details).</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.3-junit-jupiter"><a class="anchor" href="#release-notes-5.0.3-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1186,7 +1197,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.2-junit-platform"><a class="anchor" href="#release-notes-5.0.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1220,7 +1231,7 @@ Surefire feature.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.2-junit-jupiter"><a class="anchor" href="#release-notes-5.0.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1313,7 +1324,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.1-junit-jupiter"><a class="anchor" href="#release-notes-5.0.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1336,7 +1347,7 @@ used without declaring an <code>ExpectedException</code> rule.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.1-junit-vintage"><a class="anchor" href="#release-notes-5.0.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1369,7 +1380,7 @@ online.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-26 07:07:35 EST
+Last updated 2018-01-26 15:46:20 EST
 </div>
 </div>
 </body>
