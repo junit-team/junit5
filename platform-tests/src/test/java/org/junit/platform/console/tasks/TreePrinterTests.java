@@ -52,7 +52,7 @@ class TreePrinterTests {
 	@Test
 	void emptyTree() {
 		new TreePrinter(out, Theme.UNICODE, true).print(new TreeNode("<root>"));
-		assertIterableEquals(Collections.singletonList("╷"), actual(), () -> "shoul not fail");
+		assertIterableEquals(Collections.singletonList("╷"), actual());
 	}
 
 	@Test

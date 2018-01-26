@@ -89,7 +89,7 @@ class RunListenerAdapterTests {
 		ReportEntry entry = entryCaptor.getValue();
 		assertEquals(MY_TEST_METHOD_NAME, entry.getName());
 		assertEquals(MyTestClass.class.getName(), entry.getSourceName());
-		assertNull(entry.getStackTraceWriter(), () -> "should not fail");
+		assertNull(entry.getStackTraceWriter());
 	}
 
 	@Test

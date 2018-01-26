@@ -44,6 +44,11 @@ class AssertFalseAssertionsTests {
 	}
 
 	@Test
+	void assertFalseWithBooleanSupplierFalseAndMessageSupplier() {
+		assertFalse(() -> false, () -> "test");
+	}
+
+	@Test
 	void assertFalseWithBooleanTrueAndDefaultMessage() {
 		try {
 			assertFalse(true);

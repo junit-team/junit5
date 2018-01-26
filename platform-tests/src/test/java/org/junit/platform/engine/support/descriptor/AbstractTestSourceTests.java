@@ -33,7 +33,6 @@ abstract class AbstractTestSourceTests {
 		assertNotNull(different);
 
 		assertNotSame(equal1, equal2);
-		assertNotSame(equal1, equal2, () -> "should not fail");
 		assertFalse(equal1.equals(null));
 		assertFalse(equal1.equals(different));
 		assertFalse(different.equals(equal1));
