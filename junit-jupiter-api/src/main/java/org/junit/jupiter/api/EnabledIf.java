@@ -25,6 +25,7 @@ import org.apiguardian.api.API;
  * test class or test method is currently <em>enabled</em> or <em>disabled</em>.
  *
  * @since 5.1
+ * @see org.junit.jupiter.api.extension.ExecutionCondition
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -39,7 +40,76 @@ public @interface EnabledIf {
 
 	/**
 	 * The reason this test is <em>enabled</em> or <em>disabled</em>.
+	 *
+	 * <p>Defaults to: {@code "Script `{script}` evaluated to: {result}"}
+	 * <ul>
+	 *     <li>{@code {annotation}} the String-representation of the {@code @EnabledIf} annotation instance</li>
+	 *     <li>{@code {script}} the script text that was evaluated</li>
+	 *     <li>{@code {result}} the String-representation of the result object returned by the script</li>
+	 * </ul>
+	 * @return reason message
+	 * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#getReason()
 	 */
-	String reason() default "Script `{{script}}` evaluated to: {{result}}";
+	String reason() default "Script `{script}` evaluated to: {result}";
 
+	/**
+	 * Names used for the script {@link javax.script.Bindings bindings}.
+	 */
+	interface Bind {
+
+		/**
+		 * Set of all tags assigned to the current extension context.
+		 *
+		 * <p>Value type: {@code Set<String>}
+		 *
+		 * @see org.junit.jupiter.api.extension.ExtensionContext#getTags()
+		 */
+		String JUPITER_TAGS = "jupiterTags";
+
+		/**
+		 * Unique ID associated with the current extension context.
+		 *
+		 * <p>Value type: {@code String}
+		 *
+		 * @see org.junit.jupiter.api.extension.ExtensionContext#getUniqueId()
+		 */
+		String JUPITER_UNIQUE_ID = "jupiterUniqueId";
+
+		/**
+		 * Display name of the test or container.
+		 *
+		 * <p>Value type: {@code String}
+		 *
+		 * @see org.junit.jupiter.api.extension.ExtensionContext#getDisplayName()
+		 */
+		String JUPITER_DISPLAY_NAME = "jupiterDisplayName";
+
+		/**
+		 * Configuration parameter stored under the specified key.
+		 *
+		 * <p>Usage: {@code jupiterConfigurationParameter.get(key) -> String}
+		 *
+		 * @see org.junit.jupiter.api.extension.ExtensionContext#getConfigurationParameter(String)
+		 */
+		String JUPITER_CONFIGURATION_PARAMETER = "jupiterConfigurationParameter";
+
+		/**
+		 * System property stored under the specified key.
+		 *
+		 * <p>Usage: {@code systemProperty.get(key) -> String}
+		 *
+		 * @see System#getProperty(String)
+		 */
+		String SYSTEM_PROPERTY = "systemProperty";
+
+		/**
+		 * System environment value stored under the specified key.
+		 *
+		 * <p>Usage: {@code systemEnvironment.get(key) -> String}
+		 *
+		 * @see System#getenv(String)
+		 */
+		String SYSTEM_ENVIRONMENT = "systemEnvironment";
+
+	}
 }

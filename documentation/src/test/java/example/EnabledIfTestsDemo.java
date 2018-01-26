@@ -10,7 +10,6 @@
 
 package example;
 
-// tag::user_guide[]
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
@@ -20,6 +19,7 @@ import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+// tag::user_guide[]
 class EnabledIfTestsDemo {
 
 	@Test // Static JavaScript expression.
@@ -39,16 +39,23 @@ class EnabledIfTestsDemo {
 		assertTrue(System.getProperty("os.arch").contains("64"));
 	}
 
-	@Test // Multi-line script and import Java package names.
-	@EnabledIf(value = { //
-			"load('nashorn:mozilla_compat.js')", //
-			"importPackage(java.nio.file)", //
-			"", //
-			"var path = Files.createTempFile('volatile-', '.temp')", //
-			"java.lang.System.getProperties().put('volatile', path)", //
-			"Files.exists(path)" //
-	})
-	void importJavaPackages() {
+	@Test // Multi-line script, import Java package and set custom reason.
+	// end::user_guide[]
+	// @formatter:off
+	// tag::user_guide[]
+	@EnabledIf(value = {
+					"load('nashorn:mozilla_compat.js')",
+					"importPackage(java.nio.file)",
+					"",
+					"var path = Files.createTempFile('volatile-', '.temp')",
+					"java.lang.System.getProperties().put('volatile', path)",
+					"Files.exists(path)"
+				},
+				reason = "Self-fulfilling: {result}")
+	// end::user_guide[]
+	// @formatter:on
+	// tag::user_guide[]
+	void tautology() {
 		assertTrue(Files.exists((Path) System.getProperties().get("volatile")));
 	}
 }

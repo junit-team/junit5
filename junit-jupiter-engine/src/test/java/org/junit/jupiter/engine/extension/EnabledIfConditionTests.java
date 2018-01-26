@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -20,12 +21,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import javax.script.Bindings;
 import javax.script.ScriptEngine;
 
 import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 class EnabledIfConditionTests {
@@ -97,9 +101,29 @@ class EnabledIfConditionTests {
 	@Test
 	void createReasonWithCustomMessage() {
 		EnabledIf annotation = mockEnabledIfAnnotation("?");
-		when(annotation.reason()).thenReturn("result={{result}} script={{script}}");
+		when(annotation.reason()).thenReturn("result={result} script={script}");
 		String actual = new EnabledIfCondition().createReason(annotation, "?", "!");
 		assertEquals("result=! script=?", actual);
+	}
+
+	@Test
+	@EnabledIf(value = "true", reason = "{annotation}")
+	void createReasonWithAnnotationPlaceholder() throws Exception {
+		EnabledIf annotation = getClass() //
+				.getDeclaredMethod("createReasonWithAnnotationPlaceholder") //
+				.getDeclaredAnnotation(EnabledIf.class);
+		ConditionEvaluationResult result = new EnabledIfCondition().evaluate(annotation, this::mockBinder);
+		assertFalse(result.isDisabled());
+		String expected = "@org.junit.jupiter.api.EnabledIf(reason=\"{annotation}\", value={\"true\"})";
+		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
+		assertEquals(expected, actual);
+	}
+
+	private void mockBinder(Bindings bindings) {
+		bindings.put("jupiterTags", Collections.emptySet());
+		bindings.put("jupiterUniqueId", "Mock for UniqueId");
+		bindings.put("jupiterDisplayName", "Mock for DisplayName");
+		bindings.put("jupiterConfigurationParameter", Collections.emptyMap());
 	}
 
 	private void assertLinesMatchCreatedScript(List<String> expectedLines, EnabledIf annotation, String language) {

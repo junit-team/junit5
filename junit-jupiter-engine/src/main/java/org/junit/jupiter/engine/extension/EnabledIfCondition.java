@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
-import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.script.Bindings;
@@ -41,18 +41,59 @@ import org.junit.platform.commons.util.Preconditions;
  */
 class EnabledIfCondition implements ExecutionCondition {
 
-	private static final String DEFAULT_SCRIPT_ENGINE_NAME = "Nashorn";
+	/**
+	 * Use Oracle Nashorn as the default JavaScript ScriptEngine.
+	 *
+	 * Until Java SE 7, JDKs shipped with a JavaScript scripting engine based
+	 * on Mozilla Rhino. Java SE 8 instead ships with the new engine called
+	 * Oracle Nashorn, which is based on JSR 292 and {@code invokedynamic}.
+	 *
+	 * 	@see <a href="http://www.oracle.com/technetwork/articles/java/jf14-nashorn-2126515.html">Oracle Nashorn</a>
+	 */
+	private static final String DEFAULT_SCRIPT_ENGINE_NAME = "nashorn";
+
+	/**
+	 * Pre-created {@code ConditionEvaluationResult} singleton that is
+	 * returned when no {@code @EnabledIf} annotation is (meta-)present
+	 * on the current element.
+	 */
+	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled("@EnabledIf is not present");
+
+	// --- Values used in Bindings --------------------------------------------
+
+	private static final Accessor BIND_SYSTEM_PROPERTY_ACCESSOR = Accessor.of(System::getProperty);
+	private static final Accessor BIND_SYSTEM_ENVIRONMENT_ACCESSOR = Accessor.of(System::getenv);
+
+	// --- Placeholders usable in reason() messages ---------------------------
+
+	private static final String REASON_ANNOTATION_PLACEHOLDER = "{annotation}";
+	private static final String REASON_SCRIPT_PLACEHOLDER = "{script}";
+	private static final String REASON_RESULT_PLACEHOLDER = "{result}";
+
 	private static final Logger logger = LoggerFactory.getLogger(EnabledIfCondition.class);
 
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<AnnotatedElement> element = context.getElement();
-		Optional<EnabledIf> optionalAnnotation = findAnnotation(element, EnabledIf.class);
+		Optional<EnabledIf> optionalAnnotation = findAnnotation(context.getElement(), EnabledIf.class);
 		if (!optionalAnnotation.isPresent()) {
-			return enabled("@EnabledIf is not present");
+			return ENABLED_BY_DEFAULT;
 		}
 
-		EnabledIf annotation = optionalAnnotation.get();
+		// Bind context-aware names to their current values
+		Accessor configurationParameterAccessor = Accessor.of(context::getConfigurationParameter);
+		Consumer<Bindings> contextBinder = bindings -> {
+			bindings.put(EnabledIf.Bind.JUPITER_TAGS, context.getTags());
+			bindings.put(EnabledIf.Bind.JUPITER_UNIQUE_ID, context.getUniqueId());
+			bindings.put(EnabledIf.Bind.JUPITER_DISPLAY_NAME, context.getDisplayName());
+			bindings.put(EnabledIf.Bind.JUPITER_CONFIGURATION_PARAMETER, configurationParameterAccessor);
+		};
+
+		return evaluate(optionalAnnotation.get(), contextBinder);
+	}
+
+	ConditionEvaluationResult evaluate(EnabledIf annotation, Consumer<Bindings> binder) {
+		Preconditions.notNull(annotation, "annotation must not be null");
+		Preconditions.notNull(binder, "binder must not be null");
 		Preconditions.notEmpty(annotation.value(), "String[] returned by @EnabledIf.value() must not be empty");
 
 		// Find script engine
@@ -61,9 +102,9 @@ class EnabledIfCondition implements ExecutionCondition {
 
 		// Prepare bindings
 		Bindings bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
-		bindings.put("systemProperty", PropertyAccessor.of(System::getProperty));
-		bindings.put("systemEnvironment", PropertyAccessor.of(System::getenv));
-		bindings.put("jupiterConfigurationParameter", PropertyAccessor.of(context::getConfigurationParameter));
+		bindings.put(EnabledIf.Bind.SYSTEM_PROPERTY, BIND_SYSTEM_PROPERTY_ACCESSOR);
+		bindings.put(EnabledIf.Bind.SYSTEM_ENVIRONMENT, BIND_SYSTEM_ENVIRONMENT_ACCESSOR);
+		binder.accept(bindings);
 		logger.debug(() -> "Bindings: " + bindings);
 
 		// Build actual script text from annotation properties
@@ -80,6 +121,8 @@ class EnabledIfCondition implements ExecutionCondition {
 		}
 		catch (ScriptException e) {
 			logger.warn(e, () -> "Evaluation of @EnabledIf script failed, disabling execution");
+			logger.info(() -> "Script: `" + script + "`");
+			logger.info(() -> "Bindings: " + scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).entrySet());
 			return disabled(e.toString());
 		}
 
@@ -118,8 +161,9 @@ class EnabledIfCondition implements ExecutionCondition {
 
 	String createReason(EnabledIf annotation, String script, String result) {
 		String reason = annotation.reason();
-		reason = reason.replace("{{script}}", script);
-		reason = reason.replace("{{result}}", result);
+		reason = reason.replace(REASON_ANNOTATION_PLACEHOLDER, annotation.toString());
+		reason = reason.replace(REASON_SCRIPT_PLACEHOLDER, script);
+		reason = reason.replace(REASON_RESULT_PLACEHOLDER, result);
 		return reason;
 	}
 
@@ -136,15 +180,15 @@ class EnabledIfCondition implements ExecutionCondition {
 	 * <p>Usage example: {@code PropertyAccessor.of(System::getProperty)} is
 	 * analog to writing {@code System.getProperty(key)}.
 	 */
-	public static class PropertyAccessor {
+	public static class Accessor {
 
-		static PropertyAccessor of(Function<String, Object> accessor) {
-			return new PropertyAccessor(accessor);
+		static Accessor of(Function<String, Object> accessor) {
+			return new Accessor(accessor);
 		}
 
 		private final Function<String, Object> accessor;
 
-		private PropertyAccessor(Function<String, Object> accessor) {
+		private Accessor(Function<String, Object> accessor) {
 			this.accessor = accessor;
 		}
 
@@ -156,4 +200,5 @@ class EnabledIfCondition implements ExecutionCondition {
 			return String.valueOf(value);
 		}
 	}
+
 }
