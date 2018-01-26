@@ -24,11 +24,11 @@ import java.util.function.Supplier;
  */
 class AssertSame {
 
-	/// CLOVER:OFF
+	///CLOVER:OFF
 	private AssertSame() {
 		/* no-op */
 	}
-	/// CLOVER:ON
+	///CLOVER:ON
 
 	static void assertSame(Object expected, Object actual) {
 		assertSame(expected, actual, (String) null);

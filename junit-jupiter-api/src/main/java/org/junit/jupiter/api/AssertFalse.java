@@ -25,11 +25,11 @@ import java.util.function.Supplier;
  */
 class AssertFalse {
 
-	/// CLOVER:OFF
+	///CLOVER:OFF
 	private AssertFalse() {
 		/* no-op */
 	}
-	/// CLOVER:ON
+	///CLOVER:ON
 
 	static void assertFalse(boolean condition) {
 		assertFalse(condition, (String) null);

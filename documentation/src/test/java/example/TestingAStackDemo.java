@@ -59,7 +59,7 @@ class TestingAStackDemo {
 		@Test
 		@DisplayName("throws EmptyStackException when peeked")
 		void throwsExceptionWhenPeeked() {
-			assertThrows(EmptyStackException.class, () -> stack.peek(), () -> "should not fail");
+			assertThrows(EmptyStackException.class, () -> stack.peek());
 		}
 
 		@Nested
@@ -76,7 +76,7 @@ class TestingAStackDemo {
 			@Test
 			@DisplayName("it is no longer empty")
 			void isNotEmpty() {
-				assertFalse(() -> stack.isEmpty());
+				assertFalse(stack.isEmpty());
 			}
 
 			@Test
@@ -90,7 +90,7 @@ class TestingAStackDemo {
 			@DisplayName("returns the element when peeked but remains not empty")
 			void returnElementWhenPeeked() {
 				assertEquals(anElement, stack.peek());
-				assertFalse(() -> stack.isEmpty(), () -> "should not fail");
+				assertFalse(stack.isEmpty());
 			}
 		}
 	}

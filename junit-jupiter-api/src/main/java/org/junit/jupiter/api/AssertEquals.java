@@ -20,18 +20,18 @@ import static org.junit.jupiter.api.AssertionUtils.objectsAreEqual;
 import java.util.function.Supplier;
 
 /**
- * {@code AssertEquals} is a collection of utility methods that support
- * asserting equality on objects and primitives in tests.
+ * {@code AssertEquals} is a collection of utility methods that support asserting
+ * equality on objects and primitives in tests.
  *
  * @since 5.0
  */
 class AssertEquals {
 
-	/// CLOVER:OFF
+	///CLOVER:OFF
 	private AssertEquals() {
 		/* no-op */
 	}
-	/// CLOVER:ON
+	///CLOVER:ON
 
 	static void assertEquals(byte expected, byte actual) {
 		assertEquals(expected, actual, (String) null);

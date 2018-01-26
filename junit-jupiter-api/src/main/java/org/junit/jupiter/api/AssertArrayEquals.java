@@ -23,18 +23,18 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- * {@code AssertArrayEquals} is a collection of utility methods that support
- * asserting array equality in tests.
+ * {@code AssertArrayEquals} is a collection of utility methods that support asserting
+ * array equality in tests.
  *
  * @since 5.0
  */
 class AssertArrayEquals {
 
-	/// CLOVER:OFF
+	///CLOVER:OFF
 	private AssertArrayEquals() {
 		/* no-op */
 	}
-	/// CLOVER:ON
+	///CLOVER:ON
 
 	static void assertArrayEquals(boolean[] expected, boolean[] actual) {
 		assertArrayEquals(expected, actual, (String) null);

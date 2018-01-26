@@ -24,18 +24,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 /**
- * {@code AssertIterable} is a collection of utility methods that support
- * asserting Iterable equality in tests.
+ * {@code AssertIterable} is a collection of utility methods that support asserting
+ * Iterable equality in tests.
  *
  * @since 5.0
  */
 class AssertIterableEquals {
 
-	/// CLOVER:OFF
+	///CLOVER:OFF
 	private AssertIterableEquals() {
 		/* no-op */
 	}
-	/// CLOVER:ON
+	///CLOVER:ON
 
 	static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual) {
 		assertIterableEquals(expected, actual, (String) null);

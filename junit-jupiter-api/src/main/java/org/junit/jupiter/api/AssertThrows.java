@@ -21,18 +21,18 @@ import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.AssertionFailedError;
 
 /**
- * {@code AssertThrows} is a collection of utility methods that support
- * asserting an exception of an expected type is thrown.
+ * {@code AssertThrows} is a collection of utility methods that support asserting
+ * an exception of an expected type is thrown.
  *
  * @since 5.0
  */
 class AssertThrows {
 
-	/// CLOVER:OFF
+	///CLOVER:OFF
 	private AssertThrows() {
 		/* no-op */
 	}
-	/// CLOVER:ON
+	///CLOVER:ON
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable) {
 		return assertThrows(expectedType, executable, (Object) null);
