@@ -15,21 +15,10 @@ since these newer versions of IDEA will download the following JARs automaticall
 on the API version used in the project: `junit-platform-launcher`,
 `junit-jupiter-engine`, and `junit-vintage-engine`.
 
-.JUnit 5 Versions Bundled in IntelliJ IDEA
-|===
-| IntelliJ IDEA Version | Bundled JUnit 5 Version
-
-| 2016.2   | M2
-| 2016.3.1 | M3
-| 2017.1.2 | M4
-| 2017.2.1 | M5
-| 2017.2.3 | RC2
-|===
-
-WARNING: IntelliJ IDEA (prior to IDEA 2017.3) bundles a certain version of JUnit 5. Thus,
-if you want to use a newer version of JUnit Jupiter, execution of tests within the IDE
-might fail due to version conflicts. In such cases, please follow the instructions below
-to use a newer version of JUnit 5 than the one bundled with IntelliJ IDEA.
+WARNING: IntelliJ IDEA releases prior to IDEA 2017.3 bundle specific versions of JUnit 5.
+Thus, if you want to use a newer version of JUnit Jupiter, execution of tests within the
+IDE might fail due to version conflicts. In such cases, please follow the instructions
+below to use a newer version of JUnit 5 than the one bundled with IntelliJ IDEA.
 
 In order to use a different JUnit 5 version (e.g., {jupiter-version}), you may need to
 include the corresponding versions of the `junit-platform-launcher`,
@@ -39,7 +28,7 @@ include the corresponding versions of the `junit-platform-launcher`,
 [source,groovy]
 [subs=attributes+]
 ----
-// Only needed to run tests in a version of IntelliJ IDEA that bundles an older version
+// Only needed to run tests in a version of IntelliJ IDEA that bundles older versions
 testRuntime("org.junit.platform:junit-platform-launcher:{platform-version}")
 testRuntime("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
 testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
@@ -49,7 +38,7 @@ testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
 [source,xml]
 [subs=attributes+]
 ----
-<!-- Only required to run tests in a version of IntelliJ IDEA that bundles an older version -->
+<!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
 <dependency>
 	<groupId>org.junit.platform</groupId>
 	<artifactId>junit-platform-launcher</artifactId>
@@ -85,11 +74,10 @@ https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support[Eclipse Project Oxy
 ==== Other IDEs
 
 At the time of this writing, there is no direct support for running tests on the JUnit
-Platform within IDEs other than with IntelliJ IDEA and Eclipse.
-However, the JUnit team provides two intermediate solutions so that you can go ahead and
-try out JUnit 5 within your IDE today. You can use the <<running-tests-console-launcher>>
-manually or execute tests with a <<running-tests-junit-platform-runner,JUnit 4 based
-Runner>>.
+Platform within IDEs other than IntelliJ IDEA and Eclipse. However, the JUnit team
+provides two intermediate solutions so that you can go ahead and try out JUnit 5 within
+your IDE today. You can use the <<running-tests-console-launcher>> manually or execute
+tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
 
 [[running-tests-build]]
 === Build Support
