@@ -32,7 +32,7 @@ class AssertionsDemo {
 	// tag::user_guide[]
 	@Test
 	void standardAssertions() {
-		assertEquals(2, 2);
+		assertEquals(2, 2, () -> "should not fail");
 		assertEquals(4, 4, "The optional assertion message is now the last parameter.");
 		assertTrue('a' < 'b', () -> "Assertion messages can be lazily evaluated -- "
 				+ "to avoid constructing complex messages unnecessarily.");
@@ -60,19 +60,19 @@ class AssertionsDemo {
 				// Executed only if the previous assertion is valid.
 				assertAll("first name",
 					() -> assertTrue(firstName.startsWith("J")),
-					() -> assertTrue(firstName.endsWith("n"))
+					() -> assertTrue(firstName.endsWith("n"), "should not fail")
 				);
 			},
 			() -> {
 				// Grouped assertion, so processed independently
 				// of results of first name assertions.
 				String lastName = person.getLastName();
-				assertNotNull(lastName);
+				assertNotNull(lastName, () -> "should not fail");
 
 				// Executed only if the previous assertion is valid.
 				assertAll("last name",
-					() -> assertTrue(lastName.startsWith("D")),
-					() -> assertTrue(lastName.endsWith("e"))
+					() -> assertTrue(() -> lastName.startsWith("D"), "should not fail"),
+					() -> assertTrue(() -> lastName.endsWith("e"), () -> "should not fail")
 				);
 			}
 		);
@@ -95,6 +95,14 @@ class AssertionsDemo {
 	}
 
 	@Test
+	void timeoutNotExceededMessageSupplier() {
+		// The following assertion succeeds.
+		assertTimeout(ofMinutes(2), () -> {
+			// Perform task that takes less than 2 minutes.
+		}, () -> "should not fail");
+	}
+
+	@Test
 	void timeoutNotExceededWithResult() {
 		// The following assertion succeeds, and returns the supplied object.
 		String actualResult = assertTimeout(ofMinutes(2), () -> {
@@ -107,6 +115,13 @@ class AssertionsDemo {
 	void timeoutNotExceededWithMethod() {
 		// The following assertion invokes a method reference and returns an object.
 		String actualGreeting = assertTimeout(ofMinutes(2), AssertionsDemo::greeting);
+		assertEquals("Hello, World!", actualGreeting);
+	}
+
+	@Test
+	void timeoutNotExceededWithMethodAndMessageSuplier() {
+		// The following assertion invokes a method reference and returns an object.
+		String actualGreeting = assertTimeout(ofMinutes(2), AssertionsDemo::greeting, () -> "should not fail");
 		assertEquals("Hello, World!", actualGreeting);
 	}
 
@@ -127,6 +142,19 @@ class AssertionsDemo {
 	@extensions.ExpectToFail
 	// tag::user_guide[]
 	@Test
+	void timeoutExceededMessageSupplier() {
+		// The following assertion fails with an error message similar to:
+		// execution exceeded timeout of 10 ms by 91 ms
+		assertTimeout(ofMillis(10), () -> {
+			// Simulate task that takes more than 10 ms.
+			Thread.sleep(100);
+		}, () -> "should fail");
+	}
+
+	// end::user_guide[]
+	@extensions.ExpectToFail
+	// tag::user_guide[]
+	@Test
 	void timeoutExceededWithPreemptiveTermination() {
 		// The following assertion fails with an error message similar to:
 		// execution timed out after 10 ms
@@ -134,6 +162,19 @@ class AssertionsDemo {
 			// Simulate task that takes more than 10 ms.
 			Thread.sleep(100);
 		});
+	}
+
+	// end::user_guide[]
+	@extensions.ExpectToFail
+	// tag::user_guide[]
+	@Test
+	void timeoutExceededWithPreemptiveTerminationAndMessageSuplier() {
+		// The following assertion fails with an error message similar to:
+		// execution timed out after 10 ms
+		assertTimeoutPreemptively(ofMillis(10), () -> {
+			// Simulate task that takes more than 10 ms.
+			Thread.sleep(100);
+		}, () -> "should fail");
 	}
 
 	private static String greeting() {

@@ -39,7 +39,7 @@ class StandardTests {
 	// tag::user_guide[]
 	@Test
 	void failingTest() {
-		fail("a failing test");
+		fail(() -> "a failing test");
 	}
 
 	@Test

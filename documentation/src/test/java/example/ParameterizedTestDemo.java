@@ -93,7 +93,7 @@ class ParameterizedTestDemo {
 	@ParameterizedTest
 	@EnumSource(value = TimeUnit.class, mode = EXCLUDE, names = { "DAYS", "HOURS" })
 	void testWithEnumSourceExclude(TimeUnit timeUnit) {
-		assertFalse(EnumSet.of(TimeUnit.DAYS, TimeUnit.HOURS).contains(timeUnit));
+		assertFalse(EnumSet.of(TimeUnit.DAYS, TimeUnit.HOURS).contains(timeUnit), () -> "should not fail");
 		assertTrue(timeUnit.name().length() > 5);
 	}
 	// end::EnumSource_exclude_example[]
@@ -156,7 +156,7 @@ class ParameterizedTestDemo {
 	@CsvSource({ "foo, 1", "bar, 2", "'baz, qux', 3" })
 	void testWithCsvSource(String first, int second) {
 		assertNotNull(first);
-		assertNotEquals(0, second);
+		assertNotEquals(0, second, () -> "should not fail");
 	}
 	// end::CsvSource_example[]
 

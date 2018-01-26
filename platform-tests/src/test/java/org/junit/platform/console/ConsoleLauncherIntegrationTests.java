@@ -47,6 +47,7 @@ class ConsoleLauncherIntegrationTests {
 		ConsoleLauncherWrapperResult result = new ConsoleLauncherWrapper().execute(args);
 		assertAll("all subpackage test classes are excluded by the class name filter", //
 			() -> assertArrayEquals(args, result.args), //
+			() -> assertArrayEquals(args, result.args, () -> "should not fail"), //
 			() -> assertEquals(StandardCharsets.UTF_8, result.charset), //
 			() -> assertEquals(0, result.code), //
 			() -> assertEquals(0, result.getTestsFoundCount()), //

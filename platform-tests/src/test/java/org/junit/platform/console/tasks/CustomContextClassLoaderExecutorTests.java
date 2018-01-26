@@ -51,6 +51,6 @@ class CustomContextClassLoaderExecutorTests {
 		});
 
 		assertEquals(23, result);
-		assertSame(originalClassLoader, Thread.currentThread().getContextClassLoader());
+		assertSame(originalClassLoader, Thread.currentThread().getContextClassLoader(), () -> "should not fail");
 	}
 }
