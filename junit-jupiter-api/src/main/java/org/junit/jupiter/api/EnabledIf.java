@@ -37,4 +37,9 @@ public @interface EnabledIf {
 	 */
 	String[] value();
 
+	/**
+	 * The reason this test is <em>enabled</em> or <em>disabled</em>.
+	 */
+	String reason() default "Script `{{script}}` evaluated to: {{result}}";
+
 }

@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +27,6 @@ import javax.script.ScriptEngine;
 import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
-import org.mockito.Mockito;
 
 class EnabledIfConditionTests {
 
@@ -61,41 +62,62 @@ class EnabledIfConditionTests {
 	@Test
 	void trivialJavaScript() {
 		String script = "true";
-		EnabledIf enabled = mockEnabled(script);
-		String actual = new EnabledIfCondition().createScript(enabled, "ECMAScript");
+		EnabledIf annotation = mockEnabledIfAnnotation(script);
+		String actual = new EnabledIfCondition().createScript(annotation, "ECMAScript");
 		assertSame(script, actual);
 	}
 
 	@Test
 	void trivialGroovyScript() {
 		String script = "true";
-		EnabledIf enabled = mockEnabled(script);
-		String actual = new EnabledIfCondition().createScript(enabled, "Groovy");
+		EnabledIf annotation = mockEnabledIfAnnotation(script);
+		String actual = new EnabledIfCondition().createScript(annotation, "Groovy");
 		assertSame(script, actual);
 	}
 
 	@Test
 	void trivialNonJavaScript() {
-		EnabledIf enabled = mockEnabled("one", "two");
-		String actual = new EnabledIfCondition().createScript(enabled, "unknown language");
-		assertEquals("one" + System.lineSeparator() + "two", actual);
+		EnabledIf annotation = mockEnabledIfAnnotation("one", "two");
+		assertLinesMatchCreatedScript(Arrays.asList("one", "two"), annotation, "unknown language");
 	}
 
 	@Test
 	void createJavaScriptMultipleLines() {
-		EnabledIf enabled = mockEnabled("m1()", "m2()");
-		assertLinesMatchCreatedScript(Arrays.asList("m1()", "m2()"), enabled, "ECMAScript");
+		EnabledIf annotation = mockEnabledIfAnnotation("m1()", "m2()");
+		assertLinesMatchCreatedScript(Arrays.asList("m1()", "m2()"), annotation, "ECMAScript");
 	}
 
-	private void assertLinesMatchCreatedScript(List<String> expectedLines, EnabledIf enabled, String language) {
+	@Test
+	void createReasonWithDefaultMessage() {
+		EnabledIf annotation = mockEnabledIfAnnotation("?");
+		String actual = new EnabledIfCondition().createReason(annotation, "?", "!");
+		assertEquals("Script `?` evaluated to: !", actual);
+	}
+
+	@Test
+	void createReasonWithCustomMessage() {
+		EnabledIf annotation = mockEnabledIfAnnotation("?");
+		when(annotation.reason()).thenReturn("result={{result}} script={{script}}");
+		String actual = new EnabledIfCondition().createReason(annotation, "?", "!");
+		assertEquals("result=! script=?", actual);
+	}
+
+	private void assertLinesMatchCreatedScript(List<String> expectedLines, EnabledIf annotation, String language) {
 		EnabledIfCondition condition = new EnabledIfCondition();
-		String actual = condition.createScript(enabled, language);
+		String actual = condition.createScript(annotation, language);
 		assertLinesMatch(expectedLines, Arrays.asList(actual.split("\\R")));
 	}
 
-	private EnabledIf mockEnabled(String... value) {
-		EnabledIf enabled = Mockito.mock(EnabledIf.class);
-		Mockito.when(enabled.value()).thenReturn(value);
-		return enabled;
+	private EnabledIf mockEnabledIfAnnotation(String... value) {
+		EnabledIf annotation = mock(EnabledIf.class);
+		when(annotation.value()).thenReturn(value);
+		try {
+			when(annotation.reason()).thenReturn(
+				(String) EnabledIf.class.getDeclaredMethod("reason").getDefaultValue());
+		}
+		catch (NoSuchMethodException e) {
+			throw new AssertionError(e);
+		}
+		return annotation;
 	}
 }

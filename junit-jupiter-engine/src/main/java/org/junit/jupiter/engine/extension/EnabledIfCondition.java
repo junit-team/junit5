@@ -17,7 +17,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.UnaryOperator;
+import java.util.function.Function;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -41,6 +41,7 @@ import org.junit.platform.commons.util.Preconditions;
  */
 class EnabledIfCondition implements ExecutionCondition {
 
+	private static final String DEFAULT_SCRIPT_ENGINE_NAME = "Nashorn";
 	private static final Logger logger = LoggerFactory.getLogger(EnabledIfCondition.class);
 
 	@Override
@@ -55,16 +56,14 @@ class EnabledIfCondition implements ExecutionCondition {
 		Preconditions.notEmpty(annotation.value(), "String[] returned by @EnabledIf.value() must not be empty");
 
 		// Find script engine
-		String engine = "Nashorn";
-		ScriptEngine scriptEngine = findScriptEngine(engine);
+		ScriptEngine scriptEngine = findScriptEngine(DEFAULT_SCRIPT_ENGINE_NAME);
 		logger.debug(() -> "ScriptEngine: " + scriptEngine);
 
 		// Prepare bindings
 		Bindings bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
-		bindings.put("systemProperty", new PropertyAccessor(System::getProperty));
-		bindings.put("systemEnvironment", new PropertyAccessor(System::getenv));
-		bindings.put("jupiterConfigurationParameter",
-			new PropertyAccessor(key -> context.getConfigurationParameter(key).orElse(null)));
+		bindings.put("systemProperty", PropertyAccessor.of(System::getProperty));
+		bindings.put("systemEnvironment", PropertyAccessor.of(System::getenv));
+		bindings.put("jupiterConfigurationParameter", PropertyAccessor.of(context::getConfigurationParameter));
 		logger.debug(() -> "Bindings: " + bindings);
 
 		// Build actual script text from annotation properties
@@ -90,9 +89,9 @@ class EnabledIfCondition implements ExecutionCondition {
 		}
 
 		// Parse result for "true" (ignoring case) and prepare reason message.
-		boolean ok = Boolean.parseBoolean(String.valueOf(result));
-		String reason = String.format("Script `%s` evaluated to: %s", script, result);
-		return ok ? enabled(reason) : disabled(reason);
+		String resultAsString = String.valueOf(result);
+		String reason = createReason(annotation, script, resultAsString);
+		return Boolean.parseBoolean(resultAsString) ? enabled(reason) : disabled(reason);
 	}
 
 	ScriptEngine findScriptEngine(String string) {
@@ -117,6 +116,13 @@ class EnabledIfCondition implements ExecutionCondition {
 		return joinLines(System.lineSeparator(), Arrays.asList(annotation.value()));
 	}
 
+	String createReason(EnabledIf annotation, String script, String result) {
+		String reason = annotation.reason();
+		reason = reason.replace("{{script}}", script);
+		reason = reason.replace("{{result}}", result);
+		return reason;
+	}
+
 	private String joinLines(String delimiter, Iterable<? extends CharSequence> elements) {
 		if (delimiter.isEmpty()) {
 			delimiter = System.lineSeparator();
@@ -125,17 +131,29 @@ class EnabledIfCondition implements ExecutionCondition {
 	}
 
 	/**
-	 * Provides read-only access to e.g. a map.
+	 * Provides read-only access to e.g. values of {@link java.util.Map}.
+	 *
+	 * <p>Usage example: {@code PropertyAccessor.of(System::getProperty)} is
+	 * analog to writing {@code System.getProperty(key)}.
 	 */
 	public static class PropertyAccessor {
-		private final UnaryOperator<String> accessor;
 
-		private PropertyAccessor(UnaryOperator<String> accessor) {
+		static PropertyAccessor of(Function<String, Object> accessor) {
+			return new PropertyAccessor(accessor);
+		}
+
+		private final Function<String, Object> accessor;
+
+		private PropertyAccessor(Function<String, Object> accessor) {
 			this.accessor = accessor;
 		}
 
 		public String get(String key) {
-			return accessor.apply(key);
+			Object value = accessor.apply(key);
+			if (value instanceof Optional) {
+				value = ((Optional<?>) value).orElse(null);
+			}
+			return String.valueOf(value);
 		}
 	}
 }
