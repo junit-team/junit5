@@ -129,6 +129,9 @@ class PreconditionsTests {
 	@Test
 	void containsNoNullElementsPassesForArrayThatIsNullOrEmpty() {
 		containsNoNullElements((Object[]) null, "array is null");
+		containsNoNullElements((Object[]) null, () -> "array is null");
+
+		containsNoNullElements(new Object[0], "array is empty");
 		containsNoNullElements(new Object[0], () -> "array is empty");
 	}
 
@@ -136,6 +139,9 @@ class PreconditionsTests {
 	void containsNoNullElementsPassesForCollectionThatIsNullOrEmpty() {
 		containsNoNullElements((List<?>) null, "collection is null");
 		containsNoNullElements(emptyList(), "collection is empty");
+
+		containsNoNullElements((List<?>) null, () -> "collection is null");
+		containsNoNullElements(emptyList(), () -> "collection is empty");
 	}
 
 	@Test
@@ -149,6 +155,9 @@ class PreconditionsTests {
 	void containsNoNullElementsPassesForCollectionContainingNonNullElements() {
 		Collection<String> input = Arrays.asList("a", "b", "c");
 		Collection<String> output = containsNoNullElements(input, "message");
+		assertSame(input, output);
+
+		output = containsNoNullElements(input, () -> "message");
 		assertSame(input, output);
 	}
 

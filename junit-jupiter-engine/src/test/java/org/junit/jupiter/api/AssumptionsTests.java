@@ -149,6 +149,18 @@ class AssumptionsTests {
 	}
 
 	@Test
+	void assumeFalseWithBooleanSupplierFalseAndStringMessage() {
+		String foo = null;
+		try {
+			assumeFalse(() -> false, "false");
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
+	}
+
+	@Test
 	void assumeFalseWithBooleanSupplierFalseAndMessageSupplier() {
 		String foo = null;
 		try {

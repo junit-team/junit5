@@ -72,7 +72,8 @@ class AssertionsDemo {
 				// Executed only if the previous assertion is valid.
 				assertAll("last name",
 					() -> assertTrue(() -> lastName.startsWith("D"), "should not fail"),
-					() -> assertTrue(() -> lastName.endsWith("e"), () -> "should not fail")
+					() -> assertTrue(() -> lastName.endsWith("e"), () -> "should not fail"),
+					() -> assertTrue(lastName.endsWith("e"), () -> "should not fail")
 				);
 			}
 		);

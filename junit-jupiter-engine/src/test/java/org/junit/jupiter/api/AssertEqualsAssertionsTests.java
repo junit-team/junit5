@@ -394,7 +394,7 @@ class AssertEqualsAssertionsTests {
 	@Test
 	void assertEqualsDoubleWithUnequalValuesAndMessage() {
 		try {
-			assertEquals(1.0d, 1.1d, () -> "message");
+			assertEquals(1.0d, 1.1d, "message");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
