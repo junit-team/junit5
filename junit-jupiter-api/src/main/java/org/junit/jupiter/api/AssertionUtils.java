@@ -52,7 +52,13 @@ class AssertionUtils {
 		throw new AssertionFailedError(message, expected, actual);
 	}
 
+	static String nullSafeGet(Supplier<String> messageSupplier) {
+		return (messageSupplier != null ? messageSupplier.get() : null);
+	}
+
 	static String nullSafeGet(Object messageContainer) {
+		// messageContainer suppose to contain a message string or a message supplier
+		// added to avoid the need to wrap message into lambda (() -> message)
 		return (messageContainer != null
 				? (messageContainer instanceof Supplier ? nullSafeGet(((Supplier<?>) messageContainer).get())
 						: messageContainer.toString())
