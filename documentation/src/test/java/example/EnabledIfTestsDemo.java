@@ -34,7 +34,7 @@ class EnabledIfTestsDemo {
 	}
 
 	@Test // Regular expression testing bound system property.
-	@EnabledIf("/64/.test(systemProperties.get('os.arch'))")
+	@EnabledIf("/64/.test(systemProperty.get('os.arch'))")
 	void testWillBeExecutedIfOsArchitectureContains64() {
 		assertTrue(System.getProperty("os.arch").contains("64"));
 	}
@@ -45,7 +45,7 @@ class EnabledIfTestsDemo {
 			"importPackage(java.nio.file)", //
 			"", //
 			"var path = Files.createTempFile('volatile-', '.temp')", //
-			"systemProperties.put('volatile', path)", //
+			"java.lang.System.getProperties().put('volatile', path)", //
 			"Files.exists(path)" //
 	})
 	void importJavaPackages() {

@@ -17,6 +17,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -60,8 +61,10 @@ class EnabledIfCondition implements ExecutionCondition {
 
 		// Prepare bindings
 		Bindings bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
-		bindings.put("jupiterExtensionContext", context);
-		bindings.put("systemProperties", System.getProperties());
+		bindings.put("systemProperty", new PropertyAccessor(System::getProperty));
+		bindings.put("systemEnvironment", new PropertyAccessor(System::getenv));
+		bindings.put("jupiterConfigurationParameter",
+			new PropertyAccessor(key -> context.getConfigurationParameter(key).orElse(null)));
 		logger.debug(() -> "Bindings: " + bindings);
 
 		// Build actual script text from annotation properties
@@ -121,4 +124,18 @@ class EnabledIfCondition implements ExecutionCondition {
 		return String.join(delimiter, elements);
 	}
 
+	/**
+	 * Provides read-only access to e.g. a map.
+	 */
+	public static class PropertyAccessor {
+		private final UnaryOperator<String> accessor;
+
+		private PropertyAccessor(UnaryOperator<String> accessor) {
+			this.accessor = accessor;
+		}
+
+		public String get(String key) {
+			return accessor.apply(key);
+		}
+	}
 }

@@ -73,16 +73,16 @@ class EnabledIfTests {
 			"importPackage(java.nio.file)", //
 			"", //
 			"var path = Files.createTempFile('volatile-', '.temp')", //
-			"systemProperties.put('volatile', path)", //
+			"java.lang.System.getProperties().put('volatile', path)", //
 			"Files.exists(path)" //
 	})
-	void multilineAndImportJavaPackage() {
+	void multiLineAndImportJavaPackage() {
 		assertTrue(Files.exists((Path) System.getProperties().get("volatile")));
 	}
 
 	@Test
-	@EnabledIf(value = "jupiterExtensionContext.publishReportEntry('foo', 'bar')")
-	void publishReportEntry() {
+	@EnabledIf(value = "jupiterConfigurationParameter.get('some.value.or.null')")
+	void getJupiterConfigurationParameter() {
 		fail("test must not be executed");
 	}
 
@@ -99,7 +99,7 @@ class EnabledIfTests {
 	}
 
 	@Test
-	@EnabledIf("/64/.test(systemProperties.get('os.arch'))")
+	@EnabledIf("/64/.test(systemProperty.get('os.arch'))")
 	void osArch() {
 		assertTrue(System.getProperty("os.arch").contains("64"));
 	}
