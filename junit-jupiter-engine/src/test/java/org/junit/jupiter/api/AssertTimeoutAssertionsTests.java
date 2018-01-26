@@ -201,7 +201,7 @@ class AssertTimeoutAssertionsTests {
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageSupplierForExecutableThatCompletesBeforeTheTimeout() {
-		assertTimeoutPreemptively(ofMillis(100), () -> Thread.sleep(99), () -> "Tempus" + " " + "Fugit");
+		assertTimeoutPreemptively(ofMillis(100), () -> Thread.sleep(50), () -> "Tempus" + " " + "Fugit");
 	}
 
 	// -- supplier - preemptively ---
