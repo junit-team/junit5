@@ -52,6 +52,7 @@ public class ExtensionRegistry {
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);
 
 	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
+		new EnabledIfCondition(), //
 		new DisabledCondition(), //
 		new RepeatedTestExtension(), //
 		new TestInfoParameterResolver(), //
