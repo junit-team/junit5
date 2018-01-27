@@ -21,45 +21,73 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @EnabledIf} evaluates a script controlling that the annotated
- * test class or test method is currently <em>enabled</em> or <em>disabled</em>.
+ * {@code @EnabledIf} is used to control whether the annotated test class or
+ * test method is <em>enabled</em> or <em>disabled</em> by evaluating a script.
  *
- * <p>The decision is made by interpreting the return value of the {@link #value() script}:
- * <ul>
- * <li>{@code true} - if and only if the String-representation of the returned
- * value is parsed by {@link Boolean#parseBoolean(String)} to {@code true}.</li>
- * <li>{@code ConditionEvaluationResult} - an instance of
- *  {@link org.junit.jupiter.api.extension.ConditionEvaluationResult ConditionEvaluationResult}
- *  is passed directly to the Jupiter engine.</li>
- *  </ul>
+ * <p>The decision is made by interpreting the return value of the supplied
+ * {@linkplain #value script}, according to the following table.
  *
- * <p>When this annotation with a script that evaluates to {@code false}
- * is applied at the class level, all test methods within that class
- * are automatically disabled as well.
+ * <table border="1">
+ * <tr>
+ *   <th>Return Type</th>
+ *   <th>Evaluation Result</th>
+ * </tr>
+ * <tr>
+ *   <td>{@code boolean}</td>
+ *   <td>The annotated element will be enabled if the value is {@code true}.</td>
+ * </tr>
+ * <tr>
+ *   <td>{@code java.lang.Boolean}</td>
+ *   <td>The annotated element will be enabled if the value is {@code Boolean.TRUE}.</td>
+ * </tr>
+ * <tr>
+ *   <td>{@code ConditionEvaluationResult}</td>
+ *   <td>An instance of {@link org.junit.jupiter.api.extension.ConditionEvaluationResult
+ *       ConditionEvaluationResult} will be handled directly by JUnit Jupiter as if the
+ *       script were an implementation of {@link org.junit.jupiter.api.extension.ExecutionCondition
+ *       ExecutionCondition}.</td>
+ * </tr>
+ * <tr>
+ *   <td>*</td>
+ *   <td>The value of any other return type will be converted to its String
+ *       representation by {@link String#valueOf(Object)} and then interpreted as
+ *       a boolean by passing the String representation to
+ *       {@link Boolean#parseBoolean(String)}.</td>
+ * </tr>
+ * </table>
  *
- * <h3>Script engine</h3>
- * The default script engine is: Oracle Nashorn.
+ * <p>If a test class is disabled via the evaluation of {@code @EnabledIf}, all
+ * test methods within that class are automatically disabled as well.
  *
- * The {@link #engine()} property overrides the default script engine name.
+ * <h3>Script Engines</h3>
+ *
+ * <p>The default script engine is <em>Oracle Nashorn</em>; however, the
+ * {@link #engine} attribute may be used to override the default script engine
+ * name.
  *
  * <h3>Bindings</h3>
- * An {@link Accessor accessor} value provides access to a map-like structure.
  *
- * <p>The following System property accessors are available:
+ * <p>An {@link Accessor accessor} provides access to a map-like structure.
+ * The following property accessors are available.
+ *
  * <ul>
- * <li>{@link Bind#SYSTEM_ENVIRONMENT systemEnvironment} - System environment accessor.</li>
- * <li>{@link Bind#SYSTEM_PROPERTY systemProperty} - System property accessor.</li>
+ * <li>{@link Bind#SYSTEM_ENVIRONMENT systemEnvironment}: Operating system environment variable accessor</li>
+ * <li>{@link Bind#SYSTEM_PROPERTY systemProperty}: JVM system property accessor</li>
  * </ul>
  *
- * The following Jupiter extension context-aware {@link Bind bindings} are available:
+ * <p>The following {@link Bind bindings} are available for accessing information
+ * from the JUnit Jupiter {@link org.junit.jupiter.api.extension.ExtensionContext
+ * ExtensionContext}.
+ *
  * <ul>
- * <li>{@link Bind#JUPITER_TAGS jupiterTags} - All tags as a {@code Set<String>}.</li>
- * <li>{@link Bind#JUPITER_DISPLAY_NAME jupiterDisplayName} - Display name as a {@code String}.</li>
- * <li>{@link Bind#JUPITER_UNIQUE_ID jupiterUniqueId} - Unique ID as a {@code String}.</li>
- * <li>{@link Bind#JUPITER_CONFIGURATION_PARAMETER jupiterConfigurationParameter} - Configuration parameter accessor.</li>
+ * <li>{@link Bind#JUPITER_TAGS jupiterTags}: All tags as a {@code Set<String>}</li>
+ * <li>{@link Bind#JUPITER_DISPLAY_NAME jupiterDisplayName}: Display name as a {@code String}</li>
+ * <li>{@link Bind#JUPITER_UNIQUE_ID jupiterUniqueId}: Unique ID as a {@code String}</li>
+ * <li>{@link Bind#JUPITER_CONFIGURATION_PARAMETER jupiterConfigurationParameter}: Configuration parameter accessor</li>
  * </ul>
  *
  * @since 5.1
+ * @see Disabled
  * @see javax.script.ScriptEngine
  * @see org.junit.jupiter.api.extension.ExecutionCondition
  * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#enabled(String)
@@ -72,14 +100,33 @@ import org.apiguardian.api.API;
 public @interface EnabledIf {
 
 	/**
-	 * The lines of the script controlling the <em>enabled</em> or <em>disabled</em> state.
+	 * The lines of the script to evaluate.
 	 */
 	String[] value();
 
 	/**
+	 * The reason this annotated test class or test method is <em>enabled</em>
+	 * or <em>disabled</em>.
+	 *
+	 * <p>Defaults to: <code>"Script `{script}` evaluated to: {result}"</code>.
+	 *
+	 * <h4>Supported placeholders</h4>
+	 * <ul>
+	 *   <li><code>{annotation}</code>: the String representation of the {@code @EnabledIf} annotation instance</li>
+	 *   <li><code>{script}</code>: the script text that was evaluated</li>
+	 *   <li><code>{result}</code>: the String representation of the return value of the evaluated script</li>
+	 * </ul>
+	 *
+	 * @return reason the reason the element is enabled or disabled
+	 * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#getReason()
+	 */
+	String reason() default "Script `{script}` evaluated to: {result}";
+
+	/**
 	 * Short name of the {@link javax.script.ScriptEngine ScriptEngine} to use.
 	 *
-	 * <p>Oracle Nashorn is used by default interpreting JavaScript scripts.
+	 * <p>Oracle Nashorn is used by default, providing support for evaluating
+	 * JavaScript scripts.
 	 *
 	 * <p>Until Java SE 7, JDKs shipped with a JavaScript scripting engine based
 	 * on Mozilla Rhino. Java SE 8 instead ships with the new engine called
@@ -92,36 +139,23 @@ public @interface EnabledIf {
 	String engine() default "nashorn";
 
 	/**
-	 * The reason this test is <em>enabled</em> or <em>disabled</em>.
-	 *
-	 * <p>Defaults to: {@code "Script `{script}` evaluated to: {result}"}
-	 * <ul>
-	 *     <li>{@code {annotation}} the String-representation of the {@code @EnabledIf} annotation instance</li>
-	 *     <li>{@code {script}} the script text that was evaluated</li>
-	 *     <li>{@code {result}} the String-representation of the result object returned by the script</li>
-	 * </ul>
-	 * @return reason message
-	 * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#getReason()
-	 */
-	String reason() default "Script `{script}` evaluated to: {result}";
-
-	/**
-	 * Used to access named properties without exposing the underlying container (map).
+	 * Used to access named properties without exposing direct access to the
+	 * underlying source.
 	 */
 	interface Accessor {
 
 		/**
-		 * Get the value assigned to the specified name.
+		 * Get the value of the property with the supplied name.
 		 *
-		 * @param key the name to lookup
-		 * @return the value assigned to the specified name; maybe {@code null}
+		 * @param name the name of the property to look up
+		 * @return the value assigned to the specified name; may be {@code null}
 		 */
-		String get(String key);
+		String get(String name);
 
 	}
 
 	/**
-	 * Names used for the script {@link javax.script.Bindings bindings}.
+	 * Names used for script {@link javax.script.Bindings bindings}.
 	 */
 	interface Bind {
 
@@ -153,7 +187,7 @@ public @interface EnabledIf {
 		String JUPITER_DISPLAY_NAME = "jupiterDisplayName";
 
 		/**
-		 * Configuration parameter stored under the specified key.
+		 * Accessor for JUnit Platform configuration parameters.
 		 *
 		 * <p>Usage: {@code jupiterConfigurationParameter.get(key) -> String}
 		 *
@@ -162,7 +196,7 @@ public @interface EnabledIf {
 		String JUPITER_CONFIGURATION_PARAMETER = "jupiterConfigurationParameter";
 
 		/**
-		 * System property stored under the specified key.
+		 * Accessor for JVM system properties.
 		 *
 		 * <p>Usage: {@code systemProperty.get(key) -> String}
 		 *
@@ -171,7 +205,7 @@ public @interface EnabledIf {
 		String SYSTEM_PROPERTY = "systemProperty";
 
 		/**
-		 * System environment value stored under the specified key.
+		 * Accessor for operating system environment variables.
 		 *
 		 * <p>Usage: {@code systemEnvironment.get(key) -> String}
 		 *
