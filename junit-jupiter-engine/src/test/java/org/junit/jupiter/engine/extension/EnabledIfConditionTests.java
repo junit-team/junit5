@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -130,9 +131,11 @@ class EnabledIfConditionTests {
 				.getDeclaredAnnotation(EnabledIf.class);
 		ConditionEvaluationResult result = evaluate(annotation);
 		assertFalse(result.isDisabled());
-		String expected = "@org.junit.jupiter.api.EnabledIf(reason=\"{annotation}\", engine=\"nashorn\", value={\"true\"})";
 		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
-		assertEquals(expected, actual);
+		assertThat(actual)//
+				.startsWith("@org.junit.jupiter.api.EnabledIf(")//
+				.contains("reason=", "{annotation}", "engine=", "nashorn", "value=", "true")//
+				.endsWith(")");
 	}
 
 	private void assertLinesMatchCreatedScript(List<String> expectedLines, EnabledIf annotation, String language) {
