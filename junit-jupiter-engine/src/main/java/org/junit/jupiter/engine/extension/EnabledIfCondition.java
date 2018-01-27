@@ -29,6 +29,7 @@ import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
@@ -109,10 +110,9 @@ class EnabledIfCondition implements ExecutionCondition {
 			result = scriptEngine.eval(script);
 		}
 		catch (ScriptException e) {
-			logger.warn(e, () -> "Evaluation of @EnabledIf script failed, disabling execution");
-			logger.info(() -> "Script: `" + script + "`");
-			logger.info(() -> "Bindings: " + scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).entrySet());
-			return disabled(e.toString());
+			logger.error(() -> "Script: `" + script + "`");
+			logger.error(() -> "Bindings: " + scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).entrySet());
+			throw new JUnitException("Evaluation of @EnabledIf script failed", e);
 		}
 
 		// Trivial case: script returned a custom ConditionEvaluationResult instance.
