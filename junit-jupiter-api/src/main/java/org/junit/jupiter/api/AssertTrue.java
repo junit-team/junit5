@@ -10,8 +10,8 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
 import static org.junit.jupiter.api.AssertionUtils.fail;
-import static org.junit.jupiter.api.AssertionUtils.format;
 import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.function.BooleanSupplier;
@@ -25,6 +25,8 @@ import java.util.function.Supplier;
  */
 class AssertTrue {
 
+	private static final String EXPECTED_TRUE = "expected: <true> but was: <false>";
+
 	///CLOVER:OFF
 	private AssertTrue() {
 		/* no-op */
@@ -37,13 +39,13 @@ class AssertTrue {
 
 	static void assertTrue(boolean condition, String message) {
 		if (!condition) {
-			fail(format(Boolean.TRUE, Boolean.FALSE, message));
+			fail(buildPrefix(message) + EXPECTED_TRUE);
 		}
 	}
 
 	static void assertTrue(boolean condition, Supplier<String> messageSupplier) {
 		if (!condition) {
-			fail(format(Boolean.TRUE, Boolean.FALSE, nullSafeGet(messageSupplier)));
+			fail(buildPrefix(nullSafeGet(messageSupplier)) + EXPECTED_TRUE);
 		}
 	}
 
