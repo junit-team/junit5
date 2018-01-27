@@ -33,6 +33,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.StringUtils;
 
 /**
  * {@link ExecutionCondition} that supports the {@link EnabledIf @EnabledIf}
@@ -124,7 +125,7 @@ class EnabledIfCondition implements ExecutionCondition {
 
 		String resultAsString = String.valueOf(result);
 		String reason = createReason(annotation, script, resultAsString);
-		boolean enabled = false;
+		boolean enabled;
 
 		if (result instanceof Boolean) {
 			enabled = ((Boolean) result).booleanValue();
@@ -136,26 +137,28 @@ class EnabledIfCondition implements ExecutionCondition {
 		return enabled ? enabled(reason) : disabled(reason);
 	}
 
-	ScriptEngine findScriptEngine(String string) {
+	ScriptEngine findScriptEngine(String engine) {
 		ScriptEngineManager manager = new ScriptEngineManager();
-		ScriptEngine scriptEngine = manager.getEngineByName(string);
+		ScriptEngine scriptEngine = manager.getEngineByName(engine);
 		if (scriptEngine == null) {
-			scriptEngine = manager.getEngineByExtension(string);
+			scriptEngine = manager.getEngineByExtension(engine);
 		}
 		if (scriptEngine == null) {
-			scriptEngine = manager.getEngineByMimeType(string);
+			scriptEngine = manager.getEngineByMimeType(engine);
 		}
-		Preconditions.notNull(scriptEngine, "Script engine not found: " + string);
+		Preconditions.notNull(scriptEngine, () -> "Script engine not found: " + engine);
 		return scriptEngine;
 	}
 
 	String createScript(EnabledIf annotation, String language) {
+		String[] lines = annotation.value();
+
 		// trivial case: one liner
-		if (annotation.value().length == 1) {
-			return annotation.value()[0];
+		if (lines.length == 1) {
+			return lines[0];
 		}
 
-		return joinLines(System.lineSeparator(), Arrays.asList(annotation.value()));
+		return joinLines(System.lineSeparator(), Arrays.asList(lines));
 	}
 
 	String createReason(EnabledIf annotation, String script, String result) {
@@ -167,7 +170,7 @@ class EnabledIfCondition implements ExecutionCondition {
 	}
 
 	private String joinLines(String delimiter, Iterable<? extends CharSequence> elements) {
-		if (delimiter.isEmpty()) {
+		if (StringUtils.isBlank(delimiter)) {
 			delimiter = System.lineSeparator();
 		}
 		return String.join(delimiter, elements);
