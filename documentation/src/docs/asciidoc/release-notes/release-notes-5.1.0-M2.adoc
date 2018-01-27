@@ -1,13 +1,15 @@
 [[release-notes-5.1.0-M2]]
 == 5.1.0-M2
 
-*Date of Release:* ❓
+*Date of Release:* January 28, 2018
 
 *Scope:* <<../user-guide/index.adoc#extensions-registration-programmatic, Programmatic
-extension registration>> via `{RegisterExtension}`, improved implicit conversion support
-for `{ParameterizedTest}` arguments, refinements to the `ExtensionContext` API, support
-for re-running individual dynamic test and test template invocations within an IDE, tag
-expression language, minor bug fixes, and various additional enhancements.
+extension registration>> via `{RegisterExtension}`, `@EnabledIf` annotation for
+conditional test execution controlled by dynamic scripting languages, improved implicit
+conversion support for `{ParameterizedTest}` arguments, refinements to the
+`ExtensionContext` API, support for re-running individual dynamic test and test template
+invocations within an IDE, tag expression language, minor bug fixes, and various
+additional enhancements.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/18?closed=1+[5.1 M2] milestone page in the JUnit repository
@@ -98,6 +100,11 @@ _@API Guardian_ JAR _mandatory_ again.
   classes with `{RegisterExtension}`.
 ** See <<../user-guide/index.adoc#extensions-registration-programmatic, Programmatic
    Extension Registration>> in the User Guide for details.
+* New `@EnabledIf` annotation that is used to control whether the annotated test class or
+  test method is _enabled_ or _disabled_ by evaluating a script from a dynamic scripting
+  language such as JavaScript or Groovy.
+** See <<../user-guide/index.adoc#writing-tests-conditional, Conditional Test Execution>>
+   in the User Guide for details.
 * `@ValueSource` now additionally supports literal values of type `short`, `byte`,
   `float`, `char`, and `java.lang.Class` for parameterized tests.
 * New support for parameterized tests for implicit conversion from a `String` to an
@@ -147,8 +154,7 @@ _@API Guardian_ JAR _mandatory_ again.
    example, `fail<Nothing>("Some message")`. These new top-level functions remove this
    requirement by returning
    https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing.html[`Nothing`].
-* New `@EnabledIf` execution condition added. Supply a JavaScript controlling
-  whether the annotated container or test is executed.
+
 
 [[release-notes-5.1.0-M2-junit-vintage]]
 === JUnit Vintage
