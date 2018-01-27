@@ -10,11 +10,13 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh './gradlew --no-daemon clean build'
+        sh './gradlew --no-daemon -PenableJaCoCo clean build jacocoRootReport'
       }
       post {
         always {
           junit '**/build/test-results/**/*.xml'
+          jacoco execPattern: 'build/jacoco/*.exec', classPattern: 'build/jacoco/classes'
+          archiveArtifacts artifacts: 'build/reports/jacoco/jacocoRootReport/html/**'
         }
       }
     }
@@ -56,20 +58,6 @@ pipeline {
         milestone 2
         withCredentials([string(credentialsId: '9f982a37-747d-42bd-abf9-643534f579bd', variable: 'GRGIT_USER')]) {
           sh './gradlew --no-daemon --stacktrace gitPublishPush'
-        }
-      }
-    }
-    stage('Coverage') {
-      steps {
-        sh './gradlew --no-daemon -PenableClover clean cloverHtmlReport cloverXmlReport'
-      }
-      post {
-        success {
-          step([
-            $class: 'CloverPublisher',
-            cloverReportDir: 'build/reports/clover',
-            cloverReportFileName: 'clover.xml'
-          ])
         }
       }
     }
