@@ -110,9 +110,10 @@ class EnabledIfCondition implements ExecutionCondition {
 			result = scriptEngine.eval(script);
 		}
 		catch (ScriptException e) {
-			logger.error(() -> "Script: `" + script + "`");
-			logger.error(() -> "Bindings: " + scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).entrySet());
-			throw new JUnitException("Evaluation of @EnabledIf script failed", e);
+			String caption = "Evaluation of @EnabledIf script failed.";
+			String bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).entrySet().toString();
+			String message = String.format("%s script=`%s`, bindings=%s", caption, script, bindings);
+			throw new JUnitException(message, e);
 		}
 
 		// Trivial case: script returned a custom ConditionEvaluationResult instance.

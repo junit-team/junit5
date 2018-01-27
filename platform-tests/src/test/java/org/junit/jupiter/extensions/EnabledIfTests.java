@@ -88,12 +88,6 @@ class EnabledIfTests {
 	}
 
 	@Test
-	@EnabledIf(value = "syntactically, something is not right")
-	void syntaxFailure() {
-		fail("test must not be executed");
-	}
-
-	@Test
 	@EnabledIf("java.lang.System.getProperty('os.name').toLowerCase().contains('win')")
 	void win() {
 		assertTrue(System.getProperty("os.name").toLowerCase().contains("win"));

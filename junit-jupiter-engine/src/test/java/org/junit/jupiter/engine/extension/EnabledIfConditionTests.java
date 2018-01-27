@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,9 +31,16 @@ import javax.script.ScriptEngine;
 import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 class EnabledIfConditionTests {
+
+	private EnabledIfCondition condition = new EnabledIfCondition();
+
+	private ConditionEvaluationResult evaluate(EnabledIf annotation) {
+		return condition.evaluate(annotation, this::mockBinder);
+	}
 
 	@Test
 	void findJavaScriptEngine() {
@@ -58,7 +66,6 @@ class EnabledIfConditionTests {
 	}
 
 	private void findJavaScriptEngine(String string) {
-		EnabledIfCondition condition = new EnabledIfCondition();
 		ScriptEngine engine = condition.findScriptEngine(string);
 		assertNotNull(engine);
 	}
@@ -67,7 +74,7 @@ class EnabledIfConditionTests {
 	void trivialJavaScript() {
 		String script = "true";
 		EnabledIf annotation = mockEnabledIfAnnotation(script);
-		String actual = new EnabledIfCondition().createScript(annotation, "ECMAScript");
+		String actual = condition.createScript(annotation, "ECMAScript");
 		assertSame(script, actual);
 	}
 
@@ -75,7 +82,7 @@ class EnabledIfConditionTests {
 	void trivialGroovyScript() {
 		String script = "true";
 		EnabledIf annotation = mockEnabledIfAnnotation(script);
-		String actual = new EnabledIfCondition().createScript(annotation, "Groovy");
+		String actual = condition.createScript(annotation, "Groovy");
 		assertSame(script, actual);
 	}
 
@@ -94,7 +101,7 @@ class EnabledIfConditionTests {
 	@Test
 	void createReasonWithDefaultMessage() {
 		EnabledIf annotation = mockEnabledIfAnnotation("?");
-		String actual = new EnabledIfCondition().createReason(annotation, "?", "!");
+		String actual = condition.createReason(annotation, "?", "!");
 		assertEquals("Script `?` evaluated to: !", actual);
 	}
 
@@ -102,8 +109,17 @@ class EnabledIfConditionTests {
 	void createReasonWithCustomMessage() {
 		EnabledIf annotation = mockEnabledIfAnnotation("?");
 		when(annotation.reason()).thenReturn("result={result} script={script}");
-		String actual = new EnabledIfCondition().createReason(annotation, "?", "!");
+		String actual = condition.createReason(annotation, "?", "!");
 		assertEquals("result=! script=?", actual);
+	}
+
+	@Test
+	void syntaxErrorInScriptFailsTest() {
+		EnabledIf annotation = mockEnabledIfAnnotation("syntax error");
+		Exception exception = assertThrows(JUnitException.class, () -> evaluate(annotation));
+		assertTrue(exception.getMessage().contains("@EnabledIf"));
+		assertTrue(exception.getMessage().contains("script"));
+		assertTrue(exception.getMessage().contains("bindings"));
 	}
 
 	@Test
@@ -112,11 +128,17 @@ class EnabledIfConditionTests {
 		EnabledIf annotation = getClass() //
 				.getDeclaredMethod("createReasonWithAnnotationPlaceholder") //
 				.getDeclaredAnnotation(EnabledIf.class);
-		ConditionEvaluationResult result = new EnabledIfCondition().evaluate(annotation, this::mockBinder);
+		ConditionEvaluationResult result = evaluate(annotation);
 		assertFalse(result.isDisabled());
 		String expected = "@org.junit.jupiter.api.EnabledIf(reason=\"{annotation}\", engine=\"nashorn\", value={\"true\"})";
 		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
 		assertEquals(expected, actual);
+	}
+
+	private void assertLinesMatchCreatedScript(List<String> expectedLines, EnabledIf annotation, String language) {
+		EnabledIfCondition condition = new EnabledIfCondition();
+		String actual = condition.createScript(annotation, language);
+		assertLinesMatch(expectedLines, Arrays.asList(actual.split("\\R")));
 	}
 
 	private void mockBinder(Bindings bindings) {
@@ -124,12 +146,6 @@ class EnabledIfConditionTests {
 		bindings.put("jupiterUniqueId", "Mock for UniqueId");
 		bindings.put("jupiterDisplayName", "Mock for DisplayName");
 		bindings.put("jupiterConfigurationParameter", Collections.emptyMap());
-	}
-
-	private void assertLinesMatchCreatedScript(List<String> expectedLines, EnabledIf annotation, String language) {
-		EnabledIfCondition condition = new EnabledIfCondition();
-		String actual = condition.createScript(annotation, language);
-		assertLinesMatch(expectedLines, Arrays.asList(actual.split("\\R")));
 	}
 
 	private EnabledIf mockEnabledIfAnnotation(String... value) {

@@ -60,6 +60,7 @@ import org.apiguardian.api.API;
  * </ul>
  *
  * @since 5.1
+ * @see javax.script.ScriptEngine
  * @see org.junit.jupiter.api.extension.ExecutionCondition
  * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#enabled(String)
  * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#disabled(String)
@@ -78,9 +79,9 @@ public @interface EnabledIf {
 	/**
 	 * Short name of the {@link javax.script.ScriptEngine ScriptEngine} to use.
 	 *
-	 * <p>Use Oracle Nashorn as the default JavaScript ScriptEngine.
+	 * <p>Oracle Nashorn is used by default interpreting JavaScript scripts.
 	 *
-	 * Until Java SE 7, JDKs shipped with a JavaScript scripting engine based
+	 * <p>Until Java SE 7, JDKs shipped with a JavaScript scripting engine based
 	 * on Mozilla Rhino. Java SE 8 instead ships with the new engine called
 	 * Oracle Nashorn, which is based on JSR 292 and {@code invokedynamic}.
 	 *
