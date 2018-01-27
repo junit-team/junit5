@@ -556,15 +556,16 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-assertions">3.4. Assertions</a></li>
 <li><a href="#writing-tests-assumptions">3.5. Assumptions</a></li>
 <li><a href="#writing-tests-disabling">3.6. Disabling Tests</a></li>
-<li><a href="#writing-tests-tagging-and-filtering">3.7. Tagging and Filtering</a></li>
-<li><a href="#writing-tests-test-instance-lifecycle">3.8. Test Instance Lifecycle</a></li>
-<li><a href="#writing-tests-nested">3.9. Nested Tests</a></li>
-<li><a href="#writing-tests-dependency-injection">3.10. Dependency Injection for Constructors and Methods</a></li>
-<li><a href="#writing-tests-test-interfaces-and-default-methods">3.11. Test Interfaces and Default Methods</a></li>
-<li><a href="#writing-tests-repeated-tests">3.12. Repeated Tests</a></li>
-<li><a href="#writing-tests-parameterized-tests">3.13. Parameterized Tests</a></li>
-<li><a href="#writing-tests-test-templates">3.14. Test Templates</a></li>
-<li><a href="#writing-tests-dynamic-tests">3.15. Dynamic Tests</a></li>
+<li><a href="#writing-tests-conditional">3.7. Conditional Test Execution</a></li>
+<li><a href="#writing-tests-tagging-and-filtering">3.8. Tagging and Filtering</a></li>
+<li><a href="#writing-tests-test-instance-lifecycle">3.9. Test Instance Lifecycle</a></li>
+<li><a href="#writing-tests-nested">3.10. Nested Tests</a></li>
+<li><a href="#writing-tests-dependency-injection">3.11. Dependency Injection for Constructors and Methods</a></li>
+<li><a href="#writing-tests-test-interfaces-and-default-methods">3.12. Test Interfaces and Default Methods</a></li>
+<li><a href="#writing-tests-repeated-tests">3.13. Repeated Tests</a></li>
+<li><a href="#writing-tests-parameterized-tests">3.14. Parameterized Tests</a></li>
+<li><a href="#writing-tests-test-templates">3.15. Test Templates</a></li>
+<li><a href="#writing-tests-dynamic-tests">3.16. Dynamic Tests</a></li>
 </ul>
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
@@ -1463,13 +1464,57 @@ assumptions are static methods in the <code><a href="../api/org/junit/jupiter/ap
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-tagging-and-filtering"><a class="anchor" href="#writing-tests-tagging-and-filtering"></a>3.7. Tagging and Filtering</h3>
+<h3 id="writing-tests-conditional"><a class="anchor" href="#writing-tests-conditional"></a>3.7. Conditional Test Execution</h3>
+<div class="paragraph">
+<p>Here are some tests that are enabled or disabled depending
+on the evaluation of the script passed to the <code>@EnabledIf</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">EnabledIfTestsDemo</span> {
+
+    <span class="annotation">@Test</span> <span class="comment">// Static JavaScript expression.</span>
+    <span class="annotation">@EnabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">1 == 1</span><span class="delimiter">&quot;</span></span>)
+    <span class="type">void</span> testWillBeExecuted() {
+        assertTrue(<span class="integer">1</span> == <span class="integer">1</span>);
+    }
+
+    <span class="annotation">@RepeatedTest</span>(<span class="integer">10</span>) <span class="comment">// Dynamic JavaScript expression.</span>
+    <span class="annotation">@EnabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Math.random() &gt;= 0.314159</span><span class="delimiter">&quot;</span></span>)
+    <span class="type">void</span> testWillNeverOrSometimesBeExecuted() {
+    }
+
+    <span class="annotation">@Test</span> <span class="comment">// Regular expression testing bound system property.</span>
+    <span class="annotation">@EnabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/64/.test(systemProperty.get('os.arch'))</span><span class="delimiter">&quot;</span></span>)
+    <span class="type">void</span> testWillBeExecutedIfOsArchitectureContains64() {
+        assertTrue(<span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">os.arch</span><span class="delimiter">&quot;</span></span>).contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">64</span><span class="delimiter">&quot;</span></span>));
+    }
+
+    <span class="annotation">@Test</span> <span class="comment">// Multi-line script, import Java package and set custom reason.</span>
+    <span class="annotation">@EnabledIf</span>(value = {
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">load('nashorn:mozilla_compat.js')</span><span class="delimiter">&quot;</span></span>,
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">importPackage(java.nio.file)</span><span class="delimiter">&quot;</span></span>,
+                    <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>,
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">var path = Files.createTempFile('volatile-', '.temp')</span><span class="delimiter">&quot;</span></span>,
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">java.lang.System.getProperties().put('volatile', path)</span><span class="delimiter">&quot;</span></span>,
+                    <span class="string"><span class="delimiter">&quot;</span><span class="content">Files.exists(path)</span><span class="delimiter">&quot;</span></span>
+                },
+                reason = <span class="string"><span class="delimiter">&quot;</span><span class="content">Self-fulfilling: {result}</span><span class="delimiter">&quot;</span></span>)
+    <span class="type">void</span> tautology() {
+        assertTrue(Files.exists((Path) <span class="predefined-type">System</span>.getProperties().get(<span class="string"><span class="delimiter">&quot;</span><span class="content">volatile</span><span class="delimiter">&quot;</span></span>)));
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="writing-tests-tagging-and-filtering"><a class="anchor" href="#writing-tests-tagging-and-filtering"></a>3.8. Tagging and Filtering</h3>
 <div class="paragraph">
 <p>Test classes and methods can be tagged via the <code>@Tag</code> annotation. Those tags can later be
 used to filter <a href="#running-tests">test discovery and execution</a>.</p>
 </div>
 <div class="sect3">
-<h4 id="syntax-rules-for-tags"><a class="anchor" href="#syntax-rules-for-tags"></a>3.7.1. Syntax Rules for Tags</h4>
+<h4 id="syntax-rules-for-tags"><a class="anchor" href="#syntax-rules-for-tags"></a>3.8.1. Syntax Rules for Tags</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1526,7 +1571,7 @@ characters have been removed.
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-instance-lifecycle"><a class="anchor" href="#writing-tests-test-instance-lifecycle"></a>3.8. Test Instance Lifecycle</h3>
+<h3 id="writing-tests-test-instance-lifecycle"><a class="anchor" href="#writing-tests-test-instance-lifecycle"></a>3.9. Test Instance Lifecycle</h3>
 <div class="paragraph">
 <p>In order to allow individual test methods to be executed in isolation and to avoid
 unexpected side effects due to mutable test instance state, JUnit creates a new instance
@@ -1567,7 +1612,7 @@ with <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</c
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-test-instance-lifecycle-changing-default"><a class="anchor" href="#writing-tests-test-instance-lifecycle-changing-default"></a>3.8.1. Changing the Default Test Instance Lifecycle</h4>
+<h4 id="writing-tests-test-instance-lifecycle-changing-default"><a class="anchor" href="#writing-tests-test-instance-lifecycle-changing-default"></a>3.9.1. Changing the Default Test Instance Lifecycle</h4>
 <div class="paragraph">
 <p>If a test class or test interface is not annotated with <code>@TestInstance</code>, JUnit Jupiter
 will use a <em>default</em> lifecycle mode. The standard <em>default</em> mode is <code>PER_METHOD</code>;
@@ -1620,7 +1665,7 @@ configuration file instead of via a JVM system property.
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-nested"><a class="anchor" href="#writing-tests-nested"></a>3.9. Nested Tests</h3>
+<h3 id="writing-tests-nested"><a class="anchor" href="#writing-tests-nested"></a>3.10. Nested Tests</h3>
 <div class="paragraph">
 <p>Nested tests give the test writer more capabilities to express the relationship among
 several group of tests. Here&#8217;s an elaborate example.</p>
@@ -1734,7 +1779,7 @@ test class with <code>@TestInstance(Lifecycle.PER_CLASS)</code> (see
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dependency-injection"><a class="anchor" href="#writing-tests-dependency-injection"></a>3.10. Dependency Injection for Constructors and Methods</h3>
+<h3 id="writing-tests-dependency-injection"><a class="anchor" href="#writing-tests-dependency-injection"></a>3.11. Dependency Injection for Constructors and Methods</h3>
 <div class="paragraph">
 <p>In all prior JUnit versions, test constructors or methods were not allowed to have
 parameters (at least not with the standard <code>Runner</code> implementations). As one of the major
@@ -1908,7 +1953,7 @@ methods.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-interfaces-and-default-methods"><a class="anchor" href="#writing-tests-test-interfaces-and-default-methods"></a>3.11. Test Interfaces and Default Methods</h3>
+<h3 id="writing-tests-test-interfaces-and-default-methods"><a class="anchor" href="#writing-tests-test-interfaces-and-default-methods"></a>3.12. Test Interfaces and Default Methods</h3>
 <div class="paragraph">
 <p>JUnit Jupiter allows <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>,
 <code>@TestTemplate</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be declared on interface <code>default</code>
@@ -2138,7 +2183,7 @@ The above tests are merely meant as examples and therefore not complete.
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-repeated-tests"><a class="anchor" href="#writing-tests-repeated-tests"></a>3.12. Repeated Tests</h3>
+<h3 id="writing-tests-repeated-tests"><a class="anchor" href="#writing-tests-repeated-tests"></a>3.13. Repeated Tests</h3>
 <div class="paragraph">
 <p>JUnit Jupiter provides the ability to repeat a test a specified number of times simply by
 annotating a method with <code>@RepeatedTest</code> and specifying the total number of repetitions
@@ -2193,7 +2238,7 @@ repetitions programmatically, a developer can choose to have an instance of
 <code>RepetitionInfo</code> injected into a <code>@RepeatedTest</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code> method.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-repeated-tests-examples"><a class="anchor" href="#writing-tests-repeated-tests-examples"></a>3.12.1. Repeated Test Examples</h4>
+<h4 id="writing-tests-repeated-tests-examples"><a class="anchor" href="#writing-tests-repeated-tests-examples"></a>3.13.1. Repeated Test Examples</h4>
 <div class="paragraph">
 <p>The <code>RepeatedTestsDemo</code> class at the end of this section demonstrates several examples of
 repeated tests.</p>
@@ -2347,7 +2392,7 @@ to the console.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-parameterized-tests"><a class="anchor" href="#writing-tests-parameterized-tests"></a>3.13. Parameterized Tests</h3>
+<h3 id="writing-tests-parameterized-tests"><a class="anchor" href="#writing-tests-parameterized-tests"></a>3.14. Parameterized Tests</h3>
 <div class="paragraph">
 <p>Parameterized tests make it possible to run a test multiple times with different
 arguments. They are declared just like regular <code>@Test</code> methods but use the
@@ -2391,14 +2436,14 @@ following.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>3.13.1. Required Setup</h4>
+<h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>3.14.1. Required Setup</h4>
 <div class="paragraph">
 <p>In order to use parameterized tests you need to add a dependency on the
 <code>junit-jupiter-params</code> artifact. Please refer to <a href="#dependency-metadata">Dependency Metadata</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.13.2. Sources of Arguments</h4>
+<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.14.2. Sources of Arguments</h4>
 <div class="paragraph">
 <p>Out of the box, JUnit Jupiter provides quite a few <em>source</em> annotations. Each of the
 following subsections provides a brief overview and an example for each of them. Please
@@ -2701,7 +2746,7 @@ primitive type.
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.13.3. Argument Conversion</h4>
+<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.14.3. Argument Conversion</h4>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-argument-conversion-implicit"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-implicit"></a>Implicit Conversion</h5>
 <div class="paragraph">
@@ -2967,7 +3012,7 @@ composed annotation <code>JavaTimeConversionPattern</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.13.4. Customizing Display Names</h4>
+<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.14.4. Customizing Display Names</h4>
 <div class="paragraph">
 <p>By default, the display name of a parameterized test invocation contains the invocation
 index and the <code>String</code> representation of all arguments for that specific invocation.
@@ -3025,7 +3070,7 @@ However, you can customize invocation display names via the <code>name</code> at
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.13.5. Lifecycle and Interoperability</h4>
+<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.14.5. Lifecycle and Interoperability</h4>
 <div class="paragraph">
 <p>Each invocation of a parameterized test has the same lifecycle as a regular <code>@Test</code>
 method. For example, <code>@BeforeEach</code> methods will be executed before each invocation.
@@ -3062,7 +3107,7 @@ lifecycle methods (e.g. <code>@BeforeEach</code>) and test class constructors.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.14. Test Templates</h3>
+<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.15. Test Templates</h3>
 <div class="paragraph">
 <p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method is not a regular test case but rather a template for test
 cases. As such, it is designed to be invoked multiple times depending on the number of
@@ -3074,7 +3119,7 @@ method with full support for the same lifecycle callbacks and extensions. Please
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.15. Dynamic Tests</h3>
+<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.16. Dynamic Tests</h3>
 <div class="paragraph">
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in
 <a href="#writing-tests-annotations">Annotations</a> is very similar to the <code>@Test</code> annotation in JUnit 4. Both
@@ -3151,7 +3196,7 @@ Dynamic tests are currently an <em>experimental</em> feature. Consult the table 
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.15.1. Dynamic Test Examples</h4>
+<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.16.1. Dynamic Test Examples</h4>
 <div class="paragraph">
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories
 and dynamic tests.</p>
@@ -5822,7 +5867,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-26 15:46:20 EST
+Last updated 2018-01-27 07:27:42 EST
 </div>
 </div>
 </body>
