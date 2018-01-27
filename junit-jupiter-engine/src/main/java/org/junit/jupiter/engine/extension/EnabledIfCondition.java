@@ -35,7 +35,8 @@ import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * {@link ExecutionCondition} that supports the {@link EnabledIf @EnabledIf} annotation.
+ * {@link ExecutionCondition} that supports the {@link EnabledIf @EnabledIf}
+ * annotation.
  *
  * @since 5.1
  * @see #evaluateExecutionCondition(ExtensionContext)
@@ -121,10 +122,18 @@ class EnabledIfCondition implements ExecutionCondition {
 			return (ConditionEvaluationResult) result;
 		}
 
-		// Parse result for "true" (ignoring case) and prepare reason message.
 		String resultAsString = String.valueOf(result);
 		String reason = createReason(annotation, script, resultAsString);
-		return Boolean.parseBoolean(resultAsString) ? enabled(reason) : disabled(reason);
+		boolean enabled = false;
+
+		if (result instanceof Boolean) {
+			enabled = ((Boolean) result).booleanValue();
+		}
+		else {
+			enabled = Boolean.parseBoolean(resultAsString);
+		}
+
+		return enabled ? enabled(reason) : disabled(reason);
 	}
 
 	ScriptEngine findScriptEngine(String string) {

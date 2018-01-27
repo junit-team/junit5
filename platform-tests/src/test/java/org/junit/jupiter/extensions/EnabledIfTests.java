@@ -36,12 +36,34 @@ class EnabledIfTests {
 
 	@Test
 	@EnabledIf("true")
-	void justTrue() {
+	void booleanTrue() {
+	}
+
+	@Test
+	@EnabledIf("java.lang.Boolean.TRUE")
+	void booleanWrapperTrue() {
+	}
+
+	@Test
+	@EnabledIf("'TrUe'")
+	void stringTrue() {
 	}
 
 	@Test
 	@EnabledIf("false")
-	void justFalse() {
+	void booleanFalse() {
+		fail("test must not be executed");
+	}
+
+	@Test
+	@EnabledIf("java.lang.Boolean.FALSE")
+	void booleanWrapperFalse() {
+		fail("test must not be executed");
+	}
+
+	@Test
+	@EnabledIf("'FaLsE'")
+	void stringFalse() {
 		fail("test must not be executed");
 	}
 
@@ -69,7 +91,7 @@ class EnabledIfTests {
 	}
 
 	@Test
-	@EnabledIf(value = { //
+	@EnabledIf({ //
 			"load('nashorn:mozilla_compat.js')", //
 			"importPackage(java.nio.file)", //
 			"", //
@@ -82,15 +104,21 @@ class EnabledIfTests {
 	}
 
 	@Test
-	@EnabledIf(value = "jupiterConfigurationParameter.get('some.value.or.null')")
+	@EnabledIf("jupiterConfigurationParameter.get('some.value.or.null')")
 	void getJupiterConfigurationParameter() {
 		fail("test must not be executed");
 	}
 
 	@Test
 	@EnabledIf("java.lang.System.getProperty('os.name').toLowerCase().contains('win')")
-	void win() {
+	void onMicrosoftWindows() {
 		assertTrue(System.getProperty("os.name").toLowerCase().contains("win"));
+	}
+
+	@Test
+	@EnabledIf("java.lang.System.getProperty('os.name').toLowerCase().contains('mac')")
+	void onMacOs() {
+		assertTrue(System.getProperty("os.name").toLowerCase().contains("mac"));
 	}
 
 	@Test
@@ -124,9 +152,10 @@ class EnabledIfTests {
 	void gamble() {
 	}
 
-	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
 	@EnabledIf("Math.random() >= 0.5")
 	@interface CoinToss {
 	}
+
 }

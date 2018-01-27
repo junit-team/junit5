@@ -35,13 +35,14 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
+/**
+ * Unit tests for {@link EnabledIfCondition}.
+ *
+ * @since 5.1
+ */
 class EnabledIfConditionTests {
 
-	private EnabledIfCondition condition = new EnabledIfCondition();
-
-	private ConditionEvaluationResult evaluate(EnabledIf annotation) {
-		return condition.evaluate(annotation, this::mockBinder);
-	}
+	private final EnabledIfCondition condition = new EnabledIfCondition();
 
 	@Test
 	void findJavaScriptEngine() {
@@ -138,6 +139,10 @@ class EnabledIfConditionTests {
 				.endsWith(")");
 	}
 
+	private ConditionEvaluationResult evaluate(EnabledIf annotation) {
+		return condition.evaluate(annotation, this::mockBinder);
+	}
+
 	private void assertLinesMatchCreatedScript(List<String> expectedLines, EnabledIf annotation, String language) {
 		EnabledIfCondition condition = new EnabledIfCondition();
 		String actual = condition.createScript(annotation, language);
@@ -165,4 +170,5 @@ class EnabledIfConditionTests {
 		}
 		return annotation;
 	}
+
 }
