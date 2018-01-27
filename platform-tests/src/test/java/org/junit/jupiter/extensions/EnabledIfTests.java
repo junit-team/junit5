@@ -147,14 +147,18 @@ class EnabledIfTests {
 		fail("test must not be executed");
 	}
 
-	@RepeatedTest(10)
+	@RepeatedTest(2)
 	@CoinToss
 	void gamble() {
 	}
 
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
-	@EnabledIf("Math.random() >= 0.5")
+	// @CoinToss was originally annotated as follows:
+	// @EnabledIf("Math.random() >= 0.5")
+	// ... but we've replaced the randomness in order to ensure stability in the
+	// number of tests executed within our test suite.
+	@EnabledIf("Math.random() >= 0.0")
 	@interface CoinToss {
 	}
 
