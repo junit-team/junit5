@@ -49,7 +49,7 @@ class ExtensionRegistryTests {
 	void newRegistryWithoutParentHasDefaultExtensions() {
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
-		assertEquals(4, extensions.size());
+		assertEquals(5, extensions.size());
 		assertDefaultGlobalExtensionsAreRegistered();
 	}
 
@@ -62,7 +62,7 @@ class ExtensionRegistryTests {
 
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
-		assertEquals(5, extensions.size());
+		assertEquals(6, extensions.size());
 		assertDefaultGlobalExtensionsAreRegistered();
 
 		assertExtensionRegistered(registry, ServiceLoaderExtension.class);
@@ -155,13 +155,14 @@ class ExtensionRegistryTests {
 	}
 
 	private void assertDefaultGlobalExtensionsAreRegistered() {
+		assertExtensionRegistered(registry, EnabledIfCondition.class);
 		assertExtensionRegistered(registry, DisabledCondition.class);
 		assertExtensionRegistered(registry, RepeatedTestExtension.class);
 		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
 		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
 
 		assertEquals(2, countExtensions(registry, ParameterResolver.class));
-		assertEquals(1, countExtensions(registry, ExecutionCondition.class));
+		assertEquals(2, countExtensions(registry, ExecutionCondition.class));
 		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
 	}
 
