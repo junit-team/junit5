@@ -105,7 +105,13 @@ class EnabledIfTests {
 
 	@Test
 	@EnabledIf("jupiterConfigurationParameter.get('some.value.or.null')")
-	void getJupiterConfigurationParameter() {
+	void getJupiterConfigurationParameterWithJavaScript() {
+		fail("test must not be executed");
+	}
+
+	@Test
+	@EnabledIf(engine = "groovy", value = "jupiterConfigurationParameter.get('some.value.or.null')")
+	void getJupiterConfigurationParameterWithGroovy() {
 		fail("test must not be executed");
 	}
 

@@ -67,8 +67,9 @@ import org.apiguardian.api.API;
  *
  * <h3>Bindings</h3>
  *
- * <p>An {@link Accessor accessor} provides access to a map-like structure.
- * The following property accessors are available.
+ * <p>An <em>accessor</em> provides access to a map-like structure via a simple
+ * {@code String get(String name)} method. The following property accessors are
+ * automatically available within scripts.
  *
  * <ul>
  * <li>{@link Bind#SYSTEM_ENVIRONMENT systemEnvironment}: Operating system environment variable accessor</li>
@@ -137,22 +138,6 @@ public @interface EnabledIf {
 	 * @see <a href="http://www.oracle.com/technetwork/articles/java/jf14-nashorn-2126515.html">Oracle Nashorn</a>
 	 */
 	String engine() default "nashorn";
-
-	/**
-	 * Used to access named properties without exposing direct access to the
-	 * underlying source.
-	 */
-	interface Accessor {
-
-		/**
-		 * Get the value of the property with the supplied name.
-		 *
-		 * @param name the name of the property to look up
-		 * @return the value assigned to the specified name; may be {@code null}
-		 */
-		String get(String name);
-
-	}
 
 	/**
 	 * Names used for script {@link javax.script.Bindings bindings}.

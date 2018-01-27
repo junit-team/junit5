@@ -17,7 +17,6 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -44,25 +43,24 @@ import org.junit.platform.commons.util.StringUtils;
  */
 class EnabledIfCondition implements ExecutionCondition {
 
+	private static final Logger logger = LoggerFactory.getLogger(EnabledIfCondition.class);
+
 	/**
-	 * Pre-created {@code ConditionEvaluationResult} singleton that is
-	 * returned when no {@code @EnabledIf} annotation is (meta-)present
-	 * on the current element.
+	 * {@code ConditionEvaluationResult} singleton that is returned when no
+	 * {@code @EnabledIf} annotation is (meta-)present on the current element.
 	 */
 	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled("@EnabledIf is not present");
 
-	// --- Values used in Bindings --------------------------------------------
+	// --- Values used in Bindings ---------------------------------------------
 
-	private static final Accessor BIND_SYSTEM_PROPERTY_ACCESSOR = Accessor.of(System::getProperty);
-	private static final Accessor BIND_SYSTEM_ENVIRONMENT_ACCESSOR = Accessor.of(System::getenv);
+	private static final Accessor systemPropertyAccessor = new SystemPropertyAccessor();
+	private static final Accessor environmentVariableAccessor = new EnvironmentVariableAccessor();
 
-	// --- Placeholders usable in reason() messages ---------------------------
+	// --- Placeholders usable in reason messages ------------------------------
 
 	private static final String REASON_ANNOTATION_PLACEHOLDER = "{annotation}";
 	private static final String REASON_SCRIPT_PLACEHOLDER = "{script}";
 	private static final String REASON_RESULT_PLACEHOLDER = "{result}";
-
-	private static final Logger logger = LoggerFactory.getLogger(EnabledIfCondition.class);
 
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
@@ -72,7 +70,7 @@ class EnabledIfCondition implements ExecutionCondition {
 		}
 
 		// Bind context-aware names to their current values
-		Accessor configurationParameterAccessor = Accessor.of(context::getConfigurationParameter);
+		Accessor configurationParameterAccessor = new ConfigurationParameterAccessor(context);
 		Consumer<Bindings> contextBinder = bindings -> {
 			bindings.put(EnabledIf.Bind.JUPITER_TAGS, context.getTags());
 			bindings.put(EnabledIf.Bind.JUPITER_UNIQUE_ID, context.getUniqueId());
@@ -94,8 +92,8 @@ class EnabledIfCondition implements ExecutionCondition {
 
 		// Prepare bindings
 		Bindings bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
-		bindings.put(EnabledIf.Bind.SYSTEM_PROPERTY, BIND_SYSTEM_PROPERTY_ACCESSOR);
-		bindings.put(EnabledIf.Bind.SYSTEM_ENVIRONMENT, BIND_SYSTEM_ENVIRONMENT_ACCESSOR);
+		bindings.put(EnabledIf.Bind.SYSTEM_PROPERTY, systemPropertyAccessor);
+		bindings.put(EnabledIf.Bind.SYSTEM_ENVIRONMENT, environmentVariableAccessor);
 		binder.accept(bindings);
 		logger.debug(() -> "Bindings: " + bindings);
 
@@ -177,31 +175,51 @@ class EnabledIfCondition implements ExecutionCondition {
 	}
 
 	/**
-	 * Provides read-only access to e.g. values of {@link java.util.Map}.
-	 *
-	 * <p>Usage example: {@code Accessor.of(System::getProperty)} is
-	 * analog for {@code System.getProperty(key)} without exposing the
-	 * system properties instance.
+	 * Used to access named properties without exposing direct access to the
+	 * underlying source.
 	 */
-	public static class Accessor implements EnabledIf.Accessor {
+	// apparently needs to be public (even if in a package private class); otherwise
+	// we encounter errors such as the following during script evaluation:
+	// TypeError: jupiterConfigurationParameter.get is not a function
+	public interface Accessor {
 
-		static Accessor of(Function<String, Object> accessor) {
-			return new Accessor(accessor);
+		/**
+		 * Get the value of the property with the supplied name.
+		 *
+		 * @param name the name of the property to look up
+		 * @return the value assigned to the specified name; may be {@code null}
+		 */
+		String get(String name);
+
+	}
+
+	private static class SystemPropertyAccessor implements Accessor {
+
+		@Override
+		public String get(String name) {
+			return System.getProperty(name);
 		}
+	}
 
-		private final Function<String, Object> accessor;
+	private static class EnvironmentVariableAccessor implements Accessor {
 
-		private Accessor(Function<String, Object> accessor) {
-			this.accessor = accessor;
+		@Override
+		public String get(String name) {
+			return System.getenv(name);
+		}
+	}
+
+	private static class ConfigurationParameterAccessor implements Accessor {
+
+		private final ExtensionContext context;
+
+		ConfigurationParameterAccessor(ExtensionContext context) {
+			this.context = context;
 		}
 
 		@Override
 		public String get(String key) {
-			Object value = accessor.apply(key);
-			if (value instanceof Optional) {
-				value = ((Optional<?>) value).orElse(null);
-			}
-			return String.valueOf(value);
+			return this.context.getConfigurationParameter(key).orElse(null);
 		}
 	}
 
