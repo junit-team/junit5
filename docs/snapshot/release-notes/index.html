@@ -594,14 +594,16 @@ vendors.</p>
 <h2 id="release-notes-5.1.0-M2"><a class="anchor" href="#release-notes-5.1.0-M2"></a>5.1.0-M2</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> January 28, 2018</p>
 </div>
 <div class="paragraph">
 <p><strong>Scope:</strong> <a href="../user-guide/index.html#extensions-registration-programmatic">Programmatic
-extension registration</a> via <code><a href="../api/org/junit/jupiter/api/extension/RegisterExtension.html">@RegisterExtension</a></code>, improved implicit conversion support
-for <code><a href="../api/org/junit/jupiter/params/ParameterizedTest.html">@ParameterizedTest</a></code> arguments, refinements to the <code>ExtensionContext</code> API, support
-for re-running individual dynamic test and test template invocations within an IDE, tag
-expression language, minor bug fixes, and various additional enhancements.</p>
+extension registration</a> via <code><a href="../api/org/junit/jupiter/api/extension/RegisterExtension.html">@RegisterExtension</a></code>, <code>@EnabledIf</code> annotation for
+conditional test execution controlled by dynamic scripting languages, improved implicit
+conversion support for <code><a href="../api/org/junit/jupiter/params/ParameterizedTest.html">@ParameterizedTest</a></code> arguments, refinements to the
+<code>ExtensionContext</code> API, support for re-running individual dynamic test and test template
+invocations within an IDE, tag expression language, minor bug fixes, and various
+additional enhancements.</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -743,6 +745,19 @@ Extension Registration</a> in the User Guide for details.</p>
 </div>
 </li>
 <li>
+<p>New <code>@EnabledIf</code> annotation that is used to control whether the annotated test class or
+test method is <em>enabled</em> or <em>disabled</em> by evaluating a script from a dynamic scripting
+language such as JavaScript or Groovy.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="../user-guide/index.html#writing-tests-conditional">Conditional Test Execution</a>
+in the User Guide for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p><code>@ValueSource</code> now additionally supports literal values of type <code>short</code>, <code>byte</code>,
 <code>float</code>, <code>char</code>, and <code>java.lang.Class</code> for parameterized tests.</p>
 </li>
@@ -848,10 +863,6 @@ requirement by returning
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>New <code>@EnabledIf</code> execution condition added. Supply a JavaScript controlling
-whether the annotated container or test is executed.</p>
 </li>
 </ul>
 </div>
@@ -1384,7 +1395,7 @@ online.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-01-27 10:04:42 EST
+Last updated 2018-01-27 07:27:42 EST
 </div>
 </div>
 </body>
