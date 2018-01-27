@@ -36,12 +36,13 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 
 ## Code Coverage
 
-[![codecov](https://codecov.io/gh/junit-team/junit5/branch/master/graph/badge.svg)](https://codecov.io/gh/junit-team/junit5)
-
-Code coverage using [OpenClover] for the latest build is available on the
-[Jenkins CI server].
+Code coverage using [JaCoCo] for the latest build is available on the
+[Jenkins CI server] and on [Codecov].
 
 A code coverage report can also be generated locally by executing
+`gradlew -PenableJaCoCo clean jacocoRootReport`. The results will be available in
+`build/reports/jacoco/jacocoRootReport/html/index.html`.
+Alternatively, [OpenClover] can be used locally via
 `gradlew -PenableClover clean cloverHtmlReport`. The results will be available in
 `build/reports/clover/html/index.html`.
 
@@ -140,13 +141,14 @@ as it is not intended to be used as a module.
 
 
 [Automatic-Module-Name]: http://mail.openjdk.java.net/pipermail/jpms-spec-experts/2017-April/000667.html
-[OpenClover]: http://openclover.org
+[Codecov]: https://codecov.io/gh/junit-team/junit5
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
-[Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/clover-report/
+[JaCoCo]: http://www.eclemma.org/jacoco/
 [Javadoc]: http://junit.org/junit5/docs/current/api/
-[User Guide]: http://junit.org/junit5/docs/current/user-guide/
+[JDK-9]: http://jdk.java.net/9/
+[Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/artifact/build/reports/jacoco/jacocoRootReport/html/index.html
+[OpenClover]: http://openclover.org
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
-[Twitter]: https://twitter.com/junitlambda
-[JDK-9]: http://jdk.java.net/9/
+[User Guide]: http://junit.org/junit5/docs/current/user-guide/
