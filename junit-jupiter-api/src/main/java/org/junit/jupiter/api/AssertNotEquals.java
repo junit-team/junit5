@@ -39,7 +39,6 @@ class AssertNotEquals {
 		if (objectsAreEqual(unexpected, actual)) {
 			failEqual(actual, message);
 		}
-
 	}
 
 	static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
@@ -51,4 +50,5 @@ class AssertNotEquals {
 	private static void failEqual(Object actual, String message) {
 		fail(buildPrefix(message) + "expected: not equal but was: <" + actual + ">");
 	}
+
 }

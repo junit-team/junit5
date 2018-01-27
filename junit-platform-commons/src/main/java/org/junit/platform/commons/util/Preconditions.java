@@ -162,7 +162,6 @@ public final class Preconditions {
 	 * @see #notNull(Object, String)
 	 */
 	public static <T> T[] containsNoNullElements(T[] array, String message) throws PreconditionViolationException {
-
 		if (array != null) {
 			Arrays.stream(array).forEach(object -> notNull(object, message));
 		}
