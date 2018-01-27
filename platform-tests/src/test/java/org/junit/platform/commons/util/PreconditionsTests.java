@@ -65,14 +65,14 @@ class PreconditionsTests {
 	@Test
 	void notEmptyPassesForNonEmptyArray() {
 		String[] array = new String[] { "a", "b", "c" };
-		String[] nonEmptyArray = notEmpty(array, "message");
+		String[] nonEmptyArray = notEmpty(array, () -> "should not fail");
 		assertSame(array, nonEmptyArray);
 	}
 
 	@Test
 	void notEmptyPassesForNonEmptyCollection() {
 		Collection<String> collection = Arrays.asList("a", "b", "c");
-		Collection<String> nonEmptyCollection = notEmpty(collection, "message");
+		Collection<String> nonEmptyCollection = notEmpty(collection, () -> "should not fail");
 		assertSame(collection, nonEmptyCollection);
 	}
 
@@ -129,13 +129,19 @@ class PreconditionsTests {
 	@Test
 	void containsNoNullElementsPassesForArrayThatIsNullOrEmpty() {
 		containsNoNullElements((Object[]) null, "array is null");
+		containsNoNullElements((Object[]) null, () -> "array is null");
+
 		containsNoNullElements(new Object[0], "array is empty");
+		containsNoNullElements(new Object[0], () -> "array is empty");
 	}
 
 	@Test
 	void containsNoNullElementsPassesForCollectionThatIsNullOrEmpty() {
 		containsNoNullElements((List<?>) null, "collection is null");
 		containsNoNullElements(emptyList(), "collection is empty");
+
+		containsNoNullElements((List<?>) null, () -> "collection is null");
+		containsNoNullElements(emptyList(), () -> "collection is empty");
 	}
 
 	@Test
@@ -149,6 +155,9 @@ class PreconditionsTests {
 	void containsNoNullElementsPassesForCollectionContainingNonNullElements() {
 		Collection<String> input = Arrays.asList("a", "b", "c");
 		Collection<String> output = containsNoNullElements(input, "message");
+		assertSame(input, output);
+
+		output = containsNoNullElements(input, () -> "message");
 		assertSame(input, output);
 	}
 

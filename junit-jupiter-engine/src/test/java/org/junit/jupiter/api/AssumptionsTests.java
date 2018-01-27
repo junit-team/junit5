@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,6 +70,18 @@ class AssumptionsTests {
 	}
 
 	@Test
+	void assumeTrueWithBooleanTrueAndMessageSupplier() {
+		String foo = null;
+		try {
+			assumeTrue(true, () -> "true");
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
+	}
+
+	@Test
 	void assumeTrueWithBooleanSupplierTrueAndMessageSupplier() {
 		String foo = null;
 		try {
@@ -93,6 +106,11 @@ class AssumptionsTests {
 	@Test
 	void assumeTrueWithBooleanFalseAndStringMessage() {
 		assertAssumptionFailure("test", () -> assumeTrue(false, "test"));
+	}
+
+	@Test
+	void assumeTrueWithBooleanFalseAndNullStringMessage() {
+		assertAssumptionFailure(null, () -> assumeTrue(false, (String) null));
 	}
 
 	@Test
@@ -141,6 +159,30 @@ class AssumptionsTests {
 		String foo = null;
 		try {
 			assumeFalse(false, "false");
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
+	}
+
+	@Test
+	void assumeFalseWithBooleanFalseAndMessageSupplier() {
+		String foo = null;
+		try {
+			assumeFalse(false, () -> "false");
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
+	}
+
+	@Test
+	void assumeFalseWithBooleanSupplierFalseAndStringMessage() {
+		String foo = null;
+		try {
+			assumeFalse(() -> false, "false");
 			foo = "foo";
 		}
 		finally {
@@ -222,6 +264,19 @@ class AssumptionsTests {
 		assertEquals(0, list.size());
 	}
 
+	@Test
+	void assumingThatWithBooleanTrueThrowingException() {
+		try {
+			assumingThat(true, () -> {
+				throw new Exception();
+			});
+			fail("this should not be called");
+		}
+		catch (Throwable ex) {
+			assertTrue(ex instanceof Exception);
+		}
+	}
+
 	// -------------------------------------------------------------------
 
 	private static void assertAssumptionFailure(String msg, Executable executable) {
@@ -231,7 +286,8 @@ class AssumptionsTests {
 		}
 		catch (Throwable ex) {
 			assertTrue(ex instanceof TestAbortedException);
-			assertMessageEquals((TestAbortedException) ex, "Assumption failed: " + msg);
+			assertMessageEquals((TestAbortedException) ex,
+				msg == null ? "Assumption failed" : "Assumption failed: " + msg);
 		}
 	}
 

@@ -28,12 +28,14 @@ class AssertSameAssertionsTests {
 	@Test
 	void assertSameWithTwoNulls() {
 		assertSame(null, null);
+		assertSame(null, null, () -> "should not fail");
 	}
 
 	@Test
 	void assertSameWithSameObject() {
 		Object foo = new Object();
 		assertSame(foo, foo);
+		assertSame(foo, foo, () -> "should not fail");
 	}
 
 	@Test

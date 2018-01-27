@@ -39,6 +39,16 @@ class AssertTrueAssertionsTests {
 	}
 
 	@Test
+	void assertTrueWithBooleanTrueAndMessageSupplier() {
+		assertTrue(true, () -> "test");
+	}
+
+	@Test
+	void assertTrueWithBooleanSupplierTrueAndMessageSupplier() {
+		assertTrue(() -> true, () -> "test");
+	}
+
+	@Test
 	void assertTrueWithBooleanFalseAndDefaultMessage() {
 		try {
 			assertTrue(false);
@@ -53,6 +63,17 @@ class AssertTrueAssertionsTests {
 	void assertTrueWithBooleanFalseAndString() {
 		try {
 			assertTrue(false, "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "test ==> expected: <true> but was: <false>");
+		}
+	}
+
+	@Test
+	void assertTrueWithBooleanFalseAndMessageSupplier() {
+		try {
+			assertTrue(false, () -> "test");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
