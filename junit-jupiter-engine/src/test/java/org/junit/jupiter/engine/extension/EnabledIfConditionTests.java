@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import javax.script.Bindings;
 import javax.script.ScriptEngine;
@@ -91,13 +90,15 @@ class EnabledIfConditionTests {
 	@Test
 	void trivialNonJavaScript() {
 		EnabledIf annotation = mockEnabledIfAnnotation("one", "two");
-		assertLinesMatchCreatedScript(Arrays.asList("one", "two"), annotation, "unknown language");
+		String script = condition.createScript(annotation, "unknown language");
+		assertLinesMatch(Arrays.asList("one", "two"), Arrays.asList(script.split("\\R")));
 	}
 
 	@Test
 	void createJavaScriptMultipleLines() {
 		EnabledIf annotation = mockEnabledIfAnnotation("m1()", "m2()");
-		assertLinesMatchCreatedScript(Arrays.asList("m1()", "m2()"), annotation, "ECMAScript");
+		String script = condition.createScript(annotation, "ECMAScript");
+		assertLinesMatch(Arrays.asList("m1()", "m2()"), Arrays.asList(script.split("\\R")));
 	}
 
 	@Test
@@ -119,17 +120,22 @@ class EnabledIfConditionTests {
 	void syntaxErrorInScriptFailsTest() {
 		EnabledIf annotation = mockEnabledIfAnnotation("syntax error");
 		Exception exception = assertThrows(JUnitException.class, () -> evaluate(annotation));
-		assertTrue(exception.getMessage().contains("@EnabledIf"));
-		assertTrue(exception.getMessage().contains("script"));
-		assertTrue(exception.getMessage().contains("bindings"));
+		assertThat(exception.getMessage()).contains("@EnabledIf", "script", "syntax error", "bindings");
+	}
+
+	@Test
+	@EnabledIf("true")
+	void defaultAnnotationValues() {
+		EnabledIf annotation = reflectEnabledIfAnnotation("defaultAnnotationValues");
+		assertEquals("true", String.join("-", annotation.value()));
+		assertEquals("nashorn", annotation.engine());
+		assertEquals("Script `{script}` evaluated to: {result}", annotation.reason());
 	}
 
 	@Test
 	@EnabledIf(value = "true", reason = "{annotation}")
-	void createReasonWithAnnotationPlaceholder() throws Exception {
-		EnabledIf annotation = getClass() //
-				.getDeclaredMethod("createReasonWithAnnotationPlaceholder") //
-				.getDeclaredAnnotation(EnabledIf.class);
+	void createReasonWithAnnotationPlaceholder() {
+		EnabledIf annotation = reflectEnabledIfAnnotation("createReasonWithAnnotationPlaceholder");
 		ConditionEvaluationResult result = evaluate(annotation);
 		assertFalse(result.isDisabled());
 		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
@@ -139,21 +145,53 @@ class EnabledIfConditionTests {
 				.endsWith(")");
 	}
 
+	@Test
+	void getJUnitConfigurationParameterWithJavaScript() {
+		EnabledIf annotation = mockEnabledIfAnnotation("junitConfigurationParameter.get('XXX')");
+		ConditionEvaluationResult result = evaluate(annotation);
+		assertTrue(result.isDisabled());
+		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
+		assertEquals("Script `junitConfigurationParameter.get('XXX')` evaluated to: null", actual);
+	}
+
+	@Test
+	void getJUnitConfigurationParameterWithJavaScriptAndCheckForNull() {
+		EnabledIf annotation = mockEnabledIfAnnotation("junitConfigurationParameter.get('XXX') != null");
+		ConditionEvaluationResult result = evaluate(annotation);
+		assertTrue(result.isDisabled());
+		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
+		assertEquals("Script `junitConfigurationParameter.get('XXX') != null` evaluated to: false", actual);
+	}
+
+	@Test
+	void getJUnitConfigurationParameterWithGroovy() {
+		EnabledIf annotation = mockEnabledIfAnnotation("junitConfigurationParameter.get('XXX')");
+		when(annotation.engine()).thenReturn("Groovy");
+		ConditionEvaluationResult result = evaluate(annotation);
+		assertTrue(result.isDisabled());
+		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
+		assertEquals("Script `junitConfigurationParameter.get('XXX')` evaluated to: null", actual);
+	}
+
+	@Test
+	void getJUnitConfigurationParameterWithGroovyAndCheckForNull() {
+		EnabledIf annotation = mockEnabledIfAnnotation("junitConfigurationParameter.get('XXX') != null");
+		when(annotation.engine()).thenReturn("Groovy");
+		ConditionEvaluationResult result = evaluate(annotation);
+		assertTrue(result.isDisabled());
+		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
+		assertEquals("Script `junitConfigurationParameter.get('XXX') != null` evaluated to: false", actual);
+	}
+
 	private ConditionEvaluationResult evaluate(EnabledIf annotation) {
 		return condition.evaluate(annotation, this::mockBinder);
 	}
 
-	private void assertLinesMatchCreatedScript(List<String> expectedLines, EnabledIf annotation, String language) {
-		EnabledIfCondition condition = new EnabledIfCondition();
-		String actual = condition.createScript(annotation, language);
-		assertLinesMatch(expectedLines, Arrays.asList(actual.split("\\R")));
-	}
-
 	private void mockBinder(Bindings bindings) {
-		bindings.put("jupiterTags", Collections.emptySet());
-		bindings.put("jupiterUniqueId", "Mock for UniqueId");
-		bindings.put("jupiterDisplayName", "Mock for DisplayName");
-		bindings.put("jupiterConfigurationParameter", Collections.emptyMap());
+		bindings.put(EnabledIf.Bind.JUNIT_TAGS, Collections.emptySet());
+		bindings.put(EnabledIf.Bind.JUNIT_UNIQUE_ID, "Mock for UniqueId");
+		bindings.put(EnabledIf.Bind.JUNIT_DISPLAY_NAME, "Mock for DisplayName");
+		bindings.put(EnabledIf.Bind.JUNIT_CONFIGURATION_PARAMETER, Collections.emptyMap());
 	}
 
 	private EnabledIf mockEnabledIfAnnotation(String... value) {
@@ -169,6 +207,15 @@ class EnabledIfConditionTests {
 			throw new AssertionError(e);
 		}
 		return annotation;
+	}
+
+	private EnabledIf reflectEnabledIfAnnotation(String methodName, Class<?>... parameterTypes) {
+		try {
+			return getClass().getDeclaredMethod(methodName, parameterTypes).getDeclaredAnnotation(EnabledIf.class);
+		}
+		catch (NoSuchMethodException e) {
+			throw new AssertionError(e);
+		}
 	}
 
 }

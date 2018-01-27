@@ -81,11 +81,14 @@ import org.apiguardian.api.API;
  * ExtensionContext}.
  *
  * <ul>
- * <li>{@link Bind#JUPITER_TAGS jupiterTags}: All tags as a {@code Set<String>}</li>
- * <li>{@link Bind#JUPITER_DISPLAY_NAME jupiterDisplayName}: Display name as a {@code String}</li>
- * <li>{@link Bind#JUPITER_UNIQUE_ID jupiterUniqueId}: Unique ID as a {@code String}</li>
- * <li>{@link Bind#JUPITER_CONFIGURATION_PARAMETER jupiterConfigurationParameter}: Configuration parameter accessor</li>
+ * <li>{@link Bind#JUNIT_TAGS junitTags}: All tags as a {@code Set<String>}</li>
+ * <li>{@link Bind#JUNIT_DISPLAY_NAME junitDisplayName}: Display name as a {@code String}</li>
+ * <li>{@link Bind#JUNIT_UNIQUE_ID junitUniqueId}: Unique ID as a {@code String}</li>
+ * <li>{@link Bind#JUNIT_CONFIGURATION_PARAMETER junitConfigurationParameter}: Configuration parameter accessor</li>
  * </ul>
+ *
+ * <p>Scripts must not declare variables using names that start with {@code junit}.
+ * They might clash with new bindings introduced in the future.
  *
  * @since 5.1
  * @see Disabled
@@ -111,14 +114,14 @@ public @interface EnabledIf {
 	 *
 	 * <p>Defaults to: <code>"Script `{script}` evaluated to: {result}"</code>.
 	 *
-	 * <h4>Supported placeholders</h4>
+	 * <h5>Supported placeholders</h5>
 	 * <ul>
 	 *   <li><code>{annotation}</code>: the String representation of the {@code @EnabledIf} annotation instance</li>
 	 *   <li><code>{script}</code>: the script text that was evaluated</li>
 	 *   <li><code>{result}</code>: the String representation of the return value of the evaluated script</li>
 	 * </ul>
 	 *
-	 * @return reason the reason the element is enabled or disabled
+	 * @return the reason the element is enabled or disabled
 	 * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#getReason()
 	 */
 	String reason() default "Script `{script}` evaluated to: {result}";
@@ -151,7 +154,7 @@ public @interface EnabledIf {
 		 *
 		 * @see org.junit.jupiter.api.extension.ExtensionContext#getTags()
 		 */
-		String JUPITER_TAGS = "jupiterTags";
+		String JUNIT_TAGS = "junitTags";
 
 		/**
 		 * Unique ID associated with the current extension context.
@@ -160,7 +163,7 @@ public @interface EnabledIf {
 		 *
 		 * @see org.junit.jupiter.api.extension.ExtensionContext#getUniqueId()
 		 */
-		String JUPITER_UNIQUE_ID = "jupiterUniqueId";
+		String JUNIT_UNIQUE_ID = "junitUniqueId";
 
 		/**
 		 * Display name of the test or container.
@@ -169,7 +172,7 @@ public @interface EnabledIf {
 		 *
 		 * @see org.junit.jupiter.api.extension.ExtensionContext#getDisplayName()
 		 */
-		String JUPITER_DISPLAY_NAME = "jupiterDisplayName";
+		String JUNIT_DISPLAY_NAME = "junitDisplayName";
 
 		/**
 		 * Accessor for JUnit Platform configuration parameters.
@@ -178,7 +181,7 @@ public @interface EnabledIf {
 		 *
 		 * @see org.junit.jupiter.api.extension.ExtensionContext#getConfigurationParameter(String)
 		 */
-		String JUPITER_CONFIGURATION_PARAMETER = "jupiterConfigurationParameter";
+		String JUNIT_CONFIGURATION_PARAMETER = "junitConfigurationParameter";
 
 		/**
 		 * Accessor for JVM system properties.

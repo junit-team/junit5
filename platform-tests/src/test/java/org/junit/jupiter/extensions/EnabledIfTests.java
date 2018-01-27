@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -99,32 +100,10 @@ class EnabledIfTests {
 			"java.lang.System.getProperties().put('volatile', path)", //
 			"Files.exists(path)" //
 	})
-	void multiLineAndImportJavaPackage() {
-		assertTrue(Files.exists((Path) System.getProperties().get("volatile")));
-	}
-
-	@Test
-	@EnabledIf("jupiterConfigurationParameter.get('XXX')")
-	void getJupiterConfigurationParameterWithJavaScript() {
-		fail("test must not be executed");
-	}
-
-	@Test
-	@EnabledIf("jupiterConfigurationParameter.get('XXX') != null")
-	void getJupiterConfigurationParameterWithJavaScriptAndCheckForNull() {
-		fail("test must not be executed");
-	}
-
-	@Test
-	@EnabledIf(engine = "groovy", value = "jupiterConfigurationParameter.get('XXX')")
-	void getJupiterConfigurationParameterWithGroovy() {
-		fail("test must not be executed");
-	}
-
-	@Test
-	@EnabledIf(engine = "groovy", value = "jupiterConfigurationParameter.get('XXX') != null")
-	void getJupiterConfigurationParameterWithGroovyAndCheckForNull() {
-		fail("test must not be executed");
+	void multiLineAndImportJavaPackage() throws IOException {
+		Path path = (Path) System.getProperties().get("volatile");
+		assertTrue(Files.exists(path));
+		Files.deleteIfExists(path);
 	}
 
 	@Test

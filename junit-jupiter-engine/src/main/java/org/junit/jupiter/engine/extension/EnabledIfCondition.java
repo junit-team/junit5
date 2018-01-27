@@ -72,10 +72,10 @@ class EnabledIfCondition implements ExecutionCondition {
 		// Bind context-aware names to their current values
 		Accessor configurationParameterAccessor = new ConfigurationParameterAccessor(context);
 		Consumer<Bindings> contextBinder = bindings -> {
-			bindings.put(EnabledIf.Bind.JUPITER_TAGS, context.getTags());
-			bindings.put(EnabledIf.Bind.JUPITER_UNIQUE_ID, context.getUniqueId());
-			bindings.put(EnabledIf.Bind.JUPITER_DISPLAY_NAME, context.getDisplayName());
-			bindings.put(EnabledIf.Bind.JUPITER_CONFIGURATION_PARAMETER, configurationParameterAccessor);
+			bindings.put(EnabledIf.Bind.JUNIT_TAGS, context.getTags());
+			bindings.put(EnabledIf.Bind.JUNIT_UNIQUE_ID, context.getUniqueId());
+			bindings.put(EnabledIf.Bind.JUNIT_DISPLAY_NAME, context.getDisplayName());
+			bindings.put(EnabledIf.Bind.JUNIT_CONFIGURATION_PARAMETER, configurationParameterAccessor);
 		};
 
 		return evaluate(optionalAnnotation.get(), contextBinder);
@@ -126,7 +126,7 @@ class EnabledIfCondition implements ExecutionCondition {
 		boolean enabled;
 
 		if (result instanceof Boolean) {
-			enabled = ((Boolean) result).booleanValue();
+			enabled = (Boolean) result;
 		}
 		else {
 			enabled = Boolean.parseBoolean(resultAsString);
