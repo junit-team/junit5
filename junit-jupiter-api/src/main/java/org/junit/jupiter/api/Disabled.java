@@ -36,7 +36,7 @@ import org.apiguardian.api.API;
 public @interface Disabled {
 
 	/**
-	 * The reason this test is disabled.
+	 * The reason this annotated test class or test method is disabled.
 	 */
 	String value() default "";
 
