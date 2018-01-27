@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.extensions;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -102,6 +103,12 @@ class EnabledIfTests {
 	@EnabledIf("/64/.test(systemProperty.get('os.arch'))")
 	void osArch() {
 		assertTrue(System.getProperty("os.arch").contains("64"));
+	}
+
+	@Test
+	@EnabledIf(engine = "groovy", value = { "System.properties['jsr'] = '233'", "'233' == System.properties['jsr']" })
+	void groovy() {
+		assertEquals("233", System.getProperty("jsr"));
 	}
 
 	@Test

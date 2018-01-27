@@ -42,17 +42,6 @@ import org.junit.platform.commons.util.Preconditions;
 class EnabledIfCondition implements ExecutionCondition {
 
 	/**
-	 * Use Oracle Nashorn as the default JavaScript ScriptEngine.
-	 *
-	 * Until Java SE 7, JDKs shipped with a JavaScript scripting engine based
-	 * on Mozilla Rhino. Java SE 8 instead ships with the new engine called
-	 * Oracle Nashorn, which is based on JSR 292 and {@code invokedynamic}.
-	 *
-	 * 	@see <a href="http://www.oracle.com/technetwork/articles/java/jf14-nashorn-2126515.html">Oracle Nashorn</a>
-	 */
-	private static final String DEFAULT_SCRIPT_ENGINE_NAME = "nashorn";
-
-	/**
 	 * Pre-created {@code ConditionEvaluationResult} singleton that is
 	 * returned when no {@code @EnabledIf} annotation is (meta-)present
 	 * on the current element.
@@ -97,7 +86,7 @@ class EnabledIfCondition implements ExecutionCondition {
 		Preconditions.notEmpty(annotation.value(), "String[] returned by @EnabledIf.value() must not be empty");
 
 		// Find script engine
-		ScriptEngine scriptEngine = findScriptEngine(DEFAULT_SCRIPT_ENGINE_NAME);
+		ScriptEngine scriptEngine = findScriptEngine(annotation.engine());
 		logger.debug(() -> "ScriptEngine: " + scriptEngine);
 
 		// Prepare bindings
@@ -177,10 +166,11 @@ class EnabledIfCondition implements ExecutionCondition {
 	/**
 	 * Provides read-only access to e.g. values of {@link java.util.Map}.
 	 *
-	 * <p>Usage example: {@code PropertyAccessor.of(System::getProperty)} is
-	 * analog to writing {@code System.getProperty(key)}.
+	 * <p>Usage example: {@code Accessor.of(System::getProperty)} is
+	 * analog for {@code System.getProperty(key)} without exposing the
+	 * system properties instance.
 	 */
-	public static class Accessor {
+	public static class Accessor implements EnabledIf.Accessor {
 
 		static Accessor of(Function<String, Object> accessor) {
 			return new Accessor(accessor);
@@ -192,6 +182,7 @@ class EnabledIfCondition implements ExecutionCondition {
 			this.accessor = accessor;
 		}
 
+		@Override
 		public String get(String key) {
 			Object value = accessor.apply(key);
 			if (value instanceof Optional) {

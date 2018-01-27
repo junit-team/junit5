@@ -114,7 +114,7 @@ class EnabledIfConditionTests {
 				.getDeclaredAnnotation(EnabledIf.class);
 		ConditionEvaluationResult result = new EnabledIfCondition().evaluate(annotation, this::mockBinder);
 		assertFalse(result.isDisabled());
-		String expected = "@org.junit.jupiter.api.EnabledIf(reason=\"{annotation}\", value={\"true\"})";
+		String expected = "@org.junit.jupiter.api.EnabledIf(reason=\"{annotation}\", engine=\"nashorn\", value={\"true\"})";
 		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
 		assertEquals(expected, actual);
 	}
@@ -136,6 +136,8 @@ class EnabledIfConditionTests {
 		EnabledIf annotation = mock(EnabledIf.class);
 		when(annotation.value()).thenReturn(value);
 		try {
+			when(annotation.engine()).thenReturn(
+				(String) EnabledIf.class.getDeclaredMethod("engine").getDefaultValue());
 			when(annotation.reason()).thenReturn(
 				(String) EnabledIf.class.getDeclaredMethod("reason").getDefaultValue());
 		}
