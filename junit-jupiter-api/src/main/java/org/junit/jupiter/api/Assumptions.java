@@ -66,7 +66,7 @@ public final class Assumptions {
 	 * @throws TestAbortedException if the assumption is not {@code true}
 	 */
 	public static void assumeTrue(BooleanSupplier assumptionSupplier) throws TestAbortedException {
-		assumeTrue(assumptionSupplier, "assumption is not true");
+		assumeTrue(assumptionSupplier.getAsBoolean(), "assumption is not true");
 	}
 
 	/**
@@ -78,10 +78,7 @@ public final class Assumptions {
 	 * @throws TestAbortedException if the assumption is not {@code true}
 	 */
 	public static void assumeTrue(BooleanSupplier assumptionSupplier, String message) throws TestAbortedException {
-
-		if (!assumptionSupplier.getAsBoolean()) {
-			throwTestAbortedException(message);
-		}
+		assumeTrue(assumptionSupplier.getAsBoolean(), message);
 	}
 
 	/**
@@ -93,7 +90,6 @@ public final class Assumptions {
 	 * @throws TestAbortedException if the assumption is not {@code true}
 	 */
 	public static void assumeTrue(boolean assumption, Supplier<String> messageSupplier) throws TestAbortedException {
-
 		if (!assumption) {
 			throwTestAbortedException(messageSupplier.get());
 		}
@@ -108,7 +104,6 @@ public final class Assumptions {
 	 * @throws TestAbortedException if the assumption is not {@code true}
 	 */
 	public static void assumeTrue(boolean assumption, String message) throws TestAbortedException {
-
 		if (!assumption) {
 			throwTestAbortedException(message);
 		}
@@ -125,9 +120,7 @@ public final class Assumptions {
 	public static void assumeTrue(BooleanSupplier assumptionSupplier, Supplier<String> messageSupplier)
 			throws TestAbortedException {
 
-		if (!assumptionSupplier.getAsBoolean()) {
-			throwTestAbortedException(messageSupplier.get());
-		}
+		assumeTrue(assumptionSupplier.getAsBoolean(), messageSupplier);
 	}
 
 	// --- assumeFalse ----------------------------------------------------
@@ -149,7 +142,7 @@ public final class Assumptions {
 	 * @throws TestAbortedException if the assumption is not {@code false}
 	 */
 	public static void assumeFalse(BooleanSupplier assumptionSupplier) throws TestAbortedException {
-		assumeFalse(assumptionSupplier, "assumption is not false");
+		assumeFalse(assumptionSupplier.getAsBoolean(), "assumption is not false");
 	}
 
 	/**
@@ -161,10 +154,7 @@ public final class Assumptions {
 	 * @throws TestAbortedException if the assumption is not {@code false}
 	 */
 	public static void assumeFalse(BooleanSupplier assumptionSupplier, String message) throws TestAbortedException {
-
-		if (assumptionSupplier.getAsBoolean()) {
-			throwTestAbortedException(message);
-		}
+		assumeFalse(assumptionSupplier.getAsBoolean(), message);
 	}
 
 	/**
@@ -176,7 +166,6 @@ public final class Assumptions {
 	 * @throws TestAbortedException if the assumption is not {@code false}
 	 */
 	public static void assumeFalse(boolean assumption, Supplier<String> messageSupplier) throws TestAbortedException {
-
 		if (assumption) {
 			throwTestAbortedException(messageSupplier.get());
 		}
@@ -191,7 +180,6 @@ public final class Assumptions {
 	 * @throws TestAbortedException if the assumption is not {@code false}
 	 */
 	public static void assumeFalse(boolean assumption, String message) throws TestAbortedException {
-
 		if (assumption) {
 			throwTestAbortedException(message);
 		}
@@ -208,9 +196,7 @@ public final class Assumptions {
 	public static void assumeFalse(BooleanSupplier assumptionSupplier, Supplier<String> messageSupplier)
 			throws TestAbortedException {
 
-		if (assumptionSupplier.getAsBoolean()) {
-			throwTestAbortedException(messageSupplier.get());
-		}
+		assumeFalse(assumptionSupplier.getAsBoolean(), messageSupplier);
 	}
 
 	// --- assumingThat --------------------------------------------------
