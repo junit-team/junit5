@@ -49,7 +49,7 @@ class AssertThrows {
 
 	@SuppressWarnings("unchecked")
 	private static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		try {
 			executable.execute();
@@ -59,13 +59,13 @@ class AssertThrows {
 				return (T) actualException;
 			}
 			else {
-				String message = buildPrefix(nullSafeGet(messageContainer))
+				String message = buildPrefix(nullSafeGet(messageOrSupplier))
 						+ format(expectedType, actualException.getClass(), "Unexpected exception type thrown");
 				throw new AssertionFailedError(message, actualException);
 			}
 		}
 
-		String message = buildPrefix(nullSafeGet(messageContainer))
+		String message = buildPrefix(nullSafeGet(messageOrSupplier))
 				+ String.format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType));
 		throw new AssertionFailedError(message);
 	}

@@ -56,13 +56,24 @@ class AssertionUtils {
 		return (messageSupplier != null ? messageSupplier.get() : null);
 	}
 
-	static String nullSafeGet(Object messageContainer) {
-		// messageContainer suppose to contain a message string or a message supplier
-		// added to avoid the need to wrap message into lambda (() -> message)
-		return (messageContainer != null
-				? (messageContainer instanceof Supplier ? nullSafeGet(((Supplier<?>) messageContainer).get())
-						: messageContainer.toString())
-				: null);
+	/**
+	 * Alternative to {@link #nullSafeGet(Supplier)} that is used to avoid
+	 * wrapping a String in a lambda expression.
+	 *
+	 * @param messageOrSupplier an object that is either a {@code String} or
+	 * {@code Supplier<String>}
+	 */
+	static String nullSafeGet(Object messageOrSupplier) {
+		if (messageOrSupplier instanceof String) {
+			return (String) messageOrSupplier;
+		}
+		if (messageOrSupplier instanceof Supplier) {
+			Object message = ((Supplier<?>) messageOrSupplier).get();
+			if (message != null) {
+				return message.toString();
+			}
+		}
+		return null;
 	}
 
 	static String buildPrefix(String message) {

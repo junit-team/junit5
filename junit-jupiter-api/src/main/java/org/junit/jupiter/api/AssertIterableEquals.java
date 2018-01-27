@@ -50,12 +50,12 @@ class AssertIterableEquals {
 	}
 
 	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertIterablesNotNull(expected, actual, indexes, messageContainer);
+		assertIterablesNotNull(expected, actual, indexes, messageOrSupplier);
 
 		Iterator<?> expectedIterator = expected.iterator();
 		Iterator<?> actualIterator = actual.iterator();
@@ -71,45 +71,45 @@ class AssertIterableEquals {
 			}
 
 			indexes.addLast(processed - 1);
-			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageContainer);
+			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageOrSupplier);
 			indexes.removeLast();
 		}
 
-		assertIteratorsAreEmpty(expectedIterator, actualIterator, processed, indexes, messageContainer);
+		assertIteratorsAreEmpty(expectedIterator, actualIterator, processed, indexes, messageOrSupplier);
 	}
 
 	private static void assertIterableElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 		if (expected instanceof Iterable && actual instanceof Iterable) {
-			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageContainer);
+			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageOrSupplier);
 		}
 		else if (!Objects.equals(expected, actual)) {
-			assertIterablesNotNull(expected, actual, indexes, messageContainer);
-			failIterablesNotEqual(expected, actual, indexes, messageContainer);
+			assertIterablesNotNull(expected, actual, indexes, messageOrSupplier);
+			failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
 		}
 	}
 
 	private static void assertIterablesNotNull(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == null) {
-			failExpectedIterableIsNull(indexes, messageContainer);
+			failExpectedIterableIsNull(indexes, messageOrSupplier);
 		}
 		if (actual == null) {
-			failActualIterableIsNull(indexes, messageContainer);
+			failActualIterableIsNull(indexes, messageOrSupplier);
 		}
 	}
 
-	private static void failExpectedIterableIsNull(Deque<Integer> indexes, Object messageContainer) {
-		fail(buildPrefix(nullSafeGet(messageContainer)) + "expected iterable was <null>" + formatIndexes(indexes));
+	private static void failExpectedIterableIsNull(Deque<Integer> indexes, Object messageOrSupplier) {
+		fail(buildPrefix(nullSafeGet(messageOrSupplier)) + "expected iterable was <null>" + formatIndexes(indexes));
 	}
 
-	private static void failActualIterableIsNull(Deque<Integer> indexes, Object messageContainer) {
-		fail(buildPrefix(nullSafeGet(messageContainer)) + "actual iterable was <null>" + formatIndexes(indexes));
+	private static void failActualIterableIsNull(Deque<Integer> indexes, Object messageOrSupplier) {
+		fail(buildPrefix(nullSafeGet(messageOrSupplier)) + "actual iterable was <null>" + formatIndexes(indexes));
 	}
 
 	private static void assertIteratorsAreEmpty(Iterator<?> expected, Iterator<?> actual, int processed,
-			Deque<Integer> indexes, Object messageContainer) {
+			Deque<Integer> indexes, Object messageOrSupplier) {
 
 		if (expected.hasNext() || actual.hasNext()) {
 			AtomicInteger expectedCount = new AtomicInteger(processed);
@@ -118,7 +118,7 @@ class AssertIterableEquals {
 			AtomicInteger actualCount = new AtomicInteger(processed);
 			actual.forEachRemaining(e -> actualCount.incrementAndGet());
 
-			String prefix = buildPrefix(nullSafeGet(messageContainer));
+			String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
 			String message = "iterable lengths differ" + formatIndexes(indexes) + ", expected: <" + expectedCount.get()
 					+ "> but was: <" + actualCount.get() + ">";
 			fail(prefix + message);
@@ -126,9 +126,9 @@ class AssertIterableEquals {
 	}
 
 	private static void failIterablesNotEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
-		String prefix = buildPrefix(nullSafeGet(messageContainer));
+		String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
 		String message = "iterable contents differ" + formatIndexes(indexes) + ", " + formatValues(expected, actual);
 		fail(prefix + message);
 	}

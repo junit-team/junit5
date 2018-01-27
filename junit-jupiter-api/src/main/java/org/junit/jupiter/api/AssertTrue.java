@@ -37,30 +37,26 @@ class AssertTrue {
 
 	static void assertTrue(boolean condition, String message) {
 		if (!condition) {
-			fail(format(true, false, message));
+			fail(format(Boolean.TRUE, Boolean.FALSE, message));
 		}
 	}
 
 	static void assertTrue(boolean condition, Supplier<String> messageSupplier) {
 		if (!condition) {
-			fail(format(true, false, nullSafeGet(messageSupplier)));
+			fail(format(Boolean.TRUE, Boolean.FALSE, nullSafeGet(messageSupplier)));
 		}
 	}
 
 	static void assertTrue(BooleanSupplier booleanSupplier) {
-		assertTrue(booleanSupplier, (String) null);
+		assertTrue(booleanSupplier.getAsBoolean(), (String) null);
 	}
 
 	static void assertTrue(BooleanSupplier booleanSupplier, String message) {
-		if (!booleanSupplier.getAsBoolean()) {
-			fail(format(true, false, message));
-		}
+		assertTrue(booleanSupplier.getAsBoolean(), message);
 	}
 
 	static void assertTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
-		if (!booleanSupplier.getAsBoolean()) {
-			fail(format(true, false, nullSafeGet(messageSupplier)));
-		}
+		assertTrue(booleanSupplier.getAsBoolean(), messageSupplier);
 	}
 
 }

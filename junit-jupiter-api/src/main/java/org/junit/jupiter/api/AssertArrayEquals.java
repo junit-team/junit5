@@ -169,175 +169,175 @@ class AssertArrayEquals {
 	}
 
 	private static void assertArrayEquals(boolean[] expected, boolean[] actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageContainer);
+				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArrayEquals(char[] expected, char[] actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageContainer);
+				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArrayEquals(byte[] expected, byte[] actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageContainer);
+				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArrayEquals(short[] expected, short[] actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageContainer);
+				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArrayEquals(int[] expected, int[] actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageContainer);
+				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArrayEquals(long[] expected, long[] actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			if (expected[i] != actual[i]) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageContainer);
+				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArrayEquals(float[] expected, float[] actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			if (!AssertionUtils.floatsAreEqual(expected[i], actual[i])) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageContainer);
+				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArrayEquals(float[] expected, float[] actual, float delta, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		AssertionUtils.assertValidDelta(delta);
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			if (!AssertionUtils.floatsAreEqual(expected[i], actual[i], delta)) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageContainer);
+				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArrayEquals(double[] expected, double[] actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			if (!AssertionUtils.doublesAreEqual(expected[i], actual[i])) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageContainer);
+				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArrayEquals(double[] expected, double[] actual, double delta, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		AssertionUtils.assertValidDelta(delta);
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			if (!AssertionUtils.doublesAreEqual(expected[i], actual[i], delta)) {
-				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageContainer);
+				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArrayEquals(Object[] expected, Object[] actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertArraysNotNull(expected, actual, indexes, messageContainer);
-		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageContainer);
+		assertArraysNotNull(expected, actual, indexes, messageOrSupplier);
+		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageOrSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
 			Object expectedElement = expected[i];
@@ -348,78 +348,78 @@ class AssertArrayEquals {
 			}
 
 			indexes.addLast(i);
-			assertArrayElementsEqual(expectedElement, actualElement, indexes, messageContainer);
+			assertArrayElementsEqual(expectedElement, actualElement, indexes, messageOrSupplier);
 			indexes.removeLast();
 		}
 	}
 
 	private static void assertArrayElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected instanceof Object[] && actual instanceof Object[]) {
-			assertArrayEquals((Object[]) expected, (Object[]) actual, indexes, messageContainer);
+			assertArrayEquals((Object[]) expected, (Object[]) actual, indexes, messageOrSupplier);
 		}
 		else if (expected instanceof byte[] && actual instanceof byte[]) {
-			assertArrayEquals((byte[]) expected, (byte[]) actual, indexes, messageContainer);
+			assertArrayEquals((byte[]) expected, (byte[]) actual, indexes, messageOrSupplier);
 		}
 		else if (expected instanceof short[] && actual instanceof short[]) {
-			assertArrayEquals((short[]) expected, (short[]) actual, indexes, messageContainer);
+			assertArrayEquals((short[]) expected, (short[]) actual, indexes, messageOrSupplier);
 		}
 		else if (expected instanceof int[] && actual instanceof int[]) {
-			assertArrayEquals((int[]) expected, (int[]) actual, indexes, messageContainer);
+			assertArrayEquals((int[]) expected, (int[]) actual, indexes, messageOrSupplier);
 		}
 		else if (expected instanceof long[] && actual instanceof long[]) {
-			assertArrayEquals((long[]) expected, (long[]) actual, indexes, messageContainer);
+			assertArrayEquals((long[]) expected, (long[]) actual, indexes, messageOrSupplier);
 		}
 		else if (expected instanceof char[] && actual instanceof char[]) {
-			assertArrayEquals((char[]) expected, (char[]) actual, indexes, messageContainer);
+			assertArrayEquals((char[]) expected, (char[]) actual, indexes, messageOrSupplier);
 		}
 		else if (expected instanceof float[] && actual instanceof float[]) {
-			assertArrayEquals((float[]) expected, (float[]) actual, indexes, messageContainer);
+			assertArrayEquals((float[]) expected, (float[]) actual, indexes, messageOrSupplier);
 		}
 		else if (expected instanceof double[] && actual instanceof double[]) {
-			assertArrayEquals((double[]) expected, (double[]) actual, indexes, messageContainer);
+			assertArrayEquals((double[]) expected, (double[]) actual, indexes, messageOrSupplier);
 		}
 		else if (expected instanceof boolean[] && actual instanceof boolean[]) {
-			assertArrayEquals((boolean[]) expected, (boolean[]) actual, indexes, messageContainer);
+			assertArrayEquals((boolean[]) expected, (boolean[]) actual, indexes, messageOrSupplier);
 		}
 		else if (!Objects.equals(expected, actual)) {
 			if (expected == null && isArray(actual)) {
-				failExpectedArrayIsNull(indexes, messageContainer);
+				failExpectedArrayIsNull(indexes, messageOrSupplier);
 			}
 			else if (isArray(expected) && actual == null) {
-				failActualArrayIsNull(indexes, messageContainer);
+				failActualArrayIsNull(indexes, messageOrSupplier);
 			}
 			else {
-				failArraysNotEqual(expected, actual, indexes, messageContainer);
+				failArraysNotEqual(expected, actual, indexes, messageOrSupplier);
 			}
 		}
 	}
 
 	private static void assertArraysNotNull(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected == null) {
-			failExpectedArrayIsNull(indexes, messageContainer);
+			failExpectedArrayIsNull(indexes, messageOrSupplier);
 		}
 		if (actual == null) {
-			failActualArrayIsNull(indexes, messageContainer);
+			failActualArrayIsNull(indexes, messageOrSupplier);
 		}
 	}
 
-	private static void failExpectedArrayIsNull(Deque<Integer> indexes, Object messageContainer) {
-		fail(buildPrefix(nullSafeGet(messageContainer)) + "expected array was <null>" + formatIndexes(indexes));
+	private static void failExpectedArrayIsNull(Deque<Integer> indexes, Object messageOrSupplier) {
+		fail(buildPrefix(nullSafeGet(messageOrSupplier)) + "expected array was <null>" + formatIndexes(indexes));
 	}
 
-	private static void failActualArrayIsNull(Deque<Integer> indexes, Object messageContainer) {
-		fail(buildPrefix(nullSafeGet(messageContainer)) + "actual array was <null>" + formatIndexes(indexes));
+	private static void failActualArrayIsNull(Deque<Integer> indexes, Object messageOrSupplier) {
+		fail(buildPrefix(nullSafeGet(messageOrSupplier)) + "actual array was <null>" + formatIndexes(indexes));
 	}
 
 	private static void assertArraysHaveSameLength(int expected, int actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
 		if (expected != actual) {
-			String prefix = buildPrefix(nullSafeGet(messageContainer));
+			String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
 			String message = "array lengths differ" + formatIndexes(indexes) + ", expected: <" + expected
 					+ "> but was: <" + actual + ">";
 			fail(prefix + message);
@@ -427,9 +427,9 @@ class AssertArrayEquals {
 	}
 
 	private static void failArraysNotEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageContainer) {
+			Object messageOrSupplier) {
 
-		String prefix = buildPrefix(nullSafeGet(messageContainer));
+		String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
 		String message = "array contents differ" + formatIndexes(indexes) + ", " + formatValues(expected, actual);
 		fail(prefix + message);
 	}

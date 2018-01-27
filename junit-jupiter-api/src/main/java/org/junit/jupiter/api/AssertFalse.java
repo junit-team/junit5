@@ -37,30 +37,26 @@ class AssertFalse {
 
 	static void assertFalse(boolean condition, String message) {
 		if (condition) {
-			fail(format(false, true, message));
+			fail(format(Boolean.FALSE, Boolean.TRUE, message));
 		}
 	}
 
 	static void assertFalse(boolean condition, Supplier<String> messageSupplier) {
 		if (condition) {
-			fail(format(false, true, nullSafeGet(messageSupplier)));
+			fail(format(Boolean.FALSE, Boolean.TRUE, nullSafeGet(messageSupplier)));
 		}
 	}
 
 	static void assertFalse(BooleanSupplier booleanSupplier) {
-		assertFalse(booleanSupplier, (String) null);
+		assertFalse(booleanSupplier.getAsBoolean(), (String) null);
 	}
 
 	static void assertFalse(BooleanSupplier booleanSupplier, String message) {
-		if (booleanSupplier.getAsBoolean()) {
-			fail(format(false, true, message));
-		}
+		assertFalse(booleanSupplier.getAsBoolean(), message);
 	}
 
 	static void assertFalse(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
-		if (booleanSupplier.getAsBoolean()) {
-			fail(format(false, true, nullSafeGet(messageSupplier)));
-		}
+		assertFalse(booleanSupplier.getAsBoolean(), messageSupplier);
 	}
 
 }
