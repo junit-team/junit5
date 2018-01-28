@@ -72,19 +72,19 @@ import org.apiguardian.api.API;
  * automatically available within scripts.
  *
  * <ul>
- * <li>{@link Bind#SYSTEM_ENVIRONMENT systemEnvironment}: Operating system environment variable accessor</li>
- * <li>{@link Bind#SYSTEM_PROPERTY systemProperty}: JVM system property accessor</li>
+ * <li>{@code systemEnvironment}: Operating system environment variable accessor</li>
+ * <li>{@code systemProperty}: JVM system property accessor</li>
  * </ul>
  *
- * <p>The following {@link Bind bindings} are available for accessing information
+ * <p>The following {@link javax.script.Bindings bindings} are available for accessing information
  * from the JUnit Jupiter {@link org.junit.jupiter.api.extension.ExtensionContext
  * ExtensionContext}.
  *
  * <ul>
- * <li>{@link Bind#JUNIT_TAGS junitTags}: All tags as a {@code Set<String>}</li>
- * <li>{@link Bind#JUNIT_DISPLAY_NAME junitDisplayName}: Display name as a {@code String}</li>
- * <li>{@link Bind#JUNIT_UNIQUE_ID junitUniqueId}: Unique ID as a {@code String}</li>
- * <li>{@link Bind#JUNIT_CONFIGURATION_PARAMETER junitConfigurationParameter}: Configuration parameter accessor</li>
+ * <li>{@code junitTags}: All tags as a {@code Set<String>}</li>
+ * <li>{@code junitDisplayName}: Display name as a {@code String}</li>
+ * <li>{@code junitUniqueId}: Unique ID as a {@code String}</li>
+ * <li>{@code junitConfigurationParameter}: Configuration parameter accessor</li>
  * </ul>
  *
  * <p>Scripts must not declare variables using names that start with {@code junit}.
@@ -124,7 +124,7 @@ public @interface EnabledIf {
 	 * @return the reason the element is enabled or disabled
 	 * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#getReason()
 	 */
-	String reason() default "Script `{script}` evaluated to: {result}";
+	String reason() default "Script `{source}` evaluated to: {result}";
 
 	/**
 	 * Short name of the {@link javax.script.ScriptEngine ScriptEngine} to use.
@@ -140,67 +140,6 @@ public @interface EnabledIf {
 	 * @see javax.script.ScriptEngineManager#getEngineByName(String)
 	 * @see <a href="http://www.oracle.com/technetwork/articles/java/jf14-nashorn-2126515.html">Oracle Nashorn</a>
 	 */
-	String engine() default "nashorn";
-
-	/**
-	 * Names used for script {@link javax.script.Bindings bindings}.
-	 */
-	interface Bind {
-
-		/**
-		 * Set of all tags assigned to the current extension context.
-		 *
-		 * <p>Value type: {@code Set<String>}
-		 *
-		 * @see org.junit.jupiter.api.extension.ExtensionContext#getTags()
-		 */
-		String JUNIT_TAGS = "junitTags";
-
-		/**
-		 * Unique ID associated with the current extension context.
-		 *
-		 * <p>Value type: {@code String}
-		 *
-		 * @see org.junit.jupiter.api.extension.ExtensionContext#getUniqueId()
-		 */
-		String JUNIT_UNIQUE_ID = "junitUniqueId";
-
-		/**
-		 * Display name of the test or container.
-		 *
-		 * <p>Value type: {@code String}
-		 *
-		 * @see org.junit.jupiter.api.extension.ExtensionContext#getDisplayName()
-		 */
-		String JUNIT_DISPLAY_NAME = "junitDisplayName";
-
-		/**
-		 * Accessor for JUnit Platform configuration parameters.
-		 *
-		 * <p>Usage: {@code junitConfigurationParameter.get(key) -> String}
-		 *
-		 * @see org.junit.jupiter.api.extension.ExtensionContext#getConfigurationParameter(String)
-		 */
-		String JUNIT_CONFIGURATION_PARAMETER = "junitConfigurationParameter";
-
-		/**
-		 * Accessor for JVM system properties.
-		 *
-		 * <p>Usage: {@code systemProperty.get(key) -> String}
-		 *
-		 * @see System#getProperty(String)
-		 */
-		String SYSTEM_PROPERTY = "systemProperty";
-
-		/**
-		 * Accessor for operating system environment variables.
-		 *
-		 * <p>Usage: {@code systemEnvironment.get(key) -> String}
-		 *
-		 * @see System#getenv(String)
-		 */
-		String SYSTEM_ENVIRONMENT = "systemEnvironment";
-
-	}
+	String engine() default "Nashorn";
 
 }

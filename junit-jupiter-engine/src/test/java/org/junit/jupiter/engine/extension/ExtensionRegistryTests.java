@@ -155,8 +155,8 @@ class ExtensionRegistryTests {
 	}
 
 	private void assertDefaultGlobalExtensionsAreRegistered() {
-		assertExtensionRegistered(registry, EnabledIfCondition.class);
 		assertExtensionRegistered(registry, DisabledCondition.class);
+		assertExtensionRegistered(registry, ScriptExecutionCondition.class);
 		assertExtensionRegistered(registry, RepeatedTestExtension.class);
 		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
 		assertExtensionRegistered(registry, TestReporterParameterResolver.class);

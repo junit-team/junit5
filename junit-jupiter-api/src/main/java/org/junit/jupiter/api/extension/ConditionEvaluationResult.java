@@ -55,9 +55,21 @@ public class ConditionEvaluationResult {
 	}
 
 	/**
+	 * Whether the container or test is enabled.
+	 *
+	 * @return {@code true} if the container or test is enabled
+	 * @since 5.1
+	 * @see #isDisabled()
+	 */
+	public boolean isEnabled() {
+		return this.enabled;
+	}
+
+	/**
 	 * Whether the container or test should be disabled.
 	 *
 	 * @return {@code true} if the container or test should be disabled
+	 * @see #isEnabled()
 	 */
 	public boolean isDisabled() {
 		return !this.enabled;
