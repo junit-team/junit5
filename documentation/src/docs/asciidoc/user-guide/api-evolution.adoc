@@ -46,9 +46,11 @@ The following table lists which APIs are currently designated as _experimental_ 
 |===
 | Package Name                               | Class Name                    | Type
 
+| `org.junit.jupiter.api`                    | `AssertionsKt`                | `class`
 | `org.junit.jupiter.api`                    | `DynamicContainer`            | `class`
 | `org.junit.jupiter.api`                    | `DynamicNode`                 | `class`
 | `org.junit.jupiter.api`                    | `DynamicTest`                 | `class`
+| `org.junit.jupiter.api`                    | `EnabledIf`                   | `annotation`
 | `org.junit.jupiter.api`                    | `TestFactory`                 | `annotation`
 | `org.junit.jupiter.migrationsupport.rules` | `EnableRuleMigrationSupport`  | `annotation`
 | `org.junit.jupiter.migrationsupport.rules` | `ExpectedExceptionSupport`    | `class`
@@ -70,6 +72,7 @@ The following table lists which APIs are currently designated as _experimental_ 
 | `org.junit.jupiter.params.provider`        | `MethodSource`                | `annotation`
 | `org.junit.jupiter.params.provider`        | `ValueSource`                 | `annotation`
 | `org.junit.jupiter.params.support`         | `AnnotationConsumer`          | `interface`
+| `org.junit.platform.engine.discovery`      | `ModuleSelector`              | `class`
 | `org.junit.platform.gradle.plugin`         | `EnginesExtension`            | `class`
 | `org.junit.platform.gradle.plugin`         | `FiltersExtension`            | `class`
 | `org.junit.platform.gradle.plugin`         | `JUnitPlatformExtension`      | `class`
