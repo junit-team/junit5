@@ -126,7 +126,7 @@ class EnabledIfCondition implements ExecutionCondition {
 		boolean enabled;
 
 		if (result instanceof Boolean) {
-			enabled = ((Boolean) result).booleanValue();
+			enabled = (Boolean) result;
 		}
 		else {
 			enabled = Boolean.parseBoolean(resultAsString);
