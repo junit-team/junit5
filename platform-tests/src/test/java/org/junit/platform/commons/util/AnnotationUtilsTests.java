@@ -216,6 +216,14 @@ class AnnotationUtilsTests {
 	}
 
 	@Test
+	void findRepeatableAnnotationsForNotRepeatableAnnotation() {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> findRepeatableAnnotations(getClass(), Inherited.class));
+
+		assertThat(exception.getMessage()).isEqualTo(Inherited.class.getName() + " must be @Repeatable");
+	}
+
+	@Test
 	void findRepeatableAnnotationsForNullAnnotatedElement() {
 		assertThat(findRepeatableAnnotations(null, Tag.class)).isEmpty();
 	}
