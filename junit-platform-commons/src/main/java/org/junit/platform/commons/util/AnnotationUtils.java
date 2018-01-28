@@ -197,6 +197,7 @@ public final class AnnotationUtils {
 				}
 			}
 
+			// Indirectly present?
 			// Search in class hierarchy
 			if (inherited) {
 				Class<?> superclass = clazz.getSuperclass();
@@ -207,13 +208,6 @@ public final class AnnotationUtils {
 					}
 				}
 			}
-		}
-
-		// Indirectly present?
-		annotation = element.getAnnotation(annotationType);
-		if (annotation != null) {
-			annotationCache.put(key, annotation);
-			return Optional.of(annotation);
 		}
 
 		// Meta-present on indirectly present annotations?
