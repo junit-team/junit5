@@ -69,5 +69,4 @@ dependencies {
 
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
-	testRuntimeOnly("org.codehaus.groovy:groovy-jsr223:${groovyVersion}")
 }
