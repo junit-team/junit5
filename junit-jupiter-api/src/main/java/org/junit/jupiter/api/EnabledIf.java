@@ -177,7 +177,7 @@ public @interface EnabledIf {
 		/**
 		 * Accessor for JUnit Platform configuration parameters.
 		 *
-		 * <p>Usage: {@code jupiterConfigurationParameter.get(key) -> String}
+		 * <p>Usage: {@code junitConfigurationParameter.get(key) -> String}
 		 *
 		 * @see org.junit.jupiter.api.extension.ExtensionContext#getConfigurationParameter(String)
 		 */

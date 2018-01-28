@@ -126,7 +126,7 @@ class EnabledIfCondition implements ExecutionCondition {
 		boolean enabled;
 
 		if (result instanceof Boolean) {
-			enabled = (Boolean) result;
+			enabled = ((Boolean) result).booleanValue();
 		}
 		else {
 			enabled = Boolean.parseBoolean(resultAsString);
@@ -180,7 +180,7 @@ class EnabledIfCondition implements ExecutionCondition {
 	 */
 	// apparently needs to be public (even if in a package private class); otherwise
 	// we encounter errors such as the following during script evaluation:
-	// TypeError: jupiterConfigurationParameter.get is not a function
+	// TypeError: junitConfigurationParameter.get is not a function
 	public interface Accessor {
 
 		/**
