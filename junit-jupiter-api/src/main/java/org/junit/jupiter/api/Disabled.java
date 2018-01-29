@@ -28,6 +28,7 @@ import org.apiguardian.api.API;
  * are automatically disabled as well.
  *
  * @since 5.0
+ * @see EnabledIf
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
