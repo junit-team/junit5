@@ -130,8 +130,7 @@ class ClasspathScannerTests {
 		assertThat(listener.stream(ClasspathScanner.class, Level.FINE)
 				.map(LogRecord::getMessage)
 				.filter(m -> m.matches(regex))
-				.count()
-		).isEqualTo(1);
+		).hasSize(1);
 		// @formatter:on
 	}
 

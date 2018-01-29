@@ -12,8 +12,8 @@ package org.junit.platform.commons.logging;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Stream;
@@ -30,7 +30,7 @@ import org.junit.platform.commons.JUnitException;
 @API(status = INTERNAL, since = "1.1")
 public class LogRecordListener {
 
-	private final List<LogRecord> logRecords = new ArrayList<>();
+	private final List<LogRecord> logRecords = new CopyOnWriteArrayList<>();
 
 	/**
 	 * Inform the listener of a {@link LogRecord} that was submitted to JUL for
@@ -50,7 +50,9 @@ public class LogRecordListener {
 	 * testing purposes and not modified in any way.
 	 */
 	public Stream<LogRecord> stream() {
-		return this.logRecords.stream();
+		// only return LogRecords for current thread to support parallel test execution
+		int currentThreadId = new LogRecord(Level.OFF, "unused").getThreadID();
+		return this.logRecords.stream().filter(logRecord -> logRecord.getThreadID() == currentThreadId);
 	}
 
 	/**
