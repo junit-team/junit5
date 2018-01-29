@@ -18,13 +18,9 @@ import org.junit.platform.commons.annotation.ExecutionMode;
 
 class NodeWalker {
 
-	private final LockManager lockManager;
+	private final LockManager lockManager = new LockManager();
 
-	NodeWalker(LockManager lockManager) {
-		this.lockManager = lockManager;
-	}
-
-	public <C extends EngineExecutionContext> void walk(NodeExecutor<C> nodeExecutor) {
+	public void walk(NodeExecutor<?> nodeExecutor) {
 		if (nodeExecutor.getNode().getExclusiveResources().isEmpty()) {
 			nodeExecutor.getChildren().forEach(this::walk);
 		}
@@ -38,8 +34,7 @@ class NodeWalker {
 		}
 	}
 
-	private <C extends EngineExecutionContext> void doForChildrenRecursively(NodeExecutor<C> parent,
-			Consumer<NodeExecutor<C>> consumer) {
+	private void doForChildrenRecursively(NodeExecutor<?> parent, Consumer<NodeExecutor<?>> consumer) {
 		parent.getChildren().forEach(child -> {
 			consumer.accept(child);
 			doForChildrenRecursively(child, consumer);

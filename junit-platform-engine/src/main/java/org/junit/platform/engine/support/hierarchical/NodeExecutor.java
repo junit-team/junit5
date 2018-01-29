@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toCollection;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 
@@ -30,25 +30,30 @@ import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorSe
 
 class NodeExecutor<C extends EngineExecutionContext> {
 
+	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
+
+	private final List<Throwable> executionErrors = new ArrayList<>();
 	private final TestDescriptor testDescriptor;
 	private final Node<C> node;
-	private final List<Throwable> executionErrors = new ArrayList<>();
+	private final ExecutionMode executionMode;
 	private final List<NodeExecutor<C>> children;
+
+	private ResourceLock resourceLock = NopLock.INSTANCE;
+	private Optional<ExecutionMode> forcedExecutionMode = Optional.empty();
 
 	private C context;
 	private Node.SkipResult skipResult;
 	private TestExecutionResult executionResult;
 
-	private ResourceLock resourceLock = NopLock.INSTANCE;
-	private ExecutionMode executionMode;
-	private Optional<ExecutionMode> forcedExecutionMode = Optional.empty();
-
 	NodeExecutor(TestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 		node = asNode(testDescriptor);
 		executionMode = node.getExecutionMode();
-		children = testDescriptor.getChildren().stream().map(descriptor -> new NodeExecutor<C>(descriptor)).collect(
-			toList());
+		// @formatter:off
+		children = testDescriptor.getChildren().stream()
+				.map(descriptor -> new NodeExecutor<C>(descriptor))
+				.collect(toCollection(ArrayList::new));
+		// @formatter:on
 	}
 
 	public TestDescriptor getTestDescriptor() {
@@ -80,13 +85,13 @@ class NodeExecutor<C extends EngineExecutionContext> {
 	}
 
 	void execute(C parentContext, EngineExecutionListener listener, HierarchicalTestExecutorService executorService,
-			SingleTestExecutor singleTestExecutor, BiFunction<NodeExecutor<C>, C, TestTask> testTaskCreator) {
+			BiFunction<NodeExecutor<C>, C, TestTask> testTaskCreator) {
 		prepare(parentContext);
 		if (executionErrors.isEmpty()) {
 			checkWhetherSkipped();
 		}
 		if (executionErrors.isEmpty() && !skipResult.isSkipped()) {
-			executeRecursively(listener, executorService, singleTestExecutor, testTaskCreator);
+			executeRecursively(listener, executorService, testTaskCreator);
 		}
 		if (context != null) {
 			cleanUp();
@@ -113,7 +118,7 @@ class NodeExecutor<C extends EngineExecutionContext> {
 	}
 
 	private void executeRecursively(EngineExecutionListener listener, HierarchicalTestExecutorService executorService,
-			SingleTestExecutor singleTestExecutor, BiFunction<NodeExecutor<C>, C, TestTask> testTaskCreator) {
+			BiFunction<NodeExecutor<C>, C, TestTask> testTaskCreator) {
 		listener.executionStarted(testDescriptor);
 
 		executionResult = singleTestExecutor.executeSafely(() -> {
@@ -131,9 +136,11 @@ class NodeExecutor<C extends EngineExecutionContext> {
 					futures.put(nodeExecutor, executorService.submit(testTask));
 				});
 
+				children.forEach(child -> futures.computeIfAbsent(child, d -> {
+					TestTask testTask = testTaskCreator.apply(child, context);
+					return executorService.submit(testTask);
+				}));
 				// @formatter:off
-				children
-						.forEach(child -> futures.computeIfAbsent(child, d -> executorService.submit(testTaskCreator.apply(child, context))));
 				children.stream()
 						.map(futures::get)
 						.forEach(HierarchicalTestExecutor::waitFor);

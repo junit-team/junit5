@@ -36,12 +36,10 @@ import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorSe
  */
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
-	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
-
 	private final TestDescriptor rootTestDescriptor;
 	private final EngineExecutionListener listener;
 	private final C rootContext;
-	private HierarchicalTestExecutorService executorService;
+	private final HierarchicalTestExecutorService executorService;
 
 	HierarchicalTestExecutor(ExecutionRequest request, C rootContext, HierarchicalTestExecutorService executorService) {
 		this.rootTestDescriptor = request.getRootTestDescriptor();
@@ -57,7 +55,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	protected NodeExecutor<C> createRootNodeExecutor() {
 		NodeExecutor<C> rootNodeExecutor = new NodeExecutor<>(this.rootTestDescriptor);
-		new NodeWalker(new LockManager()).walk(rootNodeExecutor);
+		new NodeWalker().walk(rootNodeExecutor);
 		return rootNodeExecutor;
 	}
 
@@ -93,7 +91,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 		@Override
 		public void execute() {
-			nodeExecutor.execute(this.context, listener, executorService, singleTestExecutor, DefaultTestTask::new);
+			nodeExecutor.execute(this.context, listener, executorService, DefaultTestTask::new);
 		}
 	}
 }
