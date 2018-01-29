@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -98,6 +98,14 @@ public class LogRecordListener {
 		}
 
 		return stream(clazz).filter(logRecord -> logRecord.getLevel() == level);
+	}
+
+	/**
+	 * Clear all existing {@link LogRecord log records} that have been
+	 * {@linkplain #logRecordSubmitted submitted} to this listener.
+	 */
+	public void clear() {
+		this.logRecords.clear();
 	}
 
 }

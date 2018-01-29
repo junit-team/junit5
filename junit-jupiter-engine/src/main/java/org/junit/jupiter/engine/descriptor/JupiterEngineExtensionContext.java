@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 
@@ -39,6 +40,11 @@ public final class JupiterEngineExtensionContext extends AbstractExtensionContex
 
 	@Override
 	public Optional<Class<?>> getTestClass() {
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<Lifecycle> getTestInstanceLifecycle() {
 		return Optional.empty();
 	}
 

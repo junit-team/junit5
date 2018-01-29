@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -33,7 +33,7 @@ class AssertionUtils {
 	///CLOVER:ON
 
 	static void fail(String message) {
-		fail(() -> message);
+		throw new AssertionFailedError(message);
 	}
 
 	static void fail(String message, Throwable cause) {
@@ -54,6 +54,26 @@ class AssertionUtils {
 
 	static String nullSafeGet(Supplier<String> messageSupplier) {
 		return (messageSupplier != null ? messageSupplier.get() : null);
+	}
+
+	/**
+	 * Alternative to {@link #nullSafeGet(Supplier)} that is used to avoid
+	 * wrapping a String in a lambda expression.
+	 *
+	 * @param messageOrSupplier an object that is either a {@code String} or
+	 * {@code Supplier<String>}
+	 */
+	static String nullSafeGet(Object messageOrSupplier) {
+		if (messageOrSupplier instanceof String) {
+			return (String) messageOrSupplier;
+		}
+		if (messageOrSupplier instanceof Supplier) {
+			Object message = ((Supplier<?>) messageOrSupplier).get();
+			if (message != null) {
+				return message.toString();
+			}
+		}
+		return null;
 	}
 
 	static String buildPrefix(String message) {

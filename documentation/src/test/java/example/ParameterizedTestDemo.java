@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -69,7 +69,7 @@ class ParameterizedTestDemo {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
 	void testWithValueSource(int argument) {
-		assertNotNull(argument);
+		assertTrue(argument > 0 && argument < 4);
 	}
 	// end::ValueSource_example[]
 
@@ -211,10 +211,38 @@ class ParameterizedTestDemo {
 	}
 	// end::implicit_conversion_example[]
 
+	// tag::implicit_fallback_conversion_example[]
+	@ParameterizedTest
+	@ValueSource(strings = "42 Cats")
+	void testWithImplicitFallbackArgumentConversion(Book book) {
+		assertEquals("42 Cats", book.getTitle());
+	}
+
+	static class Book {
+
+		private final String title;
+
+		private Book(String title) {
+			this.title = title;
+		}
+
+		public static Book fromTitle(String title) {
+			return new Book(title);
+		}
+
+		public String getTitle() {
+			return this.title;
+		}
+	}
+	// end::implicit_fallback_conversion_example[]
+
+	// @formatter:off
 	// tag::explicit_conversion_example[]
 	@ParameterizedTest
 	@EnumSource(TimeUnit.class)
-	void testWithExplicitArgumentConversion(@ConvertWith(ToStringArgumentConverter.class) String argument) {
+	void testWithExplicitArgumentConversion(
+			@ConvertWith(ToStringArgumentConverter.class) String argument) {
+
 		assertNotNull(TimeUnit.valueOf(argument));
 	}
 
@@ -231,10 +259,13 @@ class ParameterizedTestDemo {
 	// tag::explicit_java_time_converter[]
 	@ParameterizedTest
 	@ValueSource(strings = { "01.01.2017", "31.12.2017" })
-	void testWithExplicitJavaTimeConverter(@JavaTimeConversionPattern("dd.MM.yyyy") LocalDate argument) {
+	void testWithExplicitJavaTimeConverter(
+			@JavaTimeConversionPattern("dd.MM.yyyy") LocalDate argument) {
+
 		assertEquals(2017, argument.getYear());
 	}
 	// end::explicit_java_time_converter[]
+	// @formatter:on
 
 	// tag::custom_display_names[]
 	@DisplayName("Display name of container")

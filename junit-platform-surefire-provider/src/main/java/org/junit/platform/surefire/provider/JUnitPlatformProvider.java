@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,9 @@ import org.apache.maven.surefire.report.ReporterException;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
 import org.apache.maven.surefire.suite.RunResult;
+import org.apache.maven.surefire.testset.TestListResolver;
 import org.apache.maven.surefire.testset.TestSetFailedException;
+import org.apache.maven.surefire.util.ScanResult;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
@@ -76,7 +78,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 
 	private final ProviderParameters parameters;
 	private final Launcher launcher;
-	final Filter<?>[] includeAndExcludeFilters;
+	final Filter<?>[] filters;
 	final Map<String, String> configurationParameters;
 
 	public JUnitPlatformProvider(ProviderParameters parameters) {
@@ -86,7 +88,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	JUnitPlatformProvider(ProviderParameters parameters, Launcher launcher) {
 		this.parameters = parameters;
 		this.launcher = launcher;
-		this.includeAndExcludeFilters = getIncludeAndExcludeFilters();
+		this.filters = getFilters();
 		this.configurationParameters = getConfigurationParameters();
 		Logger.getLogger("org.junit").setLevel(Level.WARNING);
 	}
@@ -114,8 +116,9 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	}
 
 	private TestsToRun scanClasspath() {
-		TestsToRun scannedClasses = parameters.getScanResult().applyFilter(
-			new TestPlanScannerFilter(launcher, includeAndExcludeFilters), parameters.getTestClassLoader());
+		TestPlanScannerFilter filter = new TestPlanScannerFilter(launcher, filters);
+		ScanResult scanResult = parameters.getScanResult();
+		TestsToRun scannedClasses = scanResult.applyFilter(filter, parameters.getTestClassLoader());
 		return parameters.getRunOrderCalculator().orderTestClasses(scannedClasses);
 	}
 
@@ -135,16 +138,18 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	}
 
 	private LauncherDiscoveryRequest buildLauncherDiscoveryRequest(TestsToRun testsToRun) {
-		LauncherDiscoveryRequestBuilder builder = request() //
-				.filters(includeAndExcludeFilters) //
+		// @formatter:off
+		LauncherDiscoveryRequestBuilder builder = request()
+				.filters(filters)
 				.configurationParameters(configurationParameters);
+		// @formatter:on
 		for (Class<?> testClass : testsToRun) {
 			builder.selectors(selectClass(testClass));
 		}
 		return builder.build();
 	}
 
-	private Filter<?>[] getIncludeAndExcludeFilters() {
+	private Filter<?>[] getFilters() {
 		List<Filter<?>> filters = new ArrayList<>();
 
 		Optional<List<String>> includes = getGroupsOrTags(getPropertiesList(INCLUDE_GROUPS),
@@ -154,6 +159,11 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		Optional<List<String>> excludes = getGroupsOrTags(getPropertiesList(EXCLUDE_GROUPS),
 			getPropertiesList(EXCLUDE_TAGS));
 		excludes.map(TagFilter::excludeTags).ifPresent(filters::add);
+
+		TestListResolver testListResolver = parameters.getTestRequest().getTestListResolver();
+		if (!testListResolver.isEmpty()) {
+			filters.add(new TestMethodFilter(testListResolver));
+		}
 
 		return filters.toArray(new Filter<?>[filters.size()]);
 	}

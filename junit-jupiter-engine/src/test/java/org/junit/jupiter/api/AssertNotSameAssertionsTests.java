@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -28,6 +28,13 @@ class AssertNotSameAssertionsTests {
 	@Test
 	void assertNotSameWithDifferentObjects() {
 		assertNotSame(new Object(), new Object());
+		assertNotSame(new Object(), new Object(), "message");
+		assertNotSame(new Object(), new Object(), () -> "message");
+	}
+
+	@Test
+	void assertNotSameWithDifferentObjectsAndMessageSupplier() {
+		assertNotSame(new Object(), new Object(), () -> "should not fail");
 	}
 
 	@Test

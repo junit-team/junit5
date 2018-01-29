@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -31,11 +31,13 @@ class AssertSame {
 	///CLOVER:ON
 
 	static void assertSame(Object expected, Object actual) {
-		assertSame(expected, actual, () -> null);
+		assertSame(expected, actual, (String) null);
 	}
 
 	static void assertSame(Object expected, Object actual, String message) {
-		assertSame(expected, actual, () -> message);
+		if (expected != actual) {
+			failNotSame(expected, actual, message);
+		}
 	}
 
 	static void assertSame(Object expected, Object actual, Supplier<String> messageSupplier) {

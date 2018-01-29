@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -33,11 +33,18 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	public static final String SEGMENT_TYPE = "test-template-invocation";
 
 	private TestTemplateInvocationContext invocationContext;
+	private final int index;
 
 	TestTemplateInvocationTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
 			TestTemplateInvocationContext invocationContext, int index) {
 		super(uniqueId, invocationContext.getDisplayName(index), testClass, templateMethod);
 		this.invocationContext = invocationContext;
+		this.index = index;
+	}
+
+	@Override
+	public String getLegacyReportingName() {
+		return super.getLegacyReportingName() + "[" + index + "]";
 	}
 
 	@Override

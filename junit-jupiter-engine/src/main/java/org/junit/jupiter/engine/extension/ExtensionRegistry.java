@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.engine.Constants;
 import org.junit.platform.commons.logging.Logger;
@@ -53,6 +52,7 @@ public class ExtensionRegistry {
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);
 
 	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
+		new EnabledIfCondition(), //
 		new DisabledCondition(), //
 		new RepeatedTestExtension(), //
 		new TestInfoParameterResolver(), //
@@ -228,12 +228,17 @@ public class ExtensionRegistry {
 	 * if an extension of that type already exists in this registry.
 	 *
 	 * <h4>Semantics for Source</h4>
-	 * <p>If an extension is registered declaratively via {@link ExtendWith @ExtendWith},
-	 * the {@code source} and the {@code extension} should be the same object. However,
-	 * if an extension is registered programmatically &mdash; for example, as a lambda
-	 * expression or method reference &mdash; the {@code source} object should be the
-	 * underlying {@link java.lang.reflect.Method} that implements the extension
-	 * API, or similar.
+	 *
+	 * <p>If an extension is registered <em>declaratively</em> via
+	 * {@link org.junit.jupiter.api.extension.ExtendWith @ExtendWith}, the
+	 * {@code source} and the {@code extension} should be the same object.
+	 * However, if an extension is registered <em>programmatically</em> via
+	 * {@link org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension},
+	 * the {@code source} object should be the {@link java.lang.reflect.Field}
+	 * that is annotated with {@code @RegisterExtension}. Similarly, if an
+	 * extension is registered <em>programmatically</em> as a lambda expression
+	 * or method reference, the {@code source} object should be the underlying
+	 * {@link java.lang.reflect.Method} that implements the extension API.
 	 *
 	 * @param extension the extension to register
 	 * @param source the source of the extension

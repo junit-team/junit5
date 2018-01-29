@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,9 +12,11 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apiguardian.api.API;
@@ -34,11 +36,22 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
+public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implements Filterable {
+
+	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
 
 	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod) {
 		super(uniqueId, testClass, templateMethod);
 	}
+
+	// --- Filterable ----------------------------------------------------------
+
+	@Override
+	public DynamicDescendantFilter getDynamicDescendantFilter() {
+		return dynamicDescendantFilter;
+	}
+
+	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public Type getType() {
@@ -54,8 +67,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
-		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(getTestMethod(),
-			context.getExtensionRegistry());
+		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWithAnnotation(
+			context.getExtensionRegistry(), getTestMethod());
 
 		// The test instance should be properly maintained by the enclosing class's ExtensionContext.
 		Object testInstance = context.getExtensionContext().getTestInstance().orElse(null);
@@ -83,6 +96,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 		providers.stream()
 				.flatMap(provider -> provider.provideTestTemplateInvocationContexts(extensionContext))
 				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
 				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
 		// @formatter:on
 		validateWasAtLeastInvokedOnce(invocationIndex.get());
@@ -103,10 +118,14 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor {
 				TestTemplateInvocationContextProvider.class.getSimpleName(), getTestMethod()));
 	}
 
-	private TestDescriptor createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext, int index) {
+	private Optional<TestDescriptor> createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext,
+			int index) {
 		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
-		return new TestTemplateInvocationTestDescriptor(uniqueId, getTestClass(), getTestMethod(), invocationContext,
-			index);
+		if (getDynamicDescendantFilter().test(uniqueId)) {
+			return Optional.of(new TestTemplateInvocationTestDescriptor(uniqueId, getTestClass(), getTestMethod(),
+				invocationContext, index));
+		}
+		return Optional.empty();
 	}
 
 	private void execute(DynamicTestExecutor dynamicTestExecutor, TestDescriptor testDescriptor) {

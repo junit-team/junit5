@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -28,6 +28,13 @@ class AssertNotNullAssertionsTests {
 	@Test
 	void assertNotNullWithNonNullObject() {
 		assertNotNull("foo");
+		assertNotNull("foo", "message");
+		assertNotNull("foo", () -> "message");
+	}
+
+	@Test
+	void assertNotNullWithNonNullObjectAndMessageSupplier() {
+		assertNotNull("foo", () -> "should not fail");
 	}
 
 	@Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -31,11 +31,13 @@ class AssertNull {
 	///CLOVER:ON
 
 	static void assertNull(Object actual) {
-		assertNull(actual, () -> null);
+		assertNull(actual, (String) null);
 	}
 
 	static void assertNull(Object actual, String message) {
-		assertNull(actual, () -> message);
+		if (actual != null) {
+			failNotNull(actual, message);
+		}
 	}
 
 	static void assertNull(Object actual, Supplier<String> messageSupplier) {

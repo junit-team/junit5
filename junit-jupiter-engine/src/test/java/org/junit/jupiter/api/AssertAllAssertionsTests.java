@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -73,6 +73,26 @@ class AssertAllAssertionsTests {
 			() -> assertTrue(true),
 			() -> assertFalse(false)
 		);
+		assertAll("heading",
+			() -> assertTrue(true),
+			() -> assertFalse(false)
+		);
+		assertAll(asList(
+			() -> assertTrue(true),
+			() -> assertFalse(false)
+		));
+		assertAll("heading", asList(
+			() -> assertTrue(true),
+			() -> assertFalse(false)
+		));
+		assertAll(Stream.of(
+				() -> assertTrue(true),
+				() -> assertFalse(false)
+		));
+		assertAll("heading", Stream.of(
+				() -> assertTrue(true),
+				() -> assertFalse(false)
+		));
 		// @formatter:on
 	}
 

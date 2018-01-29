@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -35,16 +35,21 @@ class AssertThrows {
 	///CLOVER:ON
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable) {
-		return assertThrows(expectedType, executable, () -> null);
+		return assertThrows(expectedType, executable, (Object) null);
 	}
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
-		return assertThrows(expectedType, executable, () -> message);
+		return assertThrows(expectedType, executable, (Object) message);
+	}
+
+	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
+			Supplier<String> messageSupplier) {
+		return assertThrows(expectedType, executable, (Object) messageSupplier);
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
-			Supplier<String> messageSupplier) {
+	private static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
+			Object messageOrSupplier) {
 
 		try {
 			executable.execute();
@@ -54,13 +59,13 @@ class AssertThrows {
 				return (T) actualException;
 			}
 			else {
-				String message = buildPrefix(nullSafeGet(messageSupplier))
+				String message = buildPrefix(nullSafeGet(messageOrSupplier))
 						+ format(expectedType, actualException.getClass(), "Unexpected exception type thrown");
 				throw new AssertionFailedError(message, actualException);
 			}
 		}
 
-		String message = buildPrefix(nullSafeGet(messageSupplier))
+		String message = buildPrefix(nullSafeGet(messageOrSupplier))
 				+ String.format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType));
 		throw new AssertionFailedError(message);
 	}

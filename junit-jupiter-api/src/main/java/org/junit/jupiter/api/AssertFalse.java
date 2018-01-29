@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,8 +10,8 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
 import static org.junit.jupiter.api.AssertionUtils.fail;
-import static org.junit.jupiter.api.AssertionUtils.format;
 import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.function.BooleanSupplier;
@@ -25,6 +25,8 @@ import java.util.function.Supplier;
  */
 class AssertFalse {
 
+	private static final String EXPECTED_FALSE = "expected: <false> but was: <true>";
+
 	///CLOVER:OFF
 	private AssertFalse() {
 		/* no-op */
@@ -32,29 +34,31 @@ class AssertFalse {
 	///CLOVER:ON
 
 	static void assertFalse(boolean condition) {
-		assertFalse(() -> condition, () -> null);
+		assertFalse(condition, (String) null);
 	}
 
 	static void assertFalse(boolean condition, String message) {
-		assertFalse(() -> condition, () -> message);
+		if (condition) {
+			fail(buildPrefix(message) + EXPECTED_FALSE);
+		}
 	}
 
 	static void assertFalse(boolean condition, Supplier<String> messageSupplier) {
-		assertFalse(() -> condition, messageSupplier);
+		if (condition) {
+			fail(buildPrefix(nullSafeGet(messageSupplier)) + EXPECTED_FALSE);
+		}
 	}
 
 	static void assertFalse(BooleanSupplier booleanSupplier) {
-		assertFalse(booleanSupplier, () -> null);
+		assertFalse(booleanSupplier.getAsBoolean(), (String) null);
 	}
 
 	static void assertFalse(BooleanSupplier booleanSupplier, String message) {
-		assertFalse(booleanSupplier, () -> message);
+		assertFalse(booleanSupplier.getAsBoolean(), message);
 	}
 
 	static void assertFalse(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
-		if (booleanSupplier.getAsBoolean()) {
-			fail(format(false, true, nullSafeGet(messageSupplier)));
-		}
+		assertFalse(booleanSupplier.getAsBoolean(), messageSupplier);
 	}
 
 }

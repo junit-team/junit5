@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -52,7 +52,8 @@ public final class Preconditions {
 	 * @see #notNull(Object, Supplier)
 	 */
 	public static <T> T notNull(T object, String message) throws PreconditionViolationException {
-		return notNull(object, () -> message);
+		condition(object != null, message);
+		return object;
 	}
 
 	/**
@@ -84,7 +85,8 @@ public final class Preconditions {
 	 * @see #condition(boolean, String)
 	 */
 	public static <T> T[] notEmpty(T[] array, String message) throws PreconditionViolationException {
-		return notEmpty(array, () -> message);
+		condition(array != null && array.length > 0, message);
+		return array;
 	}
 
 	/**
@@ -122,7 +124,8 @@ public final class Preconditions {
 	public static <T extends Collection<?>> T notEmpty(T collection, String message)
 			throws PreconditionViolationException {
 
-		return notEmpty(collection, () -> message);
+		condition(collection != null && !collection.isEmpty(), message);
+		return collection;
 	}
 
 	/**
@@ -159,7 +162,10 @@ public final class Preconditions {
 	 * @see #notNull(Object, String)
 	 */
 	public static <T> T[] containsNoNullElements(T[] array, String message) throws PreconditionViolationException {
-		return containsNoNullElements(array, () -> message);
+		if (array != null) {
+			Arrays.stream(array).forEach(object -> notNull(object, message));
+		}
+		return array;
 	}
 
 	/**
@@ -200,7 +206,10 @@ public final class Preconditions {
 	public static <T extends Collection<?>> T containsNoNullElements(T collection, String message)
 			throws PreconditionViolationException {
 
-		return containsNoNullElements(collection, () -> message);
+		if (collection != null) {
+			collection.forEach(object -> notNull(object, message));
+		}
+		return collection;
 	}
 
 	/**
@@ -238,7 +247,8 @@ public final class Preconditions {
 	 * @see #notBlank(String, Supplier)
 	 */
 	public static String notBlank(String str, String message) throws PreconditionViolationException {
-		return notBlank(str, () -> message);
+		condition(StringUtils.isNotBlank(str), message);
+		return str;
 	}
 
 	/**
@@ -268,7 +278,9 @@ public final class Preconditions {
 	 * @see #condition(boolean, Supplier)
 	 */
 	public static void condition(boolean predicate, String message) throws PreconditionViolationException {
-		condition(predicate, () -> message);
+		if (!predicate) {
+			throw new PreconditionViolationException(message);
+		}
 	}
 
 	/**

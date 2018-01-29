@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static org.junit.platform.console.tasks.XmlReportAssertions.ensureValidAccordingToJenkinsSchema;
+import static org.junit.platform.console.tasks.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -74,7 +74,7 @@ class XmlReportsWritingListenerTests {
 		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"0\"",
 
 					"<testcase name=\"display&lt;--&gt;Name 😎\" classname=\"dummy\"",
@@ -106,7 +106,7 @@ class XmlReportsWritingListenerTests {
 
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"1\" errors=\"0\"",
 				"<testcase name=\"failingTest\"",
 				"<failure message=\"expected to &lt;b&gt;fail&lt;/b&gt;\" type=\"" + AssertionFailedError.class.getName() + "\">",
@@ -133,7 +133,7 @@ class XmlReportsWritingListenerTests {
 
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"1\"",
 				"<testcase name=\"failingTest\"",
 				"<error message=\"error occurred\" type=\"java.lang.RuntimeException\">",
@@ -159,7 +159,7 @@ class XmlReportsWritingListenerTests {
 
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
 				"<testcase name=\"skippedTest\"",
 				"<skipped>",
@@ -183,7 +183,7 @@ class XmlReportsWritingListenerTests {
 
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
 				"<testcase name=\"abortedTest\"",
 				"<skipped>",
@@ -217,7 +217,7 @@ class XmlReportsWritingListenerTests {
 		// firstTest     333 (2)      666 (3)
 		// secondTest    999 (4)    1,332 (5)
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite", "time=\"1.665\"",
 				"<testcase name=\"firstTest\" classname=\"dummy\" time=\"0.333\"",
 				"<testcase name=\"secondTest\" classname=\"dummy\" time=\"0.333\"");
@@ -236,7 +236,7 @@ class XmlReportsWritingListenerTests {
 
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite",
 				"<testcase name=\"test\" classname=\"dummy\" time=\"0\"");
 		//@formatter:on
@@ -254,7 +254,7 @@ class XmlReportsWritingListenerTests {
 
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
 				"<testcase name=\"test\"",
 				"<skipped>",
@@ -277,7 +277,7 @@ class XmlReportsWritingListenerTests {
 
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"1\" errors=\"0\"",
 				"<testcase name=\"test\"",
 				"<failure message=\"failure before all tests\" type=\"" + AssertionFailedError.class.getName() + "\">",
@@ -301,7 +301,7 @@ class XmlReportsWritingListenerTests {
 
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite",
 				"<properties>",
 				"<property name=\"file.separator\" value=\"" + File.separator + "\"/>",
@@ -327,7 +327,7 @@ class XmlReportsWritingListenerTests {
 
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite",
 				"hostname=\"" + InetAddress.getLocalHost().getHostName() + "\"",
 				"timestamp=\"2016-01-28T14:02:59\"",
@@ -346,8 +346,8 @@ class XmlReportsWritingListenerTests {
 
 		listener.testPlanExecutionStarted(TestPlan.from(emptySet()));
 
-		assertThat(out.toString()).containsSequence("Could not create reports directory", "FileAlreadyExistsException",
-			"at ");
+		assertThat(out.toString()).containsSubsequence("Could not create reports directory",
+			"FileAlreadyExistsException", "at ");
 	}
 
 	@Test
@@ -363,7 +363,7 @@ class XmlReportsWritingListenerTests {
 		listener.testPlanExecutionStarted(TestPlan.from(singleton(engineDescriptor)));
 		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
 
-		assertThat(out.toString()).containsSequence("Could not write XML report", "Exception", "at ");
+		assertThat(out.toString()).containsSubsequence("Could not write XML report", "Exception", "at ");
 	}
 
 	@Test
@@ -391,7 +391,7 @@ class XmlReportsWritingListenerTests {
 
 		//@formatter:off
 		assertThat(content)
-			.containsSequence(
+			.containsSubsequence(
 				"<testsuite",
 				"<testcase",
 				"<system-out>",
@@ -422,7 +422,8 @@ class XmlReportsWritingListenerTests {
 	private String readValidXmlFile(Path xmlFile) throws Exception {
 		assertTrue(Files.exists(xmlFile), () -> "File does not exist: " + xmlFile);
 		String content = new String(Files.readAllBytes(xmlFile), UTF_8);
-		return ensureValidAccordingToJenkinsSchema(content);
+		assertValidAccordingToJenkinsSchema(content);
+		return content;
 	}
 
 }

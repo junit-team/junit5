@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -166,7 +166,7 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class LocalTestCase extends AbstractTestCase {
+	static class LocalTestCase extends AbstractTestCase {
 
 		boolean throwExceptionInAfterMethod = false;
 
@@ -215,7 +215,7 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class TestCase1 {
+	static class TestCase1 {
 
 		@BeforeAll
 		static void beforeAll1() {
@@ -238,7 +238,7 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class TestCase2 extends TestCase1 {
+	static class TestCase2 extends TestCase1 {
 
 		@BeforeAll
 		static void beforeAll2() {
@@ -261,7 +261,7 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class TestCase3 extends TestCase2 {
+	static class TestCase3 extends TestCase2 {
 
 		@BeforeAll
 		static void beforeAll3() {

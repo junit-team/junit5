@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -16,6 +16,7 @@ import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  * @since 4.12
@@ -29,6 +30,7 @@ public class PlainJUnit4TestCaseWithTwoTestMethods {
 	}
 
 	@Test
+	@Category(Categories.Successful.class)
 	public void successfulTest() {
 		assertEquals(3, 1 + 2);
 	}

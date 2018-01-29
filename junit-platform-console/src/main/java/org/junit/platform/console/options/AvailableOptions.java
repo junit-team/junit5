@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -186,10 +186,12 @@ class AvailableOptions {
 				.withRequiredArg();
 
 		includeTag = parser.acceptsAll(asList("t", "include-tag"),
-			"Provide a tag to be included in the test run. This option can be repeated.") //
+			"Provide a tag or tag expression to include only tests whose tags match. " + //
+					"When this option is repeated, all patterns will be combined using OR semantics.") //
 				.withRequiredArg();
 		excludeTag = parser.acceptsAll(asList("T", "exclude-tag"),
-			"Provide a tag to be excluded from the test run. This option can be repeated.") //
+			"Provide a tag or tag expression to exclude those tests whose tags match. " + //
+					"When this option is repeated, all patterns will be combined using OR semantics.") //
 				.withRequiredArg();
 
 		includeEngine = parser.acceptsAll(asList("e", "include-engine"),
@@ -245,8 +247,8 @@ class AvailableOptions {
 		result.setExcludedClassNamePatterns(detectedOptions.valuesOf(this.excludeClassNamePattern));
 		result.setIncludedPackages(detectedOptions.valuesOf(this.includePackage));
 		result.setExcludedPackages(detectedOptions.valuesOf(this.excludePackage));
-		result.setIncludedTags(detectedOptions.valuesOf(this.includeTag));
-		result.setExcludedTags(detectedOptions.valuesOf(this.excludeTag));
+		result.setIncludedTagExpressions(detectedOptions.valuesOf(this.includeTag));
+		result.setExcludedTagExpressions(detectedOptions.valuesOf(this.excludeTag));
 		result.setIncludedEngines(detectedOptions.valuesOf(this.includeEngine));
 		result.setExcludedEngines(detectedOptions.valuesOf(this.excludeEngine));
 

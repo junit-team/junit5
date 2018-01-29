@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,6 +11,8 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromFields;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterEachMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
@@ -72,8 +74,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private List<Method> beforeAllMethods;
 	private List<Method> afterAllMethods;
-	private List<Method> beforeEachMethods;
-	private List<Method> afterEachMethods;
 
 	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
 		this(uniqueId, ClassTestDescriptor::generateDefaultDisplayName, testClass);
@@ -131,22 +131,22 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
-		Lifecycle lifecycle = getTestInstanceLifecycle(testClass, context.getConfigurationParameters());
+		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWithAnnotation(
+			context.getExtensionRegistry(), this.testClass);
 
-		this.beforeAllMethods = findBeforeAllMethods(testClass, lifecycle == Lifecycle.PER_METHOD);
-		this.afterAllMethods = findAfterAllMethods(testClass, lifecycle == Lifecycle.PER_METHOD);
-		this.beforeEachMethods = findBeforeEachMethods(testClass);
-		this.afterEachMethods = findAfterEachMethods(testClass);
-
-		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.testClass,
-			context.getExtensionRegistry());
-
+		// Register extensions from static fields here, at the class level but
+		// after extensions registered via @ExtendWith.
+		registerExtensionsFromFields(registry, this.testClass, null);
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
 
+		Lifecycle lifecycle = getTestInstanceLifecycle(this.testClass, context.getConfigurationParameters());
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfigurationParameters(), throwableCollector);
+			context.getExecutionListener(), this, lifecycle, context.getConfigurationParameters(), throwableCollector);
+
+		this.beforeAllMethods = findBeforeAllMethods(this.testClass, lifecycle == Lifecycle.PER_METHOD);
+		this.afterAllMethods = findAfterAllMethods(this.testClass, lifecycle == Lifecycle.PER_METHOD);
 
 		// @formatter:off
 		return context.extend()
@@ -160,7 +160,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) throws Exception {
-		Lifecycle lifecycle = getTestInstanceLifecycle(testClass, context.getConfigurationParameters());
+		Lifecycle lifecycle = context.getExtensionContext().getTestInstanceLifecycle().orElse(Lifecycle.PER_METHOD);
 		if (lifecycle == Lifecycle.PER_CLASS) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ExtensionContext.
@@ -196,6 +196,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		TestInstanceProvider testInstanceProvider = childRegistry -> instantiateAndPostProcessTestInstance(
 			parentExecutionContext, extensionContext, childRegistry.orElse(registry));
+
 		return childRegistry -> extensionContext.getTestInstance().orElseGet(
 			() -> testInstanceProvider.getTestInstance(childRegistry));
 	}
@@ -205,6 +206,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		Object instance = instantiateTestClass(context, registry, extensionContext);
 		invokeTestInstancePostProcessors(instance, registry, extensionContext);
+		// In addition, we register extensions from instance fields here since the
+		// best time to do that is immediately following test class instantiation
+		// and post processing.
+		registerExtensionsFromFields(registry, this.testClass, instance);
 		return instance;
 	}
 
@@ -270,19 +275,21 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void registerBeforeEachMethodAdapters(ExtensionRegistry registry) {
-		registerMethodsAsExtensions(this.beforeEachMethods, registry, this::synthesizeBeforeEachMethodAdapter);
+		List<Method> beforeEachMethods = findBeforeEachMethods(this.testClass);
+		registerMethodsAsExtensions(beforeEachMethods, registry, this::synthesizeBeforeEachMethodAdapter);
 	}
 
 	private void registerAfterEachMethodAdapters(ExtensionRegistry registry) {
+		// Make a local copy since findAfterEachMethods() returns an immutable list.
+		List<Method> afterEachMethods = new ArrayList<>(findAfterEachMethods(this.testClass));
 
 		// Since the bottom-up ordering of afterEachMethods will later be reversed when the
-		// synthesized AfterEachMethodAdapters are executed within MethodTestDescriptor, we
-		// have to reverse the afterEachMethods list to put them in top-down order before we
-		// register them as synthesized extensions.
-		List<Method> reversed = new ArrayList<>(this.afterEachMethods);
-		Collections.reverse(reversed);
+		// synthesized AfterEachMethodAdapters are executed within TestMethodTestDescriptor,
+		// we have to reverse the afterEachMethods list to put them in top-down order before
+		// we register them as synthesized extensions.
+		Collections.reverse(afterEachMethods);
 
-		registerMethodsAsExtensions(reversed, registry, this::synthesizeAfterEachMethodAdapter);
+		registerMethodsAsExtensions(afterEachMethods, registry, this::synthesizeAfterEachMethodAdapter);
 	}
 
 	private void registerMethodsAsExtensions(List<Method> methods, ExtensionRegistry registry,

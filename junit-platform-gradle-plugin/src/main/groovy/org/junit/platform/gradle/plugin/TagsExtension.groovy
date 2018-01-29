@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -22,27 +22,31 @@ import org.apiguardian.api.API
 class TagsExtension {
 
 	/**
-	 * A list of <em>tags</em> to be included when building the test plan.
+	 * A list of <em>tags</em> or <em>tag expressions</em> to be included when
+	 * building the test plan.
 	 */
 	List<String> include = []
 
 	/**
-	 * A list of <em>tags</em> to be excluded when building the test plan.
+	 * A list of <em>tags</em> or <em>tag expressions</em> to be excluded when
+	 * building the test plan.
 	 */
 	List<String> exclude = []
 
 	/**
-	 * Add one or more <em>tags</em> to be included when building the test plan.
+	 * Add one or more <em>tags</em> or <em>tag expressions</em> to be included
+	 * when building the test plan.
 	 */
-	void include(String... tags) {
-		this.include.addAll tags
+	void include(String... tagExpressions) {
+		this.include.addAll tagExpressions
 	}
 
 	/**
-	 * Add one or more <em>tags</em> to be excluded when building the test plan.
+	 * Add one or more <em>tags</em> or <em>tag expressions</em> to be excluded
+	 * when building the test plan.
 	 */
-	void exclude(String... tags) {
-		this.exclude.addAll tags
+	void exclude(String... tagExpressions) {
+		this.exclude.addAll tagExpressions
 	}
 
 }

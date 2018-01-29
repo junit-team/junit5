@@ -1,11 +1,11 @@
 Test execution started. Number of static tests: 1
 Started:     JUnit Jupiter ([engine:junit-jupiter])
-Started:     Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report])
-Started:     reportSingleEntryWithSingleMapping(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportSingleEntryWithSingleMapping(org.junit.jupiter.api.TestReporter)])
-Reported:    reportSingleEntryWithSingleMapping(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportSingleEntryWithSingleMapping(org.junit.jupiter.api.TestReporter)])
+Started:     Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase])
+Started:     reportSingleEntryWithSingleMapping(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportSingleEntryWithSingleMapping(org.junit.jupiter.api.TestReporter)])
+Reported:    reportSingleEntryWithSingleMapping(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportSingleEntryWithSingleMapping(org.junit.jupiter.api.TestReporter)])
              => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, foo = 'bar'\]
-Finished:    reportSingleEntryWithSingleMapping(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report]/[method:reportSingleEntryWithSingleMapping(org.junit.jupiter.api.TestReporter)])
-Finished:    Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$Report])
+Finished:    reportSingleEntryWithSingleMapping(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportSingleEntryWithSingleMapping(org.junit.jupiter.api.TestReporter)])
+Finished:    Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase])
 Finished:    JUnit Jupiter ([engine:junit-jupiter])
 Test execution finished.
 

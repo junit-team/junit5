@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -110,12 +110,12 @@ class DiscoveryRequestCreator {
 			requestBuilder.filters(excludePackageNames(options.getExcludedPackages()));
 		}
 
-		if (!options.getIncludedTags().isEmpty()) {
-			requestBuilder.filters(includeTags(options.getIncludedTags()));
+		if (!options.getIncludedTagExpressions().isEmpty()) {
+			requestBuilder.filters(includeTags(options.getIncludedTagExpressions()));
 		}
 
-		if (!options.getExcludedTags().isEmpty()) {
-			requestBuilder.filters(excludeTags(options.getExcludedTags()));
+		if (!options.getExcludedTagExpressions().isEmpty()) {
+			requestBuilder.filters(excludeTags(options.getExcludedTagExpressions()));
 		}
 
 		if (!options.getIncludedEngines().isEmpty()) {

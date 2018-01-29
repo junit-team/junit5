@@ -1,0 +1,75 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.platform.launcher.tagexpression;
+
+import java.util.Collection;
+
+import org.junit.platform.engine.TestTag;
+
+class TagExpressions {
+
+	static TagExpression tag(String tag) {
+		TestTag testTag = TestTag.create(tag);
+		return new TagExpression() {
+			@Override
+			public boolean evaluate(Collection<TestTag> tags) {
+				return tags.contains(testTag);
+			}
+
+			@Override
+			public String toString() {
+				return testTag.getName();
+			}
+		};
+	}
+
+	static TagExpression not(TagExpression toNegate) {
+		return new TagExpression() {
+			@Override
+			public boolean evaluate(Collection<TestTag> tags) {
+				return !toNegate.evaluate(tags);
+			}
+
+			@Override
+			public String toString() {
+				return "!" + toNegate + "";
+			}
+		};
+	}
+
+	static TagExpression and(TagExpression lhs, TagExpression rhs) {
+		return new TagExpression() {
+			@Override
+			public boolean evaluate(Collection<TestTag> tags) {
+				return lhs.evaluate(tags) && rhs.evaluate(tags);
+			}
+
+			@Override
+			public String toString() {
+				return "(" + lhs + " & " + rhs + ")";
+			}
+		};
+	}
+
+	static TagExpression or(TagExpression lhs, TagExpression rhs) {
+		return new TagExpression() {
+			@Override
+			public boolean evaluate(Collection<TestTag> tags) {
+				return lhs.evaluate(tags) || rhs.evaluate(tags);
+			}
+
+			@Override
+			public String toString() {
+				return "(" + lhs + " | " + rhs + ")";
+			}
+		};
+	}
+}

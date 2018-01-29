@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -66,6 +66,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		project.junitPlatform {
 			platformVersion '5.0.0-M1'
 			enableStandardTestTask true
+			modulepath = project.files("abc.jar")
 			logManager 'org.apache.logging.log4j.jul.LogManager'
 
 			filters {
@@ -105,6 +106,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		JUnitPlatformExtension junitPlatform = project.extensions.getByType(JUnitPlatformExtension)
 		junitPlatform.platformVersion = '5.0.0-M1'
 		junitPlatform.enableStandardTestTask = true
+		junitPlatform.modulepath = project.files("abc.jar")
 		junitPlatform.logManager = 'org.apache.logging.log4j.jul.LogManager'
 		junitPlatform.selectors {
 			it.uris'u:foo', 'u:bar'
@@ -206,6 +208,26 @@ class JUnitPlatformPluginSpec extends Specification {
 		Task testTask = project.tasks.findByName('test')
 		testTask instanceof Test
 		testTask.enabled == false
+	}
+
+	@Issue('https://github.com/junit-team/junit5/issues/1234')
+	def "enable module-path sets main class name to --module"() {
+		given:
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
+
+		when:
+		project.junitPlatform { modulepath = project.files("abc.jar") }
+		project.evaluate()
+
+		then:
+		Task junitTask = project.tasks.findByName('junitPlatformTest')
+		junitTask instanceof JavaExec
+
+		junitTask.jvmArgs.containsAll('--module-path', project.files("abc.jar").asPath)
+		junitTask.jvmArgs.containsAll('--add-modules', 'ALL-MODULE-PATH')
+		junitTask.main == '--module'
+		junitTask.args[0] == 'org.junit.platform.console'
+		junitTask.args.contains('--scan-modules')
 	}
 
 	def "scans classes dirs for non-Java languages"() {

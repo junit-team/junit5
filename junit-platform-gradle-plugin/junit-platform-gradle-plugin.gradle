@@ -1,6 +1,15 @@
-apply plugin: 'groovy'
-apply plugin: 'java-gradle-plugin'
+plugins {
+	id 'pl.droidsonroids.jacoco.testkit' version '1.0.3'
+	id 'java-gradle-plugin'
+}
+
 apply from: 'gradle/functional-test.gradle'
+
+generateJacocoTestKitProperties {
+	destinationFile = file("$buildDir/jacoco/testkit.exec")
+	onlyIf { project.hasProperty('enableJaCoCo') }
+}
+functionalTest.dependsOn(generateJacocoTestKitProperties)
 
 dependencies {
 	api(project(path: ':junit-platform-console', configuration: 'shadow'))

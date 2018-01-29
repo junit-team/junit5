@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -147,7 +147,7 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 	// -------------------------------------------------------------------------
 
 	@TestInstance(PER_METHOD)
-	private static class ExplicitInstancePerTestMethodTestCase {
+	static class ExplicitInstancePerTestMethodTestCase {
 
 		@BeforeAll
 		static void beforeAll() {
@@ -171,7 +171,7 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 	 * {@code @AfterAll} methods are static, even though there is no explicit
 	 * {@code @TestInstance} declaration.
 	 */
-	private static class AssumedInstancePerTestMethodTestCase {
+	static class AssumedInstancePerTestMethodTestCase {
 
 		@BeforeAll
 		static void beforeAll() {
@@ -191,7 +191,7 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 	}
 
 	@TestInstance(PER_CLASS)
-	private static class ExplicitInstancePerClassTestCase {
+	static class ExplicitInstancePerClassTestCase {
 
 		@BeforeAll
 		void beforeAll(TestInfo testInfo) {
@@ -215,7 +215,7 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 	 * {@code @AfterAll} methods are non-static, even though there is no
 	 * explicit {@code @TestInstance} declaration.
 	 */
-	private static class AssumedInstancePerClassTestCase {
+	static class AssumedInstancePerClassTestCase {
 
 		@BeforeAll
 		void beforeAll(TestInfo testInfo) {

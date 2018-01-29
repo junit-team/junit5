@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -26,16 +26,25 @@ class AssertTrueAssertionsTests {
 	@Test
 	void assertTrueWithBooleanTrue() {
 		assertTrue(true);
+		assertTrue(true, "test");
+		assertTrue(true, () -> "test");
 	}
 
 	@Test
 	void assertTrueWithBooleanSupplierTrue() {
 		assertTrue(() -> true);
+		assertTrue(() -> true, "test");
+		assertTrue(() -> true, () -> "test");
 	}
 
 	@Test
-	void assertTrueWithBooleanTrueAndString() {
-		assertTrue(true, "test");
+	void assertTrueWithBooleanTrueAndMessageSupplier() {
+		assertTrue(true, () -> "test");
+	}
+
+	@Test
+	void assertTrueWithBooleanSupplierTrueAndMessageSupplier() {
+		assertTrue(() -> true, () -> "test");
 	}
 
 	@Test
@@ -53,6 +62,17 @@ class AssertTrueAssertionsTests {
 	void assertTrueWithBooleanFalseAndString() {
 		try {
 			assertTrue(false, "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "test ==> expected: <true> but was: <false>");
+		}
+	}
+
+	@Test
+	void assertTrueWithBooleanFalseAndMessageSupplier() {
+		try {
+			assertTrue(false, () -> "test");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {

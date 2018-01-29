@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -18,7 +18,6 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -30,12 +29,9 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.annotation.ExecutionControl;
 import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.commons.annotation.UseResource;
@@ -155,17 +151,6 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	@Override
 	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
 		context.close();
-	}
-
-	protected ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
-			ExtensionRegistry existingExtensionRegistry) {
-		// @formatter:off
-		List<Class<? extends Extension>> extensionTypes = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
-				.map(ExtendWith::value)
-				.flatMap(Arrays::stream)
-				.collect(toList());
-		// @formatter:on
-		return ExtensionRegistry.createRegistryFrom(existingExtensionRegistry, extensionTypes);
 	}
 
 	/**

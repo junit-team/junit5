@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -78,7 +78,7 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 	}
 
 	@EnableRuleMigrationSupport
-	private static class EnableRuleMigrationSupportWithBothRuleTypesTestCase {
+	static class EnableRuleMigrationSupportWithBothRuleTypesTestCase {
 
 		static boolean afterOfRule1WasExecuted = false;
 
@@ -119,7 +119,7 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 	}
 
 	@ExtendWith(VerifierSupport.class)
-	private static class VerifierSupportForErrorCollectorTestCase {
+	static class VerifierSupportForErrorCollectorTestCase {
 
 		static boolean survivedBothErrors = false;
 

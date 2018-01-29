@@ -40,6 +40,7 @@ javadoc {
 
 jar.enabled = false
 test.enabled = false // prevent supposed-to-fail integration tests from failing the build
+japicc.enabled = false
 
 shadowJar {
 	// Generate shadow jar only if the underlying manifest was regenerated.

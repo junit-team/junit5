@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -90,9 +90,6 @@ public final class ReflectionUtils {
 		 */
 		BOTTOM_UP;
 	}
-
-	// Pattern: [fully qualified class name]#[methodName]((comma-separated list of parameter type names))
-	private static final Pattern FULLY_QUALIFIED_METHOD_NAME_PATTERN = Pattern.compile("(.+)#([^()]+?)(\\((.*)\\))?");
 
 	// Pattern: "[Ljava.lang.String;", "[[[[Ljava.lang.String;", etc.
 	private static final Pattern VM_INTERNAL_OBJECT_ARRAY_PATTERN = Pattern.compile("^(\\[+)L(.+);$");
@@ -228,6 +225,10 @@ public final class ReflectionUtils {
 		return Modifier.isPrivate(member.getModifiers());
 	}
 
+	public static boolean isNotPrivate(Member member) {
+		return !isPrivate(member);
+	}
+
 	public static boolean isAbstract(Class<?> clazz) {
 		return Modifier.isAbstract(clazz.getModifiers());
 	}
@@ -242,6 +243,10 @@ public final class ReflectionUtils {
 
 	public static boolean isStatic(Member member) {
 		return Modifier.isStatic(member.getModifiers());
+	}
+
+	public static boolean isNotStatic(Member member) {
+		return !isStatic(member);
 	}
 
 	public static boolean isInnerClass(Class<?> clazz) {
@@ -352,7 +357,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Read the value of a potentially inaccessible field.
+	 * Read the value of a potentially inaccessible or nonexistent field.
 	 *
 	 * <p>If the field does not exist, an exception occurs while reading it, or
 	 * the value of the field is {@code null}, an empty {@link Optional} is
@@ -362,13 +367,55 @@ public final class ReflectionUtils {
 	 * @param fieldName the name of the field; never {@code null} or empty
 	 * @param instance the instance from where the value is to be read; may
 	 * be {@code null} for a static field
+	 * @see #readFieldValue(Field)
+	 * @see #readFieldValue(Field, Object)
 	 */
 	public static <T> Optional<Object> readFieldValue(Class<T> clazz, String fieldName, T instance) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(fieldName, "Field name must not be null or blank");
 
+		Field field = null;
 		try {
-			Field field = makeAccessible(clazz.getDeclaredField(fieldName));
+			field = makeAccessible(clazz.getDeclaredField(fieldName));
+		}
+		catch (Throwable t) {
+			BlacklistedExceptions.rethrowIfBlacklisted(t);
+			return Optional.empty();
+		}
+		return readFieldValue(field, instance);
+	}
+
+	/**
+	 * Read the value of a potentially inaccessible static field.
+	 *
+	 * <p>If an exception occurs while reading the field or if the value of the
+	 * field is {@code null}, an empty {@link Optional} is returned.
+	 *
+	 * @param field the field to read; never {@code null}
+	 * @see #readFieldValue(Field, Object)
+	 * @see #readFieldValue(Class, String, Object)
+	 */
+	public static Optional<Object> readFieldValue(Field field) {
+		return readFieldValue(field, null);
+	}
+
+	/**
+	 * Read the value of a potentially inaccessible field.
+	 *
+	 * <p>If an exception occurs while reading the field or if the value of the
+	 * field is {@code null}, an empty {@link Optional} is returned.
+	 *
+	 * @param field the field to read; never {@code null}
+	 * @param instance the instance from which the value is to be read; may
+	 * be {@code null} for a static field
+	 * @see #readFieldValue(Field)
+	 * @see #readFieldValue(Class, String, Object)
+	 */
+	public static <T> Optional<Object> readFieldValue(Field field, T instance) {
+		Preconditions.notNull(field, "Field must not be null");
+
+		try {
+			makeAccessible(field);
 			return Optional.ofNullable(field.get(instance));
 		}
 		catch (Throwable t) {
@@ -468,79 +515,10 @@ public final class ReflectionUtils {
 			throws ClassNotFoundException {
 
 		Class<?> componentType = classNameToTypeMap.containsKey(componentTypeName)
-				? classNameToTypeMap.get(componentTypeName) : classLoader.loadClass(componentTypeName);
+				? classNameToTypeMap.get(componentTypeName)
+				: classLoader.loadClass(componentTypeName);
 
 		return Optional.of(Array.newInstance(componentType, new int[dimensions]).getClass());
-	}
-
-	/**
-	 * Load a method by its <em>fully qualified name</em>.
-	 *
-	 * <p>The following formats are supported.
-	 *
-	 * <ul>
-	 * <li>{@code [fully qualified class name]#[methodName]}</li>
-	 * <li>{@code [fully qualified class name]#[methodName](parameter type list)}
-	 * </ul>
-	 *
-	 * <p>The <em>parameter type list</em> is a comma-separated list of primitive
-	 * names or fully qualified class names for the types of parameters accepted
-	 * by the method.
-	 *
-	 * <p>See {@link #loadClass(String, ClassLoader)} for details on the supported
-	 * syntax for array parameter types.
-	 *
-	 * <h3>Examples</h3>
-	 *
-	 * <table border="1">
-	 * <tr><th>Method</th><th>Fully Qualified Method Name</th></tr>
-	 * <tr><td>{@code java.lang.String.chars()}</td><td>{@code java.lang.String#chars}</td></tr>
-	 * <tr><td>{@code java.lang.String.chars()}</td><td>{@code java.lang.String#chars()}</td></tr>
-	 * <tr><td>{@code java.lang.String.equalsIgnoreCase(String)}</td><td>{@code java.lang.String#equalsIgnoreCase(java.lang.String)}</td></tr>
-	 * <tr><td>{@code java.lang.String.substring(int, int)}</td><td>{@code java.lang.String#substring(int, int)}</td></tr>
-	 * <tr><td>{@code example.Calc.avg(int[])}</td><td>{@code example.Calc#avg([I)}</td></tr>
-	 * <tr><td>{@code example.Calc.avg(int[])}</td><td>{@code example.Calc#avg(int[])}</td></tr>
-	 * <tr><td>{@code example.Matrix.multiply(double[][])}</td><td>{@code example.Matrix#multiply([[D)}</td></tr>
-	 * <tr><td>{@code example.Matrix.multiply(double[][])}</td><td>{@code example.Matrix#multiply(double[][])}</td></tr>
-	 * <tr><td>{@code example.Service.process(String[])}</td><td>{@code example.Service#process([Ljava.lang.String;)}</td></tr>
-	 * <tr><td>{@code example.Service.process(String[])}</td><td>{@code example.Service#process(java.lang.String[])}</td></tr>
-	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code example.Service#process([[Ljava.lang.String;)}</td></tr>
-	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code example.Service#process(java.lang.String[][])}</td></tr>
-	 * </table>
-	 *
-	 * @param fullyQualifiedMethodName the fully qualified name of the method to load;
-	 * never {@code null} or blank
-	 * @return an {@code Optional} containing the method; never {@code null} but
-	 * potentially empty
-	 * @see #getFullyQualifiedMethodName(Class, String, Class...)
-	 */
-	public static Optional<Method> loadMethod(String fullyQualifiedMethodName) {
-		Preconditions.notBlank(fullyQualifiedMethodName, "Fully qualified method name must not be null or blank");
-
-		String fqmn = fullyQualifiedMethodName.trim();
-		Matcher matcher = FULLY_QUALIFIED_METHOD_NAME_PATTERN.matcher(fqmn);
-
-		Preconditions.condition(matcher.matches(),
-			() -> String.format("Fully qualified method name [%s] does not match pattern [%s]", fqmn,
-				FULLY_QUALIFIED_METHOD_NAME_PATTERN));
-
-		String className = matcher.group(1);
-		String methodName = matcher.group(2);
-		// Note: group #3 includes the parameter types enclosed in parentheses;
-		// group #4 contains the actual parameter types.
-		String parameterTypeNames = matcher.group(4);
-
-		Optional<Class<?>> classOptional = loadClass(className);
-		if (classOptional.isPresent()) {
-			try {
-				return findMethod(classOptional.get(), methodName.trim(), parameterTypeNames);
-			}
-			catch (Exception ex) {
-				/* ignore */
-			}
-		}
-
-		return Optional.empty();
 	}
 
 	/**
@@ -700,6 +678,86 @@ public final class ReflectionUtils {
 		catch (Throwable t) {
 			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
 		}
+	}
+
+	/**
+	 * Find all constructors in the supplied class that match the supplied predicate.
+	 *
+	 * @param clazz the class in which to search for constructors; never {@code null}
+	 * @param predicate the predicate to use to test for a match; never {@code null}
+	 * @return an immutable list of all such constructors found; never {@code null}
+	 * but potentially empty
+	 */
+	public static List<Constructor<?>> findConstructors(Class<?> clazz, Predicate<Constructor<?>> predicate) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+
+		try {
+			// @formatter:off
+			return Arrays.stream(clazz.getDeclaredConstructors())
+					.filter(predicate)
+					.collect(toUnmodifiableList());
+			// @formatter:on
+		}
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
+		}
+	}
+
+	/**
+	 * Find all {@linkplain Field fields} of the supplied class or interface
+	 * that match the specified {@code predicate}.
+	 *
+	 * <p>The results will not contain fields that are <em>hidden</em>.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param predicate the field filter; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @return an immutable list of all such fields found; never {@code null}
+	 * but potentially empty
+	 */
+	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
+			HierarchyTraversalMode traversalMode) {
+
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
+
+		// @formatter:off
+		return findAllFieldsInHierarchy(clazz, traversalMode).stream()
+				.filter(predicate)
+				// unmodifiable since returned by public, non-internal method(s)
+				.collect(toUnmodifiableList());
+		// @formatter:on
+	}
+
+	private static List<Field> findAllFieldsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
+
+		// @formatter:off
+		List<Field> localFields = getDeclaredFields(clazz).stream()
+				.filter(field -> !field.isSynthetic())
+				.collect(toList());
+		List<Field> superclassFields = getSuperclassFields(clazz, traversalMode).stream()
+				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
+				.collect(toList());
+		List<Field> interfaceFields = getInterfaceFields(clazz, traversalMode).stream()
+				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
+				.collect(toList());
+		// @formatter:on
+
+		List<Field> fields = new ArrayList<>();
+		if (traversalMode == TOP_DOWN) {
+			fields.addAll(superclassFields);
+			fields.addAll(interfaceFields);
+		}
+		fields.addAll(localFields);
+		if (traversalMode == BOTTOM_UP) {
+			fields.addAll(interfaceFields);
+			fields.addAll(superclassFields);
+		}
+		return fields;
 	}
 
 	/**
@@ -885,6 +943,22 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Custom alternative to {@link Class#getFields()} that sorts the fields
+	 * and converts them to a mutable list.
+	 */
+	private static List<Field> getFields(Class<?> clazz) {
+		return toSortedMutableList(clazz.getFields());
+	}
+
+	/**
+	 * Custom alternative to {@link Class#getDeclaredFields()} that sorts the
+	 * fields and converts them to a mutable list.
+	 */
+	private static List<Field> getDeclaredFields(Class<?> clazz) {
+		return toSortedMutableList(clazz.getDeclaredFields());
+	}
+
+	/**
 	 * Custom alternative to {@link Class#getMethods()} that sorts the methods
 	 * and converts them to a mutable list.
 	 */
@@ -943,6 +1017,15 @@ public final class ReflectionUtils {
 		// @formatter:on
 	}
 
+	private static List<Field> toSortedMutableList(Field[] fields) {
+		// @formatter:off
+		return Arrays.stream(fields)
+				.sorted(ReflectionUtils::defaultFieldSorter)
+				// Use toCollection() instead of toList() to ensure list is mutable.
+				.collect(toCollection(ArrayList::new));
+		// @formatter:on
+	}
+
 	private static List<Method> toSortedMutableList(Method[] methods) {
 		// @formatter:off
 		return Arrays.stream(methods)
@@ -950,6 +1033,23 @@ public final class ReflectionUtils {
 				// Use toCollection() instead of toList() to ensure list is mutable.
 				.collect(toCollection(ArrayList::new));
 		// @formatter:on
+	}
+
+	/**
+	 * Field comparator inspired by JUnit 4's {@code org.junit.internal.MethodSorter}
+	 * implementation.
+	 */
+	private static int defaultFieldSorter(Field field1, Field field2) {
+		String name1 = field1.getName();
+		String name2 = field2.getName();
+		int comparison = Integer.compare(name1.hashCode(), name2.hashCode());
+		if (comparison == 0) {
+			comparison = name1.compareTo(name2);
+			if (comparison == 0) {
+				comparison = field1.toString().compareTo(field2.toString());
+			}
+		}
+		return comparison;
 	}
 
 	/**
@@ -992,6 +1092,40 @@ public final class ReflectionUtils {
 			}
 		}
 		return allInterfaceMethods;
+	}
+
+	private static List<Field> getInterfaceFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
+		List<Field> allInterfaceFields = new ArrayList<>();
+		for (Class<?> ifc : clazz.getInterfaces()) {
+			List<Field> localInterfaceFields = getFields(ifc);
+
+			// @formatter:off
+			List<Field> superinterfaceFields = getInterfaceFields(ifc, traversalMode).stream()
+					.filter(field -> !isFieldShadowedByLocalFields(field, localInterfaceFields))
+					.collect(toList());
+			// @formatter:on
+
+			if (traversalMode == TOP_DOWN) {
+				allInterfaceFields.addAll(superinterfaceFields);
+			}
+			allInterfaceFields.addAll(localInterfaceFields);
+			if (traversalMode == BOTTOM_UP) {
+				allInterfaceFields.addAll(superinterfaceFields);
+			}
+		}
+		return allInterfaceFields;
+	}
+
+	private static List<Field> getSuperclassFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
+		Class<?> superclass = clazz.getSuperclass();
+		if (superclass == null || superclass == Object.class) {
+			return Collections.emptyList();
+		}
+		return findAllFieldsInHierarchy(superclass, traversalMode);
+	}
+
+	private static boolean isFieldShadowedByLocalFields(Field field, List<Field> localFields) {
+		return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
 	}
 
 	private static List<Method> getSuperclassMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {

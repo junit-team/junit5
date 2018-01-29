@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -62,8 +62,8 @@ public class CommandLineOptions {
 	private List<String> excludedPackages = emptyList();
 	private List<String> includedEngines = emptyList();
 	private List<String> excludedEngines = emptyList();
-	private List<String> includedTags = emptyList();
-	private List<String> excludedTags = emptyList();
+	private List<String> includedTagExpressions = emptyList();
+	private List<String> excludedTagExpressions = emptyList();
 
 	private List<Path> additionalClasspathEntries = emptyList();
 
@@ -236,20 +236,20 @@ public class CommandLineOptions {
 		this.excludedEngines = excludedEngines;
 	}
 
-	public List<String> getIncludedTags() {
-		return this.includedTags;
+	public List<String> getIncludedTagExpressions() {
+		return this.includedTagExpressions;
 	}
 
-	public void setIncludedTags(List<String> includedTags) {
-		this.includedTags = includedTags;
+	public void setIncludedTagExpressions(List<String> includedTags) {
+		this.includedTagExpressions = includedTags;
 	}
 
-	public List<String> getExcludedTags() {
-		return this.excludedTags;
+	public List<String> getExcludedTagExpressions() {
+		return this.excludedTagExpressions;
 	}
 
-	public void setExcludedTags(List<String> excludedTags) {
-		this.excludedTags = excludedTags;
+	public void setExcludedTagExpressions(List<String> excludedTags) {
+		this.excludedTagExpressions = excludedTags;
 	}
 
 	public List<Path> getAdditionalClasspathEntries() {

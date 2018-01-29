@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -37,6 +38,8 @@ class AssumptionsTests {
 		String foo = null;
 		try {
 			assumeTrue(true);
+			assumeTrue(true, "message");
+			assumeTrue(true, () -> "message");
 			foo = "foo";
 		}
 		finally {
@@ -49,30 +52,8 @@ class AssumptionsTests {
 		String foo = null;
 		try {
 			assumeTrue(() -> true);
-			foo = "foo";
-		}
-		finally {
-			assertNotNull(foo);
-		}
-	}
-
-	@Test
-	void assumeTrueWithBooleanTrueAndStringMessage() {
-		String foo = null;
-		try {
-			assumeTrue(true, "true");
-			foo = "foo";
-		}
-		finally {
-			assertNotNull(foo);
-		}
-	}
-
-	@Test
-	void assumeTrueWithBooleanSupplierTrueAndMessageSupplier() {
-		String foo = null;
-		try {
-			assumeTrue(() -> true, () -> "true");
+			assumeTrue(() -> true, "message");
+			assumeTrue(() -> true, () -> "message");
 			foo = "foo";
 		}
 		finally {
@@ -93,6 +74,11 @@ class AssumptionsTests {
 	@Test
 	void assumeTrueWithBooleanFalseAndStringMessage() {
 		assertAssumptionFailure("test", () -> assumeTrue(false, "test"));
+	}
+
+	@Test
+	void assumeTrueWithBooleanFalseAndNullStringMessage() {
+		assertAssumptionFailure(null, () -> assumeTrue(false, (String) null));
 	}
 
 	@Test
@@ -117,6 +103,8 @@ class AssumptionsTests {
 		String foo = null;
 		try {
 			assumeFalse(false);
+			assumeFalse(false, "message");
+			assumeFalse(false, () -> "message");
 			foo = "foo";
 		}
 		finally {
@@ -129,30 +117,8 @@ class AssumptionsTests {
 		String foo = null;
 		try {
 			assumeFalse(() -> false);
-			foo = "foo";
-		}
-		finally {
-			assertNotNull(foo);
-		}
-	}
-
-	@Test
-	void assumeFalseWithBooleanFalseAndStringMessage() {
-		String foo = null;
-		try {
-			assumeFalse(false, "false");
-			foo = "foo";
-		}
-		finally {
-			assertNotNull(foo);
-		}
-	}
-
-	@Test
-	void assumeFalseWithBooleanSupplierFalseAndMessageSupplier() {
-		String foo = null;
-		try {
-			assumeFalse(() -> false, () -> "false");
+			assumeFalse(() -> false, "message");
+			assumeFalse(() -> false, () -> "message");
 			foo = "foo";
 		}
 		finally {
@@ -222,6 +188,13 @@ class AssumptionsTests {
 		assertEquals(0, list.size());
 	}
 
+	@Test
+	void assumingThatWithFailingExecutable() {
+		assertThrows(EnigmaThrowable.class, () -> assumingThat(true, () -> {
+			throw new EnigmaThrowable();
+		}));
+	}
+
 	// -------------------------------------------------------------------
 
 	private static void assertAssumptionFailure(String msg, Executable executable) {
@@ -231,7 +204,8 @@ class AssumptionsTests {
 		}
 		catch (Throwable ex) {
 			assertTrue(ex instanceof TestAbortedException);
-			assertMessageEquals((TestAbortedException) ex, "Assumption failed: " + msg);
+			assertMessageEquals((TestAbortedException) ex,
+				msg == null ? "Assumption failed" : "Assumption failed: " + msg);
 		}
 	}
 

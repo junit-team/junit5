@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -53,7 +53,7 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@Disabled
-	private static class DisabledTestClassTestCase {
+	static class DisabledTestClassTestCase {
 
 		@Test
 		void disabledTest() {
@@ -61,7 +61,7 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class DisabledTestMethodsTestCase {
+	static class DisabledTestMethodsTestCase {
 
 		@Test
 		void enabledTest() {

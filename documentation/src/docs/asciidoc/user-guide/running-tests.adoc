@@ -15,21 +15,10 @@ since these newer versions of IDEA will download the following JARs automaticall
 on the API version used in the project: `junit-platform-launcher`,
 `junit-jupiter-engine`, and `junit-vintage-engine`.
 
-.JUnit 5 Versions Bundled in IntelliJ IDEA
-|===
-| IntelliJ IDEA Version | Bundled JUnit 5 Version
-
-| 2016.2   | M2
-| 2016.3.1 | M3
-| 2017.1.2 | M4
-| 2017.2.1 | M5
-| 2017.2.3 | RC2
-|===
-
-WARNING: IntelliJ IDEA (prior to IDEA 2017.3) bundles a certain version of JUnit 5. Thus,
-if you want to use a newer version of JUnit Jupiter, execution of tests within the IDE
-might fail due to version conflicts. In such cases, please follow the instructions below
-to use a newer version of JUnit 5 than the one bundled with IntelliJ IDEA.
+WARNING: IntelliJ IDEA releases prior to IDEA 2017.3 bundle specific versions of JUnit 5.
+Thus, if you want to use a newer version of JUnit Jupiter, execution of tests within the
+IDE might fail due to version conflicts. In such cases, please follow the instructions
+below to use a newer version of JUnit 5 than the one bundled with IntelliJ IDEA.
 
 In order to use a different JUnit 5 version (e.g., {jupiter-version}), you may need to
 include the corresponding versions of the `junit-platform-launcher`,
@@ -39,7 +28,7 @@ include the corresponding versions of the `junit-platform-launcher`,
 [source,groovy]
 [subs=attributes+]
 ----
-// Only needed to run tests in a version of IntelliJ IDEA that bundles an older version
+// Only needed to run tests in a version of IntelliJ IDEA that bundles older versions
 testRuntime("org.junit.platform:junit-platform-launcher:{platform-version}")
 testRuntime("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
 testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
@@ -49,7 +38,7 @@ testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
 [source,xml]
 [subs=attributes+]
 ----
-<!-- Only required to run tests in a version of IntelliJ IDEA that bundles an older version -->
+<!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
 <dependency>
 	<groupId>org.junit.platform</groupId>
 	<artifactId>junit-platform-launcher</artifactId>
@@ -85,11 +74,10 @@ https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support[Eclipse Project Oxy
 ==== Other IDEs
 
 At the time of this writing, there is no direct support for running tests on the JUnit
-Platform within IDEs other than with IntelliJ IDEA and Eclipse.
-However, the JUnit team provides two intermediate solutions so that you can go ahead and
-try out JUnit 5 within your IDE today. You can use the <<running-tests-console-launcher>>
-manually or execute tests with a <<running-tests-junit-platform-runner,JUnit 4 based
-Runner>>.
+Platform within IDEs other than IntelliJ IDEA and Eclipse. However, the JUnit team
+provides two intermediate solutions so that you can go ahead and try out JUnit 5 within
+your IDE today. You can use the <<running-tests-console-launcher>> manually or execute
+tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
 
 [[running-tests-build]]
 === Build Support
@@ -210,7 +198,7 @@ junitPlatform {
 			// exclude 'junit-vintage'
 		}
 		tags {
-			include 'fast', 'smoke'
+			include 'fast', 'smoke & feature-a'
 			// exclude 'slow', 'ci'
 		}
 		packages {
@@ -226,10 +214,11 @@ junitPlatform {
 
 If you supply a _Test Engine ID_ via `engines {include ...}` or `engines {exclude ...}`,
 the JUnit Gradle plugin will only run tests for the desired test engines. Similarly, if
-you supply a _tag_ via `tags {include ...}` or `tags {exclude ...}`, the JUnit Gradle
-plugin will only run tests that are _tagged_ accordingly (e.g., via the `@Tag` annotation
-for JUnit Jupiter based tests). The same applies to package names that can be included or
-excluded using `packages {include ...}` or `packages {exclude ...}`.
+you supply _tags_ or <<running-tests-tag-expressions, _tag expressions_>> via
+`tags {include ...}` or `tags {exclude ...}`, the JUnit Gradle plugin will only run tests
+that are _tagged_ accordingly (e.g., via the `@Tag` annotation for JUnit Jupiter based
+tests). The same applies to package names that can be included or excluded using
+`packages {include ...}` or `packages {exclude ...}`.
 
 [[running-tests-build-gradle-config-params]]
 ===== Configuration Parameters
@@ -379,7 +368,7 @@ the `junit-platform-surefire-provider` currently only works with Surefire 2.19.1
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19</version>
+				<version>2.19.1</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -412,7 +401,7 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19</version>
+				<version>2.19.1</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -454,7 +443,7 @@ the dependencies of the `maven-surefire-plugin` similar to the following.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19</version>
+				<version>2.19.1</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -484,13 +473,39 @@ the dependencies of the `maven-surefire-plugin` similar to the following.
 	...
 ----
 
+[[running-tests-build-maven-test-system-property]]
+===== Running a Single Test Class
+
+The JUnit Platform Surefire Provider supports the `test` JVM system property supported by
+the Maven Surefire Plugin. For example, to run only test methods in the
+`org.example.MyTest` test class you can execute `mvn -Dtest=org.example.MyTest test` from
+the command line. For further details, consult the
+https://maven.apache.org/surefire/maven-surefire-plugin/examples/single-test.html[Maven Surefire Plugin]
+documentation.
+
+[[running-tests-build-maven-filter-test-class-names]]
+===== Filtering by Test Class Names
+
+The Maven Surefire Plugin will scan for test classes whose fully qualified names match
+the following patterns.
+
+- `+**/Test*.java+`
+- `+**/*Test.java+`
+- `+**/*TestCase.java+`
+
+Note, however, that you can override this default behavior by configuring explicit
+`include` and `exclude` rules in your `pom.xml` file. See the
+https://maven.apache.org/surefire/maven-surefire-plugin/examples/inclusion-exclusion.html[Inclusions and Exclusions of Tests]
+documentation for Maven Surefire for details.
+
 [[running-tests-build-maven-filter-tags]]
 ===== Filtering by Tags
 
-You can filter tests by tags using the following configuration properties.
+You can filter tests by tags or <<running-tests-tag-expressions, tag expressions>> using
+the following configuration properties.
 
-- to include a tag, use either `groups` or `includeTags`
-- to exclude a tag, use either `excludedGroups` or `excludeTags`
+- to include _tags_ or _tag expressions_, use either `groups` or `includeTags`.
+- to exclude _tags_ or _tag expressions_, use either `excludedGroups` or `excludeTags`.
 
 [source,xml,indent=0]
 ----
@@ -500,10 +515,10 @@ You can filter tests by tags using the following configuration properties.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19</version>
+				<version>2.19.1</version>
 				<configuration>
 			        <properties>
-						<includeTags>acceptance</includeTags>
+			            <includeTags>acceptance | !feature-a</includeTags>
 			            <excludeTags>integration, regression</excludeTags>
 			        </properties>
 			    </configuration>
@@ -531,7 +546,7 @@ the `configurationParameters` property and providing key-value pairs in the Java
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19</version>
+				<version>2.19.1</version>
 				<configuration>
 					<properties>
 						<configurationParameters>
@@ -730,3 +745,43 @@ Consequently, configuration parameters supplied directly to the `Launcher` take
 precedence over those supplied via system properties and the configuration file.
 Similarly, configuration parameters supplied via system properties take precedence over
 those supplied via the configuration file.
+
+[[running-tests-tag-expressions]]
+=== Tag Expressions
+Tag expressions are boolean expressions with the operators `!`, `&` and `|`. In addition,
+`(` and `)` can be used to adjust for operator precedence.
+
+.Operators (in descending order of precedence)
+|===
+| Operator | Meaning | Associativity
+
+| `!`      | not     | right
+| `&`      | and     | left
+| `\|`     | or      | left
+|===
+
+If you are tagging your tests across multiple dimensions, tag expressions help you to
+select which tests to execute. Tagging by test type (e.g. _micro_, _integration_,
+_end-to-end_) and feature (e.g. *foo*, *bar*, *baz*) the following tag expressions can be
+useful.
+
+[%header,cols="40,60"]
+|===
+| Tag Expression
+| Selection
+
+| +foo+
+| all tests for *foo*
+
+| +bar \| baz+
+| all tests for *bar* plus all tests for *baz*
+
+| +bar & baz+
+| all tests for the interaction between *bar* and *baz*
+
+| +foo & !end-to-end+
+| all tests for *foo*, but not the _end-to-end_ tests
+
+| +(micro \| integration) & (foo \| baz)+
+| all _micro_ or _integration_ tests for *foo* or *baz*
+|===

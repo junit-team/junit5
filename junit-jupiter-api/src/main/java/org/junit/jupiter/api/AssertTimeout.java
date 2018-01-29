@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -43,11 +43,14 @@ class AssertTimeout {
 	///CLOVER:ON
 
 	static void assertTimeout(Duration timeout, Executable executable) {
-		assertTimeout(timeout, executable, () -> null);
+		assertTimeout(timeout, executable, (String) null);
 	}
 
 	static void assertTimeout(Duration timeout, Executable executable, String message) {
-		assertTimeout(timeout, executable, () -> message);
+		assertTimeout(timeout, () -> {
+			executable.execute();
+			return null;
+		}, message);
 	}
 
 	static void assertTimeout(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
@@ -58,14 +61,18 @@ class AssertTimeout {
 	}
 
 	static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier) {
-		return assertTimeout(timeout, supplier, () -> null);
+		return assertTimeout(timeout, supplier, (Object) null);
 	}
 
 	static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, String message) {
-		return assertTimeout(timeout, supplier, () -> message);
+		return assertTimeout(timeout, supplier, (Object) message);
 	}
 
 	static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
+		return assertTimeout(timeout, supplier, (Object) messageSupplier);
+	}
+
+	private static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, Object messageOrSupplier) {
 		long timeoutInMillis = timeout.toMillis();
 		long start = System.currentTimeMillis();
 		T result = null;
@@ -78,18 +85,21 @@ class AssertTimeout {
 
 		long timeElapsed = System.currentTimeMillis() - start;
 		if (timeElapsed > timeoutInMillis) {
-			fail(buildPrefix(nullSafeGet(messageSupplier)) + "execution exceeded timeout of " + timeoutInMillis
+			fail(buildPrefix(nullSafeGet(messageOrSupplier)) + "execution exceeded timeout of " + timeoutInMillis
 					+ " ms by " + (timeElapsed - timeoutInMillis) + " ms");
 		}
 		return result;
 	}
 
 	static void assertTimeoutPreemptively(Duration timeout, Executable executable) {
-		assertTimeoutPreemptively(timeout, executable, () -> null);
+		assertTimeoutPreemptively(timeout, executable, (String) null);
 	}
 
 	static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
-		assertTimeoutPreemptively(timeout, executable, () -> message);
+		assertTimeoutPreemptively(timeout, () -> {
+			executable.execute();
+			return null;
+		}, message);
 	}
 
 	static void assertTimeoutPreemptively(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
@@ -100,15 +110,22 @@ class AssertTimeout {
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier) {
-		return assertTimeoutPreemptively(timeout, supplier, () -> null);
+		return assertTimeoutPreemptively(timeout, supplier, (Object) null);
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
-		return assertTimeoutPreemptively(timeout, supplier, () -> message);
+		return assertTimeoutPreemptively(timeout, supplier, (Object) message);
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
 			Supplier<String> messageSupplier) {
+
+		return assertTimeoutPreemptively(timeout, supplier, (Object) messageSupplier);
+	}
+
+	private static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
+			Object messageOrSupplier) {
+
 		ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 		try {
@@ -126,8 +143,8 @@ class AssertTimeout {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
-				throw new AssertionFailedError(
-					buildPrefix(nullSafeGet(messageSupplier)) + "execution timed out after " + timeoutInMillis + " ms");
+				throw new AssertionFailedError(buildPrefix(nullSafeGet(messageOrSupplier))
+						+ "execution timed out after " + timeoutInMillis + " ms");
 			}
 			catch (ExecutionException ex) {
 				throw ExceptionUtils.throwAsUncheckedException(ex.getCause());

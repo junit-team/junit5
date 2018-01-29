@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -32,11 +32,13 @@ class AssertNotEquals {
 	///CLOVER:ON
 
 	static void assertNotEquals(Object unexpected, Object actual) {
-		assertNotEquals(unexpected, actual, () -> null);
+		assertNotEquals(unexpected, actual, (String) null);
 	}
 
 	static void assertNotEquals(Object unexpected, Object actual, String message) {
-		assertNotEquals(unexpected, actual, () -> message);
+		if (objectsAreEqual(unexpected, actual)) {
+			failEqual(actual, message);
+		}
 	}
 
 	static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
@@ -48,4 +50,5 @@ class AssertNotEquals {
 	private static void failEqual(Object actual, String message) {
 		fail(buildPrefix(message) + "expected: not equal but was: <" + actual + ">");
 	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -28,12 +28,15 @@ class AssertSameAssertionsTests {
 	@Test
 	void assertSameWithTwoNulls() {
 		assertSame(null, null);
+		assertSame(null, null, () -> "should not fail");
 	}
 
 	@Test
 	void assertSameWithSameObject() {
 		Object foo = new Object();
 		assertSame(foo, foo);
+		assertSame(foo, foo, "message");
+		assertSame(foo, foo, () -> "message");
 	}
 
 	@Test
