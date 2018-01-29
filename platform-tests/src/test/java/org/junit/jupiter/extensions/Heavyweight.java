@@ -45,6 +45,8 @@ public class Heavyweight implements ParameterResolver, BeforeEachCallback {
 	}
 
 	interface Resource {
+		String ID = "org.junit.jupiter.extensions.Heavyweight.Resource";
+
 		int usages();
 	}
 
