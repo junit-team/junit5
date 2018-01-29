@@ -10,17 +10,12 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
-
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.platform.commons.annotation.ExecutionMode;
-import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;

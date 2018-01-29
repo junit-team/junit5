@@ -12,24 +12,22 @@ package org.junit.platform.engine.support.hierarchical;
 
 import java.util.concurrent.Callable;
 
-class ExclusiveTask<V> implements Callable<V> {
+import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 
-	private final ResourceLock resourceLock;
-	private final Callable<V> delegate;
+class ExclusiveTask implements Callable<Void> {
 
-	ExclusiveTask(ResourceLock resourceLock, Callable<V> delegate) {
-		this.resourceLock = resourceLock;
-		this.delegate = delegate;
+	private final TestTask testTask;
+
+	ExclusiveTask(TestTask testTask) {
+		this.testTask = testTask;
 	}
 
+	@SuppressWarnings("try")
 	@Override
-	public V call() throws Exception {
-		try {
-			resourceLock.acquire();
-			return delegate.call();
-		}
-		finally {
-			resourceLock.close();
+	public Void call() throws Exception {
+		try (AcquiredResourceLock acquiredLock = testTask.getResourceLock().acquire()) {
+			testTask.execute();
+			return null;
 		}
 	}
 }

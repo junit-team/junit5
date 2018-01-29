@@ -10,15 +10,13 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import java.util.List;
 import java.util.concurrent.Future;
 
 import org.junit.platform.commons.annotation.ExecutionMode;
-import org.junit.platform.engine.TestDescriptor;
 
-public interface HierarchicalTestExecutorService<C extends EngineExecutionContext> extends AutoCloseable {
+public interface HierarchicalTestExecutorService extends AutoCloseable {
 
-	Future<Void> submit(TestTask<C> testTask);
+	Future<Void> submit(TestTask testTask);
 
 	/**
 	 * Overridden to avoid warning caused by a javac bug:
@@ -27,16 +25,13 @@ public interface HierarchicalTestExecutorService<C extends EngineExecutionContex
 	@Override
 	void close();
 
-	interface TestTask<C extends EngineExecutionContext> {
+	interface TestTask {
 
-		C getParentExecutionContext();
+		ExecutionMode getExecutionMode();
 
-		TestDescriptor getTestDescriptor();
+		ResourceLock getResourceLock();
 
 		void execute();
 
-		List<ExclusiveResource> getExclusiveResources();
-
-		ExecutionMode getExecutionMode();
 	}
 }

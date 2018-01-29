@@ -10,13 +10,13 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import org.junit.platform.commons.annotation.ExecutionMode;
-
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
-public class SingleLock implements ResourceLock {
+import org.junit.platform.commons.annotation.ExecutionMode;
+
+public class SingleLock implements AcquiredResourceLock {
 	private final Lock lock;
 
 	public SingleLock(Lock lock) {
@@ -29,7 +29,7 @@ public class SingleLock implements ResourceLock {
 	}
 
 	@Override
-	public ResourceLock acquire() throws InterruptedException {
+	public AcquiredResourceLock acquire() throws InterruptedException {
 		ForkJoinPool.managedBlock(new SingleLockManagedBlocker());
 		return this;
 	}

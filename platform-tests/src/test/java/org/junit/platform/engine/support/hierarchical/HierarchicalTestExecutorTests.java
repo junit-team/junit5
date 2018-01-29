@@ -21,8 +21,8 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -144,7 +144,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		verify(listener, never()).executionStarted(child);
-		verifyNoMoreInteractions(child);
+		verify(child, times(0)).execute(any(), any());
 		verify(listener, never()).executionFinished(eq(child), any(TestExecutionResult.class));
 	}
 
@@ -166,7 +166,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		verify(listener, never()).executionStarted(child);
-		verifyNoMoreInteractions(child);
+		verify(child, times(0)).execute(any(), any());
 		verify(listener, never()).executionFinished(eq(child), any(TestExecutionResult.class));
 	}
 
@@ -191,7 +191,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
-		verifyNoMoreInteractions(child);
+		verify(child, times(0)).execute(any(), any());
 
 		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
 			"Execution of child should fail.");
@@ -222,7 +222,7 @@ class HierarchicalTestExecutorTests {
 			"Execution of root should fail.");
 		assertSame(rootExecutionResult.getValue().getThrowable().get(), anException);
 
-		verifyNoMoreInteractions(child);
+		verify(child, times(0)).execute(any(), any());
 	}
 
 	@Test
@@ -371,7 +371,7 @@ class HierarchicalTestExecutorTests {
 			"Execution of root should abort.");
 		assertSame(rootExecutionResult.getValue().getThrowable().get(), anAbortedException);
 
-		verifyNoMoreInteractions(child);
+		verify(child, times(0)).execute(any(), any());
 	}
 
 	@Test
@@ -572,7 +572,7 @@ class HierarchicalTestExecutorTests {
 	private static class MyExecutor extends HierarchicalTestExecutor<MyEngineExecutionContext> {
 
 		MyExecutor(ExecutionRequest request, MyEngineExecutionContext rootContext) {
-			super(request, rootContext, new SameThreadHierarchicalTestExecutorService<>());
+			super(request, rootContext, new SameThreadHierarchicalTestExecutorService());
 		}
 	}
 

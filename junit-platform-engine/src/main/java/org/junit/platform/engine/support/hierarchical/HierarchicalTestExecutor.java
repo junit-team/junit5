@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import java.util.List;
 import java.util.concurrent.Future;
 
 import org.junit.platform.commons.annotation.ExecutionMode;
@@ -42,10 +41,9 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	private final TestDescriptor rootTestDescriptor;
 	private final EngineExecutionListener listener;
 	private final C rootContext;
-	private HierarchicalTestExecutorService<C> executorService;
+	private HierarchicalTestExecutorService executorService;
 
-	HierarchicalTestExecutor(ExecutionRequest request, C rootContext,
-			HierarchicalTestExecutorService<C> executorService) {
+	HierarchicalTestExecutor(ExecutionRequest request, C rootContext, HierarchicalTestExecutorService executorService) {
 		this.rootTestDescriptor = request.getRootTestDescriptor();
 		this.listener = request.getEngineExecutionListener();
 		this.rootContext = rootContext;
@@ -54,7 +52,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	void execute() {
 		NodeExecutor<C> rootNodeExecutor = createRootNodeExecutor();
-		waitFor(executorService.submit(toTestTask(rootNodeExecutor, this.rootContext)));
+		waitFor(executorService.submit(new DefaultTestTask(rootNodeExecutor, this.rootContext)));
 	}
 
 	protected NodeExecutor<C> createRootNodeExecutor() {
@@ -73,12 +71,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		}
 	}
 
-	private TestTask<C> toTestTask(NodeExecutor<C> nodeExecutor, C context) {
-		return new DefaultTestTask(nodeExecutor, context);
-	}
-
-
-	private class DefaultTestTask implements TestTask<C> {
+	private class DefaultTestTask implements TestTask {
 
 		private final NodeExecutor<C> nodeExecutor;
 		private final C context;
@@ -89,28 +82,18 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		}
 
 		@Override
-		public TestDescriptor getTestDescriptor() {
-			return nodeExecutor.getTestDescriptor();
+		public ResourceLock getResourceLock() {
+			return nodeExecutor.getResourceLock();
 		}
 
 		@Override
-		public C getParentExecutionContext() {
-			return context;
+		public ExecutionMode getExecutionMode() {
+			return nodeExecutor.getExecutionMode();
 		}
 
 		@Override
 		public void execute() {
 			nodeExecutor.execute(this.context, listener, executorService, singleTestExecutor, DefaultTestTask::new);
-		}
-
-		@Override
-		public List<ExclusiveResource> getExclusiveResources() {
-			return nodeExecutor.getNode().getExclusiveResources();
-		}
-
-		@Override
-		public ExecutionMode getExecutionMode() {
-			return nodeExecutor.getNode().getExecutionMode();
 		}
 	}
 }

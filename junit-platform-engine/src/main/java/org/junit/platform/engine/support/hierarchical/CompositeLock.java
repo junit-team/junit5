@@ -10,15 +10,15 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import org.junit.platform.commons.annotation.ExecutionMode;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
-class CompositeLock implements ResourceLock {
+import org.junit.platform.commons.annotation.ExecutionMode;
+
+class CompositeLock implements AcquiredResourceLock {
 	private final List<Lock> locks;
 
 	private final List<Lock> acquiredLocks;
@@ -34,7 +34,7 @@ class CompositeLock implements ResourceLock {
 	}
 
 	@Override
-	public ResourceLock acquire() throws InterruptedException {
+	public AcquiredResourceLock acquire() throws InterruptedException {
 		ForkJoinPool.managedBlock(new CompositeLockManagedBlocker());
 		return this;
 	}

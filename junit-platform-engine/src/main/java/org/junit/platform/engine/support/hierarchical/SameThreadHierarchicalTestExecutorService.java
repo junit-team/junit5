@@ -14,11 +14,10 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 
 import java.util.concurrent.Future;
 
-public class SameThreadHierarchicalTestExecutorService<C extends EngineExecutionContext>
-		implements HierarchicalTestExecutorService<C> {
+public class SameThreadHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
 	@Override
-	public Future<Void> submit(TestTask<C> testTask) {
+	public Future<Void> submit(TestTask testTask) {
 		testTask.execute();
 		return completedFuture(null);
 	}

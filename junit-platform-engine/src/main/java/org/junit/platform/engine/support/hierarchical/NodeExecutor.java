@@ -1,20 +1,32 @@
+/*
+ * Copyright 2015-2017 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
+
 package org.junit.platform.engine.support.hierarchical;
+
+import static java.util.stream.Collectors.toList;
+import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
+import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
+import java.util.function.BiFunction;
 
 import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Future;
-import java.util.function.BiFunction;
-
-import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
-import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
+import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 
 class NodeExecutor<C extends EngineExecutionContext> {
 
@@ -29,13 +41,14 @@ class NodeExecutor<C extends EngineExecutionContext> {
 
 	private ResourceLock resourceLock = NopLock.INSTANCE;
 	private ExecutionMode executionMode;
+	private Optional<ExecutionMode> forcedExecutionMode = Optional.empty();
 
 	NodeExecutor(TestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 		node = asNode(testDescriptor);
 		executionMode = node.getExecutionMode();
-		children = testDescriptor.getChildren().stream()
-				.map(descriptor -> new NodeExecutor<C>(descriptor)).collect(toList());
+		children = testDescriptor.getChildren().stream().map(descriptor -> new NodeExecutor<C>(descriptor)).collect(
+			toList());
 	}
 
 	public TestDescriptor getTestDescriptor() {
@@ -59,15 +72,15 @@ class NodeExecutor<C extends EngineExecutionContext> {
 	}
 
 	public ExecutionMode getExecutionMode() {
-		return executionMode;
+		return forcedExecutionMode.orElse(executionMode);
 	}
 
-	public void setExecutionMode(ExecutionMode executionMode) {
-		this.executionMode = executionMode;
+	public void setForcedExecutionMode(ExecutionMode forcedExecutionMode) {
+		this.forcedExecutionMode = Optional.of(forcedExecutionMode);
 	}
 
-	void execute(C parentContext, EngineExecutionListener listener, HierarchicalTestExecutorService<C> executorService,
-				 SingleTestExecutor singleTestExecutor, BiFunction<NodeExecutor<C>, C, HierarchicalTestExecutorService.TestTask<C>> testTaskCreator) {
+	void execute(C parentContext, EngineExecutionListener listener, HierarchicalTestExecutorService executorService,
+			SingleTestExecutor singleTestExecutor, BiFunction<NodeExecutor<C>, C, TestTask> testTaskCreator) {
 		prepare(parentContext);
 		if (executionErrors.isEmpty()) {
 			checkWhetherSkipped();
@@ -99,22 +112,22 @@ class NodeExecutor<C extends EngineExecutionContext> {
 		}
 	}
 
-	private void executeRecursively(EngineExecutionListener listener, HierarchicalTestExecutorService<C> executorService,
-									SingleTestExecutor singleTestExecutor, BiFunction<NodeExecutor<C>, C, HierarchicalTestExecutorService.TestTask<C>> testTaskCreator) {
+	private void executeRecursively(EngineExecutionListener listener, HierarchicalTestExecutorService executorService,
+			SingleTestExecutor singleTestExecutor, BiFunction<NodeExecutor<C>, C, TestTask> testTaskCreator) {
 		listener.executionStarted(testDescriptor);
 
 		executionResult = singleTestExecutor.executeSafely(() -> {
 			try {
 				context = node.before(context);
 
-				Map<NodeExecutor, Future<?>> futures = new ConcurrentHashMap<>();
+				Map<NodeExecutor<C>, Future<?>> futures = new ConcurrentHashMap<>();
 
 				context = node.execute(context, dynamicTestDescriptor -> {
 					listener.dynamicTestRegistered(dynamicTestDescriptor);
 					NodeExecutor<C> nodeExecutor = new NodeExecutor<>(dynamicTestDescriptor);
 					// TODO Validate dynamic children do not add additional resource locks etc.
 					children.add(nodeExecutor);
-					HierarchicalTestExecutorService.TestTask<C> testTask = testTaskCreator.apply(nodeExecutor, context);
+					TestTask testTask = testTaskCreator.apply(nodeExecutor, context);
 					futures.put(nodeExecutor, executorService.submit(testTask));
 				});
 
@@ -184,7 +197,6 @@ class NodeExecutor<C extends EngineExecutionContext> {
 	private Node<C> asNode(TestDescriptor testDescriptor) {
 		return (testDescriptor instanceof Node ? (Node<C>) testDescriptor : noOpNode);
 	}
-
 
 	@SuppressWarnings("rawtypes")
 	private static final Node noOpNode = new Node() {

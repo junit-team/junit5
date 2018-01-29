@@ -41,7 +41,7 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	 */
 	@Override
 	public final void execute(ExecutionRequest request) {
-		try (HierarchicalTestExecutorService<C> executorService = createExecutorService(request)) {
+		try (HierarchicalTestExecutorService executorService = createExecutorService(request)) {
 			new HierarchicalTestExecutor<>(request, createExecutionContext(request), executorService).execute();
 		}
 		catch (Exception exception) {
@@ -49,8 +49,8 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 		}
 	}
 
-	protected HierarchicalTestExecutorService<C> createExecutorService(ExecutionRequest request) {
-		return new SameThreadHierarchicalTestExecutorService<>();
+	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
+		return new SameThreadHierarchicalTestExecutorService();
 	}
 
 	/**
