@@ -130,15 +130,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public List<ExclusiveResource> getExclusiveResources() {
-		// @formatter:off
-		return Stream.concat(
-						getExclusiveResources(getTestClass()).stream(),
-						getDescendants().stream()
-								.map(descriptor -> ((Node<?>) descriptor))
-								.map(Node::getExclusiveResources)
-								.flatMap(Collection::stream))
-				.collect(toList());
-		// @formatter:on
+		return getExclusiveResources(getTestClass());
 	}
 
 	@Override
