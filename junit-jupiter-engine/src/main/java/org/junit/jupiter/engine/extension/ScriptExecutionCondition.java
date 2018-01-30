@@ -29,6 +29,7 @@ import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.platform.commons.JUnitException;
 
 /**
@@ -43,6 +44,8 @@ class ScriptExecutionCondition implements ExecutionCondition {
 
 	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled(
 		"@DisabledIf and @EnabledIf not present");
+
+	private static final Namespace NAMESPACE = Namespace.create(ScriptExecutionCondition.class);
 
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
@@ -62,11 +65,7 @@ class ScriptExecutionCondition implements ExecutionCondition {
 	}
 
 	private ScriptExecutionManager getScriptExecutionManager(ExtensionContext context) {
-		return getStore(context).getOrComputeIfAbsent(ScriptExecutionManager.class);
-	}
-
-	private ExtensionContext.Store getStore(ExtensionContext context) {
-		return context.getRoot().getStore(ExtensionContext.Namespace.GLOBAL);
+		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(ScriptExecutionManager.class);
 	}
 
 	private Script createScript(ExtensionContext context) {
