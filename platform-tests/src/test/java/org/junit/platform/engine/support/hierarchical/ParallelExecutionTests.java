@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -22,11 +23,13 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.type
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -67,43 +70,45 @@ class ParallelExecutionTests {
 	static class FailingTestWithoutLock {
 
 		static AtomicInteger sharedResource = new AtomicInteger();
+		static CountDownLatch countDownLatch = new CountDownLatch(3);
 
 		@Test
 		void firstTest(TestReporter reporter) throws Exception {
-			incrementWaitAndCheck(sharedResource, reporter);
+			incrementBlockAndCheck(sharedResource, countDownLatch, reporter);
 		}
 
 		@Test
 		void secondTest(TestReporter reporter) throws Exception {
-			incrementWaitAndCheck(sharedResource, reporter);
+			incrementBlockAndCheck(sharedResource, countDownLatch, reporter);
 		}
 
 		@Test
 		void thirdTest(TestReporter reporter) throws Exception {
-			incrementWaitAndCheck(sharedResource, reporter);
+			incrementBlockAndCheck(sharedResource, countDownLatch, reporter);
 		}
 	}
 
 	static class SuccessfulTestWithMethodLock {
 
 		static AtomicInteger sharedResource = new AtomicInteger();
+		static CountDownLatch countDownLatch = new CountDownLatch(3);
 
 		@Test
 		@UseResource("sharedResource")
 		void firstTest(TestReporter reporter) throws Exception {
-			incrementWaitAndCheck(sharedResource, reporter);
+			incrementBlockAndCheck(sharedResource, countDownLatch, reporter);
 		}
 
 		@Test
 		@UseResource("sharedResource")
 		void secondTest(TestReporter reporter) throws Exception {
-			incrementWaitAndCheck(sharedResource, reporter);
+			incrementBlockAndCheck(sharedResource, countDownLatch, reporter);
 		}
 
 		@Test
 		@UseResource("sharedResource")
 		void thirdTest(TestReporter reporter) throws Exception {
-			incrementWaitAndCheck(sharedResource, reporter);
+			incrementBlockAndCheck(sharedResource, countDownLatch, reporter);
 		}
 	}
 
@@ -111,33 +116,40 @@ class ParallelExecutionTests {
 	static class SuccessfulTestWithClassLock {
 
 		static AtomicInteger sharedResource = new AtomicInteger();
+		static CountDownLatch countDownLatch = new CountDownLatch(3);
 
 		@Test
 		void firstTest(TestReporter reporter) throws Exception {
-			incrementWaitAndCheck(sharedResource, reporter);
+			incrementBlockAndCheck(sharedResource, countDownLatch, reporter);
 		}
 
 		@Test
 		void secondTest(TestReporter reporter) throws Exception {
-			incrementWaitAndCheck(sharedResource, reporter);
+			incrementBlockAndCheck(sharedResource, countDownLatch, reporter);
 		}
 
 		@Test
 		void thirdTest(TestReporter reporter) throws Exception {
-			incrementWaitAndCheck(sharedResource, reporter);
+			incrementBlockAndCheck(sharedResource, countDownLatch, reporter);
 		}
 	}
 
-	private static void incrementWaitAndCheck(AtomicInteger sharedResource, TestReporter reporter)
-			throws InterruptedException {
-		int value = sharedResource.incrementAndGet();
-		Thread.sleep(1000);
-		assertEquals(value, sharedResource.get());
+	private static void incrementBlockAndCheck(AtomicInteger sharedResource, CountDownLatch countDownLatch,
+			TestReporter reporter) throws InterruptedException {
 		reporter.publishEntry("thread", Thread.currentThread().getName());
+		int value = sharedResource.incrementAndGet();
+		countDownLatch.countDown();
+		countDownLatch.await(2, SECONDS);
+		assertEquals(value, sharedResource.get());
 	}
 
 	private List<ExecutionEvent> execute(Class<?> testClass) {
-		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
+		// @formatter:off
+		LauncherDiscoveryRequest discoveryRequest = request()
+				.selectors(selectClass(testClass))
+				.configurationParameter(Constants.ENABLE_PARALLEL_EXECUTION, Boolean.toString(true))
+				.build();
+		// @formatter:on
 		return ExecutionEventRecorder.execute(new JupiterTestEngine(), discoveryRequest);
 	}
 

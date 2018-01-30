@@ -16,12 +16,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 
+import org.junit.platform.commons.logging.LoggerFactory;
+
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
-	private final ForkJoinPool forkJoinPool;
+	private final ForkJoinPool forkJoinPool = new ForkJoinPool();
 
 	public ForkJoinPoolHierarchicalTestExecutorService() {
-		forkJoinPool = new ForkJoinPool();
+		LoggerFactory.getLogger(ForkJoinPoolHierarchicalTestExecutorService.class) //
+				.info(() -> "Created ForkJoinPool with parallelism of " + forkJoinPool.getParallelism());
 	}
 
 	@Override
