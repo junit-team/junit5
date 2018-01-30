@@ -48,6 +48,6 @@ public @interface MethodSource {
 	 * The names of the test class methods to use as sources for arguments; must
 	 * not be empty.
 	 */
-	String[] value();
+	String[] value() default "";
 
 }
