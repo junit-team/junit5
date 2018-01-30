@@ -85,7 +85,8 @@ public final class Constants {
 	 */
 	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
 
-	public static final String ENABLE_PARALLEL_EXECUTION = "junit.jupiter.execution.parallel.enabled";
+	public static final String PARALLEL_EXECUTION_ENABLED = "junit.jupiter.execution.parallel.enabled";
+	public static final String PARALLEL_EXECUTION_LEVEL = "junit.jupiter.execution.parallel.level";
 
 	private Constants() {
 		/* no-op */

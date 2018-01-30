@@ -13,6 +13,8 @@ package org.junit.platform.engine.support.hierarchical;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED;
+import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_LEVEL;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -29,7 +31,6 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
-import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -139,7 +140,7 @@ class ParallelExecutionTests {
 		reporter.publishEntry("thread", Thread.currentThread().getName());
 		int value = sharedResource.incrementAndGet();
 		countDownLatch.countDown();
-		countDownLatch.await(2, SECONDS);
+		countDownLatch.await(1, SECONDS);
 		assertEquals(value, sharedResource.get());
 	}
 
@@ -147,7 +148,8 @@ class ParallelExecutionTests {
 		// @formatter:off
 		LauncherDiscoveryRequest discoveryRequest = request()
 				.selectors(selectClass(testClass))
-				.configurationParameter(Constants.ENABLE_PARALLEL_EXECUTION, Boolean.toString(true))
+				.configurationParameter(PARALLEL_EXECUTION_ENABLED, String.valueOf(true))
+				.configurationParameter(PARALLEL_EXECUTION_LEVEL, String.valueOf(5))
 				.build();
 		// @formatter:on
 		return ExecutionEventRecorder.execute(new JupiterTestEngine(), discoveryRequest);

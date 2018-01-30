@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
@@ -20,11 +21,19 @@ import org.junit.platform.commons.logging.LoggerFactory;
 
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
-	private final ForkJoinPool forkJoinPool = new ForkJoinPool();
+	private final ForkJoinPool forkJoinPool;
 
-	public ForkJoinPoolHierarchicalTestExecutorService() {
+	public ForkJoinPoolHierarchicalTestExecutorService(Optional<Integer> parallelismLevel) {
+		forkJoinPool = createForkJoinPool(parallelismLevel);
 		LoggerFactory.getLogger(ForkJoinPoolHierarchicalTestExecutorService.class) //
-				.info(() -> "Created ForkJoinPool with parallelism of " + forkJoinPool.getParallelism());
+				.config(() -> "Using ForkJoinPool with parallelism of " + forkJoinPool.getParallelism());
+	}
+
+	private ForkJoinPool createForkJoinPool(Optional<Integer> parallelismLevel) {
+		if (parallelismLevel.isPresent()) {
+			return new ForkJoinPool(parallelismLevel.get());
+		}
+		return new ForkJoinPool();
 	}
 
 	@Override
