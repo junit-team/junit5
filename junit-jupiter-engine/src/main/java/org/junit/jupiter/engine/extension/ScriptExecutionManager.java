@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 import static org.junit.jupiter.engine.Constants.Script.Bind.SYSTEM_ENVIRONMENT;
 import static org.junit.jupiter.engine.Constants.Script.Bind.SYSTEM_PROPERTY;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.script.Bindings;
 import javax.script.Compilable;
@@ -29,35 +29,42 @@ import javax.script.ScriptException;
 import org.junit.jupiter.api.DisabledIf;
 import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
-class ScriptExecutionManager {
+class ScriptExecutionManager implements CloseableResource {
 
 	private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-	private final Map<String, ScriptEngine> scriptEngineMap = new HashMap<>(); // TODO Concurrent?
-	private final Map<Script, CompiledScript> compiledScriptMap = new HashMap<>(); // TODO Concurrent?
+	private final ConcurrentMap<String, ScriptEngine> scriptEngines = new ConcurrentHashMap<>();
+	private final ConcurrentMap<Script, CompiledScript> compiledScripts = new ConcurrentHashMap<>();
+
 	private final ScriptAccessor systemPropertyAccessor = new ScriptAccessor.SystemPropertyAccessor();
 	private final ScriptAccessor environmentVariableAccessor = new ScriptAccessor.EnvironmentVariableAccessor();
 
-	ConditionEvaluationResult evaluate(Script script, Bindings bindings) throws ScriptException {
-		CompiledScript compiledScript = compiledScriptMap.get(script);
-		if (compiledScript != null) {
-			return resultFor(script, compiledScript.eval(bindings));
-		}
-
-		ScriptEngine scriptEngine = scriptEngineMap.computeIfAbsent(script.getEngine(), this::createScriptEngine);
-		if (scriptEngine instanceof Compilable) {
-			Compilable compilable = (Compilable) scriptEngine;
-			compiledScript = compilable.compile(script.getSource());
-			compiledScriptMap.put(script, compiledScript);
-			return resultFor(script, compiledScript.eval(bindings));
-		}
-
-		return resultFor(script, scriptEngine.eval(script.getSource(), bindings));
+	@Override
+	public void close() {
+		compiledScripts.clear();
+		scriptEngines.clear();
 	}
 
-	private ConditionEvaluationResult resultFor(Script script, Object result) {
+	ConditionEvaluationResult evaluate(Script script, Bindings bindings) throws ScriptException {
+		CompiledScript compiledScript = compiledScripts.get(script);
+
+		if (compiledScript == null) {
+			String source = script.getSource();
+			ScriptEngine scriptEngine = scriptEngines.computeIfAbsent(script.getEngine(), this::createScriptEngine);
+			if (!(scriptEngine instanceof Compilable)) {
+				return computeConditionEvaluationResult(script, scriptEngine.eval(source, bindings));
+			}
+			compiledScript = ((Compilable) scriptEngine).compile(source);
+			compiledScripts.putIfAbsent(script, compiledScript);
+		}
+
+		return computeConditionEvaluationResult(script, compiledScript.eval(bindings));
+	}
+
+	ConditionEvaluationResult computeConditionEvaluationResult(Script script, Object result) {
 		// Trivial case: script returned a custom ConditionEvaluationResult instance.
 		if (result instanceof ConditionEvaluationResult) {
 			return (ConditionEvaluationResult) result;
