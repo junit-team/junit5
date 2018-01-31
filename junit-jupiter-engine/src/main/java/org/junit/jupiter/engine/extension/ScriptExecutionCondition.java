@@ -60,7 +60,7 @@ class ScriptExecutionCondition implements ExecutionCondition {
 			return scriptExecutionManager.evaluate(script, bindings);
 		}
 		catch (ScriptException e) {
-			throw new JUnitException("Script evaluation failed for " + script, e);
+			throw new JUnitException("Script evaluation failed for: " + script.getAnnotationAsString(), e);
 		}
 	}
 

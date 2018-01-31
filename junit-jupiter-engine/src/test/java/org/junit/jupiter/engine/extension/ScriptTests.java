@@ -49,9 +49,14 @@ class ScriptTests {
 	@Test
 	void equalsAndHashCode() {
 		Script s = new Script(Deprecated.class, "annotation", "engine", "source", "reason");
+		// hit short-cut branches
+		assertNotEquals(s, null);
+		assertNotEquals(s, new Object());
+		// annotationAsString and reason pattern are ignored by Script.equals and .hashCode
 		Script t = new Script(Deprecated.class, "a.........", "engine", "source", "r.....");
 		assertEquals(s, t);
 		assertEquals(s.hashCode(), t.hashCode());
+		// now assert differences
 		Script u = new Script(Deprecated.class, "annotation", "u.....", "source", "reason");
 		assertNotEquals(s, u);
 		assertNotEquals(t, u);
