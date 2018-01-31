@@ -46,7 +46,7 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 		assertAll("Summary of simple test cases run", //
 			() -> assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started"), //
-			() -> assertEquals(0, eventRecorder.getContainerSkippedCount(), "# container skipped"), //
+			() -> assertEquals(1, eventRecorder.getTestSkippedCount(), "# tests skipped"), //
 			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests started") //
 
 		);
@@ -88,6 +88,12 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@EnabledIf("syntax error")
 		void syntaxErrorFails() {
+			fail("test must not be executed");
+		}
+
+		@Test
+		@DisabledIf("junitConfigurationParameter.get('does-not-exist') == null")
+		void accessingNonExistentJUnitConfigurationParameter() {
 			fail("test must not be executed");
 		}
 	}
