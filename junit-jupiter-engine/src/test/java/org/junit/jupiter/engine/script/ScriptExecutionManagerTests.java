@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.extension;
+package org.junit.jupiter.engine.script;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,14 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_CONFIGURATION_PARAMETER;
-import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_DISPLAY_NAME;
-import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_TAGS;
-import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_UNIQUE_ID;
-import static org.junit.jupiter.engine.Constants.Script.Bind.SYSTEM_ENVIRONMENT;
-import static org.junit.jupiter.engine.Constants.Script.Bind.SYSTEM_PROPERTY;
-import static org.junit.jupiter.engine.Constants.Script.DEFAULT_ENGINE_NAME;
-import static org.junit.jupiter.engine.Constants.Script.Reason.DEFAULT_PATTERN;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -85,12 +77,12 @@ class ScriptExecutionManagerTests {
 
 	@Test
 	void systemAccessorsAreBoundByDefault() {
-		ScriptEngine engine = manager.createScriptEngine(DEFAULT_ENGINE_NAME);
-		assertTrue(ScriptAccessor.class.isAssignableFrom(engine.get(SYSTEM_ENVIRONMENT).getClass()));
-		assertTrue(ScriptAccessor.class.isAssignableFrom(engine.get(SYSTEM_PROPERTY).getClass()));
+		ScriptEngine engine = manager.createScriptEngine(Script.DEFAULT_SCRIPT_ENGINE_NAME);
+		assertTrue(ScriptAccessor.class.isAssignableFrom(engine.get(Script.BIND_SYSTEM_ENVIRONMENT).getClass()));
+		assertTrue(ScriptAccessor.class.isAssignableFrom(engine.get(Script.BIND_SYSTEM_PROPERTY).getClass()));
 
-		assertFalse(((ScriptAccessor) engine.get(SYSTEM_PROPERTY)).get("java.version").isEmpty());
-		assertFalse(((ScriptAccessor) engine.get(SYSTEM_ENVIRONMENT)).get("PATH").isEmpty());
+		assertFalse(((ScriptAccessor) engine.get(Script.BIND_SYSTEM_PROPERTY)).get("java.version").isEmpty());
+		assertFalse(((ScriptAccessor) engine.get(Script.BIND_SYSTEM_ENVIRONMENT)).get("PATH").isEmpty());
 	}
 
 	@Test
@@ -175,15 +167,16 @@ class ScriptExecutionManagerTests {
 	}
 
 	private Script script(Type type, String... lines) {
-		return new Script(type, "Mock for " + type, DEFAULT_ENGINE_NAME, String.join("\n", lines), DEFAULT_PATTERN);
+		return new Script(type, "Mock for " + type, Script.DEFAULT_SCRIPT_ENGINE_NAME, String.join("\n", lines),
+			Script.DEFAULT_SCRIPT_REASON_PATTERN);
 	}
 
 	private Bindings createDefaultContextBindings() {
 		Bindings bindings = new SimpleBindings();
-		bindings.put(JUNIT_TAGS, Collections.emptySet());
-		bindings.put(JUNIT_UNIQUE_ID, "Mock for UniqueId");
-		bindings.put(JUNIT_DISPLAY_NAME, "Mock for DisplayName");
-		bindings.put(JUNIT_CONFIGURATION_PARAMETER, Collections.emptyMap());
+		bindings.put(Script.BIND_JUNIT_TAGS, Collections.emptySet());
+		bindings.put(Script.BIND_JUNIT_UNIQUE_ID, "Mock for UniqueId");
+		bindings.put(Script.BIND_JUNIT_DISPLAY_NAME, "Mock for DisplayName");
+		bindings.put(Script.BIND_JUNIT_CONFIGURATION_PARAMETER, Collections.emptyMap());
 		return bindings;
 	}
 

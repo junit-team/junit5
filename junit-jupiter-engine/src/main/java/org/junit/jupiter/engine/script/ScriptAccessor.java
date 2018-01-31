@@ -8,8 +8,11 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.extension;
+package org.junit.jupiter.engine.script;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
@@ -18,7 +21,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  *
  * @since 5.1
  */
-interface ScriptAccessor {
+@API(status = EXPERIMENTAL, since = "5.1")
+public interface ScriptAccessor {
 
 	/**
 	 * Get the value of the property with the supplied name.
@@ -48,7 +52,7 @@ interface ScriptAccessor {
 
 		private final ExtensionContext context;
 
-		ConfigurationParameterAccessor(ExtensionContext context) {
+		public ConfigurationParameterAccessor(ExtensionContext context) {
 			this.context = context;
 		}
 

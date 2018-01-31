@@ -10,12 +10,9 @@
 
 package org.junit.jupiter.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.DisabledIf;
-import org.junit.jupiter.api.EnabledIf;
 
 /**
  * Collection of constants related to the {@link JupiterTestEngine}.
@@ -90,108 +87,6 @@ public final class Constants {
 
 	private Constants() {
 		/* no-op */
-	}
-
-	/**
-	 * Script-related constants used by {@link DisabledIf} and {@link EnabledIf}.
-	 *
-	 * <p>Declares names used for script {@link javax.script.Bindings bindings}
-	 * and also placeholder tags usable in custom reason message.
-	 */
-	@API(status = EXPERIMENTAL, since = "5.1")
-	public interface Script {
-
-		/**
-		 * The script engine name defaults to {@code Nashorn}.
-		 */
-		String DEFAULT_ENGINE_NAME = "Nashorn";
-
-		/**
-		 * Names used for script {@link javax.script.Bindings bindings}.
-		 */
-		interface Bind {
-
-			/**
-			 * Set of all tags assigned to the current extension context.
-			 *
-			 * <p>Value type: {@code Set<String>}
-			 *
-			 * @see org.junit.jupiter.api.extension.ExtensionContext#getTags()
-			 */
-			String JUNIT_TAGS = "junitTags";
-
-			/**
-			 * Unique ID associated with the current extension context.
-			 *
-			 * <p>Value type: {@code String}
-			 *
-			 * @see org.junit.jupiter.api.extension.ExtensionContext#getUniqueId()
-			 */
-			String JUNIT_UNIQUE_ID = "junitUniqueId";
-
-			/**
-			 * Display name of the test or container.
-			 *
-			 * <p>Value type: {@code String}
-			 *
-			 * @see org.junit.jupiter.api.extension.ExtensionContext#getDisplayName()
-			 */
-			String JUNIT_DISPLAY_NAME = "junitDisplayName";
-
-			/**
-			 * Accessor for JUnit Platform configuration parameters.
-			 *
-			 * <p>Usage: {@code junitConfigurationParameter.get(key) -> String}
-			 *
-			 * @see org.junit.jupiter.api.extension.ExtensionContext#getConfigurationParameter(String)
-			 */
-			String JUNIT_CONFIGURATION_PARAMETER = "junitConfigurationParameter";
-
-			/**
-			 * Accessor for JVM system properties.
-			 *
-			 * <p>Usage: {@code systemProperty.get(key) -> String}
-			 *
-			 * @see System#getProperty(String)
-			 */
-			String SYSTEM_PROPERTY = "systemProperty";
-
-			/**
-			 * Accessor for operating system environment variables.
-			 *
-			 * <p>Usage: {@code systemEnvironment.get(key) -> String}
-			 *
-			 * @see System#getenv(String)
-			 */
-			String SYSTEM_ENVIRONMENT = "systemEnvironment";
-
-		}
-
-		/**
-		 * Placeholders usable in reason format string.
-		 */
-		interface Reason {
-
-			/**
-			 * Default reason message pattern.
-			 */
-			String DEFAULT_PATTERN = "Script `{source}` evaluated to: {result}";
-
-			/**
-			 * Placeholder name for the {@code annotation.toString()} value.
-			 */
-			String ANNOTATION_PLACEHOLDER = "{annotation}";
-
-			/**
-			 * Placeholder name for String representation of the result object.
-			 */
-			String RESULT_PLACEHOLDER = "{result}";
-
-			/**
-			 * Placeholder name for the script source.
-			 */
-			String SOURCE_PLACEHOLDER = "{source}";
-		}
 	}
 
 }
