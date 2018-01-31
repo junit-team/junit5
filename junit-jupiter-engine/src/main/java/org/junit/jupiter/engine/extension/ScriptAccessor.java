@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 /**
  * Used to access named properties without exposing direct access to the
  * underlying source.
+ *
+ * @since 5.1
  */
 interface ScriptAccessor {
 

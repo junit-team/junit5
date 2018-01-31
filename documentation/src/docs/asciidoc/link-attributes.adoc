@@ -35,6 +35,8 @@
 :BeforeEachCallback:                {javadoc-root}/org/junit/jupiter/api/extension/BeforeEachCallback.html[BeforeEachCallback]
 :BeforeTestExecutionCallback:       {javadoc-root}/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html[BeforeTestExecutionCallback]
 :Disabled:                          {javadoc-root}/org/junit/jupiter/api/Disabled.html[@Disabled]
+:DisabledIf:                        {javadoc-root}/org/junit/jupiter/api/DisabledIf.html[@DisabledIf]
+:EnabledIf:                         {javadoc-root}/org/junit/jupiter/api/EnabledIf.html[@EnabledIf]
 :ExecutionCondition:                {javadoc-root}/org/junit/jupiter/api/extension/ExecutionCondition.html[ExecutionCondition]
 :ExtendWith:                        {javadoc-root}/org/junit/jupiter/api/extension/ExtendWith.html[@ExtendWith]
 :ExtensionContext_Store:            {javadoc-root}/org/junit/jupiter/api/extension/ExtensionContext.Store.html[Store]

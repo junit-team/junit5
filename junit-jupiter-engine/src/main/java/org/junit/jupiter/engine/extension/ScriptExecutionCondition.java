@@ -49,11 +49,15 @@ class ScriptExecutionCondition implements ExecutionCondition {
 
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+		// Always create a script instance for the current context.
 		Script script = createScript(context);
+
+		// If the script is null, no annotation of interest was attached to the underlying element.
 		if (script == null) {
 			return ENABLED_BY_DEFAULT;
 		}
 
+		// Delegate actual script execution and result evaluation to the globally cached manager instance.
 		ScriptExecutionManager scriptExecutionManager = getScriptExecutionManager(context);
 		try {
 			Bindings bindings = createBindings(context);
@@ -70,15 +74,18 @@ class ScriptExecutionCondition implements ExecutionCondition {
 
 	private Script createScript(ExtensionContext context) {
 		Optional<AnnotatedElement> element = context.getElement();
+		if (!element.isPresent()) {
+			return null;
+		}
 
-		Optional<DisabledIf> disabled = findAnnotation(element, DisabledIf.class);
+		AnnotatedElement annotatedElement = element.get();
+		Optional<DisabledIf> disabled = findAnnotation(annotatedElement, DisabledIf.class);
 		if (disabled.isPresent()) {
 			DisabledIf annotation = disabled.get();
 			String source = createSource(annotation.value());
 			return new Script(annotation, annotation.engine(), source, annotation.reason());
 		}
-
-		Optional<EnabledIf> enabled = findAnnotation(element, EnabledIf.class);
+		Optional<EnabledIf> enabled = findAnnotation(annotatedElement, EnabledIf.class);
 		if (enabled.isPresent()) {
 			EnabledIf annotation = enabled.get();
 			String source = createSource(annotation.value());

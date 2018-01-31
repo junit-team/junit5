@@ -41,7 +41,6 @@ import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.engine.Constants;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
@@ -86,7 +85,7 @@ class ScriptExecutionManagerTests {
 
 	@Test
 	void systemAccessorsAreBoundByDefault() {
-		ScriptEngine engine = manager.createScriptEngine(Constants.Script.DEFAULT_ENGINE_NAME);
+		ScriptEngine engine = manager.createScriptEngine(DEFAULT_ENGINE_NAME);
 		assertTrue(ScriptAccessor.class.isAssignableFrom(engine.get(SYSTEM_ENVIRONMENT).getClass()));
 		assertTrue(ScriptAccessor.class.isAssignableFrom(engine.get(SYSTEM_PROPERTY).getClass()));
 

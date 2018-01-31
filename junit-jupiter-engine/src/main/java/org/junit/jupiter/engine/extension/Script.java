@@ -18,6 +18,15 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+/**
+ * Script data class.
+ *
+ * @since 5.1
+ * @see org.junit.jupiter.api.DisabledIf
+ * @see org.junit.jupiter.api.EnabledIf
+ * @see ScriptExecutionCondition
+ * @see ScriptExecutionManager
+ */
 final class Script {
 
 	private final Type annotationType;
@@ -41,7 +50,9 @@ final class Script {
 	}
 
 	/**
-	 * Property {@link #reason} is not included on purpose.
+	 * Properties {@link #annotationType} and {@link #reason} are <b>not</b>
+	 * included on purpose. This allows more cache hits when using instances
+	 * of this class as keys in a hash map.
 	 */
 	private int computeHashCode() {
 		return Objects.hash(annotationType.getTypeName(), engine, source);
@@ -84,6 +95,10 @@ final class Script {
 		return source;
 	}
 
+	/**
+	 * @return the string returned by {@link #getReason()} with all placeholders
+	 * replaced with their current values stored here.
+	 */
 	String toReasonString(String resultAsString) {
 		return reason.replace(ANNOTATION_PLACEHOLDER, getAnnotationAsString()) //
 				.replace(SOURCE_PLACEHOLDER, getSource()) //
