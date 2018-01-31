@@ -44,7 +44,10 @@ on GitHub.
   `@ParameterizedTest` method will be used as the factory method by convention.
 ** See <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-MethodSource,
    @MethodSource>> in the User Guide for details.
-
+* New `@DisabledIf` annotation that is used to control whether the annotated test class or
+  test method is _enabled_ or _disabled_. It inverts the logic applied by `@EnabledIf`.
+** See <<../user-guide/index.adoc#writing-tests-conditional, Conditional Test Execution>>
+   in the User Guide for details.
 
 [[release-notes-5.1.0-RC1-junit-vintage]]
 === JUnit Vintage

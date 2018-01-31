@@ -11,10 +11,6 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_CONFIGURATION_PARAMETER;
-import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_DISPLAY_NAME;
-import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_TAGS;
-import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_UNIQUE_ID;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
@@ -30,6 +26,9 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.engine.script.Script;
+import org.junit.jupiter.engine.script.ScriptAccessor;
+import org.junit.jupiter.engine.script.ScriptExecutionManager;
 import org.junit.platform.commons.JUnitException;
 
 /**
@@ -49,10 +48,10 @@ class ScriptExecutionCondition implements ExecutionCondition {
 
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		// Always create a script instance for the current context.
+		// Always try to create a script instance for the current context.
 		Script script = createScript(context);
 
-		// If the script is null, no annotation of interest was attached to the underlying element.
+		// If the script is null, no annotation of interest is attached to the underlying element.
 		if (script == null) {
 			return ENABLED_BY_DEFAULT;
 		}
@@ -68,23 +67,20 @@ class ScriptExecutionCondition implements ExecutionCondition {
 		}
 	}
 
-	private ScriptExecutionManager getScriptExecutionManager(ExtensionContext context) {
-		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(ScriptExecutionManager.class);
-	}
-
 	private Script createScript(ExtensionContext context) {
 		Optional<AnnotatedElement> element = context.getElement();
 		if (!element.isPresent()) {
 			return null;
 		}
-
 		AnnotatedElement annotatedElement = element.get();
+
 		Optional<DisabledIf> disabled = findAnnotation(annotatedElement, DisabledIf.class);
 		if (disabled.isPresent()) {
 			DisabledIf annotation = disabled.get();
 			String source = createSource(annotation.value());
 			return new Script(annotation, annotation.engine(), source, annotation.reason());
 		}
+
 		Optional<EnabledIf> enabled = findAnnotation(annotatedElement, EnabledIf.class);
 		if (enabled.isPresent()) {
 			EnabledIf annotation = enabled.get();
@@ -99,13 +95,17 @@ class ScriptExecutionCondition implements ExecutionCondition {
 		return String.join(System.lineSeparator(), lines);
 	}
 
+	private ScriptExecutionManager getScriptExecutionManager(ExtensionContext context) {
+		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(ScriptExecutionManager.class);
+	}
+
 	private Bindings createBindings(ExtensionContext context) {
 		ScriptAccessor configurationParameterAccessor = new ScriptAccessor.ConfigurationParameterAccessor(context);
 		Bindings bindings = new SimpleBindings();
-		bindings.put(JUNIT_TAGS, context.getTags());
-		bindings.put(JUNIT_UNIQUE_ID, context.getUniqueId());
-		bindings.put(JUNIT_DISPLAY_NAME, context.getDisplayName());
-		bindings.put(JUNIT_CONFIGURATION_PARAMETER, configurationParameterAccessor);
+		bindings.put(Script.BIND_JUNIT_TAGS, context.getTags());
+		bindings.put(Script.BIND_JUNIT_UNIQUE_ID, context.getUniqueId());
+		bindings.put(Script.BIND_JUNIT_DISPLAY_NAME, context.getDisplayName());
+		bindings.put(Script.BIND_JUNIT_CONFIGURATION_PARAMETER, configurationParameterAccessor);
 		return bindings;
 	}
 

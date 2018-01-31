@@ -8,12 +8,11 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.extension;
+package org.junit.jupiter.engine.script;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-import static org.junit.jupiter.engine.Constants.Script.Bind.SYSTEM_ENVIRONMENT;
-import static org.junit.jupiter.engine.Constants.Script.Bind.SYSTEM_PROPERTY;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -26,6 +25,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.DisabledIf;
 import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
@@ -38,7 +38,8 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * @since 5.1
  */
-class ScriptExecutionManager implements CloseableResource {
+@API(status = EXPERIMENTAL, since = "5.1")
+public class ScriptExecutionManager implements CloseableResource {
 
 	private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 	private final ConcurrentMap<String, ScriptEngine> scriptEngines = new ConcurrentHashMap<>();
@@ -64,7 +65,7 @@ class ScriptExecutionManager implements CloseableResource {
 	 * @return the computed condition evaluation result
 	 * @throws ScriptException if an error occurs in script.
 	 */
-	ConditionEvaluationResult evaluate(Script script, Bindings bindings) throws ScriptException {
+	public ConditionEvaluationResult evaluate(Script script, Bindings bindings) throws ScriptException {
 		// Always look for a compiled script in our cache.
 		CompiledScript compiledScript = compiledScripts.get(script);
 
@@ -127,8 +128,8 @@ class ScriptExecutionManager implements CloseableResource {
 		Preconditions.notNull(scriptEngine, () -> "Script engine not found: " + engine);
 
 		Bindings bindings = scriptEngine.getBindings(ScriptContext.GLOBAL_SCOPE);
-		bindings.put(SYSTEM_PROPERTY, systemPropertyAccessor);
-		bindings.put(SYSTEM_ENVIRONMENT, environmentVariableAccessor);
+		bindings.put(Script.BIND_SYSTEM_PROPERTY, systemPropertyAccessor);
+		bindings.put(Script.BIND_SYSTEM_ENVIRONMENT, environmentVariableAccessor);
 		return scriptEngine;
 	}
 
