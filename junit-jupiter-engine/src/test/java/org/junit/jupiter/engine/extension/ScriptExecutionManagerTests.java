@@ -19,6 +19,8 @@ import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_CONFIGURATION
 import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_DISPLAY_NAME;
 import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_TAGS;
 import static org.junit.jupiter.engine.Constants.Script.Bind.JUNIT_UNIQUE_ID;
+import static org.junit.jupiter.engine.Constants.Script.Bind.SYSTEM_ENVIRONMENT;
+import static org.junit.jupiter.engine.Constants.Script.Bind.SYSTEM_PROPERTY;
 import static org.junit.jupiter.engine.Constants.Script.DEFAULT_ENGINE_NAME;
 import static org.junit.jupiter.engine.Constants.Script.Reason.DEFAULT_PATTERN;
 
@@ -33,6 +35,8 @@ import javax.script.SimpleBindings;
 import org.junit.jupiter.api.DisabledIf;
 import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.engine.Constants;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
@@ -74,53 +78,38 @@ class ScriptExecutionManagerTests {
 	}
 
 	@Test
+	void systemAccessorsAreBoundByDefault() {
+		ScriptEngine engine = manager.createScriptEngine(Constants.Script.DEFAULT_ENGINE_NAME);
+		assertTrue(ScriptAccessor.class.isAssignableFrom(engine.get(SYSTEM_ENVIRONMENT).getClass()));
+		assertTrue(ScriptAccessor.class.isAssignableFrom(engine.get(SYSTEM_PROPERTY).getClass()));
+	}
+
+	@Test
 	void trivialScripts() throws ScriptException {
 		Bindings bindings = mockContextBindings();
 		// @EnabledIf
-		assertTrue(manager.evaluate(mock(EnabledIf.class, "true"), bindings).isEnabled());
-		assertTrue(manager.evaluate(mock(EnabledIf.class, "false"), bindings).isDisabled());
+		assertTrue(manager.evaluate(mockScript(EnabledIf.class, "true"), bindings).isEnabled());
+		assertTrue(manager.evaluate(mockScript(EnabledIf.class, "false"), bindings).isDisabled());
 		// @DisabledIf
-		assertTrue(manager.evaluate(mock(DisabledIf.class, "true"), bindings).isDisabled());
-		assertTrue(manager.evaluate(mock(DisabledIf.class, "false"), bindings).isEnabled());
+		assertTrue(manager.evaluate(mockScript(DisabledIf.class, "true"), bindings).isDisabled());
+		assertTrue(manager.evaluate(mockScript(DisabledIf.class, "false"), bindings).isEnabled());
+	}
+
+	@Test
+	void reasonWithDefaultMessage() {
+		Script script = mockScript(EnabledIf.class, "?");
+		String actual = manager.computeConditionEvaluationResult(script, "!").getReason().get();
+		assertEquals("Script `?` evaluated to: !", actual);
+	}
+
+	@Test
+	void computeConditionEvaluationResultFailsForUnsupportedAnnotationType() {
+		Script script = mockScript(Override.class, "?");
+		Exception e = assertThrows(JUnitException.class, () -> manager.computeConditionEvaluationResult(script, "!"));
+		assertEquals("Unsupported annotation type: interface java.lang.Override", e.getMessage());
 	}
 
 	/*
-		@Test
-		void trivialGroovyScript() {
-			String script = "true";
-			EnabledIf annotation = mockEnabledIfAnnotation(script);
-			String actual = condition.createScript(annotation, "Groovy");
-			assertSame(script, actual);
-		}
-
-		@Test
-		void trivialNonJavaScript() {
-			EnabledIf annotation = mockEnabledIfAnnotation("one", "two");
-			String script = condition.createScript(annotation, "unknown language");
-			assertLinesMatch(Arrays.asList("one", "two"), Arrays.asList(script.split("\\R")));
-		}
-
-		@Test
-		void createJavaScriptMultipleLines() {
-			EnabledIf annotation = mockEnabledIfAnnotation("m1()", "m2()");
-			String script = condition.createScript(annotation, "ECMAScript");
-			assertLinesMatch(Arrays.asList("m1()", "m2()"), Arrays.asList(script.split("\\R")));
-		}
-
-		@Test
-		void createReasonWithDefaultMessage() {
-			EnabledIf annotation = mockEnabledIfAnnotation("?");
-			String actual = condition.createReason(annotation, "?", "!");
-			assertEquals("Script `?` evaluated to: !", actual);
-		}
-
-		@Test
-		void createReasonWithCustomMessage() {
-			EnabledIf annotation = mockEnabledIfAnnotation("?");
-			when(annotation.reason()).thenReturn("result={result} script={script}");
-			String actual = condition.createReason(annotation, "?", "!");
-			assertEquals("result=! script=?", actual);
-		}
 
 		@Test
 		void syntaxErrorInScriptFailsTest() {
@@ -220,7 +209,7 @@ class ScriptExecutionManagerTests {
 		}
 	*/
 
-	private Script mock(Class<? extends Annotation> type, String... lines) {
+	private Script mockScript(Class<? extends Annotation> type, String... lines) {
 		return new Script(type, "Mock for @EnabledIf", DEFAULT_ENGINE_NAME, String.join("\n", lines), DEFAULT_PATTERN);
 	}
 
