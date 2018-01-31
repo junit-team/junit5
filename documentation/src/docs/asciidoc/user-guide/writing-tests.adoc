@@ -722,6 +722,8 @@ addition, such methods must not accept any arguments. By default such methods mu
 If you only need a single parameter, you can return a `Stream` of instances of the
 parameter type as demonstrated by the following example.
 
+Leaving the 'value' parameter empty causes @Method source to look for a _factory_ method
+that has the same name as the test that is annotated.
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=simple_MethodSource_example]
