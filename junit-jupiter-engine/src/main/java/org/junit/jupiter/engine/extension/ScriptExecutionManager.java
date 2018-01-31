@@ -33,6 +33,11 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
+/**
+ * Entry point for script execution support.
+ *
+ * @since 5.1
+ */
 class ScriptExecutionManager implements CloseableResource {
 
 	private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
@@ -51,9 +56,19 @@ class ScriptExecutionManager implements CloseableResource {
 		scriptEngines.clear();
 	}
 
+	/**
+	 * Evaluate the script using the given bindings.
+	 *
+	 * @param script the script to evaluate
+	 * @param bindings the context-aware bindings
+	 * @return the computed condition evaluation result
+	 * @throws ScriptException if an error occurs in script.
+	 */
 	ConditionEvaluationResult evaluate(Script script, Bindings bindings) throws ScriptException {
+		// Always look for a compiled script in our cache.
 		CompiledScript compiledScript = compiledScripts.get(script);
 
+		// No compiled script found?
 		if (compiledScript == null) {
 			String source = script.getSource();
 			ScriptEngine scriptEngine = scriptEngines.computeIfAbsent(script.getEngine(), this::createScriptEngine);
@@ -61,10 +76,12 @@ class ScriptExecutionManager implements CloseableResource {
 				Object result = scriptEngine.eval(source, bindings);
 				return computeConditionEvaluationResult(script, result);
 			}
+			// Compile and store it in our cache. Fall-through for execution
 			compiledScript = ((Compilable) scriptEngine).compile(source);
 			compiledScripts.putIfAbsent(script, compiledScript);
 		}
 
+		// Let the cached compiled script do it's work.
 		Object result = compiledScript.eval(bindings);
 		return computeConditionEvaluationResult(script, result);
 	}
@@ -76,8 +93,10 @@ class ScriptExecutionManager implements CloseableResource {
 		}
 
 		String resultAsString = String.valueOf(result);
-		boolean isTrue;
+		String reason = script.toReasonString(resultAsString);
 
+		// Cast or parse result to a boolean value.
+		boolean isTrue;
 		if (result instanceof Boolean) {
 			isTrue = (Boolean) result;
 		}
@@ -85,13 +104,15 @@ class ScriptExecutionManager implements CloseableResource {
 			isTrue = Boolean.parseBoolean(resultAsString);
 		}
 
-		String reason = script.toReasonString(resultAsString);
+		// Flip enabled/disabled result based on the associated annotation type.
 		if (script.getAnnotationType() == EnabledIf.class) {
 			return isTrue ? enabled(reason) : disabled(reason);
 		}
 		if (script.getAnnotationType() == DisabledIf.class) {
 			return isTrue ? disabled(reason) : enabled(reason);
 		}
+
+		// Still here? Not so good.
 		throw new JUnitException("Unsupported annotation type: " + script.getAnnotationType());
 	}
 

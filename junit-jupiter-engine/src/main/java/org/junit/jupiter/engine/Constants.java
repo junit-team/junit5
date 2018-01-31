@@ -95,11 +95,15 @@ public final class Constants {
 	/**
 	 * Script-related constants used by {@link DisabledIf} and {@link EnabledIf}.
 	 *
-	 * <p>Also declares names used for script {@link javax.script.Bindings bindings}.
+	 * <p>Declares names used for script {@link javax.script.Bindings bindings}
+	 * and also placeholder tags usable in custom reason message.
 	 */
 	@API(status = EXPERIMENTAL, since = "5.1")
 	public interface Script {
 
+		/**
+		 * The script engine name defaults to {@code Nashorn}.
+		 */
 		String DEFAULT_ENGINE_NAME = "Nashorn";
 
 		/**
@@ -168,10 +172,24 @@ public final class Constants {
 		 */
 		interface Reason {
 
+			/**
+			 * Default reason message pattern.
+			 */
 			String DEFAULT_PATTERN = "Script `{source}` evaluated to: {result}";
 
+			/**
+			 * Placeholder name for the {@code annotation.toString()} value.
+			 */
 			String ANNOTATION_PLACEHOLDER = "{annotation}";
+
+			/**
+			 * Placeholder name for String representation of the result object.
+			 */
 			String RESULT_PLACEHOLDER = "{result}";
+
+			/**
+			 * Placeholder name for the script source.
+			 */
 			String SOURCE_PLACEHOLDER = "{source}";
 		}
 	}

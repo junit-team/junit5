@@ -167,14 +167,34 @@ include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 [[writing-tests-conditional]]
 === Conditional Test Execution
 
-The following are tests that are either _enabled_ or _disabled_ depending on the
-evaluation of the script configured via the `@EnabledIf` annotation. Scripts can be
-written in JavaScript, Groovy, or any other scripting language for which there is support
-for the Java Scripting API (defined by JSR 223).
+JUnit Jupiter comes with the ability that are either _enabled_ or _disabled_ depending on the
+evaluation of the script configured via the `{EnabledIf}` or `{DisabledIf}`
+annotation. Scripts can be written in JavaScript, Groovy, or any other
+scripting language for which there is support for the Java Scripting API,
+defined by JSR 223.
+
+WARNING: Conditional test execution via `{EnabledIf}` and `{DisabledIf}` is currently an
+_experimental_ feature. Consult the table in <<api-evolution-experimental-apis>> for details.
+
+The following names are bound to each script context:
+[cols="25,75"]
+|===
+| Name                          | Description
+
+| `systemEnvironment`           | Operating system environment variable accessor.
+| `systemProperty`              | JVM system property accessor.
+| `junitConfigurationParameter` | Configuration parameter accessor.
+| `junitDisplayName`            | Display name as a `String`.
+| `junitTags`                   | All tags as a `Set<String>`.
+| `junitUniqueId`               | Unique ID as a `String`.
+|===
+
+NOTE: An accessor provides access to a map-like structure via a simple
+`String get(String name)` method.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/EnabledIfTestsDemo.java[tags=user_guide]
+include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide]
 ----
 
 [[writing-tests-tagging-and-filtering]]

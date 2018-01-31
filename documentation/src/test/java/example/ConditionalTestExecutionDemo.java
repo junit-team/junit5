@@ -10,17 +10,18 @@
 
 package example;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.time.LocalDate;
 
+import org.junit.jupiter.api.DisabledIf;
 import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 // tag::user_guide[]
-class EnabledIfTestsDemo {
+class ConditionalTestExecutionDemo {
 
 	@Test // Static JavaScript expression.
 	@EnabledIf("1 == 1")
@@ -29,34 +30,44 @@ class EnabledIfTestsDemo {
 	}
 
 	@RepeatedTest(10) // Dynamic JavaScript expression.
-	@EnabledIf("Math.random() >= 0.314159")
+	@DisabledIf("Math.random() < 0.314159")
 	void testWillNeverOrSometimesBeExecuted() {
+		assertTrue(Math.random() >= 0);
 	}
 
 	@Test // Regular expression testing bound system property.
-	@EnabledIf("/64/.test(systemProperty.get('os.arch'))")
-	void testWillBeExecutedIfOsArchitectureContains64() {
-		assertTrue(System.getProperty("os.arch").contains("64"));
+	@DisabledIf("/32/.test(systemProperty.get('os.arch'))")
+	void testWontBeExecutedIfOsArchitectureContains32() {
+		assertFalse(System.getProperty("os.arch").contains("32"));
 	}
 
-	@Test // Multi-line script, import Java package and set custom reason.
+	@Test
+	@EnabledIf("'CI' == systemEnvironment.get('ENV')")
+	void testOnlyOnCiServer() {
+		assertTrue("CI".equals(System.getenv("ENV")));
+	}
+
+	@Test // Multi-line script, custom engine name and custom reason.
 	// end::user_guide[]
 	// @formatter:off
 	// tag::user_guide[]
 	@EnabledIf(value = {
 					"load('nashorn:mozilla_compat.js')",
-					"importPackage(java.nio.file)",
+					"importPackage(java.time)",
 					"",
-					"var path = Files.createTempFile('volatile-', '.temp')",
-					"java.lang.System.getProperties().put('volatile', path)",
-					"Files.exists(path)"
+					"var today = LocalDate.now()",
+					"var tomorrow = today.plusDays(1)",
+					"tomorrow.isAfter(today)"
 				},
+				engine = "nashorn",
 				reason = "Self-fulfilling: {result}")
 	// end::user_guide[]
 	// @formatter:on
 	// tag::user_guide[]
-	void tautology() {
-		assertTrue(Files.exists((Path) System.getProperties().get("volatile")));
+	void theDayAfterTomorrow() {
+		LocalDate today = LocalDate.now();
+		LocalDate tomorrow = today.plusDays(1);
+		assertTrue(tomorrow.isAfter(today));
 	}
 }
 // end::user_guide[]
