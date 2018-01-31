@@ -120,6 +120,19 @@ class ParameterizedTestDemo {
 	}
 	// end::simple_MethodSource_example[]
 
+	// tag::simple_MethodSource_without_value_example[]
+	@ParameterizedTest
+	@MethodSource
+	void testWithSimpleMethodSourceHavingNoValue(String argument) {
+		assertNotNull(argument);
+	}
+
+	static Stream<String> testWithSimpleMethodSourceHavingNoValue() {
+		return Stream.of("foo", "bar");
+	}
+
+	// end::simple_MethodSource_without_value_example[]
+
 	// tag::primitive_MethodSource_example[]
 	@ParameterizedTest
 	@MethodSource("range")
