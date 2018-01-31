@@ -42,6 +42,9 @@ class ScriptExecutionManager implements CloseableResource {
 	private final ScriptAccessor systemPropertyAccessor = new ScriptAccessor.SystemPropertyAccessor();
 	private final ScriptAccessor environmentVariableAccessor = new ScriptAccessor.EnvironmentVariableAccessor();
 
+	// package-private for testing purposes -- make it configurable?
+	boolean forceScriptEvaluation = false;
+
 	@Override
 	public void close() {
 		compiledScripts.clear();
@@ -54,14 +57,16 @@ class ScriptExecutionManager implements CloseableResource {
 		if (compiledScript == null) {
 			String source = script.getSource();
 			ScriptEngine scriptEngine = scriptEngines.computeIfAbsent(script.getEngine(), this::createScriptEngine);
-			if (!(scriptEngine instanceof Compilable)) {
-				return computeConditionEvaluationResult(script, scriptEngine.eval(source, bindings));
+			if (!(scriptEngine instanceof Compilable) || forceScriptEvaluation) {
+				Object result = scriptEngine.eval(source, bindings);
+				return computeConditionEvaluationResult(script, result);
 			}
 			compiledScript = ((Compilable) scriptEngine).compile(source);
 			compiledScripts.putIfAbsent(script, compiledScript);
 		}
 
-		return computeConditionEvaluationResult(script, compiledScript.eval(bindings));
+		Object result = compiledScript.eval(bindings);
+		return computeConditionEvaluationResult(script, result);
 	}
 
 	ConditionEvaluationResult computeConditionEvaluationResult(Script script, Object result) {

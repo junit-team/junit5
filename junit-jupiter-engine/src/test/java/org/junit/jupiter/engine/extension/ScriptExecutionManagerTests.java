@@ -94,6 +94,13 @@ class ScriptExecutionManagerTests {
 		assertFalse(((ScriptAccessor) engine.get(SYSTEM_ENVIRONMENT)).get("PATH").isEmpty());
 	}
 
+	@Test
+	void forceScriptEvaluation() throws ScriptException {
+		manager.forceScriptEvaluation = true;
+		assertTrue(manager.evaluate(script(EnabledIf.class, "true"), bindings).isEnabled());
+		assertTrue(manager.evaluate(script(DisabledIf.class, "true"), bindings).isDisabled());
+	}
+
 	@TestFactory
 	Stream<DynamicTest> evaluateScriptsEvaluatingToTrue() {
 		return Stream.of("true", "java.lang.Boolean.TRUE", "'TrUe'", "0 == 0", "/pi/.test('jupiter')") //
