@@ -13,7 +13,10 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -23,11 +26,23 @@ import static org.junit.platform.engine.test.event.TestExecutionResultConditions
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.stream.Stream;
+
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
+
 import org.junit.jupiter.api.DisabledIf;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.script.Script;
+import org.junit.jupiter.engine.script.ScriptExecutionManager;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -38,6 +53,50 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * @since 5.1
  */
 class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
+
+	private final Bindings bindings = createDefaultContextBindings();
+	private final ScriptExecutionCondition condition = new ScriptExecutionCondition();
+	private final ScriptExecutionManager manager = new ScriptExecutionManager();
+
+	@Test
+	void computeConditionEvaluationResultWithDefaultReasonMessage() {
+		Script script = script(EnabledIf.class, "?");
+		String actual = condition.computeConditionEvaluationResult(script, "!").getReason().orElseThrow(Error::new);
+		assertEquals("Script `?` evaluated to: !", actual);
+	}
+
+	@TestFactory
+	Stream<DynamicTest> computeConditionEvaluationResultFailsForUnsupportedAnnotationType() {
+		return Stream.of(Override.class, Deprecated.class, Object.class) //
+				.map(type -> dynamicTest("computationFailsFor(" + type + ")", //
+					() -> computeConditionEvaluationResultFailsForUnsupportedAnnotationType(type)));
+	}
+
+	private void computeConditionEvaluationResultFailsForUnsupportedAnnotationType(Type type) {
+		Script script = new Script(type, "annotation", "engine", "source", "reason");
+		Exception e = assertThrows(JUnitException.class, () -> condition.computeConditionEvaluationResult(script, "!"));
+		String expected = "Unsupported annotation type: " + type;
+		String actual = e.getMessage();
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	void getJUnitConfigurationParameterWithJavaScript() {
+		Script script = script(EnabledIf.class, "junitConfigurationParameter.get('XXX')");
+		ConditionEvaluationResult result = condition.evaluate(manager, script, bindings);
+		assertTrue(result.isDisabled());
+		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
+		assertEquals("Script `junitConfigurationParameter.get('XXX')` evaluated to: null", actual);
+	}
+
+	@Test
+	void getJUnitConfigurationParameterWithJavaScriptAndCheckForNull() {
+		Script script = script(EnabledIf.class, "junitConfigurationParameter.get('XXX') != null");
+		ConditionEvaluationResult result = condition.evaluate(manager, script, bindings);
+		assertTrue(result.isDisabled());
+		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
+		assertEquals("Script `junitConfigurationParameter.get('XXX') != null` evaluated to: false", actual);
+	}
 
 	@Test
 	void executeSimpleTestCases() {
@@ -71,6 +130,25 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		DisabledIf d = info.getTestMethod().orElseThrow(Error::new).getDeclaredAnnotation(DisabledIf.class);
 		assertEquals("Nashorn", d.engine());
 		assertEquals("Script `{source}` evaluated to: {result}", d.reason());
+	}
+
+	private Script script(Type type, String... lines) {
+		return new Script( //
+			type, //
+			"Mock for " + type, //
+			Script.DEFAULT_SCRIPT_ENGINE_NAME, //
+			String.join("\n", lines), //
+			Script.DEFAULT_SCRIPT_REASON_PATTERN //
+		);
+	}
+
+	private Bindings createDefaultContextBindings() {
+		Bindings bindings = new SimpleBindings();
+		bindings.put(Script.BIND_JUNIT_TAGS, Collections.emptySet());
+		bindings.put(Script.BIND_JUNIT_UNIQUE_ID, "Mock for UniqueId");
+		bindings.put(Script.BIND_JUNIT_DISPLAY_NAME, "Mock for DisplayName");
+		bindings.put(Script.BIND_JUNIT_CONFIGURATION_PARAMETER, Collections.emptyMap());
+		return bindings;
 	}
 
 	static class SimpleTestCases {

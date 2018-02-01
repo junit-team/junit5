@@ -21,6 +21,7 @@ import java.lang.annotation.Target;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisabledIf;
+import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
@@ -134,6 +135,13 @@ class DisabledIfTests {
 	@Disabled
 	@DisabledIf("false")
 	void disabledAndDisabledIf() {
+		fail("test must not be executed");
+	}
+
+	@Test
+	@DisabledIf("false")
+	@EnabledIf("false")
+	void disabledIfAndEnabledIf() {
 		fail("test must not be executed");
 	}
 
