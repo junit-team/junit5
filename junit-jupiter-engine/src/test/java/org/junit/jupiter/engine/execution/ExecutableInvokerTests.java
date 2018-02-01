@@ -137,6 +137,10 @@ class ExecutableInvokerTests {
 		assertSame(extensionContext, extension.resolveArguments.extensionContext);
 		assertEquals(0, extension.resolveArguments.parameterContext.getIndex());
 		assertSame(instance, extension.resolveArguments.parameterContext.getTarget().get());
+		// @formatter:off
+		assertThat(extension.resolveArguments.parameterContext.toString())
+				.contains("parameter", String.class.getTypeName(), "index", "0", "target", "Mock");
+		// @formatter:on
 	}
 
 	@Test
