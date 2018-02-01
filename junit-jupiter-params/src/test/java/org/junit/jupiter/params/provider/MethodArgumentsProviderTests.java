@@ -67,7 +67,7 @@ class MethodArgumentsProviderTests {
 	@Test
 	void throwsExceptionForIllegalReturnType() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-				() -> provideArguments("providerWithIllegalReturnType").toArray());
+			() -> provideArguments("providerWithIllegalReturnType").toArray());
 
 		assertThat(exception).hasMessageContaining("Cannot convert instance of java.lang.Integer into a Stream");
 	}
@@ -89,14 +89,15 @@ class MethodArgumentsProviderTests {
 	@Test
 	void throwsExceptionWhenNonStaticMethodIsReferencedAndStaticIsRequired() {
 		JUnitException exception = assertThrows(JUnitException.class,
-				() -> provideArguments(NonStaticTestCase.class, null, false, "nonStaticStringStreamProvider").toArray());
+			() -> provideArguments(NonStaticTestCase.class, null, false, "nonStaticStringStreamProvider").toArray());
 
 		assertThat(exception).hasMessageContaining("Cannot invoke non-static method");
 	}
 
 	@Test
 	void providesArgumentsFromNonStaticMethodWhenStaticIsNotRequired() {
-		Stream<Object[]> arguments = provideArguments(NonStaticTestCase.class, null, true, "nonStaticStringStreamProvider");
+		Stream<Object[]> arguments = provideArguments(NonStaticTestCase.class, null, true,
+			"nonStaticStringStreamProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
@@ -104,7 +105,7 @@ class MethodArgumentsProviderTests {
 	@Test
 	void throwsExceptionWhenMethodDoesNotExist() {
 		JUnitException exception = assertThrows(JUnitException.class,
-				() -> provideArguments("unknownMethod").toArray());
+			() -> provideArguments("unknownMethod").toArray());
 
 		assertThat(exception).hasMessageContaining("Could not find method");
 	}
@@ -112,15 +113,15 @@ class MethodArgumentsProviderTests {
 	@Test
 	void throwsExceptionWhenNoTestClassIsAvailable() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-				() -> provideArguments((Class<?>) null, null, false, "someMethod"));
+			() -> provideArguments((Class<?>) null, null, false, "someMethod"));
 
 		assertThat(exception).hasMessageContaining("required test class is not present");
 	}
 
 	@Test
 	void providesArgumentsUsingDefaultValue() throws NoSuchMethodException {
-		Stream<Object[]> arguments = provideArguments(TestCaseDefaultValue.class, TestCaseDefaultValue.class.getDeclaredMethod(TEST_METHOD, String.class),
-				false, "");
+		Stream<Object[]> arguments = provideArguments(TestCaseDefaultValue.class,
+			TestCaseDefaultValue.class.getDeclaredMethod(TEST_METHOD, String.class), false, "");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
@@ -194,7 +195,8 @@ class MethodArgumentsProviderTests {
 		return provideArguments(TestCase.class, null, false, methodNames);
 	}
 
-	private Stream<Object[]> provideArguments(Class<?> testClass, Method testMethod, boolean allowNonStaticMethod, String... methodNames) {
+	private Stream<Object[]> provideArguments(Class<?> testClass, Method testMethod, boolean allowNonStaticMethod,
+			String... methodNames) {
 		MethodSource annotation = mock(MethodSource.class);
 
 		when(annotation.value()).thenReturn(methodNames);
