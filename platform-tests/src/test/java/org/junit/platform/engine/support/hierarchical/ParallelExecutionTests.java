@@ -149,7 +149,7 @@ class ParallelExecutionTests {
 		LauncherDiscoveryRequest discoveryRequest = request()
 				.selectors(selectClass(testClass))
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED, String.valueOf(true))
-				.configurationParameter(PARALLEL_EXECUTION_LEVEL, String.valueOf(5))
+				.configurationParameter(PARALLEL_EXECUTION_LEVEL, String.valueOf(4))
 				.build();
 		// @formatter:on
 		return ExecutionEventRecorder.execute(new JupiterTestEngine(), discoveryRequest);

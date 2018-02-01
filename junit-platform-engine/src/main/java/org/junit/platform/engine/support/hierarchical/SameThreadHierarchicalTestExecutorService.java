@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
+import java.util.List;
 import java.util.concurrent.Future;
 
 public class SameThreadHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
@@ -20,6 +21,11 @@ public class SameThreadHierarchicalTestExecutorService implements HierarchicalTe
 	public Future<Void> submit(TestTask testTask) {
 		testTask.execute();
 		return completedFuture(null);
+	}
+
+	@Override
+	public void invokeAll(List<TestTask> tasks) {
+		tasks.forEach(TestTask::execute);
 	}
 
 	@Override

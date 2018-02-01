@@ -18,12 +18,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.annotation.ConcurrentExecution;
-import org.junit.platform.commons.annotation.SameThreadExecution;
 
-@SameThreadExecution
 class StandardTests {
 
 	@BeforeAll
@@ -34,34 +30,22 @@ class StandardTests {
 	void init() {
 	}
 
-	@Nested
-	class NestedClass {
+	@Test
+	void succeedingTest() {
+	}
 
-		@Test
-		void succeedingTest() throws InterruptedException {
-			Thread.sleep(5000);
-		}
+	// end::user_guide[]
+	@extensions.ExpectToFail
+	// tag::user_guide[]
+	@Test
+	void failingTest() {
+		fail("a failing test");
+	}
 
-		@Test
-		@ConcurrentExecution
-		void concurrentMethod() throws InterruptedException {
-			Thread.sleep(5000);
-		}
-
-		// end::user_guide[]
-		@extensions.ExpectToFail
-		// tag::user_guide[]
-		@Test
-		void failingTest() throws InterruptedException {
-			Thread.sleep(5000);
-			fail("a failing test");
-		}
-
-		@Test
-		@Disabled("for demonstration purposes")
-		void skippedTest() {
-			// not executed
-		}
+	@Test
+	@Disabled("for demonstration purposes")
+	void skippedTest() {
+		// not executed
 	}
 
 	@AfterEach

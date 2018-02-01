@@ -80,6 +80,11 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		}
 
 		@Override
+		public TestDescriptor getTestDescriptor() {
+			return nodeExecutor.getTestDescriptor();
+		}
+
+		@Override
 		public ResourceLock getResourceLock() {
 			return nodeExecutor.getResourceLock();
 		}

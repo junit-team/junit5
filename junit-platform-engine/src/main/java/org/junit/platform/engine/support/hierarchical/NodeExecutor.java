@@ -11,14 +11,13 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.function.BiFunction;
 
@@ -125,26 +124,24 @@ class NodeExecutor<C extends EngineExecutionContext> {
 			try {
 				context = node.before(context);
 
-				Map<NodeExecutor<C>, Future<?>> futures = new ConcurrentHashMap<>();
+				List<Future<?>> futures = new ArrayList<>();
 
 				context = node.execute(context, dynamicTestDescriptor -> {
 					listener.dynamicTestRegistered(dynamicTestDescriptor);
 					NodeExecutor<C> nodeExecutor = new NodeExecutor<>(dynamicTestDescriptor);
 					// TODO Validate dynamic children do not add additional resource locks etc.
-					children.add(nodeExecutor);
 					TestTask testTask = testTaskCreator.apply(nodeExecutor, context);
-					futures.put(nodeExecutor, executorService.submit(testTask));
+					futures.add(executorService.submit(testTask));
 				});
 
-				children.forEach(child -> futures.computeIfAbsent(child, d -> {
-					TestTask testTask = testTaskCreator.apply(child, context);
-					return executorService.submit(testTask);
-				}));
-				// @formatter:off
-				children.stream()
-						.map(futures::get)
-						.forEach(HierarchicalTestExecutor::waitFor);
-				// @formatter:on
+				List<TestTask> remainingTasks = children.stream().map(
+					child -> testTaskCreator.apply(child, context)).collect(toList());
+				executorService.invokeAll(remainingTasks);
+
+				// using a for loop for the sake for ForkJoinPool's work stealing
+				for (Future<?> future : futures) {
+					HierarchicalTestExecutor.waitFor(future);
+				}
 			}
 			finally {
 				node.after(context);

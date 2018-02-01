@@ -10,11 +10,14 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import java.util.concurrent.Callable;
+import java.util.concurrent.RecursiveAction;
 
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 
-class ExclusiveTask implements Callable<Void> {
+// this class cannot not be serialized because TestTask is not Serializable
+@SuppressWarnings("serial")
+class ExclusiveTask extends RecursiveAction {
 
 	private final TestTask testTask;
 
@@ -24,10 +27,12 @@ class ExclusiveTask implements Callable<Void> {
 
 	@SuppressWarnings("try")
 	@Override
-	public Void call() throws Exception {
+	public void compute() {
 		try (AcquiredResourceLock acquiredLock = testTask.getResourceLock().acquire()) {
 			testTask.execute();
-			return null;
+		}
+		catch (InterruptedException e) {
+			ExceptionUtils.throwAsUncheckedException(e);
 		}
 	}
 }
