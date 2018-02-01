@@ -13,6 +13,7 @@ package org.junit.jupiter.params.provider;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.MethodArgumentsProviderTests.TestCaseDefaultValue.TEST_METHOD;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -119,10 +120,9 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void providesArgumentsUsingDefaultValue() throws NoSuchMethodException {
+	void providesArgumentsUsingDefaultValue() {
 		Stream<Object[]> arguments = provideArguments(TestCaseDefaultValue.class,
-			TestCaseDefaultValue.class.getDeclaredMethod(TEST_METHOD, String.class), false, "");
-
+			selectMethod(TestCaseDefaultValue.class, TEST_METHOD, String.class.getName()).getJavaMethod(), false, "");
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
 

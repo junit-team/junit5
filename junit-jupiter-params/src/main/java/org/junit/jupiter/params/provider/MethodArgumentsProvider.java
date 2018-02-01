@@ -11,7 +11,6 @@
 package org.junit.jupiter.params.provider;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -38,7 +37,6 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
 		return Arrays.stream(methodNames)
-				.filter(Objects::nonNull)
 				.map(methodName -> methodName.isEmpty() && context.getTestMethod().isPresent() ? context.getRequiredTestMethod().getName() : methodName)
 				.map(methodName -> ReflectionUtils.findMethod(testClass, methodName)
 					.orElseThrow(() -> new JUnitException("Could not find method on " + testClass + ": " + methodName)))
