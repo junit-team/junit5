@@ -77,6 +77,14 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
+	void executesWithEmptyMethodSource() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(TestCase.class, "testWithEmptyMethodSource", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("empty method source")))); //
+	}
+
+	@Test
 	void executesWithCustomName() {
 		List<ExecutionEvent> executionEvents = execute(
 			selectMethod(TestCase.class, "testWithCustomName", String.class.getName() + "," + Integer.TYPE.getName()));
@@ -244,6 +252,16 @@ class ParameterizedTestIntegrationTests {
 		@CsvSource({ "not important" })
 		void testWithEmptyName(String argument) {
 			fail(argument);
+		}
+
+		@ParameterizedTest
+		@MethodSource
+		void testWithEmptyMethodSource(String argument) {
+			fail(argument);
+		}
+
+		static Stream<Arguments> testWithEmptyMethodSource() {
+			return Stream.of(Arguments.of("empty method source"));
 		}
 	}
 
