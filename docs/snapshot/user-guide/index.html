@@ -2574,39 +2574,38 @@ parameter type as demonstrated by the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>    @ParameterizedTest
-    @MethodSource("stringProvider")
-    void testWithSimpleMethodSource(String argument) {
-        assertNotNull(argument);
-    }
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@MethodSource</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">stringProvider</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> testWithSimpleMethodSource(<span class="predefined-type">String</span> argument) {
+    assertNotNull(argument);
+}
 
-    static Stream&lt;String&gt; stringProvider() {
-        return Stream.of("foo", "bar");
-    }</pre>
+<span class="directive">static</span> Stream&lt;<span class="predefined-type">String</span>&gt; stringProvider() {
+    <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>);
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Leaving the 'value' argument empty causes @MethodSource to look for a <em>factory</em> method
-that has the same name as the test that is annotated.</p>
+<p>If you do not explicitly provide a factory method name via <code>@MethodSource</code>, JUnit Jupiter
+will search for a <em>factory</em> method that has the same name as the current
+<code>@ParameterizedTest</code> method by convention. This is demonstrated in the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>    @ParameterizedTest
-    @MethodSource
-    void testWithSimpleMethodSourceHavingNoValue(String argument) {
-        assertNotNull(argument);
-    }
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@MethodSource</span>
+<span class="type">void</span> testWithSimpleMethodSourceHavingNoValue(<span class="predefined-type">String</span> argument) {
+    assertNotNull(argument);
+}
 
-    static Stream&lt;String&gt; testWithSimpleMethodSourceHavingNoValue() {
-        return Stream.of("foo", "bar");
-    }</pre>
+<span class="directive">static</span> Stream&lt;<span class="predefined-type">String</span>&gt; testWithSimpleMethodSourceHavingNoValue() {
+    <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>);
+}</code></pre>
 </div>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">Streams <span class="keyword">for</span> primitive types (<span class="error">`</span>DoubleStream<span class="error">`</span>, <span class="error">`</span>IntStream<span class="error">`</span>, and <span class="error">`</span>LongStream<span class="error">`</span>) are also
-supported as demonstrated by the following example.</code></pre>
-</div>
+<div class="paragraph">
+<p>Streams for primitive types (<code>DoubleStream</code>, <code>IntStream</code>, and <code>LongStream</code>) are also
+supported as demonstrated by the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5903,7 +5902,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-02-01 09:38:24 EST
+Last updated 2018-02-01 10:14:32 EST
 </div>
 </div>
 </body>
