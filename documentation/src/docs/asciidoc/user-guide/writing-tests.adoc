@@ -721,16 +721,20 @@ addition, such methods must not accept any arguments. By default such methods mu
 
 If you only need a single parameter, you can return a `Stream` of instances of the
 parameter type as demonstrated by the following example.
+
+[source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=simple_MethodSource_example]
 ----
-Leaving the 'value' argument empty causes @MethodSource to look for a _factory_ method
-that has the same name as the test that is annotated.
+
+If you do not explicitly provide a factory method name via `@MethodSource`, JUnit Jupiter
+will search for a _factory_ method that has the same name as the current
+`@ParameterizedTest` method by convention. This is demonstrated in the following example.
+
+[source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=simple_MethodSource_without_value_example]
 ----
-[source,java,indent=0]
-
 
 Streams for primitive types (`DoubleStream`, `IntStream`, and `LongStream`) are also
 supported as demonstrated by the following example.

@@ -42,6 +42,8 @@ on GitHub.
 * The `value` attribute of `@MethodSource` is no longer mandatory. If no value (or an
   empty String) is supplied as a method name, a method with the same name as the current
   `@ParameterizedTest` method will be used as the factory method by convention.
+** See <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-MethodSource,
+   @MethodSource>> in the User Guide for details.
 
 
 [[release-notes-5.1.0-RC1-junit-vintage]]

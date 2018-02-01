@@ -108,7 +108,8 @@ class MethodArgumentsProviderTests {
 		JUnitException exception = assertThrows(JUnitException.class,
 			() -> provideArguments("unknownMethod").toArray());
 
-		assertThat(exception).hasMessageContaining("Could not find method");
+		assertThat(exception.getMessage()).contains("Could not find factory method [unknownMethod] in class [",
+			TestCase.class.getName());
 	}
 
 	@Test

@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.params.provider;
 
+import static java.lang.String.format;
+
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -18,6 +20,7 @@ import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 
 /**
  * @since 5.0
@@ -28,7 +31,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 
 	@Override
 	public void accept(MethodSource annotation) {
-		methodNames = annotation.value();
+		this.methodNames = annotation.value();
 	}
 
 	@Override
@@ -36,10 +39,11 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		Class<?> testClass = context.getRequiredTestClass();
 		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
-		return Arrays.stream(methodNames)
-				.map(methodName -> methodName.isEmpty() && context.getTestMethod().isPresent() ? context.getRequiredTestMethod().getName() : methodName)
+		return Arrays.stream(this.methodNames)
+				.map(methodName -> StringUtils.isNotBlank(methodName) ? methodName : context.getRequiredTestMethod().getName())
 				.map(methodName -> ReflectionUtils.findMethod(testClass, methodName)
-					.orElseThrow(() -> new JUnitException("Could not find method on " + testClass + ": " + methodName)))
+					.orElseThrow(() -> new JUnitException(
+						format("Could not find factory method [%s] in class [%s]", methodName, testClass.getName()))))
 				.map(method -> ReflectionUtils.invokeMethod(method, testInstance))
 				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);

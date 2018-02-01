@@ -130,7 +130,6 @@ class ParameterizedTestDemo {
 	static Stream<String> testWithSimpleMethodSourceHavingNoValue() {
 		return Stream.of("foo", "bar");
 	}
-
 	// end::simple_MethodSource_without_value_example[]
 
 	// tag::primitive_MethodSource_example[]
