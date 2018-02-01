@@ -39,9 +39,9 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		// @formatter:off
 		return Arrays.stream(methodNames)
 				.filter(Objects::nonNull)
-				.map(methodName -> methodName.isEmpty() ? context.getRequiredTestMethod().getName() : methodName)
+				.map(methodName -> methodName.isEmpty() && context.getTestMethod().isPresent() ? context.getRequiredTestMethod().getName() : methodName)
 				.map(methodName -> ReflectionUtils.findMethod(testClass, methodName)
-					.orElseThrow(() -> new JUnitException("Could not find method: " + methodName)))
+					.orElseThrow(() -> new JUnitException("Could not find method on " + testClass + ": " + methodName)))
 				.map(method -> ReflectionUtils.invokeMethod(method, testInstance))
 				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);
