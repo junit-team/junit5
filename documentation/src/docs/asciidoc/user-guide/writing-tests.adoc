@@ -724,7 +724,7 @@ parameter type as demonstrated by the following example.
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=simple_MethodSource_example]
 ----
-Leaving the 'value' parameter empty causes @Method source to look for a _factory_ method
+Leaving the 'value' argument empty causes @MethodSource to look for a _factory_ method
 that has the same name as the test that is annotated.
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=simple_MethodSource_without_value_example]
