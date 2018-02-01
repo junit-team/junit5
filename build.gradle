@@ -301,6 +301,7 @@ subprojects { subproj ->
 			options.author = true
 			options.header = project.name
 			options.use = true
+			options.addStringOption('-html5')
 			options.addStringOption('Xdoclint:html,syntax', '-quiet')
 			options.addStringOption('tag', 'apiNote:a:API Note:')
 			options.addStringOption('tag', 'implSpec:a:Implementation Requirements:')
@@ -634,6 +635,7 @@ configure(rootProject) {
 		options.header = rootProject.description
 		options.use = true
 		options.splitIndex = true
+		options.addStringOption('-html5')
 		options.addStringOption('Xdoclint:none', '-quiet')
 		options.encoding = 'UTF-8'
 		options.jFlags '-Xmx1g'
