@@ -49,6 +49,7 @@ on GitHub.
 ** See <<../user-guide/index.adoc#writing-tests-conditional, Conditional Test Execution>>
    in the User Guide for details.
 
+
 [[release-notes-5.1.0-RC1-junit-vintage]]
 === JUnit Vintage
 

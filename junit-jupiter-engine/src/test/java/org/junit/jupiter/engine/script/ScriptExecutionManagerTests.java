@@ -27,13 +27,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
-import org.junit.jupiter.api.DisabledIf;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
@@ -88,87 +84,53 @@ class ScriptExecutionManagerTests {
 	@Test
 	void forceScriptEvaluation() throws ScriptException {
 		manager.forceScriptEvaluation = true;
-		assertTrue(manager.evaluate(script(EnabledIf.class, "true"), bindings).isEnabled());
-		assertTrue(manager.evaluate(script(DisabledIf.class, "true"), bindings).isDisabled());
+		assertTrue(manager.isCompiledScriptsEmpty());
+		assertEquals("✅", manager.evaluate(script(Character.class, "'✅'"), bindings));
+		assertTrue(manager.isCompiledScriptsEmpty());
+		assertEquals("❌", manager.evaluate(script(Character.class, "'❌'"), bindings));
+		assertTrue(manager.isCompiledScriptsEmpty());
 	}
 
 	@TestFactory
 	Stream<DynamicTest> evaluateScriptsEvaluatingToTrue() {
 		return Stream.of("true", "java.lang.Boolean.TRUE", "'TrUe'", "0 == 0", "/pi/.test('jupiter')") //
 				.map(line -> dynamicTest("`" + line + "` -> true", //
-					() -> assertScriptEvaluatingToTrue(line)));
+					() -> assertScriptEvaluatesToTrue(line)));
 	}
 
-	private void assertScriptEvaluatingToTrue(String... lines) throws ScriptException {
-		assertTrue(manager.evaluate(script(EnabledIf.class, lines), bindings).isEnabled());
-		assertTrue(manager.evaluate(script(DisabledIf.class, lines), bindings).isDisabled());
+	private void assertScriptEvaluatesToTrue(String... lines) throws ScriptException {
+		assertTrue(Boolean.parseBoolean("" + manager.evaluate(script(String.class, lines), bindings)));
 	}
 
 	@TestFactory
 	Stream<DynamicTest> evaluateScriptsEvaluatingToFalse() {
 		return Stream.of("false", "java.lang.Boolean.FALSE", "'FaLse'", "2 == 3", "/sun/.test('jupiter')") //
 				.map(line -> dynamicTest("`" + line + "` -> false", //
-					() -> assertScriptEvaluatingToFalse(line)));
+					() -> assertScriptEvaluatesToFalse(line)));
 	}
 
-	private void assertScriptEvaluatingToFalse(String... lines) throws ScriptException {
-		assertTrue(manager.evaluate(script(EnabledIf.class, lines), bindings).isDisabled());
-		assertTrue(manager.evaluate(script(DisabledIf.class, lines), bindings).isEnabled());
-	}
-
-	@Test
-	void computeConditionEvaluationResultWithDefaultReasonMessage() {
-		Script script = script(EnabledIf.class, "?");
-		String actual = manager.computeConditionEvaluationResult(script, "!").getReason().orElseThrow(Error::new);
-		assertEquals("Script `?` evaluated to: !", actual);
-	}
-
-	@TestFactory
-	Stream<DynamicTest> computeConditionEvaluationResultFailsForUnsupportedAnnotationType() {
-		return Stream.of(Override.class, Deprecated.class, Object.class) //
-				.map(type -> dynamicTest("computationFailsFor(" + type + ")", //
-					() -> computeConditionEvaluationResultFailsForUnsupportedAnnotationType(type)));
-	}
-
-	private void computeConditionEvaluationResultFailsForUnsupportedAnnotationType(Type type) {
-		Script script = script(type, "?");
-		Exception e = assertThrows(JUnitException.class, () -> manager.computeConditionEvaluationResult(script, "!"));
-		String expected = "Unsupported annotation type: " + type;
-		String actual = e.getMessage();
-		assertEquals(expected, actual);
+	private void assertScriptEvaluatesToFalse(String... lines) throws ScriptException {
+		assertFalse(Boolean.parseBoolean("" + manager.evaluate(script(String.class, lines), bindings)));
 	}
 
 	@Test
 	void syntaxErrorInScriptFailsTest() {
-		Script enabledIfScript = script(EnabledIf.class, "syntax error");
+		Script enabledIfScript = script(Error.class, "syntax error");
 		Exception exception = assertThrows(ScriptException.class, () -> manager.evaluate(enabledIfScript, bindings));
 		assertTrue(exception.getMessage().contains("syntax error"));
-		Script disabledIfScript = script(DisabledIf.class, "syntax error");
+		Script disabledIfScript = script(Error.class, "syntax error");
 		exception = assertThrows(ScriptException.class, () -> manager.evaluate(disabledIfScript, bindings));
 		assertTrue(exception.getMessage().contains("syntax error"));
 	}
 
-	@Test
-	void getJUnitConfigurationParameterWithJavaScript() throws ScriptException {
-		Script script = script(EnabledIf.class, "junitConfigurationParameter.get('XXX')");
-		ConditionEvaluationResult result = manager.evaluate(script, bindings);
-		assertTrue(result.isDisabled());
-		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
-		assertEquals("Script `junitConfigurationParameter.get('XXX')` evaluated to: null", actual);
-	}
-
-	@Test
-	void getJUnitConfigurationParameterWithJavaScriptAndCheckForNull() throws ScriptException {
-		Script script = script(EnabledIf.class, "junitConfigurationParameter.get('XXX') != null");
-		ConditionEvaluationResult result = manager.evaluate(script, bindings);
-		assertTrue(result.isDisabled());
-		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
-		assertEquals("Script `junitConfigurationParameter.get('XXX') != null` evaluated to: false", actual);
-	}
-
 	private Script script(Type type, String... lines) {
-		return new Script(type, "Mock for " + type, Script.DEFAULT_SCRIPT_ENGINE_NAME, String.join("\n", lines),
-			Script.DEFAULT_SCRIPT_REASON_PATTERN);
+		return new Script( //
+			type, //
+			"Mock for " + type, //
+			Script.DEFAULT_SCRIPT_ENGINE_NAME, //
+			String.join("\n", lines), //
+			Script.DEFAULT_SCRIPT_REASON_PATTERN //
+		);
 	}
 
 	private Bindings createDefaultContextBindings() {

@@ -165,7 +165,7 @@ include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 ----
 
 [[writing-tests-conditional]]
-=== Conditional Test Execution
+=== Conditional Test Execution via Annotation
 
 JUnit Jupiter comes with the ability to either _enable_ or _disable_ a container
 or test depending on the evaluation of a script configured via the `{EnabledIf}`
@@ -173,31 +173,36 @@ or `{DisabledIf}` annotation. Scripts can be written in JavaScript, Groovy, or
 any other scripting language for which there is support for the Java Scripting
 API, defined by JSR 223.
 
-TODO Link to <<extensions, extensions-conditions>>
-
 WARNING: Conditional test execution via `{EnabledIf}` and `{DisabledIf}` is currently an
 _experimental_ feature. Consult the table in <<api-evolution-experimental-apis>> for details.
 
-The following names are bound to each script context:
-[cols="25,75"]
-|===
-| Name                          | Description
-
-| `systemEnvironment`           | Operating system environment variable accessor.
-| `systemProperty`              | JVM system property accessor.
-| `junitConfigurationParameter` | Configuration parameter accessor.
-| `junitDisplayName`            | Display name as a `String`.
-| `junitTags`                   | All tags as a `Set<String>`.
-| `junitUniqueId`               | Unique ID as a `String`.
-|===
-
-NOTE: An accessor provides access to a map-like structure via a simple
-`String get(String name)` method.
+NOTE: If you find yourself using the same script-based condition many times,
+consider writing a dedicated <<extensions-conditions, ExecutionCondition>> extension
+testing the condition in a faster, type-safe and more maintainable manner.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide]
 ----
+
+==== Bindings
+
+The following names are bound to each script context and therefore usable by the
+script source. An _accessor_ provides access to a map-like structure via a simple
+`String get(String name)` method.
+
+[cols="25,25,75"]
+|===
+| Name                          | Type          | Description
+
+| `systemEnvironment`           | _accessor_    | Operating system environment variable accessor.
+| `systemProperty`              | _accessor_    | JVM system property accessor.
+| `junitConfigurationParameter` | _accessor_    | Configuration parameter accessor.
+| `junitDisplayName`            | `String`      | Display name of the test or container.
+| `junitTags`                   | `Set<String>` | All tags assigned to the test or container.
+| `junitUniqueId`               | `String`      | Unique ID of the test or container.
+|===
+
 
 [[writing-tests-tagging-and-filtering]]
 === Tagging and Filtering

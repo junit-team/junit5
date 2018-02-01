@@ -77,7 +77,7 @@ public final class Script {
 	 *
 	 * @see System#getProperty(String)
 	 */
-	public static final String BIND_SYSTEM_PROPERTY = "systemProperty";
+	static final String BIND_SYSTEM_PROPERTY = "systemProperty";
 
 	/**
 	 * Accessor for operating system environment variables.
@@ -86,7 +86,7 @@ public final class Script {
 	 *
 	 * @see System#getenv(String)
 	 */
-	public static final String BIND_SYSTEM_ENVIRONMENT = "systemEnvironment";
+	static final String BIND_SYSTEM_ENVIRONMENT = "systemEnvironment";
 
 	/**
 	 * Default reason message pattern.
@@ -96,17 +96,17 @@ public final class Script {
 	/**
 	 * Placeholder name for the {@code annotation.toString()} value.
 	 */
-	public static final String REASON_ANNOTATION_PLACEHOLDER = "{annotation}";
+	private static final String REASON_ANNOTATION_PLACEHOLDER = "{annotation}";
 
 	/**
 	 * Placeholder name for String representation of the result object.
 	 */
-	public static final String REASON_RESULT_PLACEHOLDER = "{result}";
+	private static final String REASON_RESULT_PLACEHOLDER = "{result}";
 
 	/**
 	 * Placeholder name for the script source.
 	 */
-	public static final String REASON_SOURCE_PLACEHOLDER = "{source}";
+	private static final String REASON_SOURCE_PLACEHOLDER = "{source}";
 
 	// ------------------------------------------------------------------------
 
@@ -121,7 +121,7 @@ public final class Script {
 		this(annotation.annotationType(), annotation.toString(), engine, source, reason);
 	}
 
-	Script(Type annotationType, String annotationAsString, String engine, String source, String reason) {
+	public Script(Type annotationType, String annotationAsString, String engine, String source, String reason) {
 		this.annotationType = annotationType;
 		this.annotationAsString = annotationAsString;
 		this.engine = engine;
@@ -160,7 +160,7 @@ public final class Script {
 		return annotationAsString;
 	}
 
-	Type getAnnotationType() {
+	public Type getAnnotationType() {
 		return annotationType;
 	}
 
@@ -180,7 +180,7 @@ public final class Script {
 	 * @return the string returned by {@link #getReason()} with all placeholders
 	 * replaced with their current values stored here.
 	 */
-	String toReasonString(String resultAsString) {
+	public String toReasonString(String resultAsString) {
 		return reason.replace(REASON_ANNOTATION_PLACEHOLDER, getAnnotationAsString()) //
 				.replace(REASON_SOURCE_PLACEHOLDER, getSource()) //
 				.replace(REASON_RESULT_PLACEHOLDER, resultAsString);

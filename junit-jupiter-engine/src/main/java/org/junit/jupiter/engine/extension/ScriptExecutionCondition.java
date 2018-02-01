@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
@@ -48,47 +49,68 @@ class ScriptExecutionCondition implements ExecutionCondition {
 
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		// Always try to create a script instance for the current context.
-		Script script = createScript(context);
-
-		// If the script is null, no annotation of interest is attached to the underlying element.
-		if (script == null) {
-			return ENABLED_BY_DEFAULT;
-		}
-
-		// Delegate actual script execution and result evaluation to the globally cached manager instance.
-		ScriptExecutionManager scriptExecutionManager = getScriptExecutionManager(context);
-		try {
-			Bindings bindings = createBindings(context);
-			return scriptExecutionManager.evaluate(script, bindings);
-		}
-		catch (ScriptException e) {
-			throw new JUnitException("Script evaluation failed for: " + script.getAnnotationAsString(), e);
-		}
-	}
-
-	private Script createScript(ExtensionContext context) {
+		// Context without an annotated element?
 		Optional<AnnotatedElement> element = context.getElement();
 		if (!element.isPresent()) {
-			return null;
+			return ENABLED_BY_DEFAULT;
 		}
 		AnnotatedElement annotatedElement = element.get();
 
+		// Always try to create script instances.
+		Script disabledIfScript = createDisabledIfScript(annotatedElement);
+		Script enabledIfScript = createEnabledIfScript(annotatedElement);
+
+		// If both scripts are null, no annotation of interest is attached to the underlying element.
+		if (disabledIfScript == null && enabledIfScript == null) {
+			return ENABLED_BY_DEFAULT;
+		}
+
+		// Delegate actual script execution to the globally cached manager instance.
+		ScriptExecutionManager scriptExecutionManager = getScriptExecutionManager(context);
+		Bindings bindings = createBindings(context);
+		ConditionEvaluationResult disabledResult = evaluate(scriptExecutionManager, disabledIfScript, bindings);
+		ConditionEvaluationResult enabledResult = evaluate(scriptExecutionManager, enabledIfScript, bindings);
+
+		int flag = 0;
+		if (disabledResult != null && disabledResult.isDisabled()) {
+			flag += 1;
+		}
+		if (enabledResult != null && enabledResult.isDisabled()) {
+			flag += 2;
+		}
+
+		switch (flag) {
+			case 0:
+				return enabled("Nothing's disabled."); // Both are enabled. Combine messages, if possible.
+			case 1:
+				return disabledResult; // Only disabled is disabled.
+			case 2:
+				return enabledResult; // Only enabled is disabled.
+			case 3:
+				return disabled("Both are disabled"); // Both are disabled. Combine messages.
+			default:
+				throw new JUnitException("Should never happen!");
+		}
+	}
+
+	private Script createDisabledIfScript(AnnotatedElement annotatedElement) {
 		Optional<DisabledIf> disabled = findAnnotation(annotatedElement, DisabledIf.class);
-		if (disabled.isPresent()) {
-			DisabledIf annotation = disabled.get();
-			String source = createSource(annotation.value());
-			return new Script(annotation, annotation.engine(), source, annotation.reason());
+		if (!disabled.isPresent()) {
+			return null;
 		}
+		DisabledIf annotation = disabled.get();
+		String source = createSource(annotation.value());
+		return new Script(annotation, annotation.engine(), source, annotation.reason());
+	}
 
+	private Script createEnabledIfScript(AnnotatedElement annotatedElement) {
 		Optional<EnabledIf> enabled = findAnnotation(annotatedElement, EnabledIf.class);
-		if (enabled.isPresent()) {
-			EnabledIf annotation = enabled.get();
-			String source = createSource(annotation.value());
-			return new Script(annotation, annotation.engine(), source, annotation.reason());
+		if (!enabled.isPresent()) {
+			return null;
 		}
-
-		return null;
+		EnabledIf annotation = enabled.get();
+		String source = createSource(annotation.value());
+		return new Script(annotation, annotation.engine(), source, annotation.reason());
 	}
 
 	private String createSource(String[] lines) {
@@ -107,6 +129,49 @@ class ScriptExecutionCondition implements ExecutionCondition {
 		bindings.put(Script.BIND_JUNIT_DISPLAY_NAME, context.getDisplayName());
 		bindings.put(Script.BIND_JUNIT_CONFIGURATION_PARAMETER, configurationParameterAccessor);
 		return bindings;
+	}
+
+	ConditionEvaluationResult evaluate(ScriptExecutionManager manager, Script script, Bindings bindings) {
+		if (script == null) {
+			return null;
+		}
+		try {
+			Object result = manager.evaluate(script, bindings);
+			return computeConditionEvaluationResult(script, result);
+		}
+		catch (ScriptException e) {
+			throw new JUnitException("Script evaluation failed for: " + script.getAnnotationAsString(), e);
+		}
+	}
+
+	ConditionEvaluationResult computeConditionEvaluationResult(Script script, Object result) {
+		// Trivial case: script returned a custom ConditionEvaluationResult instance.
+		if (result instanceof ConditionEvaluationResult) {
+			return (ConditionEvaluationResult) result;
+		}
+
+		String resultAsString = String.valueOf(result);
+		String reason = script.toReasonString(resultAsString);
+
+		// Cast or parse result to a boolean value.
+		boolean isTrue;
+		if (result instanceof Boolean) {
+			isTrue = (Boolean) result;
+		}
+		else {
+			isTrue = Boolean.parseBoolean(resultAsString);
+		}
+
+		// Flip enabled/disabled result based on the associated annotation type.
+		if (script.getAnnotationType() == EnabledIf.class) {
+			return isTrue ? enabled(reason) : disabled(reason);
+		}
+		if (script.getAnnotationType() == DisabledIf.class) {
+			return isTrue ? disabled(reason) : enabled(reason);
+		}
+
+		// Still here? Not so good.
+		throw new JUnitException("Unsupported annotation type: " + script.getAnnotationType());
 	}
 
 }
