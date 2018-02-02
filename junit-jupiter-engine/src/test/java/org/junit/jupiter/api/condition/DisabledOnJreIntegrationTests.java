@@ -12,9 +12,9 @@ package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.condition.EnabledOnJreTests.onJava10;
-import static org.junit.jupiter.api.condition.EnabledOnJreTests.onJava8;
-import static org.junit.jupiter.api.condition.EnabledOnJreTests.onJava9;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava10;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 import static org.junit.jupiter.api.condition.JRE.JAVA_10;
 import static org.junit.jupiter.api.condition.JRE.JAVA_11;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
@@ -24,11 +24,11 @@ import static org.junit.jupiter.api.condition.JRE.OTHER;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link DisabledOnJre}.
+ * Integration tests for {@link DisabledOnJre}.
  *
  * @since 5.1
  */
-class DisabledOnJreTests {
+class DisabledOnJreIntegrationTests {
 
 	@Test
 	@DisabledOnJre(JAVA_8)

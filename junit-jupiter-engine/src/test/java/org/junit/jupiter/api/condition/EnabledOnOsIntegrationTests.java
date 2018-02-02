@@ -27,12 +27,12 @@ import java.util.Locale;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link EnabledOnOs}.
+ * Integration tests for {@link EnabledOnOs}.
  *
  * @since 5.1
  */
 @EnabledOnOs({ LINUX, MAC, WINDOWS, OTHER })
-class EnabledOnOsTests {
+class EnabledOnOsIntegrationTests {
 
 	private static final String OS_NAME = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
 

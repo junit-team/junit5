@@ -12,10 +12,10 @@ package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.condition.EnabledOnOsTests.onLinux;
-import static org.junit.jupiter.api.condition.EnabledOnOsTests.onMac;
-import static org.junit.jupiter.api.condition.EnabledOnOsTests.onSolaris;
-import static org.junit.jupiter.api.condition.EnabledOnOsTests.onWindows;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onLinux;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onMac;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onSolaris;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onWindows;
 import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.junit.jupiter.api.condition.OS.MAC;
 import static org.junit.jupiter.api.condition.OS.OTHER;
@@ -30,11 +30,11 @@ import java.lang.annotation.Target;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link DisabledOnOs}.
+ * Integration tests for {@link DisabledOnOs}.
  *
  * @since 5.1
  */
-class DisabledOnOsTests {
+class DisabledOnOsIntegrationTests {
 
 	@Test
 	@DisabledOnOs(LINUX)

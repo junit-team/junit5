@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -19,15 +19,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link EnabledIfSystemProperty}.
+ * Integration tests for {@link DisabledIfSystemProperty}.
  *
  * @since 5.1
  */
-class EnabledIfSystemPropertyTests {
+class DisabledIfSystemPropertyIntegrationTests {
 
-	private static final String KEY = "EnabledIfSystemPropertyTests.key";
-	private static final String ENIGMA = "EnabledIfSystemPropertyTests.enigma";
-	private static final String BOGUS = "EnabledIfSystemPropertyTests.bogus";
+	private static final String KEY = "DisabledIfSystemPropertyTests.key";
+	private static final String ENIGMA = "DisabledIfSystemPropertyTests.enigma";
+	private static final String BOGUS = "DisabledIfSystemPropertyTests.bogus";
 
 	@BeforeAll
 	static void setUp() {
@@ -40,25 +40,25 @@ class EnabledIfSystemPropertyTests {
 	}
 
 	@Test
-	@EnabledIfSystemProperty(named = KEY, matches = ENIGMA)
+	@DisabledIfSystemProperty(named = KEY, matches = ENIGMA)
 	void propertyMatchesExactly() {
-		assertEquals(ENIGMA, System.getProperty(KEY));
-	}
-
-	@Test
-	@EnabledIfSystemProperty(named = KEY, matches = ".+enigma$")
-	void propertyMatchesPattern() {
-		assertEquals(ENIGMA, System.getProperty(KEY));
-	}
-
-	@Test
-	@EnabledIfSystemProperty(named = KEY, matches = BOGUS)
-	void propertyDoesNotMatch() {
 		fail("should be disabled");
 	}
 
 	@Test
-	@EnabledIfSystemProperty(named = BOGUS, matches = "doesn't matter")
+	@DisabledIfSystemProperty(named = KEY, matches = ".+enigma$")
+	void propertyMatchesPattern() {
+		fail("should be disabled");
+	}
+
+	@Test
+	@DisabledIfSystemProperty(named = KEY, matches = BOGUS)
+	void propertyDoesNotMatch() {
+		assertNotEquals(BOGUS, System.getProperty(KEY));
+	}
+
+	@Test
+	@DisabledIfSystemProperty(named = BOGUS, matches = "doesn't matter")
 	void propertyDoesNotExist() {
 		assertNull(System.getProperty(BOGUS));
 	}

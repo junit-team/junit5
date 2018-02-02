@@ -18,14 +18,14 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link DisabledIfEnvironmentVariable}.
+ * Integration tests for {@link DisabledIfEnvironmentVariable}.
  *
  * @since 5.1
  */
 @Disabled("Disabled since the required environment variable is not set")
 // Tests will pass if you set the following environment variable:
 // DisabledIfEnvironmentVariableTests.key = DisabledIfEnvironmentVariableTests.enigma
-class DisabledIfEnvironmentVariableTests {
+class DisabledIfEnvironmentVariableIntegrationTests {
 
 	private static final String KEY = "DisabledIfEnvironmentVariableTests.key";
 	private static final String ENIGMA = "DisabledIfEnvironmentVariableTests.enigma";

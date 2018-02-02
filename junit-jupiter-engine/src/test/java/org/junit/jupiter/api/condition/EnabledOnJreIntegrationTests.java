@@ -20,12 +20,12 @@ import static org.junit.jupiter.api.condition.JRE.OTHER;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link EnabledOnJre}.
+ * Integration tests for {@link EnabledOnJre}.
  *
  * @since 5.1
  */
 @EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, OTHER })
-class EnabledOnJreTests {
+class EnabledOnJreIntegrationTests {
 
 	private static final String JAVA_VERSION = System.getProperty("java.version");
 
