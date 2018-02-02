@@ -525,13 +525,10 @@ public final class ReflectionUtils {
 	 * Build the <em>fully qualified method name</em> for the method described by the
 	 * supplied class, method name, and parameter types.
 	 *
-	 * <p>See {@link #loadMethod(String)} for details on the format.
-	 *
 	 * @param clazz the class that declares the method; never {@code null}
 	 * @param methodName the name of the method; never {@code null} or blank
 	 * @param parameterTypes the parameter types of the method; may be {@code null} or empty
 	 * @return fully qualified method name; never {@code null}
-	 * @see #loadMethod(String)
 	 */
 	public static String getFullyQualifiedMethodName(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");

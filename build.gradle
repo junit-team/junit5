@@ -297,15 +297,16 @@ subprojects { subproj ->
 		}
 
 		javadoc {
+			// Use external javadoc.options to inject unsupported options, like:
+			//   options.addStringOption('-html5')
+			options.optionFiles(rootProject.file("src/javadoc/javadoc.options"))
+
 			options.memberLevel = JavadocMemberLevel.PROTECTED
 			options.author = true
 			options.header = project.name
 			options.use = true
-			options.addStringOption('-html5')
 			options.addStringOption('Xdoclint:html,syntax', '-quiet')
-			options.addStringOption('tag', 'apiNote:a:API Note:')
-			options.addStringOption('tag', 'implSpec:a:Implementation Requirements:')
-			options.addStringOption('tag', 'implNote:a:Implementation Note:')
+			options.addMultilineStringsOption('tag').setValue(['apiNote:a:API Note:', 'implSpec:a:Implementation Requirements:', 'implNote:a:Implementation Note:'])
 			options.encoding = 'UTF-8'
 			// Remove Kotlin classes from classpath due to "bad" class file: AssertionsKt$sam$Supplier$44378ebd.class
 			// see https://bugs.openjdk.java.net/browse/JDK-8187422
@@ -630,13 +631,17 @@ configure(rootProject) {
 
 		setDependsOn subprojects.collect { it.tasks.getByName("jar") }
 
+		// Use external javadoc.options to inject unsupported options, like:
+		//   options.addStringOption('-html5')
+		options.optionFiles(rootProject.file("src/javadoc/javadoc.options"))
+
 		options.memberLevel = JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = rootProject.description
 		options.use = true
 		options.splitIndex = true
-		options.addStringOption('-html5')
 		options.addStringOption('Xdoclint:none', '-quiet')
+		options.addMultilineStringsOption('tag').setValue(['apiNote:a:API Note:', 'implSpec:a:Implementation Requirements:', 'implNote:a:Implementation Note:'])
 		options.encoding = 'UTF-8'
 		options.jFlags '-Xmx1g'
 		options.links(
