@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.script.Bindings;
@@ -42,8 +44,11 @@ import org.junit.platform.commons.JUnitException;
  */
 class ScriptExecutionCondition implements ExecutionCondition {
 
-	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled(
-		"@DisabledIf and @EnabledIf not present");
+	private static final ConditionEvaluationResult ENABLED_NO_ELEMENT = enabled("AnnotatedElement not present");
+
+	private static final ConditionEvaluationResult ENABLED_NO_ANNOTATION = enabled("Annotation not present");
+
+	private static final ConditionEvaluationResult ENABLED_ALL = enabled("All results are enabled");
 
 	private static final Namespace NAMESPACE = Namespace.create(ScriptExecutionCondition.class);
 
@@ -52,65 +57,54 @@ class ScriptExecutionCondition implements ExecutionCondition {
 		// Context without an annotated element?
 		Optional<AnnotatedElement> element = context.getElement();
 		if (!element.isPresent()) {
-			return ENABLED_BY_DEFAULT;
+			return ENABLED_NO_ELEMENT;
 		}
 		AnnotatedElement annotatedElement = element.get();
 
 		// Always try to create script instances.
-		Script disabledIfScript = createDisabledIfScript(annotatedElement);
-		Script enabledIfScript = createEnabledIfScript(annotatedElement);
+		List<Script> scripts = new ArrayList<>();
+		createDisabledIfScript(annotatedElement).ifPresent(scripts::add);
+		createEnabledIfScript(annotatedElement).ifPresent(scripts::add);
 
-		// If both scripts are null, no annotation of interest is attached to the underlying element.
-		if (disabledIfScript == null && enabledIfScript == null) {
-			return ENABLED_BY_DEFAULT;
+		// If no scripts are created, no annotation of interest is attached to the underlying element.
+		if (scripts.isEmpty()) {
+			return ENABLED_NO_ANNOTATION;
 		}
 
 		// Delegate actual script execution to the globally cached manager instance.
 		ScriptExecutionManager scriptExecutionManager = getScriptExecutionManager(context);
 		Bindings bindings = createBindings(context);
-		ConditionEvaluationResult disabledResult = evaluate(scriptExecutionManager, disabledIfScript, bindings);
-		ConditionEvaluationResult enabledResult = evaluate(scriptExecutionManager, enabledIfScript, bindings);
-
-		int flag = 0;
-		if (disabledResult != null && disabledResult.isDisabled()) {
-			flag += 1;
-		}
-		if (enabledResult != null && enabledResult.isDisabled()) {
-			flag += 2;
+		for (Script script : scripts) {
+			ConditionEvaluationResult result = evaluate(scriptExecutionManager, script, bindings);
+			// Report the first result that is disabled, preventing evaluation of remaining scripts.
+			if (result.isDisabled()) {
+				return result;
+			}
 		}
 
-		switch (flag) {
-			case 0:
-				return enabled("Nothing's disabled."); // Both are enabled. Combine messages, if possible.
-			case 1:
-				return disabledResult; // Only disabled is disabled.
-			case 2:
-				return enabledResult; // Only enabled is disabled.
-			case 3:
-				return disabled("Both are disabled"); // Both are disabled. Combine messages.
-			default:
-				throw new JUnitException("Should never happen!");
-		}
+		return ENABLED_ALL;
 	}
 
-	private Script createDisabledIfScript(AnnotatedElement annotatedElement) {
+	private Optional<Script> createDisabledIfScript(AnnotatedElement annotatedElement) {
 		Optional<DisabledIf> disabled = findAnnotation(annotatedElement, DisabledIf.class);
 		if (!disabled.isPresent()) {
-			return null;
+			return Optional.empty();
 		}
 		DisabledIf annotation = disabled.get();
 		String source = createSource(annotation.value());
-		return new Script(annotation, annotation.engine(), source, annotation.reason());
+		Script script = new Script(annotation, annotation.engine(), source, annotation.reason());
+		return Optional.of(script);
 	}
 
-	private Script createEnabledIfScript(AnnotatedElement annotatedElement) {
+	private Optional<Script> createEnabledIfScript(AnnotatedElement annotatedElement) {
 		Optional<EnabledIf> enabled = findAnnotation(annotatedElement, EnabledIf.class);
 		if (!enabled.isPresent()) {
-			return null;
+			return Optional.empty();
 		}
 		EnabledIf annotation = enabled.get();
 		String source = createSource(annotation.value());
-		return new Script(annotation, annotation.engine(), source, annotation.reason());
+		Script script = new Script(annotation, annotation.engine(), source, annotation.reason());
+		return Optional.of(script);
 	}
 
 	private String createSource(String[] lines) {
