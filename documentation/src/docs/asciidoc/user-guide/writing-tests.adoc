@@ -150,14 +150,19 @@ include::{testDir}/example/AssumptionsDemo.java[tags=user_guide]
 [[writing-tests-disabling]]
 === Disabling Tests
 
-Here's a disabled test case.
+Entire test classes or individual test methods may be _disabled_ via the `{Disabled}`
+annotation, via one of the annotations discussed in
+<<writing-tests-conditional-execution>>, or via a custom <<extensions-conditions,
+`ExecutionCondition`>>.
+
+Here's a `@Disabled` test class.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/DisabledClassDemo.java[tags=user_guide]
 ----
 
-And here's a test case with a disabled test method.
+And here's a test class that contains a `@Disabled` test method.
 
 [source,java,indent=0]
 ----
@@ -165,19 +170,80 @@ include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 ----
 
 [[writing-tests-conditional-execution]]
-=== Conditional Test Execution via Annotations
+=== Conditional Test Execution
 
-The <<extensions-conditions, ExecutionCondition>> extension API in JUnit Jupiter allows
+The <<extensions-conditions, `ExecutionCondition`>> extension API in JUnit Jupiter allows
 developers to either _enable_ or _disable_ a container or test based on certain
-conditions. The simplest example of such a condition is the built-in `DisabledCondition`
-which supports the `{Disabled}` annotation. In addition to `@Disabled`, JUnit Jupiter
-also supports several annotation-based conditions in the
-`org.junit.jupiter.api.condition` package. See the following sections for details.
+conditions _programmatically_. The simplest example of such a condition is the built-in
+`{DisabledCondition}` which supports the `{Disabled}` annotation (see
+<<writing-tests-disabling>>). In addition to `@Disabled`, JUnit Jupiter also supports
+several other annotation-based conditions in the `org.junit.jupiter.api.condition`
+package that allow developers to enable or disable containers and tests _declaratively_.
+See the following sections for details.
+
+[TIP]
+.Composed Annotations
+====
+Note that any of the _conditional_ annotations listed in the following sections may also
+be used as a meta-annotation in order to create a custom _composed annotation_. For
+example, the `@TestOnMac` annotation in the
+<<writing-tests-conditional-execution-os-demo, @EnabledOnOs demo>> shows how you can
+combine `@Test` and `@EnabledOnOs` in a single, reusable annotation.
+====
+
+[[writing-tests-conditional-execution-os]]
+==== Operating System Conditions
+
+A container or test may be enabled or disabled on a particular operating system via the
+`{EnabledOnOs}` and `{DisabledOnOs}` annotations.
+
+[[writing-tests-conditional-execution-os-demo]]
+[source,java,indent=0]
+----
+include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_os]
+----
+
+[[writing-tests-conditional-execution-jre]]
+==== Java Runtime Environment Conditions
+
+A container or test may be enabled or disabled on a particular version of the Java
+Runtime Environment (JRE) via the `{EnabledOnJre}` and `{DisabledOnJre}` annotations.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_jre]
+----
+
+[[writing-tests-conditional-execution-system-properties]]
+==== System Property Conditions
+
+A container or test may be enabled or disabled based on the value of the `named` JVM
+system property via the `{EnabledIfSystemProperty}` and `{DisabledIfSystemProperty}`
+annotations. The value supplied via the `matches` attribute will be interpreted as a
+regular expression.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_system_property]
+----
+
+[[writing-tests-conditional-execution-environment-variables]]
+==== Environment Variable Conditions
+
+A container or test may be enabled or disabled based on the value of the `named`
+environment variable from the underlying operating system via the
+`{EnabledIfEnvironmentVariable}` and `{DisabledIfEnvironmentVariable}` annotations. The
+value supplied via the `matches` attribute will be interpreted as a regular expression.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_environment_variable]
+----
 
 [[writing-tests-conditional-execution-scripts]]
-==== Conditional Test Execution via Scripts
+==== Script-based Conditions
 
-JUnit Jupiter comes with the ability to either _enable_ or _disable_ a container or test
+JUnit Jupiter provides the ability to either _enable_ or _disable_ a container or test
 depending on the evaluation of a script configured via the `{EnabledIf}` or
 `{DisabledIf}` annotation. Scripts can be written in JavaScript, Groovy, or any other
 scripting language for which there is support for the Java Scripting API, defined by JSR
@@ -186,6 +252,12 @@ scripting language for which there is support for the Java Scripting API, define
 WARNING: Conditional test execution via `{EnabledIf}` and `{DisabledIf}` is currently an
 _experimental_ feature. Consult the table in <<api-evolution-experimental-apis>> for
 details.
+
+TIP: If the logic of your script depends only on the current operating system, the
+current Java Runtime Environment version, a particular JVM system property, or a
+particular environment variable, you should consider using one of the built-in
+annotations dedicated to that purpose. See the previous sections of this chapter for
+further details.
 
 NOTE: If you find yourself using the same script-based condition many times, consider
 writing a dedicated <<extensions-conditions, ExecutionCondition>> extension in order to

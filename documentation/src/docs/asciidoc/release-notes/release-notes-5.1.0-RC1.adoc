@@ -44,10 +44,19 @@ on GitHub.
   `@ParameterizedTest` method will be used as the factory method by convention.
 ** See <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-MethodSource,
    @MethodSource>> in the User Guide for details.
+* New predefined `@Enabled*` and `@Disabled*` annotations for declarative _conditional
+  test execution_. See the following sections of the User Guide for details.
+** <<../user-guide/index.adoc#writing-tests-conditional-execution-os, Operating Systems>>
+** <<../user-guide/index.adoc#writing-tests-conditional-execution-jre, Java Runtime
+   Environment Versions>>
+** <<../user-guide/index.adoc#writing-tests-conditional-execution-system-properties,
+   System Properties>>
+** <<../user-guide/index.adoc#writing-tests-conditional-execution-environment-variables,
+   Environment Variables>>
 * New `@DisabledIf` annotation that is used to control whether the annotated test class or
   test method is _enabled_ or _disabled_. It inverts the logic applied by `@EnabledIf`.
-** See <<../user-guide/index.adoc#writing-tests-conditional-execution-scripts, Conditional
-   Test Execution via Scripts>> in the User Guide for details.
+** See <<../user-guide/index.adoc#writing-tests-conditional-execution-scripts,
+   Script-based Conditions>> in the User Guide for details.
 
 
 [[release-notes-5.1.0-RC1-junit-vintage]]
