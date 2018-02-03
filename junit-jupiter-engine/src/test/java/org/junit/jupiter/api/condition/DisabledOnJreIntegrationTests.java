@@ -31,6 +31,12 @@ import org.junit.jupiter.api.Test;
 class DisabledOnJreIntegrationTests {
 
 	@Test
+	@DisabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, OTHER })
+	void disabledOnAllJavaVersions() {
+		fail("should be disabled");
+	}
+
+	@Test
 	@DisabledOnJre(JAVA_8)
 	void java8() {
 		assertFalse(onJava8());
@@ -46,12 +52,6 @@ class DisabledOnJreIntegrationTests {
 	@DisabledOnJre(JAVA_10)
 	void java10() {
 		assertFalse(onJava10());
-	}
-
-	@Test
-	@DisabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, OTHER })
-	void allVersions() {
-		fail("Should always be ignored");
 	}
 
 }

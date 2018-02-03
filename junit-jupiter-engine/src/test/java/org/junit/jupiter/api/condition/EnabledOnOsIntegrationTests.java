@@ -31,10 +31,14 @@ import org.junit.jupiter.api.Test;
  *
  * @since 5.1
  */
-@EnabledOnOs({ LINUX, MAC, WINDOWS, OTHER })
 class EnabledOnOsIntegrationTests {
 
 	private static final String OS_NAME = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+
+	@Test
+	@EnabledOnOs({ LINUX, MAC, WINDOWS, SOLARIS, OTHER })
+	void enabledOnEveryOs() {
+	}
 
 	@Test
 	@EnabledOnOs(LINUX)

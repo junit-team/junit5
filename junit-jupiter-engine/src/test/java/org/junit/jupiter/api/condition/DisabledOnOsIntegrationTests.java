@@ -12,6 +12,7 @@ package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onLinux;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onMac;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onSolaris;
@@ -35,6 +36,12 @@ import org.junit.jupiter.api.Test;
  * @since 5.1
  */
 class DisabledOnOsIntegrationTests {
+
+	@Test
+	@DisabledOnOs({ LINUX, MAC, WINDOWS, SOLARIS, OTHER })
+	void disabledOnEveryOs() {
+		fail("should be disabled");
+	}
 
 	@Test
 	@DisabledOnOs(LINUX)

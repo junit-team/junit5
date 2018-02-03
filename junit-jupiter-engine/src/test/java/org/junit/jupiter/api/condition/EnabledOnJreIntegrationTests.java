@@ -24,10 +24,14 @@ import org.junit.jupiter.api.Test;
  *
  * @since 5.1
  */
-@EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, OTHER })
 class EnabledOnJreIntegrationTests {
 
 	private static final String JAVA_VERSION = System.getProperty("java.version");
+
+	@Test
+	@EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, OTHER })
+	void enabledOnAllJavaVersions() {
+	}
 
 	@Test
 	@EnabledOnJre(JAVA_8)
