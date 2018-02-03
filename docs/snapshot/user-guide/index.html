@@ -556,7 +556,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-assertions">3.4. Assertions</a></li>
 <li><a href="#writing-tests-assumptions">3.5. Assumptions</a></li>
 <li><a href="#writing-tests-disabling">3.6. Disabling Tests</a></li>
-<li><a href="#writing-tests-conditional">3.7. Conditional Test Execution via Annotation</a></li>
+<li><a href="#writing-tests-conditional-execution">3.7. Conditional Test Execution via Annotations</a></li>
 <li><a href="#writing-tests-tagging-and-filtering">3.8. Tagging and Filtering</a></li>
 <li><a href="#writing-tests-test-instance-lifecycle">3.9. Test Instance Lifecycle</a></li>
 <li><a href="#writing-tests-nested">3.10. Nested Tests</a></li>
@@ -1464,13 +1464,23 @@ assumptions are static methods in the <code><a href="../api/org/junit/jupiter/ap
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-conditional"><a class="anchor" href="#writing-tests-conditional"></a>3.7. Conditional Test Execution via Annotation</h3>
+<h3 id="writing-tests-conditional-execution"><a class="anchor" href="#writing-tests-conditional-execution"></a>3.7. Conditional Test Execution via Annotations</h3>
 <div class="paragraph">
-<p>JUnit Jupiter comes with the ability to either <em>enable</em> or <em>disable</em> a container
-or test depending on the evaluation of a script configured via the <code><a href="../api/org/junit/jupiter/api/EnabledIf.html">@EnabledIf</a></code>
-or <code><a href="../api/org/junit/jupiter/api/DisabledIf.html">@DisabledIf</a></code> annotation. Scripts can be written in JavaScript, Groovy, or
-any other scripting language for which there is support for the Java Scripting
-API, defined by JSR 223.</p>
+<p>The <a href="#extensions-conditions">ExecutionCondition</a> extension API in JUnit Jupiter allows
+developers to either <em>enable</em> or <em>disable</em> a container or test based on certain
+conditions. The simplest example of such a condition is the built-in <code>DisabledCondition</code>
+which supports the <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation. In addition to <code>@Disabled</code>, JUnit Jupiter
+also supports several annotation-based conditions in the
+<code>org.junit.jupiter.api.condition</code> package. See the following sections for details.</p>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-conditional-execution-scripts"><a class="anchor" href="#writing-tests-conditional-execution-scripts"></a>3.7.1. Conditional Test Execution via Scripts</h4>
+<div class="paragraph">
+<p>JUnit Jupiter comes with the ability to either <em>enable</em> or <em>disable</em> a container or test
+depending on the evaluation of a script configured via the <code><a href="../api/org/junit/jupiter/api/EnabledIf.html">@EnabledIf</a></code> or
+<code><a href="../api/org/junit/jupiter/api/DisabledIf.html">@DisabledIf</a></code> annotation. Scripts can be written in JavaScript, Groovy, or any other
+scripting language for which there is support for the Java Scripting API, defined by JSR
+223.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -1480,7 +1490,8 @@ API, defined by JSR 223.</p>
 </td>
 <td class="content">
 Conditional test execution via <code><a href="../api/org/junit/jupiter/api/EnabledIf.html">@EnabledIf</a></code> and <code><a href="../api/org/junit/jupiter/api/DisabledIf.html">@DisabledIf</a></code> is currently an
-<em>experimental</em> feature. Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for details.
+<em>experimental</em> feature. Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for
+details.
 </td>
 </tr>
 </table>
@@ -1492,66 +1503,63 @@ Conditional test execution via <code><a href="../api/org/junit/jupiter/api/Enabl
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If you find yourself using the same script-based condition many times,
-consider writing a dedicated <a href="#extensions-conditions">ExecutionCondition</a> extension
-testing the condition in a faster, type-safe and more maintainable manner.
+If you find yourself using the same script-based condition many times, consider
+writing a dedicated <a href="#extensions-conditions">ExecutionCondition</a> extension in order to
+implement the condition in a faster, type-safe, and more maintainable manner.
 </td>
 </tr>
 </table>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">ConditionalTestExecutionDemo</span> {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span> <span class="comment">// Static JavaScript expression.</span>
+<span class="annotation">@EnabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">2 * 3 == 6</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> willBeExecuted() {
+    <span class="comment">// ...</span>
+}
 
-    <span class="annotation">@Test</span> <span class="comment">// Static JavaScript expression.</span>
-    <span class="annotation">@EnabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">1 == 1</span><span class="delimiter">&quot;</span></span>)
-    <span class="type">void</span> testWillBeExecuted() {
-        assertTrue(<span class="integer">1</span> == <span class="integer">1</span>);
-    }
+<span class="annotation">@RepeatedTest</span>(<span class="integer">10</span>) <span class="comment">// Dynamic JavaScript expression.</span>
+<span class="annotation">@DisabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Math.random() &lt; 0.314159</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> mightNotBeExecuted() {
+    <span class="comment">// ...</span>
+}
 
-    <span class="annotation">@RepeatedTest</span>(<span class="integer">10</span>) <span class="comment">// Dynamic JavaScript expression.</span>
-    <span class="annotation">@DisabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Math.random() &lt; 0.314159</span><span class="delimiter">&quot;</span></span>)
-    <span class="type">void</span> testWillNeverOrSometimesBeExecuted() {
-        assertTrue(<span class="predefined-type">Math</span>.random() &gt;= <span class="integer">0</span>);
-    }
+<span class="annotation">@Test</span> <span class="comment">// Regular expression testing bound system property.</span>
+<span class="annotation">@DisabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/32/.test(systemProperty.get('os.arch'))</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> disabledOn32BitArchitectures() {
+    assertFalse(<span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">os.arch</span><span class="delimiter">&quot;</span></span>).contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">32</span><span class="delimiter">&quot;</span></span>));
+}
 
-    <span class="annotation">@Test</span> <span class="comment">// Regular expression testing bound system property.</span>
-    <span class="annotation">@DisabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/32/.test(systemProperty.get('os.arch'))</span><span class="delimiter">&quot;</span></span>)
-    <span class="type">void</span> testWontBeExecutedIfOsArchitectureContains32() {
-        assertFalse(<span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">os.arch</span><span class="delimiter">&quot;</span></span>).contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">32</span><span class="delimiter">&quot;</span></span>));
-    }
+<span class="annotation">@Test</span>
+<span class="annotation">@EnabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">'CI' == systemEnvironment.get('ENV')</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> onlyOnCiServer() {
+    assertTrue(<span class="string"><span class="delimiter">&quot;</span><span class="content">CI</span><span class="delimiter">&quot;</span></span>.equals(<span class="predefined-type">System</span>.getenv(<span class="string"><span class="delimiter">&quot;</span><span class="content">ENV</span><span class="delimiter">&quot;</span></span>)));
+}
 
-    <span class="annotation">@Test</span>
-    <span class="annotation">@EnabledIf</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">'CI' == systemEnvironment.get('ENV')</span><span class="delimiter">&quot;</span></span>)
-    <span class="type">void</span> testOnlyOnCiServer() {
-        assertTrue(<span class="string"><span class="delimiter">&quot;</span><span class="content">CI</span><span class="delimiter">&quot;</span></span>.equals(<span class="predefined-type">System</span>.getenv(<span class="string"><span class="delimiter">&quot;</span><span class="content">ENV</span><span class="delimiter">&quot;</span></span>)));
-    }
-
-    <span class="annotation">@Test</span> <span class="comment">// Multi-line script, custom engine name and custom reason.</span>
-    <span class="annotation">@EnabledIf</span>(value = {
-                    <span class="string"><span class="delimiter">&quot;</span><span class="content">load('nashorn:mozilla_compat.js')</span><span class="delimiter">&quot;</span></span>,
-                    <span class="string"><span class="delimiter">&quot;</span><span class="content">importPackage(java.time)</span><span class="delimiter">&quot;</span></span>,
-                    <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>,
-                    <span class="string"><span class="delimiter">&quot;</span><span class="content">var today = LocalDate.now()</span><span class="delimiter">&quot;</span></span>,
-                    <span class="string"><span class="delimiter">&quot;</span><span class="content">var tomorrow = today.plusDays(1)</span><span class="delimiter">&quot;</span></span>,
-                    <span class="string"><span class="delimiter">&quot;</span><span class="content">tomorrow.isAfter(today)</span><span class="delimiter">&quot;</span></span>
-                },
-                engine = <span class="string"><span class="delimiter">&quot;</span><span class="content">nashorn</span><span class="delimiter">&quot;</span></span>,
-                reason = <span class="string"><span class="delimiter">&quot;</span><span class="content">Self-fulfilling: {result}</span><span class="delimiter">&quot;</span></span>)
-    <span class="type">void</span> theDayAfterTomorrow() {
-        LocalDate today = LocalDate.now();
-        LocalDate tomorrow = today.plusDays(<span class="integer">1</span>);
-        assertTrue(tomorrow.isAfter(today));
-    }
+<span class="annotation">@Test</span> <span class="comment">// Multi-line script, custom engine name and custom reason.</span>
+<span class="annotation">@EnabledIf</span>(value = {
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">load('nashorn:mozilla_compat.js')</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">importPackage(java.time)</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">var today = LocalDate.now()</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">var tomorrow = today.plusDays(1)</span><span class="delimiter">&quot;</span></span>,
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">tomorrow.isAfter(today)</span><span class="delimiter">&quot;</span></span>
+            },
+            engine = <span class="string"><span class="delimiter">&quot;</span><span class="content">nashorn</span><span class="delimiter">&quot;</span></span>,
+            reason = <span class="string"><span class="delimiter">&quot;</span><span class="content">Self-fulfilling: {result}</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> theDayAfterTomorrow() {
+    LocalDate today = LocalDate.now();
+    LocalDate tomorrow = today.plusDays(<span class="integer">1</span>);
+    assertTrue(tomorrow.isAfter(today));
 }</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="bindings"><a class="anchor" href="#bindings"></a>3.7.1. Bindings</h4>
+<div class="sect4">
+<h5 id="writing-tests-conditional-execution-scripts-bindings"><a class="anchor" href="#writing-tests-conditional-execution-scripts-bindings"></a>Script Bindings</h5>
 <div class="paragraph">
-<p>The following names are bound to each script context and therefore usable by the
-script source. An <em>accessor</em> provides access to a map-like structure via a simple
-<code>String get(String name)</code> method.</p>
+<p>The following names are bound to each script context and therefore usable within the
+script. An <em>accessor</em> provides access to a map-like structure via a simple <code>String
+get(String name)</code> method.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -1599,6 +1607,7 @@ script source. An <em>accessor</em> provides access to a map-like structure via 
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -5999,7 +6008,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-02-03 09:31:19 EST
+Last updated 2018-02-03 10:52:38 EST
 </div>
 </div>
 </body>
