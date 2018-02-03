@@ -745,7 +745,16 @@ test method is <em>enabled</em> or <em>disabled</em>. It inverts the logic appli
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Prior to this release, the Vintage test engine only returned a childless
+<code>TestDescriptor</code> for test classes annotated with <code>@Ignore</code>. However, build tools like
+Gradle need to show an accurate number of tests, i.e. they want to access and count the
+test methods of a test class regardless whether it&#8217;s ignored.
+The Jupiter engine already discovers skipped containers, e.g. test classes annotated
+with <code>@Disabled</code>, including their children and descendants. The Vintage engine now
+adopts this approach and returns a full subtree of <code>TestDescriptors</code> for classes
+annotated with <code>@Ignore</code>. During execution, it will only report the <code>TestDescriptor</code>
+of the test class as skipped which is consistent with how the Jupiter engine reports
+skipped containers.</p>
 </li>
 </ul>
 </div>
@@ -1558,7 +1567,7 @@ online.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-02-03 09:31:19 EST
+Last updated 2018-02-03 15:50:59 EST
 </div>
 </div>
 </body>
