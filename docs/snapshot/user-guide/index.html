@@ -556,7 +556,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-assertions">3.4. Assertions</a></li>
 <li><a href="#writing-tests-assumptions">3.5. Assumptions</a></li>
 <li><a href="#writing-tests-disabling">3.6. Disabling Tests</a></li>
-<li><a href="#writing-tests-conditional-execution">3.7. Conditional Test Execution via Annotations</a></li>
+<li><a href="#writing-tests-conditional-execution">3.7. Conditional Test Execution</a></li>
 <li><a href="#writing-tests-tagging-and-filtering">3.8. Tagging and Filtering</a></li>
 <li><a href="#writing-tests-test-instance-lifecycle">3.9. Test Instance Lifecycle</a></li>
 <li><a href="#writing-tests-nested">3.10. Nested Tests</a></li>
@@ -1426,7 +1426,12 @@ assumptions are static methods in the <code><a href="../api/org/junit/jupiter/ap
 <div class="sect2">
 <h3 id="writing-tests-disabling"><a class="anchor" href="#writing-tests-disabling"></a>3.6. Disabling Tests</h3>
 <div class="paragraph">
-<p>Here&#8217;s a disabled test case.</p>
+<p>Entire test classes or individual test methods may be <em>disabled</em> via the <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code>
+annotation, via one of the annotations discussed in
+<a href="#writing-tests-conditional-execution">Conditional Test Execution</a>, or via a custom <a href="#extensions-conditions"><code>ExecutionCondition</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a <code>@Disabled</code> test class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1442,7 +1447,7 @@ assumptions are static methods in the <code><a href="../api/org/junit/jupiter/ap
 </div>
 </div>
 <div class="paragraph">
-<p>And here&#8217;s a test case with a disabled test method.</p>
+<p>And here&#8217;s a test class that contains a <code>@Disabled</code> test method.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1464,19 +1469,156 @@ assumptions are static methods in the <code><a href="../api/org/junit/jupiter/ap
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-conditional-execution"><a class="anchor" href="#writing-tests-conditional-execution"></a>3.7. Conditional Test Execution via Annotations</h3>
+<h3 id="writing-tests-conditional-execution"><a class="anchor" href="#writing-tests-conditional-execution"></a>3.7. Conditional Test Execution</h3>
 <div class="paragraph">
-<p>The <a href="#extensions-conditions">ExecutionCondition</a> extension API in JUnit Jupiter allows
+<p>The <a href="#extensions-conditions"><code>ExecutionCondition</code></a> extension API in JUnit Jupiter allows
 developers to either <em>enable</em> or <em>disable</em> a container or test based on certain
-conditions. The simplest example of such a condition is the built-in <code>DisabledCondition</code>
-which supports the <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation. In addition to <code>@Disabled</code>, JUnit Jupiter
-also supports several annotation-based conditions in the
-<code>org.junit.jupiter.api.condition</code> package. See the following sections for details.</p>
+conditions <em>programmatically</em>. The simplest example of such a condition is the built-in
+<code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> which supports the <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation (see
+<a href="#writing-tests-disabling">Disabling Tests</a>). In addition to <code>@Disabled</code>, JUnit Jupiter also supports
+several other annotation-based conditions in the <code>org.junit.jupiter.api.condition</code>
+package that allow developers to enable or disable containers and tests <em>declaratively</em>.
+See the following sections for details.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Composed Annotations</div>
+<div class="paragraph">
+<p>Note that any of the <em>conditional</em> annotations listed in the following sections may also
+be used as a meta-annotation in order to create a custom <em>composed annotation</em>. For
+example, the <code>@TestOnMac</code> annotation in the
+<a href="#writing-tests-conditional-execution-os-demo">@EnabledOnOs demo</a> shows how you can
+combine <code>@Test</code> and <code>@EnabledOnOs</code> in a single, reusable annotation.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-conditional-execution-scripts"><a class="anchor" href="#writing-tests-conditional-execution-scripts"></a>3.7.1. Conditional Test Execution via Scripts</h4>
+<h4 id="writing-tests-conditional-execution-os"><a class="anchor" href="#writing-tests-conditional-execution-os"></a>3.7.1. Operating System Conditions</h4>
 <div class="paragraph">
-<p>JUnit Jupiter comes with the ability to either <em>enable</em> or <em>disable</em> a container or test
+<p>A container or test may be enabled or disabled on a particular operating system via the
+<code><a href="../api/org/junit/jupiter/api/condition/EnabledOnOs.html">@EnabledOnOs</a></code> and <code><a href="../api/org/junit/jupiter/api/condition/DisabledOnOs.html">@DisabledOnOs</a></code> annotations.</p>
+</div>
+<div id="writing-tests-conditional-execution-os-demo" class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
+<span class="annotation">@EnabledOnOs</span>(MAC)
+<span class="type">void</span> onlyOnMacOs() {
+    <span class="comment">// ...</span>
+}
+
+<span class="annotation">@TestOnMac</span>
+<span class="type">void</span> testOnMac() {
+    <span class="comment">// ...</span>
+}
+
+<span class="annotation">@Test</span>
+<span class="annotation">@EnabledOnOs</span>({ LINUX, MAC })
+<span class="type">void</span> onLinuxOrMac() {
+    <span class="comment">// ...</span>
+}
+
+<span class="annotation">@Test</span>
+<span class="annotation">@DisabledOnOs</span>(WINDOWS)
+<span class="type">void</span> notOnWindows() {
+    <span class="comment">// ...</span>
+}
+
+<span class="annotation">@Target</span>(<span class="predefined-type">ElementType</span>.METHOD)
+<span class="annotation">@Retention</span>(<span class="predefined-type">RetentionPolicy</span>.RUNTIME)
+<span class="annotation">@Test</span>
+<span class="annotation">@EnabledOnOs</span>(MAC)
+<span class="annotation">@interface</span> TestOnMac {
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-conditional-execution-jre"><a class="anchor" href="#writing-tests-conditional-execution-jre"></a>3.7.2. Java Runtime Environment Conditions</h4>
+<div class="paragraph">
+<p>A container or test may be enabled or disabled on a particular version of the Java
+Runtime Environment (JRE) via the <code><a href="../api/org/junit/jupiter/api/condition/EnabledOnJre.html">@EnabledOnJre</a></code> and <code><a href="../api/org/junit/jupiter/api/condition/DisabledOnJre.html">@DisabledOnJre</a></code> annotations.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
+<span class="annotation">@EnabledOnJre</span>(JAVA_8)
+<span class="type">void</span> onlyOnJava8() {
+    <span class="comment">// ...</span>
+}
+
+<span class="annotation">@Test</span>
+<span class="annotation">@EnabledOnJre</span>({ JAVA_9, JAVA_10 })
+<span class="type">void</span> onJava9Or10() {
+    <span class="comment">// ...</span>
+}
+
+<span class="annotation">@Test</span>
+<span class="annotation">@DisabledOnJre</span>(JAVA_9)
+<span class="type">void</span> notOnJava9() {
+    <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-conditional-execution-system-properties"><a class="anchor" href="#writing-tests-conditional-execution-system-properties"></a>3.7.3. System Property Conditions</h4>
+<div class="paragraph">
+<p>A container or test may be enabled or disabled based on the value of the <code>named</code> JVM
+system property via the <code><a href="../api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html">@EnabledIfSystemProperty</a></code> and <code><a href="../api/org/junit/jupiter/api/condition/DisabledIfSystemProperty.html">@DisabledIfSystemProperty</a></code>
+annotations. The value supplied via the <code>matches</code> attribute will be interpreted as a
+regular expression.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
+<span class="annotation">@EnabledIfSystemProperty</span>(named = <span class="string"><span class="delimiter">&quot;</span><span class="content">os.arch</span><span class="delimiter">&quot;</span></span>, matches = <span class="string"><span class="delimiter">&quot;</span><span class="content">.*64.*</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> onlyOn64BitArchitectures() {
+    <span class="comment">// ...</span>
+}
+
+<span class="annotation">@Test</span>
+<span class="annotation">@DisabledIfSystemProperty</span>(named = <span class="string"><span class="delimiter">&quot;</span><span class="content">ci-server</span><span class="delimiter">&quot;</span></span>, matches = <span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> notOnCiServer() {
+    <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-conditional-execution-environment-variables"><a class="anchor" href="#writing-tests-conditional-execution-environment-variables"></a>3.7.4. Environment Variable Conditions</h4>
+<div class="paragraph">
+<p>A container or test may be enabled or disabled based on the value of the <code>named</code>
+environment variable from the underlying operating system via the
+<code><a href="../api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html">@EnabledIfEnvironmentVariable</a></code> and <code><a href="../api/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html">@DisabledIfEnvironmentVariable</a></code> annotations. The
+value supplied via the <code>matches</code> attribute will be interpreted as a regular expression.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
+<span class="annotation">@EnabledIfEnvironmentVariable</span>(named = <span class="string"><span class="delimiter">&quot;</span><span class="content">ENV</span><span class="delimiter">&quot;</span></span>, matches = <span class="string"><span class="delimiter">&quot;</span><span class="content">staging-server</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> onlyOnStagingServer() {
+    <span class="comment">// ...</span>
+}
+
+<span class="annotation">@Test</span>
+<span class="annotation">@DisabledIfEnvironmentVariable</span>(named = <span class="string"><span class="delimiter">&quot;</span><span class="content">ENV</span><span class="delimiter">&quot;</span></span>, matches = <span class="string"><span class="delimiter">&quot;</span><span class="content">.*development.*</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> notOnDeveloperWorkstation() {
+    <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-conditional-execution-scripts"><a class="anchor" href="#writing-tests-conditional-execution-scripts"></a>3.7.5. Script-based Conditions</h4>
+<div class="paragraph">
+<p>JUnit Jupiter provides the ability to either <em>enable</em> or <em>disable</em> a container or test
 depending on the evaluation of a script configured via the <code><a href="../api/org/junit/jupiter/api/EnabledIf.html">@EnabledIf</a></code> or
 <code><a href="../api/org/junit/jupiter/api/DisabledIf.html">@DisabledIf</a></code> annotation. Scripts can be written in JavaScript, Groovy, or any other
 scripting language for which there is support for the Java Scripting API, defined by JSR
@@ -1492,6 +1634,22 @@ scripting language for which there is support for the Java Scripting API, define
 Conditional test execution via <code><a href="../api/org/junit/jupiter/api/EnabledIf.html">@EnabledIf</a></code> and <code><a href="../api/org/junit/jupiter/api/DisabledIf.html">@DisabledIf</a></code> is currently an
 <em>experimental</em> feature. Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for
 details.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If the logic of your script depends only on the current operating system, the
+current Java Runtime Environment version, a particular JVM system property, or a
+particular environment variable, you should consider using one of the built-in
+annotations dedicated to that purpose. See the previous sections of this chapter for
+further details.
 </td>
 </tr>
 </table>
