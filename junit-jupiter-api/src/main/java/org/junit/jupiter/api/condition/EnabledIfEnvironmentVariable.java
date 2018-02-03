@@ -30,9 +30,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * <p>When declared at the class level, the result will apply to all test methods
  * within that class as well.
  *
- * <p>If the specified environment variable is undefined, the presence of this
- * annotation will have no effect on whether or not the class or method
- * is enabled.
+ * <p>If the specified environment variable is undefined, the annotated class or
+ * method will be disabled.
  *
  * @since 5.1
  * @see DisabledIfEnvironmentVariable

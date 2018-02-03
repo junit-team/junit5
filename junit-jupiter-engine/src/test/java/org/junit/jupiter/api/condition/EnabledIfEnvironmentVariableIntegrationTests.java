@@ -11,7 +11,6 @@
 package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Disabled;
@@ -52,7 +51,7 @@ class EnabledIfEnvironmentVariableIntegrationTests {
 	@Test
 	@EnabledIfEnvironmentVariable(named = BOGUS, matches = "doesn't matter")
 	void environmentVariableDoesNotExist() {
-		assertNull(System.getenv(BOGUS));
+		fail("should be disabled");
 	}
 
 }

@@ -51,14 +51,12 @@ class EnabledIfEnvironmentVariableCondition implements ExecutionCondition {
 
 		// Nothing to match against?
 		if (actual == null) {
-			return enabled(format("Environment variable [%s] does not exist", name));
+			return disabled(format("Environment variable [%s] does not exist", name));
 		}
-
 		if (actual.matches(regex)) {
 			return enabled(format("Environment variable [%s] with value [%s] matches regular expression [%s]", name,
 				actual, regex));
 		}
-		// else
 		return disabled(format("Environment variable [%s] with value [%s] does not match regular expression [%s]", name,
 			actual, regex));
 	}
