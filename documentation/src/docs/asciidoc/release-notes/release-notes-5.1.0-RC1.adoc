@@ -72,4 +72,13 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Prior to this release, the Vintage test engine only returned a childless
+  `TestDescriptor` for test classes annotated with `@Ignore`. However, build tools like
+  Gradle need to show an accurate number of tests, i.e. they want to access and count the
+  test methods of a test class regardless whether it's ignored.
+  The Jupiter engine already discovers skipped containers, e.g. test classes annotated
+  with `@Disabled`, including their children and descendants. The Vintage engine now
+  adopts this approach and returns a full subtree of `TestDescriptors` for classes
+  annotated with `@Ignore`. During execution, it will only report the `TestDescriptor`
+  of the test class as skipped which is consistent with how the Jupiter engine reports
+  skipped containers.

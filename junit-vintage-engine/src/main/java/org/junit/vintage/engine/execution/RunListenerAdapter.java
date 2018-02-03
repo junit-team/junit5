@@ -45,14 +45,6 @@ class RunListenerAdapter extends RunListener {
 	}
 
 	@Override
-	public void testRunStarted(Description description) {
-		// If it's not a suite it might be skipped entirely later on.
-		if (description.isSuite()) {
-			fireExecutionStarted(testRun.getRunnerTestDescriptor());
-		}
-	}
-
-	@Override
 	public void testIgnored(Description description) {
 		testIgnored(lookupOrRegisterTestDescriptor(description), determineReasonForIgnoredTest(description));
 	}
