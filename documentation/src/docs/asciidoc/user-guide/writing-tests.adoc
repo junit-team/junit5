@@ -164,32 +164,44 @@ And here's a test case with a disabled test method.
 include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 ----
 
-[[writing-tests-conditional]]
-=== Conditional Test Execution via Annotation
+[[writing-tests-conditional-execution]]
+=== Conditional Test Execution via Annotations
 
-JUnit Jupiter comes with the ability to either _enable_ or _disable_ a container
-or test depending on the evaluation of a script configured via the `{EnabledIf}`
-or `{DisabledIf}` annotation. Scripts can be written in JavaScript, Groovy, or
-any other scripting language for which there is support for the Java Scripting
-API, defined by JSR 223.
+The <<extensions-conditions, ExecutionCondition>> extension API in JUnit Jupiter allows
+developers to either _enable_ or _disable_ a container or test based on certain
+conditions. The simplest example of such a condition is the built-in `DisabledCondition`
+which supports the `{Disabled}` annotation. In addition to `@Disabled`, JUnit Jupiter
+also supports several annotation-based conditions in the
+`org.junit.jupiter.api.condition` package. See the following sections for details.
+
+[[writing-tests-conditional-execution-scripts]]
+==== Conditional Test Execution via Scripts
+
+JUnit Jupiter comes with the ability to either _enable_ or _disable_ a container or test
+depending on the evaluation of a script configured via the `{EnabledIf}` or
+`{DisabledIf}` annotation. Scripts can be written in JavaScript, Groovy, or any other
+scripting language for which there is support for the Java Scripting API, defined by JSR
+223.
 
 WARNING: Conditional test execution via `{EnabledIf}` and `{DisabledIf}` is currently an
-_experimental_ feature. Consult the table in <<api-evolution-experimental-apis>> for details.
+_experimental_ feature. Consult the table in <<api-evolution-experimental-apis>> for
+details.
 
-NOTE: If you find yourself using the same script-based condition many times,
-consider writing a dedicated <<extensions-conditions, ExecutionCondition>> extension
-testing the condition in a faster, type-safe and more maintainable manner.
+NOTE: If you find yourself using the same script-based condition many times, consider
+writing a dedicated <<extensions-conditions, ExecutionCondition>> extension in order to
+implement the condition in a faster, type-safe, and more maintainable manner.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide]
+include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_scripts]
 ----
 
-==== Bindings
+[[writing-tests-conditional-execution-scripts-bindings]]
+===== Script Bindings
 
-The following names are bound to each script context and therefore usable by the
-script source. An _accessor_ provides access to a map-like structure via a simple
-`String get(String name)` method.
+The following names are bound to each script context and therefore usable within the
+script. An _accessor_ provides access to a map-like structure via a simple `String
+get(String name)` method.
 
 [cols="25,25,75"]
 |===

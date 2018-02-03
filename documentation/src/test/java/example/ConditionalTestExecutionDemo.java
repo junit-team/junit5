@@ -20,37 +20,37 @@ import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-// tag::user_guide[]
 class ConditionalTestExecutionDemo {
 
+	// tag::user_guide_scripts[]
 	@Test // Static JavaScript expression.
-	@EnabledIf("1 == 1")
-	void testWillBeExecuted() {
-		assertTrue(1 == 1);
+	@EnabledIf("2 * 3 == 6")
+	void willBeExecuted() {
+		// ...
 	}
 
 	@RepeatedTest(10) // Dynamic JavaScript expression.
 	@DisabledIf("Math.random() < 0.314159")
-	void testWillNeverOrSometimesBeExecuted() {
-		assertTrue(Math.random() >= 0);
+	void mightNotBeExecuted() {
+		// ...
 	}
 
 	@Test // Regular expression testing bound system property.
 	@DisabledIf("/32/.test(systemProperty.get('os.arch'))")
-	void testWontBeExecutedIfOsArchitectureContains32() {
+	void disabledOn32BitArchitectures() {
 		assertFalse(System.getProperty("os.arch").contains("32"));
 	}
 
 	@Test
 	@EnabledIf("'CI' == systemEnvironment.get('ENV')")
-	void testOnlyOnCiServer() {
+	void onlyOnCiServer() {
 		assertTrue("CI".equals(System.getenv("ENV")));
 	}
 
 	@Test // Multi-line script, custom engine name and custom reason.
-	// end::user_guide[]
+	// end::user_guide_scripts[]
 	// @formatter:off
-	// tag::user_guide[]
+	// tag::user_guide_scripts[]
 	@EnabledIf(value = {
 					"load('nashorn:mozilla_compat.js')",
 					"importPackage(java.time)",
@@ -61,13 +61,14 @@ class ConditionalTestExecutionDemo {
 				},
 				engine = "nashorn",
 				reason = "Self-fulfilling: {result}")
-	// end::user_guide[]
+	// end::user_guide_scripts[]
 	// @formatter:on
-	// tag::user_guide[]
+	// tag::user_guide_scripts[]
 	void theDayAfterTomorrow() {
 		LocalDate today = LocalDate.now();
 		LocalDate tomorrow = today.plusDays(1);
 		assertTrue(tomorrow.isAfter(today));
 	}
+	// end::user_guide_scripts[]
+
 }
-// end::user_guide[]
