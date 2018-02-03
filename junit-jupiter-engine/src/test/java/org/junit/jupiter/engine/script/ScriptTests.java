@@ -12,9 +12,18 @@ package org.junit.jupiter.engine.script;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
+import java.lang.annotation.Annotation;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * Unit tests for {@link Script}.
@@ -36,7 +45,7 @@ class ScriptTests {
 
 	@Test
 	void constructorWithAnnotation(TestInfo info) {
-		Test annotation = info.getTestMethod().orElseThrow(Error::new).getAnnotation(Test.class);
+		Annotation annotation = info.getTestMethod().orElseThrow(Error::new).getAnnotation(Test.class);
 		Script script = new Script(annotation, "engine", "source", "reason");
 		assertEquals(Test.class, script.getAnnotationType());
 		assertEquals("@org.junit.jupiter.api.Test()", script.getAnnotationAsString());
@@ -44,6 +53,27 @@ class ScriptTests {
 		assertEquals("source", script.getSource());
 		assertEquals("reason", script.getReason());
 		assertEquals("reason", script.toReasonString("unused result"));
+	}
+
+	@TestFactory
+	Stream<DynamicTest> preconditionsAreChecked(TestInfo info) {
+		Annotation annotation = info.getTestMethod().orElseThrow(Error::new).getAnnotation(TestFactory.class);
+		Class<JUnitException> expected = JUnitException.class;
+		return Stream.of( //
+			dynamicTest("0", () -> assertNotNull(new Script(annotation, "e", "s", "r"))), //
+			dynamicTest("1", () -> assertThrows(expected, () -> new Script(null, "e", "s", "r"))), //
+			// null is not allowed
+			dynamicTest("2", () -> assertNotNull(new Script(Test.class, "a", "e", "s", "r"))), //
+			dynamicTest("3", () -> assertThrows(expected, () -> new Script(null, "a", "e", "s", "r"))), //
+			dynamicTest("4", () -> assertThrows(expected, () -> new Script(Error.class, null, "e", "s", "r"))), //
+			dynamicTest("5", () -> assertThrows(expected, () -> new Script(Error.class, "a", null, "s", "r"))), //
+			dynamicTest("6", () -> assertThrows(expected, () -> new Script(Error.class, "a", "e", null, "r"))), //
+			dynamicTest("7", () -> assertThrows(expected, () -> new Script(Error.class, "a", "e", "s", null))), //
+			// engine and source must not be blank
+			dynamicTest("8", () -> assertNotNull(new Script(Test.class, "", "e", "s", ""))), //
+			dynamicTest("9", () -> assertThrows(expected, () -> new Script(Error.class, "", "", "s", ""))), //
+			dynamicTest("A", () -> assertThrows(expected, () -> new Script(Error.class, "", "e", "", ""))) //
+		);
 	}
 
 	@Test

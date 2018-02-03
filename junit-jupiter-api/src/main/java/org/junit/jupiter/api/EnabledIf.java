@@ -54,6 +54,11 @@ import org.apiguardian.api.API;
  *       a boolean by passing the String representation to
  *       {@link Boolean#parseBoolean(String)}.</td>
  * </tr>
+ * <tr>
+ *    <td><em>{@code null}</em></td>
+ *    <td>A return value of {@code null} is considered to be an error and will
+ *        raise a {@link org.junit.jupiter.api.extension.ScriptEvaluationException ScriptEvaluationException}.</td>
+ * </tr>
  * </table>
  *
  * <p>If a test class is disabled via the evaluation of {@code @EnabledIf}, all

@@ -42,6 +42,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ScriptEvaluationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.script.Script;
 import org.junit.jupiter.engine.script.ScriptExecutionManager;
@@ -76,7 +77,8 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	private void computeConditionEvaluationResultFailsForUnsupportedAnnotationType(Type type) {
 		Script script = new Script(type, "annotation", "engine", "source", "reason");
-		Exception e = assertThrows(JUnitException.class, () -> condition.computeConditionEvaluationResult(script, "!"));
+		Exception e = assertThrows(ScriptEvaluationException.class,
+			() -> condition.computeConditionEvaluationResult(script, "!"));
 		String expected = "Unsupported annotation type: " + type;
 		String actual = e.getMessage();
 		assertEquals(expected, actual);
@@ -93,10 +95,9 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void getJUnitConfigurationParameterWithJavaScript() {
 		Script script = script(EnabledIf.class, "junitConfigurationParameter.get('XXX')");
-		ConditionEvaluationResult result = condition.evaluate(manager, script, bindings);
-		assertTrue(result.isDisabled());
-		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
-		assertEquals("Script `junitConfigurationParameter.get('XXX')` evaluated to: null", actual);
+		Exception exception = assertThrows(ScriptEvaluationException.class,
+			() -> condition.evaluate(manager, script, bindings));
+		assertThat(exception.getMessage()).contains("Script returned `null`");
 	}
 
 	@Test

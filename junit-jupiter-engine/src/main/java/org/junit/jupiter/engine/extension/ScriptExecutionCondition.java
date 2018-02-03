@@ -29,10 +29,10 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ScriptEvaluationException;
 import org.junit.jupiter.engine.script.Script;
 import org.junit.jupiter.engine.script.ScriptAccessor;
 import org.junit.jupiter.engine.script.ScriptExecutionManager;
-import org.junit.platform.commons.JUnitException;
 
 /**
  * {@link ExecutionCondition} that supports the {@link DisabledIf} and {@link EnabledIf} annotation.
@@ -134,11 +134,16 @@ class ScriptExecutionCondition implements ExecutionCondition {
 			return computeConditionEvaluationResult(script, result);
 		}
 		catch (ScriptException e) {
-			throw new JUnitException("Script evaluation failed for: " + script.getAnnotationAsString(), e);
+			throw new ScriptEvaluationException("Script evaluation failed for: " + script.getAnnotationAsString(), e);
 		}
 	}
 
 	ConditionEvaluationResult computeConditionEvaluationResult(Script script, Object result) {
+		// Treat "null" result as an error.
+		if (result == null) {
+			throw new ScriptEvaluationException("Script returned `null`: " + script.getAnnotationAsString());
+		}
+
 		// Trivial case: script returned a custom ConditionEvaluationResult instance.
 		if (result instanceof ConditionEvaluationResult) {
 			return (ConditionEvaluationResult) result;
@@ -165,7 +170,7 @@ class ScriptExecutionCondition implements ExecutionCondition {
 		}
 
 		// Still here? Not so good.
-		throw new JUnitException("Unsupported annotation type: " + script.getAnnotationType());
+		throw new ScriptEvaluationException("Unsupported annotation type: " + script.getAnnotationType());
 	}
 
 }

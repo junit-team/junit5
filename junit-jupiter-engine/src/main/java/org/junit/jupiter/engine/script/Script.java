@@ -17,6 +17,7 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Script data class.
@@ -118,10 +119,17 @@ public final class Script {
 	private final int hashCode;
 
 	public Script(Annotation annotation, String engine, String source, String reason) {
-		this(annotation.annotationType(), annotation.toString(), engine, source, reason);
+		this(Preconditions.notNull(annotation, "annotation must not be null").annotationType(), annotation.toString(),
+			engine, source, reason);
 	}
 
 	public Script(Type annotationType, String annotationAsString, String engine, String source, String reason) {
+		Preconditions.notNull(annotationType, "annotationType must not be null");
+		Preconditions.notNull(annotationAsString, "annotationAsString must not be null");
+		Preconditions.notBlank(engine, "engine must not be blank");
+		Preconditions.notBlank(source, "source must not be blank");
+		Preconditions.notNull(reason, "reason must not be null");
+
 		this.annotationType = annotationType;
 		this.annotationAsString = annotationAsString;
 		this.engine = engine;

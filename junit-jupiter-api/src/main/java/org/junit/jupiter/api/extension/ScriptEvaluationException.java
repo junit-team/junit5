@@ -10,27 +10,25 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.JUnitException;
 
 /**
- * Thrown if an error is encountered regarding the configuration of an
- * extension.
+ * Thrown if an error is encountered evaluating a script condition.
  *
- * @since 5.0
+ * @since 5.1
  */
-@API(status = STABLE, since = "5.0")
-public class ExtensionConfigurationException extends JUnitException {
+@API(status = EXPERIMENTAL, since = "5.1")
+public class ScriptEvaluationException extends ExtensionConfigurationException {
 
 	private static final long serialVersionUID = 1L;
 
-	public ExtensionConfigurationException(String message) {
+	public ScriptEvaluationException(String message) {
 		super(message);
 	}
 
-	public ExtensionConfigurationException(String message, Throwable cause) {
+	public ScriptEvaluationException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
