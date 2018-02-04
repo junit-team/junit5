@@ -1,9 +1,11 @@
 [[release-notes-5.1.0-RC1]]
 == 5.1.0-RC1
 
-*Date of Release:* ❓
+*Date of Release:* February 4, 2018
 
-*Scope:* ❓
+*Scope:* Annotation-based <<../user-guide/index.adoc#writing-tests-conditional-execution,
+Conditional Test Execution>> with support for environment variables, system properties,
+operating systems, JRE versions, and dynamic scripts.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/19?closed=1+[5.1 RC1] milestone page in the JUnit repository
@@ -13,25 +15,11 @@ on GitHub.
 [[release-notes-5.1.0-RC1-junit-platform]]
 === JUnit Platform
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+No changes.
 
 
 [[release-notes-5.1.0-RC1-junit-jupiter]]
 === JUnit Jupiter
-
-==== Bug Fixes
-
-* ❓
 
 ==== Deprecations and Breaking Changes
 
@@ -62,14 +50,6 @@ on GitHub.
 
 [[release-notes-5.1.0-RC1-junit-vintage]]
 === JUnit Vintage
-
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
