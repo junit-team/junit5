@@ -134,8 +134,10 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 					jvmArgs += ['--module-path', junitExtension.modulepath.asPath]
 				}
 				// Treat all modules on the path as root modules.
+				// Also add all default modules, needed on OpenJDK to resolve "java.scripting".
+				// See http://mail.openjdk.java.net/pipermail/jigsaw-dev/2018-February/thread.html#13574
 				if (!jvmArgs.contains('--add-modules')) {
-					jvmArgs += ['--add-modules', 'ALL-MODULE-PATH']
+					jvmArgs += ['--add-modules', 'ALL-MODULE-PATH,ALL-DEFAULT']
 				}
 				// Set main class name to '--module' (https://github.com/junit-team/junit5/issues/1234)
 				// The first argument will be 'org.junit.platform.console'

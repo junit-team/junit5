@@ -54,7 +54,7 @@ task execScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, g
 					generateDependenciesDirectory.destinationDir,
 					generateIntegrationTestsJar.archivePath
 				).asPath,
-			'--add-modules', 'ALL-MODULE-PATH',
+			'--add-modules', 'ALL-MODULE-PATH,ALL-DEFAULT',
 			'--module', 'org.junit.platform.console',
 			'--scan-modules'
 	]
