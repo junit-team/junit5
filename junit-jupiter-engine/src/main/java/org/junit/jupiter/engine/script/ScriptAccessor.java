@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.script;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  *
  * @since 5.1
  */
-@API(status = EXPERIMENTAL, since = "5.1")
+@API(status = INTERNAL, since = "5.1")
 public interface ScriptAccessor {
 
 	/**

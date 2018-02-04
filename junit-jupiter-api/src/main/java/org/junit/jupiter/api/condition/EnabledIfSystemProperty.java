@@ -36,8 +36,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @since 5.1
  * @see DisabledIfSystemProperty
  * @see org.junit.jupiter.api.Disabled
- * @see org.junit.jupiter.api.EnabledIf
- * @see org.junit.jupiter.api.DisabledIf
+ * @see org.junit.jupiter.api.condition.EnabledIf
+ * @see org.junit.jupiter.api.condition.DisabledIf
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

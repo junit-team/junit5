@@ -15,9 +15,12 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 
 /**
- * Thrown if an error is encountered evaluating a script condition.
+ * Thrown if an error is encountered while evaluating a script-based
+ * {@link ExecutionCondition}.
  *
  * @since 5.1
+ * @see org.junit.jupiter.api.condition.EnabledIf
+ * @see org.junit.jupiter.api.condition.DisabledIf
  */
 @API(status = EXPERIMENTAL, since = "5.1")
 public class ScriptEvaluationException extends ExtensionConfigurationException {

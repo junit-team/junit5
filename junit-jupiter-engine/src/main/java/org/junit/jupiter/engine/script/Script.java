@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.script;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -23,11 +23,11 @@ import org.junit.platform.commons.util.Preconditions;
  * Script data class.
  *
  * @since 5.1
- * @see org.junit.jupiter.api.DisabledIf
- * @see org.junit.jupiter.api.EnabledIf
+ * @see org.junit.jupiter.api.condition.DisabledIf
+ * @see org.junit.jupiter.api.condition.EnabledIf
  * @see ScriptExecutionManager
  */
-@API(status = EXPERIMENTAL, since = "5.1")
+@API(status = INTERNAL, since = "5.1")
 public final class Script {
 
 	/**

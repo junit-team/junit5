@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.api;
+package org.junit.jupiter.api.condition;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @EnabledIf} is used to control whether the annotated test class or
+ * {@code @DisabledIf} is used to control whether the annotated test class or
  * test method is <em>enabled</em> or <em>disabled</em> by evaluating a script.
  *
  * <p>The decision is made by interpreting the return value of the supplied
@@ -34,11 +34,11 @@ import org.apiguardian.api.API;
  * </tr>
  * <tr>
  *   <td>{@code boolean}</td>
- *   <td>The annotated element will be enabled if the value is {@code true}.</td>
+ *   <td>The annotated element will be disabled if the value is {@code true}.</td>
  * </tr>
  * <tr>
  *   <td>{@code java.lang.Boolean}</td>
- *   <td>The annotated element will be enabled if the value is {@code Boolean.TRUE}.</td>
+ *   <td>The annotated element will be disabled if the value is {@code Boolean.TRUE}.</td>
  * </tr>
  * <tr>
  *   <td>{@code ConditionEvaluationResult}</td>
@@ -55,13 +55,13 @@ import org.apiguardian.api.API;
  *       {@link Boolean#parseBoolean(String)}.</td>
  * </tr>
  * <tr>
- *    <td><em>{@code null}</em></td>
- *    <td>A return value of {@code null} is considered to be an error and will
- *        raise a {@link org.junit.jupiter.api.extension.ScriptEvaluationException ScriptEvaluationException}.</td>
+ *   <td><em>{@code null}</em></td>
+ *   <td>A return value of {@code null} is considered to be an error and will
+ *       raise a {@link org.junit.jupiter.api.extension.ScriptEvaluationException ScriptEvaluationException}.</td>
  * </tr>
  * </table>
  *
- * <p>If a test class is disabled via the evaluation of {@code @EnabledIf}, all
+ * <p>If a test class is disabled via the evaluation of {@code @DisabledIf}, all
  * test methods within that class are automatically disabled as well.
  *
  * <h3>Script Engines</h3>
@@ -96,8 +96,8 @@ import org.apiguardian.api.API;
  * They might clash with new bindings introduced in the future.
  *
  * @since 5.1
- * @see Disabled
- * @see DisabledIf
+ * @see org.junit.jupiter.api.Disabled
+ * @see org.junit.jupiter.api.condition.EnabledIf
  * @see javax.script.ScriptEngine
  * @see org.junit.jupiter.api.extension.ExecutionCondition
  * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#enabled(String)
@@ -107,7 +107,7 @@ import org.apiguardian.api.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = EXPERIMENTAL, since = "5.1")
-public @interface EnabledIf {
+public @interface DisabledIf {
 
 	/**
 	 * The lines of the script to evaluate.
@@ -122,7 +122,7 @@ public @interface EnabledIf {
 	 *
 	 * <h5>Supported placeholders</h5>
 	 * <ul>
-	 *   <li><code>{annotation}</code>: the String representation of the {@code @EnabledIf} annotation instance</li>
+	 *   <li><code>{annotation}</code>: the String representation of the {@code @DisabledIf} annotation instance</li>
 	 *   <li><code>{script}</code>: the script text that was evaluated</li>
 	 *   <li><code>{result}</code>: the String representation of the return value of the evaluated script</li>
 	 * </ul>

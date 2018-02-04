@@ -35,7 +35,8 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The `@EnabledIf` annotation introduced in 5.1 M2 has been moved to the
+  `org.junit.jupiter.api.condition` package.
 
 ==== New Features and Improvements
 

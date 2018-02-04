@@ -35,12 +35,12 @@ import java.util.stream.Stream;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 
-import org.junit.jupiter.api.DisabledIf;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.EnabledIf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ScriptEvaluationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;

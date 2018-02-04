@@ -47,12 +47,13 @@ The following table lists which APIs are currently designated as _experimental_ 
 | Package Name                               | Class Name                    | Type
 
 | `org.junit.jupiter.api`                    | `AssertionsKt`                | `class`
-| `org.junit.jupiter.api`                    | `DisabledIf`                  | `annotation`
 | `org.junit.jupiter.api`                    | `DynamicContainer`            | `class`
 | `org.junit.jupiter.api`                    | `DynamicNode`                 | `class`
 | `org.junit.jupiter.api`                    | `DynamicTest`                 | `class`
-| `org.junit.jupiter.api`                    | `EnabledIf`                   | `annotation`
 | `org.junit.jupiter.api`                    | `TestFactory`                 | `annotation`
+| `org.junit.jupiter.api.condition`          | `DisabledIf`                  | `annotation`
+| `org.junit.jupiter.api.condition`          | `EnabledIf`                   | `annotation`
+| `org.junit.jupiter.api.extension`          | `ScriptEvaluationException`   | `class`
 | `org.junit.jupiter.migrationsupport.rules` | `EnableRuleMigrationSupport`  | `annotation`
 | `org.junit.jupiter.migrationsupport.rules` | `ExpectedExceptionSupport`    | `class`
 | `org.junit.jupiter.migrationsupport.rules` | `ExternalResourceSupport`     | `class`

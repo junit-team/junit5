@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.script;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -32,7 +32,7 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * @since 5.1
  */
-@API(status = EXPERIMENTAL, since = "5.1")
+@API(status = INTERNAL, since = "5.1")
 public class ScriptExecutionManager implements CloseableResource {
 
 	private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();

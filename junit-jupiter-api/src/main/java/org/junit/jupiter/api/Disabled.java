@@ -28,7 +28,8 @@ import org.apiguardian.api.API;
  * are automatically disabled as well.
  *
  * @since 5.0
- * @see EnabledIf
+ * @see org.junit.jupiter.api.condition.EnabledIf
+ * @see org.junit.jupiter.api.condition.DisabledIf
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
