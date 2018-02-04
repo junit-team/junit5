@@ -54,6 +54,7 @@ class ParserTests {
 		assertThat(tagExpressionParsedFrom(tagExpression)).hasToString(expression);
 	}
 
+	@SuppressWarnings("unused")
 	private static Stream<Arguments> data() {
 		// @formatter:off
 		return Stream.of(
