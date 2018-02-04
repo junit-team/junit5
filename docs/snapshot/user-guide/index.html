@@ -1619,8 +1619,8 @@ value supplied via the <code>matches</code> attribute will be interpreted as a r
 <h4 id="writing-tests-conditional-execution-scripts"><a class="anchor" href="#writing-tests-conditional-execution-scripts"></a>3.7.5. Script-based Conditions</h4>
 <div class="paragraph">
 <p>JUnit Jupiter provides the ability to either <em>enable</em> or <em>disable</em> a container or test
-depending on the evaluation of a script configured via the <code><a href="../api/org/junit/jupiter/api/EnabledIf.html">@EnabledIf</a></code> or
-<code><a href="../api/org/junit/jupiter/api/DisabledIf.html">@DisabledIf</a></code> annotation. Scripts can be written in JavaScript, Groovy, or any other
+depending on the evaluation of a script configured via the <code><a href="../api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> or
+<code><a href="../api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> annotation. Scripts can be written in JavaScript, Groovy, or any other
 scripting language for which there is support for the Java Scripting API, defined by JSR
 223.</p>
 </div>
@@ -1631,7 +1631,7 @@ scripting language for which there is support for the Java Scripting API, define
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Conditional test execution via <code><a href="../api/org/junit/jupiter/api/EnabledIf.html">@EnabledIf</a></code> and <code><a href="../api/org/junit/jupiter/api/DisabledIf.html">@DisabledIf</a></code> is currently an
+Conditional test execution via <code><a href="../api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> and <code><a href="../api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> is currently an
 <em>experimental</em> feature. Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for
 details.
 </td>
@@ -5959,11 +5959,6 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DisabledIf</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>annotation</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DynamicContainer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>class</code></p></td>
 </tr>
@@ -5979,13 +5974,23 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestFactory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>annotation</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.condition</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DisabledIf</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>annotation</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.condition</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>EnabledIf</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>annotation</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestFactory</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>annotation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ScriptEvaluationException</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>class</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migrationsupport.rules</code></p></td>
