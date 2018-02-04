@@ -11,14 +11,20 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
+import static java.util.concurrent.ForkJoinPool.defaultForkJoinWorkerThreadFactory;
 import static org.junit.platform.commons.annotation.ExecutionMode.Concurrent;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.lang.reflect.Constructor;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 import org.junit.platform.commons.logging.LoggerFactory;
 
@@ -33,10 +39,23 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	}
 
 	private ForkJoinPool createForkJoinPool(Optional<Integer> parallelismLevel) {
-		if (parallelismLevel.isPresent()) {
-			return new ForkJoinPool(parallelismLevel.get());
+		int parallelism = parallelismLevel.orElse(Runtime.getRuntime().availableProcessors());
+		int corePoolSize = parallelism;
+		int maximumPoolSize = 256 + parallelism;
+		int minimumRunnable = parallelism;
+		int keepAliveSeconds = 30;
+		try {
+			// Try to use constructor available in Java >= 9
+			Constructor<ForkJoinPool> constructor = ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE,
+				ForkJoinWorkerThreadFactory.class, UncaughtExceptionHandler.class, Boolean.TYPE, Integer.TYPE,
+				Integer.TYPE, Integer.TYPE, Predicate.class, Long.TYPE, TimeUnit.class);
+			return constructor.newInstance(parallelism, defaultForkJoinWorkerThreadFactory, null, false, corePoolSize,
+				maximumPoolSize, minimumRunnable, null, keepAliveSeconds, TimeUnit.SECONDS);
 		}
-		return new ForkJoinPool();
+		catch (Exception e) {
+			// Fallback for Java 8
+			return new ForkJoinPool(parallelism);
+		}
 	}
 
 	@Override
