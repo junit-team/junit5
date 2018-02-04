@@ -97,11 +97,17 @@ import org.apiguardian.api.API;
  *
  * @since 5.1
  * @see org.junit.jupiter.api.Disabled
+ * @see org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable
+ * @see org.junit.jupiter.api.condition.EnabledIfSystemProperty
+ * @see org.junit.jupiter.api.condition.EnabledOnJre
+ * @see org.junit.jupiter.api.condition.EnabledOnOs
  * @see org.junit.jupiter.api.condition.DisabledIf
- * @see javax.script.ScriptEngine
+ * @see org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable
+ * @see org.junit.jupiter.api.condition.DisabledIfSystemProperty
+ * @see org.junit.jupiter.api.condition.DisabledOnJre
+ * @see org.junit.jupiter.api.condition.DisabledOnOs
  * @see org.junit.jupiter.api.extension.ExecutionCondition
- * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#enabled(String)
- * @see org.junit.jupiter.api.extension.ConditionEvaluationResult#disabled(String)
+ * @see javax.script.ScriptEngine
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
