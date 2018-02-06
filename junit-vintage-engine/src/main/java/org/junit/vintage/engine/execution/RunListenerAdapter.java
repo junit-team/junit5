@@ -45,6 +45,13 @@ class RunListenerAdapter extends RunListener {
 	}
 
 	@Override
+	public void testRunStarted(Description description) {
+		if (description.isSuite() && description.getAnnotation(Ignore.class) == null) {
+			fireExecutionStarted(testRun.getRunnerTestDescriptor());
+		}
+	}
+
+	@Override
 	public void testIgnored(Description description) {
 		testIgnored(lookupOrRegisterTestDescriptor(description), determineReasonForIgnoredTest(description));
 	}

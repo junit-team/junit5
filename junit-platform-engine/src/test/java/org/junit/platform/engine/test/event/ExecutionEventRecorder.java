@@ -47,15 +47,20 @@ import org.junit.platform.engine.test.event.ExecutionEvent.Type;
 public class ExecutionEventRecorder implements EngineExecutionListener {
 
 	public static List<ExecutionEvent> execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest) {
-		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest,
-			UniqueId.forEngine(testEngine.getId()));
-		ExecutionEventRecorder listener = new ExecutionEventRecorder();
-		testEngine.execute(
-			new ExecutionRequest(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
-		return listener.getExecutionEvents();
+		ExecutionEventRecorder recorder = new ExecutionEventRecorder();
+		execute(testEngine, discoveryRequest, recorder);
+		return recorder.getExecutionEvents();
 	}
 
-	public final List<ExecutionEvent> executionEvents = new CopyOnWriteArrayList<>();
+	public static void execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
+			EngineExecutionListener listener) {
+		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest,
+			UniqueId.forEngine(testEngine.getId()));
+		testEngine.execute(
+			new ExecutionRequest(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
+	}
+
+	private final List<ExecutionEvent> executionEvents = new CopyOnWriteArrayList<>();
 
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {

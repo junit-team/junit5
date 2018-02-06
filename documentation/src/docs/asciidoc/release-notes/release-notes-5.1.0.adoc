@@ -47,7 +47,10 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Due to a regression introduced in 5.1.0-RC1, test classes were reported as started
+  to `TestExecutionListeners` after their `@BeforeClass` methods were executed.
+  Now, they are reported as early as possible again, in particular before invoking
+  `@BeforeClass` methods.
 
 ==== Deprecations and Breaking Changes
 
