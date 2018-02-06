@@ -11,14 +11,12 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.allOf;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -28,27 +26,21 @@ import static org.junit.platform.engine.test.event.TestExecutionResultConditions
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.stream.Stream;
+import java.lang.reflect.AnnotatedElement;
+import java.util.Optional;
 
-import javax.script.Bindings;
-import javax.script.SimpleBindings;
-
-import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ScriptEvaluationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.jupiter.engine.script.Script;
-import org.junit.jupiter.engine.script.ScriptExecutionManager;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.mockito.Mockito;
 
 /**
  * Unit tests for {@link ScriptExecutionCondition}.
@@ -56,58 +48,6 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * @since 5.1
  */
 class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
-
-	private final Bindings bindings = createDefaultContextBindings();
-	private final ScriptExecutionCondition condition = new ScriptExecutionCondition();
-	private final ScriptExecutionManager manager = new ScriptExecutionManager();
-
-	@Test
-	void computeConditionEvaluationResultWithDefaultReasonMessage() {
-		Script script = script(EnabledIf.class, "?");
-		String actual = condition.computeConditionEvaluationResult(script, "!").getReason().orElseThrow(Error::new);
-		assertEquals("Script `?` evaluated to: !", actual);
-	}
-
-	@TestFactory
-	Stream<DynamicTest> computeConditionEvaluationResultFailsForUnsupportedAnnotationType() {
-		return Stream.of(Override.class, Deprecated.class, Object.class) //
-				.map(type -> dynamicTest("computationFailsFor(" + type + ")", //
-					() -> computeConditionEvaluationResultFailsForUnsupportedAnnotationType(type)));
-	}
-
-	private void computeConditionEvaluationResultFailsForUnsupportedAnnotationType(Type type) {
-		Script script = new Script(type, "annotation", "engine", "source", "reason");
-		Exception e = assertThrows(ScriptEvaluationException.class,
-			() -> condition.computeConditionEvaluationResult(script, "!"));
-		String expected = "Unsupported annotation type: " + type;
-		String actual = e.getMessage();
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	void defaultConditionEvaluationResultProperties() {
-		Script script = script(EnabledIf.class, "true");
-		ConditionEvaluationResult result = condition.evaluate(manager, script, bindings);
-		assertFalse(result.isDisabled());
-		assertThat(result.toString()).contains("ConditionEvaluationResult", "enabled", "true", "reason");
-	}
-
-	@Test
-	void getJUnitConfigurationParameterWithJavaScript() {
-		Script script = script(EnabledIf.class, "junitConfigurationParameter.get('XXX')");
-		Exception exception = assertThrows(ScriptEvaluationException.class,
-			() -> condition.evaluate(manager, script, bindings));
-		assertThat(exception.getMessage()).contains("Script returned `null`");
-	}
-
-	@Test
-	void getJUnitConfigurationParameterWithJavaScriptAndCheckForNull() {
-		Script script = script(EnabledIf.class, "junitConfigurationParameter.get('XXX') != null");
-		ConditionEvaluationResult result = condition.evaluate(manager, script, bindings);
-		assertTrue(result.isDisabled());
-		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
-		assertEquals("Script `junitConfigurationParameter.get('XXX') != null` evaluated to: false", actual);
-	}
 
 	@Test
 	void executeSimpleTestCases() {
@@ -143,23 +83,59 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		assertEquals("Script `{source}` evaluated to: {result}", d.reason());
 	}
 
-	private Script script(Type type, String... lines) {
-		return new Script( //
-			type, //
-			"Mock for " + type, //
-			Script.DEFAULT_SCRIPT_ENGINE_NAME, //
-			String.join("\n", lines), //
-			Script.DEFAULT_SCRIPT_REASON_PATTERN //
-		);
+	@Test
+	void throwingEvaluatorExceptionMessage() {
+		String message = "Mock for message";
+		ReflectiveOperationException cause = new ReflectiveOperationException("Mock for ReflectiveOperationException");
+		ScriptExecutionCondition.Evaluator evaluator = new ScriptExecutionCondition.ThrowingEvaluator(message, cause);
+		Exception e = assertThrows(ScriptEvaluationException.class, () -> evaluator.evaluate(null, null));
+		assertEquals(message, e.getMessage());
 	}
 
-	private Bindings createDefaultContextBindings() {
-		Bindings bindings = new SimpleBindings();
-		bindings.put(Script.BIND_JUNIT_TAGS, Collections.emptySet());
-		bindings.put(Script.BIND_JUNIT_UNIQUE_ID, "Mock for UniqueId");
-		bindings.put(Script.BIND_JUNIT_DISPLAY_NAME, "Mock for DisplayName");
-		bindings.put(Script.BIND_JUNIT_CONFIGURATION_PARAMETER, Collections.emptyMap());
-		return bindings;
+	@Test
+	void enabledDueToAnnotatedElementNotPresent() {
+		ScriptExecutionCondition condition = new ScriptExecutionCondition();
+		ExtensionContext context = Mockito.mock(ExtensionContext.class);
+		ConditionEvaluationResult result = condition.evaluateExecutionCondition(context);
+		assertFalse(result.isDisabled());
+		assertTrue(result.getReason().isPresent());
+		result.getReason().ifPresent(reason -> assertEquals("AnnotatedElement not present", reason));
+	}
+
+	@Test
+	void enabledDueToAnnotationNotPresent() {
+		ScriptExecutionCondition condition = new ScriptExecutionCondition();
+		ExtensionContext context = Mockito.mock(ExtensionContext.class);
+		Optional<AnnotatedElement> optionalElement = Optional.of(ScriptExecutionConditionTests.class);
+		Mockito.when(context.getElement()).thenReturn(optionalElement);
+		ConditionEvaluationResult result = condition.evaluateExecutionCondition(context);
+		assertFalse(result.isDisabled());
+		assertTrue(result.getReason().isPresent());
+		result.getReason().ifPresent(reason -> assertEquals("Annotation not present", reason));
+	}
+
+	@Test
+	void throwingEvaluatorIsCreatedWhenScriptEngineIsNotAvailable() {
+		String nameOfScriptEngine = "javax.script.DoesNotExist";
+		String name = "org.junit.jupiter.engine.extension.ScriptExecutionEvaluator";
+		ScriptExecutionCondition.Evaluator evaluator = ScriptExecutionCondition.Evaluator.forName(nameOfScriptEngine,
+			name);
+		Exception e = assertThrows(Exception.class, () -> evaluator.evaluate(null, null));
+		String message = e.getMessage();
+		System.out.println(message);
+		assertTrue(message.startsWith("Class `" + nameOfScriptEngine + "` is not loadable"));
+		assertTrue(message.endsWith("`--add-modules ...,java.scripting`"));
+	}
+
+	@Test
+	void throwingEvaluatorIsCreatedWhenDefaultEvaluatorClassNameIsIllegal() throws ReflectiveOperationException {
+		String name = "illegal class name";
+		ScriptExecutionCondition condition = new ScriptExecutionCondition(name);
+		ExtensionContext context = Mockito.mock(ExtensionContext.class);
+		AnnotatedElement element = SimpleTestCases.class.getDeclaredMethod("testIsEnabled");
+		Mockito.when(context.getElement()).thenReturn(Optional.of(element));
+		Exception e = assertThrows(Exception.class, () -> condition.evaluateExecutionCondition(context));
+		assertTrue(e.getMessage().startsWith("Creating instance of class `" + name + "` failed"));
 	}
 
 	static class SimpleTestCases {
