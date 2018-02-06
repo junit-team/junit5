@@ -16,6 +16,8 @@ vendors.
 
 include::../link-attributes.adoc[]
 
+include::release-notes-5.1.0.adoc[]
+
 include::release-notes-5.1.0-RC1.adoc[]
 
 include::release-notes-5.1.0-M2.adoc[]
