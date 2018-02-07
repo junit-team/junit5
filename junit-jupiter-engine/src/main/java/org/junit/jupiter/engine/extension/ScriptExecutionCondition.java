@@ -25,6 +25,7 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.script.Script;
+import org.junit.platform.commons.util.BlacklistedExceptions;
 
 /**
  * {@link ExecutionCondition} that supports the {@link DisabledIf} and {@link EnabledIf} annotation.
@@ -138,6 +139,7 @@ class ScriptExecutionCondition implements ExecutionCondition {
 				Class.forName(nameOfScriptEngine);
 			}
 			catch (Throwable cause) {
+				BlacklistedExceptions.rethrowIfBlacklisted(cause);
 				String message = "Class `" + nameOfScriptEngine + "` is not loadable, " //
 						+ "script-based test execution is disabled. " //
 						+ "If the originating cause is a `NoClassDefFoundError: javax/script/...` and " //

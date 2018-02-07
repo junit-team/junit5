@@ -31,7 +31,9 @@ import org.junit.jupiter.engine.script.ScriptExecutionManager;
 /**
  * Encapsulates javax.script-related evaluation work.
  *
- * <p>This class is instantiated via reflection.
+ * <p>This class is instantiated via reflection in class {@link ScriptExecutionCondition}.
+ *
+ * @since 5.1
  */
 class ScriptExecutionEvaluator implements ScriptExecutionCondition.Evaluator {
 
