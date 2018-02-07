@@ -818,6 +818,19 @@ results in one invocation of the parameterized test.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example]
 ----
 
+Individual fields comprising a line from a CSV file can be coalesced into a
+custom class for clarity.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSourceWithConverter_example]
+----
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ExampleCsvFileRowConverter.java[tags=ExampleCsvFileRowConverter_example]
+----
+
 [source,csv,indent=0]
 .two-column.csv
 ----

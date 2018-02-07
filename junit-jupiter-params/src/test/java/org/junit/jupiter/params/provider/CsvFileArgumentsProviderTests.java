@@ -14,6 +14,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +27,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.converter.CsvFileRowConverter;
+import org.junit.jupiter.params.converter.DefaultCsvFileRowConverter;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
@@ -103,6 +106,16 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
+	void readsFromSingleClasspathResourceWithConverter() {
+		CsvFileSource annotation = annotation("ISO-8859-1", "\n", ',', 0, TestCsvFileRowConverter.class,
+			"/single-column.csv");
+
+		Stream<Object[]> arguments = provide(new CsvFileArgumentsProvider(), annotation);
+		Stream<String> results = arguments.map(converter -> ((TestCsvFileRowConverter) converter[0]).getFirst());
+		assertThat(results).containsExactly("foo", "bar", "baz", "qux", "");
+	}
+
+	@Test
 	void readsFromMultipleClasspathResourcesWithHeaders() {
 		CsvFileSource annotation = annotation("ISO-8859-1", "\n", ',', 1, "/single-column.csv", "/single-column.csv");
 
@@ -129,12 +142,18 @@ class CsvFileArgumentsProviderTests {
 
 	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, int numLinesToSkip,
 			String... resources) {
+		return annotation(charset, lineSeparator, delimiter, numLinesToSkip, DefaultCsvFileRowConverter.class, resources);
+	}
+
+	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, int numLinesToSkip,
+			Class<? extends CsvFileRowConverter> converter, String... resources) {
 		CsvFileSource annotation = mock(CsvFileSource.class);
 		when(annotation.resources()).thenReturn(resources);
 		when(annotation.encoding()).thenReturn(charset);
 		when(annotation.lineSeparator()).thenReturn(lineSeparator);
 		when(annotation.delimiter()).thenReturn(delimiter);
 		when(annotation.numLinesToSkip()).thenReturn(numLinesToSkip);
+		doReturn(converter).when(annotation).converter();
 		return annotation;
 	}
 

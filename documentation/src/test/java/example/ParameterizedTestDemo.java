@@ -181,6 +181,15 @@ class ParameterizedTestDemo {
 	}
 	// end::CsvFileSource_example[]
 
+	// tag::CsvFileSourceWithConverter_example[]
+	@ParameterizedTest
+	@CsvFileSource(resources = "/two-column.csv", numLinesToSkip = 1, converter = ExampleCsvFileRowConverter.class)
+	void testWithCsvFileSource(ExampleCsvFileRowConverter converter) {
+		assertNotNull(converter.getCountry());
+		assertNotEquals(0, converter.getReference());
+	}
+	// end::CsvFileSourceWithConverter_example[]
+
 	// tag::ArgumentsSource_example[]
 	@ParameterizedTest
 	@ArgumentsSource(MyArgumentsProvider.class)
