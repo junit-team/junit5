@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -58,7 +59,6 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 			() -> assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started"), //
 			() -> assertEquals(1, eventRecorder.getTestSkippedCount(), "# tests skipped"), //
 			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests started") //
-
 		);
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(), //
@@ -122,11 +122,10 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		ScriptExecutionCondition.Evaluator evaluator = ScriptExecutionCondition.Evaluator.forName(nameOfScriptEngine,
 			name);
 		Exception e = assertThrows(Exception.class, () -> evaluator.evaluate(null, null));
-		assertTrue(e instanceof ExtensionConfigurationException);
-		String message = e.getMessage();
-		System.out.println(message);
-		assertTrue(message.startsWith("Class `" + nameOfScriptEngine + "` is not loadable"));
-		assertTrue(message.endsWith("`--add-modules ...,java.scripting`"));
+		assertThat(e) //
+				.isInstanceOf(ExtensionConfigurationException.class) //
+				.hasMessageStartingWith("Class `" + nameOfScriptEngine + "` is not loadable") //
+				.hasMessageEndingWith("`--add-modules ...,java.scripting`");
 	}
 
 	@Test
@@ -137,8 +136,10 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		AnnotatedElement element = SimpleTestCases.class.getDeclaredMethod("testIsEnabled");
 		Mockito.when(context.getElement()).thenReturn(Optional.of(element));
 		Exception e = assertThrows(Exception.class, () -> condition.evaluateExecutionCondition(context));
-		assertTrue(e instanceof ExtensionConfigurationException);
-		assertTrue(e.getMessage().startsWith("Creating instance of class `" + name + "` failed"));
+		assertThat(e) //
+				.isInstanceOf(ExtensionConfigurationException.class) //
+				.hasMessageStartingWith("Creating instance of class `" + name + "` failed");
+
 	}
 
 	static class SimpleTestCases {
