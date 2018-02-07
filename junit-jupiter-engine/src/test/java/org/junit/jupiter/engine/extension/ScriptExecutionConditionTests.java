@@ -34,8 +34,8 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ScriptEvaluationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -88,7 +88,8 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		String message = "Mock for message";
 		ReflectiveOperationException cause = new ReflectiveOperationException("Mock for ReflectiveOperationException");
 		ScriptExecutionCondition.Evaluator evaluator = new ScriptExecutionCondition.ThrowingEvaluator(message, cause);
-		Exception e = assertThrows(ScriptEvaluationException.class, () -> evaluator.evaluate(null, null));
+		Exception e = assertThrows(Exception.class, () -> evaluator.evaluate(null, null));
+		assertTrue(e instanceof ExtensionConfigurationException);
 		assertEquals(message, e.getMessage());
 	}
 
@@ -121,6 +122,7 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		ScriptExecutionCondition.Evaluator evaluator = ScriptExecutionCondition.Evaluator.forName(nameOfScriptEngine,
 			name);
 		Exception e = assertThrows(Exception.class, () -> evaluator.evaluate(null, null));
+		assertTrue(e instanceof ExtensionConfigurationException);
 		String message = e.getMessage();
 		System.out.println(message);
 		assertTrue(message.startsWith("Class `" + nameOfScriptEngine + "` is not loadable"));
@@ -135,6 +137,7 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		AnnotatedElement element = SimpleTestCases.class.getDeclaredMethod("testIsEnabled");
 		Mockito.when(context.getElement()).thenReturn(Optional.of(element));
 		Exception e = assertThrows(Exception.class, () -> condition.evaluateExecutionCondition(context));
+		assertTrue(e instanceof ExtensionConfigurationException);
 		assertTrue(e.getMessage().startsWith("Creating instance of class `" + name + "` failed"));
 	}
 

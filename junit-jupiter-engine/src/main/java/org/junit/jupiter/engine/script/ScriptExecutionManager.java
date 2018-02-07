@@ -24,7 +24,6 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -33,7 +32,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  */
 @API(status = INTERNAL, since = "5.1")
-public class ScriptExecutionManager implements CloseableResource {
+public class ScriptExecutionManager {
 
 	private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 	private final ConcurrentMap<String, ScriptEngine> scriptEngines = new ConcurrentHashMap<>();
@@ -44,12 +43,6 @@ public class ScriptExecutionManager implements CloseableResource {
 
 	// package-private for testing purposes -- make it configurable?
 	boolean forceScriptEvaluation = false;
-
-	@Override
-	public void close() {
-		compiledScripts.clear();
-		scriptEngines.clear();
-	}
 
 	/**
 	 * Evaluate the script using the given bindings.
