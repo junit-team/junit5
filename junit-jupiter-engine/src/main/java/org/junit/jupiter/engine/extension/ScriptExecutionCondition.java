@@ -22,8 +22,8 @@ import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ScriptEvaluationException;
 import org.junit.jupiter.engine.script.Script;
 
 /**
@@ -160,14 +160,14 @@ class ScriptExecutionCondition implements ExecutionCondition {
 	}
 
 	/**
-	 * Evaluator implementation that always throws an {@link ScriptEvaluationException}.
+	 * Evaluator implementation that always throws an {@link ExtensionConfigurationException}.
 	 */
 	static class ThrowingEvaluator implements Evaluator {
 
-		final ScriptEvaluationException exception;
+		final ExtensionConfigurationException exception;
 
 		ThrowingEvaluator(String message, Throwable cause) {
-			this.exception = new ScriptEvaluationException(message, cause);
+			this.exception = new ExtensionConfigurationException(message, cause);
 		}
 
 		@Override
