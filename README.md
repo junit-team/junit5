@@ -145,10 +145,10 @@ as it is not intended to be used as a module.
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
 [JaCoCo]: http://www.eclemma.org/jacoco/
-[Javadoc]: http://junit.org/junit5/docs/current/api/
+[Javadoc]: https://junit.org/junit5/docs/current/api/
 [JDK-9]: http://jdk.java.net/9/
 [Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/artifact/build/reports/jacoco/jacocoRootReport/html/index.html
 [OpenClover]: http://openclover.org
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
-[User Guide]: http://junit.org/junit5/docs/current/user-guide/
+[User Guide]: https://junit.org/junit5/docs/current/user-guide/
