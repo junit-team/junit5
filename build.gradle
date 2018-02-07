@@ -137,15 +137,17 @@ allprojects { subproj ->
 	// a sub-project.
 	ext.javacRelease = rootProject.javacRelease
 
-	tasks.withType(JavaCompile) {
-		sourceCompatibility = javacRelease // needed by clover
-		targetCompatibility = javacRelease // needed by clover/asm
-		options.compilerArgs += ['--release', javacRelease]
-		options.encoding = 'UTF-8'
+	subproj.afterEvaluate { evaluatedProject ->
+		evaluatedProject.tasks.withType(JavaCompile) {
+			sourceCompatibility = javacRelease // needed by clover
+			targetCompatibility = javacRelease // needed by clover/asm
+			options.compilerArgs += ['--release', javacRelease]
+			options.encoding = 'UTF-8'
+		}
 	}
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileJava.options*.compilerArgs = [
+	compileJava.options.compilerArgs += [
 		'-Xlint:cast',
 		'-Xlint:classfile',
 		'-Xlint:deprecation',
@@ -168,7 +170,7 @@ allprojects { subproj ->
 	]
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileTestJava.options*.compilerArgs = [
+	compileTestJava.options.compilerArgs += [
 		'-Xlint:cast',
 		'-Xlint:classfile',
 		'-Xlint:deprecation',
