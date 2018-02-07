@@ -145,7 +145,7 @@ allprojects { subproj ->
 	}
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileJava.options*.compilerArgs = [
+	compileJava.options.compilerArgs += [
 		'-Xlint:cast',
 		'-Xlint:classfile',
 		'-Xlint:deprecation',
@@ -168,7 +168,7 @@ allprojects { subproj ->
 	]
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileTestJava.options*.compilerArgs = [
+	compileTestJava.options.compilerArgs += [
 		'-Xlint:cast',
 		'-Xlint:classfile',
 		'-Xlint:deprecation',
