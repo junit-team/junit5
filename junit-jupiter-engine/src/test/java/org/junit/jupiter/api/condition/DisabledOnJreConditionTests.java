@@ -66,7 +66,7 @@ class DisabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void disabledOnAllJavaVersions() {
 		evaluateCondition();
-		assertDisabledOnCurrentJre();
+		assertDisabledOnCurrentJreIf(true);
 	}
 
 	/**
@@ -75,12 +75,7 @@ class DisabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void java8() {
 		evaluateCondition();
-		if (onJava8()) {
-			assertDisabledOnCurrentJre();
-		}
-		else {
-			assertEnabledOnCurrentJre();
-		}
+		assertDisabledOnCurrentJreIf(onJava8());
 	}
 
 	/**
@@ -89,12 +84,7 @@ class DisabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void java9() {
 		evaluateCondition();
-		if (onJava9()) {
-			assertDisabledOnCurrentJre();
-		}
-		else {
-			assertEnabledOnCurrentJre();
-		}
+		assertDisabledOnCurrentJreIf(onJava9());
 	}
 
 	/**
@@ -103,12 +93,7 @@ class DisabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void java10() {
 		evaluateCondition();
-		if (onJava10()) {
-			assertDisabledOnCurrentJre();
-		}
-		else {
-			assertEnabledOnCurrentJre();
-		}
+		assertDisabledOnCurrentJreIf(onJava10());
 	}
 
 	/**
@@ -117,12 +102,7 @@ class DisabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void java11() {
 		evaluateCondition();
-		if (onJava11()) {
-			assertDisabledOnCurrentJre();
-		}
-		else {
-			assertEnabledOnCurrentJre();
-		}
+		assertDisabledOnCurrentJreIf(onJava11());
 	}
 
 	/**
@@ -131,22 +111,18 @@ class DisabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void other() {
 		evaluateCondition();
-		if (onJava8() || onJava9() || onJava10() || onJava11()) {
-			assertEnabledOnCurrentJre();
+		assertDisabledOnCurrentJreIf(!(onJava8() || onJava9() || onJava10() || onJava11()));
+	}
+
+	private void assertDisabledOnCurrentJreIf(boolean condition) {
+		if (condition) {
+			assertDisabled();
+			assertReasonContains("Disabled on JRE version: " + System.getProperty("java.version"));
 		}
 		else {
-			assertDisabledOnCurrentJre();
+			assertEnabled();
+			assertReasonContains("Enabled on JRE version: " + System.getProperty("java.version"));
 		}
-	}
-
-	private void assertEnabledOnCurrentJre() {
-		assertEnabled();
-		assertReasonContains("Enabled on JRE version: " + System.getProperty("java.version"));
-	}
-
-	private void assertDisabledOnCurrentJre() {
-		assertDisabled();
-		assertReasonContains("Disabled on JRE version: " + System.getProperty("java.version"));
 	}
 
 }
