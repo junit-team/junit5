@@ -81,15 +81,15 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	static boolean onJava9() {
-		return JAVA_VERSION.startsWith("9.");
+		return JAVA_VERSION.startsWith("9");
 	}
 
 	static boolean onJava10() {
-		return JAVA_VERSION.startsWith("10.");
+		return JAVA_VERSION.startsWith("10");
 	}
 
 	static boolean onJava11() {
-		return JAVA_VERSION.startsWith("11.");
+		return JAVA_VERSION.startsWith("11");
 	}
 
 }
