@@ -28,6 +28,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -36,6 +37,17 @@ import org.junit.jupiter.api.Test;
  * @since 5.1
  */
 class DisabledOnOsIntegrationTests {
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	void enabledBecauseAnnotationIsNotPresent() {
+	}
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	@DisabledOnOs({})
+	void missingOsDeclaration() {
+	}
 
 	@Test
 	@DisabledOnOs({ LINUX, MAC, WINDOWS, SOLARIS, OTHER })

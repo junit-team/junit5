@@ -24,6 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Locale;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,6 +35,17 @@ import org.junit.jupiter.api.Test;
 class EnabledOnOsIntegrationTests {
 
 	private static final String OS_NAME = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	void enabledBecauseAnnotationIsNotPresent() {
+	}
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	@EnabledOnOs({})
+	void missingOsDeclaration() {
+	}
 
 	@Test
 	@EnabledOnOs({ LINUX, MAC, WINDOWS, SOLARIS, OTHER })
