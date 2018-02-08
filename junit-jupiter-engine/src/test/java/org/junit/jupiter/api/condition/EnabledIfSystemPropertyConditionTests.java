@@ -17,7 +17,7 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 
 /**
  * Unit tests for {@link EnabledIfSystemPropertyCondition}.
- * 
+ *
  * <p>Note that test method names MUST match the test method names in
  * {@link EnabledIfSystemPropertyIntegrationTests}.
  *
