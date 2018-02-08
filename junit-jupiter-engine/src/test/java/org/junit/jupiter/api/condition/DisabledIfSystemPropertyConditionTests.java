@@ -50,6 +50,7 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 	 */
 	@Test
 	void enabledBecauseAnnotationIsNotPresent() {
+		evaluateCondition();
 		assertEnabled();
 		assertReasonContains("@DisabledIfSystemProperty is not present");
 	}
@@ -59,6 +60,7 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 	 */
 	@Test
 	void disabledBecauseSystemPropertyMatchesExactly() {
+		evaluateCondition();
 		assertDisabled();
 		assertReasonContains("matches regular expression");
 	}
@@ -68,6 +70,7 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 	 */
 	@Test
 	void disabledBecauseSystemPropertyMatchesPattern() {
+		evaluateCondition();
 		assertDisabled();
 		assertReasonContains("matches regular expression");
 	}
@@ -77,6 +80,7 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 	 */
 	@Test
 	void enabledBecauseSystemPropertyDoesNotMatch() {
+		evaluateCondition();
 		assertEnabled();
 		assertReasonContains("does not match regular expression");
 	}
@@ -86,6 +90,7 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 	 */
 	@Test
 	void enabledBecauseSystemPropertyDoesNotExist() {
+		evaluateCondition();
 		assertEnabled();
 		assertReasonContains("does not exist");
 	}

@@ -39,12 +39,15 @@ abstract class AbstractExecutionConditionTests {
 	@BeforeEach
 	void beforeEach(TestInfo testInfo) {
 		when(this.context.getElement()).thenReturn(method(testInfo));
-		this.result = getExecutionCondition().evaluateExecutionCondition(this.context);
 	}
 
 	protected abstract ExecutionCondition getExecutionCondition();
 
 	protected abstract Class<?> getTestClass();
+
+	protected void evaluateCondition() {
+		this.result = getExecutionCondition().evaluateExecutionCondition(this.context);
+	}
 
 	protected void assertEnabled() {
 		assertThat(this.result.isDisabled()).isFalse();
