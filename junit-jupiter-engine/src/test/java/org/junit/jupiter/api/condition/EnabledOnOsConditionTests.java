@@ -66,7 +66,7 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void enabledOnEveryOs() {
 		evaluateCondition();
-		assertEnabledOnCurrentOs();
+		assertEnabledOnCurrentOsIf(true);
 	}
 
 	/**
@@ -75,12 +75,7 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void linux() {
 		evaluateCondition();
-		if (onLinux()) {
-			assertEnabledOnCurrentOs();
-		}
-		else {
-			assertDisabledOnCurrentOs();
-		}
+		assertEnabledOnCurrentOsIf(onLinux());
 	}
 
 	/**
@@ -89,12 +84,7 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void macOs() {
 		evaluateCondition();
-		if (onMac()) {
-			assertEnabledOnCurrentOs();
-		}
-		else {
-			assertDisabledOnCurrentOs();
-		}
+		assertEnabledOnCurrentOsIf(onMac());
 	}
 
 	/**
@@ -103,12 +93,7 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void macOsWithComposedAnnotation() {
 		evaluateCondition();
-		if (onMac()) {
-			assertEnabledOnCurrentOs();
-		}
-		else {
-			assertDisabledOnCurrentOs();
-		}
+		assertEnabledOnCurrentOsIf(onMac());
 	}
 
 	/**
@@ -117,12 +102,7 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void windows() {
 		evaluateCondition();
-		if (onWindows()) {
-			assertEnabledOnCurrentOs();
-		}
-		else {
-			assertDisabledOnCurrentOs();
-		}
+		assertEnabledOnCurrentOsIf(onWindows());
 	}
 
 	/**
@@ -131,12 +111,7 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void solaris() {
 		evaluateCondition();
-		if (onSolaris()) {
-			assertEnabledOnCurrentOs();
-		}
-		else {
-			assertDisabledOnCurrentOs();
-		}
+		assertEnabledOnCurrentOsIf(onSolaris());
 	}
 
 	/**
@@ -145,22 +120,18 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void other() {
 		evaluateCondition();
-		if (onLinux() || onMac() || onSolaris() || onWindows()) {
-			assertDisabledOnCurrentOs();
+		assertEnabledOnCurrentOsIf(!(onLinux() || onMac() || onSolaris() || onWindows()));
+	}
+
+	private void assertEnabledOnCurrentOsIf(boolean condition) {
+		if (condition) {
+			assertEnabled();
+			assertReasonContains("Enabled on operating system: " + System.getProperty("os.name"));
 		}
 		else {
-			assertEnabledOnCurrentOs();
+			assertDisabled();
+			assertReasonContains("Disabled on operating system: " + System.getProperty("os.name"));
 		}
-	}
-
-	private void assertEnabledOnCurrentOs() {
-		assertEnabled();
-		assertReasonContains("Enabled on operating system: " + System.getProperty("os.name"));
-	}
-
-	private void assertDisabledOnCurrentOs() {
-		assertDisabled();
-		assertReasonContains("Disabled on operating system: " + System.getProperty("os.name"));
 	}
 
 }
