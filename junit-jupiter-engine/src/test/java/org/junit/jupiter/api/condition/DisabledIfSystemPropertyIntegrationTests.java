@@ -30,36 +30,41 @@ class DisabledIfSystemPropertyIntegrationTests {
 	private static final String BOGUS = "DisabledIfSystemPropertyTests.bogus";
 
 	@BeforeAll
-	static void setUp() {
+	static void setSystemProperty() {
 		System.setProperty(KEY, ENIGMA);
 	}
 
 	@AfterAll
-	static void tearDown() {
+	static void clearSystemProperty() {
 		System.clearProperty(KEY);
 	}
 
 	@Test
+	void enabledBecauseAnnotationIsNotPresent() {
+		// this method is used in a unit test in a different class
+	}
+
+	@Test
 	@DisabledIfSystemProperty(named = KEY, matches = ENIGMA)
-	void propertyMatchesExactly() {
+	void disabledBecauseSystemPropertyMatchesExactly() {
 		fail("should be disabled");
 	}
 
 	@Test
 	@DisabledIfSystemProperty(named = KEY, matches = ".+enigma$")
-	void propertyMatchesPattern() {
+	void disabledBecauseSystemPropertyMatchesPattern() {
 		fail("should be disabled");
 	}
 
 	@Test
 	@DisabledIfSystemProperty(named = KEY, matches = BOGUS)
-	void propertyDoesNotMatch() {
+	void enabledBecauseSystemPropertyDoesNotMatch() {
 		assertNotEquals(BOGUS, System.getProperty(KEY));
 	}
 
 	@Test
 	@DisabledIfSystemProperty(named = BOGUS, matches = "doesn't matter")
-	void propertyDoesNotExist() {
+	void enabledBecauseSystemPropertyDoesNotExist() {
 		assertNull(System.getProperty(BOGUS));
 	}
 
