@@ -11,8 +11,10 @@
 package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava10;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava11;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 import static org.junit.jupiter.api.condition.JRE.JAVA_10;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -29,6 +32,17 @@ import org.junit.jupiter.api.Test;
  * @since 5.1
  */
 class DisabledOnJreIntegrationTests {
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	void enabledBecauseAnnotationIsNotPresent() {
+	}
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	@DisabledOnJre({})
+	void missingJreDeclaration() {
+	}
 
 	@Test
 	@DisabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, OTHER })
@@ -52,6 +66,18 @@ class DisabledOnJreIntegrationTests {
 	@DisabledOnJre(JAVA_10)
 	void java10() {
 		assertFalse(onJava10());
+	}
+
+	@Test
+	@DisabledOnJre(JAVA_11)
+	void java11() {
+		assertFalse(onJava11());
+	}
+
+	@Test
+	@DisabledOnJre(OTHER)
+	void other() {
+		assertTrue(onJava8() || onJava9() || onJava10() || onJava11());
 	}
 
 }
