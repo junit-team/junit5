@@ -55,8 +55,9 @@ class ScriptExecutionEvaluatorTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void computeConditionEvaluationResultWithDefaultReasonMessage() {
 		Script script = script(EnabledIf.class, "?");
-		String actual = evaluator.computeConditionEvaluationResult(script, "!").getReason().orElseThrow(Error::new);
-		assertEquals("Script `?` evaluated to: !", actual);
+		ConditionEvaluationResult result = evaluator.computeConditionEvaluationResult(script, "!");
+		assertTrue(result.isDisabled());
+		assertThat(result.getReason()).contains("Script `?` evaluated to: !");
 	}
 
 	@TestFactory
@@ -95,8 +96,8 @@ class ScriptExecutionEvaluatorTests extends AbstractJupiterTestEngineTests {
 		Script script = script(DisabledIf.class, "junitConfigurationParameter.get('XXX') == null");
 		ConditionEvaluationResult result = evaluate(script);
 		assertTrue(result.isDisabled());
-		String actual = result.getReason().orElseThrow(() -> new AssertionError("causeless"));
-		assertEquals("Script `junitConfigurationParameter.get('XXX') == null` evaluated to: true", actual);
+		assertThat(result.getReason()) //
+				.contains("Script `junitConfigurationParameter.get('XXX') == null` evaluated to: true");
 	}
 
 	private ConditionEvaluationResult evaluate(Script script) {

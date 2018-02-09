@@ -68,7 +68,6 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 						isA(JUnitException.class), //
 						message(value -> value.contains("syntax error")) //
 					))));
-
 	}
 
 	@Test
@@ -99,8 +98,7 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		ExtensionContext context = Mockito.mock(ExtensionContext.class);
 		ConditionEvaluationResult result = condition.evaluateExecutionCondition(context);
 		assertFalse(result.isDisabled());
-		assertTrue(result.getReason().isPresent());
-		result.getReason().ifPresent(reason -> assertEquals("AnnotatedElement not present", reason));
+		assertThat(result.getReason()).contains("AnnotatedElement not present");
 	}
 
 	@Test
@@ -111,8 +109,7 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		Mockito.when(context.getElement()).thenReturn(optionalElement);
 		ConditionEvaluationResult result = condition.evaluateExecutionCondition(context);
 		assertFalse(result.isDisabled());
-		assertTrue(result.getReason().isPresent());
-		result.getReason().ifPresent(reason -> assertEquals("Annotation not present", reason));
+		assertThat(result.getReason()).contains("Annotation not present");
 	}
 
 	@Test
