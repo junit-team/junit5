@@ -48,16 +48,17 @@ import org.apiguardian.api.API;
  *       ExecutionCondition}.</td>
  * </tr>
  * <tr>
+ *    <td>{@code null}</td>
+ *    <td>A return value of {@code null} is considered to be an error and will
+ *        result in a {@link org.junit.jupiter.api.extension.ScriptEvaluationException
+ *        ScriptEvaluationException}.</td>
+ * </tr>
+ * <tr>
  *   <td>*</td>
  *   <td>The value of any other return type will be converted to its String
  *       representation by {@link String#valueOf(Object)} and then interpreted as
  *       a boolean by passing the String representation to
  *       {@link Boolean#parseBoolean(String)}.</td>
- * </tr>
- * <tr>
- *   <td><em>{@code null}</em></td>
- *   <td>A return value of {@code null} is considered to be an error and will
- *       raise a {@link org.junit.jupiter.api.extension.ScriptEvaluationException ScriptEvaluationException}.</td>
  * </tr>
  * </table>
  *
@@ -92,8 +93,8 @@ import org.apiguardian.api.API;
  * <li>{@code junitConfigurationParameter}: Configuration parameter accessor</li>
  * </ul>
  *
- * <p>Scripts must not declare variables using names that start with {@code junit}.
- * They might clash with new bindings introduced in the future.
+ * <p>Scripts must not declare variables using names that start with {@code junit},
+ * since they might clash with bindings provided by JUnit.
  *
  * @since 5.1
  * @see org.junit.jupiter.api.Disabled
