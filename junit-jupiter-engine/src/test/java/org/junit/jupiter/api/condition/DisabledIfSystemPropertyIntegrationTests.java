@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -40,8 +41,20 @@ class DisabledIfSystemPropertyIntegrationTests {
 	}
 
 	@Test
+	@Disabled("Only used in a unit test via reflection")
 	void enabledBecauseAnnotationIsNotPresent() {
-		// this method is used in a unit test in a different class
+	}
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	@DisabledIfSystemProperty(named = "  ", matches = ENIGMA)
+	void blankNamedAttribute() {
+	}
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	@DisabledIfSystemProperty(named = KEY, matches = "  ")
+	void blankMatchesAttribute() {
 	}
 
 	@Test

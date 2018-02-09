@@ -10,10 +10,14 @@
 
 package org.junit.jupiter.api.condition;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
  * Unit tests for {@link EnabledIfSystemPropertyCondition}.
@@ -53,6 +57,24 @@ class EnabledIfSystemPropertyConditionTests extends AbstractExecutionConditionTe
 		evaluateCondition();
 		assertEnabled();
 		assertReasonContains("@EnabledIfSystemProperty is not present");
+	}
+
+	/**
+	 * @see EnabledIfSystemPropertyIntegrationTests#blankNamedAttribute()
+	 */
+	@Test
+	void blankNamedAttribute() {
+		Exception exception = assertThrows(PreconditionViolationException.class, this::evaluateCondition);
+		assertThat(exception).hasMessageContaining("The 'named' attribute must not be blank");
+	}
+
+	/**
+	 * @see EnabledIfSystemPropertyIntegrationTests#blankMatchesAttribute()
+	 */
+	@Test
+	void blankMatchesAttribute() {
+		Exception exception = assertThrows(PreconditionViolationException.class, this::evaluateCondition);
+		assertThat(exception).hasMessageContaining("The 'matches' attribute must not be blank");
 	}
 
 	/**
