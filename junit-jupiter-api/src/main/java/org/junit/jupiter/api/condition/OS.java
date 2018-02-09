@@ -62,9 +62,9 @@ public enum OS {
 
 	private static final Logger logger = LoggerFactory.getLogger(OS.class);
 
-	private static final OS CURRENT_OS = determineCurrentfOs();
+	private static final OS CURRENT_OS = determineCurrentOs();
 
-	private static OS determineCurrentfOs() {
+	private static OS determineCurrentOs() {
 		String osName = System.getProperty("os.name");
 
 		if (StringUtils.isBlank(osName)) {
