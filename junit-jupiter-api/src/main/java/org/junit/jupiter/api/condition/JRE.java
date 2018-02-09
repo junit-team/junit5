@@ -21,7 +21,12 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
- * Enumeration of Java Runtime Environment versions.
+ * Enumeration of Java Runtime Environment (JRE) versions.
+ *
+ * <p>If the current JRE version cannot be detected &mdash; for example, if the
+ * {@code java.version} JVM system property is undefined &mdash; then none of
+ * the constants defined in this enum will be considered to be the
+ * {@linkplain #isCurrentVersion current JRE version}.
  *
  * @since 5.1
  * @see EnabledOnJre
@@ -53,11 +58,6 @@ public enum JRE {
 	/**
 	 * A JRE version other than {@link #JAVA_8}, {@link #JAVA_9},
 	 * {@link #JAVA_10}, or {@link #JAVA_11}.
-	 *
-	 * <p>Note that {@code OTHER} will be considered to be the {@linkplain
-	 * #isCurrentVersion current JRE version} if the current JRE version could
-	 * not be detected &mdash; for example, if the {@code java.version} JVM
-	 * system property is undefined.
 	 */
 	OTHER;
 
@@ -77,34 +77,37 @@ public enum JRE {
 		if (!javaVersionIsBlank && javaVersion.startsWith("1.8")) {
 			return JAVA_8;
 		}
-		else {
-			try {
-				// java.lang.Runtime.version() is a static method available on Java 9+
-				// that returns an instance of java.lang.Runtime.Version which has the
-				// following method: public int major()
-				Method versionMethod = Runtime.class.getMethod("version");
-				Object version = ReflectionUtils.invokeMethod(versionMethod, null);
-				Method majorMethod = version.getClass().getMethod("major");
-				int major = (int) ReflectionUtils.invokeMethod(majorMethod, version);
-				switch (major) {
-					case 9:
-						return JAVA_9;
-					case 10:
-						return JAVA_10;
-					case 11:
-						return JAVA_11;
-				}
+
+		try {
+			// java.lang.Runtime.version() is a static method available on Java 9+
+			// that returns an instance of java.lang.Runtime.Version which has the
+			// following method: public int major()
+			Method versionMethod = Runtime.class.getMethod("version");
+			Object version = ReflectionUtils.invokeMethod(versionMethod, null);
+			Method majorMethod = version.getClass().getMethod("major");
+			int major = (int) ReflectionUtils.invokeMethod(majorMethod, version);
+			switch (major) {
+				case 9:
+					return JAVA_9;
+				case 10:
+					return JAVA_10;
+				case 11:
+					return JAVA_11;
+				default:
+					return OTHER;
 			}
-			catch (Exception ex) {
-				logger.debug(ex, () -> "Failed to determine the current JRE version.");
-			}
-			return OTHER;
 		}
+		catch (Exception ex) {
+			logger.debug(ex, () -> "Failed to determine the current JRE version via java.lang.Runtime.Version.");
+		}
+
+		// null signals that the current JRE version is "unknown"
+		return null;
 	}
 
 	/**
-	 * @return {@code true} if <em>this</em> {@code JRE} is the Java Runtime
-	 * Environment version for the currently executing JVM.
+	 * @return {@code true} if <em>this</em> {@code JRE} is known to be the
+	 * Java Runtime Environment version for the currently executing JVM
 	 */
 	public boolean isCurrentVersion() {
 		return this == CURRENT_VERSION;
