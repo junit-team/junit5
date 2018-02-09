@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import java.lang.reflect.Type;
+import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.stream.Stream;
 
@@ -62,12 +62,12 @@ class ScriptExecutionEvaluatorTests extends AbstractJupiterTestEngineTests {
 
 	@TestFactory
 	Stream<DynamicTest> computeConditionEvaluationResultFailsForUnsupportedAnnotationType() {
-		return Stream.of(Override.class, Deprecated.class, Object.class) //
+		return Stream.of(Override.class, Deprecated.class) //
 				.map(type -> dynamicTest("computationFailsFor(" + type + ")", //
 					() -> computeConditionEvaluationResultFailsForUnsupportedAnnotationType(type)));
 	}
 
-	private void computeConditionEvaluationResultFailsForUnsupportedAnnotationType(Type type) {
+	private void computeConditionEvaluationResultFailsForUnsupportedAnnotationType(Class<? extends Annotation> type) {
 		Script script = new Script(type, "annotation", "engine", "source", "reason");
 		Exception e = assertThrows(ScriptEvaluationException.class,
 			() -> evaluator.computeConditionEvaluationResult(script, "!"));
@@ -104,7 +104,7 @@ class ScriptExecutionEvaluatorTests extends AbstractJupiterTestEngineTests {
 		return evaluator.evaluate(manager, script, bindings);
 	}
 
-	private Script script(Type type, String... lines) {
+	private Script script(Class<? extends Annotation> type, String... lines) {
 		return new Script( //
 			type, //
 			"Mock for " + type, //

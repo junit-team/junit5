@@ -65,14 +65,14 @@ class ScriptTests {
 			// null is not allowed
 			dynamicTest("2", () -> assertNotNull(new Script(Test.class, "a", "e", "s", "r"))), //
 			dynamicTest("3", () -> assertThrows(expected, () -> new Script(null, "a", "e", "s", "r"))), //
-			dynamicTest("4", () -> assertThrows(expected, () -> new Script(Error.class, null, "e", "s", "r"))), //
-			dynamicTest("5", () -> assertThrows(expected, () -> new Script(Error.class, "a", null, "s", "r"))), //
-			dynamicTest("6", () -> assertThrows(expected, () -> new Script(Error.class, "a", "e", null, "r"))), //
-			dynamicTest("7", () -> assertThrows(expected, () -> new Script(Error.class, "a", "e", "s", null))), //
+			dynamicTest("4", () -> assertThrows(expected, () -> new Script(Test.class, null, "e", "s", "r"))), //
+			dynamicTest("5", () -> assertThrows(expected, () -> new Script(Test.class, "a", null, "s", "r"))), //
+			dynamicTest("6", () -> assertThrows(expected, () -> new Script(Test.class, "a", "e", null, "r"))), //
+			dynamicTest("7", () -> assertThrows(expected, () -> new Script(Test.class, "a", "e", "s", null))), //
 			// engine and source must not be blank
 			dynamicTest("8", () -> assertNotNull(new Script(Test.class, "", "e", "s", ""))), //
-			dynamicTest("9", () -> assertThrows(expected, () -> new Script(Error.class, "", "", "s", ""))), //
-			dynamicTest("A", () -> assertThrows(expected, () -> new Script(Error.class, "", "e", "", ""))) //
+			dynamicTest("9", () -> assertThrows(expected, () -> new Script(Test.class, "", "", "s", ""))), //
+			dynamicTest("A", () -> assertThrows(expected, () -> new Script(Test.class, "", "e", "", ""))) //
 		);
 	}
 

@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.script;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 import java.util.Objects;
 
 import org.apiguardian.api.API;
@@ -111,7 +110,7 @@ public final class Script {
 
 	// ------------------------------------------------------------------------
 
-	private final Type annotationType;
+	private final Class<? extends Annotation> annotationType;
 	private final String annotationAsString;
 	private final String engine;
 	private final String source;
@@ -123,7 +122,9 @@ public final class Script {
 			engine, source, reason);
 	}
 
-	public Script(Type annotationType, String annotationAsString, String engine, String source, String reason) {
+	public Script(Class<? extends Annotation> annotationType, String annotationAsString, String engine, String source,
+			String reason) {
+
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 		Preconditions.notNull(annotationAsString, "annotationAsString must not be null");
 		Preconditions.notBlank(engine, "engine must not be blank");
@@ -168,7 +169,7 @@ public final class Script {
 		return annotationAsString;
 	}
 
-	public Type getAnnotationType() {
+	public Class<? extends Annotation> getAnnotationType() {
 		return annotationType;
 	}
 

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import java.lang.reflect.Type;
+import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.stream.Stream;
 
@@ -85,9 +85,9 @@ class ScriptExecutionManagerTests {
 	void forceScriptEvaluation() throws ScriptException {
 		manager.forceScriptEvaluation = true;
 		assertTrue(manager.isCompiledScriptsEmpty());
-		assertEquals("✅", manager.evaluate(script(Character.class, "'✅'"), bindings));
+		assertEquals("✅", manager.evaluate(script("'✅'"), bindings));
 		assertTrue(manager.isCompiledScriptsEmpty());
-		assertEquals("❌", manager.evaluate(script(Character.class, "'❌'"), bindings));
+		assertEquals("❌", manager.evaluate(script("'❌'"), bindings));
 		assertTrue(manager.isCompiledScriptsEmpty());
 	}
 
@@ -99,7 +99,7 @@ class ScriptExecutionManagerTests {
 	}
 
 	private void assertScriptEvaluatesToTrue(String... lines) throws ScriptException {
-		assertTrue(Boolean.parseBoolean("" + manager.evaluate(script(String.class, lines), bindings)));
+		assertTrue(Boolean.parseBoolean("" + manager.evaluate(script(lines), bindings)));
 	}
 
 	@TestFactory
@@ -110,20 +110,21 @@ class ScriptExecutionManagerTests {
 	}
 
 	private void assertScriptEvaluatesToFalse(String... lines) throws ScriptException {
-		assertFalse(Boolean.parseBoolean("" + manager.evaluate(script(String.class, lines), bindings)));
+		assertFalse(Boolean.parseBoolean("" + manager.evaluate(script(lines), bindings)));
 	}
 
 	@Test
 	void syntaxErrorInScriptFailsTest() {
-		Script enabledIfScript = script(Error.class, "syntax error");
+		Script enabledIfScript = script("syntax error");
 		Exception exception = assertThrows(ScriptException.class, () -> manager.evaluate(enabledIfScript, bindings));
 		assertTrue(exception.getMessage().contains("syntax error"));
-		Script disabledIfScript = script(Error.class, "syntax error");
+		Script disabledIfScript = script("syntax error");
 		exception = assertThrows(ScriptException.class, () -> manager.evaluate(disabledIfScript, bindings));
 		assertTrue(exception.getMessage().contains("syntax error"));
 	}
 
-	private Script script(Type type, String... lines) {
+	private Script script(String... lines) {
+		Class<? extends Annotation> type = Test.class;
 		return new Script( //
 			type, //
 			"Mock for " + type, //
