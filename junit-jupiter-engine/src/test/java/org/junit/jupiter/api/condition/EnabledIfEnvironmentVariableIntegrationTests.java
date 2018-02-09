@@ -26,31 +26,48 @@ import org.junit.jupiter.api.Test;
 // EnabledIfEnvironmentVariableTests.key = EnabledIfEnvironmentVariableTests.enigma
 class EnabledIfEnvironmentVariableIntegrationTests {
 
-	private static final String KEY = "EnabledIfEnvironmentVariableTests.key";
-	private static final String ENIGMA = "EnabledIfEnvironmentVariableTests.enigma";
-	private static final String BOGUS = "EnabledIfEnvironmentVariableTests.bogus";
+	static final String KEY = "EnabledIfEnvironmentVariableTests.key";
+	static final String ENIGMA = "EnabledIfEnvironmentVariableTests.enigma";
+	static final String BOGUS = "EnabledIfEnvironmentVariableTests.bogus";
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	void enabledBecauseAnnotationIsNotPresent() {
+	}
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	@EnabledIfEnvironmentVariable(named = "  ", matches = ENIGMA)
+	void blankNamedAttribute() {
+	}
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	@EnabledIfEnvironmentVariable(named = KEY, matches = "  ")
+	void blankMatchesAttribute() {
+	}
 
 	@Test
 	@EnabledIfEnvironmentVariable(named = KEY, matches = ENIGMA)
-	void environmentVariableMatchesExactly() {
+	void enabledBecauseEnvironmentVariableMatchesExactly() {
 		assertEquals(ENIGMA, System.getenv(KEY));
 	}
 
 	@Test
 	@EnabledIfEnvironmentVariable(named = KEY, matches = ".+enigma$")
-	void environmentVariableMatchesPattern() {
+	void enabledBecauseEnvironmentVariableMatchesPattern() {
 		assertEquals(ENIGMA, System.getenv(KEY));
 	}
 
 	@Test
 	@EnabledIfEnvironmentVariable(named = KEY, matches = BOGUS)
-	void environmentVariableDoesNotMatch() {
+	void disabledBecauseEnvironmentVariableDoesNotMatch() {
 		fail("should be disabled");
 	}
 
 	@Test
 	@EnabledIfEnvironmentVariable(named = BOGUS, matches = "doesn't matter")
-	void environmentVariableDoesNotExist() {
+	void disabledBecauseEnvironmentVariableDoesNotExist() {
 		fail("should be disabled");
 	}
 

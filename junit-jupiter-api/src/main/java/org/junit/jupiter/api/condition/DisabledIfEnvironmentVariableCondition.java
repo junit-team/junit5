@@ -47,7 +47,7 @@ class DisabledIfEnvironmentVariableCondition implements ExecutionCondition {
 		String regex = annotation.matches();
 		Preconditions.notBlank(name, () -> "The 'named' attribute must not be blank in " + annotation);
 		Preconditions.notBlank(regex, () -> "The 'matches' attribute must not be blank in " + annotation);
-		String actual = System.getenv(name);
+		String actual = getEnvironmentVariable(name);
 
 		// Nothing to match against?
 		if (actual == null) {
@@ -61,6 +61,17 @@ class DisabledIfEnvironmentVariableCondition implements ExecutionCondition {
 		// else
 		return enabled(format("Environment variable [%s] with value [%s] does not match regular expression [%s]", name,
 			actual, regex));
+	}
+
+	/**
+	 * Get the value of the named environment variable.
+	 *
+	 * <p>The default implementation simply delegates to
+	 * {@link System#getenv(String)}. Can be overridden in a subclass for
+	 * testing purposes.
+	 */
+	protected String getEnvironmentVariable(String name) {
+		return System.getenv(name);
 	}
 
 }

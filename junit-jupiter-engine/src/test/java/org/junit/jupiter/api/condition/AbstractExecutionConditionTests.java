@@ -11,6 +11,7 @@
 package org.junit.jupiter.api.condition;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,11 +51,11 @@ abstract class AbstractExecutionConditionTests {
 	}
 
 	protected void assertEnabled() {
-		assertThat(this.result.isDisabled()).isFalse();
+		assertTrue(!this.result.isDisabled(), "Should be enabled");
 	}
 
 	protected void assertDisabled() {
-		assertThat(this.result.isDisabled()).isTrue();
+		assertTrue(this.result.isDisabled(), "Should be disabled");
 	}
 
 	protected void assertReasonContains(String text) {

@@ -27,31 +27,48 @@ import org.junit.jupiter.api.Test;
 // DisabledIfEnvironmentVariableTests.key = DisabledIfEnvironmentVariableTests.enigma
 class DisabledIfEnvironmentVariableIntegrationTests {
 
-	private static final String KEY = "DisabledIfEnvironmentVariableTests.key";
-	private static final String ENIGMA = "DisabledIfEnvironmentVariableTests.enigma";
-	private static final String BOGUS = "DisabledIfEnvironmentVariableTests.bogus";
+	static final String KEY = "DisabledIfEnvironmentVariableTests.key";
+	static final String ENIGMA = "DisabledIfEnvironmentVariableTests.enigma";
+	static final String BOGUS = "DisabledIfEnvironmentVariableTests.bogus";
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	void enabledBecauseAnnotationIsNotPresent() {
+	}
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	@DisabledIfEnvironmentVariable(named = "  ", matches = ENIGMA)
+	void blankNamedAttribute() {
+	}
+
+	@Test
+	@Disabled("Only used in a unit test via reflection")
+	@DisabledIfEnvironmentVariable(named = KEY, matches = "  ")
+	void blankMatchesAttribute() {
+	}
 
 	@Test
 	@DisabledIfEnvironmentVariable(named = KEY, matches = ENIGMA)
-	void environmentVariableMatchesExactly() {
+	void disabledBecauseEnvironmentVariableMatchesExactly() {
 		fail("should be disabled");
 	}
 
 	@Test
 	@DisabledIfEnvironmentVariable(named = KEY, matches = ".+enigma$")
-	void environmentVariableMatchesPattern() {
+	void disabledBecauseEnvironmentVariableMatchesPattern() {
 		fail("should be disabled");
 	}
 
 	@Test
 	@DisabledIfEnvironmentVariable(named = KEY, matches = BOGUS)
-	void environmentVariableDoesNotMatch() {
+	void enabledBecauseEnvironmentVariableDoesNotMatch() {
 		assertNotEquals(BOGUS, System.getenv(KEY));
 	}
 
 	@Test
 	@DisabledIfEnvironmentVariable(named = BOGUS, matches = "doesn't matter")
-	void environmentVariableDoesNotExist() {
+	void enabledBecauseEnvironmentVariableDoesNotExist() {
 		assertNull(System.getenv(BOGUS));
 	}
 
