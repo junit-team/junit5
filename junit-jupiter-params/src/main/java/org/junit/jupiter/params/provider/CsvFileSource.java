@@ -19,6 +19,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.params.converter.CsvFileRowConverter;
+import org.junit.jupiter.params.converter.DefaultCsvFileRowConverter;
 
 /**
  * {@code @CsvFileSource} is an {@link ArgumentsSource} which is used to
@@ -77,4 +79,11 @@ public @interface CsvFileSource {
 	 * <p>Defaults to {@code 0}.
 	 */
 	int numLinesToSkip() default 0;
+
+	/**
+	 * The converter to transform a row of CSV file parameters into a single object.
+	 *
+	 * <p>Defaults to {@code DefaultCsvFileRowConverter.class}.
+	 */
+	Class<? extends CsvFileRowConverter> converter() default DefaultCsvFileRowConverter.class;
 }

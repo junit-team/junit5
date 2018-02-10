@@ -26,8 +26,11 @@ import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.converter.CsvFileRowConverter;
+import org.junit.jupiter.params.converter.DefaultCsvFileRowConverter;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
@@ -40,6 +43,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	private Charset charset;
 	private CsvParserSettings settings;
 	private int numLinesToSkip;
+	private Class<? extends CsvFileRowConverter> converter;
 
 	CsvFileArgumentsProvider() {
 		this(Class::getResourceAsStream);
@@ -54,6 +58,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		resources = annotation.resources();
 		charset = Charset.forName(annotation.encoding());
 		numLinesToSkip = annotation.numLinesToSkip();
+		converter = annotation.converter();
 		settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(annotation.delimiter());
 		settings.getFormat().setLineSeparator(annotation.lineSeparator());
@@ -69,7 +74,8 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		return Arrays.stream(resources)
 				.map(resource -> openInputStream(context, resource))
 				.map(this::createCsvParser)
-				.flatMap(this::toStream);
+				.flatMap(this::toStream)
+				.map(this::toCsvFileRowConverter);
 		// @formatter:on
 	}
 
@@ -89,6 +95,15 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		return stream(spliteratorUnknownSize(new CsvParserIterator(csvParser), Spliterator.ORDERED), false) //
 				.skip(numLinesToSkip) //
 				.onClose(csvParser::stopParsing);
+	}
+
+	private Arguments toCsvFileRowConverter(Arguments fields) {
+		if (DefaultCsvFileRowConverter.class.equals(converter)) {
+			return fields;
+		}
+
+		Object instance = ReflectionUtils.newInstanceForArray(converter, fields.get());
+		return of(instance);
 	}
 
 	private static class CsvParserIterator implements Iterator<Arguments> {

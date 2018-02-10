@@ -160,6 +160,22 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	void newInstanceForArray() {
+		// @formatter:off
+		assertThat(ReflectionUtils.newInstanceForArray(D.class, new Object[]{"one", "two"})).isNotNull();
+
+		assertThrows(PreconditionViolationException.class, () ->
+				ReflectionUtils.newInstance(D.class, new Object[]{"one", null}));
+		assertThrows(PreconditionViolationException.class, () ->
+				ReflectionUtils.newInstance(D.class, ((Object[]) null)));
+
+		RuntimeException exception = assertThrows(RuntimeException.class, () ->
+				ReflectionUtils.newInstanceForArray(ArrayExploder.class, new Object[]{"one", "two"}));
+		assertThat(exception).hasMessage("bang");
+		// @formatter:on
+	}
+
+	@Test
 	void readFieldValueOfNonexistentStaticField() {
 		assertThat(readFieldValue(MyClass.class, "doesNotExist", null)).isNotPresent();
 		assertThat(readFieldValue(MySubClass.class, "staticField", null)).isNotPresent();
@@ -1006,10 +1022,23 @@ class ReflectionUtilsTests {
 
 	}
 
+	static class D {
+		D(Object[] o) {
+		}
+	}
+
 	static class Exploder {
 
 		Exploder() {
 			throw new RuntimeException("boom");
+		}
+
+	}
+
+	static class ArrayExploder {
+
+		ArrayExploder(Object[] args) {
+			throw new RuntimeException("bang");
 		}
 
 	}

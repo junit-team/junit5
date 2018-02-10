@@ -333,7 +333,34 @@ public final class ReflectionUtils {
 
 	/**
 	 * Create a new instance of type {@code T} by invoking the supplied constructor
-	 * with the supplied arguments.
+	 * with the supplied arguments array.
+	 *
+	 * <p>The constructor will be made accessible if necessary, and any checked
+	 * exception will be {@linkplain ExceptionUtils#throwAsUncheckedException masked}
+	 * as an unchecked exception.
+	 *
+	 * @param clazz the class to construct; never {@code null}
+	 * @param args the array of arguments to pass to the constructor; never {@code null}
+	 * @return the new instance; never {@code null}
+	 * @see #newInstance(Class, Object...)
+	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
+	 */
+	public static <T> T newInstanceForArray(Class<T> clazz, Object[] args) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(args, "Argument array must not be null");
+		Preconditions.containsNoNullElements(args, "Individual arguments must not be null");
+		try {
+			Class<?>[] parameterTypes = new Class<?>[] { Object[].class };
+			return newInstance(clazz.getDeclaredConstructor(parameterTypes), new Object[] { args });
+		}
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
+		}
+	}
+
+	/**
+	 * Create a new instance of type {@code T} by invoking the supplied constructor
+	 * with the supplied arguments, each of which is mapped to a successive constructor argument.
 	 *
 	 * <p>The constructor will be made accessible if necessary, and any checked
 	 * exception will be {@linkplain ExceptionUtils#throwAsUncheckedException masked}
