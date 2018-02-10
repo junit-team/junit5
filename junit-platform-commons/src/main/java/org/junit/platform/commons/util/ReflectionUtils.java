@@ -360,7 +360,7 @@ public final class ReflectionUtils {
 
 	/**
 	 * Create a new instance of type {@code T} by invoking the supplied constructor
-	 * with the supplied arguments, each of which are mapped to successive constructor arguments.
+	 * with the supplied arguments, each of which is mapped to a successive constructor argument.
 	 *
 	 * <p>The constructor will be made accessible if necessary, and any checked
 	 * exception will be {@linkplain ExceptionUtils#throwAsUncheckedException masked}
