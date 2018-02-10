@@ -187,8 +187,10 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			args.addAll('--config', "${key}=${value}")
 		}
 
-		args.add('--reports-dir')
-		args.add(reportsDir.getAbsolutePath())
+		if(reportsDir != 'none') {
+		        args.add('--reports-dir')
+		        args.add(reportsDir.getAbsolutePath())
+		}
 
 		return args
 	}
