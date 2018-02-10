@@ -35,6 +35,8 @@ test {
 */
 
 dependencies {
+	asciidoctor('org.jruby:jruby-complete:9.1.15.0')
+
 	testImplementation(project(':junit-jupiter-api'))
 	testImplementation(project(path: ':junit-jupiter-params', configuration: 'shadow'))
 	testImplementation(project(':junit-platform-runner'))
