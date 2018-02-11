@@ -62,46 +62,21 @@ task execScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, g
 	errorOutput = new ByteArrayOutputStream()
 }
 
-/*
-| .
-| +-- JUnit Vintage [OK]
-| | '-- integration.VintageIntegrationTest [OK]
-| |   '-- successfulTest [OK]
-| '-- JUnit Jupiter [OK]
-|   '-- JupiterIntegrationTests [OK]
-|     +-- version() [OK]
-|     +-- moduleIsNamed() [OK]
-|     +-- packageName() [OK]
-|     '-- resolve() [OK]
+// Execute console launcher on the module-path w/o "java.scripting"
+task execNoJavaScripting(type: Exec, dependsOn: [generateDependenciesDirectory, generateIntegrationTestsJar]) {
+	executable = 'java'
+	args = [
+			'--show-module-resolution',
+			'--module-path', files(
+					generateDependenciesDirectory.destinationDir,
+					generateIntegrationTestsJar.archivePath
+				).asPath,
+			'--add-modules', 'junit.commons.integration.tests',
+			'--module', 'org.junit.platform.console',
+			'--scan-modules'
+	]
+}
 
-Test run finished after 43 ms
-[         4 containers found      ]
-[         0 containers skipped    ]
-[         4 containers started    ]
-[         0 containers aborted    ]
-[         4 containers successful ]
-[         0 containers failed     ]
-[         5 tests found           ]
-[         0 tests skipped         ]
-[         5 tests started         ]
-[         0 tests aborted         ]
-[         5 tests successful      ]
-[         0 tests failed          ]
-
-Test run finished after 54 ms
-[         4 containers found      ]
-[         0 containers skipped    ]
-[         4 containers started    ]
-[         0 containers aborted    ]
-[         4 containers successful ]
-[         0 containers failed     ]
-[         4 tests found           ]
-[         0 tests skipped         ]
-[         4 tests started         ]
-[         0 tests aborted         ]
-[         4 tests successful      ]
-[         0 tests failed          ]
-*/
 task testScanModulepath(dependsOn: execScanModulepath) {
 	doLast {
 		String text = execScanModulepath.errorOutput.toString() + execScanModulepath.standardOutput.toString()
@@ -114,6 +89,7 @@ task testScanModulepath(dependsOn: execScanModulepath) {
 		assert text.contains("version()")
 		assert text.contains("moduleIsNamed()")
 		assert text.contains("packageName()")
+		assert text.contains("javaScriptingModuleIsAvailable()")
 		// summary
 		assert text.contains("Test run finished after")
 		// container summary
@@ -124,11 +100,11 @@ task testScanModulepath(dependsOn: execScanModulepath) {
 		assert text.contains("4 containers successful")
 		assert text.contains("0 containers failed")
 		// tests summary
-		assert text.contains("5 tests found")
+		assert text.contains("6 tests found")
 		assert text.contains("0 tests skipped")
-		assert text.contains("5 tests started")
+		assert text.contains("6 tests started")
 		assert text.contains("0 tests aborted")
-		assert text.contains("5 tests successful")
+		assert text.contains("6 tests successful")
 		assert text.contains("0 tests failed")
 	}
 }

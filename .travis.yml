@@ -14,9 +14,14 @@ matrix:
     - jdk: oraclejdk9
       env: JDK_RELEASE='JDK 9' EXTRA_GRADLE_ARGS='-PenableJaCoCo'
       install: echo "Don't let Travis CI execute './gradlew assemble' by default"
-# Java 10
-    - env: JDK_RELEASE='JDK 10 Early-Access' EXTRA_GRADLE_ARGS=''
-      install: . ./src/install/install-jdk-10.sh
+# Java 10 "Oracle JDK"
+    - env: JDK_RELEASE='Oracle JDK 10' EXTRA_GRADLE_ARGS=''
+      install: . ./src/install/install-jdk.sh -F 10 -L BCL
+# Java 10 "OpenJDK"
+    - env: JDK_RELEASE='OpenJDK 10' EXTRA_GRADLE_ARGS=''
+      install: . ./src/install/install-jdk.sh -F 10 -L GPL
+  allow_failures:
+    - env: JDK_RELEASE='OpenJDK 10' EXTRA_GRADLE_ARGS=''
 
 script:
 # Display Gradle, Groovy, JVM and other versions

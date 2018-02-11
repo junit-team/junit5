@@ -17,6 +17,7 @@ import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
@@ -66,6 +67,13 @@ class JupiterIntegrationTests {
 		resolver.resolveSelectors(request().selectors(selector).build(), engine);
 
 		assertEquals(1, engine.getChildren().size()); // JupiterIntegrationTests.class
-		assertEquals(4, getOnlyElement(engine.getChildren()).getChildren().size()); // 4 test methods
+		assertEquals(5, getOnlyElement(engine.getChildren()).getChildren().size()); // 5 test methods
 	}
+
+	@Test
+	@EnabledIf("1 == 1")
+	void javaScriptingModuleIsAvailable() {
+		/* empty */
+	}
+
 }
