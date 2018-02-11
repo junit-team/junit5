@@ -109,4 +109,5 @@ task testScanModulepath(dependsOn: execScanModulepath) {
 	}
 }
 
+test.dependsOn execNoJavaScripting
 test.dependsOn testScanModulepath
