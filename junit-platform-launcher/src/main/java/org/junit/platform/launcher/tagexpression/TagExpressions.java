@@ -14,6 +14,9 @@ import java.util.Collection;
 
 import org.junit.platform.engine.TestTag;
 
+/**
+ * @since 1.1
+ */
 class TagExpressions {
 
 	static TagExpression tag(String tag) {
@@ -72,4 +75,5 @@ class TagExpressions {
 			}
 		};
 	}
+
 }

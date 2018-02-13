@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @since 1.1
+ */
 class Tokenizer {
 
 	List<Token> tokenize(String infixTagExpression) {

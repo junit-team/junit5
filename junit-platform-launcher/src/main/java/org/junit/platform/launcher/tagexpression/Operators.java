@@ -18,6 +18,9 @@ import static org.junit.platform.launcher.tagexpression.Operator.Associativity.R
 import java.util.Map;
 import java.util.stream.Stream;
 
+/**
+ * @since 1.1
+ */
 class Operators {
 
 	private static final Operator Not = Operator.unaryOperator("!", 3, Right, TagExpressions::not);

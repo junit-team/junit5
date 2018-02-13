@@ -10,7 +10,11 @@
 
 package org.junit.platform.launcher.tagexpression;
 
+/**
+ * @since 1.1
+ */
 interface Stack<T> {
+
 	void push(T t);
 
 	T peek();
@@ -20,4 +24,5 @@ interface Stack<T> {
 	boolean isEmpty();
 
 	int size();
+
 }

@@ -23,9 +23,12 @@ import java.util.List;
 /**
  * This is based on a modified version of the
  * <a href="https://en.wikipedia.org/wiki/Shunting-yard_algorithm">
- *     Shunting-yard algorithm</a>
+ * Shunting-yard algorithm</a>.
+ *
+ * @since 1.1
  */
 class ShuntingYard {
+
 	private static final Operator RightParenthesis = nullaryOperator(")", -1);
 	private static final Operator LeftParenthesis = nullaryOperator("(", -2);
 	private static final Operator Sentinel = nullaryOperator("sentinel", MIN_VALUE);

@@ -10,7 +10,11 @@
 
 package org.junit.platform.launcher.tagexpression;
 
+/**
+ * @since 1.1
+ */
 class TokenWith<T> {
+
 	final Token token;
 	final T element;
 
@@ -18,4 +22,5 @@ class TokenWith<T> {
 		this.token = token;
 		this.element = element;
 	}
+
 }

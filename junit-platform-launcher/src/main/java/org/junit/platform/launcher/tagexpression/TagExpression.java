@@ -46,4 +46,5 @@ public interface TagExpression {
 	 * @return {@code true}, if the tags match this tag expression; {@code false}, otherwise
 	 */
 	boolean evaluate(Collection<TestTag> tags);
+
 }
