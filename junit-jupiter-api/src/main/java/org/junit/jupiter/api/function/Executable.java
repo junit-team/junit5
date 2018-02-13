@@ -38,6 +38,7 @@ import org.apiguardian.api.API;
  * @see org.junit.jupiter.api.Assumptions#assumingThat(java.util.function.BooleanSupplier, Executable)
  * @see org.junit.jupiter.api.DynamicTest#dynamicTest(String, Executable)
  * @see ThrowingConsumer
+ * @see ThrowingSupplier
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")

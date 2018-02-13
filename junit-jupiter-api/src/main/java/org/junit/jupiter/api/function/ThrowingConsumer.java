@@ -33,9 +33,11 @@ import org.apiguardian.api.API;
  * use cases, {@link #accept} is declared to throw {@code Throwable}.
  *
  * @since 5.0
+ * @param <T> the type of argument consumed
  * @see java.util.function.Consumer
  * @see org.junit.jupiter.api.DynamicTest#stream
  * @see Executable
+ * @see ThrowingSupplier
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")
