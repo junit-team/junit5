@@ -43,12 +43,12 @@ public final class TestTag implements Serializable {
 	 * <em>Reserved characters</em> that are not permissible as part of a tag name.
 	 *
 	 * <ul>
-	 * <li>{@code ","}</li>
-	 * <li>{@code "("}</li>
-	 * <li>{@code ")"}</li>
-	 * <li>{@code "&"}</li>
-	 * <li>{@code "|"}</li>
-	 * <li>{@code "!"}</li>
+	 * <li>{@code ,}: <em>comma</em></li>
+	 * <li>{@code (}: <em>left parenthesis</em></li>
+	 * <li>{@code )}: <em>right parenthesis</em></li>
+	 * <li>{@code &}: <em>ampersand</em></li>
+	 * <li>{@code |}: <em>vertical bar</em></li>
+	 * <li>{@code !}: <em>exclamation point</em></li>
 	 * </ul>
 	 */
 	public static final Set<String> RESERVED_CHARACTERS = Collections.unmodifiableSet(
