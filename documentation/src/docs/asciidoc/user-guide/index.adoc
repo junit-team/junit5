@@ -7,7 +7,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Chri
 :docinfodir: ../docinfos
 :docinfo: private-head
 //
-ifdef::backend-pdf[:imagesdir: {outdir}/{imagesdir}]
+ifdef::backend-pdf[:imagesdir: {imagesoutdir}]
 //
 // Blank lines are not permitted in the doc-header: http://asciidoctor.org/docs/user-manual/#doc-header
 //
