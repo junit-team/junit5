@@ -1499,6 +1499,26 @@ combine <code>@Test</code> and <code>@EnabledOnOs</code> in a single, reusable a
 </tr>
 </table>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Each of the <em>conditional</em> annotations listed in the following sections can only be
+declared once on a given test interface, test class, or test method. If a conditional
+annotation is directly present, indirectly present, or meta-present multiple times on a
+given element, only the first such annotation discovered by JUnit will be used; any
+additional declarations will be silently ignored. Note, however, that each conditional
+annotation may be used in conjunction with other conditional annotations in the
+<code>org.junit.jupiter.api.condition</code> package.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="sect3">
 <h4 id="writing-tests-conditional-execution-os"><a class="anchor" href="#writing-tests-conditional-execution-os"></a>3.7.1. Operating System Conditions</h4>
 <div class="paragraph">
@@ -6186,7 +6206,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-02-16 07:36:09 EST
+Last updated 2018-02-16 08:02:59 EST
 </div>
 </div>
 </body>
