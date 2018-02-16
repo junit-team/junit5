@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 buildscript {
 	dependencies {
 		// upgrade to latest jruby version due to a bugfix needed for Windows 10.
@@ -90,7 +92,13 @@ asciidoctor {
 		}
 	}
 
-	backends 'html5' , 'pdf' // , 'epub3'
+	backends 'html5'
+
+	// The PDF backend currently does not work on Linux
+	// see https://github.com/junit-team/junit5/issues/1099
+	if (Os.isFamily(Os.FAMILY_WINDOWS) || Os.isFamily(Os.FAMILY_MAC)) {
+		backends 'pdf'
+	}
 
 	attributes	'jupiter-version': project.property('version'),
 				'platform-version': project.property('platformVersion'),
