@@ -21,8 +21,8 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @DisabledIf} is used to control whether the annotated test class or
- * test method is <em>enabled</em> or <em>disabled</em> by evaluating a script.
+ * {@code @DisabledIf} is used to determine whether the annotated test class or
+ * test method is <em>disabled</em> by evaluating a script.
  *
  * <p>The decision is made by interpreting the return value of the supplied
  * {@linkplain #value script}, according to the following table.
@@ -82,9 +82,9 @@ import org.apiguardian.api.API;
  * <li>{@code systemProperty}: JVM system property accessor</li>
  * </ul>
  *
- * <p>The following {@link javax.script.Bindings bindings} are available for accessing information
- * from the JUnit Jupiter {@link org.junit.jupiter.api.extension.ExtensionContext
- * ExtensionContext}.
+ * <p>The following {@link javax.script.Bindings bindings} are available for
+ * accessing information from the JUnit Jupiter
+ * {@link org.junit.jupiter.api.extension.ExtensionContext ExtensionContext}.
  *
  * <ul>
  * <li>{@code junitTags}: All tags as a {@code Set<String>}</li>
@@ -97,17 +97,16 @@ import org.apiguardian.api.API;
  * since they might clash with bindings provided by JUnit.
  *
  * @since 5.1
- * @see org.junit.jupiter.api.Disabled
  * @see org.junit.jupiter.api.condition.EnabledIf
  * @see org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable
- * @see org.junit.jupiter.api.condition.EnabledIfSystemProperty
- * @see org.junit.jupiter.api.condition.EnabledOnJre
- * @see org.junit.jupiter.api.condition.EnabledOnOs
- * @see org.junit.jupiter.api.condition.DisabledIf
  * @see org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable
+ * @see org.junit.jupiter.api.condition.EnabledIfSystemProperty
  * @see org.junit.jupiter.api.condition.DisabledIfSystemProperty
+ * @see org.junit.jupiter.api.condition.EnabledOnJre
  * @see org.junit.jupiter.api.condition.DisabledOnJre
+ * @see org.junit.jupiter.api.condition.EnabledOnOs
  * @see org.junit.jupiter.api.condition.DisabledOnOs
+ * @see org.junit.jupiter.api.Disabled
  * @see org.junit.jupiter.api.extension.ExecutionCondition
  * @see javax.script.ScriptEngine
  */
