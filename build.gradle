@@ -41,6 +41,8 @@ ext {
 	buildRevision = versioning.info.commit
 	builtByValue = project.hasProperty('builtBy') ? project.builtBy : project.defaultBuiltBy
 
+	docsVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
+
 	platformProjects = [
 		'junit-platform-commons',
 		'junit-platform-console',
@@ -748,7 +750,6 @@ configure(rootProject) {
 		}
 	}
 
-	def docsVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
 	def docsDir = new File(buildDir, 'ghpages-docs')
 	def replaceCurrentDocs = project.hasProperty('replaceCurrentDocs')
 

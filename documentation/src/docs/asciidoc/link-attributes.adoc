@@ -1,4 +1,7 @@
 :javadoc-root:                      link:../api
+ifdef::backend-pdf[]
+:javadoc-root:                      https://junit.org/junit5/docs/{docs-version}/api
+endif::[]
 //
 :snapshot-repo:                     https://oss.sonatype.org/content/repositories/snapshots
 //
