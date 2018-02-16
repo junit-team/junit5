@@ -96,6 +96,21 @@ import org.apiguardian.api.API;
  * <p>Scripts must not declare variables using names that start with {@code junit},
  * since they might clash with bindings provided by JUnit.
  *
+ * <p>This annotation may be used as a meta-annotation in order to create a
+ * custom <em>composed annotation</em> that inherits the semantics of this
+ * annotation.
+ *
+ * <h4>Warning</h4>
+ *
+ * <p>As of JUnit Jupiter 5.1, this annotation can only be declared once on an
+ * {@link java.lang.reflect.AnnotatedElement AnnotatedElement} (i.e., test
+ * interface, test class, or test method). If this annotation is directly
+ * present, indirectly present, or meta-present multiple times on a given
+ * element, only the first such annotation discovered by JUnit will be used;
+ * any additional declarations will be silently ignored. Note, however, that
+ * this annotation may be used in conjunction with other {@code @Enabled*} or
+ * {@code @Disabled*} annotations in this package.
+ *
  * @since 5.1
  * @see org.junit.jupiter.api.condition.EnabledIf
  * @see org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable

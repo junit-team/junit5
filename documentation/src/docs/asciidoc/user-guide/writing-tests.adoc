@@ -191,6 +191,17 @@ example, the `@TestOnMac` annotation in the
 combine `@Test` and `@EnabledOnOs` in a single, reusable annotation.
 ====
 
+[WARNING]
+====
+Each of the _conditional_ annotations listed in the following sections can only be
+declared once on a given test interface, test class, or test method. If a conditional
+annotation is directly present, indirectly present, or meta-present multiple times on a
+given element, only the first such annotation discovered by JUnit will be used; any
+additional declarations will be silently ignored. Note, however, that each conditional
+annotation may be used in conjunction with other conditional annotations in the
+`org.junit.jupiter.api.condition` package.
+====
+
 [[writing-tests-conditional-execution-os]]
 ==== Operating System Conditions
 
