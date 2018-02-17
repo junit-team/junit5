@@ -43,12 +43,12 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		// @formatter:off
 		this.apiReport.getDeclarationsMap().entrySet().stream()
 				.filter(e -> statuses.contains(e.getKey()))
-				.forEach(e -> printDeclarationSection(e.getKey(), e.getValue(), out));
+				.forEach(e -> printDeclarationSection(statuses, e.getKey(), e.getValue(), out));
 		// @formatter:on
 	}
 
-	protected void printDeclarationSection(Status status, List<Class<?>> types, PrintWriter out) {
-		printDeclarationSectionHeader(status, types, out);
+	protected void printDeclarationSection(EnumSet<Status> statuses, Status status, List<Class<?>> types, PrintWriter out) {
+		printDeclarationSectionHeader(statuses, status, types, out);
 		if (types.size() > 0) {
 			printDeclarationTableHeader(out);
 			types.forEach(type -> printDeclarationTableRow(type, out));
@@ -57,7 +57,11 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		}
 	}
 
-	protected void printDeclarationSectionHeader(Status status, List<Class<?>> types, PrintWriter out) {
+	protected void printDeclarationSectionHeader(EnumSet<Status> statuses, Status status, List<Class<?>> types, PrintWriter out) {
+		if (statuses.size() < 2) {
+			// omit section header when only a single status is printed
+			return;
+		}
 		out.println(h2(format("@API(%s)", status)));
 		out.println();
 		out.println(paragraph(format("Discovered %d " + code("@API(%s)") + " declarations.", types.size(), status)));

@@ -641,7 +641,7 @@ failed. Otherwise the exit code is `0`.
 ==== Options
 
 ----
-include::{generatedAsciiDocInputDir}/console-launcher-options.txt[]
+include::{consoleLauncherOptionsFile}[]
 ----
 
 

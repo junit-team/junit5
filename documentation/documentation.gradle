@@ -53,6 +53,9 @@ dependencies {
 	testRuntimeOnly(project(':junit-jupiter-engine'))
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+
+	// for ApiReportGenerator
+	testImplementation("io.github.lukehutch:fast-classpath-scanner:2.11.0")
 }
 
 asciidoctorj {
@@ -60,24 +63,31 @@ asciidoctorj {
 }
 
 ext {
-	generatedAsciiDocInputDir = buildDir.toPath().resolve('generated/asciidoc').toString()
+	generatedAsciiDocPath = buildDir.toPath().resolve('generated/asciidoc')
+	consoleLauncherOptionsFile = generatedAsciiDocPath.resolve('console-launcher-options.txt')
+	experimentalApisTableFile = generatedAsciiDocPath.resolve('experimental-apis-table.txt')
 }
 
-task generateConsoleLauncherOptions(type: JavaExec){
-	def outputPath = java.nio.file.Paths.get(generatedAsciiDocInputDir)
-	def outputFile = outputPath.resolve('console-launcher-options.txt')
-	classpath = configurations.testRuntimeClasspath
-	main = 'org.junit.platform.console.ConsoleLauncher'
-	args = ['--help']
-	standardOutput = new ByteArrayOutputStream()
-	doLast {
-		java.nio.file.Files.createDirectories(outputPath)
-		java.nio.file.Files.write(outputFile, standardOutput.toByteArray())
+def createJavaExecTaskWithOutputFile(taskName, outputFile, mainClass, mainArgs = []) {
+	task(taskName, type: JavaExec) {
+		outputs.file outputFile.toFile()
+		classpath = sourceSets.test.runtimeClasspath
+		main = mainClass
+		args = mainArgs
+		standardOutput = new ByteArrayOutputStream()
+		doLast {
+			java.nio.file.Files.createDirectories(outputFile.parent)
+			java.nio.file.Files.write(outputFile, standardOutput.toByteArray())
+		}
 	}
 }
 
+createJavaExecTaskWithOutputFile('generateConsoleLauncherOptions', consoleLauncherOptionsFile, 'org.junit.platform.console.ConsoleLauncher', ['--help'])
+
+createJavaExecTaskWithOutputFile('generateExperimentalApisTable', experimentalApisTableFile, 'org.junit.api.tools.ApiReportGenerator')
+
 asciidoctor {
-	dependsOn generateConsoleLauncherOptions
+	dependsOn 'generateConsoleLauncherOptions', 'generateExperimentalApisTable'
 
 	// enable the Asciidoctor Diagram extension
 	requires 'asciidoctor-diagram'
@@ -111,7 +121,8 @@ asciidoctor {
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
-				'generatedAsciiDocInputDir': generatedAsciiDocInputDir,
+				'consoleLauncherOptionsFile': consoleLauncherOptionsFile.toString(),
+				'experimentalApisTableFile': experimentalApisTableFile.toString(),
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
 				'outdir': outputDir.absolutePath,
 				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend and on MS Windows

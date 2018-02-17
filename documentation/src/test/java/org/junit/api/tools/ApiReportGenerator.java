@@ -32,6 +32,10 @@ import org.junit.platform.commons.logging.LoggerFactory;
 class ApiReportGenerator {
 
 	public static void main(String... args) {
+
+		// CAUTION: The output produced by this method is used to
+		//          generate a table in the User Guide.
+
 		PrintWriter writer = new PrintWriter(System.out, true);
 		ApiReportGenerator reportGenerator = new ApiReportGenerator();
 
