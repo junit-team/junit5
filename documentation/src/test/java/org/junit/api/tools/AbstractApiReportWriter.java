@@ -47,7 +47,8 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		// @formatter:on
 	}
 
-	protected void printDeclarationSection(EnumSet<Status> statuses, Status status, List<Class<?>> types, PrintWriter out) {
+	protected void printDeclarationSection(EnumSet<Status> statuses, Status status, List<Class<?>> types,
+			PrintWriter out) {
 		printDeclarationSectionHeader(statuses, status, types, out);
 		if (types.size() > 0) {
 			printDeclarationTableHeader(out);
@@ -57,7 +58,8 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		}
 	}
 
-	protected void printDeclarationSectionHeader(EnumSet<Status> statuses, Status status, List<Class<?>> types, PrintWriter out) {
+	protected void printDeclarationSectionHeader(EnumSet<Status> statuses, Status status, List<Class<?>> types,
+			PrintWriter out) {
 		if (statuses.size() < 2) {
 			// omit section header when only a single status is printed
 			return;
