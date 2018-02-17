@@ -31,7 +31,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Null elements specified in the last column after the first row via `@CsvSource` for
+  parameterized tests are now correctly converted to `null` instead of the empty `String`.
 
 ==== Deprecations and Breaking Changes
 

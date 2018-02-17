@@ -26,6 +26,8 @@ import org.junit.platform.commons.util.Preconditions;
  */
 class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvSource> {
 
+	private static final String LINE_SEPARATOR = "\n";
+
 	private String[] lines;
 	private char delimiter;
 
@@ -39,6 +41,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
+		settings.getFormat().setLineSeparator(LINE_SEPARATOR);
 		settings.getFormat().setQuote('\'');
 		settings.getFormat().setQuoteEscape('\'');
 		settings.setEmptyValue("");
@@ -48,7 +51,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		// @formatter:off
 		return Arrays.stream(lines)
 				.map(
-					line -> Preconditions.notNull(csvParser.parseLine(line),
+					line -> Preconditions.notNull(csvParser.parseLine(line + LINE_SEPARATOR),
 					() -> "Line at index " + index.get() + " contains invalid CSV: \"" + line + "\"")
 				)
 				.peek(values -> index.incrementAndGet())
