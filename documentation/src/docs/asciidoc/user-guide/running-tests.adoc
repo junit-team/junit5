@@ -271,16 +271,16 @@ dependencies {
 [[running-tests-build-gradle-logging]]
 ===== Configuring Logging (optional)
 
-JUnit uses the Java Logging APIs in `java.util.logging` to emit warnings and debug
-information. Please refer to the official documentation of `{LogManager}` for
-configuration options.
+JUnit uses the Java Logging APIs in the `java.util.logging` package (a.k.a. _JUL_) to
+emit warnings and debug information. Please refer to the official documentation of
+`{LogManager}` for configuration options.
 
 Alternatively, it's possible to redirect log messages to other logging frameworks such as
-{Log4j} or {Logback}. To use a logging frameworks that provides a custom implementation of
+{Log4j} or {Logback}. To use a logging framework that provides a custom implementation of
 `{LogManager}`, configure the `logManager` extension property of the JUnit Gradle plugin.
-This will set the `java.util.logging.manager` system property to the supplied
-_fully qualified class name_ of the `{LogManager}` implementation to use. The below
-example demonstrates how to configure Log4j{nbsp}2.x (see {Log4j_JDK_Logging_Adapter} for
+This will set the `java.util.logging.manager` system property to the supplied _fully
+qualified class name_ of the `{LogManager}` implementation to use. The example below
+demonstrates how to configure Log4j{nbsp}2.x (see {Log4j_JDK_Logging_Adapter} for
 details).
 
 [source,java,indent=0]
@@ -292,7 +292,7 @@ junitPlatform {
 ----
 
 Other logging frameworks provide different means to redirect messages logged using
-`java.util.logging`. E.g. for {Logback}, you can use the
+`java.util.logging`. For example, for {Logback} you can use the
 https://www.slf4j.org/legacy.html#jul-to-slf4j[JUL to SLF4J Bridge] by adding an
 additional dependency to the runtime classpath.
 
