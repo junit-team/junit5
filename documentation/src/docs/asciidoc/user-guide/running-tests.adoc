@@ -123,18 +123,13 @@ Once the JUnit Gradle plugin has been applied, you can configure it as follows.
 ----
 junitPlatform {
 	platformVersion '{platform-version}' // optional, defaults to plugin version
-	logManager 'org.apache.logging.log4j.jul.LogManager'
 	reportsDir file('build/test-results/junit-platform') // this is the default
 	// enableStandardTestTask true
 	// selectors (optional)
 	// filters (optional)
+	// logManager (optional)
 }
 ----
-
-Setting `logManager` instructs the JUnit Gradle plugin to set the
-`java.util.logging.manager` system property to the supplied _fully qualified class_ name
-of the `java.util.logging.LogManager` implementation to use. The above example
-demonstrates how to configure log4j as the `LogManager`.
 
 By default, the JUnit Gradle plugin disables the standard Gradle `test` task, but this
 can be overridden via the `enableStandardTestTask` flag.
@@ -272,6 +267,34 @@ dependencies {
 	testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
 }
 ----
+
+[[running-tests-build-gradle-logging]]
+===== Configuring Logging (optional)
+
+JUnit uses the Java Logging APIs in `java.util.logging` to emit warnings and debug
+information. Please refer to the official documentation of `{LogManager}` for
+configuration options.
+
+Alternatively, it's possible to redirect log messages to other logging frameworks such as
+{Log4j} or {Logback}. To use a logging frameworks that provides a custom implementation of
+`{LogManager}`, configure the `logManager` extension property of the JUnit Gradle plugin.
+This will set the `java.util.logging.manager` system property to the supplied
+_fully qualified class name_ of the `{LogManager}` implementation to use. The below
+example demonstrates how to configure Log4j{nbsp}2.x (see {Log4j_JDK_Logging_Adapter} for
+details).
+
+[source,java,indent=0]
+[subs=attributes+]
+----
+junitPlatform {
+	logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+----
+
+Other logging frameworks provide different means to redirect messages logged using
+`java.util.logging`. E.g. for {Logback}, you can use the
+https://www.slf4j.org/legacy.html#jul-to-slf4j[JUL to SLF4J Bridge] by adding an
+additional dependency to the runtime classpath.
 
 [[running-tests-build-gradle-junit-using]]
 ===== Using the JUnit Gradle Plugin
