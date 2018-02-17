@@ -10,18 +10,19 @@ branches:
 
 matrix:
   include:
-# Java 9 (openjdk-9.0.1 fails with java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty)
+# Java 9 "Oracle JDK" (provided by Travis CI)
     - jdk: oraclejdk9
-      env: JDK_RELEASE='JDK 9' EXTRA_GRADLE_ARGS='-PenableJaCoCo'
+      env: JDK_RELEASE='Oracle JDK 9' EXTRA_GRADLE_ARGS='-PenableJaCoCo'
       install: echo "Don't let Travis CI execute './gradlew assemble' by default"
+# Java 9 "OpenJDK"
+    - env: JDK_RELEASE='OpenJDK 9' EXTRA_GRADLE_ARGS=''
+      install: . ./src/install/install-jdk.sh -F 9 -L GPL
 # Java 10 "Oracle JDK"
     - env: JDK_RELEASE='Oracle JDK 10' EXTRA_GRADLE_ARGS=''
       install: . ./src/install/install-jdk.sh -F 10 -L BCL
 # Java 10 "OpenJDK"
     - env: JDK_RELEASE='OpenJDK 10' EXTRA_GRADLE_ARGS=''
       install: . ./src/install/install-jdk.sh -F 10 -L GPL
-  allow_failures:
-    - env: JDK_RELEASE='OpenJDK 10' EXTRA_GRADLE_ARGS=''
 
 script:
 # Display Gradle, Groovy, JVM and other versions
@@ -42,5 +43,5 @@ cache:
 
 # Run clover report and send report to codecov after build success for JDK 9 builds
 after_success:
-  - test "$JDK_RELEASE" = "JDK 9" && ./gradlew -PenableJaCoCo jacocoRootReport || true
-  - test "$JDK_RELEASE" = "JDK 9" && bash <(curl -s https://codecov.io/bash) || true
+  - test "$JDK_RELEASE" = "Oracle JDK 9" && ./gradlew -PenableJaCoCo jacocoRootReport || true
+  - test "$JDK_RELEASE" = "Oracle JDK 9" && bash <(curl -s https://codecov.io/bash) || true
