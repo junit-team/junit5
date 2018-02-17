@@ -17,20 +17,6 @@ test {
 }
 */
 
-// Disable these tests on Java 10 as they depend on working
-// Kotlin compilation.
-if (!gradle.ext.kotlinIsSupported) {
-	sourceSets {
-		test {
-			java {
-				srcDir 'src'
-				exclude '**/AtypicalJvmMethodNameTests**'
-				exclude '**/TestInstanceLifecycleKotlinTests**'
-			}
-		}
-	}
-}
-
 jar {
 	manifest {
 		attributes(
@@ -61,7 +47,7 @@ dependencies {
 	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-	if (gradle.ext.kotlinIsSupported) testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
