@@ -3795,19 +3795,13 @@ apply plugin: <span class="string"><span class="delimiter">'</span><span class="
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java">junitPlatform {
     platformVersion <span class="string"><span class="delimiter">'</span><span class="content">1.1.0-SNAPSHOT</span><span class="delimiter">'</span></span> <span class="comment">// optional, defaults to plugin version</span>
-    logManager <span class="string"><span class="delimiter">'</span><span class="content">org.apache.logging.log4j.jul.LogManager</span><span class="delimiter">'</span></span>
     reportsDir file(<span class="string"><span class="delimiter">'</span><span class="content">build/test-results/junit-platform</span><span class="delimiter">'</span></span>) <span class="comment">// this is the default</span>
     <span class="comment">// enableStandardTestTask true</span>
     <span class="comment">// selectors (optional)</span>
     <span class="comment">// filters (optional)</span>
+    <span class="comment">// logManager (optional)</span>
 }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Setting <code>logManager</code> instructs the JUnit Gradle plugin to set the
-<code>java.util.logging.manager</code> system property to the supplied <em>fully qualified class</em> name
-of the <code>java.util.logging.LogManager</code> implementation to use. The above example
-demonstrates how to configure log4j as the <code>LogManager</code>.</p>
 </div>
 <div class="paragraph">
 <p>By default, the JUnit Gradle plugin disables the standard Gradle <code>test</code> task, but this
@@ -3979,6 +3973,36 @@ implementation similar to the following.</p>
     testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:5.1.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
 }</code></pre>
 </div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="running-tests-build-gradle-logging"><a class="anchor" href="#running-tests-build-gradle-logging"></a>Configuring Logging (optional)</h5>
+<div class="paragraph">
+<p>JUnit uses the Java Logging APIs in <code>java.util.logging</code> to emit warnings and debug
+information. Please refer to the official documentation of <code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code> for
+configuration options.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, it&#8217;s possible to redirect log messages to other logging frameworks such as
+<a href="https://logging.apache.org/log4j/2.x/">Log4j</a> or <a href="https://logback.qos.ch/">Logback</a>. To use a logging frameworks that provides a custom implementation of
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code>, configure the <code>logManager</code> extension property of the JUnit Gradle plugin.
+This will set the <code>java.util.logging.manager</code> system property to the supplied
+<em>fully qualified class name</em> of the <code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code> implementation to use. The below
+example demonstrates how to configure Log4j&#160;2.x (see <a href="https://logging.apache.org/log4j/2.x/log4j-jul/index.html">Log4j JDK Logging Adapter</a> for
+details).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">junitPlatform {
+    logManager <span class="string"><span class="delimiter">'</span><span class="content">org.apache.logging.log4j.jul.LogManager</span><span class="delimiter">'</span></span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Other logging frameworks provide different means to redirect messages logged using
+<code>java.util.logging</code>. E.g. for <a href="https://logback.qos.ch/">Logback</a>, you can use the
+<a href="https://www.slf4j.org/legacy.html#jul-to-slf4j">JUL to SLF4J Bridge</a> by adding an
+additional dependency to the runtime classpath.</p>
 </div>
 </div>
 <div class="sect4">
@@ -6206,7 +6230,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.1.0-SNAPSHOT<br>
-Last updated 2018-02-17 06:57:17 EST
+Last updated 2018-02-17 08:19:09 EST
 </div>
 </div>
 </body>
