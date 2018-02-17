@@ -17,10 +17,12 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
- * A {@code DynamicNode} is the abstract basis class for a container or a test
- * case generated at runtime.
+ * {@code DynamicNode} serves as the abstract base class for a container or a
+ * test case generated at runtime.
  *
  * @since 5.0
+ * @see DynamicTest
+ * @see DynamicContainer
  */
 @API(status = EXPERIMENTAL, since = "5.0")
 public abstract class DynamicNode {
@@ -32,7 +34,7 @@ public abstract class DynamicNode {
 	}
 
 	/**
-	 * Get the display name of this {@code DynamicTest}.
+	 * Get the display name of this {@code DynamicNode}.
 	 */
 	public String getDisplayName() {
 		return this.displayName;
