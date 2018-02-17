@@ -18,26 +18,41 @@ import java.util.Map;
 import org.apiguardian.api.API;
 
 /**
- * Parameters of type {@code TestReporter} can be injected into methods of
- * test classes annotated with {@link BeforeEach @BeforeEach},
- * {@link AfterEach @AfterEach}, and {@link Test @Test}.
+ * Parameters of type {@code TestReporter} can be injected into
+ * {@link BeforeEach @BeforeEach} and {@link AfterEach @AfterEach} lifecycle
+ * methods as well as methods annotated with {@link Test @Test},
+ * {@link RepeatedTest @RepeatedTest},
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest},
+ * {@link TestFactory @TestFactory}, etc.
  *
- * <p>Within such methods this instance of type {@code TestReporter} can be
- * used to publish report entries.
+ * <p>Within such methods the injected {@code TestReporter} can be used to
+ * publish report entries.
  *
  * @since 5.0
+ * @see #publishEntry(Map)
+ * @see #publishEntry(String, String)
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")
 public interface TestReporter {
 
 	/**
-	 * Publish the supplied values as a report entry.
+	 * Publish the supplied map of key-value pairs as a report entry.
 	 *
-	 * @param  values the map to be published for this entry
+	 * @param map the key-value pairs to be published; never {@code null};
+	 * keys and values within entries in the map also must not be
+	 * {@code null} or blank
+	 * @see #publishEntry(String, String)
 	 */
-	void publishEntry(Map<String, String> values);
+	void publishEntry(Map<String, String> map);
 
+	/**
+	 * Publish the supplied key-value pair as a report entry.
+	 *
+	 * @param key the key of the entry to publish
+	 * @param value the value of the entry to publish
+	 * @see #publishEntry(Map)
+	 */
 	default void publishEntry(String key, String value) {
 		this.publishEntry(Collections.singletonMap(key, value));
 	}

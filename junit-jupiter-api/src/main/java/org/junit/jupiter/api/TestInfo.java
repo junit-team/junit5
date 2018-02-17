@@ -20,15 +20,22 @@ import org.apiguardian.api.API;
 
 /**
  * {@code TestInfo} is used to inject information about the current test or
- * container into to {@code @Test}, {@code @BeforeEach}, {@code @AfterEach},
- * {@code @BeforeAll}, and {@code @AfterAll} methods.
+ * container into to {@code @Test}, {@code @RepeatedTest},
+ * {@code @ParameterizedTest}, {@code @TestFactory}, {@code @BeforeEach},
+ * {@code @AfterEach}, {@code @BeforeAll}, and {@code @AfterAll} methods.
  *
  * <p>If a method parameter is of type {@link TestInfo}, JUnit will supply
- * an instance of {@code TestInfo} corresponding to the current test as the
- * value for the parameter.
+ * an instance of {@code TestInfo} corresponding to the current test or
+ * container as the value for the parameter.
  *
  * @since 5.0
  * @see Test
+ * @see RepeatedTest
+ * @see TestFactory
+ * @see BeforeEach
+ * @see AfterEach
+ * @see BeforeAll
+ * @see AfterAll
  * @see DisplayName
  * @see Tag
  */
@@ -96,7 +103,7 @@ public interface TestInfo {
 	Optional<Class<?>> getTestClass();
 
 	/**
-	 * Get the {@link Method} associated with the current test, if available.
+	 * Get the {@link Method} associated with the current test or container, if available.
 	 */
 	Optional<Method> getTestMethod();
 

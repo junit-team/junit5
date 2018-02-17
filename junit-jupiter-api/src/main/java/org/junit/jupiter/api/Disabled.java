@@ -24,10 +24,14 @@ import org.apiguardian.api.API;
  * {@code @Disabled} is used to signal that the annotated test class or
  * test method is currently <em>disabled</em> and should not be executed.
  *
+ * <p>{@code @Disabled} may optionally be declared with a {@linkplain #value
+ * reason} to document why the annotated test class or test method is disabled.
+ *
  * <p>When applied at the class level, all test methods within that class
  * are automatically disabled as well.
  *
  * @since 5.0
+ * @see #value
  * @see org.junit.jupiter.api.condition.EnabledIf
  * @see org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable
  * @see org.junit.jupiter.api.condition.EnabledIfSystemProperty
