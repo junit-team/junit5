@@ -3978,17 +3978,17 @@ implementation similar to the following.</p>
 <div class="sect4">
 <h5 id="running-tests-build-gradle-logging"><a class="anchor" href="#running-tests-build-gradle-logging"></a>Configuring Logging (optional)</h5>
 <div class="paragraph">
-<p>JUnit uses the Java Logging APIs in <code>java.util.logging</code> to emit warnings and debug
-information. Please refer to the official documentation of <code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code> for
-configuration options.</p>
+<p>JUnit uses the Java Logging APIs in the <code>java.util.logging</code> package (a.k.a. <em>JUL</em>) to
+emit warnings and debug information. Please refer to the official documentation of
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code> for configuration options.</p>
 </div>
 <div class="paragraph">
 <p>Alternatively, it&#8217;s possible to redirect log messages to other logging frameworks such as
-<a href="https://logging.apache.org/log4j/2.x/">Log4j</a> or <a href="https://logback.qos.ch/">Logback</a>. To use a logging frameworks that provides a custom implementation of
+<a href="https://logging.apache.org/log4j/2.x/">Log4j</a> or <a href="https://logback.qos.ch/">Logback</a>. To use a logging framework that provides a custom implementation of
 <code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code>, configure the <code>logManager</code> extension property of the JUnit Gradle plugin.
-This will set the <code>java.util.logging.manager</code> system property to the supplied
-<em>fully qualified class name</em> of the <code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code> implementation to use. The below
-example demonstrates how to configure Log4j&#160;2.x (see <a href="https://logging.apache.org/log4j/2.x/log4j-jul/index.html">Log4j JDK Logging Adapter</a> for
+This will set the <code>java.util.logging.manager</code> system property to the supplied <em>fully
+qualified class name</em> of the <code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code> implementation to use. The example below
+demonstrates how to configure Log4j&#160;2.x (see <a href="https://logging.apache.org/log4j/2.x/log4j-jul/index.html">Log4j JDK Logging Adapter</a> for
 details).</p>
 </div>
 <div class="listingblock">
@@ -4000,7 +4000,7 @@ details).</p>
 </div>
 <div class="paragraph">
 <p>Other logging frameworks provide different means to redirect messages logged using
-<code>java.util.logging</code>. E.g. for <a href="https://logback.qos.ch/">Logback</a>, you can use the
+<code>java.util.logging</code>. For example, for <a href="https://logback.qos.ch/">Logback</a> you can use the
 <a href="https://www.slf4j.org/legacy.html#jul-to-slf4j">JUL to SLF4J Bridge</a> by adding an
 additional dependency to the runtime classpath.</p>
 </div>
