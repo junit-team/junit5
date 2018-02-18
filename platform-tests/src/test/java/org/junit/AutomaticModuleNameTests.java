@@ -68,6 +68,7 @@ class AutomaticModuleNameTests {
 				.filter(line -> line.startsWith(startOfModuleLine))
 				.map(line -> line.substring(startOfModuleLine.length(), line.length() - 1))
 				.filter(name -> !name.equals("junit-platform-console-standalone"))
+				.filter(name -> !name.equals("junit-bom"))
 				.filter(name -> !name.endsWith("-java-9"))
 				.filter(name -> name.startsWith("junit-"))) {
 			return stream.collect(Collectors.toList());
