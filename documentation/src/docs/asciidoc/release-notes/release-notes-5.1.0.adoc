@@ -110,7 +110,6 @@ on GitHub. This section describes all _changes_ from version 5.0.3 to 5.1.0.
    System Properties>>
 ** <<../user-guide/index.adoc#writing-tests-conditional-execution-environment-variables,
    Environment Variables>>
-..
 * New `@EnabledIf` and `@DisabledIf` annotations that can be used to control whether the
   annotated test class or test method is _enabled_ or _disabled_ by evaluating a script from a dynamic scripting language such as JavaScript or Groovy.
 ** See <<../user-guide/index.adoc#writing-tests-conditional-execution-scripts,
