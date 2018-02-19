@@ -4,7 +4,7 @@ Please describe your changes here and list any open questions you might have.
 
 ---
 
-I hereby agree to the terms of the JUnit Contributor License Agreement.
+I hereby agree to the terms of the [JUnit Contributor License Agreement](https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md#junit-contributor-license-agreement).
 
 ---
 
