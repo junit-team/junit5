@@ -75,6 +75,10 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 	@Override
 	public void invokeAll(List<TestTask> tasks) {
+		if (tasks.size() == 1) {
+			new ExclusiveTask(tasks.get(0)).compute();
+			return;
+		}
 		Deque<ExclusiveTask> nonConcurrentTasks = new LinkedList<>();
 		Deque<ExclusiveTask> concurrentTasksInReverseOrder = new LinkedList<>();
 		for (TestTask testTask : tasks) {
