@@ -18,6 +18,7 @@ import static org.junit.platform.engine.test.event.ExecutionEvent.Type.REPORTING
 import static org.junit.platform.engine.test.event.ExecutionEvent.Type.SKIPPED;
 import static org.junit.platform.engine.test.event.ExecutionEvent.Type.STARTED;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -70,14 +71,20 @@ public class ExecutionEvent {
 		return event -> event.getPayload(payloadClass).filter(predicate).isPresent();
 	}
 
+	private final Instant timestamp;
 	private final ExecutionEvent.Type type;
 	private final TestDescriptor testDescriptor;
 	private final Object payload;
 
 	private ExecutionEvent(ExecutionEvent.Type type, TestDescriptor testDescriptor, Object payload) {
+		this.timestamp = Instant.now();
 		this.type = type;
 		this.testDescriptor = testDescriptor;
 		this.payload = payload;
+	}
+
+	public Instant getTimestamp() {
+		return timestamp;
 	}
 
 	public ExecutionEvent.Type getType() {
@@ -97,6 +104,7 @@ public class ExecutionEvent {
 		// @formatter:off
 		return new ToStringBuilder(this)
 				.append("type", type)
+				.append("timestamp", timestamp)
 				.append("testDescriptor", testDescriptor)
 				.append("payload", payload)
 				.toString();

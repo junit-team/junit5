@@ -24,7 +24,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
-class TreeWalkerIntegrationTests {
+class NodeWalkerIntegrationTests {
 
 	@Test
 	void pullUpExclusiveChildResourcesToTestClass() {
