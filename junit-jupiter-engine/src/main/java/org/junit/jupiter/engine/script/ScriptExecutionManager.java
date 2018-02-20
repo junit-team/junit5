@@ -23,6 +23,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import com.google.errorprone.annotations.Var;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -54,6 +56,7 @@ public class ScriptExecutionManager {
 	 */
 	public Object evaluate(Script script, Bindings bindings) throws ScriptException {
 		// Always look for a compiled script in our cache.
+		@Var
 		CompiledScript compiledScript = compiledScripts.get(script);
 
 		// No compiled script found?
@@ -73,6 +76,7 @@ public class ScriptExecutionManager {
 	}
 
 	ScriptEngine createScriptEngine(String engine) {
+		@Var
 		ScriptEngine scriptEngine = scriptEngineManager.getEngineByName(engine);
 		if (scriptEngine == null) {
 			scriptEngine = scriptEngineManager.getEngineByExtension(engine);

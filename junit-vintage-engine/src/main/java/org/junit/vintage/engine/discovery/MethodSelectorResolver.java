@@ -44,7 +44,7 @@ class MethodSelectorResolver implements DiscoverySelectorResolver {
 	 * filter that does not account for the case when the description is for a
 	 * {@link org.junit.runners.Parameterized} runner.
 	 */
-	private static Filter matchMethodDescription(final Description desiredDescription) {
+	private static Filter matchMethodDescription(Description desiredDescription) {
 		return new Filter() {
 
 			@Override

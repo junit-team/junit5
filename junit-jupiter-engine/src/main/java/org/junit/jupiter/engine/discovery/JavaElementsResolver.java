@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.google.errorprone.annotations.Var;
+
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.Filterable;
@@ -107,6 +109,7 @@ class JavaElementsResolver {
 			TestDescriptor parent = resolvedDescriptors.getLast();
 			UniqueId partialUniqueId = parent.getUniqueId().append(segment);
 
+			@Var
 			Optional<TestDescriptor> resolvedDescriptor = findTestDescriptorByUniqueId(partialUniqueId);
 			if (!resolvedDescriptor.isPresent()) {
 				// @formatter:off
@@ -137,6 +140,7 @@ class JavaElementsResolver {
 			}
 			else {
 				logger.warn(() -> {
+					@Var
 					List<Segment> unresolved = segments.subList(1, segments.size()); // Remove engine ID
 					unresolved = unresolved.subList(numSegmentsResolved, unresolved.size()); // Remove resolved segments
 					return format("Unique ID '%s' could only be partially resolved. "

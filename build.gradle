@@ -602,11 +602,6 @@ subprojects { subproj ->
 			// adds a lot of churn for not a lot of gain
 			'-Xep:InconsistentOverloads:OFF',
 
-			// TODO: turning this check on and applying @com.google.errorprone.annotations.Immutable
-			// to immutable classes causes JDK 9 to fail to compile; investigate and consider
-			// turning it on when error-prone supports JDK 9
-			//'-Xep:Immutable:OFF',
-
 			// adds a lot of churn for not a lot of gain
 			'-Xep:MethodCanBeStatic:OFF',
 
@@ -628,11 +623,6 @@ subprojects { subproj ->
 
 			// we do not follow the Google Java Style Guide
 			'-Xep:UngroupedOverloads:OFF',
-
-			// TODO: turning this check on and applying @com.google.errorprone.annotations.Var to
-			// non-final variables causes JDK 9 to fail to compile; investigate and consider turning
-			// it on when error-prone supports JDK 9
-			//'-Xep:Var:OFF'
 		]
 
 		def errorproneTestFlags = errorproneBaseFlags + [
@@ -646,6 +636,7 @@ subprojects { subproj ->
 		]
 
 		task compileJavaWithErrorProne(type: JavaCompile) {
+			dependsOn compileJava, compileKotlin
 			group = 'verification'
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
 			classpath = compileJava.classpath + compileKotlin.classpath
@@ -656,10 +647,11 @@ subprojects { subproj ->
 		check.dependsOn(compileJavaWithErrorProne)
 
 		task compileTestJavaWithErrorProne(type: JavaCompile) {
+			dependsOn compileJava, compileKotlin, compileTestJava, compileTestKotlin
 			group = 'verification'
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
-			classpath = compileTestJava.classpath + compileTestKotlin.classpath
-			source = compileTestJava.source + compileTestKotlin.source
+			classpath = compileJava.classpath + compileKotlin.classpath + compileTestJava.classpath + compileTestKotlin.classpath
+			source = compileJava.source + compileKotlin.source + compileTestJava.source + compileTestKotlin.source
 			options.compilerArgs += compileTestJava.options.compilerArgs + errorproneTestFlags
 			destinationDir = file("$buildDir/classes/error-prone-java/test")
 		}

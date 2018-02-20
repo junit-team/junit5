@@ -20,6 +20,8 @@ import static org.junit.platform.launcher.tagexpression.TagExpressions.tag;
 
 import java.util.List;
 
+import com.google.errorprone.annotations.Var;
+
 /**
  * This is based on a modified version of the
  * <a href="https://en.wikipedia.org/wiki/Shunting-yard_algorithm">
@@ -57,6 +59,7 @@ class ShuntingYard {
 	}
 
 	private ParseStatus processTokens() {
+		@Var
 		ParseStatus parseStatus = success();
 		for (Token token : tokens) {
 			parseStatus = parseStatus.process(() -> process(token));
@@ -97,7 +100,7 @@ class ShuntingYard {
 
 	private ParseStatus findOperands(Token token, Operator currentOperator) {
 		while (currentOperator.hasLowerPrecedenceThan(previousOperator())
-				|| currentOperator.hasSamePrecedenceAs(previousOperator()) && currentOperator.isLeftAssociative()) {
+				|| (currentOperator.hasSamePrecedenceAs(previousOperator()) && currentOperator.isLeftAssociative())) {
 			TokenWith<Operator> tokenWithWithOperator = operators.pop();
 			ParseStatus parseStatus = tokenWithWithOperator.element.createAndAddExpressionTo(expressions,
 				tokenWithWithOperator.token);

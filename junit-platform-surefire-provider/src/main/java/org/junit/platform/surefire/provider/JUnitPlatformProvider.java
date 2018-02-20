@@ -36,6 +36,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import com.google.errorprone.annotations.Var;
+
 import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
 import org.apache.maven.surefire.report.ConsoleOutputCapture;
@@ -186,6 +188,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	}
 
 	private Optional<List<String>> getPropertiesList(String key) {
+		@Var
 		List<String> compoundProperties = null;
 		String property = parameters.getProviderProperties().get(key);
 		if (StringUtils.isNotBlank(property)) {
@@ -199,18 +202,16 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	}
 
 	private Optional<List<String>> getGroupsOrTags(Optional<List<String>> groups, Optional<List<String>> tags) {
-		Optional<List<String>> elements = Optional.empty();
-
 		Preconditions.condition(!groups.isPresent() || !tags.isPresent(), EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED);
 
 		if (groups.isPresent()) {
-			elements = groups;
+			return groups;
 		}
 		else if (tags.isPresent()) {
-			elements = tags;
+			return tags;
 		}
 
-		return elements;
+		return Optional.empty();
 	}
 
 }

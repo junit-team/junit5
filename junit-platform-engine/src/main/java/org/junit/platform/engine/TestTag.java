@@ -19,6 +19,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.Var;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
@@ -33,6 +36,7 @@ import org.junit.platform.commons.util.StringUtils;
  * @see #create(String)
  */
 @API(status = STABLE, since = "1.0")
+@Immutable
 public final class TestTag implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -82,7 +86,7 @@ public final class TestTag implements Serializable {
 	 * @see #RESERVED_CHARACTERS
 	 * @see TestTag#create(String)
 	 */
-	public static boolean isValid(String name) {
+	public static boolean isValid(@Var String name) {
 		if (name == null) {
 			return false;
 		}

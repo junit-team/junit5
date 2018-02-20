@@ -16,6 +16,8 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.util.Optional;
 
+import com.google.errorprone.annotations.Var;
+
 import org.apiguardian.api.API;
 
 /**
@@ -61,6 +63,7 @@ public final class ClassLoaderUtils {
 	public static Optional<URL> getLocation(Object object) {
 		Preconditions.notNull(object, "object must not be null");
 		// determine class loader
+		@Var
 		ClassLoader loader = object.getClass().getClassLoader();
 		if (loader == null) {
 			loader = ClassLoader.getSystemClassLoader();
@@ -70,8 +73,7 @@ public final class ClassLoaderUtils {
 		}
 		// try finding resource by name
 		if (loader != null) {
-			String name = object.getClass().getName();
-			name = name.replace(".", "/") + ".class";
+			String name = object.getClass().getName().replace(".", "/") + ".class";
 			try {
 				return Optional.ofNullable(loader.getResource(name));
 			}

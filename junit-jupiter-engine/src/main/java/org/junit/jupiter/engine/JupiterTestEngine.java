@@ -14,6 +14,8 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
 
+import com.google.errorprone.annotations.Immutable;
+
 import org.apiguardian.api.API;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
@@ -30,6 +32,7 @@ import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
+@Immutable
 public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecutionContext> {
 
 	public static final String ENGINE_ID = "junit-jupiter";
