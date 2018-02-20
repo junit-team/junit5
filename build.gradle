@@ -581,9 +581,6 @@ subprojects { subproj ->
 
 		dependencies {
 			errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
-			// TODO: JDK 9 fails to find any of the annotations from the package
-			// com.google.errorprone.annotations, even if they're applied to the JUnit 5 code base.
-			// Apply a select subset of them once they work properly with JDK 9.
 			compileOnly("com.google.errorprone:error_prone_annotations:${errorproneVersion}")
 		}
 
@@ -608,7 +605,7 @@ subprojects { subproj ->
 			// TODO: turning this check on and applying @com.google.errorprone.annotations.Immutable
 			// to immutable classes causes JDK 9 to fail to compile; investigate and consider
 			// turning it on when error-prone supports JDK 9
-			'-Xep:Immutable:OFF',
+			//'-Xep:Immutable:OFF',
 
 			// adds a lot of churn for not a lot of gain
 			'-Xep:MethodCanBeStatic:OFF',
@@ -635,7 +632,7 @@ subprojects { subproj ->
 			// TODO: turning this check on and applying @com.google.errorprone.annotations.Var to
 			// non-final variables causes JDK 9 to fail to compile; investigate and consider turning
 			// it on when error-prone supports JDK 9
-			'-Xep:Var:OFF'
+			//'-Xep:Var:OFF'
 		]
 
 		def errorproneTestFlags = errorproneBaseFlags + [
@@ -651,6 +648,8 @@ subprojects { subproj ->
 		task compileJavaWithErrorProne(type: JavaCompile) {
 			group = 'verification'
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
+			classpath = compileJava.classpath + compileKotlin.classpath
+			source = compileJava.source + compileKotlin.source
 			options.compilerArgs = compileJava.options.compilerArgs + errorproneBaseFlags
 			destinationDir = file("$buildDir/classes/error-prone-java/main")
 		}
@@ -659,6 +658,8 @@ subprojects { subproj ->
 		task compileTestJavaWithErrorProne(type: JavaCompile) {
 			group = 'verification'
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
+			classpath = compileTestJava.classpath + compileTestKotlin.classpath
+			source = compileTestJava.source + compileTestKotlin.source
 			options.compilerArgs += compileTestJava.options.compilerArgs + errorproneTestFlags
 			destinationDir = file("$buildDir/classes/error-prone-java/test")
 		}
