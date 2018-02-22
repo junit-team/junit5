@@ -593,7 +593,8 @@ subprojects { subproj ->
 			'-Xep:BooleanParameter:OFF',
 
 			// generates too many false positives on constructors that call other constructors.
-			// TODO: see if constructors can be refactored more easily to not call each other.
+			// TODO: Turn back on when https://github.com/google/error-prone/pull/789 is merged and
+			// error-prone 2.2.1+ is released.
 			'-Xep:ConstructorLeaksThis:OFF',
 
 			// we don't use @Nullable
@@ -635,24 +636,28 @@ subprojects { subproj ->
 			'-Xep:ReturnValueIgnored:OFF'
 		]
 
-		task compileJavaWithErrorProne(type: JavaCompile) {
-			dependsOn compileJava, compileKotlin
+		task compileJavaWithErrorProne(type: JavaCompile, dependsOn: compileKotlin) {
 			group = 'verification'
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
-			classpath = compileJava.classpath + compileKotlin.classpath
+			classpath = compileJava.classpath + files(compileKotlin.destinationDir)
 			source = compileJava.source + compileKotlin.source
 			options.compilerArgs = compileJava.options.compilerArgs + errorproneBaseFlags
 			destinationDir = file("$buildDir/classes/error-prone-java/main")
 		}
 		check.dependsOn(compileJavaWithErrorProne)
 
-		task compileTestJavaWithErrorProne(type: JavaCompile) {
-			dependsOn compileJava, compileKotlin, compileTestJava, compileTestKotlin
+		task compileTestJavaWithErrorProne(type: JavaCompile, dependsOn: compileTestKotlin) {
 			group = 'verification'
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
-			classpath = compileJava.classpath + compileKotlin.classpath + compileTestJava.classpath + compileTestKotlin.classpath
-			source = compileJava.source + compileKotlin.source + compileTestJava.source + compileTestKotlin.source
-			options.compilerArgs += compileTestJava.options.compilerArgs + errorproneTestFlags
+			classpath = compileJava.classpath +
+					files(compileKotlin.destinationDir) +
+					compileTestJava.classpath +
+					files(compileTestKotlin.destinationDir)
+			source = compileJava.source +
+					compileKotlin.source +
+					compileTestJava.source +
+					compileTestKotlin.source
+			options.compilerArgs = compileTestJava.options.compilerArgs + errorproneTestFlags
 			destinationDir = file("$buildDir/classes/error-prone-java/test")
 		}
 		check.dependsOn(compileTestJavaWithErrorProne)
