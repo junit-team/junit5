@@ -551,7 +551,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	private CommandLineOptions parseArgLine(String argLine) {
-		String[] arguments = argLine.split("\\s+");
+		String[] arguments = argLine.split("\\s+", -1);
 		return createParser().parse(arguments);
 	}
 

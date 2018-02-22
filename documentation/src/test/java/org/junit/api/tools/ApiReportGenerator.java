@@ -10,7 +10,10 @@
 
 package org.junit.api.tools;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -36,7 +39,8 @@ class ApiReportGenerator {
 		// CAUTION: The output produced by this method is used to
 		//          generate a table in the User Guide.
 
-		PrintWriter writer = new PrintWriter(System.out, true);
+		PrintWriter writer = new PrintWriter(
+			new BufferedWriter(new OutputStreamWriter(System.out, Charset.defaultCharset())), true);
 		ApiReportGenerator reportGenerator = new ApiReportGenerator();
 
 		// scan all types below "org.junit" package

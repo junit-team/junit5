@@ -16,6 +16,7 @@
 
 package org.junit.platform.surefire.provider;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.toSet;
@@ -25,8 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.AdditionalMatchers.gt;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -180,7 +181,7 @@ class JUnitPlatformProviderTests {
 		verify((ConsoleOutputReceiver) runListener)
 				.writeTestOutput(captor.capture(), eq(0), gt(6), eq(false));
 		assertThat(captor.getAllValues())
-				.extracting(bytes -> new String(bytes, 0, 6))
+				.extracting(bytes -> new String(bytes, 0, 6, UTF_8))
 				.containsExactly("stdout", "stderr");
 		// @formatter:on
 	}

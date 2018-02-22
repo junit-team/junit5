@@ -27,6 +27,7 @@ import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,6 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
-
-import com.google.errorprone.annotations.Var;
 
 import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
@@ -188,17 +186,16 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	}
 
 	private Optional<List<String>> getPropertiesList(String key) {
-		@Var
-		List<String> compoundProperties = null;
 		String property = parameters.getProviderProperties().get(key);
 		if (StringUtils.isNotBlank(property)) {
-			compoundProperties = //
-				Pattern.compile("[, ]+") //
-						.splitAsStream(property) //
-						.filter(StringUtils::isNotBlank) //
-						.collect(toList());
+			// @formatter:off
+			List<String> compondProperties = Arrays.stream(property.split("[, ]+", -1))
+					.filter(StringUtils::isNotBlank)
+					.collect(toList());
+			// @formatter:on
+			return Optional.of(compondProperties);
 		}
-		return Optional.ofNullable(compoundProperties);
+		return Optional.empty();
 	}
 
 	private Optional<List<String>> getGroupsOrTags(Optional<List<String>> groups, Optional<List<String>> tags) {

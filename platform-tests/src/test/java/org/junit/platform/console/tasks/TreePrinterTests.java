@@ -42,7 +42,8 @@ class TreePrinterTests {
 	private List<String> actual() {
 		try {
 			out.flush();
-			return Arrays.asList(stream.toString(charset.name()).split("\\R"));
+			// Split with a limit of 0 so that trailing empty strings are removed.
+			return Arrays.asList(stream.toString(charset.name()).split("\\R", 0));
 		}
 		catch (UnsupportedEncodingException e) {
 			throw new AssertionError(charset.name() + " is an unsupported encoding?!", e);

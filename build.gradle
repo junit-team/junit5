@@ -633,7 +633,8 @@ subprojects { subproj ->
 			'-Xep:EqualsHashCode:OFF',
 			'-Xep:MultipleTopLevelClasses:OFF',
 			'-Xep:PrivateConstructorForUtilityClass:OFF',
-			'-Xep:ReturnValueIgnored:OFF'
+			'-Xep:ReturnValueIgnored:OFF',
+			'-Xep:Var:OFF'
 		]
 
 		task compileJavaWithErrorProne(type: JavaCompile, dependsOn: compileKotlin) {

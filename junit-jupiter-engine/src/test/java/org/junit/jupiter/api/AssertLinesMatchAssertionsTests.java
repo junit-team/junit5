@@ -106,7 +106,7 @@ class AssertLinesMatchAssertionsTests {
 			"second line", //
 			"third line> but was: <first line", //
 			"third line>");
-		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R")));
+		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R", -1)));
 	}
 
 	@Test
@@ -120,7 +120,7 @@ class AssertLinesMatchAssertionsTests {
 			"third line> but was: <first line", //
 			"sec0nd line", //
 			"third line>");
-		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R")));
+		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R", -1)));
 	}
 
 	@Test
@@ -134,7 +134,7 @@ class AssertLinesMatchAssertionsTests {
 			"third line> but was: <first line", //
 			"second line", //
 			"third line", "last line>");
-		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R")));
+		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R", -1)));
 	}
 
 	@Test
@@ -147,7 +147,7 @@ class AssertLinesMatchAssertionsTests {
 			">> 1 >>> but was: <first line", //
 			"skipped", //
 			"last line>");
-		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R")));
+		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R", -1)));
 	}
 
 	@Test
@@ -160,7 +160,7 @@ class AssertLinesMatchAssertionsTests {
 			">> 100 >>> but was: <first line", //
 			"skipped", //
 			"last line>");
-		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R")));
+		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R", -1)));
 	}
 
 	@Test
@@ -174,7 +174,7 @@ class AssertLinesMatchAssertionsTests {
 			"not present> but was: <first line", //
 			"skipped", //
 			"last line>");
-		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R")));
+		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R", -1)));
 	}
 
 	@Test

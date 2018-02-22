@@ -214,7 +214,8 @@ class ConsoleDetailsTests {
 			assumeTrue(Files.isReadable(path), "can not read: " + path);
 
 			List<String> expectedLines = Files.readAllLines(path, UTF_8);
-			List<String> actualLines = asList(result.out.split("\\R"));
+			// Split with a limit of 0 so that trailing empty strings are removed.
+			List<String> actualLines = asList(result.out.split("\\R", 0));
 
 			assertLinesMatch(expectedLines, actualLines);
 		}

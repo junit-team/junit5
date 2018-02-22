@@ -846,6 +846,7 @@ class AnnotationUtilsTests {
 
 	}
 
+	@SuppressWarnings("HidingField") // we purposely test with shadowed (hidden) fields here
 	static class ClassWithShadowedAnnotatedFields extends ClassWithAnnotatedFields {
 
 		@Annotation3
