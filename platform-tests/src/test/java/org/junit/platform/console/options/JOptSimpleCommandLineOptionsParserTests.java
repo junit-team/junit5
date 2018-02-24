@@ -497,6 +497,14 @@ class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
+	void parseInvalidConfigurationParametersSpecifiedTwice() {
+		Exception e = assertThrows(JUnitException.class, () -> parseArgLine("--config foo=bar --config foo=baz"));
+
+		assertThat(e.getMessage()).isEqualTo("Error parsing command-line arguments");
+		assertThat(e.getCause().getMessage()).contains("Duplicate key foo", "bar", "baz");
+	}
+
+	@Test
 	void printHelpOutputsHelpOption() {
 		StringWriter writer = new StringWriter();
 
