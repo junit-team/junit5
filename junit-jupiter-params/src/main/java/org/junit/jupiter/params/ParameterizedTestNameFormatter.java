@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.joining;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.stream.IntStream;
-
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -30,17 +30,19 @@ class ParameterizedTestNameFormatter {
 		this.namePattern = namePattern;
 	}
 
-	String format(int invocationIndex, Object... arguments) {
+	String format(int invocationIndex, Arguments arguments) {
 		String pattern = prepareMessageFormatPattern(invocationIndex, arguments);
 		Object[] humanReadableArguments = makeReadable(arguments);
 		return formatSafely(pattern, humanReadableArguments);
 	}
 
-	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
+	private String prepareMessageFormatPattern(int invocationIndex, Arguments arguments) {
+		// todo: shall it be split into three methods for clarity?
 		String result = namePattern.replace("{index}", String.valueOf(invocationIndex));
+		result = result.replace("{arguments.description}", arguments.description());
 		if (result.contains("{arguments}")) {
 			// @formatter:off
-			String replacement = IntStream.range(0, arguments.length)
+			String replacement = IntStream.range(0, arguments.get().length)
 					.mapToObj(index -> "{" + index + "}")
 					.collect(joining(", "));
 			// @formatter:on
@@ -49,11 +51,14 @@ class ParameterizedTestNameFormatter {
 		return result;
 	}
 
-	private Object[] makeReadable(Object[] arguments) {
+	// todo: Rename to extractReadable? Or leave as it is and pass an array of objects?
+	private Object[] makeReadable(Arguments arguments) {
 		// Note: humanReadableArguments must be an Object[] in order to
 		// avoid varargs issues with non-Eclipse compilers.
 		Object[] humanReadableArguments = //
-			Arrays.stream(arguments).map(StringUtils::nullSafeToString).toArray(String[]::new);
+			Arrays.stream(arguments.get())
+					.map(StringUtils::nullSafeToString)
+					.toArray(String[]::new);
 		return humanReadableArguments;
 	}
 

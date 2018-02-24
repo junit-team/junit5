@@ -17,7 +17,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,6 +80,8 @@ public @interface ParameterizedTest {
 	 *
 	 * @see java.text.MessageFormat
 	 */
+	//todo: consider either changing the default name or its interpretation:
+	// arguments = all arguments + arguments.description
 	String name() default "[{index}] {arguments}";
 
 }

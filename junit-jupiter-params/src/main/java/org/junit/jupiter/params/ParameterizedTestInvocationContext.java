@@ -13,9 +13,9 @@ package org.junit.jupiter.params;
 import static java.util.Collections.singletonList;
 
 import java.util.List;
-
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
+import org.junit.jupiter.params.provider.Arguments;
 
 /**
  * @since 5.0
@@ -23,9 +23,10 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 class ParameterizedTestInvocationContext implements TestTemplateInvocationContext {
 
 	private final ParameterizedTestNameFormatter formatter;
-	private final Object[] arguments;
+	private final Arguments arguments;
 
-	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter, Object[] arguments) {
+	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
+																		 Arguments arguments) {
 		this.formatter = formatter;
 		this.arguments = arguments;
 	}
@@ -37,6 +38,6 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return singletonList(new ParameterizedTestParameterResolver(arguments));
+		return singletonList(new ParameterizedTestParameterResolver(arguments.get()));
 	}
 }

@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
@@ -52,7 +51,6 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.map(ReflectionUtils::newInstance)
 				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, context))
-				.map(Arguments::get)
 				.map(arguments -> consumedArguments(arguments, templateMethod))
 				.map(arguments -> createInvocationContext(formatter, arguments))
 				.peek(invocationContext -> invocationCount.incrementAndGet())
@@ -63,7 +61,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			Object[] arguments) {
+			Arguments arguments) {
 		return new ParameterizedTestInvocationContext(formatter, arguments);
 	}
 
@@ -85,9 +83,19 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		}
 	}
 
-	private Object[] consumedArguments(Object[] arguments, Method templateMethod) {
+	private Arguments consumedArguments(Arguments arguments, Method templateMethod) {
 		int parametersCount = templateMethod.getParameterCount();
-		return arguments.length > parametersCount ? Arrays.copyOf(arguments, parametersCount) : arguments;
+		Object[] providedArguments = arguments.get();
+		if (providedArguments.length > parametersCount) {
+			Arguments consumed = Arguments.of(Arrays.copyOf(providedArguments, parametersCount));
+			// todo: can be simplified? Maybe allow setting empty descriptions?
+			if (arguments.description().isEmpty()) {
+				return consumed;
+			} else {
+				return consumed.description(arguments.description());
+			}
+		}
+		return arguments;
 	}
 
 }

@@ -38,6 +38,38 @@ public interface Arguments {
 	 */
 	Object[] get();
 
+	// todo: document properly this and below
+	default String description() {
+		return "";
+	}
+
+// todo: do we need this?
+//	/** Returns true if these arguments have a non-empty description. **/
+//	default boolean hasDescription() {
+//		return !description().isEmpty();
+//	}
+
+	// todo: @MustCheckReturnValue
+	default Arguments description(String testCaseDescription) {
+		Preconditions.notBlank(testCaseDescription,
+				() -> "Test case description must not be blank: '" + testCaseDescription + "'!");
+
+		Object[] arguments = get();
+		String trimmedDesc = testCaseDescription.trim();
+
+		return new Arguments() {
+			@Override
+			public Object[] get() {
+				return arguments;
+			}
+
+			@Override
+			public String description() {
+				return trimmedDesc;
+			}
+		};
+	}
+
 	/**
 	 * Factory method for creating an instance of {@code Arguments} based on
 	 * the supplied {@code arguments}.
@@ -45,6 +77,7 @@ public interface Arguments {
 	 * @param arguments the arguments to be used for an invocation of the test
 	 * method; must not be {@code null}
 	 * @return an instance of {@code Arguments}; never {@code null}
+	 * // todo: document default empty description and how to set it.
 	 */
 	static Arguments of(Object... arguments) {
 		Preconditions.notNull(arguments, "argument array must not be null");

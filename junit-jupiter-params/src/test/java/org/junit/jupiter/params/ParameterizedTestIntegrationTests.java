@@ -28,7 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -82,6 +81,24 @@ class ParameterizedTestIntegrationTests {
 			selectMethod(TestCase.class, "testWithEmptyMethodSource", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), finishedWithFailure(message("empty method source")))); //
+	}
+
+	@Test
+	void executesWithDefaultEmptyArgumentsDescriptions() {
+		List<ExecutionEvent> executionEvents = execute(
+				selectMethod(TestCase.class, "testWithDefaultEmptyDescriptions", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] Parameter #1 "),
+						finishedWithFailure(message("Parameter #1")))); //
+	}
+
+	@Test
+	void executesWithExplicitArgumentsDescriptions() {
+		List<ExecutionEvent> executionEvents = execute(
+				selectMethod(TestCase.class, "testWithNonEmptyDescriptions", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] test case description"),
+						finishedWithFailure(message("test with a description parameter")))); //
 	}
 
 	@Test
@@ -260,8 +277,35 @@ class ParameterizedTestIntegrationTests {
 			fail(argument);
 		}
 
+		@SuppressWarnings("unused")  // discovered automatically by the test above
 		static Stream<Arguments> testWithEmptyMethodSource() {
 			return Stream.of(Arguments.of("empty method source"));
+		}
+
+		@ParameterizedTest(name = "[{index}] {arguments.description}")
+		@MethodSource
+		void testWithNonEmptyDescriptions(String argument) {
+			fail(argument);
+		}
+
+		@SuppressWarnings("unused")  // discovered automatically by the test above
+		static Stream<Arguments> testWithNonEmptyDescriptions() {
+			return Stream.of(
+					Arguments.of("test with a description parameter").description("test case description")
+			);
+		}
+
+		@ParameterizedTest(name = "[{index}] {arguments} {arguments.description}")
+		@MethodSource
+		void testWithDefaultEmptyDescriptions(String argument) {
+			fail(argument);
+		}
+
+		@SuppressWarnings("unused")  // discovered automatically by the test above
+		static Stream<Arguments> testWithDefaultEmptyDescriptions() {
+			return Stream.of(
+					Arguments.of("Parameter #1")
+			);
 		}
 	}
 
