@@ -45,7 +45,8 @@ public class TestExecutionResultConditions {
 	}
 
 	public static Condition<Throwable> suppressed(int index, Condition<Throwable> checked) {
-		return new Condition<>(throwable -> checked.matches(throwable.getSuppressed()[index]),
+		return new Condition<>(
+			throwable -> throwable.getSuppressed().length > index && checked.matches(throwable.getSuppressed()[index]),
 			"suppressed at index %d matches %s", index, checked);
 
 	}

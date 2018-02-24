@@ -13,7 +13,9 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
+import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
+import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -75,8 +77,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 
-		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.SUCCESSFUL,
-			"Execution of root should be successful.");
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(SUCCESSFUL);
 	}
 
 	@Test
@@ -99,8 +100,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
-		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.SUCCESSFUL,
-			"Execution of child container should be successful.");
+		assertThat(childExecutionResult.getValue().getStatus()).isEqualTo(SUCCESSFUL);
 	}
 
 	@Test
@@ -122,8 +122,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(child), aTestExecutionResult.capture());
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
-		assertTrue(aTestExecutionResult.getValue().getStatus() == TestExecutionResult.Status.SUCCESSFUL,
-			"Execution of child leaf be successful.");
+		assertThat(aTestExecutionResult.getValue().getStatus()).isEqualTo(SUCCESSFUL);
 	}
 
 	@Test
@@ -193,9 +192,8 @@ class HierarchicalTestExecutorTests {
 
 		verifyNoMoreInteractions(child);
 
-		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
-			"Execution of child should fail.");
-		assertSame(childExecutionResult.getValue().getThrowable().get(), anException);
+		assertThat(childExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
+		assertThat(childExecutionResult.getValue().getThrowable()).containsSame(anException);
 	}
 
 	@Test
@@ -218,9 +216,8 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 
-		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
-			"Execution of root should fail.");
-		assertSame(rootExecutionResult.getValue().getThrowable().get(), anException);
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
+		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(anException);
 
 		verifyNoMoreInteractions(child);
 	}
@@ -251,7 +248,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 		inOrder.verifyNoMoreInteractions();
 
-		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(TestExecutionResult.Status.FAILED);
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
 		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(afterException);
 		assertThat(afterException.getSuppressed()).containsExactly(cleanUpException);
 	}
@@ -270,7 +267,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 		inOrder.verifyNoMoreInteractions();
 
-		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(TestExecutionResult.Status.FAILED);
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
 		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(prepareException);
 		assertThat(prepareException.getSuppressed()).isEmpty();
 	}
@@ -293,7 +290,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 		inOrder.verifyNoMoreInteractions();
 
-		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(TestExecutionResult.Status.FAILED);
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
 		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(cleanUpException);
 		assertThat(cleanUpException.getSuppressed()).isEmpty();
 	}
@@ -316,7 +313,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 		inOrder.verifyNoMoreInteractions();
 
-		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(TestExecutionResult.Status.FAILED);
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
 		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(shouldBeSkippedException);
 		assertThat(shouldBeSkippedException.getSuppressed()).containsExactly(cleanUpException);
 	}
@@ -342,9 +339,8 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
-		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
-			"Execution of child should fail.");
-		assertSame(childExecutionResult.getValue().getThrowable().get(), anException);
+		assertThat(childExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
+		assertThat(childExecutionResult.getValue().getThrowable()).containsSame(anException);
 	}
 
 	@Test
@@ -367,9 +363,8 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 
-		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.ABORTED,
-			"Execution of root should abort.");
-		assertSame(rootExecutionResult.getValue().getThrowable().get(), anAbortedException);
+		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(ABORTED);
+		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(anAbortedException);
 
 		verifyNoMoreInteractions(child);
 	}
@@ -395,9 +390,8 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
-		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.ABORTED,
-			"Execution of child should abort.");
-		assertSame(childExecutionResult.getValue().getThrowable().get(), anAbortedException);
+		assertThat(childExecutionResult.getValue().getStatus()).isEqualTo(ABORTED);
+		assertThat(childExecutionResult.getValue().getThrowable()).containsSame(anAbortedException);
 	}
 
 	@Test
@@ -434,7 +428,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		assertThat(aTestExecutionResult.getAllValues()).extracting(TestExecutionResult::getStatus).containsExactly(
-			TestExecutionResult.Status.SUCCESSFUL, TestExecutionResult.Status.SUCCESSFUL);
+			SUCCESSFUL, SUCCESSFUL);
 	}
 
 	@Test
@@ -482,8 +476,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		assertThat(aTestExecutionResult.getAllValues()).extracting(TestExecutionResult::getStatus).containsExactly(
-			TestExecutionResult.Status.FAILED, TestExecutionResult.Status.SUCCESSFUL,
-			TestExecutionResult.Status.SUCCESSFUL);
+			FAILED, SUCCESSFUL, SUCCESSFUL);
 	}
 
 	private Answer<Object> registerAndExecute(TestDescriptor dynamicChild) {
@@ -520,6 +513,30 @@ class HierarchicalTestExecutorTests {
 
 		Throwable actualException = assertThrows(OutOfMemoryError.class, () -> executor.execute());
 		assertSame(outOfMemoryError, actualException);
+	}
+
+	@Test
+	void exceptionInAfterDoesNotHideEarlierException() throws Exception {
+
+		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
+		Exception exceptionInExecute = new RuntimeException("execute");
+		Exception exceptionInAfter = new RuntimeException("after");
+		doThrow(exceptionInExecute).when(child).execute(eq(rootContext), any());
+		doThrow(exceptionInAfter).when(child).after(eq(rootContext));
+		root.addChild(child);
+
+		InOrder inOrder = inOrder(listener, child);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> childExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(child).execute(eq(rootContext), any());
+		inOrder.verify(child).after(eq(rootContext));
+		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
+
+		assertThat(childExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
+		assertThat(childExecutionResult.getValue().getThrowable().get()).isSameAs(
+			exceptionInExecute).hasSuppressedException(exceptionInAfter);
 	}
 
 	// -------------------------------------------------------------------

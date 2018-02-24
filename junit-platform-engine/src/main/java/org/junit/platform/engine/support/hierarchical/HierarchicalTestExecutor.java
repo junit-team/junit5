@@ -106,6 +106,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			listener.executionStarted(testDescriptor);
 
 			executionResult = singleTestExecutor.executeSafely(() -> {
+				Throwable failure = null;
 				try {
 					context = node.before(context);
 
@@ -120,10 +121,29 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 							.forEach(child -> new NodeExecutor(child).execute(context, tracker));
 					// @formatter:on
 				}
+				catch (Throwable t) {
+					failure = t;
+				}
 				finally {
-					node.after(context);
+					executeAfter(failure);
 				}
 			});
+		}
+
+		private void executeAfter(Throwable failure) throws Throwable {
+			try {
+				node.after(context);
+				if (failure != null) {
+					throw failure;
+				}
+			}
+			catch (Throwable t) {
+				if (failure != null && failure != t) {
+					failure.addSuppressed(t);
+					throw failure;
+				}
+				throw t;
+			}
 		}
 
 		private void cleanUp() {

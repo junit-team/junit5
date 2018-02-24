@@ -12,6 +12,8 @@ package org.junit.jupiter.engine;
 
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
@@ -36,6 +38,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.opentest4j.AssertionFailedError;
@@ -182,8 +188,26 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void exceptionInAfterAllCallbackDoesNotHideFailureWhenTestInstancePerClassIsUsed() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectClass(TestCaseWithInvalidConstructorAndThrowingAfterAllCallback.class)).build();
+
+		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("after"));
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(TestCaseWithInvalidConstructorAndThrowingAfterAllCallback.class), started()), //
+			event(container(TestCaseWithInvalidConstructorAndThrowingAfterAllCallback.class), finishedWithFailure(allOf( //
+				message(m -> m.contains("constructor")), //
+				suppressed(0, message("callback"))))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
 	@AfterEach
-	public void cleanUpExceptions() {
+	void cleanUpExceptions() {
 		FailureTestCase.exceptionToThrowInBeforeAll = Optional.empty();
 		FailureTestCase.exceptionToThrowInAfterAll = Optional.empty();
 		FailureTestCase.exceptionToThrowInBeforeEach = Optional.empty();
@@ -240,6 +264,28 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			throw new IOException("checked");
 		}
 
+	}
+
+	@TestInstance(PER_CLASS)
+	@ExtendWith(ThrowingAfterAllCallback.class)
+	static class TestCaseWithInvalidConstructorAndThrowingAfterAllCallback {
+		TestCaseWithInvalidConstructorAndThrowingAfterAllCallback() {
+		}
+
+		@SuppressWarnings("unused")
+		TestCaseWithInvalidConstructorAndThrowingAfterAllCallback(String unused) {
+		}
+
+		@Test
+		void test() {
+		}
+	}
+
+	static class ThrowingAfterAllCallback implements AfterAllCallback {
+		@Override
+		public void afterAll(ExtensionContext context) {
+			throw new IllegalStateException("callback");
+		}
 	}
 
 }
