@@ -17,8 +17,6 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.errorprone.annotations.Var;
-
 /**
  * @since 1.1
  */
@@ -38,7 +36,6 @@ class Tokenizer {
 	}
 
 	private List<Token> deriveTokensFrom(String infixTagExpression, List<String> trimmedTokens) {
-		@Var
 		int startIndex = 0;
 		List<Token> tokens = new ArrayList<>(trimmedTokens.size());
 		for (String trimmedToken : trimmedTokens) {

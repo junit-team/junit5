@@ -19,8 +19,6 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.errorprone.annotations.Var;
-
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -118,7 +116,7 @@ public class ConditionEvaluator {
 	 * See {@link Constants#DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME} for
 	 * details on the pattern matching syntax.
 	 */
-	private String convertToRegEx(@Var String pattern) {
+	private String convertToRegEx(String pattern) {
 		pattern = Matcher.quoteReplacement(pattern);
 
 		// Match "." against "." and "$" since users may declare a "." instead of a

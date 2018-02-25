@@ -22,8 +22,6 @@ import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Optional;
 
-import com.google.errorprone.annotations.Var;
-
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -161,7 +159,6 @@ public class ExecutableInvoker {
 
 		Parameter[] parameters = executable.getParameters();
 		Object[] values = new Object[parameters.length];
-		@Var
 		int start = 0;
 
 		// Ensure that the outer instance is resolved as the first parameter if

@@ -18,8 +18,6 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import com.google.errorprone.annotations.Var;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 
@@ -157,11 +155,8 @@ public final class LoggerFactory {
 
 		private LogRecord createLogRecord(Level level, Throwable throwable, Supplier<String> messageSupplier) {
 			StackTraceElement[] stack = new Throwable().getStackTrace();
-			@Var
 			String sourceClassName = null;
-			@Var
 			String sourceMethodName = null;
-			@Var
 			boolean found = false;
 			for (StackTraceElement element : stack) {
 				String className = element.getClassName();

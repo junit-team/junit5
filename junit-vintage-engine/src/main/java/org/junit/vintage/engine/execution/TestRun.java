@@ -96,11 +96,7 @@ class TestRun {
 		}
 		// @formatter:off
 		return descriptors.stream()
-				.filter(testDescriptor -> {
-					@SuppressWarnings("ReferenceEquality") // See JavaDoc for this method
-					boolean result = description == testDescriptor.getDescription();
-					return result;
-				})
+				.filter(testDescriptor -> description == testDescriptor.getDescription())
 				.findFirst();
 		// @formatter:on
 	}

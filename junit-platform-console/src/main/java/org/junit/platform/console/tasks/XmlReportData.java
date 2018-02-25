@@ -24,8 +24,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
-import com.google.errorprone.annotations.Var;
-
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -97,7 +95,6 @@ class XmlReportData {
 
 	String getSkipReason(TestIdentifier testIdentifier) {
 		return findSkippedAncestor(testIdentifier).map(skippedTestIdentifier -> {
-			@Var
 			String reason = this.skippedTests.get(skippedTestIdentifier);
 			if (!testIdentifier.equals(skippedTestIdentifier)) {
 				reason = "parent was skipped: " + reason;
@@ -131,7 +128,6 @@ class XmlReportData {
 
 	private Optional<TestIdentifier> findAncestor(Optional<TestIdentifier> testIdentifier,
 			Predicate<TestIdentifier> predicate) {
-		@Var
 		Optional<TestIdentifier> current = testIdentifier;
 		while (current.isPresent()) {
 			if (predicate.test(current.get())) {

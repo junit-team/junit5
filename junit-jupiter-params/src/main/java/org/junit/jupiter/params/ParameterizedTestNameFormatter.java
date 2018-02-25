@@ -16,8 +16,6 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-import com.google.errorprone.annotations.Var;
-
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -39,7 +37,6 @@ class ParameterizedTestNameFormatter {
 	}
 
 	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
-		@Var
 		String result = namePattern.replace("{index}", String.valueOf(invocationIndex));
 		if (result.contains("{arguments}")) {
 			// @formatter:off

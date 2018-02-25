@@ -34,8 +34,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
-import com.google.errorprone.annotations.Var;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
@@ -128,7 +126,6 @@ public final class AnnotationUtils {
 
 		// Cached?
 		AnnotationCacheKey key = new AnnotationCacheKey(element, annotationType);
-		@Var
 		A annotation = (A) annotationCache.get(key);
 		if (annotation != null) {
 			return Optional.of(annotation);

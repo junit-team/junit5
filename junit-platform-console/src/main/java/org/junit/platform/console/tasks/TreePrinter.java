@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.errorprone.annotations.Var;
-
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
@@ -52,7 +50,7 @@ class TreePrinter {
 		out.flush();
 	}
 
-	private void print(TreeNode node, @Var String indent, boolean continuous) {
+	private void print(TreeNode node, String indent, boolean continuous) {
 		if (node.visible) {
 			printVisible(node, indent, continuous);
 		}
@@ -74,7 +72,6 @@ class TreePrinter {
 		String tabbed = color(CONTAINER, indent + (continuous ? theme.vertical() : theme.blank()) + theme.blank());
 		String caption = colorCaption(node);
 		String duration = color(CONTAINER, node.duration + " ms");
-		@Var
 		String icon = color(SKIPPED, theme.skipped());
 		if (node.result().isPresent()) {
 			TestExecutionResult result = node.result().get();
@@ -116,7 +113,6 @@ class TreePrinter {
 			return;
 		}
 		Throwable throwable = result.getThrowable().get();
-		@Var
 		String message = throwable.getMessage();
 		if (StringUtils.isBlank(message)) {
 			message = throwable.toString();
