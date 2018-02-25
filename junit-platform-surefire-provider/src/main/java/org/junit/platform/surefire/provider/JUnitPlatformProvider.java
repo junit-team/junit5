@@ -189,11 +189,11 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		String property = parameters.getProviderProperties().get(key);
 		if (StringUtils.isNotBlank(property)) {
 			// @formatter:off
-			List<String> compondProperties = Arrays.stream(property.split("[, ]+", -1))
+			List<String> compoundProperties = Arrays.stream(property.split("[, ]+", -1))
 					.filter(StringUtils::isNotBlank)
 					.collect(toList());
 			// @formatter:on
-			return Optional.of(compondProperties);
+			return Optional.of(compoundProperties);
 		}
 		return Optional.empty();
 	}
