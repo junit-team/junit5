@@ -29,6 +29,9 @@ matrix:
 # Java 11 "OpenJDK"
     - env: JDK_RELEASE='OpenJDK 11-ea' EXTRA_GRADLE_ARGS=''
       install: . ./src/install/install-jdk.sh -F 11 -L GPL
+  allow_failures:
+    - env: JDK_RELEASE='Oracle JDK 11-ea' EXTRA_GRADLE_ARGS=''
+    - env: JDK_RELEASE='OpenJDK 11-ea' EXTRA_GRADLE_ARGS=''
 
 script:
 # Display Gradle, Groovy, JVM and other versions
