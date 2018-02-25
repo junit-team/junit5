@@ -10,7 +10,9 @@ buildscript {
 	dependencies {
 		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.10.0')
 		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
-		classpath('net.ltgt.gradle:gradle-errorprone-plugin:0.0.13')
+		if (JavaVersion.current().equals(JavaVersion.VERSION_1_9)) {
+			classpath('net.ltgt.gradle:gradle-errorprone-plugin:0.0.13')
+		}
 		classpath('org.ajoberstar:gradle-git-publish:0.3.3')
 		classpath('org.ajoberstar:gradle-git:1.7.2')
 		classpath('org.junit.platform:junit-platform-gradle-plugin:1.1.0')
@@ -576,7 +578,7 @@ subprojects { subproj ->
 
 	}
 
-	if (subproj.name != 'documentation') {
+	if (JavaVersion.current().equals(JavaVersion.VERSION_1_9) && subproj.name != 'documentation') {
 		apply plugin: 'net.ltgt.errorprone-base'
 
 		dependencies {
