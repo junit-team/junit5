@@ -23,6 +23,12 @@ matrix:
 # Java 10 "OpenJDK"
     - env: JDK_RELEASE='OpenJDK 10' EXTRA_GRADLE_ARGS=''
       install: . ./src/install/install-jdk.sh -F 10 -L GPL
+# Java 11 "Oracle JDK"
+    - env: JDK_RELEASE='Oracle JDK 11-ea' EXTRA_GRADLE_ARGS=''
+      install: . ./src/install/install-jdk.sh -F 11 -L BCL
+# Java 11 "OpenJDK"
+    - env: JDK_RELEASE='OpenJDK 11-ea' EXTRA_GRADLE_ARGS=''
+      install: . ./src/install/install-jdk.sh -F 11 -L GPL
 
 script:
 # Display Gradle, Groovy, JVM and other versions
