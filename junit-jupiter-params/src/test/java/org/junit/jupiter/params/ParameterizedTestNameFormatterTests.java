@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.JUnitException;
 
 /**
@@ -113,7 +113,7 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	@ParameterizedTest
-	@CsvSource({
+	@ValueSource(strings = {
 			"{}",
 			"{index",
 			"{-1}"
