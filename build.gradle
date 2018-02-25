@@ -583,7 +583,6 @@ subprojects { subproj ->
 
 		dependencies {
 			errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
-			compileOnly("com.google.errorprone:error_prone_annotations:${errorproneVersion}")
 		}
 
 		def errorproneBaseFlags = [
@@ -595,8 +594,6 @@ subprojects { subproj ->
 			'-Xep:BooleanParameter:OFF',
 
 			// generates too many false positives on constructors that call other constructors.
-			// TODO: Turn back on when https://github.com/google/error-prone/pull/789 is merged and
-			// error-prone 2.2.1+ is released.
 			'-Xep:ConstructorLeaksThis:OFF',
 
 			// we don't use @Nullable
@@ -604,11 +601,6 @@ subprojects { subproj ->
 
 			// adds a lot of churn for not a lot of gain
 			'-Xep:InconsistentOverloads:OFF',
-
-			// TODO: turning this check on and applying @com.google.errorprone.annotations.Immutable
-			// to immutable classes causes JDK 9 to fail to compile; investigate and consider
-			// turning it on when error-prone supports JDK 9
-			//'-Xep:Immutable:OFF',
 
 			// adds a lot of churn for not a lot of gain
 			'-Xep:MethodCanBeStatic:OFF',
@@ -632,10 +624,8 @@ subprojects { subproj ->
 			// we do not follow the Google Java Style Guide
 			'-Xep:UngroupedOverloads:OFF',
 
-			// TODO: turning this check on and applying @com.google.errorprone.annotations.Var to
-			// non-final variables causes JDK 9 to fail to compile; investigate and consider turning
-			// it on when error-prone supports JDK 9
-			//'-Xep:Var:OFF'
+			// adds a lot of churn for not a lot of gain
+			'-Xep:Var:OFF'
 		]
 
 		def errorproneTestFlags = errorproneBaseFlags + [
@@ -645,8 +635,7 @@ subprojects { subproj ->
 			'-Xep:EqualsHashCode:OFF',
 			'-Xep:MultipleTopLevelClasses:OFF',
 			'-Xep:PrivateConstructorForUtilityClass:OFF',
-			'-Xep:ReturnValueIgnored:OFF',
-			'-Xep:Var:OFF'
+			'-Xep:ReturnValueIgnored:OFF'
 		]
 
 		task compileJavaWithErrorProne(type: JavaCompile) {

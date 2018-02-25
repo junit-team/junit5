@@ -19,6 +19,12 @@ import org.junit.platform.engine.TestTag;
  */
 class TagExpressions {
 
+	///CLOVER:OFF
+	private TagExpressions() {
+		/* no-op */
+	}
+	///CLOVER:ON
+
 	static TagExpression tag(String tag) {
 		TestTag testTag = TestTag.create(tag);
 		return new TagExpression() {
