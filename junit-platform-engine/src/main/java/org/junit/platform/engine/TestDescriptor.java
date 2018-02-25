@@ -114,7 +114,8 @@ public interface TestDescriptor {
 	 * @see #getChildren()
 	 */
 	default Set<? extends TestDescriptor> getDescendants() {
-		Set<TestDescriptor> descendants = new LinkedHashSet<>(getChildren());
+		Set<TestDescriptor> descendants = new LinkedHashSet<>();
+		descendants.addAll(getChildren());
 		for (TestDescriptor child : getChildren()) {
 			descendants.addAll(child.getDescendants());
 		}

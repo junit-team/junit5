@@ -24,8 +24,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
-import com.google.errorprone.annotations.Var;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
@@ -370,9 +368,7 @@ public final class DiscoverySelectors {
 
 		String className = fullyQualifiedMethodName.substring(0, indexOfFirstHashtag);
 		String methodPart = fullyQualifiedMethodName.substring(indexOfFirstHashtag + 1);
-		@Var
 		String methodName = methodPart;
-		@Var
 		String methodParameters = "";
 
 		if (methodPart.endsWith("()")) {

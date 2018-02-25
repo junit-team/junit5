@@ -14,8 +14,6 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE
 
 import java.util.Optional;
 
-import com.google.errorprone.annotations.Var;
-
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.commons.logging.Logger;
@@ -57,7 +55,6 @@ final class TestInstanceLifecycleUtils {
 		String propertyName = DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
 
 		Optional<String> optional = configParams.get(propertyName);
-		@Var
 		String constantName = null;
 		if (optional.isPresent()) {
 			try {

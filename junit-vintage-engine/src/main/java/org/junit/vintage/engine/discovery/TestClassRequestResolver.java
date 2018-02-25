@@ -21,8 +21,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.IntFunction;
 
-import com.google.errorprone.annotations.Var;
-
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.UniqueId;
@@ -63,7 +61,6 @@ class TestClassRequestResolver {
 
 	private RunnerTestDescriptor determineRunnerTestDescriptor(Class<?> testClass, Runner runner,
 			List<RunnerTestDescriptorAwareFilter> filters, UniqueId engineId) {
-		@Var
 		RunnerTestDescriptor runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, runner, engineId);
 		if (!filters.isEmpty()) {
 			if (runner instanceof Filterable) {

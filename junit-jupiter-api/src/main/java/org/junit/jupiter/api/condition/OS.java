@@ -14,8 +14,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Locale;
 
-import com.google.errorprone.annotations.Var;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -67,7 +65,6 @@ public enum OS {
 	private static final OS CURRENT_OS = determineCurrentOs();
 
 	private static OS determineCurrentOs() {
-		@Var
 		String osName = System.getProperty("os.name");
 
 		if (StringUtils.isBlank(osName)) {

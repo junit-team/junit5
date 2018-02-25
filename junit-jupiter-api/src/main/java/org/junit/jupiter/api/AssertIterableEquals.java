@@ -23,8 +23,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-import com.google.errorprone.annotations.Var;
-
 /**
  * {@code AssertIterable} is a collection of utility methods that support asserting
  * Iterable equality in tests.
@@ -62,7 +60,6 @@ class AssertIterableEquals {
 		Iterator<?> expectedIterator = expected.iterator();
 		Iterator<?> actualIterator = actual.iterator();
 
-		@Var
 		int processed = 0;
 		while (expectedIterator.hasNext() && actualIterator.hasNext()) {
 			processed++;

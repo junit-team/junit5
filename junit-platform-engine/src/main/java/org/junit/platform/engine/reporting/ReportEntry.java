@@ -17,8 +17,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.google.errorprone.annotations.Immutable;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -32,11 +30,9 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @see #from(String, String)
  */
 @API(status = STABLE, since = "1.0")
-@Immutable
 public final class ReportEntry {
 
 	private final LocalDateTime timestamp = LocalDateTime.now();
-	@SuppressWarnings("Immutable") // only initialized in static factory methods
 	private final Map<String, String> keyValuePairs = new LinkedHashMap<>();
 
 	/**

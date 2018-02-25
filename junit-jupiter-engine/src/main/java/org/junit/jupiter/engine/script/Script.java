@@ -15,8 +15,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.lang.annotation.Annotation;
 import java.util.Objects;
 
-import com.google.errorprone.annotations.Immutable;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -29,7 +27,6 @@ import org.junit.platform.commons.util.Preconditions;
  * @see ScriptExecutionManager
  */
 @API(status = INTERNAL, since = "5.1")
-@Immutable
 public final class Script {
 
 	/**

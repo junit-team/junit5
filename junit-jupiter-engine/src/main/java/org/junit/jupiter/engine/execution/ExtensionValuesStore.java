@@ -22,8 +22,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.google.errorprone.annotations.Var;
-
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -75,7 +73,6 @@ public class ExtensionValuesStore {
 
 	<K, V> Object getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator) {
 		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		@Var
 		Supplier<Object> storedValue = getStoredValue(compositeKey);
 		if (storedValue == null) {
 			storedValue = new MemoizingSupplier(() -> defaultCreator.apply(key));
