@@ -12,10 +12,10 @@ package org.junit.platform.launcher.tagexpression;
 
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @since 1.1
@@ -32,7 +32,7 @@ class Tokenizer {
 
 	private List<String> trimmedTokenStringsFrom(String infixTagExpression) {
 		String[] parts = infixTagExpression.replaceAll("([()!|&])", " $1 ").split("\\s", -1);
-		return stream(parts).filter(part -> !part.isEmpty()).collect(toList());
+		return stream(parts).filter(part -> !part.isEmpty()).collect(Collectors.toList());
 	}
 
 	private List<Token> deriveTokensFrom(String infixTagExpression, List<String> trimmedTokens) {

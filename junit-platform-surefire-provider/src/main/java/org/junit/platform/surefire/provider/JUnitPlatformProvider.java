@@ -17,7 +17,6 @@
 package org.junit.platform.surefire.provider;
 
 import static java.util.Collections.emptyMap;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -35,6 +34,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
@@ -186,16 +186,13 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	}
 
 	private Optional<List<String>> getPropertiesList(String key) {
+		List<String> compoundProperties = null;
 		String property = parameters.getProviderProperties().get(key);
 		if (StringUtils.isNotBlank(property)) {
-			// @formatter:off
-			List<String> compoundProperties = Arrays.stream(property.split("[, ]+", -1))
-					.filter(StringUtils::isNotBlank)
-					.collect(toList());
-			// @formatter:on
-			return Optional.of(compoundProperties);
+			compoundProperties = Arrays.stream(property.split("[, ]+", -1)).filter(StringUtils::isNotBlank).collect(
+				Collectors.toList());
 		}
-		return Optional.empty();
+		return Optional.ofNullable(compoundProperties);
 	}
 
 	private Optional<List<String>> getGroupsOrTags(Optional<List<String>> groups, Optional<List<String>> tags) {
