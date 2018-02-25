@@ -31,6 +31,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.errorprone.annotations.Var;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
@@ -129,6 +131,7 @@ public class ModuleUtils {
 	 */
 	private static Stream<ResolvedModule> streamResolvedModules(Predicate<String> moduleNamePredicate) {
 		Module module = ModuleUtils.class.getModule();
+		@Var
 		ModuleLayer layer = module.getLayer();
 		if (layer == null) {
 			logger.config(() -> ModuleUtils.class + " is a member of " + module
@@ -203,7 +206,7 @@ public class ModuleUtils {
 		/**
 		 * Convert resource name to binary class name.
 		 */
-		private String className(String resourceName) {
+		private String className(@Var String resourceName) {
 			resourceName = resourceName.substring(0, resourceName.length() - 6); // 6 = ".class".length()
 			resourceName = resourceName.replace('/', '.');
 			return resourceName;

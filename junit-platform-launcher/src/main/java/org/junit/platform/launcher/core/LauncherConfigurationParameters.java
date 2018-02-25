@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
+import com.google.errorprone.annotations.Var;
+
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
@@ -101,6 +103,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		Preconditions.notBlank(key, "key must not be null or blank");
 
 		// 1) Check explicit config param.
+		@Var
 		String value = this.explicitConfigParams.get(key);
 
 		// 2) Check system property.

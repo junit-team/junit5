@@ -18,6 +18,8 @@ import java.util.Deque;
 import java.util.Optional;
 import java.util.Set;
 
+import com.google.errorprone.annotations.Var;
+
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
@@ -48,6 +50,7 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 	private Deque<Description> determinePath(RunnerTestDescriptor runnerTestDescriptor,
 			Optional<? extends TestDescriptor> identifiedTestDescriptor) {
 		Deque<Description> path = new ArrayDeque<>();
+		@Var
 		Optional<? extends TestDescriptor> current = identifiedTestDescriptor;
 		while (current.isPresent() && !current.get().equals(runnerTestDescriptor)) {
 			path.addFirst(((VintageTestDescriptor) current.get()).getDescription());

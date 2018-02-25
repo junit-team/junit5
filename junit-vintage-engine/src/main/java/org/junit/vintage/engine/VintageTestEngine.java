@@ -16,6 +16,8 @@ import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_I
 
 import java.util.Optional;
 
+import com.google.errorprone.annotations.Immutable;
+
 import org.apiguardian.api.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -33,6 +35,7 @@ import org.junit.vintage.engine.execution.RunnerExecutor;
  * @since 4.12
  */
 @API(status = INTERNAL, since = "4.12")
+@Immutable
 public final class VintageTestEngine implements TestEngine {
 
 	@Override

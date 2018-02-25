@@ -199,18 +199,16 @@ public class JUnitPlatformProvider extends AbstractProvider {
 	}
 
 	private Optional<List<String>> getGroupsOrTags(Optional<List<String>> groups, Optional<List<String>> tags) {
-		Optional<List<String>> elements = Optional.empty();
-
 		Preconditions.condition(!groups.isPresent() || !tags.isPresent(), EXCEPTION_MESSAGE_BOTH_NOT_ALLOWED);
 
 		if (groups.isPresent()) {
-			elements = groups;
+			return groups;
 		}
 		else if (tags.isPresent()) {
-			elements = tags;
+			return tags;
 		}
 
-		return elements;
+		return Optional.empty();
 	}
 
 }

@@ -32,6 +32,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import com.google.errorprone.annotations.Var;
+
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 
@@ -68,7 +70,7 @@ class ClasspathScanner {
 		this.loadClass = loadClass;
 	}
 
-	List<Class<?>> scanForClassesInPackage(String basePackageName, ClassFilter classFilter) {
+	List<Class<?>> scanForClassesInPackage(@Var String basePackageName, ClassFilter classFilter) {
 
 		PackageUtils.assertPackageNameIsValid(basePackageName);
 		Preconditions.notNull(classFilter, "classFilter must not be null");
@@ -166,6 +168,7 @@ class ClasspathScanner {
 	private String determineSubpackageName(Path baseDir, Path classFile) {
 		Path relativePath = baseDir.relativize(classFile.getParent());
 		String pathSeparator = baseDir.getFileSystem().getSeparator();
+		@Var
 		String subpackageName = relativePath.toString().replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
 		if (subpackageName.endsWith(pathSeparator)) {
 			// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
