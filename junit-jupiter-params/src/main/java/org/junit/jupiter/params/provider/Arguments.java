@@ -53,7 +53,8 @@ public interface Arguments {
 	// todo: @MustCheckReturnValue
 	default Arguments description(String testCaseDescription) {
 		Preconditions.notBlank(testCaseDescription,
-				() -> "Test case description must not be blank: '" + testCaseDescription + "'!");
+				() -> "Test case description must not be blank: '" + testCaseDescription + "'! " +
+						"Simply do not set it: it’s optional.");
 
 		Object[] arguments = get();
 		String trimmedDesc = testCaseDescription.trim();
