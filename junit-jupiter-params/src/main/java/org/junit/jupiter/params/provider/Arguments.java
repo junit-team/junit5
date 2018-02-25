@@ -38,7 +38,8 @@ public interface Arguments {
 	 */
 	Object[] get();
 
-	// todo: document properly this and below
+	// todo: document properly this and below.
+	// todo: The fact there used to be `hasDescription` indicates we might be better of with Optional<String>
 	default String description() {
 		return "";
 	}
