@@ -12,7 +12,12 @@ package org.junit.jupiter.params.provider;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 import org.apiguardian.api.API;
+import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -21,6 +26,21 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * <p>A {@link java.util.stream.Stream} of such {@code Arguments} will
  * typically be provided by an {@link ArgumentsProvider}.
+ *
+ * @apiNote This interface is specifically designed as a simple holder of arguments of
+ * a parameterized test. Therefore, if you end up {@linkplain Stream#map(Function) transforming}
+ * or {@linkplain Stream#filter(Predicate) filtering} the arguments, you shall consider
+ * using one of the following in intermediate steps:
+ * <ul>
+ *   <li>The standard collections.</li>
+ *   <li>Tuples from third-party libraries, e.g.,
+ *   <a href="http://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/tuple/package-summary.html">Commons Lang</a>,
+ *   or <a href="https://www.javatuples.org">javatuples</a>.</li>
+ *   <li>Your own data class.</li>
+ * </ul>
+ *
+ * <p>You can also use {@link ArgumentConverter}s to convert some of the arguments from one type
+ * to another.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.ParameterizedTest
@@ -33,6 +53,9 @@ public interface Arguments {
 	/**
 	 * Get the arguments used for an invocation of the
 	 * {@code @ParameterizedTest} method.
+	 *
+	 * @apiNote If you need a type-safe way to access some or all of the arguments,
+	 * please read the {@linkplain Arguments class-level API note}.
 	 *
 	 * @return the arguments; must not be {@code null}
 	 */
