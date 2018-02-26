@@ -11,11 +11,12 @@
 package org.junit.platform.console.options;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toMap;
 
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import joptsimple.OptionParser;
@@ -253,11 +254,25 @@ class AvailableOptions {
 		result.setExcludedEngines(detectedOptions.valuesOf(this.excludeEngine));
 
 		// Configuration Parameters
-		Map<String, String> configurationParametersMap = detectedOptions.valuesOf(
-			this.configurationParameters).stream().collect(toMap(pair -> pair.key, pair -> pair.value));
-		result.setConfigurationParameters(configurationParametersMap);
+		result.setConfigurationParameters(toMap(detectedOptions.valuesOf(this.configurationParameters)));
 
 		return result;
+	}
+
+	/**
+	 * Convert a list of key-value pairs to map.
+	 * @see <a href="https://github.com/junit-team/junit5/issues/1308">#1308</a>
+	 */
+	private Map<String, String> toMap(List<KeyValuePair> pairs) {
+		Map<String, String> map = new HashMap<>();
+		for (KeyValuePair pair : pairs) {
+			String key = pair.key;
+			if (map.containsKey(key)) {
+				throw new IllegalArgumentException("Duplicate key '" + key + "' in: " + pairs);
+			}
+			map.put(key, pair.value);
+		}
+		return map;
 	}
 
 }
