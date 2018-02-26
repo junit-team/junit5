@@ -28,10 +28,14 @@ afterEvaluate {
 	junitPlatformTest.dependsOn(shadowJar)
 }
 
+configurations {
+	shadowed
+}
+
 dependencies {
 	api(project(':junit-jupiter-api'))
 
-	shadow('com.univocity:univocity-parsers:2.5.9')
+	shadowed('com.univocity:univocity-parsers:2.5.9')
 
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
@@ -42,31 +46,32 @@ dependencies {
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
-	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly(project(':junit-platform-console'))
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }
 
-sourceSets.main.compileClasspath += configurations.shadow
-sourceSets.test.runtimeClasspath += configurations.shadow
+sourceSets.main.compileClasspath += configurations.shadowed
+sourceSets.test.runtimeClasspath += configurations.shadowed
 
 eclipse {
 	classpath {
-		plusConfigurations += [ configurations.shadow ]
+		plusConfigurations += [ configurations.shadowed ]
 	}
 }
 
 idea {
 	module {
-		scopes.PROVIDED.plus += [ configurations.shadow ]
+		scopes.PROVIDED.plus += [ configurations.shadowed ]
 	}
 }
 
 javadoc {
-	classpath = project.sourceSets.main.compileClasspath + configurations.shadow
+	classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
 }
 
 jar.enabled = false
+jar.dependsOn shadowJar
 
 jar {
 	manifest {
@@ -83,7 +88,7 @@ shadowJar {
 		(project.generateManifest || !shadowJar.archivePath.exists())
 	}
 	classifier = null
-	configurations = [project.configurations.shadow]
+	configurations = [project.configurations.shadowed]
 	exclude 'META-INF/**'
 	relocate 'com.univocity', 'org.junit.jupiter.params.shadow.com.univocity'
 	from(projectDir) {

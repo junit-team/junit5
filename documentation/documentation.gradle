@@ -40,14 +40,14 @@ dependencies {
 	asciidoctor('org.jruby:jruby-complete:9.1.15.0')
 
 	testImplementation(project(':junit-jupiter-api'))
-	testImplementation(project(path: ':junit-jupiter-params', configuration: 'shadow'))
+	testImplementation(project(':junit-jupiter-params'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-launcher'))
 	if (gradle.ext.kotlinIsSupported) testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
-	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly(project(':junit-platform-console'))
 
 	testRuntimeOnly(project(':junit-vintage-engine'))
 	testRuntimeOnly(project(':junit-jupiter-engine'))

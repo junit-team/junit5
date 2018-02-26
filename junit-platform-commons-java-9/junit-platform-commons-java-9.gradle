@@ -12,7 +12,7 @@ dependencies {
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
-	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly(project(':junit-platform-console'))
 	testRuntimeOnly(project(':junit-vintage-engine'))
 }
 

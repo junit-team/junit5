@@ -9,23 +9,27 @@ buildscript {
 	}
 }
 
+configurations {
+	shadowed
+}
+
 dependencies {
 	api(project(':junit-platform-launcher'))
 
-	shadow('net.sf.jopt-simple:jopt-simple:5.0.4')
+	shadowed('net.sf.jopt-simple:jopt-simple:5.0.4')
 }
 
-sourceSets.main.compileClasspath += configurations.shadow
+sourceSets.main.compileClasspath += configurations.shadowed
 
 eclipse {
 	classpath {
-		plusConfigurations += [ configurations.shadow ]
+		plusConfigurations += [ configurations.shadowed ]
 	}
 }
 
 idea {
 	module {
-		scopes.PROVIDED.plus += [ configurations.shadow ]
+		scopes.PROVIDED.plus += [ configurations.shadowed ]
 	}
 }
 
@@ -39,10 +43,11 @@ jar {
 }
 
 javadoc {
-	classpath = project.sourceSets.main.compileClasspath + configurations.shadow
+	classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
 }
 
 jar.enabled = false
+jar.dependsOn shadowJar
 
 shadowJar {
 	// Generate shadow jar only if the underlying manifest was regenerated.
@@ -51,7 +56,7 @@ shadowJar {
 		(project.generateManifest || !shadowJar.archivePath.exists())
 	}
 	classifier = null
-	configurations = [project.configurations.shadow]
+	configurations = [project.configurations.shadowed]
 	exclude 'META-INF/**'
 	relocate 'joptsimple', 'org.junit.platform.console.shadow.joptsimple'
 	transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
