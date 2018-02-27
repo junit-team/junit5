@@ -10,10 +10,6 @@ buildscript {
 	}
 }
 
-configurations {
-	shadowed
-}
-
 dependencies {
 	shadowed(project(':junit-platform-console'))
 	shadowed(project(':junit-jupiter-engine'))
@@ -25,8 +21,6 @@ dependencies {
 	testCompileOnly("junit:junit:${junit4Version}")
 }
 
-sourceSets.main.compileClasspath += configurations.shadowed
-
 jar {
 	manifest {
 		// Note: do not add `'Automatic-Module-Name': ...` because this artifact is not
@@ -36,10 +30,6 @@ jar {
 			'Main-Class': 'org.junit.platform.console.ConsoleLauncher'
 		)
 	}
-}
-
-javadoc {
-	classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
 }
 
 jar.enabled = false

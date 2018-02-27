@@ -28,10 +28,6 @@ afterEvaluate {
 	junitPlatformTest.dependsOn(shadowJar)
 }
 
-configurations {
-	shadowed
-}
-
 dependencies {
 	api(project(':junit-jupiter-api'))
 
@@ -49,25 +45,6 @@ dependencies {
 	testRuntimeOnly(project(':junit-platform-console'))
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
-}
-
-sourceSets.main.compileClasspath += configurations.shadowed
-sourceSets.test.runtimeClasspath += configurations.shadowed
-
-eclipse {
-	classpath {
-		plusConfigurations += [ configurations.shadowed ]
-	}
-}
-
-idea {
-	module {
-		scopes.PROVIDED.plus += [ configurations.shadowed ]
-	}
-}
-
-javadoc {
-	classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
 }
 
 jar.enabled = false

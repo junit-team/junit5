@@ -9,28 +9,10 @@ buildscript {
 	}
 }
 
-configurations {
-	shadowed
-}
-
 dependencies {
 	api(project(':junit-platform-launcher'))
 
 	shadowed('net.sf.jopt-simple:jopt-simple:5.0.4')
-}
-
-sourceSets.main.compileClasspath += configurations.shadowed
-
-eclipse {
-	classpath {
-		plusConfigurations += [ configurations.shadowed ]
-	}
-}
-
-idea {
-	module {
-		scopes.PROVIDED.plus += [ configurations.shadowed ]
-	}
 }
 
 jar {
@@ -40,10 +22,6 @@ jar {
 			'Automatic-Module-Name': 'org.junit.platform.console'
 		)
 	}
-}
-
-javadoc {
-	classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
 }
 
 jar.enabled = false

@@ -264,6 +264,32 @@ allprojects { subproj ->
 }
 
 subprojects { subproj ->
+
+	configurations {
+		shadowed
+	}
+
+	sourceSets {
+		main.compileClasspath += configurations.shadowed
+		test.runtimeClasspath += configurations.shadowed
+	}
+
+	eclipse {
+		classpath {
+			plusConfigurations += [ configurations.shadowed ]
+		}
+	}
+
+	idea {
+		module {
+			scopes.PROVIDED.plus += [ configurations.shadowed ]
+		}
+	}
+
+	javadoc {
+		classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
+	}
+
 	if (subproj.name in mavenizedProjects) {
 		apply plugin: 'maven'
 		apply plugin: 'signing'
@@ -663,10 +689,12 @@ configure(rootProject) {
 
 		maxMemory = "1024m"
 		destinationDir = new File(buildDir, "docs/javadoc")
-		// Remove Kotlin classes from classpath due to "bad" class file
-		// see https://bugs.openjdk.java.net/browse/JDK-8187422
 		classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
+			// Remove Kotlin classes from classpath due to "bad" class file
+			// see https://bugs.openjdk.java.net/browse/JDK-8187422
 			.filter { !it.path.contains('kotlin') }
+			// Remove subproject JARs so Kotlin classes don't get picked up
+			.filter { it.isDirectory() || !it.absolutePath.startsWith(projectDir.absolutePath) }
 	}
 
 	spotless {
