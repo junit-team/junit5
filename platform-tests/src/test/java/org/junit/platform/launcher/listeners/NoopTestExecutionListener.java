@@ -8,10 +8,13 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.launcher.listener;
+package org.junit.platform.launcher.listeners;
 
 import org.junit.platform.launcher.TestExecutionListener;
 
+/**
+ * @since 1.0
+ */
 public class NoopTestExecutionListener implements TestExecutionListener {
 	// empty on purpose
 }

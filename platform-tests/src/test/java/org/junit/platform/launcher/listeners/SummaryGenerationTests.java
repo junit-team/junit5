@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.launcher.listener;
+package org.junit.platform.launcher.listeners;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -29,19 +29,17 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
-import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
  * @since 1.0
  */
 class SummaryGenerationTests {
 
-	SummaryGeneratingListener listener = new SummaryGeneratingListener();
-	TestPlan testPlan = TestPlan.from(Collections.emptyList());
+	private final SummaryGeneratingListener listener = new SummaryGeneratingListener();
+	private final TestPlan testPlan = TestPlan.from(Collections.emptyList());
 
 	@Test
-	void emptyReport() throws Exception {
+	void emptyReport() {
 		listener.testPlanExecutionStarted(testPlan);
 		listener.testPlanExecutionFinished(testPlan);
 
@@ -70,7 +68,7 @@ class SummaryGenerationTests {
 	}
 
 	@Test
-	void reportingCorrectCounts() throws Exception {
+	void reportingCorrectCounts() {
 		TestIdentifier successfulContainer = createContainerIdentifier("c1");
 		TestIdentifier failedContainer = createContainerIdentifier("c2");
 		TestIdentifier abortedContainer = createContainerIdentifier("c3");
@@ -152,7 +150,7 @@ class SummaryGenerationTests {
 	}
 
 	@Test
-	void reportingCorrectFailures() throws Exception {
+	void reportingCorrectFailures() {
 		RuntimeException failedException = new RuntimeException("failed");
 
 		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {

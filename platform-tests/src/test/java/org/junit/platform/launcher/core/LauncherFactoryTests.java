@@ -24,7 +24,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
-import org.junit.platform.launcher.listener.NoopTestExecutionListener;
+import org.junit.platform.launcher.listeners.NoopTestExecutionListener;
 
 /**
  * @since 1.0
