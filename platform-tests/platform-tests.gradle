@@ -2,26 +2,27 @@ plugins {
 	id "me.champeau.gradle.jmh" version "0.4.5"
 }
 
-apply plugin: 'org.junit.platform.gradle.plugin'
-
-junitPlatform {
-	filters {
-		engines {
-			include 'junit-jupiter'
-		}
-		includeClassNamePattern '.*Tests?'
+test {
+	useJUnitPlatform {
+		includeEngines 'junit-jupiter'
+		excludeTags 'exclude'
 	}
-	logManager 'org.apache.logging.log4j.jul.LogManager'
+	testLogging {
+		events 'failed'
+	}
+	reports {
+		html.enabled = true
+	}
+	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
+	systemProperty 'coverage.enabled', project.hasProperty('enableClover') ? 'true' : 'false'
 }
 
 // Tests in `AutomaticModuleNameTests` depend on all and the three jars. #894
-junitPlatformTest.dependsOn(
+test.dependsOn(
 	project(':junit-jupiter-migrationsupport').jar,
 	project(':junit-platform-gradle-plugin').jar,
 	project(':junit-platform-surefire-provider').jar
 )
-
-junitPlatformTest.systemProperty 'coverage.enabled', project.hasProperty('enableClover') ? 'true' : 'false'
 
 dependencies {
 	// --- Things we are testing --------------------------------------------------
@@ -43,11 +44,11 @@ dependencies {
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(':junit-jupiter-engine'))
 	testRuntimeOnly(project(':junit-vintage-engine'))
-	testRuntimeOnly(project(':junit-jupiter-migrationsupport')) // included for @API report
-	testRuntimeOnly(project(':junit-platform-gradle-plugin')) // included for @API report
-	testRuntimeOnly(project(':junit-platform-surefire-provider')) // included for @API report
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+	testRuntimeOnly('org.codehaus.groovy:groovy-jsr223:' + GroovySystem.getVersion()) {
+		because 'Tests annotated with @EnabledIf(engine = "groovy", ...) need it.'
+	}
 
 	// --- http://openjdk.java.net/projects/code-tools/jmh/ -----------------------
 	jmh("org.openjdk.jmh:jmh-core:${jmhVersion}")
@@ -59,7 +60,7 @@ dependencies {
 jmh {
 	jmhVersion = "${jmhVersion}"
 
-	duplicateClassesStrategy = 'warn'
+	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 0 // Too long command line on Windows...
 	// warmupIterations = 1
 	// iterations = 5
