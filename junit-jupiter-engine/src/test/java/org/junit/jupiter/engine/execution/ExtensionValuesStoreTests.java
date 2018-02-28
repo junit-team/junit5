@@ -10,20 +10,13 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -297,25 +290,16 @@ class ExtensionValuesStoreTests {
 		}
 
 		@Test
-		@Disabled("Some times, always one or always two wins...")
 		void simulateRaceCondition() throws Exception {
-			List<Object> values = new ArrayList<>();
-			Function<Object, String> one = key -> "1";
-			Function<Object, String> two = key -> "2";
-			int repetitions = 10;
-			for (int i = 0; i < repetitions; i++) {
-				ExtensionValuesStore localStore = new ExtensionValuesStore(null);
-				CompletableFuture.allOf( //
-					supplyAsync(() -> localStore.getOrComputeIfAbsent(namespace, key, one)), //
-					supplyAsync(() -> localStore.getOrComputeIfAbsent(namespace, key, two)) //
-				).get(1, TimeUnit.SECONDS);
-				Object actual = localStore.get(namespace, key);
-				assertTrue(actual.equals("1") || actual.equals("2"));
-				values.add(actual);
-			}
-			assertEquals(repetitions, values.size());
-			assertTrue(values.contains("1"));
-			assertTrue(values.contains("2"));
+			ExtensionValuesStore localStore = new ExtensionValuesStore(null);
+			Thread t1 = new Thread(() -> localStore.getOrComputeIfAbsent(namespace, key, key -> value));
+			Thread t2 = new Thread(() -> localStore.getOrComputeIfAbsent(namespace, key, key -> value));
+			t1.start();
+			t2.start();
+			Thread.yield();
+			t1.join();
+			t2.join();
+			assertEquals(value, localStore.get(namespace, key));
 		}
 	}
 
