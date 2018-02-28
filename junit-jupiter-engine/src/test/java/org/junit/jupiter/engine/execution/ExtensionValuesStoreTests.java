@@ -23,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -296,6 +297,7 @@ class ExtensionValuesStoreTests {
 		}
 
 		@Test
+		@Disabled("Some times, always one or always two wins...")
 		void simulateRaceCondition() throws Exception {
 			List<Object> values = new ArrayList<>();
 			Function<Object, String> one = key -> "1";
