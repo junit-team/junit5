@@ -10,11 +10,17 @@
 
 package org.junit.jupiter.engine.execution;
 
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
@@ -202,7 +208,7 @@ class ExtensionValuesStoreTests {
 		@Test
 		void getOrComputeIfAbsentWithTypeSafetyAndInvalidRequiredTypeThrowsException() {
 			String key = "pi";
-			Float value = Float.valueOf(3.14f);
+			Float value = 3.14f;
 
 			// Store a Float...
 			store.put(namespace, key, value);
@@ -289,6 +295,26 @@ class ExtensionValuesStoreTests {
 			assertNull(store.get(namespace, key));
 		}
 
+		@Test
+		void simulateRaceCondition() throws Exception {
+			List<Object> values = new ArrayList<>();
+			Function<Object, String> one = key -> "1";
+			Function<Object, String> two = key -> "2";
+			int repetitions = 10;
+			for (int i = 0; i < repetitions; i++) {
+				ExtensionValuesStore localStore = new ExtensionValuesStore(null);
+				CompletableFuture.allOf( //
+					supplyAsync(() -> localStore.getOrComputeIfAbsent(namespace, key, one)), //
+					supplyAsync(() -> localStore.getOrComputeIfAbsent(namespace, key, two)) //
+				).get(1, TimeUnit.SECONDS);
+				Object actual = localStore.get(namespace, key);
+				assertTrue(actual.equals("1") || actual.equals("2"));
+				values.add(actual);
+			}
+			assertEquals(repetitions, values.size());
+			assertTrue(values.contains("1"));
+			assertTrue(values.contains("2"));
+		}
 	}
 
 	@Nested
