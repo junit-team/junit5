@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContextException;
@@ -289,14 +290,15 @@ class ExtensionValuesStoreTests {
 			assertNull(store.get(namespace, key));
 		}
 
-		@Test
-		void simulateRaceCondition() throws Exception {
+		@RepeatedTest(23)
+		void simulateRaceConditionInGetOrComputeIfAbsent() throws Exception {
 			ExtensionValuesStore localStore = new ExtensionValuesStore(null);
 			Thread t1 = new Thread(() -> localStore.getOrComputeIfAbsent(namespace, key, key -> value));
 			Thread t2 = new Thread(() -> localStore.getOrComputeIfAbsent(namespace, key, key -> value));
 			t1.start();
 			t2.start();
 			Thread.yield();
+			localStore.getOrComputeIfAbsent(namespace, key, key -> value); // use current thread as well
 			t1.join();
 			t2.join();
 			assertEquals(value, localStore.get(namespace, key));
