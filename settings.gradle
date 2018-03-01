@@ -5,11 +5,6 @@ if (javaVersion < 9) {
 		"Currently executing with Java " + javaVersion + ".")
 }
 
-// Disable Kotlin support on Java 10 or higher
-// Details at https://github.com/junit-team/junit5/issues/1169
-// Blocked by https://youtrack.jetbrains.com/issue/KT-21303
-gradle.ext.kotlinIsSupported = javaVersion < 10
-
 rootProject.name = 'junit5'
 
 include 'documentation'

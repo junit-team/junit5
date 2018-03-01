@@ -37,7 +37,7 @@ script:
 # Display Gradle, Groovy, JVM and other versions
   - ./gradlew -version
 # Build JUnit 5
-  - ./gradlew build $EXTRA_GRADLE_ARGS --scan --stacktrace -Dkotlin.compiler.execution.strategy="in-process"
+  - ./gradlew build $EXTRA_GRADLE_ARGS --scan --stacktrace -Dkotlin.compiler.execution.strategy="in-process" --warning-mode=all
 
 # Do not store unnecessary files from Gradle dependency cache
 before_cache:
