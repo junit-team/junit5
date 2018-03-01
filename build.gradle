@@ -10,7 +10,7 @@ buildscript {
 	dependencies {
 		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.10.0')
 		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
-		if (JavaVersion.current().equals(JavaVersion.VERSION_1_9)) {
+		if (JavaVersion.current() == JavaVersion.VERSION_1_9) {
 			classpath('net.ltgt.gradle:gradle-errorprone-plugin:0.0.13')
 		}
 		classpath('org.ajoberstar:gradle-git-publish:0.3.3')
@@ -578,7 +578,7 @@ subprojects { subproj ->
 
 	}
 
-	if (JavaVersion.current().equals(JavaVersion.VERSION_1_9) && subproj.name != 'documentation') {
+	if (JavaVersion.current() == JavaVersion.VERSION_1_9 && subproj.name != 'documentation') {
 		apply plugin: 'net.ltgt.errorprone-base'
 
 		dependencies {
@@ -638,40 +638,29 @@ subprojects { subproj ->
 			'-Xep:ReturnValueIgnored:OFF'
 		]
 
-		task compileJavaWithErrorProne(type: JavaCompile) {
-			if (gradle.ext.kotlinIsSupported) {
-				dependsOn compileKotlin
-			}
+		task compileJavaWithErrorProne(type: JavaCompile, dependsOn: compileKotlin) {
 			group = 'verification'
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
-			classpath = compileJava.classpath
-			if (gradle.ext.kotlinIsSupported) {
-				classpath += files(compileKotlin.destinationDir)
-			}
-			source = compileJava.source
-			if (gradle.ext.kotlinIsSupported) {
-				source += compileKotlin.source
-			}
+
+			// The compiler depends on .class files produced by the Kotlin compiler, hence the
+			// inclusion of Kotlin artifacts
+			classpath = compileJava.classpath + files(compileKotlin.destinationDir)
+			source = compileJava.source + compileKotlin.source
+
 			options.compilerArgs = compileJava.options.compilerArgs + errorproneBaseFlags
 			destinationDir = file("$buildDir/classes/error-prone-java/main")
 		}
 		check.dependsOn(compileJavaWithErrorProne)
 
-		task compileTestJavaWithErrorProne(type: JavaCompile) {
-			if (gradle.ext.kotlinIsSupported) {
-				dependsOn compileKotlin
-			}
-
+		task compileTestJavaWithErrorProne(type: JavaCompile, dependsOn: compileTestKotlin) {
 			group = 'verification'
 			toolChain = net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
-			classpath = compileJava.classpath + compileTestJava.classpath
-			if (gradle.ext.kotlinIsSupported) {
-				classpath += files(compileKotlin.destinationDir) + files(compileTestKotlin.destinationDir)
-			}
-			source = compileJava.source + compileTestJava.source
-			if (gradle.ext.kotlinIsSupported) {
-				compileKotlin.source + compileTestKotlin.source
-			}
+
+			// The compiler depends on .class files produced by the Kotlin compiler, hence the
+			// inclusion of Kotlin artifacts
+			classpath = compileTestJava.classpath + files(compileTestKotlin.destinationDir)
+			source = compileTestJava.source + compileTestKotlin.source
+
 			options.compilerArgs = compileTestJava.options.compilerArgs + errorproneTestFlags
 			destinationDir = file("$buildDir/classes/error-prone-java/test")
 		}
