@@ -75,6 +75,12 @@ class ReflectionSupportTests {
 	}
 
 	@Test
+	void findAllClassesInModuleDelegates() {
+		assertEquals(ReflectionUtils.findAllClassesInModule("org.junit.platform.commons", allTypes, allNames),
+			ReflectionSupport.findAllClassesInModule("org.junit.platform.commons", allTypes, allNames));
+	}
+
+	@Test
 	void findMethodsDelegates() {
 		assertEquals(
 			ReflectionUtils.findMethods(ReflectionSupportTests.class, allMethods,

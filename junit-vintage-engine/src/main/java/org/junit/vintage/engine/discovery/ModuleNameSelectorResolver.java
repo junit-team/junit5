@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static org.junit.platform.commons.util.ModuleUtils.findAllClassesInModule;
+import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInModule;
 
 import java.util.Collection;
 
