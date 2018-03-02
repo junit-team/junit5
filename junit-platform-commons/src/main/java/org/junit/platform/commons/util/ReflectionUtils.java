@@ -624,6 +624,20 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInModule(String, Predicate, Predicate)
+	 */
+	public static List<Class<?>> findAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
+		// unmodifiable since returned by public, non-internal method(s)
+		return findAllClassesInModule(moduleName, ClassFilter.of(classNameFilter, classFilter));
+	}
+
+	@API(status = INTERNAL, since = "1.2")
+	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter classFilter) {
+		return Collections.unmodifiableList(ModuleUtils.findAllClassesInModule(moduleName, classFilter));
+	}
+
+	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findNestedClasses(Class, Predicate)
 	 */
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
