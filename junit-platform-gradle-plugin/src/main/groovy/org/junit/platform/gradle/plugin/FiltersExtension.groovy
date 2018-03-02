@@ -9,7 +9,7 @@
  */
 package org.junit.platform.gradle.plugin
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL
+import static org.apiguardian.api.API.Status.DEPRECATED
 
 import org.apiguardian.api.API
 import org.gradle.api.Action
@@ -19,8 +19,10 @@ import org.junit.platform.engine.discovery.ClassNameFilter
  * Test discovery filter options for the JUnit Platform Gradle plugin.
  *
  * @since 1.0
+ * @deprecated Use Gradle's native support for JUnit Platform instead.
  */
-@API(status = EXPERIMENTAL, since = "1.0")
+@Deprecated
+@API(status = DEPRECATED, since = "1.2")
 class FiltersExtension {
 
 	/**
