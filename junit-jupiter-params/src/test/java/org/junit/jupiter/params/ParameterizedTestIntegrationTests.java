@@ -130,36 +130,36 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
-	void executesWithArgumentsSourceProvidingRedundantArguments() {
-		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
-			"testWithTwoRedundantStringArgumentsProvider", String.class.getName()));
+	void executesWithArgumentsSourceProvidingUnusedArguments() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(UnusedParametersTestCase.class,
+			"testWithTwoUnusedStringArgumentsProvider", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 	}
 
 	@Test
-	void executesWithCsvSourceContainingRedundantArguments() {
-		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
-			"testWithCsvSourceContainingRedundantArguments", String.class.getName()));
+	void executesWithCsvSourceContainingUnusedArguments() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(UnusedParametersTestCase.class,
+			"testWithCsvSourceContainingUnusedArguments", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 	}
 
 	@Test
-	void executesWithCsvFileSourceContainingRedundantArguments() {
-		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
-			"testWithCsvFileSourceContainingRedundantArguments", String.class.getName()));
+	void executesWithCsvFileSourceContainingUnusedArguments() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(UnusedParametersTestCase.class,
+			"testWithCsvFileSourceContainingUnusedArguments", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 	}
 
 	@Test
-	void executesWithMethodSourceProvidingRedundantArguments() {
-		List<ExecutionEvent> executionEvents = execute(selectMethod(RedundantParametersTestCase.class,
-			"testWithMethodSourceProvidingRedundantArguments", String.class.getName()));
+	void executesWithMethodSourceProvidingUnusedArguments() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(UnusedParametersTestCase.class,
+			"testWithMethodSourceProvidingUnusedArguments", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
@@ -265,34 +265,34 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
-	static class RedundantParametersTestCase {
+	static class UnusedParametersTestCase {
 
 		@ParameterizedTest
-		@ArgumentsSource(TwoRedundantStringArgumentsProvider.class)
-		void testWithTwoRedundantStringArgumentsProvider(String argument) {
+		@ArgumentsSource(TwoUnusedStringArgumentsProvider.class)
+		void testWithTwoUnusedStringArgumentsProvider(String argument) {
 			fail(argument);
 		}
 
 		@ParameterizedTest
-		@CsvSource({ "foo, redundant1", "bar, redundant2" })
-		void testWithCsvSourceContainingRedundantArguments(String argument) {
+		@CsvSource({ "foo, unused1", "bar, unused2" })
+		void testWithCsvSourceContainingUnusedArguments(String argument) {
 			fail(argument);
 		}
 
 		@ParameterizedTest
 		@CsvFileSource(resources = "two-column.csv")
-		void testWithCsvFileSourceContainingRedundantArguments(String argument) {
+		void testWithCsvFileSourceContainingUnusedArguments(String argument) {
 			fail(argument);
 		}
 
 		@ParameterizedTest
-		@MethodSource("redundantArgumentsProviderMethod")
-		void testWithMethodSourceProvidingRedundantArguments(String argument) {
+		@MethodSource("unusedArgumentsProviderMethod")
+		void testWithMethodSourceProvidingUnusedArguments(String argument) {
 			fail(argument);
 		}
 
-		static Stream<Arguments> redundantArgumentsProviderMethod() {
-			return Stream.of(Arguments.of("foo", "redundant1"), Arguments.of("bar", "redundant2"));
+		static Stream<Arguments> unusedArgumentsProviderMethod() {
+			return Stream.of(Arguments.of("foo", "unused1"), Arguments.of("bar", "unused2"));
 		}
 
 	}
@@ -360,11 +360,11 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
-	private static class TwoRedundantStringArgumentsProvider implements ArgumentsProvider {
+	private static class TwoUnusedStringArgumentsProvider implements ArgumentsProvider {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
-			return Stream.of(Arguments.of("foo", "redundant1"), Arguments.of("bar", "redundant2"));
+			return Stream.of(Arguments.of("foo", "unused1"), Arguments.of("bar", "unused2"));
 		}
 	}
 
