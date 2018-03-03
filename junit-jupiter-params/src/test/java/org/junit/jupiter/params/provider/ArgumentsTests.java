@@ -41,6 +41,15 @@ class ArgumentsTests {
 	}
 
 	@Test
+	void sizeEqualToTheArrayLength() {
+		Object[] input = {1, "2", 3.0};
+
+		Arguments arguments = of(input);
+
+		assertThat(arguments.size()).isEqualTo(input.length);
+	}
+
+	@Test
 	void hasEmptyDescriptionByDefault() {
 		Arguments arguments = of(1);
 

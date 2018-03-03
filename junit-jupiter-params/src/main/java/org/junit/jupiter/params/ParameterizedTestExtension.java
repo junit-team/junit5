@@ -85,17 +85,24 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	private Arguments consumedArguments(Arguments arguments, Method templateMethod) {
 		int parametersCount = templateMethod.getParameterCount();
-		Object[] providedArguments = arguments.get();
-		if (providedArguments.length > parametersCount) {
-			Arguments consumed = Arguments.of(Arrays.copyOf(providedArguments, parametersCount));
-			// todo: can be simplified? Maybe allow setting empty descriptions?
-			if (arguments.description().isEmpty()) {
-				return consumed;
-			} else {
-				return consumed.description(arguments.description());
-			}
+		if (parametersCount < arguments.size()) {
+			// Strip the redundant arguments.
+			return argumentsOfSize(arguments, parametersCount);
 		}
 		return arguments;
+	}
+
+	private static Arguments argumentsOfSize(Arguments arguments,
+																					 int newSize) {
+		Object[] providedArguments = arguments.get();
+		Arguments consumed = Arguments.of(Arrays.copyOf(providedArguments, newSize));
+		// todo: can be simplified? Maybe allow setting empty descriptions? Or a factory method?
+		// Arguments.from(Optional<>desc, Object… arguments))
+		if (arguments.description().isEmpty()) {
+      return consumed;
+    } else {
+      return consumed.description(arguments.description());
+    }
 	}
 
 }

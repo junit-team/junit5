@@ -42,7 +42,7 @@ class ParameterizedTestNameFormatter {
 		result = result.replace("{arguments.description}", arguments.description());
 		if (result.contains("{arguments}")) {
 			// @formatter:off
-			String replacement = IntStream.range(0, arguments.get().length)
+			String replacement = IntStream.range(0, arguments.size())
 					.mapToObj(index -> "{" + index + "}")
 					.collect(joining(", "));
 			// @formatter:on

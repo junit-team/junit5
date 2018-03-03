@@ -38,6 +38,11 @@ public interface Arguments {
 	 */
 	Object[] get();
 
+	/** Returns the number of arguments. Non-negative. */
+	default int size() {
+		return get().length;
+	}
+
 	// todo: document properly this and below.
 	// todo: The fact there used to be `hasDescription` indicates we might be better of with Optional<String>
 	default String description() {
