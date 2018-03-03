@@ -98,8 +98,8 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		Arguments consumed = Arguments.of(Arrays.copyOf(providedArguments, newSize));
 		// todo: can be simplified? Maybe allow setting empty descriptions? Or a factory method?
 		// Arguments.from(Optional<>desc, Object… arguments))
-		if (arguments.description().isPresent()) {
-			return consumed.description(arguments.description().get());
+		if (arguments.getDescription().isPresent()) {
+			return consumed.describedAs(arguments.getDescription().get());
 		} else {
 			return consumed;
 		}

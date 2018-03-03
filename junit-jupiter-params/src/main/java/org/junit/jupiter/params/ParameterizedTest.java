@@ -72,6 +72,8 @@ public @interface ParameterizedTest {
 	 * <ul>
 	 * <li><code>{index}</code>: the current invocation index (1-based)</li>
 	 * <li><code>{arguments}</code>: the complete, comma-separated arguments list</li>
+	 * // todo: link Arguments.getDescription?
+	 * <li><code>{arguments.description}</code>: a description of the arguments</li>
 	 * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument</li>
 	 * </ul>
 	 *

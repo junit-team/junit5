@@ -291,7 +291,7 @@ class ParameterizedTestIntegrationTests {
 		@SuppressWarnings("unused")  // discovered automatically by the test above
 		static Stream<Arguments> testWithNonEmptyDescriptions() {
 			return Stream.of(
-					Arguments.of("test with a description parameter").description("test case description")
+					Arguments.of("test with a description parameter").describedAs("test case description")
 			);
 		}
 

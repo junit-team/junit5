@@ -39,7 +39,7 @@ class ParameterizedTestNameFormatter {
 	private String prepareMessageFormatPattern(int invocationIndex, Arguments arguments) {
 		// todo: shall it be split into three methods for clarity?
 		String result = namePattern.replace("{index}", String.valueOf(invocationIndex));
-		result = result.replace("{arguments.description}", arguments.description().orElse(""));
+		result = result.replace("{arguments.description}", arguments.getDescription().orElse(""));
 		if (result.contains("{arguments}")) {
 			// @formatter:off
 			String replacement = IntStream.range(0, arguments.size())

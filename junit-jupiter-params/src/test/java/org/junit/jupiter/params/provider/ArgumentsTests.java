@@ -53,25 +53,25 @@ class ArgumentsTests {
 	void hasEmptyDescriptionByDefault() {
 		Arguments arguments = of(1);
 
-		assertThat(arguments.description()).isEmpty();
+		assertThat(arguments.getDescription()).isEmpty();
 	}
 
 	@Test
 	void setDescriptionValidString() {
 		String description = "test case #1";
 
-		Arguments arguments = of(1).description(description);
+		Arguments arguments = of(1).describedAs(description);
 
-		assertThat(arguments.description()).hasValue(description);
+		assertThat(arguments.getDescription()).hasValue(description);
 	}
 
 	@Test
 	void setDescriptionTrimsWhitespaces() {
 		String description = " \ttest case #1\n";
 
-		Arguments arguments = of(1).description(description);
+		Arguments arguments = of(1).describedAs(description);
 
-		assertThat(arguments.description()).hasValue("test case #1");
+		assertThat(arguments.getDescription()).hasValue("test case #1");
 	}
 
 	@Test
@@ -79,21 +79,21 @@ class ArgumentsTests {
 		String validDescription = "test case #1";
 
 		Arguments argumentsNoDesc = of(1);
-		Arguments argumentsWithDesc = argumentsNoDesc.description(validDescription);
+		Arguments argumentsWithDesc = argumentsNoDesc.describedAs(validDescription);
 
-		assertThat(argumentsNoDesc.description()).isEmpty();
+		assertThat(argumentsNoDesc.getDescription()).isEmpty();
 		assertThat(argumentsWithDesc).isNotEqualTo(argumentsNoDesc);
 	}
 
 	@Test
 	void replaceDescription() {
 		String first = "Test case #1";
-		Arguments arguments = of(1).description(first);
+		Arguments arguments = of(1).describedAs(first);
 
 		String second = "A better description!";
-		arguments = arguments.description(second);
+		arguments = arguments.describedAs(second);
 
-		assertThat(arguments.description()).hasValue(second);
+		assertThat(arguments.getDescription()).hasValue(second);
 	}
 
 	@Test
@@ -101,11 +101,11 @@ class ArgumentsTests {
 		Arguments arguments = of(1);
 
 		assertThrows(PreconditionViolationException.class,
-				() -> arguments.description(null)
+				() -> arguments.describedAs(null)
 		);
 
 		// Description must remain empty.
-		assertThat(arguments.description()).isEmpty();
+		assertThat(arguments.getDescription()).isEmpty();
 	}
 
 	@ParameterizedTest
@@ -119,10 +119,10 @@ class ArgumentsTests {
 		Arguments arguments = of(1);
 
 		assertThrows(PreconditionViolationException.class,
-				() -> arguments.description(illegalDescription)
+				() -> arguments.describedAs(illegalDescription)
 		);
 
 		// Description must remain empty.
-		assertThat(arguments.description()).isEmpty();
+		assertThat(arguments.getDescription()).isEmpty();
 	}
 }

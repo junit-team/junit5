@@ -68,7 +68,7 @@ class ParameterizedTestNameFormatterTests {
 		);
 
 		assertEquals("test case description",
-				formatter.format(1, Arguments.of().description("test case description"))
+				formatter.format(1, Arguments.of().describedAs("test case description"))
 		);
 	}
 
@@ -80,7 +80,7 @@ class ParameterizedTestNameFormatterTests {
 
 		int invocationIndex = 1;
 		Arguments arguments = Arguments.of(2, 4)
-				.description("squared(2) = 4");
+				.describedAs("squared(2) = 4");
 
 		assertEquals("[1] 2, 4: squared(2) = 4",
 				formatter.format(invocationIndex, arguments)
