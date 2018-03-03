@@ -12,6 +12,7 @@ package org.junit.jupiter.params.provider;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.Optional;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -44,16 +45,9 @@ public interface Arguments {
 	}
 
 	// todo: document properly this and below.
-	// todo: The fact there used to be `hasDescription` indicates we might be better of with Optional<String>
-	default String description() {
-		return "";
+	default Optional<String> description() {
+		return Optional.empty();
 	}
-
-// todo: do we need this?
-//	/** Returns true if these arguments have a non-empty description. **/
-//	default boolean hasDescription() {
-//		return !description().isEmpty();
-//	}
 
 	// todo: @MustCheckReturnValue
 	default Arguments description(String testCaseDescription) {
@@ -62,7 +56,7 @@ public interface Arguments {
 						"Simply do not set it: it’s optional.");
 
 		Object[] arguments = get();
-		String trimmedDesc = testCaseDescription.trim();
+		Optional<String> trimmedDesc = Optional.of(testCaseDescription.trim());
 
 		return new Arguments() {
 			@Override
@@ -71,7 +65,7 @@ public interface Arguments {
 			}
 
 			@Override
-			public String description() {
+			public Optional<String> description() {
 				return trimmedDesc;
 			}
 		};

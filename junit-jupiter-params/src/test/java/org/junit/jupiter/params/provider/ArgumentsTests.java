@@ -62,7 +62,7 @@ class ArgumentsTests {
 
 		Arguments arguments = of(1).description(description);
 
-		assertThat(arguments.description()).isEqualTo(description);
+		assertThat(arguments.description()).hasValue(description);
 	}
 
 	@Test
@@ -71,7 +71,7 @@ class ArgumentsTests {
 
 		Arguments arguments = of(1).description(description);
 
-		assertThat(arguments.description()).isEqualTo("test case #1");
+		assertThat(arguments.description()).hasValue("test case #1");
 	}
 
 	@Test
@@ -93,7 +93,7 @@ class ArgumentsTests {
 		String second = "A better description!";
 		arguments = arguments.description(second);
 
-		assertThat(arguments.description()).isEqualTo(second);
+		assertThat(arguments.description()).hasValue(second);
 	}
 
 	@Test
