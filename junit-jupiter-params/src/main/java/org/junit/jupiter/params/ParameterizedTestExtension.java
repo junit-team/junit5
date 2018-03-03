@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
+
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
@@ -92,15 +93,15 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		return arguments;
 	}
 
-	private static Arguments argumentsOfSize(Arguments arguments,
-																					 int newSize) {
+	private static Arguments argumentsOfSize(Arguments arguments, int newSize) {
 		Object[] providedArguments = arguments.get();
 		Arguments consumed = Arguments.of(Arrays.copyOf(providedArguments, newSize));
 		// todo: can be simplified? Maybe allow setting empty descriptions? Or a factory method?
 		// Arguments.from(Optional<>desc, Object… arguments))
 		if (arguments.getDescription().isPresent()) {
 			return consumed.describedAs(arguments.getDescription().get());
-		} else {
+		}
+		else {
 			return consumed;
 		}
 	}

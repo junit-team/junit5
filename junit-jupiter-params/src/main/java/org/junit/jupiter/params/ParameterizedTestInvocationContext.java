@@ -13,6 +13,7 @@ package org.junit.jupiter.params;
 import static java.util.Collections.singletonList;
 
 import java.util.List;
+
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
@@ -25,8 +26,7 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 	private final ParameterizedTestNameFormatter formatter;
 	private final Arguments arguments;
 
-	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
-																		 Arguments arguments) {
+	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter, Arguments arguments) {
 		this.formatter = formatter;
 		this.arguments = arguments;
 	}

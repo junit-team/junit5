@@ -42,7 +42,7 @@ class ArgumentsTests {
 
 	@Test
 	void sizeEqualToTheArrayLength() {
-		Object[] input = {1, "2", 3.0};
+		Object[] input = { 1, "2", 3.0 };
 
 		Arguments arguments = of(input);
 
@@ -100,27 +100,18 @@ class ArgumentsTests {
 	void setDescriptionRejectsNull() {
 		Arguments arguments = of(1);
 
-		assertThrows(PreconditionViolationException.class,
-				() -> arguments.describedAs(null)
-		);
+		assertThrows(PreconditionViolationException.class, () -> arguments.describedAs(null));
 
 		// Description must remain empty.
 		assertThat(arguments.getDescription()).isEmpty();
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {
-			"",
-			" ",
-			"  ",
-			"\n\t"
-	})
+	@ValueSource(strings = { "", " ", "  ", "\n\t" })
 	void setDescriptionRejectsBlankStrings(String illegalDescription) {
 		Arguments arguments = of(1);
 
-		assertThrows(PreconditionViolationException.class,
-				() -> arguments.describedAs(illegalDescription)
-		);
+		assertThrows(PreconditionViolationException.class, () -> arguments.describedAs(illegalDescription));
 
 		// Description must remain empty.
 		assertThat(arguments.getDescription()).isEmpty();

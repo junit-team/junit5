@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -63,28 +64,23 @@ class ParameterizedTestNameFormatterTests {
 
 	@Test
 	void formatsArgumentsDescription() {
-		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter(
-				"{arguments.description}"
-		);
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("{arguments.description}");
 
-		assertEquals("test case description",
-				formatter.format(1, Arguments.of().describedAs("test case description"))
-		);
+		Arguments arguments = Arguments.of().describedAs("test case description");
+		String formatted = formatter.format(1, arguments);
+
+		assertEquals("test case description", formatted);
 	}
 
 	@Test
 	void formatsArgumentsAndTheirDescription() {
 		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter(
-				"[{index}] {arguments}: {arguments.description}"
-		);
+			"[{index}] {arguments}: {arguments.description}");
 
 		int invocationIndex = 1;
-		Arguments arguments = Arguments.of(2, 4)
-				.describedAs("squared(2) = 4");
+		Arguments arguments = Arguments.of(2, 4).describedAs("squared(2) = 4");
 
-		assertEquals("[1] 2, 4: squared(2) = 4",
-				formatter.format(invocationIndex, arguments)
-		);
+		assertEquals("[1] 2, 4: squared(2) = 4", formatter.format(invocationIndex, arguments));
 	}
 
 	// todo: default pattern is likely to be changed? Or its interpretation:
@@ -94,13 +90,10 @@ class ParameterizedTestNameFormatterTests {
 		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("[{index}] {arguments}");
 
 		// Explicit test for https://github.com/junit-team/junit5/issues/814
-		assertEquals("[1] [foo, bar]",
-				formatter.format(1, arguments((Object) new String[] { "foo", "bar" }))
-		);
+		assertEquals("[1] [foo, bar]", formatter.format(1, arguments((Object) new String[] { "foo", "bar" })));
 
 		assertEquals("[1] [foo, bar], 42, true",
-				formatter.format(1, arguments(new String[] { "foo", "bar" }, 42, true))
-		);
+			formatter.format(1, arguments(new String[] { "foo", "bar" }, 42, true)));
 	}
 
 	@Test
@@ -113,17 +106,11 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {
-			"{}",
-			"{index",
-			"{-1}"
-	})
+	@ValueSource(strings = { "{}", "{index", "{-1}" })
 	void throwsReadableExceptionForInvalidPatterns(String invalidPattern) {
 		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter(invalidPattern);
 
-		JUnitException exception = assertThrows(JUnitException.class,
-				() -> formatter.format(1, EMPTY_ARGUMENTS)
-		);
+		JUnitException exception = assertThrows(JUnitException.class, () -> formatter.format(1, EMPTY_ARGUMENTS));
 		assertNotNull(exception.getCause());
 		assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
 	}

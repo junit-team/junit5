@@ -13,6 +13,7 @@ package org.junit.jupiter.params.provider;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Optional;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -71,9 +72,8 @@ public interface Arguments {
 	 * @since 5.2
 	 */
 	default Arguments describedAs(String testCaseDescription) {
-		Preconditions.notBlank(testCaseDescription,
-				() -> "Test case description must not be blank: '" + testCaseDescription + "'! " +
-						"Simply do not set it: it’s optional.");
+		Preconditions.notBlank(testCaseDescription, () -> "Test case description must not be blank: '"
+				+ testCaseDescription + "'! Simply do not set it: it’s optional.");
 
 		Object[] arguments = get();
 		Optional<String> trimmedDesc = Optional.of(testCaseDescription.trim());
