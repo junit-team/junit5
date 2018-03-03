@@ -90,6 +90,16 @@ of test that is supported by a `TestEngine` (e.g., JUnit 3, JUnit 4, JUnit Jupit
 {Specsy}, etc.). See `build.gradle` in the `{junit5-gradle-consumer}` project for an
 example of the plugin in action.
 
+[IMPORTANT]
+.Native Gradle Support Is Here!
+====
+Starting with https://docs.gradle.org/4.6/release-notes.html[version 4.6], Gradle provides
+https://docs.gradle.org/current/userguide/java_plugin.html#using_junit5[native support]
+for executing tests on the JUnit Platform. Thus, the `junit-platform-gradle-plugin` will
+be deprecated in JUnit Platform 1.2 and discontinued in version 1.3. Please switch to
+Gradle's standard `test` task and `useJUnitPlatform()`.
+====
+
 [[running-tests-build-gradle-junit-enable]]
 ===== Enabling the JUnit Gradle Plugin
 
