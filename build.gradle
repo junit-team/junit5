@@ -48,7 +48,6 @@ ext {
 		'junit-platform-console',
 		'junit-platform-console-standalone',
 		'junit-platform-engine',
-		'junit-platform-gradle-plugin',
 		'junit-platform-launcher',
 		'junit-platform-runner',
 		'junit-platform-suite-api',
@@ -97,7 +96,7 @@ ext {
 		'platform-tests'
 	]
 
-	jacocoTestProjects = cloverTestProjects << 'junit-platform-gradle-plugin'
+	jacocoTestProjects = cloverTestProjects
 	jacocoCoveredProjects = mavenizedProjects - ['junit-platform-console-standalone']
 	jacocoClassesDir = "$buildDir/jacoco/classes"
 }

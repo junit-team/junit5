@@ -20,7 +20,6 @@ test {
 // Tests in `AutomaticModuleNameTests` depend on all and the three jars. #894
 test.dependsOn(
 	project(':junit-jupiter-migrationsupport').jar,
-	project(':junit-platform-gradle-plugin').jar,
 	project(':junit-platform-surefire-provider').jar
 )
 
