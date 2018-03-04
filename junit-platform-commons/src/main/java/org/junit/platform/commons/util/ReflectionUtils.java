@@ -604,7 +604,9 @@ public final class ReflectionUtils {
 		return findAllClassesInClasspathRoot(root, ClassFilter.of(classNameFilter, classFilter));
 	}
 
-	@API(status = INTERNAL, since = "1.1")
+	/**
+	 * @since 1.1
+	 */
 	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, ClassFilter classFilter) {
 		return Collections.unmodifiableList(classpathScanner.scanForClassesInClasspathRoot(root, classFilter));
 	}
@@ -618,7 +620,9 @@ public final class ReflectionUtils {
 		return findAllClassesInPackage(basePackageName, ClassFilter.of(classNameFilter, classFilter));
 	}
 
-	@API(status = INTERNAL, since = "1.1")
+	/**
+	 * @since 1.1
+	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, ClassFilter classFilter) {
 		return Collections.unmodifiableList(classpathScanner.scanForClassesInPackage(basePackageName, classFilter));
 	}
@@ -632,7 +636,9 @@ public final class ReflectionUtils {
 		return findAllClassesInModule(moduleName, ClassFilter.of(classNameFilter, classFilter));
 	}
 
-	@API(status = INTERNAL, since = "1.2")
+	/**
+	 * @since 1.2
+	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter classFilter) {
 		return Collections.unmodifiableList(ModuleUtils.findAllClassesInModule(moduleName, classFilter));
 	}
