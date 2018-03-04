@@ -19,6 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.Test;
 
 /**
  * {@code @EnabledIf} is used to determine whether the annotated test class or
@@ -129,6 +130,7 @@ import org.apiguardian.api.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = EXPERIMENTAL, since = "5.1")
+@Test
 public @interface EnabledIf {
 
 	/**

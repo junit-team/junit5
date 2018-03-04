@@ -19,6 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
@@ -65,6 +66,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Documented
 @ExtendWith(EnabledIfEnvironmentVariableCondition.class)
 @API(status = STABLE, since = "5.1")
+@Test
 public @interface EnabledIfEnvironmentVariable {
 
 	/**

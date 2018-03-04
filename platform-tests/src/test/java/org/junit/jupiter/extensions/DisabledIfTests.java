@@ -39,6 +39,11 @@ class DisabledIfTests {
 		fail("test must not be executed");
 	}
 
+	@DisabledIf("true")
+	void annotationOnlyTrue() {
+		fail("test must not be executed");
+	}
+
 	@Test
 	@DisabledIf("java.lang.Boolean.TRUE")
 	void booleanWrapperTrue() {
@@ -54,6 +59,10 @@ class DisabledIfTests {
 	@Test
 	@DisabledIf("false")
 	void booleanFalse() {
+	}
+
+	@DisabledIf("false")
+	void annotationOnlyFalse() {
 	}
 
 	@Test
