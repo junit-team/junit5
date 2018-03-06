@@ -24,6 +24,9 @@ import java.util.stream.Stream;
 
 import org.opentest4j.AssertionFailedError;
 
+/**
+ * @since 5.0
+ */
 class DynamicTestTests {
 
 	private final List<String> assertedValues = new ArrayList<>();
@@ -60,30 +63,30 @@ class DynamicTestTests {
 	@Test
 	void reflectiveOperationThrowingAssertionFailedError() {
 		Throwable t48 = assertThrows(AssertionFailedError.class,
-			() -> dynamicTest("1 == 48", this::assertOneEquals48).getExecutable().execute());
+			() -> dynamicTest("1 == 48", this::assert1Equals48Directly).getExecutable().execute());
 		assertThat(t48).hasMessage("expected: <1> but was: <48>");
 
-		Throwable t49 = assertThrows(AssertionFailedError.class,
-			() -> dynamicTest("1 == 49", this::assertOnEquals49).getExecutable().execute());
+		Throwable t49 = assertThrows(AssertionFailedError.class, () -> dynamicTest("1 == 49",
+			this::assert1Equals49ReflectivelyAndUnwrapInvocationTargetException).getExecutable().execute());
 		assertThat(t49).hasMessage("expected: <1> but was: <49>");
 	}
 
 	@Test
 	@Disabled("https://github.com/junit-team/junit5/issues/1322")
-	void reflectiveOperationThrowingUnexpectedException() {
+	void reflectiveOperationThrowingInvocationTargetException() {
 		// Fails with: Unexpected exception type thrown
 		//   ==> expected: <org.opentest4j.AssertionFailedError>
 		//        but was: <java.lang.reflect.InvocationTargetException>
 		Throwable t50 = assertThrows(AssertionFailedError.class,
-			() -> dynamicTest("1 == 50", this::assertOneEquals50).getExecutable().execute());
+			() -> dynamicTest("1 == 50", this::assert1Equals50Reflectively).getExecutable().execute());
 		assertThat(t50).hasMessage("expected: <1> but was: <50>");
 	}
 
-	private void assertOneEquals48() {
+	private void assert1Equals48Directly() {
 		Assertions.assertEquals(1, 48);
 	}
 
-	private void assertOnEquals49() throws Throwable {
+	private void assert1Equals49ReflectivelyAndUnwrapInvocationTargetException() throws Throwable {
 		Method method = Assertions.class.getMethod("assertEquals", int.class, int.class);
 		try {
 			method.invoke(null, 1, 49);
@@ -93,7 +96,7 @@ class DynamicTestTests {
 		}
 	}
 
-	private void assertOneEquals50() throws Throwable {
+	private void assert1Equals50Reflectively() throws Throwable {
 		Method method = Assertions.class.getMethod("assertEquals", int.class, int.class);
 		method.invoke(null, 1, 50);
 	}
