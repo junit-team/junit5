@@ -33,7 +33,8 @@ class ValueArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Va
 	public void accept(ValueSource source) {
 		// @formatter:off
 		List<Object> arrays =
-				Stream.of(
+				// Declaration of <Object> is necessary due to a bug in Eclipse Photon.
+				Stream.<Object> of(
 					source.shorts(),
 					source.bytes(),
 					source.ints(),
