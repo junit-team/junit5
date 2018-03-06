@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -61,7 +62,7 @@ class DynamicTestTests {
 	}
 
 	@Test
-	void reflectiveOperationThrowingAssertionFailedError() {
+	void reflectiveOperationsThrowingAssertionFailedError() {
 		Throwable t48 = assertThrows(AssertionFailedError.class,
 			() -> dynamicTest("1 == 48", this::assert1Equals48Directly).getExecutable().execute());
 		assertThat(t48).hasMessage("expected: <1> but was: <48>");
@@ -72,14 +73,10 @@ class DynamicTestTests {
 	}
 
 	@Test
-	@Disabled("https://github.com/junit-team/junit5/issues/1322")
 	void reflectiveOperationThrowingInvocationTargetException() {
-		// Fails with: Unexpected exception type thrown
-		//   ==> expected: <org.opentest4j.AssertionFailedError>
-		//        but was: <java.lang.reflect.InvocationTargetException>
-		Throwable t50 = assertThrows(AssertionFailedError.class,
+		Throwable t50 = assertThrows(InvocationTargetException.class,
 			() -> dynamicTest("1 == 50", this::assert1Equals50Reflectively).getExecutable().execute());
-		assertThat(t50).hasMessage("expected: <1> but was: <50>");
+		assertThat(t50.getCause()).hasMessage("expected: <1> but was: <50>");
 	}
 
 	private void assert1Equals48Directly() {
@@ -88,12 +85,7 @@ class DynamicTestTests {
 
 	private void assert1Equals49ReflectivelyAndUnwrapInvocationTargetException() throws Throwable {
 		Method method = Assertions.class.getMethod("assertEquals", int.class, int.class);
-		try {
-			method.invoke(null, 1, 49);
-		}
-		catch (InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+		ReflectionSupport.invokeMethod(method, null, 1, 49);
 	}
 
 	private void assert1Equals50Reflectively() throws Throwable {
