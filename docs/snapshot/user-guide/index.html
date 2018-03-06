@@ -4114,19 +4114,6 @@ JUnit 4 and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</co
 <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project demonstrates how to use it and can serve as a starting
 point.</p>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Due to a memory leak in Surefire 2.20 and issues running on Java 9,
-the <code>junit-platform-surefire-provider</code> currently only works with Surefire 2.19.1.
-</td>
-</tr>
-</table>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml">...
@@ -4135,7 +4122,7 @@ the <code>junit-platform-surefire-provider</code> currently only works with Sure
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;dependencies&gt;</span>
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
@@ -4168,7 +4155,7 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;dependencies&gt;</span>
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
@@ -4210,7 +4197,7 @@ the dependencies of the <code>maven-surefire-plugin</code> similar to the follow
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;dependencies&gt;</span>
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
@@ -4302,7 +4289,7 @@ the following configuration properties.</p>
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
                 <span class="tag">&lt;properties&gt;</span>
                     <span class="tag">&lt;includeTags&gt;</span>acceptance | !feature-a<span class="tag">&lt;/includeTags&gt;</span>
@@ -4334,7 +4321,7 @@ the <code>configurationParameters</code> property and providing key-value pairs 
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
                 <span class="tag">&lt;properties&gt;</span>
                     <span class="tag">&lt;configurationParameters&gt;</span>
