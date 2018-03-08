@@ -6,7 +6,7 @@
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/22?closed=1+[5.2-M1 GA] milestone page in the JUnit repository
+link:{junit5-repo}+/milestone/22?closed=1+[5.2 M1] milestone page in the JUnit repository
 on GitHub.
 
 
