@@ -37,6 +37,12 @@ import org.junit.platform.commons.logging.LoggerFactory;
 @API(status = INTERNAL, since = "1.1")
 public class ModuleUtils {
 
+	///CLOVER:OFF
+	private ModuleUtils() {
+		/* no-op */
+	}
+	///CLOVER:ON
+
 	/**
 	 * Version hint is set to {@code "base"} here.
 	 */

@@ -189,7 +189,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		List<String> compoundProperties = null;
 		String property = parameters.getProviderProperties().get(key);
 		if (StringUtils.isNotBlank(property)) {
-			compoundProperties = Arrays.stream(property.split("[, ]+")).filter(StringUtils::isNotBlank).collect(
+			compoundProperties = Arrays.stream(property.split("[, ]+", -1)).filter(StringUtils::isNotBlank).collect(
 				Collectors.toList());
 		}
 		return Optional.ofNullable(compoundProperties);

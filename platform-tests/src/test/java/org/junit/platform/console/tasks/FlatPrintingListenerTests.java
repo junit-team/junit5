@@ -79,7 +79,8 @@ class FlatPrintingListenerTests {
 	}
 
 	private String[] lines(StringWriter stringWriter) {
-		return stringWriter.toString().split(EOL);
+		// Split with a limit of 0 so that trailing empty strings are removed.
+		return stringWriter.toString().split(EOL, 0);
 	}
 
 }

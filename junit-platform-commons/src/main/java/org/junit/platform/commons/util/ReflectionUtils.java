@@ -588,7 +588,7 @@ public final class ReflectionUtils {
 		// This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
 		// @formatter:off
-		return Arrays.stream(fullClassPath.split(File.pathSeparator))
+		return Arrays.stream(fullClassPath.split(File.pathSeparator, -1))
 				.map(Paths::get)
 				.filter(Files::isDirectory)
 				.collect(toSet());
@@ -841,7 +841,7 @@ public final class ReflectionUtils {
 		}
 
 		// @formatter:off
-		return Arrays.stream(parameterTypeNames.split(","))
+		return Arrays.stream(parameterTypeNames.split(",", -1))
 				.map(typeName -> loadRequiredParameterType(clazz, methodName, typeName))
 				.toArray(Class[]::new);
 		// @formatter:on

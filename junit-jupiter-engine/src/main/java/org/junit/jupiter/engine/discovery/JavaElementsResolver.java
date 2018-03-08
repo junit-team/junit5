@@ -18,12 +18,12 @@ import static org.junit.platform.commons.util.ReflectionUtils.findNestedClasses;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -99,7 +99,7 @@ class JavaElementsResolver {
 	 */
 	private Deque<TestDescriptor> resolveAllSegments(UniqueId uniqueId) {
 		List<Segment> segments = uniqueId.getSegments();
-		Deque<TestDescriptor> resolvedDescriptors = new LinkedList<>();
+		Deque<TestDescriptor> resolvedDescriptors = new ArrayDeque<>();
 		resolvedDescriptors.addFirst(this.engineDescriptor);
 
 		for (int index = 1; index < segments.size() && resolvedDescriptors.size() == index; index++) {

@@ -20,8 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -94,13 +92,33 @@ public @interface EnumSource {
 		 * Select only those enum constants whose names are supplied via the
 		 * {@link EnumSource#names} attribute.
 		 */
-		INCLUDE(Mode::validateNames, (name, names) -> names.contains(name)),
+		INCLUDE {
+			@Override
+			void doValidate(EnumSource enumSource, Set<String> names) {
+				Mode.validateNames(enumSource, names);
+			}
+
+			@Override
+			boolean doSelect(String name, Set<String> names) {
+				return names.contains(name);
+			}
+		},
 
 		/**
 		 * Select all declared enum constants except those supplied via the
 		 * {@link EnumSource#names} attribute.
 		 */
-		EXCLUDE(Mode::validateNames, (name, names) -> !names.contains(name)),
+		EXCLUDE {
+			@Override
+			void doValidate(EnumSource enumSource, Set<String> names) {
+				Mode.validateNames(enumSource, names);
+			}
+
+			@Override
+			boolean doSelect(String name, Set<String> names) {
+				return !names.contains(name);
+			}
+		},
 
 		/**
 		 * Select only those enum constants whose names match all patterns supplied
@@ -108,7 +126,17 @@ public @interface EnumSource {
 		 *
 		 * @see java.util.stream.Stream#allMatch(java.util.function.Predicate)
 		 */
-		MATCH_ALL(Mode::validatePatterns, (name, patterns) -> patterns.stream().allMatch(name::matches)),
+		MATCH_ALL {
+			@Override
+			void doValidate(EnumSource enumSource, Set<String> names) {
+				Mode.validatePatterns(enumSource, names);
+			}
+
+			@Override
+			boolean doSelect(String name, Set<String> patterns) {
+				return patterns.stream().allMatch(name::matches);
+			}
+		},
 
 		/**
 		 * Select only those enum constants whose names match any pattern supplied
@@ -116,29 +144,35 @@ public @interface EnumSource {
 		 *
 		 * @see java.util.stream.Stream#anyMatch(java.util.function.Predicate)
 		 */
-		MATCH_ANY(Mode::validatePatterns, (name, patterns) -> patterns.stream().anyMatch(name::matches));
+		MATCH_ANY {
+			@Override
+			void doValidate(EnumSource enumSource, Set<String> names) {
+				Mode.validatePatterns(enumSource, names);
+			}
 
-		private final BiConsumer<EnumSource, Set<String>> validator;
-		private final BiPredicate<String, Set<String>> selector;
-
-		private Mode(BiConsumer<EnumSource, Set<String>> validator, BiPredicate<String, Set<String>> selector) {
-			this.validator = validator;
-			this.selector = selector;
-		}
+			@Override
+			boolean doSelect(String name, Set<String> patterns) {
+				return patterns.stream().anyMatch(name::matches);
+			}
+		};
 
 		void validate(EnumSource enumSource, Set<String> names) {
 			Preconditions.notNull(enumSource, "EnumSource must not be null");
 			Preconditions.notNull(names, "names must not be null");
 
-			validator.accept(enumSource, names);
+			doValidate(enumSource, names);
 		}
+
+		abstract void doValidate(EnumSource enumSource, Set<String> names);
 
 		boolean select(Enum<?> constant, Set<String> names) {
 			Preconditions.notNull(constant, "Enum constant must not be null");
 			Preconditions.notNull(names, "names must not be null");
 
-			return selector.test(constant.name(), names);
+			return doSelect(constant.name(), names);
 		}
+
+		abstract boolean doSelect(String name, Set<String> names);
 
 		private static void validateNames(EnumSource enumSource, Set<String> names) {
 			// Do not map using Enum::name here since it results in a rawtypes warning

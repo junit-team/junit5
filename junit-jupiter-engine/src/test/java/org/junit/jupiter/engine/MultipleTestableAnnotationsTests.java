@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -37,7 +38,7 @@ class MultipleTestableAnnotationsTests extends AbstractJupiterTestEngineTests {
 
 		// @formatter:off
 		assertThat(listener.stream()
-			.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
+			.filter(where(LogRecord::getLevel, Level.WARNING::equals))
 			.map(LogRecord::getMessage)
 			.filter(m -> m.matches("Possible configuration error: method .+ resulted in multiple TestDescriptors .+"))
 			.count()

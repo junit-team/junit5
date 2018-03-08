@@ -58,6 +58,7 @@ public final class Assertions {
 	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
 	 * this method's generic return type {@code V}.
 	 */
+	@SuppressWarnings("TypeParameterUnusedInFormals") // see javadoc
 	public static <V> V fail(String message) {
 		AssertionUtils.fail(message);
 		return null; // appeasing the compiler: this line will never be executed.
@@ -78,6 +79,7 @@ public final class Assertions {
 	 * Stream.of().map(entry -> fail("should not be called"));
 	 * }</pre>
 	 */
+	@SuppressWarnings("TypeParameterUnusedInFormals") // see javadoc
 	public static <V> V fail(String message, Throwable cause) {
 		AssertionUtils.fail(message, cause);
 		return null; // appeasing the compiler: this line will never be executed.
@@ -89,6 +91,7 @@ public final class Assertions {
 	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
 	 * this method's generic return type {@code V}.
 	 */
+	@SuppressWarnings("TypeParameterUnusedInFormals") // see javadoc
 	public static <V> V fail(Throwable cause) {
 		AssertionUtils.fail(cause);
 		return null; // appeasing the compiler: this line will never be executed.
@@ -101,6 +104,7 @@ public final class Assertions {
 	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
 	 * this method's generic return type {@code V}.
 	 */
+	@SuppressWarnings("TypeParameterUnusedInFormals") // see javadoc
 	public static <V> V fail(Supplier<String> messageSupplier) {
 		AssertionUtils.fail(messageSupplier);
 		return null; // appeasing the compiler: this line will never be executed.

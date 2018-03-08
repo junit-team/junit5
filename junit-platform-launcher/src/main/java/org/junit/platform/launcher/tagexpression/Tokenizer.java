@@ -31,7 +31,7 @@ class Tokenizer {
 	}
 
 	private List<String> trimmedTokenStringsFrom(String infixTagExpression) {
-		String[] parts = infixTagExpression.replaceAll("([()!|&])", " $1 ").split("\\s");
+		String[] parts = infixTagExpression.replaceAll("([()!|&])", " $1 ").split("\\s", -1);
 		return stream(parts).filter(part -> !part.isEmpty()).collect(Collectors.toList());
 	}
 

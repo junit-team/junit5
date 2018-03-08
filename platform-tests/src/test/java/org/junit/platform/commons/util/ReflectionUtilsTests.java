@@ -923,6 +923,7 @@ class ReflectionUtilsTests {
 
 		<T> int foo(T t);
 
+		@SuppressWarnings("TypeParameterUnusedInFormals")
 		<T> T foo(int i);
 	}
 

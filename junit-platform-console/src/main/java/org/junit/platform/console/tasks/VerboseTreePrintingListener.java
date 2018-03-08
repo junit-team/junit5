@@ -179,7 +179,7 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 			return;
 		}
 		// still here? Split format into separate lines and indent them from the second line on
-		String[] lines = format.split("\\R");
+		String[] lines = format.split("\\R", -1);
 		printf(color, lines[0]);
 		if (lines.length > 1) {
 			String delimiter = System.lineSeparator() + verticals + String.format(detailFormat + "    ", "");
