@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
+import org.junit.jupiter.params.converter.TestData;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -41,14 +42,16 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Executable declaringExecutable = parameterContext.getParameter().getDeclaringExecutable();
 		Method testMethod = extensionContext.getTestMethod().orElse(null);
-		return declaringExecutable.equals(testMethod) && parameterContext.getIndex() < arguments.length;
+		return declaringExecutable.equals(testMethod) && (parameterContext.getIndex() < arguments.length
+				|| (AnnotationUtils.isAnnotated(parameterContext.getParameter(), TestData.class)));
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		Object argument = arguments[parameterContext.getIndex()];
 		Parameter parameter = parameterContext.getParameter();
+		Object argument = AnnotationUtils.isAnnotated(parameter, TestData.class) ? arguments
+				: arguments[parameterContext.getIndex()];
 		Optional<ConvertWith> annotation = AnnotationUtils.findAnnotation(parameter, ConvertWith.class);
 		// @formatter:off
 		ArgumentConverter argumentConverter = annotation.map(ConvertWith::value)
