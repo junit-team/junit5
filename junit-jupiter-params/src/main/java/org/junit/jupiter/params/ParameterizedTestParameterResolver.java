@@ -19,6 +19,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.DefaultArgumentsAccessor;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
@@ -41,14 +44,21 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Executable declaringExecutable = parameterContext.getParameter().getDeclaringExecutable();
 		Method testMethod = extensionContext.getTestMethod().orElse(null);
-		return declaringExecutable.equals(testMethod) && parameterContext.getIndex() < arguments.length;
+		return declaringExecutable.equals(testMethod)
+				&& (parameterContext.getIndex() < arguments.length || isAggregate(parameterContext.getParameter()));
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		Object argument = arguments[parameterContext.getIndex()];
+		return isAggregate(parameterContext.getParameter()) ? aggregate(parameterContext, extensionContext)
+				: convert(parameterContext, extensionContext);
+
+	}
+
+	private Object convert(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Parameter parameter = parameterContext.getParameter();
+		Object argument = arguments[parameterContext.getIndex()];
 		Optional<ConvertWith> annotation = AnnotationUtils.findAnnotation(parameter, ConvertWith.class);
 		// @formatter:off
 		ArgumentConverter argumentConverter = annotation.map(ConvertWith::value)
@@ -62,6 +72,29 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		catch (Exception ex) {
 			throw new ParameterResolutionException("Error resolving parameter at index " + parameterContext.getIndex(),
 				ex);
+		}
+	}
+
+	public static boolean isAggregate(Parameter parameter) {
+		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
+				|| AnnotationUtils.isAnnotated(parameter, AggregateWith.class);
+	}
+
+	private Object aggregate(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		Parameter parameter = parameterContext.getParameter();
+		Optional<AggregateWith> annotation = AnnotationUtils.findAnnotation(parameter, AggregateWith.class);
+		ArgumentsAccessor accessor = new DefaultArgumentsAccessor(arguments);
+		try {
+			// @formatter:off
+			return annotation.map(AggregateWith::value)
+					.map(clazz -> ReflectionUtils.newInstance(clazz))
+					.map(aggregator -> aggregator.aggregateArguments(accessor, parameterContext))
+					.orElse(accessor);
+			// @formatter:on
+		}
+		catch (Exception ex) {
+			throw new ParameterResolutionException(
+				"Error aggregating parameter at index " + parameterContext.getIndex(), ex);
 		}
 	}
 }
