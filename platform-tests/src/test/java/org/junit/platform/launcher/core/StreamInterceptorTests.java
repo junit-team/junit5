@@ -13,7 +13,6 @@ package org.junit.platform.launcher.core;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.stream.IntStream;
 
@@ -21,12 +20,12 @@ import org.junit.jupiter.api.Test;
 
 class StreamInterceptorTests {
 
-	PrintStream targetStream = new PrintStream(new ByteArrayOutputStream());
+	private PrintStream targetStream = new PrintStream(new ByteArrayOutputStream());
 
 	@Test
 	void interceptsWriteOperationsToStreamPerThread() {
 		StreamInterceptor streamInterceptor = StreamInterceptor.register(targetStream,
-			newStream -> this.targetStream = newStream, 3);
+			newStream -> this.targetStream = newStream, 3).orElseThrow(RuntimeException::new);
 		try {
 			// @formatter:off
 			IntStream.range(0, 1000)
@@ -35,16 +34,7 @@ class StreamInterceptorTests {
 					.mapToObj(String::valueOf)
 					.peek(i -> streamInterceptor.capture())
 					.peek(i -> targetStream.println(i))
-					.forEach(i -> {
-						ByteArrayOutputStream out = new ByteArrayOutputStream();
-						try {
-							streamInterceptor.consume(out);
-						} catch (IOException e) {
-							throw new RuntimeException("Could not consume stream", e);
-						}
-						String output = out.toString().trim();
-						assertEquals(i, output);
-					});
+					.forEach(i -> assertEquals(i, streamInterceptor.consume().trim()));
 			// @formatter:on
 		}
 		finally {

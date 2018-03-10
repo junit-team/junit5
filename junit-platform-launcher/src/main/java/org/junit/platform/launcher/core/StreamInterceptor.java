@@ -10,10 +10,12 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.junit.platform.commons.JUnitException;
@@ -27,22 +29,22 @@ class StreamInterceptor extends PrintStream {
 	private ThreadLocal<ByteArrayOutputStream> output = ThreadLocal.withInitial(ByteArrayOutputStream::new);
 	private ThreadLocal<Boolean> active = ThreadLocal.withInitial(() -> false);
 
-	static StreamInterceptor registerStdout(int maxNumberOfBytesPerThread) {
+	static Optional<StreamInterceptor> registerStdout(int maxNumberOfBytesPerThread) {
 		return register(System.out, System::setOut, maxNumberOfBytesPerThread);
 	}
 
-	static StreamInterceptor registerStderr(int maxNumberOfBytesPerThread) {
+	static Optional<StreamInterceptor> registerStderr(int maxNumberOfBytesPerThread) {
 		return register(System.err, System::setErr, maxNumberOfBytesPerThread);
 	}
 
-	static StreamInterceptor register(PrintStream originalStream, Consumer<PrintStream> streamSetter,
+	static Optional<StreamInterceptor> register(PrintStream originalStream, Consumer<PrintStream> streamSetter,
 			int maxNumberOfBytesPerThread) {
 		if (originalStream instanceof StreamInterceptor) {
-			throw new JUnitException(StreamInterceptor.class.getName() + " is already registered");
+			return Optional.empty();
 		}
 		StreamInterceptor interceptor = new StreamInterceptor(originalStream, streamSetter, maxNumberOfBytesPerThread);
 		streamSetter.accept(interceptor);
-		return interceptor;
+		return Optional.of(interceptor);
 	}
 
 	StreamInterceptor(PrintStream originalStream, Consumer<PrintStream> unregisterAction,
@@ -57,13 +59,21 @@ class StreamInterceptor extends PrintStream {
 		active.set(true);
 	}
 
-	void consume(OutputStream out) throws IOException {
+	String consume() {
 		if (active.get()) {
 			ByteArrayOutputStream threadOutput = output.get();
-			threadOutput.writeTo(out);
-			threadOutput.reset();
 			active.set(false);
+			try {
+				return threadOutput.toString(UTF_8.toString());
+			}
+			catch (UnsupportedEncodingException e) {
+				throw new JUnitException("UTF_8 apparently isn't a supported encoding", e);
+			}
+			finally {
+				threadOutput.reset();
+			}
 		}
+		return "";
 	}
 
 	void unregister() {

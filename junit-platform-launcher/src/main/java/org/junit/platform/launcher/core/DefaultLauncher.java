@@ -144,16 +144,25 @@ class DefaultLauncher implements Launcher {
 			TestExecutionListener... listeners) {
 
 		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
-		TestPlan testPlan = TestPlan.from(root.getEngineDescriptors());
 		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
-		testExecutionListener.testPlanExecutionStarted(testPlan);
-		ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
-			testExecutionListener);
-		for (TestEngine testEngine : root.getTestEngines()) {
-			TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
-			execute(testEngine, new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
+		Optional<StreamInterceptingTestExecutionListener> streamInterceptingTestExecutionListener = StreamInterceptingTestExecutionListener.create(
+			configurationParameters, testExecutionListener::reportingEntryPublished);
+		streamInterceptingTestExecutionListener.ifPresent(listenerRegistry::registerListeners);
+		try {
+			TestPlan testPlan = TestPlan.from(root.getEngineDescriptors());
+			testExecutionListener.testPlanExecutionStarted(testPlan);
+			ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
+				testExecutionListener);
+			for (TestEngine testEngine : root.getTestEngines()) {
+				TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
+				execute(testEngine,
+					new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
+			}
+			testExecutionListener.testPlanExecutionFinished(testPlan);
 		}
-		testExecutionListener.testPlanExecutionFinished(testPlan);
+		finally {
+			streamInterceptingTestExecutionListener.ifPresent(StreamInterceptingTestExecutionListener::unregister);
+		}
 	}
 
 	private TestExecutionListenerRegistry buildListenerRegistryForExecution(TestExecutionListener... listeners) {
