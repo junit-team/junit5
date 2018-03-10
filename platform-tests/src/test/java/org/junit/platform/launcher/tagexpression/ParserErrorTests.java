@@ -62,6 +62,7 @@ class ParserErrorTests {
 		assertThat(parseErrorFromParsing(tagExpression)).contains(parseError);
 	}
 
+	@SuppressWarnings("unused")
 	private static Stream<Arguments> data() {
 		// @formatter:off
 		return Stream.of(

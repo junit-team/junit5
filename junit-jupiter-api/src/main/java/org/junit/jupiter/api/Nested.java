@@ -22,9 +22,11 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @Nested} is used to signal that the annotated class is a nested,
- * non-static test class.
+ * non-static test class (i.e., an <em>inner class</em>).
  *
  * @since 5.0
+ * @see Test
+ * @see TestInstance
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

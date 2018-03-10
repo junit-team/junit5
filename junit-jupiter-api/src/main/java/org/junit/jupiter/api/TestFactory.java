@@ -32,12 +32,12 @@ import org.junit.platform.commons.annotation.Testable;
  * and must return a {@code Stream}, {@code Collection}, {@code Iterable}, or
  * {@code Iterator} of {@link DynamicNode} instances. Valid, instantiable
  * subclasses of {@code DynamicNode} are {@link DynamicContainer} and
- * {@link DynamicTest}. These {@code DynamicTest}s  will then be executed lazily,
+ * {@link DynamicTest}. <em>Dynamic tests</em> will then be executed lazily,
  * enabling dynamic and even non-deterministic generation of test cases.
  *
  * <p>Any {@code Stream} returned by a {@code @TestFactory} will be properly
  * closed by calling {@code stream.close()}, making it safe to use a resource
- * such as {@code Files.lines()}.
+ * such as {@code Files.lines()} as the initial source of the stream.
  *
  * <p>{@code @TestFactory} methods may optionally declare parameters to be
  * resolved by {@link org.junit.jupiter.api.extension.ParameterResolver

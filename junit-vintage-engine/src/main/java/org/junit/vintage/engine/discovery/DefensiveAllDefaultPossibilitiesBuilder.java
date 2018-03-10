@@ -13,13 +13,17 @@ package org.junit.vintage.engine.discovery;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
+import org.junit.Ignore;
 import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.internal.builders.AnnotatedBuilder;
+import org.junit.internal.builders.IgnoredBuilder;
+import org.junit.internal.builders.IgnoredClassRunner;
 import org.junit.internal.builders.JUnit4Builder;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.runner.Runner;
+import org.junit.runner.manipulation.Filterable;
 import org.junit.runners.model.RunnerBuilder;
 
 /**
@@ -30,18 +34,48 @@ import org.junit.runners.model.RunnerBuilder;
  * @since 4.12
  * @see DefensiveAnnotatedBuilder
  * @see DefensiveJUnit4Builder
+ * @see IgnoredClassRunner
  */
 class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefensiveAllDefaultPossibilitiesBuilder.class);
 
 	private final AnnotatedBuilder annotatedBuilder;
-	private final DefensiveJUnit4Builder defensiveJUnit4Builder;
+	private final JUnit4Builder junit4Builder;
+	private final IgnoredBuilder ignoredBuilder;
 
 	DefensiveAllDefaultPossibilitiesBuilder() {
 		super(true);
 		annotatedBuilder = new DefensiveAnnotatedBuilder(this);
-		defensiveJUnit4Builder = new DefensiveJUnit4Builder();
+		junit4Builder = new DefensiveJUnit4Builder();
+		ignoredBuilder = new NullIgnoredBuilder();
+	}
+
+	@Override
+	public Runner runnerForClass(Class<?> testClass) throws Throwable {
+		Runner runner = super.runnerForClass(testClass);
+		if (testClass.getAnnotation(Ignore.class) != null) {
+			if (runner == null) {
+				return new IgnoredClassRunner(testClass);
+			}
+			return decorateIgnoredTestClass(runner);
+		}
+		return runner;
+	}
+
+	/**
+	 * Instead of checking for the {@link Ignore} annotation and returning an
+	 * {@link IgnoredClassRunner} from {@link IgnoredBuilder}, we've let the
+	 * super class determine the regular runner that would have been used if
+	 * {@link Ignore} hadn't been present. Now, we decorate the runner to
+	 * override its runtime behavior (i.e. skip execution) but return its
+	 * regular {@link org.junit.runner.Description}.
+	 */
+	private Runner decorateIgnoredTestClass(Runner runner) {
+		if (runner instanceof Filterable) {
+			return new FilterableIgnoringRunnerDecorator(runner);
+		}
+		return new IgnoringRunnerDecorator(runner);
 	}
 
 	@Override
@@ -51,7 +85,12 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 
 	@Override
 	protected JUnit4Builder junit4Builder() {
-		return defensiveJUnit4Builder;
+		return junit4Builder;
+	}
+
+	@Override
+	protected IgnoredBuilder ignoredBuilder() {
+		return ignoredBuilder;
 	}
 
 	/**
@@ -96,4 +135,16 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		}
 	}
 
+	/**
+	 * Customization of {@link IgnoredBuilder} that always returns {@code null}.
+	 *
+	 * @since 5.1
+	 */
+	private static class NullIgnoredBuilder extends IgnoredBuilder {
+		@Override
+		public Runner runnerForClass(Class<?> testClass) {
+			// don't ignore entire test classes just yet
+			return null;
+		}
+	}
 }

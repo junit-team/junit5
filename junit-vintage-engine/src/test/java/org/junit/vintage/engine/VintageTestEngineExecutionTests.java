@@ -11,6 +11,7 @@
 package org.junit.vintage.engine;
 
 import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
@@ -26,7 +27,6 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.uniqueIdSubstring;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
 
@@ -35,14 +35,20 @@ import java.util.List;
 import org.assertj.core.api.Condition;
 import org.junit.AssumptionViolatedException;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
+import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestClass;
 import org.junit.vintage.engine.samples.junit4.EnclosedJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
@@ -64,6 +70,7 @@ import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCusto
 import org.junit.vintage.engine.samples.junit4.MalformedJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.ParameterizedTestCase;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
+import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithLifecycleMethods;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
@@ -304,8 +311,77 @@ class VintageTestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(test(testClass.getName()), skippedWithReason("complete class is ignored")), //
+			event(container(testClass), skippedWithReason("complete class is ignored")), //
 			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesEmptyIgnoredTestClass() {
+		Class<?> testClass = EmptyIgnoredTestClass.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(test(testClass.getName()), skippedWithReason("empty")), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void reportsExecutionEventsAroundLifecycleMethods() {
+		Class<?> testClass = PlainJUnit4TestCaseWithLifecycleMethods.class;
+		PlainJUnit4TestCaseWithLifecycleMethods.EVENTS.clear();
+		EngineExecutionListener listener = new EngineExecutionListener() {
+			@Override
+			public void executionStarted(TestDescriptor testDescriptor) {
+				PlainJUnit4TestCaseWithLifecycleMethods.EVENTS.add(
+					"executionStarted:" + testDescriptor.getDisplayName());
+			}
+
+			@Override
+			public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+				PlainJUnit4TestCaseWithLifecycleMethods.EVENTS.add(
+					"executionFinished:" + testDescriptor.getDisplayName());
+			}
+
+			@Override
+			public void executionSkipped(TestDescriptor testDescriptor, String reason) {
+				PlainJUnit4TestCaseWithLifecycleMethods.EVENTS.add(
+					"executionSkipped:" + testDescriptor.getDisplayName());
+			}
+
+			@Override
+			public void dynamicTestRegistered(TestDescriptor testDescriptor) {
+			}
+
+			@Override
+			public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
+			}
+		};
+
+		execute(testClass, listener);
+
+		// @formatter:off
+		assertThat(PlainJUnit4TestCaseWithLifecycleMethods.EVENTS).containsExactly(
+			"executionStarted:JUnit Vintage",
+				"executionStarted:" + testClass.getName(),
+					"beforeClass",
+						"executionStarted:failingTest",
+							"before",
+								"failingTest",
+							"after",
+						"executionFinished:failingTest",
+						"executionSkipped:skippedTest",
+						"executionStarted:succeedingTest",
+							"before",
+								"succeedingTest",
+							"after",
+						"executionFinished:succeedingTest",
+					"afterClass",
+				"executionFinished:" + testClass.getName(),
+			"executionFinished:JUnit Vintage"
+		);
+		// @formatter:on
 	}
 
 	@Test
@@ -337,7 +413,7 @@ class VintageTestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(suiteOfSuiteClass), started()), //
 			event(container(suiteClass), started()), //
-			event(test(testClass.getName()), skippedWithReason("complete class is ignored")), //
+			event(container(testClass), skippedWithReason("complete class is ignored")), //
 			event(container(suiteClass), finishedSuccessfully()), //
 			event(container(suiteOfSuiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
@@ -401,8 +477,7 @@ class VintageTestEngineExecutionTests {
 
 		@Override
 		public Description getDescription() {
-			Description suiteDescription = createSuiteDescription(testClass);
-			return suiteDescription;
+			return createSuiteDescription(testClass);
 		}
 
 		@Override
@@ -491,9 +566,15 @@ class VintageTestEngineExecutionTests {
 	}
 
 	private static List<ExecutionEvent> execute(Class<?> testClass) {
-		VintageTestEngine engine = new VintageTestEngine();
-		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
-		return ExecutionEventRecorder.execute(engine, discoveryRequest);
+		return ExecutionEventRecorder.execute(new VintageTestEngine(), request(testClass));
+	}
+
+	private static void execute(Class<?> testClass, EngineExecutionListener listener) {
+		ExecutionEventRecorder.execute(new VintageTestEngine(), request(testClass), listener);
+	}
+
+	private static LauncherDiscoveryRequest request(Class<?> testClass) {
+		return LauncherDiscoveryRequestBuilder.request().selectors(selectClass(testClass)).build();
 	}
 
 	@Test

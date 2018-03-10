@@ -12,6 +12,9 @@ package org.junit.platform.launcher.tagexpression;
 
 import java.util.function.Supplier;
 
+/**
+ * @since 1.1
+ */
 class ParseStatus {
 
 	static ParseStatus success() {
@@ -77,4 +80,5 @@ class ParseStatus {
 	private boolean isSuccess() {
 		return errorMessage == null;
 	}
+
 }

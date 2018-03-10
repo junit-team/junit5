@@ -22,8 +22,9 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @BeforeEach} is used to signal that the annotated method should be
- * executed <em>before</em> <strong>each</strong> {@code @Test} method in
- * the current test class.
+ * executed <em>before</em> <strong>each</strong> {@code @Test},
+ * {@code @RepeatedTest}, {@code @ParameterizedTest}, {@code @TestFactory},
+ * and {@code @TestTemplate} method in the current test class.
  *
  * <h3>Method Signatures</h3>
  *
@@ -54,6 +55,9 @@ import org.apiguardian.api.API;
  * @see BeforeAll
  * @see AfterAll
  * @see Test
+ * @see RepeatedTest
+ * @see TestFactory
+ * @see TestTemplate
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

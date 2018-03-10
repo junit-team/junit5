@@ -12,7 +12,7 @@ generateJacocoTestKitProperties {
 functionalTest.dependsOn(generateJacocoTestKitProperties)
 
 dependencies {
-	api(project(path: ':junit-platform-console', configuration: 'shadow'))
+	api(project(':junit-platform-console'))
 	api(project(':junit-platform-launcher'))
 	testRuntimeOnly("junit:junit:${junit4Version}")
 	testImplementation('org.spockframework:spock-core:1.1-groovy-2.4') {

@@ -13,6 +13,9 @@ package org.junit.platform.launcher.tagexpression;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+/**
+ * @since 1.1
+ */
 class DequeStack<T> implements Stack<T> {
 
 	private final Deque<T> deque = new ArrayDeque<>();
@@ -41,4 +44,5 @@ class DequeStack<T> implements Stack<T> {
 	public int size() {
 		return deque.size();
 	}
+
 }

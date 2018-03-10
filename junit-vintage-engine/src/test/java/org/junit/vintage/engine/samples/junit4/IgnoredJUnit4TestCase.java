@@ -11,7 +11,9 @@
 package org.junit.vintage.engine.samples.junit4;
 
 import static org.junit.Assert.fail;
+import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
+import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -19,11 +21,16 @@ import org.junit.Test;
  * @since 4.12
  */
 @Ignore("complete class is ignored")
+@FixMethodOrder(NAME_ASCENDING)
 public class IgnoredJUnit4TestCase {
 
 	@Test
-	public void test() {
-		fail("this test is not even discovered");
+	public void failingTest() {
+		fail("this test is discovered, but skipped");
+	}
+
+	@Test
+	public void succeedingTest() {
 	}
 
 }

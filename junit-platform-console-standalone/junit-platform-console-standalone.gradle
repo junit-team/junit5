@@ -11,17 +11,15 @@ buildscript {
 }
 
 dependencies {
-	shadow(project(':junit-platform-console'))
-	shadow(project(':junit-jupiter-engine'))
-	shadow(project(':junit-jupiter-params'))
-	shadow(project(':junit-vintage-engine'))
+	shadowed(project(':junit-platform-console'))
+	shadowed(project(':junit-jupiter-engine'))
+	shadowed(project(':junit-jupiter-params'))
+	shadowed(project(':junit-vintage-engine'))
 
 	testCompileOnly(project(':junit-jupiter-api'))
-	testCompileOnly(project(path: ':junit-jupiter-params', configuration: 'shadow'))
+	testCompileOnly(project(':junit-jupiter-params'))
 	testCompileOnly("junit:junit:${junit4Version}")
 }
-
-sourceSets.main.compileClasspath += configurations.shadow
 
 jar {
 	manifest {
@@ -34,11 +32,8 @@ jar {
 	}
 }
 
-javadoc {
-	classpath = project.sourceSets.main.compileClasspath + configurations.shadow
-}
-
 jar.enabled = false
+jar.dependsOn shadowJar
 test.enabled = false // prevent supposed-to-fail integration tests from failing the build
 japicc.enabled = false
 
@@ -49,13 +44,8 @@ shadowJar {
 		(project.generateManifest || !shadowJar.archivePath.exists())
 	}
 
-	dependsOn(
-		project(':junit-platform-console').shadowJar,
-		project(':junit-jupiter-params').shadowJar
-	)
-
 	classifier = null
-	configurations = [project.configurations.shadow]
+	configurations = [project.configurations.shadowed]
 
 	// https://github.com/junit-team/junit5/issues/761
 	// prevent duplicates, add 3rd-party licenses explicitly

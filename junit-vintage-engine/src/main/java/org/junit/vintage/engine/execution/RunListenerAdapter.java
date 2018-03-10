@@ -46,8 +46,7 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testRunStarted(Description description) {
-		// If it's not a suite it might be skipped entirely later on.
-		if (description.isSuite()) {
+		if (description.isSuite() && description.getAnnotation(Ignore.class) == null) {
 			fireExecutionStarted(testRun.getRunnerTestDescriptor());
 		}
 	}

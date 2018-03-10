@@ -31,7 +31,7 @@ afterEvaluate {
 dependencies {
 	api(project(':junit-jupiter-api'))
 
-	shadow('com.univocity:univocity-parsers:2.5.9')
+	shadowed('com.univocity:univocity-parsers:2.6.0')
 
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
@@ -42,31 +42,13 @@ dependencies {
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
-	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly(project(':junit-platform-console'))
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }
 
-sourceSets.main.compileClasspath += configurations.shadow
-sourceSets.test.runtimeClasspath += configurations.shadow
-
-eclipse {
-	classpath {
-		plusConfigurations += [ configurations.shadow ]
-	}
-}
-
-idea {
-	module {
-		scopes.PROVIDED.plus += [ configurations.shadow ]
-	}
-}
-
-javadoc {
-	classpath = project.sourceSets.main.compileClasspath + configurations.shadow
-}
-
 jar.enabled = false
+jar.dependsOn shadowJar
 
 jar {
 	manifest {
@@ -83,7 +65,7 @@ shadowJar {
 		(project.generateManifest || !shadowJar.archivePath.exists())
 	}
 	classifier = null
-	configurations = [project.configurations.shadow]
+	configurations = [project.configurations.shadowed]
 	exclude 'META-INF/**'
 	relocate 'com.univocity', 'org.junit.jupiter.params.shadow.com.univocity'
 	from(projectDir) {

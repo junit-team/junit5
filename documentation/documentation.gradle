@@ -1,12 +1,14 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 buildscript {
 	dependencies {
 		// upgrade to latest jruby version due to a bugfix needed for Windows 10.
 		// can be removed, when asciidoctorj uses this as a default version.
-		classpath('org.jruby:jruby-complete:9.1.15.0')
+		classpath('org.jruby:jruby-complete:9.1.16.0')
 
 		// classpath('org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.16')
 		classpath('org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16')
-		classpath('org.asciidoctor:asciidoctorj-diagram:1.5.4.1')
+		classpath('org.asciidoctor:asciidoctorj-diagram:1.5.8')
 	}
 }
 
@@ -37,20 +39,25 @@ test {
 */
 
 dependencies {
+	asciidoctor('org.jruby:jruby-complete:9.1.16.0')
+
 	testImplementation(project(':junit-jupiter-api'))
-	testImplementation(project(path: ':junit-jupiter-params', configuration: 'shadow'))
+	testImplementation(project(':junit-jupiter-params'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-launcher'))
-	if (gradle.ext.kotlinIsSupported) testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
-	testRuntimeOnly(project(path: ':junit-platform-console', configuration: 'shadow'))
+	testRuntimeOnly(project(':junit-platform-console'))
 
 	testRuntimeOnly(project(':junit-vintage-engine'))
 	testRuntimeOnly(project(':junit-jupiter-engine'))
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+
+	// for ApiReportGenerator
+	testImplementation("io.github.lukehutch:fast-classpath-scanner:2.18.1")
 }
 
 asciidoctorj {
@@ -58,24 +65,31 @@ asciidoctorj {
 }
 
 ext {
-	generatedAsciiDocInputDir = buildDir.toPath().resolve('generated/asciidoc').toString()
+	generatedAsciiDocPath = buildDir.toPath().resolve('generated/asciidoc')
+	consoleLauncherOptionsFile = generatedAsciiDocPath.resolve('console-launcher-options.txt')
+	experimentalApisTableFile = generatedAsciiDocPath.resolve('experimental-apis-table.txt')
 }
 
-task generateConsoleLauncherOptions(type: JavaExec){
-	def outputPath = java.nio.file.Paths.get(generatedAsciiDocInputDir)
-	def outputFile = outputPath.resolve('console-launcher-options.txt')
-	classpath = configurations.testRuntimeClasspath
-	main = 'org.junit.platform.console.ConsoleLauncher'
-	args = ['--help']
-	standardOutput = new ByteArrayOutputStream()
-	doLast {
-		java.nio.file.Files.createDirectories(outputPath)
-		java.nio.file.Files.write(outputFile, standardOutput.toByteArray())
+def createJavaExecTaskWithOutputFile(taskName, outputFile, mainClass, mainArgs = []) {
+	task(taskName, type: JavaExec) {
+		outputs.file outputFile.toFile()
+		classpath = sourceSets.test.runtimeClasspath
+		main = mainClass
+		args = mainArgs
+		standardOutput = new ByteArrayOutputStream()
+		doLast {
+			java.nio.file.Files.createDirectories(outputFile.parent)
+			java.nio.file.Files.write(outputFile, standardOutput.toByteArray())
+		}
 	}
 }
 
+createJavaExecTaskWithOutputFile('generateConsoleLauncherOptions', consoleLauncherOptionsFile, 'org.junit.platform.console.ConsoleLauncher', ['--help'])
+
+createJavaExecTaskWithOutputFile('generateExperimentalApisTable', experimentalApisTableFile, 'org.junit.api.tools.ApiReportGenerator')
+
 asciidoctor {
-	dependsOn generateConsoleLauncherOptions
+	dependsOn 'generateConsoleLauncherOptions', 'generateExperimentalApisTable'
 
 	// enable the Asciidoctor Diagram extension
 	requires 'asciidoctor-diagram'
@@ -90,7 +104,13 @@ asciidoctor {
 		}
 	}
 
-	backends 'html5' // , 'pdf' // , 'epub3'
+	backends 'html5'
+
+	// The PDF backend currently does not work on Linux
+	// see https://github.com/junit-team/junit5/issues/1099
+	if (Os.isFamily(Os.FAMILY_WINDOWS) || Os.isFamily(Os.FAMILY_MAC)) {
+		backends 'pdf'
+	}
 
 	attributes	'jupiter-version': project.property('version'),
 				'platform-version': project.property('platformVersion'),
@@ -99,10 +119,13 @@ asciidoctor {
 				'apiguardian-version': project.property('apiGuardianVersion'),
 				'ota4j-version': project.property('ota4jVersion'),
 				'release-branch': project.property('releaseBranch'),
+				'docs-version': project.property('docsVersion'),
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
-				'generatedAsciiDocInputDir': generatedAsciiDocInputDir,
+				'kotlinTestDir': project.sourceSets.test.kotlin.srcDirs[0],
+				'consoleLauncherOptionsFile': consoleLauncherOptionsFile.toString(),
+				'experimentalApisTableFile': experimentalApisTableFile.toString(),
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
 				'outdir': outputDir.absolutePath,
 				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend and on MS Windows
@@ -112,7 +135,4 @@ asciidoctor {
 				'sectanchors': true,
 				'idprefix': '',
 				'idseparator': '-'
-	if (gradle.ext.kotlinIsSupported) {
-		attributes.put('kotlinTestDir', project.sourceSets.test.kotlin.srcDirs[0])
-	}
 }

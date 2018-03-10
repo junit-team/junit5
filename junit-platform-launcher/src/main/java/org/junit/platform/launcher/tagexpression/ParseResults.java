@@ -12,6 +12,9 @@ package org.junit.platform.launcher.tagexpression;
 
 import java.util.Optional;
 
+/**
+ * @since 1.1
+ */
 class ParseResults {
 
 	///CLOVER:OFF
@@ -37,4 +40,5 @@ class ParseResults {
 			}
 		};
 	}
+
 }

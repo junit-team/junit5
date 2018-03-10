@@ -19,7 +19,6 @@ import java.util.Map;
 
 import joptsimple.BuiltinHelpFormatter;
 import joptsimple.OptionDescriptor;
-import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
@@ -40,7 +39,7 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 			OptionSet detectedOptions = parser.parse(arguments);
 			return availableOptions.toCommandLineOptions(detectedOptions);
 		}
-		catch (OptionException e) {
+		catch (Exception e) {
 			throw new JUnitException("Error parsing command-line arguments", e);
 		}
 	}

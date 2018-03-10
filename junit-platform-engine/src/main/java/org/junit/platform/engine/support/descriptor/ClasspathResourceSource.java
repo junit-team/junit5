@@ -49,7 +49,7 @@ public class ClasspathResourceSource implements TestSource {
 	 * @see ClassLoader#getResources(String)
 	 */
 	public static ClasspathResourceSource from(String classpathResourceName) {
-		return new ClasspathResourceSource(classpathResourceName, null);
+		return new ClasspathResourceSource(classpathResourceName);
 	}
 
 	/**

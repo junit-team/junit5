@@ -1,5 +1,10 @@
 build: off
 
+# Specify which branches/tags that we do not want to be built: r5.0.0-M5
+branches:
+  except:
+    - /^r\d.*$/
+
 install:
   - cinst jdk9 -version 9.0.4.11 -params 'installdir=C:\\jdk9'
   - SET JAVA_HOME=C:\jdk9

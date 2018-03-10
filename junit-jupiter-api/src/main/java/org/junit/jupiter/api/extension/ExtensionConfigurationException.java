@@ -30,4 +30,8 @@ public class ExtensionConfigurationException extends JUnitException {
 		super(message);
 	}
 
+	public ExtensionConfigurationException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

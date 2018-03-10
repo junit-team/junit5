@@ -10,6 +10,9 @@
 
 package org.junit.platform.launcher.tagexpression;
 
+/**
+ * @since 1.1
+ */
 class Token {
 
 	final int startIndex;

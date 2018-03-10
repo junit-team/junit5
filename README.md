@@ -2,15 +2,14 @@
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-[JUnit 5.0.3](https://github.com/junit-team/junit5/releases/tag/r5.0.3)
-was released on January 15, 2018;
-[JUnit 5.1.0-M2](https://github.com/junit-team/junit5/releases/tag/r5.1.0-M2)
-on January 28, 2018.
+[JUnit 5.1.0](https://github.com/junit-team/junit5/releases/tag/r5.1.0)
+was released on February 18, 2018.
 
 ## Documentation
 
 - [User Guide]
 - [Javadoc]
+- [Release Notes]
 
 ## Contributing
 
@@ -89,7 +88,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.0.3` or `1.1.0-M2` or `1.1.0-SNAPSHOT`
+- **Version**: `1.1.0` or `1.2.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
@@ -104,7 +103,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.0.3` or `5.1.0-M2` or `5.1.0-SNAPSHOT`
+- **Version**: `5.1.0` or `5.2.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
   - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
@@ -114,7 +113,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `4.12.3` or `5.1.0-M2` or `5.1.0-SNAPSHOT`
+- **Version**: `5.1.0` or `5.2.0-SNAPSHOT`
 - **Artifact ID** and **Automatic-Module-Name**:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
@@ -145,10 +144,11 @@ as it is not intended to be used as a module.
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
 [JaCoCo]: http://www.eclemma.org/jacoco/
-[Javadoc]: http://junit.org/junit5/docs/current/api/
+[Javadoc]: https://junit.org/junit5/docs/current/api/
 [JDK-9]: http://jdk.java.net/9/
 [Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/artifact/build/reports/jacoco/jacocoRootReport/html/index.html
 [OpenClover]: http://openclover.org
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
+[Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
-[User Guide]: http://junit.org/junit5/docs/current/user-guide/
+[User Guide]: https://junit.org/junit5/docs/current/user-guide/

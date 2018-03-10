@@ -12,6 +12,9 @@ package org.junit.platform.launcher.tagexpression;
 
 import java.util.List;
 
+/**
+ * @since 1.1
+ */
 class Parser {
 
 	private final Tokenizer tokenizer = new Tokenizer();

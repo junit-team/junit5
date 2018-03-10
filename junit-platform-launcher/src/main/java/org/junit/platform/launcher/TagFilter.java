@@ -32,17 +32,18 @@ import org.junit.platform.launcher.tagexpression.TagExpression;
  * based on <em>included</em> and <em>excluded</em> tags or tag expressions.
  *
  * <p>Tag expressions are boolean expressions with the following allowed
- * operators: {@code !} (not), {@code &} (and) and {@code |} (or). Parentheses
+ * operators: {@code !} (not), {@code &} (and), and {@code |} (or). Parentheses
  * can be used to adjust for operator precedence. Please refer to the
  * <a href="http://junit.org/junit5/docs/current/user-guide/#running-tests-tag-expressions">JUnit 5 User Guide</a>
  * for usage examples.
  *
  * <p>Please note that a tag name is a valid tag expression. Thus, wherever a tag
- * expressions can be used, a tag name can be used, too.
+ * expression can be used, a single tag name can also be used.
  *
  * @since 1.0
  * @see #includeTags(String...)
  * @see #excludeTags(String...)
+ * @see TestTag
  */
 @API(status = STABLE, since = "1.0")
 public final class TagFilter {
@@ -68,7 +69,7 @@ public final class TagFilter {
 	 * @see TestTag#isValid(String)
 	 */
 	public static PostDiscoveryFilter includeTags(String... tagExpressions) throws PreconditionViolationException {
-		Preconditions.notNull(tagExpressions, "array of tag expression must not be null");
+		Preconditions.notNull(tagExpressions, "array of tag expressions must not be null");
 		return includeTags(asList(tagExpressions));
 	}
 
@@ -105,7 +106,7 @@ public final class TagFilter {
 	 * @see TestTag#isValid(String)
 	 */
 	public static PostDiscoveryFilter excludeTags(String... tagExpressions) throws PreconditionViolationException {
-		Preconditions.notNull(tagExpressions, "array of tag expression must not be null");
+		Preconditions.notNull(tagExpressions, "array of tag expressions must not be null");
 		return excludeTags(asList(tagExpressions));
 	}
 
@@ -129,6 +130,7 @@ public final class TagFilter {
 
 	private static PostDiscoveryFilter includeMatching(List<String> tagExpressions,
 			BiPredicate<Stream<TagExpression>, Predicate<TagExpression>> matcher) {
+
 		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
 		List<TagExpression> parsedTagExpressions = parseAll(tagExpressions);
 		return descriptor -> {
@@ -147,4 +149,5 @@ public final class TagFilter {
 			message -> new PreconditionViolationException(
 				"Unable to parse tag expression \"" + tagExpression + "\": " + message));
 	}
+
 }

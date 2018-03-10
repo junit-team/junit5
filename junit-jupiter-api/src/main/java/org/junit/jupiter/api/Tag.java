@@ -40,12 +40,12 @@ import org.apiguardian.api.API;
  * <li>A <em>trimmed</em> tag must not contain any of the following
  * <em>reserved characters</em>.
  * <ul>
- * <li>{@code ,}</li>
- * <li>{@code (}</li>
- * <li>{@code )}</li>
- * <li>{@code &}</li>
- * <li>{@code |}</li>
- * <li>{@code !}</li>
+ * <li>{@code ,}: <em>comma</em></li>
+ * <li>{@code (}: <em>left parenthesis</em></li>
+ * <li>{@code )}: <em>right parenthesis</em></li>
+ * <li>{@code &}: <em>ampersand</em></li>
+ * <li>{@code |}: <em>vertical bar</em></li>
+ * <li>{@code !}: <em>exclamation point</em></li>
  * </ul>
  * </li>
  * </ul>

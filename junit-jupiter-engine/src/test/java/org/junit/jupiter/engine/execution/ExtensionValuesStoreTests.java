@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContextException;
@@ -202,7 +203,7 @@ class ExtensionValuesStoreTests {
 		@Test
 		void getOrComputeIfAbsentWithTypeSafetyAndInvalidRequiredTypeThrowsException() {
 			String key = "pi";
-			Float value = Float.valueOf(3.14f);
+			Float value = 3.14f;
 
 			// Store a Float...
 			store.put(namespace, key, value);
@@ -289,6 +290,19 @@ class ExtensionValuesStoreTests {
 			assertNull(store.get(namespace, key));
 		}
 
+		@RepeatedTest(23)
+		void simulateRaceConditionInGetOrComputeIfAbsent() throws Exception {
+			ExtensionValuesStore localStore = new ExtensionValuesStore(null);
+			Thread t1 = new Thread(() -> localStore.getOrComputeIfAbsent(namespace, key, key -> value));
+			Thread t2 = new Thread(() -> localStore.getOrComputeIfAbsent(namespace, key, key -> value));
+			t1.start();
+			t2.start();
+			Thread.yield();
+			localStore.getOrComputeIfAbsent(namespace, key, key -> value); // use current thread as well
+			t1.join();
+			t2.join();
+			assertEquals(value, localStore.get(namespace, key));
+		}
 	}
 
 	@Nested

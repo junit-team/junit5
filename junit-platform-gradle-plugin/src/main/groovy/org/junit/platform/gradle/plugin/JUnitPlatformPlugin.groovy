@@ -9,7 +9,7 @@
  */
 package org.junit.platform.gradle.plugin
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL
+import static org.apiguardian.api.API.Status.DEPRECATED
 
 import org.apiguardian.api.API
 import org.gradle.api.GradleException
@@ -22,8 +22,10 @@ import org.junit.platform.console.ConsoleLauncher
 
 /**
  * @since 1.0
+ * @deprecated Use Gradle's native support for JUnit Platform instead.
  */
-@API(status = EXPERIMENTAL, since = "1.0")
+@Deprecated
+@API(status = DEPRECATED, since = "1.2")
 class JUnitPlatformPlugin implements Plugin<Project> {
 
 	private static final String EXTENSION_NAME = 'junitPlatform'
@@ -71,6 +73,11 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			it.with {
 				group = JavaBasePlugin.VERIFICATION_GROUP
 				description = 'Runs tests on the JUnit Platform.'
+				doFirst {
+					getLogger().warn("WARNING: The junit-platform-gradle-plugin is deprecated and will be discontinued in JUnit Platform 1.3.")
+					getLogger().warn("Please use Gradle's native support for running tests on the JUnit Platform (requires Gradle 4.6 or higher):")
+					getLogger().warn("https://junit.org/junit5/docs/current/user-guide/#running-tests-build-gradle")
+				}
 			}
 		}
 
@@ -134,8 +141,10 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 					jvmArgs += ['--module-path', junitExtension.modulepath.asPath]
 				}
 				// Treat all modules on the path as root modules.
+				// Also add all default modules, needed on OpenJDK to resolve "java.scripting".
+				// See http://mail.openjdk.java.net/pipermail/jigsaw-dev/2018-February/thread.html#13574
 				if (!jvmArgs.contains('--add-modules')) {
-					jvmArgs += ['--add-modules', 'ALL-MODULE-PATH']
+					jvmArgs += ['--add-modules', 'ALL-MODULE-PATH,ALL-DEFAULT']
 				}
 				// Set main class name to '--module' (https://github.com/junit-team/junit5/issues/1234)
 				// The first argument will be 'org.junit.platform.console'

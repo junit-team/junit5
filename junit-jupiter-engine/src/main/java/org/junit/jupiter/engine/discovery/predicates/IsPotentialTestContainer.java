@@ -12,8 +12,8 @@ package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
-import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 import java.util.function.Predicate;
 
@@ -43,7 +43,7 @@ public class IsPotentialTestContainer implements Predicate<Class<?>> {
 		if (candidate.isAnonymousClass()) {
 			return false;
 		}
-		return (isStatic(candidate) || !candidate.isMemberClass());
+		return !isInnerClass(candidate);
 	}
 
 }

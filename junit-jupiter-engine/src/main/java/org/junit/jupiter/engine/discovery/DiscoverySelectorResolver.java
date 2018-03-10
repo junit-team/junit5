@@ -11,8 +11,8 @@
 package org.junit.jupiter.engine.discovery;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.ModuleUtils.findAllClassesInModule;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
+import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInModule;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassFilter;
 

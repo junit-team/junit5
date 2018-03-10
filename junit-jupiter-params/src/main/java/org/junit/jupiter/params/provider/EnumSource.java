@@ -36,8 +36,8 @@ import org.junit.platform.commons.util.Preconditions;
  * <p>The enum constants will be provided as arguments to the annotated
  * {@code @ParameterizedTest} method.
  *
- * <p>The set of enum constants can be restricted by listing the desired values
- * via the {@link #names} attribute.
+ * <p>The set of enum constants can be restricted via the {@link #names} and
+ * {@link #mode} attributes.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
@@ -59,8 +59,8 @@ public @interface EnumSource {
 	Class<? extends Enum<?>> value();
 
 	/**
-	 * The names of enum constants to provide, or regular expressions to
-	 * select the names of enum constants to provide.
+	 * The names of enum constants to provide, or regular expressions to select
+	 * the names of enum constants to provide.
 	 *
 	 * <p>If no names or regular expressions are specified, all enum constants
 	 * declared in the specified {@linkplain #value enum type} will be provided.
@@ -77,6 +77,10 @@ public @interface EnumSource {
 	 *
 	 * <p>Defaults to {@link Mode#INCLUDE INCLUDE}.
 	 *
+	 * @see Mode#INCLUDE
+	 * @see Mode#EXCLUDE
+	 * @see Mode#MATCH_ALL
+	 * @see Mode#MATCH_ANY
 	 * @see #names
 	 */
 	Mode mode() default Mode.INCLUDE;
@@ -137,6 +141,8 @@ public @interface EnumSource {
 		}
 
 		private static void validateNames(EnumSource enumSource, Set<String> names) {
+			// Do not map using Enum::name here since it results in a rawtypes warning
+			// that fails our Gradle build which is configured with -Werror.
 			Set<String> allNames = stream(enumSource.value().getEnumConstants()).map(e -> e.name()).collect(toSet());
 			Preconditions.condition(allNames.containsAll(names),
 				() -> "Invalid enum constant name(s) in " + enumSource + ". Valid names include: " + allNames);

@@ -525,13 +525,10 @@ public final class ReflectionUtils {
 	 * Build the <em>fully qualified method name</em> for the method described by the
 	 * supplied class, method name, and parameter types.
 	 *
-	 * <p>See {@link #loadMethod(String)} for details on the format.
-	 *
 	 * @param clazz the class that declares the method; never {@code null}
 	 * @param methodName the name of the method; never {@code null} or blank
 	 * @param parameterTypes the parameter types of the method; may be {@code null} or empty
 	 * @return fully qualified method name; never {@code null}
-	 * @see #loadMethod(String)
 	 */
 	public static String getFullyQualifiedMethodName(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
@@ -607,7 +604,9 @@ public final class ReflectionUtils {
 		return findAllClassesInClasspathRoot(root, ClassFilter.of(classNameFilter, classFilter));
 	}
 
-	@API(status = INTERNAL, since = "1.1")
+	/**
+	 * @since 1.1
+	 */
 	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, ClassFilter classFilter) {
 		return Collections.unmodifiableList(classpathScanner.scanForClassesInClasspathRoot(root, classFilter));
 	}
@@ -621,9 +620,27 @@ public final class ReflectionUtils {
 		return findAllClassesInPackage(basePackageName, ClassFilter.of(classNameFilter, classFilter));
 	}
 
-	@API(status = INTERNAL, since = "1.1")
+	/**
+	 * @since 1.1
+	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, ClassFilter classFilter) {
 		return Collections.unmodifiableList(classpathScanner.scanForClassesInPackage(basePackageName, classFilter));
+	}
+
+	/**
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInModule(String, Predicate, Predicate)
+	 */
+	public static List<Class<?>> findAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
+		// unmodifiable since returned by public, non-internal method(s)
+		return findAllClassesInModule(moduleName, ClassFilter.of(classNameFilter, classFilter));
+	}
+
+	/**
+	 * @since 1.2
+	 */
+	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter classFilter) {
+		return Collections.unmodifiableList(ModuleUtils.findAllClassesInModule(moduleName, classFilter));
 	}
 
 	/**

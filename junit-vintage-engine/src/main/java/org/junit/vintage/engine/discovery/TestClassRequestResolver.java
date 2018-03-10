@@ -69,7 +69,10 @@ class TestClassRequestResolver {
 				runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, filteredRunner, engineId);
 			}
 			else {
-				logger.warn(() -> "Runner " + runner.getClass().getName() //
+				Runner runnerToReport = (runner instanceof RunnerDecorator)
+						? ((RunnerDecorator) runner).getDecoratedRunner()
+						: runner;
+				logger.warn(() -> "Runner " + runnerToReport.getClass().getName() //
 						+ " (used on " + testClass.getName() + ") does not support filtering" //
 						+ " and will therefore be run completely.");
 			}

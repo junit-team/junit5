@@ -224,7 +224,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		junitTask instanceof JavaExec
 
 		junitTask.jvmArgs.containsAll('--module-path', project.files("abc.jar").asPath)
-		junitTask.jvmArgs.containsAll('--add-modules', 'ALL-MODULE-PATH')
+		junitTask.jvmArgs.containsAll('--add-modules', 'ALL-MODULE-PATH,ALL-DEFAULT')
 		junitTask.main == '--module'
 		junitTask.args[0] == 'org.junit.platform.console'
 		junitTask.args.contains('--scan-modules')

@@ -123,18 +123,13 @@ Once the JUnit Gradle plugin has been applied, you can configure it as follows.
 ----
 junitPlatform {
 	platformVersion '{platform-version}' // optional, defaults to plugin version
-	logManager 'org.apache.logging.log4j.jul.LogManager'
 	reportsDir file('build/test-results/junit-platform') // this is the default
 	// enableStandardTestTask true
 	// selectors (optional)
 	// filters (optional)
+	// logManager (optional)
 }
 ----
-
-Setting `logManager` instructs the JUnit Gradle plugin to set the
-`java.util.logging.manager` system property to the supplied _fully qualified class_ name
-of the `java.util.logging.LogManager` implementation to use. The above example
-demonstrates how to configure log4j as the `LogManager`.
 
 By default, the JUnit Gradle plugin disables the standard Gradle `test` task, but this
 can be overridden via the `enableStandardTestTask` flag.
@@ -273,6 +268,34 @@ dependencies {
 }
 ----
 
+[[running-tests-build-gradle-logging]]
+===== Configuring Logging (optional)
+
+JUnit uses the Java Logging APIs in the `java.util.logging` package (a.k.a. _JUL_) to
+emit warnings and debug information. Please refer to the official documentation of
+`{LogManager}` for configuration options.
+
+Alternatively, it's possible to redirect log messages to other logging frameworks such as
+{Log4j} or {Logback}. To use a logging framework that provides a custom implementation of
+`{LogManager}`, configure the `logManager` extension property of the JUnit Gradle plugin.
+This will set the `java.util.logging.manager` system property to the supplied _fully
+qualified class name_ of the `{LogManager}` implementation to use. The example below
+demonstrates how to configure Log4j{nbsp}2.x (see {Log4j_JDK_Logging_Adapter} for
+details).
+
+[source,java,indent=0]
+[subs=attributes+]
+----
+junitPlatform {
+	logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+----
+
+Other logging frameworks provide different means to redirect messages logged using
+`java.util.logging`. For example, for {Logback} you can use the
+https://www.slf4j.org/legacy.html#jul-to-slf4j[JUL to SLF4J Bridge] by adding an
+additional dependency to the runtime classpath.
+
 [[running-tests-build-gradle-junit-using]]
 ===== Using the JUnit Gradle Plugin
 
@@ -356,8 +379,7 @@ JUnit 4 and JUnit Jupiter tests via `mvn test`. The `pom.xml` file in the
 `{junit5-maven-consumer}` project demonstrates how to use it and can serve as a starting
 point.
 
-WARNING: Due to a memory leak in Surefire 2.20 and issues running on Java 9,
-the `junit-platform-surefire-provider` currently only works with Surefire 2.19.1.
+NOTE: Please use Surefire 2.21.0 with `junit-platform-surefire-provider`.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -368,7 +390,7 @@ the `junit-platform-surefire-provider` currently only works with Surefire 2.19.1
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>2.21.0</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -401,7 +423,7 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>2.21.0</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -443,7 +465,7 @@ the dependencies of the `maven-surefire-plugin` similar to the following.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>2.21.0</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -515,7 +537,7 @@ the following configuration properties.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>2.21.0</version>
 				<configuration>
 			        <properties>
 			            <includeTags>acceptance | !feature-a</includeTags>
@@ -546,7 +568,7 @@ the `configurationParameters` property and providing key-value pairs in the Java
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>2.21.0</version>
 				<configuration>
 					<properties>
 						<configurationParameters>
@@ -618,7 +640,7 @@ failed. Otherwise the exit code is `0`.
 ==== Options
 
 ----
-include::{generatedAsciiDocInputDir}/console-launcher-options.txt[]
+include::{consoleLauncherOptionsFile}[]
 ----
 
 
