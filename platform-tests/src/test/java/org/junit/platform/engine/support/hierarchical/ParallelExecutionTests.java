@@ -131,16 +131,19 @@ class ParallelExecutionTests {
 		@Test
 		void firstTest(TestReporter reporter) throws Exception {
 			incrementAndBlock(sharedResource, countDownLatch, reporter);
+			Thread.sleep(10);
 		}
 
 		@Test
 		void secondTest(TestReporter reporter) throws Exception {
 			incrementAndBlock(sharedResource, countDownLatch, reporter);
+			Thread.sleep(10);
 		}
 
 		@Test
 		void thirdTest(TestReporter reporter) throws Exception {
 			incrementAndBlock(sharedResource, countDownLatch, reporter);
+			Thread.sleep(10);
 		}
 	}
 
