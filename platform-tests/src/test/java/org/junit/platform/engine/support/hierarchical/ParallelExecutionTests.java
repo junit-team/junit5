@@ -63,7 +63,7 @@ class ParallelExecutionTests {
 		assertThat(startedTimestamps).hasSize(3);
 		assertThat(finishedTimestamps).hasSize(3);
 		assertThat(startedTimestamps).allMatch(startTimestamp -> finishedTimestamps.stream().allMatch(
-			finishedTimestamp -> finishedTimestamp.isAfter(startTimestamp)));
+			finishedTimestamp -> !finishedTimestamp.isBefore(startTimestamp)));
 		assertThat(getThreadNames(executionEvents)).hasSize(3);
 	}
 
@@ -131,17 +131,17 @@ class ParallelExecutionTests {
 
 		@Test
 		void firstTest(TestReporter reporter) throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch, reporter, Duration.ofSeconds(5));
+			incrementAndBlock(sharedResource, countDownLatch, reporter);
 		}
 
 		@Test
 		void secondTest(TestReporter reporter) throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch, reporter, Duration.ofSeconds(5));
+			incrementAndBlock(sharedResource, countDownLatch, reporter);
 		}
 
 		@Test
 		void thirdTest(TestReporter reporter) throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch, reporter, Duration.ofSeconds(5));
+			incrementAndBlock(sharedResource, countDownLatch, reporter);
 		}
 	}
 
@@ -250,15 +250,10 @@ class ParallelExecutionTests {
 
 	private static int incrementAndBlock(AtomicInteger sharedResource, CountDownLatch countDownLatch,
 			TestReporter reporter) throws InterruptedException {
-		return incrementAndBlock(sharedResource, countDownLatch, reporter, Duration.ofSeconds(1));
-	}
-
-	private static int incrementAndBlock(AtomicInteger sharedResource, CountDownLatch countDownLatch,
-			TestReporter reporter, Duration duration) throws InterruptedException {
 		reporter.publishEntry("thread", Thread.currentThread().getName());
 		int value = sharedResource.incrementAndGet();
 		countDownLatch.countDown();
-		countDownLatch.await(duration.getSeconds(), SECONDS);
+		countDownLatch.await(1, SECONDS);
 		return value;
 	}
 
