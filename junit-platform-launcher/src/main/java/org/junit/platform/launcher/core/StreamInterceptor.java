@@ -10,15 +10,12 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Optional;
 import java.util.function.Consumer;
-
-import org.junit.platform.commons.JUnitException;
 
 class StreamInterceptor extends PrintStream {
 
@@ -26,8 +23,7 @@ class StreamInterceptor extends PrintStream {
 	private final Consumer<PrintStream> unregisterAction;
 	private final int maxNumberOfBytesPerThread;
 
-	private ThreadLocal<ByteArrayOutputStream> output = ThreadLocal.withInitial(ByteArrayOutputStream::new);
-	private ThreadLocal<Boolean> active = ThreadLocal.withInitial(() -> false);
+	private ThreadLocal<Deque<ByteArrayOutputStream>> output = ThreadLocal.withInitial(ArrayDeque::new);
 
 	static Optional<StreamInterceptor> registerStdout(int maxNumberOfBytesPerThread) {
 		return register(System.out, System::setOut, maxNumberOfBytesPerThread);
@@ -47,7 +43,7 @@ class StreamInterceptor extends PrintStream {
 		return Optional.of(interceptor);
 	}
 
-	StreamInterceptor(PrintStream originalStream, Consumer<PrintStream> unregisterAction,
+	private StreamInterceptor(PrintStream originalStream, Consumer<PrintStream> unregisterAction,
 			int maxNumberOfBytesPerThread) {
 		super(originalStream);
 		this.originalStream = originalStream;
@@ -56,24 +52,12 @@ class StreamInterceptor extends PrintStream {
 	}
 
 	void capture() {
-		active.set(true);
+		output.get().addFirst(new ByteArrayOutputStream());
 	}
 
 	String consume() {
-		if (active.get()) {
-			ByteArrayOutputStream threadOutput = output.get();
-			active.set(false);
-			try {
-				return threadOutput.toString(UTF_8.toString());
-			}
-			catch (UnsupportedEncodingException e) {
-				throw new JUnitException("UTF_8 apparently isn't a supported encoding", e);
-			}
-			finally {
-				threadOutput.reset();
-			}
-		}
-		return "";
+		ByteArrayOutputStream out = output.get().pollFirst();
+		return out == null ? "" : out.toString();
 	}
 
 	void unregister() {
@@ -82,8 +66,8 @@ class StreamInterceptor extends PrintStream {
 
 	@Override
 	public void write(int b) {
-		if (active.get()) {
-			ByteArrayOutputStream out = output.get();
+		ByteArrayOutputStream out = output.get().peekFirst();
+		if (out != null) {
 			if (out.size() < maxNumberOfBytesPerThread) {
 				out.write(b);
 			}
@@ -98,8 +82,8 @@ class StreamInterceptor extends PrintStream {
 
 	@Override
 	public void write(byte[] buf, int off, int len) {
-		if (active.get()) {
-			ByteArrayOutputStream out = output.get();
+		ByteArrayOutputStream out = output.get().peekFirst();
+		if (out != null) {
 			int actualLength = Math.max(0, Math.min(len, maxNumberOfBytesPerThread - out.size()));
 			if (actualLength > 0) {
 				out.write(buf, off, actualLength);

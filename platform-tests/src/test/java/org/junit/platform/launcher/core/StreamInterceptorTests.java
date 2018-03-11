@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
@@ -40,5 +41,35 @@ class StreamInterceptorTests {
 		finally {
 			streamInterceptor.unregister();
 		}
+	}
+
+	@Test
+	void handlesNestedCaptures() {
+		StreamInterceptor streamInterceptor = StreamInterceptor.register(targetStream,
+			newStream -> this.targetStream = newStream, 100).orElseThrow(RuntimeException::new);
+
+		String outermost, inner, innermost;
+
+		streamInterceptor.capture();
+		streamInterceptor.print("before outermost - ");
+		{
+			streamInterceptor.capture();
+			streamInterceptor.print("before inner - ");
+			{
+				streamInterceptor.capture();
+				streamInterceptor.print("innermost");
+				innermost = streamInterceptor.consume();
+			}
+			streamInterceptor.print("after inner");
+			inner = streamInterceptor.consume();
+		}
+		streamInterceptor.print("after outermost");
+		outermost = streamInterceptor.consume();
+
+		assertAll(//
+			() -> assertEquals("before outermost - after outermost", outermost), //
+			() -> assertEquals("before inner - after inner", inner), //
+			() -> assertEquals("innermost", innermost) //
+		);
 	}
 }
