@@ -23,7 +23,9 @@ class StreamInterceptor extends PrintStream {
 	private final Consumer<PrintStream> unregisterAction;
 	private final int maxNumberOfBytesPerThread;
 
-	private ThreadLocal<Deque<ByteArrayOutputStream>> output = ThreadLocal.withInitial(ArrayDeque::new);
+	private final ThreadLocal<Deque<Integer>> startPositions = ThreadLocal.withInitial(ArrayDeque::new);
+	private final ThreadLocal<RewindableByteArrayOutputStream> output = ThreadLocal.withInitial(
+		RewindableByteArrayOutputStream::new);
 
 	static Optional<StreamInterceptor> registerStdout(int maxNumberOfBytesPerThread) {
 		return register(System.out, System::setOut, maxNumberOfBytesPerThread);
@@ -52,12 +54,16 @@ class StreamInterceptor extends PrintStream {
 	}
 
 	void capture() {
-		output.get().addFirst(new ByteArrayOutputStream());
+		startPositions.get().addFirst(output.get().size());
 	}
 
 	String consume() {
-		ByteArrayOutputStream out = output.get().pollFirst();
-		return out == null ? "" : out.toString();
+		Integer startPosition = startPositions.get().pollFirst();
+		if (startPosition == null) {
+			return "";
+		}
+		RewindableByteArrayOutputStream out = output.get();
+		return out.rewindTo(startPosition);
 	}
 
 	void unregister() {
@@ -66,8 +72,8 @@ class StreamInterceptor extends PrintStream {
 
 	@Override
 	public void write(int b) {
-		ByteArrayOutputStream out = output.get().peekFirst();
-		if (out != null) {
+		if (!startPositions.get().isEmpty()) {
+			ByteArrayOutputStream out = output.get();
 			if (out.size() < maxNumberOfBytesPerThread) {
 				out.write(b);
 			}
@@ -82,8 +88,8 @@ class StreamInterceptor extends PrintStream {
 
 	@Override
 	public void write(byte[] buf, int off, int len) {
-		ByteArrayOutputStream out = output.get().peekFirst();
-		if (out != null) {
+		if (!startPositions.get().isEmpty()) {
+			ByteArrayOutputStream out = output.get();
 			int actualLength = Math.max(0, Math.min(len, maxNumberOfBytesPerThread - out.size()));
 			if (actualLength > 0) {
 				out.write(buf, off, actualLength);
@@ -92,4 +98,15 @@ class StreamInterceptor extends PrintStream {
 		super.write(buf, off, len);
 	}
 
+	class RewindableByteArrayOutputStream extends ByteArrayOutputStream {
+
+		String rewindTo(int position) {
+			if (position == count) {
+				return "";
+			}
+			int length = count - position;
+			count -= length;
+			return new String(buf, position, length);
+		}
+	}
 }
