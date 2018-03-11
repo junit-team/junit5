@@ -27,7 +27,6 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.type;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
