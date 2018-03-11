@@ -27,6 +27,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.type;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -130,20 +131,17 @@ class ParallelExecutionTests {
 
 		@Test
 		void firstTest(TestReporter reporter) throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch, reporter);
-			Thread.sleep(10);
+			incrementAndBlock(sharedResource, countDownLatch, reporter, Duration.ofSeconds(5));
 		}
 
 		@Test
 		void secondTest(TestReporter reporter) throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch, reporter);
-			Thread.sleep(10);
+			incrementAndBlock(sharedResource, countDownLatch, reporter, Duration.ofSeconds(5));
 		}
 
 		@Test
 		void thirdTest(TestReporter reporter) throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch, reporter);
-			Thread.sleep(10);
+			incrementAndBlock(sharedResource, countDownLatch, reporter, Duration.ofSeconds(5));
 		}
 	}
 
@@ -252,10 +250,15 @@ class ParallelExecutionTests {
 
 	private static int incrementAndBlock(AtomicInteger sharedResource, CountDownLatch countDownLatch,
 			TestReporter reporter) throws InterruptedException {
+		return incrementAndBlock(sharedResource, countDownLatch, reporter, Duration.ofSeconds(1));
+	}
+
+	private static int incrementAndBlock(AtomicInteger sharedResource, CountDownLatch countDownLatch,
+			TestReporter reporter, Duration duration) throws InterruptedException {
 		reporter.publishEntry("thread", Thread.currentThread().getName());
 		int value = sharedResource.incrementAndGet();
 		countDownLatch.countDown();
-		countDownLatch.await(1, SECONDS);
+		countDownLatch.await(duration.getSeconds(), SECONDS);
 		return value;
 	}
 
