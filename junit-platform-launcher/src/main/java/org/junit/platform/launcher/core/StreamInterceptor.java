@@ -23,7 +23,6 @@ class StreamInterceptor extends PrintStream {
 	private final Consumer<PrintStream> unregisterAction;
 	private final int maxNumberOfBytesPerThread;
 
-	private final ThreadLocal<Deque<Integer>> startPositions = ThreadLocal.withInitial(ArrayDeque::new);
 	private final ThreadLocal<RewindableByteArrayOutputStream> output = ThreadLocal.withInitial(
 		RewindableByteArrayOutputStream::new);
 
@@ -54,16 +53,11 @@ class StreamInterceptor extends PrintStream {
 	}
 
 	void capture() {
-		startPositions.get().addFirst(output.get().size());
+		output.get().mark();
 	}
 
 	String consume() {
-		Integer startPosition = startPositions.get().pollFirst();
-		if (startPosition == null) {
-			return "";
-		}
-		RewindableByteArrayOutputStream out = output.get();
-		return out.rewindTo(startPosition);
+		return output.get().rewind();
 	}
 
 	void unregister() {
@@ -72,11 +66,9 @@ class StreamInterceptor extends PrintStream {
 
 	@Override
 	public void write(int b) {
-		if (!startPositions.get().isEmpty()) {
-			ByteArrayOutputStream out = output.get();
-			if (out.size() < maxNumberOfBytesPerThread) {
-				out.write(b);
-			}
+		RewindableByteArrayOutputStream out = output.get();
+		if (out.isMarked() && out.size() < maxNumberOfBytesPerThread) {
+			out.write(b);
 		}
 		super.write(b);
 	}
@@ -88,8 +80,8 @@ class StreamInterceptor extends PrintStream {
 
 	@Override
 	public void write(byte[] buf, int off, int len) {
-		if (!startPositions.get().isEmpty()) {
-			ByteArrayOutputStream out = output.get();
+		RewindableByteArrayOutputStream out = output.get();
+		if (out.isMarked()) {
 			int actualLength = Math.max(0, Math.min(len, maxNumberOfBytesPerThread - out.size()));
 			if (actualLength > 0) {
 				out.write(buf, off, actualLength);
@@ -100,8 +92,19 @@ class StreamInterceptor extends PrintStream {
 
 	class RewindableByteArrayOutputStream extends ByteArrayOutputStream {
 
-		String rewindTo(int position) {
-			if (position == count) {
+		private final Deque<Integer> markedPositions = new ArrayDeque<>();
+
+		boolean isMarked() {
+			return !markedPositions.isEmpty();
+		}
+
+		void mark() {
+			markedPositions.addFirst(count);
+		}
+
+		String rewind() {
+			Integer position = markedPositions.pollFirst();
+			if (position == null || position == count) {
 				return "";
 			}
 			int length = count - position;

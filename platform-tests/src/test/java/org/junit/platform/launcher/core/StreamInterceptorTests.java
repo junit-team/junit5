@@ -12,8 +12,11 @@ package org.junit.platform.launcher.core;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.stream.IntStream;
 
@@ -21,26 +24,48 @@ import org.junit.jupiter.api.Test;
 
 class StreamInterceptorTests {
 
-	private PrintStream targetStream = new PrintStream(new ByteArrayOutputStream());
+	private ByteArrayOutputStream originalOut = new ByteArrayOutputStream();
+	private PrintStream targetStream = new PrintStream(originalOut);
 
 	@Test
 	void interceptsWriteOperationsToStreamPerThread() {
 		StreamInterceptor streamInterceptor = StreamInterceptor.register(targetStream,
 			newStream -> this.targetStream = newStream, 3).orElseThrow(RuntimeException::new);
-		try {
-			// @formatter:off
-			IntStream.range(0, 1000)
-					.parallel()
-					.peek(i -> targetStream.println(i))
-					.mapToObj(String::valueOf)
-					.peek(i -> streamInterceptor.capture())
-					.peek(i -> targetStream.println(i))
-					.forEach(i -> assertEquals(i, streamInterceptor.consume().trim()));
-			// @formatter:on
-		}
-		finally {
-			streamInterceptor.unregister();
-		}
+		// @formatter:off
+		IntStream.range(0, 1000)
+				.parallel()
+				.peek(i -> targetStream.println(i))
+				.mapToObj(String::valueOf)
+				.peek(i -> streamInterceptor.capture())
+				.peek(i -> targetStream.println(i))
+				.forEach(i -> assertEquals(i, streamInterceptor.consume().trim()));
+		// @formatter:on
+	}
+
+	@Test
+	void unregisterRestoresOriginalStream() {
+		PrintStream originalStream = targetStream;
+
+		StreamInterceptor streamInterceptor = StreamInterceptor.register(targetStream,
+			newStream -> this.targetStream = newStream, 3).orElseThrow(RuntimeException::new);
+		assertSame(streamInterceptor, targetStream);
+
+		streamInterceptor.unregister();
+		assertSame(originalStream, targetStream);
+	}
+
+	@Test
+	void writeForwardsOperationsToOriginalStream() throws IOException {
+		PrintStream originalStream = targetStream;
+
+		StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream, 2).orElseThrow(
+			RuntimeException::new);
+		assertNotSame(originalStream, targetStream);
+
+		targetStream.write('a');
+		targetStream.write("b".getBytes());
+		targetStream.write("c".getBytes(), 0, 1);
+		assertEquals("abc", originalOut.toString());
 	}
 
 	@Test
