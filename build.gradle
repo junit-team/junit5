@@ -1,5 +1,3 @@
-import org.gradle.internal.jvm.Jvm
-
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
@@ -562,11 +560,11 @@ subprojects { subproj ->
 			dependsOn = [versionedProject.classes]
 			doLast {
 				project.exec {
-					executable "${Jvm.current().javaHome}/bin/jar"
+					executable "${System.properties['java.home']}/bin/jar"
 					args = ['--version']
 				}
 				project.exec {
-					executable "${Jvm.current().javaHome}/bin/jar"
+					executable "${System.properties['java.home']}/bin/jar"
 					args = ['--update','--file', archivePath,
 							'--release', version,
 							'-C', versionedProject.compileJava.destinationDir,

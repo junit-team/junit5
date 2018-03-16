@@ -1,5 +1,3 @@
-import org.gradle.internal.jvm.Jvm
-
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 dependencies {
@@ -50,7 +48,7 @@ task generateDependenciesDirectory(type: Copy) {
 
 // Execute console launcher on the module-path.
 task execScanModulepath(type: Exec, dependsOn: [generateDependenciesDirectory, generateIntegrationTestsJar]) {
-	executable = "${Jvm.current().javaHome}/bin/java"
+	executable = "${System.properties['java.home']}/bin/java"
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
 	args = [
@@ -101,7 +99,7 @@ task execNoJavaScripting(type: Exec, dependsOn: [generateDependenciesDirectory, 
 	ignoreExitValue = true
 	standardOutput = new ByteArrayOutputStream()
 	errorOutput = new ByteArrayOutputStream()
-	executable = "${Jvm.current().javaHome}/bin/java"
+	executable = "${System.properties['java.home']}/bin/java"
 	args = [
 			'--show-module-resolution',
 			'--module-path', files(generateDependenciesDirectory.destinationDir, generateIntegrationTestsJar.archivePath).asPath,
