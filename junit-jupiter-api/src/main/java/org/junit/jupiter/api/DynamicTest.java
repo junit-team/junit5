@@ -22,6 +22,7 @@ import java.util.stream.StreamSupport;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
+import org.junit.platform.commons.annotation.TestSource;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -59,7 +60,7 @@ public class DynamicTest extends DynamicNode {
 	 * @see #stream(Iterator, Function, ThrowingConsumer)
 	 */
 	public static DynamicTest dynamicTest(String displayName, Executable executable) {
-		return new DynamicTest(displayName, executable);
+		return new Builder().setDisplayName(displayName).setExecutable(executable).build();
 	}
 
 	/**
@@ -101,9 +102,9 @@ public class DynamicTest extends DynamicNode {
 
 	private final Executable executable;
 
-	private DynamicTest(String displayName, Executable executable) {
-		super(displayName);
-		this.executable = Preconditions.notNull(executable, "executable must not be null");
+	private DynamicTest(Builder builder) {
+		super(builder);
+		this.executable = Preconditions.notNull(builder.executable, "executable must not be null");
 	}
 
 	/**
@@ -113,4 +114,30 @@ public class DynamicTest extends DynamicNode {
 		return this.executable;
 	}
 
+	public static class Builder extends DynamicNode.Builder {
+
+		private Executable executable;
+
+		@Override
+		public DynamicTest build() {
+			return new DynamicTest(this);
+		}
+
+		@Override
+		public Builder setDisplayName(String displayName) {
+			super.setDisplayName(displayName);
+			return this;
+		}
+
+		@Override
+		public DynamicNode.Builder setTestSource(TestSource testSource) {
+			super.setTestSource(testSource);
+			return this;
+		}
+
+		public Builder setExecutable(Executable executable) {
+			this.executable = executable;
+			return this;
+		}
+	}
 }

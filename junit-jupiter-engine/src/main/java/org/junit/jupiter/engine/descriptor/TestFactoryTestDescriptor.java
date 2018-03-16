@@ -112,15 +112,16 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			int index, TestSource source, DynamicDescendantFilter dynamicDescendantFilter) {
 		UniqueId uniqueId;
 		Supplier<JupiterTestDescriptor> descriptorCreator;
+		TestSource testSource = getCustomTestSourceFromNode(node, source);
 		if (node instanceof DynamicTest) {
 			DynamicTest test = (DynamicTest) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
-			descriptorCreator = () -> new DynamicTestTestDescriptor(uniqueId, index, test, source);
+			descriptorCreator = () -> new DynamicTestTestDescriptor(uniqueId, index, test, testSource);
 		}
 		else {
 			DynamicContainer container = (DynamicContainer) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
-			descriptorCreator = () -> new DynamicContainerTestDescriptor(uniqueId, index, container, source,
+			descriptorCreator = () -> new DynamicContainerTestDescriptor(uniqueId, index, container, testSource,
 				dynamicDescendantFilter);
 		}
 		if (dynamicDescendantFilter.test(uniqueId)) {
@@ -129,6 +130,16 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			return Optional.of(descriptor);
 		}
 		return Optional.empty();
+	}
+
+	private static TestSource getCustomTestSourceFromNode(DynamicNode node, TestSource fallback) {
+		if (node.getTestSource().isPresent()) {
+			Object hint = node.getTestSource().get();
+			if (hint instanceof TestSource) {
+				return (TestSource) hint;
+			}
+		}
+		return fallback;
 	}
 
 	private JUnitException invalidReturnTypeException(Throwable cause) {
