@@ -390,6 +390,26 @@
     ]
   },
   {
+    "title": "Welcome to JUnit 5",
+    "event": "Indy.Code()",
+    "date": "2018-04-18",
+    "location": "Indianapolis, Indiana",
+    "link": "https://indycode.amegala.com/",
+    "speakers": [
+      "billykorando"
+    ]
+  },
+  {
+    "title": "Transitioning to JUnit 5",
+    "event": "Kansas City JUG",
+    "date": "2018-04-18",
+    "location": "Olathe, Kansas",
+    "link": "https://www.meetup.com/KansasCityJUG/events/245085280/",
+    "speakers": [
+      "dalehighfill"
+    ]
+  },
+  {
     "title": "JUnit 5 — The New Testing Framework for Java and Platform for the JVM",
     "event": "JAX",
     "date": "2018-04-25",
@@ -407,6 +427,26 @@
     "link": "https://2018.geecon.org/speakers/info.html?id=354",
     "speakers": [
       "marcphilipp"
+    ]
+  },
+  {
+    "title": "Welcome to JUnit 5",
+    "event": "Spring IO",
+    "date": "2018-05-24",
+    "location": "Barcelona, Spain",
+    "link": "https://2018.springio.net/",
+    "speakers": [
+      "billykorando"
+    ]
+  },
+  {
+    "title": "Welcome to JUnit 5",
+    "event": "SpringCon.Tech",
+    "date": "2018-06-05",
+    "location": "New Orleans, Louisana",
+    "link": "http://springcon.tech/",
+    "speakers": [
+      "billykorando"
     ]
   }
 ]
