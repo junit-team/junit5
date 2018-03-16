@@ -58,7 +58,7 @@ html {
 	min-height: 100%;
 }
 body {
-	margin-bottom: $footer_height;
+	margin-bottom: $footer_height * 2;
 }
 footer {
 	padding-top: ($footer_height - ($line-height-base * $font-size-base)) / 2;

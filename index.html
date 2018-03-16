@@ -30,8 +30,16 @@ title: JUnit 5
     {% capture junit5-intro %}{% include junit5-intro.md %}{% endcapture %}
     {{ junit5-intro | markdownify }}
   </div>
-  <div id="events" class="col-md-4 col-sm-6">
+  <div class="col-md-4 col-sm-6">
     <h2>Upcoming Events</h2>
-    <script defer type="text/javascript" src="{{ site.baseurl }}/assets/js/events.js"></script>
+    <div id="events">
+      <script defer type="text/javascript" src="{{ site.baseurl }}/assets/js/events.js"></script>
+    </div>
+    <div>
+      <a class="btn btn-default btn-xs" href="https://github.com/junit-team/junit5/wiki/Adding-your-talk-to-the-JUnit-website" role="button">
+        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;
+        Add your talk
+      </a>
+    </div>
   </div>
 </div>
