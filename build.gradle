@@ -560,11 +560,11 @@ subprojects { subproj ->
 			dependsOn = [versionedProject.classes]
 			doLast {
 				project.exec {
-					executable 'jar'
+					executable "${System.properties['java.home']}/bin/jar"
 					args = ['--version']
 				}
 				project.exec {
-					executable 'jar'
+					executable "${System.properties['java.home']}/bin/jar"
 					args = ['--update','--file', archivePath,
 							'--release', version,
 							'-C', versionedProject.compileJava.destinationDir,
