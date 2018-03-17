@@ -3760,8 +3760,8 @@ tests with a <a href="#running-tests-junit-platform-runner">JUnit 4 based Runner
 <div class="paragraph">
 <p>Starting with <a href="https://docs.gradle.org/4.6/release-notes.html">version 4.6</a>, Gradle provides
 <a href="https://docs.gradle.org/current/userguide/java_plugin.html#using_junit5">native support</a>
-for executing tests on the JUnit Platform. To enable it, you just need to add one line to
-your <code>build.gradle</code>:</p>
+for executing tests on the JUnit Platform. To enable it, you just need to specify
+<code>useJUnitPlatform()</code> within a <code>test</code> task declaration in <code>build.gradle</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3810,9 +3810,11 @@ in JUnit Platform 1.2 and will be discontinued in 1.3. Please switch to Gradle&#
 <div class="sect4">
 <h5 id="running-tests-build-gradle-config-params"><a class="anchor" href="#running-tests-build-gradle-config-params"></a>Configuration Parameters</h5>
 <div class="paragraph">
-<p>The standard <code>test</code> tasks does currently not provide a dedicated DSL to set configuration
-parameters to influence test discovery and execution. However, you can use system
-properties instead.</p>
+<p>The standard Gradle <code>test</code> task currently does not provide a dedicated DSL to set JUnit
+Platform <a href="#running-tests-config-params">configuration parameters</a> to influence test
+discovery and execution. However, you can provide configuration parameters within the
+build script via system properties (as shown below) or via the
+<code>junit-platform.properties</code> file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3847,9 +3849,9 @@ implementation similar to the following.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The JUnit Platform can run JUnit 4 based tests as long as you configure a
-<code>testCompile</code> dependency on JUnit 4 and a <code>testRuntime</code> dependency on the JUnit Vintage
-<code>TestEngine</code> implementation similar to the following.</p>
+<p>The JUnit Platform can run JUnit 4 based tests as long as you configure a <code>testCompile</code>
+dependency on JUnit 4 and a <code>testRuntime</code> dependency on the JUnit Vintage <code>TestEngine</code>
+implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3870,7 +3872,7 @@ emit warnings and debug information. Please refer to the official documentation 
 <div class="paragraph">
 <p>Alternatively, it&#8217;s possible to redirect log messages to other logging frameworks such as
 <a href="https://logging.apache.org/log4j/2.x/">Log4j</a> or <a href="https://logback.qos.ch/">Logback</a>. To use a logging framework that provides a custom implementation of
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code>, set the <code>java.util.logging.manager</code> system property to the supplied <em>fully
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code>, set the <code>java.util.logging.manager</code> system property to the <em>fully
 qualified class name</em> of the <code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code> implementation to use. The example below
 demonstrates how to configure Log4j&#160;2.x (see <a href="https://logging.apache.org/log4j/2.x/log4j-jul/index.html">Log4j JDK Logging Adapter</a> for
 details).</p>
@@ -3905,7 +3907,7 @@ point.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Please use Surefire 2.21.0 with <code>junit-platform-surefire-provider</code>.
+Please use Maven Surefire 2.21.0 with the <code>junit-platform-surefire-provider</code>.
 </td>
 </tr>
 </table>
@@ -4050,6 +4052,9 @@ the following patterns.</p>
 <p><code>**/*Test.java</code></p>
 </li>
 <li>
+<p><code>**/*Tests.java</code> <em>(supported since Surefire 2.20)</em></p>
+</li>
+<li>
 <p><code>**/*TestCase.java</code></p>
 </li>
 </ul>
@@ -4105,9 +4110,10 @@ the following configuration properties.</p>
 <div class="sect4">
 <h5 id="running-tests-build-maven-config-params"><a class="anchor" href="#running-tests-build-maven-config-params"></a>Configuration Parameters</h5>
 <div class="paragraph">
-<p>You can set configuration parameters to influence test discovery and execution by using
-the <code>configurationParameters</code> property and providing key-value pairs in the Java
-<code>Properties</code> file syntax.</p>
+<p>You can set JUnit Platform <a href="#running-tests-config-params">configuration parameters</a> to
+influence test discovery and execution by declaring the <code>configurationParameters</code>
+property and providing key-value pairs using the Java <code>Properties</code> file syntax (as shown
+below) or via the <code>junit-platform.properties</code> file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4467,9 +4473,9 @@ details.
 <div class="paragraph">
 <p>In addition to instructing the platform which test classes and test engines to include,
 which packages to scan, etc., it is sometimes necessary to provide additional custom
-configuration parameters that are specific to a particular test engine. For example, the
-JUnit Jupiter <code>TestEngine</code> supports <em>configuration parameters</em> for the following use
-cases.</p>
+configuration parameters that are specific to a particular test engine or registered
+extension. For example, the JUnit Jupiter <code>TestEngine</code> supports <em>configuration
+parameters</em> for the following use cases.</p>
 </div>
 <div class="ulist">
 <ul>
