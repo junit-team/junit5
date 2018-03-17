@@ -4,7 +4,6 @@ pipeline {
     jdk 'Oracle JDK 9'
   }
   options {
-    ansiColor('xterm')
     buildDiscarder(logRotator(numToKeepStr: '10'))
   }
   stages {
