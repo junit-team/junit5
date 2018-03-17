@@ -10,71 +10,35 @@
 
 package org.junit.jupiter.params.aggregator;
 
-import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.params.converter.ArgumentConversionException;
-import org.junit.platform.commons.util.Preconditions;
+public interface ArgumentsAccessor {
 
-public class ArgumentsAccessor {
+	Object[] toArray();
 
-	private final Object[] arguments;
+	List<Object> toList();
 
-	public ArgumentsAccessor(Object[] arguments) {
-		Preconditions.notNull(arguments, "ArgumentsAccessor initialized with null arguments");
-		this.arguments = arguments;
-	}
+	int getSize();
 
-	public Object get(int index) {
-		Preconditions.condition(index >= 0 && index < arguments.length,
-			String.format("Index must be between 0 and %d", arguments.length));
-		return arguments[index];
-	}
+	Object get(int index);
 
-	public Object[] toArray() {
-		return arguments;
-	}
+	Object getAs(Class<?> clazz, int index);
 
-	public List<Object> toList() {
-		return Arrays.asList(arguments);
-	}
+	Character getChar(int index);
 
-	public Integer getInt(int index) {
-		return (Integer) getAs(Integer.class, index);
-	}
+	Boolean getBoolean(int index);
 
-	public String getString(int index) {
-		return (String) getAs(String.class, index);
-	}
+	Byte getByte(int index);
 
-	public Long getLong(int index) {
-		return (Long) getAs(Long.class, index);
-	}
+	Short getShort(int index);
 
-	public Float getFloat(int index) {
-		return (Float) getAs(Float.class, index);
-	}
+	Integer getInt(int index);
 
-	public Double getDouble(int index) {
-		return (Double) getAs(Double.class, index);
-	}
+	Long getLong(int index);
 
-	public Object getAs(Class<?> clazz, int index) {
-		Preconditions.condition(index >= 0 && index < arguments.length,
-			String.format("Index must be between 0 and %d", arguments.length));
-		try {
-			return clazz.cast(arguments[index]);
-		}
-		catch (ClassCastException e) {
-			throw new ArgumentConversionException(
-				String.format("Incompatible parameter conversion from [ %s ] to  [ %s ]",
-					arguments[index].getClass().getSimpleName(), clazz.getSimpleName()),
-				e);
-		}
-	}
+	Float getFloat(int index);
 
-	public int getSize() {
-		return arguments.length;
-	}
+	Double getDouble(int index);
 
+	String getString(int index);
 }

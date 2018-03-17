@@ -19,6 +19,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface AggregateWith {
 	Class<? extends ArgumentsAggregator> value();
-
-	int[] range() default {};
 }

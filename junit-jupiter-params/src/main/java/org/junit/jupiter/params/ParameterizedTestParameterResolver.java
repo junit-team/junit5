@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.DefaultArgumentsAccessor;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
@@ -52,17 +53,20 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 			throws ParameterResolutionException {
 		return isAggregate(parameterContext) ? aggregate(parameterContext, extensionContext)
 				: convert(parameterContext, extensionContext);
+
 	}
 
-	public Object convert(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	private Object convert(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Parameter parameter = parameterContext.getParameter();
 		Object argument = arguments[parameterContext.getIndex()];
 		Optional<ConvertWith> annotation = AnnotationUtils.findAnnotation(parameter, ConvertWith.class);
 		// @formatter:off;
+
 		ArgumentConverter argumentConverter = annotation.map(ConvertWith::value)
 				.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
 				.map(converter -> AnnotationConsumerInitializer.initialize(parameter, converter))
-				.orElse	(DefaultArgumentConverter.INSTANCE);
+				.orElse	(DefaultArgumentConverter.INSTANCE
+				);
 		// @formatter:on
 		try {
 			return argumentConverter.convert(argument, parameterContext);
@@ -74,18 +78,18 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	}
 
 	// An aggregate parameter resolution requires passing all method arguments
-	public boolean isAggregate(ParameterContext context) {
+	private boolean isAggregate(ParameterContext context) {
 		Parameter parameter = context.getParameter();
-		return parameter.getType().equals(ArgumentsAccessor.class)
+		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
 				|| AnnotationUtils.isAnnotated(parameter, AggregateWith.class);
 	}
 
-	public Object aggregate(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	private Object aggregate(ParameterContext parameterContext, ExtensionContext extensionContext) {
 
-		Optional<AggregateWith> annotation = AnnotationUtils.findAnnotation(parameterContext.getParameter(),
-			AggregateWith.class);
-		ArgumentsAccessor accessor = new ArgumentsAccessor(arguments);
-		return annotation.map(annot -> annot.value()).map(clazz -> ReflectionUtils.newInstance(clazz)).map(
+		Parameter parameter = parameterContext.getParameter();
+		Optional<AggregateWith> annotation = AnnotationUtils.findAnnotation(parameter, AggregateWith.class);
+		ArgumentsAccessor accessor = new DefaultArgumentsAccessor(arguments);
+		return annotation.map(AggregateWith::value).map(clazz -> ReflectionUtils.newInstance(clazz)).map(
 			aggregator -> aggregator.aggregateArguments(accessor)).orElse(accessor);
 	}
 }

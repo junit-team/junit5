@@ -11,5 +11,5 @@
 package org.junit.jupiter.params.aggregator;
 
 public interface ArgumentsAggregator {
-	public Object aggregateArguments(ArgumentsAccessor accessor);
+	Object aggregateArguments(ArgumentsAccessor accessor);
 }
