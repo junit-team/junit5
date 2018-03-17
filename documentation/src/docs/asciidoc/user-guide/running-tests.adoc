@@ -87,8 +87,8 @@ tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
 
 Starting with https://docs.gradle.org/4.6/release-notes.html[version 4.6], Gradle provides
 https://docs.gradle.org/current/userguide/java_plugin.html#using_junit5[native support]
-for executing tests on the JUnit Platform. To enable it, you just need to add one line to
-your `build.gradle`:
+for executing tests on the JUnit Platform. To enable it, you just need to specify
+`useJUnitPlatform()` within a `test` task declaration in `build.gradle`:
 
 [source,java,indent=0]
 [subs=attributes+]
@@ -128,9 +128,11 @@ in JUnit Platform 1.2 and will be discontinued in 1.3. Please switch to Gradle's
 [[running-tests-build-gradle-config-params]]
 ===== Configuration Parameters
 
-The standard `test` tasks does currently not provide a dedicated DSL to set configuration
-parameters to influence test discovery and execution. However, you can use system
-properties instead.
+The standard Gradle `test` task currently does not provide a dedicated DSL to set JUnit
+Platform <<running-tests-config-params, configuration parameters>> to influence test
+discovery and execution. However, you can provide configuration parameters within the
+build script via system properties (as shown below) or via the
+`junit-platform.properties` file.
 
 [source,java,indent=0]
 ----
@@ -163,9 +165,9 @@ dependencies {
 }
 ----
 
-The JUnit Platform can run JUnit 4 based tests as long as you configure a
-`testCompile` dependency on JUnit 4 and a `testRuntime` dependency on the JUnit Vintage
-`TestEngine` implementation similar to the following.
+The JUnit Platform can run JUnit 4 based tests as long as you configure a `testCompile`
+dependency on JUnit 4 and a `testRuntime` dependency on the JUnit Vintage `TestEngine`
+implementation similar to the following.
 
 [source,java,indent=0]
 [subs=attributes+]
@@ -185,7 +187,7 @@ emit warnings and debug information. Please refer to the official documentation 
 
 Alternatively, it's possible to redirect log messages to other logging frameworks such as
 {Log4j} or {Logback}. To use a logging framework that provides a custom implementation of
-`{LogManager}`, set the `java.util.logging.manager` system property to the supplied _fully
+`{LogManager}`, set the `java.util.logging.manager` system property to the _fully
 qualified class name_ of the `{LogManager}` implementation to use. The example below
 demonstrates how to configure Log4j{nbsp}2.x (see {Log4j_JDK_Logging_Adapter} for
 details).
@@ -211,7 +213,7 @@ JUnit 4 and JUnit Jupiter tests via `mvn test`. The `pom.xml` file in the
 `{junit5-maven-consumer}` project demonstrates how to use it and can serve as a starting
 point.
 
-NOTE: Please use Surefire 2.21.0 with `junit-platform-surefire-provider`.
+NOTE: Please use Maven Surefire 2.21.0 with the `junit-platform-surefire-provider`.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -345,6 +347,7 @@ the following patterns.
 
 - `+**/Test*.java+`
 - `+**/*Test.java+`
+- `+**/*Tests.java+` _(supported since Surefire 2.20)_
 - `+**/*TestCase.java+`
 
 Note, however, that you can override this default behavior by configuring explicit
@@ -388,9 +391,10 @@ the following configuration properties.
 [[running-tests-build-maven-config-params]]
 ===== Configuration Parameters
 
-You can set configuration parameters to influence test discovery and execution by using
-the `configurationParameters` property and providing key-value pairs in the Java
-`Properties` file syntax.
+You can set JUnit Platform <<running-tests-config-params, configuration parameters>> to
+influence test discovery and execution by declaring the `configurationParameters`
+property and providing key-value pairs using the Java `Properties` file syntax (as shown
+below) or via the `junit-platform.properties` file.
 
 [source,xml,indent=0]
 ----
@@ -569,9 +573,9 @@ details.
 
 In addition to instructing the platform which test classes and test engines to include,
 which packages to scan, etc., it is sometimes necessary to provide additional custom
-configuration parameters that are specific to a particular test engine. For example, the
-JUnit Jupiter `TestEngine` supports _configuration parameters_ for the following use
-cases.
+configuration parameters that are specific to a particular test engine or registered
+extension. For example, the JUnit Jupiter `TestEngine` supports _configuration
+parameters_ for the following use cases.
 
 - <<writing-tests-test-instance-lifecycle-changing-default>>
 - <<extensions-registration-automatic-enabling>>
