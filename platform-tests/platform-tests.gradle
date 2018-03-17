@@ -49,7 +49,6 @@ dependencies {
 	testRuntimeOnly('org.codehaus.groovy:groovy-jsr223:' + GroovySystem.getVersion()) {
 		because 'Tests annotated with @EnabledIf(engine = "groovy", ...) need it.'
 	}
-	testRuntimeOnly('net.sf.jopt-simple:jopt-simple:5.0.4')
 
 	// --- http://openjdk.java.net/projects/code-tools/jmh/ -----------------------
 	jmh("org.openjdk.jmh:jmh-core:${jmhVersion}")
