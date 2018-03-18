@@ -77,4 +77,16 @@ public class TheoryParameterDetails {
     public Optional<? extends Annotation> getParameterSupplierAnnotation() {
         return parameterSupplierAnnotation;
     }
+
+    @Override
+    public String toString() {
+        return "TheoryParameterDetails{" +
+                "index=" + index +
+                ", type=" + type +
+                ", nonPrimitiveType=" + nonPrimitiveType +
+                ", name='" + name + '\'' +
+                ", qualifiers=" + qualifiers +
+                ", parameterSupplierAnnotation=" + parameterSupplierAnnotation +
+                '}';
+    }
 }

@@ -7,6 +7,8 @@ import java.io.PrintWriter;
  * Special wrapper exception used to modify the message of an exception without modifying its stack trace.
  */
 public class MessageModifyingWrapperException extends Throwable {
+    private static final long serialVersionUID = -5452185844058139L;
+
     private final String additionalDetails;
     private final Throwable wrapped;
 

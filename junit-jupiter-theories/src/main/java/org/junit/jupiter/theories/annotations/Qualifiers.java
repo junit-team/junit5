@@ -1,8 +1,13 @@
 package org.junit.jupiter.theories.annotations;
 
+import java.lang.annotation.*;
+
 /**
  * Annotation that limits the data points that are applicable for a {@link Theory}.
  */
+@Target(ElementType.PARAMETER)
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Qualifiers {
     /**
      * The qualifier(s) for this data point parameter. If qualifiers are provided, the annotated parameter will be run only with data points that have the

@@ -3,8 +3,8 @@ package org.junit.jupiter.theories;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.theories.annotations.Qualifiers;
 import org.junit.jupiter.theories.annotations.Theory;
-import org.junit.jupiter.theories.annotations.TheoryParam;
 import org.junit.jupiter.theories.annotations.suppliers.ParametersSuppliedBy;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
@@ -12,8 +12,10 @@ import org.junit.jupiter.theories.exceptions.DataPointRetrievalException;
 import org.junit.jupiter.theories.suppliers.ParameterArgumentSupplier;
 import org.junit.jupiter.theories.util.DataPointRetriever;
 import org.junit.jupiter.theories.util.TheoryDisplayNameFormatter;
+import org.junit.jupiter.theories.util.WellKnownTypesUtils;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -39,12 +41,9 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 
     private static final ConcurrentMap<Class<? extends Annotation>, ParameterArgumentSupplier> THEORY_PARAMETER_SUPPLIER_CACHE = new ConcurrentHashMap<>();
 
-    private static final List<DataPointDetails> BOOLEAN_DATA_POINT_DETAILS = Arrays.asList(
-            new DataPointDetails(false, Collections.emptyList(), "Automatic boolean data point generation"),
-            new DataPointDetails(true, Collections.emptyList(), "Automatic boolean data point generation")
-    );
-
     private final DataPointRetriever dataPointRetriever = new DataPointRetriever();
+
+    private final WellKnownTypesUtils wellKnownTypesUtils = new WellKnownTypesUtils();
 
     @Override
     public boolean supportsTestTemplate(ExtensionContext context) {
@@ -57,12 +56,12 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
         Method testMethod = context.getRequiredTestMethod();
         Theory theoryAnnotation = testMethod.getAnnotation(Theory.class);
 
-        List<TheoryParameterDetails> theoryParameterDetails = getTheoryParameters(testMethod);
+        List<DataPointDetails> dataPoints = dataPointRetriever.getAllDataPoints(context);
 
-        Stream<DataPointDetails> dataPoints = dataPointRetriever.getAllDataPoints(context);
+        List<TheoryParameterDetails> theoryParameterDetails = getTheoryParameters(testMethod, dataPoints);
 
         Map<Integer, List<DataPointDetails>> perParameterDataPoints = buildPerParameterDataPoints(
-                testMethod.toString(), theoryParameterDetails, dataPoints.collect(toList()));
+                testMethod.toString(), theoryParameterDetails, dataPoints);
 
         List<Map<Integer, DataPointDetails>> permutations = buildInputParamPermutations(perParameterDataPoints);
 
@@ -77,16 +76,26 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 
 
     /**
-     * Get the details for all of the parameters marked with {@link TheoryParam} for the provided method.
+     * Get the details for all of the parameters that can be populated using the provided data points.
      *
      * @param testMethod the method to inspect
      * @return a {@code List} of parameter details
      */
-    private List<TheoryParameterDetails> getTheoryParameters(Method testMethod) {
+    private List<TheoryParameterDetails> getTheoryParameters(Method testMethod, List<DataPointDetails> dataPointDetails) {
+        List<Class<?>> dataPointTypes = dataPointDetails.stream()
+                .map(DataPointDetails::getValue)
+                .map(Object::getClass)
+                .distinct()
+                .collect(toList());
+
         testMethod.setAccessible(true);
         Parameter[] params = testMethod.getParameters();
         return IntStream.range(0, params.length)
-                .filter(i -> AnnotationUtils.isAnnotated(params[i], TheoryParam.class))
+                .filter(i -> {
+                    Class<?> boxedParameterType = ReflectionUtils.getBoxedClass(params[i].getType());
+                    return dataPointTypes.stream().anyMatch(dataPointType -> dataPointType.isAssignableFrom(boxedParameterType)
+                            || wellKnownTypesUtils.isKnownType(boxedParameterType));
+                })
                 .mapToObj(i -> {
                     Parameter parameter = params[i];
                     return buildTheoryParameterDetails(i, parameter);
@@ -102,10 +111,13 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
      * @return the constructed details
      */
     private TheoryParameterDetails buildTheoryParameterDetails(int parameterIndex, Parameter parameter) {
-        List<String> qualifiers = Stream.of(parameter.getAnnotation(TheoryParam.class).qualifiers())
-                .map(String::trim)
-                .filter(String::isEmpty)
-                .collect(toList());
+        List<String> qualifiers = Optional.ofNullable(parameter.getAnnotation(Qualifiers.class))
+                .map(Qualifiers::value)
+                .map(v -> Stream.of(v)
+                        .map(String::trim)
+                        .filter(String::isEmpty)
+                        .collect(toList()))
+                .orElseGet(Collections::emptyList);
 
         Optional<? extends Annotation> parameterSupplierAnnotation = getParameterSupplierAnnotation(parameter);
 
@@ -193,12 +205,9 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
             return result;
         }
 
-        if (theoryParameterDetails.getNonPrimitiveType() == Boolean.class) {
-            return BOOLEAN_DATA_POINT_DETAILS;
-        }
-
-        if (Enum.class.isAssignableFrom(theoryParameterDetails.getNonPrimitiveType())) {
-            return buildDataPointDetailsFromEnumValues(theoryParameterDetails);
+        Optional<List<DataPointDetails>> wellKnownDataPointDetails = wellKnownTypesUtils.getDataPointDetails(theoryParameterDetails);
+        if (wellKnownDataPointDetails.isPresent()) {
+            return wellKnownDataPointDetails.get();
         }
 
         String errorMessage = "No data points found for parameter \"" + theoryParameterDetails.getName() + "\" (index "
@@ -246,20 +255,6 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
         throw new DataPointRetrievalException("Parameter supplier for parameter \"" + theoryParameterDetails.getName() + "\" (index "
                 + theoryParameterDetails.getIndex() + ") of method \"" + testMethodName + "\" returned incorrect type(s). Expected: "
                 + theoryParameterDetails.getNonPrimitiveType().getCanonicalName() + ", but found " + nonMatchingValueTypes);
-    }
-
-
-    /**
-     * Builds a list of {@link DataPointDetails} from a {@linke TheoryParameterDetails} that references an parater that accepts an enum value.
-     *
-     * @param theoryParameterDetails the parameter details to process. Must reference a type that is an enum.
-     * @return the constructed data point details
-     */
-    private List<DataPointDetails> buildDataPointDetailsFromEnumValues(TheoryParameterDetails theoryParameterDetails) {
-        Object[] enumValues = theoryParameterDetails.getType().getEnumConstants();
-        return Stream.of(enumValues)
-                .map(v -> new DataPointDetails(v, Collections.EMPTY_LIST, "Automatic enum data point generation"))
-                .collect(toList());
     }
 
     /**
