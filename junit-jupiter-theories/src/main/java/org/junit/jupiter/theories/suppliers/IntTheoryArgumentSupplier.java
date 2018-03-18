@@ -6,18 +6,17 @@ import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
 /**
  * Argument supplier for {@code int} arguments.
  */
-public class IntParameterArgumentSupplier extends AbstractParameterArgumentSupplier<IntValues> {
+public class IntTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<IntValues> {
     /**
      * Constructor.
      */
-    public IntParameterArgumentSupplier() {
+    public IntTheoryArgumentSupplier() {
         super(IntValues.class);
     }
 

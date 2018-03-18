@@ -1,6 +1,6 @@
 package org.junit.jupiter.theories.annotations.suppliers;
 
-import org.junit.jupiter.theories.suppliers.IntParameterArgumentSupplier;
+import org.junit.jupiter.theories.suppliers.IntTheoryArgumentSupplier;
 
 import java.lang.annotation.*;
 
@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.PARAMETER)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@ParametersSuppliedBy(IntParameterArgumentSupplier.class)
+@ArgumentsSuppliedBy(IntTheoryArgumentSupplier.class)
 public @interface IntValues {
     /**
      * @return the value(s) to use for the annotated theory parameter

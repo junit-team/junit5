@@ -1,6 +1,6 @@
 package org.junit.jupiter.theories.annotations.suppliers;
 
-import org.junit.jupiter.theories.suppliers.FloatParameterArgumentSupplier;
+import org.junit.jupiter.theories.suppliers.FloatTheoryArgumentSupplier;
 
 import java.lang.annotation.*;
 
@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.PARAMETER)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@ParametersSuppliedBy(FloatParameterArgumentSupplier.class)
+@ArgumentsSuppliedBy(FloatTheoryArgumentSupplier.class)
 public @interface FloatValues {
     /**
      * @return the value(s) to use for the annotated theory parameter

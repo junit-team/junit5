@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @param <U> the type for the corresponding parameter argument supplier annotation
  */
-public abstract class AbstractParameterArgumentSupplier<U extends Annotation> implements ParameterArgumentSupplier {
+public abstract class AbstractTheoryArgumentSupplier<U extends Annotation> implements TheoryArgumentSupplier {
     private final Class<U> annotationClass;
 
     /**
@@ -20,7 +20,7 @@ public abstract class AbstractParameterArgumentSupplier<U extends Annotation> im
      *
      * @param annotationClass the class for the corresponding parameter argument supplier annotation
      */
-    public AbstractParameterArgumentSupplier(Class<U> annotationClass) {
+    public AbstractTheoryArgumentSupplier(Class<U> annotationClass) {
         this.annotationClass = annotationClass;
     }
 

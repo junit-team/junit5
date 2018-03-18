@@ -1,6 +1,6 @@
 package org.junit.jupiter.theories.annotations.suppliers;
 
-import org.junit.jupiter.theories.suppliers.ShortParameterArgumentSupplier;
+import org.junit.jupiter.theories.suppliers.ShortTheoryArgumentSupplier;
 
 import java.lang.annotation.*;
 
@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.PARAMETER)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@ParametersSuppliedBy(ShortParameterArgumentSupplier.class)
+@ArgumentsSuppliedBy(ShortTheoryArgumentSupplier.class)
 public @interface ShortValues {
     /**
      * @return the value(s) to use for the annotated theory parameter

@@ -1,6 +1,6 @@
 package org.junit.jupiter.theories.annotations.suppliers;
 
-import org.junit.jupiter.theories.suppliers.LongParameterArgumentSupplier;
+import org.junit.jupiter.theories.suppliers.LongTheoryArgumentSupplier;
 
 import java.lang.annotation.*;
 
@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.PARAMETER)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@ParametersSuppliedBy(LongParameterArgumentSupplier.class)
+@ArgumentsSuppliedBy(LongTheoryArgumentSupplier.class)
 public @interface LongValues {
     /**
      * @return the value(s) to use for the annotated theory parameter
