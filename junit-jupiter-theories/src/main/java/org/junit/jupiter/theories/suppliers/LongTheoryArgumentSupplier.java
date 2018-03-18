@@ -1,28 +1,27 @@
 package org.junit.jupiter.theories.suppliers;
 
-import org.junit.jupiter.theories.annotations.suppliers.DoubleValues;
+import org.junit.jupiter.theories.annotations.suppliers.LongValues;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
 /**
- * Argument supplier for {@code double} arguments.
+ * Argument supplier for {@code long} arguments.
  */
-public class DoubleParameterArgumentSupplier extends AbstractParameterArgumentSupplier<DoubleValues> {
+public class LongTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<LongValues> {
     /**
      * Constructor.
      */
-    public DoubleParameterArgumentSupplier() {
-        super(DoubleValues.class);
+    public LongTheoryArgumentSupplier() {
+        super(LongValues.class);
     }
 
     @Override
-    protected List<DataPointDetails> buildArguments(TheoryParameterDetails parameterDetails, DoubleValues annotationToParse) {
+    protected List<DataPointDetails> buildArguments(TheoryParameterDetails parameterDetails, LongValues annotationToParse) {
         return Arrays.stream(annotationToParse.value())
                 .boxed()
                 .map(this::toDataPointDetails)

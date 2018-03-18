@@ -1,6 +1,6 @@
 package org.junit.jupiter.theories.annotations.suppliers;
 
-import org.junit.jupiter.theories.suppliers.ByteParameterArgumentSupplier;
+import org.junit.jupiter.theories.suppliers.ByteTheoryArgumentSupplier;
 
 import java.lang.annotation.*;
 
@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.PARAMETER)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@ParametersSuppliedBy(ByteParameterArgumentSupplier.class)
+@ArgumentsSuppliedBy(ByteTheoryArgumentSupplier.class)
 public @interface ByteValues {
     /**
      * @return the value(s) to use for the annotated theory parameter

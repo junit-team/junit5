@@ -1,6 +1,6 @@
 package org.junit.jupiter.theories.annotations.suppliers;
 
-import org.junit.jupiter.theories.suppliers.ParameterArgumentSupplier;
+import org.junit.jupiter.theories.suppliers.TheoryArgumentSupplier;
 
 import java.lang.annotation.*;
 
@@ -11,9 +11,9 @@ import java.lang.annotation.*;
 @Target({ElementType.ANNOTATION_TYPE, ElementType.PARAMETER})
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ParametersSuppliedBy {
+public @interface ArgumentsSuppliedBy {
     /**
      * @return the type that converts the meta-annotated annotation into data point details
      */
-    Class<? extends ParameterArgumentSupplier> value();
+    Class<? extends TheoryArgumentSupplier> value();
 }

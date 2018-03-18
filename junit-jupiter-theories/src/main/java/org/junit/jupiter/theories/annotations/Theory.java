@@ -4,6 +4,7 @@ import org.junit.jupiter.theories.TheoriesTestExtension;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.theories.annotations.suppliers.ArgumentsSuppliedBy;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -50,7 +51,7 @@ import java.lang.annotation.Target;
  * <p>
  * You can also specify the exact values for a theory parameter using parameter argument supplier annotations. For example, the
  * {@link org.junit.jupiter.theories.annotations.suppliers.IntValues} annotation may be used to specify an array of integer values to test against.
- * Parameter argument supplier annotations are specified via the {@link org.junit.jupiter.theories.annotations.suppliers.ParametersSuppliedBy}
+ * Parameter argument supplier annotations are specified via the {@link ArgumentsSuppliedBy}
  * meta-annotation. See annotations in the package {@link org.junit.jupiter.theories.annotations.suppliers} for provided suppliers.
  */
 //TODO: Revamp documentation now that TheoryParams has been removed

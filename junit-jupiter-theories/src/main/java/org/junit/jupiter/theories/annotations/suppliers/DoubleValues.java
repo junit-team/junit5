@@ -1,6 +1,6 @@
 package org.junit.jupiter.theories.annotations.suppliers;
 
-import org.junit.jupiter.theories.suppliers.DoubleParameterArgumentSupplier;
+import org.junit.jupiter.theories.suppliers.DoubleTheoryArgumentSupplier;
 
 import java.lang.annotation.*;
 
@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Target(ElementType.PARAMETER)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@ParametersSuppliedBy(DoubleParameterArgumentSupplier.class)
+@ArgumentsSuppliedBy(DoubleTheoryArgumentSupplier.class)
 public @interface DoubleValues {
     /**
      * @return the value(s) to use for the annotated theory parameter

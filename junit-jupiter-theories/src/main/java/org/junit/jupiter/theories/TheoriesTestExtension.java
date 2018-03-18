@@ -5,11 +5,11 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.theories.annotations.Qualifiers;
 import org.junit.jupiter.theories.annotations.Theory;
-import org.junit.jupiter.theories.annotations.suppliers.ParametersSuppliedBy;
+import org.junit.jupiter.theories.annotations.suppliers.ArgumentsSuppliedBy;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 import org.junit.jupiter.theories.exceptions.DataPointRetrievalException;
-import org.junit.jupiter.theories.suppliers.ParameterArgumentSupplier;
+import org.junit.jupiter.theories.suppliers.TheoryArgumentSupplier;
 import org.junit.jupiter.theories.util.DataPointRetriever;
 import org.junit.jupiter.theories.util.TheoryDisplayNameFormatter;
 import org.junit.jupiter.theories.util.WellKnownTypesUtils;
@@ -39,7 +39,7 @@ import static java.util.stream.Collectors.*;
  */
 public class TheoriesTestExtension implements TestTemplateInvocationContextProvider {
 
-    private static final ConcurrentMap<Class<? extends Annotation>, ParameterArgumentSupplier> THEORY_PARAMETER_SUPPLIER_CACHE = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<? extends Annotation>, TheoryArgumentSupplier> THEORY_PARAMETER_SUPPLIER_CACHE = new ConcurrentHashMap<>();
 
     private final DataPointRetriever dataPointRetriever = new DataPointRetriever();
 
@@ -132,14 +132,14 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
     }
 
     /**
-     * Locates the annotation (if present) that has the {@link ParametersSuppliedBy} meta-annotation.
+     * Locates the annotation (if present) that has the {@link ArgumentsSuppliedBy} meta-annotation.
      *
      * @param parameter the parameter to parse
      * @return the extracted annotation or {@link Optional#EMPTY} if no annotation is found
      */
     private Optional<? extends Annotation> getParameterSupplierAnnotation(Parameter parameter) {
         List<? extends Annotation> annotations = Stream.of(parameter.getAnnotations())
-                .filter(v -> AnnotationSupport.isAnnotated(v.getClass(), ParametersSuppliedBy.class))
+                .filter(v -> AnnotationSupport.isAnnotated(v.getClass(), ArgumentsSuppliedBy.class))
                 .collect(toList());
         if (annotations.isEmpty()) {
             return Optional.empty();
@@ -219,7 +219,7 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
     }
 
     /**
-     * Builds a list of data point details for an annotation that is meta-annotated with the {@link ParametersSuppliedBy} annotation.
+     * Builds a list of data point details for an annotation that is meta-annotated with the {@link ArgumentsSuppliedBy} annotation.
      *
      * @param testMethodName the name of the method being processed
      * @param theoryParameterDetails the theory parameter details to process
@@ -227,11 +227,11 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
      */
     private List<DataPointDetails> buildDataPointDetailsFromParameterSupplierAnnotation(String testMethodName, TheoryParameterDetails theoryParameterDetails) {
         Annotation parameterSupplierAnnotation = theoryParameterDetails.getParameterSupplierAnnotation().get();
-        ParameterArgumentSupplier supplier = THEORY_PARAMETER_SUPPLIER_CACHE.computeIfAbsent(parameterSupplierAnnotation.getClass(), v -> {
+        TheoryArgumentSupplier supplier = THEORY_PARAMETER_SUPPLIER_CACHE.computeIfAbsent(parameterSupplierAnnotation.getClass(), v -> {
             //Don't need to check isPresent here, since it was checked before adding it to the theory parameter details
-            Class<? extends ParameterArgumentSupplier> supplierClass = AnnotationSupport.findAnnotation(v, ParametersSuppliedBy.class).get().value();
+            Class<? extends TheoryArgumentSupplier> supplierClass = AnnotationSupport.findAnnotation(v, ArgumentsSuppliedBy.class).get().value();
             try {
-                Constructor<? extends ParameterArgumentSupplier> supplierConstructor = supplierClass.getConstructor();
+                Constructor<? extends TheoryArgumentSupplier> supplierConstructor = supplierClass.getConstructor();
                 return supplierConstructor.newInstance();
             } catch (ReflectiveOperationException error) {
                 throw new IllegalStateException("Unable to instantiate parameter argument supplier " + supplierClass.getCanonicalName() + ". Reason: "
