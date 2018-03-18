@@ -20,6 +20,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 /**
@@ -32,11 +33,9 @@ public class DataPointRetriever {
      * @param context the evaluation context
      * @return a {@code Stream} of data point details
      */
-    public Stream<DataPointDetails> getAllDataPoints(ExtensionContext context) {
-        return Stream.concat(
-                getIndividualDataPointValues(context),
-                getDataPointCollectionValues(context)
-        );
+    public List<DataPointDetails> getAllDataPoints(ExtensionContext context) {
+        return Stream.concat(getIndividualDataPointValues(context), getDataPointCollectionValues(context))
+                .collect(toList());
     }
 
 
@@ -130,6 +129,7 @@ public class DataPointRetriever {
      * @param qualifiers the qualifiers (if any) for this data point
      * @return a {@code Stream} of data points
      */
+    @SuppressWarnings("unchecked")
     private static Stream<DataPointDetails> buildDataPointsWithCollectionExpansion(Member valueSourceReference, Object valueToProcessIntoDataPoints,
             List<String> qualifiers) {
 

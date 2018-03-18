@@ -4,6 +4,7 @@ import org.junit.jupiter.theories.annotations.suppliers.IntValues;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -22,7 +23,8 @@ public class IntParameterArgumentSupplier extends AbstractParameterArgumentSuppl
 
     @Override
     protected List<DataPointDetails> buildArguments(TheoryParameterDetails parameterDetails, IntValues annotationToParse) {
-        return Stream.of(annotationToParse.value())
+        return Arrays.stream(annotationToParse.value())
+                .boxed()
                 .map(this::toDataPointDetails)
                 .collect(toList());
     }

@@ -4,6 +4,7 @@ import org.junit.jupiter.theories.annotations.suppliers.StringValues;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -22,7 +23,7 @@ public class StringParameterArgumentSupplier extends AbstractParameterArgumentSu
 
     @Override
     protected List<DataPointDetails> buildArguments(TheoryParameterDetails parameterDetails, StringValues annotationToParse) {
-        return Stream.of(annotationToParse.value())
+        return Arrays.stream(annotationToParse.value())
                 .map(this::toDataPointDetails)
                 .collect(toList());
     }

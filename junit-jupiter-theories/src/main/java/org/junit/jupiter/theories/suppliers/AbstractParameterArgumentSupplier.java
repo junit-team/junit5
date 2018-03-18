@@ -47,6 +47,7 @@ public abstract class AbstractParameterArgumentSupplier<U extends Annotation> im
      * @param <V> the expected annotation type
      * @return the cast annotation
      */
+    @SuppressWarnings("unchecked")
     protected <V extends Annotation> V castAnnotationToExpectedType(Annotation annotationToCast, Class<V> expectedType) {
         if (!expectedType.isInstance(annotationToCast)) {
             throw new IllegalStateException("Expected annotation of type " + expectedType.getCanonicalName() + " but received annotation of type "

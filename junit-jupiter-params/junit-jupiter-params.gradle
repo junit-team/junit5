@@ -35,6 +35,8 @@ dependencies {
 
 	shadowed('com.univocity:univocity-parsers:2.6.3')
 
+	testRuntime("org.junit.jupiter:junit-jupiter-engine:5.1.0")
+
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
 	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))

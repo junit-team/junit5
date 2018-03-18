@@ -5,6 +5,7 @@ import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 
 import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -22,7 +23,9 @@ public class ShortParameterArgumentSupplier extends AbstractParameterArgumentSup
 
     @Override
     protected List<DataPointDetails> buildArguments(TheoryParameterDetails parameterDetails, ShortValues annotationToParse) {
-        return Stream.of(annotationToParse.value())
+        short[] values = annotationToParse.value();
+        return IntStream.range(0, values.length)
+                .mapToObj(i -> values[i])
                 .map(this::toDataPointDetails)
                 .collect(toList());
     }

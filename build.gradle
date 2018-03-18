@@ -92,6 +92,7 @@ ext {
 		'junit-jupiter-engine',
 		'junit-jupiter-migrationsupport',
 		'junit-jupiter-params',
+		'junit-jupiter-theories',
 		'junit-vintage-engine',
 		'junit-platform-surefire-provider',
 		'platform-tests'

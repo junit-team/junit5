@@ -45,7 +45,7 @@ import java.lang.annotation.Target;
  * <p>
  * This test will be called six times (3 string data points * 2 boolean data points). Since boolean is a well-know type, no data points have to be specified.
  * <p>
- * The set of applicable data points for a theory parameter can be further limited via qualifiers. (See {@link TheoryParam#qualifiers()} for details about how
+ * The set of applicable data points for a theory parameter can be further limited via qualifiers. (See {@link Qualifiers#value()} for details about how
  * qualifiers work.)
  * <p>
  * You can also specify the exact values for a theory parameter using parameter argument supplier annotations. For example, the
@@ -53,6 +53,7 @@ import java.lang.annotation.Target;
  * Parameter argument supplier annotations are specified via the {@link org.junit.jupiter.theories.annotations.suppliers.ParametersSuppliedBy}
  * meta-annotation. See annotations in the package {@link org.junit.jupiter.theories.annotations.suppliers} for provided suppliers.
  */
+//TODO: Revamp documentation now that TheoryParams has been removed
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @TestTemplate

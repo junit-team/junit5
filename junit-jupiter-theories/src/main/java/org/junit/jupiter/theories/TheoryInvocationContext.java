@@ -1,7 +1,6 @@
 package org.junit.jupiter.theories;
 
 import org.junit.jupiter.api.extension.*;
-import org.junit.jupiter.theories.annotations.TheoryParam;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.exceptions.MessageModifyingWrapperException;
 import org.junit.jupiter.theories.util.TheoryDisplayNameFormatter;
@@ -75,7 +74,7 @@ public class TheoryInvocationContext implements TestTemplateInvocationContext {
     private class TheoryParameterResolver implements ParameterResolver {
         @Override
         public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-            return AnnotationUtils.isAnnotated(parameterContext.getParameter(), TheoryParam.class);
+            return theoryParameterArguments.containsKey(parameterContext.getIndex());
         }
 
 
