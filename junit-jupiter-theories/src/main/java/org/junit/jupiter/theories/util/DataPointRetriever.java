@@ -7,10 +7,7 @@ import org.junit.jupiter.theories.exceptions.DataPointRetrievalException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -103,6 +100,9 @@ public class DataPointRetriever {
         }
         try {
             return method.invoke(instance);
+        } catch (InvocationTargetException error) {
+            Throwable cause = error.getCause();
+            throw new DataPointRetrievalException("Error retrieving data point from method. Reason: " + cause.toString(), cause);
         } catch (ReflectiveOperationException error) {
             throw new DataPointRetrievalException("Error retrieving data point from method. Reason: " + error.toString(), error);
         }
@@ -142,11 +142,13 @@ public class DataPointRetriever {
         } else if (valueToProcessIntoDataPoints.getClass().isArray()) {
             valuesStream = Arrays.stream((Object[]) valueToProcessIntoDataPoints);
         } else {
-            //NOTE: Support for Streams and Iterators is intentionally left out because the fact that they're stateful causes issues if there are multiple
-            //theories in the same test class.
-            return Stream.of(valueToProcessIntoDataPoints)
-                    .map(v -> new DataPointDetails(v, qualifiers, getDataPointSourceNameAtIndex(valueSourceReference, 0)));
+            throw new DataPointRetrievalException("Element " + valueSourceReference.getDeclaringClass() + "." + valueSourceReference.getName()
+                    + " was annotated with @Datapoints, but its type (" + valueToProcessIntoDataPoints.getClass()
+                    + ") is not a recognized group of datapoints");
         }
+
+        //NOTE: Support for Streams and Iterators is intentionally left out because the fact that they're stateful causes issues if there are multiple
+        //theories in the same test class.
 
         AtomicInteger valueIndex = new AtomicInteger(0);
         return valuesStream
@@ -226,8 +228,7 @@ public class DataPointRetriever {
                         Object referencedValue = retrievalOperation.apply(instanceToGetFieldFrom, reference);
                         return dataPointDetailsFactory.buildDataPoints(reference, referencedValue, qualifiers);
                     } catch (DataPointRetrievalException error) {
-                        throw new RuntimeException("Error retrieving data point \"" + reference + "\". " + error.toString(),
-                                error);
+                        throw new DataPointRetrievalException("Error retrieving data point \"" + reference + "\". " + error.toString(), error);
                     }
                 });
     }
