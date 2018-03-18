@@ -67,9 +67,9 @@ public abstract class SupplierTestBase<T extends TheoryArgumentSupplier, U exten
         assertThat(actualValues).containsExactlyElementsOf(expectedValues);
     }
 
-    //----------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Test helper methods/classes
-    //----------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     protected TheoryParameterDetails getFakeTheoryParameterDetails() {
         return new TheoryParameterDetails(0, typeProducedBySupplier, "testParameter", Collections.emptyList(), Optional.empty());
     }
