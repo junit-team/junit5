@@ -16,6 +16,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.opentest4j.TestAbortedException;
 
 /**
  * Simple component that can be used to collect one or more instances of
@@ -55,6 +56,10 @@ public class ThrowableCollector {
 		Preconditions.notNull(t, "Throwable must not be null");
 
 		if (this.throwable == null) {
+			this.throwable = t;
+		}
+		else if (this.throwable instanceof TestAbortedException && !(t instanceof TestAbortedException)) {
+			t.addSuppressed(this.throwable);
 			this.throwable = t;
 		}
 		else {

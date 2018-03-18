@@ -12,6 +12,7 @@ package org.junit.jupiter.engine;
 
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -44,6 +45,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.opentest4j.AssertionFailedError;
+import org.opentest4j.TestAbortedException;
 
 /**
  * Integration tests that verify correct exception handling in the {@link JupiterTestEngine}.
@@ -143,6 +145,28 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 					message("unchecked"), //
 					suppressed(0, allOf(isA(IOException.class), message("checked")))))), //
 			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void exceptionInAfterEachTakesPrecedenceOverFailedAssumptionInTest() throws NoSuchMethodException {
+		Method method = FailureTestCase.class.getDeclaredMethod("abortedTest");
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
+
+		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(FailureTestCase.class), started()), //
+			event(test("abortedTest"), started()), //
+			event(test("abortedTest"), //
+				finishedWithFailure(allOf( //
+					isA(IOException.class), //
+					message("checked"), //
+					suppressed(0, allOf(isA(TestAbortedException.class)))))), //
+			event(container(FailureTestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -281,6 +305,11 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void testWithCheckedException() throws IOException {
 			throw new IOException("checked");
+		}
+
+		@Test
+		void abortedTest() {
+			assumeFalse(true, "abortedTest");
 		}
 
 	}
