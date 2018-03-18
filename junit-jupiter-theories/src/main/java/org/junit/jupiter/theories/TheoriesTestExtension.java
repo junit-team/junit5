@@ -56,7 +56,7 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
         Method testMethod = context.getRequiredTestMethod();
         Theory theoryAnnotation = testMethod.getAnnotation(Theory.class);
 
-        List<DataPointDetails> dataPoints = dataPointRetriever.getAllDataPoints(context);
+        List<DataPointDetails> dataPoints = dataPointRetriever.getAllDataPoints(context.getRequiredTestClass(), context.getTestInstance());
 
         List<TheoryParameterDetails> theoryParameterDetails = getTheoryParameters(testMethod, dataPoints);
 
