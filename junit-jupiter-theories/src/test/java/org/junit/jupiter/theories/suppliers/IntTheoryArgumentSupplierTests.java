@@ -5,6 +5,9 @@ import org.junit.jupiter.theories.annotations.suppliers.IntValues;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
+/**
+ * Tests for {@link IntTheoryArgumentSupplier}.
+ */
 class IntTheoryArgumentSupplierTests extends SupplierTestBase<IntTheoryArgumentSupplier, IntValues, Integer> {
     public IntTheoryArgumentSupplierTests() {
         super(IntTheoryArgumentSupplier.class, IntValues.class, Integer.class);

@@ -5,6 +5,9 @@ import org.junit.jupiter.theories.annotations.suppliers.LongValues;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
+/**
+ * Tests for {@link LongTheoryArgumentSupplier}.
+ */
 class LongTheoryArgumentSupplierTests extends SupplierTestBase<LongTheoryArgumentSupplier, LongValues, Long> {
     public LongTheoryArgumentSupplierTests() {
         super(LongTheoryArgumentSupplier.class, LongValues.class, Long.class);

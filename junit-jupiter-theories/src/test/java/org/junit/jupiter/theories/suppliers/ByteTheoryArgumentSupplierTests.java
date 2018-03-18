@@ -5,6 +5,9 @@ import org.junit.jupiter.theories.annotations.suppliers.ByteValues;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
+/**
+ * Tests for {@link ByteTheoryArgumentSupplier}.
+ */
 class ByteTheoryArgumentSupplierTests extends SupplierTestBase<ByteTheoryArgumentSupplier, ByteValues, Byte> {
     public ByteTheoryArgumentSupplierTests() {
         super(ByteTheoryArgumentSupplier.class, ByteValues.class, Byte.class);
