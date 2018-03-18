@@ -5,6 +5,9 @@ import org.junit.jupiter.theories.annotations.suppliers.FloatValues;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
+/**
+ * Tests for {@link FloatTheoryArgumentSupplier}.
+ */
 class FloatTheoryArgumentSupplierTests extends SupplierTestBase<FloatTheoryArgumentSupplier, FloatValues, Float> {
     public FloatTheoryArgumentSupplierTests() {
         super(FloatTheoryArgumentSupplier.class, FloatValues.class, Float.class);

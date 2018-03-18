@@ -5,6 +5,9 @@ import org.junit.jupiter.theories.annotations.suppliers.ShortValues;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
+/**
+ * Tests for {@link ShortTheoryArgumentSupplier}.
+ */
 class ShortTheoryArgumentSupplierTests extends SupplierTestBase<ShortTheoryArgumentSupplier, ShortValues, Short> {
     public ShortTheoryArgumentSupplierTests() {
         super(ShortTheoryArgumentSupplier.class, ShortValues.class, Short.class);

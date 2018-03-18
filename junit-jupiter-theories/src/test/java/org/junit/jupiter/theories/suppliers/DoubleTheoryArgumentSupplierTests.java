@@ -5,6 +5,9 @@ import org.junit.jupiter.theories.annotations.suppliers.DoubleValues;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
+/**
+ * Tests for {@link DoubleTheoryArgumentSupplier}.
+ */
 class DoubleTheoryArgumentSupplierTests extends SupplierTestBase<DoubleTheoryArgumentSupplier, DoubleValues, Double> {
 
     public DoubleTheoryArgumentSupplierTests() {
