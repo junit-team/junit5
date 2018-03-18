@@ -9,6 +9,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,9 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Utility class that encapsulates the processing for argument suppliers ({@link ArgumentsSuppliedBy} and {@link TheoryArgumentSupplier}).
+ */
 public class ArgumentSupplierUtils {
     private static final ConcurrentMap<Class<? extends Annotation>, TheoryArgumentSupplier> THEORY_PARAMETER_SUPPLIER_CACHE = new ConcurrentHashMap<>();
 
@@ -35,13 +39,7 @@ public class ArgumentSupplierUtils {
         if (annotations.isEmpty()) {
             return Optional.empty();
         }
-        if (annotations.size() > 1) {
-            String annotationsAsString = annotations.stream()
-                    .map(Object::toString)
-                    .collect(joining(", "));
-            throw new IllegalStateException("Only one parameter supplier annotation may be used per method parameter. Parameter " + parameter.toString()
-                    + " has " + annotations.size() + " supplier annotations: " + annotationsAsString);
-        }
+        //Can't have more than one in the list, since the annotation isn't repeatable
         return Optional.of(annotations.get(0));
     }
 
@@ -53,13 +51,19 @@ public class ArgumentSupplierUtils {
      * @return the constructed data point details
      */
     public List<DataPointDetails> buildDataPointDetailsFromParameterSupplierAnnotation(String testMethodName, TheoryParameterDetails theoryParameterDetails) {
-        Annotation parameterSupplierAnnotation = theoryParameterDetails.getParameterSupplierAnnotation().get();
-        TheoryArgumentSupplier supplier = THEORY_PARAMETER_SUPPLIER_CACHE.computeIfAbsent(parameterSupplierAnnotation.getClass(), v -> {
+        Annotation parameterArgumentSupplierAnnotation = theoryParameterDetails.getArgumentSupplierAnnotation()
+                .orElseThrow(() -> new IllegalArgumentException("buildDataPointDetailsFromParameterSupplierAnnotation called with theory parameter details " +
+                        "that did not contain a argument supplier annotation"));
+        TheoryArgumentSupplier supplier = THEORY_PARAMETER_SUPPLIER_CACHE.computeIfAbsent(parameterArgumentSupplierAnnotation.getClass(), v -> {
             //Don't need to check isPresent here, since it was checked before adding it to the theory parameter details
             Class<? extends TheoryArgumentSupplier> supplierClass = AnnotationSupport.findAnnotation(v, ArgumentsSuppliedBy.class).get().value();
             try {
                 Constructor<? extends TheoryArgumentSupplier> supplierConstructor = supplierClass.getConstructor();
+                supplierConstructor.setAccessible(true);
                 return supplierConstructor.newInstance();
+            } catch (InvocationTargetException error) {
+                throw new IllegalStateException("Unable to instantiate parameter argument supplier " + supplierClass.getCanonicalName() + ". Reason: "
+                        + error.getCause().toString(), error.getCause());
             } catch (ReflectiveOperationException error) {
                 throw new IllegalStateException("Unable to instantiate parameter argument supplier " + supplierClass.getCanonicalName() + ". Reason: "
                         + error.toString(), error);
@@ -67,7 +71,7 @@ public class ArgumentSupplierUtils {
         });
 
         List<DataPointDetails> dataPointDetailsFromSupplier = supplier.buildArgumentsFromSupplierAnnotation(theoryParameterDetails,
-                parameterSupplierAnnotation);
+                parameterArgumentSupplierAnnotation);
 
         if (dataPointDetailsFromSupplier.stream().allMatch(v -> theoryParameterDetails.getNonPrimitiveType().isInstance(v.getValue()))) {
             return dataPointDetailsFromSupplier;
@@ -79,8 +83,16 @@ public class ArgumentSupplierUtils {
                 .distinct()
                 .map(Class::getCanonicalName)
                 .collect(joining(", "));
-        throw new DataPointRetrievalException("Parameter supplier for parameter \"" + theoryParameterDetails.getName() + "\" (index "
+        throw new IllegalStateException("Parameter supplier for parameter \"" + theoryParameterDetails.getName() + "\" (index "
                 + theoryParameterDetails.getIndex() + ") of method \"" + testMethodName + "\" returned incorrect type(s). Expected: "
                 + theoryParameterDetails.getNonPrimitiveType().getCanonicalName() + ", but found " + nonMatchingValueTypes);
+    }
+
+    /**
+     * Clears the supplier cache.
+     */
+    //Present for testing
+    static void clearCache() {
+        THEORY_PARAMETER_SUPPLIER_CACHE.clear();
     }
 }

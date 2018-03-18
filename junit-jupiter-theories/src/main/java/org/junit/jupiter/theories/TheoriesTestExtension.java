@@ -5,28 +5,22 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.theories.annotations.Qualifiers;
 import org.junit.jupiter.theories.annotations.Theory;
-import org.junit.jupiter.theories.annotations.suppliers.ArgumentsSuppliedBy;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 import org.junit.jupiter.theories.exceptions.DataPointRetrievalException;
-import org.junit.jupiter.theories.suppliers.TheoryArgumentSupplier;
 import org.junit.jupiter.theories.util.ArgumentSupplierUtils;
 import org.junit.jupiter.theories.util.DataPointRetriever;
 import org.junit.jupiter.theories.util.TheoryDisplayNameFormatter;
 import org.junit.jupiter.theories.util.WellKnownTypesUtils;
-import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -182,7 +176,7 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
     private List<DataPointDetails> getDataPointsForParameter(String testMethodName, TheoryParameterDetails theoryParameterDetails,
             List<DataPointDetails> dataPointDetails) {
 
-        if (theoryParameterDetails.getParameterSupplierAnnotation().isPresent()) {
+        if (theoryParameterDetails.getArgumentSupplierAnnotation().isPresent()) {
             return argumentSupplierUtils.buildDataPointDetailsFromParameterSupplierAnnotation(testMethodName, theoryParameterDetails);
         }
 

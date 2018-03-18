@@ -1,7 +1,6 @@
 package org.junit.jupiter.theories.domain;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.theories.annotations.suppliers.IntValues;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -33,7 +32,7 @@ class TheoryParameterDetailsTests {
         Class<?> actualNonPrimitiveType = objectUnderTest.getNonPrimitiveType();
         String actualName = objectUnderTest.getName();
         List<String> actualQualifiers = objectUnderTest.getQualifiers();
-        Optional<? extends Annotation> actualParameterSupplierAnnotation = objectUnderTest.getParameterSupplierAnnotation();
+        Optional<? extends Annotation> actualParameterSupplierAnnotation = objectUnderTest.getArgumentSupplierAnnotation();
 
         //Verify
         assertEquals(expectedIndex, actualIndex);

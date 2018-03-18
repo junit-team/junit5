@@ -3,6 +3,7 @@ package org.junit.jupiter.theories.domain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Domain object that contains all of the information about a data point.
@@ -58,5 +59,21 @@ public class DataPointDetails {
                 .append(sourceName)
                 .append(")")
                 .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof DataPointDetails)) {
+            return false;
+        }
+        DataPointDetails other = (DataPointDetails) o;
+        return Objects.equals(value, other.value) &&
+                Objects.equals(qualifiers, other.qualifiers) &&
+                Objects.equals(sourceName, other.sourceName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, qualifiers, sourceName);
     }
 }

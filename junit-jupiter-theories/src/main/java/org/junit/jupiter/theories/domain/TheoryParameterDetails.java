@@ -3,10 +3,7 @@ package org.junit.jupiter.theories.domain;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Domain object that contains all of the information about a theory parameter.
@@ -27,15 +24,15 @@ public class TheoryParameterDetails {
      * @param type the type for this parameter
      * @param name the name of this parameter
      * @param qualifiers the qualifiers (if any) for this parameter
-     * @param parameterSupplierAnnotation the data point parameter supplier annotation (if any) for this parameter
+     * @param argumentSupplierAnnotation the parameter argument supplier annotation (if any) for this parameter
      */
-    public TheoryParameterDetails(int index, Class<?> type, String name, List<String> qualifiers, Optional<? extends Annotation> parameterSupplierAnnotation) {
+    public TheoryParameterDetails(int index, Class<?> type, String name, List<String> qualifiers, Optional<? extends Annotation> argumentSupplierAnnotation) {
         this.index = index;
         this.type = type;
         this.nonPrimitiveType = ReflectionUtils.getBoxedClass(type);
         this.name = name;
         this.qualifiers = Collections.unmodifiableList(new ArrayList<>(qualifiers));
-        this.parameterSupplierAnnotation = parameterSupplierAnnotation;
+        this.parameterSupplierAnnotation = argumentSupplierAnnotation;
     }
 
     /**
@@ -74,9 +71,9 @@ public class TheoryParameterDetails {
     }
 
     /**
-     * @return the data point parameter supplier annotation (if any) for this parameter
+     * @return the parameter argument supplier annotation (if any) for this parameter
      */
-    public Optional<? extends Annotation> getParameterSupplierAnnotation() {
+    public Optional<? extends Annotation> getArgumentSupplierAnnotation() {
         return parameterSupplierAnnotation;
     }
 
@@ -90,5 +87,24 @@ public class TheoryParameterDetails {
                 ", qualifiers=" + qualifiers +
                 ", parameterSupplierAnnotation=" + parameterSupplierAnnotation +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof TheoryParameterDetails)) {
+            return false;
+        }
+        TheoryParameterDetails other = (TheoryParameterDetails) o;
+        return index == other.index
+                && Objects.equals(type, other.type)
+                && Objects.equals(nonPrimitiveType, other.nonPrimitiveType)
+                && Objects.equals(name, other.name)
+                && Objects.equals(qualifiers, other.qualifiers)
+                && Objects.equals(parameterSupplierAnnotation, other.parameterSupplierAnnotation);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(index, type, nonPrimitiveType, name, qualifiers, parameterSupplierAnnotation);
     }
 }
