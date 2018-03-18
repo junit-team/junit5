@@ -19,7 +19,7 @@ public @interface DataPoints {
     /**
      * @return the qualifier(s) for these data points. Can be empty.
      *
-     * @see TheoryParam#qualifiers() for additional information on how qualifiers work
+     * @see Qualifiers for additional information on how qualifiers work
      */
     String[] qualifiers() default {};
 }
