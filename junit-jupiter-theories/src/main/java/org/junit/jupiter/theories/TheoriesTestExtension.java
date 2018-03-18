@@ -108,9 +108,11 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
         Parameter[] params = testMethod.getParameters();
         return IntStream.range(0, params.length)
                 .filter(i -> {
-                    Class<?> boxedParameterType = ReflectionUtils.getBoxedClass(params[i].getType());
+                    Parameter parameter = params[i];
+                    Class<?> boxedParameterType = ReflectionUtils.getBoxedClass(parameter.getType());
                     return dataPointTypes.stream().anyMatch(dataPointType -> dataPointType.isAssignableFrom(boxedParameterType)
-                            || wellKnownTypesUtils.isKnownType(boxedParameterType));
+                            || wellKnownTypesUtils.isKnownType(boxedParameterType)
+                            || argumentSupplierUtils.getParameterSupplierAnnotation(parameter).isPresent());
                 })
                 .mapToObj(i -> {
                     Parameter parameter = params[i];
