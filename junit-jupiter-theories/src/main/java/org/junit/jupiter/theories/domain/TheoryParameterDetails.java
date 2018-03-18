@@ -3,6 +3,8 @@ package org.junit.jupiter.theories.domain;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +34,7 @@ public class TheoryParameterDetails {
         this.type = type;
         this.nonPrimitiveType = ReflectionUtils.getBoxedClass(type);
         this.name = name;
-        this.qualifiers = qualifiers;
+        this.qualifiers = Collections.unmodifiableList(new ArrayList<>(qualifiers));
         this.parameterSupplierAnnotation = parameterSupplierAnnotation;
     }
 

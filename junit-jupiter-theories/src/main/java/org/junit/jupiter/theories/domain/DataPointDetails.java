@@ -1,6 +1,7 @@
 package org.junit.jupiter.theories.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public class DataPointDetails {
      */
     public DataPointDetails(Object value, List<String> qualifiers, String sourceName) {
         this.value = value;
-        this.qualifiers = qualifiers;
+        this.qualifiers = Collections.unmodifiableList(new ArrayList<>(qualifiers));
         this.sourceName = sourceName;
     }
 
@@ -38,7 +39,7 @@ public class DataPointDetails {
      * @return qualifiers (if any) for this data point
      */
     public List<String> getQualifiers() {
-        return new ArrayList<>(qualifiers);
+        return qualifiers;
     }
 
 
