@@ -30,11 +30,12 @@ public class DataPointRetriever {
     /**
      * Gets all data point details from the provided context.
      *
-     * @param context the evaluation context
+     * @param testClass the test class to extract data points from
+     * @param testInstance the (optional) test instance to extract data points from
      * @return a {@code Stream} of data point details
      */
-    public List<DataPointDetails> getAllDataPoints(ExtensionContext context) {
-        return Stream.concat(getIndividualDataPointValues(context), getDataPointCollectionValues(context))
+    public List<DataPointDetails> getAllDataPoints(Class<?> testClass, Optional<Object> testInstance) {
+        return Stream.concat(getIndividualDataPointValues(testClass, testInstance), getDataPointCollectionValues(testClass, testInstance))
                 .collect(toList());
     }
 
@@ -42,14 +43,15 @@ public class DataPointRetriever {
     /**
      * Retrieves individual data point values (i.e. those marked with {@line DataPoint}).
      *
-     * @param context the context
+     * @param testClass the test class to extract data points from
+     * @param testInstance the (optional) test instance to extract data points from
      * @return the retrieved data points
      */
-    private Stream<DataPointDetails> getIndividualDataPointValues(ExtensionContext context) {
+    private Stream<DataPointDetails> getIndividualDataPointValues(Class<?> testClass, Optional<Object> testInstance) {
         return Stream.concat(
-                getValues(context, DataPoint.class, DataPoint::qualifiers, Class::getDeclaredFields,
+                getValues(testClass, testInstance, DataPoint.class, DataPoint::qualifiers, Class::getDeclaredFields,
                         DataPointRetriever::getFieldValue, DataPointRetriever::buildDataPoint),
-                getValues(context, DataPoint.class, DataPoint::qualifiers, Class::getDeclaredMethods,
+                getValues(testClass, testInstance, DataPoint.class, DataPoint::qualifiers, Class::getDeclaredMethods,
                         DataPointRetriever::getMethodValue, DataPointRetriever::buildDataPoint)
         );
     }
@@ -58,14 +60,15 @@ public class DataPointRetriever {
     /**
      * Retrieves collections of data point values (i.e. those marked with {@line DataPoints}).
      *
-     * @param context the context
+     * @param testClass the test class to extract data points from
+     * @param testInstance the (optional) test instance to extract data points from
      * @return the retrieved data points
      */
-    private Stream<DataPointDetails> getDataPointCollectionValues(ExtensionContext context) {
+    private Stream<DataPointDetails> getDataPointCollectionValues(Class<?> testClass, Optional<Object> testInstance) {
         return Stream.concat(
-                getValues(context, DataPoints.class, DataPoints::qualifiers, Class::getDeclaredFields,
+                getValues(testClass, testInstance, DataPoints.class, DataPoints::qualifiers, Class::getDeclaredFields,
                         DataPointRetriever::getFieldValue, DataPointRetriever::buildDataPointsWithCollectionExpansion),
-                getValues(context, DataPoints.class, DataPoints::qualifiers, Class::getDeclaredMethods,
+                getValues(testClass, testInstance, DataPoints.class, DataPoints::qualifiers, Class::getDeclaredMethods,
                         DataPointRetriever::getMethodValue, DataPointRetriever::buildDataPointsWithCollectionExpansion)
         );
     }
@@ -139,8 +142,8 @@ public class DataPointRetriever {
         } else if (valueToProcessIntoDataPoints.getClass().isArray()) {
             valuesStream = Arrays.stream((Object[]) valueToProcessIntoDataPoints);
         } else {
-            //NOTE: Support for Streams and Iterators is intentionally left out because the fact that they're stateful causes concerns about
-            //whether tests will be deterministic or not
+            //NOTE: Support for Streams and Iterators is intentionally left out because the fact that they're stateful causes issues if there are multiple
+            //theories in the same test class.
             return Stream.of(valueToProcessIntoDataPoints)
                     .map(v -> new DataPointDetails(v, qualifiers, getDataPointSourceNameAtIndex(valueSourceReference, 0)));
         }
@@ -177,7 +180,8 @@ public class DataPointRetriever {
     /**
      * Builds one type of data point details.
      *
-     * @param context the context
+     * @param testClass the test class to extract data points from
+     * @param testInstance the (optional) test instance to extract data points from
      * @param targetAnnotation the data point annotation to search for
      * @param qualifierExtractor the extractor that will pull qualifiers from the target annotation
      * @param classElementReferenceExtractor the extractor that will retrieve elements (methods/functions) from the class
@@ -187,19 +191,17 @@ public class DataPointRetriever {
      * @param <U> the target annotation type
      * @return the constructed data points
      */
-    private <T extends AccessibleObject & Member, U extends Annotation> Stream<DataPointDetails> getValues(ExtensionContext context, Class<U> targetAnnotation,
-            Function<U, String[]> qualifierExtractor, Function<Class<?>, T[]> classElementReferenceExtractor,
+    private <T extends AccessibleObject & Member, U extends Annotation> Stream<DataPointDetails> getValues(Class<?> testClass, Optional<Object> testInstance,
+            Class<U> targetAnnotation, Function<U, String[]> qualifierExtractor, Function<Class<?>, T[]> classElementReferenceExtractor,
             BiFunction<Object, T, Object> retrievalOperation, DataPointDetailsFactory dataPointDetailsFactory) {
 
-        Optional<Object> optionalTestInstance = context.getTestInstance();
-
-        T[] references = classElementReferenceExtractor.apply(context.getRequiredTestClass());
+        T[] references = classElementReferenceExtractor.apply(testClass);
         Stream<T> dataPointReferences = Arrays.stream(references)
                 .peek(reference -> reference.setAccessible(true))
                 .filter(reference -> reference.getAnnotation(targetAnnotation) != null);
 
         //Unless the test instance is present we can only retrieve static data points
-        if (!optionalTestInstance.isPresent()) {
+        if (!testInstance.isPresent()) {
             dataPointReferences = dataPointReferences
                     .peek(reference -> {
                         if (!isStatic(reference)) {
@@ -219,7 +221,7 @@ public class DataPointRetriever {
                         if (isStatic(reference)) {
                             instanceToGetFieldFrom = null;
                         } else {
-                            instanceToGetFieldFrom = optionalTestInstance.get();
+                            instanceToGetFieldFrom = testInstance.get();
                         }
                         Object referencedValue = retrievalOperation.apply(instanceToGetFieldFrom, reference);
                         return dataPointDetailsFactory.buildDataPoints(reference, referencedValue, qualifiers);
