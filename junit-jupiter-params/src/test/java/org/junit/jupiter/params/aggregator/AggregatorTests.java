@@ -23,15 +23,47 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 public class AggregatorTests {
+
+	@ParameterizedTest
+	@CsvSource({ "John, Doe", "Jack, Smith" })
+	public void personAggregationTest(@AggregateWith(PersonAggregator.class) Person person) {
+		String fullName = person.name + " " + person.surname;
+		assertTrue(fullName.equals("John Doe") || fullName.equals("Jack Smith"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "Foo,Bar,Baz", "Baz,Bar,Foo" })
+	public void hashMapAggregationTest(@AggregateWith(TestHashMapAggregator.class) Map map) {
+		assertEquals(3, map.size());
+
+		// @formatter:off;
+		assertAll("Map contents",
+				() -> assertTrue(map.containsValue("Baz")),
+				() -> assertTrue(map.containsValue("Bar")),
+				() -> assertTrue(map.containsValue("Foo"))
+		);
+		// @formatter:on;
+
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1,2,3,4,5,6,7,8,9,10" })
+	public void directConversionToAccessorTest(ArgumentsAccessor accessor) {
+		assertTrue(accessor.size() == 10);
+		int sum = IntStream.range(0, 10).map(i -> accessor.getInteger(i)).sum();
+		assertEquals(55, sum);
+	}
+
 	static class Person {
-		String name;
-		String surname;
+		final String name;
+		final String surname;
 
 		public Person(String name, String surname) {
 			this.name = name;
 			this.surname = surname;
 		}
 	}
+
 	static class PersonAggregator implements ArgumentsAggregator {
 
 		@Override
@@ -48,30 +80,6 @@ public class AggregatorTests {
 			IntStream.range(0, accessor.size()).forEach(i -> m.put(Integer.toString(i), accessor.get(i)));
 			return m;
 		}
-	}
-
-	@ParameterizedTest
-	@CsvSource({ "John, Doe", "Jack, Smith" })
-	public void personAggregationTest(@AggregateWith(PersonAggregator.class) Person person) {
-		String fullName = person.name + " " + person.surname;
-		assertTrue(fullName.equals("John Doe") || fullName.equals("Jack Smith"));
-	}
-
-	@ParameterizedTest
-	@CsvSource({ "Foo,Bar,Baz", "Baz,Bar,Foo" })
-	public void hashMapAggregationTest(@AggregateWith(TestHashMapAggregator.class) Map map) {
-		assertEquals(map.size(), 3);
-		assertAll("Map contents", () -> assertTrue(map.containsValue("Baz")),
-			() -> assertTrue(map.containsValue("Bar")), () -> assertTrue(map.containsValue("Foo")));
-
-	}
-
-	@ParameterizedTest
-	@CsvSource({ "1,2,3,4,5,6,7,8,9,10" })
-	public void directConversionToAccessorTest(ArgumentsAccessor accessor) {
-		assertTrue(accessor.size() == 10);
-		int sum = IntStream.range(0, 10).map(i -> accessor.getInteger(i)).sum();
-		assertEquals(sum, 55);
 	}
 
 }
