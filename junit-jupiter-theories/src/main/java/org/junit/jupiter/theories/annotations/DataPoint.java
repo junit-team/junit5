@@ -13,6 +13,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * <li>Static fields</li>
  * <li>Static methods: Methods may be called multiple times, so they should always return the same values</li>
  * <li>Non-static fields: This requires that the class be annotated with {@code @TestInstance(TestInstance.Lifecycle.PER_CLASS)}</li>
+ * <li>Non-static methods: See the limitations for static methods and non-static fields above.</li>
  * </ul>
  */
 @Retention(RUNTIME)
