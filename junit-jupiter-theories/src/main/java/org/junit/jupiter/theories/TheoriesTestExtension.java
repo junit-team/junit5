@@ -10,6 +10,7 @@ import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 import org.junit.jupiter.theories.exceptions.DataPointRetrievalException;
 import org.junit.jupiter.theories.suppliers.TheoryArgumentSupplier;
+import org.junit.jupiter.theories.util.ArgumentSupplierUtils;
 import org.junit.jupiter.theories.util.DataPointRetriever;
 import org.junit.jupiter.theories.util.TheoryDisplayNameFormatter;
 import org.junit.jupiter.theories.util.WellKnownTypesUtils;
@@ -39,11 +40,32 @@ import static java.util.stream.Collectors.*;
  */
 public class TheoriesTestExtension implements TestTemplateInvocationContextProvider {
 
-    private static final ConcurrentMap<Class<? extends Annotation>, TheoryArgumentSupplier> THEORY_PARAMETER_SUPPLIER_CACHE = new ConcurrentHashMap<>();
+    private final DataPointRetriever dataPointRetriever;
 
-    private final DataPointRetriever dataPointRetriever = new DataPointRetriever();
+    private final WellKnownTypesUtils wellKnownTypesUtils;
 
-    private final WellKnownTypesUtils wellKnownTypesUtils = new WellKnownTypesUtils();
+    private final ArgumentSupplierUtils argumentSupplierUtils;
+
+    /**
+     * Constructor.
+     */
+    public TheoriesTestExtension() {
+        this(new DataPointRetriever(), new WellKnownTypesUtils(), new ArgumentSupplierUtils());
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param dataPointRetriever the retriever to use to extract data points
+     * @param wellKnownTypesUtils utility for handling well-known data point types
+     * @param argumentSupplierUtils utility for handling argument supplier annotations
+     */
+    //Present for testing
+    public TheoriesTestExtension(DataPointRetriever dataPointRetriever, WellKnownTypesUtils wellKnownTypesUtils, ArgumentSupplierUtils argumentSupplierUtils) {
+        this.dataPointRetriever = dataPointRetriever;
+        this.wellKnownTypesUtils = wellKnownTypesUtils;
+        this.argumentSupplierUtils = argumentSupplierUtils;
+    }
 
     @Override
     public boolean supportsTestTemplate(ExtensionContext context) {
@@ -119,7 +141,7 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
                         .collect(toList()))
                 .orElseGet(Collections::emptyList);
 
-        Optional<? extends Annotation> parameterSupplierAnnotation = getParameterSupplierAnnotation(parameter);
+        Optional<? extends Annotation> parameterSupplierAnnotation = argumentSupplierUtils.getParameterSupplierAnnotation(parameter);
 
         if (!qualifiers.isEmpty() && parameterSupplierAnnotation.isPresent()) {
             throw new IllegalStateException("Cannot mix qualifiers and parameter suppliers, but the parameter " + parameter
@@ -129,29 +151,6 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 
         String parameterName = parameter.getName();
         return new TheoryParameterDetails(parameterIndex, parameter.getType(), parameterName, qualifiers, parameterSupplierAnnotation);
-    }
-
-    /**
-     * Locates the annotation (if present) that has the {@link ArgumentsSuppliedBy} meta-annotation.
-     *
-     * @param parameter the parameter to parse
-     * @return the extracted annotation or {@link Optional#EMPTY} if no annotation is found
-     */
-    private Optional<? extends Annotation> getParameterSupplierAnnotation(Parameter parameter) {
-        List<? extends Annotation> annotations = Stream.of(parameter.getAnnotations())
-                .filter(v -> AnnotationSupport.isAnnotated(v.getClass(), ArgumentsSuppliedBy.class))
-                .collect(toList());
-        if (annotations.isEmpty()) {
-            return Optional.empty();
-        }
-        if (annotations.size() > 1) {
-            String annotationsAsString = annotations.stream()
-                    .map(Object::toString)
-                    .collect(joining(", "));
-            throw new IllegalStateException("Only one parameter supplier annotation may be used per method parameter. Parameter " + parameter.toString()
-                    + " has " + annotations.size() + " supplier annotations: " + annotationsAsString);
-        }
-        return Optional.of(annotations.get(0));
     }
 
 
@@ -184,7 +183,7 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
             List<DataPointDetails> dataPointDetails) {
 
         if (theoryParameterDetails.getParameterSupplierAnnotation().isPresent()) {
-            return buildDataPointDetailsFromParameterSupplierAnnotation(testMethodName, theoryParameterDetails);
+            return argumentSupplierUtils.buildDataPointDetailsFromParameterSupplierAnnotation(testMethodName, theoryParameterDetails);
         }
 
         Class<?> desiredClass = theoryParameterDetails.getNonPrimitiveType();
@@ -216,45 +215,6 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
             errorMessage += " with qualifiers \"" + theoryParameterDetails.getQualifiers() + "\"";
         }
         throw new DataPointRetrievalException(errorMessage);
-    }
-
-    /**
-     * Builds a list of data point details for an annotation that is meta-annotated with the {@link ArgumentsSuppliedBy} annotation.
-     *
-     * @param testMethodName the name of the method being processed
-     * @param theoryParameterDetails the theory parameter details to process
-     * @return the constructed data point details
-     */
-    private List<DataPointDetails> buildDataPointDetailsFromParameterSupplierAnnotation(String testMethodName, TheoryParameterDetails theoryParameterDetails) {
-        Annotation parameterSupplierAnnotation = theoryParameterDetails.getParameterSupplierAnnotation().get();
-        TheoryArgumentSupplier supplier = THEORY_PARAMETER_SUPPLIER_CACHE.computeIfAbsent(parameterSupplierAnnotation.getClass(), v -> {
-            //Don't need to check isPresent here, since it was checked before adding it to the theory parameter details
-            Class<? extends TheoryArgumentSupplier> supplierClass = AnnotationSupport.findAnnotation(v, ArgumentsSuppliedBy.class).get().value();
-            try {
-                Constructor<? extends TheoryArgumentSupplier> supplierConstructor = supplierClass.getConstructor();
-                return supplierConstructor.newInstance();
-            } catch (ReflectiveOperationException error) {
-                throw new IllegalStateException("Unable to instantiate parameter argument supplier " + supplierClass.getCanonicalName() + ". Reason: "
-                        + error.toString(), error);
-            }
-        });
-
-        List<DataPointDetails> dataPointDetailsFromSupplier = supplier.buildArgumentsFromSupplierAnnotation(theoryParameterDetails,
-                parameterSupplierAnnotation);
-
-        if (dataPointDetailsFromSupplier.stream().allMatch(v -> theoryParameterDetails.getNonPrimitiveType().isInstance(v.getValue()))) {
-            return dataPointDetailsFromSupplier;
-        }
-
-        String nonMatchingValueTypes = dataPointDetailsFromSupplier.stream()
-                .map(v -> v.getValue().getClass())
-                .filter(v -> !theoryParameterDetails.getNonPrimitiveType().isAssignableFrom(v))
-                .distinct()
-                .map(Class::getCanonicalName)
-                .collect(joining(", "));
-        throw new DataPointRetrievalException("Parameter supplier for parameter \"" + theoryParameterDetails.getName() + "\" (index "
-                + theoryParameterDetails.getIndex() + ") of method \"" + testMethodName + "\" returned incorrect type(s). Expected: "
-                + theoryParameterDetails.getNonPrimitiveType().getCanonicalName() + ", but found " + nonMatchingValueTypes);
     }
 
     /**
