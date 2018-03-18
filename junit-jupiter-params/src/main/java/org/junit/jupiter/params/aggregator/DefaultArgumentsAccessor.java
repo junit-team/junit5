@@ -40,45 +40,45 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	}
 
 	public Character getChar(int index) {
-		return (Character) get(Character.class, index);
+		return get(Character.class, index);
 	}
 
 	public Boolean getBoolean(int index) {
-		return (Boolean) get(Boolean.class, index);
+		return get(Boolean.class, index);
 	}
 
 	public Byte getByte(int index) {
-		return (Byte) get(Byte.class, index);
+		return get(Byte.class, index);
 	}
 
 	public Short getShort(int index) {
-		return (Short) get(Short.class, index);
+		return get(Short.class, index);
 	}
 
 	public Integer getInteger(int index) {
-		return (Integer) get(Integer.class, index);
+		return get(Integer.class, index);
 	}
 
 	public Long getLong(int index) {
-		return (Long) get(Long.class, index);
+		return get(Long.class, index);
 	}
 
 	public Float getFloat(int index) {
-		return (Float) get(Float.class, index);
+		return get(Float.class, index);
 	}
 
 	public Double getDouble(int index) {
-		return (Double) get(Double.class, index);
+		return get(Double.class, index);
 	}
 
 	public String getString(int index) {
-		return (String) get(String.class, index);
+		return get(String.class, index);
 	}
 
-	public Object get(Class<?> clazz, int index) {
+	public <T> T get(Class<T> clazz, int index) {
 		Preconditions.condition(index >= 0 && index < arguments.length,
 			String.format("Index must be between 0 and %d", arguments.length));
-		return DefaultArgumentConverter.INSTANCE.convert(arguments[index], clazz);
+		return clazz.cast(DefaultArgumentConverter.INSTANCE.convert(arguments[index], clazz));
 	}
 
 	public int size() {

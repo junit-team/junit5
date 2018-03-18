@@ -22,7 +22,7 @@ public interface ArgumentsAccessor {
 
 	Object get(int index);
 
-	Object get(Class<?> clazz, int index);
+	<T> T get(Class<T> clazz, int index);
 
 	Character getChar(int index);
 
