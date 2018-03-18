@@ -21,7 +21,7 @@ public @interface DataPoint {
     /**
      * @return the qualifier(s) for this data point. Can be empty.
      *
-     * @see TheoryParam#qualifiers() for additional information on how qualifiers work
+     * @see Qualifiers for additional information on how qualifiers work
      */
     public String[] qualifiers() default {};
 }
