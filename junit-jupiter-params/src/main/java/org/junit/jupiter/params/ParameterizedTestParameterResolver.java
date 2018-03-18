@@ -89,7 +89,11 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		Parameter parameter = parameterContext.getParameter();
 		Optional<AggregateWith> annotation = AnnotationUtils.findAnnotation(parameter, AggregateWith.class);
 		ArgumentsAccessor accessor = new DefaultArgumentsAccessor(arguments);
-		return annotation.map(AggregateWith::value).map(clazz -> ReflectionUtils.newInstance(clazz)).map(
-			aggregator -> aggregator.aggregateArguments(accessor)).orElse(accessor);
+		// @formatter:off;
+		return annotation.map(AggregateWith::value)
+				.map(clazz -> ReflectionUtils.newInstance(clazz))
+				.map(aggregator -> aggregator.aggregateArguments(accessor,parameterContext))
+				.orElse(accessor);
+		// @formatter:on
 	}
 }

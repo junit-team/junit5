@@ -18,11 +18,11 @@ public interface ArgumentsAccessor {
 
 	List<Object> toList();
 
-	int getSize();
+	int size();
 
 	Object get(int index);
 
-	Object getAs(Class<?> clazz, int index);
+	Object get(Class<?> clazz, int index);
 
 	Character getChar(int index);
 
@@ -32,7 +32,7 @@ public interface ArgumentsAccessor {
 
 	Short getShort(int index);
 
-	Integer getInt(int index);
+	Integer getInteger(int index);
 
 	Long getLong(int index);
 

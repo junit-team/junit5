@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.params.aggregator;
 
+import org.junit.jupiter.api.extension.ParameterContext;
+
 public interface ArgumentsAggregator {
-	Object aggregateArguments(ArgumentsAccessor accessor);
+	Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context);
 }

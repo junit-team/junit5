@@ -40,48 +40,48 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	}
 
 	public Character getChar(int index) {
-		return (Character) getAs(Character.class, index);
+		return (Character) get(Character.class, index);
 	}
 
 	public Boolean getBoolean(int index) {
-		return (Boolean) getAs(Boolean.class, index);
+		return (Boolean) get(Boolean.class, index);
 	}
 
 	public Byte getByte(int index) {
-		return (Byte) getAs(Byte.class, index);
+		return (Byte) get(Byte.class, index);
 	}
 
 	public Short getShort(int index) {
-		return (Short) getAs(Short.class, index);
+		return (Short) get(Short.class, index);
 	}
 
-	public Integer getInt(int index) {
-		return (Integer) getAs(Integer.class, index);
+	public Integer getInteger(int index) {
+		return (Integer) get(Integer.class, index);
 	}
 
 	public Long getLong(int index) {
-		return (Long) getAs(Long.class, index);
+		return (Long) get(Long.class, index);
 	}
 
 	public Float getFloat(int index) {
-		return (Float) getAs(Float.class, index);
+		return (Float) get(Float.class, index);
 	}
 
 	public Double getDouble(int index) {
-		return (Double) getAs(Double.class, index);
+		return (Double) get(Double.class, index);
 	}
 
 	public String getString(int index) {
-		return (String) getAs(String.class, index);
+		return (String) get(String.class, index);
 	}
 
-	public Object getAs(Class<?> clazz, int index) {
+	public Object get(Class<?> clazz, int index) {
 		Preconditions.condition(index >= 0 && index < arguments.length,
 			String.format("Index must be between 0 and %d", arguments.length));
 		return DefaultArgumentConverter.INSTANCE.convert(arguments[index], clazz);
 	}
 
-	public int getSize() {
+	public int size() {
 		return arguments.length;
 	}
 

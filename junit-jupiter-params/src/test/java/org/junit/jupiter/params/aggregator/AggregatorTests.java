@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -34,17 +35,17 @@ public class AggregatorTests {
 	static class PersonAggregator implements ArgumentsAggregator {
 
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor) {
-			assertTrue(accessor.getSize() >= 2);
+		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+			assertTrue(accessor.size() >= 2);
 			return new Person(accessor.getString(0), accessor.getString(1));
 		}
 	}
 
 	static class TestHashMapAggregator implements ArgumentsAggregator {
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor) {
+		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
 			Map<String, Object> m = new HashMap<>();
-			IntStream.range(0, accessor.getSize()).forEach(i -> m.put(Integer.toString(i), accessor.get(i)));
+			IntStream.range(0, accessor.size()).forEach(i -> m.put(Integer.toString(i), accessor.get(i)));
 			return m;
 		}
 	}
@@ -68,8 +69,8 @@ public class AggregatorTests {
 	@ParameterizedTest
 	@CsvSource({ "1,2,3,4,5,6,7,8,9,10" })
 	public void directConversionToAccessorTest(ArgumentsAccessor accessor) {
-		assertTrue(accessor.getSize() == 10);
-		int sum = IntStream.range(0, accessor.getSize()).map(i -> Integer.valueOf(accessor.getString(i))).sum();
+		assertTrue(accessor.size() == 10);
+		int sum = IntStream.range(0, 10).map(i -> accessor.getInteger(i)).sum();
 		assertEquals(sum, 55);
 	}
 
