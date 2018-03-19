@@ -38,7 +38,7 @@ public class WellKnownTypesUtils {
      * Generates the data point details for the provided type.
      *
      * @param parameterDetails the parameter to build data points for
-     * @return an {@link Optional} containing the {@code List} of
+     * @return an {@link Optional} containing the {@link List} of constructed data points
      */
     public Optional<List<DataPointDetails>> getDataPointDetails(TheoryParameterDetails parameterDetails) {
         return Arrays.stream(SupportedTypes.values())
