@@ -1,5 +1,6 @@
 package org.junit.jupiter.theories;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
@@ -26,12 +27,14 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
  * The test extension for running theories.
  *
  * @see Theory for details on how to use theories
  */
+@API(status = INTERNAL, since = "5.2")
 public class TheoriesTestExtension implements TestTemplateInvocationContextProvider {
 
     private final DataPointRetriever dataPointRetriever;

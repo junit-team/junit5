@@ -1,5 +1,6 @@
 package org.junit.jupiter.theories.annotations;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.theories.TheoriesTestExtension;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestTemplate;
@@ -10,6 +11,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
  * A theory is a specialized test that specifies one more "theory parameters". The theory will be repeatedly executed with different parameters in such a way
@@ -59,6 +62,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @TestTemplate
 @ExtendWith(TheoriesTestExtension.class)
+@API(status = EXPERIMENTAL, since = "5.2")
 public @interface Theory {
     /**
      * Placeholder for the {@linkplain TestInfo#getDisplayName display name} of

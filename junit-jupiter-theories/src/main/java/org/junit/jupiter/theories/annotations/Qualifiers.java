@@ -1,6 +1,10 @@
 package org.junit.jupiter.theories.annotations;
 
+import org.apiguardian.api.API;
+
 import java.lang.annotation.*;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
  * Annotation that limits the data points that are applicable for a {@link Theory}.
@@ -8,6 +12,7 @@ import java.lang.annotation.*;
 @Target(ElementType.PARAMETER)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
+@API(status = EXPERIMENTAL, since = "5.2")
 public @interface Qualifiers {
     /**
      * The qualifier(s) for this data point parameter. If qualifiers are provided, the annotated parameter will be run only with data points that have the

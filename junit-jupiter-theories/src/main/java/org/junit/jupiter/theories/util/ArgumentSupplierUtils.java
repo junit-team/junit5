@@ -1,5 +1,6 @@
 package org.junit.jupiter.theories.util;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.theories.annotations.suppliers.ArgumentsSuppliedBy;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
@@ -19,10 +20,12 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
  * Utility class that encapsulates the processing for argument suppliers ({@link ArgumentsSuppliedBy} and {@link TheoryArgumentSupplier}).
  */
+@API(status = INTERNAL, since = "5.2")
 public class ArgumentSupplierUtils {
     private static final ConcurrentMap<Class<? extends Annotation>, TheoryArgumentSupplier> THEORY_PARAMETER_SUPPLIER_CACHE = new ConcurrentHashMap<>();
 

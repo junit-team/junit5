@@ -1,5 +1,6 @@
 package org.junit.jupiter.theories.suppliers;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.theories.annotations.suppliers.LongValues;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
@@ -8,10 +9,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
  * Argument supplier for {@code long} arguments.
  */
+@API(status = INTERNAL, since = "5.2")
 public class LongTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<LongValues> {
     /**
      * Constructor.

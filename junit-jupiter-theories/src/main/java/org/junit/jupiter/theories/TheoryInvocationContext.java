@@ -1,5 +1,6 @@
 package org.junit.jupiter.theories;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.exceptions.MessageModifyingWrapperException;
@@ -14,9 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 /**
  * The invocation context for a theory execution.
  */
+@API(status = INTERNAL, since = "5.2")
 public class TheoryInvocationContext implements TestTemplateInvocationContext {
     private final int permutationIndex;
     private final Map<Integer, DataPointDetails> theoryParameterArguments;

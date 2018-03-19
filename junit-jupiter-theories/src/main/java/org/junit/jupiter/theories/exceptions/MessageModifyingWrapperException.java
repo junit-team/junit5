@@ -1,11 +1,16 @@
 package org.junit.jupiter.theories.exceptions;
 
+import org.apiguardian.api.API;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
  * Special wrapper exception used to modify the message of an exception without modifying its stack trace.
  */
+@API(status = INTERNAL, since = "5.2")
 public class MessageModifyingWrapperException extends Throwable {
     private static final long serialVersionUID = -5452185844058139L;
 
