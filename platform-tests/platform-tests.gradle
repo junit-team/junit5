@@ -69,3 +69,15 @@ jmh {
 checkstyleJmh { // use same style rules as defined for tests
 	configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
 }
+
+eclipse {
+	classpath {
+		plusConfigurations += [ project(':junit-platform-console').configurations.shadowed ]
+	}
+}
+
+idea {
+	module {
+		scopes.PROVIDED.plus += [ project(':junit-platform-console').configurations.shadowed ]
+	}
+}
