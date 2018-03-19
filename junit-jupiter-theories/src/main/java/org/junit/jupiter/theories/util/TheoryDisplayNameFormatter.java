@@ -60,7 +60,7 @@ public class TheoryDisplayNameFormatter {
             });
         }
         if (pattern.contains(PARAMETER_DETAILS_PLACEHOLDER)) {
-            patternModifiers.add((v, ctx) -> v.replace(PARAMETER_DETAILS_PLACEHOLDER, ctx.getArgumentsDescription(",  ")));
+            patternModifiers.add((v, ctx) -> v.replace(PARAMETER_DETAILS_PLACEHOLDER, ctx.getArgumentsDescription(", ")));
         }
 
         //Very minor performance hit for using "identity-like" initial bifunction, but it greatly simplifies the code
