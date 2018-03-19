@@ -114,8 +114,8 @@ public class TheoryInvocationContext implements TestTemplateInvocationContext {
     }
 
     /**
-     * Execution exception handler that will alter the message of any exceptions being thrown by the test. This allows us to only display the full information
-     * (toString, index, parameter name, etc.) in the event of an exception.
+     * Execution exception handler that will alter the message of any exceptions being thrown by the test. This allows us to display the full information about
+     * the theory invocation (toString, index, parameter name, etc.) in the event of an exception, even if that information isn't in the display name.
      */
     private class TheoryTestFailureMessageFixer implements TestExecutionExceptionHandler {
         @Override
