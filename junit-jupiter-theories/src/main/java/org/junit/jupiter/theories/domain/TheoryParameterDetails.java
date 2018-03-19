@@ -1,13 +1,17 @@
 package org.junit.jupiter.theories.domain;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 /**
  * Domain object that contains all of the information about a theory parameter.
  */
+@API(status = INTERNAL, since = "5.2")
 public class TheoryParameterDetails {
     private final int index;
     private final Class<?> type;

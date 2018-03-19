@@ -1,9 +1,13 @@
 package org.junit.jupiter.theories.annotations;
 
+import org.apiguardian.api.API;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
  * Annotation that indicates that an element should be treated as a group of data points for use with theories. May be used on:
@@ -23,6 +27,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
+@API(status = EXPERIMENTAL, since = "5.2")
 public @interface DataPoints {
     /**
      * @return the qualifier(s) for these data points. Can be empty.

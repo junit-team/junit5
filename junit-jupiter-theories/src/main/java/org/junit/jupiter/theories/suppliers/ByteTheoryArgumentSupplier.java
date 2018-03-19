@@ -1,5 +1,6 @@
 package org.junit.jupiter.theories.suppliers;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.theories.annotations.suppliers.ByteValues;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
@@ -8,10 +9,12 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
  * Argument supplier for {@code byte} arguments.
  */
+@API(status = INTERNAL, since = "5.2")
 public class ByteTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<ByteValues> {
     /**
      * Constructor.

@@ -1,5 +1,6 @@
 package org.junit.jupiter.theories.suppliers;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 
@@ -7,11 +8,15 @@ import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.List;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 /**
  * Base class for simple parameter argument suppliers.
  *
  * @param <U> the type for the corresponding parameter argument supplier annotation
  */
+@API(status = EXPERIMENTAL, since = "5.2")
 public abstract class AbstractTheoryArgumentSupplier<U extends Annotation> implements TheoryArgumentSupplier {
     private final Class<U> annotationClass;
 

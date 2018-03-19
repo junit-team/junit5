@@ -1,8 +1,11 @@
 package org.junit.jupiter.theories.annotations.suppliers;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.theories.suppliers.DoubleTheoryArgumentSupplier;
 
 import java.lang.annotation.*;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 
 /**
@@ -13,6 +16,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @ArgumentsSuppliedBy(DoubleTheoryArgumentSupplier.class)
+@API(status = EXPERIMENTAL, since = "5.2")
 public @interface DoubleValues {
     /**
      * @return the value(s) to use for the annotated theory parameter

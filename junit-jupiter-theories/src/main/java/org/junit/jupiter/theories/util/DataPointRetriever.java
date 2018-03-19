@@ -1,5 +1,6 @@
 package org.junit.jupiter.theories.util;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.theories.annotations.DataPoint;
 import org.junit.jupiter.theories.annotations.DataPoints;
 import org.junit.jupiter.theories.domain.DataPointDetails;
@@ -18,11 +19,13 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 /**
  * Helper class that is used to retrieve data points from test classes.
  */
+@API(status = INTERNAL, since = "5.2")
 public class DataPointRetriever {
     /**
      * Gets all data point details from the provided context.

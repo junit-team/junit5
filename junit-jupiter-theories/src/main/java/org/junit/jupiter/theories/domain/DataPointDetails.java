@@ -1,13 +1,19 @@
 package org.junit.jupiter.theories.domain;
 
+import org.apiguardian.api.API;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 /**
  * Domain object that contains all of the information about a data point.
  */
+@API(status = INTERNAL, since = "5.2")
 public class DataPointDetails {
     private final Object value;
     private final List<String> qualifiers;

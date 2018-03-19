@@ -1,5 +1,6 @@
 package org.junit.jupiter.theories.util;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.function.BiFunction;
 
 import org.junit.jupiter.theories.TheoryInvocationContext;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.theories.annotations.Theory.*;
 import static java.util.stream.Collectors.joining;
 
@@ -15,6 +17,7 @@ import static java.util.stream.Collectors.joining;
 /**
  * Formatter used to create the display name for theory executions.
  */
+@API(status = INTERNAL, since = "5.2")
 public class TheoryDisplayNameFormatter {
     private final String pattern;
 

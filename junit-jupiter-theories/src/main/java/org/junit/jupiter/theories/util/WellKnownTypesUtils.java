@@ -1,5 +1,6 @@
 package org.junit.jupiter.theories.util;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 
@@ -12,10 +13,12 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
  * Utility class for creating data points for well-known types.
  */
+@API(status = INTERNAL, since = "5.2")
 public class WellKnownTypesUtils {
     /**
      * Determines if the provided type is a well-known type.
