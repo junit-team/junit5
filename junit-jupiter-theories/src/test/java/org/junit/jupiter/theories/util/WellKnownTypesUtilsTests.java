@@ -1,108 +1,111 @@
+
 package org.junit.jupiter.theories.util;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.theories.domain.DataPointDetails;
-import org.junit.jupiter.theories.domain.TheoryParameterDetails;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.theories.domain.DataPointDetails;
+import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 
 /**
  * Tests for {@link WellKnownTypesUtils}.
  */
 class WellKnownTypesUtilsTests {
 
-    private static final List<WellKnownTypeTestCase> TEST_CASES = Arrays.asList(
-            new WellKnownTypeTestCase(Boolean.class,
-                    new DataPointDetails(true, Collections.<String>emptyList(), "Automatic boolean data point generation"),
-                    new DataPointDetails(false, Collections.<String>emptyList(), "Automatic boolean data point generation")),
-            new WellKnownTypeTestCase(TestEnum.class,
-                    new DataPointDetails(TestEnum.FOO, Collections.<String>emptyList(), "Automatic enum data point generation"),
-                    new DataPointDetails(TestEnum.BAR, Collections.<String>emptyList(), "Automatic enum data point generation"),
-                    new DataPointDetails(TestEnum.BAZ, Collections.<String>emptyList(), "Automatic enum data point generation"))
-    );
+	private static final List<WellKnownTypeTestCase> TEST_CASES = Arrays.asList(
+		new WellKnownTypeTestCase(Boolean.class,
+			new DataPointDetails(true, Collections.<String> emptyList(), "Automatic boolean data point generation"),
+			new DataPointDetails(false, Collections.<String> emptyList(), "Automatic boolean data point generation")),
+		new WellKnownTypeTestCase(TestEnum.class,
+			new DataPointDetails(TestEnum.FOO, Collections.<String> emptyList(),
+				"Automatic enum data point generation"),
+			new DataPointDetails(TestEnum.BAR, Collections.<String> emptyList(),
+				"Automatic enum data point generation"),
+			new DataPointDetails(TestEnum.BAZ, Collections.<String> emptyList(),
+				"Automatic enum data point generation")));
 
-    private WellKnownTypesUtils utilsUnderTest;
+	private WellKnownTypesUtils utilsUnderTest;
 
-    @BeforeEach
-    public void setUp() {
-        utilsUnderTest = new WellKnownTypesUtils();
-    }
+	@BeforeEach
+	public void setUp() {
+		utilsUnderTest = new WellKnownTypesUtils();
+	}
 
-    @Test
-    public void testIsKnownType_Known() {
-        for (WellKnownTypeTestCase currTestCase : TEST_CASES) {
-            //Test
-            boolean result = utilsUnderTest.isKnownType(currTestCase.parameterType);
+	@Test
+	public void testIsKnownType_Known() {
+		for (WellKnownTypeTestCase currTestCase : TEST_CASES) {
+			//Test
+			boolean result = utilsUnderTest.isKnownType(currTestCase.parameterType);
 
-            //Verify
-            assertTrue(result);
-        }
-    }
+			//Verify
+			assertTrue(result);
+		}
+	}
 
-    @Test
-    public void testIsKnownType_NotKnown() {
-        //Test
-        boolean result = utilsUnderTest.isKnownType(String.class);
+	@Test
+	public void testIsKnownType_NotKnown() {
+		//Test
+		boolean result = utilsUnderTest.isKnownType(String.class);
 
-        //Verify
-        assertFalse(result);
-    }
+		//Verify
+		assertFalse(result);
+	}
 
-    @Test
-    public void testGetDataPointDetails_Known() {
-        for (WellKnownTypeTestCase currTestCase : TEST_CASES) {
-            //Setup
-            TheoryParameterDetails details = new TheoryParameterDetails(0, currTestCase.parameterType, "testParameter", Collections.emptyList(),
-                    Optional.empty());
+	@Test
+	public void testGetDataPointDetails_Known() {
+		for (WellKnownTypeTestCase currTestCase : TEST_CASES) {
+			//Setup
+			TheoryParameterDetails details = new TheoryParameterDetails(0, currTestCase.parameterType, "testParameter",
+				Collections.emptyList(), Optional.empty());
 
-            //Test
-            Optional<List<DataPointDetails>> result = utilsUnderTest.getDataPointDetails(details);
+			//Test
+			Optional<List<DataPointDetails>> result = utilsUnderTest.getDataPointDetails(details);
 
-            //Verify
-            assertThat(result)
-                    .isPresent()
-                    .hasValueSatisfying(v -> assertThat(v)
-                            .containsExactlyInAnyOrderElementsOf(currTestCase.expectedDataPointDetails));
-        }
-    }
+			//Verify
+			// @formatter:off
+			assertThat(result)
+					.isPresent()
+					.hasValueSatisfying(v -> assertThat(v)
+							.containsExactlyInAnyOrderElementsOf(currTestCase.expectedDataPointDetails));
+			// @formatter:on
+		}
+	}
 
-    @Test
-    public void testGetDataPointDetails_NotKnown() {
-        //Setup
-        TheoryParameterDetails details = new TheoryParameterDetails(0, String.class, "testParameter", Collections.emptyList(), Optional.empty());
+	@Test
+	public void testGetDataPointDetails_NotKnown() {
+		//Setup
+		TheoryParameterDetails details = new TheoryParameterDetails(0, String.class, "testParameter",
+			Collections.emptyList(), Optional.empty());
 
-        //Test
-        Optional<List<DataPointDetails>> result = utilsUnderTest.getDataPointDetails(details);
+		//Test
+		Optional<List<DataPointDetails>> result = utilsUnderTest.getDataPointDetails(details);
 
-        //Verify
-        assertThat(result)
-                .isEmpty();
-    }
+		//Verify
+		assertThat(result).isEmpty();
+	}
 
+	private enum TestEnum {
+		FOO, BAR, BAZ;
+	}
 
-    //-------------------------------------------------------------------------
-    // Test helper methods/classes
-    //-------------------------------------------------------------------------
-    private static class WellKnownTypeTestCase {
-        private final Class<?> parameterType;
-        private final List<DataPointDetails> expectedDataPointDetails;
+	//-------------------------------------------------------------------------
+	// Test helper methods/classes
+	//-------------------------------------------------------------------------
+	private static class WellKnownTypeTestCase {
+		private final Class<?> parameterType;
+		private final List<DataPointDetails> expectedDataPointDetails;
 
-        public WellKnownTypeTestCase(Class<?> parameterType, DataPointDetails... expectedDataPointDetails) {
-            this.parameterType = parameterType;
-            this.expectedDataPointDetails = Collections.unmodifiableList(Arrays.asList(expectedDataPointDetails));
-        }
-    }
-
-    private enum TestEnum {
-        FOO,
-        BAR,
-        BAZ;
-    }
+		public WellKnownTypeTestCase(Class<?> parameterType, DataPointDetails... expectedDataPointDetails) {
+			this.parameterType = parameterType;
+			this.expectedDataPointDetails = Collections.unmodifiableList(Arrays.asList(expectedDataPointDetails));
+		}
+	}
 }
