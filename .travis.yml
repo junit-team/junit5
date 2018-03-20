@@ -22,8 +22,8 @@ matrix:
     - jdk: oraclejdk10
       env: JDK='Oracle JDK 10'
       install: echo "Don't let Travis CI execute './gradlew assemble' by default"
-# Java 10 "Oracle JDK"
-    - env: JDK='Oracle JDK 10'
+# Java 10 "OpenJDK"
+    - env: JDK='OpenJDK 10'
       install: . ./install-jdk.sh -F 10 -L GPL
 # Java 11 "Oracle JDK"
     - env: JDK='Oracle JDK 11'
