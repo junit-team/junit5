@@ -1,11 +1,9 @@
+
 package org.junit.jupiter.theories.util;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.theories.annotations.suppliers.ArgumentsSuppliedBy;
-import org.junit.jupiter.theories.domain.DataPointDetails;
-import org.junit.jupiter.theories.domain.TheoryParameterDetails;
-import org.junit.jupiter.theories.suppliers.TheoryArgumentSupplier;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
@@ -17,167 +15,177 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.theories.annotations.suppliers.ArgumentsSuppliedBy;
+import org.junit.jupiter.theories.domain.DataPointDetails;
+import org.junit.jupiter.theories.domain.TheoryParameterDetails;
+import org.junit.jupiter.theories.suppliers.TheoryArgumentSupplier;
 
 class ArgumentSupplierUtilsTests {
 
-    private static boolean testArgumentSupplierThrowsException;
-    private static String TEST_EXCEPTION_MESSAGE = "Test exception";
-    private static BiFunction<TheoryParameterDetails, Annotation, List<DataPointDetails>> mockSupplierFunction;
-    private ArgumentSupplierUtils utilsUnderTest;
+	private static boolean testArgumentSupplierThrowsException;
+	private static String TEST_EXCEPTION_MESSAGE = "Test exception";
+	private static BiFunction<TheoryParameterDetails, Annotation, List<DataPointDetails>> mockSupplierFunction;
+	private ArgumentSupplierUtils utilsUnderTest;
 
-    @BeforeEach
-    public void setUp() {
-        ArgumentSupplierUtils.clearCache();
-        mockSupplierFunction = ((a, b) -> Collections.emptyList());
+	private static final String[] getAnnotationTestValue() {
+		String[] value = { "foo", "bar" };
+		return value;
+	}
 
-        utilsUnderTest = new ArgumentSupplierUtils();
-        testArgumentSupplierThrowsException = false;
-    }
+	@BeforeEach
+	public void setUp() {
+		ArgumentSupplierUtils.clearCache();
+		mockSupplierFunction = ((a, b) -> Collections.emptyList());
 
-    @Test
-    public void testGetParameterSupplierAnnotation_AnnotationPresent() throws Exception {
-        //Setup
-        Parameter parameter = TestMethodSource.class.getMethod("methodWithAnnotation", String.class).getParameters()[0];
+		utilsUnderTest = new ArgumentSupplierUtils();
+		testArgumentSupplierThrowsException = false;
+	}
 
-        //Test
-        Optional<? extends Annotation> result = utilsUnderTest.getParameterSupplierAnnotation(parameter);
+	@Test
+	public void testGetParameterSupplierAnnotation_AnnotationPresent() throws Exception {
+		//Setup
+		Parameter parameter = TestMethodSource.class.getMethod("methodWithAnnotation", String.class).getParameters()[0];
 
-        //Verify
-        assertThat(result)
-                .isPresent()
-                .hasValueSatisfying(rawAnnotation -> assertThat(rawAnnotation)
-                        .isInstanceOf(TestArgumentSupplierAnnotation.class)
-                );
+		//Test
+		Optional<? extends Annotation> result = utilsUnderTest.getParameterSupplierAnnotation(parameter);
 
-        TestArgumentSupplierAnnotation annotationFromResult = (TestArgumentSupplierAnnotation) result.get();
-        assertThat(annotationFromResult.value())
-                .containsExactly(getAnnotationTestValue());
-    }
+		//Verify
+		// @formatter:off
+		assertThat(result)
+				.isPresent()
+				.hasValueSatisfying(rawAnnotation -> assertThat(rawAnnotation)
+						.isInstanceOf(TestArgumentSupplierAnnotation.class));
+		// @formatter:on
 
-    @Test
-    public void testGetParameterSupplierAnnotation_AnnotationMissing() throws Exception {
-        //Setup
-        Parameter parameter = TestMethodSource.class.getMethod("methodWithoutAnnotation", String.class).getParameters()[0];
+		TestArgumentSupplierAnnotation annotationFromResult = (TestArgumentSupplierAnnotation) result.get();
+		assertThat(annotationFromResult.value()).containsExactly(getAnnotationTestValue());
+	}
 
-        //Test
-        Optional<? extends Annotation> result = utilsUnderTest.getParameterSupplierAnnotation(parameter);
+	@Test
+	public void testGetParameterSupplierAnnotation_AnnotationMissing() throws Exception {
+		//Setup
+		Parameter parameter = TestMethodSource.class.getMethod("methodWithoutAnnotation",
+			String.class).getParameters()[0];
 
-        //Verify
-        assertThat(result)
-                .isEmpty();
-    }
+		//Test
+		Optional<? extends Annotation> result = utilsUnderTest.getParameterSupplierAnnotation(parameter);
 
-    @Test
-    public void testBuildDataPointDetailsFromParameterSupplierAnnotation_Error_InvaildTheoryParameterDetails() {
-        //Setup
-        TheoryParameterDetails parameterDetails = new TheoryParameterDetails(0, Object.class, "testParameter", Arrays.asList("foo", "bar"), Optional.empty());
+		//Verify
+		assertThat(result).isEmpty();
+	}
 
-        //Test/Verify
-        assertThatThrownBy(() -> utilsUnderTest.buildDataPointDetailsFromParameterSupplierAnnotation("testMethod", parameterDetails))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("did not contain a argument supplier annotation");
-    }
+	@Test
+	public void testBuildDataPointDetailsFromParameterSupplierAnnotation_Error_InvaildTheoryParameterDetails() {
+		//Setup
+		TheoryParameterDetails parameterDetails = new TheoryParameterDetails(0, Object.class, "testParameter",
+			Arrays.asList("foo", "bar"), Optional.empty());
 
-    @Test
-    public void testBuildDataPointDetailsFromParameterSupplierAnnotation_Error_SupplierInstantiationFailure() throws Exception {
-        //Setup
-        Annotation supplierAnnotation = TestMethodSource.class.getMethod("methodWithAnnotation", String.class)
-                .getParameters()[0]
-                .getAnnotation(TestArgumentSupplierAnnotation.class);
-        testArgumentSupplierThrowsException = true;
-        TheoryParameterDetails parameterDetails = new TheoryParameterDetails(0, Object.class, "testParameter", Arrays.asList("foo", "bar"),
-                Optional.of(supplierAnnotation));
+		//Test/Verify
+		// @formatter:off
+		assertThatThrownBy(() -> utilsUnderTest.buildDataPointDetailsFromParameterSupplierAnnotation("testMethod", parameterDetails))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("did not contain a argument supplier annotation");
+		// @formatter:on
+	}
 
-        //Test/Verify
-        assertThatThrownBy(() -> utilsUnderTest.buildDataPointDetailsFromParameterSupplierAnnotation("testMethod", parameterDetails))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Unable to instantiate parameter argument supplier")
-                .hasMessageContaining(TEST_EXCEPTION_MESSAGE);
-    }
+	@Test
+	public void testBuildDataPointDetailsFromParameterSupplierAnnotation_Error_SupplierInstantiationFailure()
+			throws Exception {
+		//Setup
+		Annotation supplierAnnotation = TestMethodSource.class.getMethod("methodWithAnnotation",
+			String.class).getParameters()[0].getAnnotation(TestArgumentSupplierAnnotation.class);
+		testArgumentSupplierThrowsException = true;
+		TheoryParameterDetails parameterDetails = new TheoryParameterDetails(0, Object.class, "testParameter",
+			Arrays.asList("foo", "bar"), Optional.of(supplierAnnotation));
 
-    @Test
-    public void testBuildDataPointDetailsFromParameterSupplierAnnotation_Error_SupplierReturnsWrongType() throws Exception {
-        //Setup
-        Annotation supplierAnnotation = TestMethodSource.class.getMethod("methodWithAnnotation", String.class)
-                .getParameters()[0]
-                .getAnnotation(TestArgumentSupplierAnnotation.class);
-        TheoryParameterDetails parameterDetails = new TheoryParameterDetails(0, String.class, "testParameter", Arrays.asList("foo", "bar"),
-                Optional.of(supplierAnnotation));
+		//Test/Verify
+		// @formatter:off
+		assertThatThrownBy(() -> utilsUnderTest.buildDataPointDetailsFromParameterSupplierAnnotation("testMethod", parameterDetails))
+				.isInstanceOf(IllegalStateException.class)
+				.hasMessageContaining("Unable to instantiate parameter argument supplier")
+				.hasMessageContaining(TEST_EXCEPTION_MESSAGE);
+		// @formatter:on
+	}
 
-        List<DataPointDetails> dataPointDetails = Arrays.asList(
-                new DataPointDetails("foo", Collections.emptyList(), "testSource"),
-                new DataPointDetails(42, Collections.emptyList(), "testSource"), //Incorrect type for this parameter
-                new DataPointDetails("bar", Collections.emptyList(), "testSource")
-        );
-        mockSupplierFunction = (a, b) -> dataPointDetails;
+	@Test
+	public void testBuildDataPointDetailsFromParameterSupplierAnnotation_Error_SupplierReturnsWrongType()
+			throws Exception {
+		//Setup
+		Annotation supplierAnnotation = TestMethodSource.class.getMethod("methodWithAnnotation",
+			String.class).getParameters()[0].getAnnotation(TestArgumentSupplierAnnotation.class);
+		TheoryParameterDetails parameterDetails = new TheoryParameterDetails(0, String.class, "testParameter",
+			Arrays.asList("foo", "bar"), Optional.of(supplierAnnotation));
 
-        //Test/Verify
-        assertThatThrownBy(() -> utilsUnderTest.buildDataPointDetailsFromParameterSupplierAnnotation("testMethod", parameterDetails))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("returned incorrect type(s)");
-    }
+		List<DataPointDetails> dataPointDetails = Arrays.asList(
+			new DataPointDetails("foo", Collections.emptyList(), "testSource"),
+			new DataPointDetails(42, Collections.emptyList(), "testSource"), //Incorrect type for this parameter
+			new DataPointDetails("bar", Collections.emptyList(), "testSource"));
+		mockSupplierFunction = (a, b) -> dataPointDetails;
 
-    @Test
-    public void testBuildDataPointDetailsFromParameterSupplierAnnotation_Success() throws Exception {
-        //Setup
-        Annotation supplierAnnotation = TestMethodSource.class.getMethod("methodWithAnnotation", String.class)
-                .getParameters()[0]
-                .getAnnotation(TestArgumentSupplierAnnotation.class);
-        TheoryParameterDetails parameterDetails = new TheoryParameterDetails(0, String.class, "testParameter", Arrays.asList("foo", "bar"),
-                Optional.of(supplierAnnotation));
+		//Test/Verify
+		// @formatter:off
+		assertThatThrownBy(() -> utilsUnderTest.buildDataPointDetailsFromParameterSupplierAnnotation("testMethod", parameterDetails))
+				.isInstanceOf(IllegalStateException.class)
+				.hasMessageContaining("returned incorrect type(s)");
+		// @formatter:on
+	}
 
-        List<DataPointDetails> dataPointDetails = Arrays.asList(
-                new DataPointDetails("foo", Collections.emptyList(), "testSource"),
-                new DataPointDetails("bar", Collections.emptyList(), "testSource"),
-                new DataPointDetails("baz", Collections.emptyList(), "testSource"));
-        mockSupplierFunction = (actualParameterDetails, actualSupplierAnnotation) -> {
-            assertEquals(parameterDetails, actualParameterDetails);
-            assertEquals(supplierAnnotation, actualSupplierAnnotation);
-            return dataPointDetails;
-        };
+	@Test
+	public void testBuildDataPointDetailsFromParameterSupplierAnnotation_Success() throws Exception {
+		//Setup
+		Annotation supplierAnnotation = TestMethodSource.class.getMethod("methodWithAnnotation",
+			String.class).getParameters()[0].getAnnotation(TestArgumentSupplierAnnotation.class);
+		TheoryParameterDetails parameterDetails = new TheoryParameterDetails(0, String.class, "testParameter",
+			Arrays.asList("foo", "bar"), Optional.of(supplierAnnotation));
 
-        //Test
-        List<DataPointDetails> result = utilsUnderTest.buildDataPointDetailsFromParameterSupplierAnnotation("testMethod", parameterDetails);
+		List<DataPointDetails> dataPointDetails = Arrays.asList(
+			new DataPointDetails("foo", Collections.emptyList(), "testSource"),
+			new DataPointDetails("bar", Collections.emptyList(), "testSource"),
+			new DataPointDetails("baz", Collections.emptyList(), "testSource"));
+		mockSupplierFunction = (actualParameterDetails, actualSupplierAnnotation) -> {
+			assertEquals(parameterDetails, actualParameterDetails);
+			assertEquals(supplierAnnotation, actualSupplierAnnotation);
+			return dataPointDetails;
+		};
 
-        //Verify
-        assertEquals(dataPointDetails, result);
-    }
+		//Test
+		List<DataPointDetails> result = utilsUnderTest.buildDataPointDetailsFromParameterSupplierAnnotation(
+			"testMethod", parameterDetails);
 
-    //-------------------------------------------------------------------------
-    // Test helper methods/classes
-    //-------------------------------------------------------------------------
-    @Retention(RetentionPolicy.RUNTIME)
-    @ArgumentsSuppliedBy(TestTheoryArgumentSupplier.class)
-    private @interface TestArgumentSupplierAnnotation {
-        String[] value();
-    }
+		//Verify
+		assertEquals(dataPointDetails, result);
+	}
 
-    private static class TestTheoryArgumentSupplier implements TheoryArgumentSupplier {
-        public TestTheoryArgumentSupplier() {
-            if (testArgumentSupplierThrowsException) {
-                throw new RuntimeException(TEST_EXCEPTION_MESSAGE);
-            }
-        }
+	//-------------------------------------------------------------------------
+	// Test helper methods/classes
+	//-------------------------------------------------------------------------
+	@Retention(RetentionPolicy.RUNTIME)
+	@ArgumentsSuppliedBy(TestTheoryArgumentSupplier.class)
+	private @interface TestArgumentSupplierAnnotation {
+		String[] value();
+	}
 
-        @Override
-        public List<DataPointDetails> buildArgumentsFromSupplierAnnotation(TheoryParameterDetails parameterDetails, Annotation annotationToParse) {
-            return mockSupplierFunction.apply(parameterDetails, annotationToParse);
-        }
-    }
+	private static class TestTheoryArgumentSupplier implements TheoryArgumentSupplier {
+		public TestTheoryArgumentSupplier() {
+			if (testArgumentSupplierThrowsException) {
+				throw new RuntimeException(TEST_EXCEPTION_MESSAGE);
+			}
+		}
 
-    private static final String[] getAnnotationTestValue() {
-        String[] value = {"foo", "bar"};
-        return value;
-    }
+		@Override
+		public List<DataPointDetails> buildArgumentsFromSupplierAnnotation(TheoryParameterDetails parameterDetails,
+				Annotation annotationToParse) {
+			return mockSupplierFunction.apply(parameterDetails, annotationToParse);
+		}
+	}
 
-    private static class TestMethodSource {
-        public void methodWithoutAnnotation(String parameter) {
-        }
+	private static class TestMethodSource {
+		public void methodWithoutAnnotation(String parameter) {
+		}
 
-        public void methodWithAnnotation(@TestArgumentSupplierAnnotation({"foo", "bar"}) String parameter) {
-        }
-    }
+		public void methodWithAnnotation(@TestArgumentSupplierAnnotation({ "foo", "bar" }) String parameter) {
+		}
+	}
 }
