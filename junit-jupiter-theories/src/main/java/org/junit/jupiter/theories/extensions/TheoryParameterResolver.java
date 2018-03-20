@@ -18,32 +18,32 @@ import org.junit.jupiter.theories.domain.DataPointDetails;
  */
 @API(status = INTERNAL, since = "5.2")
 public class TheoryParameterResolver implements ParameterResolver {
-	private final Map<Integer, DataPointDetails> theoryParameterArguments;
+	private final Map<Integer, DataPointDetails> theoryArguments;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param theoryParameterArguments a map of parameter index to the
+	 * @param theoryArguments a map of parameter index to the
 	 * corresponding argument
 	 */
-	public TheoryParameterResolver(Map<Integer, DataPointDetails> theoryParameterArguments) {
-		this.theoryParameterArguments = theoryParameterArguments;
+	public TheoryParameterResolver(Map<Integer, DataPointDetails> theoryArguments) {
+		this.theoryArguments = theoryArguments;
 	}
 
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return theoryParameterArguments.containsKey(parameterContext.getIndex());
+		return theoryArguments.containsKey(parameterContext.getIndex());
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		Object paramValue = theoryParameterArguments.get(parameterContext.getIndex()).getValue();
-		if (paramValue == null) {
-			throw new ParameterResolutionException("Unable to resolve parameter for TheoryParam at index "
+		DataPointDetails paramDataPointDetails = theoryArguments.get(parameterContext.getIndex());
+		if (paramDataPointDetails == null) {
+			throw new ParameterResolutionException("Unable to resolve argument for theory at index "
 					+ parameterContext.getIndex() + " (" + parameterContext.getParameter().getName() + ")");
 		}
-		return paramValue;
+		return paramDataPointDetails.getValue();
 	}
 }

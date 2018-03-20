@@ -62,7 +62,8 @@ public class TheoryInvocationContext implements TestTemplateInvocationContext {
 	 * corresponding argument
 	 * @param displayNameFormatter the display name formatter
 	 * @param testMethod the method being tested
-	 * @param theoryParameterResolver the parameter resolver to use to populate theory arguments
+	 * @param theoryParameterResolver the parameter resolver to use to populate
+	 * theory arguments
 	 * @param theoryTestFailureMessageFixer extension used to fix failure messages
 	 */
 	//Present for testing
