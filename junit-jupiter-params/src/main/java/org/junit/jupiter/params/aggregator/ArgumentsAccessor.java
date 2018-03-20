@@ -24,7 +24,7 @@ public interface ArgumentsAccessor {
 
 	<T> T get(Class<T> clazz, int index);
 
-	Character getChar(int index);
+	Character getCharacter(int index);
 
 	Boolean getBoolean(int index);
 

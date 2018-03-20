@@ -39,7 +39,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 		return Arrays.asList(arguments);
 	}
 
-	public Character getChar(int index) {
+	public Character getCharacter(int index) {
 		return get(Character.class, index);
 	}
 
