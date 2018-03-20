@@ -56,11 +56,13 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	 * Constructor.
 	 *
 	 * @param dataPointRetriever the retriever to use to extract data points
-	 * @param wellKnownTypesUtils utility for handling well-known data point types
-	 * @param argumentSupplierUtils utility for handling argument supplier annotations
+	 * @param wellKnownTypesUtils utility for handling well-known data point
+	 * types
+	 * @param argumentSupplierUtils utility for handling argument supplier
+	 * annotations
 	 */
 	//Present for testing
-	public TheoriesTestExtension(DataPointRetriever dataPointRetriever, WellKnownTypesUtils wellKnownTypesUtils,
+	TheoriesTestExtension(DataPointRetriever dataPointRetriever, WellKnownTypesUtils wellKnownTypesUtils,
 			ArgumentSupplierUtils argumentSupplierUtils) {
 		this.dataPointRetriever = dataPointRetriever;
 		this.wellKnownTypesUtils = wellKnownTypesUtils;
@@ -97,7 +99,8 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	}
 
 	/**
-	 * Get the details for all of the parameters that can be populated using the provided data points.
+	 * Get the details for all of the parameters that can be populated using
+	 * the provided data points.
 	 *
 	 * @param testMethod the method to inspect
 	 * @return a {@code List} of parameter details
@@ -122,7 +125,8 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	}
 
 	/**
-	 * Constucts the {@link TheoryParameterDetails} for the provided {@link Parameter}.
+	 * Constructs the {@link TheoryParameterDetails} for the provided
+	 * {@link Parameter}.
 	 *
 	 * @param parameterIndex the index of the parameter being processed
 	 * @param parameter the parameter to process
@@ -151,10 +155,12 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	/**
 	 * Builds the parameter index to possible values map.
 	 *
-	 * @param testMethodName the name of the test method (used for failure messages)
+	 * @param testMethodName the name of the test method (used for failure
+	 * messages)
 	 * @param theoryParameters the details of the parameters that need values
 	 * @param dataPointDetails the details of the available data points
-	 * @return a {@code Map} of parameter index to {@code List} of applicable data point values
+	 * @return a {@code Map} of parameter index to {@code List} of applicable
+	 * data point values
 	 */
 	private Map<Integer, List<DataPointDetails>> buildPerParameterDataPoints(String testMethodName,
 			List<TheoryParameterDetails> theoryParameters, List<DataPointDetails> dataPointDetails) {
@@ -167,10 +173,12 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	/**
 	 * Retrieves the data points that are applicable for a single parameter.
 	 *
-	 * @param testMethodName the name of the test method (used for failure messages)
+	 * @param testMethodName the name of the test method (used for failure
+	 * messages)
 	 * @param theoryParameterDetails the parameter that needs values
 	 * @param dataPointDetails the details of the available data points
-	 * @return a {@code List} of all data points that match the parameter's type (and qualifier, if applicable)
+	 * @return a {@code List} of all data points that match the parameter's
+	 * type (and qualifier, if applicable)
 	 */
 	private List<DataPointDetails> getDataPointsForParameter(String testMethodName,
 			TheoryParameterDetails theoryParameterDetails, List<DataPointDetails> dataPointDetails) {
@@ -212,10 +220,13 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	}
 
 	/**
-	 * Builds a {@code List} of all possible data point permutations for the method parameters.
+	 * Builds a {@code List} of all possible data point permutations for the
+	 * method parameters.
 	 *
-	 * @param perParameterDataPoints a {@code Map} of parameter index to {@code List} of applicable data point values
-	 * @return a {@code List} of {@code Map}s of parameter index to data point value, each corresponding to a single test invocation
+	 * @param perParameterDataPoints a {@code Map} of parameter index to
+	 * {@code List} of applicable data point values
+	 * @return a {@code List} of {@code Map}s of parameter index to data point
+	 * value, each corresponding to a single test invocation
 	 */
 	private List<Map<Integer, DataPointDetails>> buildInputParamPermutations(
 			Map<Integer, List<DataPointDetails>> perParameterDataPoints) {
@@ -230,10 +241,13 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	}
 
 	/**
-	 * Recursive method that builds the parameter permutations and adds them to the provided stream builder.
+	 * Recursive method that builds the parameter permutations and adds them to
+	 * the provided stream builder.
 	 *
-	 * @param currInputPermutation the mutable stack containing the input permutation that is currently being built
-	 * @param perParameterDataPointsIterator the iterator used to retrieve the index and data point options for each parameter
+	 * @param currInputPermutation the mutable stack containing the input
+	 * permutation that is currently being built
+	 * @param perParameterDataPointsIterator the iterator used to retrieve the
+	 * index and data point options for each parameter
 	 * @param permutations the {@code List} that permutations will be added to
 	 */
 	private void recursiveAddPermutations(Stack<Entry<Integer, DataPointDetails>> currInputPermutation,

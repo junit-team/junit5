@@ -48,6 +48,7 @@ public abstract class SupplierTestBase<T extends TheoryArgumentSupplier, U exten
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testSupplierConstructionAndAnnotationParsing() throws Exception {
 		//Setup
 		AnnotationExpectedResultPair annotationExpectedResultPair = getAnnotationExpectedResultPair();
