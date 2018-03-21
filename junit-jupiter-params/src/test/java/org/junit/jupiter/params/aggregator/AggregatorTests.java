@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
-
+import static java.util.stream.Collectors.toMap;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -76,9 +76,15 @@ public class AggregatorTests {
 	static class TestHashMapAggregator implements ArgumentsAggregator {
 		@Override
 		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
-			Map<String, Object> m = new HashMap<>();
-			IntStream.range(0, accessor.size()).forEach(i -> m.put(Integer.toString(i), accessor.get(i)));
-			return m;
+			return IntStream
+					.range(0, accessor.size())
+					.boxed()
+					.collect(
+							toMap(
+									i -> Integer.toString(i),
+									i -> accessor.get(i)
+							)
+					);
 		}
 	}
 
