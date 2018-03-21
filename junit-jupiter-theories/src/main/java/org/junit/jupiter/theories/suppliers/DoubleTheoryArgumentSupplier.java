@@ -27,6 +27,11 @@ public class DoubleTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier
 	@Override
 	protected List<DataPointDetails> buildArguments(TheoryParameterDetails parameterDetails,
 			DoubleValues annotationToParse) {
-		return Arrays.stream(annotationToParse.value()).boxed().map(this::toDataPointDetails).collect(toList());
+		// @formatter:off
+		return Arrays.stream(annotationToParse.value())
+				.boxed()
+				.map(this::toDataPointDetails)
+				.collect(toList());
+		// @formatter:on
 	}
 }

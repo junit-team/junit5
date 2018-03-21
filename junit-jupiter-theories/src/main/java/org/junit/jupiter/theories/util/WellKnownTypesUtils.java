@@ -55,8 +55,11 @@ public class WellKnownTypesUtils {
 			throw new IllegalArgumentException("isKnownType does not accept primitives");
 		}
 
-		return Arrays.stream(SupportedTypes.values()).map(v -> v.isSupportedPredicate).anyMatch(
-			v -> v.test(typeToTest));
+		// @formatter:off
+		return Arrays.stream(SupportedTypes.values())
+				.map(v -> v.isSupportedPredicate)
+				.anyMatch(v -> v.test(typeToTest));
+		// @formatter:on
 	}
 
 	/**
@@ -67,9 +70,12 @@ public class WellKnownTypesUtils {
 	 * data points
 	 */
 	public Optional<List<DataPointDetails>> getDataPointDetails(TheoryParameterDetails parameterDetails) {
-		return Arrays.stream(SupportedTypes.values()).filter(
-			v -> v.isSupportedPredicate.test(parameterDetails.getNonPrimitiveType())).findAny().map(
-				v -> v.dataPointDetailsFactory.apply(parameterDetails));
+		// @formatter:off
+		return Arrays.stream(SupportedTypes.values())
+				.filter(v -> v.isSupportedPredicate.test(parameterDetails.getNonPrimitiveType()))
+				.findAny()
+				.map(v -> v.dataPointDetailsFactory.apply(parameterDetails));
+		// @formatter:on
 	}
 
 	/**

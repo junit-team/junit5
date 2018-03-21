@@ -28,7 +28,11 @@ public class ByteTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<B
 	protected List<DataPointDetails> buildArguments(TheoryParameterDetails parameterDetails,
 			ByteValues annotationToParse) {
 		byte[] values = annotationToParse.value();
-		return IntStream.range(0, values.length).mapToObj(i -> values[i]).map(this::toDataPointDetails).collect(
-			toList());
+		// @formatter:off
+		return IntStream.range(0, values.length)
+				.mapToObj(i -> values[i])
+				.map(this::toDataPointDetails)
+				.collect(toList());
+		// @formatter:on
 	}
 }

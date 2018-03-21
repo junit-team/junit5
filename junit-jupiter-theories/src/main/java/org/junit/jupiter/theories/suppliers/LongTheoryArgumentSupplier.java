@@ -27,6 +27,11 @@ public class LongTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<L
 	@Override
 	protected List<DataPointDetails> buildArguments(TheoryParameterDetails parameterDetails,
 			LongValues annotationToParse) {
-		return Arrays.stream(annotationToParse.value()).boxed().map(this::toDataPointDetails).collect(toList());
+		// @formatter:off
+		return Arrays.stream(annotationToParse.value())
+				.boxed()
+				.map(this::toDataPointDetails)
+				.collect(toList());
+		// @formatter:on
 	}
 }
