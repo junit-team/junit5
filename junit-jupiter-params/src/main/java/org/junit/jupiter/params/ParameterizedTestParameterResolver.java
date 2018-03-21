@@ -60,13 +60,12 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		Parameter parameter = parameterContext.getParameter();
 		Object argument = arguments[parameterContext.getIndex()];
 		Optional<ConvertWith> annotation = AnnotationUtils.findAnnotation(parameter, ConvertWith.class);
-		// @formatter:off;
+		// @formatter:off
 
 		ArgumentConverter argumentConverter = annotation.map(ConvertWith::value)
 				.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
 				.map(converter -> AnnotationConsumerInitializer.initialize(parameter, converter))
-				.orElse	(DefaultArgumentConverter.INSTANCE
-				);
+				.orElse	(DefaultArgumentConverter.INSTANCE);
 		// @formatter:on
 		try {
 			return argumentConverter.convert(argument, parameterContext);
@@ -89,7 +88,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		Parameter parameter = parameterContext.getParameter();
 		Optional<AggregateWith> annotation = AnnotationUtils.findAnnotation(parameter, AggregateWith.class);
 		ArgumentsAccessor accessor = new DefaultArgumentsAccessor(arguments);
-		// @formatter:off;
+		// @formatter:off
 		return annotation.map(AggregateWith::value)
 				.map(clazz -> ReflectionUtils.newInstance(clazz))
 				.map(aggregator -> aggregator.aggregateArguments(accessor,parameterContext))

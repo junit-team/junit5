@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.aggregator;
 
+import static java.util.stream.Collectors.toMap;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
-import static java.util.stream.Collectors.toMap;
+
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -36,13 +37,13 @@ public class AggregatorTests {
 	public void hashMapAggregationTest(@AggregateWith(TestHashMapAggregator.class) Map map) {
 		assertEquals(3, map.size());
 
-		// @formatter:off;
+		// @formatter:off
 		assertAll("Map contents",
 				() -> assertTrue(map.containsValue("Baz")),
 				() -> assertTrue(map.containsValue("Bar")),
 				() -> assertTrue(map.containsValue("Foo"))
 		);
-		// @formatter:on;
+		// @formatter:on
 
 	}
 
@@ -76,6 +77,7 @@ public class AggregatorTests {
 	static class TestHashMapAggregator implements ArgumentsAggregator {
 		@Override
 		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+			// @formatter:off
 			return IntStream
 					.range(0, accessor.size())
 					.boxed()
@@ -85,6 +87,7 @@ public class AggregatorTests {
 									i -> accessor.get(i)
 							)
 					);
+			// @formatter:on`
 		}
 	}
 
