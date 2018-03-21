@@ -24,10 +24,7 @@ import org.junit.jupiter.theories.annotations.Theory;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 import org.junit.jupiter.theories.exceptions.DataPointRetrievalException;
-import org.junit.jupiter.theories.util.ArgumentSupplierUtils;
-import org.junit.jupiter.theories.util.DataPointRetriever;
-import org.junit.jupiter.theories.util.TheoryDisplayNameFormatter;
-import org.junit.jupiter.theories.util.WellKnownTypesUtils;
+import org.junit.jupiter.theories.util.*;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -45,11 +42,13 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 
 	private final ArgumentSupplierUtils argumentSupplierUtils;
 
+	private final ArgumentUtils argumentUtils;
+
 	/**
 	 * Constructor.
 	 */
 	public TheoriesTestExtension() {
-		this(new DataPointRetriever(), new WellKnownTypesUtils(), new ArgumentSupplierUtils());
+		this(new DataPointRetriever(), new WellKnownTypesUtils(), new ArgumentSupplierUtils(), new ArgumentUtils());
 	}
 
 	/**
@@ -60,13 +59,15 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	 * types
 	 * @param argumentSupplierUtils utility for handling argument supplier
 	 * annotations
+	 * @param argumentUtils utility class for working with arguments
 	 */
 	//Present for testing
 	TheoriesTestExtension(DataPointRetriever dataPointRetriever, WellKnownTypesUtils wellKnownTypesUtils,
-			ArgumentSupplierUtils argumentSupplierUtils) {
+			ArgumentSupplierUtils argumentSupplierUtils, ArgumentUtils argumentUtils) {
 		this.dataPointRetriever = dataPointRetriever;
 		this.wellKnownTypesUtils = wellKnownTypesUtils;
 		this.argumentSupplierUtils = argumentSupplierUtils;
+		this.argumentUtils = argumentUtils;
 	}
 
 	@Override
@@ -91,11 +92,11 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 
 		int totalPermutations = permutations.size();
 		TheoryDisplayNameFormatter displayNameFormatter = new TheoryDisplayNameFormatter(theoryAnnotation.displayName(),
-			context.getDisplayName(), totalPermutations);
+			context.getDisplayName(), totalPermutations, argumentUtils);
 
 		AtomicInteger index = new AtomicInteger(0);
 		return permutations.stream().map(permutation -> new TheoryInvocationContext(index.getAndIncrement(),
-			permutation, displayNameFormatter, testMethod));
+			permutation, displayNameFormatter, testMethod, argumentUtils));
 	}
 
 	/**
