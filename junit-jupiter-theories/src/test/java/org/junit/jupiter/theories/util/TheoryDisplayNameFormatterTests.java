@@ -3,7 +3,11 @@ package org.junit.jupiter.theories.util;
 
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,14 +28,19 @@ class TheoryDisplayNameFormatterTests {
 		String displayName = "testDisplayName";
 		int currentPermutationIndex = 0;
 		int totalPermutations = 42;
+		ArgumentUtils mockArgumentUtils = mock(ArgumentUtils.class);
+		Method testMethod = TheoryDisplayNameFormatterTests.class.getMethod("testMethod", String.class, String.class);
 
 		Map<Integer, DataPointDetails> theoryParameterArguments = new HashMap<>();
 		theoryParameterArguments.put(0, new DataPointDetails("foo", Collections.emptyList(), "testSource"));
 		theoryParameterArguments.put(1, new DataPointDetails("bar", Collections.emptyList(), "testSource"));
 
 		TheoryInvocationContext invocationContext = new TheoryInvocationContext(currentPermutationIndex,
-			theoryParameterArguments, null,
-			TheoryDisplayNameFormatterTests.class.getMethod("testMethod", String.class, String.class));
+			theoryParameterArguments, null, testMethod, mockArgumentUtils);
+
+		String testArgumentDescription = "Test argument description";
+		when(mockArgumentUtils.getArgumentsDescriptions(eq(testMethod), eq(theoryParameterArguments), ", ")).thenReturn(
+			testArgumentDescription);
 
 		InputExpectedResultValuePair inputAndExpectedResult = buildInputAndExpectedResulStrings(
 			new InputExpectedResultValuePair(Theory.DISPLAY_NAME_PLACEHOLDER, displayName),
@@ -45,12 +54,11 @@ class TheoryDisplayNameFormatterTests {
 			new InputExpectedResultValuePair(Theory.PARAMETER_VALUES_WITH_INDEXES_PLACEHOLDER,
 				theoryParameterArguments.entrySet().stream().map(
 					v -> v.getValue().getValue() + " (index " + v.getKey() + ")").collect(joining(", "))),
-			new InputExpectedResultValuePair(Theory.PARAMETER_DETAILS_PLACEHOLDER,
-				invocationContext.getArgumentsDescription(", ")));
+			new InputExpectedResultValuePair(Theory.PARAMETER_DETAILS_PLACEHOLDER, testArgumentDescription));
 
 		//Test
 		TheoryDisplayNameFormatter formatterUnderTest = new TheoryDisplayNameFormatter(inputAndExpectedResult.input,
-			displayName, totalPermutations);
+			displayName, totalPermutations, mockArgumentUtils);
 		String actualResult = formatterUnderTest.format(invocationContext);
 
 		//Verify

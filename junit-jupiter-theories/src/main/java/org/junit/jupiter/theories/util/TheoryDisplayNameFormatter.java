@@ -29,8 +29,11 @@ public class TheoryDisplayNameFormatter {
 	 * @param displayName the display name provided by JUnit
 	 * @param totalPermutations the total number of theory permutations to be
 	 * performed
+	 * @param argumentUtils utility class for working with arguments
 	 */
-	public TheoryDisplayNameFormatter(String pattern, String displayName, int totalPermutations) {
+	public TheoryDisplayNameFormatter(String pattern, String displayName, int totalPermutations,
+			ArgumentUtils argumentUtils) {
+
 		String modifiedPattern = pattern;
 		modifiedPattern = modifiedPattern.replace(DISPLAY_NAME_PLACEHOLDER, displayName);
 		modifiedPattern = modifiedPattern.replace(TOTAL_PERMUTATIONS_PLACEHOLDER, String.valueOf(totalPermutations));
@@ -57,8 +60,8 @@ public class TheoryDisplayNameFormatter {
 			});
 		}
 		if (pattern.contains(PARAMETER_DETAILS_PLACEHOLDER)) {
-			patternModifiers.add(
-				(v, ctx) -> v.replace(PARAMETER_DETAILS_PLACEHOLDER, ctx.getArgumentsDescription(", ")));
+			patternModifiers.add((v, ctx) -> v.replace(PARAMETER_DETAILS_PLACEHOLDER,
+				argumentUtils.getArgumentsDescriptions(ctx.getTestMethod(), ctx.getTheoryParameterArguments(), ", ")));
 		}
 
 		//Very minor performance hit for using "identity-like" initial bifunction, but it greatly simplifies the code
