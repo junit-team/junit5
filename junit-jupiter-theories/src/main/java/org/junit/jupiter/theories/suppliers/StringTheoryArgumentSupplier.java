@@ -27,6 +27,10 @@ public class StringTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier
 	@Override
 	protected List<DataPointDetails> buildArguments(TheoryParameterDetails parameterDetails,
 			StringValues annotationToParse) {
-		return Arrays.stream(annotationToParse.value()).map(this::toDataPointDetails).collect(toList());
+		// @formatter:off
+		return Arrays.stream(annotationToParse.value())
+				.map(this::toDataPointDetails)
+				.collect(toList());
+		// @formatter:on
 	}
 }

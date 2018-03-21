@@ -95,8 +95,11 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 			context.getDisplayName(), totalPermutations, argumentUtils);
 
 		AtomicInteger index = new AtomicInteger(0);
-		return permutations.stream().map(permutation -> new TheoryInvocationContext(index.getAndIncrement(),
-			permutation, displayNameFormatter, testMethod, argumentUtils));
+		// @formatter:off
+		return permutations.stream()
+				.map(permutation -> new TheoryInvocationContext(index.getAndIncrement(),
+						permutation, displayNameFormatter, testMethod, argumentUtils));
+		// @formatter:on
 	}
 
 	/**
@@ -113,16 +116,21 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 
 		testMethod.setAccessible(true);
 		Parameter[] params = testMethod.getParameters();
-		return IntStream.range(0, params.length).filter(i -> {
-			Parameter parameter = params[i];
-			Class<?> boxedParameterType = ReflectionUtils.getBoxedClass(parameter.getType());
-			return dataPointTypes.stream().anyMatch(dataPointType -> dataPointType.isAssignableFrom(boxedParameterType)
-					|| wellKnownTypesUtils.isKnownType(boxedParameterType)
-					|| argumentSupplierUtils.getParameterSupplierAnnotation(parameter).isPresent());
-		}).mapToObj(i -> {
-			Parameter parameter = params[i];
-			return buildTheoryParameterDetails(i, parameter);
-		}).collect(toList());
+		// @formatter:off
+		return IntStream.range(0, params.length)
+				.filter(i -> {
+					Parameter parameter = params[i];
+					Class<?> boxedParameterType = ReflectionUtils.getBoxedClass(parameter.getType());
+					return dataPointTypes.stream().anyMatch(dataPointType -> dataPointType.isAssignableFrom(boxedParameterType)
+							|| wellKnownTypesUtils.isKnownType(boxedParameterType)
+							|| argumentSupplierUtils.getParameterSupplierAnnotation(parameter).isPresent());
+				})
+				.mapToObj(i -> {
+					Parameter parameter = params[i];
+					return buildTheoryParameterDetails(i, parameter);
+				})
+				.collect(toList());
+		// @formatter:on
 	}
 
 	/**
@@ -134,10 +142,15 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	 * @return the constructed details
 	 */
 	private TheoryParameterDetails buildTheoryParameterDetails(int parameterIndex, Parameter parameter) {
-		List<String> qualifiers = Optional.ofNullable(parameter.getAnnotation(Qualifiers.class)).map(
-			Qualifiers::value).map(
-				v -> Stream.of(v).map(String::trim).filter(String::isEmpty).collect(toList())).orElseGet(
-					Collections::emptyList);
+		// @formatter:off
+		List<String> qualifiers = Optional.ofNullable(parameter.getAnnotation(Qualifiers.class))
+				.map(Qualifiers::value)
+				.map(v -> Stream.of(v)
+						.map(String::trim)
+						.filter(String::isEmpty)
+						.collect(toList()))
+				.orElseGet(Collections::emptyList);
+		// @formatter:on
 
 		Optional<? extends Annotation> parameterSupplierAnnotation = argumentSupplierUtils.getParameterSupplierAnnotation(
 			parameter);
@@ -166,9 +179,12 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	private Map<Integer, List<DataPointDetails>> buildPerParameterDataPoints(String testMethodName,
 			List<TheoryParameterDetails> theoryParameters, List<DataPointDetails> dataPointDetails) {
 
-		return theoryParameters.stream().map(paramDetails -> new SimpleEntry<>(paramDetails.getIndex(),
-			getDataPointsForParameter(testMethodName, paramDetails, dataPointDetails))).collect(
-				toMap(Entry::getKey, Entry::getValue));
+		// @formatter:off
+		return theoryParameters.stream()
+				.map(paramDetails -> new SimpleEntry<>(paramDetails.getIndex(),
+						getDataPointsForParameter(testMethodName, paramDetails, dataPointDetails)))
+				.collect(toMap(Entry::getKey, Entry::getValue));
+		// @formatter:on
 	}
 
 	/**
@@ -190,8 +206,10 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 		}
 
 		Class<?> desiredClass = theoryParameterDetails.getNonPrimitiveType();
-		Stream<DataPointDetails> intermediateDetailsStream = dataPointDetails.stream().filter(
-			currDataPointDetails -> desiredClass.isAssignableFrom(currDataPointDetails.getValue().getClass()));
+		// @formatter:off
+		Stream<DataPointDetails> intermediateDetailsStream = dataPointDetails.stream()
+				.filter(currDataPointDetails -> desiredClass.isAssignableFrom(currDataPointDetails.getValue().getClass()));
+		// @formatter:on
 
 		List<String> possibleQualifiers = theoryParameterDetails.getQualifiers();
 		if (!possibleQualifiers.isEmpty()) {

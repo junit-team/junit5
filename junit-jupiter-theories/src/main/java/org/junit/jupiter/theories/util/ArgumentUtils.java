@@ -26,11 +26,15 @@ public final class ArgumentUtils {
 	 */
 	public String getArgumentsDescriptions(Method testMethod, Map<Integer, DataPointDetails> arguments,
 			String delimiter) {
-		return arguments.entrySet().stream().map(entry -> {
-			int paramIndex = entry.getKey();
-			Parameter param = testMethod.getParameters()[paramIndex];
-			return buildArgumentDescription(param, paramIndex, entry.getValue());
-		}).collect(Collectors.joining(delimiter));
+		// @formatter:off
+		return arguments.entrySet().stream()
+				.map(entry -> {
+					int paramIndex = entry.getKey();
+					Parameter param = testMethod.getParameters()[paramIndex];
+					return buildArgumentDescription(param, paramIndex, entry.getValue());
+				})
+				.collect(Collectors.joining(delimiter));
+		// @formatter:on
 	}
 
 	/**
