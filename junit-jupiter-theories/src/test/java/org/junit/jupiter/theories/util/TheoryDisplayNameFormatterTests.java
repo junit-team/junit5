@@ -39,8 +39,8 @@ class TheoryDisplayNameFormatterTests {
 			theoryParameterArguments, null, testMethod, mockArgumentUtils);
 
 		String testArgumentDescription = "Test argument description";
-		when(mockArgumentUtils.getArgumentsDescriptions(eq(testMethod), eq(theoryParameterArguments), ", ")).thenReturn(
-			testArgumentDescription);
+		when(mockArgumentUtils.getArgumentsDescriptions(eq(testMethod), eq(theoryParameterArguments),
+			eq(", "))).thenReturn(testArgumentDescription);
 
 		InputExpectedResultValuePair inputAndExpectedResult = buildInputAndExpectedResulStrings(
 			new InputExpectedResultValuePair(Theory.DISPLAY_NAME_PLACEHOLDER, displayName),

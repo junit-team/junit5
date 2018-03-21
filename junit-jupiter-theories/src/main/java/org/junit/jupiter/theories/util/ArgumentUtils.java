@@ -15,7 +15,7 @@ import org.junit.jupiter.theories.domain.DataPointDetails;
  * Helper methods for working with theory arguments.
  */
 @API(status = INTERNAL, since = "5.2")
-public final class ArgumentUtils {
+public class ArgumentUtils {
 	/**
 	 * Builds a description of the provided argument(s) for the provided method.
 	 *

@@ -111,8 +111,13 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 	 */
 	private List<TheoryParameterDetails> getTheoryParameters(Method testMethod,
 			List<DataPointDetails> dataPointDetails) {
-		List<Class<?>> dataPointTypes = dataPointDetails.stream().map(DataPointDetails::getValue).map(
-			Object::getClass).distinct().collect(toList());
+		// @formatter:off
+		List<Class<?>> dataPointTypes = dataPointDetails.stream()
+				.map(DataPointDetails::getValue)
+				.map(Object::getClass)
+				.distinct()
+				.collect(toList());
+		// @formatter:on
 
 		testMethod.setAccessible(true);
 		Parameter[] params = testMethod.getParameters();
@@ -121,9 +126,9 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 				.filter(i -> {
 					Parameter parameter = params[i];
 					Class<?> boxedParameterType = ReflectionUtils.getBoxedClass(parameter.getType());
-					return dataPointTypes.stream().anyMatch(dataPointType -> dataPointType.isAssignableFrom(boxedParameterType)
+					return dataPointTypes.stream().anyMatch(dataPointType -> dataPointType.isAssignableFrom(boxedParameterType))
 							|| wellKnownTypesUtils.isKnownType(boxedParameterType)
-							|| argumentSupplierUtils.getParameterSupplierAnnotation(parameter).isPresent());
+							|| argumentSupplierUtils.getParameterSupplierAnnotation(parameter).isPresent();
 				})
 				.mapToObj(i -> {
 					Parameter parameter = params[i];
@@ -147,7 +152,7 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 				.map(Qualifiers::value)
 				.map(v -> Stream.of(v)
 						.map(String::trim)
-						.filter(String::isEmpty)
+						.filter(trimmedString -> !trimmedString.isEmpty())
 						.collect(toList()))
 				.orElseGet(Collections::emptyList);
 		// @formatter:on
@@ -230,6 +235,10 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 			return wellKnownDataPointDetails.get();
 		}
 
+		//Note: This case should be impossible since we verified that there is at least one valid data point when this
+		// parameter was discovered as a theory parameter. However, it's a "nice to have" in case an error is created
+		// in the future and it's also necessary to prevent the compiler from complaining about the lack of a return
+		// value)
 		String errorMessage = "No data points found for parameter \"" + theoryParameterDetails.getName() + "\" (index "
 				+ theoryParameterDetails.getIndex() + ") of method \"" + testMethodName + "\"";
 		if (!theoryParameterDetails.getQualifiers().isEmpty()) {
