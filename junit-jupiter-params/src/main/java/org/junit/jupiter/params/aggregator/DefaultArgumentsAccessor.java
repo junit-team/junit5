@@ -32,7 +32,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	}
 
 	public Object[] toArray() {
-		return arguments;
+		return Arrays.copyOf(arguments, arguments.length);
 	}
 
 	public List<Object> toList() {
