@@ -602,6 +602,48 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Parses given <em>fully qualified method name</em> and returns 3-elements array where
+	 * element at index:
+	 * <ul>
+	 *     <li>{@code 0} is fully qualified class name</li>
+	 *     <li>{@code 1} is name of the method</li>
+	 *     <li>{@code 2} is comma-separated parameters list or blank string if method
+	 *     doesn't take any parameters</li>
+	 * </ul>
+	 * @param fullyQualifiedMethodName <em>fully qualified method name</em>
+	 * @return method parts array
+	 */
+	public static String[] parseFullyQualifiedMethodName(String fullyQualifiedMethodName) {
+		Preconditions.notBlank(fullyQualifiedMethodName, "fullyQualifiedMethodName must not be null or blank");
+
+		int indexOfFirstHashtag = fullyQualifiedMethodName.indexOf('#');
+		boolean validSyntax = (indexOfFirstHashtag > 0)
+				&& (indexOfFirstHashtag < fullyQualifiedMethodName.length() - 1);
+
+		Preconditions.condition(validSyntax,
+			() -> "[" + fullyQualifiedMethodName + "] is not a valid fully qualified method name: "
+					+ "it must start with a fully qualified class name followed by a '#' "
+					+ "and then the method name, optionally followed by a parameter list enclosed in parentheses.");
+
+		String className = fullyQualifiedMethodName.substring(0, indexOfFirstHashtag);
+		String methodPart = fullyQualifiedMethodName.substring(indexOfFirstHashtag + 1);
+		String methodName = methodPart;
+		String methodParameters = "";
+
+		if (methodPart.endsWith("()")) {
+			methodName = methodPart.substring(0, methodPart.length() - 2);
+		}
+		else if (methodPart.endsWith(")")) {
+			int indexOfLastOpeningParenthesis = methodPart.lastIndexOf('(');
+			if ((indexOfLastOpeningParenthesis > 0) && (indexOfLastOpeningParenthesis < methodPart.length() - 1)) {
+				methodName = methodPart.substring(0, indexOfLastOpeningParenthesis);
+				methodParameters = methodPart.substring(indexOfLastOpeningParenthesis + 1, methodPart.length() - 1);
+			}
+		}
+		return new String[] { className, methodName, methodParameters };
+	}
+
+	/**
 	 * Get the outermost instance of the required type, searching recursively
 	 * through enclosing instances.
 	 *

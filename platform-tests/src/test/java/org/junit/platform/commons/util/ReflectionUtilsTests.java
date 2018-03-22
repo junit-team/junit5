@@ -447,6 +447,75 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	void getFullyQualifiedMethodNamePreconditions() {
+		// @formatter:off
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getFullyQualifiedMethodName(null, null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getFullyQualifiedMethodName(null, "testMethod"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getFullyQualifiedMethodName(Object.class, null));
+		// @formatter:on
+	}
+
+	@Test
+	void getFullyQualifiedMethodNameForMethodWithoutParameters() {
+		assertThat(ReflectionUtils.getFullyQualifiedMethodName(Object.class, "toString"))//
+				.isEqualTo("java.lang.Object#toString()");
+	}
+
+	@Test
+	void getFullyQualifiedMethodNameForMethodWithNullParameters() {
+		assertThat(ReflectionUtils.getFullyQualifiedMethodName(Object.class, "toString", null))//
+				.isEqualTo("java.lang.Object#toString()");
+	}
+
+	@Test
+	void getFullyQualifiedMethodNameForMethodWithSingleParameter() {
+		assertThat(ReflectionUtils.getFullyQualifiedMethodName(Object.class, "equals", Object.class))//
+				.isEqualTo("java.lang.Object#equals(java.lang.Object)");
+	}
+
+	@Test
+	void getFullyQualifiedMethodNameForMethodWithMultipleParameters() {
+		// @formatter:off
+		assertThat(ReflectionUtils.getFullyQualifiedMethodName(Object.class, "testMethod", int.class, Object.class))//
+				.isEqualTo("java.lang.Object#testMethod(int, java.lang.Object)");
+		// @formatter:on
+	}
+
+	@Test
+	void parseFullyQualifiedMethodNamePreconditions() {
+		// @formatter:off
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName(null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName(""));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("   "));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("java.lang.Object#"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("#equals"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("#"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("java.lang.Object"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("equals"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("()"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("(int, java.lang.Object)"));
+		// @formatter:on
+	}
+
+	@Test
+	void parseFullyQualifiedMethodNameForMethodWithoutParameters() {
+		assertThat(ReflectionUtils.parseFullyQualifiedMethodName("com.example.Test#method()"))//
+				.containsExactly("com.example.Test", "method", "");
+	}
+
+	@Test
+	void parseFullyQualifiedMethodNameForMethodWithSingleParameter() {
+		assertThat(ReflectionUtils.parseFullyQualifiedMethodName("com.example.Test#method(java.lang.Object)"))//
+				.containsExactly("com.example.Test", "method", "java.lang.Object");
+	}
+
+	@Test
+	void parseFullyQualifiedMethodNameForMethodWithMultipleParameters() {
+		assertThat(ReflectionUtils.parseFullyQualifiedMethodName("com.example.Test#method(int, java.lang.Object)"))//
+				.containsExactly("com.example.Test", "method", "int, java.lang.Object");
+	}
+
+	@Test
 	void getOutermostInstancePreconditions() {
 		// @formatter:off
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(null, null));

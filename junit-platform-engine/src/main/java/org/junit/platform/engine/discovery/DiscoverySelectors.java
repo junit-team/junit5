@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.UniqueId;
 
@@ -355,34 +356,8 @@ public final class DiscoverySelectors {
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(String fullyQualifiedMethodName) throws PreconditionViolationException {
-		Preconditions.notBlank(fullyQualifiedMethodName, "fullyQualifiedMethodName must not be null or blank");
-
-		int indexOfFirstHashtag = fullyQualifiedMethodName.indexOf('#');
-		boolean validSyntax = (indexOfFirstHashtag > 0)
-				&& (indexOfFirstHashtag < fullyQualifiedMethodName.length() - 1);
-
-		Preconditions.condition(validSyntax,
-			() -> "[" + fullyQualifiedMethodName + "] is not a valid fully qualified method name: "
-					+ "it must start with a fully qualified class name followed by a '#' "
-					+ "and then the method name, optionally followed by a parameter list enclosed in parentheses.");
-
-		String className = fullyQualifiedMethodName.substring(0, indexOfFirstHashtag);
-		String methodPart = fullyQualifiedMethodName.substring(indexOfFirstHashtag + 1);
-		String methodName = methodPart;
-		String methodParameters = "";
-
-		if (methodPart.endsWith("()")) {
-			methodName = methodPart.substring(0, methodPart.length() - 2);
-		}
-		else if (methodPart.endsWith(")")) {
-			int indexOfLastOpeningParenthesis = methodPart.lastIndexOf('(');
-			if ((indexOfLastOpeningParenthesis > 0) && (indexOfLastOpeningParenthesis < methodPart.length() - 1)) {
-				methodName = methodPart.substring(0, indexOfLastOpeningParenthesis);
-				methodParameters = methodPart.substring(indexOfLastOpeningParenthesis + 1, methodPart.length() - 1);
-			}
-		}
-
-		return selectMethod(className, methodName, methodParameters);
+		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
+		return selectMethod(methodParts[0], methodParts[1], methodParts[2]);
 	}
 
 	/**

@@ -113,18 +113,70 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void throwsExceptionWhenNoTestClassIsAvailable() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments((Class<?>) null, null, false, "someMethod"));
-
-		assertThat(exception).hasMessageContaining("required test class is not present");
-	}
-
-	@Test
 	void providesArgumentsUsingDefaultValue() {
 		Stream<Object[]> arguments = provideArguments(TestCaseDefaultValue.class,
 			selectMethod(TestCaseDefaultValue.class, TEST_METHOD, String.class.getName()).getJavaMethod(), false, "");
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
+	}
+
+	@Test
+	void providesArgumentsUsingExternalMethod() {
+		Stream<Object[]> arguments = provideArguments(
+			"org.junit.jupiter.params.provider.ExternalTestDataSource#stringsProvider");
+
+		assertThat(arguments).containsExactly(array("string1"), array("string2"));
+	}
+
+	@Test
+	void providesArgumentsUsingExternalMethodWithParentheses() {
+		Stream<Object[]> arguments = provideArguments(
+			"org.junit.jupiter.params.provider.ExternalTestDataSource#stringsProvider()");
+
+		assertThat(arguments).containsExactly(array("string1"), array("string2"));
+	}
+
+	@Test
+	void providesArgumentsUsingExternalMethodFromNestedClass() {
+		Stream<Object[]> arguments = provideArguments(
+			"org.junit.jupiter.params.provider.ExternalTestDataSource$Nested#stringsProvider()");
+
+		assertThat(arguments).containsExactly(array("nested string1"), array("nested string2"));
+	}
+
+	@Test
+	void providesArgumentsUsingExternalAndInternalMethodsCombined() {
+		Stream<Object[]> arguments = provideArguments("stringStreamProvider",
+			"org.junit.jupiter.params.provider.ExternalTestDataSource#stringsProvider");
+
+		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("string1"), array("string2"));
+	}
+
+	@Test
+	void throwsExceptionWhenExternalMethodHasParameters() {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(
+				"org.junit.jupiter.params.provider.ExternalTestDataSource#methodWithParams(String, String)").toArray());
+
+		assertThat(exception.getMessage()).isEqualTo(
+			"factory method [org.junit.jupiter.params.provider.ExternalTestDataSource#methodWithParams(String, String)] cannot take parameters");
+	}
+
+	@Test
+	void throwsExceptionWhenClassForExternalMethodCannotBeLoaded() {
+		JUnitException exception = assertThrows(JUnitException.class,
+			() -> provideArguments("com.example.NonExistentExternalTestDataSource#stringsProvider").toArray());
+
+		assertThat(exception.getMessage()).isEqualTo(
+			"Could not load class [com.example.NonExistentExternalTestDataSource]");
+	}
+
+	@Test
+	void throwsExceptionWhenExternalMethodCannotBeFound() {
+		JUnitException exception = assertThrows(JUnitException.class, () -> provideArguments(
+			"org.junit.jupiter.params.provider.ExternalTestDataSource#nonExistentMethod").toArray());
+
+		assertThat(exception.getMessage()).isEqualTo(
+			"Could not find factory method [nonExistentMethod] in class [org.junit.jupiter.params.provider.ExternalTestDataSource]");
 	}
 
 	@Nested
@@ -297,6 +349,26 @@ class MethodArgumentsProviderTests {
 
 		Stream<String> nonStaticStringStreamProvider() {
 			return Stream.of("foo", "bar");
+		}
+	}
+
+}
+
+@SuppressWarnings("unused")
+class ExternalTestDataSource {
+
+	static Stream<String> stringsProvider() {
+		return Stream.of("string1", "string2");
+	}
+
+	static Stream<String> methodWithParams(String a, String b) {
+		return Stream.of(a, b);
+	}
+
+	static class Nested {
+
+		static Stream<String> stringsProvider() {
+			return Stream.of("nested string1", "nested string2");
 		}
 	}
 
