@@ -41,5 +41,5 @@ script:
 
 # Run JaCoCo report and send report to codecov.io after build success for JDK 9 build
 after_success:
-  - test "${JDK}" = "Oracle JDK 9" && ./gradlew -PenableJaCoCo jacocoRootReport || true
-  - test "${JDK}" = "Oracle JDK 9" && bash <(curl -s https://codecov.io/bash) || true
+  - test "${JDK}" = "OpenJDK 10" && ./gradlew -PenableJaCoCo jacocoRootReport || true
+  - test "${JDK}" = "OpenJDK 10" && bash <(curl -s https://codecov.io/bash) || true
