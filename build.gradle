@@ -117,7 +117,7 @@ allprojects { subproj ->
 	if (project.hasProperty('enableJaCoCo')) {
 		apply plugin: "jacoco"
 		jacoco {
-			toolVersion = '0.8.0'
+			toolVersion = '0.8.1'
 		}
 	}
 
