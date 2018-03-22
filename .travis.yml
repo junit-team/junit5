@@ -14,16 +14,12 @@ before_install:
 
 matrix:
   include:
-# Java 9 "Oracle JDK" (provided by Travis CI)
-    - jdk: oraclejdk9
-      env: JDK='Oracle JDK 9' EXTRA_GRADLE_ARGS='-PenableJaCoCo'
-      install: echo "Don't let Travis CI execute './gradlew assemble' by default"
 # Java 10 "Oracle JDK" (not yet provided by Travis CI)
     - jdk: oraclejdk10
       env: JDK='Oracle JDK 10'
       install: echo "Don't let Travis CI execute './gradlew assemble' by default"
 # Java 10 "OpenJDK"
-    - env: JDK='OpenJDK 10'
+    - env: JDK='OpenJDK 10' EXTRA_GRADLE_ARGS='-PenableJaCoCo'
       install: . ./install-jdk.sh -F 10 -L GPL
 # Java 11 "Oracle JDK"
     - env: JDK='Oracle JDK 11'
