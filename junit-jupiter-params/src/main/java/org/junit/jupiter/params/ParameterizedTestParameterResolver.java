@@ -45,13 +45,13 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		Executable declaringExecutable = parameterContext.getParameter().getDeclaringExecutable();
 		Method testMethod = extensionContext.getTestMethod().orElse(null);
 		return declaringExecutable.equals(testMethod)
-				&& ((parameterContext.getIndex() < arguments.length || isAggregate(parameterContext)));
+				&& ((parameterContext.getIndex() < arguments.length || isAggregate(parameterContext.getParameter())));
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return isAggregate(parameterContext) ? aggregate(parameterContext, extensionContext)
+		return isAggregate(parameterContext.getParameter()) ? aggregate(parameterContext, extensionContext)
 				: convert(parameterContext, extensionContext);
 
 	}
@@ -77,8 +77,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	}
 
 	// An aggregate parameter resolution requires passing all method arguments
-	private boolean isAggregate(ParameterContext context) {
-		Parameter parameter = context.getParameter();
+	public static boolean isAggregate(Parameter parameter) {
 		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
 				|| AnnotationUtils.isAnnotated(parameter, AggregateWith.class);
 	}

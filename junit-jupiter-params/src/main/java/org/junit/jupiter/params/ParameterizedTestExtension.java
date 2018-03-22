@@ -15,6 +15,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
@@ -85,9 +86,12 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private Object[] consumedArguments(Object[] arguments, Method templateMethod) {
-		/*int parametersCount = templateMethod.getParameterCount();
-		return arguments.length > parametersCount ? Arrays.copyOf(arguments, parametersCount) : arguments;*/
-		return arguments;
+		boolean hasAggregate = Arrays.stream(templateMethod.getParameters()).filter(
+			p -> ParameterizedTestParameterResolver.isAggregate(p)).count() > 0;
+
+		int parametersCount = templateMethod.getParameterCount();
+		return hasAggregate ? arguments
+				: (arguments.length > parametersCount ? Arrays.copyOf(arguments, parametersCount) : arguments);
 	}
 
 }
