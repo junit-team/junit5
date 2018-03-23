@@ -280,87 +280,87 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void loadClassWhenClassNotFoundException() throws Exception {
+	void loadClassWhenClassNotFoundException() {
 		assertThat(ReflectionUtils.loadClass("foo.bar.EnigmaClassThatDoesNotExist")).isEmpty();
 	}
 
 	@Test
-	void loadClass() throws Exception {
+	void loadClass() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(Integer.class.getName());
 		assertThat(optional).contains(Integer.class);
 	}
 
 	@Test
-	void loadClassTrimsClassName() throws Exception {
+	void loadClassTrimsClassName() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("  " + Integer.class.getName() + "\t");
 		assertThat(optional).contains(Integer.class);
 	}
 
 	@Test
-	void loadClassForPrimitive() throws Exception {
+	void loadClassForPrimitive() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(int.class.getName());
 		assertThat(optional).contains(int.class);
 	}
 
 	@Test
-	void loadClassForPrimitiveArray() throws Exception {
+	void loadClassForPrimitiveArray() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(int[].class.getName());
 		assertThat(optional).contains(int[].class);
 	}
 
 	@Test
-	void loadClassForPrimitiveArrayUsingSourceCodeSyntax() throws Exception {
+	void loadClassForPrimitiveArrayUsingSourceCodeSyntax() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("int[]");
 		assertThat(optional).contains(int[].class);
 	}
 
 	@Test
-	void loadClassForObjectArray() throws Exception {
+	void loadClassForObjectArray() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(String[].class.getName());
 		assertThat(optional).contains(String[].class);
 	}
 
 	@Test
-	void loadClassForObjectArrayUsingSourceCodeSyntax() throws Exception {
+	void loadClassForObjectArrayUsingSourceCodeSyntax() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("java.lang.String[]");
 		assertThat(optional).contains(String[].class);
 	}
 
 	@Test
-	void loadClassForTwoDimensionalPrimitiveArray() throws Exception {
+	void loadClassForTwoDimensionalPrimitiveArray() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(int[][].class.getName());
 		assertThat(optional).contains(int[][].class);
 	}
 
 	@Test
-	void loadClassForTwoDimensionaldimensionalPrimitiveArrayUsingSourceCodeSyntax() throws Exception {
+	void loadClassForTwoDimensionaldimensionalPrimitiveArrayUsingSourceCodeSyntax() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("int[][]");
 		assertThat(optional).contains(int[][].class);
 	}
 
 	@Test
-	void loadClassForMultidimensionalPrimitiveArray() throws Exception {
+	void loadClassForMultidimensionalPrimitiveArray() {
 		String className = int[][][][][].class.getName();
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(className);
 		assertThat(optional).as(className).contains(int[][][][][].class);
 	}
 
 	@Test
-	void loadClassForMultidimensionalPrimitiveArrayUsingSourceCodeSyntax() throws Exception {
+	void loadClassForMultidimensionalPrimitiveArrayUsingSourceCodeSyntax() {
 		String className = "int[][][][][]";
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(className);
 		assertThat(optional).as(className).contains(int[][][][][].class);
 	}
 
 	@Test
-	void loadClassForMultidimensionalObjectArray() throws Exception {
+	void loadClassForMultidimensionalObjectArray() {
 		String className = String[][][][][].class.getName();
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(className);
 		assertThat(optional).as(className).contains(String[][][][][].class);
 	}
 
 	@Test
-	void loadClassForMultidimensionalObjectArrayUsingSourceCodeSyntax() throws Exception {
+	void loadClassForMultidimensionalObjectArrayUsingSourceCodeSyntax() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("java.lang.String[][][][][]");
 		assertThat(optional).contains(String[][][][][].class);
 	}
@@ -492,7 +492,7 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodByParameterTypesPreconditions() throws Exception {
+	void findMethodByParameterTypesPreconditions() {
 		// @formatter:off
 		assertThrows(PreconditionViolationException.class, () -> findMethod(null, null));
 		assertThrows(PreconditionViolationException.class, () -> findMethod(null, "method"));
@@ -825,7 +825,7 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodsReturnsAllOverloadedMethodsThatAreNotShadowed() throws Exception {
+	void findMethodsReturnsAllOverloadedMethodsThatAreNotShadowed() {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
 
 		// Search for all foo(*) methods.
@@ -839,7 +839,7 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodsDoesNotReturnOverriddenDefaultMethods() throws Exception {
+	void findMethodsDoesNotReturnOverriddenDefaultMethods() {
 		Class<?> clazz = InterfaceWithOverriddenGenericDefaultMethodImpl.class;
 
 		// Search for all foo(*) methods.
