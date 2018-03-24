@@ -126,3 +126,19 @@ asciidoctor {
 				'idprefix': '',
 				'idseparator': '-'
 }
+
+
+eclipse {
+	classpath {
+		plusConfigurations += [ project(':junit-platform-console').configurations.shadowed ]
+		plusConfigurations += [ project(':junit-jupiter-params').configurations.shadowed ]
+
+	}
+}
+
+idea {
+	module {
+		scopes.PROVIDED.plus += [ project(':junit-platform-console').configurations.shadowed ]
+		scopes.PROVIDED.plus += [ project(':junit-jupiter-params').configurations.shadowed ]
+	}
+}
