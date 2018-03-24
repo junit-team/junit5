@@ -58,14 +58,14 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	private void discoverTestsEarly(Method testMethod) {
 		try {
 			if (Modifier.isStatic(testMethod.getModifiers())) {
-				discoverTests(testMethod.invoke(null));
+				discoverTests(testMethod.invoke(null), true);
 			}
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new IllegalStateException("could not invoke TestFactory method", e);
 		}
 	}
 	
-	private void discoverTests(Object testFactoryMethodResult) {
+	private void discoverTests(Object testFactoryMethodResult, boolean isEarlyDiscovery) {
 		TestSource source = getSource().orElseThrow(
 				() -> new JUnitException("Illegal state: TestSource must be present"));
 
@@ -75,7 +75,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			while (iterator.hasNext()) {
 				DynamicNode dynamicNode = iterator.next();
 				Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index++,
-					source, getDynamicDescendantFilter());
+					source, getDynamicDescendantFilter(), isEarlyDiscovery);
 				descriptor.ifPresent(d -> children.add(d));
 			}
 		}
@@ -121,7 +121,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			if (!testsEarlyDiscovered) {
 				Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, extensionContext,
 						context.getExtensionRegistry());
-				discoverTests(testFactoryMethodResult);
+				discoverTests(testFactoryMethodResult, false);
 			}
 			
 			for (TestDescriptor td : children) {
@@ -141,7 +141,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	}
 
 	static Optional<JupiterTestDescriptor> createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node,
-			int index, TestSource source, DynamicDescendantFilter dynamicDescendantFilter) {
+			int index, TestSource source, DynamicDescendantFilter dynamicDescendantFilter, boolean isEarlyDiscovery) {
 		UniqueId uniqueId;
 		Supplier<JupiterTestDescriptor> descriptorCreator;
 		if (node instanceof DynamicTest) {
@@ -153,7 +153,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			DynamicContainer container = (DynamicContainer) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
 			descriptorCreator = () -> new DynamicContainerTestDescriptor(uniqueId, index, container, source,
-				dynamicDescendantFilter);
+				dynamicDescendantFilter, isEarlyDiscovery);
 		}
 		if (dynamicDescendantFilter.test(uniqueId)) {
 			JupiterTestDescriptor descriptor = descriptorCreator.get();
