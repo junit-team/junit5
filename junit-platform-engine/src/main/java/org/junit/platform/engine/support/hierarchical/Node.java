@@ -200,7 +200,7 @@ public interface Node<C extends EngineExecutionContext> {
 		 *
 		 * @param testDescriptor the test descriptor to be executed
 		 */
-		void execute(TestDescriptor testDescriptor);
+		void execute(TestDescriptor testDescriptor, boolean withRegistration);
 
 	}
 

@@ -58,7 +58,7 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 					.map(child -> toDynamicDescriptor(index.getAndIncrement(), child))
 					.filter(Optional::isPresent)
 					.map(Optional::get)
-					.forEachOrdered(dynamicTestExecutor::execute);
+					.forEachOrdered(td -> dynamicTestExecutor.execute(td, true));
 			// @formatter:on
 		}
 		return context;

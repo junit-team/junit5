@@ -130,7 +130,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 
 	private void execute(DynamicTestExecutor dynamicTestExecutor, TestDescriptor testDescriptor) {
 		addChild(testDescriptor);
-		dynamicTestExecutor.execute(testDescriptor);
+		dynamicTestExecutor.execute(testDescriptor, true);
 	}
 
 	private void validateWasAtLeastInvokedOnce(int invocationIndex) {
