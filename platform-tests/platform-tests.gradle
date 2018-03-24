@@ -40,6 +40,7 @@ dependencies {
 	testImplementation("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+	testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(':junit-jupiter-engine'))

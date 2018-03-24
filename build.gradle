@@ -124,6 +124,7 @@ allprojects { subproj ->
 	repositories {
 		// mavenLocal()
 		mavenCentral()
+		jcenter() // TODO remove once Mockito 2.17.0 is available on Central
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 
