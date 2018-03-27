@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -38,6 +39,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.condition.DisabledOnJre;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -66,6 +68,18 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void constructorInjection() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(ConstructorInjectionTestCase.class);
+
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+	}
+
+	@Test
+	void constructorInjectionWithAnnotatedParameter() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(
+			AnnotatedParameterConstructorInjectionTestCase.class);
 
 		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -239,6 +253,47 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 			private final CustomType innerCustomType;
 
 			NestedTestCase(TestInfo testInfo, CustomType customType) {
+				this.innerTestInfo = testInfo;
+				this.innerCustomType = customType;
+			}
+
+			@Test
+			void test() {
+				assertNotNull(outerTestInfo);
+				assertNotNull(outerCustomType);
+				assertNotNull(this.innerTestInfo);
+				assertNotNull(this.innerCustomType);
+			}
+		}
+	}
+
+	@ExtendWith(CustomAnnotationParameterResolver.class)
+	static class AnnotatedParameterConstructorInjectionTestCase {
+
+		private final TestInfo outerTestInfo;
+		private final CustomType outerCustomType;
+
+		AnnotatedParameterConstructorInjectionTestCase(TestInfo testInfo, @CustomAnnotation CustomType customType) {
+			this.outerTestInfo = testInfo;
+			this.outerCustomType = customType;
+		}
+
+		@Test
+		void test() {
+			assertNotNull(this.outerTestInfo);
+			assertNotNull(this.outerCustomType);
+		}
+
+		@Nested
+		@DisabledOnJre(JAVA_8)
+		// Disabled on Java 8 due to a bug in javac in JDK 8.
+		// See https://github.com/junit-team/junit5/issues/1345
+		class AnnotatedConstructorParameterNestedTestCase {
+
+			private final TestInfo innerTestInfo;
+			private final CustomType innerCustomType;
+
+			AnnotatedConstructorParameterNestedTestCase(TestInfo testInfo, @CustomAnnotation CustomType customType) {
 				this.innerTestInfo = testInfo;
 				this.innerCustomType = customType;
 			}
