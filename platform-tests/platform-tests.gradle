@@ -53,7 +53,9 @@ dependencies {
 	}
 
 	// --- http://openjdk.java.net/projects/code-tools/jmh/ -----------------------
-	jmh("org.openjdk.jmh:jmh-core:${jmhVersion}")
+	jmh("org.openjdk.jmh:jmh-core:${jmhVersion}") {
+		exclude group: 'net.sf.jopt-simple', module: 'jopt-simple'
+	}
 	jmh("org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}")
 	jmh(project(':junit-jupiter-api'))
 	jmh("junit:junit:${junit4Version}")
