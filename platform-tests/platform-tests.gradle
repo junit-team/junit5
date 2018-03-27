@@ -39,8 +39,9 @@ dependencies {
 	testImplementation(project(path: ':junit-jupiter-engine', configuration: 'testArtifacts'))
 	testImplementation("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
-	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-	testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
+	testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}") {
+		exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
+	}
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(':junit-jupiter-engine'))
