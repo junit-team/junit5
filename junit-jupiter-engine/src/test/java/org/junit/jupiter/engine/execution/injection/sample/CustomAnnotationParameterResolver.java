@@ -22,20 +22,9 @@ public class CustomAnnotationParameterResolver implements ParameterResolver {
 
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-
-		// Workaround for GitHub issue #1345
-		//
-		// Executable executable = parameterContext.getDeclaringExecutable();
-		//
-		// Parameter parameter = parameterContext.getParameter();
-		// // Take into account a bug in javac in JDK 8:
-		// if (executable.getParameters().length == executable.getParameterAnnotations().length + 1) {
-		//     parameter = executable.getParameters()[parameterContext.getIndex() - 1];
-		// }
-		//
-		// return parameter.isAnnotationPresent(CustomAnnotation.class);
-
-		return parameterContext.getParameter().isAnnotationPresent(CustomAnnotation.class);
+		// We invoke parameterContext.isAnnotated() instead of parameterContext.getParameter().isAnnotationPresent()
+		// in order to verify support for the convenience method in the ParameterContext API.
+		return parameterContext.isAnnotated(CustomAnnotation.class);
 	}
 
 	@Override

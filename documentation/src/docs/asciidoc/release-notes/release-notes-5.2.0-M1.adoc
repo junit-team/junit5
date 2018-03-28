@@ -47,6 +47,16 @@ on GitHub.
     can be declared to accept an argument of type `int`, `long`, `float`, or `double`.
 * `@MethodSource` now supports `static` factory methods declared in external classes
   referenced by _fully qualified method name_.
+* The `ParameterContext` API used in `ParameterResolver` implementations now includes the
+  following convenience methods for looking up annotations on parameters. Extension
+  authors are strongly encouraged to use these methods instead of those provided in the
+  core `java.lang.reflect.Parameter` API due to a bug in `javac` on JDK versions prior to
+  JDK 9 which causes lookups for annotations on parameters in inner class constructors to
+  fail consistently -- for example, when resolving a parameter for a `@Nested` test class
+  constructor.
+  - `boolean isAnnotated(Class<? extends Annotation> annotationType)`
+  - `Optional<A> findAnnotation(Class<A> annotationType)`
+  - `List<A> findRepeatableAnnotations(Class<A> annotationType)`
 
 
 [[release-notes-5.2.0-M1-junit-vintage]]

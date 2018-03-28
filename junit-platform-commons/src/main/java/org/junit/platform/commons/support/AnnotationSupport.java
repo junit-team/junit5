@@ -72,6 +72,9 @@ public final class AnnotationSupport {
 	 * present</em> nor <em>meta-present</em> on the class, this method will
 	 * additionally search on interfaces implemented by the class before
 	 * finding an annotation that is <em>indirectly present</em> on the class.
+	 *
+	 * @return an {@code Optional} containing the annotation; never {@code null} but
+	 * potentially empty
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
 		return AnnotationUtils.findAnnotation(element, annotationType);
