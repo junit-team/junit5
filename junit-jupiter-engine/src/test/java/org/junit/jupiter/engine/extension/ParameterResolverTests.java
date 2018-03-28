@@ -253,6 +253,45 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@ExtendWith(CustomAnnotationParameterResolver.class)
+	static class AnnotatedParameterConstructorInjectionTestCase {
+
+		private final TestInfo outerTestInfo;
+		private final CustomType outerCustomType;
+
+		AnnotatedParameterConstructorInjectionTestCase(TestInfo testInfo, @CustomAnnotation CustomType customType) {
+			this.outerTestInfo = testInfo;
+			this.outerCustomType = customType;
+		}
+
+		@Test
+		void test() {
+			assertNotNull(this.outerTestInfo);
+			assertNotNull(this.outerCustomType);
+		}
+
+		@Nested
+		// See https://github.com/junit-team/junit5/issues/1345
+		class AnnotatedConstructorParameterNestedTestCase {
+
+			private final TestInfo innerTestInfo;
+			private final CustomType innerCustomType;
+
+			AnnotatedConstructorParameterNestedTestCase(TestInfo testInfo, @CustomAnnotation CustomType customType) {
+				this.innerTestInfo = testInfo;
+				this.innerCustomType = customType;
+			}
+
+			@Test
+			void test() {
+				assertNotNull(outerTestInfo);
+				assertNotNull(outerCustomType);
+				assertNotNull(this.innerTestInfo);
+				assertNotNull(this.innerCustomType);
+			}
+		}
+	}
+
 	@ExtendWith({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
 	static class MethodInjectionTestCase {
 

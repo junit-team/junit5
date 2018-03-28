@@ -44,8 +44,7 @@ public class TempDirectory implements AfterEachCallback, ParameterResolver {
 
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return parameterContext.getParameter().isAnnotationPresent(Root.class)
-				&& parameterContext.getParameter().getType() == Path.class;
+		return parameterContext.isAnnotated(Root.class) && parameterContext.getParameter().getType() == Path.class;
 	}
 
 	@Override
