@@ -35,27 +35,28 @@ class DefaultParameterContext implements ParameterContext {
 
 	@Override
 	public Parameter getParameter() {
-		return parameter;
+		return this.parameter;
 	}
 
 	@Override
 	public int getIndex() {
-		return index;
+		return this.index;
 	}
 
 	@Override
 	public Optional<Object> getTarget() {
-		return target;
+		return this.target;
 	}
 
 	@Override
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("parameter", parameter)
-				.append("index", index)
-				.append("target", target)
+				.append("parameter", this.parameter)
+				.append("index", this.index)
+				.append("target", this.target)
 				.toString();
 		// @formatter:on
 	}
+
 }
