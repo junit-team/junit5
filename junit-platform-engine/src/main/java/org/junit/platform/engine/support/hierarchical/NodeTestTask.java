@@ -11,8 +11,6 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.stream.Collectors.toCollection;
-import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
-import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import java.util.ArrayList;
@@ -24,7 +22,6 @@ import java.util.concurrent.Future;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
@@ -34,9 +31,7 @@ import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
  */
 class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
-	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
-
-	private final List<Throwable> executionErrors = new ArrayList<>();
+	private final ThrowableCollector throwableCollector = new ThrowableCollector();
 	private final TestDescriptor testDescriptor;
 	private final EngineExecutionListener listener;
 	private final HierarchicalTestExecutorService executorService;
@@ -52,7 +47,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	private C context;
 
 	private SkipResult skipResult;
-	private TestExecutionResult executionResult;
+	private boolean started;
 
 	NodeTestTask(TestDescriptor testDescriptor, EngineExecutionListener listener,
 			HierarchicalTestExecutorService executorService) {
@@ -102,10 +97,10 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	@Override
 	public void execute() {
 		prepare();
-		if (executionErrors.isEmpty()) {
+		if (throwableCollector.isEmpty()) {
 			checkWhetherSkipped();
 		}
-		if (executionErrors.isEmpty() && !skipResult.isSkipped()) {
+		if (throwableCollector.isEmpty() && !skipResult.isSkipped()) {
 			executeRecursively();
 		}
 		if (context != null) {
@@ -115,40 +110,34 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	}
 
 	private void prepare() {
-		executeSafely(() -> context = node.prepare(parentContext));
+		throwableCollector.execute(() -> context = node.prepare(parentContext));
 	}
 
 	private void checkWhetherSkipped() {
-		executeSafely(() -> skipResult = node.shouldBeSkipped(context));
+		throwableCollector.execute(() -> skipResult = node.shouldBeSkipped(context));
 	}
 
 	private void executeRecursively() {
 		listener.executionStarted(testDescriptor);
+		started = true;
 
-		executionResult = singleTestExecutor.executeSafely(() -> {
-			Throwable failure = null;
-			try {
-				context = node.before(context);
+		throwableCollector.execute(() -> {
+			context = node.before(context);
 
-				List<Future<?>> futures = new ArrayList<>();
-				context = node.execute(context,
-					dynamicTestDescriptor -> executeDynamicTest(dynamicTestDescriptor, futures));
+			List<Future<?>> futures = new ArrayList<>();
+			context = node.execute(context,
+				dynamicTestDescriptor -> executeDynamicTest(dynamicTestDescriptor, futures));
 
-				children.forEach(child -> child.setParentContext(context));
-				executorService.invokeAll(children);
+			children.forEach(child -> child.setParentContext(context));
+			executorService.invokeAll(children);
 
-				// using a for loop for the sake for ForkJoinPool's work stealing
-				for (Future<?> future : futures) {
-					future.get();
-				}
-			}
-			catch (Throwable t) {
-				failure = t;
-			}
-			finally {
-				executeAfter(failure);
+			// using a for loop for the sake for ForkJoinPool's work stealing
+			for (Future<?> future : futures) {
+				future.get();
 			}
 		});
+
+		throwableCollector.execute(() -> node.after(context));
 	}
 
 	private void executeDynamicTest(TestDescriptor dynamicTestDescriptor, List<Future<?>> futures) {
@@ -166,74 +155,20 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		}
 	}
 
-	private void executeAfter(Throwable failure) throws Throwable {
-		try {
-			node.after(context);
-		}
-		catch (Throwable t) {
-			if (failure != null && failure != t) {
-				failure.addSuppressed(t);
-			}
-			else {
-				throw t;
-			}
-		}
-		if (failure != null) {
-			throw failure;
-		}
-	}
-
 	private void cleanUp() {
-		executeSafely(() -> node.cleanUp(context));
+		throwableCollector.execute(() -> node.cleanUp(context));
 	}
 
 	private void reportCompletion() {
-		if (executionResult != null) {
-			addExecutionErrorsToTestExecutionResult();
-			listener.executionFinished(testDescriptor, executionResult);
-		}
-		else if (executionErrors.isEmpty() && skipResult.isSkipped()) {
+		if (throwableCollector.isEmpty() && skipResult.isSkipped()) {
 			listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
-		}
-		else {
-			// Call executionStarted first to comply with the contract of EngineExecutionListener.
-			listener.executionStarted(testDescriptor);
-			listener.executionFinished(testDescriptor, createTestExecutionResultFromExecutionErrors());
-		}
-	}
-
-	private void addExecutionErrorsToTestExecutionResult() {
-		if (executionErrors.isEmpty()) {
 			return;
 		}
-		if (executionResult.getStatus() == FAILED && executionResult.getThrowable().isPresent()) {
-			Throwable throwable = executionResult.getThrowable().get();
-			executionErrors.forEach(throwable::addSuppressed);
+		if (!started) {
+			// Call executionStarted first to comply with the contract of EngineExecutionListener.
+			listener.executionStarted(testDescriptor);
 		}
-		else {
-			executionResult = createTestExecutionResultFromExecutionErrors();
-		}
-	}
-
-	private TestExecutionResult createTestExecutionResultFromExecutionErrors() {
-		Throwable throwable = executionErrors.get(0);
-		executionErrors.stream().skip(1).forEach(throwable::addSuppressed);
-		return failed(throwable);
-	}
-
-	private void executeSafely(Action action) {
-		try {
-			action.execute();
-		}
-		catch (Throwable t) {
-			rethrowIfBlacklisted(t);
-			executionErrors.add(t);
-		}
-	}
-
-	@FunctionalInterface
-	private interface Action {
-		void execute() throws Exception;
+		listener.executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
 	}
 
 	@SuppressWarnings("unchecked")

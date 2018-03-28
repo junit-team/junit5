@@ -43,6 +43,7 @@ import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 

@@ -27,6 +27,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.suppressed;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -44,6 +45,7 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.TestAbortedException;
 
@@ -244,6 +246,25 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass), finishedWithFailure(message("constructor"))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void failureInAfterAllTakesPrecedenceOverTestAbortedExceptionInBeforeAll() throws NoSuchMethodException {
+		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
+
+		FailureTestCase.exceptionToThrowInBeforeAll = Optional.of(new TestAbortedException("aborted"));
+		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("checked"));
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(FailureTestCase.class), started()), //
+			event(container(FailureTestCase.class),
+				finishedWithFailure(allOf(isA(IOException.class), message("checked"),
+					suppressed(0, allOf(isA(TestAbortedException.class), message("aborted")))))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
