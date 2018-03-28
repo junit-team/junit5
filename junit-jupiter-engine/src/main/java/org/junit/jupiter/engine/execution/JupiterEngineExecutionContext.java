@@ -21,6 +21,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
  * @since 5.0

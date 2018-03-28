@@ -8,23 +8,27 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.execution;
+package org.junit.platform.engine.support.hierarchical;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
+import static org.junit.platform.engine.TestExecutionResult.aborted;
+import static org.junit.platform.engine.TestExecutionResult.failed;
+import static org.junit.platform.engine.TestExecutionResult.successful;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.TestExecutionResult;
 import org.opentest4j.TestAbortedException;
 
 /**
  * Simple component that can be used to collect one or more instances of
  * {@link Throwable}.
  *
- * @since 5.0
+ * @since 5.2
  */
-@API(status = INTERNAL, since = "5.0")
+@API(status = MAINTAINED, since = "5.2")
 public class ThrowableCollector {
 
 	private Throwable throwable;
@@ -32,6 +36,10 @@ public class ThrowableCollector {
 	/**
 	 * Execute the supplied {@link Executable} and collect any {@link Throwable}
 	 * thrown during the execution.
+	 *
+	 * <p>If the {@code Executable} throws a <em>blacklisted</em> exception
+	 * &mdash; for example, an {@link OutOfMemoryError} &mdash; this method will
+	 * rethrow it.
 	 *
 	 * @param executable the {@code Executable} to execute
 	 * @see #assertEmpty()
@@ -41,6 +49,7 @@ public class ThrowableCollector {
 			executable.execute();
 		}
 		catch (Throwable t) {
+			rethrowIfBlacklisted(t);
 			add(t);
 		}
 	}
@@ -62,7 +71,7 @@ public class ThrowableCollector {
 			t.addSuppressed(this.throwable);
 			this.throwable = t;
 		}
-		else {
+		else if (throwable != t) {
 			this.throwable.addSuppressed(t);
 		}
 	}
@@ -75,6 +84,12 @@ public class ThrowableCollector {
 	 * will be returned with any additional throwables
 	 * {@linkplain Throwable#addSuppressed(Throwable) suppressed} in the
 	 * first {@code Throwable}.
+	 *
+	 * <p>If the first collected {@code Throwable} was a
+	 * {@link TestAbortedException} and at least one later collected throwable
+	 * wasn't, the first non-{@code TestAbortedException} will be returned with
+	 * the {@code TestAbortedException} and any additional throwables
+	 * {@linkplain Throwable#addSuppressed(Throwable) suppressed} inside.
 	 *
 	 * @return the first collected {@code Throwable} or {@code null} if this
 	 * {@code ThrowableCollector} is empty
@@ -101,6 +116,12 @@ public class ThrowableCollector {
 		return (this.throwable != null);
 	}
 
+	public void assertNotSame(Throwable otherThrowable) {
+		if (this.throwable != otherThrowable) {
+			assertEmpty();
+		}
+	}
+
 	/**
 	 * Assert that this {@code ThrowableCollector} is <em>empty</em> (i.e.,
 	 * has not collected any {@code Throwables}).
@@ -119,6 +140,42 @@ public class ThrowableCollector {
 		if (!isEmpty()) {
 			ExceptionUtils.throwAsUncheckedException(this.throwable);
 		}
+	}
+
+	/**
+	 * Convert the collected throwables into a {@link TestExecutionResult}.
+	 *
+	 * @return {@linkplain TestExecutionResult#aborted aborted} if the collected
+	 * {@code throwable} is a {@link TestAbortedException};
+	 * {@linkplain TestExecutionResult#failed failed} if any other
+	 * {@link Throwable} was collected; and
+	 * {@linkplain TestExecutionResult#successful successful} otherwise
+	 */
+	public TestExecutionResult toTestExecutionResult() {
+		if (isEmpty()) {
+			return successful();
+		}
+		if (throwable instanceof TestAbortedException) {
+			return aborted(throwable);
+		}
+		return failed(throwable);
+	}
+
+	/**
+	 * Functional interface for an executable block of code that may throw a
+	 * {@link Throwable}.
+	 */
+	@FunctionalInterface
+	public interface Executable {
+
+		/**
+		 * Execute this executable.
+		 *
+		 * @throws TestAbortedException to signal abortion
+		 * @throws Throwable to signal failure
+		 */
+		void execute() throws Throwable;
+
 	}
 
 }

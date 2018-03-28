@@ -26,6 +26,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContextException;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
  * {@code ExtensionValuesStore} is used inside implementations of

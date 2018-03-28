@@ -45,7 +45,6 @@ import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
-import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.BlacklistedExceptions;
@@ -57,6 +56,7 @@ import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -201,7 +201,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	@Override
 	public void after(JupiterEngineExecutionContext context) {
 
-		boolean throwableWasNotAlreadyThrown = context.getThrowableCollector().isEmpty();
+		Throwable previousThrowable = context.getThrowableCollector().getThrowable();
 
 		if (context.beforeAllMethodsExecuted()) {
 			invokeAfterAllMethods(context);
@@ -211,19 +211,12 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			invokeAfterAllCallbacks(context);
 		}
 
-		// If the ThrowableCollector was not empty when this method was called,
+		// If the previous Throwable was not null when this method was called,
 		// that means an exception was already thrown either before or during
 		// the execution of this Node. If an exception was already thrown, any
 		// later exceptions were added as suppressed exceptions to that original
-		// exception, and we don't need to rethrow the original exception here
-		// since it will be thrown by HierarchicalTestExecutor.NodeExecutor.
-		//
-		// However, if no exception was previously thrown, we need to ensure
-		// that any exceptions thrown by @AfterAll methods or AfterAllCallbacks
-		// are thrown here.
-		if (throwableWasNotAlreadyThrown) {
-			context.getThrowableCollector().assertEmpty();
-		}
+		// exception unless a more severe exception occurred in the meantime.
+		context.getThrowableCollector().assertNotSame(previousThrowable);
 	}
 
 	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry) {

@@ -19,9 +19,9 @@ import java.util.Optional;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
  * @since 5.0
