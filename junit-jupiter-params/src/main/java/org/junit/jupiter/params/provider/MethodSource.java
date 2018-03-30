@@ -26,7 +26,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 /**
  * {@code @MethodSource} is an {@link ArgumentsSource} which provides access
  * to values returned by {@linkplain #value() factory methods} of the class in
- * which this annotation is declared.
+ * which this annotation is declared or external class referenced by fully
+ * qualified method name.
  *
  * <p>Each factory method must return a {@link Stream}, {@link Iterable},
  * {@link Iterator}, or array of arguments. The returned values will be provided
@@ -56,8 +57,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 public @interface MethodSource {
 
 	/**
-	 * The names of the test class methods to use as sources for arguments;
-	 * leave empty if the source method has the same name as the test method.
+	 * The names of the test or external class methods to use as sources for arguments.
+	 * External class have to be referenced by fully qualified method name, eg.
+	 * {@code com.example.StringsProviders#blanksStrings}.
+	 * Leave empty if the source method has the same name as the test method.
 	 */
 	String[] value() default "";
 

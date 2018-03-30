@@ -39,7 +39,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* `@MethodSource` now supports `static` factory methods declared in external classes
+  referenced by _fully qualified method name_.
 
 
 [[release-notes-5.2.0-M1-junit-vintage]]
