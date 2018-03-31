@@ -33,7 +33,7 @@ public class AggregatorTests {
 
 	@ParameterizedTest
 	@CsvSource({ "Foo,Bar,Baz", "Baz,Bar,Foo" })
-	public void hashMapAggregationTest(@AggregateWith(TestHashMapAggregator.class) Map map) {
+	public void hashMapAggregationTest(@AggregateWith(TestHashMapAggregator.class) Map<String, String> map) {
 		assertEquals(3, map.size());
 
 		// @formatter:off
