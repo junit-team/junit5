@@ -39,7 +39,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Implicit support for _widening primitive conversion_ for an argument supplied to a
+  `@ParameterizedTest`.
+  - For example, a parameterized test annotated with `@ValueSource(ints = { 1, 2, 3 })`
+    can be declared to accept an argument of type `int`, `long`, `float`, or `double`.
 
 
 [[release-notes-5.2.0-M1-junit-vintage]]

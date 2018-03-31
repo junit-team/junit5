@@ -197,6 +197,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void isAssignableTo() {
+		// Reference Types
 		assertTrue(ReflectionUtils.isAssignableTo("string", String.class));
 		assertTrue(ReflectionUtils.isAssignableTo("string", CharSequence.class));
 		assertTrue(ReflectionUtils.isAssignableTo("string", Object.class));
@@ -205,18 +206,98 @@ class ReflectionUtilsTests {
 		assertFalse(ReflectionUtils.isAssignableTo(Integer.valueOf("1"), StringBuilder.class));
 		assertFalse(ReflectionUtils.isAssignableTo(new StringBuilder(), String.class));
 
+		// Arrays
 		assertTrue(ReflectionUtils.isAssignableTo(new int[0], int[].class));
 		assertTrue(ReflectionUtils.isAssignableTo(new double[0], Object.class));
 		assertTrue(ReflectionUtils.isAssignableTo(new String[0], String[].class));
 		assertTrue(ReflectionUtils.isAssignableTo(new String[0], Object.class));
 
+		// Primitive Types
 		assertTrue(ReflectionUtils.isAssignableTo(1, int.class));
 		assertTrue(ReflectionUtils.isAssignableTo(Long.valueOf("1"), long.class));
 		assertTrue(ReflectionUtils.isAssignableTo(Boolean.TRUE, boolean.class));
 
+		// Widening Conversions to Primitives
+		assertTrue(ReflectionUtils.isAssignableTo(1, long.class));
+		assertTrue(ReflectionUtils.isAssignableTo(1f, double.class));
+		assertTrue(ReflectionUtils.isAssignableTo((byte) 1, double.class));
+
+		// Widening Conversions to Wrappers (not supported by Java)
+		assertFalse(ReflectionUtils.isAssignableTo(1, Long.class));
+		assertFalse(ReflectionUtils.isAssignableTo(1f, Double.class));
+		assertFalse(ReflectionUtils.isAssignableTo((byte) 1, Double.class));
+
+		// Narrowing Conversions
 		assertFalse(ReflectionUtils.isAssignableTo(1, char.class));
 		assertFalse(ReflectionUtils.isAssignableTo(1L, byte.class));
 		assertFalse(ReflectionUtils.isAssignableTo(1L, int.class));
+	}
+
+	@Test
+	void wideningConversion() {
+		// byte
+		assertTrue(ReflectionUtils.isWideningConversion(byte.class, short.class));
+		assertTrue(ReflectionUtils.isWideningConversion(byte.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(byte.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(byte.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(byte.class, double.class));
+		// Byte
+		assertTrue(ReflectionUtils.isWideningConversion(Byte.class, short.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Byte.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Byte.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Byte.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Byte.class, double.class));
+
+		// short
+		assertTrue(ReflectionUtils.isWideningConversion(short.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(short.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(short.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(short.class, double.class));
+		// Short
+		assertTrue(ReflectionUtils.isWideningConversion(Short.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Short.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Short.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Short.class, double.class));
+
+		// char
+		assertTrue(ReflectionUtils.isWideningConversion(char.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(char.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(char.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(char.class, double.class));
+		// Character
+		assertTrue(ReflectionUtils.isWideningConversion(Character.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Character.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Character.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Character.class, double.class));
+
+		// int
+		assertTrue(ReflectionUtils.isWideningConversion(int.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(int.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(int.class, double.class));
+		// Integer
+		assertTrue(ReflectionUtils.isWideningConversion(Integer.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Integer.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Integer.class, double.class));
+
+		// long
+		assertTrue(ReflectionUtils.isWideningConversion(long.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(long.class, double.class));
+		// Long
+		assertTrue(ReflectionUtils.isWideningConversion(Long.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Long.class, double.class));
+
+		// float
+		assertTrue(ReflectionUtils.isWideningConversion(float.class, double.class));
+		// Float
+		assertTrue(ReflectionUtils.isWideningConversion(Float.class, double.class));
+
+		// double and Double --> nothing to test
+
+		// Unsupported
+		assertFalse(ReflectionUtils.isWideningConversion(int.class, byte.class)); // narrowing
+		assertFalse(ReflectionUtils.isWideningConversion(float.class, int.class)); // narrowing
+		assertFalse(ReflectionUtils.isWideningConversion(int.class, int.class)); // direct match
+		assertFalse(ReflectionUtils.isWideningConversion(String.class, int.class)); // neither a primitive nor a wrapper
 	}
 
 	@Test

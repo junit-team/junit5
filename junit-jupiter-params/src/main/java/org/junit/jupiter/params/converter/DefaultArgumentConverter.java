@@ -46,6 +46,7 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code DefaultArgumentConverter} is the default implementation of the
@@ -90,18 +91,15 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			}
 			return null;
 		}
+
+		if (ReflectionUtils.isAssignableTo(source, targetType)) {
+			return source;
+		}
+
 		return convertToTargetType(source, toWrapperType(targetType));
 	}
 
-	private Class<?> toWrapperType(Class<?> targetType) {
-		Class<?> wrapperType = getWrapperType(targetType);
-		return wrapperType != null ? wrapperType : targetType;
-	}
-
 	private Object convertToTargetType(Object source, Class<?> targetType) {
-		if (targetType.isInstance(source)) {
-			return source;
-		}
 		if (source instanceof String) {
 			Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
 				candidate -> candidate.canConvert(targetType)).findFirst();
@@ -122,6 +120,11 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		}
 		throw new ArgumentConversionException("No implicit conversion to convert object of type "
 				+ source.getClass().getName() + " to type " + targetType.getName());
+	}
+
+	private static Class<?> toWrapperType(Class<?> targetType) {
+		Class<?> wrapperType = getWrapperType(targetType);
+		return wrapperType != null ? wrapperType : targetType;
 	}
 
 	interface StringToObjectConverter {

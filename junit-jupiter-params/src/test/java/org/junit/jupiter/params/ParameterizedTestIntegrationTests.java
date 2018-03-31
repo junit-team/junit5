@@ -94,6 +94,18 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	/**
+	 * @since 5.2
+	 */
+	@Test
+	void executesWithPrimitiveWideningConversion() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(TestCase.class, "testWithPrimitiveWideningConversion", double.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] 1"), finishedWithFailure(message("num: 1.0")))) //
+				.haveExactly(1, event(test(), displayName("[2] 2"), finishedWithFailure(message("num: 2.0"))));
+	}
+
+	/**
 	 * @since 5.1
 	 */
 	@Test
@@ -234,6 +246,12 @@ class ParameterizedTestIntegrationTests {
 		@CsvSource({ "foo, 23", "bar, 42" })
 		void testWithCustomName(String argument, int i) {
 			fail(argument + ", " + i);
+		}
+
+		@ParameterizedTest
+		@ValueSource(shorts = { 1, 2 })
+		void testWithPrimitiveWideningConversion(double num) {
+			fail("num: " + num);
 		}
 
 		@ParameterizedTest

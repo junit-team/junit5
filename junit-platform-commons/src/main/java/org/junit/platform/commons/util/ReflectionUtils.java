@@ -268,36 +268,100 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Determine if the supplied object can be assigned to the supplied type
-	 * for the purpose of reflective method invocations.
+	 * Determine if the supplied object can be assigned to the supplied target
+	 * type for the purpose of reflective method invocations.
 	 *
 	 * <p>In contrast to {@link Class#isInstance(Object)}, this method returns
-	 * {@code true} if the supplied type represents a primitive type whose
-	 * wrapper matches the supplied object's type.
+	 * {@code true} if the target type represents a primitive type whose
+	 * wrapper matches the supplied object's type. In addition, this method
+	 * also supports
+	 * <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2">
+	 * widening conversions</a> for primitive types and their corresponding
+	 * wrapper types.
 	 *
-	 * <p>Returns {@code true} if the supplied object is {@code null} and the
-	 * supplied type does not represent a primitive type.
+	 * <p>If the supplied object is {@code null} and the supplied type does not
+	 * represent a primitive type, this method returns {@code true}.
 	 *
 	 * @param obj the object to test for assignment compatibility; potentially {@code null}
-	 * @param type the type to check against; never {@code null}
+	 * @param targetType the type to check against; never {@code null}
 	 * @return {@code true} if the object is assignment compatible
 	 * @see Class#isInstance(Object)
 	 * @see Class#isAssignableFrom(Class)
 	 */
-	public static boolean isAssignableTo(Object obj, Class<?> type) {
-		Preconditions.notNull(type, "type must not be null");
+	public static boolean isAssignableTo(Object obj, Class<?> targetType) {
+		Preconditions.notNull(targetType, "target type must not be null");
 
 		if (obj == null) {
-			return !type.isPrimitive();
+			return !targetType.isPrimitive();
 		}
 
-		if (type.isInstance(obj)) {
+		if (targetType.isInstance(obj)) {
 			return true;
 		}
 
-		if (type.isPrimitive()) {
-			return primitiveToWrapperMap.get(type) == obj.getClass();
+		if (targetType.isPrimitive()) {
+			Class<?> sourceType = obj.getClass();
+			return sourceType == primitiveToWrapperMap.get(targetType) || isWideningConversion(sourceType, targetType);
 		}
+
+		return false;
+	}
+
+	/**
+	 * Determine if Java supports a <em>widening primitive conversion</em> from the
+	 * supplied source type to the supplied <strong>primitive</strong> target type.
+	 */
+	static boolean isWideningConversion(Class<?> sourceType, Class<?> targetType) {
+		Preconditions.condition(targetType.isPrimitive(), "targetType must be primitive");
+
+		boolean isPrimitive = sourceType.isPrimitive();
+		boolean isWrapper = primitiveToWrapperMap.containsValue(sourceType);
+
+		// Neither a primitive nor a wrapper?
+		if (!isPrimitive && !isWrapper) {
+			return false;
+		}
+
+		if (isPrimitive) {
+			sourceType = primitiveToWrapperMap.get(sourceType);
+		}
+
+		// @formatter:off
+		if (sourceType == Byte.class) {
+			return
+					targetType == short.class ||
+					targetType == int.class ||
+					targetType == long.class ||
+					targetType == float.class ||
+					targetType == double.class;
+		}
+
+		if (sourceType == Short.class || sourceType == Character.class) {
+			return
+					targetType == int.class ||
+					targetType == long.class ||
+					targetType == float.class ||
+					targetType == double.class;
+		}
+
+		if (sourceType == Integer.class) {
+			return
+					targetType == long.class ||
+					targetType == float.class ||
+					targetType == double.class;
+		}
+
+		if (sourceType == Long.class) {
+			return
+					targetType == float.class ||
+					targetType == double.class;
+		}
+
+		if (sourceType == Float.class) {
+			return
+					targetType == double.class;
+		}
+		// @formatter:on
 
 		return false;
 	}
