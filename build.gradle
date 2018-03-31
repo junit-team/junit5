@@ -100,6 +100,8 @@ ext {
 	jacocoTestProjects = cloverTestProjects << 'junit-platform-gradle-plugin'
 	jacocoCoveredProjects = mavenizedProjects - ['junit-platform-console-standalone']
 	jacocoClassesDir = "$buildDir/jacoco/classes"
+
+	osgiProjects = mavenizedProjects - ['junit-platform-console-standalone']
 }
 
 allprojects { subproj ->
@@ -288,6 +290,17 @@ subprojects { subproj ->
 
 	javadoc {
 		classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
+	}
+
+	if (subproj.name in osgiProjects) {
+		apply plugin: 'osgi'
+
+		jar {
+			manifest {
+				license = licenseOf(project)
+				vendor = 'junit.org'
+			}
+		}
 	}
 
 	if (subproj.name in mavenizedProjects) {
@@ -557,7 +570,7 @@ subprojects { subproj ->
 			// We're only interested in the compiled classes. So we depend
 			// on the classes task and change (-C) to the destination
 			// directory of the version-aware project later.
-			dependsOn = [versionedProject.classes]
+			dependsOn versionedProject.classes
 			doLast {
 				project.exec {
 					executable "${System.properties['java.home']}/bin/jar"
