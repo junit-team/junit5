@@ -21,6 +21,7 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor;
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
 
 /**
@@ -109,11 +110,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 				Throwable failure = null;
 				try {
 					context = node.before(context);
-
-					context = node.execute(context, dynamicTestDescriptor -> {
-						listener.dynamicTestRegistered(dynamicTestDescriptor);
-						new NodeExecutor(dynamicTestDescriptor).execute(context, tracker);
-					});
+					context = node.execute(context, new HierarchicalDynamicTestExecutor(context, tracker));
 
 					// @formatter:off
 					testDescriptor.getChildren().stream()
@@ -193,6 +190,29 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			rethrowIfBlacklisted(throwable);
 			executionErrors.add(throwable);
 		}
+	}
+	
+	private class HierarchicalDynamicTestExecutor implements DynamicTestExecutor {
+		private final C context;
+		
+		private final ExecutionTracker tracker;
+		
+		public HierarchicalDynamicTestExecutor(C context, ExecutionTracker tracker) {
+			super();
+			this.context = context;
+			this.tracker = tracker;
+		}
+
+		@Override
+		public void dynamicRegister(TestDescriptor dynamicTestDescriptor) {
+			listener.dynamicTestRegistered(dynamicTestDescriptor);
+		}
+
+		@Override
+		public void execute(TestDescriptor dynamicTestDescriptor) {
+			new NodeExecutor(dynamicTestDescriptor).execute(context, tracker);
+		}
+		
 	}
 
 	@SuppressWarnings("unchecked")

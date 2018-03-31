@@ -194,6 +194,11 @@ public interface Node<C extends EngineExecutionContext> {
 	 * @see HierarchicalTestExecutor
 	 */
 	interface DynamicTestExecutor {
+		/**
+		 * Dynamically add a found node to test plan while execution phase
+		 * @param testDescriptor the test descriptor to be added
+		 */
+		void dynamicRegister(TestDescriptor testDescriptor);
 
 		/**
 		 * Submit a dynamic test descriptor for immediate execution.
@@ -201,7 +206,5 @@ public interface Node<C extends EngineExecutionContext> {
 		 * @param testDescriptor the test descriptor to be executed
 		 */
 		void execute(TestDescriptor testDescriptor);
-
 	}
-
 }
