@@ -463,7 +463,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void getFullyQualifiedMethodNameForMethodWithNullParameters() {
-		assertThat(ReflectionUtils.getFullyQualifiedMethodName(Object.class, "toString", null))//
+		assertThat(ReflectionUtils.getFullyQualifiedMethodName(Object.class, "toString", (Class<?>[]) null))//
 				.isEqualTo("java.lang.Object#toString()");
 	}
 

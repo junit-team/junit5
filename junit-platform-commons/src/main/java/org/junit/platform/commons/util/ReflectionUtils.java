@@ -602,16 +602,19 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Parses given <em>fully qualified method name</em> and returns 3-elements array where
-	 * element at index:
+	 * Parse the supplied <em>fully qualified method name</em> into a 3-element
+	 * {@code String[]} with the following content.
+	 *
 	 * <ul>
-	 *     <li>{@code 0} is fully qualified class name</li>
-	 *     <li>{@code 1} is name of the method</li>
-	 *     <li>{@code 2} is comma-separated parameters list or blank string if method
-	 *     doesn't take any parameters</li>
+	 *   <li>index {@code 0}: the fully qualified class name</li>
+	 *   <li>index {@code 1}: the name of the method</li>
+	 *   <li>index {@code 2}: a comma-separated list of parameter types, or a
+	 *       blank string if the method does not declare any formal parameters</li>
 	 * </ul>
-	 * @param fullyQualifiedMethodName <em>fully qualified method name</em>
-	 * @return method parts array
+	 *
+	 * @param fullyQualifiedMethodName a <em>fully qualified method name</em>,
+	 * never {@code null} or blank
+	 * @return a 3-element array of strings containing the parsed values
 	 */
 	public static String[] parseFullyQualifiedMethodName(String fullyQualifiedMethodName) {
 		Preconditions.notBlank(fullyQualifiedMethodName, "fullyQualifiedMethodName must not be null or blank");

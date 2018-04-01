@@ -13,6 +13,7 @@ package org.junit.jupiter.params.provider;
 import static java.lang.String.format;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -39,7 +40,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 	public Stream<Arguments> provideArguments(ExtensionContext context) {
 		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
-		return Stream.of(this.methodNames)
+		return Arrays.stream(this.methodNames)
 				.map(argumentsMethodName -> getMethod(context, argumentsMethodName))
 				.map(method -> ReflectionUtils.invokeMethod(method, testInstance))
 				.flatMap(CollectionUtils::toStream)
@@ -66,7 +67,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		String methodParameters = methodParts[2];
 
 		Preconditions.condition(StringUtils.isBlank(methodParameters),
-			() -> format("factory method [%s] cannot take parameters", fullyQualifiedMethodName));
+			() -> format("factory method [%s] must not declare formal parameters", fullyQualifiedMethodName));
 
 		return getMethod(loadRequiredClass(className), methodName);
 	}

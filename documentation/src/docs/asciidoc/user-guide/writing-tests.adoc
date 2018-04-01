@@ -842,13 +842,14 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_regex_exam
 ===== @MethodSource
 
 `@MethodSource` allows you to refer to one or more _factory_ methods of the test class or
-external classes. Such methods must return a `Stream`, `Iterable`, `Iterator`, or array
-of arguments. In addition, such methods must not accept any arguments. Test class methods
-must be `static` unless the test class is annotated with
-`@TestInstance(Lifecycle.PER_CLASS)`. External classes methods must always be `static`.
+external classes. Such factory methods must return a `Stream`, `Iterable`, `Iterator`, or
+array of arguments. In addition, such factory methods must not accept any arguments.
+Factory methods within the test class must be `static` unless the test class is annotated
+with `@TestInstance(Lifecycle.PER_CLASS)`; whereas, factory methods in external classes
+must always be `static`.
 
 If you only need a single parameter, you can return a `Stream` of instances of the
-parameter type as demonstrated by the following example.
+parameter type as demonstrated in the following example.
 
 [source,java,indent=0]
 ----
