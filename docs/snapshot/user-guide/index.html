@@ -3062,6 +3062,17 @@ primitive type.
 <div class="sect3">
 <h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.14.3. Argument Conversion</h4>
 <div class="sect4">
+<h5 id="writing-tests-parameterized-tests-argument-conversion-widening"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-widening"></a>Widening Conversion</h5>
+<div class="paragraph">
+<p>JUnit Jupiter supports
+<a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2">Widening Primitive
+Conversion</a> for arguments supplied to a <code>@ParameterizedTest</code>. For example, a
+parameterized test annotated with <code>@ValueSource(ints = { 1, 2, 3 })</code> can be declared to
+accept not only an argument of type <code>int</code> but also an argument of type <code>long</code>, <code>float</code>,
+or <code>double</code>.</p>
+</div>
+</div>
+<div class="sect4">
 <h5 id="writing-tests-parameterized-tests-argument-conversion-implicit"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-implicit"></a>Implicit Conversion</h5>
 <div class="paragraph">
 <p>To support use cases like <code>@CsvSource</code>, JUnit Jupiter provides a number of built-in
