@@ -11,6 +11,7 @@
 package org.junit.jupiter.params.aggregator;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
@@ -21,7 +22,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	private final Object[] arguments;
 
 	public DefaultArgumentsAccessor(Object[] arguments) {
-		Preconditions.notNull(arguments, "DefaultArgumentsAccessor initialized with null arguments");
+		Preconditions.notNull(arguments, "Arguments array must not be null");
 		this.arguments = arguments;
 	}
 
@@ -40,45 +41,51 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	}
 
 	public Character getCharacter(int index) {
-		return get(Character.class, index);
+		return get(index, Character.class);
 	}
 
 	public Boolean getBoolean(int index) {
-		return get(Boolean.class, index);
+		return get(index, Boolean.class);
 	}
 
 	public Byte getByte(int index) {
-		return get(Byte.class, index);
+		return get(index, Byte.class);
 	}
 
 	public Short getShort(int index) {
-		return get(Short.class, index);
+		return get(index, Short.class);
 	}
 
 	public Integer getInteger(int index) {
-		return get(Integer.class, index);
+		return get(index, Integer.class);
 	}
 
 	public Long getLong(int index) {
-		return get(Long.class, index);
+		return get(index, Long.class);
 	}
 
 	public Float getFloat(int index) {
-		return get(Float.class, index);
+		return get(index, Float.class);
 	}
 
 	public Double getDouble(int index) {
-		return get(Double.class, index);
+		return get(index, Double.class);
 	}
 
 	public String getString(int index) {
-		return get(String.class, index);
+		return get(index, String.class);
 	}
 
-	public <T> T get(Class<T> clazz, int index) {
-		Preconditions.condition(index >= 0 && index < arguments.length,
-			String.format("Index must be between 0 and %d", arguments.length));
-		return clazz.cast(DefaultArgumentConverter.INSTANCE.convert(arguments[index], clazz));
+	public <T> T get(int index, Class<T> requiredType) {
+		try {
+			return requiredType.cast(DefaultArgumentConverter.INSTANCE.convert(get(index), requiredType));
+		}
+		catch (Exception ex) {
+			throw new ArgumentsAccessorException(
+				String.format("Argument in index %d of class %s could not be converted to %s", index,
+					get(index).getClass().getCanonicalName(), requiredType.getCanonicalName()),
+				ex);
+		}
 	}
 
 	public int size() {

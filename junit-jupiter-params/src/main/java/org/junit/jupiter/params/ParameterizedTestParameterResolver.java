@@ -81,15 +81,20 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	}
 
 	private Object aggregate(ParameterContext parameterContext, ExtensionContext extensionContext) {
-
 		Parameter parameter = parameterContext.getParameter();
 		Optional<AggregateWith> annotation = AnnotationUtils.findAnnotation(parameter, AggregateWith.class);
 		ArgumentsAccessor accessor = new DefaultArgumentsAccessor(arguments);
-		// @formatter:off
-		return annotation.map(AggregateWith::value)
-				.map(clazz -> ReflectionUtils.newInstance(clazz))
-				.map(aggregator -> aggregator.aggregateArguments(accessor,parameterContext))
-				.orElse(accessor);
-		// @formatter:on
+		try {
+			// @formatter:off
+			return annotation.map(AggregateWith::value)
+					.map(clazz -> ReflectionUtils.newInstance(clazz))
+					.map(aggregator -> aggregator.aggregateArguments(accessor, parameterContext))
+					.orElse(accessor);
+			// @formatter:on
+		}
+		catch (Exception ex) {
+			throw new ParameterResolutionException(
+				"Error aggregating parameter at index " + parameterContext.getIndex(), ex);
+		}
 	}
 }

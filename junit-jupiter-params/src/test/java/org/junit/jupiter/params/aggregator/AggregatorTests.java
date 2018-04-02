@@ -43,13 +43,12 @@ public class AggregatorTests {
 				() -> assertTrue(map.containsValue("Foo"))
 		);
 		// @formatter:on
-
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "1,2,3,4,5,6,7,8,9,10" })
 	public void directConversionToAccessorTest(ArgumentsAccessor accessor) {
-		assertTrue(accessor.size() == 10);
+		assertEquals(10, accessor.size());
 		int sum = IntStream.range(0, 10).map(i -> accessor.getInteger(i)).sum();
 		assertEquals(55, sum);
 	}
@@ -68,7 +67,7 @@ public class AggregatorTests {
 
 		@Override
 		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
-			assertTrue(accessor.size() >= 2);
+			assertEquals(2, accessor.size());
 			return new Person(accessor.getString(0), accessor.getString(1));
 		}
 	}
@@ -86,7 +85,7 @@ public class AggregatorTests {
 									i -> accessor.get(i)
 							)
 					);
-			// @formatter:on`
+			// @formatter:on
 		}
 	}
 
