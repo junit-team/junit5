@@ -39,6 +39,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New `assertDoesNotThrow()` methods in `Assertions` which assert that the execution of
+  a given code block does _not_ throw any kind of exception.
 * Implicit support for _widening primitive conversion_ for an argument supplied to a
   `@ParameterizedTest`.
   - For example, a parameterized test annotated with `@ValueSource(ints = { 1, 2, 3 })`

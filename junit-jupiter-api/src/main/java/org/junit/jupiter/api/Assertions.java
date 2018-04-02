@@ -1187,6 +1187,57 @@ public final class Assertions {
 		return AssertThrows.assertThrows(expectedType, executable, messageSupplier);
 	}
 
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 *
+	 * @since 5.2
+	 */
+	public static void assertDoesNotThrow(Executable executable) {
+		AssertDoesNotThrow.assertDoesNotThrow(executable);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 *
+	 * @since 5.2
+	 */
+	public static void assertDoesNotThrow(Executable executable, String message) {
+		AssertDoesNotThrow.assertDoesNotThrow(executable, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @since 5.2
+	 */
+	public static void assertDoesNotThrow(Executable executable, Supplier<String> messageSupplier) {
+		AssertDoesNotThrow.assertDoesNotThrow(executable, messageSupplier);
+	}
+
 	// --- assertTimeout -------------------------------------------------------
 
 	// --- executable ---
