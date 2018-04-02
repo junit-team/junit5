@@ -11,7 +11,6 @@
 package org.junit.jupiter.params.aggregator;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
