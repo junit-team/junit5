@@ -47,24 +47,35 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	public Type getType() {
 		return Type.CONTAINER;
 	}
-
-	@Override
-	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
-			DynamicTestExecutor dynamicTestExecutor) throws Exception {
+	
+	public void disvoverTests(DynamicTestExecutor dynamicTestExecutor) {
 		AtomicInteger index = new AtomicInteger(1);
 		try (Stream<? extends DynamicNode> children = dynamicContainer.getChildren()) {
 			// @formatter:off
 			children.peek(child -> Preconditions.notNull(child, "individual dynamic node must not be null"))
-					.map(child -> toDynamicDescriptor(index.getAndIncrement(), child))
-					.filter(Optional::isPresent)
-					.map(Optional::get)
-					.forEachOrdered(dynamicTestExecutor::execute);
+					.forEach(child -> toDynamicDescriptor(index.getAndIncrement(), child, dynamicTestExecutor));
 			// @formatter:on
 		}
+	}
+
+	@Override
+	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
+			DynamicTestExecutor dynamicTestExecutor) {
+		children.forEach(dynamicTestExecutor::execute);
 		return context;
 	}
 
-	private Optional<JupiterTestDescriptor> toDynamicDescriptor(int index, DynamicNode childNode) {
-		return createDynamicDescriptor(this, childNode, index, testSource, dynamicDescendantFilter);
+	private Optional<JupiterTestDescriptor> toDynamicDescriptor(int index, DynamicNode childNode, DynamicTestExecutor dynamicTestExecutor) {
+		Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(getUniqueId(), childNode, index, testSource, dynamicDescendantFilter);
+		descriptor.ifPresent(td -> {
+			addChild(td);
+			dynamicTestExecutor.dynamicRegister(td);
+			if (td instanceof DynamicContainerTestDescriptor) {
+				((DynamicContainerTestDescriptor) td).disvoverTests(dynamicTestExecutor);
+			}
+
+		});
+		
+		return descriptor;
 	}
 }

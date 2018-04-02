@@ -87,14 +87,23 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 				Iterator<DynamicNode> iterator = dynamicNodeStream.iterator();
 				while (iterator.hasNext()) {
 					DynamicNode dynamicNode = iterator.next();
-					Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index++,
+					Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(getUniqueId(), dynamicNode, index++,
 						source, getDynamicDescendantFilter());
-					descriptor.ifPresent(dynamicTestExecutor::execute);
+					descriptor.ifPresent(td -> {
+						addChild(td);
+						dynamicTestExecutor.dynamicRegister(td);
+						if (td instanceof DynamicContainerTestDescriptor) {
+							((DynamicContainerTestDescriptor) td).disvoverTests(dynamicTestExecutor);
+						}
+
+					});
 				}
 			}
 			catch (ClassCastException ex) {
 				throw invalidReturnTypeException(ex);
 			}
+			
+			children.forEach(dynamicTestExecutor::execute);
 		});
 	}
 
@@ -108,24 +117,23 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		}
 	}
 
-	static Optional<JupiterTestDescriptor> createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node,
+	static Optional<JupiterTestDescriptor> createDynamicDescriptor(UniqueId parentId, DynamicNode node,
 			int index, TestSource source, DynamicDescendantFilter dynamicDescendantFilter) {
 		UniqueId uniqueId;
 		Supplier<JupiterTestDescriptor> descriptorCreator;
 		if (node instanceof DynamicTest) {
 			DynamicTest test = (DynamicTest) node;
-			uniqueId = parent.getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
+			uniqueId = parentId.append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
 			descriptorCreator = () -> new DynamicTestTestDescriptor(uniqueId, index, test, source);
 		}
 		else {
 			DynamicContainer container = (DynamicContainer) node;
-			uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
+			uniqueId = parentId.append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
 			descriptorCreator = () -> new DynamicContainerTestDescriptor(uniqueId, index, container, source,
 				dynamicDescendantFilter);
 		}
 		if (dynamicDescendantFilter.test(uniqueId)) {
 			JupiterTestDescriptor descriptor = descriptorCreator.get();
-			parent.addChild(descriptor);
 			return Optional.of(descriptor);
 		}
 		return Optional.empty();
