@@ -34,13 +34,26 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	private final DynamicContainer dynamicContainer;
 	private final TestSource testSource;
 	private final DynamicDescendantFilter dynamicDescendantFilter;
+	private final boolean isEarlyDiscovery;
 
 	DynamicContainerTestDescriptor(UniqueId uniqueId, int index, DynamicContainer dynamicContainer,
-			TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter) {
+			TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter, boolean isEarlyDiscovery) {
 		super(uniqueId, index, dynamicContainer, testSource);
 		this.dynamicContainer = dynamicContainer;
 		this.testSource = testSource;
 		this.dynamicDescendantFilter = dynamicDescendantFilter;
+		this.isEarlyDiscovery = isEarlyDiscovery;
+		
+		if (isEarlyDiscovery) {
+			discoverEarly();
+		}
+	}
+	
+	private void discoverEarly() {
+		AtomicInteger index = new AtomicInteger(1);
+		try (Stream<? extends DynamicNode> children = dynamicContainer.getChildren()) {
+			children.forEach(child -> toDynamicDescriptor(index.getAndIncrement(), child, !isEarlyDiscovery));
+		}
 	}
 
 	@Override
@@ -51,20 +64,25 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
-		AtomicInteger index = new AtomicInteger(1);
-		try (Stream<? extends DynamicNode> children = dynamicContainer.getChildren()) {
-			// @formatter:off
-			children.peek(child -> Preconditions.notNull(child, "individual dynamic node must not be null"))
-					.map(child -> toDynamicDescriptor(index.getAndIncrement(), child))
-					.filter(Optional::isPresent)
-					.map(Optional::get)
-					.forEachOrdered(dynamicTestExecutor::execute);
-			// @formatter:on
+		if (isEarlyDiscovery) {
+			children.forEach(td -> dynamicTestExecutor.execute(td, false));
+		} else {
+			AtomicInteger index = new AtomicInteger(1);
+			try (Stream<? extends DynamicNode> children = dynamicContainer.getChildren()) {
+				// @formatter:off
+				children.peek(child -> Preconditions.notNull(child, "individual dynamic node must not be null"))
+						.map(child -> toDynamicDescriptor(index.getAndIncrement(), child, false))
+						.filter(Optional::isPresent)
+						.map(Optional::get)
+						.forEachOrdered(td -> dynamicTestExecutor.execute(td, true));
+				// @formatter:on
+			}
+
 		}
 		return context;
 	}
 
-	private Optional<JupiterTestDescriptor> toDynamicDescriptor(int index, DynamicNode childNode) {
-		return createDynamicDescriptor(this, childNode, index, testSource, dynamicDescendantFilter);
+	private Optional<JupiterTestDescriptor> toDynamicDescriptor(int index, DynamicNode childNode, boolean isEarlyDiscovery) {
+		return createDynamicDescriptor(this, childNode, index, testSource, dynamicDescendantFilter, isEarlyDiscovery);
 	}
 }

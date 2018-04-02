@@ -110,8 +110,10 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 				try {
 					context = node.before(context);
 
-					context = node.execute(context, dynamicTestDescriptor -> {
-						listener.dynamicTestRegistered(dynamicTestDescriptor);
+					context = node.execute(context, (dynamicTestDescriptor, registrationRequired) -> {
+						if (registrationRequired) {
+							listener.dynamicTestRegistered(dynamicTestDescriptor);
+						}
 						new NodeExecutor(dynamicTestDescriptor).execute(context, tracker);
 					});
 
