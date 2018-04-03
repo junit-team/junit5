@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.io.IOException;
 
