@@ -439,9 +439,10 @@ class HierarchicalTestExecutorTests {
 	@Test
 	void executesDynamicTestDescriptorsUsingContainerAndTestType() throws Exception {
 
-		MyContainerAndTest child = spy(new MyContainerAndTest(root.getUniqueId().append("c&t", "child")));
-		MyContainerAndTest dynamicContainerAndTest = spy(
-			new MyContainerAndTest(child.getUniqueId().append("c&t", "dynamicContainerAndTest")));
+		MyContainerAndTestTestCase child = spy(
+			new MyContainerAndTestTestCase(root.getUniqueId().append("c&t", "child")));
+		MyContainerAndTestTestCase dynamicContainerAndTest = spy(
+			new MyContainerAndTestTestCase(child.getUniqueId().append("c&t", "dynamicContainerAndTest")));
 		MyLeaf dynamicLeaf = spy(new MyLeaf(dynamicContainerAndTest.getUniqueId().append("test", "dynamicLeaf")));
 
 		root.addChild(child);
@@ -579,9 +580,10 @@ class HierarchicalTestExecutorTests {
 		}
 	}
 
-	private static class MyContainerAndTest extends AbstractTestDescriptor implements Node<MyEngineExecutionContext> {
+	private static class MyContainerAndTestTestCase extends AbstractTestDescriptor
+			implements Node<MyEngineExecutionContext> {
 
-		MyContainerAndTest(UniqueId uniqueId) {
+		MyContainerAndTestTestCase(UniqueId uniqueId) {
 			super(uniqueId, uniqueId.toString());
 		}
 

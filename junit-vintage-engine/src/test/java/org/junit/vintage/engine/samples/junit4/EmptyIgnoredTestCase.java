@@ -8,15 +8,10 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.vintage.engine.samples;
+package org.junit.vintage.engine.samples.junit4;
 
-/**
- * @since 4.12
- */
-public class PlainOldJavaClassWithoutAnyTest {
+import org.junit.Ignore;
 
-	public void doSomething() {
-		// no-op
-	}
-
+@Ignore("empty")
+public class EmptyIgnoredTestCase {
 }
