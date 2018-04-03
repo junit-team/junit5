@@ -35,4 +35,4 @@ script:
 
 # If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
 after_success:
-  - test -v JACOCO && ./gradlew ${JACOCO} jacocoRootReport && bash <(curl -s https://codecov.io/bash)
+  - test -v JACOCO && ./gradlew ${JACOCO} jacocoRootReport && bash <(curl -s https://codecov.io/bash) || true
