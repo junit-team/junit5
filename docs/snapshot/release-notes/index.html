@@ -682,6 +682,28 @@ can be declared to accept an argument of type <code>int</code>, <code>long</code
 <p><code>@MethodSource</code> now supports <code>static</code> factory methods declared in external classes
 referenced by <em>fully qualified method name</em>.</p>
 </li>
+<li>
+<p>The <code>ParameterContext</code> API used in <code>ParameterResolver</code> implementations now includes the
+following convenience methods for looking up annotations on parameters. Extension
+authors are strongly encouraged to use these methods instead of those provided in the
+core <code>java.lang.reflect.Parameter</code> API due to a bug in <code>javac</code> on JDK versions prior to
+JDK 9 which causes lookups for annotations on parameters in inner class constructors to
+fail consistently&#8201;&#8212;&#8201;for example, when resolving a parameter for a <code>@Nested</code> test class
+constructor.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>boolean isAnnotated(Class&lt;? extends Annotation&gt; annotationType)</code></p>
+</li>
+<li>
+<p><code>Optional&lt;A&gt; findAnnotation(Class&lt;A&gt; annotationType)</code></p>
+</li>
+<li>
+<p><code>List&lt;A&gt; findRepeatableAnnotations(Class&lt;A&gt; annotationType)</code></p>
+</li>
+</ul>
+</div>
+</li>
 </ul>
 </div>
 </div>
@@ -1506,7 +1528,7 @@ online.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-03 05:30:12 EDT
+Last updated 2018-04-03 08:17:26 EDT
 </div>
 </div>
 </body>
