@@ -541,6 +541,13 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.2.0-M1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
+<li><a href="#release-notes-5.1.1">5.1.1</a>
+<ul class="sectlevel2">
+<li><a href="#release-notes-5.1.1-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.1.1-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.1.1-junit-vintage">JUnit Vintage</a></li>
+</ul>
+</li>
 <li><a href="#release-notes-5.1.0">5.1.0</a></li>
 </ul>
 </div>
@@ -652,28 +659,6 @@ can be declared to accept an argument of type <code>int</code>, <code>long</code
 <p><code>@MethodSource</code> now supports <code>static</code> factory methods declared in external classes
 referenced by <em>fully qualified method name</em>.</p>
 </li>
-<li>
-<p>The <code>ParameterContext</code> API used in <code>ParameterResolver</code> implementations now includes the
-following convenience methods for looking up annotations on parameters. Extension
-authors are strongly encouraged to use these methods instead of those provided in the
-core <code>java.lang.reflect.Parameter</code> API due to a bug in <code>javac</code> on JDK versions prior to
-JDK 9 which causes lookups for annotations on parameters in inner class constructors to
-fail consistently&#8201;&#8212;&#8201;for example, when resolving a parameter for a <code>@Nested</code> test class
-constructor.</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>boolean isAnnotated(Class&lt;? extends Annotation&gt; annotationType)</code></p>
-</li>
-<li>
-<p><code>Optional&lt;A&gt; findAnnotation(Class&lt;A&gt; annotationType)</code></p>
-</li>
-<li>
-<p><code>List&lt;A&gt; findRepeatableAnnotations(Class&lt;A&gt; annotationType)</code></p>
-</li>
-</ul>
-</div>
-</li>
 </ul>
 </div>
 </div>
@@ -702,6 +687,140 @@ constructor.</p>
 </div>
 <div class="sect3">
 <h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-5.1.1"><a class="anchor" href="#release-notes-5.1.1"></a>5.1.1</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Date of Release:</strong> ❓</p>
+</div>
+<div class="paragraph">
+<p><strong>Scope:</strong> Bug fixes and minor improvements since the 5.1.0 release</p>
+</div>
+<div class="paragraph">
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
+<a href="https://github.com/junit-team/junit5/milestone/24?closed=1">5.1.1</a> milestone page in the JUnit repository
+on GitHub.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.1.1-junit-platform"><a class="anchor" href="#release-notes-5.1.1-junit-platform"></a>JUnit Platform</h3>
+<div class="sect3">
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.1.1-junit-jupiter"><a class="anchor" href="#release-notes-5.1.1-junit-jupiter"></a>JUnit Jupiter</h3>
+<div class="sect3">
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>ParameterContext</code> API used in <code>ParameterResolver</code> implementations now includes the
+following convenience methods for looking up annotations on parameters. Extension
+authors are strongly encouraged to use these methods instead of those provided in the
+core <code>java.lang.reflect.Parameter</code> API due to a bug in <code>javac</code> on JDK versions prior to
+JDK 9 which causes lookups for annotations on parameters in inner class constructors to
+fail consistently&#8201;&#8212;&#8201;for example, when resolving a parameter for a <code>@Nested</code> test class
+constructor.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>boolean isAnnotated(Class&lt;? extends Annotation&gt; annotationType)</code></p>
+</li>
+<li>
+<p><code>Optional&lt;A&gt; findAnnotation(Class&lt;A&gt; annotationType)</code></p>
+</li>
+<li>
+<p><code>List&lt;A&gt; findRepeatableAnnotations(Class&lt;A&gt; annotationType)</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.1.1-junit-vintage"><a class="anchor" href="#release-notes-5.1.1-junit-vintage"></a>JUnit Vintage</h3>
+<div class="sect3">
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="deprecations-and-breaking-changes-6"><a class="anchor" href="#deprecations-and-breaking-changes-6"></a>Deprecations and Breaking Changes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -765,7 +884,7 @@ invocations within an IDE</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-03 12:04:27 EDT
+Last updated 2018-04-04 11:08:10 EDT
 </div>
 </div>
 </body>
