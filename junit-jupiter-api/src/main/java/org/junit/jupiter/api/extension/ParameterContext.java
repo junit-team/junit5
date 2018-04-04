@@ -100,7 +100,7 @@ public interface ParameterContext {
 	 *
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return {@code true} if the annotation is present or meta-present
-	 * @since 5.2
+	 * @since 5.1.1
 	 * @see #findAnnotation(Class)
 	 * @see #findRepeatableAnnotations(Class)
 	 */
@@ -120,7 +120,7 @@ public interface ParameterContext {
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return an {@code Optional} containing the annotation; never {@code null} but
 	 * potentially empty
-	 * @since 5.2
+	 * @since 5.1.1
 	 * @see #isAnnotated(Class)
 	 * @see #findRepeatableAnnotations(Class)
 	 */
@@ -141,7 +141,7 @@ public interface ParameterContext {
 	 * {@code null}
 	 * @return the list of all such annotations found; neither {@code null} nor
 	 * mutable, but potentially empty
-	 * @since 5.2
+	 * @since 5.1.1
 	 * @see #isAnnotated(Class)
 	 * @see #findAnnotation(Class)
 	 * @see java.lang.annotation.Repeatable
