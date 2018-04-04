@@ -23,7 +23,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New `findAllClassesInModule()` method in `ReflectionSupport` which enables third-party
+  `TestEngine` implementations to scan for classes in modules -- for example, when
+  processing a `ModuleSelector` during the discovery phase.
 
 
 [[release-notes-5.1.1-junit-jupiter]]
