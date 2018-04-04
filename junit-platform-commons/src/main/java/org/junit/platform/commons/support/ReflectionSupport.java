@@ -112,6 +112,7 @@ public final class ReflectionSupport {
 	 * @param classNameFilter the class name filter; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
 	 * but potentially empty
+	 * @since 1.1.1
 	 * @see #findAllClassesInClasspathRoot(URI, Predicate, Predicate)
 	 * @see #findAllClassesInPackage(String, Predicate, Predicate)
 	 */
