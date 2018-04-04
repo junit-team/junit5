@@ -738,8 +738,8 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInModule(String, Predicate, Predicate)
 	 * @since 1.1.1
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInModule(String, Predicate, Predicate)
 	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
