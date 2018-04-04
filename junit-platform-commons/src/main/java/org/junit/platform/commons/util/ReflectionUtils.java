@@ -739,6 +739,7 @@ public final class ReflectionUtils {
 
 	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInModule(String, Predicate, Predicate)
+	 * @since 1.1.1
 	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
@@ -747,7 +748,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * @since 1.2
+	 * @since 1.1.1
 	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter classFilter) {
 		return Collections.unmodifiableList(ModuleUtils.findAllClassesInModule(moduleName, classFilter));
