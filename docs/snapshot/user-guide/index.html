@@ -1875,6 +1875,20 @@ of each test class before executing each <em>test</em> method (see note below fo
 as a <em>test</em> method). This "per-method" test instance lifecycle is the default behavior in
 JUnit Jupiter and is analogous to all previous versions of JUnit.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Please note that the test class will still be instantiated if a given <em>test</em> method
+is <em>disabled</em> via a <a href="#writing-tests-conditional-execution">condition</a> (e.g., <code>@Disabled</code>,
+<code>@DisabledOnOs</code>, etc.) even when the "per-method" test instance lifecycle mode is active.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>If you would prefer that JUnit Jupiter execute all test methods on the same test
 instance, simply annotate your test class with <code>@TestInstance(Lifecycle.PER_CLASS)</code>. When
@@ -6038,7 +6052,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-05 10:02:48 EDT
+Last updated 2018-04-05 10:27:48 EDT
 </div>
 </div>
 </body>
