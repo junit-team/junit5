@@ -335,6 +335,10 @@ of each test class before executing each _test_ method (see note below for what 
 as a _test_ method). This "per-method" test instance lifecycle is the default behavior in
 JUnit Jupiter and is analogous to all previous versions of JUnit.
 
+NOTE: Please note that the test class will still be instantiated if a given _test_ method
+is _disabled_ via a <<writing-tests-conditional-execution,condition>> (e.g., `@Disabled`,
+`@DisabledOnOs`, etc.) even when the "per-method" test instance lifecycle mode is active.
+
 If you would prefer that JUnit Jupiter execute all test methods on the same test
 instance, simply annotate your test class with `@TestInstance(Lifecycle.PER_CLASS)`. When
 using this mode, a new test instance will be created once per test class. Thus, if your
