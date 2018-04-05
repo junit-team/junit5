@@ -8,40 +8,31 @@ branches:
   except:
     - /^r\d.*$/
 
+# Get latest install-jdk.sh script
+before_install:
+  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+
 matrix:
   include:
-# Java 9 "Oracle JDK" (provided by Travis CI)
-    - jdk: oraclejdk9
-      env: JDK_RELEASE='Oracle JDK 9' EXTRA_GRADLE_ARGS='-PenableJaCoCo'
-      install: echo "Don't let Travis CI execute './gradlew assemble' by default"
-# Java 9 "OpenJDK"
-    - env: JDK_RELEASE='OpenJDK 9' EXTRA_GRADLE_ARGS=''
-      install: . ./src/install/install-jdk.sh -F 9 -L GPL
-# Java 10 "Oracle JDK"
-    - env: JDK_RELEASE='Oracle JDK 10' EXTRA_GRADLE_ARGS=''
-      install: . ./src/install/install-jdk.sh -F 10 -L BCL
+# Java 10 "Oracle JDK" (not yet provided by Travis CI)
+    - env: JDK='Oracle JDK 10'
+      install: . ./install-jdk.sh -F 10 -L BCL
 # Java 10 "OpenJDK"
-    - env: JDK_RELEASE='OpenJDK 10' EXTRA_GRADLE_ARGS=''
-      install: . ./src/install/install-jdk.sh -F 10 -L GPL
+    - env: JDK='OpenJDK 10' JACOCO='-PenableJaCoCo'
+      install: . ./install-jdk.sh -F 10 -L GPL
+# Java 11 "Oracle JDK"
+    - env: JDK='Oracle JDK 11'
+      install: . ./install-jdk.sh -F 11 -L BCL
+# The following environments are known to fail
+  allow_failures:
+    - env: JDK='Oracle JDK 11'
 
 script:
 # Display Gradle, Groovy, JVM and other versions
-  - ./gradlew -version
+  - ./gradlew --version
 # Build JUnit 5
-  - ./gradlew build $EXTRA_GRADLE_ARGS --scan --stacktrace -Dkotlin.compiler.execution.strategy="in-process"
+  - ./gradlew --scan --stacktrace --warning-mode=all ${JACOCO} build
 
-# Do not store unnecessary files from Gradle dependency cache
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
-# Store Gradle dependency cache and Gradle Wrapper files for next execution
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
-# Run clover report and send report to codecov after build success for JDK 9 builds
+# If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
 after_success:
-  - test "$JDK_RELEASE" = "Oracle JDK 9" && ./gradlew -PenableJaCoCo jacocoRootReport || true
-  - test "$JDK_RELEASE" = "Oracle JDK 9" && bash <(curl -s https://codecov.io/bash) || true
+  - test -v JACOCO && ./gradlew ${JACOCO} jacocoRootReport && bash <(curl -s https://codecov.io/bash) || true
