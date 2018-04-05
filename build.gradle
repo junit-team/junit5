@@ -8,9 +8,9 @@ buildscript {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
-		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.8.0')
+		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.10.0')
 		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
-		classpath('org.ajoberstar:gradle-git-publish:0.3.2')
+		classpath('org.ajoberstar:gradle-git-publish:0.3.3')
 		classpath('org.ajoberstar:gradle-git:1.7.2')
 		classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.1')
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
@@ -18,7 +18,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.gradle.build-scan' version '1.11'
+	id 'com.gradle.build-scan' version '1.12.1'
 	id 'net.nemerosa.versioning' version '2.6.1'
 }
 
@@ -117,7 +117,7 @@ allprojects { subproj ->
 	if (project.hasProperty('enableJaCoCo')) {
 		apply plugin: "jacoco"
 		jacoco {
-			toolVersion = '0.8.0'
+			toolVersion = '0.8.1'
 		}
 	}
 
@@ -207,7 +207,7 @@ allprojects { subproj ->
 	}
 
 	checkstyle {
-		toolVersion = '8.7'
+		toolVersion = '8.8'
 		configDir = rootProject.file('src/checkstyle')
 	}
 	checkstyleMain {
@@ -345,8 +345,9 @@ subprojects { subproj ->
 		}
 
 		def isSnapshot = project.version.contains('SNAPSHOT')
-		def isContinuousIntegrationEnvironment = Boolean.parseBoolean(System.getenv("JITPACK"))
-		def signArtifacts = !(isSnapshot || isContinuousIntegrationEnvironment)
+		def isContinuousIntegrationEnvironment = Boolean.parseBoolean(System.getenv('CI'))
+		def isJitPackEnvironment = Boolean.parseBoolean(System.getenv('JITPACK'))
+		def signArtifacts = !(isSnapshot || isContinuousIntegrationEnvironment || isJitPackEnvironment)
 
 		afterEvaluate {
 			if (signArtifacts && uploadArchives.enabled) {
@@ -533,11 +534,11 @@ subprojects { subproj ->
 			dependsOn = [versionedProject.classes]
 			doLast {
 				project.exec {
-					executable 'jar'
+					executable "${System.properties['java.home']}/bin/jar"
 					args = ['--version']
 				}
 				project.exec {
-					executable 'jar'
+					executable "${System.properties['java.home']}/bin/jar"
 					args = ['--update','--file', archivePath,
 							'--release', version,
 							'-C', versionedProject.compileJava.destinationDir,
