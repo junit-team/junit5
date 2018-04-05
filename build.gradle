@@ -338,6 +338,7 @@ subprojects { subproj ->
 			options.addStringOption('Xdoclint:html,syntax', '-quiet')
 			options.addMultilineStringsOption('tag').setValue(['apiNote:a:API Note:', 'implSpec:a:Implementation Requirements:', 'implNote:a:Implementation Note:'])
 			options.encoding = 'UTF-8'
+			options.noTimestamp = true
 			// Remove Kotlin classes from classpath due to "bad" class file: AssertionsKt$sam$Supplier$44378ebd.class
 			// see https://bugs.openjdk.java.net/browse/JDK-8187422
 			classpath = classpath - files(compileKotlin.destinationDir)
@@ -674,6 +675,7 @@ configure(rootProject) {
 		options.addStringOption('Xdoclint:none', '-quiet')
 		options.addMultilineStringsOption('tag').setValue(['apiNote:a:API Note:', 'implSpec:a:Implementation Requirements:', 'implNote:a:Implementation Note:'])
 		options.encoding = 'UTF-8'
+		options.noTimestamp = true
 		options.jFlags '-Xmx1g'
 		options.links(
 			'https://docs.oracle.com/javase/8/docs/api/',
