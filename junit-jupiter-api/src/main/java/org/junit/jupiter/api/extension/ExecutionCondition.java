@@ -23,6 +23,12 @@ import org.apiguardian.api.API;
  * to determine if a given container or test should be executed based on the
  * supplied {@link ExtensionContext}.
  *
+ * <p>If an {@code ExecutionCondition} {@linkplain ConditionEvaluationResult#disabled
+ * disables} a test method, that does not prevent the test class from being
+ * instantiated. Rather, it prevents the execution of the test method and
+ * method-level lifecycle callbacks such as {@code @BeforeEach} methods,
+ * {@code @AfterEach} methods, and corresponding extension APIs.
+ *
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0

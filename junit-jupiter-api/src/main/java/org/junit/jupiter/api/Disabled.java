@@ -30,6 +30,12 @@ import org.apiguardian.api.API;
  * <p>When applied at the class level, all test methods within that class
  * are automatically disabled as well.
  *
+ * <p>When applied at the method level, the presence of this annotation does not
+ * prevent the test class from being instantiated. Rather, it prevents the
+ * execution of the test method and method-level lifecycle callbacks such as
+ * {@code @BeforeEach} methods, {@code @AfterEach} methods, and corresponding
+ * extension APIs.
+ *
  * @since 5.0
  * @see #value
  * @see org.junit.jupiter.api.condition.EnabledIf
