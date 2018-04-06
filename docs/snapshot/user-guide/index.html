@@ -4321,10 +4321,12 @@ failed. Otherwise the exit code is <code>0</code>.
                                                  only classes whose fully qualified names
                                                  match. To avoid loading classes
                                                  unnecessarily, the default pattern only
-                                                 includes class names that end with
-                                                 "Test" or "Tests". When this option is
-                                                 repeated, all patterns will be combined
-                                                 using OR semantics. (default: ^.*Tests?$)
+                                                 includes class names that begin with
+                                                 "Test" or end with "Test" or "Tests".
+                                                 When this option is repeated, all
+                                                 patterns will be combined using OR
+                                                 semantics. (default: ^(Test.*|.+[.$]Test.
+                                                 *|.*Tests?)$)
 -N, --exclude-classname &lt;String&gt;               Provide a regular expression to exclude
                                                  those classes whose fully qualified
                                                  names match. When this option is
@@ -6052,7 +6054,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-05 11:57:26 EDT
+Last updated 2018-04-05 16:00:56 EDT
 </div>
 </div>
 </body>

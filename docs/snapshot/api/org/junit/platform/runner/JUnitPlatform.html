@@ -172,7 +172,7 @@ implements org.junit.runner.manipulation.Filterable</pre>
  <p>When used on a class that serves as a test suite and the
  <a href="../../../../org/junit/platform/suite/api/IncludeClassNamePatterns.html" title="annotation in org.junit.platform.suite.api"><code>@IncludeClassNamePatterns</code></a> annotation is not
  present, the default include pattern
- <a href="../../../../org/junit/platform/engine/discovery/ClassNameFilter.html#STANDARD_INCLUDE_PATTERN">"^.*Tests?$"</a>
+ <a href="../../../../org/junit/platform/engine/discovery/ClassNameFilter.html#STANDARD_INCLUDE_PATTERN">"^(Test.*|.+[.$]Test.*|.*Tests?)$"</a>
  will be used in order to avoid loading classes unnecessarily (see <a href="../../../../org/junit/platform/engine/discovery/ClassNameFilter.html#STANDARD_INCLUDE_PATTERN"><code>ClassNameFilter#STANDARD_INCLUDE_PATTERN</code></a>).</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>

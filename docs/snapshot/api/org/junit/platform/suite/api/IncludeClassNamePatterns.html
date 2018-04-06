@@ -212,11 +212,11 @@ public @interface <span class="memberNameLabel">IncludeClassNamePatterns</span><
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;value</pre>
 <div class="block">Regular expressions used to match against fully qualified class names.
 
- <p>Defaults to <code>"^.*Tests?$"</code> which matches against class names
- ending in <code>Test</code> or <code>Tests</code> (in any package).</div>
+ <p>The default pattern matches against classes whose names either begin
+ with <code>Test</code> or end with <code>Test</code> or <code>Tests</code> (in any package).</div>
 <dl>
 <dt>Default:</dt>
-<dd>{"^.*Tests?$"}</dd>
+<dd>{"^(Test.*|.+[.$]Test.*|.*Tests?)$"}</dd>
 </dl>
 </li>
 </ul>

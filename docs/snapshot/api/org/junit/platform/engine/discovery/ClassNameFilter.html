@@ -165,9 +165,7 @@ extends <a href="../../../../../org/junit/platform/engine/DiscoveryFilter.html" 
 <td class="colLast">
 <div class="block">Standard include pattern in the form of a regular expression that is
  used to match against fully qualified class names:
- "^.*Tests?$"
- which matches against class names ending in <code>Test</code> or
- <code>Tests</code> (in any package).</div>
+ "^(Test.*|.+[.$]Test.*|.*Tests?)$"</div>
 </td>
 </tr>
 </table>
@@ -237,9 +235,10 @@ extends <a href="../../../../../org/junit/platform/engine/DiscoveryFilter.html" 
 <pre>static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> STANDARD_INCLUDE_PATTERN</pre>
 <div class="block">Standard include pattern in the form of a regular expression that is
  used to match against fully qualified class names:
- "^.*Tests?$"
- which matches against class names ending in <code>Test</code> or
- <code>Tests</code> (in any package).</div>
+ "^(Test.*|.+[.$]Test.*|.*Tests?)$"
+
+ <p>This pattern matches against class names beginning with <code>Test</code>
+ or ending with <code>Test</code> or <code>Tests</code> (in any package).</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../constant-values.html#org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN">Constant Field Values</a></dd>
