@@ -63,6 +63,10 @@ public @interface IncludeClassNamePatterns {
 	 * <p>The default pattern matches against classes whose names either begin
 	 * with {@code Test} or end with {@code Test} or {@code Tests} (in any package).
 	 */
+	// Implementation notes:
+	// - Test.* :: "Test" prefix for classes in default package
+	// - .+[.$]Test.* :: "Test" prefix for top-level and nested classes in a named package
+	// - .*Tests? :: "Test" and "Tests" suffixes in any package
 	String[] value() default "^(Test.*|.+[.$]Test.*|.*Tests?)$";
 
 }

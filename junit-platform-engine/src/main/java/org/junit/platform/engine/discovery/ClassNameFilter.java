@@ -32,6 +32,10 @@ public interface ClassNameFilter extends DiscoveryFilter<String> {
 	 * <p>This pattern matches against class names beginning with {@code Test}
 	 * or ending with {@code Test} or {@code Tests} (in any package).
 	 */
+	// Implementation notes:
+	// - Test.* :: "Test" prefix for classes in default package
+	// - .+[.$]Test.* :: "Test" prefix for top-level and nested classes in a named package
+	// - .*Tests? :: "Test" and "Tests" suffixes in any package
 	String STANDARD_INCLUDE_PATTERN = "^(Test.*|.+[.$]Test.*|.*Tests?)$";
 
 	/**
