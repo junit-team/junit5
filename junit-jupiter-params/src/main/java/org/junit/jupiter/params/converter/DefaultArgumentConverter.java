@@ -83,7 +83,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 	}
 
 	@Override
-	protected Object convert(Object source, Class<?> targetType) {
+	public Object convert(Object source, Class<?> targetType) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ArgumentConversionException(

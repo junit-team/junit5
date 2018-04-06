@@ -86,8 +86,13 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private Object[] consumedArguments(Object[] arguments, Method templateMethod) {
+		// @formatter:off
+		boolean hasAggregate = Arrays.stream(templateMethod.getParameters())
+				.anyMatch(ParameterizedTestParameterResolver::isAggregate);
+		// @formatter:on
 		int parametersCount = templateMethod.getParameterCount();
-		return arguments.length > parametersCount ? Arrays.copyOf(arguments, parametersCount) : arguments;
+		return hasAggregate ? arguments
+				: (arguments.length > parametersCount ? Arrays.copyOf(arguments, parametersCount) : arguments);
 	}
 
 }
