@@ -101,7 +101,7 @@ functions in the `org.junit.jupiter.api` package.
 // TODO: Change to using kotlin language highlighting after switch to rouge syntax highlighter
 [source,groovy,indent=0]
 ----
-include::{kotlinTestDir}/example/AssertionsDemoKotlin.kt[tags=user_guide]
+include::{kotlinTestDir}/example/AssertionsKotlinDemo.kt[tags=user_guide]
 ----
 
 [[writing-tests-assertions-third-party]]
