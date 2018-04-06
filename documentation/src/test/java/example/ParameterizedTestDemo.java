@@ -32,7 +32,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
@@ -277,6 +281,34 @@ class ParameterizedTestDemo {
 		assertEquals(2017, argument.getYear());
 	}
 	// end::explicit_java_time_converter[]
+	// @formatter:on
+
+	// tag::Accessor_example[]
+	@ParameterizedTest
+	@CsvSource({ "foo, 1, bar, 2", "baz, 3, qux, 4" })
+	void argumentsAccessorTest(ArgumentsAccessor accessor) {
+		assertNotEquals(accessor.get(0), accessor.get(2));
+		assertTrue(accessor.getInteger(3) > accessor.getInteger(1));
+	}
+	// end::Accessor_example[]
+
+	// @formatter:off
+	// tag::Aggregator_example[]
+	@ParameterizedTest
+	@CsvSource({ "3, 22, 16, 39", "45, 15, 30" })
+	void aggregationTest(@AggregateWith(SummaryAggregator.class) int sum) {
+		assertTrue(sum <= 100);
+	}
+
+	static class SummaryAggregator implements ArgumentsAggregator {
+		@Override
+		public Object aggregateArguments(ArgumentsAccessor argumentsAccessor, ParameterContext parameterContext) {
+			return IntStream.range(0, argumentsAccessor.size())
+					.map(i -> argumentsAccessor.getInteger(i))
+					.sum();
+		}
+	}
+	// end::Aggregator_example[]
 	// @formatter:on
 
 	// tag::custom_display_names[]

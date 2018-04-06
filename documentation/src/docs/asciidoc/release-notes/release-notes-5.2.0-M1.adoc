@@ -23,7 +23,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The default _include pattern_ for filtering class names now matches test classes whose
+  names either start with `Test` or end with `Test` or `Tests`.
+  - This pattern is used by the `ConsoleLauncher`, the JUnit Platform Gradle Plugin, and
+    the `JUnitPlatform` runner.
 
 
 [[release-notes-5.2.0-M1-junit-jupiter]]
@@ -39,8 +42,16 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
-
+* New `assertDoesNotThrow()` methods in `Assertions` which assert that the execution of
+  a given code block does _not_ throw any kind of exception.
+* Implicit support for _widening primitive conversion_ for an argument supplied to a
+  `@ParameterizedTest`.
+  - For example, a parameterized test annotated with `@ValueSource(ints = { 1, 2, 3 })`
+    can be declared to accept an argument of type `int`, `long`, `float`, or `double`.
+* `@MethodSource` now supports `static` factory methods declared in external classes
+  referenced by _fully qualified method name_.
+* Support for aggregation of multiple `@ParameterizedTest` arguments into a single
+  object.
 
 [[release-notes-5.2.0-M1-junit-vintage]]
 === JUnit Vintage

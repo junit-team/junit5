@@ -1047,6 +1047,39 @@ composed annotation `JavaTimeConversionPattern`.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_java_time_converter]
 ----
 
+[[writing-tests-parameterized-tests-argument-aggregation]]
+==== Argument Aggregation
+
+By default, each argument provided to a `@ParameterizedTest` method corresponds to a
+single method parameter. Consequently, Argument Sources which are expected to supply
+a large number of arguments can lead to large method signatures.
+
+In this case, an `ArgumentsAccessor` can be used instead of explicit parameters.
+Using the interface, you can access and convert the provided arguments through a single
+object. Conversion follows the "Implicit Conversion" standards.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=Accessor_example]
+----
+
+_An `ArgumentsAccessor` is automatically injected into any parameter of the same
+type._
+
+===== Custom Aggregators
+
+Apart from plain access to a `@ParameterizedTest` method's arguments using an ArgumentsAccessor,
+JUnit Jupiter supports the usage of custom aggregators.
+
+You can create an aggregator by implementing the `ArgumentsAggregator` interface.
+The result of the aggregation can be provided to the test method by annotating a compatible
+parameter with the `@AggregateWith` annotation.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=Aggregator_example]
+----
+
 
 [[writing-tests-parameterized-tests-display-names]]
 ==== Customizing Display Names

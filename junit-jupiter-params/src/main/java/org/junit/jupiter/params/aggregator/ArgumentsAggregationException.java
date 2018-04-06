@@ -10,8 +10,20 @@
 
 package org.junit.jupiter.params.aggregator;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 
+/**
+ * {@code ArgumentsAggregationException} is an Exception thrown by an
+ * {@link ArgumentsAggregator} when an error occurs during aggregation
+ *  of the arguments.
+ *
+ * @since 5.2
+ * @see ArgumentsAggregator
+ */
+@API(status = EXPERIMENTAL, since = "5.2")
 public class ArgumentsAggregationException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

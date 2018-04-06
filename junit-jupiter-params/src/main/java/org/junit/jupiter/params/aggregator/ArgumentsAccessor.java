@@ -10,8 +10,26 @@
 
 package org.junit.jupiter.params.aggregator;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.List;
 
+import org.apiguardian.api.API;
+
+/**
+ * {@code ArgumentsAccessor} is an interface for accessing and converting arguments
+ * passed to a {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}
+ * annotated method.
+ *
+ * <p>An {@code ArgumentsAccessor} implementation is injected into any parameter of
+ * an assignable type, and supplied to {@link ArgumentsAggregator} implementations.
+ *
+ * @since 5.2
+ * @see ArgumentsAggregator
+ * @see DefaultArgumentsAccessor
+ * @see org.junit.jupiter.params.ParameterizedTest
+ */
+@API(status = EXPERIMENTAL, since = "5.2")
 public interface ArgumentsAccessor {
 
 	Object[] toArray();

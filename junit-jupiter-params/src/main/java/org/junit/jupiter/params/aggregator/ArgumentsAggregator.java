@@ -10,8 +10,45 @@
 
 package org.junit.jupiter.params.aggregator;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 
+/**
+ * {@code ArgumentsAggregator} is an abstraction for the aggregation of a
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}
+ * method's arguments into a single object.
+ *
+ * <p>An {@code ArgumentsAggregator} is applied to a method parameter of a
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}
+ * method with the help of an
+ * {@link org.junit.jupiter.params.aggregator.AggregateWith @AggregateWith} annotation.
+ *
+ * <p>The result of the specified aggregation is injected into the annotated parameter.
+ *
+ * <p>Implementations must provide a no-args constructor.
+ *
+ * @since 5.2
+ * @see org.junit.jupiter.params.ParameterizedTest
+ * @see org.junit.jupiter.params.aggregator.AggregateWith
+ * @see org.junit.jupiter.params.aggregator.ArgumentsAccessor
+ */
+@API(status = EXPERIMENTAL, since = "5.2")
 public interface ArgumentsAggregator {
+
+	/**
+	 * Aggregate the arguments contained in {@code accessor} according to the supplied
+	 * {@code context}.
+	 *
+	 * @param accessor an {@link ArgumentsAccessor} containing the arguments to be
+	 * aggregated; never {@code null}
+	 * @param context the parameter context where the aggregation result is to be
+	 * supplied; never {@code null}
+	 * @return the aggregation result; may be {@code null} but only if the target
+	 * type is a reference type
+	 * @throws ArgumentsAggregationException if an error occurs during the
+	 * conversion
+	 */
 	Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context);
 }

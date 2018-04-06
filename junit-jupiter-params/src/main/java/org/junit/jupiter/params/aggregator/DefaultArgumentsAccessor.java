@@ -13,9 +13,20 @@ package org.junit.jupiter.params.aggregator;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.platform.commons.util.Preconditions;
 
+/**
+ * The default implementation of {@link ArgumentsAccessor}.
+ *
+ * Delegates conversion to {@link DefaultArgumentConverter}.
+ *
+ * @since 5.2
+ * @see ArgumentsAccessor
+ * @see ParameterizedTest
+ * @see DefaultArgumentConverter
+ */
 public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
 	private final Object[] arguments;
