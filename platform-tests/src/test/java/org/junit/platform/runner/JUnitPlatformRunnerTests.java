@@ -89,7 +89,6 @@ import org.junit.runner.Description;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.model.InitializationError;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
@@ -745,8 +744,7 @@ class JUnitPlatformRunnerTests {
 		return testDescriptor;
 	}
 
-	private LauncherDiscoveryRequest instantiateRunnerAndCaptureGeneratedRequest(Class<?> testClass)
-			throws InitializationError {
+	private LauncherDiscoveryRequest instantiateRunnerAndCaptureGeneratedRequest(Class<?> testClass) {
 		Launcher launcher = mock(Launcher.class);
 		ArgumentCaptor<LauncherDiscoveryRequest> captor = ArgumentCaptor.forClass(LauncherDiscoveryRequest.class);
 		when(launcher.discover(captor.capture())).thenReturn(TestPlan.from(emptySet()));
