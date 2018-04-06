@@ -12,14 +12,14 @@ package org.junit.platform.console.subpackage;
 
 import org.junit.jupiter.api.Test;
 
-//Even though our "example test classes" should be named *TestCase
-//according to team policy, this class must be named *Test in order
-//for ConsoleLauncherIntegrationTests to pass, but that's not a
-//problem since the test method here can never fail.
-class OneTest {
+// Even though our "example test classes" should be named *TestCase
+// according to team policy, this class must be named *Tests in order
+// for ConsoleLauncherIntegrationTests to pass, but that's not a
+// problem since the test method here can never fail.
+class ThirdTests {
 
 	@Test
-	void m1() {
+	void test() {
 	}
 
 }

@@ -60,9 +60,9 @@ public @interface IncludeClassNamePatterns {
 	/**
 	 * Regular expressions used to match against fully qualified class names.
 	 *
-	 * <p>Defaults to {@code "^.*Tests?$"} which matches against class names
-	 * ending in {@code Test} or {@code Tests} (in any package).
+	 * <p>The default pattern matches against classes whose names either begin
+	 * with {@code Test} or end with {@code Test} or {@code Tests} (in any package).
 	 */
-	String[] value() default "^.*Tests?$";
+	String[] value() default "^(Test.*|.+[.$]Test.*|.*Tests?)$";
 
 }

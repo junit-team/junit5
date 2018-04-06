@@ -23,7 +23,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The default _include pattern_ for filtering class names now matches test classes whose
+  names either start with `Test` or end with `Test` or `Tests`.
+  - This pattern is used by the `ConsoleLauncher`, the JUnit Platform Gradle Plugin, and
+    the `JUnitPlatform` runner.
 
 
 [[release-notes-5.2.0-M1-junit-jupiter]]

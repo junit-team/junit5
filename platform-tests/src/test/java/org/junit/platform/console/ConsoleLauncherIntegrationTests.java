@@ -35,9 +35,9 @@ class ConsoleLauncherIntegrationTests {
 	}
 
 	@Test
-	void executeWithoutExcludeClassnameOptionDoesNotExcludeClasses() {
+	void executeWithoutExcludeClassnameOptionDoesNotExcludeClassesAndMustIncludeAllClassesMatchingTheStandardClassnamePattern() {
 		String[] args = { "-e", "junit-jupiter", "-p", "org.junit.platform.console.subpackage" };
-		assertEquals(2, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
+		assertEquals(9, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
 	}
 
 	@Test

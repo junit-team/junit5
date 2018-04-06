@@ -170,7 +170,7 @@ class AvailableOptions {
 		includeClassNamePattern = parser.acceptsAll(asList("n", "include-classname"),
 			"Provide a regular expression to include only classes whose fully qualified names match. " //
 					+ "To avoid loading classes unnecessarily, the default pattern only includes class " //
-					+ "names that end with \"Test\" or \"Tests\". " //
+					+ "names that begin with \"Test\" or end with \"Test\" or \"Tests\". " //
 					+ "When this option is repeated, all patterns will be combined using OR semantics.") //
 				.withRequiredArg() //
 				.defaultsTo(ClassNameFilter.STANDARD_INCLUDE_PATTERN);
