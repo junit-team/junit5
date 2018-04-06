@@ -250,8 +250,20 @@ public final class ReflectionUtils {
 		return !isStatic(member);
 	}
 
+	/**
+	 * Determine if the supplied class is an <em>inner class</em> (i.e., a
+	 * non-static member class).
+	 *
+	 * <p>Technically speaking (i.e., according to the Java Language
+	 * Specification), "an inner class may be a non-static member class, a
+	 * local class, or an anonymous class." However, this method does not
+	 * return {@code true} for a local or anonymous class.
+	 *
+	 * @param clazz the class to check; never {@code null}
+	 * @return {@code true} if the class is an <em>inner class</em>
+	 */
 	public static boolean isInnerClass(Class<?> clazz) {
-		return clazz.isMemberClass() && !isStatic(clazz);
+		return !isStatic(clazz) && clazz.isMemberClass();
 	}
 
 	public static boolean returnsVoid(Method method) {
