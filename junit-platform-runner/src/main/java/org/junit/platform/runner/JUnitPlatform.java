@@ -61,7 +61,6 @@ import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.model.InitializationError;
 
 /**
  * JUnit 4 based {@link Runner} which runs tests on the JUnit Platform in a
@@ -116,12 +115,12 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private LauncherDiscoveryRequest discoveryRequest;
 	private JUnitPlatformTestTree testTree;
 
-	public JUnitPlatform(Class<?> testClass) throws InitializationError {
+	public JUnitPlatform(Class<?> testClass) {
 		this(testClass, LauncherFactory.create());
 	}
 
 	// For testing only
-	JUnitPlatform(Class<?> testClass, Launcher launcher) throws InitializationError {
+	JUnitPlatform(Class<?> testClass, Launcher launcher) {
 		this.launcher = launcher;
 		this.testClass = testClass;
 		this.discoveryRequest = createDiscoveryRequest();
