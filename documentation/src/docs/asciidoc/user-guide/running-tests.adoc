@@ -453,14 +453,14 @@ single test class (i.e., `org.myapp.test.MyFirstJUnit5Test`).
 ----
 	<path id="test.classpath">
 		<!-- The location where you have your compiled classes -->
-		<pathelement location="${build.classes.dir}"/>
+		<pathelement location="${build.classes.dir}" />
 	</path>
 
 	<!-- ... -->
 
 	<junitlauncher>
 		<classpath refid="test.classpath" />
-		<test name="org.myapp.test.MyFirstJUnit5Test"/>
+		<test name="org.myapp.test.MyFirstJUnit5Test" />
 	</junitlauncher>
 ----
 
@@ -476,17 +476,17 @@ test classes from multiple locations.
 ----
 	<path id="test.classpath">
 		<!-- The location where you have your compiled classes -->
-		<pathelement location="${build.classes.dir}"/>
+		<pathelement location="${build.classes.dir}" />
 	</path>
 	....
 	<junitlauncher>
-		<classpath refid="test.classpath"/>
+		<classpath refid="test.classpath" />
 		<testclasses outputdir="${output.dir}">
 			<fileset dir="${build.classes.dir}">
-				<include name="org/example/**/demo/**/"/>
+				<include name="org/example/**/demo/**/" />
 			</fileset>
 			<fileset dir="${some.other.dir}">
-				<include name="org/myapp/**/"/>
+				<include name="org/myapp/**/" />
 			</fileset>
 		</testclasses>
 	</junitlauncher>
