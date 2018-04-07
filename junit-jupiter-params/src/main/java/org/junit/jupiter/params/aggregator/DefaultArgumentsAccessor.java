@@ -10,23 +10,28 @@
 
 package org.junit.jupiter.params.aggregator;
 
+import static java.lang.String.format;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.params.ParameterizedTest;
+import org.apiguardian.api.API;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * The default implementation of {@link ArgumentsAccessor}.
+ * Default implementation of the {@link ArgumentsAccessor} API.
  *
- * Delegates conversion to {@link DefaultArgumentConverter}.
+ * <p>Delegates conversion to {@link DefaultArgumentConverter}.
  *
  * @since 5.2
  * @see ArgumentsAccessor
- * @see ParameterizedTest
  * @see DefaultArgumentConverter
+ * @see org.junit.jupiter.params.ParameterizedTest
  */
+@API(status = INTERNAL, since = "5.2")
 public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
 	private final Object[] arguments;
@@ -36,70 +41,87 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 		this.arguments = arguments;
 	}
 
+	@Override
 	public Object get(int index) {
-		Preconditions.condition(index >= 0 && index < arguments.length,
-			String.format("Index must be between 0 and %d", arguments.length));
-		return arguments[index];
+		Preconditions.condition(index >= 0 && index < this.arguments.length,
+			() -> format("index must be >= 0 and < %d", this.arguments.length));
+		return this.arguments[index];
 	}
 
-	public Object[] toArray() {
-		return Arrays.copyOf(arguments, arguments.length);
+	@Override
+	public <T> T get(int index, Class<T> requiredType) {
+		Preconditions.notNull(requiredType, "requiredType must not be null");
+		Object value = get(index);
+		try {
+			Object convertedValue = DefaultArgumentConverter.INSTANCE.convert(value, requiredType);
+			return requiredType.cast(convertedValue);
+		}
+		catch (ClassCastException ex) {
+			String message = format("Argument [%s] at index [%d] could not be converted or cast to [%s]", value, index,
+				requiredType.getName());
+			throw new ArgumentsAccessorException(message, ex);
+		}
 	}
 
-	public List<Object> toList() {
-		return Arrays.asList(arguments);
-	}
-
+	@Override
 	public Character getCharacter(int index) {
 		return get(index, Character.class);
 	}
 
+	@Override
 	public Boolean getBoolean(int index) {
 		return get(index, Boolean.class);
 	}
 
+	@Override
 	public Byte getByte(int index) {
 		return get(index, Byte.class);
 	}
 
+	@Override
 	public Short getShort(int index) {
 		return get(index, Short.class);
 	}
 
+	@Override
 	public Integer getInteger(int index) {
 		return get(index, Integer.class);
 	}
 
+	@Override
 	public Long getLong(int index) {
 		return get(index, Long.class);
 	}
 
+	@Override
 	public Float getFloat(int index) {
 		return get(index, Float.class);
 	}
 
+	@Override
 	public Double getDouble(int index) {
 		return get(index, Double.class);
 	}
 
+	@Override
 	public String getString(int index) {
 		return get(index, String.class);
 	}
 
-	public <T> T get(int index, Class<T> requiredType) {
-		try {
-			return requiredType.cast(DefaultArgumentConverter.INSTANCE.convert(get(index), requiredType));
-		}
-		catch (Exception ex) {
-			throw new ArgumentsAccessorException(
-				String.format("Argument in index %d of class %s could not be converted to %s", index,
-					get(index).getClass().getCanonicalName(), requiredType.getCanonicalName()),
-				ex);
-		}
+	@Override
+	public int size() {
+		return this.arguments.length;
 	}
 
-	public int size() {
-		return arguments.length;
+	@Override
+	public Object[] toArray() {
+		return Arrays.copyOf(this.arguments, this.arguments.length);
+	}
+
+	@Override
+	public List<Object> toList() {
+		// Must return a copy since Arrays.asList returns a write-through list.
+		return new ArrayList<>(Arrays.asList(this.arguments));
 	}
 
 }

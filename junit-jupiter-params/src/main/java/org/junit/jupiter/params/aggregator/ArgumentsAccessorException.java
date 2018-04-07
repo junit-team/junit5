@@ -16,9 +16,9 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 
 /**
- * {@code ArgumentsAccessorException} is an Exception thrown by an
- * {@link ArgumentsAccessor} when an error occurs during
- * access or conversion of an argument.
+ * {@code ArgumentsAccessorException} is an exception thrown by an
+ * {@link ArgumentsAccessor} if an error occurs while accessing
+ * or converting an argument.
  *
  * @since 5.2
  * @see ArgumentsAccessor
@@ -35,4 +35,5 @@ public class ArgumentsAccessorException extends JUnitException {
 	public ArgumentsAccessorException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
 }

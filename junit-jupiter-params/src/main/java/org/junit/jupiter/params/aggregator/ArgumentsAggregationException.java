@@ -16,9 +16,9 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 
 /**
- * {@code ArgumentsAggregationException} is an Exception thrown by an
- * {@link ArgumentsAggregator} when an error occurs during aggregation
- *  of the arguments.
+ * {@code ArgumentsAggregationException} is an exception thrown by an
+ * {@link ArgumentsAggregator} when an error occurs while aggregating
+ * arguments.
  *
  * @since 5.2
  * @see ArgumentsAggregator
@@ -35,4 +35,5 @@ public class ArgumentsAggregationException extends JUnitException {
 	public ArgumentsAggregationException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
 }

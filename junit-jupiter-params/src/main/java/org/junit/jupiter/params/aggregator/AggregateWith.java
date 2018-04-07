@@ -24,18 +24,21 @@ import org.apiguardian.api.API;
  * {@code @AggregateWith} is an annotation that allows one to specify an
  * {@link ArgumentsAggregator}.
  *
- * <p>This annotation may be applied to method parameters of
- * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} methods
- * in order for an argument aggregation result to be injected into them.
+ * <p>This annotation may be applied to a parameter of a
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} method
+ * in order for an aggregated value to be resolved for the annotated parameter
+ * when the test method is invoked.
  *
  * @since 5.2
+ * @see ArgumentsAggregator
  * @see org.junit.jupiter.params.ParameterizedTest
- * @see org.junit.jupiter.params.aggregator.ArgumentsAggregator
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 @Documented
 @API(status = EXPERIMENTAL, since = "5.2")
 public @interface AggregateWith {
+
 	Class<? extends ArgumentsAggregator> value();
+
 }

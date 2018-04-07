@@ -21,34 +21,36 @@ import org.junit.jupiter.api.extension.ParameterContext;
  * method's arguments into a single object.
  *
  * <p>An {@code ArgumentsAggregator} is applied to a method parameter of a
- * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}
- * method with the help of an
- * {@link org.junit.jupiter.params.aggregator.AggregateWith @AggregateWith} annotation.
+ * {@code @ParameterizedTest} method via the {@link AggregateWith @AggregateWith}
+ * annotation.
  *
- * <p>The result of the specified aggregation is injected into the annotated parameter.
+ * <p>The result of the aggregation will be passed as an argument to the
+ * {@code @ParameterizedTest} method for the annotated parameter.
  *
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.2
+ * @see AggregateWith
+ * @see ArgumentsAccessor
  * @see org.junit.jupiter.params.ParameterizedTest
- * @see org.junit.jupiter.params.aggregator.AggregateWith
- * @see org.junit.jupiter.params.aggregator.ArgumentsAccessor
  */
 @API(status = EXPERIMENTAL, since = "5.2")
 public interface ArgumentsAggregator {
 
 	/**
-	 * Aggregate the arguments contained in {@code accessor} according to the supplied
-	 * {@code context}.
+	 * Aggregate the arguments contained in the supplied {@code accessor} into a
+	 * single object.
 	 *
 	 * @param accessor an {@link ArgumentsAccessor} containing the arguments to be
 	 * aggregated; never {@code null}
-	 * @param context the parameter context where the aggregation result is to be
+	 * @param context the parameter context where the aggregated result is to be
 	 * supplied; never {@code null}
-	 * @return the aggregation result; may be {@code null} but only if the target
+	 * @return the aggregated result; may be {@code null} but only if the target
 	 * type is a reference type
 	 * @throws ArgumentsAggregationException if an error occurs during the
-	 * conversion
+	 * aggregation
 	 */
-	Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context);
+	Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
+			throws ArgumentsAggregationException;
+
 }

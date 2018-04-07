@@ -17,46 +17,167 @@ import java.util.List;
 import org.apiguardian.api.API;
 
 /**
- * {@code ArgumentsAccessor} is an interface for accessing and converting arguments
- * passed to a {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}
- * annotated method.
+ * {@code ArgumentsAccessor} defines the public API for accessing arguments passed
+ * to a {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} method.
  *
- * <p>An {@code ArgumentsAccessor} implementation is injected into any parameter of
- * an assignable type, and supplied to {@link ArgumentsAggregator} implementations.
+ * <p>Specifically, an {@code ArgumentsAccessor} encapsulates a set of arguments
+ * for a given invocation of a parameterized test and provides convenience methods
+ * for accessing those arguments in a type-safe manner with automatic type conversion
+ * support.
+ *
+ * <p>An instance of {@code ArgumentsAccessor} will be automatically supplied
+ * for any parameter of type {@code ArgumentsAccessor} in a parameterized test.
+ * In addition, {@link ArgumentsAggregator} implementations are given access to
+ * an {@code ArgumentsAccessor}.
  *
  * @since 5.2
  * @see ArgumentsAggregator
- * @see DefaultArgumentsAccessor
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @API(status = EXPERIMENTAL, since = "5.2")
 public interface ArgumentsAccessor {
 
-	Object[] toArray();
+	/**
+	 * Get the value of the argument at the given index as an {@link Object}.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @return the value at the given index, potentially {@code null}
+	 */
+	Object get(int index) throws ArgumentsAccessorException;
 
-	List<Object> toList();
+	/**
+	 * Get the value of the argument at the given index as an instance of the
+	 * required type.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @param requiredType the required type of the value; never {@code null}
+	 * @return the value at the given index, potentially {@code null}
+	 */
+	<T> T get(int index, Class<T> requiredType) throws ArgumentsAccessorException;
 
+	/**
+	 * Get the value of the argument at the given index as a {@link Character},
+	 * performing automatic type conversion as necessary.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @return the value at the given index, potentially {@code null}
+	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * or converted to the desired type
+	 */
+	Character getCharacter(int index) throws ArgumentsAccessorException;
+
+	/**
+	 * Get the value of the argument at the given index as a {@link Boolean},
+	 * performing automatic type conversion as necessary.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @return the value at the given index, potentially {@code null}
+	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * or converted to the desired type
+	 */
+	Boolean getBoolean(int index) throws ArgumentsAccessorException;
+
+	/**
+	 * Get the value of the argument at the given index as a {@link Byte},
+	 * performing automatic type conversion as necessary.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @return the value at the given index, potentially {@code null}
+	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * or converted to the desired type
+	 */
+	Byte getByte(int index) throws ArgumentsAccessorException;
+
+	/**
+	 * Get the value of the argument at the given index as a {@link Short},
+	 * performing automatic type conversion as necessary.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @return the value at the given index, potentially {@code null}
+	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * or converted to the desired type
+	 */
+	Short getShort(int index) throws ArgumentsAccessorException;
+
+	/**
+	 * Get the value of the argument at the given index as a {@link Integer},
+	 * performing automatic type conversion as necessary.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @return the value at the given index, potentially {@code null}
+	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * or converted to the desired type
+	 */
+	Integer getInteger(int index) throws ArgumentsAccessorException;
+
+	/**
+	 * Get the value of the argument at the given index as a {@link Long},
+	 * performing automatic type conversion as necessary.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @return the value at the given index, potentially {@code null}
+	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * or converted to the desired type
+	 */
+	Long getLong(int index) throws ArgumentsAccessorException;
+
+	/**
+	 * Get the value of the argument at the given index as a {@link Float},
+	 * performing automatic type conversion as necessary.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @return the value at the given index, potentially {@code null}
+	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * or converted to the desired type
+	 */
+	Float getFloat(int index) throws ArgumentsAccessorException;
+
+	/**
+	 * Get the value of the argument at the given index as a {@link Double},
+	 * performing automatic type conversion as necessary.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @return the value at the given index, potentially {@code null}
+	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * or converted to the desired type
+	 */
+	Double getDouble(int index) throws ArgumentsAccessorException;
+
+	/**
+	 * Get the value of the argument at the given index as a {@link String},
+	 * performing automatic type conversion as necessary.
+	 *
+	 * @param index the index of the argument to get; must be greater than or
+	 * equal to zero and less than {@link #size}
+	 * @return the value at the given index, potentially {@code null}
+	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * or converted to the desired type
+	 */
+	String getString(int index) throws ArgumentsAccessorException;
+
+	/**
+	 * Get the number of arguments in this accessor.
+	 */
 	int size();
 
-	Object get(int index);
+	/**
+	 * Get all arguments in this accessor as an array.
+	 */
+	Object[] toArray();
 
-	<T> T get(int index, Class<T> requiredType);
+	/**
+	 * Get all arguments in this accessor as a list.
+	 */
+	List<Object> toList();
 
-	Character getCharacter(int index);
-
-	Boolean getBoolean(int index);
-
-	Byte getByte(int index);
-
-	Short getShort(int index);
-
-	Integer getInteger(int index);
-
-	Long getLong(int index);
-
-	Float getFloat(int index);
-
-	Double getDouble(int index);
-
-	String getString(int index);
 }
