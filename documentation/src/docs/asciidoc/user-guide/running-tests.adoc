@@ -423,52 +423,56 @@ below) or via the `junit-platform.properties` file.
 	...
 ----
 
-[[running-tests-ant]]
-=== Ant
+[[running-tests-build-ant]]
+==== Ant
 
-Starting version `1.10.3` of link:https://ant.apache.org/[Ant], a new
-link:https://ant.apache.org/manual/Tasks/junitlauncher.html[junitlauncher]
-task has been introduced to provide native support for launching JUnit 5 tests.
-The `junitlauncher` task is solely responsible for launching the JUnit 5 platform
-and passing it the selected collection of tests. JUnit 5 platform then does the necessary
-test identification as well as test execution.
+Starting with version `1.10.3` of link:https://ant.apache.org/[Ant], a new
+link:https://ant.apache.org/manual/Tasks/junitlauncher.html[`junitlauncher`] task has
+been introduced to provide native support for launching tests on the JUnit Platform. The
+`junitlauncher` task is solely responsible for launching the JUnit Platform and passing
+it the selected collection of tests. The JUnit Platform then delegates to registered test
+engines to discover and execute the tests.
 
-The `junitlauncher` task tries to stay as close as possible to Ant's native constructs,
-like link:https://ant.apache.org/manual/Types/resources.html#collection[resource collections],
-for allowing users to select the tests that they want executed by the test engines. This gives
-the task a consitent and natural feel when compared to many other core Ant tasks.
+The `junitlauncher` task attempts to align as close as possible with native Ant
+constructs such as
+link:https://ant.apache.org/manual/Types/resources.html#collection[resource collections]
+for allowing users to select the tests that they want executed by test engines. This
+gives the task a consistent and natural feel when compared to many other core Ant tasks.
 
-NOTE: The version of this task shipped in Ant 1.10.3, provides basic minimal support for
-launching the tests. A lot more enhancements (including support for forking the tests in a
-separate JVM) are currently being worked upon and should be available in subsequent releases
+NOTE: The version of the `junitlauncher` task shipped in Ant 1.10.3 provides basic,
+minimal support for launching the JUnit Platform. Additional enhancements (including
+support for forking the tests in a separate JVM) will be available in subsequent releases
 of Ant.
 
-==== Basic Usage
+===== Basic Usage
 
-The following shows an example, where a single test class called `org.myapp.test.MyFirstJUnit5Test`
-is being launched by the `junitlauncher` task:
+The following example demonstrates how to configure the `junitlauncher` task to select a
+single test class (i.e., `org.myapp.test.MyFirstJUnit5Test`).
 
-[source,xml]
+[source,xml,indent=0]
 ----
 	<path id="test.classpath">
 		<!-- The location where you have your compiled classes -->
 		<pathelement location="${build.classes.dir}"/>
 	</path>
-	....
+
+	<!-- ... -->
+
 	<junitlauncher>
 		<classpath refid="test.classpath" />
 		<test name="org.myapp.test.MyFirstJUnit5Test"/>
 	</junitlauncher>
 ----
-The `test` element lets you specify a single test class that you want to be selected and launched.
-The `classpath` element let's you specify the classpath to be used during the launching and
-execution of these tests. This classpath will be used to locate the test class(es) that are part
-of the execution.
 
-The following is another example of using the `junitlauncher` task. On this instance, we will launch
-multiple tests that are located under specific locations.
+The `test` element allows you to specify a single test class that you want to be selected
+and executed. The `classpath` element allows you to specify the classpath to be used to
+launch the JUnit Platform. This classpath will also be used to locate test classes that
+are part of the execution.
 
-[source,xml]
+The following example demonstrates how to configure the `junitlauncher` task to select
+test classes from multiple locations.
+
+[source,xml,indent=0]
 ----
 	<path id="test.classpath">
 		<!-- The location where you have your compiled classes -->
@@ -488,12 +492,12 @@ multiple tests that are located under specific locations.
 	</junitlauncher>
 ----
 
-In the above example, the `testclasses` element allows you to select multiple test classes that
-reside in different locations, to launch them for test execution.
+In the above example, the `testclasses` element allows you to select multiple test
+classes that reside in different locations.
 
-For more details on the usage of the task and its configurations, please refer to Ant's official
-documentation of the link:https://ant.apache.org/manual/Tasks/junitlauncher.html[junitlauncher task]
-
+For further details on usage and configuration options please refer to the official Ant
+documentation for the
+link:https://ant.apache.org/manual/Tasks/junitlauncher.html[`junitlauncher` task].
 
 [[running-tests-console-launcher]]
 === Console Launcher
