@@ -572,11 +572,10 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#running-tests-ide">4.1. IDE Support</a></li>
 <li><a href="#running-tests-build">4.2. Build Support</a></li>
-<li><a href="#running-tests-ant">4.3. Ant</a></li>
-<li><a href="#running-tests-console-launcher">4.4. Console Launcher</a></li>
-<li><a href="#running-tests-junit-platform-runner">4.5. Using JUnit 4 to run the JUnit Platform</a></li>
-<li><a href="#running-tests-config-params">4.6. Configuration Parameters</a></li>
-<li><a href="#running-tests-tag-expressions">4.7. Tag Expressions</a></li>
+<li><a href="#running-tests-console-launcher">4.3. Console Launcher</a></li>
+<li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to run the JUnit Platform</a></li>
+<li><a href="#running-tests-config-params">4.5. Configuration Parameters</a></li>
+<li><a href="#running-tests-tag-expressions">4.6. Tag Expressions</a></li>
 </ul>
 </li>
 <li><a href="#extensions">5. Extension Model</a>
@@ -4202,22 +4201,22 @@ below) or via the <code>junit-platform.properties</code> file.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="running-tests-ant"><a class="anchor" href="#running-tests-ant"></a>4.3. Ant</h3>
+<div class="sect3">
+<h4 id="running-tests-build-ant"><a class="anchor" href="#running-tests-build-ant"></a>4.2.3. Ant</h4>
 <div class="paragraph">
-<p>Starting version <code>1.10.3</code> of <a href="https://ant.apache.org/">Ant</a>, a new
-<a href="https://ant.apache.org/manual/Tasks/junitlauncher.html">junitlauncher</a>
-task has been introduced to provide native support for launching JUnit 5 tests.
-The <code>junitlauncher</code> task is solely responsible for launching the JUnit 5 platform
-and passing it the selected collection of tests. JUnit 5 platform then does the necessary
-test identification as well as test execution.</p>
+<p>Starting with version <code>1.10.3</code> of <a href="https://ant.apache.org/">Ant</a>, a new
+<a href="https://ant.apache.org/manual/Tasks/junitlauncher.html"><code>junitlauncher</code></a> task has
+been introduced to provide native support for launching tests on the JUnit Platform. The
+<code>junitlauncher</code> task is solely responsible for launching the JUnit Platform and passing
+it the selected collection of tests. The JUnit Platform then delegates to registered test
+engines to discover and execute the tests.</p>
 </div>
 <div class="paragraph">
-<p>The <code>junitlauncher</code> task tries to stay as close as possible to Ant&#8217;s native constructs,
-like <a href="https://ant.apache.org/manual/Types/resources.html#collection">resource collections</a>,
-for allowing users to select the tests that they want executed by the test engines. This gives
-the task a consitent and natural feel when compared to many other core Ant tasks.</p>
+<p>The <code>junitlauncher</code> task attempts to align as close as possible with native Ant
+constructs such as
+<a href="https://ant.apache.org/manual/Types/resources.html#collection">resource collections</a>
+for allowing users to select the tests that they want executed by test engines. This
+gives the task a consistent and natural feel when compared to many other core Ant tasks.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -4226,75 +4225,79 @@ the task a consitent and natural feel when compared to many other core Ant tasks
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The version of this task shipped in Ant 1.10.3, provides basic minimal support for
-launching the tests. A lot more enhancements (including support for forking the tests in a
-separate JVM) are currently being worked upon and should be available in subsequent releases
+The version of the <code>junitlauncher</code> task shipped in Ant 1.10.3 provides basic,
+minimal support for launching the JUnit Platform. Additional enhancements (including
+support for forking the tests in a separate JVM) will be available in subsequent releases
 of Ant.
 </td>
 </tr>
 </table>
 </div>
-<div class="sect3">
-<h4 id="basic-usage"><a class="anchor" href="#basic-usage"></a>4.3.1. Basic Usage</h4>
+<div class="sect4">
+<h5 id="basic-usage"><a class="anchor" href="#basic-usage"></a>Basic Usage</h5>
 <div class="paragraph">
-<p>The following shows an example, where a single test class called <code>org.myapp.test.MyFirstJUnit5Test</code>
-is being launched by the <code>junitlauncher</code> task:</p>
+<p>The following example demonstrates how to configure the <code>junitlauncher</code> task to select a
+single test class (i.e., <code>org.myapp.test.MyFirstJUnit5Test</code>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;path</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-        <span class="comment">&lt;!-- The location where you have your compiled classes --&gt;</span>
-        <span class="tag">&lt;pathelement</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${build.classes.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-    <span class="tag">&lt;/path&gt;</span>
-    ....
-    <span class="tag">&lt;junitlauncher&gt;</span>
-        <span class="tag">&lt;classpath</span> <span class="attribute-name">refid</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-        <span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.myapp.test.MyFirstJUnit5Test</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-    <span class="tag">&lt;/junitlauncher&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;path</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- The location where you have your compiled classes --&gt;</span>
+    <span class="tag">&lt;pathelement</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${build.classes.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/path&gt;</span>
+
+<span class="comment">&lt;!-- ... --&gt;</span>
+
+<span class="tag">&lt;junitlauncher&gt;</span>
+    <span class="tag">&lt;classpath</span> <span class="attribute-name">refid</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.myapp.test.MyFirstJUnit5Test</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/junitlauncher&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>test</code> element lets you specify a single test class that you want to be selected and launched.
-The <code>classpath</code> element let&#8217;s you specify the classpath to be used during the launching and
-execution of these tests. This classpath will be used to locate the test class(es) that are part
-of the execution.</p>
+<p>The <code>test</code> element allows you to specify a single test class that you want to be selected
+and executed. The <code>classpath</code> element allows you to specify the classpath to be used to
+launch the JUnit Platform. This classpath will also be used to locate test classes that
+are part of the execution.</p>
 </div>
 <div class="paragraph">
-<p>The following is another example of using the <code>junitlauncher</code> task. On this instance, we will launch
-multiple tests that are located under specific locations.</p>
+<p>The following example demonstrates how to configure the <code>junitlauncher</code> task to select
+test classes from multiple locations.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">    <span class="tag">&lt;path</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-        <span class="comment">&lt;!-- The location where you have your compiled classes --&gt;</span>
-        <span class="tag">&lt;pathelement</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${build.classes.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-    <span class="tag">&lt;/path&gt;</span>
-    ....
-    <span class="tag">&lt;junitlauncher&gt;</span>
-        <span class="tag">&lt;classpath</span> <span class="attribute-name">refid</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-        <span class="tag">&lt;testclasses</span> <span class="attribute-name">outputdir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${output.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-            <span class="tag">&lt;fileset</span> <span class="attribute-name">dir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${build.classes.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-                <span class="tag">&lt;include</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org/example/**/demo/**/</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-            <span class="tag">&lt;/fileset&gt;</span>
-            <span class="tag">&lt;fileset</span> <span class="attribute-name">dir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${some.other.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-                <span class="tag">&lt;include</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org/myapp/**/</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-            <span class="tag">&lt;/fileset&gt;</span>
-        <span class="tag">&lt;/testclasses&gt;</span>
-    <span class="tag">&lt;/junitlauncher&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;path</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- The location where you have your compiled classes --&gt;</span>
+    <span class="tag">&lt;pathelement</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${build.classes.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/path&gt;</span>
+....
+<span class="tag">&lt;junitlauncher&gt;</span>
+    <span class="tag">&lt;classpath</span> <span class="attribute-name">refid</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;testclasses</span> <span class="attribute-name">outputdir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${output.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;fileset</span> <span class="attribute-name">dir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${build.classes.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;include</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org/example/**/demo/**/</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/fileset&gt;</span>
+        <span class="tag">&lt;fileset</span> <span class="attribute-name">dir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${some.other.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;include</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org/myapp/**/</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/fileset&gt;</span>
+    <span class="tag">&lt;/testclasses&gt;</span>
+<span class="tag">&lt;/junitlauncher&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In the above example, the <code>testclasses</code> element allows you to select multiple test classes that
-reside in different locations, to launch them for test execution.</p>
+<p>In the above example, the <code>testclasses</code> element allows you to select multiple test
+classes that reside in different locations.</p>
 </div>
 <div class="paragraph">
-<p>For more details on the usage of the task and its configurations, please refer to Ant&#8217;s official
-documentation of the <a href="https://ant.apache.org/manual/Tasks/junitlauncher.html">junitlauncher task</a></p>
+<p>For further details on usage and configuration options please refer to the official Ant
+documentation for the
+<a href="https://ant.apache.org/manual/Tasks/junitlauncher.html"><code>junitlauncher</code> task</a>.</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-console-launcher"><a class="anchor" href="#running-tests-console-launcher"></a>4.4. Console Launcher</h3>
+<h3 id="running-tests-console-launcher"><a class="anchor" href="#running-tests-console-launcher"></a>4.3. Console Launcher</h3>
 <div class="paragraph">
 <p>The <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> is a command-line Java application that lets you launch
 the JUnit Platform from the console. For example, it can be used to run JUnit
@@ -4357,7 +4360,7 @@ failed. Otherwise the exit code is <code>0</code>.
 </table>
 </div>
 <div class="sect3">
-<h4 id="running-tests-console-launcher-options"><a class="anchor" href="#running-tests-console-launcher-options"></a>4.4.1. Options</h4>
+<h4 id="running-tests-console-launcher-options"><a class="anchor" href="#running-tests-console-launcher-options"></a>4.3.1. Options</h4>
 <div class="listingblock">
 <div class="content">
 <pre>Option                                         Description
@@ -4449,7 +4452,7 @@ failed. Otherwise the exit code is <code>0</code>.
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-junit-platform-runner"><a class="anchor" href="#running-tests-junit-platform-runner"></a>4.5. Using JUnit 4 to run the JUnit Platform</h3>
+<h3 id="running-tests-junit-platform-runner"><a class="anchor" href="#running-tests-junit-platform-runner"></a>4.4. Using JUnit 4 to run the JUnit Platform</h3>
 <div class="paragraph">
 <p>The <code>JUnitPlatform</code> runner is a JUnit 4 based <code>Runner</code> which enables you to run any test
 whose programming model is supported on the JUnit Platform in a JUnit 4 environment&#8201;&#8212;&#8201;for example, a JUnit Jupiter test class.</p>
@@ -4474,7 +4477,7 @@ time being the <code>JUnitPlatform</code> runner is an easy way to get started.
 </table>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-setup"><a class="anchor" href="#running-tests-junit-platform-runner-setup"></a>4.5.1. Setup</h4>
+<h4 id="running-tests-junit-platform-runner-setup"><a class="anchor" href="#running-tests-junit-platform-runner-setup"></a>4.4.1. Setup</h4>
 <div class="paragraph">
 <p>You need the following artifacts and their dependencies on the classpath. See
 <a href="#dependency-metadata">Dependency Metadata</a> for details regarding group IDs, artifact IDs, and versions.</p>
@@ -4522,7 +4525,7 @@ time being the <code>JUnitPlatform</code> runner is an easy way to get started.
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-technical-names"><a class="anchor" href="#running-tests-junit-platform-runner-technical-names"></a>4.5.2. Display Names vs. Technical Names</h4>
+<h4 id="running-tests-junit-platform-runner-technical-names"><a class="anchor" href="#running-tests-junit-platform-runner-technical-names"></a>4.4.2. Display Names vs. Technical Names</h4>
 <div class="paragraph">
 <p>To define a custom <em>display name</em> for the class run via <code>@RunWith(JUnitPlatform.class)</code>
 simply annotate the class with <code>@SuiteDisplayName</code> and provide a custom value.</p>
@@ -4542,7 +4545,7 @@ configured via <code>@SuiteDisplayName</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-single-test"><a class="anchor" href="#running-tests-junit-platform-runner-single-test"></a>4.5.3. Single Test Class</h4>
+<h4 id="running-tests-junit-platform-runner-single-test"><a class="anchor" href="#running-tests-junit-platform-runner-single-test"></a>4.4.3. Single Test Class</h4>
 <div class="paragraph">
 <p>One way to use the <code>JUnitPlatform</code> runner is to annotate a test class with
 <code>@RunWith(JUnitPlatform.class)</code> directly. Please note that the test methods in the
@@ -4576,7 +4579,7 @@ otherwise, some IDEs and build tools might not recognize it as a JUnit 4 test cl
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-test-suite"><a class="anchor" href="#running-tests-junit-platform-runner-test-suite"></a>4.5.4. Test Suite</h4>
+<h4 id="running-tests-junit-platform-runner-test-suite"><a class="anchor" href="#running-tests-junit-platform-runner-test-suite"></a>4.4.4. Test Suite</h4>
 <div class="paragraph">
 <p>If you have multiple test classes you can create a test suite as can be seen in the
 following example.</p>
@@ -4619,7 +4622,7 @@ details.
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-config-params"><a class="anchor" href="#running-tests-config-params"></a>4.6. Configuration Parameters</h3>
+<h3 id="running-tests-config-params"><a class="anchor" href="#running-tests-config-params"></a>4.5. Configuration Parameters</h3>
 <div class="paragraph">
 <p>In addition to instructing the platform which test classes and test engines to include,
 which packages to scan, etc., it is sometimes necessary to provide additional custom
@@ -4695,7 +4698,7 @@ those supplied via the configuration file.
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-tag-expressions"><a class="anchor" href="#running-tests-tag-expressions"></a>4.7. Tag Expressions</h3>
+<h3 id="running-tests-tag-expressions"><a class="anchor" href="#running-tests-tag-expressions"></a>4.6. Tag Expressions</h3>
 <div class="paragraph">
 <p>Tag expressions are boolean expressions with the operators <code>!</code>, <code>&amp;</code> and <code>|</code>. In addition,
 <code>(</code> and <code>)</code> can be used to adjust for operator precedence.</p>
@@ -6145,7 +6148,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-04 11:08:10 EDT
+Last updated 2018-04-07 05:29:14 EDT
 </div>
 </div>
 </body>
