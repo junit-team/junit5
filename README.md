@@ -2,8 +2,8 @@
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-[JUnit 5.1.0](https://github.com/junit-team/junit5/releases/tag/r5.1.0)
-was released on February 18, 2018.
+[JUnit 5.1.1](https://github.com/junit-team/junit5/releases/tag/r5.1.1)
+was released on April 8, 2018.
 
 ## Documentation
 
@@ -87,7 +87,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.1.0` or `1.2.0-SNAPSHOT`
+- **Version**: `1.1.1` or `1.2.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
@@ -102,7 +102,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.1.0` or `5.2.0-SNAPSHOT`
+- **Version**: `5.1.1` or `5.2.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
   - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
@@ -112,7 +112,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `5.1.0` or `5.2.0-SNAPSHOT`
+- **Version**: `5.1.1` or `5.2.0-SNAPSHOT`
 - **Artifact ID** and **Automatic-Module-Name**:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
