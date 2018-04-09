@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -31,6 +33,16 @@ class AggregatorTests {
 	@ParameterizedTest
 	@CsvSource({ "Jane, Doe, 1980-04-16, F, red", "Jack, Smith, 2000-11-22, M, blue" })
 	void personAggregation(@AggregateWith(PersonAggregator.class) Person person) {
+		testPersonAggregation(person);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "Jane, Doe, 1980-04-16, F, red", "Jack, Smith, 2000-11-22, M, blue" })
+	void personAggregationWithCustomAggregateWithAnnotation(@CsvToPerson Person person) {
+		testPersonAggregation(person);
+	}
+
+	private void testPersonAggregation(Person person) {
 		if (person.firstName.equals("Jane")) {
 			assertEquals("Jane Doe", person.getFullName());
 			assertEquals(1980, person.dateOfBirth.getYear());
@@ -77,6 +89,11 @@ class AggregatorTests {
 		String getFullName() {
 			return this.firstName + " " + this.lastName;
 		}
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@AggregateWith(PersonAggregator.class)
+	@interface CsvToPerson {
 	}
 
 	static class PersonAggregator implements ArgumentsAggregator {
