@@ -14,8 +14,8 @@ import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assumptions.assumingThat;
 
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.IntStream;
 
@@ -29,10 +29,19 @@ import org.junit.jupiter.params.provider.CsvSource;
 class AggregatorTests {
 
 	@ParameterizedTest
-	@CsvSource({ "John, Doe", "Jack, Smith" })
+	@CsvSource({ "Jane, Doe, 1980-04-16, F, red", "Jack, Smith, 2000-11-22, M, blue" })
 	void personAggregation(@AggregateWith(PersonAggregator.class) Person person) {
-		assumingThat(person.firstName.equals("John"), () -> assertEquals("John Doe", person.getFullName()));
-		assumingThat(person.firstName.equals("Jack"), () -> assertEquals("Jack Smith", person.getFullName()));
+		if (person.firstName.equals("Jane")) {
+			assertEquals("Jane Doe", person.getFullName());
+			assertEquals(1980, person.dateOfBirth.getYear());
+			assertEquals(Gender.F, person.gender);
+		}
+
+		if (person.firstName.equals("Jack")) {
+			assertEquals("Jack Smith", person.getFullName());
+			assertEquals(2000, person.dateOfBirth.getYear());
+			assertEquals(Gender.M, person.gender);
+		}
 	}
 
 	@ParameterizedTest
@@ -47,14 +56,22 @@ class AggregatorTests {
 		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
 	}
 
+	enum Gender {
+		F, M
+	}
+
 	static class Person {
 
 		final String firstName;
 		final String lastName;
+		final Gender gender;
+		final LocalDate dateOfBirth;
 
-		Person(String firstName, String lastName) {
+		Person(String firstName, String lastName, LocalDate dateOfBirth, Gender gender) {
 			this.firstName = firstName;
 			this.lastName = lastName;
+			this.gender = gender;
+			this.dateOfBirth = dateOfBirth;
 		}
 
 		String getFullName() {
@@ -66,8 +83,14 @@ class AggregatorTests {
 
 		@Override
 		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
-			assertEquals(2, accessor.size());
-			return new Person(accessor.getString(0), accessor.getString(1));
+			// @formatter:off
+			return new Person(
+				accessor.getString(0),
+				accessor.getString(1),
+				accessor.get(2, LocalDate.class),
+				accessor.get(3, Gender.class)
+			);
+			// @formatter:on
 		}
 	}
 
@@ -79,17 +102,10 @@ class AggregatorTests {
 		@Override
 		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
 			// @formatter:off
-			Map<String, Integer> map = IntStream.range(0, accessor.size())
-					.boxed()
-					.map(i -> accessor.getString(i))
-					.collect(
-						toMap(
-							s -> s,
-							String::length
-						)
-					);
+			return IntStream.range(0, accessor.size())
+					.mapToObj(i -> accessor.getString(i))
+					.collect(toMap(s -> s, String::length));
 			// @formatter:on
-			return map;
 		}
 	}
 
