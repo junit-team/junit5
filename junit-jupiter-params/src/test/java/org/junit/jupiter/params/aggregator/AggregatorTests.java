@@ -21,6 +21,8 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -65,6 +67,13 @@ class AggregatorTests {
 	@ParameterizedTest
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
 	void argumentsAccessorAsArgumentToMethod(ArgumentsAccessor accessor) {
+		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
+	@Disabled("Disabled since aggregating argument consumers currently conflict with other ParameterResolvers")
+	void argumentsAccessorAsArgumentToMethodAlongsideTestInfo(ArgumentsAccessor accessor, TestInfo testInfo) {
 		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
 	}
 
