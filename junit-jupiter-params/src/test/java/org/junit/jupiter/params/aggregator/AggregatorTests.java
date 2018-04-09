@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,7 +22,6 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -70,11 +70,11 @@ class AggregatorTests {
 		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
 	}
 
-	@ParameterizedTest
+	@ParameterizedTest(name = "[ArgumentsAccessor with TestInfo: {arguments}")
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
-	@Disabled("Disabled since aggregating argument consumers currently conflict with other ParameterResolvers")
 	void argumentsAccessorAsArgumentToMethodAlongsideTestInfo(ArgumentsAccessor accessor, TestInfo testInfo) {
 		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
+		assertTrue(testInfo.getDisplayName().contains("ArgumentsAccessor with TestInfo"));
 	}
 
 	enum Gender {

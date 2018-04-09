@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.params.aggregator.AggregationUtils;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -86,13 +87,10 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private Object[] consumedArguments(Object[] arguments, Method templateMethod) {
-		// @formatter:off
-		boolean hasAggregate = Arrays.stream(templateMethod.getParameters())
-				.anyMatch(ParameterizedTestParameterResolver::isAggregate);
-		// @formatter:on
-		int parametersCount = templateMethod.getParameterCount();
+		boolean hasAggregate = AggregationUtils.hasAggregate(templateMethod);
+		int parameterCount = templateMethod.getParameterCount();
 		return hasAggregate ? arguments
-				: (arguments.length > parametersCount ? Arrays.copyOf(arguments, parametersCount) : arguments);
+				: (arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments);
 	}
 
 }

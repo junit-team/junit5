@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.jupiter.params.aggregator.AggregationUtils.indexOfLastAggregate;
+import static org.junit.jupiter.params.aggregator.AggregationUtils.isAggregate;
+
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -51,10 +54,19 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 			return false;
 		}
 
+		// Current parameter aggregates?
 		if (isAggregate(parameterContext.getParameter())) {
 			return true;
 		}
 
+		// Current parameter is not declared after the last aggregate?
+		// ... which would otherwise imply that a different ParameterResolver should handle it.
+		int indexOfLastAggregate = indexOfLastAggregate(testMethod);
+		if (indexOfLastAggregate != -1) {
+			return parameterContext.getIndex() <= indexOfLastAggregate;
+		}
+
+		// Else fallback to behavior for parameterized test methods without aggregates.
 		return parameterContext.getIndex() < this.arguments.length;
 	}
 
@@ -86,11 +98,6 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 			}
 			throw new ParameterResolutionException(message, ex);
 		}
-	}
-
-	public static boolean isAggregate(Parameter parameter) {
-		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
-				|| AnnotationUtils.isAnnotated(parameter, AggregateWith.class);
 	}
 
 	private Object aggregate(ParameterContext parameterContext, ExtensionContext extensionContext) {
