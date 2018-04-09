@@ -22,6 +22,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * tests or containers based on packages.
  *
  * @since 1.0
+ * @see DiscoverySelectors#selectPackage(String)
  * @see org.junit.platform.engine.support.descriptor.PackageSource
  */
 @API(status = STABLE, since = "1.0")

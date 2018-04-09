@@ -23,6 +23,8 @@ import org.junit.platform.engine.UniqueId;
  * tests or containers based on unique IDs.
  *
  * @since 1.0
+ * @see DiscoverySelectors#selectUniqueId(String)
+ * @see DiscoverySelectors#selectUniqueId(UniqueId)
  */
 @API(status = STABLE, since = "1.0")
 public class UniqueIdSelector implements DiscoverySelector {

@@ -29,12 +29,16 @@ import org.apiguardian.api.API;
  * in order for an aggregated value to be resolved for the annotated parameter
  * when the test method is invoked.
  *
+ * <p>{@code @AggregateWith} may also be used as a meta-annotation in order to
+ * create a custom <em>composed annotation</em> that inherits the semantics
+ * of {@code @AggregateWith}.
+ *
  * @since 5.2
  * @see ArgumentsAggregator
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
 @Documented
 @API(status = EXPERIMENTAL, since = "5.2")
 public @interface AggregateWith {

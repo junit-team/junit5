@@ -43,10 +43,19 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		Executable declaringExecutable = parameterContext.getParameter().getDeclaringExecutable();
+		Executable declaringExecutable = parameterContext.getDeclaringExecutable();
 		Method testMethod = extensionContext.getTestMethod().orElse(null);
-		return declaringExecutable.equals(testMethod) && (parameterContext.getIndex() < this.arguments.length
-				|| isAggregate(parameterContext.getParameter()));
+
+		// Not a @ParameterizedTest method?
+		if (!declaringExecutable.equals(testMethod)) {
+			return false;
+		}
+
+		if (isAggregate(parameterContext.getParameter())) {
+			return true;
+		}
+
+		return parameterContext.getIndex() < this.arguments.length;
 	}
 
 	@Override

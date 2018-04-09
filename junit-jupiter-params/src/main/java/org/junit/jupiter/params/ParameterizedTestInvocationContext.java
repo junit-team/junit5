@@ -32,11 +32,12 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	@Override
 	public String getDisplayName(int invocationIndex) {
-		return formatter.format(invocationIndex, arguments);
+		return this.formatter.format(invocationIndex, this.arguments);
 	}
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return singletonList(new ParameterizedTestParameterResolver(arguments));
+		return singletonList(new ParameterizedTestParameterResolver(this.arguments));
 	}
+
 }
