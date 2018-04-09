@@ -24,6 +24,8 @@ import org.junit.platform.engine.DiscoverySelector;
  * can discover tests or containers based on URIs.
  *
  * @since 1.0
+ * @see DiscoverySelectors#selectUri(String)
+ * @see DiscoverySelectors#selectUri(URI)
  * @see FileSelector
  * @see DirectorySelector
  * @see org.junit.platform.engine.support.descriptor.UriSource

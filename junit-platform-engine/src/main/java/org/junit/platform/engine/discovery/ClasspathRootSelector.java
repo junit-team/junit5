@@ -31,6 +31,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * {@linkplain Thread thread} that uses this selector.
  *
  * @since 1.0
+ * @see DiscoverySelectors#selectClasspathRoots(java.util.Set)
  * @see ClasspathResourceSelector
  * @see Thread#getContextClassLoader()
  */

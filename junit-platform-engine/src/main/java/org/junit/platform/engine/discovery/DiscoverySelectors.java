@@ -36,11 +36,16 @@ import org.junit.platform.engine.UniqueId;
  * {@link DiscoverySelector DiscoverySelectors}.
  *
  * @since 1.0
+ * @see UriSelector
+ * @see FileSelector
+ * @see DirectorySelector
  * @see ClasspathRootSelector
  * @see ClasspathResourceSelector
+ * @see ModuleSelector
+ * @see PackageSelector
  * @see ClassSelector
  * @see MethodSelector
- * @see PackageSelector
+ * @see UniqueIdSelector
  */
 @API(status = STABLE, since = "1.0")
 public final class DiscoverySelectors {
