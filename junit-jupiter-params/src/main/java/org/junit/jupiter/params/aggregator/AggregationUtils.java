@@ -14,7 +14,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.AnnotationUtils;
@@ -53,7 +52,7 @@ public class AggregationUtils {
 	 * @return {@code true} if the method has an aggregator
 	 */
 	public static boolean hasAggregator(Method method) {
-		return Arrays.stream(method.getParameters()).anyMatch(AggregationUtils::isAggregator);
+		return indexOfLastAggregator(method) != -1;
 	}
 
 	/**

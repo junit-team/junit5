@@ -16,8 +16,10 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -149,6 +151,7 @@ class AggregatorIntegrationTests {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.PARAMETER)
 	@AggregateWith(PersonAggregator.class)
 	@interface CsvToPerson {
 	}
