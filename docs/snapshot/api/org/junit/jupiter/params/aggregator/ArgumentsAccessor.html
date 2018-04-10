@@ -140,10 +140,10 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <div class="block"><code>ArgumentsAccessor</code> defines the public API for accessing arguments passed
  to a <a href="../../../../../org/junit/jupiter/params/ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>@ParameterizedTest</code></a> method.
 
- <p>Specifically, an <code>ArgumentsAccessor</code> encapsulates a set of arguments
- for a given invocation of a parameterized test and provides convenience methods
- for accessing those arguments in a type-safe manner with automatic type conversion
- support.
+ <p>Specifically, an <code>ArgumentsAccessor</code> <em>aggregates</em> a set of
+ arguments for a given invocation of a parameterized test and provides convenience
+ methods for accessing those arguments in a type-safe manner with support for
+ automatic type conversion.
 
  <p>An instance of <code>ArgumentsAccessor</code> will be automatically supplied
  for any parameter of type <code>ArgumentsAccessor</code> in a parameterized test.

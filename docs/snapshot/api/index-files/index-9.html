@@ -179,8 +179,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <a href="../org/junit/platform/suite/api/IncludeTags.html#value()">tags or tag expressions</a> to be included when running a
  test suite on the JUnit Platform.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/aggregator/AggregationUtils.html#indexOfLastAggregate(java.lang.reflect.Method)">indexOfLastAggregate(Method)</a></span> - Static method in class org.junit.jupiter.params.aggregator.<a href="../org/junit/jupiter/params/aggregator/AggregationUtils.html" title="class in org.junit.jupiter.params.aggregator">AggregationUtils</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/aggregator/AggregationUtils.html#indexOfLastAggregator(java.lang.reflect.Method)">indexOfLastAggregator(Method)</a></span> - Static method in class org.junit.jupiter.params.aggregator.<a href="../org/junit/jupiter/params/aggregator/AggregationUtils.html" title="class in org.junit.jupiter.params.aggregator">AggregationUtils</a></dt>
+<dd>
+<div class="block">Find the index of the last <a href="../org/junit/jupiter/params/aggregator/AggregationUtils.html#isAggregator(java.lang.reflect.Parameter)">aggregator</a>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> in the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/logging/Logger.html#info(java.lang.Throwable,java.util.function.Supplier)">info(Throwable, Supplier&lt;String&gt;)</a></span> - Method in interface org.junit.platform.commons.logging.<a href="../org/junit/platform/commons/logging/Logger.html" title="interface in org.junit.platform.commons.logging">Logger</a></dt>
 <dd>
 <div class="block">Log the provided <code>Throwable</code> and message from the provided
@@ -242,8 +245,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#isAbstract(java.lang.reflect.Member)">isAbstract(Member)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/aggregator/AggregationUtils.html#isAggregate(java.lang.reflect.Parameter)">isAggregate(Parameter)</a></span> - Static method in class org.junit.jupiter.params.aggregator.<a href="../org/junit/jupiter/params/aggregator/AggregationUtils.html" title="class in org.junit.jupiter.params.aggregator">AggregationUtils</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/aggregator/AggregationUtils.html#isAggregator(java.lang.reflect.Parameter)">isAggregator(Parameter)</a></span> - Static method in class org.junit.jupiter.params.aggregator.<a href="../org/junit/jupiter/params/aggregator/AggregationUtils.html" title="class in org.junit.jupiter.params.aggregator">AggregationUtils</a></dt>
+<dd>
+<div class="block">Determine if the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> is an aggregator (i.e., of
+ type <a href="../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAccessor</code></a> or annotated with <a href="../org/junit/jupiter/params/aggregator/AggregateWith.html" title="annotation in org.junit.jupiter.params.aggregator"><code>AggregateWith</code></a>).</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ParameterContext.html#isAnnotated(java.lang.Class)">isAnnotated(Class&lt;? extends Annotation&gt;)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a></dt>
 <dd>
 <div class="block">Determine if an annotation of <code>annotationType</code> is either

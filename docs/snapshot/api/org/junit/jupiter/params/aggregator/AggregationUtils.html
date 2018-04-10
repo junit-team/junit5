@@ -143,7 +143,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 public class <span class="typeNameLabel">AggregationUtils</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <div class="block">Collection of utilities for working with aggregating argument consumers
- in parameterized tests.</div>
+ in parameterized tests (i.e., parameters of type <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAccessor</code></a>
+ or annotated with <a href="../../../../../org/junit/jupiter/params/aggregator/AggregateWith.html" title="annotation in org.junit.jupiter.params.aggregator"><code>@AggregateWith</code></a>).</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.2</dd>
@@ -170,18 +171,27 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html#hasAggregate(java.lang.reflect.Method)">hasAggregate</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html#hasAggregator(java.lang.reflect.Method)">hasAggregator</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</code></th>
+<td class="colLast">
+<div class="block">Determine if the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> declares at least one
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> that is an <a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html#isAggregator(java.lang.reflect.Parameter)">aggregator</a>.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html#indexOfLastAggregate(java.lang.reflect.Method)">indexOfLastAggregate</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html#indexOfLastAggregator(java.lang.reflect.Method)">indexOfLastAggregator</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</code></th>
+<td class="colLast">
+<div class="block">Find the index of the last <a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html#isAggregator(java.lang.reflect.Parameter)">aggregator</a>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> in the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a>.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html#isAggregate(java.lang.reflect.Parameter)">isAggregate</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Parameter</a>&nbsp;parameter)</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html#isAggregator(java.lang.reflect.Parameter)">isAggregator</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Parameter</a>&nbsp;parameter)</code></th>
+<td class="colLast">
+<div class="block">Determine if the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> is an aggregator (i.e., of
+ type <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAccessor</code></a> or annotated with <a href="../../../../../org/junit/jupiter/params/aggregator/AggregateWith.html" title="annotation in org.junit.jupiter.params.aggregator"><code>AggregateWith</code></a>).</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -207,31 +217,49 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="isAggregate(java.lang.reflect.Parameter)">
+<a id="isAggregator(java.lang.reflect.Parameter)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>isAggregate</h4>
-<pre>public static&nbsp;boolean&nbsp;isAggregate&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Parameter</a>&nbsp;parameter)</pre>
+<h4>isAggregator</h4>
+<pre>public static&nbsp;boolean&nbsp;isAggregator&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Parameter</a>&nbsp;parameter)</pre>
+<div class="block">Determine if the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> is an aggregator (i.e., of
+ type <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAccessor</code></a> or annotated with <a href="../../../../../org/junit/jupiter/params/aggregator/AggregateWith.html" title="annotation in org.junit.jupiter.params.aggregator"><code>AggregateWith</code></a>).</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>true</code> if the parameter is an aggregator</dd>
+</dl>
 </li>
 </ul>
-<a id="hasAggregate(java.lang.reflect.Method)">
+<a id="hasAggregator(java.lang.reflect.Method)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>hasAggregate</h4>
-<pre>public static&nbsp;boolean&nbsp;hasAggregate&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</pre>
+<h4>hasAggregator</h4>
+<pre>public static&nbsp;boolean&nbsp;hasAggregator&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</pre>
+<div class="block">Determine if the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> declares at least one
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> that is an <a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html#isAggregator(java.lang.reflect.Parameter)">aggregator</a>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>true</code> if the method has an aggregator</dd>
+</dl>
 </li>
 </ul>
-<a id="indexOfLastAggregate(java.lang.reflect.Method)">
+<a id="indexOfLastAggregator(java.lang.reflect.Method)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>indexOfLastAggregate</h4>
-<pre>public static&nbsp;int&nbsp;indexOfLastAggregate&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</pre>
+<h4>indexOfLastAggregator</h4>
+<pre>public static&nbsp;int&nbsp;indexOfLastAggregator&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</pre>
+<div class="block">Find the index of the last <a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html#isAggregator(java.lang.reflect.Parameter)">aggregator</a>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> in the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the index of the last aggregator, or <code>-1</code> if not found</dd>
+</dl>
 </li>
 </ul>
 </li>
