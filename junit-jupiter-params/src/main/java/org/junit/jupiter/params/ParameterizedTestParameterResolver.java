@@ -59,14 +59,14 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 			return true;
 		}
 
-		// Current parameter is not declared after the last aggregator?
-		// ... which would otherwise imply that a different ParameterResolver should handle it.
+		// Ensure that the current parameter is declared before the last aggregator.
+		// Otherwise, a different ParameterResolver should handle it.
 		int indexOfLastAggregator = indexOfLastAggregator(testMethod);
 		if (indexOfLastAggregator != -1) {
 			return parameterContext.getIndex() <= indexOfLastAggregator;
 		}
 
-		// Else fallback to behavior for parameterized test methods without aggregates.
+		// Else fallback to behavior for parameterized test methods without aggregators.
 		return parameterContext.getIndex() < this.arguments.length;
 	}
 

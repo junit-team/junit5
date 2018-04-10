@@ -64,7 +64,7 @@ public class AggregationUtils {
 	 */
 	public static int indexOfLastAggregator(Method method) {
 		Parameter[] parameters = method.getParameters();
-		int parameterCount = method.getParameterCount();
+		int parameterCount = parameters.length;
 		for (int i = parameterCount - 1; i >= 0; i--) {
 			if (isAggregator(parameters[i])) {
 				return i;
