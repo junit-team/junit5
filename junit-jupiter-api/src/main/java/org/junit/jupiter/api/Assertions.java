@@ -53,6 +53,20 @@ public final class Assertions {
 	// --- fail ----------------------------------------------------------------
 
 	/**
+	 * <em>Fails</em> a test <em>without</em> a failure message.
+	 *
+	 * <p>While failing <em>with</em> a failure message is recommended
+	 * this method may be useful when maintaining legacy code.
+	 *
+	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
+	 * this method's generic return type {@code V}.
+	 */
+	public static <V> V fail() {
+		AssertionUtils.fail();
+		return null; // appeasing the compiler: this line will never be executed.
+	}
+
+	/**
 	 * <em>Fails</em> a test with the given failure {@code message}.
 	 *
 	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of

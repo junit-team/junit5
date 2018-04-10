@@ -28,6 +28,12 @@ class AssertionTestUtils {
 		throw new AssertionError("Should have thrown an " + AssertionFailedError.class.getName());
 	}
 
+	static void assertEmptyMessage(Throwable ex) throws AssertionError {
+		if (!ex.getMessage().isEmpty()) {
+			throw new AssertionError("Exception message should be an empty String, but was [" + ex.getMessage() + "].");
+		}
+	}
+
 	static void assertMessageEquals(Throwable ex, String msg) throws AssertionError {
 		if (!msg.equals(ex.getMessage())) {
 			throw new AssertionError("Exception message should be [" + msg + "], but was [" + ex.getMessage() + "].");
