@@ -28,9 +28,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 /**
+ * Integration tests for {@link ArgumentsAccessor}, {@link AggregateWith},
+ * and {@link ArgumentsAggregator}.
+ *
  * @since 5.2
  */
-class AggregatorTests {
+class AggregatorIntegrationTests {
 
 	@ParameterizedTest
 	@CsvSource({ "Jane, Doe, 1980-04-16, F, red", "Jack, Smith, 2000-11-22, M, blue" })
