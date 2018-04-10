@@ -20,10 +20,10 @@ import org.apiguardian.api.API;
  * {@code ArgumentsAccessor} defines the public API for accessing arguments passed
  * to a {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} method.
  *
- * <p>Specifically, an {@code ArgumentsAccessor} encapsulates a set of arguments
- * for a given invocation of a parameterized test and provides convenience methods
- * for accessing those arguments in a type-safe manner with automatic type conversion
- * support.
+ * <p>Specifically, an {@code ArgumentsAccessor} <em>aggregates</em> a set of
+ * arguments for a given invocation of a parameterized test and provides convenience
+ * methods for accessing those arguments in a type-safe manner with support for
+ * automatic type conversion.
  *
  * <p>An instance of {@code ArgumentsAccessor} will be automatically supplied
  * for any parameter of type {@code ArgumentsAccessor} in a parameterized test.

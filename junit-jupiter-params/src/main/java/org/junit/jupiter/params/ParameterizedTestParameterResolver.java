@@ -10,8 +10,8 @@
 
 package org.junit.jupiter.params;
 
-import static org.junit.jupiter.params.aggregator.AggregationUtils.indexOfLastAggregate;
-import static org.junit.jupiter.params.aggregator.AggregationUtils.isAggregate;
+import static org.junit.jupiter.params.aggregator.AggregationUtils.indexOfLastAggregator;
+import static org.junit.jupiter.params.aggregator.AggregationUtils.isAggregator;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
@@ -54,16 +54,16 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 			return false;
 		}
 
-		// Current parameter aggregates?
-		if (isAggregate(parameterContext.getParameter())) {
+		// Current parameter is an aggregator?
+		if (isAggregator(parameterContext.getParameter())) {
 			return true;
 		}
 
-		// Current parameter is not declared after the last aggregate?
+		// Current parameter is not declared after the last aggregator?
 		// ... which would otherwise imply that a different ParameterResolver should handle it.
-		int indexOfLastAggregate = indexOfLastAggregate(testMethod);
-		if (indexOfLastAggregate != -1) {
-			return parameterContext.getIndex() <= indexOfLastAggregate;
+		int indexOfLastAggregator = indexOfLastAggregator(testMethod);
+		if (indexOfLastAggregator != -1) {
+			return parameterContext.getIndex() <= indexOfLastAggregator;
 		}
 
 		// Else fallback to behavior for parameterized test methods without aggregates.
@@ -74,7 +74,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 
-		return isAggregate(parameterContext.getParameter()) ? aggregate(parameterContext, extensionContext)
+		return isAggregator(parameterContext.getParameter()) ? aggregate(parameterContext, extensionContext)
 				: convert(parameterContext, extensionContext);
 	}
 
