@@ -55,7 +55,7 @@ public final class Assertions {
 	/**
 	 * <em>Fails</em> a test <em>without</em> a failure message.
 	 *
-	 * <p>While failing <em>with</em> a failure message is recommended
+	 * <p>Although failing <em>with</em> an explicit failure message is recommended,
 	 * this method may be useful when maintaining legacy code.
 	 *
 	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
