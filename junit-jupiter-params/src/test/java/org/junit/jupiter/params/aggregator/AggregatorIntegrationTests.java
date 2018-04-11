@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,25 +51,53 @@ class AggregatorIntegrationTests {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "Jane, Doe, 1980-04-16, F, red", "Jack, Smith, 2000-11-22, M, blue" })
-	void personAggregatorsRegisteredViaCustomAnnotation(@CsvToPerson Person person1, @CsvToPerson Person person2) {
-		assertEquals(person1.getFullName(), person2.getFullName());
-		testPersonAggregator(person1);
-		testPersonAggregator(person2);
+	@CsvSource({ //
+			"42 Peachtree Street, Atlanta, 30318", //
+			"99 Peachtree Road, Atlanta, 30318"//
+	})
+	void addressAggregator(@CsvToAddress Address address) {
+		testAddressAggegator(address);
 	}
 
-	private void testPersonAggregator(Person person) {
-		if (person.firstName.equals("Jane")) {
-			assertEquals("Jane Doe", person.getFullName());
-			assertEquals(1980, person.dateOfBirth.getYear());
-			assertEquals(Gender.F, person.gender);
-		}
+	@ParameterizedTest
+	@CsvSource({ //
+			"Jane, Doe, 1980-04-16, F, 42 Peachtree Street, Atlanta, 30318, red", //
+			"Jack, Smith, 2000-11-22, M, 99 Peachtree Road, Atlanta, 30318, blue"//
+	})
+	void personAggregatorAndAddressAggregator(@CsvToPerson Person person,
+			@CsvToAddress @StartIndex(4) Address address) {
 
-		if (person.firstName.equals("Jack")) {
-			assertEquals("Jack Smith", person.getFullName());
-			assertEquals(2000, person.dateOfBirth.getYear());
-			assertEquals(Gender.M, person.gender);
-		}
+		testPersonAggregator(person);
+		testAddressAggegator(address);
+	}
+
+	@ParameterizedTest(name = "Mixed Mode #1: {arguments}")
+	@CsvSource({ //
+			"gh-11111111, Jane, Doe, 1980-04-16, F, 42 Peachtree Street, Atlanta, 30318, red", //
+			"gh-22222222, Jack, Smith, 2000-11-22, M, 99 Peachtree Road, Atlanta, 30318, blue"//
+	})
+	void mixedMode1(String issueNumber, @CsvToPerson @StartIndex(1) Person person,
+			@CsvToAddress @StartIndex(5) Address address, TestInfo testInfo) {
+
+		assertThat(issueNumber).startsWith("gh-");
+		testPersonAggregator(person);
+		testAddressAggegator(address);
+		assertThat(testInfo.getDisplayName()).startsWith("Mixed Mode #1");
+	}
+
+	@Disabled("only supported if ParameterizedTestParameterResolver sets boundary at first index of aggregator instead of last")
+	@ParameterizedTest(name = "Mixed Mode #2: {arguments}")
+	@CsvSource({ //
+			"gh-11111111, Jane, Doe, 1980-04-16, F, 42 Peachtree Street, Atlanta, 30318, red", //
+			"gh-22222222, Jack, Smith, 2000-11-22, M, 99 Peachtree Road, Atlanta, 30318, blue"//
+	})
+	void mixedMode2(String issueNumber, @CsvToPerson @StartIndex(1) Person person, TestInfo testInfo,
+			@CsvToAddress @StartIndex(5) Address address) {
+
+		assertThat(issueNumber).startsWith("gh-");
+		testPersonAggregator(person);
+		testAddressAggegator(address);
+		assertThat(testInfo.getDisplayName()).startsWith("Mixed Mode #2");
 	}
 
 	@ParameterizedTest
@@ -93,7 +122,7 @@ class AggregatorIntegrationTests {
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
 	void argumentsAccessorAndTestInfo(ArgumentsAccessor accessor, TestInfo testInfo) {
 		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
-		assertThat(testInfo.getDisplayName()).contains("ArgumentsAccessor and TestInfo");
+		assertThat(testInfo.getDisplayName()).startsWith("ArgumentsAccessor and TestInfo");
 	}
 
 	@ParameterizedTest(name = "Indexed Arguments and ArgumentsAccessor: {arguments}")
@@ -112,7 +141,7 @@ class AggregatorIntegrationTests {
 		assertEquals(1, num1);
 		assertEquals(2, num2);
 		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
-		assertThat(testInfo.getDisplayName()).contains("Indexed Arguments, ArgumentsAccessor, and TestInfo");
+		assertThat(testInfo.getDisplayName()).startsWith("Indexed Arguments, ArgumentsAccessor, and TestInfo");
 	}
 
 	@ParameterizedTest(name = "Indexed Arguments, 2 ArgumentsAccessors, and TestInfo: {arguments}")
@@ -124,12 +153,30 @@ class AggregatorIntegrationTests {
 		assertEquals(2, num2);
 		assertArrayEquals(accessor1.toArray(), accessor2.toArray());
 		assertEquals(55, IntStream.range(0, accessor1.size()).map(i -> accessor1.getInteger(i)).sum());
-		assertThat(testInfo.getDisplayName()).contains("Indexed Arguments, 2 ArgumentsAccessors, and TestInfo");
+		assertThat(testInfo.getDisplayName()).startsWith("Indexed Arguments, 2 ArgumentsAccessors, and TestInfo");
 	}
 
-	enum Gender {
-		F, M
+	private void testPersonAggregator(Person person) {
+		if (person.firstName.equals("Jane")) {
+			assertEquals("Jane Doe", person.getFullName());
+			assertEquals(1980, person.dateOfBirth.getYear());
+			assertEquals(Gender.F, person.gender);
+		}
+
+		if (person.firstName.equals("Jack")) {
+			assertEquals("Jack Smith", person.getFullName());
+			assertEquals(2000, person.dateOfBirth.getYear());
+			assertEquals(Gender.M, person.gender);
+		}
 	}
+
+	private void testAddressAggegator(Address address) {
+		assertThat(address.street).contains("Peachtree");
+		assertEquals("Atlanta", address.city);
+		assertEquals(30318, address.zipCode);
+	}
+
+	// -------------------------------------------------------------------------
 
 	static class Person {
 
@@ -150,22 +197,69 @@ class AggregatorIntegrationTests {
 		}
 	}
 
+	enum Gender {
+		F, M
+	}
+
+	static class Address {
+
+		final String street;
+		final String city;
+		final int zipCode;
+
+		Address(String street, String city, int zipCode) {
+			this.street = street;
+			this.city = city;
+			this.zipCode = zipCode;
+		}
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.PARAMETER)
+	@interface StartIndex {
+		int value();
+	}
+
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.PARAMETER)
 	@AggregateWith(PersonAggregator.class)
 	@interface CsvToPerson {
 	}
 
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.PARAMETER)
+	@AggregateWith(AddressAggregator.class)
+	@interface CsvToAddress {
+	}
+
 	static class PersonAggregator implements ArgumentsAggregator {
 
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+		public Person aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+			int startIndex = context.findAnnotation(StartIndex.class).map(StartIndex::value).orElse(0);
+
 			// @formatter:off
 			return new Person(
-				accessor.getString(0),
-				accessor.getString(1),
-				accessor.get(2, LocalDate.class),
-				accessor.get(3, Gender.class)
+				accessor.getString(startIndex + 0),
+				accessor.getString(startIndex + 1),
+				accessor.get(startIndex + 2, LocalDate.class),
+				accessor.get(startIndex + 3, Gender.class)
+			);
+			// @formatter:on
+		}
+	}
+
+	static class AddressAggregator implements ArgumentsAggregator {
+
+		@Override
+		public Address aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+			int startIndex = context.findAnnotation(StartIndex.class).map(StartIndex::value).orElse(0);
+
+			// @formatter:off
+			return new Address(
+				accessor.getString(startIndex + 0),
+				accessor.getString(startIndex + 1),
+				accessor.getInteger(startIndex + 2)
 			);
 			// @formatter:on
 		}
@@ -177,7 +271,7 @@ class AggregatorIntegrationTests {
 	static class MapAggregator implements ArgumentsAggregator {
 
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+		public Map<String, Integer> aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
 			// @formatter:off
 			return IntStream.range(0, accessor.size())
 					.mapToObj(i -> accessor.getString(i))
