@@ -1093,6 +1093,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAccessor_exa
 _An instance of `ArgumentsAccessor` is automatically injected into any parameter of type
 `ArgumentsAccessor`._
 
+[[writing-tests-parameterized-tests-argument-aggregation-custom]]
 ===== Custom Aggregators
 
 Apart from direct access to a `@ParameterizedTest` method's arguments using an
