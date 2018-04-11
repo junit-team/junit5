@@ -3385,55 +3385,102 @@ composed annotation <code>JavaTimeConversionPattern</code>.</p>
 <div class="sect3">
 <h4 id="writing-tests-parameterized-tests-argument-aggregation"><a class="anchor" href="#writing-tests-parameterized-tests-argument-aggregation"></a>3.14.4. Argument Aggregation</h4>
 <div class="paragraph">
-<p>By default, each argument provided to a <code>@ParameterizedTest</code> method corresponds to a
-single method parameter. Consequently, Argument Sources which are expected to supply
-a large number of arguments can lead to large method signatures.</p>
+<p>By default, each <em>argument</em> provided to a <code>@ParameterizedTest</code> method corresponds to a
+single method parameter. Consequently, argument sources which are expected to supply a
+large number of arguments can lead to large method signatures.</p>
 </div>
 <div class="paragraph">
-<p>In this case, an <code>ArgumentsAccessor</code> can be used instead of explicit parameters.
-Using the interface, you can access and convert the provided arguments through a single
-object. Conversion follows the "Implicit Conversion" standards.</p>
+<p>In such cases, an <code><a href="../api/org/junit/jupiter/params/aggregator/ArgumentsAccessor.html">ArgumentsAccessor</a></code> can be used instead of multiple parameters. Using
+this API, you can access the provided arguments through a single argument passed to your
+test method. In addition, type conversion is supported as discussed in
+<a href="#writing-tests-parameterized-tests-argument-conversion-implicit">Implicit Conversion</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@CsvSource</span>({ <span class="string"><span class="delimiter">&quot;</span><span class="content">foo, 1, bar, 2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">baz, 3, qux, 4</span><span class="delimiter">&quot;</span></span> })
-<span class="type">void</span> argumentsAccessorTest(ArgumentsAccessor accessor) {
-    assertNotEquals(accessor.get(<span class="integer">0</span>), accessor.get(<span class="integer">2</span>));
-    assertTrue(accessor.getInteger(<span class="integer">3</span>) &gt; accessor.getInteger(<span class="integer">1</span>));
+<span class="annotation">@CsvSource</span>({
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">Jane, Doe, F, 1990-05-20</span><span class="delimiter">&quot;</span></span>,
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">John, Doe, M, 1990-10-22</span><span class="delimiter">&quot;</span></span>
+})
+<span class="type">void</span> testWithArgumentsAccessor(ArgumentsAccessor accessor) {
+    Person person = <span class="keyword">new</span> Person(accessor.getString(<span class="integer">0</span>),
+                               accessor.getString(<span class="integer">1</span>),
+                               accessor.get(<span class="integer">2</span>, Gender.class),
+                               accessor.get(<span class="integer">3</span>, LocalDate.class));
+
+    <span class="keyword">if</span> (person.getFirstName().equals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Jane</span><span class="delimiter">&quot;</span></span>)) {
+        assertEquals(Gender.F, person.getGender());
+    }
+    <span class="keyword">else</span> {
+        assertEquals(Gender.M, person.getGender());
+    }
+    assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>, person.getLastName());
+    assertEquals(<span class="integer">1990</span>, person.getDateOfBirth().getYear());
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><em>An <code>ArgumentsAccessor</code> is automatically injected into any parameter of the same
-type.</em></p>
+<p><em>An instance of <code>ArgumentsAccessor</code> is automatically injected into any parameter of type
+<code>ArgumentsAccessor</code>.</em></p>
 </div>
 <div class="sect4">
 <h5 id="custom-aggregators"><a class="anchor" href="#custom-aggregators"></a>Custom Aggregators</h5>
 <div class="paragraph">
-<p>Apart from plain access to a <code>@ParameterizedTest</code> method&#8217;s arguments using an ArgumentsAccessor,
-JUnit Jupiter supports the usage of custom aggregators.</p>
+<p>Apart from direct access to a <code>@ParameterizedTest</code> method&#8217;s arguments using an
+<code>ArgumentsAccessor</code>, JUnit Jupiter also supports the usage of custom, reusable
+<em>aggregators</em>.</p>
 </div>
 <div class="paragraph">
-<p>You can create an aggregator by implementing the <code>ArgumentsAggregator</code> interface.
-The result of the aggregation can be provided to the test method by annotating a compatible
-parameter with the <code>@AggregateWith</code> annotation.</p>
+<p>To use a custom aggregator simply implement the <code><a href="../api/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html">ArgumentsAggregator</a></code> interface and
+register it via the <code>@AggregateWith</code> annotation on a compatible parameter in the
+<code>@ParameterizedTest</code> method. The result of the aggregation will then be provided as an
+argument for the corresponding parameter when the parameterized test is invoked.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@CsvSource</span>({ <span class="string"><span class="delimiter">&quot;</span><span class="content">3, 22, 16, 39</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">45, 15, 30</span><span class="delimiter">&quot;</span></span> })
-<span class="type">void</span> aggregationTest(<span class="annotation">@AggregateWith</span>(SummaryAggregator.class) <span class="type">int</span> sum) {
-    assertTrue(sum &lt;= <span class="integer">100</span>);
+<span class="annotation">@CsvSource</span>({
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">Jane, Doe, F, 1990-05-20</span><span class="delimiter">&quot;</span></span>,
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">John, Doe, M, 1990-10-22</span><span class="delimiter">&quot;</span></span>
+})
+<span class="type">void</span> testWithArgumentsAggregator(<span class="annotation">@AggregateWith</span>(PersonAggregator.class) Person person) {
+    <span class="comment">// perform assertions against person</span>
 }
 
-<span class="directive">static</span> <span class="type">class</span> <span class="class">SummaryAggregator</span> <span class="directive">implements</span> ArgumentsAggregator {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">PersonAggregator</span> <span class="directive">implements</span> ArgumentsAggregator {
     <span class="annotation">@Override</span>
-    <span class="directive">public</span> <span class="predefined-type">Object</span> aggregateArguments(ArgumentsAccessor argumentsAccessor, ParameterContext parameterContext) {
-        <span class="keyword">return</span> IntStream.range(<span class="integer">0</span>, argumentsAccessor.size())
-                .map(i -&gt; argumentsAccessor.getInteger(i))
-                .sum();
+    <span class="directive">public</span> Person aggregateArguments(ArgumentsAccessor argumentsAccessor,
+                                     ParameterContext parameterContext) {
+        <span class="keyword">return</span> <span class="keyword">new</span> Person(argumentsAccessor.getString(<span class="integer">0</span>),
+                          argumentsAccessor.getString(<span class="integer">1</span>),
+                          argumentsAccessor.get(<span class="integer">2</span>, Gender.class),
+                          argumentsAccessor.get(<span class="integer">3</span>, LocalDate.class));
     }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you find yourself repeatedly declaring <code>@AggregateWith(MyTypeAggregator.class)</code> for
+multiple parameterized test methods across your codebase, you may wish to create a custom
+<em>composed annotation</em> such as <code>@CsvToMyType</code> that is meta-annotated with
+<code>@AggregateWith(MyTypeAggregator.class)</code>. The following example demonstrates this in
+action with a custom <code>@CsvToPerson</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@CsvSource</span>({
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">Jane, Doe, F, 1990-05-20</span><span class="delimiter">&quot;</span></span>,
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">John, Doe, M, 1990-10-22</span><span class="delimiter">&quot;</span></span>
+})
+<span class="type">void</span> testWithCustomAggregatorAnnotation(<span class="annotation">@CsvToPerson</span> Person person) {
+    <span class="comment">// perform assertions against person</span>
+}
+
+<span class="annotation">@Retention</span>(<span class="predefined-type">RetentionPolicy</span>.RUNTIME)
+<span class="annotation">@Target</span>(<span class="predefined-type">ElementType</span>.PARAMETER)
+<span class="annotation">@AggregateWith</span>(PersonAggregator.class)
+<span class="directive">public</span> <span class="annotation">@interface</span> CsvToPerson {
 }</code></pre>
 </div>
 </div>
@@ -6230,7 +6277,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-11 08:17:16 EDT
+Last updated 2018-04-11 09:35:37 EDT
 </div>
 </div>
 </body>
