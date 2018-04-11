@@ -52,7 +52,8 @@ on GitHub.
   referenced by _fully qualified method name_.
 * Support for aggregation of multiple `@ParameterizedTest` arguments into a single
   object.
-
+* New `fail()` method in `Assertions` makes it possible to fail a test without an
+  explicit failure message.
 
 [[release-notes-5.2.0-M1-junit-vintage]]
 === JUnit Vintage
