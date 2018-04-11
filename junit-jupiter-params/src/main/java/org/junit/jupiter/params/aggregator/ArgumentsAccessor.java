@@ -178,7 +178,7 @@ public interface ArgumentsAccessor {
 	Object[] toArray();
 
 	/**
-	 * Get all arguments in this accessor as a list.
+	 * Get all arguments in this accessor as an immutable list.
 	 */
 	List<Object> toList();
 

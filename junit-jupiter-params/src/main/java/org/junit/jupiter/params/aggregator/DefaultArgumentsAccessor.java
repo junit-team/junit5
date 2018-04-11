@@ -13,8 +13,8 @@ package org.junit.jupiter.params.aggregator;
 import static java.lang.String.format;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apiguardian.api.API;
@@ -120,8 +120,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
 	@Override
 	public List<Object> toList() {
-		// Must return a copy since Arrays.asList returns a write-through list.
-		return new ArrayList<>(Arrays.asList(this.arguments));
+		return Collections.unmodifiableList(Arrays.asList(this.arguments));
 	}
 
 }
