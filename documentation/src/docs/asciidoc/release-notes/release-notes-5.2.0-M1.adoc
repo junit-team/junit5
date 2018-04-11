@@ -44,16 +44,19 @@ on GitHub.
 
 * New `assertDoesNotThrow()` methods in `Assertions` which assert that the execution of
   a given code block does _not_ throw any kind of exception.
+* New `fail()` method in `Assertions` makes it possible to fail a test without an
+  explicit failure message.
 * Implicit support for _widening primitive conversion_ for an argument supplied to a
   `@ParameterizedTest`.
   - For example, a parameterized test annotated with `@ValueSource(ints = { 1, 2, 3 })`
     can be declared to accept an argument of type `int`, `long`, `float`, or `double`.
 * `@MethodSource` now supports `static` factory methods declared in external classes
   referenced by _fully qualified method name_.
-* Support for aggregation of multiple `@ParameterizedTest` arguments into a single
-  object.
-* New `fail()` method in `Assertions` makes it possible to fail a test without an
-  explicit failure message.
+* Support for aggregation of multiple `@ParameterizedTest` arguments into a single object.
+  - For details, see
+    <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-aggregation,
+    Argument Aggregation>>.
+
 
 [[release-notes-5.2.0-M1-junit-vintage]]
 === JUnit Vintage
