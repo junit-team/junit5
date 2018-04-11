@@ -17,8 +17,10 @@ import java.util.List;
 import org.apiguardian.api.API;
 
 /**
- * {@code ArgumentsAccessor} defines the public API for accessing arguments passed
- * to a {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} method.
+ * {@code ArgumentsAccessor} defines the public API for accessing arguments provided
+ * by an {@link org.junit.jupiter.params.provider.ArgumentsProvider ArgumentsProvider}
+ * for a single invocation of a
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} method.
  *
  * <p>Specifically, an {@code ArgumentsAccessor} <em>aggregates</em> a set of
  * arguments for a given invocation of a parameterized test and provides convenience
