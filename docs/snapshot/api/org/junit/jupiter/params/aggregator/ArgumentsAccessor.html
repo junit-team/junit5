@@ -137,8 +137,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.2")
 public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
-<div class="block"><code>ArgumentsAccessor</code> defines the public API for accessing arguments passed
- to a <a href="../../../../../org/junit/jupiter/params/ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>@ParameterizedTest</code></a> method.
+<div class="block"><code>ArgumentsAccessor</code> defines the public API for accessing arguments provided
+ by an <a href="../../../../../org/junit/jupiter/params/provider/ArgumentsProvider.html" title="interface in org.junit.jupiter.params.provider"><code>ArgumentsProvider</code></a>
+ for a single invocation of a
+ <a href="../../../../../org/junit/jupiter/params/ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>@ParameterizedTest</code></a> method.
 
  <p>Specifically, an <code>ArgumentsAccessor</code> <em>aggregates</em> a set of
  arguments for a given invocation of a parameterized test and provides convenience
@@ -282,7 +284,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html#toList()">toList</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get all arguments in this accessor as a list.</div>
+<div class="block">Get all arguments in this accessor as an immutable list.</div>
 </td>
 </tr>
 </table>
@@ -570,7 +572,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>toList</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;toList()</pre>
-<div class="block">Get all arguments in this accessor as a list.</div>
+<div class="block">Get all arguments in this accessor as an immutable list.</div>
 </li>
 </ul>
 </li>
