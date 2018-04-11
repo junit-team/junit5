@@ -653,6 +653,10 @@ the <code>JUnitPlatform</code> runner.</p>
 a given code block does <em>not</em> throw any kind of exception.</p>
 </li>
 <li>
+<p>New <code>fail()</code> method in <code>Assertions</code> makes it possible to fail a test without an
+explicit failure message.</p>
+</li>
+<li>
 <p>Implicit support for <em>widening primitive conversion</em> for an argument supplied to a
 <code>@ParameterizedTest</code>.</p>
 <div class="ulist">
@@ -669,12 +673,15 @@ can be declared to accept an argument of type <code>int</code>, <code>long</code
 referenced by <em>fully qualified method name</em>.</p>
 </li>
 <li>
-<p>Support for aggregation of multiple <code>@ParameterizedTest</code> arguments into a single
-object.</p>
-</li>
+<p>Support for aggregation of multiple <code>@ParameterizedTest</code> arguments into a single object.</p>
+<div class="ulist">
+<ul>
 <li>
-<p>New <code>fail()</code> method in <code>Assertions</code> makes it possible to fail a test without an
-explicit failure message.</p>
+<p>For details, see
+<a href="../user-guide/index.html#writing-tests-parameterized-tests-argument-aggregation">Argument Aggregation</a>.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -836,7 +843,7 @@ invocations within an IDE</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-11 09:35:37 EDT
+Last updated 2018-04-11 09:47:08 EDT
 </div>
 </div>
 </body>
