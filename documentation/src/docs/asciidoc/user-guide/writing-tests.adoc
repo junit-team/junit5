@@ -1076,34 +1076,48 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_java_time_co
 [[writing-tests-parameterized-tests-argument-aggregation]]
 ==== Argument Aggregation
 
-By default, each argument provided to a `@ParameterizedTest` method corresponds to a
-single method parameter. Consequently, Argument Sources which are expected to supply
-a large number of arguments can lead to large method signatures.
+By default, each _argument_ provided to a `@ParameterizedTest` method corresponds to a
+single method parameter. Consequently, argument sources which are expected to supply a
+large number of arguments can lead to large method signatures.
 
-In this case, an `ArgumentsAccessor` can be used instead of explicit parameters.
-Using the interface, you can access and convert the provided arguments through a single
-object. Conversion follows the "Implicit Conversion" standards.
+In such cases, an `{ArgumentsAccessor}` can be used instead of multiple parameters. Using
+this API, you can access the provided arguments through a single argument passed to your
+test method. In addition, type conversion is supported as discussed in
+<<writing-tests-parameterized-tests-argument-conversion-implicit>>.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/ParameterizedTestDemo.java[tags=Accessor_example]
+include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAccessor_example]
 ----
 
-_An `ArgumentsAccessor` is automatically injected into any parameter of the same
-type._
+_An instance of `ArgumentsAccessor` is automatically injected into any parameter of type
+`ArgumentsAccessor`._
 
 ===== Custom Aggregators
 
-Apart from plain access to a `@ParameterizedTest` method's arguments using an ArgumentsAccessor,
-JUnit Jupiter supports the usage of custom aggregators.
+Apart from direct access to a `@ParameterizedTest` method's arguments using an
+`ArgumentsAccessor`, JUnit Jupiter also supports the usage of custom, reusable
+_aggregators_.
 
-You can create an aggregator by implementing the `ArgumentsAggregator` interface.
-The result of the aggregation can be provided to the test method by annotating a compatible
-parameter with the `@AggregateWith` annotation.
+To use a custom aggregator simply implement the `{ArgumentsAggregator}` interface and
+register it via the `@AggregateWith` annotation on a compatible parameter in the
+`@ParameterizedTest` method. The result of the aggregation will then be provided as an
+argument for the corresponding parameter when the parameterized test is invoked.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/ParameterizedTestDemo.java[tags=Aggregator_example]
+include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_example]
+----
+
+If you find yourself repeatedly declaring `@AggregateWith(MyTypeAggregator.class)` for
+multiple parameterized test methods across your codebase, you may wish to create a custom
+_composed annotation_ such as `@CsvToMyType` that is meta-annotated with
+`@AggregateWith(MyTypeAggregator.class)`. The following example demonstrates this in
+action with a custom `@CsvToPerson` annotation.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_with_custom_annotation_example]
 ----
 
 
