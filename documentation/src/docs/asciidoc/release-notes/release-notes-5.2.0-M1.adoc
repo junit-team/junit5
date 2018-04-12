@@ -15,7 +15,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Tag expressions are now supported in the JUnit Platform Maven Surefire provider.
 
 ==== Deprecations and Breaking Changes
 
