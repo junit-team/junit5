@@ -3402,11 +3402,11 @@ test method. In addition, type conversion is supported as discussed in
     <span class="string"><span class="delimiter">&quot;</span><span class="content">Jane, Doe, F, 1990-05-20</span><span class="delimiter">&quot;</span></span>,
     <span class="string"><span class="delimiter">&quot;</span><span class="content">John, Doe, M, 1990-10-22</span><span class="delimiter">&quot;</span></span>
 })
-<span class="type">void</span> testWithArgumentsAccessor(ArgumentsAccessor accessor) {
-    Person person = <span class="keyword">new</span> Person(accessor.getString(<span class="integer">0</span>),
-                               accessor.getString(<span class="integer">1</span>),
-                               accessor.get(<span class="integer">2</span>, Gender.class),
-                               accessor.get(<span class="integer">3</span>, LocalDate.class));
+<span class="type">void</span> testWithArgumentsAccessor(ArgumentsAccessor arguments) {
+    Person person = <span class="keyword">new</span> Person(arguments.getString(<span class="integer">0</span>),
+                               arguments.getString(<span class="integer">1</span>),
+                               arguments.get(<span class="integer">2</span>, Gender.class),
+                               arguments.get(<span class="integer">3</span>, LocalDate.class));
 
     <span class="keyword">if</span> (person.getFirstName().equals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Jane</span><span class="delimiter">&quot;</span></span>)) {
         assertEquals(Gender.F, person.getGender());
@@ -3449,12 +3449,12 @@ argument for the corresponding parameter when the parameterized test is invoked.
 
 <span class="directive">public</span> <span class="type">class</span> <span class="class">PersonAggregator</span> <span class="directive">implements</span> ArgumentsAggregator {
     <span class="annotation">@Override</span>
-    <span class="directive">public</span> Person aggregateArguments(ArgumentsAccessor argumentsAccessor,
+    <span class="directive">public</span> Person aggregateArguments(ArgumentsAccessor arguments,
                                      ParameterContext parameterContext) {
-        <span class="keyword">return</span> <span class="keyword">new</span> Person(argumentsAccessor.getString(<span class="integer">0</span>),
-                          argumentsAccessor.getString(<span class="integer">1</span>),
-                          argumentsAccessor.get(<span class="integer">2</span>, Gender.class),
-                          argumentsAccessor.get(<span class="integer">3</span>, LocalDate.class));
+        <span class="keyword">return</span> <span class="keyword">new</span> Person(arguments.getString(<span class="integer">0</span>),
+                          arguments.getString(<span class="integer">1</span>),
+                          arguments.get(<span class="integer">2</span>, Gender.class),
+                          arguments.get(<span class="integer">3</span>, LocalDate.class));
     }
 }</code></pre>
 </div>
@@ -6277,7 +6277,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-12 11:27:35 EDT
+Last updated 2018-04-12 12:01:16 EDT
 </div>
 </div>
 </body>
