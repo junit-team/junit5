@@ -108,51 +108,51 @@ class AggregatorIntegrationTests {
 
 	@ParameterizedTest
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
-	void argumentsAccessor(ArgumentsAccessor accessor) {
-		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
+	void argumentsAccessor(ArgumentsAccessor arguments) {
+		assertEquals(55, IntStream.range(0, arguments.size()).map(i -> arguments.getInteger(i)).sum());
 	}
 
 	@ParameterizedTest(name = "2 ArgumentsAccessors: {arguments}")
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
-	void argumentsAccessors(ArgumentsAccessor accessor1, ArgumentsAccessor accessor2) {
-		assertArrayEquals(accessor1.toArray(), accessor2.toArray());
+	void argumentsAccessors(ArgumentsAccessor arguments1, ArgumentsAccessor arguments2) {
+		assertArrayEquals(arguments1.toArray(), arguments2.toArray());
 	}
 
 	@ParameterizedTest(name = "ArgumentsAccessor and TestInfo: {arguments}")
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
-	void argumentsAccessorAndTestInfo(ArgumentsAccessor accessor, TestInfo testInfo) {
-		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
+	void argumentsAccessorAndTestInfo(ArgumentsAccessor arguments, TestInfo testInfo) {
+		assertEquals(55, IntStream.range(0, arguments.size()).map(i -> arguments.getInteger(i)).sum());
 		assertThat(testInfo.getDisplayName()).startsWith("ArgumentsAccessor and TestInfo");
 	}
 
 	@ParameterizedTest(name = "Indexed Arguments and ArgumentsAccessor: {arguments}")
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
-	void indexedArgumentsAndArgumentsAccessor(int num1, int num2, ArgumentsAccessor accessor) {
+	void indexedArgumentsAndArgumentsAccessor(int num1, int num2, ArgumentsAccessor arguments) {
 		assertEquals(1, num1);
 		assertEquals(2, num2);
-		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
+		assertEquals(55, IntStream.range(0, arguments.size()).map(i -> arguments.getInteger(i)).sum());
 	}
 
 	@ParameterizedTest(name = "Indexed Arguments, ArgumentsAccessor, and TestInfo: {arguments}")
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
-	void indexedArgumentsArgumentsAccessorAndTestInfo(int num1, int num2, ArgumentsAccessor accessor,
+	void indexedArgumentsArgumentsAccessorAndTestInfo(int num1, int num2, ArgumentsAccessor arguments,
 			TestInfo testInfo) {
 
 		assertEquals(1, num1);
 		assertEquals(2, num2);
-		assertEquals(55, IntStream.range(0, accessor.size()).map(i -> accessor.getInteger(i)).sum());
+		assertEquals(55, IntStream.range(0, arguments.size()).map(i -> arguments.getInteger(i)).sum());
 		assertThat(testInfo.getDisplayName()).startsWith("Indexed Arguments, ArgumentsAccessor, and TestInfo");
 	}
 
 	@ParameterizedTest(name = "Indexed Arguments, 2 ArgumentsAccessors, and TestInfo: {arguments}")
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
-	void indexedArgumentsArgumentsAccessorsAndTestInfo(int num1, int num2, ArgumentsAccessor accessor1,
-			ArgumentsAccessor accessor2, TestInfo testInfo) {
+	void indexedArgumentsArgumentsAccessorsAndTestInfo(int num1, int num2, ArgumentsAccessor arguments1,
+			ArgumentsAccessor arguments2, TestInfo testInfo) {
 
 		assertEquals(1, num1);
 		assertEquals(2, num2);
-		assertArrayEquals(accessor1.toArray(), accessor2.toArray());
-		assertEquals(55, IntStream.range(0, accessor1.size()).map(i -> accessor1.getInteger(i)).sum());
+		assertArrayEquals(arguments1.toArray(), arguments2.toArray());
+		assertEquals(55, IntStream.range(0, arguments1.size()).map(i -> arguments1.getInteger(i)).sum());
 		assertThat(testInfo.getDisplayName()).startsWith("Indexed Arguments, 2 ArgumentsAccessors, and TestInfo");
 	}
 
@@ -235,15 +235,15 @@ class AggregatorIntegrationTests {
 	static class PersonAggregator implements ArgumentsAggregator {
 
 		@Override
-		public Person aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+		public Person aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
 			int startIndex = context.findAnnotation(StartIndex.class).map(StartIndex::value).orElse(0);
 
 			// @formatter:off
 			return new Person(
-				accessor.getString(startIndex + 0),
-				accessor.getString(startIndex + 1),
-				accessor.get(startIndex + 2, LocalDate.class),
-				accessor.get(startIndex + 3, Gender.class)
+				arguments.getString(startIndex + 0),
+				arguments.getString(startIndex + 1),
+				arguments.get(startIndex + 2, LocalDate.class),
+				arguments.get(startIndex + 3, Gender.class)
 			);
 			// @formatter:on
 		}
@@ -252,14 +252,14 @@ class AggregatorIntegrationTests {
 	static class AddressAggregator implements ArgumentsAggregator {
 
 		@Override
-		public Address aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+		public Address aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
 			int startIndex = context.findAnnotation(StartIndex.class).map(StartIndex::value).orElse(0);
 
 			// @formatter:off
 			return new Address(
-				accessor.getString(startIndex + 0),
-				accessor.getString(startIndex + 1),
-				accessor.getInteger(startIndex + 2)
+				arguments.getString(startIndex + 0),
+				arguments.getString(startIndex + 1),
+				arguments.getInteger(startIndex + 2)
 			);
 			// @formatter:on
 		}
@@ -271,10 +271,10 @@ class AggregatorIntegrationTests {
 	static class MapAggregator implements ArgumentsAggregator {
 
 		@Override
-		public Map<String, Integer> aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+		public Map<String, Integer> aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
 			// @formatter:off
-			return IntStream.range(0, accessor.size())
-					.mapToObj(i -> accessor.getString(i))
+			return IntStream.range(0, arguments.size())
+					.mapToObj(i -> arguments.getString(i))
 					.collect(toMap(s -> s, String::length));
 			// @formatter:on
 		}

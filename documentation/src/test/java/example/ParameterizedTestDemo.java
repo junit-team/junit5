@@ -296,11 +296,11 @@ class ParameterizedTestDemo {
         "Jane, Doe, F, 1990-05-20",
         "John, Doe, M, 1990-10-22"
     })
-    void testWithArgumentsAccessor(ArgumentsAccessor accessor) {
-        Person person = new Person(accessor.getString(0),
-                                   accessor.getString(1),
-                                   accessor.get(2, Gender.class),
-                                   accessor.get(3, LocalDate.class));
+    void testWithArgumentsAccessor(ArgumentsAccessor arguments) {
+        Person person = new Person(arguments.getString(0),
+                                   arguments.getString(1),
+                                   arguments.get(2, Gender.class),
+                                   arguments.get(3, LocalDate.class));
 
         if (person.getFirstName().equals("Jane")) {
             assertEquals(Gender.F, person.getGender());
@@ -330,12 +330,12 @@ class ParameterizedTestDemo {
     // tag::ArgumentsAggregator_example[]
     public class PersonAggregator implements ArgumentsAggregator {
         @Override
-        public Person aggregateArguments(ArgumentsAccessor argumentsAccessor,
+        public Person aggregateArguments(ArgumentsAccessor arguments,
                                          ParameterContext parameterContext) {
-        	return new Person(argumentsAccessor.getString(0),
-                              argumentsAccessor.getString(1),
-                              argumentsAccessor.get(2, Gender.class),
-                              argumentsAccessor.get(3, LocalDate.class));
+            return new Person(arguments.getString(0),
+                              arguments.getString(1),
+                              arguments.get(2, Gender.class),
+                              arguments.get(3, LocalDate.class));
         }
     }
     // end::ArgumentsAggregator_example[]
