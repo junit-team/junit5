@@ -24,7 +24,6 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -76,28 +75,13 @@ class AggregatorIntegrationTests {
 			"gh-11111111, Jane, Doe, 1980-04-16, F, 42 Peachtree Street, Atlanta, 30318, red", //
 			"gh-22222222, Jack, Smith, 2000-11-22, M, 99 Peachtree Road, Atlanta, 30318, blue"//
 	})
-	void mixedMode1(String issueNumber, @CsvToPerson @StartIndex(1) Person person,
+	void mixedMode(String issueNumber, @CsvToPerson @StartIndex(1) Person person,
 			@CsvToAddress @StartIndex(5) Address address, TestInfo testInfo) {
 
 		assertThat(issueNumber).startsWith("gh-");
 		testPersonAggregator(person);
 		testAddressAggegator(address);
 		assertThat(testInfo.getDisplayName()).startsWith("Mixed Mode #1");
-	}
-
-	@Disabled("only supported if ParameterizedTestParameterResolver sets boundary at first index of aggregator instead of last")
-	@ParameterizedTest(name = "Mixed Mode #2: {arguments}")
-	@CsvSource({ //
-			"gh-11111111, Jane, Doe, 1980-04-16, F, 42 Peachtree Street, Atlanta, 30318, red", //
-			"gh-22222222, Jack, Smith, 2000-11-22, M, 99 Peachtree Road, Atlanta, 30318, blue"//
-	})
-	void mixedMode2(String issueNumber, @CsvToPerson @StartIndex(1) Person person, TestInfo testInfo,
-			@CsvToAddress @StartIndex(5) Address address) {
-
-		assertThat(issueNumber).startsWith("gh-");
-		testPersonAggregator(person);
-		testAddressAggegator(address);
-		assertThat(testInfo.getDisplayName()).startsWith("Mixed Mode #2");
 	}
 
 	@ParameterizedTest
