@@ -330,8 +330,7 @@ class ParameterizedTestDemo {
     // tag::ArgumentsAggregator_example[]
     public class PersonAggregator implements ArgumentsAggregator {
         @Override
-        public Person aggregateArguments(ArgumentsAccessor arguments,
-                                         ParameterContext parameterContext) {
+        public Person aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
             return new Person(arguments.getString(0),
                               arguments.getString(1),
                               arguments.get(2, Gender.class),
