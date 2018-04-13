@@ -3094,7 +3094,7 @@ primitive type.
     assertNotNull(argument);
 }
 
-<span class="directive">static</span> <span class="type">class</span> <span class="class">MyArgumentsProvider</span> <span class="directive">implements</span> ArgumentsProvider {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyArgumentsProvider</span> <span class="directive">implements</span> ArgumentsProvider {
 
     <span class="annotation">@Override</span>
     <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; provideArguments(ExtensionContext context) {
@@ -3316,7 +3316,7 @@ as the title of the book.</p>
     assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">42 Cats</span><span class="delimiter">&quot;</span></span>, book.getTitle());
 }
 
-<span class="directive">static</span> <span class="type">class</span> <span class="class">Book</span> {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Book</span> {
 
     <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> title;
 
@@ -3353,7 +3353,7 @@ like in the following example.</p>
     assertNotNull(<span class="predefined-type">TimeUnit</span>.valueOf(argument));
 }
 
-<span class="directive">static</span> <span class="type">class</span> <span class="class">ToStringArgumentConverter</span> <span class="directive">extends</span> SimpleArgumentConverter {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ToStringArgumentConverter</span> <span class="directive">extends</span> SimpleArgumentConverter {
 
     <span class="annotation">@Override</span>
     <span class="directive">protected</span> <span class="predefined-type">Object</span> convert(<span class="predefined-type">Object</span> source, <span class="predefined-type">Class</span>&lt;?&gt; targetType) {
@@ -3449,8 +3449,7 @@ argument for the corresponding parameter when the parameterized test is invoked.
 
 <span class="directive">public</span> <span class="type">class</span> <span class="class">PersonAggregator</span> <span class="directive">implements</span> ArgumentsAggregator {
     <span class="annotation">@Override</span>
-    <span class="directive">public</span> Person aggregateArguments(ArgumentsAccessor arguments,
-                                     ParameterContext parameterContext) {
+    <span class="directive">public</span> Person aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
         <span class="keyword">return</span> <span class="keyword">new</span> Person(arguments.getString(<span class="integer">0</span>),
                           arguments.getString(<span class="integer">1</span>),
                           arguments.get(<span class="integer">2</span>, Gender.class),
@@ -5472,7 +5471,7 @@ implement a <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateIn
     assertEquals(<span class="integer">3</span>, parameter.length());
 }
 
-<span class="directive">static</span> <span class="type">class</span> <span class="class">MyTestTemplateInvocationContextProvider</span> <span class="directive">implements</span> TestTemplateInvocationContextProvider {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyTestTemplateInvocationContextProvider</span> <span class="directive">implements</span> TestTemplateInvocationContextProvider {
     <span class="annotation">@Override</span>
     <span class="directive">public</span> <span class="type">boolean</span> supportsTestTemplate(ExtensionContext context) {
         <span class="keyword">return</span> <span class="predefined-constant">true</span>;
@@ -6277,7 +6276,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-12 11:27:35 EDT
+Last updated 2018-04-13 08:45:09 EDT
 </div>
 </div>
 </body>
