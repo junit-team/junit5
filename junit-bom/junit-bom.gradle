@@ -7,32 +7,34 @@ artifacts {
 
 apply from: "$rootDir/gradle/maven.gradle"
 
-uploadArchives {
-	enabled = true
-	repositories.mavenDeployer.pom {
-		project {
-			artifactId = project.name
-			name = project.description
-			description = project.description
-		}
-		whenConfigured {
-			packaging = "pom"
-			dependencies = []
-			withXml {
-				asNode().children().last() + {
-					delegate.dependencyManagement {
-						delegate.dependencies {
-							parent.mavenizedProjects.sort()
-								.findAll { name -> project.name != name }
-								.collect { name -> rootProject.project(name) }
-								.each { project ->
-									delegate.dependency {
-										delegate.groupId(project.group)
-										delegate.artifactId(project.name)
-										delegate.version(project.version)
-									}
+uploadArchives.enabled = true
+
+def mavenInstaller = install.repositories.mavenInstaller
+def mavenDeployer = uploadArchives.repositories.mavenDeployer
+
+[mavenInstaller, mavenDeployer]*.pom {
+	project {
+		artifactId = project.name
+		name = project.description
+		description = project.description
+	}
+	whenConfigured {
+		packaging = 'pom'
+		dependencies = []
+		withXml {
+			asNode().children().last() + {
+				delegate.dependencyManagement {
+					delegate.dependencies {
+						parent.mavenizedProjects.sort()
+							.findAll { name -> name != 'junit-platform-console-standalone' }
+							.collect { name -> rootProject.project(name) }
+							.each { project ->
+								delegate.dependency {
+									delegate.groupId(project.group)
+									delegate.artifactId(project.name)
+									delegate.version(project.version)
 								}
-						}
+							}
 					}
 				}
 			}

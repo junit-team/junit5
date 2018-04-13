@@ -35,65 +35,68 @@ uploadArchives {
 			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
 				authentication(userName: ossrhUsername, password: ossrhPassword)
 			}
+		}
+	}
+}
 
-			def projectLicense = licenseOf(project)
+def projectLicense = licenseOf(project)
+def mavenInstaller = install.repositories.mavenInstaller
+def mavenDeployer = uploadArchives.repositories.mavenDeployer
 
-			pom.project {
-				name "${project.group}:${project.name}"
-				packaging 'jar'
-				description "Module \"${project.name}\" of JUnit 5."
-				url 'http://junit.org/junit5/'
+[mavenInstaller, mavenDeployer]*.pom {
+	project {
+		name "${project.group}:${project.name}"
+		packaging 'jar'
+		description "Module \"${project.name}\" of JUnit 5."
+		url 'http://junit.org/junit5/'
 
-				scm {
-					connection 'scm:git:git://github.com/junit-team/junit5.git'
-					developerConnection 'scm:git:git://github.com/junit-team/junit5.git'
-					url 'https://github.com/junit-team/junit5'
-				}
+		scm {
+			connection 'scm:git:git://github.com/junit-team/junit5.git'
+			developerConnection 'scm:git:git://github.com/junit-team/junit5.git'
+			url 'https://github.com/junit-team/junit5'
+		}
 
-				licenses {
-					license {
-						name projectLicense['name']
-						url projectLicense['url']
-					}
-				}
-
-				developers {
-					developer {
-						id 'bechte'
-						name 'Stefan Bechtold'
-						email 'stefan.bechtold@me.com'
-					}
-					developer {
-						id 'jlink'
-						name 'Johannes Link'
-						email 'business@johanneslink.net'
-					}
-					developer {
-						id 'marcphilipp'
-						name 'Marc Philipp'
-						email 'mail@marcphilipp.de'
-					}
-					developer {
-						id 'mmerdes'
-						name 'Matthias Merdes'
-						email 'Matthias.Merdes@heidelberg-mobil.com'
-					}
-					developer {
-						id 'sbrannen'
-						name 'Sam Brannen'
-						email 'sam@sambrannen.com'
-					}
-					developer {
-						id 'sormuras'
-						name 'Christian Stein'
-						email 'sormuras@gmail.com'
-					}
-				}
-			}
-
-			pom.whenConfigured {
-				dependencies = dependencies.findAll { dep -> dep.scope != 'test' }
+		licenses {
+			license {
+				name projectLicense['name']
+				url projectLicense['url']
 			}
 		}
+
+		developers {
+			developer {
+				id 'bechte'
+				name 'Stefan Bechtold'
+				email 'stefan.bechtold@me.com'
+			}
+			developer {
+				id 'jlink'
+				name 'Johannes Link'
+				email 'business@johanneslink.net'
+			}
+			developer {
+				id 'marcphilipp'
+				name 'Marc Philipp'
+				email 'mail@marcphilipp.de'
+			}
+			developer {
+				id 'mmerdes'
+				name 'Matthias Merdes'
+				email 'Matthias.Merdes@heidelberg-mobil.com'
+			}
+			developer {
+				id 'sbrannen'
+				name 'Sam Brannen'
+				email 'sam@sambrannen.com'
+			}
+			developer {
+				id 'sormuras'
+				name 'Christian Stein'
+				email 'sormuras@gmail.com'
+			}
+		}
+	}
+	whenConfigured {
+		dependencies = dependencies.findAll { dep -> dep.scope != 'test' }
 	}
 }
