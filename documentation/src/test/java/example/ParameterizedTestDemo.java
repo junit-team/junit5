@@ -198,7 +198,10 @@ class ParameterizedTestDemo {
 		assertNotNull(argument);
 	}
 
-	static class MyArgumentsProvider implements ArgumentsProvider {
+	// end::ArgumentsSource_example[]
+	static
+	// tag::ArgumentsSource_example[]
+	public class MyArgumentsProvider implements ArgumentsProvider {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
@@ -240,7 +243,10 @@ class ParameterizedTestDemo {
 		assertEquals("42 Cats", book.getTitle());
 	}
 
-	static class Book {
+	// end::implicit_fallback_conversion_example[]
+	static
+	// tag::implicit_fallback_conversion_example[]
+	public class Book {
 
 		private final String title;
 
@@ -268,7 +274,10 @@ class ParameterizedTestDemo {
 		assertNotNull(TimeUnit.valueOf(argument));
 	}
 
-	static class ToStringArgumentConverter extends SimpleArgumentConverter {
+	// end::explicit_conversion_example[]
+	static
+	// tag::explicit_conversion_example[]
+	public class ToStringArgumentConverter extends SimpleArgumentConverter {
 
 		@Override
 		protected Object convert(Object source, Class<?> targetType) {
