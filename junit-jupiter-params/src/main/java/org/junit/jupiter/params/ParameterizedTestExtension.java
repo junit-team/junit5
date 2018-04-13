@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.params.aggregator.AggregationUtils;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -38,7 +39,23 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	@Override
 	public boolean supportsTestTemplate(ExtensionContext context) {
-		return isAnnotated(context.getTestMethod(), ParameterizedTest.class);
+		if (!context.getTestMethod().isPresent()) {
+			return false;
+		}
+
+		Method testMethod = context.getTestMethod().get();
+		if (!isAnnotated(testMethod, ParameterizedTest.class)) {
+			return false;
+		}
+
+		Preconditions.condition(AggregationUtils.hasPotentiallyValidSignature(testMethod),
+			() -> String.format(
+				"@ParameterizedTest method [%s] declares formal parameters in an invalid order: "
+						+ "argument aggregators must be declared after any indexed arguments "
+						+ "and before any arguments resolved by another ParameterResolver.",
+				testMethod.toGenericString()));
+
+		return true;
 	}
 
 	@Override
@@ -59,7 +76,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.peek(invocationContext -> invocationCount.incrementAndGet())
 				.onClose(() ->
 						Preconditions.condition(invocationCount.get() > 0,
-								() -> "Configuration error: You must provide at least one argument for this @" + ParameterizedTest.class.getSimpleName()));
+								"Configuration error: You must provide at least one argument for this @ParameterizedTest"));
 		// @formatter:on
 	}
 

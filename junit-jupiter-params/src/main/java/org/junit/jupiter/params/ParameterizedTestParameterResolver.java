@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params;
 
-import static org.junit.jupiter.params.aggregator.AggregationUtils.indexOfLastAggregator;
+import static org.junit.jupiter.params.aggregator.AggregationUtils.indexOfFirstAggregator;
 import static org.junit.jupiter.params.aggregator.AggregationUtils.isAggregator;
 
 import java.lang.reflect.Executable;
@@ -59,11 +59,11 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 			return true;
 		}
 
-		// Ensure that the current parameter is declared before the last aggregator.
+		// Ensure that the current parameter is declared before aggregators.
 		// Otherwise, a different ParameterResolver should handle it.
-		int indexOfLastAggregator = indexOfLastAggregator(testMethod);
-		if (indexOfLastAggregator != -1) {
-			return parameterContext.getIndex() <= indexOfLastAggregator;
+		int indexOfFirstAggregator = indexOfFirstAggregator(testMethod);
+		if (indexOfFirstAggregator != -1) {
+			return parameterContext.getIndex() < indexOfFirstAggregator;
 		}
 
 		// Else fallback to behavior for parameterized test methods without aggregators.
