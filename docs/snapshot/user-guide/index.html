@@ -564,8 +564,9 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-test-interfaces-and-default-methods">3.12. Test Interfaces and Default Methods</a></li>
 <li><a href="#writing-tests-repeated-tests">3.13. Repeated Tests</a></li>
 <li><a href="#writing-tests-parameterized-tests">3.14. Parameterized Tests</a></li>
-<li><a href="#writing-tests-test-templates">3.15. Test Templates</a></li>
-<li><a href="#writing-tests-dynamic-tests">3.16. Dynamic Tests</a></li>
+<li><a href="#writing-tests-parameterized-tests-consuming-arguments">3.15. Consuming Arguments</a></li>
+<li><a href="#writing-tests-test-templates">3.16. Test Templates</a></li>
+<li><a href="#writing-tests-dynamic-tests">3.17. Dynamic Tests</a></li>
 </ul>
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
@@ -2707,7 +2708,34 @@ to the console.</p>
 <p>Parameterized tests make it possible to run a test multiple times with different
 arguments. They are declared just like regular <code>@Test</code> methods but use the
 <code><a href="../api/org/junit/jupiter/params/ParameterizedTest.html">@ParameterizedTest</a></code> annotation instead. In addition, you must declare at least one
-<em>source</em> that will provide the arguments for each invocation.</p>
+<em>source</em> that will provide the arguments for each invocation and then <em>consume</em> the
+arguments in the test method.</p>
+</div>
+<div class="paragraph">
+<p>The following example demonstrates a parameterized test that uses the <code>@ValueSource</code>
+annotation to specify a <code>String</code> array as the source of arguments.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content">racecar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">radar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">able was I ere I saw elba</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> palindromes(<span class="predefined-type">String</span> candidate) {
+    assertTrue(isPalindrome(candidate));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When executing the above parameterized test method, each invocation will be reported
+separately. For instance, the <code>ConsoleLauncher</code> will print output similar to the
+following.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>palindromes(String) ✔
+├─ [1] racecar ✔
+├─ [2] radar ✔
+└─ [3] able was I ere I saw elba ✔</pre>
+</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -2722,29 +2750,6 @@ in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for details.
 </tr>
 </table>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content">racecar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">radar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">able was I ere I saw elba</span><span class="delimiter">&quot;</span></span> })
-<span class="type">void</span> palindromes(<span class="predefined-type">String</span> candidate) {
-    assertTrue(isPalindrome(candidate));
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This parameterized test uses the <code>@ValueSource</code> annotation to specify a <code>String</code> array as
-the source of arguments. When executing the above method, each invocation will be
-reported separately. For instance, the <code>ConsoleLauncher</code> will print output similar to the
-following.</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>palindromes(String) ✔
-├─ [1] racecar ✔
-├─ [2] radar ✔
-└─ [3] able was I ere I saw elba ✔</pre>
-</div>
-</div>
 <div class="sect3">
 <h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>3.14.1. Required Setup</h4>
 <div class="paragraph">
@@ -2752,8 +2757,42 @@ following.</p>
 <code>junit-jupiter-params</code> artifact. Please refer to <a href="#dependency-metadata">Dependency Metadata</a> for details.</p>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="writing-tests-parameterized-tests-consuming-arguments"><a class="anchor" href="#writing-tests-parameterized-tests-consuming-arguments"></a>3.15. Consuming Arguments</h3>
+<div class="paragraph">
+<p>Parameterized test methods typically <em>consume</em> arguments directly from the configured
+source (see <a href="#writing-tests-parameterized-tests-sources">Sources of Arguments</a>) following a one-to-one
+correlation between argument source index and method parameter index (see examples in
+<a href="#writing-tests-parameterized-tests-sources-CsvSource">@CsvSource</a>). However, a parameterized test
+method may also choose to <em>aggregate</em> arguments from the source into a single object
+passed to the method (see <a href="#writing-tests-parameterized-tests-argument-aggregation">Argument Aggregation</a>).
+Additional arguments may also be provided by a <code>ParameterResolver</code> (e.g., to obtain an
+instance of <code>TestInfo</code>, <code>TestReporter</code>, etc.). Specifically, a parameterized test method
+must declare formal parameters according to the following rules.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Zero or more <em>indexed arguments</em> must be declared first.</p>
+</li>
+<li>
+<p>Zero or more <em>aggregators</em> must be declared next.</p>
+</li>
+<li>
+<p>Zero or more arguments supplied by a <code>ParameterResolver</code> must be declared last.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In this context, an <em>indexed argument</em> is an argument for a given index in the
+<code>Arguments</code> provided by an <code>ArgumentsProvider</code> that is passed as an argument to the
+parameterized method at the same index in the method&#8217;s formal parameter list. An
+<em>aggregator</em> is any parameter of type <code>ArgumentsAccessor</code> or any parameter annotated with
+<code>@AggregateWith</code>.</p>
+</div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.14.2. Sources of Arguments</h4>
+<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.15.1. Sources of Arguments</h4>
 <div class="paragraph">
 <p>Out of the box, JUnit Jupiter provides quite a few <em>source</em> annotations. Each of the
 following subsections provides a brief overview and an example for each of them. Please
@@ -3106,7 +3145,7 @@ primitive type.
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.14.3. Argument Conversion</h4>
+<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.15.2. Argument Conversion</h4>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-argument-conversion-widening"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-widening"></a>Widening Conversion</h5>
 <div class="paragraph">
@@ -3383,7 +3422,7 @@ composed annotation <code>JavaTimeConversionPattern</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-aggregation"><a class="anchor" href="#writing-tests-parameterized-tests-argument-aggregation"></a>3.14.4. Argument Aggregation</h4>
+<h4 id="writing-tests-parameterized-tests-argument-aggregation"><a class="anchor" href="#writing-tests-parameterized-tests-argument-aggregation"></a>3.15.3. Argument Aggregation</h4>
 <div class="paragraph">
 <p>By default, each <em>argument</em> provided to a <code>@ParameterizedTest</code> method corresponds to a
 single method parameter. Consequently, argument sources which are expected to supply a
@@ -3486,7 +3525,7 @@ action with a custom <code>@CsvToPerson</code> annotation.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.14.5. Customizing Display Names</h4>
+<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.15.4. Customizing Display Names</h4>
 <div class="paragraph">
 <p>By default, the display name of a parameterized test invocation contains the invocation
 index and the <code>String</code> representation of all arguments for that specific invocation.
@@ -3544,7 +3583,7 @@ However, you can customize invocation display names via the <code>name</code> at
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.14.6. Lifecycle and Interoperability</h4>
+<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.15.5. Lifecycle and Interoperability</h4>
 <div class="paragraph">
 <p>Each invocation of a parameterized test has the same lifecycle as a regular <code>@Test</code>
 method. For example, <code>@BeforeEach</code> methods will be executed before each invocation.
@@ -3581,7 +3620,7 @@ lifecycle methods (e.g. <code>@BeforeEach</code>) and test class constructors.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.15. Test Templates</h3>
+<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.16. Test Templates</h3>
 <div class="paragraph">
 <p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method is not a regular test case but rather a template for test
 cases. As such, it is designed to be invoked multiple times depending on the number of
@@ -3593,7 +3632,7 @@ method with full support for the same lifecycle callbacks and extensions. Please
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.16. Dynamic Tests</h3>
+<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.17. Dynamic Tests</h3>
 <div class="paragraph">
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in
 <a href="#writing-tests-annotations">Annotations</a> is very similar to the <code>@Test</code> annotation in JUnit 4. Both
@@ -3670,7 +3709,7 @@ Dynamic tests are currently an <em>experimental</em> feature. Consult the table 
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.16.1. Dynamic Test Examples</h4>
+<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.17.1. Dynamic Test Examples</h4>
 <div class="paragraph">
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories
 and dynamic tests.</p>
