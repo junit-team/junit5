@@ -26,35 +26,71 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * {@code @ParameterizedTest} is used to signal that the annotated method is a
  * <em>parameterized test</em> method.
  *
+ * <p>Such methods must not be {@code private} or {@code static}.
+ *
+ * <h3>Argument Providers and Sources</h3>
+ *
  * <p>{@code @ParameterizedTest} methods must specify at least one
- * {@link org.junit.jupiter.params.provider.ArgumentsProvider} via the
- * {@link org.junit.jupiter.params.provider.ArgumentsSource @ArgumentsSource}
- * or a corresponding composed annotation. The provider is responsible for
- * providing a {@link java.util.stream.Stream} of
- * {@link org.junit.jupiter.params.provider.Arguments} that will be used to
- * invoke the {@code @ParameterizedTest} method. The method may have additional
- * parameters to be resolved by other
+ * {@link org.junit.jupiter.params.provider.ArgumentsProvider ArgumentsProvider}
+ * via {@link org.junit.jupiter.params.provider.ArgumentsSource @ArgumentsSource}
+ * or a corresponding composed annotation (e.g., {@code @ValueSource},
+ * {@code @CsvSource}, etc.). The provider is responsible for providing a
+ * {@link java.util.stream.Stream Stream} of
+ * {@link org.junit.jupiter.params.provider.Arguments Arguments} that will be
+ * used to invoke the parameterized test method.
+ *
+ * <h3>Formal Parameter List</h3>
+ *
+ * <p>A {@code @ParameterizedTest} method may declare additional parameters at
+ * the end of the method's parameter list to be resolved by other
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}
- * at the end of the method's parameter list.
+ * (e.g., {@code TestInfo}, {@code TestReporter}, etc). Specifically, a
+ * parameterized test method must declare formal parameters according to the
+ * following rules.
  *
- * <p>Method parameters may use
+ * <ol>
+ * <li>Zero or more <em>indexed arguments</em> must be declared first.</li>
+ * <li>Zero or more <em>aggregators</em> must be declared next.</li>
+ * <li>Zero or more arguments supplied by other {@code ParameterResolver}
+ * implementations must be declared last.</li>
+ * </ol>
+ *
+ * <p>In this context, an <em>indexed argument</em> is an argument for a given
+ * index in the {@code Arguments} provided by an {@code ArgumentsProvider} that
+ * is passed as an argument to the parameterized method at the same index in the
+ * method's formal parameter list. An <em>aggregator</em> is any parameter of type
+ * {@link org.junit.jupiter.params.aggregator.ArgumentsAccessor ArgumentsAccessor}
+ * or any parameter annotated with
+ * {@link org.junit.jupiter.params.aggregator.AggregateWith @AggregateWith}.
+ *
+ * <h3>Argument Conversion</h3>
+ *
+ * <p>Method parameters may be annotated with
  * {@link org.junit.jupiter.params.converter.ConvertWith @ConvertWith}
- * or a corresponding composed annotation to specify an explicit
- * {@link org.junit.jupiter.params.converter.ArgumentConverter}.
+ * or a corresponding composed annotation to specify an <em>explicit</em>
+ * {@link org.junit.jupiter.params.converter.ArgumentConverter ArgumentConverter}.
+ * Otherwise, JUnit Jupiter will attempt to perform an <em>implicit</em>
+ * conversion to the target type automatically (see the User Guide for further
+ * details).
  *
- * <p>{@code @ParameterizedTest} may also be used as a meta-annotation in order to
- * create a custom <em>composed annotation</em> that inherits the semantics
+ * <h3>Composed Annotations</h3>
+ *
+ * <p>{@code @ParameterizedTest} may also be used as a meta-annotation in order
+ * to create a custom <em>composed annotation</em> that inherits the semantics
  * of {@code @ParameterizedTest}.
  *
- * <p>{@code @ParameterizedTest} methods must not be {@code private} or {@code static}.
- *
  * @since 5.0
+ * @see org.junit.jupiter.params.provider.Arguments
+ * @see org.junit.jupiter.params.provider.ArgumentsProvider
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.CsvFileSource
  * @see org.junit.jupiter.params.provider.CsvSource
  * @see org.junit.jupiter.params.provider.EnumSource
  * @see org.junit.jupiter.params.provider.MethodSource
  * @see org.junit.jupiter.params.provider.ValueSource
+ * @see org.junit.jupiter.params.aggregator.ArgumentsAccessor
+ * @see org.junit.jupiter.params.aggregator.AggregateWith
+ * @see org.junit.jupiter.params.converter.ArgumentConverter
  * @see org.junit.jupiter.params.converter.ConvertWith
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
@@ -73,7 +109,7 @@ public @interface ParameterizedTest {
 	 * <ul>
 	 * <li><code>{index}</code>: the current invocation index (1-based)</li>
 	 * <li><code>{arguments}</code>: the complete, comma-separated arguments list</li>
-	 * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument</li>
+	 * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument (0-based)</li>
 	 * </ul>
 	 *
 	 * <p>For the latter, you may use {@link java.text.MessageFormat} patterns
