@@ -292,8 +292,6 @@ subprojects { subproj ->
 
 	if (subproj.name in mavenizedProjects) {
 
-		apply from: "$rootDir/gradle/maven.gradle"
-
 		subproj.ext.baseline = null
 
 		if (subproj.name in jupiterProjects) {
@@ -310,6 +308,9 @@ subprojects { subproj ->
 			subproj.version = vintageVersion
 			subproj.baseline = vintageBaseline
 		}
+
+		// apply after `project.group`, etc. have been set
+		apply from: "$rootDir/gradle/maven.gradle"
 
 		configurations {
 			base
