@@ -15,7 +15,6 @@ def mavenDeployer = uploadArchives.repositories.mavenDeployer
 [mavenInstaller, mavenDeployer]*.pom {
 	project {
 		artifactId = project.name
-		name = project.description
 		description = project.description
 	}
 	whenConfigured {

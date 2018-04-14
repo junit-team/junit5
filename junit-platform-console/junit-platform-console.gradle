@@ -1,5 +1,7 @@
 apply plugin: 'com.github.johnrengelman.shadow'
 
+description = 'JUnit Platform Console'
+
 buildscript {
 	repositories {
 		jcenter()

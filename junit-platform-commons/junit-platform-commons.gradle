@@ -1,3 +1,5 @@
+description = 'JUnit Platform Commons'
+
 jar {
 	manifest {
 		attributes(
