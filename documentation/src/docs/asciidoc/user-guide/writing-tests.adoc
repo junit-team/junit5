@@ -747,19 +747,19 @@ to the console.
 Parameterized tests make it possible to run a test multiple times with different
 arguments. They are declared just like regular `@Test` methods but use the
 `{ParameterizedTest}` annotation instead. In addition, you must declare at least one
-_source_ that will provide the arguments for each invocation.
+_source_ that will provide the arguments for each invocation and then _consume_ the
+arguments in the test method.
 
-WARNING: Parameterized tests are currently an _experimental_ feature. Consult the table
-in <<api-evolution-experimental-apis>> for details.
+The following example demonstrates a parameterized test that uses the `@ValueSource`
+annotation to specify a `String` array as the source of arguments.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=first_example]
 ----
 
-This parameterized test uses the `@ValueSource` annotation to specify a `String` array as
-the source of arguments. When executing the above method, each invocation will be
-reported separately. For instance, the `ConsoleLauncher` will print output similar to the
+When executing the above parameterized test method, each invocation will be reported
+separately. For instance, the `ConsoleLauncher` will print output similar to the
 following.
 
 ....
@@ -769,11 +769,37 @@ palindromes(String) ✔
 └─ [3] able was I ere I saw elba ✔
 ....
 
+WARNING: Parameterized tests are currently an _experimental_ feature. Consult the table
+in <<api-evolution-experimental-apis>> for details.
+
 [[writing-tests-parameterized-tests-setup]]
 ==== Required Setup
 
 In order to use parameterized tests you need to add a dependency on the
 `junit-jupiter-params` artifact. Please refer to <<dependency-metadata>> for details.
+
+[[writing-tests-parameterized-tests-consuming-arguments]]
+=== Consuming Arguments
+
+Parameterized test methods typically _consume_ arguments directly from the configured
+source (see <<writing-tests-parameterized-tests-sources>>) following a one-to-one
+correlation between argument source index and method parameter index (see examples in
+<<writing-tests-parameterized-tests-sources-CsvSource>>). However, a parameterized test
+method may also choose to _aggregate_ arguments from the source into a single object
+passed to the method (see <<writing-tests-parameterized-tests-argument-aggregation>>).
+Additional arguments may also be provided by a `ParameterResolver` (e.g., to obtain an
+instance of `TestInfo`, `TestReporter`, etc.). Specifically, a parameterized test method
+must declare formal parameters according to the following rules.
+
+* Zero or more _indexed arguments_ must be declared first.
+* Zero or more _aggregators_ must be declared next.
+* Zero or more arguments supplied by a `ParameterResolver` must be declared last.
+
+In this context, an _indexed argument_ is an argument for a given index in the
+`Arguments` provided by an `ArgumentsProvider` that is passed as an argument to the
+parameterized method at the same index in the method's formal parameter list. An
+_aggregator_ is any parameter of type `ArgumentsAccessor` or any parameter annotated with
+`@AggregateWith`.
 
 [[writing-tests-parameterized-tests-sources]]
 ==== Sources of Arguments
