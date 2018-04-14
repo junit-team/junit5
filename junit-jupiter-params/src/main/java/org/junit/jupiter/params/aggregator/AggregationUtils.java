@@ -11,12 +11,12 @@
 package org.junit.jupiter.params.aggregator;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.AnnotationUtils;
 
 /**
  * Collection of utilities for working with aggregating argument consumers
@@ -73,7 +73,7 @@ public class AggregationUtils {
 	 */
 	public static boolean isAggregator(Parameter parameter) {
 		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
-				|| AnnotationUtils.isAnnotated(parameter, AggregateWith.class);
+				|| isAnnotated(parameter, AggregateWith.class);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class AggregationUtils {
 	 * Find the index of the first {@linkplain #isAggregator aggregator}
 	 * {@link Parameter} in the supplied {@link Method}.
 	 *
-	 * @return the index of the last aggregator, or {@code -1} if not found
+	 * @return the index of the first aggregator, or {@code -1} if not found
 	 */
 	public static int indexOfFirstAggregator(Method method) {
 		Parameter[] parameters = method.getParameters();
