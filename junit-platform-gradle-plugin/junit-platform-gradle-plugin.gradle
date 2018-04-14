@@ -5,6 +5,8 @@ plugins {
 
 apply from: 'gradle/functional-test.gradle'
 
+description = 'JUnit Platform Gradle Plugin (deprecated)'
+
 generateJacocoTestKitProperties {
 	destinationFile = file("$buildDir/jacoco/testkit.exec")
 	onlyIf { project.hasProperty('enableJaCoCo') }

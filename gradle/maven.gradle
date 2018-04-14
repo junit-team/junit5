@@ -45,7 +45,6 @@ def mavenDeployer = uploadArchives.repositories.mavenDeployer
 
 [mavenInstaller, mavenDeployer]*.pom {
 	project {
-		name "${project.group}:${project.name}"
 		packaging 'jar'
 		description "Module \"${project.name}\" of JUnit 5."
 		url 'http://junit.org/junit5/'
@@ -97,6 +96,8 @@ def mavenDeployer = uploadArchives.repositories.mavenDeployer
 		}
 	}
 	whenConfigured {
+		// set name lazily to get access to description from subprojects
+		name = project.description ?: "${project.group}:${project.name}"
 		dependencies = dependencies.findAll { dep -> dep.scope != 'test' }
 	}
 }
