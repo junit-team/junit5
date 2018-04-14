@@ -10,6 +10,16 @@ link:{junit5-repo}+/milestone/22?closed=1+[5.2 M1] milestone page in the JUnit r
 on GitHub.
 
 
+[[release-notes-5.2.0-M1-overall-improvements]]
+=== Overall Improvements
+
+* JUnit BOM: To ease dependency management using
+https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Importing_Dependencies[Maven]
+or https://docs.gradle.org/current/userguide/managing_transitive_dependencies.html#sec:bom_import[Gradle],
+a Bill of Materials POM is now provided under the `org.junit:junit-bom:5.2.0-M1` Maven
+coordinates.
+
+
 [[release-notes-5.2.0-M1-junit-platform]]
 === JUnit Platform
 
