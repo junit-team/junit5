@@ -571,10 +571,13 @@ vendors.</p>
 <h2 id="release-notes-5.2.0-M1"><a class="anchor" href="#release-notes-5.2.0-M1"></a>5.2.0-M1</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> April 15, 2018</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong> JUnit BOM, support for Maven Surefire 2.21.0 allowing builds with Java 9 and
+Java 10, <em>argument aggregation</em> and <em>widening primitive conversion</em> for arguments in
+parameterized tests, external factory methods for <code>@MethodSource</code>, as well as various
+minor improvements and bug fixes.</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -589,7 +592,7 @@ on GitHub.</p>
 <p>JUnit BOM: To ease dependency management using
 <a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Importing_Dependencies">Maven</a>
 or <a href="https://docs.gradle.org/current/userguide/managing_transitive_dependencies.html#sec:bom_import">Gradle</a>,
-a Bill of Materials POM is now provided under the <code>org.junit:junit-bom:5.2.0-M1</code> Maven
+a <em>Bill of Materials</em> POM is now provided under the <code>org.junit:junit-bom:5.2.0-M1</code> Maven
 coordinates.</p>
 </li>
 </ul>
@@ -605,15 +608,12 @@ coordinates.</p>
 <p>Tag expressions containing spaces are now supported in the JUnit Platform Maven
 Surefire provider.</p>
 </li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
 <li>
-<p>❓</p>
+<p>Duplicate <code>--config</code> keys supplied to the <code>ConsoleLauncher</code> are now reported properly.</p>
+</li>
+<li>
+<p>Exceptions thrown in <code>Node.after()</code> (in the <code>HierarchicalTestEngine</code> infrastructure) no
+longer mask earlier exceptions.</p>
 </li>
 </ul>
 </div>
@@ -622,6 +622,10 @@ Surefire provider.</p>
 <h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>The JUnit Platform Surefire Provider (<code>junit-platform-surefire-provider</code>) now works
+with and requires Surefire <code>2.21.0</code> which allows it to be used with Java 9 and Java 10.</p>
+</li>
 <li>
 <p>The default <em>include pattern</em> for filtering class names now matches test classes whose
 names either start with <code>Test</code> or end with <code>Test</code> or <code>Tests</code>.</p>
@@ -645,17 +649,8 @@ the <code>JUnitPlatform</code> runner.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
+<p>Exceptions thrown by an <code>AfterAllCallback</code> no longer mask exceptions thrown at the
+class level when using the <code>@TestInstance(PER_CLASS)</code> lifecycle mode.</p>
 </li>
 </ul>
 </div>
@@ -705,35 +700,8 @@ referenced by <em>fully qualified method name</em>.</p>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.2.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.2.0-M1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
+<div class="paragraph">
+<p>No changes.</p>
 </div>
 </div>
 </div>
@@ -755,7 +723,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.1.1-junit-platform"><a class="anchor" href="#release-notes-5.1.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -770,7 +738,7 @@ processing a <code>ModuleSelector</code> during the discovery phase.</p>
 <div class="sect2">
 <h3 id="release-notes-5.1.1-junit-jupiter"><a class="anchor" href="#release-notes-5.1.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
