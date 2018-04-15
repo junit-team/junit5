@@ -69,6 +69,7 @@ endif::[]
 //
 :DisabledCondition:                 {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
 :TestInfoParameterResolver:         {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java[TestInfoParameterResolver]
+:RepetitionInfoParameterResolver:   {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java[RepetitionInfoParameterResolver]
 :TestReporterParameterResolver:     {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java[TestReporterParameterResolver]
 :CustomAnnotationParameterResolver: {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java[CustomAnnotationParameterResolver]
 :CustomTypeParameterResolver:       {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java[CustomTypeParameterResolver]

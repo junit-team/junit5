@@ -446,7 +446,7 @@ following demonstrates how to have `TestInfo` injected into a test constructor,
 include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
 ----
 
-* `RepetitionInfoParameterResolver`: if a method parameter in a `@RepeatedTest`,
+* `{RepetitionInfoParameterResolver}`: if a method parameter in a `@RepeatedTest`,
   `@BeforeEach`, or `@AfterEach` method is of type `{RepetitionInfo}`, the
   `RepetitionInfoParameterResolver` will supply an instance of `RepetitionInfo`.
   `RepetitionInfo` can then be used to retrieve information about the current repetition
