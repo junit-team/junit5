@@ -23,7 +23,6 @@ endif::[]
 :TestEngine:                        {javadoc-root}/org/junit/platform/engine/TestEngine.html[TestEngine]
 :DiscoverySelectors_selectMethod:   {javadoc-root}/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod-java.lang.String-[selectMethod(String) in DiscoverySelectors]
 :TestExecutionListener:             {javadoc-root}/org/junit/platform/launcher/TestExecutionListener.html[TestExecutionListener]
-:standard-include-class-name-pattern: ^.*Tests?$
 //
 :api-package:                       {javadoc-root}/org/junit/jupiter/api/package-summary.html[org.junit.jupiter.api]
 :extension-api-package:             {javadoc-root}/org/junit/jupiter/api/extension/package-summary.html[org.junit.jupiter.api.extension]
