@@ -19,7 +19,6 @@ import java.lang.reflect.Constructor;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.Future;
@@ -27,34 +26,37 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.engine.ConfigurationParameters;
 
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
 	private final ForkJoinPool forkJoinPool;
 
-	public ForkJoinPoolHierarchicalTestExecutorService(Optional<Integer> parallelismLevel) {
-		forkJoinPool = createForkJoinPool(parallelismLevel);
+	public ForkJoinPoolHierarchicalTestExecutorService(String parallelConfigPrefix,
+			ConfigurationParameters configurationParameters) {
+		forkJoinPool = createForkJoinPool(parallelConfigPrefix, configurationParameters);
 		LoggerFactory.getLogger(ForkJoinPoolHierarchicalTestExecutorService.class) //
 				.config(() -> "Using ForkJoinPool with parallelism of " + forkJoinPool.getParallelism());
 	}
 
-	private ForkJoinPool createForkJoinPool(Optional<Integer> parallelismLevel) {
-		int parallelism = parallelismLevel.orElse(Runtime.getRuntime().availableProcessors());
-		int corePoolSize = parallelism;
-		int maximumPoolSize = 256 + parallelism;
-		int minimumRunnable = parallelism;
-		int keepAliveSeconds = 30;
+	private ForkJoinPool createForkJoinPool(String parallelConfigPrefix,
+			ConfigurationParameters configurationParameters) {
+		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.getStrategy(
+			parallelConfigPrefix, configurationParameters);
+		ParallelExecutionConfiguration configuration = strategy.createConfiguration(parallelConfigPrefix,
+			configurationParameters);
 		try {
 			// Try to use constructor available in Java >= 9
 			Constructor<ForkJoinPool> constructor = ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE,
 				ForkJoinWorkerThreadFactory.class, UncaughtExceptionHandler.class, Boolean.TYPE, Integer.TYPE,
 				Integer.TYPE, Integer.TYPE, Predicate.class, Long.TYPE, TimeUnit.class);
-			return constructor.newInstance(parallelism, defaultForkJoinWorkerThreadFactory, null, false, corePoolSize,
-				maximumPoolSize, minimumRunnable, null, keepAliveSeconds, TimeUnit.SECONDS);
+			return constructor.newInstance(configuration.getParallelism(), defaultForkJoinWorkerThreadFactory, null,
+				false, configuration.getCorePoolSize(), configuration.getMaxPoolSize(),
+				configuration.getMinimumRunnable(), null, configuration.getKeepAlive(), TimeUnit.SECONDS);
 		}
 		catch (Exception e) {
 			// Fallback for Java 8
-			return new ForkJoinPool(parallelism);
+			return new ForkJoinPool(configuration.getParallelism());
 		}
 	}
 

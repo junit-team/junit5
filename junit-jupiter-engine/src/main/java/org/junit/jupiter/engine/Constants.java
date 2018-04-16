@@ -11,8 +11,12 @@
 package org.junit.jupiter.engine;
 
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_FACTOR;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_PARALLELISM;
 
 import org.apiguardian.api.API;
+import org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy;
 
 /**
  * Collection of constants related to the {@link JupiterTestEngine}.
@@ -86,7 +90,14 @@ public final class Constants {
 	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
 
 	public static final String PARALLEL_EXECUTION_ENABLED = "junit.jupiter.execution.parallel.enabled";
-	public static final String PARALLEL_EXECUTION_LEVEL = "junit.jupiter.execution.parallel.level";
+
+	public static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel.config";
+	public static final String PARALLEL_CONFIG_STRATEGY = PARALLEL_CONFIG_PREFIX + "."
+			+ DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY;
+	public static final String PARALLEL_CONFIG_FIXED_PARALLELISM = PARALLEL_CONFIG_PREFIX + "."
+			+ CONFIG_FIXED_PARALLELISM;
+	public static final String PARALLEL_CONFIG_DYNAMIC_FACTOR = PARALLEL_CONFIG_PREFIX + "." + CONFIG_DYNAMIC_FACTOR;
+	public static final String PARALLEL_CONFIG_CUSTOM_CLASS = PARALLEL_CONFIG_PREFIX + "." + CONFIG_CUSTOM_CLASS;
 
 	private Constants() {
 		/* no-op */

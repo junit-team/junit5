@@ -11,8 +11,8 @@
 package org.junit.jupiter.engine;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_PREFIX;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED;
-import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_LEVEL;
 
 import java.util.Optional;
 
@@ -71,8 +71,7 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
 		ConfigurationParameters config = request.getConfigurationParameters();
 		if (config.getBoolean(PARALLEL_EXECUTION_ENABLED).orElse(false)) {
-			Optional<Integer> parallelismLevel = config.get(PARALLEL_EXECUTION_LEVEL).map(Integer::valueOf);
-			return new ForkJoinPoolHierarchicalTestExecutorService(parallelismLevel);
+			return new ForkJoinPoolHierarchicalTestExecutorService(PARALLEL_CONFIG_PREFIX, config);
 		}
 		return super.createExecutorService(request);
 	}

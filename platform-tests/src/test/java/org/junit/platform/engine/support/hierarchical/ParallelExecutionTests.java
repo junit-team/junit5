@@ -15,8 +15,9 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED;
-import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_LEVEL;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -261,7 +262,8 @@ class ParallelExecutionTests {
 		LauncherDiscoveryRequest discoveryRequest = request()
 				.selectors(selectClass(testClass))
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED, String.valueOf(true))
-				.configurationParameter(PARALLEL_EXECUTION_LEVEL, String.valueOf(3))
+				.configurationParameter(PARALLEL_CONFIG_STRATEGY, "fixed")
+				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM, String.valueOf(3))
 				.build();
 		// @formatter:on
 		return ExecutionEventRecorder.execute(new JupiterTestEngine(), discoveryRequest);
