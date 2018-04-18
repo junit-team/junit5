@@ -19,12 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
+import static org.junit.platform.engine.test.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.engine.test.ExecutionEventConditions.event;
+import static org.junit.platform.engine.test.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.ExecutionEventConditions.test;
+import static org.junit.platform.engine.test.TestExecutionResultConditions.isA;
+import static org.junit.platform.engine.test.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.AnnotatedElement;
@@ -39,7 +39,7 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.engine.test.ExecutionGraph;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.mockito.Mockito;
 
@@ -53,15 +53,15 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeSimpleTestCases() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(SimpleTestCases.class)).build();
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
 		assertAll("Summary of simple test cases run", //
-			() -> assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started"), //
-			() -> assertEquals(1, eventRecorder.getTestSkippedCount(), "# tests skipped"), //
-			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests started") //
+			() -> assertEquals(3, executionGraph.getTestStartedCount(), "# tests started"), //
+			() -> assertEquals(1, executionGraph.getTestSkippedCount(), "# tests skipped"), //
+			() -> assertEquals(1, executionGraph.getTestFailedCount(), "# tests started") //
 		);
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionGraph.getFailedTestFinishedEvents(), //
 			event(test("syntaxError"), //
 				finishedWithFailure( //
 					allOf( //

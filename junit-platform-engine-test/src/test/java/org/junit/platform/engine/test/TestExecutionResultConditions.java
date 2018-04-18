@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.test.event;
+package org.junit.platform.engine.test;
 
 import static java.util.function.Predicate.isEqual;
 import static org.junit.platform.commons.util.FunctionUtils.where;

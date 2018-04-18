@@ -29,7 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.engine.test.ExecutionGraph;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
@@ -174,10 +174,10 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 		callSequence.clear();
 		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(testsStarted, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(testsSuccessful, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(testsStarted, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(testsSuccessful, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
 
 		assertEquals(asList(expectedCalls), callSequence, () -> "wrong call sequence for " + testClass.getName());
 	}

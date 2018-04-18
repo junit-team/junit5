@@ -25,7 +25,7 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition.SystemProperty;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.engine.test.ExecutionGraph;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
@@ -54,21 +54,21 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	void conditionWorksOnContainer() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithExecutionConditionOnClass.class)).build();
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(1, eventRecorder.getContainerSkippedCount(), "# container skipped");
-		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionGraph.getContainerSkippedCount(), "# container skipped");
+		assertEquals(0, executionGraph.getTestStartedCount(), "# tests started");
 	}
 
 	@Test
 	void conditionWorksOnTest() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithExecutionConditionOnMethods.class)).build();
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(3, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(2, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(2, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(3, executionGraph.getTestSkippedCount(), "# tests skipped");
 	}
 
 	@Test
@@ -118,7 +118,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 				.build();
 		// @formatter:on
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph eventRecorder = executeTests(request).getExecutionGraph();
 
 		assertEquals(0, eventRecorder.getContainerSkippedCount(), "# containers skipped");
 		assertEquals(2, eventRecorder.getContainerStartedCount(), "# containers started");
@@ -134,7 +134,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 				.build();
 		// @formatter:on
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph eventRecorder = executeTests(request).getExecutionGraph();
 
 		assertEquals(started, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(succeeded, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

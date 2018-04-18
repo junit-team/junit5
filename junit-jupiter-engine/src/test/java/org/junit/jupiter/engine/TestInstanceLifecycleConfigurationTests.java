@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.platform.engine.ConfigurationParameters;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.engine.test.ExecutionGraph;
 import org.junit.platform.launcher.Launcher;
 
 /**
@@ -43,8 +43,8 @@ import org.junit.platform.launcher.Launcher;
  * via {@code @TestInstance} as well as via {@link ConfigurationParameters}
  * supplied to the {@link Launcher} or via a JVM system property.
  *
- * @since 5.0
  * @see TestInstanceLifecycleTests
+ * @since 5.0
  */
 class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineTests {
 
@@ -126,19 +126,19 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 			int failedContainers, int tests, String... methods) {
 
 		// @formatter:off
-		ExecutionEventRecorder eventRecorder = executeTests(
+		ExecutionGraph executionsReport = executeTests(
 			request()
 				.selectors(selectClass(testClass))
 				.configurationParameters(configParams)
 				.build()
-		);
+		).getExecutionGraph();
 
 		assertAll(
-			() -> assertEquals(containers, eventRecorder.getContainerStartedCount(), "# containers started"),
-			() -> assertEquals(containers, eventRecorder.getContainerFinishedCount(), "# containers finished"),
-			() -> assertEquals(failedContainers, eventRecorder.getContainerFailedCount(), "# containers failed"),
-			() -> assertEquals(tests, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(tests, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(containers, executionsReport.getContainerStartedCount(), "# containers started"),
+			() -> assertEquals(containers, executionsReport.getContainerFinishedCount(), "# containers finished"),
+			() -> assertEquals(failedContainers, executionsReport.getContainerFailedCount(), "# containers failed"),
+			() -> assertEquals(tests, executionsReport.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(tests, executionsReport.getTestSuccessfulCount(), "# tests succeeded"),
 			() -> assertEquals(Arrays.asList(methods), methodsInvoked)
 		);
 		// @formatter:on
@@ -154,14 +154,14 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 			methodsInvoked.add("beforeAll");
 		}
 
-		@Test
-		void test() {
-			methodsInvoked.add("test");
-		}
-
 		@AfterAll
 		static void afterAllStatic() {
 			methodsInvoked.add("afterAll");
+		}
+
+		@Test
+		void test() {
+			methodsInvoked.add("test");
 		}
 
 	}
@@ -178,14 +178,14 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 			methodsInvoked.add("beforeAll");
 		}
 
-		@Test
-		void test() {
-			methodsInvoked.add("test");
-		}
-
 		@AfterAll
 		static void afterAllStatic() {
 			methodsInvoked.add("afterAll");
+		}
+
+		@Test
+		void test() {
+			methodsInvoked.add("test");
 		}
 
 	}

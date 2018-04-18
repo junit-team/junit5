@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.engine.test.ExecutionGraph;
 
 class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 
@@ -47,6 +47,17 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 		assertThat(engineExtensionContext.orElse(null).getParent()).isEmpty();
 	}
 
+	@Test
+	void twoTestClassesCanShareStateViaEngineExtensionContext() {
+		Parent.counter.set(0);
+
+		ExecutionGraph executionGraph = executeTests(
+			request().selectors(selectClass(A.class), selectClass(B.class)).build()).getExecutionGraph();
+
+		assertThat(executionGraph.getTestFinishedCount()).isEqualTo(2);
+		assertThat(Parent.counter).hasValue(1);
+	}
+
 	static class ExtensionContextParameterResolver implements ParameterResolver {
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
@@ -59,17 +70,6 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 				throws ParameterResolutionException {
 			return extensionContext;
 		}
-	}
-
-	@Test
-	void twoTestClassesCanShareStateViaEngineExtensionContext() {
-		Parent.counter.set(0);
-
-		ExecutionEventRecorder eventRecorder = executeTests(
-			request().selectors(selectClass(A.class), selectClass(B.class)).build());
-
-		assertThat(eventRecorder.getTestFinishedCount()).isEqualTo(2);
-		assertThat(Parent.counter).hasValue(1);
 	}
 
 	@ExtendWith(OnlyIncrementCounterOnce.class)

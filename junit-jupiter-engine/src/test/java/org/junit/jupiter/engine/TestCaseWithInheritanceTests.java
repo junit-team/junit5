@@ -26,7 +26,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.engine.test.ExecutionGraph;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
@@ -49,13 +49,13 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeAllTestsInClass() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(LocalTestCase.class);
+		ExecutionGraph executionGraph = executeTestsForClass(LocalTestCase.class).getExecutionGraph();
 
-		assertEquals(6, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(3, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(1, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(2, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(6, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(3, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped");
+		assertEquals(1, executionGraph.getTestAbortedCount(), "# tests aborted");
+		assertEquals(2, executionGraph.getTestFailedCount(), "# tests failed");
 
 		assertEquals(6, LocalTestCase.countBeforeInvoked, "# before calls");
 		assertEquals(6, LocalTestCase.countAfterInvoked, "# after calls");
@@ -68,26 +68,26 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(LocalTestCase.class, "alwaysPasses")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void executeTestDeclaredInSuperClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, "superTest")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed");
 
 		assertEquals(1, LocalTestCase.countBeforeInvoked, "# after calls");
 		assertEquals(1, LocalTestCase.countAfterInvoked, "# after calls");
@@ -101,43 +101,43 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(LocalTestCase.class, "throwExceptionInAfterMethod")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(0, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, executionGraph.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void beforeAndAfterMethodsInTestClassHierarchy() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCase3.class);
+		ExecutionGraph executionGraph = executeTestsForClass(TestCase3.class).getExecutionGraph();
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped"),
-			() -> assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted"),
-			() -> assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed")
+			() -> assertEquals(1, executionGraph.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped"),
+			() -> assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted"),
+			() -> assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed")
 		);
 		// @formatter:on
 
 		// @formatter:off
 		assertEquals(asList(
 			"beforeAll1",
-				"beforeAll2",
-					"beforeAll3",
-						"beforeEach1",
-							"beforeEach2",
-								"beforeEach3",
-									"test3",
-								"afterEach3",
-							"afterEach2",
-						"afterEach1",
-					"afterAll3",
-				"afterAll2",
+			"beforeAll2",
+			"beforeAll3",
+			"beforeEach1",
+			"beforeEach2",
+			"beforeEach3",
+			"test3",
+			"afterEach3",
+			"afterEach2",
+			"afterEach1",
+			"afterAll3",
+			"afterAll2",
 			"afterAll1"
 		), callSequence, "wrong call sequence");
 		// @formatter:on
@@ -168,10 +168,9 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	static class LocalTestCase extends AbstractTestCase {
 
-		boolean throwExceptionInAfterMethod = false;
-
 		static int countBeforeInvoked = 0;
 		static int countAfterInvoked = 0;
+		boolean throwExceptionInAfterMethod = false;
 
 		@BeforeEach
 		void before() {
@@ -222,6 +221,11 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 			callSequence.add("beforeAll1");
 		}
 
+		@AfterAll
+		static void afterAll1() {
+			callSequence.add("afterAll1");
+		}
+
 		@BeforeEach
 		void beforeEach1() {
 			callSequence.add("beforeEach1");
@@ -231,11 +235,6 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		void afterEach1() {
 			callSequence.add("afterEach1");
 		}
-
-		@AfterAll
-		static void afterAll1() {
-			callSequence.add("afterAll1");
-		}
 	}
 
 	static class TestCase2 extends TestCase1 {
@@ -243,6 +242,11 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		@BeforeAll
 		static void beforeAll2() {
 			callSequence.add("beforeAll2");
+		}
+
+		@AfterAll
+		static void afterAll2() {
+			callSequence.add("afterAll2");
 		}
 
 		@BeforeEach
@@ -254,11 +258,6 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		void afterEach2() {
 			callSequence.add("afterEach2");
 		}
-
-		@AfterAll
-		static void afterAll2() {
-			callSequence.add("afterAll2");
-		}
 	}
 
 	static class TestCase3 extends TestCase2 {
@@ -266,6 +265,11 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		@BeforeAll
 		static void beforeAll3() {
 			callSequence.add("beforeAll3");
+		}
+
+		@AfterAll
+		static void afterAll3() {
+			callSequence.add("afterAll3");
 		}
 
 		@BeforeEach
@@ -281,11 +285,6 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 		@AfterEach
 		void afterEach3() {
 			callSequence.add("afterEach3");
-		}
-
-		@AfterAll
-		static void afterAll3() {
-			callSequence.add("afterAll3");
 		}
 	}
 

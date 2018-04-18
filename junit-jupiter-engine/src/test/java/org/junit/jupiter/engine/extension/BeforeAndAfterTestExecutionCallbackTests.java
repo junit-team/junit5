@@ -32,7 +32,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.engine.test.ExecutionGraph;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
@@ -59,13 +59,13 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	void beforeAndAfterTestExecutionCallbacks() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(2, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(
@@ -100,7 +100,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	void beforeAndAfterTestExecutionCallbacksDeclaredOnSuperclassAndSubclass() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(ChildTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph eventRecorder = executeTests(request).getExecutionGraph();
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -123,7 +123,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	void beforeAndAfterTestExecutionCallbacksDeclaredOnInterfaceAndClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(TestInterfaceTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph eventRecorder = executeTests(request).getExecutionGraph();
 
 		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -157,7 +157,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInBeforeEachMethodTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph eventRecorder = executeTests(request).getExecutionGraph();
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -184,7 +184,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInBeforeTestExecutionCallbackTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph eventRecorder = executeTests(request).getExecutionGraph();
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -215,7 +215,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInAfterTestExecutionCallbackTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph eventRecorder = executeTests(request).getExecutionGraph();
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -246,7 +246,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInTestMethodTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph eventRecorder = executeTests(request).getExecutionGraph();
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
