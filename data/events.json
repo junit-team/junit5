@@ -430,6 +430,16 @@
     ]
   },
   {
+    "title": "JUnit, give me five!",
+    "event": "Heisenbug Conference",
+    "date": "2018-05-17",
+    "location": "St. Petersburg, Russia",
+    "link": "https://heisenbug-piter.ru/en/talks/2018/spb/sncgtn5gisoswks6owgwq/",
+    "speakers": [
+      "dtuchs"
+    ]
+  },
+  {
     "title": "Welcome to JUnit 5",
     "event": "Spring IO",
     "date": "2018-05-24",
