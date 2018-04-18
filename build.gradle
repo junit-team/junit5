@@ -18,7 +18,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.gradle.build-scan' version '1.13'
+	id 'com.gradle.build-scan' version '1.13.1'
 	id 'net.nemerosa.versioning' version '2.6.1'
 }
 
