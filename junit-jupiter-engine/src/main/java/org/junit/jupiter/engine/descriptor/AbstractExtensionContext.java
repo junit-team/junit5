@@ -114,7 +114,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@Override
 	public Set<String> getTags() {
 		// return modifiable copy
-		return new LinkedHashSet<String>(this.tags);
+		return new LinkedHashSet<>(this.tags);
 	}
 
 	@Override

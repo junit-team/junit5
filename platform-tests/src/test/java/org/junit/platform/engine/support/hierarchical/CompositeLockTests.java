@@ -33,6 +33,7 @@ import org.mockito.InOrder;
 class CompositeLockTests {
 
 	@Test
+	@SuppressWarnings("resource")
 	void acquiresAllLocksInOrder() throws Exception {
 		ReentrantLock lock1 = spy(new ReentrantLock());
 		ReentrantLock lock2 = spy(new ReentrantLock());
@@ -47,6 +48,7 @@ class CompositeLockTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void releasesAllLocksInReverseOrder() throws Exception {
 		ReentrantLock lock1 = spy(new ReentrantLock());
 		ReentrantLock lock2 = spy(new ReentrantLock());
@@ -61,6 +63,7 @@ class CompositeLockTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void releasesLocksInReverseOrderWhenInterruptedDuringAcquire() throws Exception {
 		CountDownLatch firstTwoLocksWereLocked = new CountDownLatch(2);
 		Lock firstLock = mockLock("firstLock", firstTwoLocksWereLocked);
@@ -95,4 +98,5 @@ class CompositeLockTests {
 		}).when(lock).lockInterruptibly();
 		return lock;
 	}
+
 }

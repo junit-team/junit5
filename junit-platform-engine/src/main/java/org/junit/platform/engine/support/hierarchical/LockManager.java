@@ -46,6 +46,7 @@ class LockManager {
 				.distinct()
 				.sorted(COMPARATOR)
 				.collect(groupingBy(ExclusiveResource::getKey, LinkedHashMap::new, toList()));
+
 		return resourcesByKey.values().stream()
 				.map(resourcesWithSameKey -> resourcesWithSameKey.get(0))
 				.map(resource -> {

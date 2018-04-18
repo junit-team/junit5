@@ -12,7 +12,7 @@ package org.junit.jupiter.params.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.params.provider.MethodArgumentsProviderTests.TestCaseDefaultValue.TEST_METHOD;
+import static org.junit.jupiter.params.provider.MethodArgumentsProviderTests.DefaultFactoryMethodNameTestCase.TEST_METHOD;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
@@ -21,8 +21,11 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Nested;
@@ -38,10 +41,39 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class MethodArgumentsProviderTests {
 
 	@Test
+	void throwsExceptionForIllegalReturnType() {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments("providerWithIllegalReturnType").toArray());
+
+		assertThat(exception).hasMessageContaining("Cannot convert instance of java.lang.Integer into a Stream");
+	}
+
+	@Test
 	void providesArgumentsUsingStream() {
 		Stream<Object[]> arguments = provideArguments("stringStreamProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
+	}
+
+	@Test
+	void providesArgumentsUsingDoubleStream() {
+		var arguments = provideArguments("doubleStreamProvider");
+
+		assertThat(arguments).containsExactly(array(1.2), array(3.4));
+	}
+
+	@Test
+	void providesArgumentsUsingLongStream() {
+		var arguments = provideArguments("longStreamProvider");
+
+		assertThat(arguments).containsExactly(array(1L), array(2L));
+	}
+
+	@Test
+	void providesArgumentsUsingIntStream() {
+		var arguments = provideArguments("intStreamProvider");
+
+		assertThat(arguments).containsExactly(array(1), array(2));
 	}
 
 	@Test
@@ -66,14 +98,6 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void throwsExceptionForIllegalReturnType() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments("providerWithIllegalReturnType").toArray());
-
-		assertThat(exception).hasMessageContaining("Cannot convert instance of java.lang.Integer into a Stream");
-	}
-
-	@Test
 	void providesArgumentsUsingArgumentsStream() {
 		Stream<Object[]> arguments = provideArguments("argumentsStreamProvider");
 
@@ -81,8 +105,15 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void providesArgumentsUsingObjectArrays() {
-		Stream<Object[]> arguments = provideArguments("objectArrayProvider");
+	void providesArgumentsUsingIterableOfObjectArrays() {
+		Stream<Object[]> arguments = provideArguments("objectArrayIterableProvider");
+
+		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
+	}
+
+	@Test
+	void providesArgumentsUsingListOfObjectArrays() {
+		var arguments = provideArguments("objectArrayListProvider");
 
 		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
 	}
@@ -113,9 +144,10 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void providesArgumentsUsingDefaultValue() {
-		Stream<Object[]> arguments = provideArguments(TestCaseDefaultValue.class,
-			selectMethod(TestCaseDefaultValue.class, TEST_METHOD, String.class.getName()).getJavaMethod(), false, "");
+	void providesArgumentsUsingDefaultFactoryMethodName() {
+		Method method = selectMethod(DefaultFactoryMethodNameTestCase.class, TEST_METHOD,
+			String.class.getName()).getJavaMethod();
+		Stream<Object[]> arguments = provideArguments(DefaultFactoryMethodNameTestCase.class, method, false, "");
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
 
@@ -238,6 +270,27 @@ class MethodArgumentsProviderTests {
 
 	}
 
+	@Nested
+	class ObjectArrays {
+
+		@Test
+		void providesArgumentsUsingObjectArray() {
+			Stream<Object[]> arguments = provideArguments("objectArrayProvider");
+
+			assertThat(arguments).containsExactly(array(42), array("bar"));
+		}
+
+		@Test
+		void providesArgumentsUsing2dObjectArray() {
+			Stream<Object[]> arguments = provideArguments("twoDimensionalObjectArrayProvider");
+
+			assertThat(arguments).containsExactly(array(42, "bar"), array("foo", 'A'));
+		}
+
+	}
+
+	// -------------------------------------------------------------------------
+
 	private static Object[] array(Object... objects) {
 		return objects;
 	}
@@ -269,25 +322,69 @@ class MethodArgumentsProviderTests {
 
 	// -------------------------------------------------------------------------
 
-	static class TestCaseDefaultValue {
+	static class DefaultFactoryMethodNameTestCase {
 
-		static final String TEST_METHOD = "testDefaultValue";
+		static final String TEST_METHOD = "testDefaultFactoryMethodName";
 
-		static Stream<String> testDefaultValue() {
+		static Stream<String> testDefaultFactoryMethodName() {
 			return Stream.of("foo", "bar");
 		}
 
-		public void testDefaultValue(String param) {
+		void testDefaultFactoryMethodName(String param) {
 		}
 	}
 
 	static class TestCase {
 
-		static AtomicBoolean collectionStreamClosed = new AtomicBoolean(false);
+		// --- Invalid ---------------------------------------------------------
+
+		static Object providerWithIllegalReturnType() {
+			return -1;
+		}
+
+		// --- Stream ----------------------------------------------------------
 
 		static Stream<String> stringStreamProvider() {
 			return Stream.of("foo", "bar");
 		}
+
+		static DoubleStream doubleStreamProvider() {
+			return DoubleStream.of(1.2, 3.4);
+		}
+
+		static LongStream longStreamProvider() {
+			return LongStream.of(1L, 2L);
+		}
+
+		static IntStream intStreamProvider() {
+			return IntStream.of(1, 2);
+		}
+
+		static Stream<Arguments> argumentsStreamProvider() {
+			return Stream.of("foo", "bar").map(Arguments::of);
+		}
+
+		// --- Iterable / Collection -------------------------------------------
+
+		static Iterable<String> stringIterableProvider() {
+			return TestCase::stringIteratorProvider;
+		}
+
+		static Iterable<Object[]> objectArrayIterableProvider() {
+			return objectArrayListProvider();
+		}
+
+		static List<Object[]> objectArrayListProvider() {
+			return Arrays.asList(array("foo", 42), array("bar", 23));
+		}
+
+		// --- Iterator --------------------------------------------------------
+
+		static Iterator<String> stringIteratorProvider() {
+			return Arrays.asList("foo", "bar").iterator();
+		}
+
+		// --- Array of primitives ---------------------------------------------
 
 		static boolean[] booleanArrayProvider() {
 			return new boolean[] { true, false };
@@ -321,25 +418,16 @@ class MethodArgumentsProviderTests {
 			return new short[] { (short) 47, Short.MIN_VALUE };
 		}
 
-		static Iterable<String> stringIterableProvider() {
-			return TestCase::stringIteratorProvider;
+		// --- Array of objects ------------------------------------------------
+
+		static Object[] objectArrayProvider() {
+			return new Object[] { 42, "bar" };
 		}
 
-		static Iterator<String> stringIteratorProvider() {
-			return Arrays.asList("foo", "bar").iterator();
+		static Object[][] twoDimensionalObjectArrayProvider() {
+			return new Object[][] { { 42, "bar" }, { "foo", 'A' } };
 		}
 
-		static Object providerWithIllegalReturnType() {
-			return -1;
-		}
-
-		static Stream<Arguments> argumentsStreamProvider() {
-			return Stream.of("foo", "bar").map(Arguments::of);
-		}
-
-		static Iterable<Object[]> objectArrayProvider() {
-			return Arrays.asList(array("foo", 42), array("bar", 23));
-		}
 	}
 
 	// This test case mimics @TestInstance(Lifecycle.PER_CLASS)
@@ -366,7 +454,6 @@ class MethodArgumentsProviderTests {
 				return Stream.of("nested string1", "nested string2");
 			}
 		}
-
 	}
 
 }

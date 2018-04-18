@@ -44,10 +44,11 @@ public interface Node<C extends EngineExecutionContext> {
 	}
 
 	/**
-	 * Cleanup the supplied {@code context} after execution.
+	 * Clean up the supplied {@code context} after execution.
 	 *
 	 * <p>The default implementation does nothing.
 	 *
+	 * @param context the context to execute in
 	 * @since 1.1
 	 * @see #prepare(EngineExecutionContext)
 	 */
@@ -70,11 +71,13 @@ public interface Node<C extends EngineExecutionContext> {
 	 * <p>This method will be called once <em>before</em> {@linkplain #execute
 	 * execution} of this node.
 	 *
-	 * @param context the context to execute in
-	 * @return the new context to be used for children of this node
+	 * <p>The default implementation returns the supplied {@code context} unmodified.
 	 *
-	 * @see #execute
-	 * @see #after
+	 * @param context the context to execute in
+	 * @return the new context to be used for children of this node; never
+	 * {@code null}
+	 * @see #execute(EngineExecutionContext, DynamicTestExecutor)
+	 * @see #after(EngineExecutionContext)
 	 */
 	default C before(C context) throws Exception {
 		return context;
@@ -89,11 +92,12 @@ public interface Node<C extends EngineExecutionContext> {
 	 * <p>The supplied {@code dynamicTestExecutor} may be used to submit
 	 * additional dynamic tests for immediate execution.
 	 *
+	 * <p>The default implementation returns the supplied {@code context} unmodified.
+	 *
 	 * @param context the context to execute in
 	 * @param dynamicTestExecutor the executor to submit dynamic tests to
 	 * @return the new context to be used for children of this node and for the
 	 * <em>after</em> behavior of the parent of this node, if any
-	 *
 	 * @see #before
 	 * @see #after
 	 */
@@ -107,8 +111,9 @@ public interface Node<C extends EngineExecutionContext> {
 	 * <p>This method will be called once <em>after</em> {@linkplain #execute
 	 * execution} of this node.
 	 *
-	 * @param context the context to execute in
+	 * <p>The default implementation does nothing.
 	 *
+	 * @param context the context to execute in
 	 * @see #before
 	 * @see #execute
 	 */
@@ -116,13 +121,15 @@ public interface Node<C extends EngineExecutionContext> {
 	}
 
 	/**
-	 * Get the set of {@linkplain ExclusiveResource resources} required to
-	 * execute this node.
+	 * Get the set of {@linkplain ExclusiveResource exclusive resources}
+	 * required to execute this node.
 	 *
-	 * @return the set of resources required by this node; never {@code null}
-	 * but potentially empty
-	 * @see ExclusiveResource
+	 * <p>The default implementation returns an empty set.
+	 *
+	 * @return the set of exclusive resources required by this node; never
+	 * {@code null} but potentially empty
 	 * @since 1.3
+	 * @see ExclusiveResource
 	 */
 	@API(status = EXPERIMENTAL, since = "1.3", consumers = "org.junit.platform.engine.support.hierarchical")
 	default Set<ExclusiveResource> getExclusiveResources() {
@@ -133,9 +140,11 @@ public interface Node<C extends EngineExecutionContext> {
 	 * Get the preferred of {@linkplain ExecutionMode execution mode} for
 	 * parallel execution of this node.
 	 *
+	 * <p>The default implementation returns {@link ExecutionMode#CONCURRENT}.
+	 *
 	 * @return the preferred execution mode of this node; never {@code null}
-	 * @see ExecutionMode
 	 * @since 1.3
+	 * @see ExecutionMode
 	 */
 	@API(status = EXPERIMENTAL, since = "1.3", consumers = "org.junit.platform.engine.support.hierarchical")
 	default ExecutionMode getExecutionMode() {
@@ -160,7 +169,8 @@ public interface Node<C extends EngineExecutionContext> {
 		 *
 		 * <p>A context that is skipped will be not be executed.
 		 *
-		 * @param reason the reason why the context should be skipped
+		 * @param reason the reason that the context should be skipped,
+		 * may be {@code null}
 		 * @return a skipped {@code SkipResult} with the given reason
 		 */
 		public static SkipResult skip(String reason) {
@@ -193,7 +203,7 @@ public interface Node<C extends EngineExecutionContext> {
 		}
 
 		/**
-		 * Get the reason why execution of the context should be skipped,
+		 * Get the reason that execution of the context should be skipped,
 		 * if available.
 		 */
 		public Optional<String> getReason() {
@@ -209,6 +219,7 @@ public interface Node<C extends EngineExecutionContext> {
 					.toString();
 			// @formatter:on
 		}
+
 	}
 
 	/**
@@ -237,19 +248,25 @@ public interface Node<C extends EngineExecutionContext> {
 	/**
 	 * Supported execution modes for parallel execution.
 	 *
-	 * @see Node#getExecutionMode()
 	 * @since 1.3
+	 * @see #SAME_THREAD
+	 * @see #CONCURRENT
+	 * @see Node#getExecutionMode()
 	 */
 	@API(status = EXPERIMENTAL, since = "1.3", consumers = "org.junit.platform.engine.support.hierarchical")
 	enum ExecutionMode {
 
 		/**
 		 * Force execution in same thread as the parent node.
+		 *
+		 * @see #CONCURRENT
 		 */
 		SAME_THREAD,
 
 		/**
 		 * Allow concurrent execution with any other node.
+		 *
+		 * @see #SAME_THREAD
 		 */
 		CONCURRENT
 	}

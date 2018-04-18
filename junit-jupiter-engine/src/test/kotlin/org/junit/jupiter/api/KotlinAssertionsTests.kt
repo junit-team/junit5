@@ -89,9 +89,9 @@ class KotlinAssertionsTests {
     companion object {
         fun assertExpectedExceptionTypes(
             multipleFailuresError: MultipleFailuresError,
-            vararg exceptionTypes: KClass<out Throwable>) =
+            vararg exceptionTypes: KClass<out Throwable>
+        ) =
             AssertAllAssertionsTests.assertExpectedExceptionTypes(
                 multipleFailuresError, *exceptionTypes.map { it.java }.toTypedArray())
     }
-
 }

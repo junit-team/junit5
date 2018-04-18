@@ -20,8 +20,8 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @Execution} is used to configure the parallel execution mode of a test
- * class or test method.
+ * {@code @Execution} is used to configure the parallel execution
+ * {@linkplain #value mode} of a test class or test method.
  *
  * @see Resources
  * @see ResourceAccessMode

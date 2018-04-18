@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -132,6 +133,20 @@ public class ExtensionRegistry {
 	}
 
 	/**
+	 * Get the parent of this {@code ExtensionRegistry}.
+	 *
+	 * <p><strong>WARNING:</strong> accessing the parent directly is typically
+	 * unnecessary unless you are explicitly working with {@linkplain
+	 * #getLocalExtensions(Class) local extensions}.
+	 *
+	 * @return the parent registry or {@code null} if no parent exists
+	 * @since 5.3
+	 */
+	public ExtensionRegistry getParent() {
+		return this.parent;
+	}
+
+	/**
 	 * Stream all {@code Extensions} of the specified type that are present
 	 * in this registry or one of its ancestors.
 	 *
@@ -168,11 +183,29 @@ public class ExtensionRegistry {
 	 * in this registry or one of its ancestors.
 	 *
 	 * @param extensionType the type of {@link Extension} to get
+	 * @see #getLocalExtensions(Class)
 	 * @see #getReversedExtensions(Class)
 	 * @see #stream(Class)
 	 */
 	public <E extends Extension> List<E> getExtensions(Class<E> extensionType) {
-		return stream(extensionType).collect(toList());
+		return stream(extensionType).collect(toCollection(ArrayList::new));
+	}
+
+	/**
+	 * Get all {@code Extensions} of the specified type that are present
+	 * in this registry, ignoring those present in one of its ancestors.
+	 *
+	 * <p><strong>WARNING:</strong> you typically need to invoke
+	 * {@link #getExtensions(Class)} instead of this method.
+	 *
+	 * @param extensionType the type of {@link Extension} to get
+	 * @since 5.3
+	 * @see #getExtensions(Class)
+	 * @see #getReversedExtensions(Class)
+	 * @see #stream(Class)
+	 */
+	public <E extends Extension> List<E> getLocalExtensions(Class<E> extensionType) {
+		return streamLocal(extensionType).collect(toCollection(ArrayList::new));
 	}
 
 	/**

@@ -38,9 +38,9 @@ public abstract class SimpleArgumentConverter implements ArgumentConverter {
 	 * @param targetType the target type the source object should be converted
 	 * into; never {@code null}
 	 * @return the converted object; may be {@code null} but only if the target
-	 * type is a reference type.
+	 * type is a reference type
 	 * @throws ArgumentConversionException in case an error occurs during the
-	 * conversion.
+	 * conversion
 	 */
 	protected abstract Object convert(Object source, Class<?> targetType) throws ArgumentConversionException;
 

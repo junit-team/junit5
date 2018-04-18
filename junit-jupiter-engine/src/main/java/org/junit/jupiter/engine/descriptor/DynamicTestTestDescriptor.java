@@ -41,4 +41,5 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 		executeAndMaskThrowable(dynamicTest.getExecutable());
 		return context;
 	}
+
 }

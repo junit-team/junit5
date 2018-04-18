@@ -63,20 +63,24 @@ class FilePositionTests extends AbstractTestSourceTests {
 		assertThat(filePosition.getColumn()).contains(99);
 	}
 
+	/**
+	 * @since 1.3
+	 */
 	@ParameterizedTest
 	@MethodSource
 	void filePositionFromQuery(String query, int expectedLine, int expectedColumn) {
 		Optional<FilePosition> optionalFilePosition = FilePosition.fromQuery(query);
+
 		if (optionalFilePosition.isPresent()) {
 			FilePosition filePosition = optionalFilePosition.get();
 
 			assertThat(filePosition.getLine()).isEqualTo(expectedLine);
 			assertThat(filePosition.getColumn().orElse(-1)).isEqualTo(expectedColumn);
-			return;
 		}
-
-		assertEquals(-1, expectedLine);
-		assertEquals(-1, expectedColumn);
+		else {
+			assertEquals(-1, expectedColumn);
+			assertEquals(-1, expectedLine);
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -86,9 +90,13 @@ class FilePositionTests extends AbstractTestSourceTests {
 			arguments("?!", -1, -1), //
 			arguments("line=ZZ", -1, -1), //
 			arguments("line=42", 42, -1), //
-			arguments("line=42&line=24", 24, -1), //
 			arguments("line=42&column=99", 42, 99), //
-			arguments("line=42&column=ZZ", 42, -1) //
+			arguments("line=42&column=ZZ", 42, -1), //
+			arguments("line=42&abc=xyz&column=99", 42, 99), //
+			arguments("1=3&foo=X&line=42&abc=xyz&column=99&enigma=393939", 42, 99), //
+			// First one wins:
+			arguments("line=42&line=555", 42, -1), //
+			arguments("line=42&line=555&column=99&column=555", 42, 99) //
 		);
 	}
 

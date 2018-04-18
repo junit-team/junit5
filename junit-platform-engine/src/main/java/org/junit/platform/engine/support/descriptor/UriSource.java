@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestSource;
 
 /**
@@ -58,22 +57,17 @@ public interface UriSource extends TestSource {
 		Preconditions.notNull(uri, "URI must not be null");
 
 		try {
-			URI pathBasedUriWithoutQuery = uri;
-			String query = uri.getQuery();
-			if (StringUtils.isNotBlank(query)) {
-				String uriAsString = uri.toString();
-				pathBasedUriWithoutQuery = URI.create(uriAsString.substring(0, uriAsString.indexOf('?')));
-			}
-			Path path = Paths.get(pathBasedUriWithoutQuery);
+			URI uriWithoutQuery = ResourceUtils.stripQueryComponent(uri);
+			Path path = Paths.get(uriWithoutQuery);
 			if (Files.isRegularFile(path)) {
-				return FileSource.from(path.toFile(), FilePosition.fromQuery(query).orElse(null));
+				return FileSource.from(path.toFile(), FilePosition.fromQuery(uri.getQuery()).orElse(null));
 			}
 			if (Files.isDirectory(path)) {
 				return DirectorySource.from(path.toFile());
 			}
 		}
-		catch (RuntimeException e) {
-			LoggerFactory.getLogger(UriSource.class).debug(e, () -> String.format(
+		catch (RuntimeException ex) {
+			LoggerFactory.getLogger(UriSource.class).debug(ex, () -> String.format(
 				"The supplied URI [%s] is not path-based. Falling back to default UriSource implementation.", uri));
 		}
 

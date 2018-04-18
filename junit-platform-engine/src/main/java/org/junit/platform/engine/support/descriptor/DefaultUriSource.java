@@ -10,12 +10,9 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static org.apiguardian.api.API.Status.STABLE;
-
 import java.net.URI;
 import java.util.Objects;
 
-import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -24,7 +21,6 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 1.3
  */
-@API(status = STABLE, since = "1.3")
 class DefaultUriSource implements UriSource {
 
 	private static final long serialVersionUID = 1L;

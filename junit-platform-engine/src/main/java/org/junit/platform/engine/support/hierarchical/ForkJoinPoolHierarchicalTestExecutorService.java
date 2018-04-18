@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
-import java.util.concurrent.ForkJoinWorkerThread;
+import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.Future;
 import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +36,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 /**
  * A {@link ForkJoinPool}-based
  * {@linkplain HierarchicalTestExecutorService executor service} that executes
- * {@linkplain TestTask test tasks} with a configured parallelism.
+ * {@linkplain TestTask test tasks} with the configured parallelism.
  *
  * @see ForkJoinPool
  * @see DefaultParallelExecutionConfigurationStrategy
@@ -55,7 +55,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	 */
 	public ForkJoinPoolHierarchicalTestExecutorService(ConfigurationParameters configurationParameters) {
 		forkJoinPool = createForkJoinPool(configurationParameters);
-		LoggerFactory.getLogger(ForkJoinPoolHierarchicalTestExecutorService.class) //
+		LoggerFactory.getLogger(getClass()) //
 				.config(() -> "Using ForkJoinPool with parallelism of " + forkJoinPool.getParallelism());
 	}
 
@@ -70,7 +70,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				Integer.TYPE, Integer.TYPE, Predicate.class, Long.TYPE, TimeUnit.class);
 			return constructor.newInstance(configuration.getParallelism(), defaultForkJoinWorkerThreadFactory, null,
 				false, configuration.getCorePoolSize(), configuration.getMaxPoolSize(),
-				configuration.getMinimumRunnable(), null, configuration.getKeepAlive(), TimeUnit.SECONDS);
+				configuration.getMinimumRunnable(), null, configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
 		}
 		catch (Exception e) {
 			// Fallback for Java 8
@@ -86,7 +86,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			// can use ForkJoinTask API in invokeAll etc.
 			return forkJoinPool.submit(exclusiveTask);
 		}
-		if (testTask.getExecutionMode() == CONCURRENT) {
+		// limit the amount of queued work so we don't consume dynamic tests too eagerly
+		if (testTask.getExecutionMode() == CONCURRENT && ForkJoinTask.getSurplusQueuedTaskCount() < 1) {
 			return exclusiveTask.fork();
 		}
 		exclusiveTask.compute();
@@ -94,9 +95,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	}
 
 	private boolean isAlreadyRunningInForkJoinPool() {
-		Thread currentThread = Thread.currentThread();
-		return currentThread instanceof ForkJoinWorkerThread
-				&& ((ForkJoinWorkerThread) currentThread).getPool() == forkJoinPool;
+		return ForkJoinTask.getPool() == forkJoinPool;
 	}
 
 	@Override
@@ -164,5 +163,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				ExceptionUtils.throwAsUncheckedException(e);
 			}
 		}
+
 	}
+
 }

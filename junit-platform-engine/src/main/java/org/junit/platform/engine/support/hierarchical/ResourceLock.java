@@ -29,8 +29,8 @@ public interface ResourceLock extends AutoCloseable {
 	 *
 	 * @return this lock so it can easily be used in a try-with-resources
 	 * statement.
-	 * @throws InterruptedException when the calling thread is interrupted
-	 * while waiting to acquire this lock.
+	 * @throws InterruptedException if the calling thread is interrupted
+	 * while waiting to acquire this lock
 	 */
 	ResourceLock acquire() throws InterruptedException;
 
@@ -43,4 +43,5 @@ public interface ResourceLock extends AutoCloseable {
 	default void close() {
 		release();
 	}
+
 }

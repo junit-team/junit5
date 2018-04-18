@@ -63,6 +63,7 @@ class CompositeLock implements ResourceLock {
 	}
 
 	private class CompositeLockManagedBlocker implements ForkJoinPool.ManagedBlocker {
+
 		private boolean acquired;
 
 		@Override
@@ -76,5 +77,7 @@ class CompositeLock implements ResourceLock {
 		public boolean isReleasable() {
 			return acquired;
 		}
+
 	}
+
 }

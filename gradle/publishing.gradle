@@ -3,6 +3,10 @@ apply plugin: 'signing'
 
 def isSnapshot = project.version.contains('SNAPSHOT')
 
+// ensure project is built successfully before publishing it
+publish.dependsOn(build)
+publishToMavenLocal.dependsOn(build)
+
 signing {
 	sign publishing.publications
 	required {

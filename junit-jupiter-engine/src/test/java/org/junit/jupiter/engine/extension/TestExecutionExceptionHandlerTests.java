@@ -15,17 +15,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.testkit.ExecutionEventConditions.container;
+import static org.junit.platform.testkit.ExecutionEventConditions.engine;
+import static org.junit.platform.testkit.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.ExecutionEventConditions.started;
+import static org.junit.platform.testkit.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.TestExecutionResultConditions.message;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,8 +38,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.ExecutionRecorder;
 
 /**
  * Integration tests that verify support for {@link TestExecutionExceptionHandler}.
@@ -63,11 +63,11 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void exceptionHandlerRethrowsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testRethrow")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionRecorder executionRecorder = executeTests(request);
 
 		assertTrue(RethrowException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionRecorder.getExecutionGraph().getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testRethrow"), started()), //
@@ -80,11 +80,11 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void exceptionHandlerSwallowsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSwallow")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionRecorder executionRecorder = executeTests(request);
 
 		assertTrue(SwallowException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionRecorder.getExecutionGraph().getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testSwallow"), started()), //
@@ -97,11 +97,11 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void exceptionHandlerConvertsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testConvert")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionRecorder executionRecorder = executeTests(request);
 
 		assertTrue(ConvertException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionRecorder.getExecutionGraph().getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testConvert"), started()), //
@@ -114,14 +114,14 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void severalHandlersAreCalledInOrder() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSeveral")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionRecorder executionRecorder = executeTests(request);
 
 		assertTrue(ConvertException.handleExceptionCalled, "ConvertException should have been called");
 		assertTrue(RethrowException.handleExceptionCalled, "RethrowException should have been called");
 		assertTrue(SwallowException.handleExceptionCalled, "SwallowException should have been called");
 		assertFalse(ShouldNotBeCalled.handleExceptionCalled, "ShouldNotBeCalled should not have been called");
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionRecorder.getExecutionGraph().getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testSeveral"), started()), //

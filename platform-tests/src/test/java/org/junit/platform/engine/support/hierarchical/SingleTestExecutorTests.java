@@ -25,6 +25,7 @@ import org.opentest4j.TestAbortedException;
 /**
  * @since 1.0
  */
+@SuppressWarnings("deprecation")
 class SingleTestExecutorTests {
 
 	@Test

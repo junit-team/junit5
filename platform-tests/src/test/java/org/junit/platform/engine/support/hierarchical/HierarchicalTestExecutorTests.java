@@ -575,6 +575,30 @@ class HierarchicalTestExecutorTests {
 			"Dynamic test descriptors must not declare exclusive resources");
 	}
 
+	@Test
+	void exceptionInAfterIsReportedInsteadOfEarlierTestAbortedException() throws Exception {
+
+		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
+		Exception exceptionInExecute = new TestAbortedException("execute");
+		Exception exceptionInAfter = new RuntimeException("after");
+		doThrow(exceptionInExecute).when(child).execute(eq(rootContext), any());
+		doThrow(exceptionInAfter).when(child).after(eq(rootContext));
+		root.addChild(child);
+
+		InOrder inOrder = inOrder(listener, child);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> childExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(child).execute(eq(rootContext), any());
+		inOrder.verify(child).after(eq(rootContext));
+		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
+
+		assertThat(childExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
+		assertThat(childExecutionResult.getValue().getThrowable().get()).isSameAs(
+			exceptionInAfter).hasSuppressedException(exceptionInExecute);
+	}
+
 	// -------------------------------------------------------------------
 
 	private static class MyEngineExecutionContext implements EngineExecutionContext {
@@ -626,7 +650,8 @@ class HierarchicalTestExecutorTests {
 	private static class MyExecutor extends HierarchicalTestExecutor<MyEngineExecutionContext> {
 
 		MyExecutor(ExecutionRequest request, MyEngineExecutionContext rootContext) {
-			super(request, rootContext, new SameThreadHierarchicalTestExecutorService());
+			super(request, rootContext, new SameThreadHierarchicalTestExecutorService(),
+				OpenTest4JAwareThrowableCollector::new);
 		}
 	}
 

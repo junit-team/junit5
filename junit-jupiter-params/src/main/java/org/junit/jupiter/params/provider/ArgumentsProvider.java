@@ -31,6 +31,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.Arguments
+ * @see org.junit.jupiter.params.support.AnnotationConsumer
  */
 @API(status = EXPERIMENTAL, since = "5.0")
 public interface ArgumentsProvider {

@@ -15,20 +15,26 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 
 /**
- * Supported execution modes for parallel execution.
+ * Supported execution modes for parallel test execution.
  *
  * @since 5.3
+ * @see #SAME_THREAD
+ * @see #CONCURRENT
  */
 @API(status = EXPERIMENTAL, since = "5.3")
 public enum ExecutionMode {
 
 	/**
 	 * Force execution in same thread as the parent node.
+	 *
+	 * @see #CONCURRENT
 	 */
 	SAME_THREAD,
 
 	/**
 	 * Allow concurrent execution with any other node.
+	 *
+	 * @see #SAME_THREAD
 	 */
 	CONCURRENT
 

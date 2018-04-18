@@ -1,6 +1,4 @@
-plugins {
-	id 'java'
-}
+apply from: "$rootDir/gradle/testing.gradle"
 
 // https://github.com/schauder/degraph/issues/87
 degraph.enabled = false
@@ -21,17 +19,15 @@ dependencies {
 	implementation('commons-io:commons-io:2.6') {
 		because 'downloading tool archives and moving/deleting directory trees'
 	}
-
-	testImplementation(project(':junit-jupiter-api'))
-	testImplementation(project(':junit-jupiter-params'))
-	testRuntimeOnly(project(':junit-platform-launcher'))
-	testRuntimeOnly(project(':junit-jupiter-engine'))
 }
 
 test {
 	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
 	enabled = Boolean.getBoolean('platform.tooling.support.tests.enabled')
 
+	// The following if-block is necessary since Gradle will otherwise
+	// always publish all mavenizedProjects even if this 'test' task
+	// is not executed.
 	if (enabled) {
 		// All maven-aware projects must be installed, i.e. published to the local repository
 		rootProject.ext.mavenizedProjects.each { name ->
@@ -39,5 +35,4 @@ test {
 		}
 	}
 
-	useJUnitPlatform()
 }

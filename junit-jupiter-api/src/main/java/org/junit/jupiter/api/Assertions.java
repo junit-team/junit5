@@ -37,14 +37,23 @@ import org.opentest4j.MultipleFailuresError;
  * <p>Unless otherwise noted, a <em>failed</em> assertion will throw an
  * {@link org.opentest4j.AssertionFailedError} or a subclass thereof.
  *
+ * <p>Although it is technically possible to extend this class, extension is
+ * strongly discouraged. The JUnit Team highly recommends that the methods
+ * defined in this class be used via <em>static imports</em>.
+ *
  * @since 5.0
  * @see org.opentest4j.AssertionFailedError
  * @see Assumptions
  */
 @API(status = STABLE, since = "5.0")
-public final class Assertions {
+public class Assertions {
 
-	private Assertions() {
+	/**
+	 * Protected constructor allowing subclassing but not direct instantiation.
+	 *
+	 * @since 5.3
+	 */
+	protected Assertions() {
 		/* no-op */
 	}
 

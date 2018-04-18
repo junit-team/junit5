@@ -30,8 +30,9 @@ import org.junit.platform.engine.TestEngine;
 public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
 
 	/**
-	 * Create an initial {@linkplain #createExecutionContext execution
-	 * context}, execute the behavior of all {@linkplain Node nodes} in the
+	 * Create an {@linkplain #createExecutorService(ExecutionRequest) executor
+	 * service}; create an initial {@linkplain #createExecutionContext execution
+	 * context}; execute the behavior of all {@linkplain Node nodes} in the
 	 * hierarchy starting with the supplied {@code request}'s
 	 * {@linkplain ExecutionRequest#getRootTestDescriptor() root} and notify
 	 * its {@linkplain ExecutionRequest#getEngineExecutionListener() execution
@@ -44,7 +45,10 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	@Override
 	public final void execute(ExecutionRequest request) {
 		try (HierarchicalTestExecutorService executorService = createExecutorService(request)) {
-			new HierarchicalTestExecutor<>(request, createExecutionContext(request), executorService).execute().get();
+			C executionContext = createExecutionContext(request);
+			ThrowableCollector.Factory throwableCollectorFactory = createThrowableCollectorFactory(request);
+			new HierarchicalTestExecutor<>(request, executionContext, executorService,
+				throwableCollectorFactory).execute().get();
 		}
 		catch (Exception exception) {
 			throw new JUnitException("Error executing tests for engine " + getId(), exception);
@@ -71,6 +75,29 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	@API(status = EXPERIMENTAL, since = "1.3")
 	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
 		return new SameThreadHierarchicalTestExecutorService();
+	}
+
+	/**
+	 * Create the {@linkplain ThrowableCollector.Factory factory} for creating
+	 * {@link ThrowableCollector} instances used to handle exceptions that occur
+	 * during execution of this engine's tests.
+	 *
+	 * <p>An engine may use the information in the supplied <em>request</em>
+	 * such as the contained
+	 * {@linkplain ExecutionRequest#getConfigurationParameters() configuration parameters}
+	 * to decide what kind of factory to return or how to configure it.
+	 *
+	 * <p>By default, this method returns a factory that always creates instances of
+	 * {@link OpenTest4JAwareThrowableCollector}.
+	 *
+	 * @param request the request about to be executed
+	 * @see OpenTest4JAwareThrowableCollector
+	 * @see ThrowableCollector
+	 * @since 1.3
+	 */
+	@API(status = EXPERIMENTAL, since = "1.3")
+	protected ThrowableCollector.Factory createThrowableCollectorFactory(ExecutionRequest request) {
+		return OpenTest4JAwareThrowableCollector::new;
 	}
 
 	/**

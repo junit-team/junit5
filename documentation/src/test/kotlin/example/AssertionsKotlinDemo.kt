@@ -59,6 +59,5 @@ class AssertionsKotlinDemo {
             people.map { { assertEquals("Doe", it.lastName) } }
         )
     }
-
 }
 // end::user_guide[]

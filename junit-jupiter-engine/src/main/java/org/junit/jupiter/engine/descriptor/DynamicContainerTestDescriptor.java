@@ -37,6 +37,7 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 
 	DynamicContainerTestDescriptor(UniqueId uniqueId, int index, DynamicContainer dynamicContainer,
 			TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter) {
+
 		super(uniqueId, index, dynamicContainer, testSource);
 		this.dynamicContainer = dynamicContainer;
 		this.testSource = testSource;
@@ -51,6 +52,7 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
+
 		AtomicInteger index = new AtomicInteger(1);
 		try (Stream<? extends DynamicNode> children = dynamicContainer.getChildren()) {
 			// @formatter:off
@@ -67,4 +69,5 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	private Optional<JupiterTestDescriptor> toDynamicDescriptor(int index, DynamicNode childNode) {
 		return createDynamicDescriptor(this, childNode, index, testSource, dynamicDescendantFilter);
 	}
+
 }

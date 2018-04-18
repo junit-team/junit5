@@ -38,7 +38,8 @@ import org.apiguardian.api.API;
 public @interface ArgumentsSources {
 
 	/**
-	 * An array of one or more {@link ArgumentsSource} annotations.
+	 * An array of one or more {@link ArgumentsSource @ArgumentsSource}
+	 * annotations.
 	 */
 	ArgumentsSource[] value();
 

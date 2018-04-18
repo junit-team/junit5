@@ -117,6 +117,7 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 		verify(listener, never()).reportingEntryPublished(any(), any());
 	}
 
+	@SuppressWarnings("unused") // used via @MethodSource("systemStreams")
 	private static Stream<Arguments> systemStreams() {
 		return Stream.of(//
 			streamType(CAPTURE_STDOUT_PROPERTY_NAME, () -> System.out, STDOUT_REPORT_ENTRY_KEY), //
@@ -148,4 +149,5 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 			System.setErr(store.get("err", PrintStream.class));
 		}
 	}
+
 }

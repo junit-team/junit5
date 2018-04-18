@@ -2,12 +2,12 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 plugins {
-	id 'com.gradle.build-scan' version '1.13.4'
-	id 'net.nemerosa.versioning' version '2.6.1'
-	id 'com.github.ben-manes.versions' version '0.17.0' apply false
-	id 'com.diffplug.gradle.spotless' version '3.12.0' apply false
-	id 'org.ajoberstar.git-publish' version '0.4.1' apply false
-	id 'org.jetbrains.kotlin.jvm' version '1.2.41' apply false
+	id 'com.gradle.build-scan' version '1.15'
+	id 'net.nemerosa.versioning' version '2.7.1'
+	id 'com.github.ben-manes.versions' version '0.20.0' apply false
+	id 'com.diffplug.gradle.spotless' version '3.13.0' apply false
+	id 'org.ajoberstar.git-publish' version '1.0.1' apply false
+	id 'org.jetbrains.kotlin.jvm' version '1.2.51' apply false
 	id 'com.github.johnrengelman.shadow' version '2.0.4' apply false
 }
 
@@ -39,7 +39,8 @@ ext {
 		'junit-platform-launcher',
 		'junit-platform-runner',
 		'junit-platform-suite-api',
-		'junit-platform-surefire-provider'
+		'junit-platform-surefire-provider',
+		'junit-platform-testkit'
 	]
 
 	jupiterProjects = [
@@ -99,7 +100,7 @@ allprojects { subproj ->
 	apply from: "$rootDir/gradle/degraph.gradle"
 
 	if (project.hasProperty('enableJaCoCo')) {
-		apply plugin: "jacoco"
+		apply plugin: 'jacoco'
 		jacoco {
 			toolVersion = '0.8.1'
 		}
@@ -115,8 +116,27 @@ allprojects { subproj ->
 		api("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	}
 
-	tasks.withType(Test) { task ->
-		task.testLogging.exceptionFormat = 'full'
+	compileJava {
+		options.encoding = 'UTF-8'
+
+		// See: https://docs.oracle.com/javase/10/tools/javac.htm
+		options.compilerArgs += [
+			'-Xlint', // Enables all recommended warnings.
+			'-Werror' // Terminates compilation when warnings occur.
+		]
+	}
+
+	compileTestJava {
+		options.encoding = 'UTF-8'
+		sourceCompatibility = 10
+		targetCompatibility = 10
+
+		// See: https://docs.oracle.com/javase/10/tools/javac.htm
+		options.compilerArgs += [
+			'-Xlint',     // Enables all recommended warnings.
+			'-Xlint:-overrides', // Disables "method overrides" warnings.
+			'-parameters' // Generates metadata for reflection on method parameters.
+		]
 	}
 
 	// Declare "javacRelease" as a global property to make it overridable by
@@ -124,62 +144,11 @@ allprojects { subproj ->
 	ext.javacRelease = rootProject.javacRelease
 
 	subproj.afterEvaluate { evaluatedProject ->
-		evaluatedProject.tasks.withType(JavaCompile) {
+		evaluatedProject.tasks.getByName('compileJava') {
 			sourceCompatibility = javacRelease
 			targetCompatibility = javacRelease // needed by asm
 			options.compilerArgs += ['--release', javacRelease]
-			options.encoding = 'UTF-8'
 		}
-	}
-
-	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileJava.options.compilerArgs += [
-		'-Xlint:cast',
-		'-Xlint:classfile',
-		'-Xlint:deprecation',
-		'-Xlint:dep-ann',
-		'-Xlint:divzero',
-		'-Xlint:empty',
-		'-Xlint:fallthrough',
-		'-Xlint:finally',
-		'-Xlint:overrides',
-		'-Xlint:path',
-		'-Xlint:processing',
-		'-Xlint:rawtypes',
-		'-Xlint:serial',
-		'-Xlint:static',
-		'-Xlint:try',
-		'-Xlint:unchecked',
-		'-Xlint:varargs',
-		'-Xlint:-options',
-		'-Werror'
-	]
-
-	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileTestJava.options.compilerArgs += [
-		'-Xlint:cast',
-		'-Xlint:classfile',
-		'-Xlint:deprecation',
-		'-Xlint:dep-ann',
-		'-Xlint:divzero',
-		'-Xlint:empty',
-		'-Xlint:fallthrough',
-		'-Xlint:finally',
-		'-Xlint:path',
-		'-Xlint:processing',
-		'-Xlint:rawtypes',
-		'-Xlint:serial',
-		'-Xlint:static',
-		'-Xlint:try',
-		'-Xlint:unchecked',
-		'-Xlint:varargs',
-		'-Xlint:-options',
-		'-Xlint:-overrides'
-	]
-
-	compileTestJava {
-		options.encoding = 'UTF-8'
-		options.compilerArgs += '-parameters'
 	}
 
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
@@ -388,7 +357,7 @@ subprojects { subproj ->
 		}
 
 		kotlin {
-			ktlint("0.9.0")
+			ktlint('0.24.0')
 			licenseHeaderFile headerFile
 			trimTrailingWhitespace()
 			endWithNewline()
@@ -436,9 +405,9 @@ configure(rootProject) {
 	def apiGuardianDocVersion = apiGuardianVersion.contains('SNAPSHOT') ? 'snapshot' : apiGuardianVersion
 
 	task aggregateJavadocs(type: Javadoc) {
-		group = "Documentation"
-		description = "Generates aggregated Javadocs"
-		dependsOn subprojects.collect { it.tasks.getByName("jar") }
+		group = 'Documentation'
+		description = 'Generates aggregated Javadocs'
+		dependsOn subprojects.collect { it.tasks.getByName('jar') }
 
 		title = "JUnit ${version} API"
 
@@ -471,8 +440,8 @@ configure(rootProject) {
 		// Only generate JavaDoc for 'main' sources in Mavenized projects
 		source = subprojects.findAll { mavenizedProjects.contains(it.name) }.collect { it.sourceSets.main.allJava }
 
-		maxMemory = "1024m"
-		destinationDir = new File(buildDir, "docs/javadoc")
+		maxMemory = '1024m'
+		destinationDir = new File(buildDir, 'docs/javadoc')
 		classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
 			// Remove Kotlin classes from classpath due to "bad" class file
 			// see https://bugs.openjdk.java.net/browse/JDK-8187422
@@ -522,7 +491,7 @@ configure(rootProject) {
 
 wrapper {
 	description = 'Generates gradlew and gradlew.bat scripts'
-	gradleVersion = '4.8.1'
+	gradleVersion = '4.9-rc-2'
 	/*
 	* Reasoning for using BIN:
 	* https://github.com/junit-team/junit5/pull/1012#discussion_r132061924

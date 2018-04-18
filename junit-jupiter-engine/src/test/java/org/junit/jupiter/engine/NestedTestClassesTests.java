@@ -21,8 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.ExecutionGraph;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}
@@ -41,14 +41,14 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void nestedTestsAreExecuted() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithNesting.class);
+		ExecutionGraph executionGraph = executeTestsForClass(TestCaseWithNesting.class).getExecutionGraph();
 
-		assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(3, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(2, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionGraph.getTestFailedCount(), "# tests failed");
 
-		assertEquals(3, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(3, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(3, executionGraph.getContainerStartedCount(), "# containers started");
+		assertEquals(3, executionGraph.getContainerFinishedCount(), "# containers finished");
 	}
 
 	@Test
@@ -60,14 +60,14 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void doublyNestedTestsAreExecuted() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithDoubleNesting.class);
+		ExecutionGraph executionGraph = executeTestsForClass(TestCaseWithDoubleNesting.class).getExecutionGraph();
 
-		assertEquals(5, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(3, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(2, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(5, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(3, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(2, executionGraph.getTestFailedCount(), "# tests failed");
 
-		assertEquals(4, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(4, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(4, executionGraph.getContainerStartedCount(), "# containers started");
+		assertEquals(4, executionGraph.getContainerFinishedCount(), "# containers finished");
 
 		assertAll("before each counts", //
 			() -> assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),
@@ -83,14 +83,14 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void inheritedNestedTestsAreExecuted() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithInheritedNested.class);
+		ExecutionGraph executionGraph = executeTestsForClass(TestCaseWithInheritedNested.class).getExecutionGraph();
 
-		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionGraph.getTestFailedCount(), "# tests failed");
 
-		assertEquals(3, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(3, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(3, executionGraph.getContainerStartedCount(), "# containers started");
+		assertEquals(3, executionGraph.getContainerFinishedCount(), "# containers finished");
 	}
 
 	// -------------------------------------------------------------------

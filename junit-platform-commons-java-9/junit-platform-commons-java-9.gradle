@@ -31,7 +31,7 @@ test {
 task generateIntegrationTestsJar(type: Jar, dependsOn: compileTestJava) {
 	archiveName = 'junit-commons-integration-tests.jar'
 	from compileTestJava.destinationDir
-	include("integration/**/*")
+	include('integration/**/*')
 }
 
 // Copy runtime dependencies to a single directory.
@@ -60,31 +60,31 @@ task testScanModulepath(dependsOn: execScanModulepath) {
 	doLast {
 		String text = execScanModulepath.errorOutput.toString() + execScanModulepath.standardOutput.toString()
 		// tree node names
-		assert text.contains("JUnit Vintage")
-		assert text.contains("integration.VintageIntegrationTest")
-		assert text.contains("successfulTest")
-		assert text.contains("JUnit Jupiter")
-		assert text.contains("JupiterIntegrationTests")
-		assert text.contains("version()")
-		assert text.contains("moduleIsNamed()")
-		assert text.contains("packageName()")
-		assert text.contains("javaScriptingModuleIsAvailable()")
+		assert text.contains('JUnit Vintage')
+		assert text.contains('VintageIntegrationTest')
+		assert text.contains('successfulTest')
+		assert text.contains('JUnit Jupiter')
+		assert text.contains('JupiterIntegrationTests')
+		assert text.contains('version()')
+		assert text.contains('moduleIsNamed()')
+		assert text.contains('packageName()')
+		assert text.contains('javaScriptingModuleIsAvailable()')
 		// summary
-		assert text.contains("Test run finished after")
+		assert text.contains('Test run finished after')
 		// container summary
-		assert text.contains("4 containers found")
-		assert text.contains("0 containers skipped")
-		assert text.contains("4 containers started")
-		assert text.contains("0 containers aborted")
-		assert text.contains("4 containers successful")
-		assert text.contains("0 containers failed")
+		assert text.contains('4 containers found')
+		assert text.contains('0 containers skipped')
+		assert text.contains('4 containers started')
+		assert text.contains('0 containers aborted')
+		assert text.contains('4 containers successful')
+		assert text.contains('0 containers failed')
 		// tests summary
-		assert text.contains("6 tests found")
-		assert text.contains("0 tests skipped")
-		assert text.contains("6 tests started")
-		assert text.contains("0 tests aborted")
-		assert text.contains("6 tests successful")
-		assert text.contains("0 tests failed")
+		assert text.contains('6 tests found')
+		assert text.contains('0 tests skipped')
+		assert text.contains('6 tests started')
+		assert text.contains('0 tests aborted')
+		assert text.contains('6 tests successful')
+		assert text.contains('0 tests failed')
 	}
 }
 
@@ -124,31 +124,31 @@ task testNoJavaScripting(dependsOn: execNoJavaScripting) {
 	doLast {
 		String text = execNoJavaScripting.errorOutput.toString() + execNoJavaScripting.standardOutput.toString()
 		// tree node names
-		assert text.contains("JUnit Jupiter")
-		assert text.contains("JupiterIntegrationTests")
-		assert text.contains("version()")
-		assert text.contains("moduleIsNamed()")
-		assert text.contains("packageName()")
-		assert text.contains("javaScriptingModuleIsAvailable()")
-		assert text.contains("Failed to evaluate condition")
-		assert text.contains("Class `javax.script.ScriptEngine` is not loadable")
-		assert text.contains("script-based test execution is disabled")
+		assert text.contains('JUnit Jupiter')
+		assert text.contains('JupiterIntegrationTests')
+		assert text.contains('version()')
+		assert text.contains('moduleIsNamed()')
+		assert text.contains('packageName()')
+		assert text.contains('javaScriptingModuleIsAvailable()')
+		assert text.contains('Failed to evaluate condition')
+		assert text.contains('Class `javax.script.ScriptEngine` is not loadable')
+		assert text.contains('script-based test execution is disabled')
 		// summary
-		assert text.contains("Test run finished after")
+		assert text.contains('Test run finished after')
 		// container summary
-		assert text.contains("2 containers found")
-		assert text.contains("0 containers skipped")
-		assert text.contains("2 containers started")
-		assert text.contains("0 containers aborted")
-		assert text.contains("2 containers successful")
-		assert text.contains("0 containers failed")
+		assert text.contains('2 containers found')
+		assert text.contains('0 containers skipped')
+		assert text.contains('2 containers started')
+		assert text.contains('0 containers aborted')
+		assert text.contains('2 containers successful')
+		assert text.contains('0 containers failed')
 		// tests summary
-		assert text.contains("5 tests found")
-		assert text.contains("0 tests skipped")
-		assert text.contains("5 tests started")
-		assert text.contains("0 tests aborted")
-		assert text.contains("4 tests successful")
-		assert text.contains("1 tests failed")
+		assert text.contains('5 tests found')
+		assert text.contains('0 tests skipped')
+		assert text.contains('5 tests started')
+		assert text.contains('0 tests aborted')
+		assert text.contains('4 tests successful')
+		assert text.contains('1 tests failed')
 	}
 }
 

@@ -387,7 +387,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		assertThat(firstWarningLogRecord(listener).getMessage())//
 				.isEqualTo("Unique ID '" + uniqueId + "' could only be partially resolved. "
-						+ "All resolved segments will be executed; however, the following segments "
+						+ "All resolved segments will be finished; however, the following segments "
 						+ "could not be resolved: [Segment [type = 'method', value = 'test7(java.math.BigDecimal)']]");
 	}
 

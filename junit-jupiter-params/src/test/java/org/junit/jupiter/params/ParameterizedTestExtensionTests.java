@@ -30,6 +30,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
+import org.junit.jupiter.engine.execution.ExtensionValuesStore;
+import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -71,6 +73,9 @@ class ParameterizedTestExtensionTests {
 	void streamsReturnedByProvidersAreClosedWhenCallingProvide() {
 		ExtensionContext extensionContext = getExtensionContextReturningSingleMethod(
 			new TestCaseWithArgumentSourceAnnotatedMethod());
+		// we need to call supportsTestTemplate() first, because it creates and
+		// puts the ParameterizedTestMethodContext into the Store
+		this.parameterizedTestExtension.supportsTestTemplate(extensionContext);
 
 		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContext);
@@ -103,7 +108,7 @@ class ParameterizedTestExtensionTests {
 		JUnitException exception = assertThrows(JUnitException.class, stream::close);
 
 		assertThat(exception).hasMessage(
-			"Configuration error: You must provide at least one argument for this @ParameterizedTest");
+			"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest");
 	}
 
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase) {
@@ -115,6 +120,8 @@ class ParameterizedTestExtensionTests {
 		// @formatter:on
 
 		return new ExtensionContext() {
+
+			private final ExtensionValuesStore store = new ExtensionValuesStore(null);
 
 			@Override
 			public Optional<Method> getTestMethod() {
@@ -182,7 +189,7 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Store getStore(Namespace namespace) {
-				return null;
+				return new NamespaceAwareStore(store, namespace);
 			}
 		};
 	}

@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.PreconditionViolationException;
@@ -148,7 +147,7 @@ public interface ExtensionContext {
 	 *
 	 * @return an {@code Optional} containing the test instance {@code Lifecycle};
 	 * never {@code null} but potentially empty
-	 * @see TestInstance {@code @TestInstance}
+	 * @see org.junit.jupiter.api.TestInstance {@code @TestInstance}
 	 * @since 5.1
 	 */
 	@API(status = STABLE, since = "5.1")
@@ -381,7 +380,9 @@ public interface ExtensionContext {
 		 * @see #getOrComputeIfAbsent(Object, Function)
 		 * @see #getOrComputeIfAbsent(Object, Function, Class)
 		 * @see CloseableResource
+		 * @since 5.1
 		 */
+		@API(status = STABLE, since = "5.1")
 		default <V> V getOrComputeIfAbsent(Class<V> type) {
 			return getOrComputeIfAbsent(type, ReflectionSupport::newInstance, type);
 		}

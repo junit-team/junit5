@@ -16,15 +16,24 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.platform.engine.test.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
+import static org.junit.platform.engine.test.ExecutionEventConditions.container;
+import static org.junit.platform.engine.test.ExecutionEventConditions.displayName;
+import static org.junit.platform.engine.test.ExecutionEventConditions.event;
+import static org.junit.platform.engine.test.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.ExecutionEventConditions.test;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
+import static org.junit.platform.engine.test.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.ExecutionConditions.container;
+import static org.junit.platform.testkit.ExecutionConditions.displayName;
+import static org.junit.platform.testkit.ExecutionConditions.event;
+import static org.junit.platform.testkit.ExecutionConditions.finishedWithFailure;
+import static org.junit.platform.testkit.ExecutionConditions.test;
+import static org.junit.platform.testkit.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
+import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.TestExecutionResultConditions.message;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -34,6 +43,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,8 +64,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.test.event.ExecutionEvent;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.testkit.ExecutionEvent;
+import org.junit.platform.testkit.ExecutionRecorder;
+import org.opentest4j.TestAbortedException;
 
 /**
  * @since 5.0
@@ -86,6 +97,14 @@ class ParameterizedTestIntegrationTests {
 			selectMethod(TestCase.class, "testWithEmptyMethodSource", String.class.getName()));
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), finishedWithFailure(message("empty method source")))); //
+	}
+
+	@Test
+	void executesWithMethodSourceReturning2dObjectArray() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(TestCase.class,
+			"testWithMethodSourceReturning2dObjectArray", String.class.getName() + ", " + int.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("foo:42")))); //
 	}
 
 	@Test
@@ -237,8 +256,19 @@ class ParameterizedTestIntegrationTests {
 					message("Error converting parameter at index 0: something went horribly wrong")))));
 	}
 
+	@Test
+	void reportsContainerWithAssumptionFailureInMethodSourceAsAborted() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(AssumptionFailureInMethodSourceTestCase.class, "strings", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(container("test-template:strings"), //
+					abortedWithReason(
+						allOf(isA(TestAbortedException.class), message("Assumption failed: nothing to test")))));
+	}
+
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
-		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
+		return ExecutionRecorder.execute(new JupiterTestEngine(),
+			request().selectors(selectors).build()).getExecutionEvents();
 	}
 
 	static class TestCase {
@@ -291,15 +321,26 @@ class ParameterizedTestIntegrationTests {
 			fail(argument);
 		}
 
+		static Stream<Arguments> testWithEmptyMethodSource() {
+			return Stream.of(arguments("empty method source"));
+		}
+
+		@ParameterizedTest
+		@MethodSource("twoDimensionalObjectArray")
+		void testWithMethodSourceReturning2dObjectArray(String s, int x) {
+			fail(s + ":" + x);
+		}
+
+		static Object twoDimensionalObjectArray() {
+			return new Object[][] { { "foo", 42 } };
+		}
+
 		@ParameterizedTest
 		@ValueSource(ints = 42)
 		void testWithErroneousConverter(@ConvertWith(ErroneousConverter.class) Object ignored) {
 			fail("this should never be called");
 		}
 
-		static Stream<Arguments> testWithEmptyMethodSource() {
-			return Stream.of(arguments("empty method source"));
-		}
 	}
 
 	static class UnusedParametersTestCase {
@@ -432,6 +473,20 @@ class ParameterizedTestIntegrationTests {
 		static Book factory(String title) {
 			return new Book(title);
 		}
+	}
+
+	static class AssumptionFailureInMethodSourceTestCase {
+
+		static List<String> strings() {
+			Assumptions.assumeFalse(true, "nothing to test");
+			return null;
+		}
+
+		@ParameterizedTest
+		@MethodSource
+		void strings(String test) {
+		}
+
 	}
 
 }

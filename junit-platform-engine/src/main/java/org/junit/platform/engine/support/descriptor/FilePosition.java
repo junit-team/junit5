@@ -87,20 +87,25 @@ public class FilePosition implements Serializable {
 					String[] data = pair.split("=");
 					if (data.length == 2) {
 						String key = data[0];
-						int value = Integer.valueOf(data[1]);
-						if ("line".equals(key)) {
-							line = value;
+						if (line == null && "line".equals(key)) {
+							line = Integer.valueOf(data[1]);
 						}
-						if ("column".equals(key)) {
-							column = value;
+						else if (column == null && "column".equals(key)) {
+							column = Integer.valueOf(data[1]);
 						}
+					}
+
+					// Already found what we're looking for?
+					if (line != null && column != null) {
+						break;
 					}
 				}
 			}
-			catch (IllegalArgumentException e) {
-				logger.debug(e, () -> "Failed to parse 'line' and/or 'column' from query string: " + query);
+			catch (IllegalArgumentException ex) {
+				logger.debug(ex, () -> "Failed to parse 'line' and/or 'column' from query string: " + query);
 				// fall-through and continue
 			}
+
 			if (line != null) {
 				result = column == null ? new FilePosition(line) : new FilePosition(line, column);
 			}

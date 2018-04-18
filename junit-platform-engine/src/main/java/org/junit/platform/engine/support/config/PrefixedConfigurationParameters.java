@@ -67,4 +67,5 @@ public class PrefixedConfigurationParameters implements ConfigurationParameters 
 	public int size() {
 		return delegate.size();
 	}
+
 }

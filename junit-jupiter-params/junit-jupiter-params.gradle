@@ -1,16 +1,7 @@
 apply plugin: 'com.github.johnrengelman.shadow'
+apply from: "$rootDir/gradle/testing.gradle"
 
 description = 'JUnit Jupiter Params'
-
-test {
-	useJUnitPlatform {
-		includeEngines 'junit-jupiter'
-	}
-	filter {
-		includeTestsMatching '*Tests'
-	}
-	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
-}
 
 afterEvaluate {
 	// Use classes modified by shadow plugin for test execution so JaCoCo
@@ -23,20 +14,18 @@ afterEvaluate {
 dependencies {
 	api(project(':junit-jupiter-api'))
 
-	shadowed('com.univocity:univocity-parsers:2.6.3')
+	shadowed('com.univocity:univocity-parsers:2.6.4')
 
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
+	testImplementation(project(':junit-platform-testkit'))
+	testImplementation(project(path: ':junit-platform-testkit', configuration: 'testArtifacts'))
 	testImplementation(project(':junit-jupiter-engine'))
 	testImplementation(project(':junit-platform-launcher'))
 	testImplementation(project(':junit-platform-runner'))
 
-	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
-
-	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
-	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	compileOnly('org.jetbrains.kotlin:kotlin-stdlib')
+	testImplementation('org.jetbrains.kotlin:kotlin-stdlib')
 }
 
 jar.enabled = false

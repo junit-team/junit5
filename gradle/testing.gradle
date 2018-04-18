@@ -1,0 +1,30 @@
+test {
+	useJUnitPlatform {
+		includeEngines 'junit-jupiter'
+	}
+	include(['**/*Test.class', '**/*Tests.class'])
+	testLogging {
+		events 'failed'
+		exceptionFormat = 'full'
+	}
+	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
+}
+
+dependencies {
+	testImplementation("org.assertj:assertj-core:${assertJVersion}")
+	testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}") {
+		exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
+	}
+
+	if (project.name != 'junit-jupiter-engine') {
+		testImplementation(project(':junit-jupiter-api'))
+		testImplementation(project(':junit-jupiter-params'))
+
+		testRuntimeOnly(project(':junit-jupiter-engine'))
+	}
+
+	testRuntimeOnly(project(':junit-platform-launcher'))
+
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+}

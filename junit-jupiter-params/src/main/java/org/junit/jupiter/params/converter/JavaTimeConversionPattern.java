@@ -23,7 +23,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 
 /**
  * {@code @JavaTimeConversionPattern} is an annotation that allows a date/time
- * conversion pattern to be specified on a method parameter of a
+ * conversion pattern to be specified on a parameter of a
  * {@link ParameterizedTest @ParameterizedTest} method.
  *
  * @since 5.0

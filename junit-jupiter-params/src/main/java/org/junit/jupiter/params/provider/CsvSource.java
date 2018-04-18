@@ -43,13 +43,15 @@ public @interface CsvSource {
 	 * The CSV lines to use as source of arguments; must not be empty.
 	 *
 	 * <p>Each value corresponds to a line in a CSV file and will be split using
-	 * the specified {@link #delimiter()}.
+	 * the specified {@link #delimiter}.
 	 */
 	String[] value();
 
 	/**
 	 * The column delimiter to use when reading the
 	 * {@linkplain #value() values}.
+	 *
+	 * <p>Defaults to {@code ','}.
 	 */
 	char delimiter() default ',';
 

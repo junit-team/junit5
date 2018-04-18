@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 class SingleLockTests {
 
 	@Test
+	@SuppressWarnings("resource")
 	void acquire() throws Exception {
 		ReentrantLock lock = new ReentrantLock();
 
@@ -32,6 +33,7 @@ class SingleLockTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void release() throws Exception {
 		ReentrantLock lock = new ReentrantLock();
 
@@ -39,4 +41,5 @@ class SingleLockTests {
 
 		assertFalse(lock.isLocked());
 	}
+
 }

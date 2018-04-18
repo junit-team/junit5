@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
+import org.junit.platform.commons.util.StringUtils;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -89,9 +90,12 @@ class AssertThrows {
 			}
 		}
 
+		String includedResult = supplier.includeResult()
+				? String.format(" (returned %s).", StringUtils.nullSafeToString(result))
+				: ".";
 		String message = buildPrefix(nullSafeGet(messageOrSupplier))
 				+ String.format("Expected %s to be thrown, but nothing was thrown", getCanonicalName(expectedType))
-				+ (supplier.includeResult() ? String.format(" (returned %s).", result) : ".");
+				+ includedResult;
 		throw new AssertionFailedError(message);
 	}
 
@@ -110,18 +114,30 @@ class AssertThrows {
 	}
 
 	private static ResultAwareThrowingSupplier<Void> asSupplier(Executable executable) {
-		return new ResultAwareThrowingSupplier<Void>() {
-			@Override
-			public Void get() throws Throwable {
-				executable.execute();
-				return null;
-			}
+		return new ResultAwareThrowingSupplierAdapter(executable);
+	}
 
-			@Override
-			public boolean includeResult() {
-				return false;
-			}
-		};
+	/**
+	 * Adapts an {@link Executable} to the {@link ResultAwareThrowingSupplier} API.
+	 */
+	private static class ResultAwareThrowingSupplierAdapter implements ResultAwareThrowingSupplier<Void> {
+
+		private final Executable executable;
+
+		ResultAwareThrowingSupplierAdapter(Executable executable) {
+			this.executable = executable;
+		}
+
+		@Override
+		public Void get() throws Throwable {
+			executable.execute();
+			return null;
+		}
+
+		@Override
+		public boolean includeResult() {
+			return false;
+		}
 	}
 
 }

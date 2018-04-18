@@ -59,6 +59,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.ExecutionRecorder;
 
 /**
  * @since 1.3
@@ -83,13 +84,13 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void failingTestWithoutLock() {
-		List<ExecutionEvent> executionEvents = execute(3, FailingTestWithoutLock.class);
+		List<ExecutionEvent> executionEvents = execute(3, FailingWithoutLockTestCase.class);
 		assertThat(executionEvents.stream().filter(event(test(), finishedWithFailure())::matches)).hasSize(2);
 	}
 
 	@Test
 	void successfulTestWithMethodLock() {
-		List<ExecutionEvent> executionEvents = execute(3, SuccessfulTestWithMethodLock.class);
+		List<ExecutionEvent> executionEvents = execute(3, SuccessfulWithMethodLockTestCase.class);
 
 		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(3);
@@ -97,7 +98,7 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void successfulTestWithClassLock() {
-		List<ExecutionEvent> executionEvents = execute(3, SuccessfulTestWithClassLock.class);
+		List<ExecutionEvent> executionEvents = execute(3, SuccessfulWithClassLockTestCase.class);
 
 		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(1);
@@ -166,7 +167,7 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	@ExtendWith(ThreadReporter.class)
-	static class FailingTestWithoutLock {
+	static class FailingWithoutLockTestCase {
 
 		static AtomicInteger sharedResource;
 		static CountDownLatch countDownLatch;
@@ -194,7 +195,7 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	@ExtendWith(ThreadReporter.class)
-	static class SuccessfulTestWithMethodLock {
+	static class SuccessfulWithMethodLockTestCase {
 
 		static AtomicInteger sharedResource;
 		static CountDownLatch countDownLatch;
@@ -226,7 +227,7 @@ class ParallelExecutionIntegrationTests {
 
 	@ExtendWith(ThreadReporter.class)
 	@ResourceLock("sharedResource")
-	static class SuccessfulTestWithClassLock {
+	static class SuccessfulWithClassLockTestCase {
 
 		static AtomicInteger sharedResource;
 		static CountDownLatch countDownLatch;
@@ -413,7 +414,7 @@ class ParallelExecutionIntegrationTests {
 				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism))
 				.build();
 		// @formatter:on
-		return ExecutionEventRecorder.execute(new JupiterTestEngine(), discoveryRequest);
+		return ExecutionRecorder.execute(new JupiterTestEngine(), discoveryRequest).getExecutionEvents();
 	}
 
 	static class ThreadReporter implements AfterTestExecutionCallback {

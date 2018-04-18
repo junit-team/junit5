@@ -41,7 +41,7 @@ class ToStringBuilderTests {
 
 	@Test
 	void appendWithIllegalName() {
-		ToStringBuilder builder = new ToStringBuilder("");
+		var builder = new ToStringBuilder("");
 
 		assertThrows(PreconditionViolationException.class, () -> builder.append(null, ""));
 		assertThrows(PreconditionViolationException.class, () -> builder.append("", ""));
@@ -129,7 +129,7 @@ class ToStringBuilderTests {
 	@SuppressWarnings("serial")
 	void withMapField() {
 		// @formatter:off
-		Map<String,Object> map = new LinkedHashMap<String,Object>() {{
+		Map<String,Object> map = new LinkedHashMap<>() {{
 			put("foo", 42);
 			put("bar", "enigma");
 		}};
@@ -140,7 +140,7 @@ class ToStringBuilderTests {
 
 	@Test
 	void withDemoImplementation() {
-		RoleModel roleModel = new RoleModel("Dilbert", 42);
+		var roleModel = new RoleModel("Dilbert", 42);
 		assertEquals("RoleModel [name = 'Dilbert', age = 42]", roleModel.toString());
 	}
 
@@ -153,7 +153,6 @@ class ToStringBuilderTests {
 		}
 
 		RoleModel(String name, int age) {
-			super();
 			this.name = name;
 			this.age = age;
 		}

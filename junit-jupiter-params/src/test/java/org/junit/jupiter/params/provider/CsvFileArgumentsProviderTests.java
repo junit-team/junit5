@@ -115,12 +115,46 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionForMissingClasspathResource() {
-		CsvFileSource annotation = annotation("UTF-8", "\n", ',', "does-not-exist.csv");
+		CsvFileSource annotation = annotation("UTF-8", "\n", ',', "/does-not-exist.csv");
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> provide(new CsvFileArgumentsProvider(), annotation).toArray());
 
-		assertThat(exception).hasMessageContaining("Classpath resource does not exist: does-not-exist.csv");
+		assertThat(exception).hasMessageContaining("Classpath resource [/does-not-exist.csv] does not exist");
+	}
+
+	@Test
+	void throwsExceptionForBlankClasspathResource() {
+		CsvFileSource annotation = annotation("UTF-8", "\n", ',', "    ");
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> provide(new CsvFileArgumentsProvider(), annotation).toArray());
+
+		assertThat(exception).hasMessageContaining("Classpath resource [    ] must not be null or blank");
+	}
+
+	@Test
+	void throwsExceptionForInvalidCharset() {
+		CsvFileSource annotation = annotation("Bogus-Charset", "\n", ',', "/bogus-charset.csv");
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> provide(new CsvFileArgumentsProvider(), annotation).toArray());
+
+		assertThat(exception)//
+				.hasMessageContaining("The charset supplied in Mock for CsvFileSource")//
+				.hasMessageEndingWith("is invalid");
+	}
+
+	@Test
+	void throwsExceptionForInvalidCsvFormat() {
+		CsvFileSource annotation = annotation("UTF-8", "\n", ',', "/broken.csv");
+
+		CsvParsingException exception = assertThrows(CsvParsingException.class,
+			() -> provide(new CsvFileArgumentsProvider(), annotation).toArray());
+
+		assertThat(exception)//
+				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
+				.hasRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}
 
 	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, String... resources) {
@@ -129,6 +163,7 @@ class CsvFileArgumentsProviderTests {
 
 	private CsvFileSource annotation(String charset, String lineSeparator, char delimiter, int numLinesToSkip,
 			String... resources) {
+
 		CsvFileSource annotation = mock(CsvFileSource.class);
 		when(annotation.resources()).thenReturn(resources);
 		when(annotation.encoding()).thenReturn(charset);

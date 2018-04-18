@@ -43,7 +43,9 @@ import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
+import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 /**
@@ -130,7 +132,7 @@ class ExtensionContextTests {
 		assertThat(nestedExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(outerExtensionContext, null,
-			methodTestDescriptor, configParams, new OuterClass(), new ThrowableCollector());
+			methodTestDescriptor, configParams, new OuterClass(), new OpenTest4JAwareThrowableCollector());
 		assertThat(methodExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "method-tag");
 		assertThat(methodExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 	}
@@ -151,7 +153,7 @@ class ExtensionContextTests {
 		ClassExtensionContext classExtensionContext = new ClassExtensionContext(engineExtensionContext, null,
 			classTestDescriptor, configParams, null);
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(classExtensionContext, null,
-			methodTestDescriptor, configParams, testInstance, new ThrowableCollector());
+			methodTestDescriptor, configParams, testInstance, new OpenTest4JAwareThrowableCollector());
 
 		// @formatter:off
 		assertAll("methodContext",
@@ -186,7 +188,7 @@ class ExtensionContextTests {
 
 		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 		Mockito.verify(engineExecutionListener, Mockito.times(3)).reportingEntryPublished(
-			Mockito.eq(classTestDescriptor), entryCaptor.capture());
+			ArgumentMatchers.eq(classTestDescriptor), entryCaptor.capture());
 
 		ReportEntry reportEntry1 = entryCaptor.getAllValues().get(0);
 		ReportEntry reportEntry2 = entryCaptor.getAllValues().get(1);
@@ -204,7 +206,7 @@ class ExtensionContextTests {
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
 		ExtensionContext parentContext = new ClassExtensionContext(null, null, classTestDescriptor, configParams, null);
 		MethodExtensionContext childContext = new MethodExtensionContext(parentContext, null, methodTestDescriptor,
-			configParams, new OuterClass(), new ThrowableCollector());
+			configParams, new OuterClass(), new OpenTest4JAwareThrowableCollector());
 
 		ExtensionContext.Store childStore = childContext.getStore(Namespace.GLOBAL);
 		ExtensionContext.Store parentStore = parentContext.getStore(Namespace.GLOBAL);

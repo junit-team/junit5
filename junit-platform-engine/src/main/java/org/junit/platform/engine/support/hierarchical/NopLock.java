@@ -11,6 +11,8 @@
 package org.junit.platform.engine.support.hierarchical;
 
 /**
+ * No-op {@link ResourceLock} implementation.
+ *
  * @since 1.3
  */
 class NopLock implements ResourceLock {
@@ -29,4 +31,5 @@ class NopLock implements ResourceLock {
 	public void release() {
 		// nothing to do
 	}
+
 }

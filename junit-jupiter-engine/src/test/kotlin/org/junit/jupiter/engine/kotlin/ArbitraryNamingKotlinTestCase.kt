@@ -22,5 +22,4 @@ class ArbitraryNamingKotlinTestCase {
 
     @Test
     fun `test name ends with parentheses()`() { }
-
 }

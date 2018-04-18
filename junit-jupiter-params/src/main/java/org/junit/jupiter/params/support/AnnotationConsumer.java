@@ -18,16 +18,17 @@ import java.util.function.Consumer;
 import org.apiguardian.api.API;
 
 /**
- * {@code @AnnotationConsumer} is a {@code @FunctionalInterface} for consuming
- * annotations.
+ * {@code AnnotationConsumer} is a {@linkplain FunctionalInterface functional
+ * interface} for consuming annotations.
  *
  * <p>It is typically implemented by implementations of
- * {@link org.junit.jupiter.params.provider.ArgumentsProvider} and
- * {@link org.junit.jupiter.params.converter.ArgumentConverter} in order to
- * signal that they can {@link #accept} a certain annotation.
+ * {@link org.junit.jupiter.params.provider.ArgumentsProvider ArgumentsProvider}
+ * and {@link org.junit.jupiter.params.converter.ArgumentConverter ArgumentConverter}
+ * in order to signal that they can {@link #accept} a certain annotation.
  *
  * @since 5.0
  */
+@FunctionalInterface
 @API(status = EXPERIMENTAL, since = "5.0")
 public interface AnnotationConsumer<A extends Annotation> extends Consumer<A> {
 }
