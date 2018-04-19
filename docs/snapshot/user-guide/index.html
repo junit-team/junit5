@@ -2250,39 +2250,33 @@ Other parameter resolvers must be explicitly enabled by registering appropriate
 </table>
 </div>
 <div class="paragraph">
-<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a custom <code><a href="../api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>.
-While not intended to be production-ready, it demonstrates the simplicity and
-expressiveness of both the extension model and the parameter resolution process.
-<code>MyMockitoTest</code> demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code>
+<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java">RandomParametersExtension</a></code> for an example of a custom
+<code><a href="../api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>. While not intended to be production-ready, it demonstrates the
+simplicity and expressiveness of both the extension model and the parameter resolution
+process. <code>MyRandomParametersTest</code> demonstrates how to inject random values into <code>@Test</code>
 methods.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
-<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.mockito.Mockito.when</span>;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(RandomParametersExtension.class)
+<span class="type">class</span> <span class="class">MyRandomParametersTest</span> {
 
-<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
-<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
-<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.ExtendWith</span>;
-<span class="keyword">import</span> <span class="include">org.mockito.Mock</span>;
-<span class="keyword">import</span> <span class="include">com.example.Person</span>;
-<span class="keyword">import</span> <span class="include">com.example.mockito.MockitoExtension</span>;
-
-<span class="annotation">@ExtendWith</span>(MockitoExtension.class)
-<span class="type">class</span> <span class="class">MyMockitoTest</span> {
-
-    <span class="annotation">@BeforeEach</span>
-    <span class="type">void</span> init(<span class="annotation">@Mock</span> Person person) {
-        when(person.getName()).thenReturn(<span class="string"><span class="delimiter">&quot;</span><span class="content">Dilbert</span><span class="delimiter">&quot;</span></span>);
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> injectsInteger(<span class="annotation">@Random</span> <span class="type">int</span> i, <span class="annotation">@Random</span> <span class="type">int</span> j) {
+        assertNotEquals(i, j);
     }
 
     <span class="annotation">@Test</span>
-    <span class="type">void</span> simpleTestWithInjectedMock(<span class="annotation">@Mock</span> Person person) {
-        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Dilbert</span><span class="delimiter">&quot;</span></span>, person.getName());
+    <span class="type">void</span> injectsDouble(<span class="annotation">@Random</span> <span class="type">double</span> d) {
+        assertEquals(<span class="float">0.0</span>, d, <span class="float">1.0</span>);
     }
 
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>For real-world use cases, check out the source code for the <code><a href="https://github.com/mockito/mockito/blob/release/2.x/subprojects/junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java">MockitoExtension</a></code> and the
+<code><a href="https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -4970,12 +4964,12 @@ annotation</a></em> with <code>@ExtendWith(&#8230;&#8203;)</code> and supplying 
 to register.</p>
 </div>
 <div class="paragraph">
-<p>For example, to register a custom <code>MockitoExtension</code> for a particular test method, you
+<p>For example, to register a custom <code>RandomParametersExtension</code> for a particular test method, you
 would annotate the test method as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(MockitoExtension.class)
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(RandomParametersExtension.class)
 <span class="annotation">@Test</span>
 <span class="type">void</span> mockTest() {
     <span class="comment">// ...</span>
@@ -4983,12 +4977,12 @@ would annotate the test method as follows.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>To register a custom <code>MockitoExtension</code> for all tests in a particular class and its
+<p>To register a custom <code>RandomParametersExtension</code> for all tests in a particular class and its
 subclasses, you would annotate the test class as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(MockitoExtension.class)
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(RandomParametersExtension.class)
 <span class="type">class</span> <span class="class">MockTests</span> {
     <span class="comment">// ...</span>
 }</code></pre>
@@ -5285,7 +5279,7 @@ process</em> test instances.</p>
 initialization methods on the test instance, etc.</p>
 </div>
 <div class="paragraph">
-<p>For concrete examples, consult the source code for the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> and the
+<p>For a concrete example, consult the source code for the <code><a href="https://github.com/mockito/mockito/blob/release/2.x/subprojects/junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java">MockitoExtension</a></code> and the
 <code><a href="https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
 </div>
 </div>
@@ -6337,7 +6331,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-19 14:23:20 EDT
+Last updated 2018-04-19 15:24:54 EDT
 </div>
 </div>
 </body>
