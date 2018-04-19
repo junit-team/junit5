@@ -86,7 +86,7 @@ tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
 ==== Gradle
 
 Starting with https://docs.gradle.org/4.6/release-notes.html[version 4.6], Gradle provides
-https://docs.gradle.org/current/userguide/java_plugin.html#using_junit5[native support]
+https://docs.gradle.org/current/userguide/java_testing.html#using_junit5[native support]
 for executing tests on the JUnit Platform. To enable it, you just need to specify
 `useJUnitPlatform()` within a `test` task declaration in `build.gradle`:
 
