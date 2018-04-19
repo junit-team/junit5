@@ -33,7 +33,7 @@ afterEvaluate {
 dependencies {
 	api(project(':junit-jupiter-api'))
 
-	shadowed('com.univocity:univocity-parsers:2.6.2')
+	shadowed('com.univocity:univocity-parsers:2.6.3')
 
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
