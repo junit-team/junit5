@@ -472,39 +472,32 @@ include::{testDir}/example/TestReporterDemo.java[tags=user_guide]
 NOTE: Other parameter resolvers must be explicitly enabled by registering appropriate
 <<extensions,extensions>> via `@ExtendWith`.
 
-Check out the `{MockitoExtension}` for an example of a custom `{ParameterResolver}`.
-While not intended to be production-ready, it demonstrates the simplicity and
-expressiveness of both the extension model and the parameter resolution process.
-`MyMockitoTest` demonstrates how to inject Mockito mocks into `@BeforeEach` and `@Test`
+Check out the `{RandomParametersExtension}` for an example of a custom
+`{ParameterResolver}`. While not intended to be production-ready, it demonstrates the
+simplicity and expressiveness of both the extension model and the parameter resolution
+process. `MyRandomParametersTest` demonstrates how to inject random values into `@Test`
 methods.
 
 [source,java,indent=0]
 ----
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+@ExtendWith(RandomParametersExtension.class)
+class MyRandomParametersTest {
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import com.example.Person;
-import com.example.mockito.MockitoExtension;
-
-@ExtendWith(MockitoExtension.class)
-class MyMockitoTest {
-
-	@BeforeEach
-	void init(@Mock Person person) {
-		when(person.getName()).thenReturn("Dilbert");
+	@Test
+	void injectsInteger(@Random int i, @Random int j) {
+		assertNotEquals(i, j);
 	}
 
 	@Test
-	void simpleTestWithInjectedMock(@Mock Person person) {
-		assertEquals("Dilbert", person.getName());
+	void injectsDouble(@Random double d) {
+		assertEquals(0.0, d, 1.0);
 	}
 
 }
 ----
+
+For real-world use cases, check out the source code for the `{MockitoExtension}` and the
+`{SpringExtension}`.
 
 [[writing-tests-test-interfaces-and-default-methods]]
 === Test Interfaces and Default Methods
