@@ -77,6 +77,7 @@ endif::[]
 :junit-vintage-engine:              {javadoc-root}/org/junit/vintage/engine/package-summary.html[junit-vintage-engine]
 //
 :junit5-samples-repo:               {junit-team}/junit5-samples
+:junit5-jupiter-starter-ant:        {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-ant[junit5-jupiter-starter-ant]
 :junit5-gradle-consumer:            {junit5-samples-repo}/tree/{release-branch}/junit5-gradle-consumer[junit5-gradle-consumer]
 :junit5-maven-consumer:             {junit5-samples-repo}/tree/{release-branch}/junit5-maven-consumer[junit5-maven-consumer]
 :RandomParametersExtension:         {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java[RandomParametersExtension]

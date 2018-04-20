@@ -444,6 +444,9 @@ minimal support for launching the JUnit Platform. Additional enhancements (inclu
 support for forking the tests in a separate JVM) will be available in subsequent releases
 of Ant.
 
+The `build.xml` file in the `{junit5-jupiter-starter-ant}` project demonstrates how to use
+it and can serve as a starting point.
+
 ===== Basic Usage
 
 The following example demonstrates how to configure the `junitlauncher` task to select a
