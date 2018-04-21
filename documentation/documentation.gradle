@@ -115,6 +115,7 @@ asciidoctor {
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
 				'kotlinTestDir': project.sourceSets.test.kotlin.srcDirs[0],
+				'surefire-version': surefireVersion,
 				'consoleLauncherOptionsFile': consoleLauncherOptionsFile.toString(),
 				'experimentalApisTableFile': experimentalApisTableFile.toString(),
 				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
