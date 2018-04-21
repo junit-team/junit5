@@ -551,7 +551,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests">3. Writing Tests</a>
 <ul class="sectlevel2">
 <li><a href="#writing-tests-annotations">3.1. Annotations</a></li>
-<li><a href="#writing-tests-standard">3.2. Standard Test Class</a></li>
+<li><a href="#writing-tests-classes-and-methods">3.2. Test Classes and Methods</a></li>
 <li><a href="#writing-tests-display-names">3.3. Display Names</a></li>
 <li><a href="#writing-tests-assertions">3.4. Assertions</a></li>
 <li><a href="#writing-tests-assumptions">3.5. Assumptions</a></li>
@@ -1071,9 +1071,14 @@ named <code>@Fast</code> as follows. <code>@Fast</code> can then be used as a dr
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-standard"><a class="anchor" href="#writing-tests-standard"></a>3.2. Standard Test Class</h3>
+<h3 id="writing-tests-classes-and-methods"><a class="anchor" href="#writing-tests-classes-and-methods"></a>3.2. Test Classes and Methods</h3>
+<div class="paragraph">
+<p>A <em>test method</em> is any instance method that is directly or meta-annotated with <code>@Test</code>,
+<code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>, or <code>@TestTemplate</code>. A <em>test class</em>
+is any top level or static member class that contains at least one test method.</p>
+</div>
 <div class="listingblock">
-<div class="title">A standard test case</div>
+<div class="title">A standard test class</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.fail</span>;
 
@@ -1894,9 +1899,9 @@ characters have been removed.
 <div class="paragraph">
 <p>In order to allow individual test methods to be executed in isolation and to avoid
 unexpected side effects due to mutable test instance state, JUnit creates a new instance
-of each test class before executing each <em>test</em> method (see note below for what qualifies
-as a <em>test</em> method). This "per-method" test instance lifecycle is the default behavior in
-JUnit Jupiter and is analogous to all previous versions of JUnit.</p>
+of each test class before executing each <em>test method</em> (see
+<a href="#writing-tests-classes-and-methods">Test Classes and Methods</a>). This "per-method" test instance lifecycle is the
+default behavior in JUnit Jupiter and is analogous to all previous versions of JUnit.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1905,7 +1910,7 @@ JUnit Jupiter and is analogous to all previous versions of JUnit.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Please note that the test class will still be instantiated if a given <em>test</em> method
+Please note that the test class will still be instantiated if a given <em>test method</em>
 is <em>disabled</em> via a <a href="#writing-tests-conditional-execution">condition</a> (e.g., <code>@Disabled</code>,
 <code>@DisabledOnOs</code>, etc.) even when the "per-method" test instance lifecycle mode is active.
 </td>
@@ -1930,19 +1935,6 @@ methods in <code>@Nested</code> test classes.</p>
 <p>If you are authoring tests using the Kotlin programming language, you may also find it
 easier to implement <code>@BeforeAll</code> and <code>@AfterAll</code> methods by switching to the "per-class"
 test instance lifecycle mode.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-In the context of test instance lifecycle a <em>test</em> method is any method annotated
-with <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>, or <code>@TestTemplate</code>.
-</td>
-</tr>
-</table>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-test-instance-lifecycle-changing-default"><a class="anchor" href="#writing-tests-test-instance-lifecycle-changing-default"></a>3.9.1. Changing the Default Test Instance Lifecycle</h4>
@@ -4110,8 +4102,8 @@ additional dependency to the runtime classpath.</p>
 <div class="sect3">
 <h4 id="running-tests-build-maven"><a class="anchor" href="#running-tests-build-maven"></a>4.2.2. Maven</h4>
 <div class="paragraph">
-<p>The JUnit team has developed a very basic provider for Maven Surefire that lets you run
-JUnit 4 and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
+<p>The JUnit team has developed a basic provider for Maven Surefire that lets you run JUnit 4
+and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
 <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project demonstrates how to use it and can serve as a starting
 point.</p>
 </div>
@@ -4122,7 +4114,8 @@ point.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Please use Maven Surefire 2.21.0 with the <code>junit-platform-surefire-provider</code>.
+Please use Maven Surefire 2.21.0 with the
+<code>junit-platform-surefire-provider</code>.
 </td>
 </tr>
 </table>
@@ -4267,7 +4260,7 @@ the following patterns.</p>
 <p><code>**/*Test.java</code></p>
 </li>
 <li>
-<p><code>**/*Tests.java</code> <em>(supported since Surefire 2.20)</em></p>
+<p><code>**/*Tests.java</code></p>
 </li>
 <li>
 <p><code>**/*TestCase.java</code></p>
@@ -4275,8 +4268,37 @@ the following patterns.</p>
 </ul>
 </div>
 <div class="paragraph">
+<p>Moreover, it will exclude all nested classes (including static member classes) by default.</p>
+</div>
+<div class="paragraph">
 <p>Note, however, that you can override this default behavior by configuring explicit
-<code>include</code> and <code>exclude</code> rules in your <code>pom.xml</code> file. See the
+<code>include</code> and <code>exclude</code> rules in your <code>pom.xml</code> file. For example, to keep Maven Surefire
+from excluding static member classes, you can override its exclude rules.</p>
+</div>
+<div class="listingblock">
+<div class="title">Overriding exclude rules of Maven Surefire</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">...
+<span class="tag">&lt;build&gt;</span>
+    <span class="tag">&lt;plugins&gt;</span>
+        ...
+        <span class="tag">&lt;plugin&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;configuration&gt;</span>
+                <span class="tag">&lt;excludes&gt;</span>
+                    <span class="tag">&lt;exclude</span><span class="tag">/&gt;</span>
+                <span class="tag">&lt;/excludes&gt;</span>
+            <span class="tag">&lt;/configuration&gt;</span>
+            ...
+        <span class="tag">&lt;/plugin&gt;</span>
+    <span class="tag">&lt;/plugins&gt;</span>
+<span class="tag">&lt;/build&gt;</span>
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please see the
 <a href="https://maven.apache.org/surefire/maven-surefire-plugin/examples/inclusion-exclusion.html">Inclusions and Exclusions of Tests</a>
 documentation for Maven Surefire for details.</p>
 </div>
@@ -6335,7 +6357,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-21 09:02:12 EDT
+Last updated 2018-04-21 09:07:04 EDT
 </div>
 </div>
 </body>
