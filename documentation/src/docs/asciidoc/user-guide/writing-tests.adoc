@@ -60,11 +60,15 @@ named `@Fast` as follows. `@Fast` can then be used as a drop-in replacement for
 include::{testDir}/example/Fast.java[tags=user_guide]
 ----
 
-[[writing-tests-standard]]
-=== Standard Test Class
+[[writing-tests-classes-and-methods]]
+=== Test Classes and Methods
+
+A _test method_ is any instance method that is directly or meta-annotated with `@Test`,
+`@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`. A _test class_
+is any top level or static member class that contains at least one test method.
 
 [source,java,indent=0]
-.A standard test case
+.A standard test class
 ----
 include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
@@ -331,11 +335,11 @@ include::{testDir}/example/TaggingDemo.java[tags=user_guide]
 
 In order to allow individual test methods to be executed in isolation and to avoid
 unexpected side effects due to mutable test instance state, JUnit creates a new instance
-of each test class before executing each _test_ method (see note below for what qualifies
-as a _test_ method). This "per-method" test instance lifecycle is the default behavior in
-JUnit Jupiter and is analogous to all previous versions of JUnit.
+of each test class before executing each _test method_ (see
+<<writing-tests-classes-and-methods>>). This "per-method" test instance lifecycle is the
+default behavior in JUnit Jupiter and is analogous to all previous versions of JUnit.
 
-NOTE: Please note that the test class will still be instantiated if a given _test_ method
+NOTE: Please note that the test class will still be instantiated if a given _test method_
 is _disabled_ via a <<writing-tests-conditional-execution,condition>> (e.g., `@Disabled`,
 `@DisabledOnOs`, etc.) even when the "per-method" test instance lifecycle mode is active.
 
@@ -354,9 +358,6 @@ methods in `@Nested` test classes.
 If you are authoring tests using the Kotlin programming language, you may also find it
 easier to implement `@BeforeAll` and `@AfterAll` methods by switching to the "per-class"
 test instance lifecycle mode.
-
-NOTE: In the context of test instance lifecycle a _test_ method is any method annotated
-with `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`.
 
 [[writing-tests-test-instance-lifecycle-changing-default]]
 ==== Changing the Default Test Instance Lifecycle
