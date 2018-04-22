@@ -254,8 +254,8 @@ ul.subNavList li {
 }
 .indexNav {
     position:relative;
-    font-size:12px;
-    background-color:#dee3e9;
+    font-size:inherit;
+    background-color:#eee;
 }
 .indexNav ul {
     margin-top:0;
@@ -273,6 +273,7 @@ ul.subNavList li {
 .title {
     color:#2c4557;
     margin:10px 0;
+    font-size: 32px;
 }
 .subTitle {
     margin:5px 0 0 0;
@@ -292,14 +293,14 @@ ul.subNavList li {
  * Styles for headings.
  */
 div.details ul.blockList ul.blockList ul.blockList li.blockList h4, div.details ul.blockList ul.blockList ul.blockListLast li.blockList h4 {
-    background-color:#dee3e9;
-    border:1px solid #d0d9e0;
+    background-color:#ddd;
+    border:1px solid #ddd;
     margin:0 0 6px -8px;
     padding:7px 5px;
 }
 ul.blockList ul.blockList ul.blockList li.blockList h3 {
-    background-color:#dee3e9;
-    border:1px solid #d0d9e0;
+    background-color:#ddd;
+    border:1px solid #ddd;
     margin:0 0 6px -8px;
     padding:7px 5px;
 }
@@ -343,8 +344,8 @@ ul.blockList li.blockList h2 {
 }
 .contentContainer .description dl dd, .contentContainer .details dl dd, .serializedFormContainer dl dd {
     margin:5px 0 10px 0px;
-    font-size:14px;
-    font-family:'Open Sans', Arial, Helvetica, serif;
+    font-size:inherit;
+    font-family:inherit;
 }
 .serializedFormContainer dl.nameValue dt {
     margin-left:1px;
@@ -464,7 +465,7 @@ table tr td dl, table tr td dl dt, table tr td dl dd {
 }
 .useSummary caption a:link, .useSummary caption a:hover, .useSummary caption a:active,
 .useSummary caption a:visited {
-    color:#1f389c;
+    color:inherit;
 }
 .overviewSummary caption span, .memberSummary caption span, .typeSummary caption span,
 .useSummary caption span, .constantsSummary caption span, .deprecatedSummary caption span,
@@ -563,9 +564,9 @@ th.colFirst, th.colSecond, th.colLast, th.colConstructorName, th.colDeprecatedIt
 }
 th.colFirst, th.colSecond, th.colLast, th.colConstructorName, th.colDeprecatedItemName, .constantsSummary th,
 .packagesSummary th {
-    background:#dee3e9;
+    background:#ddd;
     text-align:left;
-    padding:8px 3px 3px 7px;
+    padding:8px 3px 6px 10px;
 }
 td.colFirst, th.colFirst {
     white-space:nowrap;
@@ -653,7 +654,7 @@ h1.hidden {
 }
 .block {
     display:block;
-    margin:3px 10px 2px 0px;
+    margin:0px 10px 5px 0px;
     color:#474747;
 }
 .deprecatedLabel, .descfrmTypeLabel, .implementationLabel, .memberNameLabel, .memberNameLink,
@@ -666,8 +667,8 @@ h1.hidden {
     font-style:italic;
 }
 .deprecationBlock {
-    font-size:14px;
-    font-family:'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
+    font-size:inherit;
+    font-family:inherit;
     border-style:solid;
     border-width:thin;
     border-radius:10px;
@@ -901,4 +902,13 @@ table.striped > tbody > tr > th, table.striped > tbody > tr > td {
 }
 table.striped > tbody > tr > th {
     font-weight: normal;
+}
+
+/*
+ * JUnit Additions
+ */
+
+hr {
+    border: 1px solid #eee;
+    margin-bottom: 14px;
 }
