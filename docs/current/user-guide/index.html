@@ -529,7 +529,7 @@ table.CodeRay td.code>pre{padding:0}
 <span id="author4" class="author">Matthias Merdes</span><br>
 <span id="author5" class="author">Marc Philipp</span><br>
 <span id="author6" class="author">Christian Stein</span><br>
-<span id="revnumber">version 5.2.0-M1</span>
+<span id="revnumber">version 5.1.1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -564,9 +564,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-test-interfaces-and-default-methods">3.12. Test Interfaces and Default Methods</a></li>
 <li><a href="#writing-tests-repeated-tests">3.13. Repeated Tests</a></li>
 <li><a href="#writing-tests-parameterized-tests">3.14. Parameterized Tests</a></li>
-<li><a href="#writing-tests-parameterized-tests-consuming-arguments">3.15. Consuming Arguments</a></li>
-<li><a href="#writing-tests-test-templates">3.16. Test Templates</a></li>
-<li><a href="#writing-tests-dynamic-tests">3.17. Dynamic Tests</a></li>
+<li><a href="#writing-tests-test-templates">3.15. Test Templates</a></li>
+<li><a href="#writing-tests-dynamic-tests">3.16. Dynamic Tests</a></li>
 </ul>
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
@@ -709,7 +708,7 @@ has been compiled with previous versions of the JDK.</p>
 <p><strong>Group ID</strong>: <code>org.junit.platform</code></p>
 </li>
 <li>
-<p><strong>Version</strong>: <code>1.2.0-M1</code></p>
+<p><strong>Version</strong>: <code>1.1.1</code></p>
 </li>
 <li>
 <p><strong>Artifact IDs</strong>:</p>
@@ -776,7 +775,7 @@ environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to
 <p><strong>Group ID</strong>: <code>org.junit.jupiter</code></p>
 </li>
 <li>
-<p><strong>Version</strong>: <code>5.2.0-M1</code></p>
+<p><strong>Version</strong>: <code>5.1.1</code></p>
 </li>
 <li>
 <p><strong>Artifact IDs</strong>:</p>
@@ -813,7 +812,7 @@ only required for running selected JUnit 4 rules.</p>
 <p><strong>Group ID</strong>: <code>org.junit.vintage</code></p>
 </li>
 <li>
-<p><strong>Version</strong>: <code>5.2.0-M1</code></p>
+<p><strong>Version</strong>: <code>5.1.1</code></p>
 </li>
 <li>
 <p><strong>Artifact ID</strong>:</p>
@@ -831,29 +830,7 @@ written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="dependency-metadata-junit-bom"><a class="anchor" href="#dependency-metadata-junit-bom"></a>2.1.4. Bill of Materials (BOM)</h4>
-<div class="paragraph">
-<p>The <em>Bill of Materials</em> POM provided under the following Maven coordinates can be used to
-ease dependency management when referencing multiple of the above artifacts using
-<a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Importing_Dependencies">Maven</a>
-or <a href="https://docs.gradle.org/current/userguide/managing_transitive_dependencies.html#sec:bom_import">Gradle</a>.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Group ID</strong>: <code>org.junit</code></p>
-</li>
-<li>
-<p><strong>Artifact ID</strong>: <code>junit-bom</code></p>
-</li>
-<li>
-<p><strong>Version</strong>: <code>5.2.0-M1</code></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="dependency-metadata-dependencies"><a class="anchor" href="#dependency-metadata-dependencies"></a>2.1.5. Dependencies</h4>
+<h4 id="dependency-metadata-dependencies"><a class="anchor" href="#dependency-metadata-dependencies"></a>2.1.4. Dependencies</h4>
 <div class="paragraph">
 <p>All of the above artifacts have a dependency in their published Maven POMs on
 the following <em>@API Guardian</em> JAR.</p>
@@ -894,7 +871,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <h3 id="dependency-diagram"><a class="anchor" href="#dependency-diagram"></a>2.2. Dependency Diagram</h3>
 <div class="imageblock">
 <div class="content">
-<img src="images/component-diagram.svg" alt="component diagram" width="1863" height="564">
+<img src="images/component-diagram.svg" alt="component diagram" width="1925" height="613">
 </div>
 </div>
 </div>
@@ -908,10 +885,10 @@ projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respect
 <div class="ulist">
 <ul>
 <li>
-<p>For Gradle, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/r5.2.0-M1/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project.</p>
+<p>For Gradle, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/r5.1.1/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project.</p>
 </li>
 <li>
-<p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/r5.2.0-M1/junit5-maven-consumer">junit5-maven-consumer</a></code> project.</p>
+<p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/r5.1.1/junit5-maven-consumer">junit5-maven-consumer</a></code> project.</p>
 </li>
 </ul>
 </div>
@@ -1309,7 +1286,7 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertThrows</span>
 
-<span class="type">class</span> <span class="class">AssertionsKotlinDemo</span> {
+<span class="type">class</span> <span class="class">AssertionsDemoKotlin</span> {
 
     <span class="annotation">@Test</span>
     fun <span class="error">`</span>grouped assertions<span class="error">`</span>() {
@@ -1497,7 +1474,7 @@ annotation, via one of the annotations discussed in
 <p>The <a href="#extensions-conditions"><code>ExecutionCondition</code></a> extension API in JUnit Jupiter allows
 developers to either <em>enable</em> or <em>disable</em> a container or test based on certain
 conditions <em>programmatically</em>. The simplest example of such a condition is the built-in
-<code><a href="https://github.com/junit-team/junit5/tree/r5.2.0-M1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> which supports the <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation (see
+<code><a href="https://github.com/junit-team/junit5/tree/r5.1.1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> which supports the <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation (see
 <a href="#writing-tests-disabling">Disabling Tests</a>). In addition to <code>@Disabled</code>, JUnit Jupiter also supports
 several other annotation-based conditions in the <code>org.junit.jupiter.api.condition</code>
 package that allow developers to enable or disable containers and tests <em>declaratively</em>.
@@ -1898,20 +1875,6 @@ of each test class before executing each <em>test</em> method (see note below fo
 as a <em>test</em> method). This "per-method" test instance lifecycle is the default behavior in
 JUnit Jupiter and is analogous to all previous versions of JUnit.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Please note that the test class will still be instantiated if a given <em>test</em> method
-is <em>disabled</em> via a <a href="#writing-tests-conditional-execution">condition</a> (e.g., <code>@Disabled</code>,
-<code>@DisabledOnOs</code>, etc.) even when the "per-method" test instance lifecycle mode is active.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>If you would prefer that JUnit Jupiter execute all test methods on the same test
 instance, simply annotate your test class with <code>@TestInstance(Lifecycle.PER_CLASS)</code>. When
@@ -2132,7 +2095,7 @@ parameter must be resolved at runtime by a registered <code>ParameterResolver</c
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/r5.2.0-M1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="../api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code>, the
+<p><code><a href="https://github.com/junit-team/junit5/tree/r5.1.1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="../api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code>, the
 <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code> corresponding to the
 current test as the value for the parameter. The <code>TestInfo</code> can then be used to retrieve
 information about the current test such as the test&#8217;s display name, the test class, the
@@ -2188,7 +2151,7 @@ following demonstrates how to have <code>TestInfo</code> injected into a test co
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/r5.2.0-M1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java">RepetitionInfoParameterResolver</a></code>: if a method parameter in a <code>@RepeatedTest</code>,
+<p><code>RepetitionInfoParameterResolver</code>: if a method parameter in a <code>@RepeatedTest</code>,
 <code>@BeforeEach</code>, or <code>@AfterEach</code> method is of type <code><a href="../api/org/junit/jupiter/api/RepetitionInfo.html">RepetitionInfo</a></code>, the
 <code>RepetitionInfoParameterResolver</code> will supply an instance of <code>RepetitionInfo</code>.
 <code>RepetitionInfo</code> can then be used to retrieve information about the current repetition
@@ -2197,7 +2160,7 @@ however, that <code>RepetitionInfoParameterResolver</code> is not registered out
 of a <code>@RepeatedTest</code>. See <a href="#writing-tests-repeated-tests-examples">Repeated Test Examples</a>.</p>
 </li>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/r5.2.0-M1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="../api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>,
+<p><code><a href="https://github.com/junit-team/junit5/tree/r5.1.1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="../api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>,
 the <code>TestReporterParameterResolver</code> will supply an instance of <code>TestReporter</code>. The
 <code>TestReporter</code> can be used to publish additional data about the current test run. The
 data can be consumed through <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a>.reportingEntryPublished()</code> and
@@ -2250,7 +2213,7 @@ Other parameter resolvers must be explicitly enabled by registering appropriate
 </table>
 </div>
 <div class="paragraph">
-<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/r5.2.0-M1/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a custom <code><a href="../api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>.
+<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/r5.1.1/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a custom <code><a href="../api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>.
 While not intended to be production-ready, it demonstrates the simplicity and
 expressiveness of both the extension model and the parameter resolution process.
 <code>MyMockitoTest</code> demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code>
@@ -2730,34 +2693,7 @@ to the console.</p>
 <p>Parameterized tests make it possible to run a test multiple times with different
 arguments. They are declared just like regular <code>@Test</code> methods but use the
 <code><a href="../api/org/junit/jupiter/params/ParameterizedTest.html">@ParameterizedTest</a></code> annotation instead. In addition, you must declare at least one
-<em>source</em> that will provide the arguments for each invocation and then <em>consume</em> the
-arguments in the test method.</p>
-</div>
-<div class="paragraph">
-<p>The following example demonstrates a parameterized test that uses the <code>@ValueSource</code>
-annotation to specify a <code>String</code> array as the source of arguments.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content">racecar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">radar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">able was I ere I saw elba</span><span class="delimiter">&quot;</span></span> })
-<span class="type">void</span> palindromes(<span class="predefined-type">String</span> candidate) {
-    assertTrue(isPalindrome(candidate));
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>When executing the above parameterized test method, each invocation will be reported
-separately. For instance, the <code>ConsoleLauncher</code> will print output similar to the
-following.</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>palindromes(String) ✔
-├─ [1] racecar ✔
-├─ [2] radar ✔
-└─ [3] able was I ere I saw elba ✔</pre>
-</div>
+<em>source</em> that will provide the arguments for each invocation.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -2772,6 +2708,29 @@ in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for details.
 </tr>
 </table>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content">racecar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">radar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">able was I ere I saw elba</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> palindromes(<span class="predefined-type">String</span> candidate) {
+    assertTrue(isPalindrome(candidate));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This parameterized test uses the <code>@ValueSource</code> annotation to specify a <code>String</code> array as
+the source of arguments. When executing the above method, each invocation will be
+reported separately. For instance, the <code>ConsoleLauncher</code> will print output similar to the
+following.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>palindromes(String) ✔
+├─ [1] racecar ✔
+├─ [2] radar ✔
+└─ [3] able was I ere I saw elba ✔</pre>
+</div>
+</div>
 <div class="sect3">
 <h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>3.14.1. Required Setup</h4>
 <div class="paragraph">
@@ -2779,42 +2738,8 @@ in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for details.
 <code>junit-jupiter-params</code> artifact. Please refer to <a href="#dependency-metadata">Dependency Metadata</a> for details.</p>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="writing-tests-parameterized-tests-consuming-arguments"><a class="anchor" href="#writing-tests-parameterized-tests-consuming-arguments"></a>3.15. Consuming Arguments</h3>
-<div class="paragraph">
-<p>Parameterized test methods typically <em>consume</em> arguments directly from the configured
-source (see <a href="#writing-tests-parameterized-tests-sources">Sources of Arguments</a>) following a one-to-one
-correlation between argument source index and method parameter index (see examples in
-<a href="#writing-tests-parameterized-tests-sources-CsvSource">@CsvSource</a>). However, a parameterized test
-method may also choose to <em>aggregate</em> arguments from the source into a single object
-passed to the method (see <a href="#writing-tests-parameterized-tests-argument-aggregation">Argument Aggregation</a>).
-Additional arguments may also be provided by a <code>ParameterResolver</code> (e.g., to obtain an
-instance of <code>TestInfo</code>, <code>TestReporter</code>, etc.). Specifically, a parameterized test method
-must declare formal parameters according to the following rules.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Zero or more <em>indexed arguments</em> must be declared first.</p>
-</li>
-<li>
-<p>Zero or more <em>aggregators</em> must be declared next.</p>
-</li>
-<li>
-<p>Zero or more arguments supplied by a <code>ParameterResolver</code> must be declared last.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>In this context, an <em>indexed argument</em> is an argument for a given index in the
-<code>Arguments</code> provided by an <code>ArgumentsProvider</code> that is passed as an argument to the
-parameterized method at the same index in the method&#8217;s formal parameter list. An
-<em>aggregator</em> is any parameter of type <code>ArgumentsAccessor</code> or any parameter annotated with
-<code>@AggregateWith</code>.</p>
-</div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.15.1. Sources of Arguments</h4>
+<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.14.2. Sources of Arguments</h4>
 <div class="paragraph">
 <p>Out of the box, JUnit Jupiter provides quite a few <em>source</em> annotations. Each of the
 following subsections provides a brief overview and an example for each of them. Please
@@ -2932,16 +2857,14 @@ following examples.</p>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-MethodSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-MethodSource"></a>@MethodSource</h5>
 <div class="paragraph">
-<p><code>@MethodSource</code> allows you to refer to one or more <em>factory</em> methods of the test class or
-external classes. Such factory methods must return a <code>Stream</code>, <code>Iterable</code>, <code>Iterator</code>, or
-array of arguments. In addition, such factory methods must not accept any arguments.
-Factory methods within the test class must be <code>static</code> unless the test class is annotated
-with <code>@TestInstance(Lifecycle.PER_CLASS)</code>; whereas, factory methods in external classes
-must always be <code>static</code>.</p>
+<p><code>@MethodSource</code> allows you to refer to one or more <em>factory</em> methods of the test class.
+Such methods must return a <code>Stream</code>, <code>Iterable</code>, <code>Iterator</code>, or array of arguments. In
+addition, such methods must not accept any arguments. By default such methods must be
+<code>static</code> unless the test class is annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
 </div>
 <div class="paragraph">
 <p>If you only need a single parameter, you can return a <code>Stream</code> of instances of the
-parameter type as demonstrated in the following example.</p>
+parameter type as demonstrated by the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3011,36 +2934,6 @@ factory method defined in the <code>Arguments</code> interface.</p>
         Arguments.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>)),
         Arguments.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">x</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">y</span><span class="delimiter">&quot;</span></span>))
     );
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>An external, <code>static</code> <em>factory</em> method can be referenced by providing its <em>fully
-qualified method name</em> as demonstrated in the following example.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">example</span>;
-
-<span class="keyword">import</span> <span class="include">java.util.stream.Stream</span>;
-
-<span class="keyword">import</span> <span class="include">org.junit.jupiter.params.ParameterizedTest</span>;
-<span class="keyword">import</span> <span class="include">org.junit.jupiter.params.provider.MethodSource</span>;
-
-<span class="type">class</span> <span class="class">ExternalMethodSourceDemo</span> {
-
-    <span class="annotation">@ParameterizedTest</span>
-    <span class="annotation">@MethodSource</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">example.StringsProviders#blankStrings</span><span class="delimiter">&quot;</span></span>)
-    <span class="type">void</span> testWithExternalMethodSource(<span class="predefined-type">String</span> blankString) {
-        <span class="comment">// test with blank string</span>
-    }
-}
-
-<span class="type">class</span> <span class="class">StringsProviders</span> {
-
-    <span class="directive">static</span> Stream&lt;<span class="predefined-type">String</span>&gt; blankStrings() {
-        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="char">\n</span><span class="content"> </span><span class="delimiter">&quot;</span></span>);
-    }
 }</code></pre>
 </div>
 </div>
@@ -3155,7 +3048,7 @@ primitive type.
     assertNotNull(argument);
 }
 
-<span class="directive">public</span> <span class="type">class</span> <span class="class">MyArgumentsProvider</span> <span class="directive">implements</span> ArgumentsProvider {
+<span class="directive">static</span> <span class="type">class</span> <span class="class">MyArgumentsProvider</span> <span class="directive">implements</span> ArgumentsProvider {
 
     <span class="annotation">@Override</span>
     <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; provideArguments(ExtensionContext context) {
@@ -3167,18 +3060,7 @@ primitive type.
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.15.2. Argument Conversion</h4>
-<div class="sect4">
-<h5 id="writing-tests-parameterized-tests-argument-conversion-widening"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-widening"></a>Widening Conversion</h5>
-<div class="paragraph">
-<p>JUnit Jupiter supports
-<a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2">Widening Primitive
-Conversion</a> for arguments supplied to a <code>@ParameterizedTest</code>. For example, a
-parameterized test annotated with <code>@ValueSource(ints = { 1, 2, 3 })</code> can be declared to
-accept not only an argument of type <code>int</code> but also an argument of type <code>long</code>, <code>float</code>,
-or <code>double</code>.</p>
-</div>
-</div>
+<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.14.3. Argument Conversion</h4>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-argument-conversion-implicit"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-implicit"></a>Implicit Conversion</h5>
 <div class="paragraph">
@@ -3377,7 +3259,7 @@ as the title of the book.</p>
     assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">42 Cats</span><span class="delimiter">&quot;</span></span>, book.getTitle());
 }
 
-<span class="directive">public</span> <span class="type">class</span> <span class="class">Book</span> {
+<span class="directive">static</span> <span class="type">class</span> <span class="class">Book</span> {
 
     <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> title;
 
@@ -3414,7 +3296,7 @@ like in the following example.</p>
     assertNotNull(<span class="predefined-type">TimeUnit</span>.valueOf(argument));
 }
 
-<span class="directive">public</span> <span class="type">class</span> <span class="class">ToStringArgumentConverter</span> <span class="directive">extends</span> SimpleArgumentConverter {
+<span class="directive">static</span> <span class="type">class</span> <span class="class">ToStringArgumentConverter</span> <span class="directive">extends</span> SimpleArgumentConverter {
 
     <span class="annotation">@Override</span>
     <span class="directive">protected</span> <span class="predefined-type">Object</span> convert(<span class="predefined-type">Object</span> source, <span class="predefined-type">Class</span>&lt;?&gt; targetType) {
@@ -3444,110 +3326,7 @@ composed annotation <code>JavaTimeConversionPattern</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-aggregation"><a class="anchor" href="#writing-tests-parameterized-tests-argument-aggregation"></a>3.15.3. Argument Aggregation</h4>
-<div class="paragraph">
-<p>By default, each <em>argument</em> provided to a <code>@ParameterizedTest</code> method corresponds to a
-single method parameter. Consequently, argument sources which are expected to supply a
-large number of arguments can lead to large method signatures.</p>
-</div>
-<div class="paragraph">
-<p>In such cases, an <code><a href="../api/org/junit/jupiter/params/aggregator/ArgumentsAccessor.html">ArgumentsAccessor</a></code> can be used instead of multiple parameters. Using
-this API, you can access the provided arguments through a single argument passed to your
-test method. In addition, type conversion is supported as discussed in
-<a href="#writing-tests-parameterized-tests-argument-conversion-implicit">Implicit Conversion</a>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@CsvSource</span>({
-    <span class="string"><span class="delimiter">&quot;</span><span class="content">Jane, Doe, F, 1990-05-20</span><span class="delimiter">&quot;</span></span>,
-    <span class="string"><span class="delimiter">&quot;</span><span class="content">John, Doe, M, 1990-10-22</span><span class="delimiter">&quot;</span></span>
-})
-<span class="type">void</span> testWithArgumentsAccessor(ArgumentsAccessor arguments) {
-    Person person = <span class="keyword">new</span> Person(arguments.getString(<span class="integer">0</span>),
-                               arguments.getString(<span class="integer">1</span>),
-                               arguments.get(<span class="integer">2</span>, Gender.class),
-                               arguments.get(<span class="integer">3</span>, LocalDate.class));
-
-    <span class="keyword">if</span> (person.getFirstName().equals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Jane</span><span class="delimiter">&quot;</span></span>)) {
-        assertEquals(Gender.F, person.getGender());
-    }
-    <span class="keyword">else</span> {
-        assertEquals(Gender.M, person.getGender());
-    }
-    assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>, person.getLastName());
-    assertEquals(<span class="integer">1990</span>, person.getDateOfBirth().getYear());
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><em>An instance of <code>ArgumentsAccessor</code> is automatically injected into any parameter of type
-<code>ArgumentsAccessor</code>.</em></p>
-</div>
-<div class="sect4">
-<h5 id="writing-tests-parameterized-tests-argument-aggregation-custom"><a class="anchor" href="#writing-tests-parameterized-tests-argument-aggregation-custom"></a>Custom Aggregators</h5>
-<div class="paragraph">
-<p>Apart from direct access to a <code>@ParameterizedTest</code> method&#8217;s arguments using an
-<code>ArgumentsAccessor</code>, JUnit Jupiter also supports the usage of custom, reusable
-<em>aggregators</em>.</p>
-</div>
-<div class="paragraph">
-<p>To use a custom aggregator simply implement the <code><a href="../api/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html">ArgumentsAggregator</a></code> interface and
-register it via the <code>@AggregateWith</code> annotation on a compatible parameter in the
-<code>@ParameterizedTest</code> method. The result of the aggregation will then be provided as an
-argument for the corresponding parameter when the parameterized test is invoked.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@CsvSource</span>({
-    <span class="string"><span class="delimiter">&quot;</span><span class="content">Jane, Doe, F, 1990-05-20</span><span class="delimiter">&quot;</span></span>,
-    <span class="string"><span class="delimiter">&quot;</span><span class="content">John, Doe, M, 1990-10-22</span><span class="delimiter">&quot;</span></span>
-})
-<span class="type">void</span> testWithArgumentsAggregator(<span class="annotation">@AggregateWith</span>(PersonAggregator.class) Person person) {
-    <span class="comment">// perform assertions against person</span>
-}
-
-<span class="directive">public</span> <span class="type">class</span> <span class="class">PersonAggregator</span> <span class="directive">implements</span> ArgumentsAggregator {
-    <span class="annotation">@Override</span>
-    <span class="directive">public</span> Person aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
-        <span class="keyword">return</span> <span class="keyword">new</span> Person(arguments.getString(<span class="integer">0</span>),
-                          arguments.getString(<span class="integer">1</span>),
-                          arguments.get(<span class="integer">2</span>, Gender.class),
-                          arguments.get(<span class="integer">3</span>, LocalDate.class));
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you find yourself repeatedly declaring <code>@AggregateWith(MyTypeAggregator.class)</code> for
-multiple parameterized test methods across your codebase, you may wish to create a custom
-<em>composed annotation</em> such as <code>@CsvToMyType</code> that is meta-annotated with
-<code>@AggregateWith(MyTypeAggregator.class)</code>. The following example demonstrates this in
-action with a custom <code>@CsvToPerson</code> annotation.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@CsvSource</span>({
-    <span class="string"><span class="delimiter">&quot;</span><span class="content">Jane, Doe, F, 1990-05-20</span><span class="delimiter">&quot;</span></span>,
-    <span class="string"><span class="delimiter">&quot;</span><span class="content">John, Doe, M, 1990-10-22</span><span class="delimiter">&quot;</span></span>
-})
-<span class="type">void</span> testWithCustomAggregatorAnnotation(<span class="annotation">@CsvToPerson</span> Person person) {
-    <span class="comment">// perform assertions against person</span>
-}
-
-<span class="annotation">@Retention</span>(<span class="predefined-type">RetentionPolicy</span>.RUNTIME)
-<span class="annotation">@Target</span>(<span class="predefined-type">ElementType</span>.PARAMETER)
-<span class="annotation">@AggregateWith</span>(PersonAggregator.class)
-<span class="directive">public</span> <span class="annotation">@interface</span> CsvToPerson {
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.15.4. Customizing Display Names</h4>
+<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.14.4. Customizing Display Names</h4>
 <div class="paragraph">
 <p>By default, the display name of a parameterized test invocation contains the invocation
 index and the <code>String</code> representation of all arguments for that specific invocation.
@@ -3605,7 +3384,7 @@ However, you can customize invocation display names via the <code>name</code> at
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.15.5. Lifecycle and Interoperability</h4>
+<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.14.5. Lifecycle and Interoperability</h4>
 <div class="paragraph">
 <p>Each invocation of a parameterized test has the same lifecycle as a regular <code>@Test</code>
 method. For example, <code>@BeforeEach</code> methods will be executed before each invocation.
@@ -3642,7 +3421,7 @@ lifecycle methods (e.g. <code>@BeforeEach</code>) and test class constructors.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.16. Test Templates</h3>
+<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.15. Test Templates</h3>
 <div class="paragraph">
 <p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method is not a regular test case but rather a template for test
 cases. As such, it is designed to be invoked multiple times depending on the number of
@@ -3654,7 +3433,7 @@ method with full support for the same lifecycle callbacks and extensions. Please
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.17. Dynamic Tests</h3>
+<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.16. Dynamic Tests</h3>
 <div class="paragraph">
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in
 <a href="#writing-tests-annotations">Annotations</a> is very similar to the <code>@Test</code> annotation in JUnit 4. Both
@@ -3713,7 +3492,7 @@ or extensions between the execution of individual dynamic tests generated by the
 </table>
 </div>
 <div class="paragraph">
-<p>As of JUnit Jupiter 5.2.0-M1, dynamic tests must always be created by factory
+<p>As of JUnit Jupiter 5.1.1, dynamic tests must always be created by factory
 methods; however, this might be complemented by a registration facility in a later
 release.</p>
 </div>
@@ -3731,7 +3510,7 @@ Dynamic tests are currently an <em>experimental</em> feature. Consult the table 
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.17.1. Dynamic Test Examples</h4>
+<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.16.1. Dynamic Test Examples</h4>
 <div class="paragraph">
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories
 and dynamic tests.</p>
@@ -3912,7 +3691,7 @@ below to use a newer version of JUnit 5 than the one bundled with IntelliJ IDEA.
 </table>
 </div>
 <div class="paragraph">
-<p>In order to use a different JUnit 5 version (e.g., 5.2.0-M1), you may need to
+<p>In order to use a different JUnit 5 version (e.g., 5.1.1), you may need to
 include the corresponding versions of the <code>junit-platform-launcher</code>,
 <code>junit-jupiter-engine</code>, and <code>junit-vintage-engine</code> JARs in the classpath.</p>
 </div>
@@ -3920,9 +3699,9 @@ include the corresponding versions of the <code>junit-platform-launcher</code>,
 <div class="title">Additional Gradle Dependencies</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="groovy"><span class="comment">// Only needed to run tests in a version of IntelliJ IDEA that bundles older versions</span>
-testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.platform:junit-platform-launcher:1.2.0-M1</span><span class="delimiter">&quot;</span></span>)
-testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-engine:5.2.0-M1</span><span class="delimiter">&quot;</span></span>)
-testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:5.2.0-M1</span><span class="delimiter">&quot;</span></span>)</code></pre>
+testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.platform:junit-platform-launcher:1.1.1</span><span class="delimiter">&quot;</span></span>)
+testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-engine:5.1.1</span><span class="delimiter">&quot;</span></span>)
+testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:5.1.1</span><span class="delimiter">&quot;</span></span>)</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -3932,19 +3711,19 @@ testRuntime(<span class="string"><span class="delimiter">&quot;</span><span clas
 <span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>junit-platform-launcher<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>1.2.0-M1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.1.1<span class="tag">&lt;/version&gt;</span>
     <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span>
 <span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>junit-jupiter-engine<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>5.2.0-M1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>5.1.1<span class="tag">&lt;/version&gt;</span>
     <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span>
 <span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>org.junit.vintage<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>junit-vintage-engine<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>5.2.0-M1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>5.1.1<span class="tag">&lt;/version&gt;</span>
     <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -3979,73 +3758,204 @@ tests with a <a href="#running-tests-junit-platform-runner">JUnit 4 based Runner
 <div class="sect3">
 <h4 id="running-tests-build-gradle"><a class="anchor" href="#running-tests-build-gradle"></a>4.2.1. Gradle</h4>
 <div class="paragraph">
-<p>Starting with <a href="https://docs.gradle.org/4.6/release-notes.html">version 4.6</a>, Gradle provides
-<a href="https://docs.gradle.org/current/userguide/java_plugin.html#using_junit5">native support</a>
-for executing tests on the JUnit Platform. To enable it, you just need to specify
-<code>useJUnitPlatform()</code> within a <code>test</code> task declaration in <code>build.gradle</code>:</p>
+<p>The JUnit team has developed a very basic Gradle plugin that allows you to run any kind
+of test that is supported by a <code>TestEngine</code> (e.g., JUnit 3, JUnit 4, JUnit Jupiter,
+<a href="http://specsy.org/">Specsy</a>, etc.). See <code>build.gradle</code> in the <code><a href="https://github.com/junit-team/junit5-samples/tree/r5.1.1/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project for an
+example of the plugin in action.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">test {
-    useJUnitPlatform()
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Filtering by tags or engines is also supported:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">test {
-    useJUnitPlatform {
-        includeTags <span class="string"><span class="delimiter">'</span><span class="content">fast</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">smoke &amp; feature-a</span><span class="delimiter">'</span></span>
-        excludeTags <span class="string"><span class="delimiter">'</span><span class="content">slow</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">ci</span><span class="delimiter">'</span></span>
-        includeEngines <span class="string"><span class="delimiter">'</span><span class="content">junit-jupiter</span><span class="delimiter">'</span></span>
-        excludeEngines <span class="string"><span class="delimiter">'</span><span class="content">junit-vintage</span><span class="delimiter">'</span></span>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Please refer to the
-<a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_test">official Gradle documentation</a>
-for a comprehensive list of options.</p>
-</div>
-<div class="admonitionblock warning">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-<div class="title">The JUnit Platform Gradle Plugin is deprecated</div>
+<div class="title">Native Gradle Support Is Here!</div>
 <div class="paragraph">
-<p>The very basic <code>junit-platform-gradle-plugin</code> developed by the JUnit team was deprecated
-in JUnit Platform 1.2 and will be discontinued in 1.3. Please switch to Gradle&#8217;s standard
-<code>test</code> task.</p>
+<p>Starting with <a href="https://docs.gradle.org/4.6/release-notes.html">version 4.6</a>, Gradle provides
+<a href="https://docs.gradle.org/current/userguide/java_plugin.html#using_junit5">native support</a>
+for executing tests on the JUnit Platform. Thus, the <code>junit-platform-gradle-plugin</code> will
+be deprecated in JUnit Platform 1.2 and discontinued in version 1.3. Please switch to
+Gradle&#8217;s standard <code>test</code> task and <code>useJUnitPlatform()</code>.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="sect4">
-<h5 id="running-tests-build-gradle-config-params"><a class="anchor" href="#running-tests-build-gradle-config-params"></a>Configuration Parameters</h5>
+<h5 id="running-tests-build-gradle-junit-enable"><a class="anchor" href="#running-tests-build-gradle-junit-enable"></a>Enabling the JUnit Gradle Plugin</h5>
 <div class="paragraph">
-<p>The standard Gradle <code>test</code> task currently does not provide a dedicated DSL to set JUnit
-Platform <a href="#running-tests-config-params">configuration parameters</a> to influence test
-discovery and execution. However, you can provide configuration parameters within the
-build script via system properties (as shown below) or via the
-<code>junit-platform.properties</code> file.</p>
+<p>To use the JUnit Gradle plugin, you first need to make sure that you are running Gradle
+2.5 or higher. Once you&#8217;ve done that, you can configure <code>build.gradle</code> as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">test {
+<pre class="CodeRay highlight"><code data-lang="java">buildscript {
+    repositories {
+        mavenCentral()
+        <span class="comment">// The following is only necessary if you want to use SNAPSHOT releases.</span>
+        <span class="comment">// maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }</span>
+    }
+    dependencies {
+        classpath <span class="string"><span class="delimiter">'</span><span class="content">org.junit.platform:junit-platform-gradle-plugin:1.1.1</span><span class="delimiter">'</span></span>
+    }
+}
+
+apply plugin: <span class="string"><span class="delimiter">'</span><span class="content">org.junit.platform.gradle.plugin</span><span class="delimiter">'</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="running-tests-build-gradle-junit-configure"><a class="anchor" href="#running-tests-build-gradle-junit-configure"></a>Configuring the JUnit Gradle Plugin</h5>
+<div class="paragraph">
+<p>Once the JUnit Gradle plugin has been applied, you can configure it as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">junitPlatform {
+    platformVersion <span class="string"><span class="delimiter">'</span><span class="content">1.1.1</span><span class="delimiter">'</span></span> <span class="comment">// optional, defaults to plugin version</span>
+    reportsDir file(<span class="string"><span class="delimiter">'</span><span class="content">build/test-results/junit-platform</span><span class="delimiter">'</span></span>) <span class="comment">// this is the default</span>
+    <span class="comment">// enableStandardTestTask true</span>
+    <span class="comment">// selectors (optional)</span>
+    <span class="comment">// filters (optional)</span>
+    <span class="comment">// logManager (optional)</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, the JUnit Gradle plugin disables the standard Gradle <code>test</code> task, but this
+can be overridden via the <code>enableStandardTestTask</code> flag.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="running-tests-build-gradle-selectors"><a class="anchor" href="#running-tests-build-gradle-selectors"></a>Configuring Selectors</h5>
+<div class="paragraph">
+<p>By default, the plugin will scan your project&#8217;s output directories for tests. However,
+you can specify which tests to execute explicitly using the <code>selectors</code> extension element.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">junitPlatform {
     <span class="comment">// ...</span>
-    systemProperty <span class="string"><span class="delimiter">'</span><span class="content">junit.jupiter.conditions.deactivate</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">*</span><span class="delimiter">'</span></span>
-    systemProperties = [
+    selectors {
+        uris <span class="string"><span class="delimiter">'</span><span class="content">file:///foo.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">http://example.com/</span><span class="delimiter">'</span></span>
+        uri <span class="string"><span class="delimiter">'</span><span class="content">foo:resource</span><span class="delimiter">'</span></span> <i class="conum" data-value="1"></i><b>(1)</b>
+        files <span class="string"><span class="delimiter">'</span><span class="content">foo.txt</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">bar.csv</span><span class="delimiter">'</span></span>
+        file <span class="string"><span class="delimiter">'</span><span class="content">qux.json</span><span class="delimiter">'</span></span> <i class="conum" data-value="2"></i><b>(2)</b>
+        directories <span class="string"><span class="delimiter">'</span><span class="content">foo/bar</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">bar/qux</span><span class="delimiter">'</span></span>
+        directory <span class="string"><span class="delimiter">'</span><span class="content">qux/bar</span><span class="delimiter">'</span></span> <i class="conum" data-value="3"></i><b>(3)</b>
+        packages <span class="string"><span class="delimiter">'</span><span class="content">com.acme.foo</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">com.acme.bar</span><span class="delimiter">'</span></span>
+        aPackage <span class="string"><span class="delimiter">'</span><span class="content">com.example.app</span><span class="delimiter">'</span></span> <i class="conum" data-value="4"></i><b>(4)</b>
+        classes <span class="string"><span class="delimiter">'</span><span class="content">com.acme.Foo</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">com.acme.Bar</span><span class="delimiter">'</span></span>
+        aClass <span class="string"><span class="delimiter">'</span><span class="content">com.example.app.Application</span><span class="delimiter">'</span></span> <i class="conum" data-value="5"></i><b>(5)</b>
+        methods <span class="string"><span class="delimiter">'</span><span class="content">com.acme.Foo#a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">com.acme.Foo#b</span><span class="delimiter">'</span></span>
+        method <span class="string"><span class="delimiter">'</span><span class="content">com.example.app.Application#run(java.lang.String[])</span><span class="delimiter">'</span></span> <i class="conum" data-value="6"></i><b>(6)</b>
+        resources <span class="string"><span class="delimiter">'</span><span class="content">/bar.csv</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">/foo/input.json</span><span class="delimiter">'</span></span>
+        resource <span class="string"><span class="delimiter">'</span><span class="content">/com/acme/my.properties</span><span class="delimiter">'</span></span> <i class="conum" data-value="7"></i><b>(7)</b>
+        modules <span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">bar</span><span class="delimiter">'</span></span>
+        module <span class="string"><span class="delimiter">'</span><span class="content">baz</span><span class="delimiter">'</span></span> <i class="conum" data-value="8"></i><b>(8)</b>
+    }
+    <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>URIs</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Local files</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Local directories</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Packages</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Classes, fully qualified class names</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Methods, fully qualified method names (see <a href="../api/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod-java.lang.String-">selectMethod(String) in DiscoverySelectors</a>)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>Classpath resources</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>Module names</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="running-tests-build-gradle-filters"><a class="anchor" href="#running-tests-build-gradle-filters"></a>Configuring Filters</h5>
+<div class="paragraph">
+<p>You can configure filters for the test plan by using the <code>filters</code> extension. By default,
+all engines and tags are included in the test plan. Only the default
+<code>includeClassNamePattern</code> (<code>^.*Tests?$</code>) is applied. You can
+override the default pattern as in the following example. When you specify multiple
+patterns, they are combined using OR semantics.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">junitPlatform {
+    <span class="comment">// ...</span>
+    filters {
+        engines {
+            include <span class="string"><span class="delimiter">'</span><span class="content">junit-jupiter</span><span class="delimiter">'</span></span>
+            <span class="comment">// exclude 'junit-vintage'</span>
+        }
+        tags {
+            include <span class="string"><span class="delimiter">'</span><span class="content">fast</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">smoke &amp; feature-a</span><span class="delimiter">'</span></span>
+            <span class="comment">// exclude 'slow', 'ci'</span>
+        }
+        packages {
+            include <span class="string"><span class="delimiter">'</span><span class="content">com.sample.included1</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">com.sample.included2</span><span class="delimiter">'</span></span>
+            <span class="comment">// exclude 'com.sample.excluded1', 'com.sample.excluded2'</span>
+        }
+        includeClassNamePattern <span class="string"><span class="delimiter">'</span><span class="content">.*Spec</span><span class="delimiter">'</span></span>
+        includeClassNamePatterns <span class="string"><span class="delimiter">'</span><span class="content">.*Test</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">.*Tests</span><span class="delimiter">'</span></span>
+    }
+    <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you supply a <em>Test Engine ID</em> via <code>engines {include &#8230;&#8203;}</code> or <code>engines {exclude &#8230;&#8203;}</code>,
+the JUnit Gradle plugin will only run tests for the desired test engines. Similarly, if
+you supply <em>tags</em> or <a href="#running-tests-tag-expressions"><em>tag expressions</em></a> via
+<code>tags {include &#8230;&#8203;}</code> or <code>tags {exclude &#8230;&#8203;}</code>, the JUnit Gradle plugin will only run tests
+that are <em>tagged</em> accordingly (e.g., via the <code>@Tag</code> annotation for JUnit Jupiter based
+tests). The same applies to package names that can be included or excluded using
+<code>packages {include &#8230;&#8203;}</code> or <code>packages {exclude &#8230;&#8203;}</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="running-tests-build-gradle-config-params"><a class="anchor" href="#running-tests-build-gradle-config-params"></a>Configuration Parameters</h5>
+<div class="paragraph">
+<p>You can set configuration parameters to influence test discovery and execution by using
+the <code>configurationParameter</code> or <code>configurationParameters</code> DSL. The former can be used to
+set a single configuration parameter, while the latter takes a map of configuration
+parameters to set multiple key-value pairs at once. All keys and values must be <code>Strings</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">junitPlatform {
+    <span class="comment">// ...</span>
+    configurationParameter <span class="string"><span class="delimiter">'</span><span class="content">junit.jupiter.conditions.deactivate</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">*</span><span class="delimiter">'</span></span>
+    configurationParameters([
         <span class="string"><span class="delimiter">'</span><span class="content">junit.jupiter.extensions.autodetection.enabled</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">true</span><span class="delimiter">'</span></span>,
         <span class="string"><span class="delimiter">'</span><span class="content">junit.jupiter.testinstance.lifecycle.default</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">per_class</span><span class="delimiter">'</span></span>
-    ]
+    ])
     <span class="comment">// ...</span>
 }</code></pre>
 </div>
@@ -4054,7 +3964,8 @@ build script via system properties (as shown below) or via the
 <div class="sect4">
 <h5 id="running-tests-build-gradle-engines-configure"><a class="anchor" href="#running-tests-build-gradle-engines-configure"></a>Configuring Test Engines</h5>
 <div class="paragraph">
-<p>In order to run any tests at all, a <code>TestEngine</code> implementation must be on the classpath.</p>
+<p>In order to have the JUnit Gradle plugin run any tests at all, a <code>TestEngine</code>
+implementation must be on the classpath.</p>
 </div>
 <div class="paragraph">
 <p>To configure support for JUnit Jupiter based tests, configure a <code>testCompile</code> dependency
@@ -4064,21 +3975,21 @@ implementation similar to the following.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java">dependencies {
-    testCompile(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-api:5.2.0-M1</span><span class="delimiter">&quot;</span></span>)
-    testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-engine:5.2.0-M1</span><span class="delimiter">&quot;</span></span>)
+    testCompile(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-api:5.1.1</span><span class="delimiter">&quot;</span></span>)
+    testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-engine:5.1.1</span><span class="delimiter">&quot;</span></span>)
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The JUnit Platform can run JUnit 4 based tests as long as you configure a <code>testCompile</code>
-dependency on JUnit 4 and a <code>testRuntime</code> dependency on the JUnit Vintage <code>TestEngine</code>
-implementation similar to the following.</p>
+<p>The JUnit Gradle plugin can run JUnit 4 based tests as long as you configure a
+<code>testCompile</code> dependency on JUnit 4 and a <code>testRuntime</code> dependency on the JUnit Vintage
+<code>TestEngine</code> implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java">dependencies {
     testCompile(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit:junit:4.12</span><span class="delimiter">&quot;</span></span>)
-    testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:5.2.0-M1</span><span class="delimiter">&quot;</span></span>)
+    testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:5.1.1</span><span class="delimiter">&quot;</span></span>)
 }</code></pre>
 </div>
 </div>
@@ -4093,15 +4004,16 @@ emit warnings and debug information. Please refer to the official documentation 
 <div class="paragraph">
 <p>Alternatively, it&#8217;s possible to redirect log messages to other logging frameworks such as
 <a href="https://logging.apache.org/log4j/2.x/">Log4j</a> or <a href="https://logback.qos.ch/">Logback</a>. To use a logging framework that provides a custom implementation of
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code>, set the <code>java.util.logging.manager</code> system property to the <em>fully
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code>, configure the <code>logManager</code> extension property of the JUnit Gradle plugin.
+This will set the <code>java.util.logging.manager</code> system property to the supplied <em>fully
 qualified class name</em> of the <code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code> implementation to use. The example below
 demonstrates how to configure Log4j&#160;2.x (see <a href="https://logging.apache.org/log4j/2.x/log4j-jul/index.html">Log4j JDK Logging Adapter</a> for
 details).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java">test {
-    systemProperty <span class="string"><span class="delimiter">'</span><span class="content">java.util.logging.manager</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">org.apache.logging.log4j.jul.LogManager</span><span class="delimiter">'</span></span>
+<pre class="CodeRay highlight"><code data-lang="java">junitPlatform {
+    logManager <span class="string"><span class="delimiter">'</span><span class="content">org.apache.logging.log4j.jul.LogManager</span><span class="delimiter">'</span></span>
 }</code></pre>
 </div>
 </div>
@@ -4112,14 +4024,77 @@ details).</p>
 additional dependency to the runtime classpath.</p>
 </div>
 </div>
-</div>
-<div class="sect3">
-<h4 id="running-tests-build-maven"><a class="anchor" href="#running-tests-build-maven"></a>4.2.2. Maven</h4>
+<div class="sect4">
+<h5 id="running-tests-build-gradle-junit-using"><a class="anchor" href="#running-tests-build-gradle-junit-using"></a>Using the JUnit Gradle Plugin</h5>
 <div class="paragraph">
-<p>The JUnit team has developed a very basic provider for Maven Surefire that lets you run
-JUnit 4 and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
-<code><a href="https://github.com/junit-team/junit5-samples/tree/r5.2.0-M1/junit5-maven-consumer">junit5-maven-consumer</a></code> project demonstrates how to use it and can serve as a starting
-point.</p>
+<p>Once the JUnit Gradle plugin has been applied and configured, you have a new
+<code>junitPlatformTest</code> task at your disposal.</p>
+</div>
+<div class="paragraph">
+<p>Invoking <code>gradlew junitPlatformTest</code> (or <code>gradlew test</code>) from the command line will
+execute all tests within the project whose class names match the regular expression
+supplied via the <code>includeClassNamePattern</code> (which defaults to
+<code>^.*Tests?$</code>).</p>
+</div>
+<div class="paragraph">
+<p>Executing the <code>junitPlatformTest</code> task in the <code><a href="https://github.com/junit-team/junit5-samples/tree/r5.1.1/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project results
+in output similar to the following:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>:junitPlatformTest
+
+Test run finished after 93 ms
+[         3 containers found      ]
+[         0 containers skipped    ]
+[         3 containers started    ]
+[         0 containers aborted    ]
+[         3 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         1 tests skipped         ]
+[         2 tests started         ]
+[         0 tests aborted         ]
+[         2 tests successful      ]
+[         0 tests failed          ]
+
+BUILD SUCCESSFUL</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If a test fails, the build will fail with output similar to the following:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>:junitPlatformTest
+
+Test failures (1):
+  JUnit Jupiter:SecondTest:mySecondTest()
+    MethodSource [className = 'com.example.project.SecondTest', methodName = 'mySecondTest', methodParameterTypes = '']
+    =&gt; Exception: 2 is not equal to 1 ==&gt; expected: &lt;2&gt; but was: &lt;1&gt;
+
+Test run finished after 99 ms
+[         3 containers found      ]
+[         0 containers skipped    ]
+[         3 containers started    ]
+[         0 containers aborted    ]
+[         3 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         0 tests skipped         ]
+[         3 tests started         ]
+[         0 tests aborted         ]
+[         2 tests successful      ]
+[         1 tests failed          ]
+
+:junitPlatformTest FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':junitPlatformTest'.
+&gt; Process 'command '/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/bin/java'' finished with non-zero exit value 1</pre>
+</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -4128,7 +4103,45 @@ point.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Please use Maven Surefire 2.21.0 with the <code>junit-platform-surefire-provider</code>.
+The <em>exit value</em> is <code>1</code> if any containers or tests failed; otherwise, it is <code>0</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Current Limitations of the JUnit Gradle Plugin</div>
+The results of any tests run via the JUnit Gradle plugin will not be included
+in the standard test report generated by Gradle; however, the test results can
+typically be aggregated on a CI server. See the <code>reportsDir</code> property of the plugin.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="running-tests-build-maven"><a class="anchor" href="#running-tests-build-maven"></a>4.2.2. Maven</h4>
+<div class="paragraph">
+<p>The JUnit team has developed a very basic provider for Maven Surefire that lets you run
+JUnit 4 and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
+<code><a href="https://github.com/junit-team/junit5-samples/tree/r5.1.1/junit5-maven-consumer">junit5-maven-consumer</a></code> project demonstrates how to use it and can serve as a starting
+point.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Due to a memory leak in Surefire 2.20 and issues running on Java 9,
+the <code>junit-platform-surefire-provider</code> currently only works with Surefire 2.19.1.
 </td>
 </tr>
 </table>
@@ -4141,12 +4154,12 @@ Please use Maven Surefire 2.21.0 with the <code>junit-platform-surefire-provider
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;dependencies&gt;</span>
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
                     <span class="tag">&lt;artifactId&gt;</span>junit-platform-surefire-provider<span class="tag">&lt;/artifactId&gt;</span>
-                    <span class="tag">&lt;version&gt;</span>1.2.0-M1<span class="tag">&lt;/version&gt;</span>
+                    <span class="tag">&lt;version&gt;</span>1.1.1<span class="tag">&lt;/version&gt;</span>
                 <span class="tag">&lt;/dependency&gt;</span>
             <span class="tag">&lt;/dependencies&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
@@ -4174,17 +4187,17 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;dependencies&gt;</span>
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
                     <span class="tag">&lt;artifactId&gt;</span>junit-platform-surefire-provider<span class="tag">&lt;/artifactId&gt;</span>
-                    <span class="tag">&lt;version&gt;</span>1.2.0-M1<span class="tag">&lt;/version&gt;</span>
+                    <span class="tag">&lt;version&gt;</span>1.1.1<span class="tag">&lt;/version&gt;</span>
                 <span class="tag">&lt;/dependency&gt;</span>
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
                     <span class="tag">&lt;artifactId&gt;</span>junit-jupiter-engine<span class="tag">&lt;/artifactId&gt;</span>
-                    <span class="tag">&lt;version&gt;</span>5.2.0-M1<span class="tag">&lt;/version&gt;</span>
+                    <span class="tag">&lt;version&gt;</span>5.1.1<span class="tag">&lt;/version&gt;</span>
                 <span class="tag">&lt;/dependency&gt;</span>
             <span class="tag">&lt;/dependencies&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
@@ -4196,7 +4209,7 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
     <span class="tag">&lt;dependency&gt;</span>
         <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
         <span class="tag">&lt;artifactId&gt;</span>junit-jupiter-api<span class="tag">&lt;/artifactId&gt;</span>
-        <span class="tag">&lt;version&gt;</span>5.2.0-M1<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;version&gt;</span>5.1.1<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
     <span class="tag">&lt;/dependency&gt;</span>
 <span class="tag">&lt;/dependencies&gt;</span>
@@ -4216,18 +4229,18 @@ the dependencies of the <code>maven-surefire-plugin</code> similar to the follow
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;dependencies&gt;</span>
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
                     <span class="tag">&lt;artifactId&gt;</span>junit-platform-surefire-provider<span class="tag">&lt;/artifactId&gt;</span>
-                    <span class="tag">&lt;version&gt;</span>1.2.0-M1<span class="tag">&lt;/version&gt;</span>
+                    <span class="tag">&lt;version&gt;</span>1.1.1<span class="tag">&lt;/version&gt;</span>
                 <span class="tag">&lt;/dependency&gt;</span>
                 ...
                 <span class="tag">&lt;dependency&gt;</span>
                     <span class="tag">&lt;groupId&gt;</span>org.junit.vintage<span class="tag">&lt;/groupId&gt;</span>
                     <span class="tag">&lt;artifactId&gt;</span>junit-vintage-engine<span class="tag">&lt;/artifactId&gt;</span>
-                    <span class="tag">&lt;version&gt;</span>5.2.0-M1<span class="tag">&lt;/version&gt;</span>
+                    <span class="tag">&lt;version&gt;</span>5.1.1<span class="tag">&lt;/version&gt;</span>
                 <span class="tag">&lt;/dependency&gt;</span>
             <span class="tag">&lt;/dependencies&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
@@ -4273,9 +4286,6 @@ the following patterns.</p>
 <p><code>**/*Test.java</code></p>
 </li>
 <li>
-<p><code>**/*Tests.java</code> <em>(supported since Surefire 2.20)</em></p>
-</li>
-<li>
 <p><code>**/*TestCase.java</code></p>
 </li>
 </ul>
@@ -4311,7 +4321,7 @@ the following configuration properties.</p>
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
                 <span class="tag">&lt;properties&gt;</span>
                     <span class="tag">&lt;includeTags&gt;</span>acceptance | !feature-a<span class="tag">&lt;/includeTags&gt;</span>
@@ -4331,10 +4341,9 @@ the following configuration properties.</p>
 <div class="sect4">
 <h5 id="running-tests-build-maven-config-params"><a class="anchor" href="#running-tests-build-maven-config-params"></a>Configuration Parameters</h5>
 <div class="paragraph">
-<p>You can set JUnit Platform <a href="#running-tests-config-params">configuration parameters</a> to
-influence test discovery and execution by declaring the <code>configurationParameters</code>
-property and providing key-value pairs using the Java <code>Properties</code> file syntax (as shown
-below) or via the <code>junit-platform.properties</code> file.</p>
+<p>You can set configuration parameters to influence test discovery and execution by using
+the <code>configurationParameters</code> property and providing key-value pairs in the Java
+<code>Properties</code> file syntax.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4344,7 +4353,7 @@ below) or via the <code>junit-platform.properties</code> file.</p>
         ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.21.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.19.1<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
                 <span class="tag">&lt;properties&gt;</span>
                     <span class="tag">&lt;configurationParameters&gt;</span>
@@ -4365,100 +4374,6 @@ below) or via the <code>junit-platform.properties</code> file.</p>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="running-tests-build-ant"><a class="anchor" href="#running-tests-build-ant"></a>4.2.3. Ant</h4>
-<div class="paragraph">
-<p>Starting with version <code>1.10.3</code> of <a href="https://ant.apache.org/">Ant</a>, a new
-<a href="https://ant.apache.org/manual/Tasks/junitlauncher.html"><code>junitlauncher</code></a> task has
-been introduced to provide native support for launching tests on the JUnit Platform. The
-<code>junitlauncher</code> task is solely responsible for launching the JUnit Platform and passing
-it the selected collection of tests. The JUnit Platform then delegates to registered test
-engines to discover and execute the tests.</p>
-</div>
-<div class="paragraph">
-<p>The <code>junitlauncher</code> task attempts to align as close as possible with native Ant
-constructs such as
-<a href="https://ant.apache.org/manual/Types/resources.html#collection">resource collections</a>
-for allowing users to select the tests that they want executed by test engines. This
-gives the task a consistent and natural feel when compared to many other core Ant tasks.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The version of the <code>junitlauncher</code> task shipped in Ant 1.10.3 provides basic,
-minimal support for launching the JUnit Platform. Additional enhancements (including
-support for forking the tests in a separate JVM) will be available in subsequent releases
-of Ant.
-</td>
-</tr>
-</table>
-</div>
-<div class="sect4">
-<h5 id="basic-usage"><a class="anchor" href="#basic-usage"></a>Basic Usage</h5>
-<div class="paragraph">
-<p>The following example demonstrates how to configure the <code>junitlauncher</code> task to select a
-single test class (i.e., <code>org.myapp.test.MyFirstJUnit5Test</code>).</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;path</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="comment">&lt;!-- The location where you have your compiled classes --&gt;</span>
-    <span class="tag">&lt;pathelement</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${build.classes.dir}</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-<span class="tag">&lt;/path&gt;</span>
-
-<span class="comment">&lt;!-- ... --&gt;</span>
-
-<span class="tag">&lt;junitlauncher&gt;</span>
-    <span class="tag">&lt;classpath</span> <span class="attribute-name">refid</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-    <span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.myapp.test.MyFirstJUnit5Test</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-<span class="tag">&lt;/junitlauncher&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>test</code> element allows you to specify a single test class that you want to be selected
-and executed. The <code>classpath</code> element allows you to specify the classpath to be used to
-launch the JUnit Platform. This classpath will also be used to locate test classes that
-are part of the execution.</p>
-</div>
-<div class="paragraph">
-<p>The following example demonstrates how to configure the <code>junitlauncher</code> task to select
-test classes from multiple locations.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;path</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="comment">&lt;!-- The location where you have your compiled classes --&gt;</span>
-    <span class="tag">&lt;pathelement</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${build.classes.dir}</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-<span class="tag">&lt;/path&gt;</span>
-....
-<span class="tag">&lt;junitlauncher&gt;</span>
-    <span class="tag">&lt;classpath</span> <span class="attribute-name">refid</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-    <span class="tag">&lt;testclasses</span> <span class="attribute-name">outputdir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${output.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-        <span class="tag">&lt;fileset</span> <span class="attribute-name">dir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${build.classes.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-            <span class="tag">&lt;include</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org/example/**/demo/**/</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-        <span class="tag">&lt;/fileset&gt;</span>
-        <span class="tag">&lt;fileset</span> <span class="attribute-name">dir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${some.other.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-            <span class="tag">&lt;include</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org/myapp/**/</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-        <span class="tag">&lt;/fileset&gt;</span>
-    <span class="tag">&lt;/testclasses&gt;</span>
-<span class="tag">&lt;/junitlauncher&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In the above example, the <code>testclasses</code> element allows you to select multiple test
-classes that reside in different locations.</p>
-</div>
-<div class="paragraph">
-<p>For further details on usage and configuration options please refer to the official Ant
-documentation for the
-<a href="https://ant.apache.org/manual/Tasks/junitlauncher.html"><code>junitlauncher</code> task</a>.</p>
-</div>
-</div>
-</div>
 </div>
 <div class="sect2">
 <h3 id="running-tests-console-launcher"><a class="anchor" href="#running-tests-console-launcher"></a>4.3. Console Launcher</h3>
@@ -4468,14 +4383,14 @@ the JUnit Platform from the console. For example, it can be used to run JUnit
 Vintage and JUnit Jupiter tests and print test execution results to the console.</p>
 </div>
 <div class="paragraph">
-<p>An executable <code>junit-platform-console-standalone-1.2.0-M1.jar</code> with all
+<p>An executable <code>junit-platform-console-standalone-1.1.1.jar</code> with all
 dependencies included is published in the central Maven repository under the
 <a href="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone">junit-platform-console-standalone</a>
 directory. You can <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/run.html">run</a> the
 standalone <code>ConsoleLauncher</code> as shown below.</p>
 </div>
 <div class="paragraph">
-<p><code>java -jar junit-platform-console-standalone-1.2.0-M1.jar &lt;<a href="#running-tests-console-launcher-options">Options</a>&gt;</code></p>
+<p><code>java -jar junit-platform-console-standalone-1.1.1.jar &lt;<a href="#running-tests-console-launcher-options">Options</a>&gt;</code></p>
 </div>
 <div class="paragraph">
 <p>Here&#8217;s an example of its output:</p>
@@ -4579,12 +4494,10 @@ failed. Otherwise the exit code is <code>0</code>.
                                                  only classes whose fully qualified names
                                                  match. To avoid loading classes
                                                  unnecessarily, the default pattern only
-                                                 includes class names that begin with
-                                                 "Test" or end with "Test" or "Tests".
-                                                 When this option is repeated, all
-                                                 patterns will be combined using OR
-                                                 semantics. (default: ^(Test.*|.+[.$]Test.
-                                                 *|.*Tests?)$)
+                                                 includes class names that end with
+                                                 "Test" or "Tests". When this option is
+                                                 repeated, all patterns will be combined
+                                                 using OR semantics. (default: ^.*Tests?$)
 -N, --exclude-classname &lt;String&gt;               Provide a regular expression to exclude
                                                  those classes whose fully qualified
                                                  names match. When this option is
@@ -4764,8 +4677,8 @@ following example.</p>
 </div>
 <div class="paragraph">
 <p>The <code>JUnit4SuiteDemo</code> will discover and run all tests in the <code>example</code> package
-and its subpackages. By default, it will only include test classes whose names
-either begin with <code>Test</code> or end with <code>Test</code> or <code>Tests</code>.</p>
+and its subpackages. By default, it will only include test classes whose names match the
+pattern <code>^.*Tests?$</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -4790,9 +4703,9 @@ details.
 <div class="paragraph">
 <p>In addition to instructing the platform which test classes and test engines to include,
 which packages to scan, etc., it is sometimes necessary to provide additional custom
-configuration parameters that are specific to a particular test engine or registered
-extension. For example, the JUnit Jupiter <code>TestEngine</code> supports <em>configuration
-parameters</em> for the following use cases.</p>
+configuration parameters that are specific to a particular test engine. For example, the
+JUnit Jupiter <code>TestEngine</code> supports <em>configuration parameters</em> for the following use
+cases.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -5215,7 +5128,7 @@ container or test to be disabled. In other words, the evaluation works like the
 short-circuiting boolean OR operator.</p>
 </div>
 <div class="paragraph">
-<p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/r5.2.0-M1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
+<p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/r5.1.1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
 </div>
 <div class="sect3">
 <h4 id="extensions-conditions-deactivation"><a class="anchor" href="#extensions-conditions-deactivation"></a>5.3.1. Deactivating Conditions</h4>
@@ -5285,7 +5198,7 @@ process</em> test instances.</p>
 initialization methods on the test instance, etc.</p>
 </div>
 <div class="paragraph">
-<p>For concrete examples, consult the source code for the <code><a href="https://github.com/junit-team/junit5-samples/tree/r5.2.0-M1/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> and the
+<p>For concrete examples, consult the source code for the <code><a href="https://github.com/junit-team/junit5-samples/tree/r5.1.1/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> and the
 <code><a href="https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
 </div>
 </div>
@@ -5299,11 +5212,11 @@ runtime.</p>
 <p>If a test constructor or a <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>,
 <code>@TestFactory</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts
 a parameter, the parameter must be <em>resolved</em> at runtime by a <code>ParameterResolver</code>. A
-<code>ParameterResolver</code> can either be built-in (see <code><a href="https://github.com/junit-team/junit5/tree/r5.2.0-M1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or
+<code>ParameterResolver</code> can either be built-in (see <code><a href="https://github.com/junit-team/junit5/tree/r5.1.1/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or
 <a href="#extensions-registration">registered by the user</a>. Generally speaking, parameters may be
 resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any combination thereof. For concrete
-examples, consult the source code for <code><a href="https://github.com/junit-team/junit5/tree/r5.2.0-M1/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
-<code><a href="https://github.com/junit-team/junit5/tree/r5.2.0-M1/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
+examples, consult the source code for <code><a href="https://github.com/junit-team/junit5/tree/r5.1.1/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
+<code><a href="https://github.com/junit-team/junit5/tree/r5.1.1/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -5532,7 +5445,7 @@ implement a <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateIn
     assertEquals(<span class="integer">3</span>, parameter.length());
 }
 
-<span class="directive">public</span> <span class="type">class</span> <span class="class">MyTestTemplateInvocationContextProvider</span> <span class="directive">implements</span> TestTemplateInvocationContextProvider {
+<span class="directive">static</span> <span class="type">class</span> <span class="class">MyTestTemplateInvocationContextProvider</span> <span class="directive">implements</span> TestTemplateInvocationContextProvider {
     <span class="annotation">@Override</span>
     <span class="directive">public</span> <span class="type">boolean</span> supportsTestTemplate(ExtensionContext context) {
         <span class="keyword">return</span> <span class="predefined-constant">true</span>;
@@ -6199,31 +6112,6 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>annotation</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.aggregator</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AggregateWith</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>annotation</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.aggregator</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ArgumentsAccessor</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>interface</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.aggregator</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ArgumentsAccessorException</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>class</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.aggregator</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ArgumentsAggregationException</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>class</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.aggregator</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ArgumentsAggregator</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>interface</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.converter</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ArgumentConversionException</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>class</code></p></td>
@@ -6336,8 +6224,8 @@ declarations.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 5.2.0-M1<br>
-Last updated 2018-04-13 20:35:52 CEST
+Version 5.1.1<br>
+Last updated 2018-03-22 17:44:31 CET
 </div>
 </div>
 </body>
