@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -47,6 +48,29 @@ class AssertDoesNotThrow {
 	private static void assertDoesNotThrow(Executable executable, Object messageOrSupplier) {
 		try {
 			executable.execute();
+		}
+		catch (Throwable t) {
+			String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "Unexpected exception thrown: "
+					+ t.getClass().getName();
+			throw new AssertionFailedError(message, t);
+		}
+	}
+
+	static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier) {
+		return assertDoesNotThrow(supplier, (Object) null);
+	}
+
+	static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, String message) {
+		return assertDoesNotThrow(supplier, (Object) message);
+	}
+
+	static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
+		return assertDoesNotThrow(supplier, (Object) messageSupplier);
+	}
+
+	private static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, Object messageOrSupplier) {
+		try {
+			return supplier.get();
 		}
 		catch (Throwable t) {
 			String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "Unexpected exception thrown: "
