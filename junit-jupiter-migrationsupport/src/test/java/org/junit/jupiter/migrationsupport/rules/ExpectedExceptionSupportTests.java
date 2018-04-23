@@ -10,32 +10,33 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.assertj.core.api.Assertions.allOf;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.engine.test.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.engine.test.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.TestExecutionResultConditions.message;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-
-import java.io.IOException;
-
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.test.ExecutionGraph;
-import org.junit.platform.engine.test.ExecutionRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionGraph;
+import org.junit.platform.tck.ExecutionRecorder;
 import org.junit.rules.ExpectedException;
+
+import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.tck.ExecutionEventConditions.event;
+import static org.junit.platform.tck.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.tck.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.tck.ExecutionEventConditions.test;
+import static org.junit.platform.tck.TestExecutionResultConditions.isA;
+import static org.junit.platform.tck.TestExecutionResultConditions.message;
 
 /**
  * Integration tests for {@link ExpectedExceptionSupport}.
@@ -48,15 +49,18 @@ class ExpectedExceptionSupportTests {
 	void expectedExceptionIsProcessedCorrectly() {
 		ExecutionGraph executionGraph = executeTestsForClass(ExpectedExceptionTestCase.class).getExecutionGraph();
 
-		assertEquals(4, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(3, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(4, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.ABORTED).size(),
+			"# tests aborted");
+		assertEquals(3, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
-		assertThat(executionGraph.getSuccessfulTestFinishedEvents()).have(
+		assertThat(executionGraph.getTestFinishedEvents(TestExecutionResult.Status.SUCCESSFUL)).have(
 			event(test("correctExceptionExpectedThrown"), finishedSuccessfully()));
 
-		assertThat(executionGraph.getFailedTestFinishedEvents())//
+		assertThat(executionGraph.getTestFinishedEvents(TestExecutionResult.Status.FAILED))//
 				.haveExactly(1, //
 					event(test("noExceptionExpectedButThrown"), //
 						finishedWithFailure(message("no exception expected")))) //
@@ -75,15 +79,18 @@ class ExpectedExceptionSupportTests {
 		ExecutionGraph executionGraph = executeTestsForClass(
 			ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase.class).getExecutionGraph();
 
-		assertEquals(2, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.ABORTED).size(),
+			"# tests aborted");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
-		assertThat(executionGraph.getSuccessfulTestFinishedEvents()).have(
+		assertThat(executionGraph.getTestFinishedEvents(TestExecutionResult.Status.SUCCESSFUL)).have(
 			event(test("success"), finishedSuccessfully()));
 
-		assertThat(executionGraph.getFailedTestFinishedEvents())//
+		assertThat(executionGraph.getTestFinishedEvents(TestExecutionResult.Status.FAILED))//
 				.haveExactly(1, event(test("failure"), //
 					finishedWithFailure(message("must fail"))));
 	}

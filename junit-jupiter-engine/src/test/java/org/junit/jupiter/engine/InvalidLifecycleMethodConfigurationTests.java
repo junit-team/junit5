@@ -20,8 +20,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.test.ExecutionGraph;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionGraph;
 
 /**
  * Integration tests that very proper handling of invalid configuration for
@@ -63,9 +64,13 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(3, executionGraph.getContainerStartedCount(), "# containers started"),
-			() -> assertEquals(1, executionGraph.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started"),
+			() -> assertEquals(1,
+					executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+					"# tests succeeded"),
+			() -> assertEquals(0,
+					executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+					"# tests failed"),
 			() -> assertEquals(3, executionGraph.getContainerFinishedCount(), "# containers finished"),
 			() -> assertEquals(1, executionGraph.getContainerFailedCount(), "# containers failed")
 		);

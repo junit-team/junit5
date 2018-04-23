@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.test;
+package org.junit.platform.tck;
 
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.allOf;
@@ -16,13 +16,13 @@ import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
-import static org.junit.platform.engine.test.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
-import static org.junit.platform.engine.test.ExecutionEvent.Type.FINISHED;
-import static org.junit.platform.engine.test.ExecutionEvent.Type.SKIPPED;
-import static org.junit.platform.engine.test.ExecutionEvent.Type.STARTED;
-import static org.junit.platform.engine.test.ExecutionEvent.byPayload;
-import static org.junit.platform.engine.test.ExecutionEvent.byTestDescriptor;
-import static org.junit.platform.engine.test.ExecutionEvent.byType;
+import static org.junit.platform.tck.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
+import static org.junit.platform.tck.ExecutionEvent.Type.FINISHED;
+import static org.junit.platform.tck.ExecutionEvent.Type.SKIPPED;
+import static org.junit.platform.tck.ExecutionEvent.Type.STARTED;
+import static org.junit.platform.tck.ExecutionEvent.byPayload;
+import static org.junit.platform.tck.ExecutionEvent.byTestDescriptor;
+import static org.junit.platform.tck.ExecutionEvent.byType;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -43,6 +43,9 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
  * @since 1.0
  */
 public class ExecutionEventConditions {
+
+	private ExecutionEventConditions() {
+	}
 
 	@SafeVarargs
 	public static void assertRecordedExecutionEventsContainsExactly(List<ExecutionEvent> executionEvents,

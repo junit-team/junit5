@@ -15,17 +15,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.test.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.platform.engine.test.ExecutionEventConditions.container;
-import static org.junit.platform.engine.test.ExecutionEventConditions.engine;
-import static org.junit.platform.engine.test.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.engine.test.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.ExecutionEventConditions.started;
-import static org.junit.platform.engine.test.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.tck.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.tck.ExecutionEventConditions.container;
+import static org.junit.platform.tck.ExecutionEventConditions.engine;
+import static org.junit.platform.tck.ExecutionEventConditions.event;
+import static org.junit.platform.tck.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.tck.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.tck.ExecutionEventConditions.started;
+import static org.junit.platform.tck.ExecutionEventConditions.test;
+import static org.junit.platform.tck.TestExecutionResultConditions.isA;
+import static org.junit.platform.tck.TestExecutionResultConditions.message;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,8 +38,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.engine.test.ExecutionRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionRecorder;
 
 /**
  * Integration tests that verify support for {@link TestExecutionExceptionHandler}.

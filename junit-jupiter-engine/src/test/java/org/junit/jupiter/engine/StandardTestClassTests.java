@@ -20,8 +20,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.test.ExecutionGraph;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionGraph;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -59,9 +60,11 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(6, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(5, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(6, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(5, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
 		assertEquals(3, executionGraph.getContainerStartedCount(), "# containers started");
 		assertEquals(3, executionGraph.getContainerFinishedCount(), "# containers finished");
@@ -71,10 +74,13 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	void allTestsInClassAreRunWithBeforeEach() {
 		ExecutionGraph executionGraph = executeTestsForClass(MyStandardTestCase.class).getExecutionGraph();
 
-		assertEquals(4, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(2, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(4, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(2, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.ABORTED).size(),
+			"# tests aborted");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
 		assertEquals(2, executionGraph.getContainerStartedCount(), "# containers started");
 		assertEquals(2, executionGraph.getContainerFinishedCount(), "# containers finished");
@@ -87,7 +93,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	void allTestsInClassAreRunWithAfterEach() {
 		ExecutionGraph executionGraph = executeTestsForClass(MyStandardTestCase.class).getExecutionGraph();
 
-		assertEquals(4, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(4, executionGraph.getTestExecutionsFinished().size(), "# tests started");
 		assertEquals(4, MyStandardTestCase.countAfter, "# after each calls");
 
 		assertEquals(2, executionGraph.getContainerStartedCount(), "# containers started");
@@ -98,9 +104,11 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	void testsFailWhenBeforeEachFails() {
 		ExecutionGraph executionGraph = executeTestsForClass(TestCaseWithFailingBefore.class).getExecutionGraph();
 
-		assertEquals(2, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(0, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(2, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(2, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
 		assertEquals(2, executionGraph.getContainerStartedCount(), "# containers started");
 		assertEquals(2, executionGraph.getContainerFinishedCount(), "# containers finished");
@@ -112,9 +120,11 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	void testsFailWhenAfterEachFails() {
 		ExecutionGraph executionGraph = executeTestsForClass(TestCaseWithFailingAfter.class).getExecutionGraph();
 
-		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(0, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
 		assertEquals(2, executionGraph.getContainerStartedCount(), "# containers started");
 		assertEquals(2, executionGraph.getContainerFinishedCount(), "# containers finished");

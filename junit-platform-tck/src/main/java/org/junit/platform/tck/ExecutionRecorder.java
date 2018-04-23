@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.test;
+package org.junit.platform.tck;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -28,7 +28,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * @see ExecutionGraph
  * @since 1.1.1
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.1.1")
+@API(status = API.Status.EXPERIMENTAL, since = "1.2.0")
 public class ExecutionRecorder implements EngineExecutionListener {
 
 	private ExecutionGraph.Builder graphBuilder;

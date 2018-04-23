@@ -25,8 +25,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.engine.test.ExecutionGraph;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionGraph;
 
 /**
  * Integration tests that verify support for {@link TestInstancePostProcessor}.
@@ -48,8 +49,9 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(2, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(2, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(2, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(2, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -78,8 +80,9 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
 
 		assertThat(callSequence).containsExactly(
 			"fooPostProcessTestInstance:TestCaseWithTestSpecificTestInstancePostProcessor", "beforeEachMethod", "test");

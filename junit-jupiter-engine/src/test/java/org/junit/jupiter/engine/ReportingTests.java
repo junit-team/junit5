@@ -22,8 +22,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.platform.commons.util.PreconditionViolationException;
-import org.junit.platform.engine.test.ExecutionGraph;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionGraph;
 
 /**
  * @since 5.0
@@ -36,9 +37,11 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(2, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(2, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(2, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 		assertEquals(6, executionGraph.getReportingEntryPublishedCount(), "# report entries published");
 	}
 

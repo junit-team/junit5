@@ -13,12 +13,12 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.test.ExecutionEventConditions.container;
-import static org.junit.platform.engine.test.ExecutionEventConditions.displayName;
-import static org.junit.platform.engine.test.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.tck.ExecutionEventConditions.container;
+import static org.junit.platform.tck.ExecutionEventConditions.displayName;
+import static org.junit.platform.tck.ExecutionEventConditions.event;
+import static org.junit.platform.tck.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.tck.TestExecutionResultConditions.message;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -29,8 +29,8 @@ import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.test.ExecutionGraph;
-import org.junit.platform.engine.test.ExecutionRecorder;
+import org.junit.platform.tck.ExecutionGraph;
+import org.junit.platform.tck.ExecutionRecorder;
 
 /**
  * Integration tests for {@link RepeatedTest @RepeatedTest} and supporting

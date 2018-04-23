@@ -17,8 +17,9 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.test.ExecutionGraph;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionGraph;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} in the {@link JupiterTestEngine}.
@@ -33,7 +34,7 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
 		assertEquals(1, executionGraph.getContainerSkippedCount(), "# container skipped");
-		assertEquals(0, executionGraph.getTestStartedCount(), "# tests started");
+		assertEquals(0, executionGraph.getTestExecutionsFinished().size(), "# tests started");
 	}
 
 	@Test
@@ -41,12 +42,13 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestMethodsTestCase.class)).build();
 		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, executionGraph.getTestSkippedCount(), "# tests skipped");
+		assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(1, executionGraph.getTestExecutionsSkipped().size(), "# tests skipped");
 
 		String method = DisabledTestMethodsTestCase.class.getDeclaredMethod("disabledTest").toString();
-		String reason = executionGraph.getSkippedTestEvents().get(0).getPayload(String.class).get();
+		String reason = executionGraph.getTestExecutionsSkipped().get(0).getTerminationInfo().getSkipReason();
 		assertEquals(method + " is @Disabled", reason);
 	}
 

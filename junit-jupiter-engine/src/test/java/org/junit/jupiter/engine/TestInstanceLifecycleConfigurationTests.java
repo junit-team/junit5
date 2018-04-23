@@ -32,8 +32,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.platform.engine.ConfigurationParameters;
-import org.junit.platform.engine.test.ExecutionGraph;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.tck.ExecutionGraph;
 
 /**
  * Integration tests for {@link TestInstance @TestInstance} lifecycle
@@ -126,7 +127,7 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 			int failedContainers, int tests, String... methods) {
 
 		// @formatter:off
-		ExecutionGraph executionsReport = executeTests(
+		ExecutionGraph executionGraph = executeTests(
 			request()
 				.selectors(selectClass(testClass))
 				.configurationParameters(configParams)
@@ -134,11 +135,11 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 		).getExecutionGraph();
 
 		assertAll(
-			() -> assertEquals(containers, executionsReport.getContainerStartedCount(), "# containers started"),
-			() -> assertEquals(containers, executionsReport.getContainerFinishedCount(), "# containers finished"),
-			() -> assertEquals(failedContainers, executionsReport.getContainerFailedCount(), "# containers failed"),
-			() -> assertEquals(tests, executionsReport.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(tests, executionsReport.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(containers, executionGraph.getContainerStartedCount(), "# containers started"),
+			() -> assertEquals(containers, executionGraph.getContainerFinishedCount(), "# containers finished"),
+			() -> assertEquals(failedContainers, executionGraph.getContainerFailedCount(), "# containers failed"),
+			() -> assertEquals(tests, executionGraph.getTestExecutionsFinished().size(), "# tests started"),
+			() -> assertEquals(tests, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(), "# tests succeeded"),
 			() -> assertEquals(Arrays.asList(methods), methodsInvoked)
 		);
 		// @formatter:on

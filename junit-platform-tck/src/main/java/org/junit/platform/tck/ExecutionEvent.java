@@ -8,13 +8,14 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.test;
+package org.junit.platform.tck;
 
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -22,8 +23,11 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 
-@API(status = API.Status.EXPERIMENTAL, since = "1.1.1")
+@API(status = API.Status.EXPERIMENTAL, since = "1.2.0")
 public class ExecutionEvent {
+
+	private static final Supplier<IllegalArgumentException> EXCEPTION_NO_PAYLOAD = () -> new IllegalArgumentException(
+		"Cannot access payload from ExecutionEvent when no payload is present.");
 
 	private Type type;
 	private TestDescriptor testDescriptor;
@@ -83,6 +87,14 @@ public class ExecutionEvent {
 
 	public <T> Optional<T> getPayload(Class<T> payloadClass) {
 		return Optional.ofNullable(payload).filter(payloadClass::isInstance).map(payloadClass::cast);
+	}
+
+	public boolean isPayloadPresent(Class<?> payloadClass) {
+		return getPayload(payloadClass).isPresent();
+	}
+
+	public <T> T getPayloadAs(Class<T> payloadClass) {
+		return getPayload(payloadClass).orElseThrow(EXCEPTION_NO_PAYLOAD);
 	}
 
 	@Override

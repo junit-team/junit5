@@ -16,7 +16,7 @@ dependencies {
 	api(project(':junit-platform-engine'))
 	api("org.opentest4j:opentest4j:${ota4jVersion}")
 
-	api("org.assertj:assertj-core:${assertJVersion}")
+	testImplementation("org.assertj:assertj-core:${assertJVersion}")
 }
 
 jar {

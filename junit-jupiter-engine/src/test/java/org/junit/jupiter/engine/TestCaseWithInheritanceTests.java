@@ -26,8 +26,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.test.ExecutionGraph;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionGraph;
 
 /**
  * Integration tests for test class hierarchy support in the {@link JupiterTestEngine}.
@@ -51,11 +52,14 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 	void executeAllTestsInClass() {
 		ExecutionGraph executionGraph = executeTestsForClass(LocalTestCase.class).getExecutionGraph();
 
-		assertEquals(6, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(3, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped");
-		assertEquals(1, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(2, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(6, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(3, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(0, executionGraph.getTestExecutionsSkipped().size(), "# tests skipped");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.ABORTED).size(),
+			"# tests aborted");
+		assertEquals(2, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
 		assertEquals(6, LocalTestCase.countBeforeInvoked, "# before calls");
 		assertEquals(6, LocalTestCase.countAfterInvoked, "# after calls");
@@ -70,11 +74,14 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(0, executionGraph.getTestExecutionsSkipped().size(), "# tests skipped");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.ABORTED).size(),
+			"# tests aborted");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 	}
 
 	@Test
@@ -83,11 +90,14 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(0, executionGraph.getTestExecutionsSkipped().size(), "# tests skipped");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.ABORTED).size(),
+			"# tests aborted");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
 		assertEquals(1, LocalTestCase.countBeforeInvoked, "# after calls");
 		assertEquals(1, LocalTestCase.countAfterInvoked, "# after calls");
@@ -103,11 +113,14 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(0, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(0, executionGraph.getTestExecutionsSkipped().size(), "# tests skipped");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.ABORTED).size(),
+			"# tests aborted");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 	}
 
 	@Test
@@ -116,11 +129,11 @@ class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(1, executionGraph.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(0, executionGraph.getTestSkippedCount(), "# tests skipped"),
-			() -> assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted"),
-			() -> assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed")
+			() -> assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started"),
+			() -> assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(), "# tests succeeded"),
+			() -> assertEquals(0, executionGraph.getTestExecutionsSkipped().size(), "# tests skipped"),
+			() -> assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.ABORTED).size(), "# tests aborted"),
+			() -> assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(), "# tests failed")
 		);
 		// @formatter:on
 

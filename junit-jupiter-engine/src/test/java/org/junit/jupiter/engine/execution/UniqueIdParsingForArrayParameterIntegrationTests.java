@@ -19,9 +19,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.test.ExecutionEvent;
-import org.junit.platform.engine.test.ExecutionGraph;
+import org.junit.platform.tck.ExecutionEvent;
+import org.junit.platform.tck.ExecutionGraph;
 
 /**
  * Integration tests for {@link UniqueId#parse(String)} for methods
@@ -39,9 +40,11 @@ class UniqueIdParsingForArrayParameterIntegrationTests extends AbstractJupiterTe
 		ExecutionGraph executionGraph = executeTestsForClass(
 			PrimitiveArrayMethodInjectionTestCase.class).getExecutionGraph();
 
-		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
 		// @formatter:off
 		UniqueId uniqueId = executionGraph.getExecutionEvents().stream()

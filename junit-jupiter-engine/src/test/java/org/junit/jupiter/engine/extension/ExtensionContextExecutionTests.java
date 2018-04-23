@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.engine.test.ExecutionGraph;
+import org.junit.platform.tck.ExecutionGraph;
 
 class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 
@@ -54,7 +54,7 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 		ExecutionGraph executionGraph = executeTests(
 			request().selectors(selectClass(A.class), selectClass(B.class)).build()).getExecutionGraph();
 
-		assertThat(executionGraph.getTestFinishedCount()).isEqualTo(2);
+		assertThat(executionGraph.getTestExecutionsFinished()).isEqualTo(2);
 		assertThat(Parent.counter).hasValue(1);
 	}
 

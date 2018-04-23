@@ -54,7 +54,8 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.test.ExecutionGraph;
+import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.tck.ExecutionGraph;
 
 /**
  * Integration tests for {@link TestInstance @TestInstance} lifecycle support.
@@ -578,8 +579,8 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertAll(
 			() -> assertEquals(containers, executionGraph.getContainerStartedCount(), "# containers started"),
 			() -> assertEquals(containers, executionGraph.getContainerFinishedCount(), "# containers finished"),
-			() -> assertEquals(tests, executionGraph.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(tests, executionGraph.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(tests, executionGraph.getTestExecutionsFinished().size(), "# tests started"),
+			() -> assertEquals(tests, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(), "# tests succeeded"),
 			() -> assertThat(instanceCount).describedAs("instance count").contains(instanceCountEntries),
 			() -> assertEquals(allMethods, beforeAllCount, "@BeforeAll count"),
 			() -> assertEquals(allMethods, afterAllCount, "@AfterAll count"),
