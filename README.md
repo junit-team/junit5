@@ -98,7 +98,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
   - `junit-platform-console` (`org.junit.platform.console`)
   - `junit-platform-console-standalone` (*N/A*)
   - `junit-platform-engine` (`org.junit.platform.engine`)
-  - `junit-platform-engine-test` (`org.junit.platform.engine.test`)
+  - `junit-platform-tck` (`org.junit.platform.tck`)
   - `junit-platform-gradle-plugin` (`org.junit.platform.gradle.plugin`)
   - `junit-platform-launcher` (`org.junit.platform.launcher`)
   - `junit-platform-runner` (`org.junit.platform.runner`)
