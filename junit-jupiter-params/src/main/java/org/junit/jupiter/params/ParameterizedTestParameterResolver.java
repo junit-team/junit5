@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.jupiter.params.aggregator.AggregationUtils.indexOfFirstAggregator;
+import static org.junit.jupiter.params.aggregator.AggregationUtils.isAggregator;
+
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -51,10 +54,19 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 			return false;
 		}
 
-		if (isAggregate(parameterContext.getParameter())) {
+		// Current parameter is an aggregator?
+		if (isAggregator(parameterContext.getParameter())) {
 			return true;
 		}
 
+		// Ensure that the current parameter is declared before aggregators.
+		// Otherwise, a different ParameterResolver should handle it.
+		int indexOfFirstAggregator = indexOfFirstAggregator(testMethod);
+		if (indexOfFirstAggregator != -1) {
+			return parameterContext.getIndex() < indexOfFirstAggregator;
+		}
+
+		// Else fallback to behavior for parameterized test methods without aggregators.
 		return parameterContext.getIndex() < this.arguments.length;
 	}
 
@@ -62,7 +74,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 
-		return isAggregate(parameterContext.getParameter()) ? aggregate(parameterContext, extensionContext)
+		return isAggregator(parameterContext.getParameter()) ? aggregate(parameterContext, extensionContext)
 				: convert(parameterContext, extensionContext);
 	}
 
@@ -86,11 +98,6 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 			}
 			throw new ParameterResolutionException(message, ex);
 		}
-	}
-
-	public static boolean isAggregate(Parameter parameter) {
-		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
-				|| AnnotationUtils.isAnnotated(parameter, AggregateWith.class);
 	}
 
 	private Object aggregate(ParameterContext parameterContext, ExtensionContext extensionContext) {

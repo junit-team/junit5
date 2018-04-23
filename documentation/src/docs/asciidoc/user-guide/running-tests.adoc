@@ -86,7 +86,7 @@ tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
 ==== Gradle
 
 Starting with https://docs.gradle.org/4.6/release-notes.html[version 4.6], Gradle provides
-https://docs.gradle.org/current/userguide/java_plugin.html#using_junit5[native support]
+https://docs.gradle.org/current/userguide/java_testing.html#using_junit5[native support]
 for executing tests on the JUnit Platform. To enable it, you just need to specify
 `useJUnitPlatform()` within a `test` task declaration in `build.gradle`:
 
@@ -106,9 +106,9 @@ Filtering by tags or engines is also supported:
 test {
     useJUnitPlatform {
         includeTags 'fast', 'smoke & feature-a'
-        excludeTags 'slow', 'ci'
+        // excludeTags 'slow', 'ci'
         includeEngines 'junit-jupiter'
-        excludeEngines 'junit-vintage'
+        // excludeEngines 'junit-vintage'
 	}
 }
 ----
@@ -208,12 +208,13 @@ additional dependency to the runtime classpath.
 [[running-tests-build-maven]]
 ==== Maven
 
-The JUnit team has developed a very basic provider for Maven Surefire that lets you run
-JUnit 4 and JUnit Jupiter tests via `mvn test`. The `pom.xml` file in the
+The JUnit team has developed a basic provider for Maven Surefire that lets you run JUnit 4
+and JUnit Jupiter tests via `mvn test`. The `pom.xml` file in the
 `{junit5-maven-consumer}` project demonstrates how to use it and can serve as a starting
 point.
 
-NOTE: Please use Maven Surefire 2.21.0 with the `junit-platform-surefire-provider`.
+NOTE: Please use Maven Surefire {surefire-version} with the
+`junit-platform-surefire-provider`.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -224,7 +225,7 @@ NOTE: Please use Maven Surefire 2.21.0 with the `junit-platform-surefire-provide
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
+				<version>{surefire-version}</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -257,7 +258,7 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
+				<version>{surefire-version}</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -299,7 +300,7 @@ the dependencies of the `maven-surefire-plugin` similar to the following.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
+				<version>{surefire-version}</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -347,11 +348,39 @@ the following patterns.
 
 - `+**/Test*.java+`
 - `+**/*Test.java+`
-- `+**/*Tests.java+` _(supported since Surefire 2.20)_
+- `+**/*Tests.java+`
 - `+**/*TestCase.java+`
 
+Moreover, it will exclude all nested classes (including static member classes) by default.
+
 Note, however, that you can override this default behavior by configuring explicit
-`include` and `exclude` rules in your `pom.xml` file. See the
+`include` and `exclude` rules in your `pom.xml` file. For example, to keep Maven Surefire
+from excluding static member classes, you can override its exclude rules.
+
+[source,xml,indent=0]
+[subs=attributes+]
+.Overriding exclude rules of Maven Surefire
+----
+	...
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>{surefire-version}</version>
+				<configuration>
+					<excludes>
+						<exclude/>
+					</excludes>
+				</configuration>
+				...
+			</plugin>
+		</plugins>
+	</build>
+	...
+----
+
+Please see the
 https://maven.apache.org/surefire/maven-surefire-plugin/examples/inclusion-exclusion.html[Inclusions and Exclusions of Tests]
 documentation for Maven Surefire for details.
 
@@ -365,6 +394,7 @@ the following configuration properties.
 - to exclude _tags_ or _tag expressions_, use either `excludedGroups` or `excludeTags`.
 
 [source,xml,indent=0]
+[subs=attributes+]
 ----
 	...
 	<build>
@@ -372,7 +402,7 @@ the following configuration properties.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
+				<version>{surefire-version}</version>
 				<configuration>
 			        <properties>
 			            <includeTags>acceptance | !feature-a</includeTags>
@@ -397,6 +427,7 @@ property and providing key-value pairs using the Java `Properties` file syntax (
 below) or via the `junit-platform.properties` file.
 
 [source,xml,indent=0]
+[subs=attributes+]
 ----
 	...
 	<build>
@@ -404,7 +435,7 @@ below) or via the `junit-platform.properties` file.
 			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
+				<version>{surefire-version}</version>
 				<configuration>
 					<properties>
 						<configurationParameters>
@@ -443,6 +474,9 @@ NOTE: The version of the `junitlauncher` task shipped in Ant 1.10.3 provides bas
 minimal support for launching the JUnit Platform. Additional enhancements (including
 support for forking the tests in a separate JVM) will be available in subsequent releases
 of Ant.
+
+The `build.xml` file in the `{junit5-jupiter-starter-ant}` project demonstrates how to use
+it and can serve as a starting point.
 
 ===== Basic Usage
 
@@ -635,8 +669,8 @@ include::{testDir}/example/JUnit4SuiteDemo.java[tags=user_guide]
 ----
 
 The `JUnit4SuiteDemo` will discover and run all tests in the `example` package
-and its subpackages. By default, it will only include test classes whose names match the
-pattern `{standard-include-class-name-pattern}`.
+and its subpackages. By default, it will only include test classes whose names
+either begin with `Test` or end with `Test` or `Tests`.
 
 .Additional Configuration Options
 NOTE: There are more configuration options for discovering and filtering tests than just

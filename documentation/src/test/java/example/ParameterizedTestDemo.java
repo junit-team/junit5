@@ -18,6 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -25,6 +29,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import example.Person.Gender;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -192,7 +198,10 @@ class ParameterizedTestDemo {
 		assertNotNull(argument);
 	}
 
-	static class MyArgumentsProvider implements ArgumentsProvider {
+	// end::ArgumentsSource_example[]
+	static
+	// tag::ArgumentsSource_example[]
+	public class MyArgumentsProvider implements ArgumentsProvider {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
@@ -234,7 +243,10 @@ class ParameterizedTestDemo {
 		assertEquals("42 Cats", book.getTitle());
 	}
 
-	static class Book {
+	// end::implicit_fallback_conversion_example[]
+	static
+	// tag::implicit_fallback_conversion_example[]
+	public class Book {
 
 		private final String title;
 
@@ -262,7 +274,10 @@ class ParameterizedTestDemo {
 		assertNotNull(TimeUnit.valueOf(argument));
 	}
 
-	static class ToStringArgumentConverter extends SimpleArgumentConverter {
+	// end::explicit_conversion_example[]
+	static
+	// tag::explicit_conversion_example[]
+	public class ToStringArgumentConverter extends SimpleArgumentConverter {
 
 		@Override
 		protected Object convert(Object source, Class<?> targetType) {
@@ -283,32 +298,74 @@ class ParameterizedTestDemo {
 	// end::explicit_java_time_converter[]
 	// @formatter:on
 
-	// tag::Accessor_example[]
-	@ParameterizedTest
-	@CsvSource({ "foo, 1, bar, 2", "baz, 3, qux, 4" })
-	void argumentsAccessorTest(ArgumentsAccessor accessor) {
-		assertNotEquals(accessor.get(0), accessor.get(2));
-		assertTrue(accessor.getInteger(3) > accessor.getInteger(1));
-	}
-	// end::Accessor_example[]
+	// @formatter:off
+    // tag::ArgumentsAccessor_example[]
+    @ParameterizedTest
+    @CsvSource({
+        "Jane, Doe, F, 1990-05-20",
+        "John, Doe, M, 1990-10-22"
+    })
+    void testWithArgumentsAccessor(ArgumentsAccessor arguments) {
+        Person person = new Person(arguments.getString(0),
+                                   arguments.getString(1),
+                                   arguments.get(2, Gender.class),
+                                   arguments.get(3, LocalDate.class));
+
+        if (person.getFirstName().equals("Jane")) {
+            assertEquals(Gender.F, person.getGender());
+        }
+        else {
+            assertEquals(Gender.M, person.getGender());
+        }
+        assertEquals("Doe", person.getLastName());
+        assertEquals(1990, person.getDateOfBirth().getYear());
+    }
+    // end::ArgumentsAccessor_example[]
+	// @formatter:on
 
 	// @formatter:off
-	// tag::Aggregator_example[]
-	@ParameterizedTest
-	@CsvSource({ "3, 22, 16, 39", "45, 15, 30" })
-	void aggregationTest(@AggregateWith(SummaryAggregator.class) int sum) {
-		assertTrue(sum <= 100);
-	}
+    // tag::ArgumentsAggregator_example[]
+    @ParameterizedTest
+    @CsvSource({
+        "Jane, Doe, F, 1990-05-20",
+        "John, Doe, M, 1990-10-22"
+    })
+    void testWithArgumentsAggregator(@AggregateWith(PersonAggregator.class) Person person) {
+        // perform assertions against person
+    }
 
-	static class SummaryAggregator implements ArgumentsAggregator {
-		@Override
-		public Object aggregateArguments(ArgumentsAccessor argumentsAccessor, ParameterContext parameterContext) {
-			return IntStream.range(0, argumentsAccessor.size())
-					.map(i -> argumentsAccessor.getInteger(i))
-					.sum();
-		}
-	}
-	// end::Aggregator_example[]
+    // end::ArgumentsAggregator_example[]
+    static
+    // tag::ArgumentsAggregator_example[]
+    public class PersonAggregator implements ArgumentsAggregator {
+        @Override
+        public Person aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
+            return new Person(arguments.getString(0),
+                              arguments.getString(1),
+                              arguments.get(2, Gender.class),
+                              arguments.get(3, LocalDate.class));
+        }
+    }
+    // end::ArgumentsAggregator_example[]
+	// @formatter:on
+
+	// @formatter:off
+    // tag::ArgumentsAggregator_with_custom_annotation_example[]
+    @ParameterizedTest
+    @CsvSource({
+        "Jane, Doe, F, 1990-05-20",
+        "John, Doe, M, 1990-10-22"
+    })
+    void testWithCustomAggregatorAnnotation(@CsvToPerson Person person) {
+        // perform assertions against person
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+    @AggregateWith(PersonAggregator.class)
+    public @interface CsvToPerson {
+    }
+    // end::ArgumentsAggregator_with_custom_annotation_example[]
 	// @formatter:on
 
 	// tag::custom_display_names[]

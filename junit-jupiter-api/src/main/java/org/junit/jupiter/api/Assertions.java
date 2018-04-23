@@ -53,6 +53,20 @@ public final class Assertions {
 	// --- fail ----------------------------------------------------------------
 
 	/**
+	 * <em>Fails</em> a test <em>without</em> a failure message.
+	 *
+	 * <p>Although failing <em>with</em> an explicit failure message is recommended,
+	 * this method may be useful when maintaining legacy code.
+	 *
+	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
+	 * this method's generic return type {@code V}.
+	 */
+	public static <V> V fail() {
+		AssertionUtils.fail();
+		return null; // appeasing the compiler: this line will never be executed.
+	}
+
+	/**
 	 * <em>Fails</em> a test with the given failure {@code message}.
 	 *
 	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
@@ -1187,6 +1201,8 @@ public final class Assertions {
 		return AssertThrows.assertThrows(expectedType, executable, messageSupplier);
 	}
 
+	// --- executable ---
+
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code executable} does
 	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
@@ -1236,6 +1252,61 @@ public final class Assertions {
 	 */
 	public static void assertDoesNotThrow(Executable executable, Supplier<String> messageSupplier) {
 		AssertDoesNotThrow.assertDoesNotThrow(executable, messageSupplier);
+	}
+
+	// --- supplier ---
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <p>If the assertion passes, the {@code supplier}'s result will be returned.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 */
+	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier) {
+		return AssertDoesNotThrow.assertDoesNotThrow(supplier);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <p>If the assertion passes, the {@code supplier}'s result will be returned.
+	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 */
+	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, String message) {
+		return AssertDoesNotThrow.assertDoesNotThrow(supplier, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <p>If the assertion passes, the {@code supplier}'s result will be returned.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 */
+	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
+		return AssertDoesNotThrow.assertDoesNotThrow(supplier, messageSupplier);
 	}
 
 	// --- assertTimeout -------------------------------------------------------

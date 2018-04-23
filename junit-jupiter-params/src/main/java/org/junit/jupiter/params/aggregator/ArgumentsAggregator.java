@@ -16,9 +16,11 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 
 /**
- * {@code ArgumentsAggregator} is an abstraction for the aggregation of a
- * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}
- * method's arguments into a single object.
+ * {@code ArgumentsAggregator} is an abstraction for the aggregation of arguments
+ * provided by an {@link org.junit.jupiter.params.provider.ArgumentsProvider
+ * ArgumentsProvider} for a single invocation of a
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} method
+ * into a single object.
  *
  * <p>An {@code ArgumentsAggregator} is applied to a method parameter of a
  * {@code @ParameterizedTest} method via the {@link AggregateWith @AggregateWith}
@@ -26,6 +28,10 @@ import org.junit.jupiter.api.extension.ParameterContext;
  *
  * <p>The result of the aggregation will be passed as an argument to the
  * {@code @ParameterizedTest} method for the annotated parameter.
+ *
+ * <p>A common use case is the aggregation of multiple columns from a single line
+ * in a CSV file into a domain object such as a {@code Person}, {@code Address},
+ * {@code Order}, etc.
  *
  * <p>Implementations must provide a no-args constructor.
  *

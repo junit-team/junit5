@@ -17,13 +17,15 @@ import java.util.List;
 import org.apiguardian.api.API;
 
 /**
- * {@code ArgumentsAccessor} defines the public API for accessing arguments passed
- * to a {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} method.
+ * {@code ArgumentsAccessor} defines the public API for accessing arguments provided
+ * by an {@link org.junit.jupiter.params.provider.ArgumentsProvider ArgumentsProvider}
+ * for a single invocation of a
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} method.
  *
- * <p>Specifically, an {@code ArgumentsAccessor} encapsulates a set of arguments
- * for a given invocation of a parameterized test and provides convenience methods
- * for accessing those arguments in a type-safe manner with automatic type conversion
- * support.
+ * <p>Specifically, an {@code ArgumentsAccessor} <em>aggregates</em> a set of
+ * arguments for a given invocation of a parameterized test and provides convenience
+ * methods for accessing those arguments in a type-safe manner with support for
+ * automatic type conversion.
  *
  * <p>An instance of {@code ArgumentsAccessor} will be automatically supplied
  * for any parameter of type {@code ArgumentsAccessor} in a parameterized test.
@@ -176,7 +178,7 @@ public interface ArgumentsAccessor {
 	Object[] toArray();
 
 	/**
-	 * Get all arguments in this accessor as a list.
+	 * Get all arguments in this accessor as an immutable list.
 	 */
 	List<Object> toList();
 

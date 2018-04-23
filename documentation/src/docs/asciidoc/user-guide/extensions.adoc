@@ -24,24 +24,24 @@ interface, test class, test method, or custom _<<writing-tests-meta-annotations,
 annotation>>_ with `@ExtendWith(...)` and supplying class references for the extensions
 to register.
 
-For example, to register a custom `MockitoExtension` for a particular test method, you
+For example, to register a custom `RandomParametersExtension` for a particular test method, you
 would annotate the test method as follows.
 
 [source,java,indent=0]
 ----
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(RandomParametersExtension.class)
 @Test
 void mockTest() {
 	// ...
 }
 ----
 
-To register a custom `MockitoExtension` for all tests in a particular class and its
+To register a custom `RandomParametersExtension` for all tests in a particular class and its
 subclasses, you would annotate the test class as follows.
 
 [source,java,indent=0]
 ----
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(RandomParametersExtension.class)
 class MockTests {
 	// ...
 }
@@ -250,7 +250,7 @@ process_ test instances.
 Common use cases include injecting dependencies into the test instance, invoking custom
 initialization methods on the test instance, etc.
 
-For concrete examples, consult the source code for the `{MockitoExtension}` and the
+For a concrete example, consult the source code for the `{MockitoExtension}` and the
 `{SpringExtension}`.
 
 [[extensions-parameter-resolution]]

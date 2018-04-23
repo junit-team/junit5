@@ -59,7 +59,7 @@ dependencies {
 	jmh("org.openjdk.jmh:jmh-core:${jmhVersion}") {
 		exclude group: 'net.sf.jopt-simple', module: 'jopt-simple'
 	}
-	jmh("org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}")
+	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}")
 	jmh(project(':junit-jupiter-api'))
 	jmh("junit:junit:${junit4Version}")
 }
@@ -69,8 +69,8 @@ jmh {
 
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 0 // Too long command line on Windows...
-	// warmupIterations = 1
-	// iterations = 5
+	warmupIterations = 1
+	iterations = 5
 }
 
 checkstyleJmh { // use same style rules as defined for tests

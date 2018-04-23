@@ -1,3 +1,5 @@
+description = 'JUnit Platform Engine API'
+
 configurations {
 	testArtifacts.extendsFrom testRuntime
 }
