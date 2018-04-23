@@ -10,21 +10,6 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import org.junit.Rule;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.engine.ExecutionRequest;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.engine.UniqueId;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.tck.ExecutionGraph;
-import org.junit.platform.tck.ExecutionRecorder;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +22,21 @@ import static org.junit.platform.tck.ExecutionEventConditions.finishedWithFailur
 import static org.junit.platform.tck.ExecutionEventConditions.test;
 import static org.junit.platform.tck.TestExecutionResultConditions.isA;
 import static org.junit.platform.tck.TestExecutionResultConditions.message;
+
+import java.io.IOException;
+
+import org.junit.Rule;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.platform.engine.ExecutionRequest;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionGraph;
+import org.junit.platform.tck.ExecutionRecorder;
+import org.junit.rules.ExpectedException;
 
 /**
  * Integration tests for {@link ExpectedExceptionSupport}.
