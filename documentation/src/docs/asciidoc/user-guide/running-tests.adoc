@@ -106,9 +106,9 @@ Filtering by tags or engines is also supported:
 test {
     useJUnitPlatform {
         includeTags 'fast', 'smoke & feature-a'
-        excludeTags 'slow', 'ci'
+        // excludeTags 'slow', 'ci'
         includeEngines 'junit-jupiter'
-        excludeEngines 'junit-vintage'
+        // excludeEngines 'junit-vintage'
 	}
 }
 ----
