@@ -3985,9 +3985,9 @@ for executing tests on the JUnit Platform. To enable it, you just need to specif
 <pre class="CodeRay highlight"><code data-lang="java">test {
     useJUnitPlatform {
         includeTags <span class="string"><span class="delimiter">'</span><span class="content">fast</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">smoke &amp; feature-a</span><span class="delimiter">'</span></span>
-        excludeTags <span class="string"><span class="delimiter">'</span><span class="content">slow</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">ci</span><span class="delimiter">'</span></span>
+        <span class="comment">// excludeTags 'slow', 'ci'</span>
         includeEngines <span class="string"><span class="delimiter">'</span><span class="content">junit-jupiter</span><span class="delimiter">'</span></span>
-        excludeEngines <span class="string"><span class="delimiter">'</span><span class="content">junit-vintage</span><span class="delimiter">'</span></span>
+        <span class="comment">// excludeEngines 'junit-vintage'</span>
     }
 }</code></pre>
 </div>
@@ -6357,7 +6357,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-21 09:07:04 EDT
+Last updated 2018-04-23 07:13:52 EDT
 </div>
 </div>
 </body>
