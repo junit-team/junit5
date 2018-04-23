@@ -1,6 +1,8 @@
 apply plugin: 'java-library'
 apply plugin: 'com.github.johnrengelman.shadow'
 
+description = 'JUnit Platform Console Standalone'
+
 buildscript {
 	repositories {
 		jcenter()

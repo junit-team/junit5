@@ -13,12 +13,13 @@ package org.junit.jupiter.params.aggregator;
 import static java.lang.String.format;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
+import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -36,7 +37,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
 	private final Object[] arguments;
 
-	public DefaultArgumentsAccessor(Object[] arguments) {
+	public DefaultArgumentsAccessor(Object... arguments) {
 		Preconditions.notNull(arguments, "Arguments array must not be null");
 		this.arguments = arguments;
 	}
@@ -56,8 +57,10 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 			Object convertedValue = DefaultArgumentConverter.INSTANCE.convert(value, requiredType);
 			return requiredType.cast(convertedValue);
 		}
-		catch (ClassCastException ex) {
-			String message = format("Argument [%s] at index [%d] could not be converted or cast to [%s]", value, index,
+		catch (Exception ex) {
+			String message = format(
+				"Argument at index [%d] with value [%s] and type [%s] could not be converted or cast to type [%s].",
+				index, value, ClassUtils.nullSafeToString(value == null ? null : value.getClass()),
 				requiredType.getName());
 			throw new ArgumentsAccessorException(message, ex);
 		}
@@ -120,8 +123,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
 	@Override
 	public List<Object> toList() {
-		// Must return a copy since Arrays.asList returns a write-through list.
-		return new ArrayList<>(Arrays.asList(this.arguments));
+		return Collections.unmodifiableList(Arrays.asList(this.arguments));
 	}
 
 }

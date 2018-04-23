@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionTestUtils.assertEmptyMessage;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
@@ -27,6 +28,17 @@ import org.opentest4j.AssertionFailedError;
  * @since 5.0
  */
 class FailAssertionsTests {
+
+	@Test
+	void failWithoutArgument() {
+		try {
+			fail();
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertEmptyMessage(ex);
+		}
+	}
 
 	@Test
 	void failWithString() {

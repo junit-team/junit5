@@ -13,17 +13,21 @@ endif::[]
 :junit-platform-engine:             {javadoc-root}/org/junit/platform/engine/package-summary.html[junit-platform-engine]
 :junit-platform-launcher:           {javadoc-root}/org/junit/platform/launcher/package-summary.html[junit-platform-launcher]
 :junit-platform-support-package:    {javadoc-root}/org/junit/platform/commons/support/package-summary.html[org.junit.platform.commons.support]
+//
 :AnnotationSupport:                 {javadoc-root}/org/junit/platform/commons/support/AnnotationSupport.html[AnnotationSupport]
 :ClassSupport:                      {javadoc-root}/org/junit/platform/commons/support/ClassSupport.html[ClassSupport]
 :ReflectionSupport:                 {javadoc-root}/org/junit/platform/commons/support/ReflectionSupport.html[ReflectionSupport]
-:Launcher:                          {javadoc-root}/org/junit/platform/launcher/Launcher.html[Launcher]
+//
 :ConsoleLauncher:                   {javadoc-root}/org/junit/platform/console/ConsoleLauncher.html[ConsoleLauncher]
-:JUnitPlatform-Runner:              {javadoc-root}/org/junit/platform/runner/JUnitPlatform.html[JUnitPlatform]
-:SummaryGeneratingListener:         {javadoc-root}/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html[SummaryGeneratingListener]
-:TestEngine:                        {javadoc-root}/org/junit/platform/engine/TestEngine.html[TestEngine]
+//
 :DiscoverySelectors_selectMethod:   {javadoc-root}/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod-java.lang.String-[selectMethod(String) in DiscoverySelectors]
+:TestEngine:                        {javadoc-root}/org/junit/platform/engine/TestEngine.html[TestEngine]
+//
+:Launcher:                          {javadoc-root}/org/junit/platform/launcher/Launcher.html[Launcher]
+:SummaryGeneratingListener:         {javadoc-root}/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html[SummaryGeneratingListener]
 :TestExecutionListener:             {javadoc-root}/org/junit/platform/launcher/TestExecutionListener.html[TestExecutionListener]
-:standard-include-class-name-pattern: ^.*Tests?$
+//
+:JUnitPlatform-Runner:              {javadoc-root}/org/junit/platform/runner/JUnitPlatform.html[JUnitPlatform]
 //
 :api-package:                       {javadoc-root}/org/junit/jupiter/api/package-summary.html[org.junit.jupiter.api]
 :extension-api-package:             {javadoc-root}/org/junit/jupiter/api/extension/package-summary.html[org.junit.jupiter.api.extension]
@@ -32,6 +36,8 @@ endif::[]
 :AfterAllCallback:                  {javadoc-root}/org/junit/jupiter/api/extension/AfterAllCallback.html[AfterAllCallback]
 :AfterEachCallback:                 {javadoc-root}/org/junit/jupiter/api/extension/AfterEachCallback.html[AfterEachCallback]
 :AfterTestExecutionCallback:        {javadoc-root}/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html[AfterTestExecutionCallback]
+:ArgumentsAccessor:                 {javadoc-root}/org/junit/jupiter/params/aggregator/ArgumentsAccessor.html[ArgumentsAccessor]
+:ArgumentsAggregator:               {javadoc-root}/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html[ArgumentsAggregator]
 :Assertions:                        {javadoc-root}/org/junit/jupiter/api/Assertions.html[org.junit.jupiter.api.Assertions]
 :Assumptions:                       {javadoc-root}/org/junit/jupiter/api/Assumptions.html[org.junit.jupiter.api.Assumptions]
 :BeforeAllCallback:                 {javadoc-root}/org/junit/jupiter/api/extension/BeforeAllCallback.html[BeforeAllCallback]
@@ -66,8 +72,10 @@ endif::[]
 :TestTemplateInvocationContextProvider: {javadoc-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html[TestTemplateInvocationContextProvider]
 //
 :DisabledCondition:                 {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
+:RepetitionInfoParameterResolver:   {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java[RepetitionInfoParameterResolver]
 :TestInfoParameterResolver:         {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java[TestInfoParameterResolver]
 :TestReporterParameterResolver:     {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java[TestReporterParameterResolver]
+//
 :CustomAnnotationParameterResolver: {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java[CustomAnnotationParameterResolver]
 :CustomTypeParameterResolver:       {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java[CustomTypeParameterResolver]
 //
@@ -75,8 +83,9 @@ endif::[]
 //
 :junit5-samples-repo:               {junit-team}/junit5-samples
 :junit5-gradle-consumer:            {junit5-samples-repo}/tree/{release-branch}/junit5-gradle-consumer[junit5-gradle-consumer]
+:junit5-jupiter-starter-ant:        {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-ant[junit5-jupiter-starter-ant]
 :junit5-maven-consumer:             {junit5-samples-repo}/tree/{release-branch}/junit5-maven-consumer[junit5-maven-consumer]
-:MockitoExtension:                  {junit5-samples-repo}/tree/{release-branch}/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
+:RandomParametersExtension:         {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java[RandomParametersExtension]
 //
 :API:                               https://apiguardian-team.github.io/apiguardian/docs/current/api/[@API]
 :API_Guardian:                      https://github.com/apiguardian-team/apiguardian[@API Guardian]
@@ -87,6 +96,7 @@ endif::[]
 :Log4j_JDK_Logging_Adapter:         https://logging.apache.org/log4j/2.x/log4j-jul/index.html[Log4j JDK Logging Adapter]
 :Logback:                           https://logback.qos.ch/[Logback]
 :LogManager:                        https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html[LogManager]
+:MockitoExtension:                  https://github.com/mockito/mockito/blob/release/2.x/subprojects/junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java[MockitoExtension]
 :Specsy:                            http://specsy.org/[Specsy]
 :SpringExtension:                   https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
 :StackOverflow:                     https://stackoverflow.com/questions/tagged/junit5[Stack Overflow]

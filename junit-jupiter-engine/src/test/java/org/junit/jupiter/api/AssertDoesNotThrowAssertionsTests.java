@@ -13,10 +13,12 @@ package org.junit.jupiter.api;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -29,18 +31,22 @@ class AssertDoesNotThrowAssertionsTests {
 	private static final Executable nix = () -> {
 	};
 
+	private static final ThrowingSupplier<String> something = () -> "enigma";
+
+	// --- executable ----------------------------------------------------------
+
 	@Test
-	void assertDoesNotThrowAnything() {
+	void assertDoesNotThrowAnythingWithExecutable() {
 		assertDoesNotThrow(nix);
 	}
 
 	@Test
-	void assertDoesNotThrowAnythingWithMessage() {
+	void assertDoesNotThrowAnythingWithExecutableAndMessage() {
 		assertDoesNotThrow(nix, "message");
 	}
 
 	@Test
-	void assertDoesNotThrowAnythingWithMessageSupplier() {
+	void assertDoesNotThrowAnythingWithExecutableAndMessageSupplier() {
 		assertDoesNotThrow(nix, () -> "message");
 	}
 
@@ -99,6 +105,95 @@ class AssertDoesNotThrowAssertionsTests {
 	void assertDoesNotThrowWithExecutableThatThrowsAnExceptionWithMessageSupplier() {
 		try {
 			assertDoesNotThrow(() -> {
+				throw new IllegalStateException();
+			}, () -> "Custom message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex,
+				"Custom message ==> Unexpected exception thrown: " + IllegalStateException.class.getName());
+		}
+	}
+
+	// --- supplier ------------------------------------------------------------
+
+	@Test
+	void assertDoesNotThrowAnythingWithSupplier() {
+		assertEquals("enigma", assertDoesNotThrow(something));
+	}
+
+	@Test
+	void assertDoesNotThrowAnythingWithSupplierAndMessage() {
+		assertEquals("enigma", assertDoesNotThrow(something, "message"));
+	}
+
+	@Test
+	void assertDoesNotThrowAnythingWithSupplierAndMessageSupplier() {
+		assertEquals("enigma", assertDoesNotThrow(something, () -> "message"));
+	}
+
+	@Test
+	void assertDoesNotThrowWithSupplierThatThrowsACheckedException() {
+		try {
+			@SuppressWarnings("unused")
+			String result = assertDoesNotThrow(() -> {
+				throw new IOException();
+			});
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "Unexpected exception thrown: " + IOException.class.getName());
+		}
+	}
+
+	@Test
+	void assertDoesNotThrowWithSupplierThatThrowsARuntimeException() {
+		try {
+			@SuppressWarnings("unused")
+			String result = assertDoesNotThrow(() -> {
+				throw new IllegalStateException();
+			});
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "Unexpected exception thrown: " + IllegalStateException.class.getName());
+		}
+	}
+
+	@Test
+	void assertDoesNotThrowWithSupplierThatThrowsAnError() {
+		try {
+			@SuppressWarnings("unused")
+			String result = assertDoesNotThrow(() -> {
+				throw new StackOverflowError();
+			});
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "Unexpected exception thrown: " + StackOverflowError.class.getName());
+		}
+	}
+
+	@Test
+	void assertDoesNotThrowWithSupplierThatThrowsAnExceptionWithMessageString() {
+		try {
+			@SuppressWarnings("unused")
+			String result = assertDoesNotThrow(() -> {
+				throw new IllegalStateException();
+			}, "Custom message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex,
+				"Custom message ==> Unexpected exception thrown: " + IllegalStateException.class.getName());
+		}
+	}
+
+	@Test
+	void assertDoesNotThrowWithSupplierThatThrowsAnExceptionWithMessageSupplier() {
+		try {
+			@SuppressWarnings("unused")
+			String result = assertDoesNotThrow(() -> {
 				throw new IllegalStateException();
 			}, () -> "Custom message");
 			expectAssertionFailedError();
