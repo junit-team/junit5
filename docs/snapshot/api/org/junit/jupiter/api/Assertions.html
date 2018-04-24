@@ -2588,17 +2588,17 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
    <br>Skip strictly 21 lines. If they can't be skipped for any reason, an assertion error is raised.</li>
  </ul>
 
- <p>Example showing all three kinds of expected line formats:
+ <p>Here is an example showing all three kinds of expected line formats:
  <pre><code>
- \u2502  \u2502  \u2502     caught: AssertionFailedError: single line fail message
- &gt;&gt; S T A C K T R A C E &gt;&gt;
- \u2502  \u2502  \u2502   duration: [\d]+ ms
- \u2502  \u2502  \u2502     status: \u2718 FAILED
- \u2502  \u2514\u2500 test() finished after [\d]+ ms\.
- \u2514\u2500 JUnit Jupiter finished after [\d]+ ms\.
- Test plan execution finished. Number of all tests: 1
-
- Test run finished after [\d]+ ms
+ ls -la /
+ total [\d]+
+ drwxr-xr-x  0 root root   512 Jan  1  1970 .
+ drwxr-xr-x  0 root root   512 Jan  1  1970 ..
+ drwxr-xr-x  0 root root   512 Apr  5 07:45 bin
+ &gt;&gt; 4 &gt;&gt;
+ -rwxr-xr-x  1 root root [\d]+ Jan  1  1970 init
+ &gt;&gt; M A N Y  M O R E  E N T R I E S &gt;&gt;
+ drwxr-xr-x  0 root root   512 Sep 22  2017 var
  </code></pre></div>
 </li>
 </ul>
