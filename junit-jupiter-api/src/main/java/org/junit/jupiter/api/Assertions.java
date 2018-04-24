@@ -940,17 +940,17 @@ public final class Assertions {
 	 *   <br>Skip strictly 21 lines. If they can't be skipped for any reason, an assertion error is raised.</li>
 	 * </ul>
 	 *
-	 * <p>Example showing all three kinds of expected line formats:
+	 * <p>Here is an example showing all three kinds of expected line formats:
 	 * <pre>{@code
-	 * │  │  │     caught: AssertionFailedError: single line fail message
-	 * >> S T A C K T R A C E >>
-	 * │  │  │   duration: [\d]+ ms
-	 * │  │  │     status: ✘ FAILED
-	 * │  └─ test() finished after [\d]+ ms\.
-	 * └─ JUnit Jupiter finished after [\d]+ ms\.
-	 * Test plan execution finished. Number of all tests: 1
-	 *
-	 * Test run finished after [\d]+ ms
+	 * ls -la /
+	 * total [\d]+
+	 * drwxr-xr-x  0 root root   512 Jan  1  1970 .
+	 * drwxr-xr-x  0 root root   512 Jan  1  1970 ..
+	 * drwxr-xr-x  0 root root   512 Apr  5 07:45 bin
+	 * >> 4 >>
+	 * -rwxr-xr-x  1 root root [\d]+ Jan  1  1970 init
+	 * >> M A N Y  M O R E  E N T R I E S >>
+	 * drwxr-xr-x  0 root root   512 Sep 22  2017 var
 	 * }</pre>
 	 */
 	public static void assertLinesMatch(List<String> expectedLines, List<String> actualLines) {
