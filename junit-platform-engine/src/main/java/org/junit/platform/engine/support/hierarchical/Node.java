@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 
 /**
  * A <em>node</em> within the execution hierarchy.
@@ -118,6 +119,30 @@ public interface Node<C extends EngineExecutionContext> {
 	 * @see #execute
 	 */
 	default void after(C context) throws Exception {
+	}
+
+	/**
+	 * Action triggered when the execution of this Node is skipped.
+	 *
+	 *  @param context the execution context
+	 *  @param descriptor  the skipped test {@link TestDescriptor}
+	 *  @param result the cause of skipped execution
+	 * @since 1.4
+	 */
+	@API(status = MAINTAINED, since = "1.4", consumers = "org.junit.platform.engine.support.hierarchical")
+	default void nodeSkipped(C context, TestDescriptor descriptor, SkipResult result) {
+	}
+
+	/**
+	 * Action triggered when the execution of this Node has finished.
+	 *
+	 * @param context the execution context
+	 * @param descriptor the skipped test's {@link TestDescriptor}
+	 * @param result the {@link TestExecutionResult} resulting from the execution of {@code descriptor}
+	 * @since 1.4
+	 */
+	@API(status = MAINTAINED, since = "1.4", consumers = "org.junit.platform.engine.support.hierarchical")
+	default void nodeFinished(C context, TestDescriptor descriptor, TestExecutionResult result) {
 	}
 
 	/**

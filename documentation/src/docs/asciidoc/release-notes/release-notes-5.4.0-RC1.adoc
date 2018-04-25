@@ -57,6 +57,8 @@ repository on GitHub.
   provide `null` and _empty_ arguments to `@ParameterizedTest` methods.
   - See <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-null-and-empty,
     Null and Empty Sources>> in the User Guide for details.
+* New `TestWatcher` extension API that allows extensions to process test results by
+  defining result-based callbacks invoked after text execution.
 
 
 [[release-notes-5.4.0-RC1-junit-vintage]]

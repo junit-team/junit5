@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -28,14 +29,20 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable;
@@ -62,6 +69,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executa
 public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
+	private static final Logger logger = LoggerFactory.getLogger(TestMethodTestDescriptor.class);
 
 	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration) {
@@ -231,6 +239,58 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		registry.getReversedExtensions(type).forEach(callback -> {
 			Executable executable = generator.apply(extensionContext, callback);
 			throwableCollector.execute(executable);
+		});
+	}
+
+	@Override
+	public void nodeSkipped(JupiterEngineExecutionContext context, TestDescriptor descriptor, SkipResult result) {
+		if (context != null) {
+			invokeTestWatchers(context, watcher -> {
+				watcher.testDisabled(context.getExtensionContext(), result.getReason());
+			}, false);
+		}
+	}
+
+	@Override
+	public void nodeFinished(JupiterEngineExecutionContext context, TestDescriptor descriptor,
+			TestExecutionResult result) {
+		if (context != null) {
+			invokeTestWatchers(context, watcher -> {
+				ExtensionContext extensionContext = context.getExtensionContext();
+				TestExecutionResult.Status status = result.getStatus();
+				switch (status) {
+					case SUCCESSFUL:
+						watcher.testSuccessful(extensionContext);
+						break;
+					case FAILED:
+						watcher.testFailed(extensionContext, result.getThrowable().get());
+						break;
+					case ABORTED:
+						watcher.testAborted(extensionContext, result.getThrowable().get());
+						break;
+				}
+			}, true);
+		}
+	}
+
+	private void invokeTestWatchers(JupiterEngineExecutionContext context, Consumer<TestWatcher> callback,
+			boolean reverseOrder) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
+		List<? extends TestWatcher> watchers = reverseOrder ? registry.getReversedExtensions(TestWatcher.class)
+				: registry.getExtensions(TestWatcher.class);
+		watchers.forEach(watcher -> {
+			try {
+				callback.accept(watcher);
+			}
+			catch (Throwable throwable) {
+				ExtensionContext extensionContext = context.getExtensionContext();
+				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+				logger.warn(throwable,
+					() -> String.format("Failed to invoke TestWatcher %s for test %s", watcher.getClass().getName(),
+						ReflectionUtils.getFullyQualifiedMethodName(extensionContext.getRequiredTestClass(),
+							extensionContext.getRequiredTestMethod().getName(),
+							extensionContext.getRequiredTestMethod().getParameterTypes())));
+			}
 		});
 	}
 

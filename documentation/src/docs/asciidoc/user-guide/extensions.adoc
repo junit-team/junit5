@@ -346,6 +346,26 @@ those provided in `java.lang.reflect.Parameter` in order to avoid this bug in th
 * `List<A> findRepeatableAnnotations(Class<A> annotationType)`
 ====
 
+[[extensions-test-result-processing]]
+=== Test result processing
+
+`{TestWatcher}` defines the API for extensions that wish to process test results.
+
+Test methods extended with any number of TestWatcher extensions will
+have their results reported to each of them, by invoking the interface method
+corresponding to the test result. Methods are injected with the current ExtensionContext
+and the cause of a failed/aborted/skipped execution, where applicable.
+
+Extensions implementing this interface can also be registered at the class level,
+and will be invoked for any contained tests including nested classes.
+
+[WARNING]
+====
+Any instances of `ExtensionContext.Store.CloseableResource` stored in the provided
+`{ExtensionContext}` will be closed (see <<extensions-keeping-state>>). You can use the
+parent context's store to operate with such resources.
+====
+
 [[extensions-lifecycle-callbacks]]
 === Test Lifecycle Callbacks
 

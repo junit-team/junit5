@@ -86,6 +86,7 @@ endif::[]
 :TestInstancePostProcessor:              {javadoc-root}/org/junit/jupiter/api/extension/TestInstancePostProcessor.html[TestInstancePostProcessor]
 :TestTemplateInvocationContext:          {javadoc-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContext.html[TestTemplateInvocationContext]
 :TestTemplateInvocationContextProvider:  {javadoc-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html[TestTemplateInvocationContextProvider]
+:TestWatcher:                            {javadoc-root}/org/junit/jupiter/api/extension/TestWatcher.html[TestWatcher]
 // Jupiter Conditions
 :DisabledIf:                             {javadoc-root}/org/junit/jupiter/api/condition/DisabledIf.html[@DisabledIf]
 :DisabledIfEnvironmentVariable:          {javadoc-root}/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html[@DisabledIfEnvironmentVariable]
