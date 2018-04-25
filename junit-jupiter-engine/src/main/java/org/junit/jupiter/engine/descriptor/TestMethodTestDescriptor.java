@@ -13,11 +13,13 @@ package org.junit.jupiter.engine.descriptor;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
+import static org.junit.platform.engine.TestExecutionResult.Status;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
@@ -34,6 +37,7 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable;
@@ -231,4 +235,48 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		});
 	}
 
+	@Override
+	public void nodeSkipped(JupiterEngineExecutionContext context, TestDescriptor descriptor, SkipResult result) {
+		invokeTestWatchers(context, t -> {
+			t.testSkipped(createTestIdentifier(), result.getReason(), context.getExtensionContext());
+		});
+	}
+
+	@Override
+	public void nodeFinished(JupiterEngineExecutionContext context, TestDescriptor descriptor,
+			TestExecutionResult result) {
+		invokeTestWatchers(context, t -> {
+			ExtensionContext extensionContext = context.getExtensionContext();
+			Status status = result.getStatus();
+			String identifier = createTestIdentifier();
+			switch (status) {
+				case SUCCESSFUL:
+					t.testSuccessful(identifier, extensionContext);
+					break;
+				case FAILED:
+					t.testFailed(identifier, result.getThrowable().get(), extensionContext);
+					break;
+				case ABORTED:
+					t.testAborted(identifier, result.getThrowable().get(), extensionContext);
+					break;
+			}
+		});
+	}
+
+	private void invokeTestWatchers(JupiterEngineExecutionContext context, Consumer<TestWatcher> callback) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
+		registry.getReversedExtensions(TestWatcher.class).forEach(t -> {
+			try {
+				callback.accept(t);
+			}
+			catch (Exception e) {
+				//swallow
+			}
+		});
+	}
+
+	private String createTestIdentifier() {
+		Method testMethod = this.getTestMethod();
+		return String.format("%s#%s", testMethod.getDeclaringClass().getName(), testMethod.getName());
+	}
 }
