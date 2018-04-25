@@ -19,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.tck.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.tck.ExecutionEventConditions.event;
+import static org.junit.platform.tck.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.tck.ExecutionEventConditions.test;
+import static org.junit.platform.tck.TestExecutionResultConditions.isA;
+import static org.junit.platform.tck.TestExecutionResultConditions.message;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
@@ -39,8 +39,9 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionGraph;
 import org.mockito.Mockito;
 
 /**
@@ -53,15 +54,17 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeSimpleTestCases() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(SimpleTestCases.class)).build();
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
 		assertAll("Summary of simple test cases run", //
-			() -> assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started"), //
-			() -> assertEquals(1, eventRecorder.getTestSkippedCount(), "# tests skipped"), //
-			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests started") //
+			() -> assertEquals(3, executionGraph.getTestExecutionsFinished().size(), "# tests started"), //
+			() -> assertEquals(1, executionGraph.getTestExecutionsSkipped().size(), "# tests skipped"), //
+			() -> assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+				"# tests started") //
 		);
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(), //
+		assertRecordedExecutionEventsContainsExactly(
+			executionGraph.getTestFinishedEvents(TestExecutionResult.Status.FAILED), //
 			event(test("syntaxError"), //
 				finishedWithFailure( //
 					allOf( //

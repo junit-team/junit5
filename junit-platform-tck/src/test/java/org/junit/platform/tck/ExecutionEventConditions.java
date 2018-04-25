@@ -8,25 +8,21 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.test.event;
+package org.junit.platform.tck;
 
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.allOf;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.Index.atIndex;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
-import static org.junit.platform.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
-import static org.junit.platform.engine.test.event.ExecutionEvent.Type.FINISHED;
-import static org.junit.platform.engine.test.event.ExecutionEvent.Type.SKIPPED;
-import static org.junit.platform.engine.test.event.ExecutionEvent.Type.STARTED;
-import static org.junit.platform.engine.test.event.ExecutionEvent.byPayload;
-import static org.junit.platform.engine.test.event.ExecutionEvent.byTestDescriptor;
-import static org.junit.platform.engine.test.event.ExecutionEvent.byType;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.cause;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.status;
+import static org.junit.platform.tck.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
+import static org.junit.platform.tck.ExecutionEvent.Type.FINISHED;
+import static org.junit.platform.tck.ExecutionEvent.Type.SKIPPED;
+import static org.junit.platform.tck.ExecutionEvent.Type.STARTED;
+import static org.junit.platform.tck.ExecutionEvent.byPayload;
+import static org.junit.platform.tck.ExecutionEvent.byTestDescriptor;
+import static org.junit.platform.tck.ExecutionEvent.byType;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -34,12 +30,12 @@ import java.util.function.Predicate;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.data.Index;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
-import org.junit.platform.engine.test.event.ExecutionEvent.Type;
 
 /**
  * Collection of AssertJ conditions for {@link ExecutionEvent}.
@@ -48,13 +44,16 @@ import org.junit.platform.engine.test.event.ExecutionEvent.Type;
  */
 public class ExecutionEventConditions {
 
+	private ExecutionEventConditions() {
+	}
+
 	@SafeVarargs
 	public static void assertRecordedExecutionEventsContainsExactly(List<ExecutionEvent> executionEvents,
 			Condition<? super ExecutionEvent>... conditions) {
 		SoftAssertions softly = new SoftAssertions();
-		assertThat(executionEvents).hasSize(conditions.length);
+		Assertions.assertThat(executionEvents).hasSize(conditions.length);
 		for (int i = 0; i < conditions.length; i++) {
-			softly.assertThat(executionEvents).has(conditions[i], atIndex(i));
+			softly.assertThat(executionEvents).has(conditions[i], Index.atIndex(i));
 		}
 		softly.assertAll();
 	}
@@ -62,7 +61,7 @@ public class ExecutionEventConditions {
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	public static Condition<ExecutionEvent> event(Condition<? super ExecutionEvent>... conditions) {
-		return Assertions.<ExecutionEvent> allOf(conditions);
+		return allOf(conditions);
 	}
 
 	public static Condition<ExecutionEvent> engine() {
@@ -102,7 +101,7 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> dynamicTestRegistered(Condition<ExecutionEvent> condition) {
-		return allOf(type(DYNAMIC_TEST_REGISTERED), condition);
+		return Assertions.allOf(type(DYNAMIC_TEST_REGISTERED), condition);
 	}
 
 	public static Condition<ExecutionEvent> uniqueIdSubstring(String uniqueIdSubstring) {
@@ -122,7 +121,7 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> skippedWithReason(String expectedReason) {
-		return allOf(type(SKIPPED), reason(expectedReason));
+		return Assertions.allOf(type(SKIPPED), reason(expectedReason));
 	}
 
 	public static Condition<ExecutionEvent> started() {
@@ -139,22 +138,23 @@ public class ExecutionEventConditions {
 
 	private static Condition<ExecutionEvent> finishedWithCause(Status expectedStatus,
 			Condition<? super Throwable> causeCondition) {
-		return finished(allOf(status(expectedStatus), cause(causeCondition)));
+		return finished(allOf(TestExecutionResultConditions.status(expectedStatus),
+			TestExecutionResultConditions.cause(causeCondition)));
 	}
 
 	public static Condition<ExecutionEvent> finishedWithFailure() {
-		return finished(status(FAILED));
+		return finished(TestExecutionResultConditions.status(FAILED));
 	}
 
 	public static Condition<ExecutionEvent> finishedSuccessfully() {
-		return finished(status(SUCCESSFUL));
+		return finished(TestExecutionResultConditions.status(SUCCESSFUL));
 	}
 
 	public static Condition<ExecutionEvent> finished(Condition<TestExecutionResult> resultCondition) {
 		return allOf(type(FINISHED), result(resultCondition));
 	}
 
-	public static Condition<ExecutionEvent> type(Type expectedType) {
+	public static Condition<ExecutionEvent> type(ExecutionEvent.Type expectedType) {
 		return new Condition<>(byType(expectedType), "type is %s", expectedType);
 	}
 

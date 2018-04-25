@@ -41,12 +41,12 @@ import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
-import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.DiscoveryFilterStub;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
+import org.junit.platform.tck.TestEngineStub;
 
 /**
  * @since 1.0

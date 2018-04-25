@@ -20,8 +20,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.tck.ExecutionGraph;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -57,27 +58,32 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(FirstOfTwoTestCases.class),
 			selectClass(SecondOfTwoTestCases.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
 
-		assertEquals(6, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(5, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(6, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(5, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
-		assertEquals(3, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(3, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(3, executionGraph.getContainerStartedCount(), "# containers started");
+		assertEquals(3, executionGraph.getContainerFinishedCount(), "# containers finished");
 	}
 
 	@Test
 	void allTestsInClassAreRunWithBeforeEach() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(MyStandardTestCase.class);
+		ExecutionGraph executionGraph = executeTestsForClass(MyStandardTestCase.class).getExecutionGraph();
 
-		assertEquals(4, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(4, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(2, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.ABORTED).size(),
+			"# tests aborted");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
-		assertEquals(2, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(2, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(2, executionGraph.getContainerStartedCount(), "# containers started");
+		assertEquals(2, executionGraph.getContainerFinishedCount(), "# containers finished");
 
 		assertEquals(4, MyStandardTestCase.countBefore1, "# before1 calls");
 		assertEquals(4, MyStandardTestCase.countBefore2, "# before2 calls");
@@ -85,39 +91,43 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void allTestsInClassAreRunWithAfterEach() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(MyStandardTestCase.class);
+		ExecutionGraph executionGraph = executeTestsForClass(MyStandardTestCase.class).getExecutionGraph();
 
-		assertEquals(4, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(4, executionGraph.getTestExecutionsFinished().size(), "# tests started");
 		assertEquals(4, MyStandardTestCase.countAfter, "# after each calls");
 
-		assertEquals(2, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(2, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(2, executionGraph.getContainerStartedCount(), "# containers started");
+		assertEquals(2, executionGraph.getContainerFinishedCount(), "# containers finished");
 	}
 
 	@Test
 	void testsFailWhenBeforeEachFails() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithFailingBefore.class);
+		ExecutionGraph executionGraph = executeTestsForClass(TestCaseWithFailingBefore.class).getExecutionGraph();
 
-		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(2, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(2, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
-		assertEquals(2, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(2, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(2, executionGraph.getContainerStartedCount(), "# containers started");
+		assertEquals(2, executionGraph.getContainerFinishedCount(), "# containers finished");
 
 		assertEquals(2, TestCaseWithFailingBefore.countBefore, "# before each calls");
 	}
 
 	@Test
 	void testsFailWhenAfterEachFails() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithFailingAfter.class);
+		ExecutionGraph executionGraph = executeTestsForClass(TestCaseWithFailingAfter.class).getExecutionGraph();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started");
+		assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+			"# tests succeeded");
+		assertEquals(1, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+			"# tests failed");
 
-		assertEquals(2, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(2, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(2, executionGraph.getContainerStartedCount(), "# containers started");
+		assertEquals(2, executionGraph.getContainerFinishedCount(), "# containers finished");
 
 		assertTrue(TestCaseWithFailingAfter.testExecuted, "test executed?");
 	}

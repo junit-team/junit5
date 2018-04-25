@@ -35,7 +35,8 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.tck.ExecutionGraph;
 
 /**
  * Integration tests that verify support for programmatic extension registration
@@ -76,13 +77,17 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	}
 
 	private void assertOneTestSucceeded(Class<?> testClass) {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+		ExecutionGraph executionGraph = executeTestsForClass(testClass).getExecutionGraph();
 		assertAll(//
-			() -> assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started"), //
-			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"), //
-			() -> assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped"), //
-			() -> assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted"), //
-			() -> assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed")//
+			() -> assertEquals(1, executionGraph.getTestExecutionsFinished().size(), "# tests started"), //
+			() -> assertEquals(1,
+				executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.SUCCESSFUL).size(),
+				"# tests succeeded"), //
+			() -> assertEquals(0, executionGraph.getTestExecutionsSkipped().size(), "# tests skipped"), //
+			() -> assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.ABORTED).size(),
+				"# tests aborted"), //
+			() -> assertEquals(0, executionGraph.getTestExecutionsFinished(TestExecutionResult.Status.FAILED).size(),
+				"# tests failed")//
 		);
 	}
 

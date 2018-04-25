@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.test.event;
+package org.junit.platform.tck;
 
 import static java.util.function.Predicate.isEqual;
 import static org.junit.platform.commons.util.FunctionUtils.where;
@@ -25,6 +25,9 @@ import org.junit.platform.engine.TestExecutionResult.Status;
  * @since 1.0
  */
 public class TestExecutionResultConditions {
+
+	private TestExecutionResultConditions() {
+	}
 
 	public static Condition<TestExecutionResult> status(Status expectedStatus) {
 		return new Condition<>(where(TestExecutionResult::getStatus, isEqual(expectedStatus)), "status is %s",
