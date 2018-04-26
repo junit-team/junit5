@@ -1,7 +1,7 @@
-[[release-notes-5.2.0-M1]]
-== 5.2.0-M1
+[[release-notes-5.2.0]]
+== 5.2.0
 
-*Date of Release:* April 15, 2018
+*Date of Release:* April 29, 2018
 
 *Scope:* JUnit BOM, support for Maven Surefire 2.21.0 allowing builds with Java 9 and
 Java 10, _argument aggregation_ and _widening primitive conversion_ for arguments in
@@ -9,21 +9,23 @@ parameterized tests, external factory methods for `@MethodSource`, as well as va
 minor improvements and bug fixes.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/22?closed=1+[5.2 M1] milestone page in the JUnit repository
+link:{junit5-repo}+/milestone/22?closed=1+[5.2 M1],
+link:{junit5-repo}+/milestone/25?closed=1+[5.2 RC1], and
+link:{junit5-repo}+/milestone/26?closed=1+[5.2 GA] milestone pages in the JUnit repository
 on GitHub.
 
 
-[[release-notes-5.2.0-M1-overall-improvements]]
+[[release-notes-5.2.0-overall-improvements]]
 === Overall Improvements
 
 * JUnit BOM: To ease dependency management using
 https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Importing_Dependencies[Maven]
 or https://docs.gradle.org/current/userguide/managing_transitive_dependencies.html#sec:bom_import[Gradle],
-a _Bill of Materials_ POM is now provided under the `org.junit:junit-bom:5.2.0-M1` Maven
+a _Bill of Materials_ POM is now provided under the `org.junit:junit-bom:5.2.0` Maven
 coordinates.
 
 
-[[release-notes-5.2.0-M1-junit-platform]]
+[[release-notes-5.2.0-junit-platform]]
 === JUnit Platform
 
 ==== Bug Fixes
@@ -44,7 +46,7 @@ coordinates.
     the `JUnitPlatform` runner.
 
 
-[[release-notes-5.2.0-M1-junit-jupiter]]
+[[release-notes-5.2.0-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
@@ -70,7 +72,7 @@ coordinates.
     Argument Aggregation>>.
 
 
-[[release-notes-5.2.0-M1-junit-vintage]]
+[[release-notes-5.2.0-junit-vintage]]
 === JUnit Vintage
 
 No changes.
