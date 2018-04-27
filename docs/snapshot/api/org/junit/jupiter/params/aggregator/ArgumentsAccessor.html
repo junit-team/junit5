@@ -61,8 +61,8 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" target="_top">Frames</a></li>
@@ -311,7 +311,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>get</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;get&#8203;(int&nbsp;index)
-    throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+    throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Object</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -320,7 +320,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code></dd>
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -332,7 +332,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <h4>get</h4>
 <pre>&lt;T&gt;&nbsp;T&nbsp;get&#8203;(int&nbsp;index,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;requiredType)
-   throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+   throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as an instance of the
  required type.</div>
 <dl>
@@ -343,7 +343,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code></dd>
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -354,7 +354,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>getCharacter</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Character.html?is-external=true" title="class or interface in java.lang" class="externalLink">Character</a>&nbsp;getCharacter&#8203;(int&nbsp;index)
-                throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+                throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Character.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Character</code></a>,
  performing automatic type conversion as necessary.</div>
 <dl>
@@ -364,7 +364,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code> - if the value cannot be accessed
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code> - if the value cannot be accessed
  or converted to the desired type</dd>
 </dl>
 </li>
@@ -376,7 +376,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>getBoolean</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;getBoolean&#8203;(int&nbsp;index)
-            throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+            throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Boolean</code></a>,
  performing automatic type conversion as necessary.</div>
 <dl>
@@ -386,7 +386,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code> - if the value cannot be accessed
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code> - if the value cannot be accessed
  or converted to the desired type</dd>
 </dl>
 </li>
@@ -398,7 +398,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>getByte</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang" class="externalLink">Byte</a>&nbsp;getByte&#8203;(int&nbsp;index)
-      throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+      throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Byte</code></a>,
  performing automatic type conversion as necessary.</div>
 <dl>
@@ -408,7 +408,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code> - if the value cannot be accessed
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code> - if the value cannot be accessed
  or converted to the desired type</dd>
 </dl>
 </li>
@@ -420,7 +420,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>getShort</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang" class="externalLink">Short</a>&nbsp;getShort&#8203;(int&nbsp;index)
-        throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+        throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Short</code></a>,
  performing automatic type conversion as necessary.</div>
 <dl>
@@ -430,7 +430,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code> - if the value cannot be accessed
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code> - if the value cannot be accessed
  or converted to the desired type</dd>
 </dl>
 </li>
@@ -442,7 +442,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>getInteger</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&nbsp;getInteger&#8203;(int&nbsp;index)
-            throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+            throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Integer</code></a>,
  performing automatic type conversion as necessary.</div>
 <dl>
@@ -452,7 +452,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code> - if the value cannot be accessed
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code> - if the value cannot be accessed
  or converted to the desired type</dd>
 </dl>
 </li>
@@ -464,7 +464,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>getLong</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>&nbsp;getLong&#8203;(int&nbsp;index)
-      throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+      throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Long</code></a>,
  performing automatic type conversion as necessary.</div>
 <dl>
@@ -474,7 +474,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code> - if the value cannot be accessed
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code> - if the value cannot be accessed
  or converted to the desired type</dd>
 </dl>
 </li>
@@ -486,7 +486,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>getFloat</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang" class="externalLink">Float</a>&nbsp;getFloat&#8203;(int&nbsp;index)
-        throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+        throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Float</code></a>,
  performing automatic type conversion as necessary.</div>
 <dl>
@@ -496,7 +496,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code> - if the value cannot be accessed
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code> - if the value cannot be accessed
  or converted to the desired type</dd>
 </dl>
 </li>
@@ -508,7 +508,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>getDouble</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;getDouble&#8203;(int&nbsp;index)
-          throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+          throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Double</code></a>,
  performing automatic type conversion as necessary.</div>
 <dl>
@@ -518,7 +518,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code> - if the value cannot be accessed
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code> - if the value cannot be accessed
  or converted to the desired type</dd>
 </dl>
 </li>
@@ -530,7 +530,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <li class="blockList">
 <h4>getString</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getString&#8203;(int&nbsp;index)
-          throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></pre>
+          throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></pre>
 <div class="block">Get the value of the argument at the given index as a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a>,
  performing automatic type conversion as necessary.</div>
 <dl>
@@ -540,7 +540,7 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value at the given index, potentially <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAccessorException</a></code> - if the value cannot be accessed
+<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentAccessException</a></code> - if the value cannot be accessed
  or converted to the desired type</dd>
 </dl>
 </li>
@@ -608,8 +608,8 @@ public interface <span class="typeNameLabel">ArgumentsAccessor</span></pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../org/junit/jupiter/params/aggregator/AggregationUtils.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessorException.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" target="_top">Frames</a></li>
