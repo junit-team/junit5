@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageDoesNotContain;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
@@ -232,6 +233,64 @@ class AssertThrowsAssertionsTests {
 				assertMessageContains(ex, "expected: <org.junit.jupiter.api.EnigmaThrowable@");
 				assertMessageContains(ex, "but was: <org.junit.jupiter.api.EnigmaThrowable@");
 			}
+		}
+	}
+
+	@Test
+	void assertThrowsReturns() {
+		try {
+			assertThrows(EnigmaThrowable.class, () -> 42);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageContains(ex, "(returned 42)");
+		}
+	}
+
+	@Test
+	void assertThrowsReturnsNull() {
+		try {
+			assertThrows(EnigmaThrowable.class, () -> null);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageContains(ex, "(returned null)");
+		}
+	}
+
+	@Test
+	void assertThrowsReturnsVoid() {
+		try {
+			assertThrows(EnigmaThrowable.class, () -> {
+			});
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageDoesNotContain(ex, "(returned null)");
+		}
+	}
+
+	@Test
+	void assertThrowsReturnsCustomMessage() {
+		try {
+			assertThrows(EnigmaThrowable.class, () -> 42, "custom message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageContains(ex, "(returned 42)");
+			assertMessageContains(ex, "custom message");
+		}
+	}
+
+	@Test
+	void assertThrowsReturnsCustomMessageSupplier() {
+		try {
+			assertThrows(EnigmaThrowable.class, () -> 42, () -> "custom message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageContains(ex, "(returned 42)");
+			assertMessageContains(ex, "custom message");
 		}
 	}
 
