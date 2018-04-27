@@ -62,7 +62,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 				"Argument at index [%d] with value [%s] and type [%s] could not be converted or cast to type [%s].",
 				index, value, ClassUtils.nullSafeToString(value == null ? null : value.getClass()),
 				requiredType.getName());
-			throw new ArgumentsAccessorException(message, ex);
+			throw new ArgumentAccessException(message, ex);
 		}
 	}
 

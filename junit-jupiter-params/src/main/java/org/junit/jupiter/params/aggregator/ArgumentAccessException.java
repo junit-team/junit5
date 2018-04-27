@@ -16,7 +16,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 
 /**
- * {@code ArgumentsAccessorException} is an exception thrown by an
+ * {@code ArgumentAccessException} is an exception thrown by an
  * {@link ArgumentsAccessor} if an error occurs while accessing
  * or converting an argument.
  *
@@ -24,15 +24,15 @@ import org.junit.platform.commons.JUnitException;
  * @see ArgumentsAccessor
  */
 @API(status = EXPERIMENTAL, since = "5.2")
-public class ArgumentsAccessorException extends JUnitException {
+public class ArgumentAccessException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;
 
-	public ArgumentsAccessorException(String message) {
+	public ArgumentAccessException(String message) {
 		super(message);
 	}
 
-	public ArgumentsAccessorException(String message, Throwable cause) {
+	public ArgumentAccessException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

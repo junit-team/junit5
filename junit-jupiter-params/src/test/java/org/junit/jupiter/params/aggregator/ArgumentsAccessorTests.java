@@ -62,12 +62,12 @@ class ArgumentsAccessorTests {
 
 	@Test
 	void getWithCastToPrimitiveType() {
-		Exception exception = assertThrows(ArgumentsAccessorException.class,
+		Exception exception = assertThrows(ArgumentAccessException.class,
 			() -> new DefaultArgumentsAccessor(1).get(0, int.class));
 		assertThat(exception.getMessage()).isEqualTo(
 			"Argument at index [0] with value [1] and type [java.lang.Integer] could not be converted or cast to type [int].");
 
-		exception = assertThrows(ArgumentsAccessorException.class,
+		exception = assertThrows(ArgumentAccessException.class,
 			() -> new DefaultArgumentsAccessor(new Object[] { null }).get(0, int.class));
 		assertThat(exception.getMessage()).isEqualTo(
 			"Argument at index [0] with value [null] and type [null] could not be converted or cast to type [int].");
@@ -75,7 +75,7 @@ class ArgumentsAccessorTests {
 
 	@Test
 	void getWithCastToIncompatibleType() {
-		Exception exception = assertThrows(ArgumentsAccessorException.class,
+		Exception exception = assertThrows(ArgumentAccessException.class,
 			() -> new DefaultArgumentsAccessor(1).get(0, Character.class));
 		assertThat(exception.getMessage()).isEqualTo(
 			"Argument at index [0] with value [1] and type [java.lang.Integer] could not be converted or cast to type [java.lang.Character].");

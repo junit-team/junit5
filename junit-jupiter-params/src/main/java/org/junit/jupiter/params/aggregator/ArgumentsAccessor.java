@@ -46,7 +46,7 @@ public interface ArgumentsAccessor {
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
 	 */
-	Object get(int index) throws ArgumentsAccessorException;
+	Object get(int index) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as an instance of the
@@ -57,7 +57,7 @@ public interface ArgumentsAccessor {
 	 * @param requiredType the required type of the value; never {@code null}
 	 * @return the value at the given index, potentially {@code null}
 	 */
-	<T> T get(int index, Class<T> requiredType) throws ArgumentsAccessorException;
+	<T> T get(int index, Class<T> requiredType) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as a {@link Character},
@@ -66,10 +66,10 @@ public interface ArgumentsAccessor {
 	 * @param index the index of the argument to get; must be greater than or
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
-	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
-	Character getCharacter(int index) throws ArgumentsAccessorException;
+	Character getCharacter(int index) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as a {@link Boolean},
@@ -78,10 +78,10 @@ public interface ArgumentsAccessor {
 	 * @param index the index of the argument to get; must be greater than or
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
-	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
-	Boolean getBoolean(int index) throws ArgumentsAccessorException;
+	Boolean getBoolean(int index) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as a {@link Byte},
@@ -90,10 +90,10 @@ public interface ArgumentsAccessor {
 	 * @param index the index of the argument to get; must be greater than or
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
-	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
-	Byte getByte(int index) throws ArgumentsAccessorException;
+	Byte getByte(int index) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as a {@link Short},
@@ -102,10 +102,10 @@ public interface ArgumentsAccessor {
 	 * @param index the index of the argument to get; must be greater than or
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
-	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
-	Short getShort(int index) throws ArgumentsAccessorException;
+	Short getShort(int index) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as a {@link Integer},
@@ -114,10 +114,10 @@ public interface ArgumentsAccessor {
 	 * @param index the index of the argument to get; must be greater than or
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
-	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
-	Integer getInteger(int index) throws ArgumentsAccessorException;
+	Integer getInteger(int index) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as a {@link Long},
@@ -126,10 +126,10 @@ public interface ArgumentsAccessor {
 	 * @param index the index of the argument to get; must be greater than or
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
-	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
-	Long getLong(int index) throws ArgumentsAccessorException;
+	Long getLong(int index) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as a {@link Float},
@@ -138,10 +138,10 @@ public interface ArgumentsAccessor {
 	 * @param index the index of the argument to get; must be greater than or
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
-	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
-	Float getFloat(int index) throws ArgumentsAccessorException;
+	Float getFloat(int index) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as a {@link Double},
@@ -150,10 +150,10 @@ public interface ArgumentsAccessor {
 	 * @param index the index of the argument to get; must be greater than or
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
-	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
-	Double getDouble(int index) throws ArgumentsAccessorException;
+	Double getDouble(int index) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as a {@link String},
@@ -162,10 +162,10 @@ public interface ArgumentsAccessor {
 	 * @param index the index of the argument to get; must be greater than or
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
-	 * @throws ArgumentsAccessorException if the value cannot be accessed
+	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
-	String getString(int index) throws ArgumentsAccessorException;
+	String getString(int index) throws ArgumentAccessException;
 
 	/**
 	 * Get the number of arguments in this accessor.
