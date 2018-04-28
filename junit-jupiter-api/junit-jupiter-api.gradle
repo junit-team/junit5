@@ -2,7 +2,8 @@ description = 'JUnit Jupiter API'
 
 dependencies {
 	api("org.opentest4j:opentest4j:${ota4jVersion}")
-	api(project(":junit-platform-commons"))
+	api(project(':junit-platform-commons'))
+	compileOnly(project(':junit-platform-engine'))
 	compileOnly("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 }
 

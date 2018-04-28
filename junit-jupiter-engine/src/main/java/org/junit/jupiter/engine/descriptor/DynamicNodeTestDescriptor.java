@@ -10,10 +10,13 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import java.util.Set;
+
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 
 /**
@@ -24,10 +27,18 @@ import org.junit.platform.engine.UniqueId;
 abstract class DynamicNodeTestDescriptor extends JupiterTestDescriptor {
 
 	private final int index;
+	private final Set<TestTag> testTags;
 
-	DynamicNodeTestDescriptor(UniqueId uniqueId, int index, DynamicNode dynamicNode, TestSource testSource) {
+	DynamicNodeTestDescriptor(UniqueId uniqueId, int index, DynamicNode dynamicNode, TestSource testSource,
+			Set<TestTag> testTags) {
 		super(uniqueId, dynamicNode.getDisplayName(), testSource);
 		this.index = index;
+		this.testTags = testTags;
+	}
+
+	@Override
+	public Set<TestTag> getTags() {
+		return testTags;
 	}
 
 	@Override
@@ -41,12 +52,12 @@ abstract class DynamicNodeTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
+	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		return context.extend().withExtensionContext(null).build();
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) {
 		return SkipResult.doNotSkip();
 	}
 

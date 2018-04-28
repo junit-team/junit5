@@ -12,11 +12,14 @@ package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.TestSource;
 
 /**
  * A {@code DynamicContainer} is a container generated at runtime.
@@ -82,6 +85,18 @@ public class DynamicContainer extends DynamicNode {
 	 */
 	public Stream<? extends DynamicNode> getChildren() {
 		return children;
+	}
+
+	public DynamicContainer withTags(String... tags) {
+		DynamicContainer result = new DynamicContainer(getDisplayName(), children);
+		result.tags = new HashSet<>(Arrays.asList(tags));
+		return result;
+	}
+
+	public DynamicContainer withTestSource(TestSource testSource) {
+		DynamicContainer result = new DynamicContainer(getDisplayName(), children);
+		result.testSource = testSource;
+		return result;
 	}
 
 }

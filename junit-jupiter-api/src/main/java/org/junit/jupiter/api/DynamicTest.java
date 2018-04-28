@@ -14,6 +14,8 @@ import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -23,6 +25,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.TestSource;
 
 /**
  * A {@code DynamicTest} is a test case generated at runtime.
@@ -111,6 +114,18 @@ public class DynamicTest extends DynamicNode {
 	 */
 	public Executable getExecutable() {
 		return this.executable;
+	}
+
+	public DynamicTest withTags(String... tags) {
+		DynamicTest result = new DynamicTest(getDisplayName(), executable);
+		result.tags = new HashSet<>(Arrays.asList(tags));
+		return result;
+	}
+
+	public DynamicTest withTestSource(TestSource testSource) {
+		DynamicTest result = new DynamicTest(getDisplayName(), executable);
+		result.testSource = testSource;
+		return result;
 	}
 
 }

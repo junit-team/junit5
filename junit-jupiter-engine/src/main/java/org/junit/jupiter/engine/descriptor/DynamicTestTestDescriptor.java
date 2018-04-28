@@ -10,10 +10,13 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import java.util.Set;
+
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 
 /**
@@ -25,8 +28,9 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 
 	private final DynamicTest dynamicTest;
 
-	DynamicTestTestDescriptor(UniqueId uniqueId, int index, DynamicTest dynamicTest, TestSource source) {
-		super(uniqueId, index, dynamicTest, source);
+	DynamicTestTestDescriptor(UniqueId uniqueId, int index, DynamicTest dynamicTest, TestSource testSource,
+			Set<TestTag> testTags) {
+		super(uniqueId, index, dynamicTest, testSource, testTags);
 		this.dynamicTest = dynamicTest;
 	}
 
@@ -37,7 +41,7 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
-			DynamicTestExecutor dynamicTestExecutor) throws Exception {
+			DynamicTestExecutor dynamicTestExecutor) {
 		executeAndMaskThrowable(dynamicTest.getExecutable());
 		return context;
 	}
