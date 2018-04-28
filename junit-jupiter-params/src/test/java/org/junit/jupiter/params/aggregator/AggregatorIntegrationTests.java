@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Integration tests for {@link ArgumentsAccessor}, {@link AggregateWith},
@@ -138,6 +140,12 @@ class AggregatorIntegrationTests {
 		assertArrayEquals(arguments1.toArray(), arguments2.toArray());
 		assertEquals(55, IntStream.range(0, arguments1.size()).map(i -> arguments1.getInteger(i)).sum());
 		assertThat(testInfo.getDisplayName()).startsWith("Indexed Arguments, 2 ArgumentsAccessors, and TestInfo");
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "foo, bar" })
+	void nullAggregator(@AggregateWith(NullAggregator.class) Person person) {
+		assertNull(person);
 	}
 
 	private void testPersonAggregator(Person person) {
@@ -261,6 +269,15 @@ class AggregatorIntegrationTests {
 					.mapToObj(i -> arguments.getString(i))
 					.collect(toMap(s -> s, String::length));
 			// @formatter:on
+		}
+	}
+
+	static class NullAggregator implements ArgumentsAggregator {
+		@Override
+		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+			Preconditions.condition(!context.getParameter().getType().isPrimitive(),
+				() -> "only supports reference types");
+			return null;
 		}
 	}
 

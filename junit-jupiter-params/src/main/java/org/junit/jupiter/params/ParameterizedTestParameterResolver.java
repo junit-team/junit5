@@ -24,11 +24,13 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.aggregator.DefaultArgumentsAccessor;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -74,11 +76,10 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 
-		return isAggregator(parameterContext.getParameter()) ? aggregate(parameterContext, extensionContext)
-				: convert(parameterContext, extensionContext);
+		return isAggregator(parameterContext.getParameter()) ? aggregate(parameterContext) : convert(parameterContext);
 	}
 
-	private Object convert(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	private Object convert(ParameterContext parameterContext) {
 		Parameter parameter = parameterContext.getParameter();
 		Object argument = this.arguments[parameterContext.getIndex()];
 		Optional<ConvertWith> annotation = AnnotationUtils.findAnnotation(parameter, ConvertWith.class);
@@ -100,17 +101,21 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		}
 	}
 
-	private Object aggregate(ParameterContext parameterContext, ExtensionContext extensionContext) {
+	private Object aggregate(ParameterContext parameterContext) {
 		Parameter parameter = parameterContext.getParameter();
 		Optional<AggregateWith> annotation = AnnotationUtils.findAnnotation(parameter, AggregateWith.class);
 		ArgumentsAccessor accessor = new DefaultArgumentsAccessor(this.arguments);
+		if (annotation.isPresent()) {
+			return aggregateSafely(annotation.get().value(), accessor, parameterContext);
+		}
+		return accessor;
+	}
+
+	private Object aggregateSafely(Class<? extends ArgumentsAggregator> clazz, ArgumentsAccessor accessor,
+			ParameterContext parameterContext) {
 		try {
-			// @formatter:off
-			return annotation.map(AggregateWith::value)
-					.map(clazz -> ReflectionUtils.newInstance(clazz))
-					.map(aggregator -> aggregator.aggregateArguments(accessor, parameterContext))
-					.orElse(accessor);
-			// @formatter:on
+			ArgumentsAggregator aggregator = ReflectionSupport.newInstance(clazz);
+			return aggregator.aggregateArguments(accessor, parameterContext);
 		}
 		catch (Exception ex) {
 			String message = "Error aggregating arguments for parameter at index " + parameterContext.getIndex();
