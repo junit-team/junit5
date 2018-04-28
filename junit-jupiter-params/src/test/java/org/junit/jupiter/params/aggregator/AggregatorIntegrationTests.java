@@ -11,25 +11,42 @@
 package org.junit.jupiter.params.aggregator;
 
 import static java.util.stream.Collectors.toMap;
+import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.test.event.ExecutionEvent;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 /**
  * Integration tests for {@link ArgumentsAccessor}, {@link AggregateWith},
@@ -148,6 +165,15 @@ class AggregatorIntegrationTests {
 		assertNull(person);
 	}
 
+	@Test
+	void reportsExceptionForErroneousAggregator() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(ErroneousTestCases.class, "testWithErroneousAggregator", Object.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), finishedWithFailure(allOf(isA(ParameterResolutionException.class), //
+					message("Error aggregating arguments for parameter at index 0: something went horribly wrong")))));
+	}
+
 	private void testPersonAggregator(Person person) {
 		if (person.firstName.equals("Jane")) {
 			assertEquals("Jane Doe", person.getFullName());
@@ -166,6 +192,10 @@ class AggregatorIntegrationTests {
 		assertThat(address.street).contains("Peachtree");
 		assertEquals("Atlanta", address.city);
 		assertEquals(30318, address.zipCode);
+	}
+
+	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
+		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
 	}
 
 	// -------------------------------------------------------------------------
@@ -278,6 +308,22 @@ class AggregatorIntegrationTests {
 			Preconditions.condition(!context.getParameter().getType().isPrimitive(),
 				() -> "only supports reference types");
 			return null;
+		}
+	}
+
+	static class ErroneousAggregator implements ArgumentsAggregator {
+		@Override
+		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
+				throws ArgumentsAggregationException {
+			throw new ArgumentsAggregationException("something went horribly wrong");
+		}
+	}
+
+	static class ErroneousTestCases {
+		@ParameterizedTest
+		@ValueSource(ints = 42)
+		void testWithErroneousAggregator(@AggregateWith(ErroneousAggregator.class) Object ignored) {
+			fail("this should never be called");
 		}
 	}
 

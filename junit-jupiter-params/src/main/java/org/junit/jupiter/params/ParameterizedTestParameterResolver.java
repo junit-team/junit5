@@ -93,11 +93,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 			return argumentConverter.convert(argument, parameterContext);
 		}
 		catch (Exception ex) {
-			String message = "Error resolving parameter at index " + parameterContext.getIndex();
-			if (StringUtils.isNotBlank(ex.getMessage())) {
-				message += ": " + ex.getMessage();
-			}
-			throw new ParameterResolutionException(message, ex);
+			throw parameterResolutionException("Error converting parameter", ex, parameterContext);
 		}
 	}
 
@@ -118,12 +114,17 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 			return aggregator.aggregateArguments(accessor, parameterContext);
 		}
 		catch (Exception ex) {
-			String message = "Error aggregating arguments for parameter at index " + parameterContext.getIndex();
-			if (StringUtils.isNotBlank(ex.getMessage())) {
-				message += ": " + ex.getMessage();
-			}
-			throw new ParameterResolutionException(message, ex);
+			throw parameterResolutionException("Error aggregating arguments for parameter", ex, parameterContext);
 		}
+	}
+
+	private ParameterResolutionException parameterResolutionException(String message, Exception cause,
+			ParameterContext context) {
+		String fullMessage = message + " at index " + context.getIndex();
+		if (StringUtils.isNotBlank(cause.getMessage())) {
+			fullMessage += ": " + cause.getMessage();
+		}
+		return new ParameterResolutionException(fullMessage, cause);
 	}
 
 }

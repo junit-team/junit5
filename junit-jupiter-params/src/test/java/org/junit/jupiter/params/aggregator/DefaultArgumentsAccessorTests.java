@@ -24,19 +24,29 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
- * Unit tests for {@link ArgumentsAccessor}.
+ * Unit tests for {@link DefaultArgumentsAccessor}.
  *
  * @since 5.2
  */
-class ArgumentsAccessorTests {
+class DefaultArgumentsAccessorTests {
 
 	@Test
-	void preconditions() {
+	void argumentsMustNotBeNull() {
 		assertThrows(PreconditionViolationException.class, () -> new DefaultArgumentsAccessor((Object[]) null));
+	}
 
+	@Test
+	void indexMustNotBeNegative() {
 		ArgumentsAccessor arguments = new DefaultArgumentsAccessor(1, 2);
 		Exception exception = assertThrows(PreconditionViolationException.class, () -> arguments.get(-1));
-		assertThat(exception.getMessage()).isEqualTo("index must be >= 0 and < 2");
+		assertThat(exception.getMessage()).containsSubsequence("index must be", ">= 0");
+	}
+
+	@Test
+	void indexMustBeSmallerThanLength() {
+		ArgumentsAccessor arguments = new DefaultArgumentsAccessor(1, 2);
+		Exception exception = assertThrows(PreconditionViolationException.class, () -> arguments.get(2));
+		assertThat(exception.getMessage()).containsSubsequence("index must be", "< 2");
 	}
 
 	@Test
