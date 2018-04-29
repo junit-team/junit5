@@ -16,7 +16,7 @@ import org.apiguardian.api.API;
  * <ul>
  * <li>Static fields containing groups of data points</li>
  * <li>Static methods returning groups of data points: Methods may be called
- * multiple times, so they should always return the same values</li>
+ * multiple times, so they must always return the same values</li>
  * <li>Non-static fields containing groups of data points: This requires that
  * the class be annotated with
  * {@code @TestInstance(TestInstance.Lifecycle.PER_CLASS)}</li>
@@ -26,8 +26,10 @@ import org.apiguardian.api.API;
  *
  * <p>Supported data point group types:
  * <ul>
- * <li>{@link java.util.Collection}</li>
+ * <li>{@link Iterable}</li>
  * <li>Arrays</li>
+ * <li>{@link java.util.Iterator} (Only supported for datapoint methods)</li>
+ * <li>{@link java.util.stream.Stream} (Only supported for datapoint methods)</li>
  * </ul>
  */
 @Target({ ElementType.METHOD, ElementType.FIELD })

@@ -7,14 +7,12 @@ import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.theories.annotations.DataPoint;
@@ -109,21 +107,51 @@ public class DataPointRetriever {
 		if (valueToProcessIntoDataPoints instanceof Collection) {
 			valuesStream = ((Collection<Object>) valueToProcessIntoDataPoints).stream();
 		}
+		else if (valueToProcessIntoDataPoints instanceof Iterable) {
+			valuesStream = StreamSupport.stream(((Iterable<Object>)valueToProcessIntoDataPoints).spliterator(), false);
+		}
+		else if (valueToProcessIntoDataPoints instanceof Iterator) {
+			if (valueSourceReference instanceof Field) {
+				throw new DataPointRetrievalException("Field " + getPrintableMemberName(valueSourceReference)
+						+ " was marked with @Datapoints but was a field of type "
+						+ Iterator.class.getCanonicalName() + ". This type is only supported for data point methods (not for fields).");
+			}
+			Iterable<Object> valueToProcessAsIterable = () -> (Iterator<Object>) valueToProcessIntoDataPoints;
+			valuesStream = StreamSupport.stream(valueToProcessAsIterable.spliterator(), false);
+		}
+		else if (valueToProcessIntoDataPoints instanceof Stream) {
+			if (valueSourceReference instanceof Field) {
+				throw new DataPointRetrievalException("Field " + getPrintableMemberName(valueSourceReference)
+						+ " was marked with @Datapoints but was a field of type "
+						+ Stream.class.getCanonicalName() + ". This type is only supported for data point methods (not for fields).");
+			}
+			valuesStream = (Stream<Object>) valueToProcessIntoDataPoints;
+		}
 		else if (valueToProcessIntoDataPoints.getClass().isArray()) {
 			valuesStream = Arrays.stream((Object[]) valueToProcessIntoDataPoints);
 		}
 		else {
-			throw new DataPointRetrievalException("Element " + valueSourceReference.getDeclaringClass() + "."
-					+ valueSourceReference.getName() + " was annotated with @Datapoints, but its type ("
-					+ valueToProcessIntoDataPoints.getClass() + ") is not a recognized group of datapoints");
+			throw new DataPointRetrievalException("Element " +getPrintableMemberName(valueSourceReference)
+					+ " was annotated with @Datapoints, but its type (" + valueToProcessIntoDataPoints.getClass()
+					+ ") is not a recognized group of datapoints");
 		}
 
-		//NOTE: Support for Streams and Iterators is intentionally left out because the fact that they're stateful causes issues if there are multiple
-		//theories in the same test class.
+		//NOTE: Support for Streams and Iterators is intentionally left out because the fact that they're stateful
+		//causes issues if there are multiple theories in the same test class.
 
 		AtomicInteger valueIndex = new AtomicInteger(0);
 		return valuesStream.map(v -> new DataPointDetails(v, qualifiers,
 			getDataPointSourceNameAtIndex(valueSourceReference, valueIndex.getAndIncrement())));
+	}
+
+	/**
+	 * Helper method that gets the human-readable name of the provided member.
+	 *
+	 * @param member the member to process
+	 * @return the human-readable name
+	 */
+	private static String getPrintableMemberName(Member member) {
+		return member.getDeclaringClass() + "." + member.getName();
 	}
 
 	/**
@@ -219,9 +247,11 @@ public class DataPointRetriever {
 			BiFunction<Object, T, Object> retrievalOperation, DataPointDetailsFactory dataPointDetailsFactory) {
 
 		T[] references = classElementReferenceExtractor.apply(testClass);
-		Stream<T> dataPointReferences = Arrays.stream(references).peek(
-			reference -> reference.setAccessible(true)).filter(
-				reference -> reference.getAnnotation(targetAnnotation) != null);
+		// @formatter:off
+		Stream<T> dataPointReferences = Arrays.stream(references)
+				.peek(reference -> reference.setAccessible(true))
+				.filter(reference -> reference.getAnnotation(targetAnnotation) != null);
+		// @formatter:on
 
 		//Unless the test instance is present we can only retrieve static data points
 		if (!testInstance.isPresent()) {
