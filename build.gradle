@@ -712,9 +712,11 @@ configure(rootProject) {
 		}
 		from("$buildDir/docs") {
 			include 'javadoc/**'
-			filter { line ->
-				line.startsWith("<head>") ? line.replace("<head>", "<head><link rel=\"icon\" type=\"image/png\" href=\"http://junit.org/junit5/assets/img/junit5-logo.png\">") :
-						line
+			filesMatching("*.html") {
+				filter { line ->
+					line.startsWith("<head>") ? line.replace("<head>", "<head><link rel=\"icon\" type=\"image/png\" href=\"http://junit.org/junit5/assets/img/junit5-logo.png\">") :
+							line
+				}
 			}
 		}
 		into "${docsDir}/${docsVersion}"
