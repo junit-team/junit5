@@ -4997,7 +4997,7 @@ would annotate the test method as follows.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(RandomParametersExtension.class)
 <span class="annotation">@Test</span>
-<span class="type">void</span> mockTest() {
+<span class="type">void</span> test(<span class="annotation">@Random</span> <span class="type">int</span> i) {
     <span class="comment">// ...</span>
 }</code></pre>
 </div>
@@ -5009,7 +5009,7 @@ subclasses, you would annotate the test class as follows.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(RandomParametersExtension.class)
-<span class="type">class</span> <span class="class">MockTests</span> {
+<span class="type">class</span> <span class="class">MyTests</span> {
     <span class="comment">// ...</span>
 }</code></pre>
 </div>
@@ -5020,7 +5020,7 @@ subclasses, you would annotate the test class as follows.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>({ FooExtension.class, BarExtension.class })
-<span class="type">class</span> <span class="class">MyTestsV1</span> {
+<span class="type">class</span> <span class="class">MyTests</span> {
     <span class="comment">// ...</span>
 }</code></pre>
 </div>
@@ -5032,7 +5032,7 @@ subclasses, you would annotate the test class as follows.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(FooExtension.class)
 <span class="annotation">@ExtendWith</span>(BarExtension.class)
-<span class="type">class</span> <span class="class">MyTestsV2</span> {
+<span class="type">class</span> <span class="class">MyTests</span> {
     <span class="comment">// ...</span>
 }</code></pre>
 </div>
@@ -6357,7 +6357,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.2.0-SNAPSHOT<br>
-Last updated 2018-04-29 04:44:35 EDT
+Last updated 2018-04-29 04:57:33 EDT
 </div>
 </div>
 </body>
