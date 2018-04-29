@@ -64,6 +64,11 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 		}
 	};
 
+	public static final String CONFIG_STRATEGY = "strategy";
+	public static final String CONFIG_FIXED_PARALLELISM = "fixed.parallelism";
+	public static final String CONFIG_DYNAMIC_FACTOR = "dynamic.factor";
+	public static final String CONFIG_CUSTOM_CLASS = "custom.class";
+
 	private static <T> Optional<T> getSafely(ConfigurationParameters configurationParameters, String key,
 			Function<String, T> transformation) {
 		return configurationParameters.get(key).map(withExceptionHandling(key, transformation));
@@ -86,10 +91,5 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 		return valueOf(
 			configurationParameters.get(engineSpecificPrefix + "." + CONFIG_STRATEGY).orElse("dynamic").toUpperCase());
 	}
-
-	public static final String CONFIG_STRATEGY = "strategy";
-	public static final String CONFIG_FIXED_PARALLELISM = "fixed.parallelism";
-	public static final String CONFIG_DYNAMIC_FACTOR = "dynamic.factor";
-	public static final String CONFIG_CUSTOM_CLASS = "custom.class";
 
 }
