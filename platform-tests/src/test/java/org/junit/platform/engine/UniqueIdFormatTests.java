@@ -54,7 +54,7 @@ class UniqueIdFormatTests {
 	}
 
 	@Nested
-	class ParsingWithDefaultFormat implements ParsingTest {
+	class ParsingWithDefaultFormat implements ParsingTestTrait {
 
 		private final UniqueIdFormat format = UniqueIdFormat.getDefault();
 
@@ -76,7 +76,7 @@ class UniqueIdFormatTests {
 	}
 
 	@Nested
-	class ParsingWithCustomFormat implements ParsingTest {
+	class ParsingWithCustomFormat implements ParsingTestTrait {
 
 		private final UniqueIdFormat format = new UniqueIdFormat('{', '=', '}', ',');
 
@@ -104,7 +104,7 @@ class UniqueIdFormatTests {
 		assertEquals(expectedValue, segment.getValue(), "segment value");
 	}
 
-	interface ParsingTest {
+	interface ParsingTestTrait {
 
 		UniqueIdFormat getFormat();
 

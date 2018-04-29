@@ -28,10 +28,15 @@ public interface ClassNameFilter extends DiscoveryFilter<String> {
 	 * Standard include pattern in the form of a regular expression that is
 	 * used to match against fully qualified class names:
 	 * {@value org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN}
-	 * which matches against class names ending in {@code Test} or
-	 * {@code Tests} (in any package).
+	 *
+	 * <p>This pattern matches against class names beginning with {@code Test}
+	 * or ending with {@code Test} or {@code Tests} (in any package).
 	 */
-	String STANDARD_INCLUDE_PATTERN = "^.*Tests?$";
+	// Implementation notes:
+	// - Test.* :: "Test" prefix for classes in default package
+	// - .+[.$]Test.* :: "Test" prefix for top-level and nested classes in a named package
+	// - .*Tests? :: "Test" and "Tests" suffixes in any package
+	String STANDARD_INCLUDE_PATTERN = "^(Test.*|.+[.$]Test.*|.*Tests?)$";
 
 	/**
 	 * Create a new <em>include</em> {@link ClassNameFilter} based on the

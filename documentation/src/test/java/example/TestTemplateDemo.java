@@ -26,6 +26,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
 class TestTemplateDemo {
+
 	// tag::user_guide[]
 	@TestTemplate
 	@ExtendWith(MyTestTemplateInvocationContextProvider.class)
@@ -33,7 +34,10 @@ class TestTemplateDemo {
 		assertEquals(3, parameter.length());
 	}
 
-	static class MyTestTemplateInvocationContextProvider implements TestTemplateInvocationContextProvider {
+	// end::user_guide[]
+	static
+	// tag::user_guide[]
+	public class MyTestTemplateInvocationContextProvider implements TestTemplateInvocationContextProvider {
 		@Override
 		public boolean supportsTestTemplate(ExtensionContext context) {
 			return true;

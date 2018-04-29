@@ -29,6 +29,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * <p>When applied at the class level, all test methods within that class
  * will be disabled on the same specified JRE versions.
  *
+ * <p>If a test method is disabled via this annotation, that does not prevent
+ * the test class from being instantiated. Rather, it prevents the execution of
+ * the test method and method-level lifecycle callbacks such as {@code @BeforeEach}
+ * methods, {@code @AfterEach} methods, and corresponding extension APIs.
+ *
  * <p>This annotation may be used as a meta-annotation in order to create a
  * custom <em>composed annotation</em> that inherits the semantics of this
  * annotation.

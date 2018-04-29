@@ -48,7 +48,7 @@ import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
-import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestClass;
+import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestCase;
 import org.junit.vintage.engine.samples.junit4.EnclosedJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
@@ -317,7 +317,7 @@ class VintageTestEngineExecutionTests {
 
 	@Test
 	void executesEmptyIgnoredTestClass() {
-		Class<?> testClass = EmptyIgnoredTestClass.class;
+		Class<?> testClass = EmptyIgnoredTestCase.class;
 
 		List<ExecutionEvent> executionEvents = execute(testClass);
 

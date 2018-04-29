@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -20,6 +21,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.disp
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -37,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
@@ -91,6 +94,18 @@ class ParameterizedTestIntegrationTests {
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), displayName("foo and 23"), finishedWithFailure(message("foo, 23")))) //
 				.haveExactly(1, event(test(), displayName("bar and 42"), finishedWithFailure(message("bar, 42"))));
+	}
+
+	/**
+	 * @since 5.2
+	 */
+	@Test
+	void executesWithPrimitiveWideningConversion() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(TestCase.class, "testWithPrimitiveWideningConversion", double.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), displayName("[1] 1"), finishedWithFailure(message("num: 1.0")))) //
+				.haveExactly(1, event(test(), displayName("[2] 2"), finishedWithFailure(message("num: 2.0"))));
 	}
 
 	/**
@@ -212,6 +227,15 @@ class ParameterizedTestIntegrationTests {
 					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
 	}
 
+	@Test
+	void reportsExceptionForErroneousConverter() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(TestCase.class, "testWithErroneousConverter", Object.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), finishedWithFailure(allOf(isA(ParameterResolutionException.class), //
+					message("Error converting parameter at index 0: something went horribly wrong")))));
+	}
+
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
 		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
 	}
@@ -237,6 +261,12 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@ParameterizedTest
+		@ValueSource(shorts = { 1, 2 })
+		void testWithPrimitiveWideningConversion(double num) {
+			fail("num: " + num);
+		}
+
+		@ParameterizedTest
 		@ValueSource(strings = { "book 1", "book 2" })
 		void testWithImplicitGenericConverter(Book book) {
 			fail(book.title);
@@ -258,6 +288,12 @@ class ParameterizedTestIntegrationTests {
 		@MethodSource
 		void testWithEmptyMethodSource(String argument) {
 			fail(argument);
+		}
+
+		@ParameterizedTest
+		@ValueSource(ints = 42)
+		void testWithErroneousConverter(@ConvertWith(ErroneousConverter.class) Object ignored) {
+			fail("this should never be called");
 		}
 
 		static Stream<Arguments> testWithEmptyMethodSource() {
@@ -373,6 +409,14 @@ class ParameterizedTestIntegrationTests {
 		@Override
 		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
 			return String.valueOf(source).length();
+		}
+	}
+
+	private static class ErroneousConverter implements ArgumentConverter {
+
+		@Override
+		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+			throw new ArgumentConversionException("something went horribly wrong");
 		}
 	}
 

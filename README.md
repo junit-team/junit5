@@ -2,8 +2,12 @@
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-[JUnit 5.1.0](https://github.com/junit-team/junit5/releases/tag/r5.1.0)
-was released on February 18, 2018.
+## Latest Releases
+
+- General Availability (GA): [JUnit 5.1.1](https://github.com/junit-team/junit5/releases/tag/r5.1.1)
+(April 8, 2018).
+- Preview (Milestone/Release Candidate): [JUnit 5.2 RC1](https://github.com/junit-team/junit5/releases/tag/r5.2.0-RC1)
+(April 22, 2018).
 
 ## Documentation
 
@@ -55,7 +59,7 @@ project, click on "See console output" on the build scan page.
 
 ## Building from Source
 
-You need [JDK-9] or higher to build JUnit 5.
+You need [JDK-10] to build JUnit 5.
 All modules can be built with Gradle using the following command.
 
 ```
@@ -88,7 +92,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.1.0` or `1.2.0-SNAPSHOT`
+- **Version**: `1.1.1` or `1.2.0-RC1` or `1.2.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
@@ -103,7 +107,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.1.0` or `5.2.0-SNAPSHOT`
+- **Version**: `5.1.1` or `5.2.0-RC1` or `5.2.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
   - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
@@ -113,15 +117,21 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `5.1.0` or `5.2.0-SNAPSHOT`
+- **Version**: `5.1.1` or `5.2.0-RC1` or `5.2.0-SNAPSHOT`
 - **Artifact ID** and **Automatic-Module-Name**:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
-## Java 9 Module Names
+### Bill of Materials (BOM)
+
+- **Group ID**: `org.junit`
+- **Artifact ID** `junit-bom`
+- **Version**: `5.2.0-RC1` or `5.2.0-SNAPSHOT`
+
+## Java Module Names
 
 All published JAR artifacts contain an [Automatic-Module-Name] manifest attribute
 whose value is used as the name of the automatic module defined by that JAR file
-when it is placed on the **Java 9** module path. The names are listed above in the
+when it is placed on the module path. The names are listed above in the
 Dependency Metadata section.
 
 This allows test module authors to require well-known JUnit module names as
@@ -145,7 +155,7 @@ as it is not intended to be used as a module.
 [Gitter]: https://gitter.im/junit-team/junit5
 [JaCoCo]: http://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
-[JDK-9]: http://jdk.java.net/9/
+[JDK-10]: http://jdk.java.net/10/
 [Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/artifact/build/reports/jacoco/jacocoRootReport/html/index.html
 [OpenClover]: http://openclover.org
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype

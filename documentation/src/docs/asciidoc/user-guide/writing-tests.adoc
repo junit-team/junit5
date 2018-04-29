@@ -60,11 +60,15 @@ named `@Fast` as follows. `@Fast` can then be used as a drop-in replacement for
 include::{testDir}/example/Fast.java[tags=user_guide]
 ----
 
-[[writing-tests-standard]]
-=== Standard Test Class
+[[writing-tests-classes-and-methods]]
+=== Test Classes and Methods
+
+A _test method_ is any instance method that is directly or meta-annotated with `@Test`,
+`@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`. A _test class_
+is any top level or static member class that contains at least one test method.
 
 [source,java,indent=0]
-.A standard test case
+.A standard test class
 ----
 include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
@@ -101,7 +105,7 @@ functions in the `org.junit.jupiter.api` package.
 // TODO: Change to using kotlin language highlighting after switch to rouge syntax highlighter
 [source,groovy,indent=0]
 ----
-include::{kotlinTestDir}/example/AssertionsDemoKotlin.kt[tags=user_guide]
+include::{kotlinTestDir}/example/AssertionsKotlinDemo.kt[tags=user_guide]
 ----
 
 [[writing-tests-assertions-third-party]]
@@ -331,9 +335,13 @@ include::{testDir}/example/TaggingDemo.java[tags=user_guide]
 
 In order to allow individual test methods to be executed in isolation and to avoid
 unexpected side effects due to mutable test instance state, JUnit creates a new instance
-of each test class before executing each _test_ method (see note below for what qualifies
-as a _test_ method). This "per-method" test instance lifecycle is the default behavior in
-JUnit Jupiter and is analogous to all previous versions of JUnit.
+of each test class before executing each _test method_ (see
+<<writing-tests-classes-and-methods>>). This "per-method" test instance lifecycle is the
+default behavior in JUnit Jupiter and is analogous to all previous versions of JUnit.
+
+NOTE: Please note that the test class will still be instantiated if a given _test method_
+is _disabled_ via a <<writing-tests-conditional-execution,condition>> (e.g., `@Disabled`,
+`@DisabledOnOs`, etc.) even when the "per-method" test instance lifecycle mode is active.
 
 If you would prefer that JUnit Jupiter execute all test methods on the same test
 instance, simply annotate your test class with `@TestInstance(Lifecycle.PER_CLASS)`. When
@@ -350,9 +358,6 @@ methods in `@Nested` test classes.
 If you are authoring tests using the Kotlin programming language, you may also find it
 easier to implement `@BeforeAll` and `@AfterAll` methods by switching to the "per-class"
 test instance lifecycle mode.
-
-NOTE: In the context of test instance lifecycle a _test_ method is any method annotated
-with `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`.
 
 [[writing-tests-test-instance-lifecycle-changing-default]]
 ==== Changing the Default Test Instance Lifecycle
@@ -442,7 +447,7 @@ following demonstrates how to have `TestInfo` injected into a test constructor,
 include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
 ----
 
-* `RepetitionInfoParameterResolver`: if a method parameter in a `@RepeatedTest`,
+* `{RepetitionInfoParameterResolver}`: if a method parameter in a `@RepeatedTest`,
   `@BeforeEach`, or `@AfterEach` method is of type `{RepetitionInfo}`, the
   `RepetitionInfoParameterResolver` will supply an instance of `RepetitionInfo`.
   `RepetitionInfo` can then be used to retrieve information about the current repetition
@@ -468,39 +473,32 @@ include::{testDir}/example/TestReporterDemo.java[tags=user_guide]
 NOTE: Other parameter resolvers must be explicitly enabled by registering appropriate
 <<extensions,extensions>> via `@ExtendWith`.
 
-Check out the `{MockitoExtension}` for an example of a custom `{ParameterResolver}`.
-While not intended to be production-ready, it demonstrates the simplicity and
-expressiveness of both the extension model and the parameter resolution process.
-`MyMockitoTest` demonstrates how to inject Mockito mocks into `@BeforeEach` and `@Test`
+Check out the `{RandomParametersExtension}` for an example of a custom
+`{ParameterResolver}`. While not intended to be production-ready, it demonstrates the
+simplicity and expressiveness of both the extension model and the parameter resolution
+process. `MyRandomParametersTest` demonstrates how to inject random values into `@Test`
 methods.
 
 [source,java,indent=0]
 ----
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+@ExtendWith(RandomParametersExtension.class)
+class MyRandomParametersTest {
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import com.example.Person;
-import com.example.mockito.MockitoExtension;
-
-@ExtendWith(MockitoExtension.class)
-class MyMockitoTest {
-
-	@BeforeEach
-	void init(@Mock Person person) {
-		when(person.getName()).thenReturn("Dilbert");
+	@Test
+	void injectsInteger(@Random int i, @Random int j) {
+		assertNotEquals(i, j);
 	}
 
 	@Test
-	void simpleTestWithInjectedMock(@Mock Person person) {
-		assertEquals("Dilbert", person.getName());
+	void injectsDouble(@Random double d) {
+		assertEquals(0.0, d, 1.0);
 	}
 
 }
 ----
+
+For real-world use cases, check out the source code for the `{MockitoExtension}` and the
+`{SpringExtension}`.
 
 [[writing-tests-test-interfaces-and-default-methods]]
 === Test Interfaces and Default Methods
@@ -743,19 +741,19 @@ to the console.
 Parameterized tests make it possible to run a test multiple times with different
 arguments. They are declared just like regular `@Test` methods but use the
 `{ParameterizedTest}` annotation instead. In addition, you must declare at least one
-_source_ that will provide the arguments for each invocation.
+_source_ that will provide the arguments for each invocation and then _consume_ the
+arguments in the test method.
 
-WARNING: Parameterized tests are currently an _experimental_ feature. Consult the table
-in <<api-evolution-experimental-apis>> for details.
+The following example demonstrates a parameterized test that uses the `@ValueSource`
+annotation to specify a `String` array as the source of arguments.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=first_example]
 ----
 
-This parameterized test uses the `@ValueSource` annotation to specify a `String` array as
-the source of arguments. When executing the above method, each invocation will be
-reported separately. For instance, the `ConsoleLauncher` will print output similar to the
+When executing the above parameterized test method, each invocation will be reported
+separately. For instance, the `ConsoleLauncher` will print output similar to the
 following.
 
 ....
@@ -765,11 +763,37 @@ palindromes(String) ✔
 └─ [3] able was I ere I saw elba ✔
 ....
 
+WARNING: Parameterized tests are currently an _experimental_ feature. Consult the table
+in <<api-evolution-experimental-apis>> for details.
+
 [[writing-tests-parameterized-tests-setup]]
 ==== Required Setup
 
 In order to use parameterized tests you need to add a dependency on the
 `junit-jupiter-params` artifact. Please refer to <<dependency-metadata>> for details.
+
+[[writing-tests-parameterized-tests-consuming-arguments]]
+=== Consuming Arguments
+
+Parameterized test methods typically _consume_ arguments directly from the configured
+source (see <<writing-tests-parameterized-tests-sources>>) following a one-to-one
+correlation between argument source index and method parameter index (see examples in
+<<writing-tests-parameterized-tests-sources-CsvSource>>). However, a parameterized test
+method may also choose to _aggregate_ arguments from the source into a single object
+passed to the method (see <<writing-tests-parameterized-tests-argument-aggregation>>).
+Additional arguments may also be provided by a `ParameterResolver` (e.g., to obtain an
+instance of `TestInfo`, `TestReporter`, etc.). Specifically, a parameterized test method
+must declare formal parameters according to the following rules.
+
+* Zero or more _indexed arguments_ must be declared first.
+* Zero or more _aggregators_ must be declared next.
+* Zero or more arguments supplied by a `ParameterResolver` must be declared last.
+
+In this context, an _indexed argument_ is an argument for a given index in the
+`Arguments` provided by an `ArgumentsProvider` that is passed as an argument to the
+parameterized method at the same index in the method's formal parameter list. An
+_aggregator_ is any parameter of type `ArgumentsAccessor` or any parameter annotated with
+`@AggregateWith`.
 
 [[writing-tests-parameterized-tests-sources]]
 ==== Sources of Arguments
@@ -841,13 +865,15 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_regex_exam
 [[writing-tests-parameterized-tests-sources-MethodSource]]
 ===== @MethodSource
 
-`@MethodSource` allows you to refer to one or more _factory_ methods of the test class.
-Such methods must return a `Stream`, `Iterable`, `Iterator`, or array of arguments. In
-addition, such methods must not accept any arguments. By default such methods must be
-`static` unless the test class is annotated with `@TestInstance(Lifecycle.PER_CLASS)`.
+`@MethodSource` allows you to refer to one or more _factory_ methods of the test class or
+external classes. Such factory methods must return a `Stream`, `Iterable`, `Iterator`, or
+array of arguments. In addition, such factory methods must not accept any arguments.
+Factory methods within the test class must be `static` unless the test class is annotated
+with `@TestInstance(Lifecycle.PER_CLASS)`; whereas, factory methods in external classes
+must always be `static`.
 
 If you only need a single parameter, you can return a `Stream` of instances of the
-parameter type as demonstrated by the following example.
+parameter type as demonstrated in the following example.
 
 [source,java,indent=0]
 ----
@@ -878,6 +904,16 @@ factory method defined in the `Arguments` interface.
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=multi_arg_MethodSource_example]
+----
+
+An external, `static` _factory_ method can be referenced by providing its _fully
+qualified method name_ as demonstrated in the following example.
+
+[source,java,indent=0]
+----
+package example;
+
+include::{testDir}/example/ExternalMethodSourceDemo.java[tags=external_MethodSource_example]
 ----
 
 [[writing-tests-parameterized-tests-sources-CsvSource]]
@@ -944,6 +980,16 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsSource_examp
 
 [[writing-tests-parameterized-tests-argument-conversion]]
 ==== Argument Conversion
+
+[[writing-tests-parameterized-tests-argument-conversion-widening]]
+===== Widening Conversion
+
+JUnit Jupiter supports
+https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2[Widening Primitive
+Conversion] for arguments supplied to a `@ParameterizedTest`. For example, a
+parameterized test annotated with `@ValueSource(ints = { 1, 2, 3 })` can be declared to
+accept not only an argument of type `int` but also an argument of type `long`, `float`,
+or `double`.
 
 [[writing-tests-parameterized-tests-argument-conversion-implicit]]
 ===== Implicit Conversion
@@ -1045,6 +1091,54 @@ composed annotation `JavaTimeConversionPattern`.
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_java_time_converter]
+----
+
+[[writing-tests-parameterized-tests-argument-aggregation]]
+==== Argument Aggregation
+
+By default, each _argument_ provided to a `@ParameterizedTest` method corresponds to a
+single method parameter. Consequently, argument sources which are expected to supply a
+large number of arguments can lead to large method signatures.
+
+In such cases, an `{ArgumentsAccessor}` can be used instead of multiple parameters. Using
+this API, you can access the provided arguments through a single argument passed to your
+test method. In addition, type conversion is supported as discussed in
+<<writing-tests-parameterized-tests-argument-conversion-implicit>>.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAccessor_example]
+----
+
+_An instance of `ArgumentsAccessor` is automatically injected into any parameter of type
+`ArgumentsAccessor`._
+
+[[writing-tests-parameterized-tests-argument-aggregation-custom]]
+===== Custom Aggregators
+
+Apart from direct access to a `@ParameterizedTest` method's arguments using an
+`ArgumentsAccessor`, JUnit Jupiter also supports the usage of custom, reusable
+_aggregators_.
+
+To use a custom aggregator simply implement the `{ArgumentsAggregator}` interface and
+register it via the `@AggregateWith` annotation on a compatible parameter in the
+`@ParameterizedTest` method. The result of the aggregation will then be provided as an
+argument for the corresponding parameter when the parameterized test is invoked.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_example]
+----
+
+If you find yourself repeatedly declaring `@AggregateWith(MyTypeAggregator.class)` for
+multiple parameterized test methods across your codebase, you may wish to create a custom
+_composed annotation_ such as `@CsvToMyType` that is meta-annotated with
+`@AggregateWith(MyTypeAggregator.class)`. The following example demonstrates this in
+action with a custom `@CsvToPerson` annotation.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_with_custom_annotation_example]
 ----
 
 

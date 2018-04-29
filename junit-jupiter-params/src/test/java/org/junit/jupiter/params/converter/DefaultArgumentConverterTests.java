@@ -61,6 +61,19 @@ class DefaultArgumentConverterTests {
 	}
 
 	@Test
+	void isAwareOfWideningConversions() {
+		assertConverts((byte) 1, short.class, (byte) 1);
+		assertConverts((short) 1, int.class, (short) 1);
+		assertConverts((char) 1, int.class, (char) 1);
+		assertConverts((byte) 1, long.class, (byte) 1);
+		assertConverts(1, long.class, 1);
+		assertConverts((char) 1, float.class, (char) 1);
+		assertConverts(1, float.class, 1);
+		assertConverts(1L, double.class, 1L);
+		assertConverts(1.0f, double.class, 1.0f);
+	}
+
+	@Test
 	void convertsStringsToPrimitiveTypes() {
 		assertConverts("true", boolean.class, true);
 		assertConverts("1", byte.class, (byte) 1);

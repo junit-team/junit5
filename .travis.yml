@@ -10,17 +10,16 @@ branches:
 
 # Get latest install-jdk.sh script
 before_install:
-  - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
 
 matrix:
   include:
-# Java 9 "Oracle JDK" (provided by Travis CI)
-    - jdk: oraclejdk9
-      env: JDK='Oracle JDK 9' EXTRA_GRADLE_ARGS='-PenableJaCoCo'
-      install: echo "Don't let Travis CI execute './gradlew assemble' by default"
-# Java 10 "Oracle JDK"
+# Java 10 "Oracle JDK" (not yet provided by Travis CI)
     - env: JDK='Oracle JDK 10'
       install: . ./install-jdk.sh -F 10 -L BCL
+# Java 10 "OpenJDK"
+    - env: JDK='OpenJDK 10' JACOCO='-PenableJaCoCo'
+      install: . ./install-jdk.sh -F 10 -L GPL
 # Java 11 "Oracle JDK"
     - env: JDK='Oracle JDK 11'
       install: . ./install-jdk.sh -F 11 -L BCL
@@ -30,11 +29,10 @@ matrix:
 
 script:
 # Display Gradle, Groovy, JVM and other versions
-  - ./gradlew -version
+  - ./gradlew --version
 # Build JUnit 5
-  - ./gradlew --scan --stacktrace --warning-mode=all ${EXTRA_GRADLE_ARGS} build
+  - ./gradlew --scan --stacktrace --warning-mode=all ${JACOCO} build
 
-# Run JaCoCo report and send report to codecov.io after build success for JDK 9 build
+# If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
 after_success:
-  - test "${JDK}" = "Oracle JDK 9" && ./gradlew -PenableJaCoCo jacocoRootReport || true
-  - test "${JDK}" = "Oracle JDK 9" && bash <(curl -s https://codecov.io/bash) || true
+  - test -v JACOCO && ./gradlew ${JACOCO} jacocoRootReport && bash <(curl -s https://codecov.io/bash) || true

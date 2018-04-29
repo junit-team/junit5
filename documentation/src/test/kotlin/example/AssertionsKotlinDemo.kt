@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.assertThrows
 
-class AssertionsDemoKotlin {
+class AssertionsKotlinDemo {
 
     // end::user_guide[]
     val person = Person("John", "Doe")

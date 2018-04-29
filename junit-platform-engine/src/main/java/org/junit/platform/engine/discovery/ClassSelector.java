@@ -33,6 +33,8 @@ import org.junit.platform.engine.DiscoverySelector;
  * languages such Groovy, Scala, etc.
  *
  * @since 1.0
+ * @see DiscoverySelectors#selectClass(String)
+ * @see DiscoverySelectors#selectClass(Class)
  * @see org.junit.platform.engine.support.descriptor.ClassSource
  */
 @API(status = STABLE, since = "1.0")

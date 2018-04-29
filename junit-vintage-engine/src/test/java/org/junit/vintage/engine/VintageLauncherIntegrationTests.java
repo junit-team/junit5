@@ -12,6 +12,7 @@ package org.junit.vintage.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.FilterResult.excluded;
 import static org.junit.platform.engine.FilterResult.includedIf;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
@@ -45,6 +46,7 @@ import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithFilterableC
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithTwoTestCases;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithNotFilterableRunner;
 import org.junit.vintage.engine.samples.junit4.NotFilterableRunner;
+import org.junit.vintage.engine.samples.junit4.ParameterizedTestCase;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
 
@@ -213,6 +215,21 @@ class VintageLauncherIntegrationTests {
 		LauncherDiscoveryRequestBuilder request = request() //
 				.selectors(selectClass(testClass)) //
 				.filters(excludeTags(Categories.Successful.class.getName()));
+
+		TestPlan testPlan = discover(request);
+		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).isEmpty();
+
+		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
+				.containsExactly("JUnit Vintage");
+	}
+
+	@Test
+	void filtersOutAllDescendantsOfParameterizedTestCase() {
+		Class<?> testClass = ParameterizedTestCase.class;
+		LauncherDiscoveryRequestBuilder request = request() //
+				.selectors(selectClass(testClass)) //
+				.filters((PostDiscoveryFilter) descriptor -> excluded("excluded"));
 
 		TestPlan testPlan = discover(request);
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).isEmpty();

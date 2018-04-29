@@ -59,7 +59,7 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void providesArgumentsUsingMultipleMethods() {
+	void providesArgumentsUsingMultipleFactoryMethods() {
 		Stream<Object[]> arguments = provideArguments("stringStreamProvider", "stringIterableProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("foo"), array("bar"));
@@ -88,7 +88,7 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void throwsExceptionWhenNonStaticMethodIsReferencedAndStaticIsRequired() {
+	void throwsExceptionWhenNonStaticFactoryMethodIsReferencedAndStaticIsRequired() {
 		JUnitException exception = assertThrows(JUnitException.class,
 			() -> provideArguments(NonStaticTestCase.class, null, false, "nonStaticStringStreamProvider").toArray());
 
@@ -96,7 +96,7 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void providesArgumentsFromNonStaticMethodWhenStaticIsNotRequired() {
+	void providesArgumentsFromNonStaticFactoryMethodWhenStaticIsNotRequired() {
 		Stream<Object[]> arguments = provideArguments(NonStaticTestCase.class, null, true,
 			"nonStaticStringStreamProvider");
 
@@ -104,7 +104,7 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void throwsExceptionWhenMethodDoesNotExist() {
+	void throwsExceptionWhenFactoryMethodDoesNotExist() {
 		JUnitException exception = assertThrows(JUnitException.class,
 			() -> provideArguments("unknownMethod").toArray());
 
@@ -113,18 +113,68 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void throwsExceptionWhenNoTestClassIsAvailable() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments((Class<?>) null, null, false, "someMethod"));
-
-		assertThat(exception).hasMessageContaining("required test class is not present");
-	}
-
-	@Test
 	void providesArgumentsUsingDefaultValue() {
 		Stream<Object[]> arguments = provideArguments(TestCaseDefaultValue.class,
 			selectMethod(TestCaseDefaultValue.class, TEST_METHOD, String.class.getName()).getJavaMethod(), false, "");
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
+	}
+
+	@Test
+	void providesArgumentsUsingExternalFactoryMethod() {
+		Stream<Object[]> arguments = provideArguments(ExternalFactoryMethods.class.getName() + "#stringsProvider");
+
+		assertThat(arguments).containsExactly(array("string1"), array("string2"));
+	}
+
+	@Test
+	void providesArgumentsUsingExternalFactoryMethodWithParentheses() {
+		Stream<Object[]> arguments = provideArguments(ExternalFactoryMethods.class.getName() + "#stringsProvider()");
+
+		assertThat(arguments).containsExactly(array("string1"), array("string2"));
+	}
+
+	@Test
+	void providesArgumentsUsingExternalFactoryMethodFromStaticNestedClass() {
+		Stream<Object[]> arguments = provideArguments(
+			ExternalFactoryMethods.class.getName() + "$Nested#stringsProvider()");
+
+		assertThat(arguments).containsExactly(array("nested string1"), array("nested string2"));
+	}
+
+	@Test
+	void providesArgumentsUsingExternalAndInternalFactoryMethodsCombined() {
+		Stream<Object[]> arguments = provideArguments("stringStreamProvider",
+			ExternalFactoryMethods.class.getName() + "#stringsProvider");
+
+		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("string1"), array("string2"));
+	}
+
+	@Test
+	void throwsExceptionWhenExternalFactoryMethodDeclaresParameters() {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(
+				ExternalFactoryMethods.class.getName() + "#methodWithParams(String, String)").toArray());
+
+		assertThat(exception.getMessage()).isEqualTo("factory method [" + ExternalFactoryMethods.class.getName()
+				+ "#methodWithParams(String, String)] must not declare formal parameters");
+	}
+
+	@Test
+	void throwsExceptionWhenClassForExternalFactoryMethodCannotBeLoaded() {
+		JUnitException exception = assertThrows(JUnitException.class,
+			() -> provideArguments("com.example.NonExistentExternalFactoryMethods#stringsProvider").toArray());
+
+		assertThat(exception.getMessage()).isEqualTo(
+			"Could not load class [com.example.NonExistentExternalFactoryMethods]");
+	}
+
+	@Test
+	void throwsExceptionWhenExternalFactoryMethodCannotBeFound() {
+		JUnitException exception = assertThrows(JUnitException.class,
+			() -> provideArguments(ExternalFactoryMethods.class.getName() + "#nonExistentMethod").toArray());
+
+		assertThat(exception.getMessage()).isEqualTo("Could not find factory method [nonExistentMethod] in class ["
+				+ ExternalFactoryMethods.class.getName() + "]");
 	}
 
 	@Nested
@@ -220,6 +270,7 @@ class MethodArgumentsProviderTests {
 	// -------------------------------------------------------------------------
 
 	static class TestCaseDefaultValue {
+
 		static final String TEST_METHOD = "testDefaultValue";
 
 		static Stream<String> testDefaultValue() {
@@ -227,7 +278,6 @@ class MethodArgumentsProviderTests {
 		}
 
 		public void testDefaultValue(String param) {
-
 		}
 	}
 
@@ -298,6 +348,25 @@ class MethodArgumentsProviderTests {
 		Stream<String> nonStaticStringStreamProvider() {
 			return Stream.of("foo", "bar");
 		}
+	}
+
+	static class ExternalFactoryMethods {
+
+		static Stream<String> stringsProvider() {
+			return Stream.of("string1", "string2");
+		}
+
+		static Stream<String> methodWithParams(String a, String b) {
+			return Stream.of(a, b);
+		}
+
+		static class Nested {
+
+			static Stream<String> stringsProvider() {
+				return Stream.of("nested string1", "nested string2");
+			}
+		}
+
 	}
 
 }

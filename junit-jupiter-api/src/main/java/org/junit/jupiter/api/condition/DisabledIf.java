@@ -65,6 +65,11 @@ import org.apiguardian.api.API;
  * <p>If a test class is disabled via the evaluation of {@code @DisabledIf}, all
  * test methods within that class are automatically disabled as well.
  *
+ * <p>If a test method is disabled via this annotation, that does not prevent
+ * the test class from being instantiated. Rather, it prevents the execution of
+ * the test method and method-level lifecycle callbacks such as {@code @BeforeEach}
+ * methods, {@code @AfterEach} methods, and corresponding extension APIs.
+ *
  * <h3>Script Engines</h3>
  *
  * <p>The default script engine is <em>Oracle Nashorn</em>; however, the

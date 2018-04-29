@@ -43,6 +43,16 @@ import org.apiguardian.api.API;
  *
  * @since 1.0
  * @see SuiteDisplayName
+ * @see SelectPackages
+ * @see SelectClasses
+ * @see IncludeClassNamePatterns
+ * @see ExcludeClassNamePatterns
+ * @see IncludePackages
+ * @see ExcludePackages
+ * @see IncludeTags
+ * @see ExcludeTags
+ * @see IncludeEngines
+ * @see ExcludeEngines
  * @see org.junit.platform.runner.JUnitPlatform
  */
 @Retention(RetentionPolicy.RUNTIME)

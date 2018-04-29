@@ -25,7 +25,7 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.0.3
  */
-class LegacyReportingUtilsTest {
+class LegacyReportingUtilsTests {
 
 	private TestDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("foo"), "Foo");
 
@@ -43,7 +43,7 @@ class LegacyReportingUtilsTest {
 	void legacyReportingClassNameForDescendantOfTestIdentifierWithClassSourceIsClassName() {
 		UniqueId classUniqueId = engineDescriptor.getUniqueId().append("class", "class");
 		TestDescriptor classDescriptor = createTestDescriptor(classUniqueId, "Class",
-			ClassSource.from(LegacyReportingUtilsTest.class));
+			ClassSource.from(LegacyReportingUtilsTests.class));
 		engineDescriptor.addChild(classDescriptor);
 
 		UniqueId subUniqueId = classUniqueId.append("sub", "baz");
@@ -55,9 +55,9 @@ class LegacyReportingUtilsTest {
 		subDescriptor.addChild(subSubDescriptor);
 
 		assertThat(getClassName(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
-		assertThat(getClassName(classUniqueId)).isEqualTo(LegacyReportingUtilsTest.class.getName());
-		assertThat(getClassName(subUniqueId)).isEqualTo(LegacyReportingUtilsTest.class.getName());
-		assertThat(getClassName(subSubUniqueId)).isEqualTo(LegacyReportingUtilsTest.class.getName());
+		assertThat(getClassName(classUniqueId)).isEqualTo(LegacyReportingUtilsTests.class.getName());
+		assertThat(getClassName(subUniqueId)).isEqualTo(LegacyReportingUtilsTests.class.getName());
+		assertThat(getClassName(subSubUniqueId)).isEqualTo(LegacyReportingUtilsTests.class.getName());
 	}
 
 	private String getClassName(UniqueId uniqueId) {

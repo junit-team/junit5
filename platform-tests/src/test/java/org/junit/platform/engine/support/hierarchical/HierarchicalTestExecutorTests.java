@@ -20,7 +20,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -29,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -38,6 +38,9 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.opentest4j.TestAbortedException;
 
@@ -46,18 +49,20 @@ import org.opentest4j.TestAbortedException;
  *
  * @since 1.0
  */
+@ExtendWith(MockitoExtension.class)
 class HierarchicalTestExecutorTests {
 
-	MyContainer root;
+	@Spy
+	MyContainer root = new MyContainer(UniqueId.root("container", "root"));
+
+	@Mock
 	EngineExecutionListener listener;
-	MyEngineExecutionContext rootContext;
+
+	MyEngineExecutionContext rootContext = new MyEngineExecutionContext();
 	HierarchicalTestExecutor<MyEngineExecutionContext> executor;
 
 	@BeforeEach
 	void init() {
-		root = spy(new MyContainer(UniqueId.root("container", "root")));
-		listener = mock(EngineExecutionListener.class);
-		rootContext = new MyEngineExecutionContext();
 		ExecutionRequest request = new ExecutionRequest(root, listener, null);
 		executor = new MyExecutor(request, rootContext);
 	}
@@ -434,9 +439,10 @@ class HierarchicalTestExecutorTests {
 	@Test
 	void executesDynamicTestDescriptorsUsingContainerAndTestType() throws Exception {
 
-		MyContainerAndTest child = spy(new MyContainerAndTest(root.getUniqueId().append("c&t", "child")));
-		MyContainerAndTest dynamicContainerAndTest = spy(
-			new MyContainerAndTest(child.getUniqueId().append("c&t", "dynamicContainerAndTest")));
+		MyContainerAndTestTestCase child = spy(
+			new MyContainerAndTestTestCase(root.getUniqueId().append("c&t", "child")));
+		MyContainerAndTestTestCase dynamicContainerAndTest = spy(
+			new MyContainerAndTestTestCase(child.getUniqueId().append("c&t", "dynamicContainerAndTest")));
 		MyLeaf dynamicLeaf = spy(new MyLeaf(dynamicContainerAndTest.getUniqueId().append("test", "dynamicLeaf")));
 
 		root.addChild(child);
@@ -574,9 +580,10 @@ class HierarchicalTestExecutorTests {
 		}
 	}
 
-	private static class MyContainerAndTest extends AbstractTestDescriptor implements Node<MyEngineExecutionContext> {
+	private static class MyContainerAndTestTestCase extends AbstractTestDescriptor
+			implements Node<MyEngineExecutionContext> {
 
-		MyContainerAndTest(UniqueId uniqueId) {
+		MyContainerAndTestTestCase(UniqueId uniqueId) {
 			super(uniqueId, uniqueId.toString());
 		}
 

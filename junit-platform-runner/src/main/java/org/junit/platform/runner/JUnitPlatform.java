@@ -27,12 +27,14 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.Launcher;
@@ -59,7 +61,6 @@ import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.model.InitializationError;
 
 /**
  * JUnit 4 based {@link Runner} which runs tests on the JUnit Platform in a
@@ -89,21 +90,24 @@ import org.junit.runners.model.InitializationError;
  *
  * @since 1.0
  * @see SuiteDisplayName
+ * @see UseTechnicalNames
  * @see SelectPackages
  * @see SelectClasses
  * @see IncludeClassNamePatterns
  * @see ExcludeClassNamePatterns
+ * @see IncludePackages
+ * @see ExcludePackages
  * @see IncludeTags
  * @see ExcludeTags
  * @see IncludeEngines
  * @see ExcludeEngines
- * @see UseTechnicalNames
  */
 @API(status = STABLE, since = "1.0")
 public class JUnitPlatform extends Runner implements Filterable {
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
+	private static final String[] STANDARD_INCLUDE_PATTERN_ARRAY = new String[] { STANDARD_INCLUDE_PATTERN };
 
 	private final Class<?> testClass;
 	private final Launcher launcher;
@@ -111,12 +115,12 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private LauncherDiscoveryRequest discoveryRequest;
 	private JUnitPlatformTestTree testTree;
 
-	public JUnitPlatform(Class<?> testClass) throws InitializationError {
+	public JUnitPlatform(Class<?> testClass) {
 		this(testClass, LauncherFactory.create());
 	}
 
 	// For testing only
-	JUnitPlatform(Class<?> testClass, Launcher launcher) throws InitializationError {
+	JUnitPlatform(Class<?> testClass, Launcher launcher) {
 		this.launcher = launcher;
 		this.testClass = testClass;
 		this.discoveryRequest = createDiscoveryRequest();
@@ -271,33 +275,29 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	private String[] getIncludeClassNamePatterns(boolean isSuite) {
-		String[] patterns = getValueFromAnnotation(IncludeClassNamePatterns.class, IncludeClassNamePatterns::value,
-			new String[0]);
+		String[] patterns = trimmed(getValueFromAnnotation(IncludeClassNamePatterns.class,
+			IncludeClassNamePatterns::value, EMPTY_STRING_ARRAY));
 		if (patterns.length == 0 && isSuite) {
-			return new String[] { STANDARD_INCLUDE_PATTERN };
+			return STANDARD_INCLUDE_PATTERN_ARRAY;
 		}
-		Preconditions.containsNoNullElements(patterns, "IncludeClassNamePatterns must not contain null elements");
-		trim(patterns);
 		return patterns;
 	}
 
 	private String[] getExcludeClassNamePatterns() {
-		String[] patterns = getValueFromAnnotation(ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value,
-			new String[0]);
-
-		Preconditions.containsNoNullElements(patterns, "ExcludeClassNamePatterns must not contain null elements");
-		trim(patterns);
-		return patterns;
+		return trimmed(getValueFromAnnotation(ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value,
+			EMPTY_STRING_ARRAY));
 	}
 
-	private void trim(String[] patterns) {
-		for (int i = 0; i < patterns.length; i++) {
-			patterns[i] = patterns[i].trim();
+	private String[] trimmed(String[] patterns) {
+		if (patterns.length == 0) {
+			return patterns;
 		}
+		return Arrays.stream(patterns).filter(StringUtils::isNotBlank).map(String::trim).toArray(String[]::new);
 	}
 
 	private <A extends Annotation, V> V getValueFromAnnotation(Class<A> annotationClass, Function<A, V> extractor,
 			V defaultValue) {
+
 		A annotation = this.testClass.getAnnotation(annotationClass);
 		return (annotation != null ? extractor.apply(annotation) : defaultValue);
 	}

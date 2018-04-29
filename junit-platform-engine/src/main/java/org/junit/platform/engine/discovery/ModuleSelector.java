@@ -22,6 +22,8 @@ import org.junit.platform.engine.DiscoverySelector;
  * tests or containers based on modules.
  *
  * @since 1.1
+ * @see DiscoverySelectors#selectModule(String)
+ * @see DiscoverySelectors#selectModules(java.util.Set)
  */
 @API(status = EXPERIMENTAL, since = "1.1")
 public class ModuleSelector implements DiscoverySelector {

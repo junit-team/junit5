@@ -34,6 +34,16 @@ import org.apiguardian.api.API;
  *
  * @since 1.1
  * @see UseTechnicalNames
+ * @see SelectPackages
+ * @see SelectClasses
+ * @see IncludeClassNamePatterns
+ * @see ExcludeClassNamePatterns
+ * @see IncludePackages
+ * @see ExcludePackages
+ * @see IncludeTags
+ * @see ExcludeTags
+ * @see IncludeEngines
+ * @see ExcludeEngines
  * @see org.junit.platform.runner.JUnitPlatform
  */
 @Retention(RUNTIME)

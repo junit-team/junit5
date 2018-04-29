@@ -30,6 +30,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * <p>When declared at the class level, the result will apply to all test methods
  * within that class as well.
  *
+ * <p>If a test method is disabled via this annotation, that does not prevent
+ * the test class from being instantiated. Rather, it prevents the execution of
+ * the test method and method-level lifecycle callbacks such as {@code @BeforeEach}
+ * methods, {@code @AfterEach} methods, and corresponding extension APIs.
+ *
  * <p>If the specified environment variable is undefined, the presence of this
  * annotation will have no effect on whether or not the class or method
  * is disabled.

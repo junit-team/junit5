@@ -41,6 +41,12 @@ import org.junit.platform.engine.DiscoverySelector;
  * or methods from other JVM languages such Groovy, Scala, etc.
  *
  * @since 1.0
+ * @see DiscoverySelectors#selectMethod(String)
+ * @see DiscoverySelectors#selectMethod(String, String)
+ * @see DiscoverySelectors#selectMethod(String, String, String)
+ * @see DiscoverySelectors#selectMethod(Class, String)
+ * @see DiscoverySelectors#selectMethod(Class, String, String)
+ * @see DiscoverySelectors#selectMethod(Class, Method)
  * @see org.junit.platform.engine.support.descriptor.MethodSource
  */
 @API(status = STABLE, since = "1.0")

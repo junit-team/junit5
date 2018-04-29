@@ -108,7 +108,7 @@ possible.
 
 #### Mocking
 
-- Use either Mockito or hand-written test doubles.
+- Use either [Mockito](https://github.com/mockito/mockito) or hand-written test doubles.
 
 ### Logging
 

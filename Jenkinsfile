@@ -1,10 +1,9 @@
 pipeline {
   agent { label 'hi-speed' }
   tools {
-    jdk 'Oracle JDK 9'
+    jdk 'Oracle JDK 10'
   }
   options {
-    ansiColor('xterm')
     buildDiscarder(logRotator(numToKeepStr: '10'))
   }
   stages {

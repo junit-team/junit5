@@ -35,6 +35,17 @@ import org.apiguardian.api.API;
  * {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 1.0
+ * @see SuiteDisplayName
+ * @see UseTechnicalNames
+ * @see SelectPackages
+ * @see SelectClasses
+ * @see IncludeClassNamePatterns
+ * @see IncludePackages
+ * @see ExcludePackages
+ * @see IncludeTags
+ * @see ExcludeTags
+ * @see IncludeEngines
+ * @see ExcludeEngines
  * @see org.junit.platform.engine.discovery.ClassNameFilter#excludeClassNamePatterns
  * @see org.junit.platform.runner.JUnitPlatform
  */

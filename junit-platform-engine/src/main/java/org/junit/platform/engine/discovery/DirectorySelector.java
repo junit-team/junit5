@@ -29,6 +29,8 @@ import org.junit.platform.engine.DiscoverySelector;
  * file system.
  *
  * @since 1.0
+ * @see DiscoverySelectors#selectDirectory(String)
+ * @see DiscoverySelectors#selectDirectory(File)
  * @see FileSelector
  * @see #getDirectory()
  * @see #getPath()

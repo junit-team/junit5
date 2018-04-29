@@ -1,10 +1,8 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-
 buildscript {
 	dependencies {
 		// upgrade to latest jruby version due to a bugfix needed for Windows 10.
 		// can be removed, when asciidoctorj uses this as a default version.
-		classpath('org.jruby:jruby-complete:9.1.16.0')
+		classpath('org.jruby:jruby-complete:9.1.17.0')
 
 		// classpath('org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.16')
 		classpath('org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16')
@@ -39,7 +37,7 @@ test {
 */
 
 dependencies {
-	asciidoctor('org.jruby:jruby-complete:9.1.16.0')
+	asciidoctor('org.jruby:jruby-complete:9.1.17.0')
 
 	testImplementation(project(':junit-jupiter-api'))
 	testImplementation(project(':junit-jupiter-params'))
@@ -57,7 +55,7 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
 	// for ApiReportGenerator
-	testImplementation("io.github.lukehutch:fast-classpath-scanner:2.18.1")
+	testImplementation("io.github.lukehutch:fast-classpath-scanner:2.18.2")
 }
 
 asciidoctorj {
@@ -104,29 +102,25 @@ asciidoctor {
 		}
 	}
 
-	backends 'html5'
+	backends 'html5', 'pdf'
 
-	// The PDF backend currently does not work on Linux
-	// see https://github.com/junit-team/junit5/issues/1099
-	if (Os.isFamily(Os.FAMILY_WINDOWS) || Os.isFamily(Os.FAMILY_MAC)) {
-		backends 'pdf'
-	}
-
-	attributes	'jupiter-version': project.property('version'),
-				'platform-version': project.property('platformVersion'),
-				'vintage-version': project.property('vintageVersion'),
-				'junit4-version': project.property('junit4Version'),
-				'apiguardian-version': project.property('apiGuardianVersion'),
-				'ota4j-version': project.property('ota4jVersion'),
-				'release-branch': project.property('releaseBranch'),
-				'docs-version': project.property('docsVersion'),
-				'revnumber' : project.version,
-				'mainDir': project.sourceSets.main.java.srcDirs[0],
-				'testDir': project.sourceSets.test.java.srcDirs[0],
-				'kotlinTestDir': project.sourceSets.test.kotlin.srcDirs[0],
+	attributes	'jupiter-version': version,
+				'platform-version': platformVersion,
+				'vintage-version': vintageVersion,
+				'bom-version': version,
+				'junit4-version': junit4Version,
+				'apiguardian-version': apiGuardianVersion,
+				'ota4j-version': ota4jVersion,
+				'surefire-version': surefireVersion,
+				'release-branch': releaseBranch,
+				'docs-version': docsVersion,
+				'revnumber' : version,
+				'releaseBranch' : version,
+				'testDir': sourceSets.test.java.srcDirs[0],
+				'kotlinTestDir': sourceSets.test.kotlin.srcDirs[0],
 				'consoleLauncherOptionsFile': consoleLauncherOptionsFile.toString(),
 				'experimentalApisTableFile': experimentalApisTableFile.toString(),
-				'testResourcesDir': project.sourceSets.test.resources.srcDirs[0],
+				'testResourcesDir': sourceSets.test.resources.srcDirs[0],
 				'outdir': outputDir.absolutePath,
 				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend and on MS Windows
 				'tabsize': '4',
@@ -135,4 +129,20 @@ asciidoctor {
 				'sectanchors': true,
 				'idprefix': '',
 				'idseparator': '-'
+}
+
+
+eclipse {
+	classpath {
+		plusConfigurations += [ project(':junit-platform-console').configurations.shadowed ]
+		plusConfigurations += [ project(':junit-jupiter-params').configurations.shadowed ]
+
+	}
+}
+
+idea {
+	module {
+		scopes.PROVIDED.plus += [ project(':junit-platform-console').configurations.shadowed ]
+		scopes.PROVIDED.plus += [ project(':junit-jupiter-params').configurations.shadowed ]
+	}
 }

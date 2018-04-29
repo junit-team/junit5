@@ -35,6 +35,17 @@ import org.apiguardian.api.API;
  * {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 1.0
+ * @see SuiteDisplayName
+ * @see UseTechnicalNames
+ * @see SelectPackages
+ * @see SelectClasses
+ * @see ExcludeClassNamePatterns
+ * @see IncludePackages
+ * @see ExcludePackages
+ * @see IncludeTags
+ * @see ExcludeTags
+ * @see IncludeEngines
+ * @see ExcludeEngines
  * @see org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN
  * @see org.junit.platform.engine.discovery.ClassNameFilter#includeClassNamePatterns
  * @see org.junit.platform.runner.JUnitPlatform
@@ -49,9 +60,13 @@ public @interface IncludeClassNamePatterns {
 	/**
 	 * Regular expressions used to match against fully qualified class names.
 	 *
-	 * <p>Defaults to {@code "^.*Tests?$"} which matches against class names
-	 * ending in {@code Test} or {@code Tests} (in any package).
+	 * <p>The default pattern matches against classes whose names either begin
+	 * with {@code Test} or end with {@code Test} or {@code Tests} (in any package).
 	 */
-	String[] value() default "^.*Tests?$";
+	// Implementation notes:
+	// - Test.* :: "Test" prefix for classes in default package
+	// - .+[.$]Test.* :: "Test" prefix for top-level and nested classes in a named package
+	// - .*Tests? :: "Test" and "Tests" suffixes in any package
+	String[] value() default "^(Test.*|.+[.$]Test.*|.*Tests?)$";
 
 }

@@ -1,3 +1,5 @@
+description = 'JUnit Platform Launcher'
+
 dependencies {
 	api(project(':junit-platform-engine'))
 }

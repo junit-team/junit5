@@ -49,14 +49,14 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.runner.manipulation.Filter;
-import org.junit.vintage.engine.samples.PlainOldJavaClassWithoutAnyTest;
+import org.junit.vintage.engine.samples.PlainOldJavaClassWithoutAnyTestsTestCase;
 import org.junit.vintage.engine.samples.junit3.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.vintage.engine.samples.junit4.Categories.Failing;
 import org.junit.vintage.engine.samples.junit4.Categories.Plain;
 import org.junit.vintage.engine.samples.junit4.Categories.Skipped;
 import org.junit.vintage.engine.samples.junit4.Categories.SkippedWithReason;
-import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestClass;
+import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestCase;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithTwoTestCases;
@@ -114,7 +114,7 @@ class VintageTestEngineDiscoveryTests {
 
 	@Test
 	void resolvesEmptyIgnoredTestClass() {
-		Class<?> testClass = EmptyIgnoredTestClass.class;
+		Class<?> testClass = EmptyIgnoredTestCase.class;
 		LauncherDiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
@@ -223,7 +223,7 @@ class VintageTestEngineDiscoveryTests {
 
 	@Test
 	void doesNotResolvePlainOldJavaClassesWithoutAnyTest() {
-		assertYieldsNoDescriptors(PlainOldJavaClassWithoutAnyTest.class);
+		assertYieldsNoDescriptors(PlainOldJavaClassWithoutAnyTestsTestCase.class);
 	}
 
 	@Test
@@ -242,7 +242,7 @@ class VintageTestEngineDiscoveryTests {
 			.extracting(TestDescriptor::getDisplayName)
 			.contains(PlainJUnit4TestCaseWithSingleTestWhichFails.class.getName())
 			.contains(PlainJUnit3TestCaseWithSingleTestWhichFails.class.getName())
-			.doesNotContain(PlainOldJavaClassWithoutAnyTest.class.getName());
+			.doesNotContain(PlainOldJavaClassWithoutAnyTestsTestCase.class.getName());
 		// @formatter:on
 	}
 

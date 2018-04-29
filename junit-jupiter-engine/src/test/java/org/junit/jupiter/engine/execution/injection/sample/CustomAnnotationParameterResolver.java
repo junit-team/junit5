@@ -22,7 +22,9 @@ public class CustomAnnotationParameterResolver implements ParameterResolver {
 
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return parameterContext.getParameter().isAnnotationPresent(CustomAnnotation.class);
+		// We invoke parameterContext.isAnnotated() instead of parameterContext.getParameter().isAnnotationPresent()
+		// in order to verify support for the convenience method in the ParameterContext API.
+		return parameterContext.isAnnotated(CustomAnnotation.class);
 	}
 
 	@Override

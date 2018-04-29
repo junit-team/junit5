@@ -197,6 +197,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void isAssignableTo() {
+		// Reference Types
 		assertTrue(ReflectionUtils.isAssignableTo("string", String.class));
 		assertTrue(ReflectionUtils.isAssignableTo("string", CharSequence.class));
 		assertTrue(ReflectionUtils.isAssignableTo("string", Object.class));
@@ -205,18 +206,98 @@ class ReflectionUtilsTests {
 		assertFalse(ReflectionUtils.isAssignableTo(Integer.valueOf("1"), StringBuilder.class));
 		assertFalse(ReflectionUtils.isAssignableTo(new StringBuilder(), String.class));
 
+		// Arrays
 		assertTrue(ReflectionUtils.isAssignableTo(new int[0], int[].class));
 		assertTrue(ReflectionUtils.isAssignableTo(new double[0], Object.class));
 		assertTrue(ReflectionUtils.isAssignableTo(new String[0], String[].class));
 		assertTrue(ReflectionUtils.isAssignableTo(new String[0], Object.class));
 
+		// Primitive Types
 		assertTrue(ReflectionUtils.isAssignableTo(1, int.class));
 		assertTrue(ReflectionUtils.isAssignableTo(Long.valueOf("1"), long.class));
 		assertTrue(ReflectionUtils.isAssignableTo(Boolean.TRUE, boolean.class));
 
+		// Widening Conversions to Primitives
+		assertTrue(ReflectionUtils.isAssignableTo(1, long.class));
+		assertTrue(ReflectionUtils.isAssignableTo(1f, double.class));
+		assertTrue(ReflectionUtils.isAssignableTo((byte) 1, double.class));
+
+		// Widening Conversions to Wrappers (not supported by Java)
+		assertFalse(ReflectionUtils.isAssignableTo(1, Long.class));
+		assertFalse(ReflectionUtils.isAssignableTo(1f, Double.class));
+		assertFalse(ReflectionUtils.isAssignableTo((byte) 1, Double.class));
+
+		// Narrowing Conversions
 		assertFalse(ReflectionUtils.isAssignableTo(1, char.class));
 		assertFalse(ReflectionUtils.isAssignableTo(1L, byte.class));
 		assertFalse(ReflectionUtils.isAssignableTo(1L, int.class));
+	}
+
+	@Test
+	void wideningConversion() {
+		// byte
+		assertTrue(ReflectionUtils.isWideningConversion(byte.class, short.class));
+		assertTrue(ReflectionUtils.isWideningConversion(byte.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(byte.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(byte.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(byte.class, double.class));
+		// Byte
+		assertTrue(ReflectionUtils.isWideningConversion(Byte.class, short.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Byte.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Byte.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Byte.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Byte.class, double.class));
+
+		// short
+		assertTrue(ReflectionUtils.isWideningConversion(short.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(short.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(short.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(short.class, double.class));
+		// Short
+		assertTrue(ReflectionUtils.isWideningConversion(Short.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Short.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Short.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Short.class, double.class));
+
+		// char
+		assertTrue(ReflectionUtils.isWideningConversion(char.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(char.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(char.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(char.class, double.class));
+		// Character
+		assertTrue(ReflectionUtils.isWideningConversion(Character.class, int.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Character.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Character.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Character.class, double.class));
+
+		// int
+		assertTrue(ReflectionUtils.isWideningConversion(int.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(int.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(int.class, double.class));
+		// Integer
+		assertTrue(ReflectionUtils.isWideningConversion(Integer.class, long.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Integer.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Integer.class, double.class));
+
+		// long
+		assertTrue(ReflectionUtils.isWideningConversion(long.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(long.class, double.class));
+		// Long
+		assertTrue(ReflectionUtils.isWideningConversion(Long.class, float.class));
+		assertTrue(ReflectionUtils.isWideningConversion(Long.class, double.class));
+
+		// float
+		assertTrue(ReflectionUtils.isWideningConversion(float.class, double.class));
+		// Float
+		assertTrue(ReflectionUtils.isWideningConversion(Float.class, double.class));
+
+		// double and Double --> nothing to test
+
+		// Unsupported
+		assertFalse(ReflectionUtils.isWideningConversion(int.class, byte.class)); // narrowing
+		assertFalse(ReflectionUtils.isWideningConversion(float.class, int.class)); // narrowing
+		assertFalse(ReflectionUtils.isWideningConversion(int.class, int.class)); // direct match
+		assertFalse(ReflectionUtils.isWideningConversion(String.class, int.class)); // neither a primitive nor a wrapper
 	}
 
 	@Test
@@ -280,89 +361,158 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void loadClassWhenClassNotFoundException() throws Exception {
+	void loadClassWhenClassNotFoundException() {
 		assertThat(ReflectionUtils.loadClass("foo.bar.EnigmaClassThatDoesNotExist")).isEmpty();
 	}
 
 	@Test
-	void loadClass() throws Exception {
+	void loadClass() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(Integer.class.getName());
 		assertThat(optional).contains(Integer.class);
 	}
 
 	@Test
-	void loadClassTrimsClassName() throws Exception {
+	void loadClassTrimsClassName() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("  " + Integer.class.getName() + "\t");
 		assertThat(optional).contains(Integer.class);
 	}
 
 	@Test
-	void loadClassForPrimitive() throws Exception {
+	void loadClassForPrimitive() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(int.class.getName());
 		assertThat(optional).contains(int.class);
 	}
 
 	@Test
-	void loadClassForPrimitiveArray() throws Exception {
+	void loadClassForPrimitiveArray() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(int[].class.getName());
 		assertThat(optional).contains(int[].class);
 	}
 
 	@Test
-	void loadClassForPrimitiveArrayUsingSourceCodeSyntax() throws Exception {
+	void loadClassForPrimitiveArrayUsingSourceCodeSyntax() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("int[]");
 		assertThat(optional).contains(int[].class);
 	}
 
 	@Test
-	void loadClassForObjectArray() throws Exception {
+	void loadClassForObjectArray() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(String[].class.getName());
 		assertThat(optional).contains(String[].class);
 	}
 
 	@Test
-	void loadClassForObjectArrayUsingSourceCodeSyntax() throws Exception {
+	void loadClassForObjectArrayUsingSourceCodeSyntax() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("java.lang.String[]");
 		assertThat(optional).contains(String[].class);
 	}
 
 	@Test
-	void loadClassForTwoDimensionalPrimitiveArray() throws Exception {
+	void loadClassForTwoDimensionalPrimitiveArray() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(int[][].class.getName());
 		assertThat(optional).contains(int[][].class);
 	}
 
 	@Test
-	void loadClassForTwoDimensionaldimensionalPrimitiveArrayUsingSourceCodeSyntax() throws Exception {
+	void loadClassForTwoDimensionaldimensionalPrimitiveArrayUsingSourceCodeSyntax() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("int[][]");
 		assertThat(optional).contains(int[][].class);
 	}
 
 	@Test
-	void loadClassForMultidimensionalPrimitiveArray() throws Exception {
+	void loadClassForMultidimensionalPrimitiveArray() {
 		String className = int[][][][][].class.getName();
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(className);
 		assertThat(optional).as(className).contains(int[][][][][].class);
 	}
 
 	@Test
-	void loadClassForMultidimensionalPrimitiveArrayUsingSourceCodeSyntax() throws Exception {
+	void loadClassForMultidimensionalPrimitiveArrayUsingSourceCodeSyntax() {
 		String className = "int[][][][][]";
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(className);
 		assertThat(optional).as(className).contains(int[][][][][].class);
 	}
 
 	@Test
-	void loadClassForMultidimensionalObjectArray() throws Exception {
+	void loadClassForMultidimensionalObjectArray() {
 		String className = String[][][][][].class.getName();
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(className);
 		assertThat(optional).as(className).contains(String[][][][][].class);
 	}
 
 	@Test
-	void loadClassForMultidimensionalObjectArrayUsingSourceCodeSyntax() throws Exception {
+	void loadClassForMultidimensionalObjectArrayUsingSourceCodeSyntax() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass("java.lang.String[][][][][]");
 		assertThat(optional).contains(String[][][][][].class);
+	}
+
+	@Test
+	void getFullyQualifiedMethodNamePreconditions() {
+		// @formatter:off
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getFullyQualifiedMethodName(null, null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getFullyQualifiedMethodName(null, "testMethod"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getFullyQualifiedMethodName(Object.class, null));
+		// @formatter:on
+	}
+
+	@Test
+	void getFullyQualifiedMethodNameForMethodWithoutParameters() {
+		assertThat(ReflectionUtils.getFullyQualifiedMethodName(Object.class, "toString"))//
+				.isEqualTo("java.lang.Object#toString()");
+	}
+
+	@Test
+	void getFullyQualifiedMethodNameForMethodWithNullParameters() {
+		assertThat(ReflectionUtils.getFullyQualifiedMethodName(Object.class, "toString", (Class<?>[]) null))//
+				.isEqualTo("java.lang.Object#toString()");
+	}
+
+	@Test
+	void getFullyQualifiedMethodNameForMethodWithSingleParameter() {
+		assertThat(ReflectionUtils.getFullyQualifiedMethodName(Object.class, "equals", Object.class))//
+				.isEqualTo("java.lang.Object#equals(java.lang.Object)");
+	}
+
+	@Test
+	void getFullyQualifiedMethodNameForMethodWithMultipleParameters() {
+		// @formatter:off
+		assertThat(ReflectionUtils.getFullyQualifiedMethodName(Object.class, "testMethod", int.class, Object.class))//
+				.isEqualTo("java.lang.Object#testMethod(int, java.lang.Object)");
+		// @formatter:on
+	}
+
+	@Test
+	void parseFullyQualifiedMethodNamePreconditions() {
+		// @formatter:off
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName(null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName(""));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("   "));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("java.lang.Object#"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("#equals"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("#"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("java.lang.Object"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("equals"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("()"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.parseFullyQualifiedMethodName("(int, java.lang.Object)"));
+		// @formatter:on
+	}
+
+	@Test
+	void parseFullyQualifiedMethodNameForMethodWithoutParameters() {
+		assertThat(ReflectionUtils.parseFullyQualifiedMethodName("com.example.Test#method()"))//
+				.containsExactly("com.example.Test", "method", "");
+	}
+
+	@Test
+	void parseFullyQualifiedMethodNameForMethodWithSingleParameter() {
+		assertThat(ReflectionUtils.parseFullyQualifiedMethodName("com.example.Test#method(java.lang.Object)"))//
+				.containsExactly("com.example.Test", "method", "java.lang.Object");
+	}
+
+	@Test
+	void parseFullyQualifiedMethodNameForMethodWithMultipleParameters() {
+		assertThat(ReflectionUtils.parseFullyQualifiedMethodName("com.example.Test#method(int, java.lang.Object)"))//
+				.containsExactly("com.example.Test", "method", "int, java.lang.Object");
 	}
 
 	@Test
@@ -492,7 +642,7 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodByParameterTypesPreconditions() throws Exception {
+	void findMethodByParameterTypesPreconditions() {
 		// @formatter:off
 		assertThrows(PreconditionViolationException.class, () -> findMethod(null, null));
 		assertThrows(PreconditionViolationException.class, () -> findMethod(null, "method"));
@@ -825,7 +975,7 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodsReturnsAllOverloadedMethodsThatAreNotShadowed() throws Exception {
+	void findMethodsReturnsAllOverloadedMethodsThatAreNotShadowed() {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
 
 		// Search for all foo(*) methods.
@@ -839,7 +989,7 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodsDoesNotReturnOverriddenDefaultMethods() throws Exception {
+	void findMethodsDoesNotReturnOverriddenDefaultMethods() {
 		Class<?> clazz = InterfaceWithOverriddenGenericDefaultMethodImpl.class;
 
 		// Search for all foo(*) methods.

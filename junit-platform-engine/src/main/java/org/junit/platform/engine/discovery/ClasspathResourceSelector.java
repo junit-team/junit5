@@ -29,6 +29,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * {@linkplain Thread thread} that uses it.
  *
  * @since 1.0
+ * @see DiscoverySelectors#selectClasspathResource(String)
  * @see ClasspathRootSelector
  * @see #getClasspathResourceName()
  */

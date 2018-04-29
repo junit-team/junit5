@@ -75,6 +75,18 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void constructorInjectionWithAnnotatedParameter() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(
+			AnnotatedParameterConstructorInjectionTestCase.class);
+
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+	}
+
+	@Test
 	void executeTestsForMethodInjectionCases() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(MethodInjectionTestCase.class);
 
@@ -239,6 +251,45 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 			private final CustomType innerCustomType;
 
 			NestedTestCase(TestInfo testInfo, CustomType customType) {
+				this.innerTestInfo = testInfo;
+				this.innerCustomType = customType;
+			}
+
+			@Test
+			void test() {
+				assertNotNull(outerTestInfo);
+				assertNotNull(outerCustomType);
+				assertNotNull(this.innerTestInfo);
+				assertNotNull(this.innerCustomType);
+			}
+		}
+	}
+
+	@ExtendWith(CustomAnnotationParameterResolver.class)
+	static class AnnotatedParameterConstructorInjectionTestCase {
+
+		private final TestInfo outerTestInfo;
+		private final CustomType outerCustomType;
+
+		AnnotatedParameterConstructorInjectionTestCase(TestInfo testInfo, @CustomAnnotation CustomType customType) {
+			this.outerTestInfo = testInfo;
+			this.outerCustomType = customType;
+		}
+
+		@Test
+		void test() {
+			assertNotNull(this.outerTestInfo);
+			assertNotNull(this.outerCustomType);
+		}
+
+		@Nested
+		// See https://github.com/junit-team/junit5/issues/1345
+		class AnnotatedConstructorParameterNestedTestCase {
+
+			private final TestInfo innerTestInfo;
+			private final CustomType innerCustomType;
+
+			AnnotatedConstructorParameterNestedTestCase(TestInfo testInfo, @CustomAnnotation CustomType customType) {
 				this.innerTestInfo = testInfo;
 				this.innerCustomType = customType;
 			}

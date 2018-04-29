@@ -7,6 +7,9 @@ test {
 		includeEngines 'junit-jupiter'
 		excludeTags 'exclude'
 	}
+	filter {
+		includeTestsMatching "*Tests"
+	}
 	testLogging {
 		events 'failed'
 	}
@@ -39,7 +42,9 @@ dependencies {
 	testImplementation(project(path: ':junit-jupiter-engine', configuration: 'testArtifacts'))
 	testImplementation("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	testImplementation("org.assertj:assertj-core:${assertJVersion}")
-	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+	testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}") {
+		exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
+	}
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(':junit-jupiter-engine'))
@@ -51,8 +56,10 @@ dependencies {
 	}
 
 	// --- http://openjdk.java.net/projects/code-tools/jmh/ -----------------------
-	jmh("org.openjdk.jmh:jmh-core:${jmhVersion}")
-	jmh("org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}")
+	jmh("org.openjdk.jmh:jmh-core:${jmhVersion}") {
+		exclude group: 'net.sf.jopt-simple', module: 'jopt-simple'
+	}
+	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}")
 	jmh(project(':junit-jupiter-api'))
 	jmh("junit:junit:${junit4Version}")
 }
@@ -62,10 +69,22 @@ jmh {
 
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 0 // Too long command line on Windows...
-	// warmupIterations = 1
-	// iterations = 5
+	warmupIterations = 1
+	iterations = 5
 }
 
 checkstyleJmh { // use same style rules as defined for tests
 	configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
+}
+
+eclipse {
+	classpath {
+		plusConfigurations += [ project(':junit-platform-console').configurations.shadowed ]
+	}
+}
+
+idea {
+	module {
+		scopes.PROVIDED.plus += [ project(':junit-platform-console').configurations.shadowed ]
+	}
 }

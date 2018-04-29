@@ -53,6 +53,20 @@ public final class Assertions {
 	// --- fail ----------------------------------------------------------------
 
 	/**
+	 * <em>Fails</em> a test <em>without</em> a failure message.
+	 *
+	 * <p>Although failing <em>with</em> an explicit failure message is recommended,
+	 * this method may be useful when maintaining legacy code.
+	 *
+	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
+	 * this method's generic return type {@code V}.
+	 */
+	public static <V> V fail() {
+		AssertionUtils.fail();
+		return null; // appeasing the compiler: this line will never be executed.
+	}
+
+	/**
 	 * <em>Fails</em> a test with the given failure {@code message}.
 	 *
 	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
@@ -926,17 +940,17 @@ public final class Assertions {
 	 *   <br>Skip strictly 21 lines. If they can't be skipped for any reason, an assertion error is raised.</li>
 	 * </ul>
 	 *
-	 * <p>Example showing all three kinds of expected line formats:
+	 * <p>Here is an example showing all three kinds of expected line formats:
 	 * <pre>{@code
-	 * │  │  │     caught: AssertionFailedError: single line fail message
-	 * >> S T A C K T R A C E >>
-	 * │  │  │   duration: [\d]+ ms
-	 * │  │  │     status: ✘ FAILED
-	 * │  └─ test() finished after [\d]+ ms\.
-	 * └─ JUnit Jupiter finished after [\d]+ ms\.
-	 * Test plan execution finished. Number of all tests: 1
-	 *
-	 * Test run finished after [\d]+ ms
+	 * ls -la /
+	 * total [\d]+
+	 * drwxr-xr-x  0 root root   512 Jan  1  1970 .
+	 * drwxr-xr-x  0 root root   512 Jan  1  1970 ..
+	 * drwxr-xr-x  0 root root   512 Apr  5 07:45 bin
+	 * >> 4 >>
+	 * -rwxr-xr-x  1 root root [\d]+ Jan  1  1970 init
+	 * >> M A N Y  M O R E  E N T R I E S >>
+	 * drwxr-xr-x  0 root root   512 Sep 22  2017 var
 	 * }</pre>
 	 */
 	public static void assertLinesMatch(List<String> expectedLines, List<String> actualLines) {
@@ -1185,6 +1199,114 @@ public final class Assertions {
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
 			Supplier<String> messageSupplier) {
 		return AssertThrows.assertThrows(expectedType, executable, messageSupplier);
+	}
+
+	// --- executable ---
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 *
+	 * @since 5.2
+	 */
+	public static void assertDoesNotThrow(Executable executable) {
+		AssertDoesNotThrow.assertDoesNotThrow(executable);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 *
+	 * @since 5.2
+	 */
+	public static void assertDoesNotThrow(Executable executable, String message) {
+		AssertDoesNotThrow.assertDoesNotThrow(executable, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @since 5.2
+	 */
+	public static void assertDoesNotThrow(Executable executable, Supplier<String> messageSupplier) {
+		AssertDoesNotThrow.assertDoesNotThrow(executable, messageSupplier);
+	}
+
+	// --- supplier ---
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <p>If the assertion passes, the {@code supplier}'s result will be returned.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 */
+	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier) {
+		return AssertDoesNotThrow.assertDoesNotThrow(supplier);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <p>If the assertion passes, the {@code supplier}'s result will be returned.
+	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 */
+	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, String message) {
+		return AssertDoesNotThrow.assertDoesNotThrow(supplier, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code supplier} does
+	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
+	 *
+	 * <p>If the assertion passes, the {@code supplier}'s result will be returned.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * <h3>Usage Note</h3>
+	 * <p>Although any exception thrown from a test method will cause the test
+	 * to <em>fail</em>, there are certain use cases where it can be beneficial
+	 * to explicitly assert that an exception is not thrown for a given code
+	 * block within a test method.
+	 */
+	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
+		return AssertDoesNotThrow.assertDoesNotThrow(supplier, messageSupplier);
 	}
 
 	// --- assertTimeout -------------------------------------------------------

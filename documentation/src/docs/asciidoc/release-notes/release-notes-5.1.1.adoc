@@ -1,0 +1,43 @@
+[[release-notes-5.1.1]]
+== 5.1.1
+
+*Date of Release:* April 8, 2018
+
+*Scope:* Bug fixes and minor improvements since the 5.1.0 release
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/24?closed=1+[5.1.1] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.1.1-junit-platform]]
+=== JUnit Platform
+
+==== New Features and Improvements
+
+* New `findAllClassesInModule()` method in `ReflectionSupport` which enables third-party
+  `TestEngine` implementations to scan for classes in modules -- for example, when
+  processing a `ModuleSelector` during the discovery phase.
+
+
+[[release-notes-5.1.1-junit-jupiter]]
+=== JUnit Jupiter
+
+==== New Features and Improvements
+
+* The `ParameterContext` API used in `ParameterResolver` implementations now includes the
+  following convenience methods for looking up annotations on parameters. Extension
+  authors are strongly encouraged to use these methods instead of those provided in the
+  core `java.lang.reflect.Parameter` API due to a bug in `javac` on JDK versions prior to
+  JDK 9 which causes lookups for annotations on parameters in inner class constructors to
+  fail consistently -- for example, when resolving a parameter for a `@Nested` test class
+  constructor.
+  - `boolean isAnnotated(Class<? extends Annotation> annotationType)`
+  - `Optional<A> findAnnotation(Class<A> annotationType)`
+  - `List<A> findRepeatableAnnotations(Class<A> annotationType)`
+
+
+[[release-notes-5.1.1-junit-vintage]]
+=== JUnit Vintage
+
+No changes.

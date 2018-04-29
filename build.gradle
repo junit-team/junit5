@@ -18,7 +18,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.gradle.build-scan' version '1.12.1'
+	id 'com.gradle.build-scan' version '1.13.1'
 	id 'net.nemerosa.versioning' version '2.6.1'
 }
 
@@ -117,7 +117,7 @@ allprojects { subproj ->
 	if (project.hasProperty('enableJaCoCo')) {
 		apply plugin: "jacoco"
 		jacoco {
-			toolVersion = '0.8.0'
+			toolVersion = '0.8.1'
 		}
 	}
 
@@ -207,7 +207,7 @@ allprojects { subproj ->
 	}
 
 	checkstyle {
-		toolVersion = '8.8'
+		toolVersion = '8.9'
 		configDir = rootProject.file('src/checkstyle')
 	}
 	checkstyleMain {
@@ -291,10 +291,16 @@ subprojects { subproj ->
 	}
 
 	if (subproj.name in mavenizedProjects) {
-		apply plugin: 'maven'
-		apply plugin: 'signing'
 
-		if (subproj.name in platformProjects) {
+		apply from: "$rootDir/gradle/maven.gradle"
+
+		subproj.ext.baseline = null
+
+		if (subproj.name in jupiterProjects) {
+			subproj.group = jupiterGroup
+			subproj.baseline = jupiterBaseline
+		}
+		else if (subproj.name in platformProjects) {
 			subproj.group = platformGroup
 			subproj.version = platformVersion
 			subproj.baseline = platformBaseline
@@ -338,6 +344,7 @@ subprojects { subproj ->
 			options.addStringOption('Xdoclint:html,syntax', '-quiet')
 			options.addMultilineStringsOption('tag').setValue(['apiNote:a:API Note:', 'implSpec:a:Implementation Requirements:', 'implNote:a:Implementation Note:'])
 			options.encoding = 'UTF-8'
+			options.noTimestamp = true
 			// Remove Kotlin classes from classpath due to "bad" class file: AssertionsKt$sam$Supplier$44378ebd.class
 			// see https://bugs.openjdk.java.net/browse/JDK-8187422
 			classpath = classpath - files(compileKotlin.destinationDir)
@@ -370,102 +377,7 @@ subprojects { subproj ->
 			}
 		}
 
-		def isSnapshot = project.version.contains('SNAPSHOT')
-		def isContinuousIntegrationEnvironment = Boolean.parseBoolean(System.getenv('CI'))
-		def isJitPackEnvironment = Boolean.parseBoolean(System.getenv('JITPACK'))
-		def signArtifacts = !(isSnapshot || isContinuousIntegrationEnvironment || isJitPackEnvironment)
 
-		afterEvaluate {
-			if (signArtifacts && uploadArchives.enabled) {
-				signing {
-					sign configurations.archives
-				}
-			}
-		}
-
-		uploadArchives {
-
-			dependsOn check
-
-			repositories {
-				mavenDeployer {
-
-					if (signArtifacts) {
-						beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-					}
-
-					def ossrhUsername = rootProject.hasProperty('ossrhUsername') ? rootProject.ossrhUsername : ''
-					def ossrhPassword = rootProject.hasProperty('ossrhPassword') ? rootProject.ossrhPassword : ''
-
-					repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-						authentication(userName: ossrhUsername, password: ossrhPassword)
-					}
-
-					snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-						authentication(userName: ossrhUsername, password: ossrhPassword)
-					}
-
-					def projectLicense = licenseOf(project)
-
-					pom.project {
-						name "${project.group}:${project.name}"
-						packaging 'jar'
-						description "Module \"${project.name}\" of JUnit 5."
-						url 'http://junit.org/junit5/'
-
-						scm {
-							connection 'scm:git:git://github.com/junit-team/junit5.git'
-							developerConnection 'scm:git:git://github.com/junit-team/junit5.git'
-							url 'https://github.com/junit-team/junit5'
-						}
-
-						licenses {
-							license {
-								name projectLicense['name']
-								url projectLicense['url']
-							}
-						}
-
-						developers {
-							developer {
-								id 'bechte'
-								name 'Stefan Bechtold'
-								email 'stefan.bechtold@me.com'
-							}
-							developer {
-								id 'jlink'
-								name 'Johannes Link'
-								email 'business@johanneslink.net'
-							}
-							developer {
-								id 'marcphilipp'
-								name 'Marc Philipp'
-								email 'mail@marcphilipp.de'
-							}
-							developer {
-								id 'mmerdes'
-								name 'Matthias Merdes'
-								email 'Matthias.Merdes@heidelberg-mobil.com'
-							}
-							developer {
-								id 'sbrannen'
-								name 'Sam Brannen'
-								email 'sam@sambrannen.com'
-							}
-							developer {
-								id 'sormuras'
-								name 'Christian Stein'
-								email 'sormuras@gmail.com'
-							}
-						}
-					}
-
-					pom.whenConfigured { p ->
-						p.dependencies = p.dependencies.findAll { dep -> dep.scope != 'test' }
-					}
-				}
-			}
-		}
 	} else {
 		jar.enabled = false
 		javadoc.enabled = false
@@ -559,12 +471,20 @@ subprojects { subproj ->
 			// directory of the version-aware project later.
 			dependsOn = [versionedProject.classes]
 			doLast {
+				// The following two external "project.exec" commands should be replaced by:
+				// 		ToolProvider.findFirst("jar").get().run(System.out, System.err,
+				//				'--update',
+				//				'--file', archivePath,
+				//				'--release', version,
+				//				'-C', versionedProject.compileJava.destinationDir,
+				//				'.')
+				// Blocked by: https://github.com/gradle/gradle/issues/721
 				project.exec {
-					executable 'jar'
+					executable "${System.properties['java.home']}/bin/jar"
 					args = ['--version']
 				}
 				project.exec {
-					executable 'jar'
+					executable "${System.properties['java.home']}/bin/jar"
 					args = ['--update','--file', archivePath,
 							'--release', version,
 							'-C', versionedProject.compileJava.destinationDir,
@@ -674,6 +594,7 @@ configure(rootProject) {
 		options.addStringOption('Xdoclint:none', '-quiet')
 		options.addMultilineStringsOption('tag').setValue(['apiNote:a:API Note:', 'implSpec:a:Implementation Requirements:', 'implNote:a:Implementation Note:'])
 		options.encoding = 'UTF-8'
+		options.noTimestamp = true
 		options.jFlags '-Xmx1g'
 		options.links(
 			'https://docs.oracle.com/javase/8/docs/api/',
@@ -791,9 +712,11 @@ configure(rootProject) {
 		}
 		from("$buildDir/docs") {
 			include 'javadoc/**'
-			filter { line ->
-				line.startsWith("<head>") ? line.replace("<head>", "<head><link rel=\"icon\" type=\"image/png\" href=\"http://junit.org/junit5/assets/img/junit5-logo.png\">") :
-						line
+			filesMatching("**/*.html") {
+				filter { line ->
+					line.startsWith("<head>") ? line.replace("<head>", "<head><link rel=\"icon\" type=\"image/png\" href=\"http://junit.org/junit5/assets/img/junit5-logo.png\">") :
+							line
+				}
 			}
 		}
 		into "${docsDir}/${docsVersion}"
@@ -836,7 +759,7 @@ configure(rootProject) {
 
 task wrapper(type: Wrapper) {
 	description = 'Generates gradlew and gradlew.bat scripts'
-	gradleVersion = '4.6'
+	gradleVersion = '4.7'
 	/*
 	* Reasoning for using BIN:
 	* https://github.com/junit-team/junit5/pull/1012#discussion_r132061924

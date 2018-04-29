@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -195,7 +196,7 @@ public final class ReflectionUtils {
 
 		classNameToTypeMap = Collections.unmodifiableMap(classNamesToTypes);
 
-		Map<Class<?>, Class<?>> primitivesToWrappers = new HashMap<>(8);
+		Map<Class<?>, Class<?>> primitivesToWrappers = new IdentityHashMap<>(8);
 
 		primitivesToWrappers.put(boolean.class, Boolean.class);
 		primitivesToWrappers.put(byte.class, Byte.class);
@@ -249,8 +250,20 @@ public final class ReflectionUtils {
 		return !isStatic(member);
 	}
 
+	/**
+	 * Determine if the supplied class is an <em>inner class</em> (i.e., a
+	 * non-static member class).
+	 *
+	 * <p>Technically speaking (i.e., according to the Java Language
+	 * Specification), "an inner class may be a non-static member class, a
+	 * local class, or an anonymous class." However, this method does not
+	 * return {@code true} for a local or anonymous class.
+	 *
+	 * @param clazz the class to check; never {@code null}
+	 * @return {@code true} if the class is an <em>inner class</em>
+	 */
 	public static boolean isInnerClass(Class<?> clazz) {
-		return clazz.isMemberClass() && !isStatic(clazz);
+		return !isStatic(clazz) && clazz.isMemberClass();
 	}
 
 	public static boolean returnsVoid(Method method) {
@@ -268,36 +281,100 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Determine if the supplied object can be assigned to the supplied type
-	 * for the purpose of reflective method invocations.
+	 * Determine if the supplied object can be assigned to the supplied target
+	 * type for the purpose of reflective method invocations.
 	 *
 	 * <p>In contrast to {@link Class#isInstance(Object)}, this method returns
-	 * {@code true} if the supplied type represents a primitive type whose
-	 * wrapper matches the supplied object's type.
+	 * {@code true} if the target type represents a primitive type whose
+	 * wrapper matches the supplied object's type. In addition, this method
+	 * also supports
+	 * <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2">
+	 * widening conversions</a> for primitive types and their corresponding
+	 * wrapper types.
 	 *
-	 * <p>Returns {@code true} if the supplied object is {@code null} and the
-	 * supplied type does not represent a primitive type.
+	 * <p>If the supplied object is {@code null} and the supplied type does not
+	 * represent a primitive type, this method returns {@code true}.
 	 *
 	 * @param obj the object to test for assignment compatibility; potentially {@code null}
-	 * @param type the type to check against; never {@code null}
+	 * @param targetType the type to check against; never {@code null}
 	 * @return {@code true} if the object is assignment compatible
 	 * @see Class#isInstance(Object)
 	 * @see Class#isAssignableFrom(Class)
 	 */
-	public static boolean isAssignableTo(Object obj, Class<?> type) {
-		Preconditions.notNull(type, "type must not be null");
+	public static boolean isAssignableTo(Object obj, Class<?> targetType) {
+		Preconditions.notNull(targetType, "target type must not be null");
 
 		if (obj == null) {
-			return !type.isPrimitive();
+			return !targetType.isPrimitive();
 		}
 
-		if (type.isInstance(obj)) {
+		if (targetType.isInstance(obj)) {
 			return true;
 		}
 
-		if (type.isPrimitive()) {
-			return primitiveToWrapperMap.get(type) == obj.getClass();
+		if (targetType.isPrimitive()) {
+			Class<?> sourceType = obj.getClass();
+			return sourceType == primitiveToWrapperMap.get(targetType) || isWideningConversion(sourceType, targetType);
 		}
+
+		return false;
+	}
+
+	/**
+	 * Determine if Java supports a <em>widening primitive conversion</em> from the
+	 * supplied source type to the supplied <strong>primitive</strong> target type.
+	 */
+	static boolean isWideningConversion(Class<?> sourceType, Class<?> targetType) {
+		Preconditions.condition(targetType.isPrimitive(), "targetType must be primitive");
+
+		boolean isPrimitive = sourceType.isPrimitive();
+		boolean isWrapper = primitiveToWrapperMap.containsValue(sourceType);
+
+		// Neither a primitive nor a wrapper?
+		if (!isPrimitive && !isWrapper) {
+			return false;
+		}
+
+		if (isPrimitive) {
+			sourceType = primitiveToWrapperMap.get(sourceType);
+		}
+
+		// @formatter:off
+		if (sourceType == Byte.class) {
+			return
+					targetType == short.class ||
+					targetType == int.class ||
+					targetType == long.class ||
+					targetType == float.class ||
+					targetType == double.class;
+		}
+
+		if (sourceType == Short.class || sourceType == Character.class) {
+			return
+					targetType == int.class ||
+					targetType == long.class ||
+					targetType == float.class ||
+					targetType == double.class;
+		}
+
+		if (sourceType == Integer.class) {
+			return
+					targetType == long.class ||
+					targetType == float.class ||
+					targetType == double.class;
+		}
+
+		if (sourceType == Long.class) {
+			return
+					targetType == float.class ||
+					targetType == double.class;
+		}
+
+		if (sourceType == Float.class) {
+			return
+					targetType == double.class;
+		}
+		// @formatter:on
 
 		return false;
 	}
@@ -538,6 +615,51 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Parse the supplied <em>fully qualified method name</em> into a 3-element
+	 * {@code String[]} with the following content.
+	 *
+	 * <ul>
+	 *   <li>index {@code 0}: the fully qualified class name</li>
+	 *   <li>index {@code 1}: the name of the method</li>
+	 *   <li>index {@code 2}: a comma-separated list of parameter types, or a
+	 *       blank string if the method does not declare any formal parameters</li>
+	 * </ul>
+	 *
+	 * @param fullyQualifiedMethodName a <em>fully qualified method name</em>,
+	 * never {@code null} or blank
+	 * @return a 3-element array of strings containing the parsed values
+	 */
+	public static String[] parseFullyQualifiedMethodName(String fullyQualifiedMethodName) {
+		Preconditions.notBlank(fullyQualifiedMethodName, "fullyQualifiedMethodName must not be null or blank");
+
+		int indexOfFirstHashtag = fullyQualifiedMethodName.indexOf('#');
+		boolean validSyntax = (indexOfFirstHashtag > 0)
+				&& (indexOfFirstHashtag < fullyQualifiedMethodName.length() - 1);
+
+		Preconditions.condition(validSyntax,
+			() -> "[" + fullyQualifiedMethodName + "] is not a valid fully qualified method name: "
+					+ "it must start with a fully qualified class name followed by a '#' "
+					+ "and then the method name, optionally followed by a parameter list enclosed in parentheses.");
+
+		String className = fullyQualifiedMethodName.substring(0, indexOfFirstHashtag);
+		String methodPart = fullyQualifiedMethodName.substring(indexOfFirstHashtag + 1);
+		String methodName = methodPart;
+		String methodParameters = "";
+
+		if (methodPart.endsWith("()")) {
+			methodName = methodPart.substring(0, methodPart.length() - 2);
+		}
+		else if (methodPart.endsWith(")")) {
+			int indexOfLastOpeningParenthesis = methodPart.lastIndexOf('(');
+			if ((indexOfLastOpeningParenthesis > 0) && (indexOfLastOpeningParenthesis < methodPart.length() - 1)) {
+				methodName = methodPart.substring(0, indexOfLastOpeningParenthesis);
+				methodParameters = methodPart.substring(indexOfLastOpeningParenthesis + 1, methodPart.length() - 1);
+			}
+		}
+		return new String[] { className, methodName, methodParameters };
+	}
+
+	/**
 	 * Get the outermost instance of the required type, searching recursively
 	 * through enclosing instances.
 	 *
@@ -628,6 +750,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 1.1.1
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInModule(String, Predicate, Predicate)
 	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
@@ -637,7 +760,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * @since 1.2
+	 * @since 1.1.1
 	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter classFilter) {
 		return Collections.unmodifiableList(ModuleUtils.findAllClassesInModule(moduleName, classFilter));

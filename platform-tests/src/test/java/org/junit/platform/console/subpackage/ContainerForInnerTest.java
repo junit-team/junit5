@@ -10,12 +10,21 @@
 
 package org.junit.platform.console.subpackage;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class TwoTest {
+// Even though our "example test classes" should be named *TestCase
+// according to team policy, this class must be named *Test in order
+// for ConsoleLauncherIntegrationTests to pass, but that's not a
+// problem since the test method here can never fail.
+class ContainerForInnerTest {
 
-	@Test
-	void m2() {
+	@Nested
+	class NestedTest {
+
+		@Test
+		void test() {
+		}
 	}
 
 }
