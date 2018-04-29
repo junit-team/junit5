@@ -32,6 +32,8 @@ import org.apiguardian.api.API;
  * In addition, {@link ArgumentsAggregator} implementations are given access to
  * an {@code ArgumentsAccessor}.
  *
+ * <p>This interface is not intended to be implemented by clients.
+ *
  * @since 5.2
  * @see ArgumentsAggregator
  * @see org.junit.jupiter.params.ParameterizedTest
