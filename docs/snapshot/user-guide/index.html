@@ -5020,7 +5020,7 @@ subclasses, you would annotate the test class as follows.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>({ FooExtension.class, BarExtension.class })
-<span class="type">class</span> <span class="class">MyTests</span> {
+<span class="type">class</span> <span class="class">MyFirstTests</span> {
     <span class="comment">// ...</span>
 }</code></pre>
 </div>
@@ -5032,7 +5032,7 @@ subclasses, you would annotate the test class as follows.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(FooExtension.class)
 <span class="annotation">@ExtendWith</span>(BarExtension.class)
-<span class="type">class</span> <span class="class">MyTests</span> {
+<span class="type">class</span> <span class="class">MySecondTests</span> {
     <span class="comment">// ...</span>
 }</code></pre>
 </div>
@@ -5047,7 +5047,7 @@ subclasses, you would annotate the test class as follows.</p>
 <div class="title">Extension Registration Order</div>
 Extensions registered declaratively via <code>@ExtendWith</code> will be executed in the order
 in which they are declared in the source code. For example, the execution of tests in
-both <code>MyTestsV1</code> and <code>MyTestsV2</code> will be extended by the <code>FooExtension</code> and
+both <code>MyFirstTests</code> and <code>MySecondTests</code> will be extended by the <code>FooExtension</code> and
 <code>BarExtension</code>, <strong>in exactly that order</strong>.
 </td>
 </tr>
