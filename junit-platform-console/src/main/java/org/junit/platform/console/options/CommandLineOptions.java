@@ -67,6 +67,8 @@ public class CommandLineOptions {
 
 	private List<Path> additionalClasspathEntries = emptyList();
 
+	private boolean failIfNoTests;
+
 	private Path reportsDir;
 
 	private Map<String, String> configurationParameters = emptyMap();
@@ -276,6 +278,14 @@ public class CommandLineOptions {
 
 	public void setSelectedClasspathEntries(List<Path> selectedClasspathEntries) {
 		this.selectedClasspathEntries = selectedClasspathEntries;
+	}
+
+	public boolean isFailIfNoTests() {
+		return failIfNoTests;
+	}
+
+	public void setFailIfNoTests(boolean failIfNoTests) {
+		this.failIfNoTests = failIfNoTests;
 	}
 
 	public Map<String, String> getConfigurationParameters() {

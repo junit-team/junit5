@@ -82,7 +82,7 @@ public class ConsoleLauncher {
 	private ConsoleLauncherExecutionResult executeTests(CommandLineOptions options, PrintWriter out) {
 		try {
 			TestExecutionSummary testExecutionSummary = new ConsoleTestExecutor(options).execute(out);
-			return ConsoleLauncherExecutionResult.forSummary(testExecutionSummary);
+			return ConsoleLauncherExecutionResult.forSummary(testExecutionSummary, options);
 		}
 		catch (Exception exception) {
 			exception.printStackTrace(errStream);
