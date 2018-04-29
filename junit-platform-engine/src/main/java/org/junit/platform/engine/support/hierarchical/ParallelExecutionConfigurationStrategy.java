@@ -14,7 +14,6 @@ import org.junit.platform.engine.ConfigurationParameters;
 
 public interface ParallelExecutionConfigurationStrategy {
 
-	ParallelExecutionConfiguration createConfiguration(String engineSpecificPrefix,
-			ConfigurationParameters configurationParameters);
+	ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters);
 
 }

@@ -25,15 +25,14 @@ import org.junit.platform.engine.ConfigurationParameters;
 
 class DefaultParallelExecutionConfigurationStrategyTest {
 
-	private String prefix = "foo.bar";
 	private ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 
 	@Test
 	void fixedStrategyCreatesValidConfiguration() {
-		when(configParams.get("foo.bar.fixed.parallelism")).thenReturn(Optional.of("42"));
+		when(configParams.get("fixed.parallelism")).thenReturn(Optional.of("42"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.FIXED;
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(prefix, configParams);
+		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configParams);
 
 		assertThat(configuration.getParallelism()).isEqualTo(42);
 		assertThat(configuration.getCorePoolSize()).isEqualTo(42);
@@ -44,10 +43,10 @@ class DefaultParallelExecutionConfigurationStrategyTest {
 
 	@Test
 	void dynamicStrategyCreatesValidConfiguration() {
-		when(configParams.get("foo.bar.dynamic.factor")).thenReturn(Optional.of("2.0"));
+		when(configParams.get("dynamic.factor")).thenReturn(Optional.of("2.0"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(prefix, configParams);
+		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configParams);
 
 		int availableProcessors = Runtime.getRuntime().availableProcessors();
 		assertThat(configuration.getParallelism()).isEqualTo(availableProcessors * 2);
@@ -59,11 +58,11 @@ class DefaultParallelExecutionConfigurationStrategyTest {
 
 	@Test
 	void customStrategyCreatesValidConfiguration() {
-		when(configParams.get("foo.bar.custom.class")).thenReturn(
+		when(configParams.get("custom.class")).thenReturn(
 			Optional.of(CustomParallelExecutionConfigurationStrategy.class.getName()));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.CUSTOM;
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(prefix, configParams);
+		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configParams);
 
 		assertThat(configuration.getParallelism()).isEqualTo(1);
 		assertThat(configuration.getCorePoolSize()).isEqualTo(4);
@@ -75,33 +74,33 @@ class DefaultParallelExecutionConfigurationStrategyTest {
 	@ParameterizedTest
 	@EnumSource(DefaultParallelExecutionConfigurationStrategy.class)
 	void createsStrategyFromConfigParam(DefaultParallelExecutionConfigurationStrategy strategy) {
-		when(configParams.get("foo.bar.strategy")).thenReturn(Optional.of(strategy.name().toLowerCase()));
+		when(configParams.get("strategy")).thenReturn(Optional.of(strategy.name().toLowerCase()));
 
-		assertThat(DefaultParallelExecutionConfigurationStrategy.getStrategy(prefix, configParams)).isSameAs(strategy);
+		assertThat(DefaultParallelExecutionConfigurationStrategy.getStrategy(configParams)).isSameAs(strategy);
 	}
 
 	@Test
 	void fixedStrategyThrowsExceptionWhenPropertyIsNotPresent() {
-		when(configParams.get("foo.bar.fixed.parallelism")).thenReturn(Optional.empty());
+		when(configParams.get("fixed.parallelism")).thenReturn(Optional.empty());
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.FIXED;
-		assertThrows(JUnitException.class, () -> strategy.createConfiguration(prefix, configParams));
+		assertThrows(JUnitException.class, () -> strategy.createConfiguration(configParams));
 	}
 
 	@Test
 	void fixedStrategyThrowsExceptionWhenPropertyIsNotAnInteger() {
-		when(configParams.get("foo.bar.fixed.parallelism")).thenReturn(Optional.of("foo"));
+		when(configParams.get("fixed.parallelism")).thenReturn(Optional.of("foo"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.FIXED;
-		assertThrows(JUnitException.class, () -> strategy.createConfiguration(prefix, configParams));
+		assertThrows(JUnitException.class, () -> strategy.createConfiguration(configParams));
 	}
 
 	@Test
 	void dynamicStrategyUsesDefaultWhenPropertyIsNotPresent() {
-		when(configParams.get("foo.bar.dynamic.factor")).thenReturn(Optional.empty());
+		when(configParams.get("dynamic.factor")).thenReturn(Optional.empty());
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(prefix, configParams);
+		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configParams);
 
 		int availableProcessors = Runtime.getRuntime().availableProcessors();
 		assertThat(configuration.getParallelism()).isEqualTo(availableProcessors);
@@ -113,34 +112,34 @@ class DefaultParallelExecutionConfigurationStrategyTest {
 
 	@Test
 	void dynamicStrategyThrowsExceptionWhenPropertyIsNotAnInteger() {
-		when(configParams.get("foo.bar.dynamic.factor")).thenReturn(Optional.of("foo"));
+		when(configParams.get("dynamic.factor")).thenReturn(Optional.of("foo"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
-		assertThrows(JUnitException.class, () -> strategy.createConfiguration(prefix, configParams));
+		assertThrows(JUnitException.class, () -> strategy.createConfiguration(configParams));
 	}
 
 	@Test
 	void dynamicStrategyThrowsExceptionWhenFactorIsZero() {
-		when(configParams.get("foo.bar.dynamic.factor")).thenReturn(Optional.of("0"));
+		when(configParams.get("dynamic.factor")).thenReturn(Optional.of("0"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
-		assertThrows(JUnitException.class, () -> strategy.createConfiguration(prefix, configParams));
+		assertThrows(JUnitException.class, () -> strategy.createConfiguration(configParams));
 	}
 
 	@Test
 	void dynamicStrategyThrowsExceptionWhenFactorIsNegative() {
-		when(configParams.get("foo.bar.dynamic.factor")).thenReturn(Optional.of("-1"));
+		when(configParams.get("dynamic.factor")).thenReturn(Optional.of("-1"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
-		assertThrows(JUnitException.class, () -> strategy.createConfiguration(prefix, configParams));
+		assertThrows(JUnitException.class, () -> strategy.createConfiguration(configParams));
 	}
 
 	@Test
 	void dynamicStrategyUsesAtLeastParallelismOfOneWhenPropertyIsTooSmall() {
-		when(configParams.get("foo.bar.dynamic.factor")).thenReturn(Optional.of("0.00000000001"));
+		when(configParams.get("dynamic.factor")).thenReturn(Optional.of("0.00000000001"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(prefix, configParams);
+		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configParams);
 
 		assertThat(configuration.getParallelism()).isEqualTo(1);
 		assertThat(configuration.getCorePoolSize()).isEqualTo(1);
@@ -151,24 +150,23 @@ class DefaultParallelExecutionConfigurationStrategyTest {
 
 	@Test
 	void customStrategyThrowsExceptionWhenPropertyIsNotPresent() {
-		when(configParams.get("foo.bar.custom.class")).thenReturn(Optional.empty());
+		when(configParams.get("custom.class")).thenReturn(Optional.empty());
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.CUSTOM;
-		assertThrows(JUnitException.class, () -> strategy.createConfiguration(prefix, configParams));
+		assertThrows(JUnitException.class, () -> strategy.createConfiguration(configParams));
 	}
 
 	@Test
 	void customStrategyThrowsExceptionWhenClassDoesNotExist() {
-		when(configParams.get("foo.bar.custom.class")).thenReturn(Optional.of("com.acme.ClassDoesNotExist"));
+		when(configParams.get("custom.class")).thenReturn(Optional.of("com.acme.ClassDoesNotExist"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.CUSTOM;
-		assertThrows(JUnitException.class, () -> strategy.createConfiguration(prefix, configParams));
+		assertThrows(JUnitException.class, () -> strategy.createConfiguration(configParams));
 	}
 
 	static class CustomParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 		@Override
-		public ParallelExecutionConfiguration createConfiguration(String engineSpecificPrefix,
-				ConfigurationParameters configurationParameters) {
+		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
 			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5);
 		}
 	}

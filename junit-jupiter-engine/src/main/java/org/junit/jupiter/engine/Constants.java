@@ -91,12 +91,11 @@ public final class Constants {
 
 	public static final String PARALLEL_EXECUTION_ENABLED = "junit.jupiter.execution.parallel.enabled";
 
-	public static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel.config";
-	public static final String PARALLEL_CONFIG_STRATEGY = PARALLEL_CONFIG_PREFIX + "." + CONFIG_STRATEGY;
-	public static final String PARALLEL_CONFIG_FIXED_PARALLELISM = PARALLEL_CONFIG_PREFIX + "."
-			+ CONFIG_FIXED_PARALLELISM;
-	public static final String PARALLEL_CONFIG_DYNAMIC_FACTOR = PARALLEL_CONFIG_PREFIX + "." + CONFIG_DYNAMIC_FACTOR;
-	public static final String PARALLEL_CONFIG_CUSTOM_CLASS = PARALLEL_CONFIG_PREFIX + "." + CONFIG_CUSTOM_CLASS;
+	public static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel.config.";
+	public static final String PARALLEL_CONFIG_STRATEGY = PARALLEL_CONFIG_PREFIX + CONFIG_STRATEGY;
+	public static final String PARALLEL_CONFIG_FIXED_PARALLELISM = PARALLEL_CONFIG_PREFIX + CONFIG_FIXED_PARALLELISM;
+	public static final String PARALLEL_CONFIG_DYNAMIC_FACTOR = PARALLEL_CONFIG_PREFIX + CONFIG_DYNAMIC_FACTOR;
+	public static final String PARALLEL_CONFIG_CUSTOM_CLASS = PARALLEL_CONFIG_PREFIX + CONFIG_CUSTOM_CLASS;
 
 	private Constants() {
 		/* no-op */

@@ -32,19 +32,16 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 	private final ForkJoinPool forkJoinPool;
 
-	public ForkJoinPoolHierarchicalTestExecutorService(String parallelConfigPrefix,
-			ConfigurationParameters configurationParameters) {
-		forkJoinPool = createForkJoinPool(parallelConfigPrefix, configurationParameters);
+	public ForkJoinPoolHierarchicalTestExecutorService(ConfigurationParameters configurationParameters) {
+		forkJoinPool = createForkJoinPool(configurationParameters);
 		LoggerFactory.getLogger(ForkJoinPoolHierarchicalTestExecutorService.class) //
 				.config(() -> "Using ForkJoinPool with parallelism of " + forkJoinPool.getParallelism());
 	}
 
-	private ForkJoinPool createForkJoinPool(String parallelConfigPrefix,
-			ConfigurationParameters configurationParameters) {
+	private ForkJoinPool createForkJoinPool(ConfigurationParameters configurationParameters) {
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.getStrategy(
-			parallelConfigPrefix, configurationParameters);
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(parallelConfigPrefix,
 			configurationParameters);
+		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configurationParameters);
 		try {
 			// Try to use constructor available in Java >= 9
 			Constructor<ForkJoinPool> constructor = ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE,

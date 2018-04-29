@@ -23,11 +23,9 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	FIXED {
 		@Override
-		public ParallelExecutionConfiguration createConfiguration(String engineSpecificPrefix,
-				ConfigurationParameters configurationParameters) {
-			String key = engineSpecificPrefix + "." + CONFIG_FIXED_PARALLELISM;
-			int parallelism = getSafely(configurationParameters, key, Integer::valueOf).orElseThrow(
-				() -> new JUnitException(key + " must be set"));
+		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
+			int parallelism = getSafely(configurationParameters, CONFIG_FIXED_PARALLELISM,
+				Integer::valueOf).orElseThrow(() -> new JUnitException(CONFIG_FIXED_PARALLELISM + " must be set"));
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, 256 + parallelism, parallelism,
 				30);
 		}
@@ -35,11 +33,11 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	DYNAMIC {
 		@Override
-		public ParallelExecutionConfiguration createConfiguration(String engineSpecificPrefix,
-				ConfigurationParameters configurationParameters) {
-			String key = engineSpecificPrefix + "." + CONFIG_DYNAMIC_FACTOR;
-			BigDecimal factor = getSafely(configurationParameters, key, BigDecimal::new).orElse(BigDecimal.ONE);
-			Preconditions.condition(factor.compareTo(BigDecimal.ZERO) > 0, () -> key + " must be greater than 0");
+		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
+			BigDecimal factor = getSafely(configurationParameters, CONFIG_DYNAMIC_FACTOR, BigDecimal::new).orElse(
+				BigDecimal.ONE);
+			Preconditions.condition(factor.compareTo(BigDecimal.ZERO) > 0,
+				() -> CONFIG_DYNAMIC_FACTOR + " must be greater than 0");
 			int parallelism = Math.max(1,
 				factor.multiply(BigDecimal.valueOf(Runtime.getRuntime().availableProcessors())).intValue());
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, 256 + parallelism, parallelism,
@@ -49,18 +47,16 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	CUSTOM {
 		@Override
-		public ParallelExecutionConfiguration createConfiguration(String engineSpecificPrefix,
-				ConfigurationParameters configurationParameters) {
-			String key = engineSpecificPrefix + "." + CONFIG_CUSTOM_CLASS;
-			String className = configurationParameters.get(key).orElseThrow(
-				() -> new JUnitException(key + " must be set"));
+		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
+			String className = configurationParameters.get(CONFIG_CUSTOM_CLASS).orElseThrow(
+				() -> new JUnitException(CONFIG_CUSTOM_CLASS + " must be set"));
 			Class<?> strategyClass = ReflectionUtils.loadClass(className).orElseThrow(
-				() -> new JUnitException("Could not load class for " + key));
+				() -> new JUnitException("Could not load class for " + CONFIG_CUSTOM_CLASS));
 			Preconditions.condition(ParallelExecutionConfigurationStrategy.class.isAssignableFrom(strategyClass),
-				key + " does not implement " + ParallelExecutionConfigurationStrategy.class);
+				CONFIG_CUSTOM_CLASS + " does not implement " + ParallelExecutionConfigurationStrategy.class);
 			ParallelExecutionConfigurationStrategy strategy = (ParallelExecutionConfigurationStrategy) ReflectionUtils.newInstance(
 				strategyClass);
-			return strategy.createConfiguration(engineSpecificPrefix, configurationParameters);
+			return strategy.createConfiguration(configurationParameters);
 		}
 	};
 
@@ -86,10 +82,8 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 		};
 	}
 
-	static ParallelExecutionConfigurationStrategy getStrategy(String engineSpecificPrefix,
-			ConfigurationParameters configurationParameters) {
-		return valueOf(
-			configurationParameters.get(engineSpecificPrefix + "." + CONFIG_STRATEGY).orElse("dynamic").toUpperCase());
+	static ParallelExecutionConfigurationStrategy getStrategy(ConfigurationParameters configurationParameters) {
+		return valueOf(configurationParameters.get(CONFIG_STRATEGY).orElse("dynamic").toUpperCase());
 	}
 
 }

@@ -25,6 +25,7 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.config.PrefixedConfigurationParameters;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
@@ -71,7 +72,8 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
 		ConfigurationParameters config = request.getConfigurationParameters();
 		if (config.getBoolean(PARALLEL_EXECUTION_ENABLED).orElse(false)) {
-			return new ForkJoinPoolHierarchicalTestExecutorService(PARALLEL_CONFIG_PREFIX, config);
+			return new ForkJoinPoolHierarchicalTestExecutorService(
+				new PrefixedConfigurationParameters(config, PARALLEL_CONFIG_PREFIX));
 		}
 		return super.createExecutorService(request);
 	}
