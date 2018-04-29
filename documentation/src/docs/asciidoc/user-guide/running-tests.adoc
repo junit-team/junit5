@@ -210,7 +210,7 @@ additional dependency to the runtime classpath.
 
 The JUnit team has developed a basic provider for Maven Surefire that lets you run JUnit 4
 and JUnit Jupiter tests via `mvn test`. The `pom.xml` file in the
-`{junit5-maven-consumer}` project demonstrates how to use it and can serve as a starting
+`{junit5-jupiter-starter-maven}` project demonstrates how to use it and can serve as a starting
 point.
 
 NOTE: Please use Maven Surefire {surefire-version} with the
