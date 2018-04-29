@@ -27,7 +27,6 @@ import org.junit.jupiter.theories.annotations.Theory;
 import org.junit.jupiter.theories.annotations.suppliers.ArgumentsSuppliedBy;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
-import org.junit.jupiter.theories.exceptions.DataPointRetrievalException;
 import org.junit.jupiter.theories.suppliers.TheoryArgumentSupplier;
 import org.junit.jupiter.theories.util.ArgumentSupplierUtils;
 import org.junit.jupiter.theories.util.ArgumentUtils;
@@ -118,6 +117,7 @@ class TheoriesTestExtensionTests {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testProvideTestTemplateInvocationContexts_Success_FromDataPoints() {
 		//Setup
 		when(mockDataPointRetriever.getAllDataPoints(eq(FakeTestClass.class), any(Optional.class))).thenReturn(
@@ -213,7 +213,8 @@ class TheoriesTestExtensionTests {
 	}
 
 	@Test
-	public void testProvideTestTemplateInvocationContexts_Failure_MixedQualifierAndSupplierAnnotations() throws Exception {
+	public void testProvideTestTemplateInvocationContexts_Failure_MixedQualifierAndSupplierAnnotations()
+			throws Exception {
 		//Setup
 		fakeTheoryMethod = FakeTestClass.class.getMethod("invalidTheoryDueToMixedSupplierAndQualifier", int.class);
 		extensionContext = buildExtensionContext(new FakeTestClass(), fakeTheoryMethod);
@@ -237,7 +238,7 @@ class TheoriesTestExtensionTests {
 				return type == Integer.class ? INT_DATA_POINT_DETAILS : STRING_DATA_POINT_DETAILS;
 			});
 
-		//Test
+		//Test/Verify
 		// @formatter:off
 		assertThatThrownBy(() ->extensionUnderTest.provideTestTemplateInvocationContexts(extensionContext))
 				.isInstanceOf(IllegalStateException.class)

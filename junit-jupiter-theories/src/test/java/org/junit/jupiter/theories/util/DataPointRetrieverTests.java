@@ -5,10 +5,8 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -122,56 +120,53 @@ class DataPointRetrieverTests {
 		// @formatter:on
 	}
 
+	@Test
+	public void testGetAllDataPoints_InvalidStreamField() {
+		//Test/Verify
+		// @formatter:off
+		assertThatThrownBy(() -> retrieverUnderTest.getAllDataPoints(ClassWithInvalidStreamField.class, Optional.empty()))
+				.isInstanceOf(DataPointRetrievalException.class)
+				.hasMessageContaining(Stream.class.getCanonicalName())
+				.hasMessageContaining("only supported for data point methods");
+		// @formatter:on
+	}
+
+	@Test
+	public void testGetAllDataPoints_InvalidIteratorField() {
+		//Test/Verify
+		// @formatter:off
+		assertThatThrownBy(() -> retrieverUnderTest.getAllDataPoints(ClassWithInvalidIteratorField.class, Optional.empty()))
+				.isInstanceOf(DataPointRetrievalException.class)
+				.hasMessageContaining(Iterator.class.getCanonicalName())
+				.hasMessageContaining("only supported for data point methods");
+		// @formatter:on
+	}
+
 	//-------------------------------------------------------------------------
 	// Test helper methods/classes
 	//-------------------------------------------------------------------------
 	private static class ClassWithValidInstanceDataPoints {
-		//Public data point
 		@DataPoint
 		public final String publicInstanceStringField = "public instance string field";
-		//Public array data points
+
+		@DataPoint
+		private final String privateInstanceStringField = "private instance string field";
+
 		@DataPoints
 		public final String[] publicInstanceArrayField = { "public instance array field (1/2)",
 				"public instance array field (1/2)" };
-		//Private data point
-		@DataPoint
-		private final String privateInstanceStringField = "private instance string field";
-		//Public list data points
-		@DataPoints
-		private final List<String> publicInstanceListField = Arrays.asList("public instance list field (1/2)",
-			"public instance list field (1/2)");
-		//Private list data points
-		@DataPoints
-		private final List<String> privateInstanceListField = Arrays.asList("private instance list field (1/2)",
-			"private instance list field (1/2)");
-		//Private array data points
+
 		@DataPoints
 		private final String[] privateInstanceArrayField = { "private instance array field (1/2)",
 				"private instance array field (1/2)" };
 
-		public List<String> getExpectedValues() {
-			List<String> expectedValues = new ArrayList<>();
+		@DataPoints
+		private final List<String> publicInstanceListField = Arrays.asList("public instance list field (1/2)",
+			"public instance list field (1/2)");
 
-			expectedValues.add(publicInstanceStringField);
-			expectedValues.add(publicInstanceStringMethod());
-
-			expectedValues.add(privateInstanceStringField);
-			expectedValues.add(privateInstanceStringMethod());
-
-			expectedValues.addAll(publicInstanceListField);
-			expectedValues.addAll(publicInstanceListMethod());
-
-			expectedValues.addAll(privateInstanceListField);
-			expectedValues.addAll(privateInstanceListMethod());
-
-			expectedValues.addAll(Arrays.asList(publicInstanceArrayField));
-			expectedValues.addAll(Arrays.asList(publicInstanceArrayMethod()));
-
-			expectedValues.addAll(Arrays.asList(privateInstanceArrayField));
-			expectedValues.addAll(Arrays.asList(privateInstanceArrayMethod()));
-
-			return expectedValues;
-		}
+		@DataPoints
+		private final List<String> privateInstanceListField = Arrays.asList("private instance list field (1/2)",
+			"private instance list field (1/2)");
 
 		@DataPoint
 		public String publicInstanceStringMethod() {
@@ -181,16 +176,6 @@ class DataPointRetrieverTests {
 		@DataPoint
 		private String privateInstanceStringMethod() {
 			return "private instance string method";
-		}
-
-		@DataPoints
-		public List<String> publicInstanceListMethod() {
-			return Arrays.asList("public instance list method (1/2)", "public instance list method (2/2)");
-		}
-
-		@DataPoints
-		private List<String> privateInstanceListMethod() {
-			return Arrays.asList("private instance list method (1/2)", "private instance list method (2/2)");
 		}
 
 		@DataPoints
@@ -204,31 +189,112 @@ class DataPointRetrieverTests {
 			String[] result = { "private instance array method (1/2)", "private instance array method (2/2)" };
 			return result;
 		}
+
+		@DataPoints
+		public List<String> publicInstanceListMethod() {
+			return Arrays.asList("public instance list method (1/2)", "public instance list method (2/2)");
+		}
+
+		@DataPoints
+		private List<String> privateInstanceListMethod() {
+			return Arrays.asList("private instance list method (1/2)", "private instance list method (2/2)");
+		}
+
+		@DataPoints
+		public Stream<String> publicInstanceStreamMethod() {
+			return Stream.of("public instance stream method (1/2)", "public instance stream method (2/2)");
+		}
+
+		@DataPoints
+		private Stream<String> privateInstanceStreamMethod() {
+			return Stream.of("private instance stream method (1/2)", "private instance stream method (2/2)");
+		}
+
+		@DataPoints
+		public Iterator<String> publicInstanceIteratorMethod() {
+			return Arrays.asList("public instance iterable method (1/2)",
+				"public instance iterable method (2/2)").iterator();
+		}
+
+		@DataPoints
+		private Iterator<String> privateInstanceIteratorMethod() {
+			return Arrays.asList("private instance iterable method (1/2)",
+				"private instance iterable method (2/2)").iterator();
+		}
+
+		@DataPoints
+		public Iterable<String> publicInstanceIterableMethod() {
+			//Note: This conversion is important because it prevents the return
+			//value from being an instance of Collection, which has special handling
+			return () -> Arrays.asList("public instance iterable method (1/2)",
+				"public instance iterable method (2/2)").iterator();
+		}
+
+		@DataPoints
+		private Iterable<String> privateInstanceIterableMethod() {
+			//Note: This conversion is important because it prevents the return
+			//value from being an instance of Collection, which has special handling
+			return () -> Arrays.asList("private instance iterable method (1/2)",
+				"private instance iterable method (2/2)").iterator();
+		}
+
+		public List<String> getExpectedValues() {
+			List<String> expectedValues = new ArrayList<>();
+
+			expectedValues.add(publicInstanceStringField);
+			expectedValues.add(privateInstanceStringField);
+			expectedValues.addAll(Arrays.asList(publicInstanceArrayField));
+			expectedValues.addAll(Arrays.asList(privateInstanceArrayField));
+			expectedValues.addAll(publicInstanceListField);
+			expectedValues.addAll(privateInstanceListField);
+
+			expectedValues.add(publicInstanceStringMethod());
+			expectedValues.add(privateInstanceStringMethod());
+			expectedValues.addAll(Arrays.asList(publicInstanceArrayMethod()));
+			expectedValues.addAll(Arrays.asList(privateInstanceArrayMethod()));
+			expectedValues.addAll(publicInstanceListMethod());
+			expectedValues.addAll(privateInstanceListMethod());
+			expectedValues.addAll(publicInstanceStreamMethod().collect(toList()));
+			expectedValues.addAll(privateInstanceStreamMethod().collect(toList()));
+			copyFromIteratorToList(publicInstanceIteratorMethod(), expectedValues);
+			copyFromIteratorToList(privateInstanceIteratorMethod(), expectedValues);
+			copyFromIteratorToList(publicInstanceIterableMethod().iterator(), expectedValues);
+			copyFromIteratorToList(privateInstanceIterableMethod().iterator(), expectedValues);
+
+			return expectedValues;
+		}
+
+		private <T> void copyFromIteratorToList(Iterator<T> iterator, List<T> list) {
+			while (iterator.hasNext()) {
+				list.add(iterator.next());
+			}
+		}
+
 	}
 
 	private static class ClassWithValidStaticDataPoints {
-		//Public data point
+
 		@DataPoint
 		public static final String PUBLIC_STATIC_STRING_FIELD = "public static string field";
-		//Public list data points
-		@DataPoints
-		public static final List<String> PUBLIC_STATIC_LIST_FIELD = Arrays.asList("public static list field (1/2)",
-			"public static list field (2/2)");
-		//Public array data points
+
+		@DataPoint
+		private static final String PRIVATE_STATIC_STRING_FIELD = "private static string field";
+
 		@DataPoints
 		public static final String[] PUBLIC_STATIC_ARRAY_FIELD = { "public static array field (1/2)",
 				"public static array field (2/2)" };
-		//Private data point
-		@DataPoint
-		private static final String PRIVATE_STATIC_STRING_FIELD = "private static string field";
-		//Private list data points
-		@DataPoints
-		private static final List<String> PRIVATE_STATIC_LIST_FIELD = Arrays.asList("private static list field (1/2)",
-			"private static list field (2/2)");
-		//Private array data points
+
 		@DataPoints
 		private static final String[] PRIVATE_STATIC_ARRAY_FIELD = { "private static array field (1/2)",
 				"private static array field (2/2)" };
+
+		@DataPoints
+		public static final List<String> PUBLIC_STATIC_LIST_FIELD = Arrays.asList("public static list field (1/2)",
+			"public static list field (2/2)");
+
+		@DataPoints
+		private static final List<String> PRIVATE_STATIC_LIST_FIELD = Arrays.asList("private static list field (1/2)",
+			"private static list field (2/2)");
 
 		@DataPoint
 		public static String publicStaticStringMethod() {
@@ -238,16 +304,6 @@ class DataPointRetrieverTests {
 		@DataPoint
 		private static String privateStaticStringMethod() {
 			return "private static string method";
-		}
-
-		@DataPoints
-		public static List<String> publicStaticListMethod() {
-			return Arrays.asList("public static list method (1/2)", "public static list method (2/2)");
-		}
-
-		@DataPoints
-		private static List<String> privateStaticListMethod() {
-			return Arrays.asList("private static list method (1/2)", "private static list method (2/2)");
 		}
 
 		@DataPoints
@@ -262,28 +318,84 @@ class DataPointRetrieverTests {
 			return result;
 		}
 
+		@DataPoints
+		public static List<String> publicStaticListMethod() {
+			return Arrays.asList("public static list method (1/2)", "public static list method (2/2)");
+		}
+
+		@DataPoints
+		private static List<String> privateStaticListMethod() {
+			return Arrays.asList("private static list method (1/2)", "private static list method (2/2)");
+		}
+
+		@DataPoints
+		public static Stream<String> publicStaticStreamMethod() {
+			return Stream.of("public static stream method (1/2)", "public static stream method (2/2)");
+		}
+
+		@DataPoints
+		private static Stream<String> privateStaticStreamMethod() {
+			return Stream.of("private static stream method (1/2)", "private static stream method (2/2)");
+		}
+
+		@DataPoints
+		public static Iterator<String> publicStaticIteratorMethod() {
+			return Arrays.asList("public static iterable method (1/2)",
+				"public static iterable method (2/2)").iterator();
+		}
+
+		@DataPoints
+		private static Iterator<String> privateStaticIteratorMethod() {
+			return Arrays.asList("private static iterable method (1/2)",
+				"private static iterable method (2/2)").iterator();
+		}
+
+		@DataPoints
+		public static Iterable<String> publicStaticIterableMethod() {
+			//Note: This conversion is important because it prevents the return
+			//value from being an static of Collection, which has special handling
+			return () -> Arrays.asList("public static iterable method (1/2)",
+				"public static iterable method (2/2)").iterator();
+		}
+
+		@DataPoints
+		private static Iterable<String> privateStaticIterableMethod() {
+			//Note: This conversion is important because it prevents the return
+			//value from being an static of Collection, which has special handling
+			return () -> Arrays.asList("private static iterable method (1/2)",
+				"private static iterable method (2/2)").iterator();
+		}
+
 		public List<String> getExpectedValues() {
 			List<String> expectedValues = new ArrayList<>();
 
 			expectedValues.add(PUBLIC_STATIC_STRING_FIELD);
-			expectedValues.add(publicStaticStringMethod());
-
 			expectedValues.add(PRIVATE_STATIC_STRING_FIELD);
-			expectedValues.add(privateStaticStringMethod());
-
-			expectedValues.addAll(PUBLIC_STATIC_LIST_FIELD);
-			expectedValues.addAll(publicStaticListMethod());
-
-			expectedValues.addAll(PRIVATE_STATIC_LIST_FIELD);
-			expectedValues.addAll(privateStaticListMethod());
-
 			expectedValues.addAll(Arrays.asList(PUBLIC_STATIC_ARRAY_FIELD));
-			expectedValues.addAll(Arrays.asList(publicStaticArrayMethod()));
-
 			expectedValues.addAll(Arrays.asList(PRIVATE_STATIC_ARRAY_FIELD));
+			expectedValues.addAll(PUBLIC_STATIC_LIST_FIELD);
+			expectedValues.addAll(PRIVATE_STATIC_LIST_FIELD);
+
+			expectedValues.add(publicStaticStringMethod());
+			expectedValues.add(privateStaticStringMethod());
+			expectedValues.addAll(Arrays.asList(publicStaticArrayMethod()));
 			expectedValues.addAll(Arrays.asList(privateStaticArrayMethod()));
+			expectedValues.addAll(publicStaticListMethod());
+			expectedValues.addAll(privateStaticListMethod());
+			expectedValues.addAll(publicStaticStreamMethod().collect(toList()));
+			expectedValues.addAll(privateStaticStreamMethod().collect(toList()));
+			copyFromIteratorToList(publicStaticIteratorMethod(), expectedValues);
+			copyFromIteratorToList(privateStaticIteratorMethod(), expectedValues);
+			copyFromIteratorToList(publicStaticIterableMethod().iterator(), expectedValues);
+			copyFromIteratorToList(privateStaticIterableMethod().iterator(), expectedValues);
 
 			return expectedValues;
+		}
+
+		private <T> void copyFromIteratorToList(Iterator<T> iterator, List<T> list) {
+			while (iterator.hasNext()) {
+				list.add(iterator.next());
+			}
 		}
 	}
 
@@ -300,4 +412,17 @@ class DataPointRetrieverTests {
 		@DataPoints
 		public static String THIS_IS_NOT_VALID = "Because string is not a valid data points group type";
 	}
+
+	private static class ClassWithInvalidStreamField {
+		@DataPoints
+		public static Stream<String> THIS_IS_NOT_VALID = Stream.of("Becase a field",
+			"cannot specify datapoints with a stream");
+	}
+
+	private static class ClassWithInvalidIteratorField {
+		@DataPoints
+		public static Iterator<String> THIS_IS_NOT_VALID = Arrays.asList("Becase a field",
+			"cannot specify datapoints with an iterator").iterator();
+	}
+
 }
