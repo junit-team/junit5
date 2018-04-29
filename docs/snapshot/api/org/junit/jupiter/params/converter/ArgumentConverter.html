@@ -149,7 +149,10 @@ public interface <span class="typeNameLabel">ArgumentConverter</span></pre>
  to know about the target type instead of the complete
  <a href="../../../../../org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a>.
 
- <p>Implementations must provide a no-args constructor.</div>
+ <p>Implementations must provide a no-args constructor and should not make any
+ assumptions on when they are instantiated or how often they are called. Since
+ instances may potentially be cached and called from different threads they
+ should be thread-safe and designed to be used as singletons.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.0</dd>

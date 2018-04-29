@@ -149,7 +149,10 @@ public interface <span class="typeNameLabel">ArgumentsAggregator</span></pre>
  in a CSV file into a domain object such as a <code>Person</code>, <code>Address</code>,
  <code>Order</code>, etc.
 
- <p>Implementations must provide a no-args constructor.</div>
+ <p>Implementations must provide a no-args constructor and should not make any
+ assumptions on when they are instantiated or how often they are called. Since
+ instances may potentially be cached and called from different threads they
+ should be thread-safe and designed to be used as singletons.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.2</dd>
