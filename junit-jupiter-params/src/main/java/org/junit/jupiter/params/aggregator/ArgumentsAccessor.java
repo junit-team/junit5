@@ -34,6 +34,10 @@ import org.apiguardian.api.API;
  *
  * <p>This interface is not intended to be implemented by clients.
  *
+ * <p>Additional <a href="https://kotlinlang.org/">Kotlin</a> arguments accessors can be
+ * found as <em>extension functions</em> in the {@link org.junit.jupiter.params.aggregator}
+ * package.
+ *
  * @since 5.2
  * @see ArgumentsAggregator
  * @see org.junit.jupiter.params.ParameterizedTest

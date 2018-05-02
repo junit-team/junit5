@@ -43,6 +43,8 @@ on GitHub.
 * New `assertThrows` methods in `Assertions` provide a more specific failure
   message if the lambda returns a result instead of throwing the expected
   exception.
+* New `get<Class>(index)` Kotlin extension method to make `ArgumentsAccessor` friendlier
+  to use from Kotlin.
 
 
 [[release-notes-5.3.0-M1-junit-vintage]]
