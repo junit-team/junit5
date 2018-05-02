@@ -49,7 +49,7 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
 	compileOnly("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
-
+	testCompile("org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}")
 }
 
 jar.enabled = false
