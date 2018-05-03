@@ -892,81 +892,9 @@ following <em>OpenTest4J</em> JAR.</p>
 </div>
 <div class="sect2">
 <h3 id="dependency-diagram"><a class="anchor" href="#dependency-diagram"></a>2.2. Dependency Diagram</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>skinparam {
-    defaultFontName Open Sans
-}
-
-package org.junit.jupiter {
-    [junit-jupiter-api] as jupiter_api
-    [junit-jupiter-engine] as jupiter_engine
-    [junit-jupiter-params] as jupiter_params
-    [junit-jupiter-migrationsupport] as jupiter_migration_support
-}
-
-package org.junit.vintage {
-    [junit-vintage-engine] as vintage_engine
-    [junit:junit] as junit4
-}
-
-package org.junit.platform {
-    [junit-platform-commons] as commons
-    [junit-platform-console] as console
-    [junit-platform-engine] as engine
-    [junit-platform-gradle-plugin] as gradle
-    [junit-platform-launcher] as launcher
-    [junit-platform-runner] as runner
-    [junit-platform-suite-api] as suite_api
-    [junit-platform-surefire-provider] as surefire
-}
-
-package org.opentest4j {
-    [opentest4j]
-}
-
-package org.apiguardian {
-    [apiguardian-api] as apiguardian
-    note bottom of apiguardian #white
-        All artifacts except
-        opentest4j and junit:junit
-        have a dependency on this
-        artifact. The edges have
-        been omitted from this
-        diagram for the sake of
-        readability.
-    endnote
-}
-
-jupiter_api ..&gt; opentest4j
-jupiter_api ..&gt; commons
-
-jupiter_engine ..&gt; engine
-jupiter_engine ..&gt; jupiter_api
-
-jupiter_params ..&gt; jupiter_api
-jupiter_migration_support ..&gt; jupiter_api
-jupiter_migration_support ..&gt; junit4
-
-console ..&gt; launcher
-
-gradle ..&gt; console
-
-launcher ..&gt; engine
-
-engine ..&gt; opentest4j
-engine ..&gt; commons
-
-runner ..&gt; launcher
-runner ..&gt; suite_api
-runner ..&gt; junit4
-
-suite_api ..&gt; commons
-
-surefire ..&gt; launcher
-
-vintage_engine ..&gt; engine
-vintage_engine ..&gt; junit4</pre>
+<img src="images/component-diagram.svg" alt="component diagram" width="1799" height="596">
 </div>
 </div>
 </div>
