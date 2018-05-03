@@ -15,7 +15,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Full stacktrace is printed to the console, when running the `ConsoleLauncher`
+  in `--details verbose` mode.
 
 ==== Deprecations and Breaking Changes
 
