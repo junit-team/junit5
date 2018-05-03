@@ -10,9 +10,9 @@
 package org.junit.jupiter.params.aggregator
 
 /**
- * <p>Extension Function for {@link ArgumentsAccessor}.
+ * Extension Function for {@link ArgumentsAccessor}.
  *
- * @since 5.2
+ * @since 5.3
  * @receiver[ArgumentsAccessor]
  * @see ArgumentsAccessor.get(Int, Class<T!>!)
  */
