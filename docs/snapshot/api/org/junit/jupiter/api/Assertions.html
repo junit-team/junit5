@@ -1078,7 +1078,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/jupiter/api/Assertions.html#assertThrows(java.lang.Class,org.junit.jupiter.api.function.ThrowingSupplier)">assertThrows</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;expectedType,
             <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function">ThrowingSupplier</a>&lt;?&gt;&nbsp;supplier)</code></th>
 <td class="colLast">
-<div class="block"><em>Asserts</em> that execution of the supplied <code>executable</code> throws
+<div class="block"><em>Asserts</em> that execution of the given <code>supplier</code> throws
  an exception of the <code>expectedType</code> and returns the exception.</div>
 </td>
 </tr>
@@ -1088,7 +1088,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
             <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function">ThrowingSupplier</a>&lt;?&gt;&nbsp;supplier,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;message)</code></th>
 <td class="colLast">
-<div class="block"><em>Asserts</em> that execution of the supplied <code>executable</code> throws
+<div class="block"><em>Asserts</em> that execution of the given <code>supplier</code> throws
  an exception of the <code>expectedType</code> and returns the exception.</div>
 </td>
 </tr>
@@ -1098,7 +1098,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
             <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function">ThrowingSupplier</a>&lt;?&gt;&nbsp;supplier,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Supplier</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;messageSupplier)</code></th>
 <td class="colLast">
-<div class="block"><em>Asserts</em> that execution of the supplied <code>executable</code> throws
+<div class="block"><em>Asserts</em> that execution of the given <code>supplier</code> throws
  an exception of the <code>expectedType</code> and returns the exception.</div>
 </td>
 </tr>
@@ -2936,27 +2936,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  simply ignore the return value.</div>
 </li>
 </ul>
-<a id="assertThrows(java.lang.Class,org.junit.jupiter.api.function.ThrowingSupplier)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>assertThrows</h4>
-<pre>public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&gt;&nbsp;T&nbsp;assertThrows&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;expectedType,
-                                                   <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function">ThrowingSupplier</a>&lt;?&gt;&nbsp;supplier)</pre>
-<div class="block"><em>Asserts</em> that execution of the supplied <code>executable</code> throws
- an exception of the <code>expectedType</code> and returns the exception.
-
- <p>If no exception is thrown, or if an exception of a different type is
- thrown, this method will fail.
-
- <p>If you do not want to perform additional checks on the exception instance,
- simply ignore the return value.
-
- <p>If the given <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function"><code>ThrowingSupplier</code></a> returns a result instead of throwing the expected exception,
- the result will be included in the failure message.</div>
-</li>
-</ul>
 <a id="assertThrows(java.lang.Class,org.junit.jupiter.api.function.Executable,java.lang.String)">
 <!--   -->
 </a>
@@ -2974,28 +2953,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 
  <p>If you do not want to perform additional checks on the exception instance,
  simply ignore the return value.</div>
-</li>
-</ul>
-<a id="assertThrows(java.lang.Class,org.junit.jupiter.api.function.ThrowingSupplier,java.lang.String)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>assertThrows</h4>
-<pre>public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&gt;&nbsp;T&nbsp;assertThrows&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;expectedType,
-                                                   <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function">ThrowingSupplier</a>&lt;?&gt;&nbsp;supplier,
-                                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;message)</pre>
-<div class="block"><em>Asserts</em> that execution of the supplied <code>executable</code> throws
- an exception of the <code>expectedType</code> and returns the exception.
-
- <p>If no exception is thrown, or if an exception of a different type is
- thrown, this method will fail.
-
- <p>If you do not want to perform additional checks on the exception instance,
- simply ignore the return value.
-
- <p>If the given <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function"><code>ThrowingSupplier</code></a> returns a result instead of throwing the expected exception,
- the result will be included in the failure message.</div>
 </li>
 </ul>
 <a id="assertThrows(java.lang.Class,org.junit.jupiter.api.function.Executable,java.util.function.Supplier)">
@@ -3020,6 +2977,49 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  simply ignore the return value.</div>
 </li>
 </ul>
+<a id="assertThrows(java.lang.Class,org.junit.jupiter.api.function.ThrowingSupplier)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>assertThrows</h4>
+<pre>public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&gt;&nbsp;T&nbsp;assertThrows&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;expectedType,
+                                                   <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function">ThrowingSupplier</a>&lt;?&gt;&nbsp;supplier)</pre>
+<div class="block"><em>Asserts</em> that execution of the given <code>supplier</code> throws
+ an exception of the <code>expectedType</code> and returns the exception.
+
+ <p>If no exception is thrown, or if an exception of a different type is
+ thrown, this method will fail.
+
+ <p>If the given <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function"><code>ThrowingSupplier</code></a> returns a result instead of
+ throwing an exception, the result will be included in the failure message.
+
+ <p>If you do not want to perform additional checks on the exception instance,
+ simply ignore the return value.</div>
+</li>
+</ul>
+<a id="assertThrows(java.lang.Class,org.junit.jupiter.api.function.ThrowingSupplier,java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>assertThrows</h4>
+<pre>public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&gt;&nbsp;T&nbsp;assertThrows&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;expectedType,
+                                                   <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function">ThrowingSupplier</a>&lt;?&gt;&nbsp;supplier,
+                                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;message)</pre>
+<div class="block"><em>Asserts</em> that execution of the given <code>supplier</code> throws
+ an exception of the <code>expectedType</code> and returns the exception.
+
+ <p>If no exception is thrown, or if an exception of a different type is
+ thrown, this method will fail.
+
+ <p>If the given <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function"><code>ThrowingSupplier</code></a> returns a result instead of
+ throwing an exception, the result will be included in the failure message.
+
+ <p>If you do not want to perform additional checks on the exception instance,
+ simply ignore the return value.</div>
+</li>
+</ul>
 <a id="assertThrows(java.lang.Class,org.junit.jupiter.api.function.ThrowingSupplier,java.util.function.Supplier)">
 <!--   -->
 </a>
@@ -3029,7 +3029,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre>public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&gt;&nbsp;T&nbsp;assertThrows&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;expectedType,
                                                    <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function">ThrowingSupplier</a>&lt;?&gt;&nbsp;supplier,
                                                    <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Supplier</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;messageSupplier)</pre>
-<div class="block"><em>Asserts</em> that execution of the supplied <code>executable</code> throws
+<div class="block"><em>Asserts</em> that execution of the given <code>supplier</code> throws
  an exception of the <code>expectedType</code> and returns the exception.
 
  <p>If no exception is thrown, or if an exception of a different type is
@@ -3038,11 +3038,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <p>If necessary, the failure message will be retrieved lazily from the
  supplied <code>messageSupplier</code>.
 
- <p>If you do not want to perform additional checks on the exception instance,
- simply ignore the return value.
+ <p>If the given <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function"><code>ThrowingSupplier</code></a> returns a result instead of
+ throwing an exception, the result will be included in the failure message.
 
- <p>If the given <a href="../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function"><code>ThrowingSupplier</code></a> returns a result instead of throwing the expected exception,
- the result will be included in the failure message.</div>
+ <p>If you do not want to perform additional checks on the exception instance,
+ simply ignore the return value.</div>
 </li>
 </ul>
 <a id="assertDoesNotThrow(org.junit.jupiter.api.function.Executable)">
