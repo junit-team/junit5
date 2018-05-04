@@ -94,7 +94,7 @@ class AssertThrows {
 		 * Determine if the result of invoking {@link #get()} should be included
 		 * in the assertion failure message if this supplier returns an actual
 		 * result instead of throwing an exception.
-		 * 
+		 *
 		 * @return {@code true} by default; can be overridden in concrete implementations
 		 */
 		default boolean includeResult() {
