@@ -1206,7 +1206,7 @@ public final class Assertions {
 	// --- supplier ---
 
 	/**
-	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
+	 * <em>Asserts</em> that execution of the given {@code supplier} throws
 	 * an exception of the {@code expectedType} and returns the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is
@@ -1223,7 +1223,7 @@ public final class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
+	 * <em>Asserts</em> that execution of the given {@code supplier} throws
 	 * an exception of the {@code expectedType} and returns the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is
@@ -1242,7 +1242,7 @@ public final class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
+	 * <em>Asserts</em> that execution of the given {@code supplier} throws
 	 * an exception of the {@code expectedType} and returns the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is
