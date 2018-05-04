@@ -1155,6 +1155,8 @@ public final class Assertions {
 
 	// --- assert exceptions ---------------------------------------------------
 
+	// --- executable ---
+
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
 	 * an exception of the {@code expectedType} and returns the exception.
@@ -1178,44 +1180,9 @@ public final class Assertions {
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * simply ignore the return value.
-	 *
-	 * <p>If the given {@link ThrowingSupplier} returns a result instead of throwing the expected exception,
-	 * the result will be included in the failure message.
-	 */
-	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier) {
-		return AssertThrows.assertThrows(expectedType, supplier);
-	}
-
-	/**
-	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
-	 * an exception of the {@code expectedType} and returns the exception.
-	 *
-	 * <p>If no exception is thrown, or if an exception of a different type is
-	 * thrown, this method will fail.
-	 *
-	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
 		return AssertThrows.assertThrows(expectedType, executable, message);
-	}
-
-	/**
-	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
-	 * an exception of the {@code expectedType} and returns the exception.
-	 *
-	 * <p>If no exception is thrown, or if an exception of a different type is
-	 * thrown, this method will fail.
-	 *
-	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
-	 *
-	 * <p>If the given {@link ThrowingSupplier} returns a result instead of throwing the expected exception,
-	 * the result will be included in the failure message.
-	 */
-	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
-			String message) {
-		return AssertThrows.assertThrows(expectedType, supplier, message);
 	}
 
 	/**
@@ -1236,6 +1203,44 @@ public final class Assertions {
 		return AssertThrows.assertThrows(expectedType, executable, messageSupplier);
 	}
 
+	// --- supplier ---
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
+	 * an exception of the {@code expectedType} and returns the exception.
+	 *
+	 * <p>If no exception is thrown, or if an exception of a different type is
+	 * thrown, this method will fail.
+	 *
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * simply ignore the return value.
+	 *
+	 * <p>If the given {@link ThrowingSupplier} returns a result instead of
+	 * throwing an exception, the result will be included in the failure message.
+	 */
+	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier) {
+		return AssertThrows.assertThrows(expectedType, supplier);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
+	 * an exception of the {@code expectedType} and returns the exception.
+	 *
+	 * <p>If no exception is thrown, or if an exception of a different type is
+	 * thrown, this method will fail.
+	 *
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * simply ignore the return value.
+	 *
+	 * <p>If the given {@link ThrowingSupplier} returns a result instead of
+	 * throwing an exception, the result will be included in the failure message.
+	 */
+	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
+			String message) {
+
+		return AssertThrows.assertThrows(expectedType, supplier, message);
+	}
+
 	/**
 	 * <em>Asserts</em> that execution of the supplied {@code executable} throws
 	 * an exception of the {@code expectedType} and returns the exception.
@@ -1249,11 +1254,12 @@ public final class Assertions {
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * simply ignore the return value.
 	 *
-	 * <p>If the given {@link ThrowingSupplier} returns a result instead of throwing the expected exception,
-	 * the result will be included in the failure message.
+	 * <p>If the given {@link ThrowingSupplier} returns a result instead of
+	 * throwing an exception, the result will be included in the failure message.
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
 			Supplier<String> messageSupplier) {
+
 		return AssertThrows.assertThrows(expectedType, supplier, messageSupplier);
 	}
 
