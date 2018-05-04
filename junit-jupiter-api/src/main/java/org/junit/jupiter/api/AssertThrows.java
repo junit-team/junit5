@@ -62,12 +62,6 @@ class AssertThrows {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
-			Object messageOrSupplier) {
-		return assertThrows(expectedType, asSupplier(executable), messageOrSupplier);
-	}
-
-	@SuppressWarnings("unchecked")
 	private static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingResultSupplier<?> supplier,
 			Object messageOrSupplier) {
 
