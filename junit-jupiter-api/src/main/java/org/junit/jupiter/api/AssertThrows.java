@@ -35,34 +35,36 @@ class AssertThrows {
 	}
 	///CLOVER:ON
 
-	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier) {
-		return assertThrows(expectedType, supplier::get, (Object) null);
-	}
-
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable) {
 		return assertThrows(expectedType, asSupplier(executable), (Object) null);
-	}
-
-	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier, String message) {
-		return assertThrows(expectedType, supplier::get, (Object) message);
 	}
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
 		return assertThrows(expectedType, asSupplier(executable), (Object) message);
 	}
 
-	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
-			Supplier<String> messageSupplier) {
-		return assertThrows(expectedType, supplier::get, (Object) messageSupplier);
-	}
-
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
 			Supplier<String> messageSupplier) {
+
 		return assertThrows(expectedType, asSupplier(executable), (Object) messageSupplier);
 	}
 
+	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier) {
+		return assertThrows(expectedType, supplier::get, (Object) null);
+	}
+
+	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier, String message) {
+		return assertThrows(expectedType, supplier::get, (Object) message);
+	}
+
+	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
+			Supplier<String> messageSupplier) {
+
+		return assertThrows(expectedType, supplier::get, (Object) messageSupplier);
+	}
+
 	@SuppressWarnings("unchecked")
-	private static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingResultSupplier<?> supplier,
+	private static <T extends Throwable> T assertThrows(Class<T> expectedType, ResultAwareThrowingSupplier<?> supplier,
 			Object messageOrSupplier) {
 
 		Object result;
@@ -82,22 +84,26 @@ class AssertThrows {
 
 		String message = buildPrefix(nullSafeGet(messageOrSupplier))
 				+ String.format("Expected %s to be thrown, but nothing was thrown", getCanonicalName(expectedType))
-				+ (supplier.formatResult() ? String.format(" (returned %s).", result) : ".");
+				+ (supplier.includeResult() ? String.format(" (returned %s).", result) : ".");
 		throw new AssertionFailedError(message);
 	}
 
-	private interface ThrowingResultSupplier<T> extends ThrowingSupplier<T> {
+	private interface ResultAwareThrowingSupplier<T> extends ThrowingSupplier<T> {
+
 		/**
-		 * Returns true if the result should be included in the failure message in the case where the supplier
-		 * returns a result instead of throwing the expected exception.
+		 * Determine if the result of invoking {@link #get()} should be included
+		 * in the assertion failure message if this supplier returns an actual
+		 * result instead of throwing an exception.
+		 * 
+		 * @return {@code true} by default; can be overridden in concrete implementations
 		 */
-		default boolean formatResult() {
+		default boolean includeResult() {
 			return true;
 		}
 	}
 
-	private static ThrowingResultSupplier<Void> asSupplier(Executable executable) {
-		return new ThrowingResultSupplier<Void>() {
+	private static ResultAwareThrowingSupplier<Void> asSupplier(Executable executable) {
+		return new ResultAwareThrowingSupplier<Void>() {
 			@Override
 			public Void get() throws Throwable {
 				executable.execute();
@@ -105,7 +111,7 @@ class AssertThrows {
 			}
 
 			@Override
-			public boolean formatResult() {
+			public boolean includeResult() {
 				return false;
 			}
 		};
