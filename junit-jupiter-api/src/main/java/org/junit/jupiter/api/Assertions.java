@@ -1212,11 +1212,11 @@ public final class Assertions {
 	 * <p>If no exception is thrown, or if an exception of a different type is
 	 * thrown, this method will fail.
 	 *
-	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
-	 *
 	 * <p>If the given {@link ThrowingSupplier} returns a result instead of
 	 * throwing an exception, the result will be included in the failure message.
+	 *
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * simply ignore the return value.
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier) {
 		return AssertThrows.assertThrows(expectedType, supplier);
@@ -1229,11 +1229,11 @@ public final class Assertions {
 	 * <p>If no exception is thrown, or if an exception of a different type is
 	 * thrown, this method will fail.
 	 *
-	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
-	 *
 	 * <p>If the given {@link ThrowingSupplier} returns a result instead of
 	 * throwing an exception, the result will be included in the failure message.
+	 *
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * simply ignore the return value.
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
 			String message) {
@@ -1251,11 +1251,11 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the
 	 * supplied {@code messageSupplier}.
 	 *
-	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
-	 *
 	 * <p>If the given {@link ThrowingSupplier} returns a result instead of
 	 * throwing an exception, the result will be included in the failure message.
+	 *
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * simply ignore the return value.
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
 			Supplier<String> messageSupplier) {
