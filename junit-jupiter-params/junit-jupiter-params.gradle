@@ -47,6 +47,9 @@ dependencies {
 	testRuntimeOnly(project(':junit-platform-console'))
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+
+	compileOnly("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	testImplementation("org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}")
 }
 
 jar.enabled = false
