@@ -161,7 +161,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html?i
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.1</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/api/condition/EnabledOnOs.html" title="annotation in org.junit.jupiter.api.condition"><code>EnabledOnOs</code></a>, 
+<dd><a href="../../../../../org/junit/jupiter/api/condition/OS.html#AIX"><code>AIX</code></a>, 
+<a href="../../../../../org/junit/jupiter/api/condition/OS.html#LINUX"><code>LINUX</code></a>, 
+<a href="../../../../../org/junit/jupiter/api/condition/OS.html#MAC"><code>MAC</code></a>, 
+<a href="../../../../../org/junit/jupiter/api/condition/OS.html#SOLARIS"><code>SOLARIS</code></a>, 
+<a href="../../../../../org/junit/jupiter/api/condition/OS.html#WINDOWS"><code>WINDOWS</code></a>, 
+<a href="../../../../../org/junit/jupiter/api/condition/OS.html#OTHER"><code>OTHER</code></a>, 
+<a href="../../../../../org/junit/jupiter/api/condition/EnabledOnOs.html" title="annotation in org.junit.jupiter.api.condition"><code>EnabledOnOs</code></a>, 
 <a href="../../../../../org/junit/jupiter/api/condition/DisabledOnOs.html" title="annotation in org.junit.jupiter.api.condition"><code>DisabledOnOs</code></a></dd>
 </dl>
 </li>
@@ -184,31 +190,37 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html?i
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
+<th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/condition/OS.html#AIX">AIX</a></span></code></th>
+<td class="colLast">
+<div class="block">IBM AIX operating system.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/condition/OS.html#LINUX">LINUX</a></span></code></th>
 <td class="colLast">
 <div class="block">Linux-based operating system.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/condition/OS.html#MAC">MAC</a></span></code></th>
 <td class="colLast">
 <div class="block">Apple Macintosh operating system (e.g., macOS).</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/condition/OS.html#OTHER">OTHER</a></span></code></th>
 <td class="colLast">
-<div class="block">An operating system other than <a href="../../../../../org/junit/jupiter/api/condition/OS.html#LINUX"><code>LINUX</code></a>, <a href="../../../../../org/junit/jupiter/api/condition/OS.html#MAC"><code>MAC</code></a>,
+<div class="block">An operating system other than <a href="../../../../../org/junit/jupiter/api/condition/OS.html#AIX"><code>AIX</code></a>, <a href="../../../../../org/junit/jupiter/api/condition/OS.html#LINUX"><code>LINUX</code></a>, <a href="../../../../../org/junit/jupiter/api/condition/OS.html#MAC"><code>MAC</code></a>,
  <a href="../../../../../org/junit/jupiter/api/condition/OS.html#SOLARIS"><code>SOLARIS</code></a>, or <a href="../../../../../org/junit/jupiter/api/condition/OS.html#WINDOWS"><code>WINDOWS</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/condition/OS.html#SOLARIS">SOLARIS</a></span></code></th>
 <td class="colLast">
 <div class="block">Oracle Solaris operating system.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/condition/OS.html#WINDOWS">WINDOWS</a></span></code></th>
 <td class="colLast">
 <div class="block">Microsoft Windows operating system.</div>
@@ -283,6 +295,22 @@ the order they are declared.</div>
 <!--   -->
 </a>
 <h3>Enum Constant Detail</h3>
+<a id="AIX">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>AIX</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.3")
+public static final&nbsp;<a href="../../../../../org/junit/jupiter/api/condition/OS.html" title="enum in org.junit.jupiter.api.condition">OS</a> AIX</pre>
+<div class="block">IBM AIX operating system.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.3</dd>
+</dl>
+</li>
+</ul>
 <a id="LINUX">
 <!--   -->
 </a>
@@ -330,7 +358,7 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>OTHER</h4>
 <pre>public static final&nbsp;<a href="../../../../../org/junit/jupiter/api/condition/OS.html" title="enum in org.junit.jupiter.api.condition">OS</a> OTHER</pre>
-<div class="block">An operating system other than <a href="../../../../../org/junit/jupiter/api/condition/OS.html#LINUX"><code>LINUX</code></a>, <a href="../../../../../org/junit/jupiter/api/condition/OS.html#MAC"><code>MAC</code></a>,
+<div class="block">An operating system other than <a href="../../../../../org/junit/jupiter/api/condition/OS.html#AIX"><code>AIX</code></a>, <a href="../../../../../org/junit/jupiter/api/condition/OS.html#LINUX"><code>LINUX</code></a>, <a href="../../../../../org/junit/jupiter/api/condition/OS.html#MAC"><code>MAC</code></a>,
  <a href="../../../../../org/junit/jupiter/api/condition/OS.html#SOLARIS"><code>SOLARIS</code></a>, or <a href="../../../../../org/junit/jupiter/api/condition/OS.html#WINDOWS"><code>WINDOWS</code></a>.</div>
 </li>
 </ul>
