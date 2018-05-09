@@ -28,11 +28,25 @@ import org.junit.platform.commons.util.StringUtils;
  * {@linkplain #isCurrentOs current operating system}.
  *
  * @since 5.1
+ * @see #AIX
+ * @see #LINUX
+ * @see #MAC
+ * @see #SOLARIS
+ * @see #WINDOWS
+ * @see #OTHER
  * @see EnabledOnOs
  * @see DisabledOnOs
  */
 @API(status = STABLE, since = "5.1")
 public enum OS {
+
+	/**
+	 * IBM AIX operating system.
+	 *
+	 * @since 5.3
+	 */
+	@API(status = STABLE, since = "5.3")
+	AIX,
 
 	/**
 	 * Linux-based operating system.
@@ -55,7 +69,7 @@ public enum OS {
 	WINDOWS,
 
 	/**
-	 * An operating system other than {@link #LINUX}, {@link #MAC},
+	 * An operating system other than {@link #AIX}, {@link #LINUX}, {@link #MAC},
 	 * {@link #SOLARIS}, or {@link #WINDOWS}.
 	 */
 	OTHER;
@@ -77,6 +91,9 @@ public enum OS {
 
 		osName = osName.toLowerCase(Locale.ENGLISH);
 
+		if (osName.contains("aix")) {
+			return AIX;
+		}
 		if (osName.contains("linux")) {
 			return LINUX;
 		}

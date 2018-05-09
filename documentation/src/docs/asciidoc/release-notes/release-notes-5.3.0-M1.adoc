@@ -40,6 +40,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New support for the IBM AIX operating system in `@EnabledOnOs` and `@DisabledOnOs`.
 * New `assertThrows` methods in `Assertions` provide a more specific failure
   message if the lambda returns a result instead of throwing the expected
   exception.
