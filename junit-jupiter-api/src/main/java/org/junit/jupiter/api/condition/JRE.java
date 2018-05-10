@@ -29,6 +29,11 @@ import org.junit.platform.commons.util.StringUtils;
  * {@linkplain #isCurrentVersion current JRE version}.
  *
  * @since 5.1
+ * @see #JAVA_8
+ * @see #JAVA_9
+ * @see #JAVA_10
+ * @see #JAVA_11
+ * @see #OTHER
  * @see EnabledOnJre
  * @see DisabledOnJre
  */
