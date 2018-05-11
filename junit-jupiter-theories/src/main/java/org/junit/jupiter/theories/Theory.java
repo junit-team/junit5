@@ -88,7 +88,7 @@ public @interface Theory {
 	 * Placeholder for the {@linkplain TestInfo#getDisplayName display name} of
 	 * a {@code @TheoryTest}
 	 */
-	String DISPLAY_NAME_PLACEHOLDER = "{displayName}";
+	String DISPLAY_NAME_PLACEHOLDER = "{name}";
 
 	/**
 	 * Placeholder for the current permutation count of a {@code @Theory}
@@ -120,6 +120,6 @@ public @interface Theory {
 	 */
 	String PARAMETER_DETAILS_PLACEHOLDER = "{parameterDetails}";
 
-	String displayName() default CURRENT_PERMUTATION_PLACEHOLDER + " of " + TOTAL_PERMUTATIONS_PLACEHOLDER
-			+ " [Values: " + PARAMETER_VALUES_PLACEHOLDER + "]";
+	String name() default CURRENT_PERMUTATION_PLACEHOLDER + " of " + TOTAL_PERMUTATIONS_PLACEHOLDER + " [Values: "
+			+ PARAMETER_VALUES_PLACEHOLDER + "]";
 }

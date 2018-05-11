@@ -107,7 +107,7 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 		List<Map<Integer, DataPointDetails>> permutations = buildInputParamPermutations(perParameterDataPoints);
 
 		int totalPermutations = permutations.size();
-		TheoryDisplayNameFormatter displayNameFormatter = new TheoryDisplayNameFormatter(theoryAnnotation.displayName(),
+		TheoryDisplayNameFormatter displayNameFormatter = new TheoryDisplayNameFormatter(theoryAnnotation.name(),
 			context.getDisplayName(), totalPermutations, argumentUtils);
 
 		AtomicInteger index = new AtomicInteger(0);
