@@ -1,3 +1,12 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
 
 package org.junit.jupiter.theories;
 
@@ -7,7 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +28,6 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.extensions.TheoryParameterResolver;
 import org.junit.jupiter.theories.util.ArgumentUtils;
-import org.junit.jupiter.theories.util.TheoryDisplayNameFormatter;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 

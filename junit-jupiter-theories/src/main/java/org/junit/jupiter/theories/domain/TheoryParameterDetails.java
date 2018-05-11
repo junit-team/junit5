@@ -1,10 +1,23 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
 
 package org.junit.jupiter.theories.domain;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -34,7 +47,7 @@ public class TheoryParameterDetails {
 			Optional<? extends Annotation> argumentSupplierAnnotation) {
 		this.index = index;
 		this.type = type;
-		this.nonPrimitiveType = ReflectionUtils.getBoxedClass(type);
+		this.nonPrimitiveType = ReflectionUtils.getNonPrimitiveClass(type);
 		this.name = name;
 		this.qualifiers = Collections.unmodifiableList(new ArrayList<>(qualifiers));
 		this.parameterSupplierAnnotation = argumentSupplierAnnotation;
@@ -55,7 +68,9 @@ public class TheoryParameterDetails {
 	}
 
 	/**
-	 * @return the non-primitive type for this parameter (this will either be the original type, or its boxed equivalent if the original type was a primitive)
+	 * @return the non-primitive type for this parameter (this will either be
+	 * the original type, or its boxed equivalent if the original type was a
+	 * primitive)
 	 */
 	public Class<?> getNonPrimitiveType() {
 		return nonPrimitiveType;

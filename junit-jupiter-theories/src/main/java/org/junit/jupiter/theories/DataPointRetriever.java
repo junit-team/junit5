@@ -1,13 +1,31 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
 
-package org.junit.jupiter.theories.util;
+package org.junit.jupiter.theories;
 
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.Preconditions.notNull;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -15,8 +33,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.theories.annotations.DataPoint;
-import org.junit.jupiter.theories.annotations.DataPoints;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.exceptions.DataPointRetrievalException;
 
@@ -108,13 +124,13 @@ public class DataPointRetriever {
 			valuesStream = ((Collection<Object>) valueToProcessIntoDataPoints).stream();
 		}
 		else if (valueToProcessIntoDataPoints instanceof Iterable) {
-			valuesStream = StreamSupport.stream(((Iterable<Object>)valueToProcessIntoDataPoints).spliterator(), false);
+			valuesStream = StreamSupport.stream(((Iterable<Object>) valueToProcessIntoDataPoints).spliterator(), false);
 		}
 		else if (valueToProcessIntoDataPoints instanceof Iterator) {
 			if (valueSourceReference instanceof Field) {
 				throw new DataPointRetrievalException("Field " + getPrintableMemberName(valueSourceReference)
-						+ " was marked with @Datapoints but was a field of type "
-						+ Iterator.class.getCanonicalName() + ". This type is only supported for data point methods (not for fields).");
+						+ " was marked with @Datapoints but was a field of type " + Iterator.class.getCanonicalName()
+						+ ". This type is only supported for data point methods (not for fields).");
 			}
 			Iterable<Object> valueToProcessAsIterable = () -> (Iterator<Object>) valueToProcessIntoDataPoints;
 			valuesStream = StreamSupport.stream(valueToProcessAsIterable.spliterator(), false);
@@ -122,8 +138,8 @@ public class DataPointRetriever {
 		else if (valueToProcessIntoDataPoints instanceof Stream) {
 			if (valueSourceReference instanceof Field) {
 				throw new DataPointRetrievalException("Field " + getPrintableMemberName(valueSourceReference)
-						+ " was marked with @Datapoints but was a field of type "
-						+ Stream.class.getCanonicalName() + ". This type is only supported for data point methods (not for fields).");
+						+ " was marked with @Datapoints but was a field of type " + Stream.class.getCanonicalName()
+						+ ". This type is only supported for data point methods (not for fields).");
 			}
 			valuesStream = (Stream<Object>) valueToProcessIntoDataPoints;
 		}
@@ -131,7 +147,7 @@ public class DataPointRetriever {
 			valuesStream = Arrays.stream((Object[]) valueToProcessIntoDataPoints);
 		}
 		else {
-			throw new DataPointRetrievalException("Element " +getPrintableMemberName(valueSourceReference)
+			throw new DataPointRetrievalException("Element " + getPrintableMemberName(valueSourceReference)
 					+ " was annotated with @Datapoints, but its type (" + valueToProcessIntoDataPoints.getClass()
 					+ ") is not a recognized group of datapoints");
 		}
@@ -268,7 +284,8 @@ public class DataPointRetriever {
 		return dataPointReferences.flatMap(reference -> {
 			try {
 				List<String> qualifiers = Arrays.asList(
-					qualifierExtractor.apply(reference.getAnnotation(targetAnnotation)));
+					notNull(qualifierExtractor.apply(reference.getAnnotation(targetAnnotation)),
+						"Data points cannot have null qualifiers"));
 				Object instanceToGetFieldFrom;
 				if (isStatic(reference)) {
 					instanceToGetFieldFrom = null;

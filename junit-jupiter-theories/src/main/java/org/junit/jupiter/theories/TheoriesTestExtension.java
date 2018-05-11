@@ -1,16 +1,33 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
 
 package org.junit.jupiter.theories;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.Preconditions.notEmpty;
+import static org.junit.platform.commons.util.Preconditions.notNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -19,12 +36,12 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.jupiter.theories.annotations.Qualifiers;
-import org.junit.jupiter.theories.annotations.Theory;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 import org.junit.jupiter.theories.exceptions.DataPointRetrievalException;
-import org.junit.jupiter.theories.util.*;
+import org.junit.jupiter.theories.util.ArgumentSupplierUtils;
+import org.junit.jupiter.theories.util.ArgumentUtils;
+import org.junit.jupiter.theories.util.WellKnownTypesUtils;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -91,8 +108,9 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 		List<Map<Integer, DataPointDetails>> permutations = buildInputParamPermutations(perParameterDataPoints);
 
 		int totalPermutations = permutations.size();
-		TheoryDisplayNameFormatter displayNameFormatter = new TheoryDisplayNameFormatter(theoryAnnotation.displayName(),
-			context.getDisplayName(), totalPermutations, argumentUtils);
+		TheoryDisplayNameFormatter displayNameFormatter = new TheoryDisplayNameFormatter(
+			notNull(theoryAnnotation.displayName(), "Theory display name cannot be null"), context.getDisplayName(),
+			totalPermutations, argumentUtils);
 
 		AtomicInteger index = new AtomicInteger(0);
 		// @formatter:off
@@ -125,9 +143,10 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 		return IntStream.range(0, params.length)
 				.filter(i -> {
 					Parameter parameter = params[i];
-					Class<?> boxedParameterType = ReflectionUtils.getBoxedClass(parameter.getType());
-					return dataPointTypes.stream().anyMatch(dataPointType -> dataPointType.isAssignableFrom(boxedParameterType))
-							|| wellKnownTypesUtils.isKnownType(boxedParameterType)
+					Class<?> nonPrimitiveParameterType = ReflectionUtils.getNonPrimitiveClass(parameter.getType());
+					return dataPointTypes.stream().anyMatch(dataPointType ->
+							dataPointType.isAssignableFrom(nonPrimitiveParameterType))
+							|| wellKnownTypesUtils.isKnownType(nonPrimitiveParameterType)
 							|| argumentSupplierUtils.getParameterSupplierAnnotation(parameter).isPresent();
 				})
 				.mapToObj(i -> {
@@ -150,6 +169,7 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 		// @formatter:off
 		List<String> qualifiers = Optional.ofNullable(parameter.getAnnotation(Qualifiers.class))
 				.map(Qualifiers::value)
+				.map(v -> notEmpty(v, "Qualifier cannot be null or empty"))
 				.map(v -> Stream.of(v)
 						.map(String::trim)
 						.filter(trimmedString -> !trimmedString.isEmpty())

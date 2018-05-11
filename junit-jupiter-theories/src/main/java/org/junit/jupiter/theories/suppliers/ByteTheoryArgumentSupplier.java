@@ -1,3 +1,12 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
 
 package org.junit.jupiter.theories.suppliers;
 
@@ -8,9 +17,9 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.theories.annotations.suppliers.ByteValues;
 import org.junit.jupiter.theories.domain.DataPointDetails;
 import org.junit.jupiter.theories.domain.TheoryParameterDetails;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Argument supplier for {@code byte} arguments.
@@ -27,10 +36,14 @@ public class ByteTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<B
 	@Override
 	protected List<DataPointDetails> buildArguments(TheoryParameterDetails parameterDetails,
 			ByteValues annotationToParse) {
-		byte[] values = annotationToParse.value();
+
+		byte[] valuesFromAnnotation = annotationToParse.value();
+		Preconditions.condition(valuesFromAnnotation != null && valuesFromAnnotation.length > 0,
+			"Supplier annotations cannot have null or empty values");
+
 		// @formatter:off
-		return IntStream.range(0, values.length)
-				.mapToObj(i -> values[i])
+		return IntStream.range(0, valuesFromAnnotation.length)
+				.mapToObj(i -> valuesFromAnnotation[i])
 				.map(this::toDataPointDetails)
 				.collect(toList());
 		// @formatter:on
