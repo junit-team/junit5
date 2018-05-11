@@ -20,7 +20,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for {@linke TheoryParameterDetails}.
+ * Tests for {@link TheoryParameterDetails}.
  */
 class TheoryParameterDetailsTests {
 	@Test

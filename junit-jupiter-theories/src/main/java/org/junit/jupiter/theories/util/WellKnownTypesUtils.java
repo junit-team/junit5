@@ -92,7 +92,7 @@ public class WellKnownTypesUtils {
 	 */
 	private enum SupportedTypes {
 		BOOLEAN(v -> v == Boolean.class, ignored -> BOOLEAN_DATA_POINT_DETAILS),
-		ENUM(v -> Enum.class.isAssignableFrom(v), WellKnownTypesUtils::buildDataPointDetailsFromEnumValues);
+		ENUM(Enum.class::isAssignableFrom, WellKnownTypesUtils::buildDataPointDetailsFromEnumValues);
 
 		private final Predicate<Class<?>> isSupportedPredicate;
 		private final Function<TheoryParameterDetails, List<DataPointDetails>> dataPointDetailsFactory;

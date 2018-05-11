@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.theories.util;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -31,15 +32,12 @@ class WellKnownTypesUtilsTests {
 
 	private static final List<WellKnownTypeTestCase> TEST_CASES = Arrays.asList(
 		new WellKnownTypeTestCase(Boolean.class,
-			new DataPointDetails(true, Collections.<String> emptyList(), "Automatic boolean data point generation"),
-			new DataPointDetails(false, Collections.<String> emptyList(), "Automatic boolean data point generation")),
+			new DataPointDetails(true, emptyList(), "Automatic boolean data point generation"),
+			new DataPointDetails(false, emptyList(), "Automatic boolean data point generation")),
 		new WellKnownTypeTestCase(TestEnum.class,
-			new DataPointDetails(TestEnum.FOO, Collections.<String> emptyList(),
-				"Automatic enum data point generation"),
-			new DataPointDetails(TestEnum.BAR, Collections.<String> emptyList(),
-				"Automatic enum data point generation"),
-			new DataPointDetails(TestEnum.BAZ, Collections.<String> emptyList(),
-				"Automatic enum data point generation")));
+			new DataPointDetails(TestEnum.FOO, emptyList(), "Automatic enum data point generation"),
+			new DataPointDetails(TestEnum.BAR, emptyList(), "Automatic enum data point generation"),
+			new DataPointDetails(TestEnum.BAZ, emptyList(), "Automatic enum data point generation")));
 
 	private WellKnownTypesUtils utilsUnderTest;
 
@@ -73,7 +71,7 @@ class WellKnownTypesUtilsTests {
 		for (WellKnownTypeTestCase currTestCase : TEST_CASES) {
 			//Setup
 			TheoryParameterDetails details = new TheoryParameterDetails(0, currTestCase.parameterType, "testParameter",
-				Collections.emptyList(), Optional.empty());
+				emptyList(), Optional.empty());
 
 			//Test
 			Optional<List<DataPointDetails>> result = utilsUnderTest.getDataPointDetails(details);
@@ -91,8 +89,8 @@ class WellKnownTypesUtilsTests {
 	@Test
 	public void testGetDataPointDetails_NotKnown() {
 		//Setup
-		TheoryParameterDetails details = new TheoryParameterDetails(0, String.class, "testParameter",
-			Collections.emptyList(), Optional.empty());
+		TheoryParameterDetails details = new TheoryParameterDetails(0, String.class, "testParameter", emptyList(),
+			Optional.empty());
 
 		//Test
 		Optional<List<DataPointDetails>> result = utilsUnderTest.getDataPointDetails(details);
@@ -102,7 +100,7 @@ class WellKnownTypesUtilsTests {
 	}
 
 	private enum TestEnum {
-		FOO, BAR, BAZ;
+		FOO, BAR, BAZ
 	}
 
 	//-------------------------------------------------------------------------

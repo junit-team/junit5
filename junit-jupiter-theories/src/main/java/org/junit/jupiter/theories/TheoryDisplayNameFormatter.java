@@ -66,12 +66,14 @@ public class TheoryDisplayNameFormatter {
 			});
 		}
 		if (pattern.contains(PARAMETER_VALUES_WITH_INDEXES_PLACEHOLDER)) {
+			// @formatter:off
 			patternModifiers.add((v, ctx) -> {
-				String valuesWithIndexes = ctx.getTheoryParameterArguments().entrySet().stream().map(
-					entry -> new StringBuilder(entry.getValue().getValue().toString()).append(" (index ").append(
-						entry.getKey()).append(")").toString()).collect(joining(", "));
+				String valuesWithIndexes = ctx.getTheoryParameterArguments().entrySet().stream()
+						.map(entry -> entry.getValue().getValue() + " (index " + entry.getKey() + ")")
+						.collect(joining(", "));
 				return v.replace(PARAMETER_VALUES_WITH_INDEXES_PLACEHOLDER, valuesWithIndexes);
 			});
+			// @formatter:on
 		}
 		if (pattern.contains(PARAMETER_DETAILS_PLACEHOLDER)) {
 			patternModifiers.add((v, ctx) -> v.replace(PARAMETER_DETAILS_PLACEHOLDER,

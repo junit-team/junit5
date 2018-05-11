@@ -38,7 +38,7 @@ class ArgumentSupplierUtilsTests {
 	private static BiFunction<TheoryParameterDetails, Annotation, List<DataPointDetails>> mockSupplierFunction;
 	private ArgumentSupplierUtils utilsUnderTest;
 
-	private static final String[] getAnnotationTestValue() {
+	private static String[] getAnnotationTestValue() {
 		String[] value = { "foo", "bar" };
 		return value;
 	}
