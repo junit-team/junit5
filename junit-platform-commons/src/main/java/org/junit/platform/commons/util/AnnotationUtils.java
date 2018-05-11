@@ -72,6 +72,7 @@ public final class AnnotationUtils {
 	 * {@code element}.
 	 *
 	 * @see #findAnnotation(Optional, Class)
+	 * @see org.junit.platform.commons.support.AnnotationSupport#isAnnotated(Optional, Class)
 	 */
 	public static boolean isAnnotated(Optional<? extends AnnotatedElement> element,
 			Class<? extends Annotation> annotationType) {
