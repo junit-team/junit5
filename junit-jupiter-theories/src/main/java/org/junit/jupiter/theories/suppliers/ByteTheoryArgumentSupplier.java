@@ -24,7 +24,7 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * Argument supplier for {@code byte} arguments.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class ByteTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<ByteValues> {
 	/**
 	 * Constructor.

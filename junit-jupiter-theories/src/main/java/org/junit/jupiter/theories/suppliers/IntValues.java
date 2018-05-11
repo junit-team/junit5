@@ -29,7 +29,7 @@ import org.apiguardian.api.API;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @ArgumentsSuppliedBy(IntTheoryArgumentSupplier.class)
-@API(status = EXPERIMENTAL, since = "5.2")
+@API(status = EXPERIMENTAL, since = "5.3")
 public @interface IntValues {
 	/**
 	 * @return the value(s) to use for the annotated theory parameter

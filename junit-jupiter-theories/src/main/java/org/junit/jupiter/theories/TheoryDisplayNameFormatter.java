@@ -30,7 +30,7 @@ import org.junit.jupiter.theories.util.ArgumentUtils;
 /**
  * Formatter used to create the display name for theory executions.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class TheoryDisplayNameFormatter {
 	private final String pattern;
 

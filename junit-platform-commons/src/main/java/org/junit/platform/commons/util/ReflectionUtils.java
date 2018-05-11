@@ -1326,18 +1326,18 @@ public final class ReflectionUtils {
 		return type instanceof TypeVariable || type instanceof GenericArrayType;
 	}
 
-    /**
-     * Returns the non-primitive (boxed) representation of the provided class.
-     *
-     * @param classToBox the class to box
-     * @return the boxed class (if {@code classToBox} was a primitive), or the original class otherwise
-     */
-    public static Class<?> getNonPrimitiveClass(Class<?> classToBox) {
-        if (!classToBox.isPrimitive()) {
-            return classToBox;
-        }
-        return getWrapperType(classToBox);
-    }
+	/**
+	 * Returns the non-primitive (boxed) representation of the provided class.
+	 *
+	 * @param classToBox the class to box
+	 * @return the boxed class (if {@code classToBox} was a primitive), or the original class otherwise
+	 */
+	public static Class<?> getNonPrimitiveClass(Class<?> classToBox) {
+		if (!classToBox.isPrimitive()) {
+			return classToBox;
+		}
+		return getWrapperType(classToBox);
+	}
 
 	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
 	public static <T extends AccessibleObject> T makeAccessible(T object) {

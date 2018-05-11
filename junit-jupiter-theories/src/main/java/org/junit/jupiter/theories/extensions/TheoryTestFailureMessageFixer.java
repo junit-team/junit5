@@ -26,7 +26,7 @@ import org.junit.jupiter.theories.exceptions.MessageModifyingWrapperException;
  * name, etc.) in the event of an exception, even if that information isn't
  * in the display name.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class TheoryTestFailureMessageFixer implements TestExecutionExceptionHandler {
 	private Supplier<String> argumentsDescriptionSupplier;
 

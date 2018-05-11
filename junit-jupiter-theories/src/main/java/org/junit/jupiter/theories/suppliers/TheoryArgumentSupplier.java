@@ -25,7 +25,7 @@ import org.junit.jupiter.theories.domain.TheoryParameterDetails;
  * (annotations that have the {@link ArgumentsSuppliedBy} meta-annotation) into
  * lists of {@link DataPointDetails}.
  */
-@API(status = EXPERIMENTAL, since = "5.2")
+@API(status = EXPERIMENTAL, since = "5.3")
 public interface TheoryArgumentSupplier {
 	/**
 	 * Converts the provided parameter details and annotation into a list of

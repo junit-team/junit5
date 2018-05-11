@@ -28,7 +28,7 @@ import org.junit.jupiter.theories.domain.TheoryParameterDetails;
 /**
  * Utility class for creating data points for well-known types.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class WellKnownTypesUtils {
 	/**
 	 * Possible data points for a boolean theory parameter.

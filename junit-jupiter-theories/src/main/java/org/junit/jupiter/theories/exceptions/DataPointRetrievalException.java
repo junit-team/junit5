@@ -17,7 +17,7 @@ import org.apiguardian.api.API;
 /**
  * Exception that is thrown if there are any errors while retrieving a data point.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class DataPointRetrievalException extends RuntimeException {
 
 	private static final long serialVersionUID = -2002844107705394342L;

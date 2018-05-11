@@ -82,7 +82,7 @@ import org.junit.jupiter.theories.suppliers.ArgumentsSuppliedBy;
 @Target(ElementType.METHOD)
 @TestTemplate
 @ExtendWith(TheoriesTestExtension.class)
-@API(status = EXPERIMENTAL, since = "5.2")
+@API(status = EXPERIMENTAL, since = "5.3")
 public @interface Theory {
 	/**
 	 * Placeholder for the {@linkplain TestInfo#getDisplayName display name} of

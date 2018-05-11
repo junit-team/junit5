@@ -38,7 +38,7 @@ import org.junit.jupiter.theories.exceptions.DataPointRetrievalException;
 /**
  * Helper class that is used to retrieve data points from test classes.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class DataPointRetriever {
 	/**
 	 * Gets the value of the provided field, wrapping any exceptions with a

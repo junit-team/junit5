@@ -49,7 +49,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @see Theory for details on how to use theories
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class TheoriesTestExtension implements TestTemplateInvocationContextProvider {
 
 	private final DataPointRetriever dataPointRetriever;

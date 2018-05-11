@@ -35,7 +35,7 @@ import org.apiguardian.api.API;
  */
 @Retention(RUNTIME)
 @Target({ METHOD, FIELD })
-@API(status = EXPERIMENTAL, since = "5.2")
+@API(status = EXPERIMENTAL, since = "5.3")
 public @interface DataPoint {
 	/**
 	 * @return the qualifier(s) for this data point. Can be empty.

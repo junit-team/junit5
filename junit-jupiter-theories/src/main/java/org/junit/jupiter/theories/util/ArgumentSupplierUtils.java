@@ -35,7 +35,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
  * Utility class that encapsulates the processing for argument suppliers
  * ({@link ArgumentsSuppliedBy} and {@link TheoryArgumentSupplier}).
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class ArgumentSupplierUtils {
 	private static final ConcurrentMap<Class<? extends Annotation>, TheoryArgumentSupplier> THEORY_PARAMETER_SUPPLIER_CACHE = new ConcurrentHashMap<>();
 
