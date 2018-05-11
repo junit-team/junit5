@@ -1,5 +1,6 @@
 /**
- * Utility classes for parsing data points, formatting test names, etc.
+ * Utility classes for handling well known types, boxing primitive arguments,
+ * etc.
  */
 
 package org.junit.jupiter.theories.util;

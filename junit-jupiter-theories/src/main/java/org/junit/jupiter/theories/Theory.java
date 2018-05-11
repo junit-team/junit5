@@ -1,5 +1,14 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
 
-package org.junit.jupiter.theories.annotations;
+package org.junit.jupiter.theories;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
@@ -12,8 +21,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.theories.TheoriesTestExtension;
-import org.junit.jupiter.theories.annotations.suppliers.ArgumentsSuppliedBy;
+import org.junit.jupiter.theories.suppliers.ArgumentsSuppliedBy;
 
 /**
  * A theory is a specialized test that will be repeatedly executed with
@@ -22,7 +30,7 @@ import org.junit.jupiter.theories.annotations.suppliers.ArgumentsSuppliedBy;
  * them. Theories may be safely used in the same class as normal and
  * parameterized tests.
  *
- * <p>Datapoints are the values that will be passed to theory parameters, and
+ * <p>Data points are the values that will be passed to theory parameters, and
  * are specified via the {@link DataPoint} and {@link DataPoints} annotations.
  * See those classes for additional details regarding what elements may be
  * annotated and any additional requirements/limitations. Booleans and enums
@@ -63,11 +71,11 @@ import org.junit.jupiter.theories.annotations.suppliers.ArgumentsSuppliedBy;
  *
  * <p>You can also specify the exact values for a theory parameter using
  * parameter argument supplier annotations. For example, the
- * {@link org.junit.jupiter.theories.annotations.suppliers.IntValues}
+ * {@link org.junit.jupiter.theories.suppliers.IntValues}
  * annotation may be used to specify an array of integer values to test
  * against. Parameter argument supplier annotations are specified via the
  * {@link ArgumentsSuppliedBy} meta-annotation. See annotations in the package
- * {@link org.junit.jupiter.theories.annotations.suppliers} for provided
+ * {@link org.junit.jupiter.theories.suppliers} for provided
  * suppliers.
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -100,7 +108,9 @@ public @interface Theory {
 
 	/**
 	 * Placeholder the list of parameters values (with their indices) that will
-	 * be passed into a {@code @{@link Theory}}.
+	 * be passed into a {@code @{@link Theory}}. This is more detailed than
+	 * {@code PARAMETER_VALUES_PLACEHOLDER} and less detailed than
+	 * {@code PARAMETER_DETAILS_PLACEHOLDER}.
 	 */
 	String PARAMETER_VALUES_WITH_INDEXES_PLACEHOLDER = "{parameterValuesWithIndices}";
 
@@ -110,5 +120,6 @@ public @interface Theory {
 	 */
 	String PARAMETER_DETAILS_PLACEHOLDER = "{parameterDetails}";
 
-	String displayName() default CURRENT_PERMUTATION_PLACEHOLDER + " of " + TOTAL_PERMUTATIONS_PLACEHOLDER;
+	String displayName() default CURRENT_PERMUTATION_PLACEHOLDER + " of " + TOTAL_PERMUTATIONS_PLACEHOLDER
+			+ " [Values: " + PARAMETER_VALUES_PLACEHOLDER + "]";
 }
