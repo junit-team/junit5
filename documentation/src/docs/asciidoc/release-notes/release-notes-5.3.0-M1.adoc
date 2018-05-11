@@ -46,7 +46,8 @@ on GitHub.
   an exception.
 * New `get<Class>(index)` Kotlin extension method to make `ArgumentsAccessor` friendlier
   to use from Kotlin.
-
+* Support for <<../user-guide/index.adoc#writing-tests-theories, Theories>>. (An advanced
+  form of parameterized tests.)
 
 [[release-notes-5.3.0-M1-junit-vintage]]
 === JUnit Vintage
