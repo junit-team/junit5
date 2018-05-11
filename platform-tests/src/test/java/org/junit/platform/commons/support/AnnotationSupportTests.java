@@ -19,6 +19,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -40,11 +41,19 @@ class AnnotationSupportTests {
 	}
 
 	@Test
-	void findAnnotationDelegates() throws Throwable {
-		assertEquals(AnnotationUtils.findAnnotation(Probe.class, Tag.class),
-			AnnotationSupport.findAnnotation(Probe.class, Tag.class));
-		assertEquals(AnnotationUtils.findAnnotation(Probe.class, Override.class),
-			AnnotationSupport.findAnnotation(Probe.class, Override.class));
+	void findAnnotationDelegates() {
+		Class<Probe> element = Probe.class;
+		Optional<Class<Probe>> optional = Optional.of(element);
+
+		assertEquals(AnnotationUtils.findAnnotation(optional, Tag.class),
+			AnnotationSupport.findAnnotation(optional, Tag.class));
+		assertEquals(AnnotationUtils.findAnnotation(optional, Override.class),
+			AnnotationSupport.findAnnotation(optional, Override.class));
+
+		assertEquals(AnnotationUtils.findAnnotation(element, Tag.class),
+			AnnotationSupport.findAnnotation(element, Tag.class));
+		assertEquals(AnnotationUtils.findAnnotation(element, Override.class),
+			AnnotationSupport.findAnnotation(element, Override.class));
 	}
 
 	@Test
