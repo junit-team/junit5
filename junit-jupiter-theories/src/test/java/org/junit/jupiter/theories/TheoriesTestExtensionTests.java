@@ -75,7 +75,7 @@ class TheoriesTestExtensionTests {
 	private static final List<DataPointDetails> ALL_DATA_POINT_DETAILS = Collections.unmodifiableList(
 		Stream.concat(INT_DATA_POINT_DETAILS.stream(), STRING_DATA_POINT_DETAILS.stream()).collect(toList()));
 
-	private static final List<Map<Integer, DataPointDetails>> ALL_DATAPOINT_COMBINATIONS = buildAllCombinations(
+	private static final List<Map<Integer, DataPointDetails>> ALL_DATA_POINT_COMBINATIONS = buildAllCombinations(
 		INT_DATA_POINT_DETAILS, STRING_DATA_POINT_DETAILS);
 
 	@Mock
@@ -156,7 +156,7 @@ class TheoriesTestExtensionTests {
 				.collect(toList());
 		// @formatter:on
 
-		assertThat(actualArgumentCombinations).containsExactlyInAnyOrderElementsOf(ALL_DATAPOINT_COMBINATIONS);
+		assertThat(actualArgumentCombinations).containsExactlyInAnyOrderElementsOf(ALL_DATA_POINT_COMBINATIONS);
 	}
 
 	@Test
@@ -184,7 +184,7 @@ class TheoriesTestExtensionTests {
 				.collect(toList());
 		// @formatter:on
 
-		assertThat(actualArgumentCombinations).containsExactlyInAnyOrderElementsOf(ALL_DATAPOINT_COMBINATIONS);
+		assertThat(actualArgumentCombinations).containsExactlyInAnyOrderElementsOf(ALL_DATA_POINT_COMBINATIONS);
 	}
 
 	@Test
@@ -227,7 +227,7 @@ class TheoriesTestExtensionTests {
 				.collect(toList());
 		// @formatter:on
 
-		assertThat(actualArgumentCombinations).containsExactlyInAnyOrderElementsOf(ALL_DATAPOINT_COMBINATIONS);
+		assertThat(actualArgumentCombinations).containsExactlyInAnyOrderElementsOf(ALL_DATA_POINT_COMBINATIONS);
 	}
 
 	@Test

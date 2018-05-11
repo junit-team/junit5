@@ -80,7 +80,7 @@ public class TheoryDisplayNameFormatter {
 				argumentUtils.getArgumentsDescriptions(ctx.getTestMethod(), ctx.getTheoryParameterArguments(), ", ")));
 		}
 
-		//Very minor performance hit for using "identity-like" initial bifunction, but it greatly simplifies the code
+		//Very minor performance hit for using "identity-like" initial bi-function, but it greatly simplifies the code
 		BiFunction<String, TheoryInvocationContext, String> collapsedPatternModifier = (v, ctx) -> v;
 		for (BiFunction<String, TheoryInvocationContext, String> currModifier : patternModifiers) {
 			collapsedPatternModifier = collapseModifiers(collapsedPatternModifier, currModifier);

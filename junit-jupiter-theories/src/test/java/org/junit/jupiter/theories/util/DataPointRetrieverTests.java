@@ -130,7 +130,7 @@ class DataPointRetrieverTests {
 		// @formatter:off
 		assertThatThrownBy(() -> retrieverUnderTest.getAllDataPoints(ClassWithDataPointsOfInvalidGroupType.class, Optional.empty()))
 				.isInstanceOf(DataPointRetrievalException.class)
-				.hasMessageContaining("not a recognized group of datapoints");
+				.hasMessageContaining("not a recognized group of data points");
 		// @formatter:on
 	}
 
@@ -429,14 +429,14 @@ class DataPointRetrieverTests {
 
 	private static class ClassWithInvalidStreamField {
 		@DataPoints
-		public static Stream<String> THIS_IS_NOT_VALID = Stream.of("Becase a field",
-			"cannot specify datapoints with a stream");
+		public static Stream<String> THIS_IS_NOT_VALID = Stream.of("Because a field",
+			"cannot specify data points with a stream");
 	}
 
 	private static class ClassWithInvalidIteratorField {
 		@DataPoints
-		public static Iterator<String> THIS_IS_NOT_VALID = Arrays.asList("Becase a field",
-			"cannot specify datapoints with an iterator").iterator();
+		public static Iterator<String> THIS_IS_NOT_VALID = Arrays.asList("Because a field",
+			"cannot specify data points with an iterator").iterator();
 	}
 
 }

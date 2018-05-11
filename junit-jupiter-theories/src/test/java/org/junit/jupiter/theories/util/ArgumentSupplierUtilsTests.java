@@ -86,7 +86,7 @@ class ArgumentSupplierUtilsTests {
 	}
 
 	@Test
-	public void testBuildDataPointDetailsFromParameterSupplierAnnotation_Error_InvaildTheoryParameterDetails() {
+	public void testBuildDataPointDetailsFromParameterSupplierAnnotation_Error_InvalidTheoryParameterDetails() {
 		//Setup
 		TheoryParameterDetails parameterDetails = new TheoryParameterDetails(0, Object.class, "testParameter",
 			Arrays.asList("foo", "bar"), Optional.empty());

@@ -52,7 +52,7 @@ class TheoryDisplayNameFormatterTests {
 		when(mockArgumentUtils.getArgumentsDescriptions(eq(testMethod), eq(theoryParameterArguments),
 			eq(", "))).thenReturn(testArgumentDescription);
 
-		InputExpectedResultValuePair inputAndExpectedResult = buildInputAndExpectedResulStrings(
+		InputExpectedResultValuePair inputAndExpectedResult = buildInputAndExpectedResultStrings(
 			new InputExpectedResultValuePair(Theory.DISPLAY_NAME_PLACEHOLDER, displayName),
 			new InputExpectedResultValuePair(Theory.CURRENT_PERMUTATION_PLACEHOLDER,
 				Integer.toString(currentPermutationIndex + 1)),
@@ -78,7 +78,7 @@ class TheoryDisplayNameFormatterTests {
 	//-------------------------------------------------------------------------
 	// Test helper methods/classes
 	//-------------------------------------------------------------------------
-	private InputExpectedResultValuePair buildInputAndExpectedResulStrings(InputExpectedResultValuePair... entries) {
+	private InputExpectedResultValuePair buildInputAndExpectedResultStrings(InputExpectedResultValuePair... entries) {
 		String input = Stream.of(entries).map(v -> v.input).collect(joining("] [", "[", "]"));
 		String expectedResult = Stream.of(entries).map(v -> v.expectedResult).collect(joining("] [", "[", "]"));
 
