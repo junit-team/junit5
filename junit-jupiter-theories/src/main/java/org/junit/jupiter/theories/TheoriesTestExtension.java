@@ -14,7 +14,6 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.Preconditions.notEmpty;
-import static org.junit.platform.commons.util.Preconditions.notNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -108,9 +107,8 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 		List<Map<Integer, DataPointDetails>> permutations = buildInputParamPermutations(perParameterDataPoints);
 
 		int totalPermutations = permutations.size();
-		TheoryDisplayNameFormatter displayNameFormatter = new TheoryDisplayNameFormatter(
-			notNull(theoryAnnotation.displayName(), "Theory display name cannot be null"), context.getDisplayName(),
-			totalPermutations, argumentUtils);
+		TheoryDisplayNameFormatter displayNameFormatter = new TheoryDisplayNameFormatter(theoryAnnotation.displayName(),
+			context.getDisplayName(), totalPermutations, argumentUtils);
 
 		AtomicInteger index = new AtomicInteger(0);
 		// @formatter:off
@@ -169,7 +167,7 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 		// @formatter:off
 		List<String> qualifiers = Optional.ofNullable(parameter.getAnnotation(Qualifiers.class))
 				.map(Qualifiers::value)
-				.map(v -> notEmpty(v, "Qualifier cannot be null or empty"))
+				.map(v -> notEmpty(v, "Qualifier cannot be empty"))
 				.map(v -> Stream.of(v)
 						.map(String::trim)
 						.filter(trimmedString -> !trimmedString.isEmpty())

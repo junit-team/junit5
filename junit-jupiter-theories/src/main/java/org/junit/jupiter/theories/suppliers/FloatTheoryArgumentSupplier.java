@@ -38,8 +38,7 @@ public class FloatTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<
 			FloatValues annotationToParse) {
 
 		float[] valuesFromAnnotation = annotationToParse.value();
-		Preconditions.condition(valuesFromAnnotation != null && valuesFromAnnotation.length > 0,
-			"Supplier annotations cannot have null or empty values");
+		Preconditions.condition(valuesFromAnnotation.length > 0, "Supplier annotations cannot have empty values");
 
 		// @formatter:off
 		return IntStream.range(0, valuesFromAnnotation.length)
