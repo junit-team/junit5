@@ -22,15 +22,16 @@ module.
 
 | `@Test`              | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations. Such methods are _inherited_ unless they are _overridden_.
 | `@ParameterizedTest` | Denotes that a method is a <<writing-tests-parameterized-tests, parameterized test>>. Such methods are _inherited_ unless they are _overridden_.
+| `@Theory`            | Denotes that a method is a <<writing-tests-theories, theories>>. Such methods are _inherited_ unless they are _overridden_.
 | `@RepeatedTest`      | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>. Such methods are _inherited_ unless they are _overridden_.
 | `@TestFactory`       | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>. Such methods are _inherited_ unless they are _overridden_.
 | `@TestInstance`      | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class. Such annotations are _inherited_.
 | `@TestTemplate`      | Denotes that a method is a <<writing-tests-test-templates, template for test cases>> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <<extensions-test-templates, providers>>. Such methods are _inherited_ unless they are _overridden_.
 | `@DisplayName`       | Declares a custom display name for the test class or test method. Such annotations are not _inherited_.
-| `@BeforeEach`        | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_ unless they are _overridden_.
-| `@AfterEach`         | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_ unless they are _overridden_.
-| `@BeforeAll`         | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
-| `@AfterAll`          | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
+| `@BeforeEach`        | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@Theory`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_ unless they are _overridden_.
+| `@AfterEach`         | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@Theory`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_ unless they are _overridden_.
+| `@BeforeAll`         | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@Theory`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
+| `@AfterAll`          | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@Theory`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
 | `@Nested`            | Denotes that the annotated class is a nested, non-static test class. `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Such annotations are not _inherited_.
 | `@Tag`               | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are _inherited_ at the class level but not at the method level.
 | `@Disabled`          | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not _inherited_.
@@ -64,7 +65,7 @@ include::{testDir}/example/Fast.java[tags=user_guide]
 === Test Classes and Methods
 
 A _test method_ is any instance method that is directly or meta-annotated with `@Test`,
-`@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`. A _test class_
+`@RepeatedTest`, `@ParameterizedTest`, `@Theory`, `@TestFactory`, or `@TestTemplate`. A _test class_
 is any top level or static member class that contains at least one test method.
 
 [source,java,indent=0]
@@ -503,11 +504,11 @@ For real-world use cases, check out the source code for the `{MockitoExtension}`
 [[writing-tests-test-interfaces-and-default-methods]]
 === Test Interfaces and Default Methods
 
-JUnit Jupiter allows `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`,
-`@TestTemplate`, `@BeforeEach`, and `@AfterEach` to be declared on interface `default`
-methods. `@BeforeAll` and `@AfterAll` can either be declared on `static` methods in a
-test interface or on interface `default` methods _if_ the test interface or test class is
-annotated with `@TestInstance(Lifecycle.PER_CLASS)` (see
+JUnit Jupiter allows `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@Theory`,
+`@TestFactory`, `@TestTemplate`, `@BeforeEach`, and `@AfterEach` to be declared on
+interface `default` methods. `@BeforeAll` and `@AfterAll` can either be declared on
+`static` methods in a test interface or on interface `default` methods _if_ the test
+interface or test class is annotated with `@TestInstance(Lifecycle.PER_CLASS)` (see
 <<writing-tests-test-instance-lifecycle>>). Here are some examples.
 
 [source,java]
@@ -773,7 +774,7 @@ In order to use parameterized tests you need to add a dependency on the
 `junit-jupiter-params` artifact. Please refer to <<dependency-metadata>> for details.
 
 [[writing-tests-parameterized-tests-consuming-arguments]]
-=== Consuming Arguments
+==== Consuming Arguments
 
 Parameterized test methods typically _consume_ arguments directly from the configured
 source (see <<writing-tests-parameterized-tests-sources>>) following a one-to-one
@@ -1196,6 +1197,211 @@ lifecycle methods (e.g. `@BeforeEach`) and test class constructors.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ParameterResolver_example]
 ----
 
+[[writing-tests-theories]]
+=== Theories
+
+Theories make it possible to run a single test multiple times with different arguments.
+This is similar to <<writing-tests-parameterized-tests>>, but where Parameterized Tests
+uses a specific list of arguments for each test, Theories use data points. Data points
+are class-level or test-instance-level fields or methods that are used to populate the
+arguments for Theories. Theories are executed with all possible combinations of data
+points. Ffor example, a test class with 3 `String` data points and 2 `double` data points
+will execute a theory with the parameter types`(String, double, double)` 12 times
+(3 * 2 * 2). They are declared just like regular `@Test` methods but use the
+`@Theory` annotation instead. In addition, you must provide one or more data points
+(unless the parameter type is a well-known type, in which case the data point can be
+implicit).
+
+The following example demonstrates two theories that use three data points to test
+concatenation in `StringBuilder`. Each theory will be executed nine times to cover all
+possible combinations of data points.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/theories/TheoriesTestDemo.java[tags=basic_usage_example]
+----
+
+WARNING: Theories are currently an _experimental_ feature. Consult the table
+in <<api-evolution-experimental-apis>> for details.
+
+[[writing-tests-theories-setup]]
+==== Required Setup
+
+In order to use theories you need to add a dependency on the
+`junit-jupiter-theories` artifact. Please refer to <<dependency-metadata>> for details.
+
+[[writing-tests-theories-datapoints]]
+==== Declaring DataPoints
+
+Data points may be declared in two ways: Independently or as groups. Valid locations
+for declaring data points include:
+
+* Static fields
+* Static methods: Methods may be called multiple times, so they must be idempotent
+(always return the same value)
+* Non-static fields: This requires that the class be annotated with
+`@TestInstance(TestInstance.Lifecycle.PER_CLASS)`
+* Non-static methods: See the limitations for both static methods and non-static fields above.
+
+Single data points may be declared via the `@DataPoint` annotation.
+
+Groups of data points may be declared via the `@DataPoints` annotation. Be aware that,
+while this form makes it simpler to specify a large number of data points, it trades
+clarity of failure messages for this simplicity because the entire group shares a single
+name. (It's much easier to see that your test failed because of the value `ZERO` rather
+than `INTEGER_VALUES[3]`.) Valid types for groups of data points include:
+
+* Arrays
+* `java.lang.Iterable`
+* `java.util.Iterator` (Only supported for data point methods)
+* `java.util.stream.Stream` (Only supported for data point methods)
+
+Both `@DataPoint` and `@DataPoints` can optionally provide qualifiers to allow theories
+to limit which data points may be used as parameters. See
+<<writing-tests-theories-qualifiers>> for more details.
+
+[[writing-tests-theories-qualifiers]]
+==== Qualifiers
+
+Under normal circumstances, all data points of a given type will be passed to a theory
+paramter of that type. Qualifiers are used to limit which data points will be available
+to specific parameter, and are specified in two parts.
+
+First, the qualifiers for a data point (or group of data points) is set on the
+`@DataPoint`/`@DataPoints` annotation. This array of qualifiers provides
+strings that independently describe that value. For example, a `int` data point with the
+value of `12` might have the qualifiers `divisibleByTwo`, `divisibleByThree`, and `even`
+
+Second, individual theory parameters are marked with the `@Qualifiers` annotation. This
+provides an array of strings that independently describe data points that may be used
+for that parameter.
+
+For example, this theory provides only non-zero values to the divisor parameter.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/theories/TheoriesTestDemo.java[tags=qualifiers_example]
+----
+
+[[writing-tests-theories-display-names]]
+==== Customizing Display Names
+
+By default, the display name of a theory invocation contains the invocation
+index and the `String` representation of all arguments for that specific invocation.
+However, you can customize invocation display names via the `name` attribute of the
+`@Theory` annotation like in the following example.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/theories/TheoriesTestDemo.java[tags=custom_display_names]
+----
+
+When executing the above method using the `ConsoleLauncher` you will see output similar to the following.
+
+....
+Overall theory name ✔
+├─ Overall theory name (1/9) => 3 (index 0), 3 (index 1) ✔
+├─ Overall theory name (2/9) => 3 (index 0), 5 (index 1) ✔
+├─ Overall theory name (3/9) => 3 (index 0), 7 (index 1) ✔
+├─ Overall theory name (4/9) => 5 (index 0), 3 (index 1) ✔
+├─ Overall theory name (5/9) => 5 (index 0), 5 (index 1) ✔
+├─ Overall theory name (6/9) => 5 (index 0), 7 (index 1) ✔
+├─ Overall theory name (7/9) => 7 (index 0), 3 (index 1) ✔
+├─ Overall theory name (8/9) => 7 (index 0), 5 (index 1) ✔
+└─ Overall theory name (9/9) => 7 (index 0), 7 (index 1) ✔
+....
+
+The following placeholders are supported within custom display names.
+
+[cols="20,80"]
+|===
+| Placeholder            | Description
+
+| `{name}`               | The display name of the theory (as specified by `@DisplayName`)
+| `{currentPermutation}` | The one-based current permutation (invocation) index
+| `{totalPermutations}`  | The total number of permutations
+| `{argumentValues}`     | The values of the arguments passed to the theory
+| `{argumentValuesWithIndices}` | The values of the arguments, along with the zero-based
+                                  indices of the parameters.
+| `{argumentDetails}`    | The values of the arguments, the zero-based indices of the
+                           parameters, and the source for the data point(s).
+|===
+
+Constants for all of these placeholders are available as fields on the `Theory` class.
+
+[[writing-tests-theories-argument-suppliers]]
+==== Argument Suppliers
+
+Argument suppliers provide a mechanism for specifying data points directly on a theory's
+parameter via an annotation. This can be used to provide data points that are only needed
+for a single test, or to override the data points declared at the class level.
+
+For example, in this theory the class level `INTEGER_VALUES` data points will be ignored
+and replaced with the provided values (1, 2, 3, and 4).
+
+[source,java,indent=0]
+----
+include::{testDir}/example/theories/TheoriesTestDemo.java[tags=argument_supplier_example]
+----
+
+The following suppliers are provided:
+
+[cols="20,80"]
+|===
+| Annotation | Supported types
+| `@ByteValues` | `Byte` and `byte`
+| `@DoubleValues` | `Double` and `double`
+| `@FloatValues` | `Float` and `float`
+| `@IntValues` | `Integer` and `int`
+| `@LongValues` | `Long` and `long`
+| `@ShortValues` | `Short` and `short`
+| `@StringValues` | `String`
+|===
+
+[[writing-tests-theories-argument-suppliers-custom]]
+===== Custom Argument Suppliers
+
+Custom argument suppliers can be created via the `@ArgumentsSuppliedBy` meta-annotation
+and the `TheoryArgumentSupplier` interface.
+
+First, create a new annotation that will be used to declare the data points. This
+annotation must use the meta-annotation `@ArgumentsSuppliedBy` to specify the argument
+supplier (created in the next step) along with `@Target(ElementType.PARAMETER)` and
+`@Retention(RetentionPolicy.RUNTIME)` meta-annotations.
+
+Next, create a class that implements `TheoryArgumentSupplier` and implement code to
+parse your annotation into a `List<DataPoint>`. To make this simpler, you can extend
+`AbstractTheoryArgumentSupplier`.
+
+For example, if you wanted to make an argument supplier for this X/Y point class:
+
+[source,java,indent=0]
+----
+include::{testDir}/example/theories/XYPoint.java[tags=custom_supplier_example_domain]
+----
+
+You would start by making this annotation:
+
+[source,java,indent=0]
+----
+include::{testDir}/example/theories/XYPointValues.java[tags=custom_supplier_example_annotation]
+----
+
+Then you would provide a supplier implementation like this:
+
+(Note: For the sake of brevity, validation is skipped in this example.)
+
+[source,java,indent=0]
+----
+include::{testDir}/example/theories/XYPointTheoryArgumentSupplier.java[tags=custom_supplier_example_supplier]
+----
+
+Finally, you could write a theory that uses this supplier:
+
+[source,java,indent=0]
+----
+include::{testDir}/example/theories/TheoriesTestDemo.java[tags=custom_supplier_example_supplier]
+----
 
 [[writing-tests-test-templates]]
 === Test Templates
