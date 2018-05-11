@@ -35,8 +35,8 @@ import org.apiguardian.api.API;
  *
  * <p>Supported data point group types:
  * <ul>
- * <li>{@link Iterable}</li>
  * <li>Arrays</li>
+ * <li>{@link Iterable}</li>
  * <li>{@link java.util.Iterator} (Only supported for data point methods)</li>
  * <li>{@link java.util.stream.Stream} (Only supported for data point methods)</li>
  * </ul>
