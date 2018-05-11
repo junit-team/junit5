@@ -14,9 +14,9 @@ import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.theories.Theory.CURRENT_PERMUTATION_PLACEHOLDER;
 import static org.junit.jupiter.theories.Theory.DISPLAY_NAME_PLACEHOLDER;
-import static org.junit.jupiter.theories.Theory.PARAMETER_DETAILS_PLACEHOLDER;
-import static org.junit.jupiter.theories.Theory.PARAMETER_VALUES_PLACEHOLDER;
-import static org.junit.jupiter.theories.Theory.PARAMETER_VALUES_WITH_INDEXES_PLACEHOLDER;
+import static org.junit.jupiter.theories.Theory.ARGUMENT_DETAILS_PLACEHOLDER;
+import static org.junit.jupiter.theories.Theory.ARGUMENT_VALUES_PLACEHOLDER;
+import static org.junit.jupiter.theories.Theory.ARGUMENT_VALUES_WITH_INDEXES_PLACEHOLDER;
 import static org.junit.jupiter.theories.Theory.TOTAL_PERMUTATIONS_PLACEHOLDER;
 
 import java.util.ArrayList;
@@ -58,25 +58,25 @@ public class TheoryDisplayNameFormatter {
 			patternModifiers.add(
 				(v, ctx) -> v.replace(CURRENT_PERMUTATION_PLACEHOLDER, String.valueOf(ctx.getPermutationIndex() + 1)));
 		}
-		if (pattern.contains(PARAMETER_VALUES_PLACEHOLDER)) {
+		if (pattern.contains(ARGUMENT_VALUES_PLACEHOLDER)) {
 			patternModifiers.add((v, ctx) -> {
 				String values = ctx.getTheoryParameterArguments().values().stream().map(DataPointDetails::getValue).map(
 					String::valueOf).collect(joining(", "));
-				return v.replace(PARAMETER_VALUES_PLACEHOLDER, values);
+				return v.replace(ARGUMENT_VALUES_PLACEHOLDER, values);
 			});
 		}
-		if (pattern.contains(PARAMETER_VALUES_WITH_INDEXES_PLACEHOLDER)) {
+		if (pattern.contains(ARGUMENT_VALUES_WITH_INDEXES_PLACEHOLDER)) {
 			// @formatter:off
 			patternModifiers.add((v, ctx) -> {
 				String valuesWithIndexes = ctx.getTheoryParameterArguments().entrySet().stream()
 						.map(entry -> entry.getValue().getValue() + " (index " + entry.getKey() + ")")
 						.collect(joining(", "));
-				return v.replace(PARAMETER_VALUES_WITH_INDEXES_PLACEHOLDER, valuesWithIndexes);
+				return v.replace(ARGUMENT_VALUES_WITH_INDEXES_PLACEHOLDER, valuesWithIndexes);
 			});
 			// @formatter:on
 		}
-		if (pattern.contains(PARAMETER_DETAILS_PLACEHOLDER)) {
-			patternModifiers.add((v, ctx) -> v.replace(PARAMETER_DETAILS_PLACEHOLDER,
+		if (pattern.contains(ARGUMENT_DETAILS_PLACEHOLDER)) {
+			patternModifiers.add((v, ctx) -> v.replace(ARGUMENT_DETAILS_PLACEHOLDER,
 				argumentUtils.getArgumentsDescriptions(ctx.getTestMethod(), ctx.getTheoryParameterArguments(), ", ")));
 		}
 
