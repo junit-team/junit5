@@ -64,7 +64,7 @@ public class DataPointDetails {
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append(value).append(" (Source: ").append(sourceName).append(")").toString();
+		return value + " (Source: " + sourceName + ")";
 	}
 
 	@Override
