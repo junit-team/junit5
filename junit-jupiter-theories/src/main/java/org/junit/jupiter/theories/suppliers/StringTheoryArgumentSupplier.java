@@ -38,8 +38,7 @@ public class StringTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier
 			StringValues annotationToParse) {
 
 		String[] valuesFromAnnotation = annotationToParse.value();
-		Preconditions.condition(valuesFromAnnotation != null && valuesFromAnnotation.length > 0,
-			"Supplier annotations cannot have null or empty values");
+		Preconditions.condition(valuesFromAnnotation.length > 0, "Supplier annotations cannot have empty values");
 
 		// @formatter:off
 		return Arrays.stream(valuesFromAnnotation)

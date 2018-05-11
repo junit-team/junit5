@@ -12,7 +12,6 @@ package org.junit.jupiter.theories;
 
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.Preconditions.notNull;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 import java.lang.annotation.Annotation;
@@ -284,8 +283,7 @@ public class DataPointRetriever {
 		return dataPointReferences.flatMap(reference -> {
 			try {
 				List<String> qualifiers = Arrays.asList(
-					notNull(qualifierExtractor.apply(reference.getAnnotation(targetAnnotation)),
-						"Data points cannot have null qualifiers"));
+					qualifierExtractor.apply(reference.getAnnotation(targetAnnotation)));
 				Object instanceToGetFieldFrom;
 				if (isStatic(reference)) {
 					instanceToGetFieldFrom = null;
