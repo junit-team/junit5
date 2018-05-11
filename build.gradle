@@ -56,7 +56,8 @@ ext {
 		'junit-jupiter-api',
 		'junit-jupiter-engine',
 		'junit-jupiter-migrationsupport',
-		'junit-jupiter-params'
+		'junit-jupiter-params',
+		'junit-jupiter-theories'
 	]
 
 	vintageProjects = [

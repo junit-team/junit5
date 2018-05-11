@@ -20,7 +20,7 @@ import org.apiguardian.api.API;
 /**
  * Special wrapper exception used to modify the message of an exception without modifying its stack trace.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class MessageModifyingWrapperException extends Throwable {
 	private static final long serialVersionUID = -5452185844058139L;
 

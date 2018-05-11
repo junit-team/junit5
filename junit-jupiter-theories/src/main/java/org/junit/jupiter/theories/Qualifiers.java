@@ -27,7 +27,7 @@ import org.apiguardian.api.API;
 @Target(ElementType.PARAMETER)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@API(status = EXPERIMENTAL, since = "5.2")
+@API(status = EXPERIMENTAL, since = "5.3")
 public @interface Qualifiers {
 	/**
 	 * The qualifier(s) for this data point parameter. If qualifiers are

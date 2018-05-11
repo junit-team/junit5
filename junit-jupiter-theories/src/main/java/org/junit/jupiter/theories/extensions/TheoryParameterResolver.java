@@ -25,7 +25,7 @@ import org.junit.jupiter.theories.domain.DataPointDetails;
  * The parameter resolver that will be used to populate the arguments for
  * the theory parameters.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class TheoryParameterResolver implements ParameterResolver {
 	private final Map<Integer, DataPointDetails> theoryArguments;
 

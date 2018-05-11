@@ -25,7 +25,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 /**
  * Domain object that contains all of the information about a theory parameter.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class TheoryParameterDetails {
 	private final int index;
 	private final Class<?> type;

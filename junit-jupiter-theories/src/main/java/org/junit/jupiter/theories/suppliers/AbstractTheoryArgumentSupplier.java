@@ -27,7 +27,7 @@ import org.junit.jupiter.theories.domain.TheoryParameterDetails;
  * @param <U> the type for the corresponding parameter argument supplier
  * annotation
  */
-@API(status = EXPERIMENTAL, since = "5.2")
+@API(status = EXPERIMENTAL, since = "5.3")
 public abstract class AbstractTheoryArgumentSupplier<U extends Annotation> implements TheoryArgumentSupplier {
 	private final Class<U> annotationClass;
 

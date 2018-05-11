@@ -29,7 +29,7 @@ import org.junit.jupiter.theories.util.ArgumentUtils;
 /**
  * The invocation context for a theory execution.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class TheoryInvocationContext implements TestTemplateInvocationContext {
 	private final int permutationIndex;
 	private final Map<Integer, DataPointDetails> theoryParameterArguments;

@@ -22,7 +22,7 @@ import org.apiguardian.api.API;
 /**
  * Domain object that contains all of the information about a data point.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class DataPointDetails {
 	private final Object value;
 	private final List<String> qualifiers;

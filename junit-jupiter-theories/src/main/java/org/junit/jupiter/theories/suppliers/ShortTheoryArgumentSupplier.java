@@ -24,7 +24,7 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * Argument supplier for {@code short} arguments.
  */
-@API(status = INTERNAL, since = "5.2")
+@API(status = INTERNAL, since = "5.3")
 public class ShortTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<ShortValues> {
 	/**
 	 * Constructor.
