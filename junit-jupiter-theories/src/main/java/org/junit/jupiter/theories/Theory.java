@@ -101,25 +101,25 @@ public @interface Theory {
 	String TOTAL_PERMUTATIONS_PLACEHOLDER = "{totalPermutations}";
 
 	/**
-	 * Placeholder the list of parameters values that will be passed into a
+	 * Placeholder for the list of argument values that will be passed into a
 	 * {@code @{@link Theory}}.
 	 */
-	String PARAMETER_VALUES_PLACEHOLDER = "{parameterValues}";
+	String ARGUMENT_VALUES_PLACEHOLDER = "{argumentValues}";
 
 	/**
-	 * Placeholder the list of parameters values (with their indices) that will
-	 * be passed into a {@code @{@link Theory}}. This is more detailed than
-	 * {@code PARAMETER_VALUES_PLACEHOLDER} and less detailed than
-	 * {@code PARAMETER_DETAILS_PLACEHOLDER}.
+	 * Placeholder for the list of argument values (with their indices) that
+	 * will be passed into a {@code @{@link Theory}}. This is more detailed
+	 * than {@code ARGUMENT_VALUES_PLACEHOLDER} and less detailed than
+	 * {@code ARGUMENT_DETAILS_PLACEHOLDER}.
 	 */
-	String PARAMETER_VALUES_WITH_INDEXES_PLACEHOLDER = "{parameterValuesWithIndices}";
+	String ARGUMENT_VALUES_WITH_INDEXES_PLACEHOLDER = "{argumentValuesWithIndices}";
 
 	/**
-	 * Placeholder the list of parameter details (value, source, index, etc.)
+	 * Placeholder for the list of argument details (value, source, index, etc.)
 	 * that will be passed into a {@code @{@link Theory}}.
 	 */
-	String PARAMETER_DETAILS_PLACEHOLDER = "{parameterDetails}";
+	String ARGUMENT_DETAILS_PLACEHOLDER = "{argumentDetails}";
 
 	String name() default CURRENT_PERMUTATION_PLACEHOLDER + " of " + TOTAL_PERMUTATIONS_PLACEHOLDER + " [Values: "
-			+ PARAMETER_VALUES_PLACEHOLDER + "]";
+			+ ARGUMENT_VALUES_PLACEHOLDER + "]";
 }

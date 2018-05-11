@@ -58,13 +58,13 @@ class TheoryDisplayNameFormatterTests {
 				Integer.toString(currentPermutationIndex + 1)),
 			new InputExpectedResultValuePair(Theory.TOTAL_PERMUTATIONS_PLACEHOLDER,
 				Integer.toString(totalPermutations)),
-			new InputExpectedResultValuePair(Theory.PARAMETER_VALUES_PLACEHOLDER,
+			new InputExpectedResultValuePair(Theory.ARGUMENT_VALUES_PLACEHOLDER,
 				theoryParameterArguments.entrySet().stream().map(v -> (String) v.getValue().getValue()).collect(
 					joining(", "))),
-			new InputExpectedResultValuePair(Theory.PARAMETER_VALUES_WITH_INDEXES_PLACEHOLDER,
+			new InputExpectedResultValuePair(Theory.ARGUMENT_VALUES_WITH_INDEXES_PLACEHOLDER,
 				theoryParameterArguments.entrySet().stream().map(
 					v -> v.getValue().getValue() + " (index " + v.getKey() + ")").collect(joining(", "))),
-			new InputExpectedResultValuePair(Theory.PARAMETER_DETAILS_PLACEHOLDER, testArgumentDescription));
+			new InputExpectedResultValuePair(Theory.ARGUMENT_DETAILS_PLACEHOLDER, testArgumentDescription));
 
 		//Test
 		TheoryDisplayNameFormatter formatterUnderTest = new TheoryDisplayNameFormatter(inputAndExpectedResult.input,
