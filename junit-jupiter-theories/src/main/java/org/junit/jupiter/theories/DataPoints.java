@@ -37,8 +37,8 @@ import org.apiguardian.api.API;
  * <ul>
  * <li>{@link Iterable}</li>
  * <li>Arrays</li>
- * <li>{@link java.util.Iterator} (Only supported for datapoint methods)</li>
- * <li>{@link java.util.stream.Stream} (Only supported for datapoint methods)</li>
+ * <li>{@link java.util.Iterator} (Only supported for data point methods)</li>
+ * <li>{@link java.util.stream.Stream} (Only supported for data point methods)</li>
  * </ul>
  */
 @Target({ ElementType.METHOD, ElementType.FIELD })

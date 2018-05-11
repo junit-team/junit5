@@ -129,7 +129,7 @@ public class DataPointRetriever {
 		else if (valueToProcessIntoDataPoints instanceof Iterator) {
 			if (valueSourceReference instanceof Field) {
 				throw new DataPointRetrievalException("Field " + getPrintableMemberName(valueSourceReference)
-						+ " was marked with @Datapoints but was a field of type " + Iterator.class.getCanonicalName()
+						+ " was marked with @DataPoints but was a field of type " + Iterator.class.getCanonicalName()
 						+ ". This type is only supported for data point methods (not for fields).");
 			}
 			Iterable<Object> valueToProcessAsIterable = () -> (Iterator<Object>) valueToProcessIntoDataPoints;
@@ -138,7 +138,7 @@ public class DataPointRetriever {
 		else if (valueToProcessIntoDataPoints instanceof Stream) {
 			if (valueSourceReference instanceof Field) {
 				throw new DataPointRetrievalException("Field " + getPrintableMemberName(valueSourceReference)
-						+ " was marked with @Datapoints but was a field of type " + Stream.class.getCanonicalName()
+						+ " was marked with @DataPoints but was a field of type " + Stream.class.getCanonicalName()
 						+ ". This type is only supported for data point methods (not for fields).");
 			}
 			valuesStream = (Stream<Object>) valueToProcessIntoDataPoints;
@@ -148,8 +148,8 @@ public class DataPointRetriever {
 		}
 		else {
 			throw new DataPointRetrievalException("Element " + getPrintableMemberName(valueSourceReference)
-					+ " was annotated with @Datapoints, but its type (" + valueToProcessIntoDataPoints.getClass()
-					+ ") is not a recognized group of datapoints");
+					+ " was annotated with @DataPoints, but its type (" + valueToProcessIntoDataPoints.getClass()
+					+ ") is not a recognized group of data points");
 		}
 
 		//NOTE: Support for Streams and Iterators is intentionally left out because the fact that they're stateful
