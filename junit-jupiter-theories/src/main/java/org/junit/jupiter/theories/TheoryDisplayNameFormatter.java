@@ -12,11 +12,11 @@ package org.junit.jupiter.theories;
 
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.jupiter.theories.Theory.CURRENT_PERMUTATION_PLACEHOLDER;
-import static org.junit.jupiter.theories.Theory.DISPLAY_NAME_PLACEHOLDER;
 import static org.junit.jupiter.theories.Theory.ARGUMENT_DETAILS_PLACEHOLDER;
 import static org.junit.jupiter.theories.Theory.ARGUMENT_VALUES_PLACEHOLDER;
 import static org.junit.jupiter.theories.Theory.ARGUMENT_VALUES_WITH_INDEXES_PLACEHOLDER;
+import static org.junit.jupiter.theories.Theory.CURRENT_PERMUTATION_PLACEHOLDER;
+import static org.junit.jupiter.theories.Theory.DISPLAY_NAME_PLACEHOLDER;
 import static org.junit.jupiter.theories.Theory.TOTAL_PERMUTATIONS_PLACEHOLDER;
 
 import java.util.ArrayList;

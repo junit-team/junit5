@@ -16,6 +16,7 @@ import static org.junit.jupiter.theories.Theory.ARGUMENT_VALUES_PLACEHOLDER;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -108,7 +109,7 @@ class TheoriesTestCase {
 
 	@Theory
 	public void testAdd_IntAndDouble_Theory(int x, double y) {
-		//Test
+		//Test3
 		double result = objectUnderTest.add(x, y);
 
 		//Verify
@@ -128,7 +129,7 @@ class TheoriesTestCase {
 	@DisplayName("Test")
 	@Theory(name = Theory.DISPLAY_NAME_PLACEHOLDER + " (" + Theory.CURRENT_PERMUTATION_PLACEHOLDER + "/"
 			+ Theory.TOTAL_PERMUTATIONS_PLACEHOLDER + ") => " + Theory.ARGUMENT_VALUES_WITH_INDEXES_PLACEHOLDER)
-//	@Disabled("Failure case. Enable to simulate a test failure")
+	@Disabled("Failure case. Enable to simulate a test failure")
 	public void testThrowException(int x, double y) {
 		//Test
 		if (x == 2) {
