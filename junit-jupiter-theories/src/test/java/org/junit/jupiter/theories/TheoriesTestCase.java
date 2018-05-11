@@ -87,7 +87,7 @@ class TheoriesTestCase {
 		assertEquals(x + y, result);
 	}
 
-	@Theory(displayName = PARAMETER_VALUES_PLACEHOLDER)
+	@Theory(name = PARAMETER_VALUES_PLACEHOLDER)
 	public void testAdd_Ints_TheoryWithEnum(TestEnum x, TestEnum y) {
 		//Test
 		int result = objectUnderTest.add(x.value, y.value);
@@ -125,7 +125,7 @@ class TheoriesTestCase {
 		assertEquals(x + y, result);
 	}
 
-	@Theory(displayName = Theory.DISPLAY_NAME_PLACEHOLDER + " (" + Theory.CURRENT_PERMUTATION_PLACEHOLDER + "/"
+	@Theory(name = Theory.DISPLAY_NAME_PLACEHOLDER + " (" + Theory.CURRENT_PERMUTATION_PLACEHOLDER + "/"
 			+ Theory.TOTAL_PERMUTATIONS_PLACEHOLDER + ") " + Theory.PARAMETER_DETAILS_PLACEHOLDER)
 	@Disabled("Failure case. Enable to simulate a test failure")
 	public void testThrowException(int x, double y) {
