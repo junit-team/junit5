@@ -20,7 +20,10 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The `junit-platform-gradle-plugin` has been discontinued and is no longer released as
+  part of JUnit 5. Please use <<../user-guide/index.adoc#running-tests-build-gradle,
+  Gradle's native support>> for running tests on the JUnit Platform (requires Gradle 4.6
+  or higher) instead.
 
 ==== New Features and Improvements
 

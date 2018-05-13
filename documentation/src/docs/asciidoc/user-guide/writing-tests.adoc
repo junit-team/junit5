@@ -699,9 +699,8 @@ INFO: About to execute repetition 5 of 5 for repeatedTestInGerman
 include::{testDir}/example/RepeatedTestsDemo.java[tags=user_guide]
 ----
 
-When using the `ConsoleLauncher` or the `junitPlatformTest` Gradle plugin with the
-unicode theme enabled, execution of `RepeatedTestsDemo` results in the following output
-to the console.
+When using the `ConsoleLauncher` with the unicode theme enabled, execution of
+`RepeatedTestsDemo` results in the following output to the console.
 
 ....
 ├─ RepeatedTestsDemo ✔

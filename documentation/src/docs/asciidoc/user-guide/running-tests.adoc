@@ -118,11 +118,11 @@ https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_test[officia
 for a comprehensive list of options.
 
 [WARNING]
-.The JUnit Platform Gradle Plugin is deprecated
+.The JUnit Platform Gradle Plugin has been discontinued
 ====
 The very basic `junit-platform-gradle-plugin` developed by the JUnit team was deprecated
-in JUnit Platform 1.2 and will be discontinued in 1.3. Please switch to Gradle's standard
-`test` task.
+in JUnit Platform 1.2 and discontinued in 1.3. Please switch to Gradle's standard `test`
+task.
 ====
 
 [[running-tests-build-gradle-config-params]]
@@ -700,8 +700,8 @@ engines running on the JUnit Platform via one of the following mechanisms.
   by the JUnit Platform you can specify configuration parameters as follows:
   * <<running-tests-console-launcher,Console Launcher>>: use the `--config`
     command-line option.
-  * <<running-tests-build-gradle-config-params,Gradle plugin>>: use the
-    `configurationParameter` or `configurationParameters` DSL.
+  * <<running-tests-build-gradle-config-params,Gradle>>: use the
+    `systemProperty` or `systemProperties` DSL.
   * <<running-tests-build-maven-config-params,Maven Surefire provider>>: use the
     `configurationParameters` property.
 2. JVM system properties.
