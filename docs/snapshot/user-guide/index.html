@@ -736,11 +736,6 @@ directory. See <a href="#running-tests-console-launcher">Console Launcher</a> fo
 <dd>
 <p>Public API for test engines. See <a href="#launcher-api-engines-custom">Plugging in Your Own Test Engine</a> for details.</p>
 </dd>
-<dt class="hdlist1"><code>junit-platform-gradle-plugin</code></dt>
-<dd>
-<p>Support for discovering and executing tests on the JUnit Platform using
-<a href="#running-tests-build-gradle">Gradle</a>.</p>
-</dd>
 <dt class="hdlist1"><code>junit-platform-launcher</code></dt>
 <dd>
 <p>Public API for configuring and launching test plans&#8201;&#8212;&#8201;typically used by IDEs and build tools.
@@ -894,7 +889,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <h3 id="dependency-diagram"><a class="anchor" href="#dependency-diagram"></a>2.2. Dependency Diagram</h3>
 <div class="imageblock">
 <div class="content">
-<img src="images/component-diagram.svg" alt="component diagram" width="1735" height="585">
+<img src="images/component-diagram.svg" alt="component diagram" width="1735" height="479">
 </div>
 </div>
 </div>
@@ -2672,9 +2667,8 @@ INFO: About to execute repetition 5 of 5 for repeatedTestInGerman</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>When using the <code>ConsoleLauncher</code> or the <code>junitPlatformTest</code> Gradle plugin with the
-unicode theme enabled, execution of <code>RepeatedTestsDemo</code> results in the following output
-to the console.</p>
+<p>When using the <code>ConsoleLauncher</code> with the unicode theme enabled, execution of
+<code>RepeatedTestsDemo</code> results in the following output to the console.</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -4004,11 +3998,11 @@ for a comprehensive list of options.</p>
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-<div class="title">The JUnit Platform Gradle Plugin is deprecated</div>
+<div class="title">The JUnit Platform Gradle Plugin has been discontinued</div>
 <div class="paragraph">
 <p>The very basic <code>junit-platform-gradle-plugin</code> developed by the JUnit team was deprecated
-in JUnit Platform 1.2 and will be discontinued in 1.3. Please switch to Gradle&#8217;s standard
-<code>test</code> task.</p>
+in JUnit Platform 1.2 and discontinued in 1.3. Please switch to Gradle&#8217;s standard <code>test</code>
+task.</p>
 </div>
 </td>
 </tr>
@@ -4845,8 +4839,8 @@ by the JUnit Platform you can specify configuration parameters as follows:</p>
 command-line option.</p>
 </li>
 <li>
-<p><a href="#running-tests-build-gradle-config-params">Gradle plugin</a>: use the
-<code>configurationParameter</code> or <code>configurationParameters</code> DSL.</p>
+<p><a href="#running-tests-build-gradle-config-params">Gradle</a>: use the
+<code>systemProperty</code> or <code>systemProperties</code> DSL.</p>
 </li>
 <li>
 <p><a href="#running-tests-build-maven-config-params">Maven Surefire provider</a>: use the
@@ -6357,7 +6351,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-05-12 06:07:19 EDT
+Last updated 2018-05-13 14:19:07 EDT
 </div>
 </div>
 </body>
