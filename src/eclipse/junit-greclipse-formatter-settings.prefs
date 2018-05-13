@@ -1,6 +1,0 @@
-#Remove unnecessary semicolons. The default value is 'false'.
-groovy.formatter.remove.unnecessary.semicolons=true
-
-#Length after which list are considered too long. These will be wrapped.
-#The default value is 30.
-groovy.formatter.longListLength=140

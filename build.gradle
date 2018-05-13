@@ -102,7 +102,6 @@ ext {
 allprojects { subproj ->
 
 	apply plugin: 'java-library'
-	apply plugin: 'groovy' // apply for all projects so rootProject sees groovy output dir
 	apply plugin: 'kotlin'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
@@ -472,7 +471,6 @@ subprojects { subproj ->
 		def headerFile = rootProject.file('src/spotless/' + licenseOf(project)['headerFile'])
 		def importOrderConfigFile = rootProject.file('src/eclipse/junit-eclipse.importorder')
 		def javaFormatterConfigFile = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
-		def groovyFormatterConfigFile = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
 
 		java {
 			licenseHeaderFile headerFile, '(package|import|open|module) '
@@ -484,18 +482,6 @@ subprojects { subproj ->
 
 			trimTrailingWhitespace()
 			endWithNewline()
-		}
-
-		groovy {
-			target 'src/**/*.groovy'
-			licenseHeaderFile headerFile, "package "
-			importOrderFile importOrderConfigFile
-			greclipse().configFile javaFormatterConfigFile, groovyFormatterConfigFile
-
-			trimTrailingWhitespace()
-			endWithNewline()
-			replaceRegex 'Empty line between last method and class closure', /\n([\s]+)}\n}\n$/, '\n$1}\n\n}\n'
-			replaceRegex 'Remove line breaks between consecutive closing parentheses', /\)\n[\s]+\)\n/, '))\n'
 		}
 
 		kotlin {
