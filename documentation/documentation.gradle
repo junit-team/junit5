@@ -14,16 +14,21 @@ plugins {
 	id 'org.asciidoctor.convert' version '1.5.7'
 }
 
-test {
-	useJUnitPlatform {
-		excludeTags 'exclude'
-	}
-	filter {
-		includeTestsMatching '*Tests'
-		includeTestsMatching '*Demo'
-	}
+task consoleLauncherTest(type: JavaExec, overwrite: true) {
+	def reportsDir = file("$buildDir/test-results")
+	outputs.dir reportsDir
+	classpath sourceSets.test.runtimeClasspath
+	main 'org.junit.platform.console.ConsoleLauncher'
+	args '--scan-classpath'
+	args '--details', 'tree'
+	args '--include-classname', '.*Tests'
+	args '--include-classname', '.*Demo'
+	args '--exclude-tag', 'exclude'
+	args '--reports-dir', reportsDir
 	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
 }
+test.enabled = false
+test.dependsOn consoleLauncherTest
 
 dependencies {
 	asciidoctor('org.jruby:jruby-complete:9.1.17.0')
