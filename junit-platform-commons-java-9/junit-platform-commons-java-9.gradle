@@ -8,8 +8,7 @@ dependencies {
 	testImplementation(project(':junit-jupiter-engine'))
 	testImplementation("junit:junit:${junit4Version}")
 
-	// Include junit-platform-console so that the JUnit Gradle plugin
-	// uses the local version of the ConsoleLauncher.
+	// Required by :execNoJavaScripting
 	testRuntimeOnly(project(':junit-platform-console'))
 	testRuntimeOnly(project(':junit-vintage-engine'))
 }

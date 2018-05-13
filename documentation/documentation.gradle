@@ -39,8 +39,7 @@ dependencies {
 	testImplementation(project(':junit-platform-launcher'))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 
-	// Include junit-platform-console so that the JUnit Gradle plugin
-	// uses the local version of the ConsoleLauncher.
+	// Required by :consoleLauncherTest and :generateConsoleLauncherOptions
 	testRuntimeOnly(project(':junit-platform-console'))
 
 	testRuntimeOnly(project(':junit-vintage-engine'))
