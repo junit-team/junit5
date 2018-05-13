@@ -1,4 +1,3 @@
-apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 description = 'JUnit Jupiter Params'
@@ -12,22 +11,22 @@ buildscript {
 	}
 }
 
-junitPlatform {
-	filters {
-		engines {
-			include 'junit-jupiter'
-		}
-		includeClassNamePattern '.*Tests?'
+test {
+	useJUnitPlatform {
+		includeEngines 'junit-jupiter'
 	}
-	logManager 'org.apache.logging.log4j.jul.LogManager'
+	filter {
+		includeTestsMatching '*Tests'
+	}
+	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
 }
 
 afterEvaluate {
 	// Use classes modified by shadow plugin for test execution so JaCoCo
 	// finds same class files when creating its report
-	junitPlatformTest.classpath -= sourceSets.main.output
-	junitPlatformTest.classpath += files(shadowJar.archivePath)
-	junitPlatformTest.dependsOn(shadowJar)
+	test.classpath -= sourceSets.main.output
+	test.classpath += files(shadowJar.archivePath)
+	test.dependsOn(shadowJar)
 }
 
 dependencies {

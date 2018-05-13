@@ -14,25 +14,16 @@ plugins {
 	id 'org.asciidoctor.convert' version '1.5.7'
 }
 
-apply plugin: 'org.junit.platform.gradle.plugin'
-
-junitPlatform {
-	details 'tree'
-	filters {
-		includeClassNamePattern '.+(Tests|Demo)$'
-		tags {
-			exclude 'exclude'
-		}
-	}
-	logManager 'org.apache.logging.log4j.jul.LogManager'
-}
-
-/*
 test {
-	scanForTestClasses = false
-	include(['example/DocumentationTestSuite.class'])
+	useJUnitPlatform {
+		excludeTags 'exclude'
+	}
+	filter {
+		includeTestsMatching '*Tests'
+		includeTestsMatching '*Demo'
+	}
+	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
 }
-*/
 
 dependencies {
 	asciidoctor('org.jruby:jruby-complete:9.1.17.0')

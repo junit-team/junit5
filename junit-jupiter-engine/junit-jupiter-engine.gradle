@@ -1,23 +1,14 @@
-apply plugin: 'org.junit.platform.gradle.plugin'
-
 description = 'JUnit Jupiter Engine'
 
-junitPlatform {
-	filters {
-		engines {
-			include 'junit-jupiter'
-		}
-		includeClassNamePattern '.*Tests?'
-	}
-	logManager 'org.apache.logging.log4j.jul.LogManager'
-}
-
-/*
 test {
-	scanForTestClasses = false
-	include(['org/junit/jupiter/JupiterTestSuite.class'])
+	useJUnitPlatform {
+		includeEngines 'junit-jupiter'
+	}
+	filter {
+		includeTestsMatching '*Tests'
+	}
+	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
 }
-*/
 
 jar {
 	manifest {
