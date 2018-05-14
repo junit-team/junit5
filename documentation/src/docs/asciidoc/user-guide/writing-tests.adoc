@@ -897,8 +897,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=primitive_MethodSourc
 ----
 
 If a test method declares multiple parameters, you need to return a collection or stream
-of `Arguments` instances as shown below. Note that `Arguments.of(Object...)` is a static
-factory method defined in the `Arguments` interface.
+of `Arguments` instances as shown below. Note that `arguments(Object...)` is a static
+factory method defined in the `Arguments` interface. In addition,
+`Arguments.of(Object...)` may be used as an alternative to `arguments(Object...)`.
 
 [source,java,indent=0]
 ----

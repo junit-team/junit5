@@ -48,6 +48,8 @@ on GitHub.
 * New `assertThrows` methods in `Assertions` provide a more specific failure message if
   the supplied lambda expression or method reference returns a result instead of throwing
   an exception.
+* New `arguments()` static factory method in the `Arguments` interface that serves as an
+  _alias_ for `Arguments.of()`. `arguments()` is intended to be used via `import static`.
 * New `get<Class>(index)` Kotlin extension method to make `ArgumentsAccessor` friendlier
   to use from Kotlin.
 

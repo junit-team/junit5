@@ -69,10 +69,29 @@ public interface Arguments {
 	 * @param arguments the arguments to be used for an invocation of the test
 	 * method; must not be {@code null}
 	 * @return an instance of {@code Arguments}; never {@code null}
+	 * @see #arguments(Object...)
 	 */
 	static Arguments of(Object... arguments) {
 		Preconditions.notNull(arguments, "argument array must not be null");
 		return () -> arguments;
+	}
+
+	/**
+	 * Factory method for creating an instance of {@code Arguments} based on
+	 * the supplied {@code arguments}.
+	 *
+	 * <p>This method is an <em>alias</em> for {@link Arguments#of} and is
+	 * intended to be used when statically imported &mdash; for example, via:
+	 * {@code import static org.junit.jupiter.params.provider.Arguments.arguments;}
+	 *
+	 * @param arguments the arguments to be used for an invocation of the test
+	 * method; must not be {@code null}
+	 * @return an instance of {@code Arguments}; never {@code null}
+	 * @since 5.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.3")
+	static Arguments arguments(Object... arguments) {
+		return of(arguments);
 	}
 
 }
