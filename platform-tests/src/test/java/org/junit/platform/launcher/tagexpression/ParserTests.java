@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.tagexpression;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.stream.Stream;
 
@@ -58,15 +59,15 @@ class ParserTests {
 	private static Stream<Arguments> data() {
 		// @formatter:off
 		return Stream.of(
-				Arguments.of("foo", "foo"),
-				Arguments.of("! foo", "!foo"),
-				Arguments.of("foo & bar", "(foo & bar)"),
-				Arguments.of("foo | bar", "(foo | bar)"),
-				Arguments.of("( ! foo & bar | baz)", "((!foo & bar) | baz)"),
-				Arguments.of("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
-				Arguments.of("! foo | bar & ! baz | ! quux | quuz & corge", "(((!foo | (bar & !baz)) | !quux) | (quuz & corge))"),
-				Arguments.of("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
-				Arguments.of("foo | bar & baz|quux", "((foo | (bar & baz)) | quux)")
+				arguments("foo", "foo"),
+				arguments("! foo", "!foo"),
+				arguments("foo & bar", "(foo & bar)"),
+				arguments("foo | bar", "(foo | bar)"),
+				arguments("( ! foo & bar | baz)", "((!foo & bar) | baz)"),
+				arguments("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
+				arguments("! foo | bar & ! baz | ! quux | quuz & corge", "(((!foo | (bar & !baz)) | !quux) | (quuz & corge))"),
+				arguments("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
+				arguments("foo | bar & baz|quux", "((foo | (bar & baz)) | quux)")
 		);
 		// @formatter:on
 	}
@@ -75,4 +76,5 @@ class ParserTests {
 		return parser.parse(tagExpression).tagExpressionOrThrow(
 			(error) -> new RuntimeException("[" + tagExpression + "] should be parsable"));
 	}
+
 }
