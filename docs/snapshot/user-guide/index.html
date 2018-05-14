@@ -2973,8 +2973,9 @@ supported as demonstrated by the following example.</p>
 </div>
 <div class="paragraph">
 <p>If a test method declares multiple parameters, you need to return a collection or stream
-of <code>Arguments</code> instances as shown below. Note that <code>Arguments.of(Object&#8230;&#8203;)</code> is a static
-factory method defined in the <code>Arguments</code> interface.</p>
+of <code>Arguments</code> instances as shown below. Note that <code>arguments(Object&#8230;&#8203;)</code> is a static
+factory method defined in the <code>Arguments</code> interface. In addition,
+<code>Arguments.of(Object&#8230;&#8203;)</code> may be used as an alternative to <code>arguments(Object&#8230;&#8203;)</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2988,8 +2989,8 @@ factory method defined in the <code>Arguments</code> interface.</p>
 
 <span class="directive">static</span> Stream&lt;Arguments&gt; stringIntAndListProvider() {
     <span class="keyword">return</span> Stream.of(
-        Arguments.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>)),
-        Arguments.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">x</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">y</span><span class="delimiter">&quot;</span></span>))
+        arguments(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>)),
+        arguments(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">x</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">y</span><span class="delimiter">&quot;</span></span>))
     );
 }</code></pre>
 </div>
@@ -6351,7 +6352,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-05-13 14:19:07 EDT
+Last updated 2018-05-14 07:41:08 EDT
 </div>
 </div>
 </body>

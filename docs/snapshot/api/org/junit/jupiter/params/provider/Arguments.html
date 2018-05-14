@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":1};
+var methods = {"i0":1,"i1":6,"i2":1};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -188,6 +188,14 @@ public interface <span class="typeNameLabel">Arguments</span></pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../org/junit/jupiter/params/provider/Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/provider/Arguments.html#arguments(java.lang.Object...)">arguments</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>...&nbsp;arguments)</code></th>
+<td class="colLast">
+<div class="block">Factory method for creating an instance of <code>Arguments</code> based on
+ the supplied <code>arguments</code>.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/provider/Arguments.html#get()">get</a></span>()</code></th>
 <td class="colLast">
@@ -195,7 +203,7 @@ public interface <span class="typeNameLabel">Arguments</span></pre>
  <code>@ParameterizedTest</code> method.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../org/junit/jupiter/params/provider/Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/provider/Arguments.html#of(java.lang.Object...)">of</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>...&nbsp;arguments)</code></th>
 <td class="colLast">
@@ -241,7 +249,7 @@ public interface <span class="typeNameLabel">Arguments</span></pre>
 <a id="of(java.lang.Object...)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>of</h4>
 <pre>static&nbsp;<a href="../../../../../org/junit/jupiter/params/provider/Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a>&nbsp;of&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>...&nbsp;arguments)</pre>
@@ -253,6 +261,34 @@ public interface <span class="typeNameLabel">Arguments</span></pre>
  method; must not be <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>an instance of <code>Arguments</code>; never <code>null</code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../org/junit/jupiter/params/provider/Arguments.html#arguments(java.lang.Object...)"><code>arguments(Object...)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="arguments(java.lang.Object...)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>arguments</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.3")
+static&nbsp;<a href="../../../../../org/junit/jupiter/params/provider/Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a>&nbsp;arguments&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>...&nbsp;arguments)</pre>
+<div class="block">Factory method for creating an instance of <code>Arguments</code> based on
+ the supplied <code>arguments</code>.
+
+ <p>This method is an <em>alias</em> for <a href="../../../../../org/junit/jupiter/params/provider/Arguments.html#of(java.lang.Object...)"><code>of(java.lang.Object...)</code></a> and is
+ intended to be used when statically imported &mdash; for example, via:
+ <code>import static org.junit.jupiter.params.provider.Arguments.arguments;</code></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>arguments</code> - the arguments to be used for an invocation of the test
+ method; must not be <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>an instance of <code>Arguments</code>; never <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.3</dd>
 </dl>
 </li>
 </ul>
