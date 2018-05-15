@@ -19,16 +19,16 @@ import org.junit.jupiter.params.provider.MethodSource;
 class ExternalMethodSourceDemo {
 
 	@ParameterizedTest
-	@MethodSource("example.StringsProviders#blankStrings")
-	void testWithExternalMethodSource(String blankString) {
-		// test with blank string
+	@MethodSource("example.StringsProviders#tinyStrings")
+	void testWithExternalMethodSource(String tinyString) {
+		// test with tiny string
 	}
 }
 
 class StringsProviders {
 
-	static Stream<String> blankStrings() {
-		return Stream.of("", " ", " \n ");
+	static Stream<String> tinyStrings() {
+		return Stream.of(".", "oo", "OOO");
 	}
 }
 // end::external_MethodSource_example[]
