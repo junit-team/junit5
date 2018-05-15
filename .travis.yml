@@ -23,9 +23,6 @@ matrix:
 # Java 11 "Oracle JDK"
     - env: JDK='Oracle JDK 11'
       install: . ./install-jdk.sh -F 11 -L BCL
-# The following environments are known to fail
-  allow_failures:
-    - env: JDK='Oracle JDK 11'
 
 script:
 # Display Gradle, Groovy, JVM and other versions
