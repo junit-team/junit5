@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.theories.util;
+package org.junit.jupiter.theories;
 
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,10 +23,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.theories.Theory;
-import org.junit.jupiter.theories.TheoryDisplayNameFormatter;
-import org.junit.jupiter.theories.TheoryInvocationContext;
 import org.junit.jupiter.theories.domain.DataPointDetails;
+import org.junit.jupiter.theories.util.ArgumentUtils;
 
 /**
  * Tests for {@link TheoryDisplayNameFormatter}.
