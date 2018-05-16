@@ -12,6 +12,7 @@ package org.junit.jupiter.theories.util;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -64,6 +65,14 @@ class WellKnownTypesUtilsTests {
 
 		//Verify
 		assertFalse(result);
+	}
+
+	@Test
+	public void testIsKnownType_PrimitiveTypeNotAccepted() {
+		//Test/Verify
+		assertThatThrownBy(() -> utilsUnderTest.isKnownType(int.class))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("does not accept primitives");
 	}
 
 	@Test

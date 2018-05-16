@@ -62,13 +62,6 @@ public class TheoriesTestExtension implements TestTemplateInvocationContextProvi
 
 	/**
 	 * Constructor.
-	 */
-	public TheoriesTestExtension() {
-		this(new DataPointRetriever(), new WellKnownTypesUtils(), new ArgumentSupplierUtils(), new ArgumentUtils());
-	}
-
-	/**
-	 * Constructor.
 	 *
 	 * @param dataPointRetriever the retriever to use to extract data points
 	 * @param wellKnownTypesUtils utility for handling well-known data point

@@ -75,7 +75,7 @@ public abstract class AbstractTheoryArgumentSupplier<U extends Annotation> imple
 			Class<V> expectedType) {
 		if (!expectedType.isInstance(annotationToCast)) {
 			throw new IllegalStateException("Expected annotation of type " + expectedType.getCanonicalName()
-					+ " but received annotation of type " + annotationToCast.getClass().getCanonicalName());
+					+ " but received annotation of type " + annotationToCast.annotationType().getCanonicalName());
 		}
 		return (V) annotationToCast;
 	}

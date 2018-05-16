@@ -11,6 +11,7 @@
 package org.junit.jupiter.theories.suppliers;
 
 import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -79,6 +80,27 @@ public abstract class SupplierTestBase<T extends TheoryArgumentSupplier, U exten
 				.collect(toList());
 		// @formatter:on
 		assertThat(actualValues).containsExactlyElementsOf(expectedValues);
+	}
+
+	@Test
+	public void testBuildArgumentsFromSupplierAnnotation_FailsWhenGivenWrongType() throws Exception {
+		//Setup
+		AnnotationExpectedResultPair annotationExpectedResultPair = getAnnotationExpectedResultPair();
+		List<V> expectedValues = annotationExpectedResultPair.getExpectedResults();
+		TheoryParameterDetails fakeParameterDetails = getFakeTheoryParameterDetails();
+		Annotation incorrectAnnotation = new Test(){
+			@Override
+			public Class<? extends Annotation> annotationType() {
+				return Test.class;
+			}
+		};
+		T supplierUnderTest = argumentSupplierClassUnderTest.getConstructor().newInstance();
+
+		//Test/Verify
+		assertThatThrownBy(() -> supplierUnderTest.buildArgumentsFromSupplierAnnotation(fakeParameterDetails, incorrectAnnotation))
+				.isInstanceOf(IllegalStateException.class)
+				.hasMessageContaining(Test.class.getSimpleName())
+				.hasMessageContaining(parameterSupplierAnnotationClass.getSimpleName());
 	}
 
 	//-------------------------------------------------------------------------
