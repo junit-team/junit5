@@ -97,7 +97,7 @@ class TheoriesTestExtensionTests {
 	private TheoriesTestExtension extensionUnderTest;
 
 	@BeforeEach
-	void setUp() throws Exception {
+	public void beforeEach() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		when(mockDataPointRetriever.getAllDataPoints(any(), any())).thenReturn(Collections.emptyList());
 		when(mockWellKnownTypesUtils.isKnownType(any())).thenReturn(false);

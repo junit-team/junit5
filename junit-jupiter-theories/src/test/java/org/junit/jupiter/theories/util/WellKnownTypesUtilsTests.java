@@ -42,7 +42,7 @@ class WellKnownTypesUtilsTests {
 	private WellKnownTypesUtils utilsUnderTest;
 
 	@BeforeEach
-	public void setUp() {
+	public void beforeEach() {
 		utilsUnderTest = new WellKnownTypesUtils();
 	}
 

@@ -43,7 +43,7 @@ class TheoryParameterResolverTests {
 	private TheoryParameterResolver resolverUnderTest;
 
 	@BeforeEach
-	void setUp() {
+	public void beforeEach() {
 		Map<Integer, DataPointDetails> arguments = new HashMap<>();
 		arguments.put(SUPPORTED_PARAMETER_INDEX, new DataPointDetails("Foo", Collections.emptyList(), "Test source 0"));
 		arguments.put(1, new DataPointDetails(UUID.randomUUID(), Collections.emptyList(), "Test source 1"));

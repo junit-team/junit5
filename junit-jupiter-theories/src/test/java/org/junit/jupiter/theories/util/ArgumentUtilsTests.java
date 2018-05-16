@@ -1,10 +1,18 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
 
 package org.junit.jupiter.theories.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +43,8 @@ class ArgumentUtilsTests {
 
 		String value2 = "value2";
 		String source2Name = "source2";
-        DataPointDetails argument2Details = new DataPointDetails(value2, Arrays.asList("arg2Qual1", "arg2Qual2"),
-                source2Name);
+		DataPointDetails argument2Details = new DataPointDetails(value2, Arrays.asList("arg2Qual1", "arg2Qual2"),
+			source2Name);
 		dataPointDetailsMap.put(1, argument2Details);
 
 		String delimiter = "@@@";
