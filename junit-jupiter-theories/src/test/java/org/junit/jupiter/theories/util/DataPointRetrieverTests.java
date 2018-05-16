@@ -34,7 +34,7 @@ class DataPointRetrieverTests {
 	private DataPointRetriever retrieverUnderTest;
 
 	@BeforeEach
-	public void setUp() {
+	public void beforeEach() {
 		retrieverUnderTest = new DataPointRetriever();
 	}
 

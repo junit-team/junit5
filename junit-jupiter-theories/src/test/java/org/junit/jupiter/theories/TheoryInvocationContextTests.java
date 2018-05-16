@@ -50,7 +50,7 @@ class TheoryInvocationContextTests {
 	private TheoryInvocationContext contextUnderTest;
 
 	@BeforeEach
-	void setUp() throws Exception {
+	public void beforeEach() throws Exception {
 		MockitoAnnotations.initMocks(this);
 
 		//Actual method doesn't matter here--we just need a valid method to test with

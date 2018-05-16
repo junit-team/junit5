@@ -44,7 +44,7 @@ class ArgumentSupplierUtilsTests {
 	}
 
 	@BeforeEach
-	public void setUp() {
+	public void beforeEach() {
 		ArgumentSupplierUtils.clearCache();
 		mockSupplierFunction = ((a, b) -> Collections.emptyList());
 
