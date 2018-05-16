@@ -23,6 +23,8 @@ import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Argument supplier for {@code float} arguments.
+ *
+ * @see FloatValues
  */
 @API(status = INTERNAL, since = "5.3")
 public class FloatTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<FloatValues> {

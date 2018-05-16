@@ -47,7 +47,8 @@ import org.junit.platform.commons.util.ReflectionUtils;
 /**
  * The test extension for running theories.
  *
- * @see Theory for details on how to use theories
+ * @see Theory The documentation of the Theory annotation for details on how to
+ * use theories
  */
 @API(status = INTERNAL, since = "5.3")
 public class TheoriesTestExtension implements TestTemplateInvocationContextProvider {

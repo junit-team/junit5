@@ -48,7 +48,8 @@ public @interface DataPoints {
 	/**
 	 * @return the qualifier(s) for these data points. Can be empty.
 	 *
-	 * @see Qualifiers for additional information on how qualifiers work
+	 * @see Qualifiers The documentation of the Qualifiers annotation for
+	 * additional information on how qualifiers work
 	 */
 	String[] qualifiers() default {};
 }

@@ -23,6 +23,8 @@ import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Argument supplier for {@code String} arguments.
+ *
+ * @see StringValues
  */
 @API(status = INTERNAL, since = "5.3")
 public class StringTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<StringValues> {

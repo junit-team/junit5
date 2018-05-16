@@ -23,6 +23,8 @@ import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Argument supplier for {@code short} arguments.
+ *
+ * @see ShortValues
  */
 @API(status = INTERNAL, since = "5.3")
 public class ShortTheoryArgumentSupplier extends AbstractTheoryArgumentSupplier<ShortValues> {
