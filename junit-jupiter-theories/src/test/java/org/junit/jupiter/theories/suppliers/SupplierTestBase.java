@@ -88,7 +88,7 @@ public abstract class SupplierTestBase<T extends TheoryArgumentSupplier, U exten
 		AnnotationExpectedResultPair annotationExpectedResultPair = getAnnotationExpectedResultPair();
 		List<V> expectedValues = annotationExpectedResultPair.getExpectedResults();
 		TheoryParameterDetails fakeParameterDetails = getFakeTheoryParameterDetails();
-		Annotation incorrectAnnotation = new Test(){
+		Annotation incorrectAnnotation = new Test() {
 			@Override
 			public Class<? extends Annotation> annotationType() {
 				return Test.class;
@@ -97,10 +97,9 @@ public abstract class SupplierTestBase<T extends TheoryArgumentSupplier, U exten
 		T supplierUnderTest = argumentSupplierClassUnderTest.getConstructor().newInstance();
 
 		//Test/Verify
-		assertThatThrownBy(() -> supplierUnderTest.buildArgumentsFromSupplierAnnotation(fakeParameterDetails, incorrectAnnotation))
-				.isInstanceOf(IllegalStateException.class)
-				.hasMessageContaining(Test.class.getSimpleName())
-				.hasMessageContaining(parameterSupplierAnnotationClass.getSimpleName());
+		assertThatThrownBy(() -> supplierUnderTest.buildArgumentsFromSupplierAnnotation(fakeParameterDetails,
+			incorrectAnnotation)).isInstanceOf(IllegalStateException.class).hasMessageContaining(
+				Test.class.getSimpleName()).hasMessageContaining(parameterSupplierAnnotationClass.getSimpleName());
 	}
 
 	//-------------------------------------------------------------------------

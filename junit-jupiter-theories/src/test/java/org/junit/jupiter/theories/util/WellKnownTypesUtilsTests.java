@@ -70,9 +70,8 @@ class WellKnownTypesUtilsTests {
 	@Test
 	public void testIsKnownType_PrimitiveTypeNotAccepted() {
 		//Test/Verify
-		assertThatThrownBy(() -> utilsUnderTest.isKnownType(int.class))
-				.isInstanceOf(IllegalArgumentException.class)
-				.hasMessageContaining("does not accept primitives");
+		assertThatThrownBy(() -> utilsUnderTest.isKnownType(int.class)).isInstanceOf(
+			IllegalArgumentException.class).hasMessageContaining("does not accept primitives");
 	}
 
 	@Test
