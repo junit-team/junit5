@@ -347,6 +347,9 @@ subprojects { subproj ->
 			from components.java
 			artifact sourcesJar
 			artifact javadocJar
+			pom {
+				description = "Module \"${project.name}\" of JUnit 5." as String
+			}
 		}
 
 	} else {

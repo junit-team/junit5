@@ -4,7 +4,8 @@ apply from: "$rootDir/gradle/publishing.gradle"
 
 publishing.publications.maven.pom {
 	packaging = 'pom'
-	description = project.description
+	description = 'This Bill of Materials POM can be used to ease dependency management ' +
+			'when referencing multiple JUnit artifacts using Gradle or Maven.'
 	withXml {
 		def root = asNode()
 		root.get('dependencies').each { root.remove(it) }

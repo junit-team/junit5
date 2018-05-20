@@ -18,7 +18,6 @@ publishing {
 			pom {
 				afterEvaluate {
 					name = project.description ?: "${project.group}:${project.name}" as String
-					description = "Module \"${project.name}\" of JUnit 5." as String
 				}
 				url = 'http://junit.org/junit5/'
 				scm {
