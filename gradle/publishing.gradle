@@ -4,12 +4,11 @@ apply plugin: 'signing'
 def isSnapshot = project.version.contains('SNAPSHOT')
 
 signing {
-	sign publishing.publications.each {
-		onlyIf {
-			def isContinuousIntegrationEnvironment = Boolean.parseBoolean(System.getenv('CI'))
-			def isJitPackEnvironment = Boolean.parseBoolean(System.getenv('JITPACK'))
-			return !(isSnapshot || isContinuousIntegrationEnvironment || isJitPackEnvironment)
-		}
+	sign publishing.publications
+	required {
+		def isContinuousIntegrationEnvironment = Boolean.parseBoolean(System.getenv('CI'))
+		def isJitPackEnvironment = Boolean.parseBoolean(System.getenv('JITPACK'))
+		return !(isSnapshot || isContinuousIntegrationEnvironment || isJitPackEnvironment)
 	}
 }
 
