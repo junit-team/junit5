@@ -715,7 +715,7 @@ configure(rootProject) {
 	gitPublishCommit.dependsOn(createCurrentDocsFolder)
 }
 
-task wrapper(type: Wrapper) {
+wrapper {
 	description = 'Generates gradlew and gradlew.bat scripts'
 	gradleVersion = '4.8-rc-1'
 	/*
