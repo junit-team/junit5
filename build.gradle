@@ -257,21 +257,20 @@ subprojects { subproj ->
 		apply from: "$rootDir/gradle/japicc.gradle"
 
 		javadoc {
-			// Use external javadoc.options to inject unsupported options, like:
-			//   options.addStringOption('-html5')
-			options.optionFiles(rootProject.file("src/javadoc/javadoc.options"))
-
-			options.memberLevel = JavadocMemberLevel.PROTECTED
-			options.author = true
-			options.header = project.name
-			options.use = true
-			options.addStringOption('Xdoclint:html,syntax', '-quiet')
-			options.addMultilineStringsOption('tag').setValue(['apiNote:a:API Note:', 'implSpec:a:Implementation Requirements:', 'implNote:a:Implementation Note:'])
-			options.encoding = 'UTF-8'
-			options.noTimestamp = true
-			// Remove Kotlin classes from classpath due to "bad" class file: AssertionsKt$sam$Supplier$44378ebd.class
-			// see https://bugs.openjdk.java.net/browse/JDK-8187422
-			classpath = classpath - files(compileKotlin.destinationDir)
+			options {
+				memberLevel = JavadocMemberLevel.PROTECTED
+				author = true
+				header = project.name
+				use = true
+				addBooleanOption('Xdoclint:html,syntax', true)
+				addBooleanOption('html5', true)
+				addMultilineStringsOption('tag').value = [
+					'apiNote:a:API Note:',
+					'implNote:a:Implementation Note:'
+				]
+				encoding = 'UTF-8'
+				noTimestamp = true
+			}
 		}
 
 		task sourcesJar(type: Jar, dependsOn: classes) {
@@ -486,36 +485,37 @@ configure(rootProject) {
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
 		description = "Generates aggregated Javadocs"
+		dependsOn subprojects.collect { it.tasks.getByName("jar") }
+
 		title = "JUnit ${version} API"
 
-		setDependsOn subprojects.collect { it.tasks.getByName("jar") }
+		options {
+			memberLevel = JavadocMemberLevel.PROTECTED
+			author = true
+			header = rootProject.description
+			use = true
+			splitIndex = true
+			addBooleanOption('Xdoclint:none', true)
+			addBooleanOption('html5', true)
+			addMultilineStringsOption('tag').value = [
+				'apiNote:a:API Note:',
+				'implNote:a:Implementation Note:'
+			]
+			encoding = 'UTF-8'
+			noTimestamp = true
+			JFlags = ['-Xmx1g']
+			links('https://docs.oracle.com/javase/8/docs/api/')
+            links("https://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/")
+			links("https://apiguardian-team.github.io/apiguardian/docs/${apiGuardianDocVersion}/api/")
+			stylesheetFile = rootProject.file('src/javadoc/stylesheet.css')
+			groups = [
+				Jupiter: ['org.junit.jupiter.*'],
+				Vintage: ['org.junit.vintage.*'],
+				Platform: ['org.junit.platform.*']
+			]
+		}
 
-		// Use external javadoc.options to inject unsupported options, like:
-		//   options.addStringOption('-html5')
-		options.optionFiles(rootProject.file("src/javadoc/javadoc.options"))
-
-		options.memberLevel = JavadocMemberLevel.PROTECTED
-		options.author = true
-		options.header = rootProject.description
-		options.use = true
-		options.splitIndex = true
-		options.addStringOption('Xdoclint:none', '-quiet')
-		options.addMultilineStringsOption('tag').setValue(['apiNote:a:API Note:', 'implSpec:a:Implementation Requirements:', 'implNote:a:Implementation Note:'])
-		options.encoding = 'UTF-8'
-		options.noTimestamp = true
-		options.jFlags '-Xmx1g'
-		options.links(
-			'https://docs.oracle.com/javase/8/docs/api/',
-			"https://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/",
-			"https://apiguardian-team.github.io/apiguardian/docs/${apiGuardianDocVersion}/api/"
-		)
-		options.stylesheetFile rootProject.file("src/javadoc/stylesheet.css")
-		options
-			.group("Jupiter", ["org.junit.jupiter.*"])
-			.group("Vintage", ["org.junit.vintage.*"])
-			.group("Platform", ["org.junit.platform.*"])
-
-		setSource subprojects.collect { it.sourceSets.main.allJava }
+		source = subprojects.collect { it.sourceSets.main.allJava }
 
 		maxMemory = "1024m"
 		destinationDir = new File(buildDir, "docs/javadoc")

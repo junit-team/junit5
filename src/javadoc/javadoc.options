@@ -1,7 +1,0 @@
-#
-# This file contains Javadoc options that are not (yet) supported by
-# Gradle's javadoc task.
-#
-
-# Generate HTML 5 output.
--html5
