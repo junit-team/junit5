@@ -465,7 +465,7 @@ subprojects { subproj ->
 configure(rootProject) {
 	description = 'JUnit 5'
 
-	apply plugin: "org.ajoberstar.git-publish"
+	apply from: "$rootDir/gradle/gh-pages.gradle"
 
 	jar.enabled = false
 
@@ -554,62 +554,6 @@ configure(rootProject) {
 			}
 		}
 	}
-
-	def docsDir = new File(buildDir, 'ghpages-docs')
-	def replaceCurrentDocs = project.hasProperty('replaceCurrentDocs')
-
-	task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: Copy) {
-		outputs.dir docsDir
-
-		from("${project(':documentation').buildDir}/asciidoc") {
-			include 'user-guide/**'
-			include 'release-notes/**'
-		}
-		from("$buildDir/docs") {
-			include 'javadoc/**'
-			filesMatching("**/*.html") {
-				filter { line ->
-					line.startsWith("<head>") ? line.replace("<head>", "<head><link rel=\"icon\" type=\"image/png\" href=\"http://junit.org/junit5/assets/img/junit5-logo.png\">") :
-							line
-				}
-			}
-		}
-		into "${docsDir}/${docsVersion}"
-		filesMatching('javadoc/**') { fileCopyDetails ->
-			fileCopyDetails.path = fileCopyDetails.path.replace('javadoc/', 'api/')
-		}
-		includeEmptyDirs = false
-	}
-
-	task createCurrentDocsFolder(dependsOn: prepareDocsForUploadToGhPages, type: Copy) {
-		outputs.dir "${docsDir}/current"
-
-		from "${docsDir}/${docsVersion}"
-		into "${docsDir}/current"
-	}
-
-	createCurrentDocsFolder.onlyIf { replaceCurrentDocs }
-
-	gitPublish {
-		repoUri = 'https://github.com/junit-team/junit5.git'
-		branch = 'gh-pages'
-
-		contents {
-			from docsDir
-			into "docs"
-		}
-
-		preserve {
-			include '**/*'
-			exclude "docs/${docsVersion}/**"
-			if (replaceCurrentDocs) {
-				exclude "docs/current/**"
-			}
-		}
-	}
-
-	gitPublishCommit.dependsOn(prepareDocsForUploadToGhPages)
-	gitPublishCommit.dependsOn(createCurrentDocsFolder)
 }
 
 wrapper {
