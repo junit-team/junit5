@@ -12,9 +12,14 @@ package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.TestSource;
 
 /**
  * {@code DynamicNode} serves as the abstract base class for a container or a
@@ -29,6 +34,9 @@ public abstract class DynamicNode {
 
 	private final String displayName;
 
+	Set<String> tags = Collections.emptySet();
+	TestSource testSource = null;
+
 	DynamicNode(String displayName) {
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
 	}
@@ -38,6 +46,20 @@ public abstract class DynamicNode {
 	 */
 	public String getDisplayName() {
 		return this.displayName;
+	}
+
+	/**
+	 * Get the set of tags of this {@code DynamicNode}.
+	 */
+	public Set<String> getTags() {
+		return tags;
+	}
+
+	/**
+	 * Get the optional test source of this {@code DynamicNode}.
+	 */
+	public Optional<TestSource> getTestSource() {
+		return Optional.ofNullable(testSource);
 	}
 
 	@Override

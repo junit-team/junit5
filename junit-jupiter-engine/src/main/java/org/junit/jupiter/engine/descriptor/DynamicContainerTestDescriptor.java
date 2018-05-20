@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.createDynamicDescriptor;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -22,6 +23,7 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 
 /**
@@ -36,8 +38,8 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	private final DynamicDescendantFilter dynamicDescendantFilter;
 
 	DynamicContainerTestDescriptor(UniqueId uniqueId, int index, DynamicContainer dynamicContainer,
-			TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter) {
-		super(uniqueId, index, dynamicContainer, testSource);
+			TestSource testSource, Set<TestTag> testTags, DynamicDescendantFilter dynamicDescendantFilter) {
+		super(uniqueId, index, dynamicContainer, testSource, testTags);
 		this.dynamicContainer = dynamicContainer;
 		this.testSource = testSource;
 		this.dynamicDescendantFilter = dynamicDescendantFilter;
@@ -50,7 +52,7 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
-			DynamicTestExecutor dynamicTestExecutor) throws Exception {
+			DynamicTestExecutor dynamicTestExecutor) {
 		AtomicInteger index = new AtomicInteger(1);
 		try (Stream<? extends DynamicNode> children = dynamicContainer.getChildren()) {
 			// @formatter:off

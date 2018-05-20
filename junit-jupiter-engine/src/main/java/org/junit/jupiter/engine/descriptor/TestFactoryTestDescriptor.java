@@ -15,7 +15,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -29,6 +31,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 
 /**
@@ -109,18 +112,20 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	}
 
 	static Optional<JupiterTestDescriptor> createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node,
-			int index, TestSource source, DynamicDescendantFilter dynamicDescendantFilter) {
+			int index, TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter) {
 		UniqueId uniqueId;
 		Supplier<JupiterTestDescriptor> descriptorCreator;
+		TestSource source = node.getTestSource().orElse(testSource);
+		Set<TestTag> tags = node.getTags().stream().map(TestTag::create).collect(Collectors.toSet());
 		if (node instanceof DynamicTest) {
 			DynamicTest test = (DynamicTest) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
-			descriptorCreator = () -> new DynamicTestTestDescriptor(uniqueId, index, test, source);
+			descriptorCreator = () -> new DynamicTestTestDescriptor(uniqueId, index, test, source, tags);
 		}
 		else {
 			DynamicContainer container = (DynamicContainer) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
-			descriptorCreator = () -> new DynamicContainerTestDescriptor(uniqueId, index, container, source,
+			descriptorCreator = () -> new DynamicContainerTestDescriptor(uniqueId, index, container, source, tags,
 				dynamicDescendantFilter);
 		}
 		if (dynamicDescendantFilter.test(uniqueId)) {
