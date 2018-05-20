@@ -1,30 +1,20 @@
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-buildscript {
-	repositories {
-		// mavenLocal()
-		maven { url 'https://plugins.gradle.org/m2/' }
-	}
-	dependencies {
-		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.10.0')
-		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
-		classpath('org.ajoberstar:gradle-git-publish:0.4.1')
-		classpath('org.ajoberstar:gradle-git:1.7.2')
-		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
-	}
-}
-
 plugins {
-	id 'com.gradle.build-scan' version '1.13.1'
+	id 'com.gradle.build-scan' version '1.13.4'
 	id 'net.nemerosa.versioning' version '2.6.1'
+	id 'com.github.ben-manes.versions' version '0.17.0' apply false
+	id 'com.diffplug.gradle.spotless' version '3.12.0' apply false
+	id 'org.ajoberstar.git-publish' version '0.4.1' apply false
+	id 'org.jetbrains.kotlin.jvm' version '1.2.41' apply false
+	id 'com.github.johnrengelman.shadow' version '2.0.4' apply false
 }
 
 buildScan {
 	licenseAgreementUrl = 'https://gradle.com/terms-of-service'
 	licenseAgree = 'yes'
 }
-
 
 def buildTimeAndDate = OffsetDateTime.now()
 ext {

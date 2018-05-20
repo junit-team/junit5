@@ -37,7 +37,7 @@ dependencies {
 	testImplementation(project(':junit-jupiter-params'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-launcher'))
-	testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
 
 	// Required by :consoleLauncherTest and :generateConsoleLauncherOptions
 	testRuntimeOnly(project(':junit-platform-console'))

@@ -2,15 +2,6 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 description = 'JUnit Jupiter Params'
 
-buildscript {
-	repositories {
-		jcenter()
-	}
-	dependencies {
-		classpath("com.github.jengelman.gradle.plugins:shadow:${shadowVersion}")
-	}
-}
-
 test {
 	useJUnitPlatform {
 		includeEngines 'junit-jupiter'
@@ -44,8 +35,8 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
-	compileOnly("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
-	testImplementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
+	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
 }
 
 jar.enabled = false
