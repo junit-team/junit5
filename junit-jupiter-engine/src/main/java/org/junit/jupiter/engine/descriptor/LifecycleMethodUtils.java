@@ -32,11 +32,9 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
  */
 final class LifecycleMethodUtils {
 
-	///CLOVER:OFF
 	private LifecycleMethodUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	static List<Method> findBeforeAllMethods(Class<?> testClass, boolean requireStatic) {
 		return findMethodsAndAssertStatic(testClass, requireStatic, BeforeAll.class, HierarchyTraversalMode.TOP_DOWN);

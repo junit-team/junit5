@@ -11,7 +11,6 @@
 package org.junit.platform.commons.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import org.junit.jupiter.api.Test;
 
@@ -24,9 +23,6 @@ class ModuleUtilsTests {
 
 	@Test
 	void isJavaPlatformModuleSystemAvailable() {
-		// when running clover for code coverage the mr-jar is not created
-		// which leads to 'false' fails here - so exit here if clover is running
-		assumeFalse(Boolean.getBoolean("coverage.enabled"));
 		boolean expected;
 		try {
 			Class.forName("java.lang.Module");

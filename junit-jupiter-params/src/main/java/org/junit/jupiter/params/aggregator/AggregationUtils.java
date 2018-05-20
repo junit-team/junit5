@@ -28,11 +28,9 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "5.2")
 public class AggregationUtils {
 
-	///CLOVER:OFF
 	private AggregationUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Determine if the supplied {@link Method} has a <em>potentially</em>

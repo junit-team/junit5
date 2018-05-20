@@ -33,11 +33,9 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = MAINTAINED, since = "1.0")
 public final class AnnotationSupport {
 
-	///CLOVER:OFF
 	private AnnotationSupport() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Determine if an annotation of {@code annotationType} is either

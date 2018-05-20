@@ -32,11 +32,9 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = MAINTAINED, since = "1.0")
 public final class ReflectionSupport {
 
-	///CLOVER:OFF
 	private ReflectionSupport() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,

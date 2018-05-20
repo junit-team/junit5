@@ -46,7 +46,6 @@ import org.junit.platform.engine.reporting.ReportEntry;
  */
 @API(status = STABLE, since = "1.0")
 public interface TestExecutionListener {
-	///CLOVER:OFF
 
 	/**
 	 * Called when the execution of the {@link TestPlan} has started,
@@ -156,5 +155,4 @@ public interface TestExecutionListener {
 	default void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 	}
 
-	///CLOVER:ON
 }

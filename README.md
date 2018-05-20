@@ -44,9 +44,6 @@ Code coverage using [JaCoCo] for the latest build is available on the
 A code coverage report can also be generated locally by executing
 `gradlew -PenableJaCoCo clean jacocoRootReport`. The results will be available in
 `build/reports/jacoco/jacocoRootReport/html/index.html`.
-Alternatively, [OpenClover] can be used locally via
-`gradlew -PenableClover clean cloverHtmlReport`. The results will be available in
-`build/reports/clover/html/index.html`.
 
 ## Gradle Build Scans
 
@@ -155,7 +152,6 @@ as it is not intended to be used as a module.
 [Javadoc]: https://junit.org/junit5/docs/current/api/
 [JDK-10]: http://jdk.java.net/10/
 [Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/artifact/build/reports/jacoco/jacocoRootReport/html/index.html
-[OpenClover]: http://openclover.org
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5

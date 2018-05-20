@@ -69,11 +69,9 @@ import org.junit.platform.commons.JUnitException;
 @API(status = INTERNAL, since = "1.0")
 public final class ReflectionUtils {
 
-	///CLOVER:OFF
 	private ReflectionUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Modes in which a hierarchy can be traversed &mdash; for example, when

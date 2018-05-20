@@ -29,11 +29,9 @@ import org.junit.platform.commons.JUnitException;
 @API(status = INTERNAL, since = "1.0")
 public final class LoggerFactory {
 
-	///CLOVER:OFF
 	private LoggerFactory() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	private static final Set<LogRecordListener> listeners = ConcurrentHashMap.newKeySet();
 

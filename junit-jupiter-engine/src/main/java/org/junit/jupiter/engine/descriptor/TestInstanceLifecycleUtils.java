@@ -33,11 +33,9 @@ final class TestInstanceLifecycleUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestInstanceLifecycleUtils.class);
 
-	///CLOVER:OFF
 	private TestInstanceLifecycleUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	static TestInstance.Lifecycle getTestInstanceLifecycle(Class<?> testClass, ConfigurationParameters configParams) {
 		Preconditions.notNull(testClass, "testClass must not be null");

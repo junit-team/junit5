@@ -22,7 +22,6 @@ test {
 		html.enabled = true
 	}
 	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
-	systemProperty 'coverage.enabled', project.hasProperty('enableClover') ? 'true' : 'false'
 }
 
 dependencies {

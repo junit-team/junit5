@@ -40,11 +40,9 @@ import org.junit.platform.launcher.TestExecutionListener;
 @API(status = STABLE, since = "1.0")
 public class LauncherFactory {
 
-	///CLOVER:OFF
 	private LauncherFactory() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Factory method for creating a new {@link Launcher} using dynamically

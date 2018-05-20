@@ -44,11 +44,9 @@ import org.opentest4j.MultipleFailuresError;
 @API(status = STABLE, since = "5.0")
 public final class Assertions {
 
-	///CLOVER:OFF
 	private Assertions() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	// --- fail ----------------------------------------------------------------
 

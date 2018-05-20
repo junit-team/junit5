@@ -42,11 +42,9 @@ final class ExtensionUtils {
 	private static final Predicate<Field> isStaticExtension = new IsStaticExtensionField();
 	private static final Predicate<Field> isNonStaticExtension = new IsNonStaticExtensionField();
 
-	///CLOVER:OFF
 	private ExtensionUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Populate a new {@link ExtensionRegistry} from extension types declared via

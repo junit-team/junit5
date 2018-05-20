@@ -41,11 +41,9 @@ public final class BlacklistedExceptions {
 
 	private static final List<Class<? extends Throwable>> blacklist = Collections.singletonList(OutOfMemoryError.class);
 
-	///CLOVER:OFF
 	private BlacklistedExceptions() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Rethrow the supplied {@link Throwable exception} if it is

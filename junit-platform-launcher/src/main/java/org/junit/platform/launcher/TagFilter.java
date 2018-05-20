@@ -48,11 +48,9 @@ import org.junit.platform.launcher.tagexpression.TagExpression;
 @API(status = STABLE, since = "1.0")
 public final class TagFilter {
 
-	///CLOVER:OFF
 	private TagFilter() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Create an <em>include</em> filter based on the supplied tag expressions.

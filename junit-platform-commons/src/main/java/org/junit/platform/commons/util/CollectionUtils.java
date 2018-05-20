@@ -45,11 +45,9 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public final class CollectionUtils {
 
-	///CLOVER:OFF
 	private CollectionUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Read the only element of a collection of size 1.

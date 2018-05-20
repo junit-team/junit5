@@ -27,11 +27,9 @@ import java.util.function.Supplier;
  */
 class AssertEquals {
 
-	///CLOVER:OFF
 	private AssertEquals() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	static void assertEquals(byte expected, byte actual) {
 		assertEquals(expected, actual, (String) null);

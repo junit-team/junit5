@@ -85,7 +85,7 @@ ext {
 		]
 	}
 
-	cloverTestProjects = [
+	jacocoTestProjects = [
 		'junit-jupiter-engine',
 		'junit-jupiter-migrationsupport',
 		'junit-jupiter-params',
@@ -93,8 +93,6 @@ ext {
 		'junit-platform-surefire-provider',
 		'platform-tests'
 	]
-
-	jacocoTestProjects = cloverTestProjects
 	jacocoCoveredProjects = mavenizedProjects - ['junit-platform-console-standalone']
 	jacocoClassesDir = "$buildDir/jacoco/classes"
 }
@@ -137,8 +135,8 @@ allprojects { subproj ->
 
 	subproj.afterEvaluate { evaluatedProject ->
 		evaluatedProject.tasks.withType(JavaCompile) {
-			sourceCompatibility = javacRelease // needed by clover
-			targetCompatibility = javacRelease // needed by clover/asm
+			sourceCompatibility = javacRelease
+			targetCompatibility = javacRelease // needed by asm
 			options.compilerArgs += ['--release', javacRelease]
 			options.encoding = 'UTF-8'
 		}
@@ -211,51 +209,6 @@ allprojects { subproj ->
 	}
 	checkstyleTest {
 		configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
-	}
-
-	if (project.hasProperty('enableClover')) {
-
-		configurations {
-			clover
-		}
-
-		dependencies {
-			clover('org.openclover:clover:4.2.0')
-		}
-
-		ext.cloverDir = file("$buildDir/clover")
-		ext.cloverInitstring = "$cloverDir/clover.db"
-
-		def instrumentedJavaSourcesDir = file("$cloverDir/instrumentedSources/java")
-
-		task cloverTaskdef {
-			ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
-		}
-
-		task cloverInstrumentJava(dependsOn: cloverTaskdef) {
-			outputs.dir cloverDir
-			onlyIf { sourceSets.main.allJava.any { it.exists() } }
-			doLast {
-				ant.'clover-instr'(
-					initstring: cloverInitstring,
-					recordTestResults: false,
-					destdir: instrumentedJavaSourcesDir,
-					encoding: 'UTF-8',
-					source: compileJava.sourceCompatibility) {
-					sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
-				}
-			}
-		}
-
-		// Disable javac warnings when executing Clover
-		compileJava.options*.compilerArgs = ['-Xlint:none']
-		compileTestJava.options*.compilerArgs = ['-Xlint:none']
-
-		compileJava.source = instrumentedJavaSourcesDir
-		sourceSets.main.compileClasspath += configurations.clover
-		sourceSets.test.compileClasspath += configurations.clover
-		sourceSets.test.runtimeClasspath += configurations.clover
-		compileJava.dependsOn cloverInstrumentJava
 	}
 }
 
@@ -435,10 +388,6 @@ subprojects { subproj ->
 				return
 			}
 
-			if (project.hasProperty('enableClover')) {
-				println "Skip updating $archivePath with $versionedProject - Clover is enabled!"
-				return
-			}
 			// We're only interested in the compiled classes. So we depend
 			// on the classes task and change (-C) to the destination
 			// directory of the version-aware project later.
@@ -589,49 +538,6 @@ configure(rootProject) {
 			target '**/*.adoc', '**/*.md'
 			trimTrailingWhitespace()
 			endWithNewline()
-		}
-	}
-
-	if (project.hasProperty('enableClover')) {
-
-		def cloverAggregationFile = "$cloverDir/coverage.db"
-
-		task cloverAggregateDatabases(dependsOn: cloverTaskdef) {
-			outputs.file cloverAggregationFile
-			subprojects.findAll { it.name in cloverTestProjects }
-				.each { dependsOn it.tasks.withType(Test) }
-			doLast {
-				ant.'clover-merge'(initString: cloverAggregationFile) {
-					subprojects.each { project ->
-						def cloverDbFile = project.file(project.cloverInitstring)
-						if(cloverDbFile.exists()) {
-							cloverDb(initString: project.cloverInitstring)
-						}
-					}
-				}
-			}
-		}
-
-		task cloverHtmlReport(dependsOn: cloverAggregateDatabases) {
-			outputs.dir "$buildDir/reports/clover/html"
-			doLast {
-				ant."clover-report"(initString: cloverAggregationFile) {
-					current(outfile: "$buildDir/reports/clover/html", title: rootProject.description, homepage: 'overview') {
-						format(type: 'html')
-					}
-				}
-			}
-		}
-
-		task cloverXmlReport(dependsOn: cloverAggregateDatabases) {
-			outputs.file "$buildDir/reports/clover/clover.xml"
-			doLast {
-				ant."clover-report"(initString: cloverAggregationFile) {
-					current(outfile: "$buildDir/reports/clover/clover.xml") {
-						format(type: 'xml')
-					}
-				}
-			}
 		}
 	}
 

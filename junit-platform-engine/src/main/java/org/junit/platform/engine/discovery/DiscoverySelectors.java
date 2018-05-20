@@ -50,11 +50,9 @@ import org.junit.platform.engine.UniqueId;
 @API(status = STABLE, since = "1.0")
 public final class DiscoverySelectors {
 
-	///CLOVER:OFF
 	private DiscoverySelectors() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Create a {@code UriSelector} for the supplied URI.

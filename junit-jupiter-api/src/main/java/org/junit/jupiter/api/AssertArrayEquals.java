@@ -30,11 +30,9 @@ import java.util.function.Supplier;
  */
 class AssertArrayEquals {
 
-	///CLOVER:OFF
 	private AssertArrayEquals() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	static void assertArrayEquals(boolean[] expected, boolean[] actual) {
 		assertArrayEquals(expected, actual, (String) null);
