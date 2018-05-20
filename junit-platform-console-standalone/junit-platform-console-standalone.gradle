@@ -80,11 +80,6 @@ shadowJar {
 	}
 }
 
-
-artifacts {
-	archives shadowJar
-}
-
 task standaloneExec(type: JavaExec, dependsOn: [shadowJar, testClasses]) {
 	ignoreExitValue = true
 	workingDir = "$buildDir/libs"

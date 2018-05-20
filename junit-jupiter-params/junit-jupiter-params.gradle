@@ -74,7 +74,3 @@ shadowJar {
 		into 'META-INF'
 	}
 }
-
-artifacts {
-	archives shadowJar
-}

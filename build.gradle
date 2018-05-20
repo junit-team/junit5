@@ -300,7 +300,7 @@ subprojects { subproj ->
 
 	if (subproj.name in mavenizedProjects) {
 
-		apply from: "$rootDir/gradle/maven.gradle"
+		apply from: "$rootDir/gradle/publishing.gradle"
 		apply from: "$rootDir/gradle/japicc.gradle"
 
 		javadoc {
@@ -332,11 +332,6 @@ subprojects { subproj ->
 			from javadoc
 		}
 
-		artifacts {
-			archives sourcesJar
-			archives javadocJar
-		}
-
 		tasks.withType(Jar) {
 			from(project.projectDir) {
 				include 'LICENSE.md'
@@ -348,11 +343,15 @@ subprojects { subproj ->
 			}
 		}
 
+		publishing.publications.maven {
+			from components.java
+			artifact sourcesJar
+			artifact javadocJar
+		}
 
 	} else {
 		jar.enabled = false
 		javadoc.enabled = false
-		uploadArchives.enabled = false
 	}
 
 	def normalizeVersion = { versionLiteral ->
@@ -528,7 +527,6 @@ configure(rootProject) {
 	apply plugin: "org.ajoberstar.git-publish"
 
 	jar.enabled = false
-	uploadArchives.enabled = false
 
 	def ota4jDocVersion = ota4jVersion.contains('SNAPSHOT') ? 'snapshot' : ota4jVersion
 	def apiGuardianDocVersion = apiGuardianVersion.contains('SNAPSHOT') ? 'snapshot' : apiGuardianVersion

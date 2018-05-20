@@ -26,7 +26,7 @@ pipeline {
       steps {
         milestone 1
         withCredentials([usernamePassword(credentialsId: '50481102-b416-45bd-8628-bd890c4f0188', usernameVariable: 'ORG_GRADLE_PROJECT_ossrhUsername', passwordVariable: 'ORG_GRADLE_PROJECT_ossrhPassword')]) {
-          sh './gradlew --no-daemon uploadArchives -x test'
+          sh './gradlew --no-daemon publish -x test'
         }
       }
     }

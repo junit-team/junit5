@@ -78,7 +78,7 @@ Since Gradle has excellent incremental build support, you can usually omit execu
 All modules can be installed in a local Maven repository for consumption in other projects via the following command.
 
 ```
-gradlew clean install
+gradlew clean publishToMavenLocal
 ```
 
 ## Dependency Metadata
