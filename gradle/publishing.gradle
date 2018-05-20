@@ -72,7 +72,6 @@ publishing {
 		maven {
 			def stagingRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
 			def snapshotRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-			// change to point to your repo, e.g. http://my.org/repo
 			url isSnapshot ? snapshotRepoUrl : stagingRepoUrl
 			credentials {
 				username = rootProject.findProperty('ossrhUsername') ?: ''
