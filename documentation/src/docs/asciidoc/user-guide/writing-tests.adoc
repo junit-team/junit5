@@ -772,7 +772,7 @@ In order to use parameterized tests you need to add a dependency on the
 `junit-jupiter-params` artifact. Please refer to <<dependency-metadata>> for details.
 
 [[writing-tests-parameterized-tests-consuming-arguments]]
-=== Consuming Arguments
+==== Consuming Arguments
 
 Parameterized test methods typically _consume_ arguments directly from the configured
 source (see <<writing-tests-parameterized-tests-sources>>) following a one-to-one
