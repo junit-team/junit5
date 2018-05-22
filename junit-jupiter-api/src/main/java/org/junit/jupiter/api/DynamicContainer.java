@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.annotation.TestSource;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -49,7 +50,7 @@ public class DynamicContainer extends DynamicNode {
 	 * @see #dynamicContainer(String, Stream)
 	 */
 	public static DynamicContainer dynamicContainer(String displayName, Iterable<? extends DynamicNode> dynamicNodes) {
-		return new DynamicContainer(displayName, StreamSupport.stream(dynamicNodes.spliterator(), false));
+		return dynamicContainer(displayName, StreamSupport.stream(dynamicNodes.spliterator(), false));
 	}
 
 	/**
@@ -65,15 +66,14 @@ public class DynamicContainer extends DynamicNode {
 	 * @see #dynamicContainer(String, Iterable)
 	 */
 	public static DynamicContainer dynamicContainer(String displayName, Stream<? extends DynamicNode> dynamicNodes) {
-		return new DynamicContainer(displayName, dynamicNodes);
+		return new Builder().setDisplayName(displayName).setChildren(dynamicNodes).build();
 	}
 
 	private final Stream<? extends DynamicNode> children;
 
-	private DynamicContainer(String displayName, Stream<? extends DynamicNode> children) {
-		super(displayName);
-		Preconditions.notNull(children, "children must not be null");
-		this.children = children;
+	private DynamicContainer(Builder builder) {
+		super(builder);
+		this.children = Preconditions.notNull(builder.children, "children must not be null");
 	}
 
 	/**
@@ -84,4 +84,30 @@ public class DynamicContainer extends DynamicNode {
 		return children;
 	}
 
+	public static class Builder extends DynamicNode.Builder {
+
+		private Stream<? extends DynamicNode> children;
+
+		@Override
+		public DynamicContainer build() {
+			return new DynamicContainer(this);
+		}
+
+		@Override
+		public Builder setDisplayName(String displayName) {
+			super.setDisplayName(displayName);
+			return this;
+		}
+
+		@Override
+		public Builder setTestSource(TestSource testSource) {
+			super.setTestSource(testSource);
+			return this;
+		}
+
+		public Builder setChildren(Stream<? extends DynamicNode> children) {
+			this.children = children;
+			return this;
+		}
+	}
 }

@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.getFullyQualifiedMethodName;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Files;
@@ -42,6 +43,7 @@ import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.console.options.Details;
 import org.junit.platform.console.options.Theme;
+import org.junit.platform.engine.support.descriptor.FileSource;
 
 /**
  * @since 1.0
@@ -95,7 +97,12 @@ class ConsoleDetailsTests {
 					String displayName = methodName + "() " + theme.name();
 					String dirName = "console/details/" + containerName.toLowerCase();
 					String outName = caption + ".out.txt";
-					tests.add(DynamicTest.dynamicTest(displayName, new Runner(dirName, outName, args)));
+					Runner runner = new Runner(dirName, outName, args);
+					DynamicTest.Builder builder = new DynamicTest.Builder();
+					builder.setDisplayName(displayName);
+					builder.setExecutable(runner);
+					builder.setTestSource(FileSource.from(new File(dirName, outName)));
+					tests.add(builder.build());
 				}
 			}
 		}

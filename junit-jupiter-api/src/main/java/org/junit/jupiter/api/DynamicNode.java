@@ -12,7 +12,10 @@ package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.Optional;
+
 import org.apiguardian.api.API;
+import org.junit.platform.commons.annotation.TestSource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -29,8 +32,11 @@ public abstract class DynamicNode {
 
 	private final String displayName;
 
-	DynamicNode(String displayName) {
-		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
+	private final TestSource testSource;
+
+	DynamicNode(Builder builder) {
+		this.displayName = Preconditions.notBlank(builder.displayName, "displayName must not be null or blank");
+		this.testSource = builder.testSource;
 	}
 
 	/**
@@ -40,9 +46,34 @@ public abstract class DynamicNode {
 		return this.displayName;
 	}
 
+	/**
+	 * Get the optional test source of this {@code DynamicNode}.
+	 */
+	public Optional<Object> getTestSource() {
+		return Optional.ofNullable(testSource);
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("displayName", displayName).toString();
 	}
 
+	static abstract class Builder {
+
+		String displayName;
+
+		TestSource testSource;
+
+		public Builder setDisplayName(String displayName) {
+			this.displayName = displayName;
+			return this;
+		}
+
+		public Builder setTestSource(TestSource testSource) {
+			this.testSource = testSource;
+			return this;
+		}
+
+		abstract DynamicNode build();
+	}
 }

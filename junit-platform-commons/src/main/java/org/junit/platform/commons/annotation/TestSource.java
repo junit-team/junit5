@@ -8,9 +8,11 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine;
+package org.junit.platform.commons.annotation;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import java.io.Serializable;
 
 import org.apiguardian.api.API;
 
@@ -25,8 +27,8 @@ import org.apiguardian.api.API;
  * <em>serializable</em> and <em>immutable</em> since they may be used as data
  * transfer objects.
  *
- * @since 1.0
+ * @since 1.2
  */
-@API(status = STABLE, since = "1.0")
-public interface TestSource extends org.junit.platform.commons.annotation.TestSource {
+@API(status = EXPERIMENTAL, since = "1.2")
+public interface TestSource extends Serializable {
 }
