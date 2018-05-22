@@ -17,7 +17,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
@@ -52,6 +54,50 @@ public class FilePosition implements Serializable {
 		return new FilePosition(line, column);
 	}
 
+	/**
+	 * Create an optional {@code FilePosition} parsing the supplied
+	 * {@code query} string.
+	 *
+	 * <p>Examples of valid {@code query} strings:
+	 * <ul>
+	 *     <li>{@code "line=23"}</li>
+	 *     <li>{@code "line=23&column=42"}</li>
+	 * </ul>
+	 *
+	 * @param query the query string; may be {@code null}
+	 * @since 1.3
+	 */
+	public static Optional<FilePosition> fromQuery(String query) {
+		FilePosition result = null;
+		Integer line = null;
+		Integer column = null;
+		if (StringUtils.isNotBlank(query)) {
+			try {
+				for (String pair : query.split("&")) {
+					String[] data = pair.split("=");
+					if (data.length == 2) {
+						String key = data[0];
+						int value = Integer.valueOf(data[1]);
+						if (key.equals("line")) {
+							line = value;
+						}
+						if (key.equals("column")) {
+							column = value;
+						}
+					}
+				}
+			}
+			catch (IllegalArgumentException e) {
+				LoggerFactory.getLogger(FilePosition.class).debug(e, () -> "parsing query failed: " + query);
+				// fall-through and continue
+			}
+			if (line != null) {
+				result = column == null ? new FilePosition(line) : new FilePosition(line, column);
+			}
+		}
+		return Optional.ofNullable(result);
+	}
+
 	private final int line;
 	private final Integer column;
 
@@ -65,7 +111,7 @@ public class FilePosition implements Serializable {
 		Preconditions.condition(line > 0, "line number must be greater than zero");
 		Preconditions.condition(column > 0, "column number must be greater than zero");
 		this.line = line;
-		this.column = Integer.valueOf(column);
+		this.column = column;
 	}
 
 	/**

@@ -69,6 +69,9 @@ on GitHub.
   _alias_ for `Arguments.of()`. `arguments()` is intended to be used via `import static`.
 * New `get<Class>(index)` Kotlin extension method to make `ArgumentsAccessor` friendlier
   to use from Kotlin.
+* New support for supplying a custom test source `URI` when creating a dynamic container
+  or test. See factory methods `dynamicContainer(String, URI, ...)` in `DynamicContainer`
+  and `dynamicTest(String, URI, Executable)` in `DynamicTest` for details.
 
 
 [[release-notes-5.3.0-M1-junit-vintage]]

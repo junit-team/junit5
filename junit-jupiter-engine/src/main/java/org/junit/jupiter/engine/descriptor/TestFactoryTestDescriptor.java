@@ -30,6 +30,7 @@ import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.UriSource;
 
 /**
  * {@link org.junit.platform.engine.TestDescriptor TestDescriptor} for
@@ -108,10 +109,18 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		}
 	}
 
+	private JUnitException invalidReturnTypeException(Throwable cause) {
+		String message = String.format(
+			"@TestFactory method [%s] must return a Stream, Collection, Iterable, or Iterator of %s.",
+			getTestMethod().toGenericString(), DynamicNode.class.getName());
+		return new JUnitException(message, cause);
+	}
+
 	static Optional<JupiterTestDescriptor> createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node,
-			int index, TestSource source, DynamicDescendantFilter dynamicDescendantFilter) {
+			int index, TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter) {
 		UniqueId uniqueId;
 		Supplier<JupiterTestDescriptor> descriptorCreator;
+		TestSource source = computeOptionalTestSource(node).orElse(testSource);
 		if (node instanceof DynamicTest) {
 			DynamicTest test = (DynamicTest) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
@@ -131,11 +140,8 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		return Optional.empty();
 	}
 
-	private JUnitException invalidReturnTypeException(Throwable cause) {
-		String message = String.format(
-			"@TestFactory method [%s] must return a Stream, Collection, Iterable, or Iterator of %s.",
-			getTestMethod().toGenericString(), DynamicNode.class.getName());
-		return new JUnitException(message, cause);
+	static Optional<TestSource> computeOptionalTestSource(DynamicNode node) {
+		return node.getTestSourceURI().map(UriSource::from);
 	}
 
 }

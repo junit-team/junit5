@@ -12,6 +12,9 @@ package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.net.URI;
+import java.util.Optional;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -29,8 +32,12 @@ public abstract class DynamicNode {
 
 	private final String displayName;
 
-	DynamicNode(String displayName) {
+	/** Custom test source {@link URI} instance associated with this node; potentially {@code null}. */
+	private final URI testSourceUri;
+
+	DynamicNode(String displayName, URI testSourceUri) {
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
+		this.testSourceUri = testSourceUri;
 	}
 
 	/**
@@ -40,9 +47,20 @@ public abstract class DynamicNode {
 		return this.displayName;
 	}
 
+	/**
+	 * Get the optional test source of this {@code DynamicNode}.
+	 * @since 5.3
+	 */
+	public Optional<URI> getTestSourceURI() {
+		return Optional.ofNullable(testSourceUri);
+	}
+
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("displayName", displayName).toString();
+		return new ToStringBuilder(this) //
+				.append("displayName", displayName) //
+				.append("testSourceUri", testSourceUri) //
+				.toString();
 	}
 
 }
