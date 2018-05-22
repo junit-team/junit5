@@ -137,8 +137,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 public interface <span class="typeNameLabel">Extension</span></pre>
 <div class="block">Marker interface for all extensions.
 
- <p>An <code>Extension</code> can be registered declaratively via
- <a href="../../../../../org/junit/jupiter/api/extension/ExtendWith.html" title="annotation in org.junit.jupiter.api.extension"><code>@ExtendWith</code></a>.</div>
+ <p>An <code>Extension</code> can be registered <em>declaratively</em> via
+ <a href="../../../../../org/junit/jupiter/api/extension/ExtendWith.html" title="annotation in org.junit.jupiter.api.extension"><code>@ExtendWith</code></a>, <em>programmatically</em> via
+ <a href="../../../../../org/junit/jupiter/api/extension/RegisterExtension.html" title="annotation in org.junit.jupiter.api.extension"><code>@RegisterExtension</code></a>, or <em>automatically</em> via
+ the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism. For details on the latter,
+ consult the User Guide.
+
+ <h3>Constructor Requirements</h3>
+
+ <p>Extension implementations must have a <em>default constructor</em> if
+ registered via <code>@ExtendWith</code> or the <code>ServiceLoader</code>. When
+ registered via <code>@ExtendWith</code> the default constructor is not required
+ to be <code>public</code>. When registered via the <code>ServiceLoader</code> the
+ default constructor must be <code>public</code>. When registered via
+ <code>@RegisterExtension</code> the extension's constructors must be <code>public</code>
+ unless the extension provides <code>static</code> factory methods or a builder
+ API as an alternative to public constructors.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.0</dd>
