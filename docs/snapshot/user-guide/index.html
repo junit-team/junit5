@@ -564,9 +564,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-test-interfaces-and-default-methods">3.12. Test Interfaces and Default Methods</a></li>
 <li><a href="#writing-tests-repeated-tests">3.13. Repeated Tests</a></li>
 <li><a href="#writing-tests-parameterized-tests">3.14. Parameterized Tests</a></li>
-<li><a href="#writing-tests-parameterized-tests-consuming-arguments">3.15. Consuming Arguments</a></li>
-<li><a href="#writing-tests-test-templates">3.16. Test Templates</a></li>
-<li><a href="#writing-tests-dynamic-tests">3.17. Dynamic Tests</a></li>
+<li><a href="#writing-tests-test-templates">3.15. Test Templates</a></li>
+<li><a href="#writing-tests-dynamic-tests">3.16. Dynamic Tests</a></li>
 </ul>
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
@@ -2759,9 +2758,8 @@ in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for details.
 <code>junit-jupiter-params</code> artifact. Please refer to <a href="#dependency-metadata">Dependency Metadata</a> for details.</p>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="writing-tests-parameterized-tests-consuming-arguments"><a class="anchor" href="#writing-tests-parameterized-tests-consuming-arguments"></a>3.15. Consuming Arguments</h3>
+<div class="sect3">
+<h4 id="writing-tests-parameterized-tests-consuming-arguments"><a class="anchor" href="#writing-tests-parameterized-tests-consuming-arguments"></a>3.14.2. Consuming Arguments</h4>
 <div class="paragraph">
 <p>Parameterized test methods typically <em>consume</em> arguments directly from the configured
 source (see <a href="#writing-tests-parameterized-tests-sources">Sources of Arguments</a>) following a one-to-one
@@ -2793,8 +2791,9 @@ parameterized method at the same index in the method&#8217;s formal parameter li
 <em>aggregator</em> is any parameter of type <code>ArgumentsAccessor</code> or any parameter annotated with
 <code>@AggregateWith</code>.</p>
 </div>
+</div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.15.1. Sources of Arguments</h4>
+<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.14.3. Sources of Arguments</h4>
 <div class="paragraph">
 <p>Out of the box, JUnit Jupiter provides quite a few <em>source</em> annotations. Each of the
 following subsections provides a brief overview and an example for each of them. Please
@@ -3148,7 +3147,7 @@ primitive type.
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.15.2. Argument Conversion</h4>
+<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.14.4. Argument Conversion</h4>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-argument-conversion-widening"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-widening"></a>Widening Conversion</h5>
 <div class="paragraph">
@@ -3425,7 +3424,7 @@ composed annotation <code>JavaTimeConversionPattern</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-aggregation"><a class="anchor" href="#writing-tests-parameterized-tests-argument-aggregation"></a>3.15.3. Argument Aggregation</h4>
+<h4 id="writing-tests-parameterized-tests-argument-aggregation"><a class="anchor" href="#writing-tests-parameterized-tests-argument-aggregation"></a>3.14.5. Argument Aggregation</h4>
 <div class="paragraph">
 <p>By default, each <em>argument</em> provided to a <code>@ParameterizedTest</code> method corresponds to a
 single method parameter. Consequently, argument sources which are expected to supply a
@@ -3528,7 +3527,7 @@ action with a custom <code>@CsvToPerson</code> annotation.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.15.4. Customizing Display Names</h4>
+<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.14.6. Customizing Display Names</h4>
 <div class="paragraph">
 <p>By default, the display name of a parameterized test invocation contains the invocation
 index and the <code>String</code> representation of all arguments for that specific invocation.
@@ -3586,7 +3585,7 @@ However, you can customize invocation display names via the <code>name</code> at
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.15.5. Lifecycle and Interoperability</h4>
+<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.14.7. Lifecycle and Interoperability</h4>
 <div class="paragraph">
 <p>Each invocation of a parameterized test has the same lifecycle as a regular <code>@Test</code>
 method. For example, <code>@BeforeEach</code> methods will be executed before each invocation.
@@ -3623,7 +3622,7 @@ lifecycle methods (e.g. <code>@BeforeEach</code>) and test class constructors.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.16. Test Templates</h3>
+<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.15. Test Templates</h3>
 <div class="paragraph">
 <p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method is not a regular test case but rather a template for test
 cases. As such, it is designed to be invoked multiple times depending on the number of
@@ -3635,7 +3634,7 @@ method with full support for the same lifecycle callbacks and extensions. Please
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.17. Dynamic Tests</h3>
+<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.16. Dynamic Tests</h3>
 <div class="paragraph">
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in
 <a href="#writing-tests-annotations">Annotations</a> is very similar to the <code>@Test</code> annotation in JUnit 4. Both
@@ -3712,7 +3711,7 @@ Dynamic tests are currently an <em>experimental</em> feature. Consult the table 
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.17.1. Dynamic Test Examples</h4>
+<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.16.1. Dynamic Test Examples</h4>
 <div class="paragraph">
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories
 and dynamic tests.</p>
@@ -6352,7 +6351,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-05-22 06:34:39 EDT
+Last updated 2018-05-22 07:03:49 EDT
 </div>
 </div>
 </body>
