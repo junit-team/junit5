@@ -11,10 +11,17 @@
 package org.junit.platform.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
@@ -34,7 +41,7 @@ class FilePositionTests extends AbstractTestSourceTests {
 
 	@Test
 	@DisplayName("create FilePosition from factory method with line number")
-	void filePositionFromLine() throws Exception {
+	void filePositionFromLine() {
 		FilePosition filePosition = FilePosition.from(42);
 
 		assertThat(filePosition.getLine()).isEqualTo(42);
@@ -43,11 +50,40 @@ class FilePositionTests extends AbstractTestSourceTests {
 
 	@Test
 	@DisplayName("create FilePosition from factory method with line number and column number")
-	void filePositionFromLineAndColumn() throws Exception {
+	void filePositionFromLineAndColumn() {
 		FilePosition filePosition = FilePosition.from(42, 99);
 
 		assertThat(filePosition.getLine()).isEqualTo(42);
 		assertThat(filePosition.getColumn()).contains(99);
+	}
+
+	@ParameterizedTest
+	@MethodSource
+	void filePositionFromQuery(String query, int expectedLine, int expectedColumn) {
+		Optional<FilePosition> optionalFilePosition = FilePosition.fromQuery(query);
+		if (optionalFilePosition.isPresent()) {
+			FilePosition filePosition = optionalFilePosition.get();
+
+			assertThat(filePosition.getLine()).isEqualTo(expectedLine);
+			assertThat(filePosition.getColumn().orElse(-1)).isEqualTo(expectedColumn);
+			return;
+		}
+
+		assertEquals(-1, expectedLine);
+		assertEquals(-1, expectedColumn);
+	}
+
+	@SuppressWarnings("unused")
+	static Stream<Arguments> filePositionFromQuery() {
+		return Stream.of( //
+			Arguments.of(null, -1, -1), //
+			Arguments.of("?!", -1, -1), //
+			Arguments.of("line=ZZ", -1, -1), //
+			Arguments.of("line=42", 42, -1), //
+			Arguments.of("line=42&line=24", 24, -1), //
+			Arguments.of("line=42&column=99", 42, 99), //
+			Arguments.of("line=42&column=ZZ", 42, -1) //
+		);
 	}
 
 	@Test

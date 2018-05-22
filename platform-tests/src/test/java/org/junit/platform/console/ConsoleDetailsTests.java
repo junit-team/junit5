@@ -16,10 +16,15 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.getFullyQualifiedMethodName;
 
+import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,7 +38,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -95,11 +99,14 @@ class ConsoleDetailsTests {
 					String displayName = methodName + "() " + theme.name();
 					String dirName = "console/details/" + containerName.toLowerCase();
 					String outName = caption + ".out.txt";
-					tests.add(DynamicTest.dynamicTest(displayName, new Runner(dirName, outName, args)));
+					Runner runner = new Runner(dirName, outName, args);
+					URI source = toUri(dirName, outName).orElse(null);
+					tests.add(dynamicTest(displayName, source, runner));
 				}
 			}
 		}
-		map.forEach((details, tests) -> nodes.add(DynamicContainer.dynamicContainer(details.name(), tests)));
+		URI source = new File("src/test/resources/console/details").toURI();
+		map.forEach((details, tests) -> nodes.add(dynamicContainer(details.name(), source, tests.stream())));
 		return nodes;
 	}
 
@@ -194,22 +201,20 @@ class ConsoleDetailsTests {
 			ConsoleLauncherWrapper wrapper = new ConsoleLauncherWrapper();
 			ConsoleLauncherWrapperResult result = wrapper.execute(Optional.empty(), args);
 
-			String resourceName = dirName + "/" + outName;
-			Optional<URL> optionalUrl = Optional.ofNullable(getClass().getClassLoader().getResource(resourceName));
-			if (!optionalUrl.isPresent()) {
+			Optional<URI> optionalUri = toUri(dirName, outName);
+			if (!optionalUri.isPresent()) {
 				if (Boolean.getBoolean("org.junit.platform.console.ConsoleDetailsTests.writeResultOut")) {
 					// do not use Files.createTempDirectory(prefix) as we want one folder for one container
 					Path temp = Paths.get(System.getProperty("java.io.tmpdir"), dirName.replace('/', '-'));
 					Files.createDirectories(temp);
 					Path path = Files.write(temp.resolve(outName), result.out.getBytes(UTF_8));
 					assumeTrue(false,
-						format("resource `%s` not found\nwrote console stdout to: %s", resourceName, path));
+						format("resource `%s` not found\nwrote console stdout to: %s/%s", dirName, outName, path));
 				}
-				fail("could not load resource named `" + resourceName + "`");
+				fail("could not load resource named `" + dirName + "/" + outName + "`");
 			}
 
-			URL url = optionalUrl.orElseThrow(AssertionError::new);
-			Path path = Paths.get(url.toURI());
+			Path path = Paths.get(optionalUri.get());
 			assumeTrue(Files.exists(path), "path does not exist: " + path);
 			assumeTrue(Files.isReadable(path), "can not read: " + path);
 
@@ -217,6 +222,20 @@ class ConsoleDetailsTests {
 			List<String> actualLines = asList(result.out.split("\\R"));
 
 			assertLinesMatch(expectedLines, actualLines);
+		}
+	}
+
+	static Optional<URI> toUri(String dirName, String outName) {
+		String resourceName = dirName + "/" + outName;
+		URL url = ConsoleDetailsTests.class.getClassLoader().getResource(resourceName);
+		if (url == null) {
+			return Optional.empty();
+		}
+		try {
+			return Optional.of(url.toURI());
+		}
+		catch (URISyntaxException e) {
+			return Optional.empty();
 		}
 	}
 

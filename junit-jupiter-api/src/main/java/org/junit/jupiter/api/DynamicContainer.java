@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.net.URI;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -49,7 +50,7 @@ public class DynamicContainer extends DynamicNode {
 	 * @see #dynamicContainer(String, Stream)
 	 */
 	public static DynamicContainer dynamicContainer(String displayName, Iterable<? extends DynamicNode> dynamicNodes) {
-		return new DynamicContainer(displayName, StreamSupport.stream(dynamicNodes.spliterator(), false));
+		return dynamicContainer(displayName, null, StreamSupport.stream(dynamicNodes.spliterator(), false));
 	}
 
 	/**
@@ -65,13 +66,32 @@ public class DynamicContainer extends DynamicNode {
 	 * @see #dynamicContainer(String, Iterable)
 	 */
 	public static DynamicContainer dynamicContainer(String displayName, Stream<? extends DynamicNode> dynamicNodes) {
-		return new DynamicContainer(displayName, dynamicNodes);
+		return dynamicContainer(displayName, null, dynamicNodes);
+	}
+
+	/**
+	 * Factory for creating a new {@code DynamicContainer} for the supplied display
+	 * name, the test source uri, and stream of dynamic nodes.
+	 *
+	 * <p>The stream of dynamic nodes must not contain {@code null} elements.
+	 *
+	 * @param displayName the display name for the dynamic container; never
+	 * {@code null} or blank
+	 * @param testSourceUri the test source uri for the dynamic test; can be {@code null}
+	 * @param dynamicNodes stream of dynamic nodes to execute;
+	 * never {@code null}
+	 * @since 5.3
+	 * @see #dynamicContainer(String, Iterable)
+	 */
+	public static DynamicContainer dynamicContainer(String displayName, URI testSourceUri,
+			Stream<? extends DynamicNode> dynamicNodes) {
+		return new DynamicContainer(displayName, testSourceUri, dynamicNodes);
 	}
 
 	private final Stream<? extends DynamicNode> children;
 
-	private DynamicContainer(String displayName, Stream<? extends DynamicNode> children) {
-		super(displayName);
+	private DynamicContainer(String displayName, URI testSourceUri, Stream<? extends DynamicNode> children) {
+		super(displayName, testSourceUri);
 		Preconditions.notNull(children, "children must not be null");
 		this.children = children;
 	}
