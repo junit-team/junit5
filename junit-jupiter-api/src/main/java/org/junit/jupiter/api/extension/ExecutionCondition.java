@@ -29,7 +29,10 @@ import org.apiguardian.api.API;
  * method-level lifecycle callbacks such as {@code @BeforeEach} methods,
  * {@code @AfterEach} methods, and corresponding extension APIs.
  *
- * <p>Implementations must provide a no-args constructor.
+ * <h3>Constructor Requirements</h3>
+ *
+ * <p>Consult the documentation in {@link Extension} for details on
+ * constructor requirements.
  *
  * @since 5.0
  * @see org.junit.jupiter.api.Disabled

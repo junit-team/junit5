@@ -41,7 +41,10 @@ import org.apiguardian.api.API;
  * the test template method will be invoked using the contexts of all active
  * providers.
  *
- * <p>Implementations must provide a no-args constructor.
+ * <h3>Constructor Requirements</h3>
+ *
+ * <p>Consult the documentation in {@link Extension} for details on
+ * constructor requirements.
  *
  * @see org.junit.jupiter.api.TestTemplate
  * @see TestTemplateInvocationContext

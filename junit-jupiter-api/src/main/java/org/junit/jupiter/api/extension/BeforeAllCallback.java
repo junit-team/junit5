@@ -21,10 +21,13 @@ import org.apiguardian.api.API;
  *
  * <p>Concrete implementations often implement {@link AfterAllCallback} as well.
  *
- * <p>Implementations must provide a no-args constructor.
- *
  * <p>Extensions that implement {@code BeforeAllCallback} must be registered at
  * the class level.
+ *
+ * <h3>Constructor Requirements</h3>
+ *
+ * <p>Consult the documentation in {@link Extension} for details on
+ * constructor requirements.
  *
  * @since 5.0
  * @see org.junit.jupiter.api.BeforeAll
