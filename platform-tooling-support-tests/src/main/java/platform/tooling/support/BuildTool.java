@@ -14,23 +14,35 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public enum Tool {
+/**
+ * @since 1.3
+ */
+public enum BuildTool {
 
 	ANT("https://www.apache.org/dist/ant/binaries/${ARCHIVE}", "apache-ant-${VERSION}-bin.zip"),
 
 	GRADLE("https://services.gradle.org/distributions/${ARCHIVE}", "gradle-${VERSION}-bin.zip"),
 
 	MAVEN("https://archive.apache.org/dist/maven/maven-3/${VERSION}/binaries/${ARCHIVE}",
-			"apache-maven-${VERSION}-bin.zip");
+			"apache-maven-${VERSION}-bin.zip", "bin/mvn", "bin/mvn.cmd");
 
 	private final String uriTemplate;
 	private final String zipTemplate;
-	private final String exeTemplate;
+	private final String executable;
+	private final String wincutable;
 
-	Tool(String uriTemplate, String zipTemplate) {
+	BuildTool(String uriTemplate, String zipTemplate) {
 		this.uriTemplate = uriTemplate;
 		this.zipTemplate = zipTemplate;
-		this.exeTemplate = "bin/" + name().toLowerCase();
+		this.executable = "bin/" + name().toLowerCase();
+		this.wincutable = "bin/" + name().toLowerCase() + ".bat";
+	}
+
+	BuildTool(String uriTemplate, String zipTemplate, String executable, String wincutable) {
+		this.uriTemplate = uriTemplate;
+		this.zipTemplate = zipTemplate;
+		this.executable = executable;
+		this.wincutable = wincutable;
 	}
 
 	public String createArchive(String version) {
@@ -43,9 +55,9 @@ public enum Tool {
 	}
 
 	public Path createExecutable() {
-		var executable = exeTemplate;
+		var executable = this.executable;
 		if (System.getProperty("os.name").toLowerCase().contains("win")) {
-			executable += ".bat";
+			executable = wincutable;
 		}
 		return Paths.get(executable);
 	}

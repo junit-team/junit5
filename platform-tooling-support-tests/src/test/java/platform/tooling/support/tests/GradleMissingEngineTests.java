@@ -19,44 +19,47 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.JRE;
 
-import platform.tooling.support.Tool;
-import platform.tooling.support.ToolRequest;
+import platform.tooling.support.BuildRequest;
+import platform.tooling.support.BuildTool;
 import platform.tooling.support.ToolSupport;
 
+/**
+ * @since 1.3
+ */
 class GradleMissingEngineTests {
 
 	@Test
 	void gradle_wrapper() throws Exception {
-		test(new ToolSupport(Tool.GRADLE), "wrapper");
+		test(new ToolSupport(BuildTool.GRADLE), "wrapper");
 	}
 
 	@Test
 	@EnabledOnJre(JRE.JAVA_10)
 	void gradle_4_7() throws Exception {
-		test(new ToolSupport(Tool.GRADLE, "4.7"), "4.7");
+		test(new ToolSupport(BuildTool.GRADLE, "4.7"), "4.7");
 	}
 
 	private void test(ToolSupport gradle, String workspaceSuffix) throws Exception {
 		var project = "gradle-missing-engine";
 		var executable = gradle.init();
-		var request = ToolRequest.builder() //
+		var request = BuildRequest.builder() //
 				.setProject(project) //
 				.setWorkspace(project + '-' + workspaceSuffix) //
 				.setExecutable(executable) //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
 				.build();
-		var response = gradle.run(request);
+		var result = gradle.run(request);
 
-		assertEquals(1, response.getStatus());
+		assertEquals(1, result.getStatus());
 		assertLinesMatch(List.of( //
 			">> HEAD >>", //
 			".+DEBUG.+Cannot create Launcher without at least one TestEngine.+", //
 			">> TAIL >>"), //
-			response.getOutputLines());
+			result.getOutputLines());
 		assertLinesMatch(List.of( //
 			">> HEAD >>", //
 			".+ERROR.+FAILURE: Build failed with an exception.", //
 			">> TAIL >>"), //
-			response.getErrorLines());
+			result.getErrorLines());
 	}
 }

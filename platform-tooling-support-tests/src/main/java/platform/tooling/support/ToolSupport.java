@@ -21,21 +21,24 @@ import java.util.spi.ToolProvider;
 
 import org.apache.commons.io.FileUtils;
 
+/**
+ * @since 1.3
+ */
 public class ToolSupport {
 
 	private static final String WRAPPER = "<wrapper>";
 
-	private final Tool tool;
+	private final BuildTool tool;
 	private final String version;
 
 	private final Path toolPath = Paths.get("build", "test-tools");
 	private final Path workPath = Paths.get("build", "test-workspace");
 
-	public ToolSupport(Tool tool) {
+	public ToolSupport(BuildTool tool) {
 		this(tool, WRAPPER);
 	}
 
-	public ToolSupport(Tool tool, String version) {
+	public ToolSupport(BuildTool tool, String version) {
 		this.tool = tool;
 		this.version = version;
 	}
@@ -55,7 +58,7 @@ public class ToolSupport {
 		var windows = System.getProperty("os.name").toLowerCase().contains("win");
 
 		// trivial case: use "gradlew" from "junit5" main project
-		if (Tool.GRADLE.equals(tool) && WRAPPER.equals(version)) {
+		if (BuildTool.GRADLE.equals(tool) && WRAPPER.equals(version)) {
 			var executable = "gradlew";
 			if (windows) {
 				executable += ".bat";
@@ -89,32 +92,32 @@ public class ToolSupport {
 		return executable;
 	}
 
-	public ToolResponse run(ToolRequest request) throws Exception {
-		var response = new ToolResponse();
+	public BuildResult run(BuildRequest request) throws Exception {
+		var result = new BuildResult();
 
 		// unroll to clean "build/test-workspace/${name}" workspace directory
 		var project = Paths.get("projects", request.getProject());
-		var workspace = response.workspace = workPath.resolve(request.getWorkspace());
+		var workspace = result.workspace = workPath.resolve(request.getWorkspace());
 		FileUtils.deleteQuietly(workspace.toFile());
 		FileUtils.copyDirectory(project.toFile(), workspace.toFile());
 
 		// execute build and collect data
-		response.out = workspace.resolve("stdout.txt");
-		response.err = workspace.resolve("stderr.txt");
+		result.out = workspace.resolve("stdout.txt");
+		result.err = workspace.resolve("stderr.txt");
 
 		var command = new ArrayList<String>();
 		command.add(request.getExecutable().toString());
 		request.getArguments().forEach(arg -> command.add(arg.toString()));
 		var builder = new ProcessBuilder(command) //
 				.directory(workspace.toFile()) //
-				.redirectOutput(response.out.toFile()) //
-				.redirectError(response.err.toFile());
+				.redirectOutput(result.out.toFile()) //
+				.redirectError(result.err.toFile());
 		var process = builder.start();
-		response.status = process.waitFor();
+		result.status = process.waitFor();
 		var encoding = workspace.resolve("file.encoding.txt");
 		if (Files.exists(encoding)) {
-			response.charset = Charset.forName(new String(Files.readAllBytes(encoding)));
+			result.charset = Charset.forName(new String(Files.readAllBytes(encoding)));
 		}
-		return response;
+		return result;
 	}
 }

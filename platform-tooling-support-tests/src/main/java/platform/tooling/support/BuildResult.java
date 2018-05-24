@@ -21,7 +21,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class ToolResponse {
+/**
+ * @since 1.3
+ */
+public class BuildResult {
 
 	int status = Integer.MIN_VALUE;
 	Charset charset = StandardCharsets.UTF_8;
