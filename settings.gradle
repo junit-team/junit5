@@ -23,6 +23,7 @@ include 'junit-platform-suite-api'
 include 'junit-platform-surefire-provider'
 include 'junit-vintage-engine'
 include 'platform-tests'
+include 'platform-tooling-support-tests'
 include 'junit-bom'
 
 // check that every subproject has a custom build file
