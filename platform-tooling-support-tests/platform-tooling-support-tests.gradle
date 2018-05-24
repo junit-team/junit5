@@ -1,0 +1,35 @@
+plugins {
+	id 'java'
+}
+
+project.ext.javaVersion = JavaVersion.VERSION_1_10
+// https://github.com/schauder/degraph/issues/87
+degraph.enabled = false
+
+afterEvaluate {
+	tasks.withType(JavaCompile) {
+		sourceCompatibility = project.ext.javaVersion
+		targetCompatibility = project.ext.javaVersion
+		options.encoding = 'UTF-8'
+		options.compilerArgs += '-parameters'
+		options.compilerArgs += ['--release', project.ext.javaVersion.majorVersion]
+	}
+}
+
+dependencies {
+	implementation('commons-io:commons-io:2.6') {
+		because 'downloading tool archives from URL, moving and deleting directory trees'
+	}
+
+	testImplementation(project(':junit-jupiter-api'))
+
+	testRuntimeOnly(project(':junit-platform-console-standalone')) {
+		because 'needed by Ant projects using native junitlauncher task'
+	}
+	testRuntimeOnly(project(':junit-platform-launcher'))
+	testRuntimeOnly(project(':junit-jupiter-engine'))
+}
+
+test {
+	useJUnitPlatform()
+}

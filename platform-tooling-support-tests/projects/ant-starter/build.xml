@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ant-starter" default="build" basedir=".">
+
+    <fail message="Ant 1.10.3+ is required!">
+        <condition>
+            <not>
+                <antversion atleast="1.10.3"/>
+            </not>
+        </condition>
+    </fail>
+
+    <property name="build.sysclasspath" value="last"/>
+
+    <path id="test.classpath">
+        <pathelement path="build/test"/>
+        <pathelement path="build/main"/>
+        <fileset dir="${ant.home}/lib" includes="*.jar" />
+    </path>
+
+    <target name="build" description="clean build" depends="clean, test" />
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="init">
+        <mkdir dir="build/main"/>
+        <mkdir dir="build/test"/>
+        <mkdir dir="build/test-report"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac destdir="build/main" srcdir="src/main/java" includeantruntime="false"/>
+        <javac destdir="build/test" classpathref="test.classpath" srcdir="src/test/java" includeantruntime="true"/>
+    </target>
+
+    <!-- https://junit.org/junit5/docs/snapshot/user-guide/#running-tests-build-ant -->
+    <target name="test.junit.launcher" depends="compile">
+        <junitlauncher haltOnFailure="true">
+            <classpath refid="test.classpath"/>
+            <testclasses outputdir="build/test-report">
+                <fileset dir="build/test">
+                    <include name="**/*Tests.class"/>
+                </fileset>
+                <listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
+                <listener type="legacy-plain" sendSysOut="true" />
+                <listener classname="com.example.project.SummaryPrintingListener"/>
+            </testclasses>
+        </junitlauncher>
+        <loadfile property="summary" srcFile="build/test-summary.txt"/>
+        <echo>${summary}</echo>
+    </target>
+
+    <!-- https://junit.org/junit5/docs/current/user-guide/#running-tests-console-launcher -->
+    <target name="test.console.launcher" depends="compile">
+        <java classpathref="test.classpath" classname="org.junit.platform.console.ConsoleLauncher" fork="true">
+            <arg value="--scan-classpath"/>
+            <arg value="--disable-ansi-colors"/>
+            <arg line="--reports-dir build/test-report"/>
+        </java>
+        <junitreport todir="build/test-report">
+            <fileset dir="build/test-report">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="build/test-report/html"/>
+        </junitreport>
+    </target>
+
+    <target name="test" depends="test.junit.launcher, test.console.launcher" />
+
+</project>
