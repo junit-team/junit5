@@ -2,10 +2,11 @@ plugins {
 	id 'java'
 }
 
-project.ext.javaVersion = JavaVersion.VERSION_1_10
 // https://github.com/schauder/degraph/issues/87
 degraph.enabled = false
 
+// Use Java 10
+project.ext.javaVersion = JavaVersion.VERSION_1_10
 afterEvaluate {
 	tasks.withType(JavaCompile) {
 		sourceCompatibility = project.ext.javaVersion
@@ -18,18 +19,21 @@ afterEvaluate {
 
 dependencies {
 	implementation('commons-io:commons-io:2.6') {
-		because 'downloading tool archives from URL, moving and deleting directory trees'
+		because 'downloading tool archives and moving/deleting directory trees'
 	}
 
 	testImplementation(project(':junit-jupiter-api'))
-
-	testRuntimeOnly(project(':junit-platform-console-standalone')) {
-		because 'needed by Ant projects using native junitlauncher task'
-	}
 	testRuntimeOnly(project(':junit-platform-launcher'))
 	testRuntimeOnly(project(':junit-jupiter-engine'))
 }
 
 test {
+	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
+	enabled = Boolean.getBoolean('platform.tooling.support.tests.enabled')
+
+	// The standalone artifact is needed by Ant projects using its native <junitlauncher> task
+	dependsOn project(':junit-platform-console-standalone').jar
+	dependsOn rootProject.task('publishToMavenLocal')
+
 	useJUnitPlatform()
 }

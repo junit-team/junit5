@@ -15,8 +15,18 @@ repositories {
 
 dependencies {
 	testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.0-SNAPSHOT')
+	testImplementation('org.junit.jupiter:junit-jupiter-params:5.3.0-SNAPSHOT')
+	testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.3.0-SNAPSHOT')
 }
 
 test {
 	useJUnitPlatform()
+
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
+
+	reports {
+		html.enabled = true
+	}
 }

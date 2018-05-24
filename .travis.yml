@@ -20,7 +20,7 @@ matrix:
     - env: JDK='Oracle JDK 10'
       install: . ./install-jdk.sh -F 10 -L BCL
 # Java 10 "OpenJDK"
-    - env: JDK='OpenJDK 10' JACOCO='-PenableJaCoCo'
+    - env: JDK='OpenJDK 10' JACOCO='-PenableJaCoCo' TOOLING='-Dplatform.tooling.support.tests.enabled=true'
       install: . ./install-jdk.sh -F 10 -L GPL
 # Java 11 "Oracle JDK"
     - env: JDK='Oracle JDK 11'
@@ -30,7 +30,7 @@ script:
 # Display Gradle, Groovy, JVM and other versions
   - ./gradlew --version
 # Build JUnit 5
-  - ./gradlew --scan --stacktrace --warning-mode=all ${JACOCO} build
+  - ./gradlew --scan --stacktrace --warning-mode=all ${JACOCO} ${TOOLING} build
 
 # If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
 after_success:

@@ -18,28 +18,31 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import platform.tooling.support.Tool;
-import platform.tooling.support.ToolRequest;
+import platform.tooling.support.BuildRequest;
+import platform.tooling.support.BuildTool;
 import platform.tooling.support.ToolSupport;
 
+/**
+ * @since 1.3
+ */
 class AntStarterTests {
 
 	@Test
 	void ant_1_10_3() throws Exception {
 		var project = "ant-starter";
-		var ant = new ToolSupport(Tool.ANT, "1.10.3");
+		var ant = new ToolSupport(BuildTool.ANT, "1.10.3");
 		var executable = ant.init();
 		var standalone = Paths.get("..", "junit-platform-console-standalone", "build", "libs");
-		var request = ToolRequest.builder() //
+		var request = BuildRequest.builder() //
 				.setProject(project) //
 				.setWorkspace(project) //
 				.setExecutable(executable) //
 				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
 				.build();
-		var response = ant.run(request);
+		var result = ant.run(request);
 
-		assertEquals(0, response.getStatus());
-		assertEquals(List.of(), response.getErrorLines(), "error log isn't empty");
+		assertEquals(0, result.getStatus());
+		assertEquals(List.of(), result.getErrorLines(), "error log isn't empty");
 		assertLinesMatch(List.of(">> HEAD >>", //
 			"test.junit.launcher:", //
 			">>>>", //
@@ -55,6 +58,6 @@ class AntStarterTests {
 			"     \\[java\\] \\[         5 tests successful      \\]", //
 			"     \\[java\\] \\[         0 tests failed          \\]", //
 			">> TAIL >>"), //
-			response.getOutputLines());
+			result.getOutputLines());
 	}
 }

@@ -29,7 +29,9 @@ on GitHub.
 
 * New overloaded variant of `isAnnotated()` in `AnnotationSupport` that accepts
   `Optional<? extends AnnotatedElement>` instead of `AnnotatedElement`.
-
+* New integration test sub-project `platform-tooling-support-tests` added. Set system
+  property `platform.tooling.support.tests.enabled` to `true` to activate it in the
+  main build process.
 
 [[release-notes-5.3.0-M1-junit-jupiter]]
 === JUnit Jupiter
