@@ -13,52 +13,48 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import platform.tooling.support.Tool;
 import platform.tooling.support.ToolRequest;
 import platform.tooling.support.ToolSupport;
 
-@DisplayName(AntStarterTests.PROJECT)
 class AntStarterTests {
 
-	static final String PROJECT = "ant-starter";
-
 	@Test
-	@DisplayName("ant-1.10.3")
 	void ant_1_10_3() throws Exception {
+		var project = "ant-starter";
 		var ant = new ToolSupport(Tool.ANT, "1.10.3");
 		var executable = ant.init();
-
-		// patch ant installation with "junit-platform-console-standalone.jar"
-		var standalone = Paths.get("..", "junit-platform-console-standalone", "build",
-			"libs").normalize().toAbsolutePath();
-
+		var standalone = Paths.get("..", "junit-platform-console-standalone", "build", "libs");
 		var request = ToolRequest.builder() //
-				.setProject(PROJECT) //
-				.setWorkspace(PROJECT) //
+				.setProject(project) //
+				.setWorkspace(project) //
 				.setExecutable(executable) //
-				.addArguments("-verbose", "-lib", standalone) //
+				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
 				.build();
+		var response = ant.run(request);
 
-		var result = ant.run(request);
-
-		// assert
-		assertEquals(0, result.getStatus());
+		assertEquals(0, response.getStatus());
+		assertEquals(List.of(), response.getErrorLines(), "error log isn't empty");
 		assertLinesMatch(List.of(">> HEAD >>", //
 			"test.junit.launcher:", //
 			">>>>", //
 			"     \\[echo\\] Test run finished after [\\d]+ ms", //
 			">>>>", //
+			"     \\[echo\\] \\[         5 tests successful      \\]", //
+			"     \\[echo\\] \\[         0 tests failed          \\]", //
+			">>>>", //
 			"test.console.launcher:", //
 			">>>>", //
 			"     \\[java\\] Test run finished after [\\d]+ ms", //
-			">> TAIL >>"), result.getOutputLines());
-		assertEquals(0, Files.size(result.getErrorPath()), "error log is not empty:\n" + result.getErrorLines());
+			">>>>", //
+			"     \\[java\\] \\[         5 tests successful      \\]", //
+			"     \\[java\\] \\[         0 tests failed          \\]", //
+			">> TAIL >>"), //
+			response.getOutputLines());
 	}
 }

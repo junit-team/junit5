@@ -90,31 +90,31 @@ public class ToolSupport {
 	}
 
 	public ToolResponse run(ToolRequest request) throws Exception {
-		var report = new ToolResponse();
+		var response = new ToolResponse();
 
 		// unroll to clean "build/test-workspace/${name}" workspace directory
 		var project = Paths.get("projects", request.getProject());
-		var workspace = workPath.resolve(request.getWorkspace());
+		var workspace = response.workspace = workPath.resolve(request.getWorkspace());
 		FileUtils.deleteQuietly(workspace.toFile());
 		FileUtils.copyDirectory(project.toFile(), workspace.toFile());
 
 		// execute build and collect data
-		report.out = workspace.resolve("stdout.txt");
-		report.err = workspace.resolve("stderr.txt");
+		response.out = workspace.resolve("stdout.txt");
+		response.err = workspace.resolve("stderr.txt");
 
 		var command = new ArrayList<String>();
 		command.add(request.getExecutable().toString());
 		request.getArguments().forEach(arg -> command.add(arg.toString()));
 		var builder = new ProcessBuilder(command) //
 				.directory(workspace.toFile()) //
-				.redirectOutput(report.out.toFile()) //
-				.redirectError(report.err.toFile());
+				.redirectOutput(response.out.toFile()) //
+				.redirectError(response.err.toFile());
 		var process = builder.start();
-		report.status = process.waitFor();
+		response.status = process.waitFor();
 		var encoding = workspace.resolve("file.encoding.txt");
 		if (Files.exists(encoding)) {
-			report.charset = Charset.forName(new String(Files.readAllBytes(encoding)));
+			response.charset = Charset.forName(new String(Files.readAllBytes(encoding)));
 		}
-		return report;
+		return response;
 	}
 }

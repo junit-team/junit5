@@ -8,9 +8,11 @@ branches:
   except:
     - /^r\d.*$/
 
-# Get latest install-jdk.sh script
 before_install:
+# Get latest install-jdk.sh script
   - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+# https://github.com/travis-ci/travis-ci/issues/8408
+  - unset _JAVA_OPTIONS
 
 matrix:
   include:

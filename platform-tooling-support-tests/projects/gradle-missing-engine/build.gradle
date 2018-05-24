@@ -2,7 +2,11 @@ plugins {
 	id 'java'
 }
 
-file("file.encoding.txt").write(System.getProperty("file.encoding"))
+// don't use `build` as target to prevent Jenkins picking up
+project.buildDir = 'bin'
+
+// emit default file encoding to a file
+file('file.encoding.txt').write(System.getProperty('file.encoding'))
 
 repositories {
 	mavenLocal()
@@ -17,10 +21,4 @@ dependencies {
 
 test {
 	useJUnitPlatform()
-
-	testLogging {
-		showExceptions true
-		showCauses true
-		showStandardStreams true
-	}
 }
