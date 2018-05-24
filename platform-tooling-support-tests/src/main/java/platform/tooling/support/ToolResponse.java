@@ -27,6 +27,7 @@ public class ToolResponse {
 	Charset charset = StandardCharsets.UTF_8;
 	Path out = Paths.get("stdout.txt");
 	Path err = Paths.get("stderr.txt");
+	Path workspace = Paths.get(".");
 
 	public int getStatus() {
 		return status;
@@ -50,6 +51,10 @@ public class ToolResponse {
 
 	public List<String> getErrorLines() {
 		return readAllLines(getErrorPath());
+	}
+
+	public Path getWorkspace() {
+		return workspace;
 	}
 
 	private List<String> readAllLines(Path path) {

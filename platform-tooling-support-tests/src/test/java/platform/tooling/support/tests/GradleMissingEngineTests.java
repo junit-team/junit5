@@ -10,63 +10,53 @@
 
 package platform.tooling.support.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
 import platform.tooling.support.Tool;
 import platform.tooling.support.ToolRequest;
 import platform.tooling.support.ToolSupport;
 
-@DisplayName(GradleMissingEngineTests.PROJECT)
 class GradleMissingEngineTests {
 
-	static final String PROJECT = "gradle-missing-engine";
-
-	static ToolRequest.Builder createToolRequestBuilder(String workspaceSuffix) {
-		return ToolRequest.builder() //
-				.setProject(PROJECT) //
-				.setWorkspace(PROJECT + '-' + workspaceSuffix).addArguments("build", "--no-daemon", "--debug",
-					"--stacktrace");
-	}
-
 	@Test
-	@DisplayName("gradle-wrapper")
 	void gradle_wrapper() throws Exception {
-		var gradle = new ToolSupport(Tool.GRADLE);
-		var executable = gradle.init();
-
-		var request = createToolRequestBuilder("wrapper").setExecutable(executable).build();
-		var response = gradle.run(request);
-
-		// assert
-		Assertions.assertNotEquals(0, response.getStatus());
-		Assertions.assertLinesMatch(List.of(">> HEAD >>",
-			".+DEBUG.+org.junit.platform.commons.util.PreconditionViolationException: Cannot create Launcher without at least one TestEngine; consider adding an engine implementation JAR to the classpath",
-			">> TAIL >>"), response.getOutputLines());
-		Assertions.assertLinesMatch(
-			List.of(">> HEAD >>", ".+ERROR.+FAILURE: Build failed with an exception.", ">> TAIL >>"),
-			response.getErrorLines());
+		test(new ToolSupport(Tool.GRADLE), "wrapper");
 	}
 
 	@Test
-	@DisplayName("gradle-4.7")
+	@EnabledOnJre(JRE.JAVA_10)
 	void gradle_4_7() throws Exception {
-		var gradle = new ToolSupport(Tool.GRADLE, "4.7");
-		var executable = gradle.init();
+		test(new ToolSupport(Tool.GRADLE, "4.7"), "4.7");
+	}
 
-		var request = createToolRequestBuilder("4.7").setExecutable(executable).build();
+	private void test(ToolSupport gradle, String workspaceSuffix) throws Exception {
+		var project = "gradle-missing-engine";
+		var executable = gradle.init();
+		var request = ToolRequest.builder() //
+				.setProject(project) //
+				.setWorkspace(project + '-' + workspaceSuffix) //
+				.setExecutable(executable) //
+				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
+				.build();
 		var response = gradle.run(request);
 
-		// assert
-		Assertions.assertNotEquals(0, response.getStatus());
-		Assertions.assertLinesMatch(List.of(">> HEAD >>",
-			".+DEBUG.+org.junit.platform.commons.util.PreconditionViolationException: Cannot create Launcher without at least one TestEngine; consider adding an engine implementation JAR to the classpath",
-			">> TAIL >>"), response.getOutputLines());
-		Assertions.assertLinesMatch(
-			List.of(">> HEAD >>", ".+ERROR.+FAILURE: Build failed with an exception.", ">> TAIL >>"),
+		assertEquals(1, response.getStatus());
+		assertLinesMatch(List.of( //
+			">> HEAD >>", //
+			".+DEBUG.+Cannot create Launcher without at least one TestEngine.+", //
+			">> TAIL >>"), //
+			response.getOutputLines());
+		assertLinesMatch(List.of( //
+			">> HEAD >>", //
+			".+ERROR.+FAILURE: Build failed with an exception.", //
+			">> TAIL >>"), //
 			response.getErrorLines());
 	}
 }
