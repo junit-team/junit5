@@ -211,7 +211,7 @@ class AssertTimeoutAssertionsTests {
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageSupplierForExecutableThatCompletesBeforeTheTimeout() {
-		assertTimeoutPreemptively(ofMillis(500), this::nap, () -> "Tempus" + " " + "Fugit");
+		assertTimeoutPreemptively(ofMillis(500), nix, () -> "Tempus" + " " + "Fugit");
 	}
 
 	// -- supplier - preemptively ---
