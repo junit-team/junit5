@@ -15,6 +15,7 @@ plugins {
 }
 
 task consoleLauncherTest(type: JavaExec, overwrite: true) {
+	dependsOn testClasses
 	def reportsDir = file("$buildDir/test-results")
 	outputs.dir reportsDir
 	classpath sourceSets.test.runtimeClasspath
@@ -27,8 +28,10 @@ task consoleLauncherTest(type: JavaExec, overwrite: true) {
 	args '--reports-dir', reportsDir
 	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
 }
-test.enabled = false
-test.dependsOn consoleLauncherTest
+test {
+	dependsOn consoleLauncherTest
+	exclude '**/*'
+}
 
 dependencies {
 	asciidoctor('org.jruby:jruby-complete:9.1.17.0')
