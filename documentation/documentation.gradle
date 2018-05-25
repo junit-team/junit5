@@ -14,7 +14,7 @@ plugins {
 	id 'org.asciidoctor.convert' version '1.5.7'
 }
 
-task consoleLauncherTest(type: JavaExec, overwrite: true) {
+task consoleLauncherTest(type: JavaExec) {
 	dependsOn testClasses
 	def reportsDir = file("$buildDir/test-results")
 	outputs.dir reportsDir
