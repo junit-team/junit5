@@ -17,10 +17,10 @@ before_install:
 matrix:
   include:
 # Java 10 "Oracle JDK" (not yet provided by Travis CI)
-    - env: JDK='Oracle JDK 10'
+    - env: JDK='Oracle JDK 10' INSTALL='publishToMavenLocal'
       install: . ./install-jdk.sh -F 10 -L BCL
 # Java 10 "OpenJDK"
-    - env: JDK='OpenJDK 10' JACOCO='-PenableJaCoCo' TOOLING='-Dplatform.tooling.support.tests.enabled=true'
+    - env: JDK='OpenJDK 10' JACOCO='-PenableJaCoCo'
       install: . ./install-jdk.sh -F 10 -L GPL
 # Java 11 "Oracle JDK"
     - env: JDK='Oracle JDK 11'
@@ -30,7 +30,8 @@ script:
 # Display Gradle, Groovy, JVM and other versions
   - ./gradlew --version
 # Build JUnit 5
-  - ./gradlew --scan --stacktrace --warning-mode=all ${JACOCO} ${TOOLING} build
+  - ./gradlew --scan --stacktrace --warning-mode=all ${JACOCO} build ${INSTALL}
+  - test -v INSTALL && ./gradlew -Dplatform.tooling.support.tests.enabled=true build || true
 
 # If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
 after_success:

@@ -33,7 +33,6 @@ test {
 
 	// The standalone artifact is needed by Ant projects using its native <junitlauncher> task
 	dependsOn project(':junit-platform-console-standalone').jar
-	dependsOn rootProject.task('publishToMavenLocal')
 
 	useJUnitPlatform()
 }
